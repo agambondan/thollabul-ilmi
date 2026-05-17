@@ -21,6 +21,7 @@ Last updated: 2026-05-17
   - `POST /api/v1/library/books`
   - `PUT /api/v1/library/books/:id`
   - `DELETE /api/v1/library/books/:id`
+  - Source type, license status, source note, and source verification metadata.
 - Added mobile Explore feature key `library` that reads the same backend catalog.
 - Added `library_book` references for notes and bookmarks so users can keep study notes from library detail journeys.
 - Added study progress:
@@ -45,6 +46,8 @@ Last updated: 2026-05-17
 - Dashboard users can filter the catalog by `planned`, `reading`, `paused`, or `completed` without leaving the dashboard namespace.
 - Mobile users can apply the same progress status filter from the Perpustakaan list when logged in.
 - Web users can continue loading the catalog beyond the first API page without leaving the current public/dashboard route.
+- Admins can mark source/license verification metadata before exposing or maintaining resource links.
+- Readers can see source/license metadata from web and mobile detail screens when available.
 - PDF files are not mirrored yet. The current MVP stores external source URLs and license notes so uploaded PDFs can be added later only after source/license verification.
 
 ## Sync Contract

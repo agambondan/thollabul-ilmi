@@ -42,6 +42,14 @@ func (s *libraryBookService) Create(req *model.CreateLibraryBookRequest) (*model
 	if format == "" {
 		format = model.LibraryBookFormatLink
 	}
+	sourceType := req.SourceType
+	if sourceType == "" {
+		sourceType = model.LibraryBookSourceExternal
+	}
+	licenseStatus := req.LicenseStatus
+	if licenseStatus == "" {
+		licenseStatus = model.LibraryBookLicenseUnverified
+	}
 	slug := req.Slug
 	if slug == "" {
 		slug = uniqueLibraryBookSlug(req.Title, func(candidate string) bool {
@@ -51,20 +59,24 @@ func (s *libraryBookService) Create(req *model.CreateLibraryBookRequest) (*model
 	}
 
 	return s.repo.Create(&model.LibraryBook{
-		Title:       req.Title,
-		Slug:        slug,
-		Author:      req.Author,
-		Description: req.Description,
-		Category:    req.Category,
-		Level:       req.Level,
-		Language:    req.Language,
-		Format:      format,
-		SourceURL:   req.SourceURL,
-		CoverURL:    req.CoverURL,
-		License:     req.License,
-		Pages:       req.Pages,
-		Tags:        req.Tags,
-		Status:      status,
+		Title:            req.Title,
+		Slug:             slug,
+		Author:           req.Author,
+		Description:      req.Description,
+		Category:         req.Category,
+		Level:            req.Level,
+		Language:         req.Language,
+		Format:           format,
+		SourceType:       sourceType,
+		SourceURL:        req.SourceURL,
+		CoverURL:         req.CoverURL,
+		License:          req.License,
+		LicenseStatus:    licenseStatus,
+		SourceNote:       req.SourceNote,
+		IsSourceVerified: req.IsSourceVerified,
+		Pages:            req.Pages,
+		Tags:             req.Tags,
+		Status:           status,
 	})
 }
 
@@ -77,6 +89,14 @@ func (s *libraryBookService) Update(id int, req *model.CreateLibraryBookRequest)
 	if format == "" {
 		format = model.LibraryBookFormatLink
 	}
+	sourceType := req.SourceType
+	if sourceType == "" {
+		sourceType = model.LibraryBookSourceExternal
+	}
+	licenseStatus := req.LicenseStatus
+	if licenseStatus == "" {
+		licenseStatus = model.LibraryBookLicenseUnverified
+	}
 	slug := req.Slug
 	if slug == "" {
 		slug = uniqueLibraryBookSlug(req.Title, func(candidate string) bool {
@@ -86,20 +106,24 @@ func (s *libraryBookService) Update(id int, req *model.CreateLibraryBookRequest)
 	}
 
 	return s.repo.Update(id, &model.LibraryBook{
-		Title:       req.Title,
-		Slug:        slug,
-		Author:      req.Author,
-		Description: req.Description,
-		Category:    req.Category,
-		Level:       req.Level,
-		Language:    req.Language,
-		Format:      format,
-		SourceURL:   req.SourceURL,
-		CoverURL:    req.CoverURL,
-		License:     req.License,
-		Pages:       req.Pages,
-		Tags:        req.Tags,
-		Status:      status,
+		Title:            req.Title,
+		Slug:             slug,
+		Author:           req.Author,
+		Description:      req.Description,
+		Category:         req.Category,
+		Level:            req.Level,
+		Language:         req.Language,
+		Format:           format,
+		SourceType:       sourceType,
+		SourceURL:        req.SourceURL,
+		CoverURL:         req.CoverURL,
+		License:          req.License,
+		LicenseStatus:    licenseStatus,
+		SourceNote:       req.SourceNote,
+		IsSourceVerified: req.IsSourceVerified,
+		Pages:            req.Pages,
+		Tags:             req.Tags,
+		Status:           status,
 	})
 }
 

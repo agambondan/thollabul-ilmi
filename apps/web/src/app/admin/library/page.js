@@ -7,6 +7,8 @@ import { BsBoxArrowUpRight, BsPencil, BsPlusCircle, BsTrash, BsX } from 'react-i
 
 const FORMATS = ['link', 'pdf', 'epub', 'html'];
 const STATUSES = ['published', 'draft'];
+const SOURCE_TYPES = ['external', 'uploaded'];
+const LICENSE_STATUSES = ['unverified', 'needs_review', 'verified', 'restricted'];
 const EMPTY_FORM = {
     author: '',
     category: '',
@@ -16,9 +18,13 @@ const EMPTY_FORM = {
     language: 'Indonesia',
     level: 'Pemula',
     license: '',
+    license_status: 'unverified',
     pages: '',
     slug: '',
+    source_note: '',
+    source_type: 'external',
     source_url: '',
+    is_source_verified: false,
     status: 'published',
     tags: '',
     title: '',
@@ -33,9 +39,13 @@ const toForm = (item) => ({
     language: item.language ?? 'Indonesia',
     level: item.level ?? 'Pemula',
     license: item.license ?? '',
+    license_status: item.license_status ?? 'unverified',
     pages: item.pages ? String(item.pages) : '',
     slug: item.slug ?? '',
+    source_note: item.source_note ?? '',
+    source_type: item.source_type ?? 'external',
     source_url: item.source_url ?? '',
+    is_source_verified: Boolean(item.is_source_verified),
     status: item.status ?? 'published',
     tags: item.tags ?? '',
     title: item.title ?? '',
@@ -43,6 +53,7 @@ const toForm = (item) => ({
 
 const toPayload = (form) => ({
     ...form,
+    is_source_verified: Boolean(form.is_source_verified),
     pages: Number(form.pages) || 0,
 });
 
@@ -170,6 +181,9 @@ const AdminLibraryPage = () => {
                                 <th className='px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300'>
                                     {t('admin.library.format')}
                                 </th>
+                                <th className='hidden px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300 lg:table-cell'>
+                                    {t('admin.library.license_status')}
+                                </th>
                                 <th className='hidden px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300 md:table-cell'>
                                     {t('admin.library.status')}
                                 </th>
@@ -196,6 +210,24 @@ const AdminLibraryPage = () => {
                                         <span className='rounded bg-emerald-100 px-2 py-0.5 text-xs uppercase text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
                                             {item.format || 'link'}
                                         </span>
+                                    </td>
+                                    <td className='hidden px-4 py-3 lg:table-cell'>
+                                        <span
+                                            className={`rounded px-2 py-0.5 text-xs ${
+                                                item.license_status === 'verified'
+                                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
+                                                    : item.license_status === 'restricted'
+                                                      ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'
+                                                      : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
+                                            }`}
+                                        >
+                                            {item.license_status || 'unverified'}
+                                        </span>
+                                        {item.is_source_verified ? (
+                                            <p className='mt-1 text-[11px] text-emerald-600 dark:text-emerald-300'>
+                                                {t('admin.library.source_verified')}
+                                            </p>
+                                        ) : null}
                                     </td>
                                     <td className='hidden px-4 py-3 text-gray-500 dark:text-gray-400 md:table-cell'>
                                         {item.status || 'published'}
@@ -235,7 +267,7 @@ const AdminLibraryPage = () => {
                             ))}
                             {filtered.length === 0 && (
                                 <tr>
-                                    <td className='px-4 py-8 text-center text-gray-400' colSpan={6}>
+                                    <td className='px-4 py-8 text-center text-gray-400' colSpan={7}>
                                         {t('admin.crud.no_data')}
                                     </td>
                                 </tr>
@@ -305,6 +337,36 @@ const AdminLibraryPage = () => {
                                     <input className={inputClass} min='0' onChange={(e) => setForm({ ...form, pages: e.target.value })} type='number' value={form.pages} />
                                 </Field>
                             </div>
+                            <div className='grid gap-4 md:grid-cols-3'>
+                                <Field label={t('admin.library.source_type')}>
+                                    <select className={inputClass} onChange={(e) => setForm({ ...form, source_type: e.target.value })} value={form.source_type}>
+                                        {SOURCE_TYPES.map((type) => (
+                                            <option key={type} value={type}>
+                                                {type}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </Field>
+                                <Field label={t('admin.library.license_status')}>
+                                    <select className={inputClass} onChange={(e) => setForm({ ...form, license_status: e.target.value })} value={form.license_status}>
+                                        {LICENSE_STATUSES.map((status) => (
+                                            <option key={status} value={status}>
+                                                {status}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </Field>
+                                <Field label={t('admin.library.source_verified')}>
+                                    <label className='flex min-h-[38px] items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-slate-600 dark:bg-slate-700 dark:text-white'>
+                                        <input
+                                            checked={form.is_source_verified}
+                                            onChange={(e) => setForm({ ...form, is_source_verified: e.target.checked })}
+                                            type='checkbox'
+                                        />
+                                        {t('admin.library.source_verified_hint')}
+                                    </label>
+                                </Field>
+                            </div>
                             <Field label={t('admin.library.source_url')}>
                                 <input className={inputClass} onChange={(e) => setForm({ ...form, source_url: e.target.value })} placeholder='https://...' type='url' value={form.source_url} />
                             </Field>
@@ -322,6 +384,9 @@ const AdminLibraryPage = () => {
                                     <input className={inputClass} onChange={(e) => setForm({ ...form, license: e.target.value })} value={form.license} />
                                 </Field>
                             </div>
+                            <Field label={t('admin.library.source_note')}>
+                                <textarea className={inputClass} onChange={(e) => setForm({ ...form, source_note: e.target.value })} rows={2} value={form.source_note} />
+                            </Field>
                         </div>
                         <div className='flex gap-3 border-t border-gray-100 p-5 dark:border-slate-700'>
                             <button

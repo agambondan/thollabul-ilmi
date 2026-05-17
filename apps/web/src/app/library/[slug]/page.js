@@ -239,6 +239,27 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
                                 </span>
                             )}
                         </div>
+                        {((book.license_status && book.license_status !== 'unverified') || book.is_source_verified || book.source_note) && (
+                            <div className='mt-4 rounded-lg border border-gray-100 bg-gray-50 p-3 text-xs leading-5 text-gray-600 dark:border-slate-800 dark:bg-slate-950/60 dark:text-gray-300'>
+                                <div className='flex flex-wrap gap-2'>
+                                    {book.license_status && book.license_status !== 'unverified' && (
+                                        <span className='rounded-full bg-white px-2 py-0.5 font-semibold text-gray-700 dark:bg-slate-900 dark:text-gray-200'>
+                                            Lisensi: {book.license_status}
+                                        </span>
+                                    )}
+                                    {book.is_source_verified && (
+                                        <span className='rounded-full bg-emerald-100 px-2 py-0.5 font-semibold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200'>
+                                            Sumber terverifikasi
+                                        </span>
+                                    )}
+                                </div>
+                                {book.source_note && (
+                                    <p className='mt-2 text-gray-500 dark:text-gray-400'>
+                                        {book.source_note}
+                                    </p>
+                                )}
+                            </div>
+                        )}
 
                         <div className='mt-8 rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 dark:border-slate-700 dark:bg-slate-800/70'>
                             <div className='mb-3 flex flex-wrap items-center justify-between gap-2'>

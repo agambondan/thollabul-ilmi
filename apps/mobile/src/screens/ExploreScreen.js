@@ -1405,6 +1405,32 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       );
     };
 
+    const renderLibrarySourcePanel = () => {
+      if (!isLibraryDetail) return null;
+      const raw = selectedItem?.raw ?? {};
+      const hasLicenseStatus = raw.license_status && raw.license_status !== 'unverified';
+      if (!hasLicenseStatus && !raw.is_source_verified && !raw.source_note) return null;
+
+      return (
+        <View style={styles.librarySourcePanel}>
+          <CardTitle meta={raw.source_type ?? raw.format ?? 'resource'}>Sumber Resource</CardTitle>
+          <View style={styles.libraryStatusRow}>
+            {hasLicenseStatus ? (
+              <View style={styles.libraryProgressBadgeRow}>
+                <Text style={styles.libraryProgressBadgeText}>Lisensi: {raw.license_status}</Text>
+              </View>
+            ) : null}
+            {raw.is_source_verified ? (
+              <View style={styles.libraryProgressBadgeRow}>
+                <Text style={styles.libraryProgressBadgeText}>Sumber terverifikasi</Text>
+              </View>
+            ) : null}
+          </View>
+          {raw.source_note ? <Text style={styles.detailLine}>{raw.source_note}</Text> : null}
+        </View>
+      );
+    };
+
     return (
       <Screen
         actions={(
@@ -1449,6 +1475,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         </Card>
 
         {renderFeedCommentsPanel()}
+        {renderLibrarySourcePanel()}
         {renderLibraryProgressPanel()}
 
         <View style={styles.detailActions}>
@@ -3119,6 +3146,14 @@ const styles = StyleSheet.create({
   },
   libraryProgressPanel: {
     backgroundColor: colors.surface,
+    borderColor: colors.faint,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    marginBottom: spacing.md,
+    padding: spacing.md,
+  },
+  librarySourcePanel: {
+    backgroundColor: colors.surfaceMuted,
     borderColor: colors.faint,
     borderRadius: radius.lg,
     borderWidth: 1,

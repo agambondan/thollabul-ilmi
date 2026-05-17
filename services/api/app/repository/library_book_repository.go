@@ -93,20 +93,24 @@ func (r *libraryBookRepo) Update(id int, book *model.LibraryBook) (*model.Librar
 		return nil, err
 	}
 	updates := map[string]interface{}{
-		"title":       book.Title,
-		"slug":        book.Slug,
-		"author":      book.Author,
-		"description": book.Description,
-		"category":    book.Category,
-		"level":       book.Level,
-		"language":    book.Language,
-		"format":      book.Format,
-		"source_url":  book.SourceURL,
-		"cover_url":   book.CoverURL,
-		"license":     book.License,
-		"pages":       book.Pages,
-		"tags":        book.Tags,
-		"status":      book.Status,
+		"title":              book.Title,
+		"slug":               book.Slug,
+		"author":             book.Author,
+		"description":        book.Description,
+		"category":           book.Category,
+		"level":              book.Level,
+		"language":           book.Language,
+		"format":             book.Format,
+		"source_type":        book.SourceType,
+		"source_url":         book.SourceURL,
+		"cover_url":          book.CoverURL,
+		"license":            book.License,
+		"license_status":     book.LicenseStatus,
+		"source_note":        book.SourceNote,
+		"is_source_verified": book.IsSourceVerified,
+		"pages":              book.Pages,
+		"tags":               book.Tags,
+		"status":             book.Status,
 	}
 	if err := r.db.Model(&existing).Updates(updates).Error; err != nil {
 		return nil, err
