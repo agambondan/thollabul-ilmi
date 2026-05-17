@@ -36,6 +36,15 @@ jest.mock('../api/social', () => ({
   likeFeedPost: jest.fn(),
 }));
 
+jest.mock('../api/forum', () => ({
+  acceptForumAnswer: jest.fn(),
+  createForumAnswer: jest.fn(),
+  createForumQuestion: jest.fn(),
+  getForumQuestion: jest.fn(),
+  getForumQuestions: jest.fn(),
+  voteForum: jest.fn(),
+}));
+
 jest.mock('../api/personal', () => ({
   addBookmark: jest.fn(),
   createUserWird: jest.fn(),
@@ -194,6 +203,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'notes', title: 'Catatan', subtitle: 'Catatan pribadi', group: 'Personal', type: 'notes' },
     { key: 'community-feed', title: 'Komunitas', subtitle: 'Refleksi', group: 'Ilmu', type: 'feed' },
     { key: 'kajian', title: 'Kajian', subtitle: 'Sesi belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/kajian' },
+    { key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi seputar Islam', group: 'Ilmu', type: 'forum' },
     { key: 'library', title: 'Perpustakaan', subtitle: 'Kitab dan bahan belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/library/books?page=0&size=20' },
     { key: 'tasbih', title: 'Tasbih', subtitle: 'Penghitung', group: 'Alat', type: 'tasbih' },
     { key: 'zakat', title: 'Kalkulator Zakat', subtitle: 'Hitung zakat maal', group: 'Alat', type: 'zakat' },
@@ -206,7 +216,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'kajian-artikel',
       label: 'Kajian & Artikel',
       meta: 'Belajar rutin',
-      features: allFeatures.filter((f) => ['community-feed', 'kajian'].includes(f.key)),
+      features: allFeatures.filter((f) => ['community-feed', 'kajian', 'forum'].includes(f.key)),
     },
     {
       key: 'referensi',
@@ -235,6 +245,7 @@ import { ExploreScreen } from '../screens/ExploreScreen';
 const { useSession } = require('../context/SessionContext');
 const { useFeedback } = require('../context/FeedbackContext');
 const exploreApi = require('../api/explore');
+const forumApi = require('../api/forum');
 const clientApi = require('../api/client');
 const personalApi = require('../api/personal');
 const { readPinnedFeatures, readRecentFeatures, rememberFeatureOpen, togglePinnedFeature } = require('../storage/recentFeatures');
@@ -357,6 +368,112 @@ describe('ExploreScreen', () => {
 
     await waitFor(() => {
       expect(exploreApi.getQuizQuestions).toHaveBeenCalled();
+    });
+  });
+
+  test('loads forum questions from mobile forum feature', async () => {
+    forumApi.getForumQuestions.mockResolvedValueOnce({
+      hasMore: false,
+      items: [
+        {
+          id: 'forum-1',
+          title: 'Apa hukum zakat emas?',
+          body: 'Mohon penjelasan ringkas tentang zakat emas.',
+          slug: 'zakat-emas',
+          tags: ['zakat'],
+          answerCount: 1,
+          voteCount: 2,
+          user: { name: 'Ahmad' },
+        },
+      ],
+      total: 1,
+    });
+
+    const { getByText } = await renderExploreScreen();
+
+    fireEvent.press(getByText('Forum Tanya Jawab'));
+
+    await waitFor(() => {
+      expect(forumApi.getForumQuestions).toHaveBeenCalledWith({ page: 0, size: 10 });
+      expect(getByText('Apa hukum zakat emas?')).toBeTruthy();
+    });
+  });
+
+  test('forum detail supports question vote, answer downvote, and accept answer', async () => {
+    useSession.mockReturnValue({
+      ...mockUseSession(),
+      session: { token: 'abc' },
+      user: { id: '1', name: 'Test', email: 'test@test.com' },
+    });
+    forumApi.getForumQuestions.mockResolvedValueOnce({
+      hasMore: false,
+      items: [{ id: 'forum-1', title: 'Apa hukum zakat emas?', body: 'Isi pertanyaan', slug: 'zakat-emas', answerCount: 1, voteCount: 2, user: { name: 'Ahmad' } }],
+      total: 1,
+    });
+    forumApi.getForumQuestion.mockResolvedValue({
+      answers: [{ id: 'answer-1', body: 'Wajib jika mencapai nisab dan haul.', voteCount: 3, isAccepted: false, user: { name: 'Ustadz' } }],
+      question: { id: 'forum-1', title: 'Apa hukum zakat emas?', body: 'Isi pertanyaan', slug: 'zakat-emas', answerCount: 1, voteCount: 2, user: { name: 'Ahmad' } },
+    });
+    forumApi.voteForum.mockResolvedValue({});
+    forumApi.acceptForumAnswer.mockResolvedValue({});
+
+    const { getByText } = await renderExploreScreen();
+
+    fireEvent.press(getByText('Forum Tanya Jawab'));
+    await waitFor(() => expect(getByText('Apa hukum zakat emas?')).toBeTruthy());
+    fireEvent.press(getByText('Apa hukum zakat emas?'));
+
+    await waitFor(() => {
+      expect(getByText('Wajib jika mencapai nisab dan haul.')).toBeTruthy();
+    });
+
+    fireEvent.press(getByText('▲ Pertanyaan'));
+    await waitFor(() => {
+      expect(forumApi.voteForum).toHaveBeenCalledWith({ targetType: 'question', targetId: 'forum-1', value: 1 });
+    });
+
+    fireEvent.press(getByText('▼'));
+    await waitFor(() => {
+      expect(forumApi.voteForum).toHaveBeenCalledWith({ targetType: 'answer', targetId: 'answer-1', value: -1 });
+    });
+
+    fireEvent.press(getByText('Terima'));
+    await waitFor(() => {
+      expect(forumApi.acceptForumAnswer).toHaveBeenCalledWith('forum-1', 'answer-1');
+    });
+  });
+
+  test('forum ask form creates question and opens returned detail', async () => {
+    useSession.mockReturnValue({
+      ...mockUseSession(),
+      session: { token: 'abc' },
+      user: { id: '1', name: 'Test', email: 'test@test.com' },
+    });
+    forumApi.getForumQuestions.mockResolvedValueOnce({ hasMore: false, items: [], total: 0 });
+    forumApi.createForumQuestion.mockResolvedValueOnce({ slug: 'adab-belajar' });
+    forumApi.getForumQuestion.mockResolvedValueOnce({
+      answers: [],
+      question: { id: 'forum-2', title: 'Bagaimana adab belajar?', body: 'Apa saja adab belajar harian?', slug: 'adab-belajar', answerCount: 0, voteCount: 0, user: { name: 'Test' } },
+    });
+
+    const { getByPlaceholderText, getByText } = await renderExploreScreen();
+
+    fireEvent.press(getByText('Forum Tanya Jawab'));
+    await waitFor(() => expect(getByText('Ajukan Pertanyaan')).toBeTruthy());
+    fireEvent.press(getByText('Ajukan Pertanyaan'));
+
+    fireEvent.changeText(getByPlaceholderText('Judul pertanyaan (min 10 karakter)'), 'Bagaimana adab belajar?');
+    fireEvent.changeText(getByPlaceholderText('Isi pertanyaan (min 20 karakter)'), 'Apa saja adab belajar harian?');
+    fireEvent.changeText(getByPlaceholderText('Tag (pisahkan dengan koma, opsional)'), 'adab, ilmu');
+    fireEvent.press(getByText('Kirim Pertanyaan'));
+
+    await waitFor(() => {
+      expect(forumApi.createForumQuestion).toHaveBeenCalledWith({
+        title: 'Bagaimana adab belajar?',
+        body: 'Apa saja adab belajar harian?',
+        tags: 'adab, ilmu',
+      });
+      expect(getByText('Bagaimana adab belajar?')).toBeTruthy();
     });
   });
 

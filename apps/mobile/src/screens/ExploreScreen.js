@@ -16,7 +16,6 @@ import {
   acceptForumAnswer,
   createForumAnswer,
   createForumQuestion,
-  deleteForumAnswer,
   getForumQuestion,
   getForumQuestions,
   voteForum,
@@ -2528,6 +2527,32 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                 <Text style={[styles.statusNote, { marginTop: spacing.sm }]}>
                   {forumDetail.user?.name} · {forumDetail.answerCount} jawaban · {forumDetail.voteCount} suara
                 </Text>
+                <View style={[styles.answerRow, { justifyContent: 'flex-start', marginTop: spacing.sm }]}>
+                  {[
+                    { label: '▲ Pertanyaan', value: 1 },
+                    { label: '▼ Pertanyaan', value: -1 },
+                  ].map((action) => (
+                    <Pressable
+                      key={action.label}
+                      android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
+                      disabled={forumVotingId === `${forumDetail.id}-${action.value}`}
+                      onPress={async () => {
+                        if (!session?.token) { showInfo('Buka Profil untuk memberi suara.'); return; }
+                        setForumVotingId(`${forumDetail.id}-${action.value}`);
+                        try {
+                          await voteForum({ targetType: 'question', targetId: forumDetail.id, value: action.value });
+                          setForumDetail((current) => current ? { ...current, voteCount: current.voteCount + action.value } : current);
+                        } catch {
+                          showError('Gagal memberi suara.');
+                        }
+                        setForumVotingId('');
+                      }}
+                      style={styles.answerButton}
+                    >
+                      <Text style={styles.answerText}>{action.label}</Text>
+                    </Pressable>
+                  ))}
+                </View>
 
                 {forumAnswers.length === 0 ? (
                   <Text style={[styles.statusNote, { marginTop: spacing.md }]}>Belum ada jawaban.</Text>
@@ -2543,25 +2568,51 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                           ) : null}
                         </View>
                       </View>
-                      <Pressable
-                        android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
-                        disabled={forumVotingId === answer.id}
-                        onPress={async () => {
-                          if (!session?.token) { showInfo('Buka Profil untuk memberi suara.'); return; }
-                          setForumVotingId(answer.id);
-                          try {
-                            await voteForum({ targetType: 'answer', targetId: answer.id, value: 1 });
-                            setForumAnswers((prev) => prev.map((a) => a.id === answer.id ? { ...a, voteCount: a.voteCount + 1 } : a));
-                          } catch {
-                            showError('Gagal memberi suara.');
-                          }
-                          setForumVotingId('');
-                        }}
-                        style={{ alignItems: 'center', minWidth: 40 }}
-                      >
-                        <Text style={{ color: colors.primary, fontSize: 13, fontWeight: '700' }}>▲</Text>
+                      <View style={{ alignItems: 'center', gap: 4, minWidth: 52 }}>
+                        {[1, -1].map((value) => (
+                          <Pressable
+                            key={value}
+                            android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
+                            disabled={forumVotingId === `${answer.id}-${value}`}
+                            onPress={async () => {
+                              if (!session?.token) { showInfo('Buka Profil untuk memberi suara.'); return; }
+                              setForumVotingId(`${answer.id}-${value}`);
+                              try {
+                                await voteForum({ targetType: 'answer', targetId: answer.id, value });
+                                setForumAnswers((prev) => prev.map((a) => a.id === answer.id ? { ...a, voteCount: a.voteCount + value } : a));
+                              } catch {
+                                showError('Gagal memberi suara.');
+                              }
+                              setForumVotingId('');
+                            }}
+                            style={styles.answerButton}
+                          >
+                            <Text style={styles.answerText}>{value > 0 ? '▲' : '▼'}</Text>
+                          </Pressable>
+                        ))}
                         <Text style={{ color: colors.text, fontSize: 12 }}>{answer.voteCount}</Text>
-                      </Pressable>
+                        {session?.token && !answer.isAccepted ? (
+                          <Pressable
+                            android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
+                            disabled={forumVotingId === `accept-${answer.id}`}
+                            onPress={async () => {
+                              setForumVotingId(`accept-${answer.id}`);
+                              try {
+                                await acceptForumAnswer(forumDetail.id, answer.id);
+                                const updated = await getForumQuestion(forumSlug);
+                                setForumDetail(updated.question);
+                                setForumAnswers(updated.answers);
+                              } catch {
+                                showError('Jawaban belum bisa diterima.');
+                              }
+                              setForumVotingId('');
+                            }}
+                            style={styles.answerButton}
+                          >
+                            <Text style={styles.answerText}>Terima</Text>
+                          </Pressable>
+                        ) : null}
+                      </View>
                     </View>
                   ))
                 )}

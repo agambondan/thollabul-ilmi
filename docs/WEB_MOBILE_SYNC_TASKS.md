@@ -11,20 +11,22 @@
 **Web ref:** 4 pages (`/forum`, `/forum/ask`, `/forum/[slug]`, `/dashboard/forum`)
 
 ### [F-1.1] API module forum (M)
-- [ ] Buat `src/api/forum.js` — `getForumQuestions()`, `getForumQuestion(slug)`, `createForumQuestion()`, `submitAnswer()`, `voteQuestion()`, `acceptAnswer()`
-- [ ] Export lewat `client.js` atau langsung import di screen
-- [ ] Test coverage ≥ 3 test cases
+- [x] Buat `src/api/forum.js` — `getForumQuestions()`, `getForumQuestion(slug)`, `createForumQuestion()`, `submitAnswer()`, `voteQuestion()`, `acceptAnswer()`
+- [x] Export lewat `client.js` atau langsung import di screen
+- [x] Test coverage ≥ 3 test cases
 
 ### [F-1.2] Feature entry + list page (M)
-- [ ] Tambah `{ key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi dan konsultasi Islam', type: 'forum', badges: ['Baru'] }` ke `mobileFeatures.js` di grup Ilmu
-- [ ] Register `type: 'forum'` di `renderFeatureContent()` — render list paginated dengan search
-- [ ] Gunakan existing pattern: `getFeatureItemPage()` + `normalizeExploreItem()`
+- [x] Tambah `{ key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi dan konsultasi Islam', type: 'forum', badges: ['Baru'] }` ke `mobileFeatures.js` di grup Ilmu
+- [x] Register `type: 'forum'` di `renderFeatureContent()` — render list paginated dengan search
+- [x] Gunakan existing pattern: `getFeatureItemPage()` + `normalizeExploreItem()`
 
 ### [F-1.3] Detail + ask + vote (L)
-- [ ] Tambah `renderForumDetail()` — tampilkan question + answers + vote buttons
-- [ ] Buat form "Ask Question" (modal/bottom-sheet)
-- [ ] Integrasi action sheet: vote up/down, accept answer (untuk owner)
-- [ ] Test: render, vote toggle, create question
+- [x] Tambah `renderForumDetail()` — tampilkan question + answers + vote buttons
+- [x] Buat form "Ask Question" (modal/bottom-sheet)
+- [x] Integrasi action sheet: vote up/down, accept answer (untuk owner)
+- [x] Test: render, vote toggle, create question
+
+**Status 2026-05-17:** Selesai. Mobile Forum Q&A punya API module, list/search/pagination, detail, ask form, answer form, question vote, answer vote, accept answer, dan coverage di `exploreScreen.test.js`.
 
 ---
 
