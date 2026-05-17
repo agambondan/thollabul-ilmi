@@ -11,6 +11,7 @@ import (
 
 type LibraryBookController interface {
 	FindAll(ctx *fiber.Ctx) error
+	FindAllAdmin(ctx *fiber.Ctx) error
 	FindBySlug(ctx *fiber.Ctx) error
 	Create(ctx *fiber.Ctx) error
 	Update(ctx *fiber.Ctx) error
@@ -38,6 +39,22 @@ func NewLibraryBookController(services *service.Services) LibraryBookController 
 // @Router /library/books [get]
 func (c *libraryBookController) FindAll(ctx *fiber.Ctx) error {
 	page := c.svc.FindAll(ctx, ctx.Query("category"), ctx.Query("level"), ctx.Query("search"))
+	return lib.OK(ctx, page)
+}
+
+// @Summary Get all library books for admin
+// @Tags Belajar
+// @Accept json
+// @Produce json
+// @Param category query string false "Filter by category"
+// @Param level query string false "Filter by level"
+// @Param search query string false "Search keyword"
+// @Param page query int false "Page number"
+// @Param size query int false "Page size"
+// @Success 200 {object} lib.Response
+// @Router /library/admin/books [get]
+func (c *libraryBookController) FindAllAdmin(ctx *fiber.Ctx) error {
+	page := c.svc.FindAllAdmin(ctx, ctx.Query("category"), ctx.Query("level"), ctx.Query("search"))
 	return lib.OK(ctx, page)
 }
 

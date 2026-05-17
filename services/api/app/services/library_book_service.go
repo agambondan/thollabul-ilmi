@@ -11,6 +11,7 @@ import (
 
 type LibraryBookService interface {
 	FindAll(ctx *fiber.Ctx, category string, level string, search string) *paginate.Page
+	FindAllAdmin(ctx *fiber.Ctx, category string, level string, search string) *paginate.Page
 	FindBySlug(slug string) (*model.LibraryBook, error)
 	Create(req *model.CreateLibraryBookRequest) (*model.LibraryBook, error)
 	Update(id int, req *model.CreateLibraryBookRequest) (*model.LibraryBook, error)
@@ -27,6 +28,10 @@ func NewLibraryBookService(repo repository.LibraryBookRepository) LibraryBookSer
 
 func (s *libraryBookService) FindAll(ctx *fiber.Ctx, category string, level string, search string) *paginate.Page {
 	return s.repo.FindAll(ctx, category, level, search)
+}
+
+func (s *libraryBookService) FindAllAdmin(ctx *fiber.Ctx, category string, level string, search string) *paginate.Page {
+	return s.repo.FindAllAdmin(ctx, category, level, search)
 }
 
 func (s *libraryBookService) FindBySlug(slug string) (*model.LibraryBook, error) {

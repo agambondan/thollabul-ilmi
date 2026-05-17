@@ -18,6 +18,7 @@ Last updated: 2026-05-17
   - `/dashboard/library/:slug`
 - Added admin management:
   - `/admin/library`
+  - `GET /api/v1/library/admin/books`
   - `POST /api/v1/library/books`
   - `PUT /api/v1/library/books/:id`
   - `DELETE /api/v1/library/books/:id`
@@ -46,6 +47,7 @@ Last updated: 2026-05-17
 - Dashboard users can filter the catalog by `planned`, `reading`, `paused`, or `completed` without leaving the dashboard namespace.
 - Mobile users can apply the same progress status filter from the Perpustakaan list when logged in.
 - Web users can continue loading the catalog beyond the first API page without leaving the current public/dashboard route.
+- Admins can list all library resources, including drafts, from the admin-only catalog endpoint without exposing drafts on the public API.
 - Admins can mark source/license verification metadata before exposing or maintaining resource links.
 - Readers can see source/license metadata from web and mobile detail screens when available.
 - PDF files are not mirrored yet. The current MVP stores external source URLs and license notes so uploaded PDFs can be added later only after source/license verification.

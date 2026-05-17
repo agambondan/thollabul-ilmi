@@ -9,6 +9,7 @@ import (
 
 type LibraryBookRepository interface {
 	FindAll(ctx *fiber.Ctx, category string, level string, search string) *paginate.Page
+	FindAllAdmin(ctx *fiber.Ctx, category string, level string, search string) *paginate.Page
 	FindBySlug(slug string) (*model.LibraryBook, error)
 	FindBySlugAny(slug string) (*model.LibraryBook, error)
 	FindManyByIDs(ids []int) ([]model.LibraryBook, error)
@@ -27,11 +28,21 @@ func NewLibraryBookRepository(db *gorm.DB, pg *paginate.Pagination) LibraryBookR
 }
 
 func (r *libraryBookRepo) FindAll(ctx *fiber.Ctx, category string, level string, search string) *paginate.Page {
+	return r.findAll(ctx, category, level, search, true)
+}
+
+func (r *libraryBookRepo) FindAllAdmin(ctx *fiber.Ctx, category string, level string, search string) *paginate.Page {
+	return r.findAll(ctx, category, level, search, false)
+}
+
+func (r *libraryBookRepo) findAll(ctx *fiber.Ctx, category string, level string, search string, publishedOnly bool) *paginate.Page {
 	var books []model.LibraryBook
 	mod := r.db.Model(&model.LibraryBook{}).
-		Where("status = ?", model.LibraryBookStatusPublished).
 		Order("category asc, title asc")
 
+	if publishedOnly {
+		mod = mod.Where("status = ?", model.LibraryBookStatusPublished)
+	}
 	if category != "" {
 		mod = mod.Where("category ILIKE ?", category)
 	}

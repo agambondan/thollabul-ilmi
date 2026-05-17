@@ -560,7 +560,7 @@ export const adminKajianApi = {
 };
 
 export const adminLibraryApi = {
-    list: (page = 0, size = 100) => authFetch(`/api/v1/library/books?page=${page}&size=${size}`),
+    list: (page = 0, size = 100) => authFetch(`/api/v1/library/admin/books?page=${page}&size=${size}`),
     create: (data) => authFetch('/api/v1/library/books', { method: 'POST', body: JSON.stringify(data) }),
     update: (id, data) => authFetch(`/api/v1/library/books/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     delete: (id) => authFetch(`/api/v1/library/books/${id}`, { method: 'DELETE' }),

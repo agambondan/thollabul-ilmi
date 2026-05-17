@@ -337,6 +337,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 
 	// Library Books / Perpustakaan Ilmu (public)
 	master.Post("/library/books", admin, newLibraryBookController.Create)
+	master.Get("/library/admin/books", admin, newLibraryBookController.FindAllAdmin)
 	master.Get("/library/books", newLibraryBookController.FindAll)
 	master.Get("/library/books/:slug", newLibraryBookController.FindBySlug)
 	master.Put("/library/books/:id", admin, newLibraryBookController.Update)
