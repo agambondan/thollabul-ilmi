@@ -17,6 +17,7 @@ type LibraryBookService interface {
 	Create(req *model.CreateLibraryBookRequest) (*model.LibraryBook, error)
 	Update(id int, req *model.CreateLibraryBookRequest) (*model.LibraryBook, error)
 	UpdateResource(id int, resource *model.LibraryBookResource) (*model.LibraryBook, error)
+	ClearResource(id int) (*model.LibraryBook, error)
 	Delete(id int) error
 }
 
@@ -146,6 +147,10 @@ func (s *libraryBookService) Update(id int, req *model.CreateLibraryBookRequest)
 
 func (s *libraryBookService) UpdateResource(id int, resource *model.LibraryBookResource) (*model.LibraryBook, error) {
 	return s.repo.UpdateResource(id, resource)
+}
+
+func (s *libraryBookService) ClearResource(id int) (*model.LibraryBook, error) {
+	return s.repo.ClearResource(id)
 }
 
 func (s *libraryBookService) Delete(id int) error {

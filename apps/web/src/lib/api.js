@@ -571,6 +571,7 @@ export const adminLibraryApi = {
         data.append('file', file);
         return authFetch(`/api/v1/library/books/${id}/resource`, { method: 'POST', body: data });
     },
+    clearResource: (id) => authFetch(`/api/v1/library/books/${id}/resource`, { method: 'DELETE' }),
     delete: (id) => authFetch(`/api/v1/library/books/${id}`, { method: 'DELETE' }),
 };
 

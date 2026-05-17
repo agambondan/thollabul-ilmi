@@ -23,6 +23,7 @@ type LibraryBookController interface {
 	Create(ctx *fiber.Ctx) error
 	Update(ctx *fiber.Ctx) error
 	UploadResource(ctx *fiber.Ctx) error
+	ClearResource(ctx *fiber.Ctx) error
 	Delete(ctx *fiber.Ctx) error
 }
 
@@ -145,7 +146,8 @@ func (c *libraryBookController) UploadResource(ctx *fiber.Ctx) error {
 	if err != nil {
 		return lib.ErrorBadRequest(ctx, "invalid id")
 	}
-	if _, err := c.svc.FindByIDAny(id); err != nil {
+	existingBook, err := c.svc.FindByIDAny(id)
+	if err != nil {
 		return lib.ErrorNotFound(ctx)
 	}
 	header, err := ctx.FormFile("file")
@@ -180,8 +182,42 @@ func (c *libraryBookController) UploadResource(ctx *fiber.Ctx) error {
 		FileName:      header.Filename,
 		FileMimeType:  contentType,
 		FileSizeBytes: header.Size,
+		ObjectKey:     objectKey,
 		Format:        format,
 	})
+	if err != nil {
+		_ = lib.DeletePublicObject(ctx.UserContext(), objectKey)
+		return lib.ErrorNotFound(ctx)
+	}
+	if existingBook.FileObjectKey != "" && existingBook.FileObjectKey != objectKey {
+		_ = lib.DeletePublicObject(ctx.UserContext(), existingBook.FileObjectKey)
+	}
+	return lib.OK(ctx, book)
+}
+
+// @Summary Clear library book resource file
+// @Tags Belajar
+// @Accept json
+// @Produce json
+// @Param id path int true "Library book ID"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Failure 404 {object} lib.Response
+// @Failure 500 {object} lib.Response
+// @Router /library/books/{id}/resource [delete]
+func (c *libraryBookController) ClearResource(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	book, err := c.svc.FindByIDAny(id)
+	if err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	if err := lib.DeletePublicObject(ctx.UserContext(), book.FileObjectKey); err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	book, err = c.svc.ClearResource(id)
 	if err != nil {
 		return lib.ErrorNotFound(ctx)
 	}

@@ -22,6 +22,7 @@ Last updated: 2026-05-17
   - `POST /api/v1/library/books`
   - `PUT /api/v1/library/books/:id`
   - `POST /api/v1/library/books/:id/resource`
+  - `DELETE /api/v1/library/books/:id/resource`
   - `DELETE /api/v1/library/books/:id`
   - Source type, license status, source note, and source verification metadata.
   - PDF, EPUB, and HTML resource upload to the configured MinIO library bucket.
@@ -50,7 +51,8 @@ Last updated: 2026-05-17
 - Mobile users can apply the same progress status filter from the Perpustakaan list when logged in.
 - Web users can continue loading the catalog beyond the first API page without leaving the current public/dashboard route.
 - Admins can list all library resources, including drafts, from the admin-only catalog endpoint without exposing drafts on the public API.
-- Admins can upload verified PDF/EPUB/HTML resource files from the edit modal; uploaded files update the book format, source type, source URL, and file metadata.
+- Admins can upload verified PDF/EPUB/HTML resource files from the edit modal; uploaded files update the book format, source type, source URL, file metadata, and stored object key.
+- Admins can clear a wrong uploaded resource from the same edit modal; the API removes the stored object when available and resets resource metadata back to an external link baseline.
 - Admins can mark source/license verification metadata before exposing or maintaining resource links.
 - Readers can see source/license metadata from web and mobile detail screens when available.
 - Uploaded files are stored in MinIO through `MINIO_LIBRARY_BUCKET`; external source URLs are still supported for resources that should not be mirrored.
@@ -64,3 +66,4 @@ Last updated: 2026-05-17
 - Note/bookmark ref type: `library_book`
 - Progress endpoint family: `/api/v1/library/progress`
 - Admin resource upload endpoint: `POST /api/v1/library/books/:id/resource`
+- Admin resource clear endpoint: `DELETE /api/v1/library/books/:id/resource`

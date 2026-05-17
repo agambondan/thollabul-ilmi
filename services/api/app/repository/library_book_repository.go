@@ -17,6 +17,7 @@ type LibraryBookRepository interface {
 	Create(book *model.LibraryBook) (*model.LibraryBook, error)
 	Update(id int, book *model.LibraryBook) (*model.LibraryBook, error)
 	UpdateResource(id int, resource *model.LibraryBookResource) (*model.LibraryBook, error)
+	ClearResource(id int) (*model.LibraryBook, error)
 	Delete(id int) error
 }
 
@@ -140,6 +141,9 @@ func (r *libraryBookRepo) Update(id int, book *model.LibraryBook) (*model.Librar
 	if err := r.db.Model(&existing).Updates(updates).Error; err != nil {
 		return nil, err
 	}
+	if err := r.db.First(&existing, id).Error; err != nil {
+		return nil, err
+	}
 	return &existing, nil
 }
 
@@ -155,6 +159,30 @@ func (r *libraryBookRepo) UpdateResource(id int, resource *model.LibraryBookReso
 		"file_name":       resource.FileName,
 		"file_mime_type":  resource.FileMimeType,
 		"file_size_bytes": resource.FileSizeBytes,
+		"file_object_key": resource.ObjectKey,
+	}
+	if err := r.db.Model(&existing).Updates(updates).Error; err != nil {
+		return nil, err
+	}
+	if err := r.db.First(&existing, id).Error; err != nil {
+		return nil, err
+	}
+	return &existing, nil
+}
+
+func (r *libraryBookRepo) ClearResource(id int) (*model.LibraryBook, error) {
+	var existing model.LibraryBook
+	if err := r.db.First(&existing, id).Error; err != nil {
+		return nil, err
+	}
+	updates := map[string]interface{}{
+		"format":          model.LibraryBookFormatLink,
+		"source_type":     model.LibraryBookSourceExternal,
+		"source_url":      "",
+		"file_name":       "",
+		"file_mime_type":  "",
+		"file_size_bytes": int64(0),
+		"file_object_key": "",
 	}
 	if err := r.db.Model(&existing).Updates(updates).Error; err != nil {
 		return nil, err

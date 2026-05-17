@@ -47,6 +47,42 @@ func TestLibraryBookRepositoryPublicAndAdminStatusScope(t *testing.T) {
 	}
 }
 
+func TestLibraryBookRepositoryResourceLifecycle(t *testing.T) {
+	db := newLibraryBookRepositoryTestDB(t)
+	repo := NewLibraryBookRepository(db, paginate.New())
+	createLibraryBookRepositoryTestBook(t, db, "resource-book", model.LibraryBookStatusPublished)
+
+	book, err := repo.FindBySlugAny("resource-book")
+	if err != nil {
+		t.Fatalf("find book: %v", err)
+	}
+	updated, err := repo.UpdateResource(*book.ID, &model.LibraryBookResource{
+		SourceURL:     "http://localhost:9020/library/resource-book.pdf",
+		FileName:      "resource-book.pdf",
+		FileMimeType:  "application/pdf",
+		FileSizeBytes: 2048,
+		ObjectKey:     "library/books/1/resource-book.pdf",
+		Format:        model.LibraryBookFormatPDF,
+	})
+	if err != nil {
+		t.Fatalf("update resource: %v", err)
+	}
+	if updated.SourceType != model.LibraryBookSourceUploaded || updated.FileObjectKey == "" || updated.FileSizeBytes != 2048 {
+		t.Fatalf("resource metadata was not persisted: %#v", updated)
+	}
+
+	cleared, err := repo.ClearResource(*book.ID)
+	if err != nil {
+		t.Fatalf("clear resource: %v", err)
+	}
+	if cleared.SourceType != model.LibraryBookSourceExternal || cleared.Format != model.LibraryBookFormatLink {
+		t.Fatalf("expected cleared resource to become external link, got %#v", cleared)
+	}
+	if cleared.SourceURL != "" || cleared.FileName != "" || cleared.FileMimeType != "" || cleared.FileSizeBytes != 0 || cleared.FileObjectKey != "" {
+		t.Fatalf("resource fields were not cleared: %#v", cleared)
+	}
+}
+
 func newLibraryBookRepositoryTestDB(t *testing.T) *gorm.DB {
 	t.Helper()
 	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{

@@ -39,6 +39,7 @@ type LibraryBook struct {
 	FileName         string                   `json:"file_name" gorm:"type:varchar(256)"`
 	FileMimeType     string                   `json:"file_mime_type" gorm:"type:varchar(120)"`
 	FileSizeBytes    int64                    `json:"file_size_bytes" gorm:"default:0"`
+	FileObjectKey    string                   `json:"-" gorm:"type:varchar(700)"`
 	License          string                   `json:"license" gorm:"type:varchar(256)"`
 	LicenseStatus    LibraryBookLicenseStatus `json:"license_status" gorm:"type:varchar(30);default:'unverified';index"`
 	SourceNote       string                   `json:"source_note" gorm:"type:text"`
@@ -77,5 +78,6 @@ type LibraryBookResource struct {
 	FileName      string            `json:"file_name"`
 	FileMimeType  string            `json:"file_mime_type"`
 	FileSizeBytes int64             `json:"file_size_bytes"`
+	ObjectKey     string            `json:"object_key"`
 	Format        LibraryBookFormat `json:"format"`
 }

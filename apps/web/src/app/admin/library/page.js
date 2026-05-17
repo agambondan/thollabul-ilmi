@@ -75,6 +75,7 @@ const AdminLibraryPage = () => {
     const [deleteId, setDeleteId] = useState(null);
     const [resourceFile, setResourceFile] = useState(null);
     const [uploadingResource, setUploadingResource] = useState(false);
+    const [clearingResource, setClearingResource] = useState(false);
 
     const load = async () => {
         setLoading(true);
@@ -146,6 +147,23 @@ const AdminLibraryPage = () => {
         } catch {
         } finally {
             setUploadingResource(false);
+        }
+    };
+
+    const clearResource = async () => {
+        if (!editId || !form.file_name) return;
+        setClearingResource(true);
+        try {
+            const res = await adminLibraryApi.clearResource(editId);
+            if (!res.ok) throw new Error('clear resource failed');
+            const data = await res.json();
+            const book = data?.data ?? data;
+            setForm(toForm(book));
+            setResourceFile(null);
+            load();
+        } catch {
+        } finally {
+            setClearingResource(false);
         }
     };
 
@@ -417,9 +435,19 @@ const AdminLibraryPage = () => {
                                                     {uploadingResource ? t('admin.library.uploading_resource') : t('admin.library.upload_resource')}
                                                 </button>
                                                 {form.file_name ? (
-                                                    <span className='text-xs text-gray-500 dark:text-gray-400'>
-                                                        {form.file_name} {form.file_size_bytes ? `· ${Math.round(Number(form.file_size_bytes) / 1024)} KB` : ''}
-                                                    </span>
+                                                    <>
+                                                        <span className='text-xs text-gray-500 dark:text-gray-400'>
+                                                            {form.file_name} {form.file_size_bytes ? `· ${Math.round(Number(form.file_size_bytes) / 1024)} KB` : ''}
+                                                        </span>
+                                                        <button
+                                                            className='rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50 dark:border-red-900/60 dark:text-red-300 dark:hover:bg-red-950/30'
+                                                            disabled={clearingResource}
+                                                            onClick={clearResource}
+                                                            type='button'
+                                                        >
+                                                            {clearingResource ? t('admin.library.clearing_resource') : t('admin.library.clear_resource')}
+                                                        </button>
+                                                    </>
                                                 ) : null}
                                             </div>
                                         </div>

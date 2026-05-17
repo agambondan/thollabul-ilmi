@@ -48,6 +48,7 @@ func TestP0ContractRoutes(t *testing.T) {
 		"DELETE /tahlil/items/:id",
 		"GET /library/admin/books",
 		"POST /library/books/:id/resource",
+		"DELETE /library/books/:id/resource",
 		"GET /manasik/items",
 		"POST /manasik",
 		"PUT /manasik/:id",
