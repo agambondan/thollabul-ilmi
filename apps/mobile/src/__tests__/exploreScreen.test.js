@@ -45,6 +45,11 @@ jest.mock('../api/forum', () => ({
   voteForum: jest.fn(),
 }));
 
+jest.mock('../utils/haptics', () => ({
+  hapticMedium: jest.fn(),
+  hapticTap: jest.fn(),
+}));
+
 jest.mock('../api/personal', () => ({
   addBookmark: jest.fn(),
   createUserWird: jest.fn(),
@@ -199,6 +204,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'quiz', title: 'Quiz Islami', subtitle: 'Latihan soal', group: 'Alat', type: 'quiz' },
     { key: 'hijri', title: 'Kalender Hijri', subtitle: 'Hari ini', group: 'Alat', type: 'hijri' },
     { key: 'doa', title: 'Doa', subtitle: 'Doa harian', group: 'Bacaan', type: 'list', endpoint: '/api/v1/doa' },
+    { key: 'asmaul-wirid', title: 'Wirid Asmaul Husna', subtitle: 'Dzikir 99 nama Allah', group: 'Bacaan', type: 'asmaul-wirid' },
     { key: 'bookmarks', title: 'Bookmark', subtitle: 'Tersimpan', group: 'Personal', type: 'bookmarks' },
     { key: 'notes', title: 'Catatan', subtitle: 'Catatan pribadi', group: 'Personal', type: 'notes' },
     { key: 'community-feed', title: 'Komunitas', subtitle: 'Refleksi', group: 'Ilmu', type: 'feed' },
@@ -222,7 +228,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'referensi',
       label: 'Referensi',
       meta: 'Kamus dan katalog',
-      features: allFeatures.filter((f) => ['kamus', 'tafsir', 'asmaul-flashcard', 'library'].includes(f.key)),
+      features: allFeatures.filter((f) => ['kamus', 'tafsir', 'asmaul-flashcard', 'asmaul-wirid', 'library'].includes(f.key)),
     },
     {
       key: 'evaluasi',
@@ -248,6 +254,7 @@ const exploreApi = require('../api/explore');
 const forumApi = require('../api/forum');
 const clientApi = require('../api/client');
 const personalApi = require('../api/personal');
+const haptics = require('../utils/haptics');
 const { readPinnedFeatures, readRecentFeatures, rememberFeatureOpen, togglePinnedFeature } = require('../storage/recentFeatures');
 
 const defaultNavigation = {
@@ -499,6 +506,38 @@ describe('ExploreScreen', () => {
 
     fireEvent.press(getByText('Lihat arti'));
     expect(getByText('Maha Pengasih')).toBeTruthy();
+  });
+
+  test('asmaul wirid persists count and triggers milestone haptic', async () => {
+    exploreApi.getAsmaulNames.mockResolvedValue([
+      {
+        id: 1,
+        number: 1,
+        arabic: 'الرَّحْمَنُ',
+        transliteration: 'Ar-Rahman',
+        indonesian: 'Maha Pengasih',
+      },
+    ]);
+
+    const { getByTestId, getByText } = await renderExploreScreen();
+
+    fireEvent.press(getByText('Wirid Asmaul Husna'));
+
+    await waitFor(() => {
+      expect(exploreApi.getAsmaulNames).toHaveBeenCalled();
+      expect(getByText('Ar-Rahman')).toBeTruthy();
+    });
+
+    const counter = getByTestId('asmaul-wirid-counter');
+    for (let i = 0; i < 33; i += 1) {
+      fireEvent.press(counter);
+    }
+
+    await waitFor(() => {
+      expect(getByText('33')).toBeTruthy();
+      expect(haptics.hapticTap).toHaveBeenCalledTimes(33);
+      expect(haptics.hapticMedium).toHaveBeenCalledTimes(1);
+    });
   });
 
   test('filters library list by saved progress status', async () => {

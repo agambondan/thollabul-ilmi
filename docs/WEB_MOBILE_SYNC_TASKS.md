@@ -131,14 +131,16 @@
 **Existing mobile:** `type: 'list'` with endpoint `/api/v1/asmaul-husna` — cuma list nama
 
 ### [F-7.1] New feature type `asmaul-wirid` (M)
-- [ ] Tambah `{ key: 'asmaul-wirid', title: 'Wirid Asmaul Husna', subtitle: 'Dzikir 99 nama Allah', type: 'asmaul-wirid', badges: ['Baru'] }` di `mobileFeatures.js` di grup Bacaan
-- [ ] Register `case 'asmaul-wirid'` di `renderFeatureContent()`
-- [ ] Render: counter besar di tengah, nama Arab + arti, prev/next arrows, progress bar
-- [ ] Persist count via AsyncStorage per nama
+- [x] Tambah `{ key: 'asmaul-wirid', title: 'Wirid Asmaul Husna', subtitle: 'Dzikir 99 nama Allah', type: 'asmaul-wirid', badges: ['Baru'] }` di `mobileFeatures.js` di grup Bacaan
+- [x] Register `case 'asmaul-wirid'` di `renderFeatureContent()`
+- [x] Render: counter besar di tengah, nama Arab + arti, prev/next arrows, progress bar
+- [x] Persist count via AsyncStorage per nama
 
 ### [F-7.2] Haptic + audio (S)
-- [ ] `hapticTap()` tiap tap counter (existing `expo-haptics`)
-- [ ] Vibrate saat mencapai 33/99
+- [x] `hapticTap()` tiap tap counter (existing `expo-haptics`)
+- [x] Vibrate saat mencapai 33/99
+
+**Status 2026-05-17:** Selesai. Mobile Wirid Asmaul Husna menyimpan counter per nama via AsyncStorage, tidak reset saat pindah nama, dan memberi haptic medium saat milestone 33/99 tercapai.
 
 ---
 

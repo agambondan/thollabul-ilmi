@@ -36,6 +36,7 @@ import {
   readCalculatorHistory,
   saveCalculatorHistory,
 } from '../storage/calculatorHistory';
+import { readAsmaulWiridCounts, setAsmaulWiridCount } from '../storage/asmaulWirid';
 import { readPinnedFeatures, readRecentFeatures, rememberFeatureOpen, togglePinnedFeature } from '../storage/recentFeatures';
 import { arabicTypography } from '../styles/arabicTypography';
 import { colors, radius, spacing } from '../theme';
@@ -387,6 +388,12 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
             setAsmaulIndex(0);
           } catch { /* silent */ }
           setAsmaulLoading(false);
+        }
+
+        if (feature.type === 'asmaul-wirid') {
+          readAsmaulWiridCounts()
+            .then(setAsmaulCounts)
+            .catch(() => setAsmaulCounts({}));
         }
 
         if (feature.type === 'zakat') {
@@ -1665,11 +1672,27 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       const isComplete = currentCount >= 33;
 
       const incrementName = () => {
+        if (!currentName?.id) return;
+        const nameId = currentName.id;
         hapticTap();
-        setAsmaulCounts((prev) => ({
-          ...prev,
-          [currentName.id]: (prev[currentName.id] ?? 0) + 1,
-        }));
+        setAsmaulCounts((prev) => {
+          const nextCount = (prev[nameId] ?? 0) + 1;
+          if (nextCount === 33 || nextCount === 99) hapticMedium();
+          const nextCounts = { ...prev, [nameId]: nextCount };
+          setAsmaulWiridCount(nextCounts, nameId, nextCount).catch(() => {});
+          return nextCounts;
+        });
+      };
+
+      const resetName = () => {
+        if (!currentName?.id) return;
+        const nameId = currentName.id;
+        setAsmaulCounts((prev) => {
+          const nextCounts = { ...prev };
+          delete nextCounts[nameId];
+          setAsmaulWiridCount(nextCounts, nameId, 0).catch(() => {});
+          return nextCounts;
+        });
       };
 
       return (
@@ -1684,7 +1707,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
               <View style={styles.asmaulHeader}>
                 <Pressable
                   disabled={asmaulIndex === 0}
-                  onPress={() => { setAsmaulIndex((i) => Math.max(0, i - 1)); setAsmaulCounts((prev) => ({ ...prev, [currentName.id]: 0 })); }}
+                  onPress={() => setAsmaulIndex((i) => Math.max(0, i - 1))}
                   style={[styles.heirButton, asmaulIndex === 0 && styles.heirButtonDisabled]}
                 >
                   <Text style={styles.heirButtonText}>←</Text>
@@ -1696,7 +1719,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
                 </View>
                 <Pressable
                   disabled={asmaulIndex >= asmaulNames.length - 1}
-                  onPress={() => { setAsmaulIndex((i) => Math.min(asmaulNames.length - 1, i + 1)); setAsmaulCounts((prev) => ({ ...prev, [currentName.id]: 0 })); }}
+                  onPress={() => setAsmaulIndex((i) => Math.min(asmaulNames.length - 1, i + 1))}
                   style={[styles.heirButton, asmaulIndex >= asmaulNames.length - 1 && styles.heirButtonDisabled]}
                 >
                   <Text style={styles.heirButtonText}>→</Text>
@@ -1705,12 +1728,12 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
               <View style={{ height: 6, backgroundColor: colors.faint, borderRadius: 3, marginVertical: spacing.md }}>
                 <View style={{ height: 6, backgroundColor: isComplete ? colors.primary : colors.muted, borderRadius: 3, width: `${Math.min(100, (currentCount / 33) * 100)}%` }} />
               </View>
-              <Pressable onPress={incrementName} style={styles.counter}>
+              <Pressable onPress={incrementName} style={styles.counter} testID="asmaul-wirid-counter">
                 <Text style={styles.counterNumber}>{currentCount}</Text>
                 <Text style={styles.counterLabel}>{isComplete ? 'Sempurna!' : 'Tap untuk hitung'}</Text>
               </Pressable>
               <View style={styles.answerRow}>
-                <Pressable onPress={() => setAsmaulCounts((prev) => ({ ...prev, [currentName.id]: 0 }))} style={styles.answerButton}>
+                <Pressable onPress={resetName} style={styles.answerButton}>
                   <Text style={styles.answerText}>Reset</Text>
                 </Pressable>
               </View>
