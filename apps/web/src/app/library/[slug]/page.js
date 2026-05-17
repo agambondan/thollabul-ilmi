@@ -20,6 +20,13 @@ const PROGRESS_STATUSES = [
     { value: 'completed', label: 'Selesai' },
 ];
 
+const formatFileSize = (bytes) => {
+    const value = Number(bytes);
+    if (!Number.isFinite(value) || value <= 0) return '';
+    if (value < 1024 * 1024) return `${Math.round(value / 1024)} KB`;
+    return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+};
+
 const metaItems = (book) =>
     [
         book?.author,
@@ -236,6 +243,12 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
                             {book.license && (
                                 <span className='text-xs leading-5 text-gray-500 dark:text-gray-400'>
                                     {book.license}
+                                </span>
+                            )}
+                            {book.file_name && (
+                                <span className='rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs text-emerald-800 dark:border-slate-700 dark:bg-slate-800 dark:text-emerald-200'>
+                                    {book.file_name}
+                                    {formatFileSize(book.file_size_bytes) ? ` · ${formatFileSize(book.file_size_bytes)}` : ''}
                                 </span>
                             )}
                         </div>

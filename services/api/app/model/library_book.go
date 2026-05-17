@@ -36,6 +36,9 @@ type LibraryBook struct {
 	SourceType       LibraryBookSourceType    `json:"source_type" gorm:"type:varchar(30);default:'external';index"`
 	SourceURL        string                   `json:"source_url" gorm:"type:varchar(700)"`
 	CoverURL         string                   `json:"cover_url" gorm:"type:varchar(700)"`
+	FileName         string                   `json:"file_name" gorm:"type:varchar(256)"`
+	FileMimeType     string                   `json:"file_mime_type" gorm:"type:varchar(120)"`
+	FileSizeBytes    int64                    `json:"file_size_bytes" gorm:"default:0"`
 	License          string                   `json:"license" gorm:"type:varchar(256)"`
 	LicenseStatus    LibraryBookLicenseStatus `json:"license_status" gorm:"type:varchar(30);default:'unverified';index"`
 	SourceNote       string                   `json:"source_note" gorm:"type:text"`
@@ -57,6 +60,9 @@ type CreateLibraryBookRequest struct {
 	SourceType       LibraryBookSourceType    `json:"source_type"`
 	SourceURL        string                   `json:"source_url" validate:"max=700"`
 	CoverURL         string                   `json:"cover_url" validate:"max=700"`
+	FileName         string                   `json:"file_name" validate:"max=256"`
+	FileMimeType     string                   `json:"file_mime_type" validate:"max=120"`
+	FileSizeBytes    int64                    `json:"file_size_bytes"`
 	License          string                   `json:"license" validate:"max=256"`
 	LicenseStatus    LibraryBookLicenseStatus `json:"license_status"`
 	SourceNote       string                   `json:"source_note" validate:"max=5000"`
@@ -64,4 +70,12 @@ type CreateLibraryBookRequest struct {
 	Pages            int                      `json:"pages"`
 	Tags             string                   `json:"tags" validate:"max=500"`
 	Status           LibraryBookStatus        `json:"status"`
+}
+
+type LibraryBookResource struct {
+	SourceURL     string            `json:"source_url"`
+	FileName      string            `json:"file_name"`
+	FileMimeType  string            `json:"file_mime_type"`
+	FileSizeBytes int64             `json:"file_size_bytes"`
+	Format        LibraryBookFormat `json:"format"`
 }

@@ -82,12 +82,21 @@ export const normalizeExploreItem = (item, index = 0) => {
   }
 
   if (item?.source_url || item?.format || item?.license) {
+    const fileSize = Number(item?.file_size_bytes ?? 0);
+    const sizeLabel = fileSize > 0 ? `${Math.round(fileSize / 1024)} KB` : '';
     return {
       id: item?.id ?? item?.slug ?? `library-book-${index}`,
       title: pickText(item?.title, item?.name, `Buku ${index + 1}`),
       arabic: '',
       body: pickText(item?.description, item?.summary),
-      meta: joinMeta(item?.author, item?.category, item?.level, item?.format ? String(item.format).toUpperCase() : ''),
+      meta: joinMeta(
+        item?.author,
+        item?.category,
+        item?.level,
+        item?.format ? String(item.format).toUpperCase() : '',
+        item?.file_name,
+        sizeLabel,
+      ),
       raw: item,
     };
   }

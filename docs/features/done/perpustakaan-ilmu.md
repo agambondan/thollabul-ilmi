@@ -21,8 +21,10 @@ Last updated: 2026-05-17
   - `GET /api/v1/library/admin/books`
   - `POST /api/v1/library/books`
   - `PUT /api/v1/library/books/:id`
+  - `POST /api/v1/library/books/:id/resource`
   - `DELETE /api/v1/library/books/:id`
   - Source type, license status, source note, and source verification metadata.
+  - PDF, EPUB, and HTML resource upload to the configured MinIO library bucket.
 - Added mobile Explore feature key `library` that reads the same backend catalog.
 - Added `library_book` references for notes and bookmarks so users can keep study notes from library detail journeys.
 - Added study progress:
@@ -48,9 +50,10 @@ Last updated: 2026-05-17
 - Mobile users can apply the same progress status filter from the Perpustakaan list when logged in.
 - Web users can continue loading the catalog beyond the first API page without leaving the current public/dashboard route.
 - Admins can list all library resources, including drafts, from the admin-only catalog endpoint without exposing drafts on the public API.
+- Admins can upload verified PDF/EPUB/HTML resource files from the edit modal; uploaded files update the book format, source type, source URL, and file metadata.
 - Admins can mark source/license verification metadata before exposing or maintaining resource links.
 - Readers can see source/license metadata from web and mobile detail screens when available.
-- PDF files are not mirrored yet. The current MVP stores external source URLs and license notes so uploaded PDFs can be added later only after source/license verification.
+- Uploaded files are stored in MinIO through `MINIO_LIBRARY_BUCKET`; external source URLs are still supported for resources that should not be mirrored.
 
 ## Sync Contract
 
@@ -60,3 +63,4 @@ Last updated: 2026-05-17
 - Mobile route: `feature:library`
 - Note/bookmark ref type: `library_book`
 - Progress endpoint family: `/api/v1/library/progress`
+- Admin resource upload endpoint: `POST /api/v1/library/books/:id/resource`

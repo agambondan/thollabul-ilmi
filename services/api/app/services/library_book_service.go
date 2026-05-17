@@ -12,9 +12,11 @@ import (
 type LibraryBookService interface {
 	FindAll(ctx *fiber.Ctx, category string, level string, search string) *paginate.Page
 	FindAllAdmin(ctx *fiber.Ctx, category string, level string, search string) *paginate.Page
+	FindByIDAny(id int) (*model.LibraryBook, error)
 	FindBySlug(slug string) (*model.LibraryBook, error)
 	Create(req *model.CreateLibraryBookRequest) (*model.LibraryBook, error)
 	Update(id int, req *model.CreateLibraryBookRequest) (*model.LibraryBook, error)
+	UpdateResource(id int, resource *model.LibraryBookResource) (*model.LibraryBook, error)
 	Delete(id int) error
 }
 
@@ -36,6 +38,10 @@ func (s *libraryBookService) FindAllAdmin(ctx *fiber.Ctx, category string, level
 
 func (s *libraryBookService) FindBySlug(slug string) (*model.LibraryBook, error) {
 	return s.repo.FindBySlug(slug)
+}
+
+func (s *libraryBookService) FindByIDAny(id int) (*model.LibraryBook, error) {
+	return s.repo.FindByIDAny(id)
 }
 
 func (s *libraryBookService) Create(req *model.CreateLibraryBookRequest) (*model.LibraryBook, error) {
@@ -75,6 +81,9 @@ func (s *libraryBookService) Create(req *model.CreateLibraryBookRequest) (*model
 		SourceType:       sourceType,
 		SourceURL:        req.SourceURL,
 		CoverURL:         req.CoverURL,
+		FileName:         req.FileName,
+		FileMimeType:     req.FileMimeType,
+		FileSizeBytes:    req.FileSizeBytes,
 		License:          req.License,
 		LicenseStatus:    licenseStatus,
 		SourceNote:       req.SourceNote,
@@ -122,6 +131,9 @@ func (s *libraryBookService) Update(id int, req *model.CreateLibraryBookRequest)
 		SourceType:       sourceType,
 		SourceURL:        req.SourceURL,
 		CoverURL:         req.CoverURL,
+		FileName:         req.FileName,
+		FileMimeType:     req.FileMimeType,
+		FileSizeBytes:    req.FileSizeBytes,
 		License:          req.License,
 		LicenseStatus:    licenseStatus,
 		SourceNote:       req.SourceNote,
@@ -130,6 +142,10 @@ func (s *libraryBookService) Update(id int, req *model.CreateLibraryBookRequest)
 		Tags:             req.Tags,
 		Status:           status,
 	})
+}
+
+func (s *libraryBookService) UpdateResource(id int, resource *model.LibraryBookResource) (*model.LibraryBook, error) {
+	return s.repo.UpdateResource(id, resource)
 }
 
 func (s *libraryBookService) Delete(id int) error {

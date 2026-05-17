@@ -10,11 +10,13 @@ import (
 type LibraryBookRepository interface {
 	FindAll(ctx *fiber.Ctx, category string, level string, search string) *paginate.Page
 	FindAllAdmin(ctx *fiber.Ctx, category string, level string, search string) *paginate.Page
+	FindByIDAny(id int) (*model.LibraryBook, error)
 	FindBySlug(slug string) (*model.LibraryBook, error)
 	FindBySlugAny(slug string) (*model.LibraryBook, error)
 	FindManyByIDs(ids []int) ([]model.LibraryBook, error)
 	Create(book *model.LibraryBook) (*model.LibraryBook, error)
 	Update(id int, book *model.LibraryBook) (*model.LibraryBook, error)
+	UpdateResource(id int, resource *model.LibraryBookResource) (*model.LibraryBook, error)
 	Delete(id int) error
 }
 
@@ -73,6 +75,15 @@ func (r *libraryBookRepo) FindBySlug(slug string) (*model.LibraryBook, error) {
 	return &book, nil
 }
 
+func (r *libraryBookRepo) FindByIDAny(id int) (*model.LibraryBook, error) {
+	var book model.LibraryBook
+	err := r.db.First(&book, id).Error
+	if err != nil {
+		return nil, err
+	}
+	return &book, nil
+}
+
 func (r *libraryBookRepo) FindBySlugAny(slug string) (*model.LibraryBook, error) {
 	var book model.LibraryBook
 	err := r.db.Where("slug = ?", slug).First(&book).Error
@@ -115,6 +126,9 @@ func (r *libraryBookRepo) Update(id int, book *model.LibraryBook) (*model.Librar
 		"source_type":        book.SourceType,
 		"source_url":         book.SourceURL,
 		"cover_url":          book.CoverURL,
+		"file_name":          book.FileName,
+		"file_mime_type":     book.FileMimeType,
+		"file_size_bytes":    book.FileSizeBytes,
 		"license":            book.License,
 		"license_status":     book.LicenseStatus,
 		"source_note":        book.SourceNote,
@@ -122,6 +136,25 @@ func (r *libraryBookRepo) Update(id int, book *model.LibraryBook) (*model.Librar
 		"pages":              book.Pages,
 		"tags":               book.Tags,
 		"status":             book.Status,
+	}
+	if err := r.db.Model(&existing).Updates(updates).Error; err != nil {
+		return nil, err
+	}
+	return &existing, nil
+}
+
+func (r *libraryBookRepo) UpdateResource(id int, resource *model.LibraryBookResource) (*model.LibraryBook, error) {
+	var existing model.LibraryBook
+	if err := r.db.First(&existing, id).Error; err != nil {
+		return nil, err
+	}
+	updates := map[string]interface{}{
+		"format":          resource.Format,
+		"source_type":     model.LibraryBookSourceUploaded,
+		"source_url":      resource.SourceURL,
+		"file_name":       resource.FileName,
+		"file_mime_type":  resource.FileMimeType,
+		"file_size_bytes": resource.FileSizeBytes,
 	}
 	if err := r.db.Model(&existing).Updates(updates).Error; err != nil {
 		return nil, err

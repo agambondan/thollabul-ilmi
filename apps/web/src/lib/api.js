@@ -68,12 +68,15 @@ const refreshAccessToken = async () => {
 export const authFetch = async (path, options = {}) => {
     const token = getToken();
     const method = (options.method ?? 'GET').toUpperCase();
+    const isFormData =
+        typeof FormData !== 'undefined' && options.body instanceof FormData;
+    const baseHeaders = isFormData ? {} : { 'Content-Type': 'application/json' };
     try {
         const res = await fetch(`${API_URL}${path}`, {
             ...options,
             credentials: 'include',
             headers: {
-                'Content-Type': 'application/json',
+                ...baseHeaders,
                 ...(token ? { Authorization: `Bearer ${token}` } : {}),
                 ...options.headers,
             },
@@ -86,7 +89,7 @@ export const authFetch = async (path, options = {}) => {
                     ...options,
                     credentials: 'include',
                     headers: {
-                        'Content-Type': 'application/json',
+                        ...baseHeaders,
                         Authorization: `Bearer ${newToken}`,
                         ...options.headers,
                     },
@@ -563,6 +566,11 @@ export const adminLibraryApi = {
     list: (page = 0, size = 100) => authFetch(`/api/v1/library/admin/books?page=${page}&size=${size}`),
     create: (data) => authFetch('/api/v1/library/books', { method: 'POST', body: JSON.stringify(data) }),
     update: (id, data) => authFetch(`/api/v1/library/books/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    uploadResource: (id, file) => {
+        const data = new FormData();
+        data.append('file', file);
+        return authFetch(`/api/v1/library/books/${id}/resource`, { method: 'POST', body: data });
+    },
     delete: (id) => authFetch(`/api/v1/library/books/${id}`, { method: 'DELETE' }),
 };
 

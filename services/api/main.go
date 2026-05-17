@@ -94,9 +94,13 @@ func main() {
 
 	services.Notification.StartReminderScheduler(ctx, time.Minute)
 
+	bodyLimit := viper.GetInt("BODY_LIMIT_BYTES")
+	if bodyLimit <= 0 {
+		bodyLimit = 25 * 1024 * 1024
+	}
 	app := fiber.New(fiber.Config{
 		Prefork:   viper.GetString("PREFORK") == "true",
-		BodyLimit: 4 * 1024 * 1024, // 4 MB
+		BodyLimit: bodyLimit,
 	})
 
 	http.Handle(app, newRepositories)

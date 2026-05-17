@@ -24,6 +24,14 @@ services:
       - REDIS_INDEX=3
       - PREFORK=false
       - CACHE_TTL_SECONDS=60
+      - BODY_LIMIT_BYTES=26214400
+      - LIBRARY_UPLOAD_MAX_BYTES=26214400
+      - MINIO_ENDPOINT=tholabul-ilmi-minio:9000
+      - MINIO_PUBLIC_URL=http://localhost:9020
+      - MINIO_ACCESS=minioadmin
+      - MINIO_SECRET=minioadmin
+      - MINIO_LIBRARY_BUCKET=thollabul-ilmi-library
+      - MINIO_USE_SSL=false
       - RATE_LIMIT_GLOBAL=180
       - RATE_LIMIT_SEARCH=60
       - RATE_LIMIT_AUTH=10

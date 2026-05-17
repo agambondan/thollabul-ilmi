@@ -14,6 +14,9 @@ const EMPTY_FORM = {
     category: '',
     cover_url: '',
     description: '',
+    file_mime_type: '',
+    file_name: '',
+    file_size_bytes: 0,
     format: 'link',
     language: 'Indonesia',
     level: 'Pemula',
@@ -36,6 +39,9 @@ const toForm = (item) => ({
     cover_url: item.cover_url ?? '',
     description: item.description ?? '',
     format: item.format ?? 'link',
+    file_mime_type: item.file_mime_type ?? '',
+    file_name: item.file_name ?? '',
+    file_size_bytes: item.file_size_bytes ?? 0,
     language: item.language ?? 'Indonesia',
     level: item.level ?? 'Pemula',
     license: item.license ?? '',
@@ -67,6 +73,8 @@ const AdminLibraryPage = () => {
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState('');
     const [deleteId, setDeleteId] = useState(null);
+    const [resourceFile, setResourceFile] = useState(null);
+    const [uploadingResource, setUploadingResource] = useState(false);
 
     const load = async () => {
         setLoading(true);
@@ -88,12 +96,14 @@ const AdminLibraryPage = () => {
     const openCreate = () => {
         setEditId(null);
         setForm(EMPTY_FORM);
+        setResourceFile(null);
         setShowModal(true);
     };
 
     const openEdit = (item) => {
         setEditId(item.id ?? item._id);
         setForm(toForm(item));
+        setResourceFile(null);
         setShowModal(true);
     };
 
@@ -120,6 +130,23 @@ const AdminLibraryPage = () => {
             setDeleteId(null);
             load();
         } catch {}
+    };
+
+    const uploadResource = async () => {
+        if (!editId || !resourceFile) return;
+        setUploadingResource(true);
+        try {
+            const res = await adminLibraryApi.uploadResource(editId, resourceFile);
+            if (!res.ok) throw new Error('upload failed');
+            const data = await res.json();
+            const book = data?.data ?? data;
+            setForm(toForm(book));
+            setResourceFile(null);
+            load();
+        } catch {
+        } finally {
+            setUploadingResource(false);
+        }
     };
 
     const filtered = items.filter((item) => {
@@ -369,6 +396,39 @@ const AdminLibraryPage = () => {
                             </div>
                             <Field label={t('admin.library.source_url')}>
                                 <input className={inputClass} onChange={(e) => setForm({ ...form, source_url: e.target.value })} placeholder='https://...' type='url' value={form.source_url} />
+                            </Field>
+                            <Field label={t('admin.library.resource_file')}>
+                                <div className='rounded-lg border border-dashed border-gray-300 p-3 dark:border-slate-600'>
+                                    {editId ? (
+                                        <div className='space-y-2'>
+                                            <input
+                                                accept='.pdf,.epub,.html,.htm,application/pdf,application/epub+zip,text/html'
+                                                className='block w-full text-sm text-gray-600 file:mr-3 file:rounded-md file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-emerald-800 hover:file:bg-emerald-100 dark:text-gray-300 dark:file:bg-slate-700 dark:file:text-emerald-200'
+                                                onChange={(e) => setResourceFile(e.target.files?.[0] ?? null)}
+                                                type='file'
+                                            />
+                                            <div className='flex flex-wrap items-center gap-2'>
+                                                <button
+                                                    className='rounded-lg bg-emerald-700 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-600 disabled:opacity-50'
+                                                    disabled={!resourceFile || uploadingResource}
+                                                    onClick={uploadResource}
+                                                    type='button'
+                                                >
+                                                    {uploadingResource ? t('admin.library.uploading_resource') : t('admin.library.upload_resource')}
+                                                </button>
+                                                {form.file_name ? (
+                                                    <span className='text-xs text-gray-500 dark:text-gray-400'>
+                                                        {form.file_name} {form.file_size_bytes ? `· ${Math.round(Number(form.file_size_bytes) / 1024)} KB` : ''}
+                                                    </span>
+                                                ) : null}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                            {t('admin.library.resource_file_save_first')}
+                                        </p>
+                                    )}
+                                </div>
                             </Field>
                             <Field label={t('admin.library.cover_url')}>
                                 <input className={inputClass} onChange={(e) => setForm({ ...form, cover_url: e.target.value })} placeholder='https://...' type='url' value={form.cover_url} />

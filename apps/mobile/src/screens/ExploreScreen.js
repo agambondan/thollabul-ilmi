@@ -1409,7 +1409,11 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       if (!isLibraryDetail) return null;
       const raw = selectedItem?.raw ?? {};
       const hasLicenseStatus = raw.license_status && raw.license_status !== 'unverified';
-      if (!hasLicenseStatus && !raw.is_source_verified && !raw.source_note) return null;
+      const fileSize = Number(raw.file_size_bytes ?? 0);
+      const fileInfo = raw.file_name
+        ? `${raw.file_name}${fileSize > 0 ? ` · ${Math.round(fileSize / 1024)} KB` : ''}`
+        : '';
+      if (!hasLicenseStatus && !raw.is_source_verified && !raw.source_note && !fileInfo) return null;
 
       return (
         <View style={styles.librarySourcePanel}>
@@ -1426,6 +1430,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
               </View>
             ) : null}
           </View>
+          {fileInfo ? <Text style={styles.detailLine}>{fileInfo}</Text> : null}
           {raw.source_note ? <Text style={styles.detailLine}>{raw.source_note}</Text> : null}
         </View>
       );
