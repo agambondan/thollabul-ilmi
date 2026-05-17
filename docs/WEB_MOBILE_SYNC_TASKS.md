@@ -62,7 +62,7 @@
 ### [F-3.2] Multi-tab calculator (M)
 - [x] Upgrade `renderFeatureContent()` case `zakat`: tambah tab selector (horizontal pills/carousel) untuk 6 jenis
 - [x] Tiap tab: form input spesifik + hasil kalkulasi 2.5%
-- [ ] Auto-fetch gold price dari API untuk tab emas
+- [x] Auto-fetch gold price dari API untuk tab emas
 
 ### [F-3.3] Save + history (M)
 - [x] Tombol "Simpan" di tiap tab → POST ke BE saat login atau AsyncStorage saat guest

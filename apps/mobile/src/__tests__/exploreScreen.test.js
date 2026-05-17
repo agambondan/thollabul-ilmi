@@ -25,6 +25,7 @@ jest.mock('../api/explore', () => ({
   getFeatureItemPage: jest.fn(),
   getHijriOverview: jest.fn(),
   getQuizQuestions: jest.fn(),
+  getZakatGoldPrice: jest.fn(),
   searchDictionary: jest.fn(),
 }));
 
@@ -195,6 +196,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'kajian', title: 'Kajian', subtitle: 'Sesi belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/kajian' },
     { key: 'library', title: 'Perpustakaan', subtitle: 'Kitab dan bahan belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/library/books?page=0&size=20' },
     { key: 'tasbih', title: 'Tasbih', subtitle: 'Penghitung', group: 'Alat', type: 'tasbih' },
+    { key: 'zakat', title: 'Kalkulator Zakat', subtitle: 'Hitung zakat maal', group: 'Alat', type: 'zakat' },
     { key: 'siroh', title: 'Siroh', subtitle: 'Biografi Nabi', group: 'Ilmu', type: 'list', endpoint: '/api/v1/siroh' },
     { key: 'user-wird', title: 'Wirid Saya', subtitle: 'Wirid pribadi', group: 'Bacaan', type: 'user-wird' },
   ];
@@ -216,7 +218,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'evaluasi',
       label: 'Evaluasi',
       meta: 'Latihan',
-      features: allFeatures.filter((f) => f.key === 'quiz'),
+      features: allFeatures.filter((f) => ['quiz', 'zakat'].includes(f.key)),
     },
   ];
 
@@ -489,6 +491,19 @@ describe('ExploreScreen', () => {
 
     expect(queryByText('Kemenag detail')).toBeNull();
     expect(getByText('Al-Mishbah detail')).toBeTruthy();
+  });
+
+  test('loads backend gold price when opening zakat calculator', async () => {
+    exploreApi.getZakatGoldPrice.mockResolvedValueOnce(1400000);
+
+    const { getByText } = await renderExploreScreen();
+
+    fireEvent.press(getByText('Kalkulator Zakat'));
+
+    await waitFor(() => {
+      expect(exploreApi.getZakatGoldPrice).toHaveBeenCalledTimes(1);
+      expect(getByText('Rp 119.000.000')).toBeTruthy();
+    });
   });
 
   test('shows profile action button when no feature is active', async () => {

@@ -212,6 +212,13 @@ export const getFeatureItems = async (feature, pagination) => {
   return page.items;
 };
 
+export const getZakatGoldPrice = async () => {
+  const payload = await requestJson('/api/v1/zakat/gold-price');
+  const data = payload?.data ?? payload;
+  const price = Number(data?.price_per_gram ?? data?.pricePerGram ?? 0);
+  return Number.isFinite(price) && price > 0 ? Math.round(price) : null;
+};
+
 export const getFeatureItemPage = async (feature, pagination) => {
   const endpoint = pagination ? withPagination(feature.endpoint, pagination) : feature.endpoint;
   const payload = await requestJson(endpoint, { auth: feature.type === 'protected-list' });

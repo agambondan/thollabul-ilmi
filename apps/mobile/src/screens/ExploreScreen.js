@@ -8,6 +8,7 @@ import {
   getFeatureItemPage,
   getHijriOverview,
   getQuizQuestions,
+  getZakatGoldPrice,
   searchDictionary,
 } from '../api/explore';
 import { createComment, getCommentsByRef, getFeedPostPage, likeFeedPost } from '../api/social';
@@ -389,6 +390,14 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
           setAsmaulLoading(false);
         }
 
+        if (feature.type === 'zakat') {
+          getZakatGoldPrice()
+            .then((price) => {
+              if (price) setZakatGoldPrice(`${price}`);
+            })
+            .catch(() => {});
+        }
+
         if (feature.type === 'forum') {
           setForumView('list');
           setForumSearch('');
@@ -505,6 +514,14 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       loadingMoreRef.current = false;
     }
   }, [activeFeature, items, loading, pagination.hasMore, pagination.loadingMore, pagination.page]);
+
+  const loadZakatHistory = useCallback(async () => {
+    try {
+      const localItems = await readCalculatorHistory('zakat');
+      const remoteItems = session?.token ? await getKalkulasiZakat() : [];
+      setZakatHistory(mergeCalculatorHistory(remoteItems, localItems));
+    } catch { /* silent */ }
+  }, [session?.token]);
 
   const loadBookmarks = useCallback(async () => {
     if (!session?.token) {
@@ -820,6 +837,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
   useEffect(() => {
     loadBookmarks();
   }, [loadBookmarks]);
+
+  useEffect(() => {
+    if (activeFeature?.type === 'zakat' && zakatTab === 6) loadZakatHistory();
+  }, [activeFeature?.type, loadZakatHistory, zakatTab]);
 
   useEffect(() => {
     if (!isActive) return;
@@ -1889,14 +1910,6 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         zakatTimerRef.current = setTimeout(() => setZakatSavedMsg(''), 2500);
       };
 
-      const loadZakatHistory = useCallback(async () => {
-        try {
-          const localItems = await readCalculatorHistory('zakat');
-          const remoteItems = session?.token ? await getKalkulasiZakat() : [];
-          setZakatHistory(mergeCalculatorHistory(remoteItems, localItems));
-        } catch { /* silent */ }
-      }, [session?.token]);
-
       const handleDeleteZakat = async (item) => {
         try {
           if (item?.is_local || `${item?.id ?? ''}`.startsWith('local-zakat-')) {
@@ -1909,10 +1922,6 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
           showError('Riwayat zakat gagal dihapus.');
         }
       };
-
-      useEffect(() => {
-        if (zakatTab === 6) loadZakatHistory();
-      }, [zakatTab, loadZakatHistory]);
 
       const renderZakatResult = (amount, label, color = 'primary') => (
         <View style={[styles.resultPanel, { borderColor: color === 'amber' ? '#F59E0B' : color === 'blue' ? '#3B82F6' : colors.primary, borderWidth: 1, marginTop: spacing.md }]}>
@@ -1940,7 +1949,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
             <>
               <Text style={styles.body}>Zakat 2,5% dari harta bersih yang sudah mencapai nisab dan haul.</Text>
               <Text style={[styles.body, { fontSize: 12, color: colors.muted, marginBottom: spacing.sm }]}>
-                Nisab: {formatCurrency(nisab)} (85g emas × Rp{formatCurrency(goldPrice)}/g)
+                Nisab: {formatCurrency(nisab)} (85g emas × {formatCurrency(goldPrice)}/g)
               </Text>
               {renderCurrencyInput({ label: 'Total harta', value: zakat.assets, placeholder: '0', onChangeText: (v) => setZakat((c) => ({ ...c, assets: v })) })}
               {renderCurrencyInput({ label: 'Utang jatuh tempo', value: zakat.debts, placeholder: '0', onChangeText: (v) => setZakat((c) => ({ ...c, debts: v })) })}
