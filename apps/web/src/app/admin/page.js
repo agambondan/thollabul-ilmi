@@ -524,6 +524,78 @@ const AdminDashboard = () => {
                 <div className='mb-3 flex items-end justify-between gap-4'>
                     <div>
                         <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                            {t('admin.metrics.recent_activity')}
+                        </h2>
+                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                            {t('admin.metrics.recent_activity_desc')}
+                        </p>
+                    </div>
+                </div>
+                <div className='overflow-x-auto rounded-xl border border-gray-100 bg-white dark:border-slate-700 dark:bg-slate-800'>
+                    <table className='w-full text-xs'>
+                        <thead>
+                            <tr className='border-b border-gray-100 dark:border-slate-700'>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>{t('admin.table.identity')}</th>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>{t('admin.table.path')}</th>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>{t('admin.table.referrer')}</th>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>{t('admin.table.user_agent')}</th>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>{t('admin.table.source')}</th>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>{t('admin.table.seen_at')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {overview.recentActivity.map((activity) => {
+                                const identity = activity.name ||
+                                    (activity.visitor_id
+                                        ? `${t('admin.analytics.guest')} ${String(activity.visitor_id).slice(0, 8)}`
+                                        : t('admin.analytics.guest'));
+
+                                return (
+                                    <tr key={activity.id} className='border-b border-gray-50 last:border-0 dark:border-slate-700/50'>
+                                        <td className='max-w-[160px] px-4 py-2.5'>
+                                            <div className='truncate font-medium text-gray-900 dark:text-white' title={identity}>
+                                                {identity}
+                                            </div>
+                                            <div className='truncate text-gray-400 dark:text-gray-500' title={activity.email || activity.visitor_id}>
+                                                {activity.email || activity.visitor_id || '-'}
+                                            </div>
+                                        </td>
+                                        <td className='max-w-[220px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-400' title={activity.path}>
+                                            {activity.path}
+                                        </td>
+                                        <td className='max-w-[180px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-400' title={activity.referrer}>
+                                            {activity.referrer || '-'}
+                                        </td>
+                                        <td className='max-w-[260px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-400' title={activity.user_agent}>
+                                            {activity.user_agent || '-'}
+                                        </td>
+                                        <td className='px-4 py-2.5'>
+                                            <span className='rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-slate-700 dark:text-gray-300'>
+                                                {t(`admin.source.${activity.source || 'unknown'}`)}
+                                            </span>
+                                        </td>
+                                        <td className='whitespace-nowrap px-4 py-2.5 text-gray-500 dark:text-gray-400'>
+                                            {activity.seen_at}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                            {!overview.loading && overview.recentActivity.length === 0 ? (
+                                <tr>
+                                    <td colSpan={6} className='px-4 py-6 text-center text-gray-400 dark:text-gray-500'>
+                                        {t('admin.metrics.no_visitor_data')}
+                                    </td>
+                                </tr>
+                            ) : null}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section className='mb-8'>
+                <div className='mb-3 flex items-end justify-between gap-4'>
+                    <div>
+                        <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
                             {t('admin.traffic.title')}
                         </h2>
                         <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>

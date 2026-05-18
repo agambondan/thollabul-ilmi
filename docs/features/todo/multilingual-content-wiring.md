@@ -57,8 +57,6 @@ bahasa tanpa field plain string yang terkunci ke satu bahasa.
 
 - Isi `en`/`description_en` untuk dataset static yang sekarang baru punya IDN
   (content task, perlu sumber terjemahan).
-- Model `Perawi` dan `JarhTadil` masih plain string — terminologi hadits Arab,
-  skip unless requested.
 - Update seeder static lanjutan jika sumber JSON mulai membawa field multi
   bahasa eksplisit.
 
@@ -66,7 +64,8 @@ bahasa tanpa field plain string yang terkunci ke satu bahasa.
 
 - 2026-05-18:
   - Added backfillDoa / backfillDzikir to BackfillTranslations (both have TranslationID but were missing backfill functions)
-  - Seeder model audit confirmed: 25+ models already have TranslationID, BackfillTranslations covers 18 of them
+  - Perawi + JarhTadil: added TranslationID + Translation, controller GetPreferredLang, seeder Translation rows, backfill functions
+  - Seeder model audit confirmed: all 25+ content models now have TranslationID, BackfillTranslations covers 20 of them
   - TokohTarikh: TranslationID + Translation model, controller FindAll/FindByID pakai GetPreferredLang + FilterByLang
   - Repository: FindAll/FindByID now preload Translation
   - Seeder: 15 tokoh seeded from JSON with parallel Translation rows

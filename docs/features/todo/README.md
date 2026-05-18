@@ -11,5 +11,4 @@ kerja, tetapi belum mulai aktif.
 
 ## Task List
 
-- [Multilingual Content Wiring](./multilingual-content-wiring.md) (IN_PROGRESS)
-- [Social Feed Moderation Hardening](./social-feed-moderation-hardening.md) (IN_PROGRESS)
+- [Multilingual Content Wiring](./multilingual-content-wiring.md) (IN_PROGRESS — only EN content fill remains)
