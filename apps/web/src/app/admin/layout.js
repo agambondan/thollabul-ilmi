@@ -33,24 +33,44 @@ import {
 } from 'react-icons/bs';
 import { MdLogout } from 'react-icons/md';
 
-const NAV = [
-    { href: '/admin', labelKey: 'admin.nav.dashboard', icon: <BsGrid /> },
-    { href: '/admin/blog', labelKey: 'admin.nav.blog', icon: <BsFileText /> },
-    { href: '/admin/siroh', labelKey: 'admin.nav.sirah', icon: <BsJournalText /> },
-    { href: '/admin/doa', labelKey: 'admin.nav.prayers', icon: <BsBookHalf /> },
-    { href: '/admin/dzikir', labelKey: 'admin.nav.dhikr', icon: <BsRepeat /> },
-    { href: '/admin/asmaul-husna', labelKey: 'admin.nav.asmaul', icon: <BsStar /> },
-    { href: '/admin/kajian', labelKey: 'admin.nav.studies', icon: <BsCameraVideo /> },
-    { href: '/admin/library', labelKey: 'admin.nav.library', icon: <BsBook /> },
-    { href: '/admin/kamus', labelKey: 'admin.nav.dictionary', icon: <BsBook /> },
-    { href: '/admin/quiz', labelKey: 'admin.nav.quiz', icon: <BsQuestionCircle /> },
-    { href: '/admin/sejarah', labelKey: 'admin.nav.history', icon: <BsClock /> },
-    { href: '/admin/asbabun-nuzul', labelKey: 'admin.nav.asbabun', icon: <BsBookmark /> },
-    { href: '/admin/wirid', labelKey: 'admin.nav.wird', icon: <BsHeart /> },
-    { href: '/admin/tahlil', labelKey: 'admin.nav.tahlil', icon: <BsMoon /> },
-    { href: '/admin/manasik', labelKey: 'admin.nav.manasik', icon: <BsMap /> },
-    { href: '/admin/fiqh', labelKey: 'admin.nav.fiqh', icon: <BsListCheck /> },
-    { href: '/admin/users', labelKey: 'admin.nav.users', icon: <BsPeople /> },
+const NAV_GROUPS = [
+    {
+        titleKey: 'admin.group.content',
+        links: [
+            { href: '/admin/blog', labelKey: 'admin.nav.blog', icon: <BsFileText /> },
+            { href: '/admin/library', labelKey: 'admin.nav.library', icon: <BsBook /> },
+            { href: '/admin/kajian', labelKey: 'admin.nav.studies', icon: <BsCameraVideo /> },
+            { href: '/admin/siroh', labelKey: 'admin.nav.sirah', icon: <BsJournalText /> },
+            { href: '/admin/sejarah', labelKey: 'admin.nav.history', icon: <BsClock /> },
+            { href: '/admin/asbabun-nuzul', labelKey: 'admin.nav.asbabun', icon: <BsBookmark /> },
+            { href: '/admin/fiqh', labelKey: 'admin.nav.fiqh', icon: <BsListCheck /> },
+        ],
+    },
+    {
+        titleKey: 'admin.group.worship',
+        links: [
+            { href: '/admin/doa', labelKey: 'admin.nav.prayers', icon: <BsBookHalf /> },
+            { href: '/admin/dzikir', labelKey: 'admin.nav.dhikr', icon: <BsRepeat /> },
+            { href: '/admin/wirid', labelKey: 'admin.nav.wird', icon: <BsHeart /> },
+            { href: '/admin/tahlil', labelKey: 'admin.nav.tahlil', icon: <BsMoon /> },
+            { href: '/admin/asmaul-husna', labelKey: 'admin.nav.asmaul', icon: <BsStar /> },
+            { href: '/admin/manasik', labelKey: 'admin.nav.manasik', icon: <BsMap /> },
+        ],
+    },
+    {
+        titleKey: 'admin.group.tools',
+        links: [
+            { href: '/admin/kamus', labelKey: 'admin.nav.dictionary', icon: <BsBook /> },
+            { href: '/admin/quiz', labelKey: 'admin.nav.quiz', icon: <BsQuestionCircle /> },
+        ],
+    },
+    {
+        titleKey: 'admin.group.system',
+        links: [
+            { href: '/admin/users', labelKey: 'admin.nav.users', icon: <BsPeople /> },
+            { href: '/', labelKey: 'admin.back_to_app', icon: <BsGrid /> },
+        ],
+    },
 ];
 
 const LANGS = ['ID', 'EN'];
@@ -137,8 +157,8 @@ const AdminLayout = ({ children }) => {
         return <Spinner3 />;
     }
 
-    const sidebarWidth = isCollapsed ? 'w-16' : 'w-52';
-    const mainOffset = isCollapsed ? 'ml-16' : 'ml-52';
+    const sidebarWidth = isCollapsed ? 'w-16' : 'w-60';
+    const mainOffset = isCollapsed ? 'ml-16' : 'ml-60';
     const sidebarToggleLabel = isCollapsed
         ? t('sidebar.expand')
         : t('sidebar.collapse');
@@ -147,73 +167,116 @@ const AdminLayout = ({ children }) => {
         <div className='min-h-screen flex bg-gray-50 dark:bg-gray-950'>
             <AdminMutationToast />
             <aside
-                className={`${sidebarWidth} shrink-0 bg-emerald-900 dark:bg-gray-900 text-white flex flex-col fixed inset-y-0 left-0 z-40 transition-[width] duration-200`}
+                className={`${sidebarWidth} shrink-0 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col fixed inset-y-0 left-0 z-40 transition-[width] duration-200`}
             >
-                <div className='p-3 border-b border-emerald-800 dark:border-gray-800'>
-                    {isCollapsed ? (
-                        <Link
-                            href='/'
-                            title={t('admin.back_to_app')}
-                            className='flex h-9 w-9 items-center justify-center rounded-lg text-xs text-emerald-300 hover:bg-emerald-800 hover:text-white transition-colors'
-                        >
-                            ←
-                        </Link>
-                    ) : (
-                        <div className='min-w-0'>
-                            <Link
-                                href='/'
-                                className='text-xs text-emerald-300 hover:text-white transition-colors'
-                            >
-                                ← {t('admin.back_to_app')}
-                            </Link>
-                            <p className='text-sm font-bold text-white mt-1 truncate'>
-                                {t('admin.panel')}
-                            </p>
+                <div
+                    className={`border-b border-gray-100 dark:border-slate-800 ${
+                        isCollapsed ? 'p-3' : 'p-4'
+                    }`}
+                >
+                    <Link
+                        href='/admin'
+                        title={t('admin.panel')}
+                        className={`flex items-center group ${
+                            isCollapsed ? 'justify-center' : 'gap-2.5'
+                        }`}
+                    >
+                        <div className='w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center shrink-0'>
+                            <span className='text-white text-xs font-bold'>ط</span>
                         </div>
-                    )}
+                        {!isCollapsed && (
+                            <div className='min-w-0'>
+                                <p className='text-sm font-bold text-gray-900 dark:text-white leading-none truncate'>
+                                    {t('admin.panel')}
+                                </p>
+                                <p className='text-[10px] text-gray-400 dark:text-gray-500 mt-0.5 arabic-text'>
+                                    طُلَّابُ الْعِلْمِ
+                                </p>
+                            </div>
+                        )}
+                    </Link>
                 </div>
 
-                <nav className='flex-1 p-3 space-y-1 overflow-y-auto'>
-                    {NAV.map((link) => {
-                        const isActive =
-                            link.href === '/admin'
-                                ? pathname === '/admin'
-                                : pathname.startsWith(link.href);
-                        return (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                title={t(link.labelKey)}
-                                className={`flex items-center py-2 rounded-lg text-sm transition-colors ${
-                                    isCollapsed ? 'justify-center px-0' : 'gap-3 px-3'
-                                } ${
-                                    isActive
-                                        ? 'bg-emerald-700 text-white font-medium'
-                                        : 'text-emerald-200 hover:bg-emerald-800 hover:text-white'
-                                }`}
-                            >
-                                <span className='text-base shrink-0'>{link.icon}</span>
-                                {!isCollapsed && <span className='truncate'>{t(link.labelKey)}</span>}
-                            </Link>
-                        );
-                    })}
-                </nav>
-
-                <div className='p-4 border-t border-emerald-800 dark:border-gray-800'>
+                <div className='px-4 py-3 border-b border-gray-100 dark:border-slate-800'>
                     {isCollapsed ? (
                         <div
                             title={user?.name ?? 'Admin'}
-                            className='mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-emerald-800 text-xs font-semibold text-emerald-100'
+                            className='mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
                         >
                             {(user?.name ?? 'A').slice(0, 1).toUpperCase()}
                         </div>
                     ) : (
                         <>
-                            <p className='text-xs text-emerald-300 truncate'>{user?.name}</p>
-                            <p className='text-[11px] text-emerald-500 truncate'>{user?.email}</p>
+                            <p className='text-sm font-medium text-gray-800 dark:text-white truncate'>
+                                {user?.name ?? 'Admin'}
+                            </p>
+                            <p className='text-xs text-gray-400 dark:text-gray-500 truncate'>
+                                {user?.email ?? ''}
+                            </p>
                         </>
                     )}
                 </div>
+
+                <div className='px-3 pt-3'>
+                    <Link
+                        href='/admin'
+                        title={t('admin.nav.dashboard')}
+                        className={`flex items-center py-2 rounded-lg text-sm font-medium transition-colors ${
+                            isCollapsed ? 'justify-center px-0' : 'gap-2.5 px-3'
+                        } ${
+                            pathname === '/admin'
+                                ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'
+                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'
+                        }`}
+                    >
+                        <BsGrid className='shrink-0' />
+                        {!isCollapsed && <span>{t('admin.nav.dashboard')}</span>}
+                    </Link>
+                </div>
+
+                <nav className='flex-1 overflow-y-auto px-3 py-2 space-y-4'>
+                    {NAV_GROUPS.map((group) => (
+                        <div key={group.titleKey}>
+                            {isCollapsed ? (
+                                <div className='mx-3 mb-1 h-px bg-gray-100 dark:bg-slate-800' />
+                            ) : (
+                                <p className='px-3 text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1'>
+                                    {t(group.titleKey)}
+                                </p>
+                            )}
+                            <ul className='space-y-0.5'>
+                                {group.links.map((link) => {
+                                    const isActive =
+                                        pathname === link.href ||
+                                        (link.href !== '/' &&
+                                            pathname.startsWith(link.href + '/'));
+                                    return (
+                                        <li key={link.href}>
+                                            <Link
+                                                href={link.href}
+                                                title={t(link.labelKey)}
+                                                className={`flex items-center py-1.5 rounded-lg text-sm transition-colors ${
+                                                    isCollapsed ? 'justify-center px-0' : 'gap-2.5 px-3'
+                                                } ${
+                                                    isActive
+                                                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-medium'
+                                                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'
+                                                }`}
+                                            >
+                                                <span className='shrink-0 text-base'>
+                                                    {link.icon}
+                                                </span>
+                                                {!isCollapsed && (
+                                                    <span className='truncate'>{t(link.labelKey)}</span>
+                                                )}
+                                            </Link>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    ))}
+                </nav>
             </aside>
 
             <main

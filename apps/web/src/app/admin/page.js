@@ -14,6 +14,7 @@ import {
     BsListCheck,
     BsMap,
     BsMoon,
+    BsPeople,
     BsQuestionCircle,
     BsRepeat,
     BsStar,
@@ -55,6 +56,12 @@ const cards = [
         icon: <BsCameraVideo className='text-3xl text-red-500' />,
         titleKey: 'admin.nav.studies',
         descKey: 'admin.card.studies_desc',
+    },
+    {
+        href: '/admin/library',
+        icon: <BsBook className='text-3xl text-emerald-600' />,
+        titleKey: 'admin.nav.library',
+        descKey: 'admin.card.library_desc',
     },
     {
         href: '/admin/kamus',
@@ -104,26 +111,32 @@ const cards = [
         titleKey: 'admin.nav.fiqh',
         descKey: 'admin.card.fiqh_desc',
     },
+    {
+        href: '/admin/users',
+        icon: <BsPeople className='text-3xl text-slate-500' />,
+        titleKey: 'admin.nav.users',
+        descKey: 'admin.card.users_desc',
+    },
 ];
 
 const AdminDashboard = () => {
     const { t } = useLocale();
 
     return (
-        <div className='p-8'>
-            <div className='mb-8'>
-                <h1 className='text-2xl font-bold text-gray-900 dark:text-white'>{t('admin.nav.dashboard')}</h1>
+        <div className='px-4 py-6'>
+            <div className='mb-6'>
+                <h1 className='text-xl font-bold text-emerald-900 dark:text-white'>{t('admin.nav.dashboard')}</h1>
                 <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
                     {t('admin.dashboard.subtitle')}
                 </p>
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
                 {cards.map((card) => (
                     <Link
                         key={card.href}
                         href={card.href}
-                        className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6 hover:shadow-md transition-shadow'
+                        className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-5 hover:shadow-md transition-shadow'
                     >
                         <div className='mb-3'>{card.icon}</div>
                         <h2 className='text-base font-bold text-gray-900 dark:text-white mb-1'>
