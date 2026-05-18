@@ -281,3 +281,28 @@ Status: `VERIFIED`
 - PASS: `node scripts/check-feature-parity.js`
 - PASS: `git diff --check`
 - PASS: `cd apps/web && npm run build`
+
+## Follow-up 2026-05-18 - Admin Analytics Window Selector
+
+Status: `VERIFIED`
+
+### Scope
+
+- Tambah selector periode analytics di `/admin`: 7, 14, 30, dan 90 hari.
+- Selector memakai query `GET /api/v1/analytics/admin/summary?days=...`.
+- Periode aktif memengaruhi:
+  - pengunjung,
+  - insight traffic,
+  - source breakdown,
+  - chart visitor,
+  - top pages per source,
+  - active users,
+  - recent activity.
+- Update copy metric visitor agar tidak hardcoded 14 hari.
+- Update `docs/WEB_MOBILE_SYNC.md` untuk mencatat selector periode analytics.
+
+### Verification
+
+- PASS: `node scripts/check-feature-parity.js`
+- PASS: `git diff --check`
+- PASS: `cd apps/web && npm run build`

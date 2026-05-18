@@ -54,6 +54,8 @@ const METRIC_TONES = {
     slate: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
 };
 
+const ANALYTICS_WINDOW_OPTIONS = [7, 14, 30, 90];
+
 const normalizeList = (payload) => {
     if (Array.isArray(payload)) return payload;
     if (Array.isArray(payload?.items)) return payload.items;
@@ -183,6 +185,7 @@ const buildRoleData = (users) => {
 const AdminDashboard = () => {
     const { t } = useLocale();
     const [overview, setOverview] = useState(initialOverview);
+    const [analyticsDays, setAnalyticsDays] = useState(14);
 
     useEffect(() => {
         let alive = true;
@@ -222,7 +225,7 @@ const AdminDashboard = () => {
                 safeJson(adminSejarahApi.list()),
                 safeJson(adminKajianApi.list(0, 100)),
                 safeJson(adminAsmaulHusnaApi.list()),
-                safeData(adminAnalyticsApi.summary(14)),
+                safeData(adminAnalyticsApi.summary(analyticsDays)),
             ]);
 
             if (!alive) return;
@@ -340,7 +343,7 @@ const AdminDashboard = () => {
                     labelKey: 'admin.traffic.total_views',
                     descKey: 'admin.traffic.total_views_desc',
                     value: totalViews.toLocaleString('id-ID'),
-                    hint: t('admin.traffic.last_14_days'),
+                    hint: `${analyticsDays} ${t('admin.analytics.days')}`,
                 },
                 {
                     labelKey: 'admin.traffic.today_views',
@@ -407,7 +410,7 @@ const AdminDashboard = () => {
         return () => {
             alive = false;
         };
-    }, [t]);
+    }, [analyticsDays, t]);
 
     const metricCards = useMemo(
         () => [
@@ -601,6 +604,25 @@ const AdminDashboard = () => {
                         <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
                             {t('admin.traffic.subtitle')}
                         </p>
+                    </div>
+                    <div className='flex items-center gap-2 rounded-xl border border-gray-100 bg-white p-1 dark:border-slate-700 dark:bg-slate-800'>
+                        <span className='hidden px-2 text-xs font-semibold text-gray-400 dark:text-gray-500 sm:inline'>
+                            {t('admin.analytics.period')}
+                        </span>
+                        {ANALYTICS_WINDOW_OPTIONS.map((days) => (
+                            <button
+                                key={days}
+                                type='button'
+                                onClick={() => setAnalyticsDays(days)}
+                                className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors ${
+                                    analyticsDays === days
+                                        ? 'bg-emerald-700 text-white'
+                                        : 'text-gray-500 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-slate-700'
+                                }`}
+                            >
+                                {days}{t('admin.analytics.day_suffix')}
+                            </button>
+                        ))}
                     </div>
                 </div>
                 <div className='grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4'>
