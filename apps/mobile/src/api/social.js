@@ -64,6 +64,14 @@ export const likeFeedPost = async (id) => {
   return normalizeFeedPost(payload);
 };
 
+export const hideFeedPost = async (id) => {
+  await postJson(`/api/v1/feed/${id}/hide`, {}, { auth: true });
+};
+
+export const reportFeedPost = async (id) => {
+  await postJson(`/api/v1/feed/${id}/report`, {}, { auth: true });
+};
+
 export const getCommentsByRef = async ({ refType, refId }) => {
   if (!refType || !refId) return [];
   const params = new URLSearchParams({ ref_id: `${refId}`, ref_type: refType });

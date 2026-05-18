@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, BackHandler, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import AnalyticsTracker from './src/components/AnalyticsTracker';
 import { SwipeBackView } from './src/components/SwipeBackView';
 import { TabBar } from './src/components/TabBar';
 import { FeedbackProvider } from './src/context/FeedbackContext';
@@ -211,6 +212,7 @@ export default function App() {
         <SessionProvider>
           <FeedbackProvider>
             <TabActivityProvider>
+              <AnalyticsTracker activeTab={activeTab} internalRoutes={internalRoutes} />
               <SafeAreaView edges={['top', 'left', 'right']} style={styles.safeArea}>
               <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}

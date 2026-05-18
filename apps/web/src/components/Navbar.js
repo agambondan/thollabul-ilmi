@@ -3,7 +3,7 @@
 import SmallDropDown from '@/components/dropdown/SmallDropDown';
 import { useAuth } from '@/context/Auth';
 import { useLocale } from '@/context/Locale';
-import { linksMenu, linksMenuContent } from '@/lib/const';
+import { linksMenu, linksMenuContent, linksMenuContentGroups } from '@/lib/const';
 import { ConvertFLagLanguage } from '@/lib/converter';
 import classNames from 'classnames';
 import Link from 'next/link';
@@ -232,23 +232,34 @@ export const NavbarTailwindCss = () => {
                                 {t('nav.content')} ▾
                             </button>
                             {isContentMenuOpen && (
-                                <div className='absolute left-0 top-full mt-1 w-44 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-lg py-1 z-50'>
-                                    {linksMenuContent.map((link) => (
-                                        <Link
-                                            key={link.href}
-                                            href={link.href}
-                                            onClick={() => setIsContentMenuOpen(false)}
-                                            className={classNames(
-                                                'flex items-center gap-2 px-4 py-2 text-sm transition-colors',
-                                                currentPath.startsWith(link.href)
-                                                    ? 'text-emerald-700 dark:text-emerald-400 font-semibold'
-                                                    : 'text-emerald-900 dark:text-white hover:bg-emerald-50 dark:hover:bg-slate-700'
-                                            )}
-                                        >
-                                            {link.icon}
-                                            {link.labelKey ? t(link.labelKey) : link.label}
-                                        </Link>
-                                    ))}
+                                <div className='absolute right-0 top-full z-50 mt-2 max-h-[calc(100vh-96px)] w-[min(92vw,720px)] overflow-y-auto rounded-xl border border-gray-100 bg-white p-3 shadow-2xl dark:border-slate-700 dark:bg-slate-800'>
+                                    <div className='grid grid-cols-2 gap-3'>
+                                        {linksMenuContentGroups.map((group) => (
+                                            <div key={group.labelKey} className='rounded-lg border border-gray-100 bg-gray-50/70 p-2 dark:border-slate-700 dark:bg-slate-900/40'>
+                                                <p className='px-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500'>
+                                                    {t(group.labelKey)}
+                                                </p>
+                                                <div className='space-y-0.5'>
+                                                    {group.items.map((link) => (
+                                                        <Link
+                                                            key={link.href}
+                                                            href={link.href}
+                                                            onClick={() => setIsContentMenuOpen(false)}
+                                                            className={classNames(
+                                                                'flex min-h-9 items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors',
+                                                                currentPath.startsWith(link.href)
+                                                                    ? 'bg-emerald-50 text-emerald-700 font-semibold dark:bg-emerald-900/20 dark:text-emerald-300'
+                                                                    : 'text-emerald-900 hover:bg-white dark:text-white dark:hover:bg-slate-700'
+                                                            )}
+                                                        >
+                                                            <span className='shrink-0 text-sm'>{link.icon}</span>
+                                                            <span className='leading-5'>{link.labelKey ? t(link.labelKey) : link.label}</span>
+                                                        </Link>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             )}
                         </li>

@@ -13,6 +13,9 @@ type PageViewRepository interface {
 	UniqueVisitors(since time.Time) (int64, error)
 	DailyStats(since time.Time) ([]model.PageViewDailyStat, error)
 	TopPages(since time.Time, limit int) ([]model.PageViewTopPage, error)
+	SourceStats(since time.Time) ([]model.PageViewSourceStat, error)
+	ActiveUsers(since time.Time, limit int) ([]model.PageViewUserStat, error)
+	TopPagesBySource(since time.Time, limitPerSource int) ([]model.PageViewTopPageSource, error)
 }
 
 type pageViewRepo struct {
@@ -53,6 +56,81 @@ func (r *pageViewRepo) DailyStats(since time.Time) ([]model.PageViewDailyStat, e
 		Where("created_at >= ?", since).
 		Group("DATE(created_at)").
 		Order("date asc").
+		Scan(&rows).Error
+	return rows, err
+}
+
+func (r *pageViewRepo) ActiveUsers(since time.Time, limit int) ([]model.PageViewUserStat, error) {
+	if limit <= 0 {
+		limit = 10
+	}
+	var rows []model.PageViewUserStat
+	// Inner subquery limits to top N users first, then LATERAL fetches last path/source
+	// for only those N rows — avoids correlated subqueries on the full result set.
+	err := r.db.Raw(`
+		SELECT
+			u.id::text AS user_id,
+			u.name,
+			u.email,
+			pv_stats.total_views,
+			TO_CHAR(pv_stats.last_seen, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS last_seen,
+			lp.path AS last_path,
+			lp.source AS source
+		FROM (
+			SELECT
+				pv.user_id,
+				COUNT(*) AS total_views,
+				MAX(pv.created_at) AS last_seen
+			FROM page_views pv
+			WHERE pv.user_id IS NOT NULL AND pv.created_at >= ?
+			GROUP BY pv.user_id
+			ORDER BY total_views DESC
+			LIMIT ?
+		) pv_stats
+		JOIN users u ON u.id = pv_stats.user_id
+		LEFT JOIN LATERAL (
+			SELECT path, source
+			FROM page_views
+			WHERE user_id = pv_stats.user_id
+			ORDER BY created_at DESC
+			LIMIT 1
+		) lp ON TRUE
+		ORDER BY pv_stats.total_views DESC
+	`, since, limit).Scan(&rows).Error
+	return rows, err
+}
+
+func (r *pageViewRepo) TopPagesBySource(since time.Time, limitPerSource int) ([]model.PageViewTopPageSource, error) {
+	if limitPerSource <= 0 {
+		limitPerSource = 4
+	}
+	var rows []model.PageViewTopPageSource
+	// Use a window-function approach: rank pages per source, then filter
+	err := r.db.Raw(`
+		SELECT source, path, views, visitors FROM (
+			SELECT
+				source,
+				path,
+				COUNT(*) AS views,
+				COUNT(DISTINCT `+pageViewVisitorIdentityExpr+`) AS visitors,
+				ROW_NUMBER() OVER (PARTITION BY source ORDER BY COUNT(*) DESC) AS rn
+			FROM page_views
+			WHERE created_at >= ?
+			GROUP BY source, path
+		) ranked
+		WHERE rn <= ?
+		ORDER BY source, views DESC
+	`, since, limitPerSource).Scan(&rows).Error
+	return rows, err
+}
+
+func (r *pageViewRepo) SourceStats(since time.Time) ([]model.PageViewSourceStat, error) {
+	var rows []model.PageViewSourceStat
+	err := r.db.Model(&model.PageView{}).
+		Select("source, COUNT(*) AS views, COUNT(DISTINCT "+pageViewVisitorIdentityExpr+") AS visitors").
+		Where("created_at >= ?", since).
+		Group("source").
+		Order("views desc").
 		Scan(&rows).Error
 	return rows, err
 }

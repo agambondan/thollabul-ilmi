@@ -205,3 +205,52 @@ Status: `VERIFIED`
 - PASS: `node scripts/check-feature-parity.js`
 - PASS: `git diff --check`
 - PASS: `cd apps/web && npm run build`
+
+## Follow-up 2026-05-18 - Admin Content Composition Density
+
+Status: `VERIFIED`
+
+### Scope
+
+- Isi area kosong pada card `Komposisi Konten` di `/admin`.
+- Tambah chart `Kesiapan Konten` dari data health existing:
+  - metadata artikel,
+  - sumber buku,
+  - cakupan ibadah,
+  - cakupan belajar.
+- Tambah chart `Beban Review` dari data queue existing:
+  - artikel draft / arsip,
+  - artikel kurang metadata,
+  - buku perlu verifikasi,
+  - buku tanpa resource.
+- Tambah i18n ID/EN untuk chart baru.
+
+### Verification
+
+- PASS: `node scripts/check-feature-parity.js`
+- PASS: `git diff --check`
+- PASS: `cd apps/web && npm run build`
+
+## Follow-up 2026-05-18 - Public Content Dropdown Grouping
+
+Status: `VERIFIED`
+
+### Scope
+
+- Group dropdown `Konten` di navbar public agar tidak menjadi list linear yang
+  terlalu panjang.
+- Tambah 4 group desktop:
+  - Ibadah & Dzikir,
+  - Quran & Ilmu,
+  - Sejarah & Media,
+  - Tools.
+- Ubah dropdown desktop menjadi panel 2 kolom dengan max-height dan scroll
+  internal agar item bawah tetap dapat diakses di viewport pendek.
+- Tambah i18n ID/EN untuk heading group.
+
+### Verification
+
+- PASS: `node scripts/check-feature-parity.js`
+- PASS: `git diff --check`
+- PASS: `cd apps/web && npm run build`
+- PASS: `cd apps/web && npm test -- --runInBand apps/web/src/__tests__/const.test.js`

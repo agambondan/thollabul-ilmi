@@ -76,6 +76,65 @@ export const linksMenuContent = [
     { label: 'Kalkulator Zakat', labelKey: 'link.zakat', href: '/zakat', icon: <BsCalculator /> },
 ];
 
+const pickContentLinks = (hrefs) =>
+    hrefs
+        .map((href) => linksMenuContent.find((link) => link.href === href))
+        .filter(Boolean);
+
+export const linksMenuContentGroups = [
+    {
+        labelKey: 'nav.content_group.worship',
+        items: pickContentLinks([
+            '/doa',
+            '/dzikir',
+            '/panduan-sholat',
+            '/wirid',
+            '/wirid-custom',
+            '/tahlil',
+            '/asmaul-husna',
+            '/asmaul-husna/flashcard',
+            '/asmaul-husna/wirid',
+        ]),
+    },
+    {
+        labelKey: 'nav.content_group.quran_learning',
+        items: pickContentLinks([
+            '/tafsir',
+            '/asbabun-nuzul',
+            '/fiqh',
+            '/kamus',
+            '/quiz',
+            '/library',
+            '/forum',
+        ]),
+    },
+    {
+        labelKey: 'nav.content_group.history_media',
+        items: pickContentLinks([
+            '/siroh',
+            '/sejarah',
+            '/tokoh',
+            '/peta',
+            '/blog',
+            '/kajian',
+            '/manasik',
+        ]),
+    },
+    {
+        labelKey: 'nav.content_group.tools',
+        items: pickContentLinks([
+            '/jadwal-sholat',
+            '/hijri',
+            '/imsakiyah',
+            '/kiblat',
+            '/tasbih',
+            '/faraidh',
+            '/zakat',
+            '/leaderboard',
+        ]),
+    },
+];
+
 export const linksMenuAuth = [
     { label: 'Dashboard', labelKey: 'link.dashboard', href: '/dashboard', icon: <BsBarChart /> },
     { label: 'Bookmark', labelKey: 'link.bookmarks', href: '/bookmarks' },

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, BookOpen, Bookmark, BookmarkCheck, CheckCircle2, Circle, ExternalLink, Heart, MessageCircle, Pencil, StickyNote, Trash2, UserCircle } from 'lucide-react-native';
+import { ArrowLeft, BookOpen, Bookmark, BookmarkCheck, CheckCircle2, Circle, ExternalLink, EyeOff, Flag, Heart, MessageCircle, Pencil, StickyNote, Trash2, UserCircle } from 'lucide-react-native';
 import { ActivityIndicator, Linking, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import {
   getAllNotes,
@@ -11,7 +11,7 @@ import {
   getZakatGoldPrice,
   searchDictionary,
 } from '../api/explore';
-import { createComment, getCommentsByRef, getFeedPostPage, likeFeedPost } from '../api/social';
+import { createComment, getCommentsByRef, getFeedPostPage, hideFeedPost, likeFeedPost, reportFeedPost } from '../api/social';
 import {
   acceptForumAnswer,
   createForumAnswer,
@@ -610,6 +610,44 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     }
   };
 
+  const handleHideFeedItem = async (item) => {
+    if (!session?.token) {
+      showInfo('Buka Profil untuk masuk.');
+      return;
+    }
+
+    setError('');
+    try {
+      await hideFeedPost(item.raw?.id ?? item.id);
+      setItems((current) => current.filter((entry) => entry.id !== item.id));
+      if (selectedItem?.id === item.id) {
+        setSelectedItem(null);
+      }
+      showSuccess('Post disembunyikan.');
+    } catch (err) {
+      const nextMessage = err?.message ?? 'Post belum bisa disembunyikan.';
+      setError(nextMessage);
+      showError(nextMessage);
+    }
+  };
+
+  const handleReportFeedItem = async (item) => {
+    if (!session?.token) {
+      showInfo('Buka Profil untuk masuk.');
+      return;
+    }
+
+    setError('');
+    try {
+      await reportFeedPost(item.raw?.id ?? item.id);
+      showSuccess('Post dilaporkan ke moderator.');
+    } catch (err) {
+      const nextMessage = err?.message ?? 'Post belum bisa dilaporkan.';
+      setError(nextMessage);
+      showError(nextMessage);
+    }
+  };
+
   const loadFeedComments = useCallback(async (item) => {
     const ref = getItemRef({ type: 'feed' }, item);
     if (!ref.refType || !ref.refId) return;
@@ -1134,6 +1172,20 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
               label="Sumber"
               onPress={() => openSource(item)}
             />
+            {session?.token ? (
+              <>
+                <ActionPill
+                  Icon={EyeOff}
+                  label="Sembunyikan"
+                  onPress={() => handleHideFeedItem(item)}
+                />
+                <ActionPill
+                  Icon={Flag}
+                  label="Laporkan"
+                  onPress={() => handleReportFeedItem(item)}
+                />
+              </>
+            ) : null}
           </View>
         </Card>
       );

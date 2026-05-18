@@ -45,6 +45,12 @@ func (c *tokohTarikhController) FindAll(ctx *fiber.Ctx) error {
 	if err != nil {
 		return lib.ErrorInternal(ctx)
 	}
+	lang := lib.GetPreferredLang(ctx)
+	for i := range items {
+		if items[i].Translation != nil {
+			items[i].Translation.FilterByLang(lang)
+		}
+	}
 	return lib.OK(ctx, fiber.Map{"items": items, "total": total, "page": page, "size": size})
 }
 
@@ -56,6 +62,9 @@ func (c *tokohTarikhController) FindByID(ctx *fiber.Ctx) error {
 	item, err := c.svc.FindByID(id)
 	if err != nil {
 		return lib.ErrorNotFound(ctx)
+	}
+	if item.Translation != nil {
+		item.Translation.FilterByLang(lib.GetPreferredLang(ctx))
 	}
 	return lib.OK(ctx, item)
 }

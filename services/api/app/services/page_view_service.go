@@ -81,15 +81,30 @@ func (s *pageViewService) AdminSummary(days int) (*model.PageViewAdminSummary, e
 	if err != nil {
 		return nil, err
 	}
+	sourceBreakdown, err := s.repo.SourceStats(since)
+	if err != nil {
+		return nil, err
+	}
+	activeUsers, err := s.repo.ActiveUsers(since, 10)
+	if err != nil {
+		return nil, err
+	}
+	topPagesBySource, err := s.repo.TopPagesBySource(since, 4)
+	if err != nil {
+		return nil, err
+	}
 
 	return &model.PageViewAdminSummary{
-		TotalViews:      totalViews,
-		UniqueVisitors:  uniqueVisitors,
-		TodayViews:      todayViews,
-		TodayVisitors:   todayVisitors,
-		Daily:           fillDailyPageViews(since, days, daily),
-		TopPages:        topPages,
-		TrackingEnabled: true,
+		TotalViews:       totalViews,
+		UniqueVisitors:   uniqueVisitors,
+		TodayViews:       todayViews,
+		TodayVisitors:    todayVisitors,
+		Daily:            fillDailyPageViews(since, days, daily),
+		TopPages:         topPages,
+		SourceBreakdown:  sourceBreakdown,
+		ActiveUsers:      activeUsers,
+		TopPagesBySource: topPagesBySource,
+		TrackingEnabled:  true,
 	}, nil
 }
 

@@ -1,0 +1,152 @@
+[
+  {
+    "nama": "Abu Bakar Ash-Shiddiq",
+    "era": "sahabat",
+    "tahun_lahir": "573",
+    "tahun_wafat": "634",
+    "biografi": "Abu Bakar Ash-Shiddiq adalah khalifah pertama setelah wafatnya Nabi Muhammad SAW. Beliau dikenal sebagai sahabat yang paling setia dan pertama kali masuk Islam dari kalangan pria dewasa.",
+    "kontribusi": "Memerangi kaum murtad, mengumpulkan Al-Qur'an, memperluas wilayah Islam ke Syam dan Irak.",
+    "kategori": "khalifah",
+    "image_url": ""
+  },
+  {
+    "nama": "Umar bin Khattab",
+    "era": "sahabat",
+    "tahun_lahir": "584",
+    "tahun_wafat": "644",
+    "biografi": "Umar bin Khattab adalah khalifah kedua yang dikenal dengan ketegasan dan keadilannya. Di masa pemerintahannya, Islam mencapai perluasan wilayah yang sangat pesat.",
+    "kontribusi": "Mendirikan institusi pemerintahan Islam, menetapkan kalender Hijriyah, memperluas wilayah hingga Persia dan Mesir.",
+    "kategori": "khalifah",
+    "image_url": ""
+  },
+  {
+    "nama": "Utsman bin Affan",
+    "era": "sahabat",
+    "tahun_lahir": "576",
+    "tahun_wafat": "656",
+    "biografi": "Utsman bin Affan adalah khalifah ketiga yang dikenal dengan kedermawanannya. Beliau berjasa besar dalam pembukuan Al-Qur'an.",
+    "kontribusi": "Menstandarisasi mushaf Al-Qur'an (Mushaf Utsmani), memperluas Masjid Nabawi, membangun angkatan laut Islam.",
+    "kategori": "khalifah",
+    "image_url": ""
+  },
+  {
+    "nama": "Ali bin Abi Thalib",
+    "era": "sahabat",
+    "tahun_lahir": "601",
+    "tahun_wafat": "661",
+    "biografi": "Ali bin Abi Thalib adalah khalifah keempat, sepupu dan menantu Nabi Muhammad SAW. Beliau dikenal sebagai gerbangnya ilmu karena kedalaman pengetahuannya.",
+    "kontribusi": "Menata tata bahasa Arab, memajukan ilmu tafsir dan kalam, membangun kota Kufah sebagai pusat ilmu.",
+    "kategori": "khalifah",
+    "image_url": ""
+  },
+  {
+    "nama": "Imam Abu Hanifah",
+    "era": "tabiin",
+    "tahun_lahir": "699",
+    "tahun_wafat": "767",
+    "biografi": "Imam Abu Hanifah atau Nu'man bin Tsabit adalah pendiri mazhab Hanafi. Beliau dikenal sebagai pelopor penggunaan qiyas (analogi) dalam hukum Islam.",
+    "kontribusi": "Mendirikan mazhab Hanafi, mengembangkan metode istinbath hukum dengan qiyas, menulis kitab Al-Fiqh Al-Akbar.",
+    "kategori": "ulama",
+    "image_url": ""
+  },
+  {
+    "nama": "Imam Malik bin Anas",
+    "era": "tabiin",
+    "tahun_lahir": "711",
+    "tahun_wafat": "795",
+    "biografi": "Imam Malik bin Anas adalah pendiri mazhab Maliki. Beliau dikenal sebagai ahli hadits yang sangat berhati-hati dan menulis kitab Al-Muwaththa'.",
+    "kontribusi": "Mendirikan mazhab Maliki, menulis Al-Muwaththa' sebagai kitab hadits dan fiqh tertua yang masih terpelihara.",
+    "kategori": "ulama",
+    "image_url": ""
+  },
+  {
+    "nama": "Imam Syafi'i",
+    "era": "tabiut tabiin",
+    "tahun_lahir": "767",
+    "tahun_wafat": "820",
+    "biografi": "Imam Syafi'i atau Muhammad bin Idris Asy-Syafi'i adalah pendiri mazhab Syafi'i. Beliau dikenal sebagai pembangun ushul fiqh yang sistematis.",
+    "kontribusi": "Mendirikan mazhab Syafi'i, menulis Ar-Risalah sebagai kitab ushul fiqh pertama, menyusun metode tarjih antar dalil.",
+    "kategori": "ulama",
+    "image_url": ""
+  },
+  {
+    "nama": "Imam Ahmad bin Hanbal",
+    "era": "tabiut tabiin",
+    "tahun_lahir": "780",
+    "tahun_wafat": "855",
+    "biografi": "Imam Ahmad bin Hanbal adalah pendiri mazhab Hambali. Beliau dikenal karena keteguhannya dalam mempertahankan akidah Ahlus Sunnah wal Jama'ah.",
+    "kontribusi": "Mendirikan mazhab Hambali, menulis Musnad Ahmad yang berisi lebih dari 27.000 hadits.",
+    "kategori": "ulama",
+    "image_url": ""
+  },
+  {
+    "nama": "Imam Bukhari",
+    "era": "tabiut tabiin",
+    "tahun_lahir": "810",
+    "tahun_wafat": "870",
+    "biografi": "Imam Bukhari atau Muhammad bin Ismail Al-Bukhari adalah ahli hadits terkemuka yang mengumpulkan hadits-hadits shahih dalam kitab Shahih Bukhari.",
+    "kontribusi": "Menulis Shahih Bukhari yang diakui sebagai kitab hadits paling autentik setelah Al-Qur'an, mengembangkan metodologi kritik hadits.",
+    "kategori": "ulama",
+    "image_url": ""
+  },
+  {
+    "nama": "Imam Muslim",
+    "era": "tabiut tabiin",
+    "tahun_lahir": "821",
+    "tahun_wafat": "875",
+    "biografi": "Imam Muslim atau Muslim bin Al-Hajjaj An-Naisaburi adalah ahli hadits yang menulis Shahih Muslim, salah satu kitab hadits paling otoritatif.",
+    "kontribusi": "Menulis Shahih Muslim, menyempurnakan metodologi kritik sanad dan matan hadits.",
+    "kategori": "ulama",
+    "image_url": ""
+  },
+  {
+    "nama": " Ibnu Sina",
+    "era": "keemasan",
+    "tahun_lahir": "980",
+    "tahun_wafat": "1037",
+    "biografi": " Ibnu Sina atau Avicenna adalah ilmuwan muslim multi-disiplin yang dikenal sebagai Bapak Kedokteran Modern. Karyanya Al-Qanun fi Ath-Thibb menjadi rujukan kedokteran dunia selama berabad-abad.",
+    "kontribusi": "Menulis Al-Qanun fi Ath-Thibb (The Canon of Medicine), Asy-Syifa (ensiklopedia filsafat), mengembangkan teori kedokteran dan farmasi.",
+    "kategori": "ilmuwan",
+    "image_url": ""
+  },
+  {
+    "nama": "Al-Ghazali",
+    "era": "keemasan",
+    "tahun_lahir": "1058",
+    "tahun_wafat": "1111",
+    "biografi": "Al-Ghazali atau Abu Hamid Muhammad Al-Ghazali adalah ulama, filsuf, dan sufi besar yang dikenal sebagai Hujjatul Islam (Pembela Islam).",
+    "kontribusi": "Menulis Ihya Ulumuddin, Tahafut Al-Falasifah (kerancuan para filsuf), mengintegrasikan tasawuf dengan syariat.",
+    "kategori": "ulama",
+    "image_url": ""
+  },
+  {
+    "nama": "Ibnu Rusyd",
+    "era": "keemasan",
+    "tahun_lahir": "1126",
+    "tahun_wafat": "1198",
+    "biografi": "Ibnu Rusyd atau Averroes adalah filsuf dan dokter muslim dari Andalusia yang terkenal dengan komentarnya terhadap karya Aristoteles.",
+    "kontribusi": "Menulis komentar komprehensif atas karya Aristoteles, mengembangkan filsafat rasional dalam Islam, menulis Al-Kulliyat fi Ath-Thibb.",
+    "kategori": "ilmuwan",
+    "image_url": ""
+  },
+  {
+    "nama": "Salahuddin Al-Ayyubi",
+    "era": "keemasan",
+    "tahun_lahir": "1137",
+    "tahun_wafat": "1193",
+    "biografi": "Salahuddin Al-Ayyubi adalah panglima dan sultan yang membebaskan Baitul Maqdis (Yerusalem) dari kekuasaan Salib. Beliau dikenal karena keadilan dan kesatrianya.",
+    "kontribusi": "Membebaskan Yerusalem dalam Perang Salib, mendirikan dinasti Ayyubiyah, memajukan pendidikan dan ilmu pengetahuan.",
+    "kategori": "pahlawan",
+    "image_url": ""
+  },
+  {
+    "nama": " Ibnu Khaldun",
+    "era": "keemasan",
+    "tahun_lahir": "1332",
+    "tahun_wafat": "1406",
+    "biografi": " Ibnu Khaldun adalah sejarawan, sosiolog, dan filsuf muslim yang dianggap sebagai bapak sosiologi dan historiografi modern.",
+    "kontribusi": "Menulis Muqaddimah sebagai pengantar ilmu sejarah dan sosiologi, mengembangkan teori siklus peradaban dan ashabiyah.",
+    "kategori": "ilmuwan",
+    "image_url": ""
+  }
+]

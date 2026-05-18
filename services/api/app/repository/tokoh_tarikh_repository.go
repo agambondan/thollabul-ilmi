@@ -26,7 +26,7 @@ func (r *tokohTarikhRepo) Save(t *model.TokohTarikh) (*model.TokohTarikh, error)
 func (r *tokohTarikhRepo) FindAll(search, era, kategori string, limit, offset int) ([]model.TokohTarikh, int64, error) {
 	var list []model.TokohTarikh
 	var total int64
-	query := r.db.Model(&model.TokohTarikh{})
+	query := r.db.Model(&model.TokohTarikh{}).Preload("Translation")
 	if search != "" {
 		q := "%" + search + "%"
 		query = query.Where("nama ILIKE ? OR biografi ILIKE ?", q, q)
@@ -44,7 +44,7 @@ func (r *tokohTarikhRepo) FindAll(search, era, kategori string, limit, offset in
 
 func (r *tokohTarikhRepo) FindByID(id int) (*model.TokohTarikh, error) {
 	var t model.TokohTarikh
-	err := r.db.First(&t, id).Error
+	err := r.db.Preload("Translation").First(&t, id).Error
 	if err != nil {
 		return nil, err
 	}

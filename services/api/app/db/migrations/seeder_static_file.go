@@ -45,6 +45,7 @@ func SeedStaticFromFiles(db *gorm.DB) {
 	seedPerawiFromFile(db)
 	seedJarhTadilFromFile(db)
 	seedPerawiGuruFromFile(db)
+	seedTokohTarikhFromFile(db)
 }
 
 // ── helpers ───────────────────────────────────────────────────────────────────
@@ -713,6 +714,13 @@ func seedHistoryEventsFromFile(db *gorm.DB) {
 	}
 	log.Printf("[seeder] seedHistoryEventsFromFile: %d entri", len(rows))
 	for _, r := range rows {
+		tr := model.Translation{
+			Idn:            stringPtr(r.Title),
+			DescriptionIdn: stringPtr(r.Description),
+		}
+		if err := db.Create(&tr).Error; err != nil {
+			log.Printf("[seeder] history_event translation '%s': %v", r.Title, err)
+		}
 		item := model.HistoryEvent{
 			YearHijri:     r.YearHijri,
 			YearMiladi:    r.YearMiladi,
@@ -721,10 +729,11 @@ func seedHistoryEventsFromFile(db *gorm.DB) {
 			Description:   r.Description,
 			Category:      model.HistoryCategory(r.Category),
 			IsSignificant: r.IsSignificant,
+			TranslationID: tr.ID,
 		}
 		db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "slug"}},
-			DoUpdates: clause.AssignmentColumns([]string{"title", "description", "year_hijri", "year_miladi", "category", "is_significant"}),
+			DoUpdates: clause.AssignmentColumns([]string{"title", "description", "year_hijri", "year_miladi", "category", "is_significant", "translation_id"}),
 		}).Create(&item)
 	}
 }
@@ -1040,6 +1049,56 @@ func seedPerawiGuruFromFile(db *gorm.DB) {
 		}
 		item := model.PerawiGuru{GuruID: &guruID, MuridID: &muridID}
 		db.Clauses(clause.OnConflict{DoNothing: true}).Create(&item)
+	}
+}
+
+// ── Tokoh Tarikh ──────────────────────────────────────────────────────────────
+
+func seedTokohTarikhFromFile(db *gorm.DB) {
+	var count int64
+	db.Model(&model.TokohTarikh{}).Count(&count)
+	if count > 0 {
+		return
+	}
+	type row struct {
+		Nama       string `json:"nama"`
+		Era        string `json:"era"`
+		TahunLahir string `json:"tahun_lahir"`
+		TahunWafat string `json:"tahun_wafat"`
+		Biografi   string `json:"biografi"`
+		Kontribusi string `json:"kontribusi"`
+		Kategori   string `json:"kategori"`
+		ImageURL   string `json:"image_url"`
+	}
+	var rows []row
+	if !readStaticJSON("tokoh_tarikh.json", &rows) {
+		return
+	}
+	log.Printf("[seeder] seedTokohTarikhFromFile: %d entri", len(rows))
+	for _, r := range rows {
+		tr := model.Translation{
+			Idn:            stringPtr(r.Biografi),
+			DescriptionIdn: stringPtr(r.Kontribusi),
+		}
+		if err := db.Create(&tr).Error; err != nil {
+			log.Printf("[seeder] tokoh_tarikh translation '%s': %v", r.Nama, err)
+			continue
+		}
+		item := model.TokohTarikh{
+			Nama:          r.Nama,
+			Era:           r.Era,
+			TahunLahir:    r.TahunLahir,
+			TahunWafat:    r.TahunWafat,
+			Biografi:      r.Biografi,
+			Kontribusi:    r.Kontribusi,
+			Kategori:      r.Kategori,
+			ImageURL:      r.ImageURL,
+			TranslationID: tr.ID,
+		}
+		db.Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "nama"}},
+			DoUpdates: clause.AssignmentColumns([]string{"era", "biografi", "kontribusi", "kategori", "image_url", "translation_id"}),
+		}).Create(&item)
 	}
 }
 

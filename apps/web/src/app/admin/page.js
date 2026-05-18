@@ -75,6 +75,11 @@ const hasValue = (value) => {
 
 const countWhere = (items, predicate) => items.filter(predicate).length;
 
+const shortTick = (value, max = 16) => {
+    const text = String(value ?? '');
+    return text.length > max ? `${text.slice(0, max)}...` : text;
+};
+
 const needsBlogMetadata = (post) =>
     !hasValue(post.category_id ?? post.category?.id) ||
     !hasValue(post.excerpt) ||
@@ -148,6 +153,9 @@ const initialOverview = {
     worshipContent: 0,
     learningContent: 0,
     analytics: null,
+    sourceBreakdown: [],
+    activeUsers: [],
+    topPagesBySource: [],
     trafficInsights: [],
     contentMix: [],
     reviewQueue: [],
@@ -237,6 +245,9 @@ const AdminDashboard = () => {
             const learningTotal = quiz.count + kamus.count + fiqh.count + asbabun.count + sejarah.count + kajian.count + asmaul.count;
             const analyticsData = analytics.data;
             const dailyAnalytics = analyticsData?.daily ?? [];
+            const sourceBreakdown = analyticsData?.source_breakdown ?? [];
+            const activeUsers = analyticsData?.active_users ?? [];
+            const topPagesBySource = analyticsData?.top_pages_by_source ?? [];
             const totalViews = Number(analyticsData?.total_views ?? 0);
             const averageDailyViews =
                 dailyAnalytics.length > 0 ? Math.round(totalViews / dailyAnalytics.length) : 0;
@@ -377,6 +388,9 @@ const AdminDashboard = () => {
                 worshipContent: worshipTotal,
                 learningContent: learningTotal,
                 analytics: analyticsData,
+                sourceBreakdown,
+                activeUsers,
+                topPagesBySource,
                 trafficInsights,
                 contentMix,
                 reviewQueue,
@@ -428,6 +442,24 @@ const AdminDashboard = () => {
             },
         ],
         [overview, t],
+    );
+
+    const contentHealthChart = useMemo(
+        () => overview.healthItems.map((item) => ({
+            name: t(item.labelKey),
+            percent: item.total > 0 ? Math.round((item.value / item.total) * 100) : 0,
+            value: item.value,
+            total: item.total,
+        })),
+        [overview.healthItems, t],
+    );
+
+    const reviewQueueChart = useMemo(
+        () => overview.reviewQueue.map((item) => ({
+            name: t(item.labelKey),
+            count: item.count,
+        })),
+        [overview.reviewQueue, t],
     );
 
     return (
@@ -626,64 +658,162 @@ const AdminDashboard = () => {
                             </p>
                         </div>
                     </div>
-                    <div className='h-72'>
-                        <ResponsiveContainer width='100%' height='100%'>
-                            <BarChart data={overview.contentMix} margin={{ top: 8, right: 8, bottom: 8, left: 0 }}>
-                                <XAxis dataKey='name' tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: '#64748b' }} />
-                                <YAxis allowDecimals={false} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: '#64748b' }} />
-                                <Tooltip
-                                    cursor={{ fill: 'rgba(4, 120, 87, 0.08)' }}
-                                    contentStyle={{
-                                        borderRadius: 12,
-                                        borderColor: '#e2e8f0',
-                                        fontSize: 12,
-                                    }}
-                                />
-                                <Bar dataKey='value' radius={[8, 8, 0, 0]}>
-                                    {overview.contentMix.map((_, index) => (
-                                        <Cell key={`content-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
-                                    ))}
-                                </Bar>
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
-
-                <div className='grid grid-cols-1 gap-4'>
-                    <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
-                        <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
-                            {t('admin.metrics.status_chart')}
-                        </h2>
-                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
-                            {t('admin.metrics.status_chart_desc')}
-                        </p>
-                        <div className='mt-4 h-44'>
+                    <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+                        <div className='h-64'>
                             <ResponsiveContainer width='100%' height='100%'>
-                                <PieChart>
-                                    <Pie
-                                        data={overview.statusMix}
-                                        dataKey='value'
-                                        nameKey='name'
-                                        innerRadius={46}
-                                        outerRadius={70}
-                                        paddingAngle={3}
-                                    >
-                                        {overview.statusMix.map((_, index) => (
-                                            <Cell key={`status-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
-                                        ))}
-                                    </Pie>
+                                <BarChart data={overview.contentMix} margin={{ top: 8, right: 8, bottom: 8, left: 0 }}>
+                                    <XAxis dataKey='name' tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: '#64748b' }} />
+                                    <YAxis allowDecimals={false} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: '#64748b' }} />
                                     <Tooltip
+                                        cursor={{ fill: 'rgba(4, 120, 87, 0.08)' }}
                                         contentStyle={{
                                             borderRadius: 12,
                                             borderColor: '#e2e8f0',
                                             fontSize: 12,
                                         }}
                                     />
-                                </PieChart>
+                                    <Bar dataKey='value' radius={[8, 8, 0, 0]}>
+                                        {overview.contentMix.map((_, index) => (
+                                            <Cell key={`content-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                                        ))}
+                                    </Bar>
+                                </BarChart>
                             </ResponsiveContainer>
                         </div>
+                        <div>
+                            <div className='flex items-center justify-between gap-4'>
+                                <div>
+                                    <p className='text-xs font-semibold text-gray-900 dark:text-white'>
+                                        {t('admin.metrics.status_chart')}
+                                    </p>
+                                    <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
+                                        {t('admin.metrics.status_chart_desc')}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className='h-48'>
+                                <ResponsiveContainer width='100%' height='100%'>
+                                    <PieChart>
+                                        <Pie
+                                            data={overview.statusMix}
+                                            dataKey='value'
+                                            nameKey='name'
+                                            innerRadius={50}
+                                            outerRadius={74}
+                                            paddingAngle={3}
+                                        >
+                                            {overview.statusMix.map((_, index) => (
+                                                <Cell key={`status-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip
+                                            contentStyle={{
+                                                borderRadius: 12,
+                                                borderColor: '#e2e8f0',
+                                                fontSize: 12,
+                                            }}
+                                        />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
                     </div>
+                    <div className='mt-5 grid grid-cols-1 gap-5 border-t border-gray-100 pt-5 dark:border-slate-700 lg:grid-cols-2'>
+                        <div>
+                            <div className='mb-3'>
+                                <p className='text-xs font-semibold text-gray-900 dark:text-white'>
+                                    {t('admin.metrics.content_health_chart')}
+                                </p>
+                                <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
+                                    {t('admin.metrics.content_health_chart_desc')}
+                                </p>
+                            </div>
+                            <div className='h-56'>
+                                <ResponsiveContainer width='100%' height='100%'>
+                                    <BarChart
+                                        data={contentHealthChart}
+                                        layout='vertical'
+                                        margin={{ top: 4, right: 18, bottom: 4, left: 12 }}
+                                    >
+                                        <XAxis
+                                            type='number'
+                                            domain={[0, 100]}
+                                            tickFormatter={(value) => `${value}%`}
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tick={{ fontSize: 10, fill: '#64748b' }}
+                                        />
+                                        <YAxis
+                                            type='category'
+                                            dataKey='name'
+                                            width={92}
+                                            tickFormatter={(value) => shortTick(value, 14)}
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tick={{ fontSize: 10, fill: '#64748b' }}
+                                        />
+                                        <Tooltip
+                                            formatter={(value, name, props) => [
+                                                `${value}% (${props.payload.value}/${props.payload.total})`,
+                                                t('admin.metrics.ready'),
+                                            ]}
+                                            contentStyle={{
+                                                borderRadius: 12,
+                                                borderColor: '#e2e8f0',
+                                                fontSize: 12,
+                                            }}
+                                        />
+                                        <Bar dataKey='percent' fill='#047857' radius={[0, 6, 6, 0]} />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+                        <div>
+                            <div className='mb-3'>
+                                <p className='text-xs font-semibold text-gray-900 dark:text-white'>
+                                    {t('admin.metrics.review_queue_chart')}
+                                </p>
+                                <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
+                                    {t('admin.metrics.review_queue_chart_desc')}
+                                </p>
+                            </div>
+                            <div className='h-56'>
+                                <ResponsiveContainer width='100%' height='100%'>
+                                    <BarChart data={reviewQueueChart} margin={{ top: 6, right: 8, bottom: 8, left: -12 }}>
+                                        <XAxis
+                                            dataKey='name'
+                                            tickFormatter={(value) => shortTick(value, 12)}
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tick={{ fontSize: 10, fill: '#64748b' }}
+                                        />
+                                        <YAxis
+                                            allowDecimals={false}
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tick={{ fontSize: 10, fill: '#64748b' }}
+                                        />
+                                        <Tooltip
+                                            formatter={(value) => [
+                                                value,
+                                                t('admin.metrics.review_items'),
+                                            ]}
+                                            cursor={{ fill: 'rgba(180, 83, 9, 0.08)' }}
+                                            contentStyle={{
+                                                borderRadius: 12,
+                                                borderColor: '#e2e8f0',
+                                                fontSize: 12,
+                                            }}
+                                        />
+                                        <Bar dataKey='count' fill='#b45309' radius={[6, 6, 0, 0]} />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div className='grid grid-cols-1 gap-4'>
                     <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
                         <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
                             {t('admin.metrics.role_chart')}
@@ -737,6 +867,67 @@ const AdminDashboard = () => {
                     </div>
 
                     <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
+                        <div className='mb-4 flex items-start justify-between gap-4'>
+                            <div>
+                                <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                    {t('admin.metrics.source_chart')}
+                                </h2>
+                                <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                                    {t('admin.metrics.source_chart_desc')}
+                                </p>
+                            </div>
+                        </div>
+                        <div className='h-44'>
+                            <ResponsiveContainer width='100%' height='100%'>
+                                <PieChart>
+                                    <Pie
+                                        data={overview.sourceBreakdown}
+                                        dataKey='visitors'
+                                        nameKey='source'
+                                        innerRadius={46}
+                                        outerRadius={70}
+                                        paddingAngle={3}
+                                    >
+                                        {overview.sourceBreakdown.map((_, index) => (
+                                            <Cell key={`source-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip
+                                        formatter={(value, name) => [
+                                            value,
+                                            t(`admin.source.${name}`),
+                                        ]}
+                                        contentStyle={{
+                                            borderRadius: 12,
+                                            borderColor: '#e2e8f0',
+                                            fontSize: 12,
+                                        }}
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div className='mt-3 grid grid-cols-2 gap-2'>
+                            {overview.sourceBreakdown.map((item, index) => (
+                                <div key={item.source} className='flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400'>
+                                    <span
+                                        className='h-2.5 w-2.5 rounded-full'
+                                        style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}
+                                    />
+                                    <span>{t(`admin.source.${item.source}`)}</span>
+                                    <span className='font-semibold text-gray-800 dark:text-gray-200'>
+                                        {item.visitors}
+                                    </span>
+                                </div>
+                            ))}
+                            {!overview.loading && overview.sourceBreakdown.length === 0 ? (
+                                <p className='col-span-2 text-xs text-gray-400 dark:text-gray-500'>
+                                    {t('admin.metrics.no_visitor_data')}
+                                </p>
+                            ) : null}
+                        </div>
+                    </div>
+
+                    <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
                         <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
                             {t('admin.metrics.visitor_chart')}
                         </h2>
@@ -761,28 +952,106 @@ const AdminDashboard = () => {
                             </ResponsiveContainer>
                         </div>
                         <div className='mt-4 border-t border-gray-100 pt-3 dark:border-slate-700'>
-                            <p className='mb-2 text-xs font-semibold text-gray-700 dark:text-gray-300'>
-                                {t('admin.metrics.top_pages')}
+                            <p className='mb-0.5 text-xs font-semibold text-gray-700 dark:text-gray-300'>
+                                {t('admin.metrics.top_pages_source')}
                             </p>
-                            <div className='space-y-2'>
-                                {(overview.analytics?.top_pages ?? []).slice(0, 4).map((page) => (
-                                    <div key={page.path} className='flex items-center justify-between gap-3 text-xs'>
-                                        <span className='truncate text-gray-500 dark:text-gray-400'>
-                                            {page.path}
-                                        </span>
-                                        <span className='shrink-0 font-semibold text-gray-900 dark:text-white'>
-                                            {page.views}
-                                        </span>
+                            <p className='mb-3 text-xs text-gray-400 dark:text-gray-500'>
+                                {t('admin.metrics.top_pages_source_desc')}
+                            </p>
+                            {overview.topPagesBySource.length > 0 ? (() => {
+                                const groups = {};
+                                overview.topPagesBySource.forEach((p) => {
+                                    if (!groups[p.source]) groups[p.source] = [];
+                                    groups[p.source].push(p);
+                                });
+                                return (
+                                    <div className='grid grid-cols-2 gap-2'>
+                                        {Object.entries(groups).map(([source, pages]) => (
+                                            <div key={source} className='rounded-lg border border-gray-50 bg-gray-50/50 p-2 dark:border-slate-600 dark:bg-slate-700/30'>
+                                                <span className='mb-1.5 block text-xs font-semibold text-gray-700 dark:text-gray-300'>
+                                                    {t(`admin.source.${source}`)}
+                                                </span>
+                                                {pages.slice(0, 3).map((page) => (
+                                                    <div key={page.path} className='flex items-center justify-between gap-2 py-0.5 text-xs'>
+                                                        <span className='truncate text-gray-500 dark:text-gray-400'>
+                                                            {page.path}
+                                                        </span>
+                                                        <span className='shrink-0 font-semibold text-gray-900 dark:text-white'>
+                                                            {page.views}
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
-                                {!overview.loading && (overview.analytics?.top_pages ?? []).length === 0 ? (
-                                    <p className='text-xs text-gray-400 dark:text-gray-500'>
-                                        {t('admin.metrics.no_visitor_data')}
-                                    </p>
-                                ) : null}
-                            </div>
+                                );
+                            })() : !overview.loading ? (
+                                <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                    {t('admin.metrics.no_visitor_data')}
+                                </p>
+                            ) : null}
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <section className='mb-8'>
+                <div className='mb-3 flex items-end justify-between gap-4'>
+                    <div>
+                        <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                            {t('admin.metrics.active_users')}
+                        </h2>
+                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                            {t('admin.metrics.active_users_desc')}
+                        </p>
+                    </div>
+                </div>
+                <div className='overflow-x-auto rounded-xl border border-gray-100 bg-white dark:border-slate-700 dark:bg-slate-800'>
+                    <table className='w-full text-xs'>
+                        <thead>
+                            <tr className='border-b border-gray-100 dark:border-slate-700'>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>{t('admin.metric.users')}</th>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>{t('admin.table.email')}</th>
+                                <th className='px-4 py-3 text-right font-semibold text-gray-500 dark:text-gray-400'>{t('admin.table.views')}</th>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>{t('admin.table.last_seen')}</th>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>{t('admin.table.last_route')}</th>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>{t('admin.table.source')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {overview.activeUsers.map((user) => (
+                                <tr key={user.user_id} className='border-b border-gray-50 last:border-0 dark:border-slate-700/50'>
+                                    <td className='max-w-[120px] truncate px-4 py-2.5 font-medium text-gray-900 dark:text-white' title={user.name}>
+                                        {user.name}
+                                    </td>
+                                    <td className='max-w-[160px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-400' title={user.email}>
+                                        {user.email}
+                                    </td>
+                                    <td className='px-4 py-2.5 text-right font-semibold text-gray-900 dark:text-white'>
+                                        {user.total_views}
+                                    </td>
+                                    <td className='whitespace-nowrap px-4 py-2.5 text-gray-500 dark:text-gray-400'>
+                                        {user.last_seen}
+                                    </td>
+                                    <td className='max-w-[140px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-400' title={user.last_path}>
+                                        {user.last_path}
+                                    </td>
+                                    <td className='px-4 py-2.5'>
+                                        <span className='rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-slate-700 dark:text-gray-300'>
+                                            {t(`admin.source.${user.source}`)}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                            {!overview.loading && overview.activeUsers.length === 0 ? (
+                                <tr>
+                                    <td colSpan={6} className='px-4 py-6 text-center text-gray-400 dark:text-gray-500'>
+                                        {t('admin.metrics.no_visitor_data')}
+                                    </td>
+                                </tr>
+                            ) : null}
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
