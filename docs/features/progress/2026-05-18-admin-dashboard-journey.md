@@ -73,6 +73,26 @@ Status: `VERIFIED`
 - PASS: `git diff --check`
 - PASS: `cd apps/web && npm run build`
 
+## Follow-up 2026-05-18 - Admin Traffic Insights
+
+Status: `VERIFIED`
+
+### Scope
+
+- Tambah section `Insight Traffic` di `/admin`.
+- Derive insight dari payload `GET /api/v1/analytics/admin/summary?days=14`:
+  - total views 14 hari,
+  - views hari ini + visitor hari ini,
+  - rata-rata views harian,
+  - hari/halaman terkuat.
+- Tambah i18n ID/EN untuk traffic insight.
+
+### Verification
+
+- PASS: `node scripts/check-feature-parity.js`
+- PASS: `git diff --check`
+- PASS: `cd apps/web && npm run build`
+
 ## Follow-up 2026-05-18 - Admin Metrics Overview
 
 Status: `VERIFIED`

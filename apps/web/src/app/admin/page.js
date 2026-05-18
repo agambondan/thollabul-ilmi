@@ -148,6 +148,7 @@ const initialOverview = {
     worshipContent: 0,
     learningContent: 0,
     analytics: null,
+    trafficInsights: [],
     contentMix: [],
     reviewQueue: [],
     healthItems: [],
@@ -234,6 +235,16 @@ const AdminDashboard = () => {
             const libraryNeedsResource = countWhere(libraryItems, needsLibraryResource);
             const worshipTotal = doa.count + dzikir.count + wirid.count + tahlil.count + manasik.count;
             const learningTotal = quiz.count + kamus.count + fiqh.count + asbabun.count + sejarah.count + kajian.count + asmaul.count;
+            const analyticsData = analytics.data;
+            const dailyAnalytics = analyticsData?.daily ?? [];
+            const totalViews = Number(analyticsData?.total_views ?? 0);
+            const averageDailyViews =
+                dailyAnalytics.length > 0 ? Math.round(totalViews / dailyAnalytics.length) : 0;
+            const bestDay = dailyAnalytics.reduce(
+                (best, day) => (Number(day.views ?? 0) > Number(best.views ?? 0) ? day : best),
+                { date: '-', views: 0 },
+            );
+            const topPage = analyticsData?.top_pages?.[0];
             const contentMix = [
                 { name: t('admin.metric.content_blog'), value: posts.count },
                 { name: t('admin.metric.content_library'), value: library.count },
@@ -311,6 +322,32 @@ const AdminDashboard = () => {
                     total: Math.max(learningTotal, 50),
                 },
             ];
+            const trafficInsights = [
+                {
+                    labelKey: 'admin.traffic.total_views',
+                    descKey: 'admin.traffic.total_views_desc',
+                    value: totalViews.toLocaleString('id-ID'),
+                    hint: t('admin.traffic.last_14_days'),
+                },
+                {
+                    labelKey: 'admin.traffic.today_views',
+                    descKey: 'admin.traffic.today_views_desc',
+                    value: Number(analyticsData?.today_views ?? 0).toLocaleString('id-ID'),
+                    hint: `${Number(analyticsData?.today_visitors ?? 0).toLocaleString('id-ID')} ${t('admin.traffic.visitors')}`,
+                },
+                {
+                    labelKey: 'admin.traffic.avg_daily',
+                    descKey: 'admin.traffic.avg_daily_desc',
+                    value: averageDailyViews.toLocaleString('id-ID'),
+                    hint: t('admin.traffic.views_per_day'),
+                },
+                {
+                    labelKey: 'admin.traffic.best_day',
+                    descKey: 'admin.traffic.best_day_desc',
+                    value: Number(bestDay.views ?? 0).toLocaleString('id-ID'),
+                    hint: topPage?.path || bestDay.date,
+                },
+            ];
 
             setOverview({
                 loading: false,
@@ -339,7 +376,8 @@ const AdminDashboard = () => {
                 libraryBooks: library.count,
                 worshipContent: worshipTotal,
                 learningContent: learningTotal,
-                analytics: analytics.data,
+                analytics: analyticsData,
+                trafficInsights,
                 contentMix,
                 reviewQueue,
                 healthItems,
@@ -441,6 +479,43 @@ const AdminDashboard = () => {
                             </p>
                             <p className='mt-2 text-xs leading-5 text-gray-500 dark:text-gray-400'>
                                 {metric.desc}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            <section className='mb-8'>
+                <div className='mb-3 flex items-end justify-between gap-4'>
+                    <div>
+                        <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                            {t('admin.traffic.title')}
+                        </h2>
+                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                            {t('admin.traffic.subtitle')}
+                        </p>
+                    </div>
+                </div>
+                <div className='grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4'>
+                    {overview.trafficInsights.map((item) => (
+                        <div
+                            key={item.labelKey}
+                            className='rounded-xl border border-gray-100 bg-white p-4 dark:border-slate-700 dark:bg-slate-800'
+                        >
+                            <div className='mb-3 flex items-center justify-between gap-3'>
+                                <p className='text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500'>
+                                    {t(item.labelKey)}
+                                </p>
+                                <BsActivity className='text-emerald-600 dark:text-emerald-400' />
+                            </div>
+                            <p className='text-2xl font-bold text-gray-900 dark:text-white'>
+                                {overview.loading ? '...' : item.value}
+                            </p>
+                            <p className='mt-1 truncate text-xs font-medium text-emerald-700 dark:text-emerald-300'>
+                                {overview.loading ? '...' : item.hint}
+                            </p>
+                            <p className='mt-2 text-xs leading-5 text-gray-500 dark:text-gray-400'>
+                                {t(item.descKey)}
                             </p>
                         </div>
                     ))}
