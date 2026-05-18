@@ -330,7 +330,7 @@ Recommendation:
 
 ### P1. Admin Dashboard Cards Bukan Task-Oriented CTA
 
-Status 2026-05-18: `CLOSED_BY_ADMIN_QUICK_ACTIONS`.
+Status 2026-05-18: `CLOSED_BY_ADMIN_QUICK_ACTIONS_AND_METRICS`.
 
 Evidence:
 
@@ -351,13 +351,15 @@ Recommendation:
   - `Tambah Konten Doa/Dzikir`
   - `Kelola User & Role`
   - `Cek Konten Terbaru`
-- Module cards tetap ada, tetapi secondary.
+- Module cards tidak perlu tampil di dashboard utama jika sidebar admin sudah
+  menjadi navigasi modul.
 
 Implementation note:
 
-- `/admin` sekarang menampilkan section `Aksi Cepat` di atas module cards,
-  dengan CTA untuk tulis artikel, review konten, tambah doa, dan kelola user.
-- Module cards dipindahkan menjadi section secondary `Modul Admin`.
+- `/admin` sekarang menampilkan metric operasional, chart, dan section
+  `Aksi Cepat` untuk tulis artikel, review konten, tambah doa, dan kelola user.
+- Section `Modul Admin` dihapus dari dashboard karena navigasi modul sudah
+  tersedia di sidebar admin.
 
 ### P1. Admin Navigation Tidak Membedakan Content, Taxonomy, Dan User Control
 
