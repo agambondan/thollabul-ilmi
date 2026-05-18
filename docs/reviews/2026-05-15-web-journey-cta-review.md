@@ -330,6 +330,8 @@ Recommendation:
 
 ### P1. Admin Dashboard Cards Bukan Task-Oriented CTA
 
+Status 2026-05-18: `CLOSED_BY_ADMIN_QUICK_ACTIONS`.
+
 Evidence:
 
 - `apps/web/src/app/admin/page.js:123-133` cards hanya link ke modul.
@@ -351,7 +353,15 @@ Recommendation:
   - `Cek Konten Terbaru`
 - Module cards tetap ada, tetapi secondary.
 
+Implementation note:
+
+- `/admin` sekarang menampilkan section `Aksi Cepat` di atas module cards,
+  dengan CTA untuk tulis artikel, review konten, tambah doa, dan kelola user.
+- Module cards dipindahkan menjadi section secondary `Modul Admin`.
+
 ### P1. Admin Navigation Tidak Membedakan Content, Taxonomy, Dan User Control
+
+Status 2026-05-18: `CLOSED_BY_ADMIN_GROUPED_SIDEBAR`.
 
 Evidence:
 
@@ -369,6 +379,11 @@ Recommendation:
   - `Ibadah`: doa, dzikir, wirid, tahlil, manasik, fiqh
   - `Data Referensi`: kamus, asmaul husna, asbabun nuzul, quiz
   - `Access`: users
+
+Implementation note:
+
+- `/admin` sidebar sekarang mengikuti shell `/dashboard` dan sudah memakai group
+  menu `Konten`, `Ibadah`, `Belajar & Tools`, dan `Sistem`.
 
 ### P1. Icon-Only Admin CRUD CTA Tidak Punya Accessible Name
 

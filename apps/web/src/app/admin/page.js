@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useLocale } from '@/context/Locale';
 import {
+    BsArrowRight,
     BsBook,
     BsBookHalf,
     BsBookmark,
@@ -15,10 +16,39 @@ import {
     BsMap,
     BsMoon,
     BsPeople,
+    BsPlusCircle,
     BsQuestionCircle,
     BsRepeat,
     BsStar,
 } from 'react-icons/bs';
+
+const quickActions = [
+    {
+        href: '/admin/blog/new',
+        icon: <BsPlusCircle className='text-xl' />,
+        titleKey: 'admin.quick.write_article',
+        descKey: 'admin.quick.write_article_desc',
+        primary: true,
+    },
+    {
+        href: '/admin/blog',
+        icon: <BsFileText className='text-xl' />,
+        titleKey: 'admin.quick.review_content',
+        descKey: 'admin.quick.review_content_desc',
+    },
+    {
+        href: '/admin/doa',
+        icon: <BsBookHalf className='text-xl' />,
+        titleKey: 'admin.quick.add_prayer',
+        descKey: 'admin.quick.add_prayer_desc',
+    },
+    {
+        href: '/admin/users',
+        icon: <BsPeople className='text-xl' />,
+        titleKey: 'admin.quick.manage_users',
+        descKey: 'admin.quick.manage_users_desc',
+    },
+];
 
 const cards = [
     {
@@ -131,21 +161,92 @@ const AdminDashboard = () => {
                 </p>
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                {cards.map((card) => (
-                    <Link
-                        key={card.href}
-                        href={card.href}
-                        className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-5 hover:shadow-md transition-shadow'
-                    >
-                        <div className='mb-3'>{card.icon}</div>
-                        <h2 className='text-base font-bold text-gray-900 dark:text-white mb-1'>
-                            {t(card.titleKey)}
+            <section className='mb-8'>
+                <div className='mb-3 flex items-end justify-between gap-4'>
+                    <div>
+                        <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                            {t('admin.quick.title')}
                         </h2>
-                        <p className='text-sm text-gray-500 dark:text-gray-400'>{t(card.descKey)}</p>
-                    </Link>
-                ))}
-            </div>
+                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                            {t('admin.quick.subtitle')}
+                        </p>
+                    </div>
+                </div>
+                <div className='grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4'>
+                    {quickActions.map((action) => (
+                        <Link
+                            key={action.href}
+                            href={action.href}
+                            className={`group rounded-xl border p-4 transition-all ${
+                                action.primary
+                                    ? 'border-emerald-700 bg-emerald-700 text-white hover:bg-emerald-800'
+                                    : 'border-gray-100 bg-white text-gray-900 hover:border-emerald-100 hover:bg-emerald-50/50 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:border-emerald-900/60 dark:hover:bg-emerald-900/10'
+                            }`}
+                        >
+                            <div className='mb-3 flex items-center justify-between gap-3'>
+                                <span
+                                    className={`inline-flex h-9 w-9 items-center justify-center rounded-lg ${
+                                        action.primary
+                                            ? 'bg-white/15 text-white'
+                                            : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
+                                    }`}
+                                >
+                                    {action.icon}
+                                </span>
+                                <BsArrowRight
+                                    className={`text-sm transition-transform group-hover:translate-x-0.5 ${
+                                        action.primary
+                                            ? 'text-white/80'
+                                            : 'text-gray-300 dark:text-gray-500'
+                                    }`}
+                                />
+                            </div>
+                            <h3
+                                className={`text-sm font-semibold ${
+                                    action.primary ? 'text-white' : 'text-gray-900 dark:text-white'
+                                }`}
+                            >
+                                {t(action.titleKey)}
+                            </h3>
+                            <p
+                                className={`mt-1 text-xs leading-5 ${
+                                    action.primary
+                                        ? 'text-emerald-50'
+                                        : 'text-gray-500 dark:text-gray-400'
+                                }`}
+                            >
+                                {t(action.descKey)}
+                            </p>
+                        </Link>
+                    ))}
+                </div>
+            </section>
+
+            <section>
+                <div className='mb-3'>
+                    <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                        {t('admin.modules.title')}
+                    </h2>
+                    <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                        {t('admin.modules.subtitle')}
+                    </p>
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+                    {cards.map((card) => (
+                        <Link
+                            key={card.href}
+                            href={card.href}
+                            className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-5 hover:shadow-md transition-shadow'
+                        >
+                            <div className='mb-3'>{card.icon}</div>
+                            <h2 className='text-base font-bold text-gray-900 dark:text-white mb-1'>
+                                {t(card.titleKey)}
+                            </h2>
+                            <p className='text-sm text-gray-500 dark:text-gray-400'>{t(card.descKey)}</p>
+                        </Link>
+                    ))}
+                </div>
+            </section>
         </div>
     );
 };
