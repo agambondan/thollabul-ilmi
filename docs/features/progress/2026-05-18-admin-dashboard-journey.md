@@ -26,3 +26,27 @@ sidebar `/admin` disamakan dengan `/dashboard`.
 - PASS: `node scripts/check-feature-parity.js`
 - PASS: `git diff --check`
 - PASS: `cd apps/web && npm run build`
+
+## Follow-up 2026-05-18 - Admin Metrics Overview
+
+Status: `VERIFIED`
+
+### Scope
+
+- Tambah section `Ringkasan Operasional` di `/admin`.
+- Tambah metric cards:
+  - Pengunjung: status analytics visitor belum aktif.
+  - Total user: dari endpoint admin users.
+  - Konten bacaan: artikel terbit + koleksi buku.
+  - Draft / arsip: artikel yang perlu review.
+- Tambah chart:
+  - Komposisi konten dari modul blog, library, ibadah, dan belajar.
+  - Distribusi role user.
+  - Placeholder visitor chart yang eksplisit menunggu event page view atau endpoint analytics global.
+- Tambah i18n ID/EN untuk metric dan chart admin.
+
+### Verification
+
+- PASS: `node scripts/check-feature-parity.js`
+- PASS: `git diff --check`
+- PASS: `cd apps/web && npm run build`
