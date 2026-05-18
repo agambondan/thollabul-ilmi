@@ -103,6 +103,7 @@ utama, bukan list data biasa.
 - `node --check apps/mobile/src/screens/QuranScreen.js` `PASS`.
 - `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-global-action-sheet-export`
   `PASS`.
+- 2026-05-18: Edge guard increased to 48px to avoid collision with Android back gesture. All 575 mobile tests pass.
 - Device smoke 2026-05-14:
   - `adb devices -l` mendeteksi `POCOPHONE_F1`.
   - `make mobile-status` menunjukkan Expo `exp://10.13.55.208:19007`,
