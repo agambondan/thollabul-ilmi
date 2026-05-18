@@ -21,6 +21,7 @@ const AdminBlogPage = () => {
     const [tags, setTags] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
+    const [actionError, setActionError] = useState('');
 
     const [newCatName, setNewCatName] = useState('');
     const [newTagName, setNewTagName] = useState('');
@@ -53,10 +54,13 @@ const AdminBlogPage = () => {
         if (!confirm(t('admin.blog.confirm_delete_article'))) return;
         const prev = posts;
         setPosts((p) => p.filter((x) => x.id !== id));
+        setActionError('');
         try {
-            await adminBlogApi.delete(id);
-        } catch {
+            const res = await adminBlogApi.delete(id);
+            if (!res.ok) throw new Error(t('admin.error.save'));
+        } catch (err) {
             setPosts(prev);
+            setActionError(err.message || t('admin.error.save'));
         }
     };
 
@@ -64,14 +68,17 @@ const AdminBlogPage = () => {
         e.preventDefault();
         if (!newCatName.trim()) return;
         setCatLoading(true);
+        setActionError('');
         try {
             const res = await adminBlogApi.createCategory({ name: newCatName.trim() });
+            if (!res.ok) throw new Error(t('admin.error.save'));
             const data = await res.json();
             if (data?.id) {
                 setCategories((prev) => [...prev, data]);
                 setNewCatName('');
             }
-        } catch {
+        } catch (err) {
+            setActionError(err.message || t('admin.error.save'));
         } finally {
             setCatLoading(false);
         }
@@ -81,10 +88,13 @@ const AdminBlogPage = () => {
         if (!confirm(t('admin.blog.confirm_delete_category'))) return;
         const prev = categories;
         setCategories((c) => c.filter((x) => x.id !== id));
+        setActionError('');
         try {
-            await adminBlogApi.deleteCategory(id);
-        } catch {
+            const res = await adminBlogApi.deleteCategory(id);
+            if (!res.ok) throw new Error(t('admin.error.save'));
+        } catch (err) {
             setCategories(prev);
+            setActionError(err.message || t('admin.error.save'));
         }
     };
 
@@ -92,14 +102,17 @@ const AdminBlogPage = () => {
         e.preventDefault();
         if (!newTagName.trim()) return;
         setTagLoading(true);
+        setActionError('');
         try {
             const res = await adminBlogApi.createTag({ name: newTagName.trim() });
+            if (!res.ok) throw new Error(t('admin.error.save'));
             const data = await res.json();
             if (data?.id) {
                 setTags((prev) => [...prev, data]);
                 setNewTagName('');
             }
-        } catch {
+        } catch (err) {
+            setActionError(err.message || t('admin.error.save'));
         } finally {
             setTagLoading(false);
         }
@@ -108,10 +121,13 @@ const AdminBlogPage = () => {
     const handleDeleteTag = async (id) => {
         const prev = tags;
         setTags((t) => t.filter((x) => x.id !== id));
+        setActionError('');
         try {
-            await adminBlogApi.deleteTag(id);
-        } catch {
+            const res = await adminBlogApi.deleteTag(id);
+            if (!res.ok) throw new Error(t('admin.error.save'));
+        } catch (err) {
             setTags(prev);
+            setActionError(err.message || t('admin.error.save'));
         }
     };
 
@@ -138,6 +154,9 @@ const AdminBlogPage = () => {
             {error && (
                 <p className='text-sm text-red-500 dark:text-red-400 mb-4'>{error}</p>
             )}
+            {actionError && (
+                <p className='text-sm text-red-500 dark:text-red-400 mb-4'>{actionError}</p>
+            )}
 
             {/* Post list */}
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden mb-8'>
@@ -159,11 +178,12 @@ const AdminBlogPage = () => {
                         <tbody className='divide-y divide-gray-100 dark:divide-slate-700'>
                             {posts.map((post) => {
                                 const badge = STATUS_LABELS[post.status] ?? STATUS_LABELS.draft;
+                                const title = getLocalizedField(post, 'title', lang);
                                 return (
                                     <tr key={post.id} className='hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors'>
                                         <td className='px-5 py-3'>
                                             <p className='font-medium text-gray-900 dark:text-white line-clamp-1'>
-                                                {getLocalizedField(post, 'title', lang)}
+                                                {title}
                                             </p>
                                             {getLocalizedField(post, 'excerpt', lang) && (
                                                 <p className='text-xs text-gray-400 dark:text-gray-500 line-clamp-1 mt-0.5'>
@@ -188,12 +208,16 @@ const AdminBlogPage = () => {
                                             <div className='flex items-center gap-1 justify-end'>
                                                 <Link
                                                     href={`/admin/blog/${post.id}/edit`}
+                                                    aria-label={`${t('common.edit')} ${title}`}
+                                                    title={`${t('common.edit')} ${title}`}
                                                     className='p-2 rounded-lg text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                                                 >
                                                     <BsPencil />
                                                 </Link>
                                                 <button
                                                     onClick={() => handleDeletePost(post.id)}
+                                                    aria-label={`${t('common.delete')} ${title}`}
+                                                    title={`${t('common.delete')} ${title}`}
                                                     className='p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
                                                 >
                                                     <BsTrash />
@@ -223,6 +247,8 @@ const AdminBlogPage = () => {
                         <button
                             type='submit'
                             disabled={catLoading}
+                            aria-label={`${t('admin.crud.add')} ${t('admin.field.category')}`}
+                            title={`${t('admin.crud.add')} ${t('admin.field.category')}`}
                             className='px-3 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-60 text-white rounded-lg text-sm transition-colors'
                         >
                             <BsPlus className='text-lg' />
@@ -237,6 +263,8 @@ const AdminBlogPage = () => {
                                 <span className='text-sm text-gray-700 dark:text-gray-200'>{cat.name}</span>
                                 <button
                                     onClick={() => handleDeleteCategory(cat.id)}
+                                    aria-label={`${t('common.delete')} ${cat.name}`}
+                                    title={`${t('common.delete')} ${cat.name}`}
                                     className='text-gray-400 hover:text-red-500 transition-colors p-1'
                                 >
                                     <BsX />
@@ -262,6 +290,8 @@ const AdminBlogPage = () => {
                         <button
                             type='submit'
                             disabled={tagLoading}
+                            aria-label={`${t('admin.crud.add')} ${t('admin.field.tag')}`}
+                            title={`${t('admin.crud.add')} ${t('admin.field.tag')}`}
                             className='px-3 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-60 text-white rounded-lg text-sm transition-colors'
                         >
                             <BsPlus className='text-lg' />
@@ -276,6 +306,8 @@ const AdminBlogPage = () => {
                                 #{tag.name}
                                 <button
                                     onClick={() => handleDeleteTag(tag.id)}
+                                    aria-label={`${t('common.delete')} ${tag.name}`}
+                                    title={`${t('common.delete')} ${tag.name}`}
                                     className='text-gray-400 hover:text-red-500 transition-colors'
                                 >
                                     <BsX />

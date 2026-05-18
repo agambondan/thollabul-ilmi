@@ -72,3 +72,26 @@ Status: `VERIFIED`
 - PASS: `node scripts/check-feature-parity.js`
 - PASS: `git diff --check`
 - PASS: `cd apps/web && npm run build`
+
+## Follow-up 2026-05-18 - Blog And Sirah Admin CTA Polish
+
+Status: `VERIFIED`
+
+### Scope
+
+- Tambah inline action error untuk `/admin/blog` dan `/admin/siroh`.
+- Tambah `res.ok` checks pada mutation create/delete taxonomy dan delete
+  content agar optimistic UI rollback saat backend menolak request.
+- Update category edit `/admin/siroh` agar modal/inline edit tidak tertutup
+  sebelum save benar-benar berhasil.
+- Tambah `aria-label` dan `title` pada action icon-only untuk:
+  - blog article edit/delete,
+  - blog category/tag add/delete,
+  - sirah category create/edit/save/cancel/delete,
+  - sirah content edit/delete.
+
+### Verification
+
+- PASS: `node scripts/check-feature-parity.js`
+- PASS: `git diff --check`
+- PASS: `cd apps/web && npm run build`

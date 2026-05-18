@@ -14,6 +14,7 @@ const AdminSirahPage = () => {
     const [contents, setContents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
+    const [actionError, setActionError] = useState('');
 
     const [newCatTitle, setNewCatTitle] = useState('');
     const [newCatOrder, setNewCatOrder] = useState('');
@@ -47,18 +48,21 @@ const AdminSirahPage = () => {
         e.preventDefault();
         if (!newCatTitle.trim()) return;
         setCatLoading(true);
+        setActionError('');
         try {
             const res = await adminSirohApi.createCategory({
                 title: newCatTitle.trim(),
                 order: newCatOrder ? Number(newCatOrder) : 0,
             });
+            if (!res.ok) throw new Error(t('admin.error.save'));
             const data = await res.json();
             if (data?.id) {
                 setCategories((prev) => [...prev, data]);
                 setNewCatTitle('');
                 setNewCatOrder('');
             }
-        } catch {
+        } catch (err) {
+            setActionError(err.message || t('admin.error.save'));
         } finally {
             setCatLoading(false);
         }
@@ -68,10 +72,13 @@ const AdminSirahPage = () => {
         if (!confirm(t('admin.sirah.confirm_delete_category'))) return;
         const prev = categories;
         setCategories((c) => c.filter((x) => x.id !== id));
+        setActionError('');
         try {
-            await adminSirohApi.deleteCategory(id);
-        } catch {
+            const res = await adminSirohApi.deleteCategory(id);
+            if (!res.ok) throw new Error(t('admin.error.save'));
+        } catch (err) {
             setCategories(prev);
+            setActionError(err.message || t('admin.error.save'));
         }
     };
 
@@ -82,18 +89,20 @@ const AdminSirahPage = () => {
     };
 
     const handleUpdateCategory = async (id) => {
+        setActionError('');
         try {
             const res = await adminSirohApi.updateCategory(id, {
                 title: editCatTitle.trim(),
                 order: Number(editCatOrder) || 0,
             });
+            if (!res.ok) throw new Error(t('admin.error.save'));
             const data = await res.json();
             if (data?.id) {
                 setCategories((prev) => prev.map((c) => (c.id === id ? data : c)));
             }
-        } catch {
-        } finally {
             setEditingCat(null);
+        } catch (err) {
+            setActionError(err.message || t('admin.error.save'));
         }
     };
 
@@ -101,10 +110,13 @@ const AdminSirahPage = () => {
         if (!confirm(t('admin.sirah.confirm_delete_content'))) return;
         const prev = contents;
         setContents((c) => c.filter((x) => x.id !== id));
+        setActionError('');
         try {
-            await adminSirohApi.deleteContent(id);
-        } catch {
+            const res = await adminSirohApi.deleteContent(id);
+            if (!res.ok) throw new Error(t('admin.error.save'));
+        } catch (err) {
             setContents(prev);
+            setActionError(err.message || t('admin.error.save'));
         }
     };
 
@@ -132,6 +144,9 @@ const AdminSirahPage = () => {
 
             {error && (
                 <p className='text-sm text-red-500 dark:text-red-400 mb-4'>{error}</p>
+            )}
+            {actionError && (
+                <p className='text-sm text-red-500 dark:text-red-400 mb-4'>{actionError}</p>
             )}
 
             <div className='grid lg:grid-cols-2 gap-8'>
@@ -161,6 +176,8 @@ const AdminSirahPage = () => {
                         <button
                             type='submit'
                             disabled={catLoading}
+                            aria-label={`${t('admin.crud.add')} ${t('admin.field.category')}`}
+                            title={`${t('admin.crud.add')} ${t('admin.field.category')}`}
                             className='px-3 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-60 text-white rounded-lg text-sm transition-colors'
                         >
                             <BsPlus className='text-lg' />
@@ -173,65 +190,76 @@ const AdminSirahPage = () => {
                                 {t('admin.blog.empty_categories')}
                             </p>
                         )}
-                        {categories.map((cat) => (
-                            <div
-                                key={cat.id}
-                                className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 px-4 py-3'
-                            >
-                                {editingCat === cat.id ? (
-                                    <div className='flex gap-2'>
-                                        <input
-                                            value={editCatTitle}
-                                            onChange={(e) => setEditCatTitle(e.target.value)}
-                                            className='flex-1 px-2 py-1 text-sm rounded border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none'
-                                        />
-                                        <input
-                                            value={editCatOrder}
-                                            onChange={(e) => setEditCatOrder(e.target.value)}
-                                            type='number'
-                                            className='w-16 px-2 py-1 text-sm rounded border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none'
-                                        />
-                                        <button
-                                            onClick={() => handleUpdateCategory(cat.id)}
-                                            className='px-3 py-1 bg-emerald-700 hover:bg-emerald-600 text-white rounded text-xs'
-                                        >
-                                            {t('common.save')}
-                                        </button>
-                                        <button
-                                            onClick={() => setEditingCat(null)}
-                                            className='px-2 py-1 text-gray-400 hover:text-gray-600'
-                                        >
-                                            <BsX />
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className='flex items-center justify-between'>
-                                        <div>
-                                            <p className='text-sm font-medium text-gray-900 dark:text-white'>
-                                                {getLocalizedField(cat, 'title', lang)}
-                                            </p>
-                                            <p className='text-xs text-gray-400 dark:text-gray-500'>
-                                                {t('admin.field.order')}: {cat.order ?? 0} · {cat.slug}
-                                            </p>
-                                        </div>
-                                        <div className='flex gap-1'>
+                        {categories.map((cat) => {
+                            const title = getLocalizedField(cat, 'title', lang);
+                            return (
+                                <div
+                                    key={cat.id}
+                                    className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 px-4 py-3'
+                                >
+                                    {editingCat === cat.id ? (
+                                        <div className='flex gap-2'>
+                                            <input
+                                                value={editCatTitle}
+                                                onChange={(e) => setEditCatTitle(e.target.value)}
+                                                className='flex-1 px-2 py-1 text-sm rounded border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none'
+                                            />
+                                            <input
+                                                value={editCatOrder}
+                                                onChange={(e) => setEditCatOrder(e.target.value)}
+                                                type='number'
+                                                className='w-16 px-2 py-1 text-sm rounded border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none'
+                                            />
                                             <button
-                                                onClick={() => startEditCategory(cat)}
-                                                className='p-1.5 rounded text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
+                                                onClick={() => handleUpdateCategory(cat.id)}
+                                                aria-label={`${t('common.save')} ${title}`}
+                                                title={`${t('common.save')} ${title}`}
+                                                className='px-3 py-1 bg-emerald-700 hover:bg-emerald-600 text-white rounded text-xs'
                                             >
-                                                <BsPencil className='text-xs' />
+                                                {t('common.save')}
                                             </button>
                                             <button
-                                                onClick={() => handleDeleteCategory(cat.id)}
-                                                className='p-1.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
+                                                onClick={() => setEditingCat(null)}
+                                                aria-label={t('common.cancel')}
+                                                title={t('common.cancel')}
+                                                className='px-2 py-1 text-gray-400 hover:text-gray-600'
                                             >
-                                                <BsTrash className='text-xs' />
+                                                <BsX />
                                             </button>
                                         </div>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+                                    ) : (
+                                        <div className='flex items-center justify-between'>
+                                            <div>
+                                                <p className='text-sm font-medium text-gray-900 dark:text-white'>
+                                                    {title}
+                                                </p>
+                                                <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                                    {t('admin.field.order')}: {cat.order ?? 0} · {cat.slug}
+                                                </p>
+                                            </div>
+                                            <div className='flex gap-1'>
+                                                <button
+                                                    onClick={() => startEditCategory(cat)}
+                                                    aria-label={`${t('common.edit')} ${title}`}
+                                                    title={`${t('common.edit')} ${title}`}
+                                                    className='p-1.5 rounded text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
+                                                >
+                                                    <BsPencil className='text-xs' />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteCategory(cat.id)}
+                                                    aria-label={`${t('common.delete')} ${title}`}
+                                                    title={`${t('common.delete')} ${title}`}
+                                                    className='p-1.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
+                                                >
+                                                    <BsTrash className='text-xs' />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
 
@@ -246,37 +274,48 @@ const AdminSirahPage = () => {
                                 {t('admin.sirah.empty_content')}
                             </p>
                         )}
-                        {contents.map((item) => (
-                            <div
-                                key={item.id}
-                                className='flex items-center justify-between bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 px-4 py-3'
-                            >
-                                <div className='min-w-0 flex-1'>
-                                    <p className='text-sm font-medium text-gray-900 dark:text-white truncate'>
-                                        {getLocalizedField(item, 'title', lang)}
-                                    </p>
-                                    <p className='text-xs text-gray-400 dark:text-gray-500'>
-                                        {categories.find((c) => c.id === item.category_id)?.title ??
-                                            `${t('admin.field.category')} #${item.category_id}`}{' '}
-                                        · {t('admin.field.order')} {item.order ?? 0}
-                                    </p>
+                        {contents.map((item) => {
+                            const title = getLocalizedField(item, 'title', lang);
+                            const category = categories.find((c) => c.id === item.category_id);
+                            const categoryTitle = category
+                                ? getLocalizedField(category, 'title', lang)
+                                : `${t('admin.field.category')} #${item.category_id}`;
+
+                            return (
+                                <div
+                                    key={item.id}
+                                    className='flex items-center justify-between bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 px-4 py-3'
+                                >
+                                    <div className='min-w-0 flex-1'>
+                                        <p className='text-sm font-medium text-gray-900 dark:text-white truncate'>
+                                            {title}
+                                        </p>
+                                        <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                            {categoryTitle}{' '}
+                                            · {t('admin.field.order')} {item.order ?? 0}
+                                        </p>
+                                    </div>
+                                    <div className='flex gap-1 ml-3 shrink-0'>
+                                        <Link
+                                            href={`/admin/siroh/${item.id}/edit`}
+                                            aria-label={`${t('common.edit')} ${title}`}
+                                            title={`${t('common.edit')} ${title}`}
+                                            className='p-1.5 rounded text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
+                                        >
+                                            <BsPencil className='text-xs' />
+                                        </Link>
+                                        <button
+                                            onClick={() => handleDeleteContent(item.id)}
+                                            aria-label={`${t('common.delete')} ${title}`}
+                                            title={`${t('common.delete')} ${title}`}
+                                            className='p-1.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
+                                        >
+                                            <BsTrash className='text-xs' />
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className='flex gap-1 ml-3 shrink-0'>
-                                    <Link
-                                        href={`/admin/siroh/${item.id}/edit`}
-                                        className='p-1.5 rounded text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
-                                    >
-                                        <BsPencil className='text-xs' />
-                                    </Link>
-                                    <button
-                                        onClick={() => handleDeleteContent(item.id)}
-                                        className='p-1.5 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
-                                    >
-                                        <BsTrash className='text-xs' />
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             </div>

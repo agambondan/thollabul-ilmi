@@ -387,6 +387,8 @@ Implementation note:
 
 ### P1. Icon-Only Admin CRUD CTA Tidak Punya Accessible Name
 
+Status 2026-05-18: `PARTIALLY_CLOSED_FOR_BLOG_AND_SIRAH`.
+
 Evidence:
 
 - Blog edit/delete icon-only:
@@ -413,7 +415,17 @@ Recommendation:
   - `Tambah kategori`
 - Pertimbangkan action menu per row untuk destructive action.
 
+Implementation note:
+
+- `/admin/blog` article, category, dan tag action icon sekarang memiliki
+  `aria-label` dan `title` spesifik.
+- `/admin/siroh` category dan content action icon sekarang memiliki
+  `aria-label` dan `title` spesifik.
+- Scope ini belum menutup seluruh admin surface lain di luar Blog/Siroh.
+
 ### P1. Delete Category/Tag Kurang Safe Untuk Data Berelasi
+
+Status 2026-05-18: `PARTIALLY_CLOSED_FOR_BLOG_AND_SIRAH_ROLLBACK`.
 
 Evidence:
 
@@ -437,7 +449,15 @@ Recommendation:
 - Jika backend menolak karena masih dipakai, tampilkan error recovery dan
   rollback optimistic UI.
 
+Implementation note:
+
+- Blog category/tag delete dan Siroh category/content delete sekarang rollback
+  optimistic UI serta menampilkan inline action error saat request gagal.
+- Blog tag delete masih perlu konfirmasi destruktif yang lebih eksplisit.
+
 ### P1. Submit Form Admin Tidak Mengecek `res.ok`
+
+Status 2026-05-18: `PARTIALLY_CLOSED_FOR_BLOG_AND_SIRAH_INDEX_MUTATIONS`.
 
 Evidence:
 
@@ -461,6 +481,14 @@ Recommendation:
 - Tampilkan inline error berisi penyebab dan tindakan:
   `Slug sudah dipakai. Ubah slug lalu simpan lagi.`
 - Jangan redirect sebelum save benar-benar sukses.
+
+Implementation note:
+
+- `/admin/blog` category/tag create dan delete sekarang mengecek `res.ok`.
+- `/admin/siroh` category create/update/delete dan content delete sekarang
+  mengecek `res.ok`; edit category tetap terbuka saat save gagal.
+- Finding untuk `_BlogForm.js` dan `_SirohForm.js` tetap open sampai form submit
+  create/edit artikel/konten juga dicek dengan pola yang sama.
 
 ### P2. New Content Pages Minim Wayfinding
 
