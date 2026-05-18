@@ -20,6 +20,7 @@ import {
     BsChevronLeft,
     BsChevronRight,
     BsCurrencyDollar,
+    BsGlobe,
     BsJournalCheck,
     BsJournalPlus,
     BsMoonStarsFill,
@@ -169,6 +170,7 @@ const DashboardLayout = ({ children }) => {
                 { labelKey: 'link.manasik', href: '/dashboard/manasik', icon: <MdOutlineDirectionsWalk /> },
                 { labelKey: 'link.library', href: '/dashboard/library', icon: <BsBook /> },
                 { labelKey: 'link.blog', href: '/dashboard/blog', icon: <BsNewspaper /> },
+                { labelKey: 'link.feed', href: '/dashboard/feed', icon: <BsGlobe /> },
             ],
         },
         {

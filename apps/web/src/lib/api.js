@@ -741,6 +741,39 @@ export const forumApi = {
     }),
 };
 
+export const feedApi = {
+    list: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return fetch(`${API_URL}/api/v1/feed${qs ? '?' + qs : ''}`);
+    },
+    get: (id) => fetch(`${API_URL}/api/v1/feed/${id}`),
+    create: (data) => authFetch('/api/v1/feed', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    }),
+    like: (id) => authFetch(`/api/v1/feed/${id}/like`, { method: 'POST' }),
+    hide: (id) => authFetch(`/api/v1/feed/${id}/hide`, { method: 'POST' }),
+    report: (id, data) => authFetch(`/api/v1/feed/${id}/report`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data || {}),
+    }),
+    delete: (id) => authFetch(`/api/v1/feed/${id}`, { method: 'DELETE' }),
+};
+
+export const commentApi = {
+    list: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return fetch(`${API_URL}/api/v1/comments${qs ? '?' + qs : ''}`);
+    },
+    create: (data) => authFetch('/api/v1/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    }),
+};
+
 export const notificationInboxApi = {
     list: () => authFetch('/api/v1/notifications/inbox'),
     markRead: (id) => authFetch(`/api/v1/notifications/inbox/${id}/read`, { method: 'PUT' }),
