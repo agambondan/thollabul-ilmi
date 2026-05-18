@@ -69,6 +69,12 @@ func BackfillTranslations(db *gorm.DB) error {
 	if err := backfillIslamicEvents(db); err != nil {
 		return err
 	}
+	if err := backfillDoa(db); err != nil {
+		return err
+	}
+	if err := backfillDzikir(db); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -386,6 +392,44 @@ func backfillIslamicEvents(db *gorm.DB) error {
 			DescriptionIdn: stringPtr(row.Description),
 		}
 		if err := linkTranslation(db, "islamic_event", "id", row.ID, tr); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func backfillDoa(db *gorm.DB) error {
+	var rows []model.Doa
+	if err := db.Where("translation_id IS NULL").Find(&rows).Error; err != nil {
+		return err
+	}
+	for _, row := range rows {
+		tr := &model.Translation{
+			Idn:            stringPtr(row.Title),
+			LatinIdn:       stringPtr(row.Transliteration),
+			DescriptionIdn: stringPtr(row.TranslationText),
+			Ar:             stringPtr(row.Arabic),
+		}
+		if err := linkTranslation(db, "doa", "id", row.ID, tr); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func backfillDzikir(db *gorm.DB) error {
+	var rows []model.Dzikir
+	if err := db.Where("translation_id IS NULL").Find(&rows).Error; err != nil {
+		return err
+	}
+	for _, row := range rows {
+		tr := &model.Translation{
+			Idn:            stringPtr(row.Title),
+			LatinIdn:       stringPtr(row.Transliteration),
+			DescriptionIdn: stringPtr(row.TranslationText),
+			Ar:             stringPtr(row.Arabic),
+		}
+		if err := linkTranslation(db, "dzikir", "id", row.ID, tr); err != nil {
 			return err
 		}
 	}
