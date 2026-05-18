@@ -136,13 +136,19 @@ export const adminUserApi = {
 };
 
 export const analyticsApi = {
-    trackPageView: (data) =>
-        fetch(`${API_URL}/api/v1/analytics/page-view`, {
+    trackPageView: (data) => {
+        const token = getToken();
+        return fetch(`${API_URL}/api/v1/analytics/page-view`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
             body: JSON.stringify(data),
             keepalive: true,
-        }),
+        });
+    },
 };
 
 export const adminAnalyticsApi = {

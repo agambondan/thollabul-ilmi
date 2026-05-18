@@ -19,6 +19,8 @@ type pageViewRepo struct {
 	db *gorm.DB
 }
 
+const pageViewVisitorIdentityExpr = "COALESCE(CAST(user_id AS TEXT), visitor_id)"
+
 func NewPageViewRepository(db *gorm.DB) PageViewRepository {
 	return &pageViewRepo{db}
 }
@@ -39,7 +41,7 @@ func (r *pageViewRepo) UniqueVisitors(since time.Time) (int64, error) {
 	var count int64
 	err := r.db.Model(&model.PageView{}).
 		Where("created_at >= ?", since).
-		Distinct("visitor_id").
+		Distinct(pageViewVisitorIdentityExpr).
 		Count(&count).Error
 	return count, err
 }
@@ -47,7 +49,7 @@ func (r *pageViewRepo) UniqueVisitors(since time.Time) (int64, error) {
 func (r *pageViewRepo) DailyStats(since time.Time) ([]model.PageViewDailyStat, error) {
 	var rows []model.PageViewDailyStat
 	err := r.db.Model(&model.PageView{}).
-		Select("DATE(created_at) AS date, COUNT(*) AS views, COUNT(DISTINCT visitor_id) AS visitors").
+		Select("DATE(created_at) AS date, COUNT(*) AS views, COUNT(DISTINCT "+pageViewVisitorIdentityExpr+") AS visitors").
 		Where("created_at >= ?", since).
 		Group("DATE(created_at)").
 		Order("date asc").
@@ -61,7 +63,7 @@ func (r *pageViewRepo) TopPages(since time.Time, limit int) ([]model.PageViewTop
 	}
 	var rows []model.PageViewTopPage
 	err := r.db.Model(&model.PageView{}).
-		Select("path, COUNT(*) AS views, COUNT(DISTINCT visitor_id) AS visitors").
+		Select("path, COUNT(*) AS views, COUNT(DISTINCT "+pageViewVisitorIdentityExpr+") AS visitors").
 		Where("created_at >= ?", since).
 		Group("path").
 		Order("views desc").

@@ -139,6 +139,27 @@ Status: `VERIFIED`
 - PASS: `git diff --check`
 - PASS: `cd apps/web && npm run build`
 
+## Follow-up 2026-05-18 - Authenticated Analytics Identity
+
+Status: `VERIFIED`
+
+### Scope
+
+- Web page-view tracker now sends auth token when a user is logged in.
+- Backend page-view rows keep both:
+  - `visitor_id` for anonymous/device journey,
+  - `user_id` for authenticated account traceability.
+- Unique visitor aggregation now counts `user_id` first when present and falls
+  back to `visitor_id` for guests.
+- Daily visitor and top-page visitor counts use the same identity expression.
+
+### Verification
+
+- PASS: `cd services/api/app && go test ./...`
+- PASS: `node scripts/check-feature-parity.js`
+- PASS: `git diff --check`
+- PASS: `cd apps/web && npm run build`
+
 ## Follow-up 2026-05-18 - Blog And Sirah Admin CTA Polish
 
 Status: `VERIFIED`
