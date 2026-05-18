@@ -108,6 +108,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	newHadithAyahController := controllers.NewHadithAyahController(newServices)
 	newForumController := controllers.NewForumController(newServices)
 	newMunasabahController := controllers.NewMunasabahController(newServices)
+	newPageViewController := controllers.NewPageViewController(newServices)
 	newNotificationTemplateController := controllers.NewNotificationTemplateController(newServices)
 	newTokohTarikhController := controllers.NewTokohTarikhController(newServices)
 	newSholatController := controllers.NewSholatController(newServices)
@@ -224,6 +225,10 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 
 	// Dashboard (protected — user home screen aggregation)
 	master.Get("/dashboard", jwt, newDashboardController.GetHome)
+
+	// Analytics (public write, admin read)
+	master.Post("/analytics/page-view", newPageViewController.Record)
+	master.Get("/analytics/admin/summary", admin, newPageViewController.AdminSummary)
 
 	// Mufrodat / Kosakata Quran (public)
 	master.Get("/mufrodat/ayah/:id", newMufrodatController.FindByAyahID)

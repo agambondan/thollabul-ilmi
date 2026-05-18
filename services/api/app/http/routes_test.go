@@ -57,6 +57,8 @@ func TestP0ContractRoutes(t *testing.T) {
 		"POST /fiqh/items",
 		"PUT /fiqh/items/:id",
 		"DELETE /fiqh/items/:id",
+		"POST /analytics/page-view",
+		"GET /analytics/admin/summary",
 	}
 	for _, key := range expected {
 		if _, ok := index[key]; !ok {

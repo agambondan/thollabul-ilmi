@@ -89,6 +89,7 @@ var ModelMigrations []interface{} = []interface{}{
 	model.ForumAnswer{},
 	model.ForumVote{},
 	model.Munasabah{},
+	model.PageView{},
 	model.NotificationTemplate{},
 	model.PushToken{},
 	model.TokohTarikh{},

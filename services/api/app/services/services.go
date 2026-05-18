@@ -46,6 +46,7 @@ type Services struct {
 	HadithAyah           HadithAyahService
 	Forum                ForumService
 	Munasabah            MunasabahService
+	PageView             PageViewService
 	NotificationTemplate NotificationTemplateService
 	TokohTarikh          TokohTarikhService
 	Sholat               SholatService
@@ -132,6 +133,7 @@ func NewServices(repo *repository.Repositories) *Services {
 		HadithAyah:           NewHadithAyahService(repo.HadithAyah),
 		Forum:                NewForumServiceWithCache(repo.Forum, cache),
 		Munasabah:            NewMunasabahService(repo.Munasabah),
+		PageView:             NewPageViewService(repo.PageView),
 		NotificationTemplate: NewNotificationTemplateService(repo.NotificationTemplate),
 		TokohTarikh:          NewTokohTarikhServiceWithCache(repo.TokohTarikh, cache),
 		Sholat:               NewSholatService(repo.Sholat),

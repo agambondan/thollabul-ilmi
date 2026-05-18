@@ -2,6 +2,7 @@ import './globals.css';
 import { AuthProvider } from '@/context/Auth';
 import SettingButton from '@/components/popup/SettingButton';
 import { LocaleProvider } from '@/context/Locale';
+import AnalyticsTracker from '@/components/AnalyticsTracker';
 
 const SITE_URL =
     process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tholabul-ilmi.com';
@@ -81,6 +82,7 @@ export default function RootLayout({ children }) {
                 />
                 <LocaleProvider>
                     <AuthProvider>
+                        <AnalyticsTracker />
                         {children}
                         <SettingButton />
                     </AuthProvider>

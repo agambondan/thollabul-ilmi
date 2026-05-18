@@ -35,18 +35,40 @@ Status: `VERIFIED`
 
 - Tambah section `Ringkasan Operasional` di `/admin`.
 - Tambah metric cards:
-  - Pengunjung: status analytics visitor belum aktif.
+  - Pengunjung: unique visitor 14 hari terakhir dari page-view analytics.
   - Total user: dari endpoint admin users.
   - Konten bacaan: artikel terbit + koleksi buku.
   - Draft / arsip: artikel yang perlu review.
 - Tambah chart:
   - Komposisi konten dari modul blog, library, ibadah, dan belajar.
   - Distribusi role user.
-  - Placeholder visitor chart yang eksplisit menunggu event page view atau endpoint analytics global.
+  - Visitor chart dari event page view harian.
 - Tambah i18n ID/EN untuk metric dan chart admin.
 
 ### Verification
 
+- PASS: `node scripts/check-feature-parity.js`
+- PASS: `git diff --check`
+- PASS: `cd apps/web && npm run build`
+
+## Follow-up 2026-05-18 - Page View Analytics
+
+Status: `VERIFIED`
+
+### Scope
+
+- Tambah model backend `PageView` dan migration.
+- Tambah endpoint public `POST /api/v1/analytics/page-view`.
+- Tambah endpoint admin `GET /api/v1/analytics/admin/summary?days=14`.
+- Tambah tracker global web yang mencatat route change dengan visitor id lokal.
+- Hubungkan admin dashboard ke summary analytics untuk:
+  - unique visitor 14 hari terakhir,
+  - chart visitor harian,
+  - halaman teratas.
+
+### Verification
+
+- PASS: `cd services/api/app && go test ./...`
 - PASS: `node scripts/check-feature-parity.js`
 - PASS: `git diff --check`
 - PASS: `cd apps/web && npm run build`

@@ -5,6 +5,7 @@ import { useLocale } from '@/context/Locale';
 import {
     adminAsbabunNuzulApi,
     adminAsmaulHusnaApi,
+    adminAnalyticsApi,
     adminBlogApi,
     adminDoaApi,
     adminDzikirApi,
@@ -83,6 +84,16 @@ const safeJson = async (promise) => {
         return { ok: true, count: countItems(payload), items: normalizeList(payload) };
     } catch {
         return { ok: false, count: 0, items: [] };
+    }
+};
+
+const safeData = async (promise) => {
+    try {
+        const res = await promise;
+        if (!res?.ok) return { ok: false, data: null };
+        return { ok: true, data: await res.json() };
+    } catch {
+        return { ok: false, data: null };
     }
 };
 
@@ -223,6 +234,7 @@ const initialOverview = {
     libraryBooks: 0,
     worshipContent: 0,
     learningContent: 0,
+    analytics: null,
     contentMix: [],
 };
 
@@ -267,6 +279,7 @@ const AdminDashboard = () => {
                 sejarah,
                 kajian,
                 asmaul,
+                analytics,
             ] = await Promise.all([
                 safeJson(adminUserApi.list()),
                 safeJson(adminBlogApi.listAll()),
@@ -283,6 +296,7 @@ const AdminDashboard = () => {
                 safeJson(adminSejarahApi.list()),
                 safeJson(adminKajianApi.list(0, 100)),
                 safeJson(adminAsmaulHusnaApi.list()),
+                safeData(adminAnalyticsApi.summary(14)),
             ]);
 
             if (!alive) return;
@@ -325,6 +339,7 @@ const AdminDashboard = () => {
                     sejarah,
                     kajian,
                     asmaul,
+                    analytics,
                 ].filter((item) => !item.ok).length,
                 users: users.count,
                 roles: buildRoleData(users.items),
@@ -333,6 +348,7 @@ const AdminDashboard = () => {
                 libraryBooks: library.count,
                 worshipContent: doa.count + dzikir.count + wirid.count + tahlil.count + manasik.count,
                 learningContent: quiz.count + kamus.count + fiqh.count + asbabun.count + sejarah.count + kajian.count + asmaul.count,
+                analytics: analytics.data,
                 contentMix,
             });
         };
@@ -348,7 +364,9 @@ const AdminDashboard = () => {
         () => [
             {
                 label: t('admin.metric.visitors'),
-                value: t('admin.metric.not_tracked'),
+                value: overview.loading
+                    ? '...'
+                    : Number(overview.analytics?.unique_visitors ?? 0).toLocaleString('id-ID'),
                 desc: t('admin.metric.visitors_desc'),
                 icon: <BsActivity />,
                 tone: 'amber',
@@ -523,13 +541,52 @@ const AdminDashboard = () => {
                         </div>
                     </div>
 
-                    <div className='rounded-xl border border-dashed border-amber-200 bg-amber-50/50 p-5 dark:border-amber-900/60 dark:bg-amber-900/10'>
-                        <h2 className='text-sm font-semibold text-amber-900 dark:text-amber-200'>
+                    <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
+                        <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
                             {t('admin.metrics.visitor_chart')}
                         </h2>
-                        <p className='mt-2 text-xs leading-5 text-amber-800/80 dark:text-amber-200/80'>
+                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
                             {t('admin.metrics.visitor_chart_desc')}
                         </p>
+                        <div className='mt-4 h-40'>
+                            <ResponsiveContainer width='100%' height='100%'>
+                                <BarChart data={overview.analytics?.daily ?? []} margin={{ top: 4, right: 4, bottom: 4, left: -16 }}>
+                                    <XAxis dataKey='date' tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: '#64748b' }} />
+                                    <YAxis allowDecimals={false} tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: '#64748b' }} />
+                                    <Tooltip
+                                        cursor={{ fill: 'rgba(180, 83, 9, 0.08)' }}
+                                        contentStyle={{
+                                            borderRadius: 12,
+                                            borderColor: '#e2e8f0',
+                                            fontSize: 12,
+                                        }}
+                                    />
+                                    <Bar dataKey='visitors' fill='#b45309' radius={[6, 6, 0, 0]} />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div className='mt-4 border-t border-gray-100 pt-3 dark:border-slate-700'>
+                            <p className='mb-2 text-xs font-semibold text-gray-700 dark:text-gray-300'>
+                                {t('admin.metrics.top_pages')}
+                            </p>
+                            <div className='space-y-2'>
+                                {(overview.analytics?.top_pages ?? []).slice(0, 4).map((page) => (
+                                    <div key={page.path} className='flex items-center justify-between gap-3 text-xs'>
+                                        <span className='truncate text-gray-500 dark:text-gray-400'>
+                                            {page.path}
+                                        </span>
+                                        <span className='shrink-0 font-semibold text-gray-900 dark:text-white'>
+                                            {page.views}
+                                        </span>
+                                    </div>
+                                ))}
+                                {!overview.loading && (overview.analytics?.top_pages ?? []).length === 0 ? (
+                                    <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                        {t('admin.metrics.no_visitor_data')}
+                                    </p>
+                                ) : null}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

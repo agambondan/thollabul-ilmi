@@ -135,6 +135,20 @@ export const adminUserApi = {
     delete: (id) => authFetch(`/api/v1/users/${id}`, { method: 'DELETE' }),
 };
 
+export const analyticsApi = {
+    trackPageView: (data) =>
+        fetch(`${API_URL}/api/v1/analytics/page-view`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+            keepalive: true,
+        }),
+};
+
+export const adminAnalyticsApi = {
+    summary: (days = 14) => authFetch(`/api/v1/analytics/admin/summary?days=${days}`),
+};
+
 export const bookmarkApi = {
     list: () => authFetch('/api/v1/bookmarks'),
     add: (refType, refId, extra = {}) =>

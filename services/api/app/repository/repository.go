@@ -69,6 +69,7 @@ type Repositories struct {
 	HadithAyah           HadithAyahRepository
 	Forum                ForumRepository
 	Munasabah            MunasabahRepository
+	PageView             PageViewRepository
 	NotificationTemplate NotificationTemplateRepository
 	TokohTarikh          TokohTarikhRepository
 	AsbabunNuzul         AsbabunNuzulRepository
@@ -150,6 +151,7 @@ func NewRepositories(db *gorm.DB, client *redis.Client) (*Repositories, error) {
 		HadithAyah:           NewHadithAyahRepository(db),
 		Forum:                NewForumRepository(db),
 		Munasabah:            NewMunasabahRepository(db),
+		PageView:             NewPageViewRepository(db),
 		NotificationTemplate: NewNotificationTemplateRepository(db),
 		TokohTarikh:          NewTokohTarikhRepository(db),
 		AsbabunNuzul:         NewAsbabunNuzulRepository(db),
@@ -204,6 +206,8 @@ func (s *Repositories) createCompositeIndexes() {
 		`CREATE INDEX IF NOT EXISTS idx_ua_uid_date_del    ON user_activity (user_id, activity_date, deleted_at)`,
 		`CREATE INDEX IF NOT EXISTS idx_hafalan_uid_del    ON hafalan_progress (user_id, deleted_at)`,
 		`CREATE INDEX IF NOT EXISTS idx_hafalan_status_del ON hafalan_progress (status, deleted_at)`,
+		`CREATE INDEX IF NOT EXISTS idx_page_views_created ON page_views (created_at)`,
+		`CREATE INDEX IF NOT EXISTS idx_page_views_source_created ON page_views (source, created_at)`,
 
 		// pg_trgm GIN indexes for ILIKE search optimization
 		`CREATE INDEX IF NOT EXISTS idx_trgm_translation_ar  ON translation USING GIN (ar gin_trgm_ops)`,
