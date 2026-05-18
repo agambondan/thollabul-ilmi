@@ -457,7 +457,7 @@ Implementation note:
 
 ### P1. Submit Form Admin Tidak Mengecek `res.ok`
 
-Status 2026-05-18: `PARTIALLY_CLOSED_FOR_BLOG_AND_SIRAH_INDEX_MUTATIONS`.
+Status 2026-05-18: `CLOSED_FOR_BLOG_AND_SIRAH`.
 
 Evidence:
 
@@ -487,10 +487,13 @@ Implementation note:
 - `/admin/blog` category/tag create dan delete sekarang mengecek `res.ok`.
 - `/admin/siroh` category create/update/delete dan content delete sekarang
   mengecek `res.ok`; edit category tetap terbuka saat save gagal.
-- Finding untuk `_BlogForm.js` dan `_SirohForm.js` tetap open sampai form submit
-  create/edit artikel/konten juga dicek dengan pola yang sama.
+- `_BlogForm.js` dan `_SirohForm.js` sekarang mengecek `res.ok` pada
+  create/edit submit sebelum redirect ke list.
+- Form inline error memakai pesan backend/global mutation guard jika tersedia.
 
 ### P2. New Content Pages Minim Wayfinding
+
+Status 2026-05-18: `CLOSED_FOR_BLOG_AND_SIRAH`.
 
 Evidence:
 
@@ -508,6 +511,13 @@ Recommendation:
   - `Blog / Artikel Baru`
   - Back link `Kembali ke Blog`
 - Pastikan Cancel tetap terlihat di atas untuk form panjang.
+
+Implementation note:
+
+- `/admin/blog/new`, `/admin/blog/[id]/edit`, `/admin/siroh/new`, dan
+  `/admin/siroh/[id]/edit` sekarang punya back link header ke list modulnya.
+- State not-found edit Blog/Sirah juga punya back link agar admin tidak
+  terjebak di halaman error.
 
 ### P2. Admin User Delete Sudah Lebih Baik, Tapi Role Change Terlalu Silent
 

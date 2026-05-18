@@ -73,14 +73,13 @@ const BlogForm = ({ initialData = null, postId = null }) => {
             status,
         };
         try {
-            if (isEdit) {
-                await adminBlogApi.update(postId, payload);
-            } else {
-                await adminBlogApi.create(payload);
-            }
+            const res = isEdit
+                ? await adminBlogApi.update(postId, payload)
+                : await adminBlogApi.create(payload);
+            if (!res.ok) throw new Error(t('admin.error.save'));
             router.push('/admin/blog');
-        } catch {
-            setError(t('admin.error.save'));
+        } catch (err) {
+            setError(err.message || t('admin.error.save'));
         } finally {
             setIsLoading(false);
         }

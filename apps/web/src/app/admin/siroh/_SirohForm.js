@@ -61,14 +61,13 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             order: Number(order) || 0,
         };
         try {
-            if (isEdit) {
-                await adminSirohApi.updateContent(contentId, payload);
-            } else {
-                await adminSirohApi.createContent(payload);
-            }
+            const res = isEdit
+                ? await adminSirohApi.updateContent(contentId, payload)
+                : await adminSirohApi.createContent(payload);
+            if (!res.ok) throw new Error(t('admin.error.save'));
             router.push('/admin/siroh');
-        } catch {
-            setError(t('admin.error.save'));
+        } catch (err) {
+            setError(err.message || t('admin.error.save'));
         } finally {
             setIsLoading(false);
         }

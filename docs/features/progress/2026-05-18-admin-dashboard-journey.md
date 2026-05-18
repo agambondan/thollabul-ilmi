@@ -95,3 +95,26 @@ Status: `VERIFIED`
 - PASS: `node scripts/check-feature-parity.js`
 - PASS: `git diff --check`
 - PASS: `cd apps/web && npm run build`
+
+## Follow-up 2026-05-18 - Blog And Sirah Form Recovery
+
+Status: `VERIFIED`
+
+### Scope
+
+- Tambah explicit `res.ok` checks pada submit create/edit artikel Blog.
+- Tambah explicit `res.ok` checks pada submit create/edit konten Sirah.
+- Inline error form sekarang memakai pesan error backend/global mutation guard
+  jika tersedia dan tidak redirect sebelum save sukses.
+- Tambah back link header pada halaman:
+  - `/admin/blog/new`
+  - `/admin/blog/[id]/edit`
+  - `/admin/siroh/new`
+  - `/admin/siroh/[id]/edit`
+- Tambah back link juga pada state not-found edit Blog/Sirah.
+
+### Verification
+
+- PASS: `node scripts/check-feature-parity.js`
+- PASS: `git diff --check`
+- PASS: `cd apps/web && npm run build`
