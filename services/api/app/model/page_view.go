@@ -55,15 +55,29 @@ type PageViewTopPageSource struct {
 	Visitors int64  `json:"visitors"`
 }
 
+type PageViewRecentActivity struct {
+	ID        string `json:"id"`
+	UserID    string `json:"user_id"`
+	VisitorID string `json:"visitor_id"`
+	Name      string `json:"name"`
+	Email     string `json:"email"`
+	Path      string `json:"path"`
+	Source    string `json:"source"`
+	Referrer  string `json:"referrer"`
+	UserAgent string `json:"user_agent"`
+	SeenAt    string `json:"seen_at"`
+}
+
 type PageViewAdminSummary struct {
-	TotalViews       int64                   `json:"total_views"`
-	UniqueVisitors   int64                   `json:"unique_visitors"`
-	TodayViews       int64                   `json:"today_views"`
-	TodayVisitors    int64                   `json:"today_visitors"`
-	Daily            []PageViewDailyStat     `json:"daily"`
-	TopPages         []PageViewTopPage       `json:"top_pages"`
-	SourceBreakdown  []PageViewSourceStat    `json:"source_breakdown"`
-	ActiveUsers      []PageViewUserStat      `json:"active_users"`
-	TopPagesBySource []PageViewTopPageSource `json:"top_pages_by_source"`
-	TrackingEnabled  bool                    `json:"tracking_enabled"`
+	TotalViews       int64                    `json:"total_views"`
+	UniqueVisitors   int64                    `json:"unique_visitors"`
+	TodayViews       int64                    `json:"today_views"`
+	TodayVisitors    int64                    `json:"today_visitors"`
+	Daily            []PageViewDailyStat      `json:"daily"`
+	TopPages         []PageViewTopPage        `json:"top_pages"`
+	SourceBreakdown  []PageViewSourceStat     `json:"source_breakdown"`
+	ActiveUsers      []PageViewUserStat       `json:"active_users"`
+	TopPagesBySource []PageViewTopPageSource  `json:"top_pages_by_source"`
+	RecentActivity   []PageViewRecentActivity `json:"recent_activity"`
+	TrackingEnabled  bool                     `json:"tracking_enabled"`
 }

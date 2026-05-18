@@ -23,7 +23,7 @@ func NewJarhTadilRepository(db *gorm.DB) JarhTadilRepository {
 }
 
 func (r *jarhTadilRepo) withRelations(db *gorm.DB) *gorm.DB {
-	return db.Preload("Perawi").Preload("Penilai")
+	return db.Preload("Perawi").Preload("Penilai").Preload("Translation")
 }
 
 func (r *jarhTadilRepo) Save(j *model.JarhTadil) (*model.JarhTadil, error) {

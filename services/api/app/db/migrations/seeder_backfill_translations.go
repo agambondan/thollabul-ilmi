@@ -75,6 +75,12 @@ func BackfillTranslations(db *gorm.DB) error {
 	if err := backfillDzikir(db); err != nil {
 		return err
 	}
+	if err := backfillPerawi(db); err != nil {
+		return err
+	}
+	if err := backfillJarhTadil(db); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -430,6 +436,52 @@ func backfillDzikir(db *gorm.DB) error {
 			Ar:             stringPtr(row.Arabic),
 		}
 		if err := linkTranslation(db, "dzikir", "id", row.ID, tr); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func backfillPerawi(db *gorm.DB) error {
+	var rows []model.Perawi
+	if err := db.Where("translation_id IS NULL").Find(&rows).Error; err != nil {
+		return err
+	}
+	for _, row := range rows {
+		biografis := ""
+		if row.Biografis != nil {
+			biografis = *row.Biografis
+		}
+		tr := &model.Translation{
+			Idn:            stringPtr(biografis),
+			DescriptionIdn: stringPtr(biografis),
+		}
+		if err := linkTranslation(db, "perawi", "id", row.ID, tr); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func backfillJarhTadil(db *gorm.DB) error {
+	var rows []model.JarhTadil
+	if err := db.Where("translation_id IS NULL").Find(&rows).Error; err != nil {
+		return err
+	}
+	for _, row := range rows {
+		teksNilai := ""
+		if row.TeksNilai != nil {
+			teksNilai = *row.TeksNilai
+		}
+		catatan := ""
+		if row.Catatan != nil {
+			catatan = *row.Catatan
+		}
+		tr := &model.Translation{
+			Idn:            stringPtr(teksNilai),
+			DescriptionIdn: stringPtr(catatan),
+		}
+		if err := linkTranslation(db, "jarh_tadil", "id", row.ID, tr); err != nil {
 			return err
 		}
 	}

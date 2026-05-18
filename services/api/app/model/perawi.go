@@ -29,20 +29,22 @@ const (
 
 type Perawi struct {
 	BaseID
-	NamaArab    *string `json:"nama_arab,omitempty" gorm:"type:varchar(255);not null;index"`
-	NamaLatin   *string `json:"nama_latin,omitempty" gorm:"type:varchar(255);not null;index"`
-	NamaLengkap *string `json:"nama_lengkap,omitempty" gorm:"type:text"`
-	Kunyah      *string `json:"kunyah,omitempty" gorm:"type:varchar(100)"`
-	Laqab       *string `json:"laqab,omitempty" gorm:"type:varchar(100)"`
-	Nisbah      *string `json:"nisbah,omitempty" gorm:"type:varchar(100)"`
-	TahunLahir  *int    `json:"tahun_lahir,omitempty"`
-	TahunWafat  *int    `json:"tahun_wafat,omitempty"`
-	TahunHijri  *bool   `json:"tahun_hijri,omitempty" gorm:"default:true"`
-	TempatLahir *string `json:"tempat_lahir,omitempty" gorm:"type:varchar(100)"`
-	TempatWafat *string `json:"tempat_wafat,omitempty" gorm:"type:varchar(100)"`
-	Tabaqah     *string `json:"tabaqah,omitempty" gorm:"type:varchar(50);index"`
-	Status      *string `json:"status,omitempty" gorm:"type:varchar(30);index"`
-	Biografis   *string `json:"biografis,omitempty" gorm:"type:text"`
+	NamaArab      *string       `json:"nama_arab,omitempty" gorm:"type:varchar(255);not null;index"`
+	NamaLatin     *string       `json:"nama_latin,omitempty" gorm:"type:varchar(255);not null;index"`
+	NamaLengkap   *string       `json:"nama_lengkap,omitempty" gorm:"type:text"`
+	Kunyah        *string       `json:"kunyah,omitempty" gorm:"type:varchar(100)"`
+	Laqab         *string       `json:"laqab,omitempty" gorm:"type:varchar(100)"`
+	Nisbah        *string       `json:"nisbah,omitempty" gorm:"type:varchar(100)"`
+	TahunLahir    *int          `json:"tahun_lahir,omitempty"`
+	TahunWafat    *int          `json:"tahun_wafat,omitempty"`
+	TahunHijri    *bool         `json:"tahun_hijri,omitempty" gorm:"default:true"`
+	TempatLahir   *string       `json:"tempat_lahir,omitempty" gorm:"type:varchar(100)"`
+	TempatWafat   *string       `json:"tempat_wafat,omitempty" gorm:"type:varchar(100)"`
+	Tabaqah       *string       `json:"tabaqah,omitempty" gorm:"type:varchar(50);index"`
+	Status        *string       `json:"status,omitempty" gorm:"type:varchar(30);index"`
+	Biografis     *string       `json:"-" gorm:"type:text"`
+	TranslationID *int          `json:"translation_id,omitempty" gorm:"index"`
+	Translation   *Translation  `json:"translation,omitempty" gorm:"foreignKey:TranslationID;-:migration"`
 
 	Guru      []Perawi    `json:"guru,omitempty" gorm:"many2many:perawi_guru;joinForeignKey:MuridID;joinReferences:GuruID"`
 	Murid     []Perawi    `json:"murid,omitempty" gorm:"many2many:perawi_guru;joinForeignKey:GuruID;joinReferences:MuridID"`

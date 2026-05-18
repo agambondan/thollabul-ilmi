@@ -16,6 +16,7 @@ type PageViewRepository interface {
 	SourceStats(since time.Time) ([]model.PageViewSourceStat, error)
 	ActiveUsers(since time.Time, limit int) ([]model.PageViewUserStat, error)
 	TopPagesBySource(since time.Time, limitPerSource int) ([]model.PageViewTopPageSource, error)
+	RecentActivity(since time.Time, limit int) ([]model.PageViewRecentActivity, error)
 }
 
 type pageViewRepo struct {
@@ -132,6 +133,32 @@ func (r *pageViewRepo) SourceStats(since time.Time) ([]model.PageViewSourceStat,
 		Group("source").
 		Order("views desc").
 		Scan(&rows).Error
+	return rows, err
+}
+
+func (r *pageViewRepo) RecentActivity(since time.Time, limit int) ([]model.PageViewRecentActivity, error) {
+	if limit <= 0 {
+		limit = 20
+	}
+	var rows []model.PageViewRecentActivity
+	err := r.db.Raw(`
+		SELECT
+			pv.id::text AS id,
+			COALESCE(pv.user_id::text, '') AS user_id,
+			CASE WHEN pv.user_id IS NULL THEN pv.visitor_id ELSE '' END AS visitor_id,
+			COALESCE(u.name, '') AS name,
+			COALESCE(u.email, '') AS email,
+			pv.path,
+			pv.source,
+			COALESCE(pv.referrer, '') AS referrer,
+			COALESCE(pv.user_agent, '') AS user_agent,
+			TO_CHAR(pv.created_at, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS seen_at
+		FROM page_views pv
+		LEFT JOIN users u ON u.id = pv.user_id
+		WHERE pv.created_at >= ?
+		ORDER BY pv.created_at DESC
+		LIMIT ?
+	`, since, limit).Scan(&rows).Error
 	return rows, err
 }
 

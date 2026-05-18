@@ -208,6 +208,7 @@ func (s *Repositories) createCompositeIndexes() {
 		`CREATE INDEX IF NOT EXISTS idx_hafalan_status_del ON hafalan_progress (status, deleted_at)`,
 		`CREATE INDEX IF NOT EXISTS idx_page_views_created ON page_views (created_at)`,
 		`CREATE INDEX IF NOT EXISTS idx_page_views_source_created ON page_views (source, created_at)`,
+		`CREATE INDEX IF NOT EXISTS idx_page_views_user_created ON page_views (user_id, created_at DESC)`,
 
 		// pg_trgm GIN indexes for ILIKE search optimization
 		`CREATE INDEX IF NOT EXISTS idx_trgm_translation_ar  ON translation USING GIN (ar gin_trgm_ops)`,

@@ -93,6 +93,10 @@ func (s *pageViewService) AdminSummary(days int) (*model.PageViewAdminSummary, e
 	if err != nil {
 		return nil, err
 	}
+	recentActivity, err := s.repo.RecentActivity(since, 20)
+	if err != nil {
+		return nil, err
+	}
 
 	return &model.PageViewAdminSummary{
 		TotalViews:       totalViews,
@@ -104,6 +108,7 @@ func (s *pageViewService) AdminSummary(days int) (*model.PageViewAdminSummary, e
 		SourceBreakdown:  sourceBreakdown,
 		ActiveUsers:      activeUsers,
 		TopPagesBySource: topPagesBySource,
+		RecentActivity:   recentActivity,
 		TrackingEnabled:  true,
 	}, nil
 }

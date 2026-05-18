@@ -254,3 +254,30 @@ Status: `VERIFIED`
 - PASS: `git diff --check`
 - PASS: `cd apps/web && npm run build`
 - PASS: `cd apps/web && npm test -- --runInBand apps/web/src/__tests__/const.test.js`
+
+## Follow-up 2026-05-18 - Admin Visitor Journey Trace
+
+Status: `VERIFIED`
+
+### Scope
+
+- Extend admin analytics summary dengan `recent_activity`.
+- Recent activity menampilkan:
+  - identitas user jika login,
+  - visitor id untuk guest,
+  - path,
+  - referrer,
+  - source,
+  - user agent,
+  - waktu event.
+- Tambah table `Aktivitas Terbaru` di `/admin` untuk tracing journey user dan
+  guest.
+- Tambah index `idx_page_views_user_created` untuk query active user / journey.
+- Update `docs/WEB_MOBILE_SYNC.md` untuk mencatat detail admin analytics baru.
+
+### Verification
+
+- PASS: `cd services/api/app && go test ./...`
+- PASS: `node scripts/check-feature-parity.js`
+- PASS: `git diff --check`
+- PASS: `cd apps/web && npm run build`

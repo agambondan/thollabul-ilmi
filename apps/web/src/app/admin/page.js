@@ -156,6 +156,7 @@ const initialOverview = {
     sourceBreakdown: [],
     activeUsers: [],
     topPagesBySource: [],
+    recentActivity: [],
     trafficInsights: [],
     contentMix: [],
     reviewQueue: [],
@@ -248,6 +249,7 @@ const AdminDashboard = () => {
             const sourceBreakdown = analyticsData?.source_breakdown ?? [];
             const activeUsers = analyticsData?.active_users ?? [];
             const topPagesBySource = analyticsData?.top_pages_by_source ?? [];
+            const recentActivity = analyticsData?.recent_activity ?? [];
             const totalViews = Number(analyticsData?.total_views ?? 0);
             const averageDailyViews =
                 dailyAnalytics.length > 0 ? Math.round(totalViews / dailyAnalytics.length) : 0;
@@ -391,6 +393,7 @@ const AdminDashboard = () => {
                 sourceBreakdown,
                 activeUsers,
                 topPagesBySource,
+                recentActivity,
                 trafficInsights,
                 contentMix,
                 reviewQueue,

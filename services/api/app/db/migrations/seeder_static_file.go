@@ -920,24 +920,33 @@ func seedPerawiFromFile(db *gorm.DB) {
 	}
 	log.Printf("[seeder] seedPerawiFromFile: %d entri", len(rows))
 	for _, r := range rows {
+		tr := model.Translation{
+			Idn:            stringPtr(r.Biografis),
+			DescriptionIdn: stringPtr(r.Biografis),
+		}
+		if err := db.Create(&tr).Error; err != nil {
+			log.Printf("[seeder] perawi translation '%s': %v", r.NamaLatin, err)
+			continue
+		}
 		item := model.Perawi{
-			NamaArab:    strptrIfNonEmpty(r.NamaArab),
-			NamaLatin:   strptrIfNonEmpty(r.NamaLatin),
-			NamaLengkap: strptrIfNonEmpty(r.NamaLengkap),
-			Kunyah:      strptrIfNonEmpty(r.Kunyah),
-			Nisbah:      strptrIfNonEmpty(r.Nisbah),
-			TahunLahir:  r.TahunLahir,
-			TahunWafat:  r.TahunWafat,
-			TahunHijri:  &r.TahunHijri,
-			TempatLahir: strptrIfNonEmpty(r.TempatLahir),
-			TempatWafat: strptrIfNonEmpty(r.TempatWafat),
-			Tabaqah:     strptrIfNonEmpty(r.Tabaqah),
-			Status:      strptrIfNonEmpty(r.Status),
-			Biografis:   strptrIfNonEmpty(r.Biografis),
+			NamaArab:      strptrIfNonEmpty(r.NamaArab),
+			NamaLatin:     strptrIfNonEmpty(r.NamaLatin),
+			NamaLengkap:   strptrIfNonEmpty(r.NamaLengkap),
+			Kunyah:        strptrIfNonEmpty(r.Kunyah),
+			Nisbah:        strptrIfNonEmpty(r.Nisbah),
+			TahunLahir:    r.TahunLahir,
+			TahunWafat:    r.TahunWafat,
+			TahunHijri:    &r.TahunHijri,
+			TempatLahir:   strptrIfNonEmpty(r.TempatLahir),
+			TempatWafat:   strptrIfNonEmpty(r.TempatWafat),
+			Tabaqah:       strptrIfNonEmpty(r.Tabaqah),
+			Status:        strptrIfNonEmpty(r.Status),
+			Biografis:     strptrIfNonEmpty(r.Biografis),
+			TranslationID: tr.ID,
 		}
 		db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "nama_latin"}},
-			DoUpdates: clause.AssignmentColumns([]string{"nama_arab", "nama_lengkap", "kunyah", "nisbah", "tahun_lahir", "tahun_wafat", "tempat_lahir", "tempat_wafat", "tabaqah", "status", "biografis"}),
+			DoUpdates: clause.AssignmentColumns([]string{"nama_arab", "nama_lengkap", "kunyah", "nisbah", "tahun_lahir", "tahun_wafat", "tempat_lahir", "tempat_wafat", "tabaqah", "status", "biografis", "translation_id"}),
 		}).Create(&item)
 	}
 }
@@ -990,19 +999,36 @@ func seedJarhTadilFromFile(db *gorm.DB) {
 			continue
 		}
 		jenisNilai := model.JarhTadilJenis(r.JenisNilai)
+		teksVal := ""
+		if r.TeksNilai != nil {
+			teksVal = *r.TeksNilai
+		}
+		catatVal := ""
+		if r.Catatan != nil {
+			catatVal = *r.Catatan
+		}
+		tr := model.Translation{
+			Idn:            stringPtr(teksVal),
+			DescriptionIdn: stringPtr(catatVal),
+		}
+		if err := db.Create(&tr).Error; err != nil {
+			log.Printf("[seeder] jarh_tadil translation: %v", err)
+			continue
+		}
 		item := model.JarhTadil{
-			PerawiID:   &pID,
-			PenilaiID:  &penilaiID,
-			JenisNilai: &jenisNilai,
-			Tingkat:    r.Tingkat,
-			TeksNilai:  r.TeksNilai,
-			Sumber:     r.Sumber,
-			Halaman:    r.Halaman,
-			Catatan:    r.Catatan,
+			PerawiID:      &pID,
+			PenilaiID:     &penilaiID,
+			JenisNilai:    &jenisNilai,
+			Tingkat:       r.Tingkat,
+			TeksNilai:     r.TeksNilai,
+			Sumber:        r.Sumber,
+			Halaman:       r.Halaman,
+			Catatan:       r.Catatan,
+			TranslationID: tr.ID,
 		}
 		db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "perawi_id"}, {Name: "penilai_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"jenis_nilai", "tingkat", "teks_nilai", "sumber", "halaman", "catatan"}),
+			DoUpdates: clause.AssignmentColumns([]string{"jenis_nilai", "tingkat", "teks_nilai", "sumber", "halaman", "catatan", "translation_id"}),
 		}).Create(&item)
 	}
 }

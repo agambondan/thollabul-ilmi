@@ -86,6 +86,9 @@ func (c *perawiController) FindByID(ctx *fiber.Ctx) error {
 	if err != nil {
 		return lib.ErrorNotFound(ctx)
 	}
+	if data.Translation != nil {
+		data.Translation.FilterByLang(lib.GetPreferredLang(ctx))
+	}
 	return lib.OK(ctx, data)
 }
 

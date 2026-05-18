@@ -30,7 +30,11 @@ func NewPerawiRepository(db *gorm.DB, pg *paginate.Pagination) PerawiRepository 
 }
 
 func (r *perawiRepo) withRelations(db *gorm.DB) *gorm.DB {
-	return db.Preload("JarhTadil").Preload("JarhTadil.Penilai")
+	return db.Preload("JarhTadil").Preload("JarhTadil.Penilai").Preload("Translation")
+}
+
+func (r *perawiRepo) withListJoins(db *gorm.DB) *gorm.DB {
+	return db.Joins("Translation")
 }
 
 func (r *perawiRepo) Save(p *model.Perawi) (*model.Perawi, error) {
@@ -42,7 +46,7 @@ func (r *perawiRepo) Save(p *model.Perawi) (*model.Perawi, error) {
 
 func (r *perawiRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 	var list []model.Perawi
-	mod := r.db.Model(&model.Perawi{}).Order("id")
+	mod := r.withListJoins(r.db.Model(&model.Perawi{})).Order("id")
 	page := r.pg.With(mod).Request(ctx.Request()).Response(&list)
 	return &page
 }
@@ -59,7 +63,7 @@ func (r *perawiRepo) FindByID(id *int) (*model.Perawi, error) {
 
 func (r *perawiRepo) FindByTabaqah(ctx *fiber.Ctx, tabaqah string) *paginate.Page {
 	var list []model.Perawi
-	mod := r.db.Model(&model.Perawi{}).Where("tabaqah = ?", tabaqah).Order("id")
+	mod := r.withListJoins(r.db.Model(&model.Perawi{})).Where("tabaqah = ?", tabaqah).Order("id")
 	page := r.pg.With(mod).Request(ctx.Request()).Response(&list)
 	return &page
 }
@@ -67,7 +71,7 @@ func (r *perawiRepo) FindByTabaqah(ctx *fiber.Ctx, tabaqah string) *paginate.Pag
 func (r *perawiRepo) Search(ctx *fiber.Ctx, q string) *paginate.Page {
 	var list []model.Perawi
 	like := "%" + q + "%"
-	mod := r.db.Model(&model.Perawi{}).
+	mod := r.withListJoins(r.db.Model(&model.Perawi{})).
 		Where("nama_latin ILIKE ? OR nama_arab ILIKE ? OR nama_lengkap ILIKE ?", like, like, like).
 		Order("id")
 	page := r.pg.With(mod).Request(ctx.Request()).Response(&list)
