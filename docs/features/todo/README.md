@@ -11,6 +11,5 @@ kerja, tetapi belum mulai aktif.
 
 ## Task List
 
-- [Public Dashboard Journey And CTA Parity](./public-dashboard-journey-cta-parity.md)
-- [Multilingual Content Wiring](./multilingual-content-wiring.md)
-- [Social Feed Moderation Hardening](./social-feed-moderation-hardening.md)
+- [Multilingual Content Wiring](./multilingual-content-wiring.md) (IN_PROGRESS)
+- [Social Feed Moderation Hardening](./social-feed-moderation-hardening.md) (IN_PROGRESS)
