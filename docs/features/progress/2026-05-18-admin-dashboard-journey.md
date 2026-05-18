@@ -46,6 +46,33 @@ Status: `VERIFIED`
 - PASS: `git diff --check`
 - PASS: `cd apps/web && npm run build`
 
+## Follow-up 2026-05-18 - Admin Work Queue And Content Health
+
+Status: `VERIFIED`
+
+### Scope
+
+- Tambah section `Antrian Review` di `/admin` dengan CTA operasional:
+  - artikel draft / arsip,
+  - artikel kurang metadata,
+  - buku perlu verifikasi sumber/lisensi,
+  - buku tanpa source/resource.
+- Tambah section `Kesehatan Konten` dengan progress bar:
+  - kelengkapan metadata artikel,
+  - kesiapan sumber buku,
+  - cakupan konten ibadah,
+  - cakupan konten belajar.
+- Tambah chart `Status Konten` untuk komposisi artikel published/draft/archive.
+- Semua item queue dan health tetap link ke modul admin terkait, bukan module
+  launcher umum.
+- Tambah i18n ID/EN untuk queue, health, dan status chart.
+
+### Verification
+
+- PASS: `node scripts/check-feature-parity.js`
+- PASS: `git diff --check`
+- PASS: `cd apps/web && npm run build`
+
 ## Follow-up 2026-05-18 - Admin Metrics Overview
 
 Status: `VERIFIED`

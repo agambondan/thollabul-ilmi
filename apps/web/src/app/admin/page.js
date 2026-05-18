@@ -27,6 +27,8 @@ import {
     BsBarChart,
     BsBook,
     BsBookHalf,
+    BsClipboardCheck,
+    BsExclamationTriangle,
     BsFileText,
     BsHourglassSplit,
     BsPeople,
@@ -64,6 +66,27 @@ const countItems = (payload) => {
     const list = normalizeList(payload);
     return Number(payload?.total ?? payload?.total_items ?? payload?.count ?? list.length);
 };
+
+const hasValue = (value) => {
+    if (value === null || value === undefined) return false;
+    if (typeof value === 'string') return value.trim().length > 0;
+    return true;
+};
+
+const countWhere = (items, predicate) => items.filter(predicate).length;
+
+const needsBlogMetadata = (post) =>
+    !hasValue(post.category_id ?? post.category?.id) ||
+    !hasValue(post.excerpt) ||
+    !hasValue(post.cover_image);
+
+const needsLibrarySourceReview = (book) =>
+    book.status === 'draft' ||
+    !book.is_source_verified ||
+    !['verified', 'restricted'].includes(book.license_status);
+
+const needsLibraryResource = (book) =>
+    !hasValue(book.source_url) && !hasValue(book.file_name);
 
 const safeJson = async (promise) => {
     try {
@@ -126,6 +149,9 @@ const initialOverview = {
     learningContent: 0,
     analytics: null,
     contentMix: [],
+    reviewQueue: [],
+    healthItems: [],
+    statusMix: [],
 };
 
 const buildRoleData = (users) => {
@@ -192,22 +218,97 @@ const AdminDashboard = () => {
             if (!alive) return;
 
             const postItems = posts.items;
+            const libraryItems = library.items;
             const publishedPosts = postItems.filter(
                 (post) => (post.status || '').toLowerCase() === 'published',
             ).length;
             const draftPosts = postItems.filter(
                 (post) => ['draft', 'archived'].includes((post.status || '').toLowerCase()),
             ).length;
+            const archivedPosts = countWhere(
+                postItems,
+                (post) => (post.status || '').toLowerCase() === 'archived',
+            );
+            const blogNeedsMetadata = countWhere(postItems, needsBlogMetadata);
+            const libraryNeedsSourceReview = countWhere(libraryItems, needsLibrarySourceReview);
+            const libraryNeedsResource = countWhere(libraryItems, needsLibraryResource);
+            const worshipTotal = doa.count + dzikir.count + wirid.count + tahlil.count + manasik.count;
+            const learningTotal = quiz.count + kamus.count + fiqh.count + asbabun.count + sejarah.count + kajian.count + asmaul.count;
             const contentMix = [
                 { name: t('admin.metric.content_blog'), value: posts.count },
                 { name: t('admin.metric.content_library'), value: library.count },
                 {
                     name: t('admin.metric.content_worship'),
-                    value: doa.count + dzikir.count + wirid.count + tahlil.count + manasik.count,
+                    value: worshipTotal,
                 },
                 {
                     name: t('admin.metric.content_learning'),
-                    value: quiz.count + kamus.count + fiqh.count + asbabun.count + sejarah.count + kajian.count + asmaul.count,
+                    value: learningTotal,
+                },
+            ];
+            const statusMix = [
+                { name: t('admin.status.published'), value: publishedPosts },
+                { name: t('admin.status.draft'), value: draftPosts - archivedPosts },
+                { name: t('admin.status.archived'), value: archivedPosts },
+            ].filter((item) => item.value > 0);
+            const reviewQueue = [
+                {
+                    href: '/admin/blog',
+                    labelKey: 'admin.queue.blog_drafts',
+                    descKey: 'admin.queue.blog_drafts_desc',
+                    count: draftPosts,
+                    tone: 'amber',
+                },
+                {
+                    href: '/admin/blog',
+                    labelKey: 'admin.queue.blog_metadata',
+                    descKey: 'admin.queue.blog_metadata_desc',
+                    count: blogNeedsMetadata,
+                    tone: 'slate',
+                },
+                {
+                    href: '/admin/library',
+                    labelKey: 'admin.queue.library_source',
+                    descKey: 'admin.queue.library_source_desc',
+                    count: libraryNeedsSourceReview,
+                    tone: 'teal',
+                },
+                {
+                    href: '/admin/library',
+                    labelKey: 'admin.queue.library_resource',
+                    descKey: 'admin.queue.library_resource_desc',
+                    count: libraryNeedsResource,
+                    tone: 'emerald',
+                },
+            ];
+            const healthItems = [
+                {
+                    href: '/admin/blog',
+                    labelKey: 'admin.health.blog_metadata',
+                    descKey: 'admin.health.blog_metadata_desc',
+                    value: Math.max(posts.count - blogNeedsMetadata, 0),
+                    total: posts.count,
+                },
+                {
+                    href: '/admin/library',
+                    labelKey: 'admin.health.library_source',
+                    descKey: 'admin.health.library_source_desc',
+                    value: Math.max(library.count - libraryNeedsSourceReview, 0),
+                    total: library.count,
+                },
+                {
+                    href: '/admin/doa',
+                    labelKey: 'admin.health.worship_coverage',
+                    descKey: 'admin.health.worship_coverage_desc',
+                    value: worshipTotal,
+                    total: Math.max(worshipTotal, 50),
+                },
+                {
+                    href: '/admin/quiz',
+                    labelKey: 'admin.health.learning_coverage',
+                    descKey: 'admin.health.learning_coverage_desc',
+                    value: learningTotal,
+                    total: Math.max(learningTotal, 50),
                 },
             ];
 
@@ -236,10 +337,13 @@ const AdminDashboard = () => {
                 publishedPosts,
                 draftPosts,
                 libraryBooks: library.count,
-                worshipContent: doa.count + dzikir.count + wirid.count + tahlil.count + manasik.count,
-                learningContent: quiz.count + kamus.count + fiqh.count + asbabun.count + sejarah.count + kajian.count + asmaul.count,
+                worshipContent: worshipTotal,
+                learningContent: learningTotal,
                 analytics: analytics.data,
                 contentMix,
+                reviewQueue,
+                healthItems,
+                statusMix,
             });
         };
 
@@ -343,6 +447,98 @@ const AdminDashboard = () => {
                 </div>
             </section>
 
+            <section className='mb-8 grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.8fr)]'>
+                <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
+                    <div className='mb-4 flex items-start justify-between gap-4'>
+                        <div>
+                            <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                {t('admin.queue.title')}
+                            </h2>
+                            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                                {t('admin.queue.subtitle')}
+                            </p>
+                        </div>
+                        <BsExclamationTriangle className='mt-1 text-amber-500' />
+                    </div>
+                    <div className='grid grid-cols-1 gap-3 md:grid-cols-2'>
+                        {overview.reviewQueue.map((item) => (
+                            <Link
+                                key={item.labelKey}
+                                href={item.href}
+                                className='group rounded-lg border border-gray-100 p-4 transition-colors hover:border-emerald-100 hover:bg-emerald-50/50 dark:border-slate-700 dark:hover:border-emerald-900/60 dark:hover:bg-emerald-900/10'
+                            >
+                                <div className='flex items-start justify-between gap-3'>
+                                    <div className='min-w-0'>
+                                        <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                            {t(item.labelKey)}
+                                        </p>
+                                        <p className='mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400'>
+                                            {t(item.descKey)}
+                                        </p>
+                                    </div>
+                                    <span
+                                        className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${
+                                            METRIC_TONES[item.tone] ?? METRIC_TONES.slate
+                                        }`}
+                                    >
+                                        {overview.loading ? '...' : item.count.toLocaleString('id-ID')}
+                                    </span>
+                                </div>
+                                <div className='mt-3 flex items-center justify-between text-xs font-medium text-emerald-700 opacity-0 transition-opacity group-hover:opacity-100 dark:text-emerald-300'>
+                                    <span>{t('admin.queue.open_module')}</span>
+                                    <BsArrowRight />
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+
+                <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
+                    <div className='mb-4 flex items-start justify-between gap-4'>
+                        <div>
+                            <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                {t('admin.health.title')}
+                            </h2>
+                            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                                {t('admin.health.subtitle')}
+                            </p>
+                        </div>
+                        <BsClipboardCheck className='mt-1 text-emerald-600' />
+                    </div>
+                    <div className='space-y-4'>
+                        {overview.healthItems.map((item) => {
+                            const percent = item.total > 0
+                                ? Math.round((item.value / item.total) * 100)
+                                : 0;
+
+                            return (
+                                <Link key={item.labelKey} href={item.href} className='block'>
+                                    <div className='mb-2 flex items-start justify-between gap-3'>
+                                        <div>
+                                            <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                                {t(item.labelKey)}
+                                            </p>
+                                            <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
+                                                {t(item.descKey)}
+                                            </p>
+                                        </div>
+                                        <span className='shrink-0 text-xs font-bold text-gray-700 dark:text-gray-200'>
+                                            {overview.loading ? '...' : `${percent}%`}
+                                        </span>
+                                    </div>
+                                    <div className='h-2 rounded-full bg-gray-100 dark:bg-slate-700'>
+                                        <div
+                                            className='h-2 rounded-full bg-emerald-700 dark:bg-emerald-500'
+                                            style={{ width: `${Math.min(percent, 100)}%` }}
+                                        />
+                                    </div>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+
             <section className='mb-8 grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]'>
                 <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
                     <div className='mb-4 flex items-start justify-between gap-4'>
@@ -379,6 +575,40 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className='grid grid-cols-1 gap-4'>
+                    <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
+                        <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                            {t('admin.metrics.status_chart')}
+                        </h2>
+                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                            {t('admin.metrics.status_chart_desc')}
+                        </p>
+                        <div className='mt-4 h-44'>
+                            <ResponsiveContainer width='100%' height='100%'>
+                                <PieChart>
+                                    <Pie
+                                        data={overview.statusMix}
+                                        dataKey='value'
+                                        nameKey='name'
+                                        innerRadius={46}
+                                        outerRadius={70}
+                                        paddingAngle={3}
+                                    >
+                                        {overview.statusMix.map((_, index) => (
+                                            <Cell key={`status-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip
+                                        contentStyle={{
+                                            borderRadius: 12,
+                                            borderColor: '#e2e8f0',
+                                            fontSize: 12,
+                                        }}
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+
                     <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
                         <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
                             {t('admin.metrics.role_chart')}
