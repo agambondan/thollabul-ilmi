@@ -10,6 +10,10 @@
 @layer base {
     :root {
         --navbar-height: 4.5rem;
+        --font-arabic-body: 'Kitab', 'Uthmani', 'Othmani', 'NooreHidayah', 'Naskh',
+            'Scheherazade', 'Amiri', serif;
+        --font-arabic-display: 'NooreHidayah', 'Kitab', 'Uthmani', 'Othmani',
+            'Naskh', 'Scheherazade', 'Amiri', serif;
     }
 }
 
@@ -58,7 +62,7 @@
 /* ─── Arabic Text ──────────────────────────────────────────────── */
 .text-arabic {
     direction: rtl;
-    font-family: 'Amiri', serif;
+    font-family: var(--font-arabic-body);
     line-height: 2;
 }
 
@@ -281,4 +285,34 @@ tajweed.idgh_mus:hover {
 
 .font-thabit {
     font-family: 'Thabit', serif;
+}
+
+/* ─── Global Arabic Font Contract ──────────────────────────────── */
+.font-arabic,
+.arabic-text {
+    direction: rtl;
+    font-family: var(--font-arabic-body);
+    font-synthesis: none;
+    font-weight: 400;
+    letter-spacing: 0;
+}
+
+.font-arabic-display {
+    direction: rtl;
+    font-family: var(--font-arabic-display);
+    font-synthesis: none;
+    font-weight: 400;
+    letter-spacing: 0;
+}
+
+:where([dir='rtl']) {
+    font-family: var(--font-arabic-body);
+    font-synthesis: none;
+    letter-spacing: 0;
+}
+
+:where([style*='Amiri'], [style*='Uthmani'], [style*='Othmani']) {
+    font-family: var(--font-arabic-body) !important;
+    font-synthesis: none;
+    letter-spacing: 0;
 }
