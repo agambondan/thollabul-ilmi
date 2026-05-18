@@ -32,6 +32,10 @@ bahasa tanpa field plain string yang terkunci ke satu bahasa.
 
 ## Progress
 
+- 2026-05-18:
+  - TokohTarikh model refactored: added TranslationID + Translation relation, controller now calls GetPreferredLang + FilterByLang
+  - TokohTarikh seeder created: statis JSON (15 tokoh) + Translation row creation di seeder_static_file.go
+  - HistoryEvent seeder fixed: now creates Translation row (Idn/DescriptionIdn) before inserting each event
 - 2026-05-16:
   - `HistoryRepository.Create` sekarang meng-upsert row `translation` dari
     `title`/`description`, lalu menyimpan `translation_id` saat create maupun
@@ -56,6 +60,14 @@ bahasa tanpa field plain string yang terkunci ke satu bahasa.
   ke schema translation-aware.
 - Update seeder static lanjutan jika sumber JSON mulai membawa field multi
   bahasa eksplisit.
+
+## Evidence
+
+- 2026-05-18:
+  - TokohTarikh: TranslationID + Translation model, controller FindAll/FindByID pakai GetPreferredLang + FilterByLang
+  - Repository: FindAll/FindByID now preload Translation
+  - Seeder: 15 tokoh seeded from JSON with parallel Translation rows
+  - HistoryEvent seeder: now creates Translation (Idn/DescriptionIdn) per row matching IslamicEvent pattern
 
 ## Source of Truth
 

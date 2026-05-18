@@ -31,7 +31,7 @@ service, repository, dan model feed/comment.
 
 1. `DONE` Desain kontrak report/hide minimal.
 2. `DONE` Tambah API moderation baseline.
-3. `PENDING` Tambah aksi report/hide pada mobile feed detail.
+3. `DONE` Tambah aksi report/hide pada mobile feed detail.
 4. `DONE` Verifikasi hak akses delete/report backend.
 
 ## Acceptance Criteria
@@ -42,6 +42,12 @@ service, repository, dan model feed/comment.
 
 ## Evidence
 
+- 2026-05-18:
+  - Mobile: Added `hideFeedPost` / `reportFeedPost` API functions di `apps/mobile/src/api/social.js`
+  - Mobile: Added `Sembunyikan` (EyeOff) dan `Laporkan` (Flag) ActionPill buttons di setiap feed item, hanya tampil saat user login
+  - Mobile: Handle hide → hapus item dari list + show success; handle report → show success tanpa hapus
+  - Guardrail: handler cek `session?.token` sebelum mengizinkan aksi (guest tidak melihat tombol)
+  - Validasi: Go build + web build + 575 mobile tests pass
 - 2026-05-16:
   - Model `SocialModerationAction` ditambahkan untuk menyimpan aksi per user:
     target `feed_post`/`comment`, action `hide`/`report`, `target_id`, dan
