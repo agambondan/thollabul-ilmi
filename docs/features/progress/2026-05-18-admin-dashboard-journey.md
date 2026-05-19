@@ -328,3 +328,18 @@ Status: `VERIFIED`
 - PASS: `node scripts/check-feature-parity.js`
 - PASS: `git diff --check`
 - PASS: `cd apps/web && npm run build`
+
+## Follow-up 2026-05-19 - Admin Analytics Dynamic Period Copy
+
+Status: `VERIFIED`
+
+### Scope
+
+- Ubah subtitle `Insight Traffic` agar mengikuti periode aktif 7/14/30/90 hari.
+- Hilangkan hardcoded `14 hari terakhir` / `14-day` supaya CTA selector dan copy tidak saling bertentangan.
+
+### Verification
+
+- PASS: `node scripts/check-feature-parity.js`
+- PASS: `git diff --check`
+- PASS: `cd apps/web && npm run build`

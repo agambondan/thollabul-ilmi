@@ -625,7 +625,7 @@ const AdminDashboard = () => {
                             {t('admin.traffic.title')}
                         </h2>
                         <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
-                            {t('admin.traffic.subtitle')}
+                            {t('admin.traffic.subtitle', { days: analyticsDays })}
                         </p>
                     </div>
                     <div className='flex items-center gap-2 rounded-xl border border-gray-100 bg-white p-1 dark:border-slate-700 dark:bg-slate-800'>
