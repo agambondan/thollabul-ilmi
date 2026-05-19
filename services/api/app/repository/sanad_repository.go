@@ -81,7 +81,9 @@ func (r *sanadRepo) SaveMataSanad(m *model.MataSanad) (*model.MataSanad, error) 
 	if err := r.db.Create(m).Error; err != nil {
 		return nil, err
 	}
-	r.db.Preload("Perawi").First(m, m.ID)
+	if err := r.db.Preload("Perawi").First(m, m.ID).Error; err != nil {
+		return nil, err
+	}
 	return m, nil
 }
 

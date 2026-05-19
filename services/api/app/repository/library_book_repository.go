@@ -47,10 +47,10 @@ func (r *libraryBookRepo) findAll(ctx *fiber.Ctx, category string, level string,
 		mod = mod.Where("status = ?", model.LibraryBookStatusPublished)
 	}
 	if category != "" {
-		mod = mod.Where("category ILIKE ?", category)
+		mod = mod.Where("category = ?", category)
 	}
 	if level != "" {
-		mod = mod.Where("level ILIKE ?", level)
+		mod = mod.Where("level = ?", level)
 	}
 	if search != "" {
 		like := "%" + search + "%"

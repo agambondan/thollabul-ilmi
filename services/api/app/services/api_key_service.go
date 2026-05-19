@@ -1,6 +1,8 @@
 package service
 
 import (
+	"log/slog"
+
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/repository"
 	"github.com/google/uuid"
@@ -56,7 +58,7 @@ func (s *apiKeyService) Validate(key string) (*model.APIKey, error) {
 		return nil, err
 	}
 	go func() {
-		defer func() { _ = recover() }()
+		defer func() { if r := recover(); r != nil { slog.Error("panic in api_key_service", "recover", r) } }()
 		_ = s.repo.IncrementUsage(key)
 	}()
 	return k, nil

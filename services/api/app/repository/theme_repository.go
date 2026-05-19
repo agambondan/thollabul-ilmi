@@ -156,6 +156,8 @@ func (c *themeRepo) DeleteById(id *int, scoped *string) error {
 
 func (c *themeRepo) Count() (*int64, error) {
 	var count int64
-	c.db.Table("theme").Count(&count)
+	if err := c.db.Table("theme").Count(&count).Error; err != nil {
+		return nil, err
+	}
 	return &count, nil
 }

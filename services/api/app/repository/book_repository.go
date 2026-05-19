@@ -82,7 +82,9 @@ func (c *bookRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 	themeMap := make(map[int]model.Theme)
 	if len(themeIDs) > 0 {
 		var themes []model.Theme
-		c.db.Joins("Translation").Where(`"theme".id IN ?`, themeIDs).Find(&themes)
+		if err := c.db.Joins("Translation").Where(`"theme".id IN ?`, themeIDs).Find(&themes).Error; err != nil {
+			return &page
+		}
 		for _, t := range themes {
 			if t.ID != nil {
 				themeMap[*t.ID] = t
@@ -111,10 +113,11 @@ func (c *bookRepo) FindAll(ctx *fiber.Ctx) *paginate.Page {
 func (c *bookRepo) FindById(id *int) (*model.Book, error) {
 	var book *model.Book
 	if err := c.db.Joins("Translation").Preload("Media").
+		Preload("Themes.Translation").
 		First(&book, `book.id = ?`, id).Error; err != nil {
 		return nil, err
 	}
-	c.db.Joins(`JOIN book_themes "bt" on bt.theme_id = theme.id AND bt.book_id = ?`, book.ID).Joins("Translation").Find(&book.Theme)
+	book.Theme = book.Themes
 	return book, nil
 }
 
