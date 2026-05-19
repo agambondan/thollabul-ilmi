@@ -10,6 +10,9 @@ type DoaService interface {
 	FindAll(limit, offset int) ([]model.Doa, error)
 	FindByID(int) (*model.Doa, error)
 	FindByCategory(model.DoaCategory, int, int) ([]model.Doa, error)
+	Create(*model.Doa) (*model.Doa, error)
+	Update(int, *model.Doa) (*model.Doa, error)
+	Delete(int) error
 }
 
 type doaService struct {
@@ -51,4 +54,28 @@ func (s *doaService) FindByCategory(category model.DoaCategory, limit, offset in
 		return s.repo.FindByCategory(category, limit, offset)
 	})
 	return result, err
+}
+
+func (s *doaService) Create(d *model.Doa) (*model.Doa, error) {
+	result, err := s.repo.Create(d)
+	if err == nil && s.cache != nil {
+		s.cache.Invalidate("doa:*")
+	}
+	return result, err
+}
+
+func (s *doaService) Update(id int, d *model.Doa) (*model.Doa, error) {
+	result, err := s.repo.Update(id, d)
+	if err == nil && s.cache != nil {
+		s.cache.Invalidate("doa:*")
+	}
+	return result, err
+}
+
+func (s *doaService) Delete(id int) error {
+	err := s.repo.Delete(id)
+	if err == nil && s.cache != nil {
+		s.cache.Invalidate("doa:*")
+	}
+	return err
 }

@@ -73,6 +73,10 @@ export default function KamusPage() {
         return word.definition || word.translation?.description_idn || word.translation?.idn || word.meaning || '';
     };
 
+    const wordTerm = (word) => word.arabic || word.term || '';
+    const wordLatin = (word) => word.latin || word.transliteration || word.term || '';
+    const wordRoot = (word) => word.root || word.origin || word.source || '';
+
     const handleSearch = () => {
         const q = query.trim();
         if (!q) return;
@@ -178,20 +182,20 @@ export default function KamusPage() {
                                                     className='text-2xl text-gray-900 dark:text-white font-bold'
                                                     style={{ fontFamily: 'Amiri, serif', direction: 'rtl' }}
                                                 >
-                                                    {word.arabic}
+                                                    {wordTerm(word)}
                                                 </p>
                                                 <div>
                                                     <p className='text-sm font-semibold text-emerald-700 dark:text-emerald-400 italic'>
-                                                        {word.latin}
+                                                        {wordLatin(word)}
                                                     </p>
                                                     <p className='text-sm text-gray-600 dark:text-gray-300'>
                                                         {wordMeaning(word)}
                                                     </p>
                                                 </div>
                                             </div>
-                                            {word.root && (
+                                            {wordRoot(word) && (
                                                 <span className='text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-lg font-medium flex-shrink-0'>
-                                                    {word.root}
+                                                    {wordRoot(word)}
                                                 </span>
                                             )}
                                         </div>
@@ -205,7 +209,7 @@ export default function KamusPage() {
                                                             className='font-bold text-gray-800 dark:text-white'
                                                             style={{ fontFamily: 'Amiri, serif' }}
                                                         >
-                                                            {word.root}
+                                                            {wordRoot(word)}
                                                         </span>
                                                     </div>
                                                 </div>

@@ -7,11 +7,14 @@ import { useEffect, useState } from 'react';
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from 'react-icons/bs';
 
 const EMPTY_FORM = {
+    collection_type: 'tahlil',
+    collection_id: null,
     step: '',
     title: '',
     arabic: '',
     transliteration: '',
     translation: '',
+    repeat: 1,
 };
 
 const AdminTahlilPage = () => {
@@ -51,11 +54,14 @@ const AdminTahlilPage = () => {
     const openEdit = (item) => {
         setEditId(item.id ?? item._id);
         setForm({
+            collection_type: item.collection_type || 'tahlil',
+            collection_id: item.collection_id ?? null,
             step: item.step ?? '',
             title: item.title ?? '',
             arabic: item.arabic ?? '',
             transliteration: item.transliteration ?? '',
             translation: item.translation ?? '',
+            repeat: item.repeat ?? 1,
         });
         setShowModal(true);
     };
@@ -66,7 +72,11 @@ const AdminTahlilPage = () => {
     const save = async () => {
         setSaving(true);
         try {
-            const payload = { ...form, step: Number(form.step) };
+            const payload = {
+                ...form,
+                step: Number(form.step),
+                repeat: Number(form.repeat) || 1,
+            };
             let res;
             if (editId) {
                 res = await adminTahlilApi.update(editId, payload);

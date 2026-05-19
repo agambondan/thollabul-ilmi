@@ -116,16 +116,16 @@ export default function DashboardKamusPage() {
                                         <td
                                             dir='rtl'
                                             className='px-4 py-3 font-arabic text-xl text-gray-800 dark:text-gray-200 text-right'>
-                                            {item.arabic ?? item.word_arabic ?? '—'}
+                                            {item.arabic ?? item.word_arabic ?? item.term ?? '—'}
                                         </td>
                                         <td className='px-4 py-3 italic text-gray-500 dark:text-gray-400'>
-                                            {item.latin ?? item.transliteration ?? '—'}
+                                            {item.latin ?? item.transliteration ?? item.term ?? '—'}
                                         </td>
                                         <td className='px-4 py-3 text-gray-700 dark:text-gray-300'>
                                             {getLocalizedTranslation(item.meaning ?? item.definition, lang) || '—'}
                                         </td>
                                         <td className='px-4 py-3 text-gray-400 dark:text-gray-500'>
-                                            {toStr(item.root ?? item.word_root) || '—'}
+                                            {toStr(item.root ?? item.word_root ?? item.origin ?? item.source) || '—'}
                                         </td>
                                     </tr>
                                 );

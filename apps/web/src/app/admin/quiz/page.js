@@ -17,6 +17,7 @@ const EMPTY_FORM = {
     answer: '0',
     explanation: '',
     category: 'umum',
+    difficulty: 'medium',
 };
 
 const OPTION_LABELS = ['A', 'B', 'C', 'D'];
@@ -60,14 +61,15 @@ const AdminQuizPage = () => {
         setEditId(item.id ?? item._id);
         const opts = item.options ?? [];
         setForm({
-            question: item.question ?? '',
+            question: getLocalizedField(item, 'question', lang, ['question_text', 'text']) || item.question || '',
             option_a: opts[0] ?? item.option_a ?? '',
             option_b: opts[1] ?? item.option_b ?? '',
             option_c: opts[2] ?? item.option_c ?? '',
             option_d: opts[3] ?? item.option_d ?? '',
             answer: String(item.answer ?? '0'),
             explanation: item.explanation ?? '',
-            category: item.category ?? 'umum',
+            category: item.category ?? item.type ?? 'umum',
+            difficulty: item.difficulty ?? 'medium',
         });
         setShowModal(true);
     };
@@ -84,6 +86,8 @@ const AdminQuizPage = () => {
                 answer: Number(form.answer),
                 explanation: form.explanation,
                 category: form.category,
+                type: form.category,
+                difficulty: form.difficulty || 'medium',
             };
             let res;
             if (editId) {
@@ -117,8 +121,10 @@ const AdminQuizPage = () => {
 
     const filtered = items.filter(
         (i) =>
-            i.question?.toLowerCase().includes(search.toLowerCase()) ||
-            i.category?.toLowerCase().includes(search.toLowerCase()),
+            getLocalizedField(i, 'question', lang, ['question_text', 'text'])
+                .toLowerCase()
+                .includes(search.toLowerCase()) ||
+            (i.category ?? i.type)?.toLowerCase().includes(search.toLowerCase()),
     );
 
     const getAnswerLabel = (item) => {

@@ -58,7 +58,7 @@ const AdminAsmaulHusnaPage = () => {
             transliteration: item.transliteration ?? '',
             indonesian: item.indonesian ?? '',
             english: item.english ?? '',
-            description: item.description ?? '',
+            description: item.meaning ?? item.translation?.description_idn ?? '',
         });
         setShowModal(true);
     };
@@ -101,11 +101,16 @@ const AdminAsmaulHusnaPage = () => {
     };
 
     const filtered = items.filter(
-        (i) =>
-            i.transliteration?.toLowerCase().includes(search.toLowerCase()) ||
-            i.indonesian?.toLowerCase().includes(search.toLowerCase()) ||
-            i.english?.toLowerCase().includes(search.toLowerCase()) ||
-            String(i.number).includes(search),
+        (i) => {
+            const q = search.toLowerCase();
+            return (
+                i.transliteration?.toLowerCase().includes(q) ||
+                i.indonesian?.toLowerCase().includes(q) ||
+                i.english?.toLowerCase().includes(q) ||
+                i.meaning?.toLowerCase().includes(q) ||
+                String(i.number).includes(q)
+            );
+        },
     );
 
     return (

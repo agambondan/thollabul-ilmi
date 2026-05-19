@@ -9,6 +9,9 @@ import (
 type AsmaUlHusnaService interface {
 	FindAll(limit, offset int) ([]model.AsmaUlHusna, error)
 	FindByNumber(int) (*model.AsmaUlHusna, error)
+	Create(*model.AsmaUlHusna) (*model.AsmaUlHusna, error)
+	Update(int, *model.AsmaUlHusna) (*model.AsmaUlHusna, error)
+	Delete(int) error
 }
 
 type asmaUlHusnaService struct {
@@ -41,4 +44,28 @@ func (s *asmaUlHusnaService) FindAll(limit, offset int) ([]model.AsmaUlHusna, er
 
 func (s *asmaUlHusnaService) FindByNumber(number int) (*model.AsmaUlHusna, error) {
 	return s.repo.FindByNumber(number)
+}
+
+func (s *asmaUlHusnaService) Create(a *model.AsmaUlHusna) (*model.AsmaUlHusna, error) {
+	result, err := s.repo.Create(a)
+	if err == nil && s.cache != nil {
+		s.cache.Invalidate("asmaul-husna:*")
+	}
+	return result, err
+}
+
+func (s *asmaUlHusnaService) Update(id int, a *model.AsmaUlHusna) (*model.AsmaUlHusna, error) {
+	result, err := s.repo.Update(id, a)
+	if err == nil && s.cache != nil {
+		s.cache.Invalidate("asmaul-husna:*")
+	}
+	return result, err
+}
+
+func (s *asmaUlHusnaService) Delete(id int) error {
+	err := s.repo.Delete(id)
+	if err == nil && s.cache != nil {
+		s.cache.Invalidate("asmaul-husna:*")
+	}
+	return err
 }

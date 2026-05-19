@@ -16,17 +16,29 @@ const CATEGORIES = [
     'tahsin',
     'umum',
 ];
-const PLATFORMS = ['youtube', 'spotify', 'website', 'lainnya'];
+const TYPES = ['video', 'audio', 'text'];
+
+const parseDurationSeconds = (value) => {
+    if (typeof value === 'number') return value;
+    const raw = String(value ?? '').trim();
+    if (!raw) return 0;
+    if (!raw.includes(':')) return Number(raw) || 0;
+    return raw
+        .split(':')
+        .map((part) => Number(part) || 0)
+        .reduce((total, part) => total * 60 + part, 0);
+};
 
 const EMPTY_FORM = {
     title: '',
-    ustadz: '',
-    category: 'umum',
-    platform: 'youtube',
+    speaker: '',
+    topic: 'umum',
+    type: 'video',
     url: '',
-    duration: '',
+    duration_seconds: '',
     description: '',
-    thumbnail: '',
+    thumbnail_url: '',
+    published_at: '',
 };
 
 const AdminStudiesPage = () => {
@@ -67,13 +79,14 @@ const AdminStudiesPage = () => {
         setEditId(item.id ?? item._id);
         setForm({
             title: item.title ?? '',
-            ustadz: item.ustadz ?? '',
-            category: item.category ?? 'umum',
-            platform: item.platform ?? 'youtube',
+            speaker: item.speaker ?? item.ustadz ?? '',
+            topic: item.topic ?? item.category ?? 'umum',
+            type: item.type ?? 'video',
             url: item.url ?? '',
-            duration: item.duration ?? '',
-            description: item.description ?? '',
-            thumbnail: item.thumbnail ?? '',
+            duration_seconds: item.duration_seconds ?? item.duration ?? '',
+            description: getLocalizedField(item, 'description', lang) || item.description || '',
+            thumbnail_url: item.thumbnail_url ?? item.thumbnail ?? '',
+            published_at: item.published_at ?? '',
         });
         setShowModal(true);
     };
@@ -84,11 +97,22 @@ const AdminStudiesPage = () => {
     const save = async () => {
         setSaving(true);
         try {
+            const payload = {
+                title: form.title,
+                speaker: form.speaker,
+                topic: form.topic,
+                type: form.type,
+                url: form.url,
+                duration_seconds: parseDurationSeconds(form.duration_seconds),
+                description: form.description,
+                thumbnail_url: form.thumbnail_url,
+                published_at: form.published_at,
+            };
             let res;
             if (editId) {
-                res = await adminKajianApi.update(editId, form);
+                res = await adminKajianApi.update(editId, payload);
             } else {
-                res = await adminKajianApi.create(form);
+                res = await adminKajianApi.create(payload);
             }
             if (!res.ok) throw new Error(t('admin.error.save'));
             setShowModal(false);
@@ -117,8 +141,9 @@ const AdminStudiesPage = () => {
     const filtered = items.filter(
         (i) =>
             getLocalizedField(i, 'title', lang)?.toLowerCase().includes(search.toLowerCase()) ||
-            i.ustadz?.toLowerCase().includes(search.toLowerCase()) ||
-            i.category?.toLowerCase().includes(search.toLowerCase()),
+            getLocalizedField(i, 'description', lang)?.toLowerCase().includes(search.toLowerCase()) ||
+            i.speaker?.toLowerCase().includes(search.toLowerCase()) ||
+            i.topic?.toLowerCase().includes(search.toLowerCase()),
     );
 
     return (
@@ -165,7 +190,7 @@ const AdminStudiesPage = () => {
                                     Ustadz
                                 </th>
                                 <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300 w-24'>
-                                    {t('admin.kajian.platform')}
+                                    Tipe
                                 </th>
                                 <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300 w-24 hidden lg:table-cell'>
                                     {t('admin.field.category')}
@@ -183,15 +208,15 @@ const AdminStudiesPage = () => {
                                         {getLocalizedField(item, 'title', lang)}
                                     </td>
                                     <td className='px-4 py-3 text-gray-500 dark:text-gray-400 hidden md:table-cell'>
-                                        {item.ustadz ?? '-'}
+                                        {item.speaker ?? '-'}
                                     </td>
                                     <td className='px-4 py-3'>
                                         <span className='px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded text-xs capitalize'>
-                                            {item.platform ?? '-'}
+                                            {item.type ?? '-'}
                                         </span>
                                     </td>
                                     <td className='px-4 py-3 text-gray-500 dark:text-gray-400 hidden lg:table-cell capitalize'>
-                                        {item.category}
+                                        {item.topic}
                                     </td>
                                     <td className='px-4 py-3'>
                                         <div className='flex items-center gap-1.5 justify-end'>
@@ -277,9 +302,9 @@ const AdminStudiesPage = () => {
                                     </label>
                                     <input
                                         type='text'
-                                        value={form.ustadz}
+                                        value={form.speaker}
                                         onChange={(e) =>
-                                            setForm({ ...form, ustadz: e.target.value })
+                                            setForm({ ...form, speaker: e.target.value })
                                         }
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
@@ -290,11 +315,11 @@ const AdminStudiesPage = () => {
                                     </label>
                                     <input
                                         type='text'
-                                        value={form.duration}
+                                        value={form.duration_seconds}
                                         onChange={(e) =>
-                                            setForm({ ...form, duration: e.target.value })
+                                            setForm({ ...form, duration_seconds: e.target.value })
                                         }
-                                        placeholder='e.g. 01:23:45'
+                                        placeholder='3600 atau 01:00:00'
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
                                 </div>
@@ -302,16 +327,16 @@ const AdminStudiesPage = () => {
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
-                                        {t('admin.kajian.platform')}
+                                        Tipe
                                     </label>
                                     <select
-                                        value={form.platform}
+                                        value={form.type}
                                         onChange={(e) =>
-                                            setForm({ ...form, platform: e.target.value })
+                                            setForm({ ...form, type: e.target.value })
                                         }
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     >
-                                        {PLATFORMS.map((p) => (
+                                        {TYPES.map((p) => (
                                             <option key={p} value={p}>
                                                 {p}
                                             </option>
@@ -323,9 +348,9 @@ const AdminStudiesPage = () => {
                                         {t('admin.field.category')}
                                     </label>
                                     <select
-                                        value={form.category}
+                                        value={form.topic}
                                         onChange={(e) =>
-                                            setForm({ ...form, category: e.target.value })
+                                            setForm({ ...form, topic: e.target.value })
                                         }
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     >
@@ -357,9 +382,9 @@ const AdminStudiesPage = () => {
                                 </label>
                                 <input
                                     type='url'
-                                    value={form.thumbnail}
+                                    value={form.thumbnail_url}
                                     onChange={(e) =>
-                                        setForm({ ...form, thumbnail: e.target.value })
+                                        setForm({ ...form, thumbnail_url: e.target.value })
                                     }
                                     placeholder='https://...'
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'

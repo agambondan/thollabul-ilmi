@@ -8,8 +8,9 @@ import { BsSearch, BsBoxArrowUpRight } from 'react-icons/bs';
 const CATEGORIES = ['aqidah', 'fiqh', 'akhlak', 'tafsir', 'hadits', 'sirah', 'umum'];
 
 const platformStyle = {
-    youtube: 'bg-red-100 text-red-700',
-    spotify: 'bg-green-100 text-green-700',
+    video: 'bg-red-100 text-red-700',
+    audio: 'bg-green-100 text-green-700',
+    text: 'bg-blue-100 text-blue-700',
 };
 
 const toStr = (v) => {
@@ -41,14 +42,14 @@ export default function KajianDashboardPage() {
         const matchSearch =
             getLocalizedField(item, 'title', lang).toLowerCase().includes(q) ||
             getLocalizedField(item, 'description', lang).toLowerCase().includes(q) ||
-            item.ustadz?.toLowerCase().includes(q);
-        const matchCategory = activeCategory ? toStr(item.category) === activeCategory : true;
+            item.speaker?.toLowerCase().includes(q);
+        const matchCategory = activeCategory ? toStr(item.topic) === activeCategory : true;
         return matchSearch && matchCategory;
     });
 
     const totalKajian = items.length;
-    const youtubeCount = items.filter((i) => toStr(i.platform).toLowerCase() === 'youtube').length;
-    const categoryCount = new Set(items.map((i) => toStr(i.category)).filter(Boolean)).size;
+    const youtubeCount = items.filter((i) => toStr(i.type).toLowerCase() === 'video').length;
+    const categoryCount = new Set(items.map((i) => toStr(i.topic)).filter(Boolean)).size;
 
     return (
         <div className='p-6'>
@@ -67,7 +68,7 @@ export default function KajianDashboardPage() {
                 </div>
                 <div className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-3'>
                     <p className='text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500'>
-                        {t('kajian.youtube_label') ?? 'YouTube'}
+                        Video
                     </p>
                     <p className='text-lg font-bold text-emerald-700 dark:text-emerald-400'>{youtubeCount}</p>
                 </div>
@@ -128,22 +129,22 @@ export default function KajianDashboardPage() {
                 {filtered.map((item) => {
                     const id = item.id ?? item._id;
                     const platformClass =
-                        platformStyle[toStr(item.platform).toLowerCase()] ??
+                        platformStyle[toStr(item.type).toLowerCase()] ??
                         'bg-gray-100 text-gray-600';
 
                     const CardContent = (
                         <div className='border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 shadow-sm p-4 h-full hover:shadow-md transition-shadow'>
                             <div className='flex items-start justify-between mb-2'>
                                 <div className='flex gap-2 flex-wrap'>
-                                    {item.platform && (
+                                    {item.type && (
                                         <span
                                             className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${platformClass}`}>
-                                            {toStr(item.platform)}
+                                            {toStr(item.type)}
                                         </span>
                                     )}
-                                    {item.category && (
+                                    {item.topic && (
                                         <span className='px-2 py-0.5 rounded-full text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 capitalize'>
-                                            {toStr(item.category)}
+                                            {toStr(item.topic)}
                                         </span>
                                     )}
                                 </div>
@@ -155,10 +156,14 @@ export default function KajianDashboardPage() {
                                 {getLocalizedField(item, 'title', lang)}
                             </h3>
                             <p className='text-xs text-emerald-700 dark:text-emerald-400 font-medium mb-1'>
-                                {toStr(item.ustadz)}
+                                {toStr(item.speaker)}
                             </p>
-                            {item.duration && (
-                                <p className='text-xs text-gray-400 dark:text-gray-500 mb-2'>{toStr(item.duration)}</p>
+                            {item.duration_seconds ? (
+                                <p className='text-xs text-gray-400 dark:text-gray-500 mb-2'>
+                                    {item.duration_seconds} detik
+                                </p>
+                            ) : (
+                                null
                             )}
                             {getLocalizedField(item, 'description', lang) && (
                                 <p className='text-xs text-gray-500 dark:text-gray-400 line-clamp-2'>

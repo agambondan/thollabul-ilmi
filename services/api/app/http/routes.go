@@ -386,12 +386,18 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 
 	// Doa (public)
 	master.Get("/doa", newDoaController.FindAll)
+	master.Post("/doa", middlewares.EditorOrAdminMiddleware(), newDoaController.Create)
 	master.Get("/doa/category/:category", newDoaController.FindByCategory)
 	master.Get("/doa/:id", newDoaController.FindByID)
+	master.Put("/doa/:id", middlewares.EditorOrAdminMiddleware(), newDoaController.Update)
+	master.Delete("/doa/:id", middlewares.EditorOrAdminMiddleware(), newDoaController.Delete)
 
 	// Asmaul Husna (public)
 	master.Get("/asmaul-husna", newAsmaUlHusnaController.FindAll)
+	master.Post("/asmaul-husna", middlewares.EditorOrAdminMiddleware(), newAsmaUlHusnaController.Create)
 	master.Get("/asmaul-husna/:number", newAsmaUlHusnaController.FindByNumber)
+	master.Put("/asmaul-husna/:id", middlewares.EditorOrAdminMiddleware(), newAsmaUlHusnaController.Update)
+	master.Delete("/asmaul-husna/:id", middlewares.EditorOrAdminMiddleware(), newAsmaUlHusnaController.Delete)
 
 	// Audio Murotal (public read, admin write)
 	master.Get("/audio/surah/:surahId", newAudioController.FindSurahAudio)

@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
+	"github.com/agambondan/islamic-explorer/app/model"
 	service "github.com/agambondan/islamic-explorer/app/services"
 	"github.com/gofiber/fiber/v2"
 )
@@ -11,10 +12,23 @@ import (
 type AsmaUlHusnaController interface {
 	FindAll(ctx *fiber.Ctx) error
 	FindByNumber(ctx *fiber.Ctx) error
+	Create(ctx *fiber.Ctx) error
+	Update(ctx *fiber.Ctx) error
+	Delete(ctx *fiber.Ctx) error
 }
 
 type asmaUlHusnaController struct {
 	svc service.AsmaUlHusnaService
+}
+
+type asmaulHusnaAdminRequest struct {
+	Number          int    `json:"number" validate:"required,gt=0,lte=99"`
+	Arabic          string `json:"arabic" validate:"required"`
+	Transliteration string `json:"transliteration" validate:"required"`
+	Indonesian      string `json:"indonesian" validate:"required"`
+	English         string `json:"english" validate:"required"`
+	Description     string `json:"description"`
+	AudioURL        string `json:"audio_url"`
 }
 
 func NewAsmaUlHusnaController(services *service.Services) AsmaUlHusnaController {
@@ -69,4 +83,55 @@ func (c *asmaUlHusnaController) FindByNumber(ctx *fiber.Ctx) error {
 	}
 	asma.Translation.FilterByLang(lib.GetPreferredLang(ctx))
 	return lib.OK(ctx, asma)
+}
+
+func (c *asmaUlHusnaController) Create(ctx *fiber.Ctx) error {
+	req := new(asmaulHusnaAdminRequest)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	item, err := c.svc.Create(asmaulFromAdminRequest(req))
+	if err != nil {
+		return lib.ErrorConflict(ctx, err)
+	}
+	return lib.OK(ctx, item)
+}
+
+func (c *asmaUlHusnaController) Update(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	req := new(asmaulHusnaAdminRequest)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	item, err := c.svc.Update(id, asmaulFromAdminRequest(req))
+	if err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	return lib.OK(ctx, item)
+}
+
+func (c *asmaUlHusnaController) Delete(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	if err := c.svc.Delete(id); err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	return lib.OK(ctx)
+}
+
+func asmaulFromAdminRequest(req *asmaulHusnaAdminRequest) *model.AsmaUlHusna {
+	return &model.AsmaUlHusna{
+		Number:          req.Number,
+		Arabic:          req.Arabic,
+		Transliteration: req.Transliteration,
+		Indonesian:      req.Indonesian,
+		English:         req.English,
+		Meaning:         req.Description,
+		AudioURL:        req.AudioURL,
+	}
 }

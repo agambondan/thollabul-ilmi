@@ -7,9 +7,11 @@ import { useEffect, useState } from 'react';
 import { BsChevronDown, BsChevronUp, BsSearch } from 'react-icons/bs';
 
 const CATEGORIES = [
-    'khulafaur-rasyidin',
-    'dinasti-umayyah',
+    'khulafa',
+    'dinasti',
+    'peristiwa',
     'perang',
+    'ulama',
     'nabi',
     'modern',
     'umum',
@@ -19,6 +21,12 @@ const toStr = (v) => {
     if (!v) return '';
     if (typeof v === 'string') return v;
     return v.name ?? v.title ?? v.label ?? v.value ?? '';
+};
+
+const formatYear = (item) => {
+    if (item.year_hijri) return `${item.year_hijri} H`;
+    if (item.year_miladi == null) return '';
+    return item.year_miladi < 0 ? `${Math.abs(item.year_miladi)} SM` : `${item.year_miladi} M`;
 };
 
 export default function SejarahDashboardPage() {
@@ -48,9 +56,11 @@ export default function SejarahDashboardPage() {
         return [
             getLocalizedField(item, 'title', lang),
             getLocalizedField(item, 'description', lang),
-            item.year,
+            formatYear(item),
+            item.year_hijri,
+            item.year_miladi,
             toStr(item.category),
-        ].filter(Boolean).some((v) => v.toLowerCase().includes(q));
+        ].filter(Boolean).some((v) => String(v).toLowerCase().includes(q));
     });
 
     const toggle = (id) => setExpanded((prev) => (prev === id ? null : id));
@@ -119,7 +129,7 @@ export default function SejarahDashboardPage() {
                                 <div className='relative z-10 flex-shrink-0 w-[4.5rem] flex flex-col items-center pt-3'>
                                     <div className='w-3 h-3 rounded-full bg-emerald-500 border-2 border-white shadow' />
                                     <span className='text-xs text-emerald-700 font-semibold mt-1 text-center leading-tight'>
-                                        {item.year}
+                                        {formatYear(item)}
                                     </span>
                                 </div>
 

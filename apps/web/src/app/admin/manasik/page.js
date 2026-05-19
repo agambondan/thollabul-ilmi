@@ -17,6 +17,7 @@ const EMPTY_FORM = {
     translation: '',
     description: '',
     notes: '',
+    is_wajib: false,
 };
 
 const AdminManasikPage = () => {
@@ -71,6 +72,7 @@ const AdminManasikPage = () => {
             translation: item.translation ?? '',
             description: item.description ?? '',
             notes: item.notes ?? '',
+            is_wajib: item.is_wajib ?? false,
         });
         setShowModal(true);
     };
@@ -81,7 +83,13 @@ const AdminManasikPage = () => {
     const save = async () => {
         setSaving(true);
         try {
-            const payload = { ...form, step: Number(form.step) };
+            const payload = {
+                ...form,
+                step: Number(form.step),
+                step_order: Number(form.step),
+                transliteration: form.latin,
+                is_wajib: Boolean(form.is_wajib),
+            };
             let res;
             if (editId) {
                 res = await adminManasikApi.update(editId, payload);
@@ -351,6 +359,17 @@ const AdminManasikPage = () => {
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
+                            <label className='flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300'>
+                                <input
+                                    type='checkbox'
+                                    checked={form.is_wajib}
+                                    onChange={(e) =>
+                                        setForm({ ...form, is_wajib: e.target.checked })
+                                    }
+                                    className='rounded border-gray-300 dark:border-slate-600 text-emerald-700 focus:ring-emerald-500'
+                                />
+                                Wajib
+                            </label>
                         </div>
                         <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
                             <button

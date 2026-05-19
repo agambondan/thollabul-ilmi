@@ -5,11 +5,15 @@ import { useLocale } from '@/context/Locale';
 import { useEffect, useState } from 'react';
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from 'react-icons/bs';
 
+const CATEGORIES = ['fiqh', 'aqidah', 'tasawuf', 'ulumul_quran', 'hadith', 'lainnya'];
+
 const EMPTY_FORM = {
-    arabic: '',
-    latin: '',
-    meaning: '',
-    root: '',
+    term: '',
+    category: 'lainnya',
+    definition: '',
+    example: '',
+    source: '',
+    origin: '',
 };
 
 const AdminDictionaryPage = () => {
@@ -49,10 +53,12 @@ const AdminDictionaryPage = () => {
     const openEdit = (item) => {
         setEditId(item.id ?? item._id);
         setForm({
-            arabic: item.arabic ?? '',
-            latin: item.latin ?? '',
-            meaning: item.meaning ?? '',
-            root: item.root ?? '',
+            term: item.term ?? item.arabic ?? item.latin ?? '',
+            category: item.category ?? 'lainnya',
+            definition: item.definition ?? item.meaning ?? '',
+            example: item.example ?? '',
+            source: item.source ?? '',
+            origin: item.origin ?? item.root ?? '',
         });
         setShowModal(true);
     };
@@ -94,10 +100,17 @@ const AdminDictionaryPage = () => {
     };
 
     const filtered = items.filter(
-        (i) =>
-            i.latin?.toLowerCase().includes(search.toLowerCase()) ||
-            i.meaning?.toLowerCase().includes(search.toLowerCase()) ||
-            i.arabic?.includes(search),
+        (i) => {
+            const q = search.toLowerCase();
+            return (
+                i.term?.toLowerCase().includes(q) ||
+                i.definition?.toLowerCase().includes(q) ||
+                i.category?.toLowerCase().includes(q) ||
+                i.arabic?.includes(search) ||
+                i.latin?.toLowerCase().includes(q) ||
+                i.meaning?.toLowerCase().includes(q)
+            );
+        },
     );
 
     return (
@@ -138,16 +151,16 @@ const AdminDictionaryPage = () => {
                         <thead className='bg-gray-50 dark:bg-slate-700'>
                             <tr>
                                 <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300'>
-                                    {t('admin.field.arabic')}
+                                    Istilah
                                 </th>
                                 <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300'>
-                                    {t('admin.field.latin')}
+                                    {t('admin.field.category')}
                                 </th>
                                 <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300'>
-                                    {t('admin.kamus.meaning')}
+                                    Definisi
                                 </th>
                                 <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300 hidden md:table-cell'>
-                                    {t('admin.kamus.root')}
+                                    Asal/Sumber
                                 </th>
                                 <th className='px-4 py-3 w-20'></th>
                             </tr>
@@ -158,17 +171,17 @@ const AdminDictionaryPage = () => {
                                     key={item.id ?? item._id}
                                     className='hover:bg-gray-50 dark:hover:bg-slate-750'
                                 >
-                                    <td className='px-4 py-3 text-gray-900 dark:text-white font-arabic text-lg'>
-                                        {item.arabic}
+                                    <td className='px-4 py-3 text-gray-900 dark:text-white font-medium'>
+                                        {item.term ?? item.arabic}
                                     </td>
-                                    <td className='px-4 py-3 text-gray-700 dark:text-gray-300 italic'>
-                                        {item.latin}
+                                    <td className='px-4 py-3 text-gray-700 dark:text-gray-300'>
+                                        {item.category ?? '-'}
                                     </td>
                                     <td className='px-4 py-3 text-gray-500 dark:text-gray-400'>
-                                        {item.meaning}
+                                        {item.definition ?? item.meaning}
                                     </td>
                                     <td className='px-4 py-3 text-gray-400 dark:text-gray-500 text-xs hidden md:table-cell'>
-                                        {item.root ?? '-'}
+                                        {item.origin || item.source || item.root || '-'}
                                     </td>
                                     <td className='px-4 py-3'>
                                         <div className='flex items-center gap-2 justify-end'>
@@ -226,57 +239,88 @@ const AdminDictionaryPage = () => {
                         <div className='p-5 space-y-4'>
                             <div>
                                 <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
-                                    {t('admin.field.arabic')}
+                                    Istilah
                                 </label>
                                 <input
                                     type='text'
-                                    value={form.arabic}
+                                    value={form.term}
                                     onChange={(e) =>
-                                        setForm({ ...form, arabic: e.target.value })
-                                    }
-                                    dir='rtl'
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white font-arabic text-lg'
-                                />
-                            </div>
-                            <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
-                                    {t('admin.field.latin')}
-                                </label>
-                                <input
-                                    type='text'
-                                    value={form.latin}
-                                    onChange={(e) =>
-                                        setForm({ ...form, latin: e.target.value })
+                                        setForm({ ...form, term: e.target.value })
                                     }
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
                             <div>
                                 <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
-                                    {t('admin.kamus.meaning')}
+                                    {t('admin.field.category')}
                                 </label>
-                                <input
-                                    type='text'
-                                    value={form.meaning}
+                                <select
+                                    value={form.category}
                                     onChange={(e) =>
-                                        setForm({ ...form, meaning: e.target.value })
+                                        setForm({ ...form, category: e.target.value })
                                     }
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                >
+                                    {CATEGORIES.map((c) => (
+                                        <option key={c} value={c}>
+                                            {c}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    Definisi
+                                </label>
+                                <textarea
+                                    value={form.definition}
+                                    onChange={(e) =>
+                                        setForm({ ...form, definition: e.target.value })
+                                    }
+                                    rows={3}
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
                             <div>
                                 <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
-                                    {t('admin.kamus.root')} ({t('common.optional')})
+                                    Contoh ({t('common.optional')})
                                 </label>
-                                <input
-                                    type='text'
-                                    value={form.root}
+                                <textarea
+                                    value={form.example}
                                     onChange={(e) =>
-                                        setForm({ ...form, root: e.target.value })
+                                        setForm({ ...form, example: e.target.value })
                                     }
-                                    dir='rtl'
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white font-arabic text-lg'
+                                    rows={2}
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
+                            </div>
+                            <div className='grid grid-cols-2 gap-4'>
+                                <div>
+                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                        Asal ({t('common.optional')})
+                                    </label>
+                                    <input
+                                        type='text'
+                                        value={form.origin}
+                                        onChange={(e) =>
+                                            setForm({ ...form, origin: e.target.value })
+                                        }
+                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                    />
+                                </div>
+                                <div>
+                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                        {t('common.source')} ({t('common.optional')})
+                                    </label>
+                                    <input
+                                        type='text'
+                                        value={form.source}
+                                        onChange={(e) =>
+                                            setForm({ ...form, source: e.target.value })
+                                        }
+                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                    />
+                                </div>
                             </div>
                         </div>
                         <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
@@ -288,7 +332,7 @@ const AdminDictionaryPage = () => {
                             </button>
                             <button
                                 onClick={save}
-                                disabled={saving || !form.arabic || !form.meaning}
+                                disabled={saving || !form.term || !form.definition}
                                 className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
                             >
                                 {saving ? t('common.saving') : t('common.save')}

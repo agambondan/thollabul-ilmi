@@ -17,9 +17,18 @@ const CATEGORIES = [
     'umum',
 ];
 
+const slugify = (str) =>
+    str
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
 const EMPTY_FORM = {
     category: 'umum',
     title: '',
+    slug: '',
     content: '',
     source: '',
     dalil: '',
@@ -64,8 +73,9 @@ const AdminFiqhPage = () => {
         setEditId(item.id ?? item._id);
         setForm({
             category: item.category ?? 'umum',
-            title: item.title ?? '',
-            content: item.content ?? '',
+            title: getLocalizedField(item, 'title', lang) || item.title || '',
+            slug: item.slug ?? '',
+            content: getLocalizedField(item, 'content', lang) || item.content || '',
             source: item.source ?? '',
             dalil: item.dalil ?? '',
         });
@@ -78,11 +88,17 @@ const AdminFiqhPage = () => {
     const save = async () => {
         setSaving(true);
         try {
+            const title = form.title.trim();
+            const payload = {
+                ...form,
+                title,
+                slug: form.slug.trim() || slugify(title),
+            };
             let res;
             if (editId) {
-                res = await adminFiqhApi.update(editId, form);
+                res = await adminFiqhApi.update(editId, payload);
             } else {
-                res = await adminFiqhApi.create(form);
+                res = await adminFiqhApi.create(payload);
             }
             if (!res.ok) throw new Error(t('admin.error.save'));
             setShowModal(false);
@@ -111,8 +127,8 @@ const AdminFiqhPage = () => {
     const filtered = items.filter(
         (i) =>
             (!catFilter || i.category === catFilter) &&
-            (i.title?.toLowerCase().includes(search.toLowerCase()) ||
-                i.content?.toLowerCase().includes(search.toLowerCase())),
+            (getLocalizedField(i, 'title', lang).toLowerCase().includes(search.toLowerCase()) ||
+                getLocalizedField(i, 'content', lang).toLowerCase().includes(search.toLowerCase())),
     );
 
     return (
@@ -271,12 +287,34 @@ const AdminFiqhPage = () => {
                                     <input
                                         type='text'
                                         value={form.title}
-                                        onChange={(e) =>
-                                            setForm({ ...form, title: e.target.value })
-                                        }
+                                        onChange={(e) => {
+                                            const nextTitle = e.target.value;
+                                            setForm({
+                                                ...form,
+                                                title: nextTitle,
+                                                slug:
+                                                    !form.slug || form.slug === slugify(form.title)
+                                                        ? slugify(nextTitle)
+                                                        : form.slug,
+                                            });
+                                        }}
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
                                 </div>
+                            </div>
+                            <div>
+                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    {t('admin.field.slug')}
+                                </label>
+                                <input
+                                    type='text'
+                                    value={form.slug}
+                                    onChange={(e) =>
+                                        setForm({ ...form, slug: e.target.value })
+                                    }
+                                    placeholder='auto dari judul'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                />
                             </div>
                             <div>
                                 <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>

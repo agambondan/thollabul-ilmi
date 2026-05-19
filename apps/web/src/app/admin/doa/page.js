@@ -6,7 +6,18 @@ import { getLocalizedField } from '@/lib/translation';
 import { useEffect, useState } from 'react';
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from 'react-icons/bs';
 
-const CATEGORIES = ['pagi', 'petang', 'makan', 'tidur', 'safar', 'ibadah', 'umum'];
+const CATEGORIES = [
+    'pagi',
+    'petang',
+    'makan',
+    'tidur',
+    'bangun',
+    'kamar_mandi',
+    'masjid',
+    'safar',
+    'belajar',
+    'umum',
+];
 
 const EMPTY_FORM = {
     title: '',
@@ -54,10 +65,10 @@ const AdminPrayersPage = () => {
     const openEdit = (item) => {
         setEditId(item.id ?? item._id);
         setForm({
-            title: item.translation?.idn ?? item.title ?? '',
+            title: getLocalizedField(item, 'title', lang) ?? '',
             arabic: item.translation?.ar ?? item.arabic ?? '',
             transliteration: item.translation?.latin_idn ?? item.transliteration ?? '',
-            translation: item.translation?.description_idn ?? '',
+            translation: getLocalizedField(item, 'description', lang, ['translation']) ?? '',
             category: item.category ?? 'umum',
             source: item.source ?? '',
         });
@@ -101,9 +112,13 @@ const AdminPrayersPage = () => {
     };
 
     const filtered = items.filter(
-        (i) =>
-            i.title?.toLowerCase().includes(search.toLowerCase()) ||
-            i.category?.toLowerCase().includes(search.toLowerCase()),
+        (i) => {
+            const q = search.toLowerCase();
+            return (
+                getLocalizedField(i, 'title', lang)?.toLowerCase().includes(q) ||
+                i.category?.toLowerCase().includes(q)
+            );
+        },
     );
 
     return (
