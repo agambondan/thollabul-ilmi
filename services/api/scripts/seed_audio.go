@@ -300,10 +300,16 @@ func main() {
 	qariCatalog := map[string]qariInfo{
 		"mishary": defaultQari,
 		"sudais": {
-			Name:         "Abdul Rahman Al-Sudais",
-			Slug:         "abdul-rahman-al-sudais",
-			EveryAyahDir: "Abdul_Basit_Murattal_192kbps", // placeholder — ganti sesuai EveryAyah dir
-			QuranicAudio: "abdulbaset",                   // placeholder
+			Name:         "Abdurrahman As-Sudais",
+			Slug:         "abdurrahman-as-sudais",
+			EveryAyahDir: "Abdurrahmaan_As-Sudais_192kbps",
+			QuranicAudio: "abdurrahmaan_as-sudays",
+		},
+		"abdulbasit": {
+			Name:         "Abdul Basit",
+			Slug:         "abdul-basit",
+			EveryAyahDir: "Abdul_Basit_Murattal_192kbps",
+			QuranicAudio: "abdul_basit",
 		},
 	}
 	q, ok := qariCatalog[*qariSlug]
