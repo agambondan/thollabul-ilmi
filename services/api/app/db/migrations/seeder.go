@@ -28,7 +28,6 @@ func DataSeeds(db *gorm.DB) []interface{} {
 		seedBlogCategories(),
 		seedBlogTags(),
 		seedKajian(),
-		seedLibraryBooks(),
 	}
 }
 

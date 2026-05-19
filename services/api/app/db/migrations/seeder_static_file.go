@@ -1124,10 +1124,12 @@ func seedTokohTarikhFromFile(db *gorm.DB) {
 			ImageURL:      r.ImageURL,
 			TranslationID: tr.ID,
 		}
-		db.Clauses(clause.OnConflict{
+		if err := db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "nama"}},
-			DoUpdates: clause.AssignmentColumns([]string{"era", "biografi", "kontribusi", "kategori", "image_url", "translation_id"}),
-		}).Create(&item)
+			DoUpdates: clause.AssignmentColumns([]string{"era", "kategori", "image_url", "translation_id"}),
+		}).Create(&item).Error; err != nil {
+			log.Printf("[seeder] tokoh_tarikh insert '%s': %v", r.Nama, err)
+		}
 	}
 }
 

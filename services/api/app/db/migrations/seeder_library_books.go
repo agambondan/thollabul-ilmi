@@ -1,63 +1,51 @@
 package migrations
 
-import "github.com/agambondan/islamic-explorer/app/model"
+import (
+	"log"
 
-func seedLibraryBooks() []model.LibraryBook {
-	return []model.LibraryBook{
-		{
-			Title:       "Riyadhus Shalihin",
-			Slug:        "riyadhus-shalihin",
-			Author:      "Imam An-Nawawi",
-			Description: "Kumpulan hadith tematik tentang adab, ibadah, akhlak, dan penyucian jiwa. Disediakan sebagai rujukan belajar; sumber eksternal dibuka di luar aplikasi.",
-			Category:    "Hadis",
-			Level:       "Menengah",
-			Language:    "Arab dan terjemah",
+	"github.com/agambondan/islamic-explorer/app/model"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
+)
+
+func SeedLibraryBooks(db *gorm.DB) {
+	var count int64
+	db.Model(&model.LibraryBook{}).Count(&count)
+	if count > 0 {
+		return
+	}
+
+	type bookDef struct {
+		Title       string
+		Slug        string
+		Author      string
+		Description string
+		SourceURL   string
+	}
+	books := []bookDef{
+		{"Hadits Arbain An-Nawawi", "arbain-nawawi", "Imam An-Nawawi", "40 hadits inti ajaran Islam. Karya Imam An-Nawawi yang menghimpun hadits-hadits pokok dalam agama Islam.", "https://sunnah.com/nawawi40"},
+		{"Riyadhus Shalihin", "riyadhus-shalihin", "Imam An-Nawawi", "Kumpulan hadits tentang adab, akhlak, dan ibadah. Karya klasik Imam An-Nawawi yang sangat populer.", "https://sunnah.com/riyadussalihin"},
+		{"Bulughul Maram", "bulughul-maram", "Ibnu Hajar Al-Asqalani", "Kumpulan hadits-hadits hukum yang menjadi rujukan fiqih. Dibahas oleh Ibnu Hajar Al-Asqalani.", "https://sunnah.com/bulugh"},
+		{"Mukhtashar Shahih Muslim", "mukhtashar-shahih-muslim", "Imam Al-Mundziri", "Ringkasan Shahih Muslim karya Imam Al-Mundziri. Hadits-hadits pilihan dari kitab Shahih Muslim.", "https://sunnah.com/muslim"},
+	}
+
+	if len(books) == 0 {
+		return
+	}
+	log.Printf("[seeder] seed library books: %d entri", len(books))
+	for _, b := range books {
+		book := model.LibraryBook{
+			Title:       b.Title,
+			Slug:        b.Slug,
+			Author:      b.Author,
+			Description: b.Description,
+			SourceURL:   b.SourceURL,
 			Format:      model.LibraryBookFormatLink,
-			SourceURL:   "https://sunnah.com/riyadussalihin",
-			License:     "External public resource; verify license before mirroring files.",
-			Tags:        "hadis,adab,akhlak,nawawi",
 			Status:      model.LibraryBookStatusPublished,
-		},
-		{
-			Title:       "Arbain Nawawiyah",
-			Slug:        "arbain-nawawiyah",
-			Author:      "Imam An-Nawawi",
-			Description: "Empat puluh hadith pokok yang sering menjadi pengantar memahami dasar agama, niat, amal, halal-haram, dan akhlak.",
-			Category:    "Hadis",
-			Level:       "Pemula",
-			Language:    "Arab dan terjemah",
-			Format:      model.LibraryBookFormatLink,
-			SourceURL:   "https://sunnah.com/nawawi40",
-			License:     "External public resource; verify license before mirroring files.",
-			Tags:        "hadis,pemula,nawawi,arbain",
-			Status:      model.LibraryBookStatusPublished,
-		},
-		{
-			Title:       "Bulughul Maram",
-			Slug:        "bulughul-maram",
-			Author:      "Ibnu Hajar Al-Asqalani",
-			Description: "Kumpulan hadith ahkam untuk pengantar fikih ibadah dan muamalah. Cocok sebagai jalur belajar setelah hadith dasar.",
-			Category:    "Fikih",
-			Level:       "Menengah",
-			Language:    "Arab dan terjemah",
-			Format:      model.LibraryBookFormatLink,
-			SourceURL:   "https://sunnah.com/bulugh",
-			License:     "External public resource; verify license before mirroring files.",
-			Tags:        "fikih,hadis,ahkam,ibadah",
-			Status:      model.LibraryBookStatusPublished,
-		},
-		{
-			Title:       "Panduan Dasar Bahasa Arab",
-			Slug:        "panduan-dasar-bahasa-arab",
-			Author:      "Tim Thullaabul Ilmi",
-			Description: "Ruang katalog untuk materi nahwu, sharaf, mufrodat, dan latihan membaca teks Arab. File PDF dapat ditambahkan saat sumber resmi sudah dipilih.",
-			Category:    "Bahasa Arab",
-			Level:       "Pemula",
-			Language:    "Indonesia",
-			Format:      model.LibraryBookFormatLink,
-			License:     "Internal learning placeholder; attach verified resources before distribution.",
-			Tags:        "bahasa-arab,nahwu,sharaf,mufrodat",
-			Status:      model.LibraryBookStatusPublished,
-		},
+		}
+		db.Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "slug"}},
+			DoUpdates: clause.AssignmentColumns([]string{"title", "author", "description", "source_url"}),
+		}).Create(&book)
 	}
 }

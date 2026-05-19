@@ -261,6 +261,7 @@ func (s *Repositories) Seeder() error {
 		return err
 	}
 	migrations.SeedRelated(s.db)
+	migrations.SeedLibraryBooks(s.db)
 	migrations.SeedTier3(s.db)
 	if err := migrations.BackfillTranslations(s.db); err != nil {
 		return err
@@ -271,6 +272,8 @@ func (s *Repositories) Seeder() error {
 	migrations.SeedMufrodatFromFile(s.db)
 	migrations.SeedHadithFromFiles(s.db)
 	migrations.SeedStaticFromFiles(s.db)
+	migrations.SeedAudioFromCDN(s.db)
+	migrations.SeedLocationsFromFile(s.db)
 	if err := migrations.BackfillTranslations(s.db); err != nil {
 		return err
 	}
