@@ -208,17 +208,17 @@ func (s *Repositories) createCompositeIndexes() {
 		`CREATE INDEX IF NOT EXISTS idx_ua_uid_date_del    ON user_activity (user_id, activity_date, deleted_at)`,
 		`CREATE INDEX IF NOT EXISTS idx_hafalan_uid_del    ON hafalan_progress (user_id, deleted_at)`,
 		`CREATE INDEX IF NOT EXISTS idx_hafalan_status_del ON hafalan_progress (status, deleted_at)`,
-		`CREATE INDEX IF NOT EXISTS idx_page_views_created ON page_views (created_at)`,
-		`CREATE INDEX IF NOT EXISTS idx_page_views_source_created ON page_views (source, created_at)`,
-		`CREATE INDEX IF NOT EXISTS idx_page_views_user_created ON page_views (user_id, created_at DESC)`,
+		`CREATE INDEX IF NOT EXISTS idx_page_views_created ON page_view (created_at)`,
+		`CREATE INDEX IF NOT EXISTS idx_page_views_source_created ON page_view (source, created_at)`,
+		`CREATE INDEX IF NOT EXISTS idx_page_views_user_created ON page_view (user_id, created_at DESC)`,
 
 		// pg_trgm GIN indexes for ILIKE search optimization
 		`CREATE INDEX IF NOT EXISTS idx_trgm_translation_ar  ON translation USING GIN (ar gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_translation_idn ON translation USING GIN (idn gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_translation_en  ON translation USING GIN (en gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_fts_translation_idn_en ON translation USING GIN (to_tsvector('simple', coalesce(idn,'') || ' ' || coalesce(en,'')))`,
-		`CREATE INDEX IF NOT EXISTS idx_trgm_islamic_term    ON islamic_terms USING GIN (term gin_trgm_ops)`,
-		`CREATE INDEX IF NOT EXISTS idx_trgm_islamic_def     ON islamic_terms USING GIN (definition gin_trgm_ops)`,
+		`CREATE INDEX IF NOT EXISTS idx_trgm_islamic_term    ON islamic_term USING GIN (term gin_trgm_ops)`,
+		`CREATE INDEX IF NOT EXISTS idx_trgm_islamic_def     ON islamic_term USING GIN (definition gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_doa_title       ON doa USING GIN (title gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_doa_arabic      ON doa USING GIN (arabic gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_kajian_title    ON kajian USING GIN (title gin_trgm_ops)`,
@@ -235,27 +235,27 @@ func (s *Repositories) createCompositeIndexes() {
 func (s *Repositories) Seeder() error {
 	var count int64
 	s.db.Model(&model.Surah{}).Count(&count)
-	if count > 0 {
-		slog.Info("seed data already exists, skipping seeder")
-		return nil
-	}
-	migrations.DeduplicateSeedData(s.db)
-	seeds := migrations.DataSeeds(s.db)
-	for i := range seeds {
-		tx := s.db.Begin()
-		defer func() {
-			if r := recover(); r != nil {
+	if count == 0 {
+		migrations.DeduplicateSeedData(s.db)
+		seeds := migrations.DataSeeds(s.db)
+		for i := range seeds {
+			tx := s.db.Begin()
+			defer func() {
+				if r := recover(); r != nil {
+					tx.Rollback()
+				}
+			}()
+
+			if err := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(seeds[i]).Error; nil != err {
 				tx.Rollback()
 			}
-		}()
 
-		if err := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(seeds[i]).Error; nil != err {
-			tx.Rollback()
+			if err := tx.Commit().Error; nil != err {
+				tx.Rollback()
+			}
 		}
-
-		if err := tx.Commit().Error; nil != err {
-			tx.Rollback()
-		}
+	} else {
+		slog.Info("base Quran seed already exists, continuing idempotent seeders")
 	}
 	if err := migrations.UpsertSeedData(s.db); err != nil {
 		return err

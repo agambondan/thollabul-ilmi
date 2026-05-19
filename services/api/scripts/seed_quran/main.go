@@ -19,19 +19,19 @@ import (
 )
 
 const (
-	baseURL       = "https://api.alquran.cloud/v1"
-	editionAr     = "quran-uthmani"
-	editionIdn    = "id.indonesian"
-	editionEn     = "en.asad"
-	requestDelay  = 300 * time.Millisecond
+	baseURL      = "https://api.alquran.cloud/v1"
+	editionAr    = "quran-uthmani"
+	editionIdn   = "id.indonesian"
+	editionEn    = "en.asad"
+	requestDelay = 300 * time.Millisecond
 )
 
 // ─── API response structs ─────────────────────────────────────────────────────
 
 type SurahListResponse struct {
-	Code   int           `json:"code"`
-	Status string        `json:"status"`
-	Data   []SurahMeta   `json:"data"`
+	Code   int         `json:"code"`
+	Status string      `json:"status"`
+	Data   []SurahMeta `json:"data"`
 }
 
 type SurahMeta struct {
@@ -50,13 +50,13 @@ type SurahEditionsResponse struct {
 }
 
 type SurahEdition struct {
-	Number        int          `json:"number"`
-	Name          string       `json:"name"`
-	EnglishName   string       `json:"englishName"`
-	NumberOfAyahs int          `json:"numberOfAyahs"`
+	Number         int         `json:"number"`
+	Name           string      `json:"name"`
+	EnglishName    string      `json:"englishName"`
+	NumberOfAyahs  int         `json:"numberOfAyahs"`
 	RevelationType string      `json:"revelationType"`
-	Edition       EditionMeta  `json:"edition"`
-	Ayahs         []AyahRaw    `json:"ayahs"`
+	Edition        EditionMeta `json:"edition"`
+	Ayahs          []AyahRaw   `json:"ayahs"`
 }
 
 type EditionMeta struct {
@@ -66,15 +66,15 @@ type EditionMeta struct {
 }
 
 type AyahRaw struct {
-	Number        int         `json:"number"`
-	Text          string      `json:"text"`
-	NumberInSurah int         `json:"numberInSurah"`
-	Juz           int         `json:"juz"`
-	Manzil        int         `json:"manzil"`
-	Page          int         `json:"page"`
-	Ruku          int         `json:"ruku"`
-	HizbQuarter   int         `json:"hizbQuarter"`
-	Sajda         SajdaField  `json:"sajda"`
+	Number        int        `json:"number"`
+	Text          string     `json:"text"`
+	NumberInSurah int        `json:"numberInSurah"`
+	Juz           int        `json:"juz"`
+	Manzil        int        `json:"manzil"`
+	Page          int        `json:"page"`
+	Ruku          int        `json:"ruku"`
+	HizbQuarter   int        `json:"hizbQuarter"`
+	Sajda         SajdaField `json:"sajda"`
 }
 
 // SajdaField bisa false atau object {"id":N,"recommended":bool,"obligatory":bool}
@@ -119,6 +119,22 @@ func saveTranslation(db *gorm.DB, t *model.Translation) error {
 	return db.Clauses(clause.OnConflict{DoNothing: true}).Create(t).Error
 }
 
+func saveOrUpdateTranslation(db *gorm.DB, existingID *int, t *model.Translation) error {
+	if existingID != nil {
+		t.ID = existingID
+		return db.Model(&model.Translation{}).
+			Where("id = ?", *existingID).
+			Updates(map[string]interface{}{
+				"ar":             t.Ar,
+				"idn":            t.Idn,
+				"en":             t.En,
+				"latin_en":       t.LatinEn,
+				"description_ar": t.DescriptionAr,
+			}).Error
+	}
+	return saveTranslation(db, t)
+}
+
 func saveSurah(db *gorm.DB, s *model.Surah) error {
 	return db.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "number"}},
@@ -127,7 +143,24 @@ func saveSurah(db *gorm.DB, s *model.Surah) error {
 }
 
 func saveAyah(db *gorm.DB, a *model.Ayah) error {
-	return db.Clauses(clause.OnConflict{DoNothing: true}).Create(a).Error
+	var existing model.Ayah
+	err := db.Where("surah_id = ? AND number = ?", a.SurahID, a.Number).First(&existing).Error
+	if err == nil {
+		a.ID = existing.ID
+		return db.Model(&existing).Updates(map[string]interface{}{
+			"translation_id": a.TranslationID,
+			"juz_number":     a.JuzNumber,
+			"manzil":         a.Manzil,
+			"page":           a.Page,
+			"ruku":           a.Ruku,
+			"hizb_quarter":   a.HizbQuarter,
+			"sajda":          a.Sajda,
+		}).Error
+	}
+	if err != gorm.ErrRecordNotFound {
+		return err
+	}
+	return db.Create(a).Error
 }
 
 // ─── Main logic ──────────────────────────────────────────────────────────────
@@ -174,7 +207,15 @@ func run(db *gorm.DB) error {
 			Idn:           lib.Strptr(meta.EnglishNameTranslation), // fallback, nama surah Inggris = Idn
 			DescriptionAr: lib.Strptr(meta.Name),
 		}
-		if err := saveTranslation(db, surahTranslation); err != nil {
+		var existingSurah model.Surah
+		var existingSurahTranslationID *int
+		if err := db.Where("number = ?", meta.Number).First(&existingSurah).Error; err == nil {
+			existingSurahTranslationID = existingSurah.TranslationID
+		} else if err != gorm.ErrRecordNotFound {
+			return fmt.Errorf("find surah %d: %w", meta.Number, err)
+		}
+
+		if err := saveOrUpdateTranslation(db, existingSurahTranslationID, surahTranslation); err != nil {
 			return fmt.Errorf("save surah translation %d: %w", meta.Number, err)
 		}
 
@@ -192,6 +233,11 @@ func run(db *gorm.DB) error {
 		if err := saveSurah(db, surah); err != nil {
 			return fmt.Errorf("save surah %d: %w", meta.Number, err)
 		}
+		if surah.ID == nil {
+			if err := db.Where("number = ?", meta.Number).Select("id").First(surah).Error; err != nil {
+				return fmt.Errorf("reload surah %d: %w", meta.Number, err)
+			}
+		}
 
 		// 5. Simpan Ayahs
 		totalAyah := len(arEd.Ayahs)
@@ -208,7 +254,15 @@ func run(db *gorm.DB) error {
 				ayahTranslation.En = lib.Strptr(enEd.Ayahs[i].Text)
 			}
 
-			if err := saveTranslation(db, ayahTranslation); err != nil {
+			var existingAyah model.Ayah
+			var existingAyahTranslationID *int
+			if err := db.Where("surah_id = ? AND number = ?", surah.ID, arAyah.NumberInSurah).First(&existingAyah).Error; err == nil {
+				existingAyahTranslationID = existingAyah.TranslationID
+			} else if err != gorm.ErrRecordNotFound {
+				return fmt.Errorf("find ayah surah=%d ayah=%d: %w", meta.Number, arAyah.NumberInSurah, err)
+			}
+
+			if err := saveOrUpdateTranslation(db, existingAyahTranslationID, ayahTranslation); err != nil {
 				return fmt.Errorf("save ayah translation surah=%d ayah=%d: %w", meta.Number, arAyah.NumberInSurah, err)
 			}
 

@@ -101,7 +101,7 @@ func (r *pageViewRepo) ActiveUsers(since time.Time, limit int) ([]model.PageView
 				pv.user_id,
 				COUNT(*) AS total_views,
 				MAX(pv.created_at) AS last_seen
-			FROM page_views pv
+			FROM page_view pv
 			WHERE pv.user_id IS NOT NULL AND pv.created_at >= ?
 			GROUP BY pv.user_id
 			ORDER BY total_views DESC
@@ -110,7 +110,7 @@ func (r *pageViewRepo) ActiveUsers(since time.Time, limit int) ([]model.PageView
 		JOIN users u ON u.id = pv_stats.user_id
 		LEFT JOIN LATERAL (
 			SELECT path, source
-			FROM page_views
+			FROM page_view
 			WHERE user_id = pv_stats.user_id
 			ORDER BY created_at DESC
 			LIMIT 1
@@ -134,7 +134,7 @@ func (r *pageViewRepo) TopPagesBySource(since time.Time, limitPerSource int) ([]
 				COUNT(*) AS views,
 				COUNT(DISTINCT `+pageViewVisitorIdentityExpr+`) AS visitors,
 				ROW_NUMBER() OVER (PARTITION BY source ORDER BY COUNT(*) DESC) AS rn
-			FROM page_views
+			FROM page_view
 			WHERE created_at >= ?
 			GROUP BY source, path
 		) ranked
@@ -172,7 +172,7 @@ func (r *pageViewRepo) RecentActivity(since time.Time, limit int) ([]model.PageV
 			COALESCE(pv.referrer, '') AS referrer,
 			COALESCE(pv.user_agent, '') AS user_agent,
 			TO_CHAR(pv.created_at, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS seen_at
-		FROM page_views pv
+		FROM page_view pv
 		LEFT JOIN users u ON u.id = pv.user_id
 		WHERE pv.created_at >= ?
 		ORDER BY pv.created_at DESC

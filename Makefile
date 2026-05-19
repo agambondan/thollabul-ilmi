@@ -115,7 +115,7 @@ db-seed-audio:
 
 ## Sama via docker-compose DB
 db-seed-audio-docker:
-	cd services/api && $(DB_DOCKER_ENV) go run scripts/seed_audio.go -mode=all -environment docker
+	cd services/api && $(DB_DOCKER_ENV) go run scripts/seed_audio.go -mode=all
 
 ## Download audio dari CDN, upload ke MinIO, lalu insert URL MinIO ke DB
 db-seed-audio-minio:
@@ -125,7 +125,7 @@ db-seed-audio-minio:
 ## Sama via docker-compose DB + MinIO
 db-seed-audio-minio-docker:
 	cd services/api && $(DB_DOCKER_ENV) MINIO_ENDPOINT=$(MINIO_ENDPOINT) MINIO_ACCESS=$(MINIO_ACCESS) MINIO_SECRET=$(MINIO_SECRET) MINIO_BUCKET=$(MINIO_BUCKET) \
-		go run scripts/seed_audio.go -mode=all -minio -environment docker
+		go run scripts/seed_audio.go -mode=all -minio
 
 seed-quran:
 	cd services/api && go run ./scripts/seed_quran/main.go
