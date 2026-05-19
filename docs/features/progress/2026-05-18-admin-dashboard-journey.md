@@ -306,3 +306,25 @@ Status: `VERIFIED`
 - PASS: `node scripts/check-feature-parity.js`
 - PASS: `git diff --check`
 - PASS: `cd apps/web && npm run build`
+
+## Follow-up 2026-05-19 - Admin Analytics Previous Period Trend
+
+Status: `VERIFIED`
+
+### Scope
+
+- Extend admin analytics summary dengan comparison window periode sebelumnya.
+- Tambah payload:
+  - `previous_views`,
+  - `previous_visitors`,
+  - `views_change_percent`,
+  - `visitors_change_percent`.
+- Tampilkan delta periode sebelumnya di metric pengunjung dan card total view.
+- Update `docs/WEB_MOBILE_SYNC.md` untuk mencatat trend delta analytics.
+
+### Verification
+
+- PASS: `cd services/api/app && go test ./...`
+- PASS: `node scripts/check-feature-parity.js`
+- PASS: `git diff --check`
+- PASS: `cd apps/web && npm run build`

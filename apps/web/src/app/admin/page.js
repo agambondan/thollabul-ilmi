@@ -82,6 +82,19 @@ const shortTick = (value, max = 16) => {
     return text.length > max ? `${text.slice(0, max)}...` : text;
 };
 
+const formatTrend = (value = 0) => {
+    const numeric = Number(value ?? 0);
+    if (!Number.isFinite(numeric) || numeric === 0) return '0%';
+    const sign = numeric > 0 ? '+' : '';
+    return `${sign}${numeric.toFixed(Math.abs(numeric) >= 10 ? 0 : 1)}%`;
+};
+
+const trendTone = (value = 0) => (
+    Number(value ?? 0) >= 0
+        ? 'text-emerald-700 dark:text-emerald-300'
+        : 'text-rose-600 dark:text-rose-300'
+);
+
 const needsBlogMetadata = (post) =>
     !hasValue(post.category_id ?? post.category?.id) ||
     !hasValue(post.excerpt) ||
@@ -254,6 +267,7 @@ const AdminDashboard = () => {
             const topPagesBySource = analyticsData?.top_pages_by_source ?? [];
             const recentActivity = analyticsData?.recent_activity ?? [];
             const totalViews = Number(analyticsData?.total_views ?? 0);
+            const viewsChange = Number(analyticsData?.views_change_percent ?? 0);
             const averageDailyViews =
                 dailyAnalytics.length > 0 ? Math.round(totalViews / dailyAnalytics.length) : 0;
             const bestDay = dailyAnalytics.reduce(
@@ -344,6 +358,8 @@ const AdminDashboard = () => {
                     descKey: 'admin.traffic.total_views_desc',
                     value: totalViews.toLocaleString('id-ID'),
                     hint: `${analyticsDays} ${t('admin.analytics.days')}`,
+                    trend: viewsChange,
+                    trendLabel: t('admin.analytics.vs_previous_period'),
                 },
                 {
                     labelKey: 'admin.traffic.today_views',
@@ -422,6 +438,8 @@ const AdminDashboard = () => {
                 desc: t('admin.metric.visitors_desc'),
                 icon: <BsActivity />,
                 tone: 'amber',
+                trend: Number(overview.analytics?.visitors_change_percent ?? 0),
+                trendLabel: t('admin.analytics.vs_previous_period'),
             },
             {
                 label: t('admin.metric.users'),
@@ -518,6 +536,11 @@ const AdminDashboard = () => {
                             <p className='mt-2 text-xs leading-5 text-gray-500 dark:text-gray-400'>
                                 {metric.desc}
                             </p>
+                            {metric.trend !== undefined && !overview.loading ? (
+                                <p className={`mt-2 text-xs font-semibold ${trendTone(metric.trend)}`}>
+                                    {formatTrend(metric.trend)} {metric.trendLabel}
+                                </p>
+                            ) : null}
                         </div>
                     ))}
                 </div>
@@ -643,6 +666,11 @@ const AdminDashboard = () => {
                             <p className='mt-1 truncate text-xs font-medium text-emerald-700 dark:text-emerald-300'>
                                 {overview.loading ? '...' : item.hint}
                             </p>
+                            {item.trend !== undefined && !overview.loading ? (
+                                <p className={`mt-1 text-xs font-semibold ${trendTone(item.trend)}`}>
+                                    {formatTrend(item.trend)} {item.trendLabel}
+                                </p>
+                            ) : null}
                             <p className='mt-2 text-xs leading-5 text-gray-500 dark:text-gray-400'>
                                 {t(item.descKey)}
                             </p>

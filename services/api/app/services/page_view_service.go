@@ -56,6 +56,7 @@ func (s *pageViewService) AdminSummary(days int) (*model.PageViewAdminSummary, e
 	}
 	since := time.Now().AddDate(0, 0, -days+1).Truncate(24 * time.Hour)
 	today := time.Now().Truncate(24 * time.Hour)
+	previousSince := since.AddDate(0, 0, -days)
 
 	totalViews, err := s.repo.TotalViews(since)
 	if err != nil {
@@ -70,6 +71,14 @@ func (s *pageViewService) AdminSummary(days int) (*model.PageViewAdminSummary, e
 		return nil, err
 	}
 	todayVisitors, err := s.repo.UniqueVisitors(today)
+	if err != nil {
+		return nil, err
+	}
+	previousViews, err := s.repo.TotalViewsBetween(previousSince, since)
+	if err != nil {
+		return nil, err
+	}
+	previousVisitors, err := s.repo.UniqueVisitorsBetween(previousSince, since)
 	if err != nil {
 		return nil, err
 	}
@@ -99,17 +108,21 @@ func (s *pageViewService) AdminSummary(days int) (*model.PageViewAdminSummary, e
 	}
 
 	return &model.PageViewAdminSummary{
-		TotalViews:       totalViews,
-		UniqueVisitors:   uniqueVisitors,
-		TodayViews:       todayViews,
-		TodayVisitors:    todayVisitors,
-		Daily:            fillDailyPageViews(since, days, daily),
-		TopPages:         topPages,
-		SourceBreakdown:  sourceBreakdown,
-		ActiveUsers:      activeUsers,
-		TopPagesBySource: topPagesBySource,
-		RecentActivity:   recentActivity,
-		TrackingEnabled:  true,
+		TotalViews:        totalViews,
+		UniqueVisitors:    uniqueVisitors,
+		TodayViews:        todayViews,
+		TodayVisitors:     todayVisitors,
+		PreviousViews:     previousViews,
+		PreviousVisitors:  previousVisitors,
+		ViewsChangePct:    percentChange(totalViews, previousViews),
+		VisitorsChangePct: percentChange(uniqueVisitors, previousVisitors),
+		Daily:             fillDailyPageViews(since, days, daily),
+		TopPages:          topPages,
+		SourceBreakdown:   sourceBreakdown,
+		ActiveUsers:       activeUsers,
+		TopPagesBySource:  topPagesBySource,
+		RecentActivity:    recentActivity,
+		TrackingEnabled:   true,
 	}, nil
 }
 
@@ -156,4 +169,14 @@ func fillDailyPageViews(since time.Time, days int, rows []model.PageViewDailySta
 		out = append(out, model.PageViewDailyStat{Date: date})
 	}
 	return out
+}
+
+func percentChange(current, previous int64) float64 {
+	if previous == 0 {
+		if current == 0 {
+			return 0
+		}
+		return 100
+	}
+	return (float64(current-previous) / float64(previous)) * 100
 }

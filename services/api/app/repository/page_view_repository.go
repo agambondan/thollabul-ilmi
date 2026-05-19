@@ -10,7 +10,9 @@ import (
 type PageViewRepository interface {
 	Record(*model.PageView) error
 	TotalViews(since time.Time) (int64, error)
+	TotalViewsBetween(start, end time.Time) (int64, error)
 	UniqueVisitors(since time.Time) (int64, error)
+	UniqueVisitorsBetween(start, end time.Time) (int64, error)
 	DailyStats(since time.Time) ([]model.PageViewDailyStat, error)
 	TopPages(since time.Time, limit int) ([]model.PageViewTopPage, error)
 	SourceStats(since time.Time) ([]model.PageViewSourceStat, error)
@@ -41,10 +43,27 @@ func (r *pageViewRepo) TotalViews(since time.Time) (int64, error) {
 	return count, err
 }
 
+func (r *pageViewRepo) TotalViewsBetween(start, end time.Time) (int64, error) {
+	var count int64
+	err := r.db.Model(&model.PageView{}).
+		Where("created_at >= ? AND created_at < ?", start, end).
+		Count(&count).Error
+	return count, err
+}
+
 func (r *pageViewRepo) UniqueVisitors(since time.Time) (int64, error) {
 	var count int64
 	err := r.db.Model(&model.PageView{}).
 		Where("created_at >= ?", since).
+		Distinct(pageViewVisitorIdentityExpr).
+		Count(&count).Error
+	return count, err
+}
+
+func (r *pageViewRepo) UniqueVisitorsBetween(start, end time.Time) (int64, error) {
+	var count int64
+	err := r.db.Model(&model.PageView{}).
+		Where("created_at >= ? AND created_at < ?", start, end).
 		Distinct(pageViewVisitorIdentityExpr).
 		Count(&count).Error
 	return count, err
