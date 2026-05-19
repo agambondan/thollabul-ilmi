@@ -407,6 +407,16 @@ export const notificationApi = {
             method: 'PUT',
             body: JSON.stringify(settings),
         }),
+    getPushTokens: () => authFetch('/api/v1/notifications/push-tokens'),
+    registerPushToken: (data) =>
+        authFetch('/api/v1/notifications/push-token', {
+            method: 'PUT',
+            body: JSON.stringify(data),
+        }),
+    sendTestPush: () =>
+        authFetch('/api/v1/notifications/push-test', {
+            method: 'POST',
+        }),
 };
 
 export const notesApi = {

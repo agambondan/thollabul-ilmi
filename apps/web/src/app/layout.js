@@ -3,6 +3,8 @@ import { AuthProvider } from '@/context/Auth';
 import SettingButton from '@/components/popup/SettingButton';
 import { LocaleProvider } from '@/context/Locale';
 import AnalyticsTracker from '@/components/AnalyticsTracker';
+import { Toaster } from 'react-hot-toast';
+import InAppNotification from '@/components/InAppNotification';
 
 const SITE_URL =
     process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tholabul-ilmi.com';
@@ -85,6 +87,23 @@ export default function RootLayout({ children }) {
                         <AnalyticsTracker />
                         {children}
                         <SettingButton />
+                        <Toaster
+                            position='top-right'
+                            toastOptions={{
+                                duration: 5000,
+                                style: {
+                                    borderRadius: '12px',
+                                    background: '#fff',
+                                    color: '#1e293b',
+                                    boxShadow: '0 4px 24px rgba(0,0,0,0.1)',
+                                },
+                                dark: {
+                                    background: '#1e293b',
+                                    color: '#f1f5f9',
+                                },
+                            }}
+                        />
+                        <InAppNotification />
                     </AuthProvider>
                 </LocaleProvider>
             </body>

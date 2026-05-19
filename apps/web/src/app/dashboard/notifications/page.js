@@ -2,10 +2,18 @@
 
 import { useAuth } from '@/context/Auth';
 import { useLocale } from '@/context/Locale';
-import { notificationInboxApi } from '@/lib/api';
+import { notificationApi, notificationInboxApi } from '@/lib/api';
+import {
+    registerServiceWorker,
+    subscribeToPush,
+    unsubscribeFromPush,
+    subscriptionToPlainObject,
+    getPushPermissionStatus,
+    requestNotificationPermission,
+} from '@/lib/pushSubscription';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { BsBell, BsBellFill, BsCheckAll } from 'react-icons/bs';
+import { useCallback, useEffect, useState } from 'react';
+import { BsBell, BsBellFill, BsCheckAll, BsPhone, BsLaptop } from 'react-icons/bs';
 
 const todayStr = () => {
     const d = new Date();
@@ -36,16 +44,116 @@ const NotificationsPage = () => {
     const { t, lang } = useLocale();
     const { isAuthenticated } = useAuth();
     const [notifs, setNotifs] = useState([]);
+    const [pushState, setPushState] = useState({
+        supported: false,
+        subscribed: false,
+        permission: 'default',
+        loading: true,
+        swRegistration: null,
+    });
+    const [testLoading, setTestLoading] = useState(false);
+    const [testMessage, setTestMessage] = useState('');
 
+    // --- Push notification setup ---
+    const initPush = useCallback(async () => {
+        const perm = await getPushPermissionStatus();
+
+        if (perm === 'unsupported') {
+            setPushState((s) => ({ ...s, supported: false, loading: false, permission: 'unsupported' }));
+            return;
+        }
+
+        const { supported, registration } = await registerServiceWorker();
+        if (!supported) {
+            setPushState((s) => ({ ...s, supported: false, loading: false }));
+            return;
+        }
+
+        let subscribed = false;
+        if (registration) {
+            try {
+                const sub = await registration.pushManager.getSubscription();
+                subscribed = !!sub;
+            } catch {}
+        }
+
+        setPushState({
+            supported: true,
+            subscribed,
+            permission: perm,
+            loading: false,
+            swRegistration: registration,
+        });
+    }, []);
+
+    useEffect(() => {
+        initPush();
+    }, [initPush]);
+
+    const handleSubscribe = async () => {
+        const perm = await requestNotificationPermission();
+        if (!perm.granted) {
+            setPushState((s) => ({ ...s, permission: 'denied' }));
+            return;
+        }
+
+        const { supported, registration } = await registerServiceWorker();
+        if (!supported || !registration) return;
+
+        const result = await subscribeToPush(registration);
+        if (result.success && isAuthenticated) {
+            const sub = subscriptionToPlainObject(result.subscription);
+            if (sub) {
+                try {
+                    await notificationApi.registerPushToken({
+                        token: sub.endpoint,
+                        platform: 'web',
+                        provider: 'web',
+                        device_id: `web:${navigator.userAgent?.slice(0, 40) ?? 'unknown'}`,
+                        key_p256dh: sub.keys?.p256dh ?? '',
+                        key_auth: sub.keys?.auth ?? '',
+                    });
+                } catch {}
+            }
+        }
+
+        setPushState((s) => ({
+            ...s,
+            subscribed: result.success,
+            permission: 'granted',
+            swRegistration: registration,
+        }));
+    };
+
+    const handleUnsubscribe = async () => {
+        const { success } = await unsubscribeFromPush(pushState.swRegistration);
+        if (success) {
+            setPushState((s) => ({ ...s, subscribed: false }));
+        }
+    };
+
+    const handleTestPush = async () => {
+        setTestLoading(true);
+        setTestMessage('');
+        try {
+            await notificationApi.sendTestPush();
+            setTestMessage(t('notif.test_success') || 'Push terkirim! Cek perangkat Anda.');
+        } catch (err) {
+            const text = await err.text?.().catch(() => '');
+            setTestMessage(text || 'Gagal mengirim test push.');
+        } finally {
+            setTestLoading(false);
+        }
+    };
+
+    // --- Inbox ---
     const buildLocalNotifs = () => {
         const readIds = loadLocalRead();
         const local = [];
         const today = todayStr();
 
         try {
-            const muhasabah = JSON.parse(
-                localStorage.getItem('tholabul_muhasabah') ?? '[]',
-            );
+            const muhasabah = JSON.parse(localStorage.getItem('tholabul_muhasabah') ?? '[]');
             if (!muhasabah.find((m) => m.date === today)) {
                 local.push({
                     id: 'auto_muhasabah_today',
@@ -63,9 +171,7 @@ const NotificationsPage = () => {
 
         try {
             const PRAYERS = ['shubuh', 'dzuhur', 'ashar', 'maghrib', 'isya'];
-            const log = JSON.parse(
-                localStorage.getItem(`sholat_log_${today}`) ?? '{}',
-            );
+            const log = JSON.parse(localStorage.getItem(`sholat_log_${today}`) ?? '{}');
             const done = PRAYERS.filter((p) => log[p]).length;
             if (done < 5) {
                 local.push({
@@ -83,9 +189,7 @@ const NotificationsPage = () => {
         } catch {}
 
         try {
-            const tilawah = JSON.parse(
-                localStorage.getItem('tholabul_tilawah') ?? '[]',
-            );
+            const tilawah = JSON.parse(localStorage.getItem('tholabul_tilawah') ?? '[]');
             const hasTodayTilawah = tilawah.some((e) => e.date === today);
             if (!hasTodayTilawah) {
                 local.push({
@@ -103,12 +207,8 @@ const NotificationsPage = () => {
         } catch {}
 
         try {
-            const reviews = JSON.parse(
-                localStorage.getItem('muroja_ah_reviews') ?? '{}',
-            );
-            const hafalan = JSON.parse(
-                localStorage.getItem('tholabul_hafalan') ?? '[]',
-            );
+            const reviews = JSON.parse(localStorage.getItem('muroja_ah_reviews') ?? '{}');
+            const hafalan = JSON.parse(localStorage.getItem('tholabul_hafalan') ?? '[]');
             const urgentCount = hafalan
                 .filter((s) => s.status === 'hafal')
                 .filter((s) => {
@@ -207,6 +307,54 @@ const NotificationsPage = () => {
                     </button>
                 )}
             </div>
+
+            {/* Push Notification Settings */}
+            {!pushState.loading && pushState.supported && (
+                <div className='mb-6 bg-white dark:bg-slate-800 rounded-xl border border-emerald-100 dark:border-emerald-900/30 p-4'>
+                    <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2'>
+                        <BsLaptop className='text-emerald-500' />
+                        Push Notification Browser
+                    </h2>
+                    <div className='flex flex-wrap items-center gap-3'>
+                        {pushState.permission === 'denied' ? (
+                            <p className='text-xs text-red-500'>
+                                Izin notifikasi ditolak. Izinkan melalui pengaturan browser.
+                            </p>
+                        ) : pushState.subscribed ? (
+                            <>
+                                <span className='inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-300'>
+                                    <span className='w-2 h-2 rounded-full bg-emerald-500' />
+                                    Terdaftar
+                                </span>
+                                <button
+                                    onClick={handleUnsubscribe}
+                                    className='text-xs text-slate-500 hover:text-red-500 underline'
+                                >
+                                    Berhenti
+                                </button>
+                                <button
+                                    onClick={handleTestPush}
+                                    disabled={testLoading}
+                                    className='text-xs text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 underline disabled:opacity-50'
+                                >
+                                    {testLoading ? 'Mengirim...' : 'Kirim Test Push'}
+                                </button>
+                            </>
+                        ) : (
+                            <button
+                                onClick={handleSubscribe}
+                                className='inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-emerald-700 dark:bg-emerald-500 dark:text-emerald-950 dark:hover:bg-emerald-400'
+                            >
+                                <BsBellFill />
+                                Aktifkan Push Notification
+                            </button>
+                        )}
+                    </div>
+                    {testMessage && (
+                        <p className='mt-2 text-xs text-gray-500 dark:text-gray-400'>{testMessage}</p>
+                    )}
+                </div>
+            )}
 
             {notifs.length === 0 ? (
                 <div className='text-center py-16'>
