@@ -591,6 +591,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     const [settingsVisible, setSettingsVisible] = useState(false);
     const [tajweedVisible, setTajweedVisible] = useState(false);
     const [referenceModal, setReferenceModal] = useState({ visible: false, type: null, ayah: null });
+    const [tafsirMode, setTafsirMode] = useState('all');
     const [munasabahModal, setMunasabahModal] = useState({ visible: false, ayah: null, items: [], loading: false, error: '' });
     const [hadithAyahModal, setHadithAyahModal] = useState({ visible: false, ayah: null, items: [], loading: false, error: '' });
     const [ayahActionSheet, setAyahActionSheet] = useState({ visible: false, ayah: null });
@@ -650,6 +651,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
 
     const openReferenceModal = async (ayah, type) => {
         setReferenceModal({ visible: true, type, ayah });
+        if (type !== 'tafsir') setTafsirMode('all');
         const key = `${type}:${ayah.id}`;
         if (referenceState[key]?.items || referenceState[key]?.loading) return;
 
@@ -2572,6 +2574,18 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         const state = key ? referenceState[key] : null;
         const title = type === 'tafsir' ? 'Tafsir' : 'Asbabun Nuzul';
 
+        const items = state?.items ?? [];
+        const kemenag = items.find((i) => i.title === 'Kemenag');
+        const ibnuKatsir = items.find((i) => i.title === 'Ibnu Katsir');
+        const hasBoth = !!kemenag && !!ibnuKatsir;
+
+        const TAFSIR_MODES = [
+            { key: 'all', label: 'Semua' },
+            { key: 'side-by-side', label: 'Bandingkan' },
+            { key: 'kemenag', label: 'Kemenag' },
+            { key: 'mishbah', label: 'Al-Mishbah' },
+        ];
+
         return (
             <AppModalSheet
                 onClose={() => setReferenceModal((m) => ({ ...m, visible: false }))}
@@ -2588,15 +2602,60 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                 {state?.error ? (
                     <Text style={styles.referenceEmpty}>{state.error}</Text>
                 ) : null}
-                {state?.items?.map((item) => (
-                    <View key={item.id} style={styles.referenceItem}>
-                        <Text style={styles.referenceTitle}>{item.title}</Text>
-                        {item.meta ? (
-                            <Text style={styles.referenceMeta}>{item.meta}</Text>
-                        ) : null}
-                        <Text style={styles.referenceBody}>{item.body}</Text>
+
+                {!state?.loading && !state?.error && type === 'tafsir' && hasBoth && (
+                    <View style={styles.tafsirModeRow}>
+                        {TAFSIR_MODES.map((mode) => (
+                            <Pressable
+                                key={mode.key}
+                                onPress={() => setTafsirMode(mode.key)}
+                                style={[
+                                    styles.tafsirModePill,
+                                    tafsirMode === mode.key && styles.tafsirModePillActive,
+                                ]}
+                            >
+                                <Text
+                                    style={[
+                                        styles.tafsirModePillText,
+                                        tafsirMode === mode.key && styles.tafsirModePillTextActive,
+                                    ]}
+                                >
+                                    {mode.label}
+                                </Text>
+                            </Pressable>
+                        ))}
                     </View>
-                ))}
+                )}
+
+                {!state?.loading && !state?.error && type === 'tafsir' && tafsirMode === 'side-by-side' && hasBoth ? (
+                    <View style={styles.sideBySideRow}>
+                        <View style={[styles.sideBySideCol, styles.sideBySideColPrimary]}>
+                            <Text style={styles.sideBySideColTitle}>Kemenag</Text>
+                            <Text style={styles.referenceBody}>{kemenag.body}</Text>
+                        </View>
+                        <View style={[styles.sideBySideCol, styles.sideBySideColSecondary]}>
+                            <Text style={styles.sideBySideColTitle}>Al-Mishbah</Text>
+                            <Text style={styles.referenceBody}>{ibnuKatsir.body}</Text>
+                        </View>
+                    </View>
+                ) : (
+                    items
+                        .filter((item) => {
+                            if (type !== 'tafsir' || tafsirMode === 'all') return true;
+                            if (tafsirMode === 'kemenag') return item.title === 'Kemenag';
+                            if (tafsirMode === 'mishbah') return item.title === 'Ibnu Katsir';
+                            return true;
+                        })
+                        .map((item) => (
+                            <View key={item.id} style={styles.referenceItem}>
+                                <Text style={styles.referenceTitle}>{item.title}</Text>
+                                {item.meta ? (
+                                    <Text style={styles.referenceMeta}>{item.meta}</Text>
+                                ) : null}
+                                <Text style={styles.referenceBody}>{item.body}</Text>
+                            </View>
+                        ))
+                )}
             </AppModalSheet>
         );
     };
@@ -4606,6 +4665,52 @@ const styles = StyleSheet.create({
         fontSize: 13,
         lineHeight: 19,
         marginTop: spacing.sm,
+    },
+    tafsirModeRow: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: spacing.xs,
+        marginBottom: spacing.sm,
+    },
+    tafsirModePill: {
+        borderColor: colors.faint,
+        borderRadius: 16,
+        borderWidth: 1,
+        paddingHorizontal: 12,
+        paddingVertical: 5,
+    },
+    tafsirModePillActive: {
+        backgroundColor: colors.primary,
+        borderColor: colors.primary,
+    },
+    tafsirModePillText: {
+        color: colors.text,
+        fontSize: 12,
+        fontWeight: '600',
+    },
+    tafsirModePillTextActive: {
+        color: '#fff',
+    },
+    sideBySideRow: {
+        flexDirection: 'row',
+        gap: spacing.sm,
+    },
+    sideBySideCol: {
+        borderRadius: radius.md,
+        flex: 1,
+        padding: spacing.md,
+    },
+    sideBySideColPrimary: {
+        backgroundColor: '#f0fdf4',
+    },
+    sideBySideColSecondary: {
+        backgroundColor: '#f0f9ff',
+    },
+    sideBySideColTitle: {
+        color: colors.ink,
+        fontSize: 13,
+        fontWeight: '900',
+        marginBottom: spacing.sm,
     },
     qariGrid: {
         flexDirection: 'row',
