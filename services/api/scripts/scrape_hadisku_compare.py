@@ -8,6 +8,7 @@ Use the JSONL output as a candidate source for Arabic backfill after review.
 Examples:
   python3 scripts/scrape_hadisku_compare.py --sample 10
   python3 scripts/scrape_hadisku_compare.py --books ahmad --full --scrape-cache --scrape-only --delay 0.7
+  python3 scripts/scrape_hadisku_compare.py --books ahmad --full --scrape-cache --scrape-only --compare-during-scrape
   python3 scripts/scrape_hadisku_compare.py --books ahmad --full --from-cache
   python3 scripts/scrape_hadisku_compare.py --books ahmad,darimi --sample 50
   python3 scripts/scrape_hadisku_compare.py --books ahmad --full --workers 8
@@ -305,12 +306,7 @@ def append_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
             handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
 
 
-def raw_cache_path(raw_dir: Path, slug: str) -> Path:
-    return raw_dir / f"{slug}.jsonl"
-
-
-def load_raw_cache(raw_dir: Path, slug: str) -> dict[int, dict[str, Any]]:
-    path = raw_cache_path(raw_dir, slug)
+def load_numbered_jsonl(path: Path) -> dict[int, dict[str, Any]]:
     if not path.exists():
         return {}
     records: dict[int, dict[str, Any]] = {}
@@ -325,13 +321,29 @@ def load_raw_cache(raw_dir: Path, slug: str) -> dict[int, dict[str, Any]]:
     return records
 
 
+def raw_cache_path(raw_dir: Path, slug: str) -> Path:
+    return raw_dir / f"{slug}.jsonl"
+
+
+def load_raw_cache(raw_dir: Path, slug: str) -> dict[int, dict[str, Any]]:
+    return load_numbered_jsonl(raw_cache_path(raw_dir, slug))
+
+
+def compare_output_path(out_dir: Path, slug: str) -> Path:
+    return out_dir / f"{slug}.jsonl"
+
+
 def scrape_raw_cache(
     raw_dir: Path,
+    compare_dir: Path,
     slug: str,
     remote_slug: str,
     numbers: list[int],
     refresh_cache: bool,
     delay: float,
+    local_rows: list[dict[str, Any]] | None = None,
+    threshold: float = 0.85,
+    compare_during_scrape: bool = False,
 ) -> dict[str, Any]:
     path = raw_cache_path(raw_dir, slug)
     existing = load_raw_cache(raw_dir, slug)
@@ -340,6 +352,22 @@ def scrape_raw_cache(
     started = time.time()
     ok_count = 0
     error_count = 0
+    compared_count = 0
+    compare_path = compare_output_path(compare_dir, slug)
+    local_by_number = {row["number"]: row for row in (local_rows or [])}
+    compared_existing = load_numbered_jsonl(compare_path) if compare_during_scrape else {}
+
+    if compare_during_scrape:
+        cached_compare_rows = []
+        for number in numbers:
+            if number in compared_existing or number not in existing or number not in local_by_number:
+                continue
+            cached_compare_rows.append(compare_payload(slug, remote_slug, local_by_number[number], existing[number], threshold))
+        if cached_compare_rows:
+            append_jsonl(compare_path, cached_compare_rows)
+            compared_count += len(cached_compare_rows)
+            print(f"[{slug}] stream compared {len(cached_compare_rows)} existing cached rows")
+
     for idx, number in enumerate(target_numbers, 1):
         remote = fetch_hadisku(remote_slug, number)
         record = {
@@ -350,6 +378,10 @@ def scrape_raw_cache(
             **remote,
         }
         append_jsonl(path, [record])
+        if compare_during_scrape and number in local_by_number:
+            compare_row = compare_payload(slug, remote_slug, local_by_number[number], record, threshold)
+            append_jsonl(compare_path, [compare_row])
+            compared_count += 1
         if record["ok"]:
             ok_count += 1
         else:
@@ -366,8 +398,10 @@ def scrape_raw_cache(
         "scraped": len(target_numbers),
         "ok": ok_count,
         "errors": error_count,
+        "compared": compared_count,
         "elapsed_seconds": round(time.time() - started, 2),
         "output": str(path),
+        "compare_output": str(compare_path) if compare_during_scrape else "",
     }
 
 
@@ -386,6 +420,7 @@ def main() -> None:
     parser.add_argument("--scrape-only", action="store_true", help="Only populate raw cache, do not compare.")
     parser.add_argument("--from-cache", action="store_true", help="Compare using raw JSONL cache only; never hit HadisKu.")
     parser.add_argument("--refresh-cache", action="store_true", help="Re-scrape selected raw cache rows even when already cached.")
+    parser.add_argument("--compare-during-scrape", action="store_true", help="Append compare JSONL rows while raw cache is being scraped.")
     parser.add_argument("--delay", type=float, default=0.7, help="Delay in seconds between raw cache scrape requests.")
     args = parser.parse_args()
 
@@ -407,7 +442,18 @@ def main() -> None:
             remote_slug = BOOK_SLUGS[slug]
             rows = load_local_rows(args.data_dir, slug)
             numbers = choose_remote_numbers(rows, remote_slug, args.sample, args.full, explicit_numbers)
-            summary = scrape_raw_cache(args.raw_dir, slug, remote_slug, numbers, args.refresh_cache, args.delay)
+            summary = scrape_raw_cache(
+                args.raw_dir,
+                args.out_dir,
+                slug,
+                remote_slug,
+                numbers,
+                args.refresh_cache,
+                args.delay,
+                local_rows=rows,
+                threshold=args.threshold,
+                compare_during_scrape=args.compare_during_scrape,
+            )
             scrape_summaries.append(summary)
             print(json.dumps(summary, ensure_ascii=False, sort_keys=True))
 
