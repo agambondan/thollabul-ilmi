@@ -42,16 +42,20 @@ type PushToken struct {
 	Platform   string    `json:"platform" gorm:"type:varchar(24);not null"`
 	Provider   string    `json:"provider" gorm:"type:varchar(24);not null;default:'expo'"`
 	DeviceID   string    `json:"device_id,omitempty" gorm:"type:varchar(128);index"`
+	KeyP256DH  string    `json:"key_p256dh,omitempty" gorm:"type:varchar(256)"`
+	KeyAuth    string    `json:"key_auth,omitempty" gorm:"type:varchar(256)"`
 	IsActive   bool      `json:"is_active" gorm:"default:true"`
 	LastSeenAt time.Time `json:"last_seen_at"`
 	User       *User     `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
 }
 
 type PushTokenRegisterRequest struct {
-	Token    string `json:"token" validate:"required"`
-	Platform string `json:"platform" validate:"required"`
-	Provider string `json:"provider"`
-	DeviceID string `json:"device_id"`
+	Token     string `json:"token" validate:"required"`
+	Platform  string `json:"platform" validate:"required"`
+	Provider  string `json:"provider"`
+	DeviceID  string `json:"device_id"`
+	KeyP256DH string `json:"key_p256dh"`
+	KeyAuth   string `json:"key_auth"`
 }
 
 type PushTokenStatus struct {

@@ -46,7 +46,7 @@ func (s *notificationService) FindPushTokenStatus(userID uuid.UUID) (model.PushT
 	items := make([]model.PushTokenStatus, 0, len(tokens))
 	activeCount := 0
 	for _, token := range tokens {
-		if isDeliverableExpoPushToken(token) {
+		if token.IsActive {
 			activeCount++
 		}
 		items = append(items, model.PushTokenStatus{
@@ -110,11 +110,13 @@ func (s *notificationService) RegisterPushToken(userID uuid.UUID, req *model.Pus
 	}
 
 	return s.repo.UpsertPushToken(model.PushToken{
-		UserID:   userID,
-		Token:    token,
-		Platform: platform,
-		Provider: provider,
-		DeviceID: strings.TrimSpace(req.DeviceID),
+		UserID:    userID,
+		Token:     token,
+		Platform:  platform,
+		Provider:  provider,
+		DeviceID:  strings.TrimSpace(req.DeviceID),
+		KeyP256DH: strings.TrimSpace(req.KeyP256DH),
+		KeyAuth:   strings.TrimSpace(req.KeyAuth),
 	})
 }
 
@@ -129,7 +131,7 @@ func (s *notificationService) SendTestPush(userID uuid.UUID) (model.PushTestResp
 		return model.PushTestResponse{}, err
 	}
 	if sent == 0 {
-		return model.PushTestResponse{}, fmt.Errorf("no active Expo push token found")
+		return model.PushTestResponse{}, fmt.Errorf("tidak ada push token aktif — daftarkan perangkat terlebih dahulu")
 	}
 	if s.inboxRepo != nil {
 		_, _ = s.inboxRepo.Create(model.UserNotification{

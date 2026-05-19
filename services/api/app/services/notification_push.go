@@ -6,10 +6,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/SherClockHolmes/webpush-go"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
@@ -61,35 +63,127 @@ func (s *notificationService) sendPushToUser(userID uuid.UUID, notificationType 
 		return 0, err
 	}
 
-	messages := make([]expoPushMessage, 0, len(tokens))
-	tokenIDs := make([]int, 0, len(tokens))
+	expoMessages := make([]expoPushMessage, 0, len(tokens))
+	expoTokenIDs := make([]int, 0, len(tokens))
+	sent := 0
+
 	for _, token := range tokens {
-		if !isDeliverableExpoPushToken(token) {
+		if !token.IsActive {
 			continue
 		}
 
-		tokenID := 0
-		if token.ID != nil {
-			tokenID = *token.ID
+		switch strings.ToLower(token.Provider) {
+		case "expo":
+			if !isValidExpoToken(token.Token) {
+				continue
+			}
+			tokenID := 0
+			if token.ID != nil {
+				tokenID = *token.ID
+			}
+			expoTokenIDs = append(expoTokenIDs, tokenID)
+			expoMessages = append(expoMessages, expoPushMessage{
+				To:        token.Token,
+				Title:     content.Title,
+				Body:      content.Description,
+				Sound:     "default",
+				ChannelID: viper.GetString("EXPO_PUSH_CHANNEL_ID"),
+				Data: map[string]interface{}{
+					"type":              "daily_reminder",
+					"notification_type": notificationType,
+				},
+			})
+
+		case "web":
+			if token.KeyP256DH == "" || token.KeyAuth == "" {
+				continue
+			}
+			if err := s.sendWebPush(token, content.Title, content.Description, notificationType); err != nil {
+				slog.Warn("web push send failed", "user_id", userID, "err", err)
+				continue
+			}
+			sent++
 		}
-		tokenIDs = append(tokenIDs, tokenID)
-		messages = append(messages, expoPushMessage{
-			To:        token.Token,
-			Title:     content.Title,
-			Body:      content.Description,
-			Sound:     "default",
-			ChannelID: viper.GetString("EXPO_PUSH_CHANNEL_ID"),
-			Data: map[string]interface{}{
-				"type":              "daily_reminder",
-				"notification_type": notificationType,
-			},
-		})
 	}
 
-	if len(messages) == 0 {
-		return 0, nil
+	if len(expoMessages) > 0 {
+		expoSent, err := s.sendExpoBatches(expoMessages, expoTokenIDs)
+		if err != nil {
+			return sent, err
+		}
+		sent += expoSent
 	}
 
+	return sent, nil
+}
+
+func isValidExpoToken(token string) bool {
+	return strings.HasPrefix(token, "ExponentPushToken[") || strings.HasPrefix(token, "ExpoPushToken[")
+}
+
+func isDeliverableExpoPushToken(token model.PushToken) bool {
+	return token.IsActive && strings.EqualFold(token.Provider, "expo") && isValidExpoToken(token.Token)
+}
+
+func (s *notificationService) sendWebPush(token model.PushToken, title, body string, notificationType model.NotificationType) error {
+	vapidPublicKey := strings.TrimSpace(viper.GetString("VAPID_PUBLIC_KEY"))
+	vapidPrivateKey := strings.TrimSpace(viper.GetString("VAPID_PRIVATE_KEY"))
+	vapidSubject := strings.TrimSpace(viper.GetString("VAPID_SUBJECT"))
+	if vapidPublicKey == "" || vapidPrivateKey == "" {
+		return fmt.Errorf("VAPID keys not configured")
+	}
+	if vapidSubject == "" {
+		vapidSubject = "mailto:notifications@thollabul-ilmi.app"
+	}
+
+	payload, err := json.Marshal(map[string]interface{}{
+		"title": title,
+		"body":  body,
+		"url":   "/",
+		"data": map[string]interface{}{
+			"type":              "daily_reminder",
+			"notification_type": notificationType,
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	sub := &webpush.Subscription{
+		Endpoint: token.Token,
+		Keys: webpush.Keys{
+			P256dh: token.KeyP256DH,
+			Auth:   token.KeyAuth,
+		},
+	}
+
+	resp, err := webpush.SendNotification(payload, sub, &webpush.Options{
+		Subscriber:      vapidSubject,
+		VAPIDPublicKey:  vapidPublicKey,
+		VAPIDPrivateKey: vapidPrivateKey,
+		TTL:             86400,
+	})
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusGone || resp.StatusCode == http.StatusNotFound {
+		if token.ID != nil {
+			if deactErr := s.repo.DeactivatePushToken(*token.ID); deactErr != nil {
+				slog.Warn("failed to deactivate expired web push token", "token_id", *token.ID, "err", deactErr)
+			}
+		}
+		return fmt.Errorf("web push endpoint expired (HTTP %d)", resp.StatusCode)
+	}
+	if resp.StatusCode >= 400 {
+		return fmt.Errorf("web push failed (HTTP %d)", resp.StatusCode)
+	}
+
+	return nil
+}
+
+func (s *notificationService) sendExpoBatches(messages []expoPushMessage, tokenIDs []int) (int, error) {
 	sent := 0
 	for start := 0; start < len(messages); start += 100 {
 		end := start + 100
@@ -103,13 +197,6 @@ func (s *notificationService) sendPushToUser(userID uuid.UUID, notificationType 
 		sent += batchSent
 	}
 	return sent, nil
-}
-
-func isDeliverableExpoPushToken(token model.PushToken) bool {
-	if !token.IsActive || !strings.EqualFold(token.Provider, "expo") {
-		return false
-	}
-	return strings.HasPrefix(token.Token, "ExponentPushToken[") || strings.HasPrefix(token.Token, "ExpoPushToken[")
 }
 
 func (s *notificationService) sendExpoPushBatch(messages []expoPushMessage, tokenIDs []int) (int, error) {

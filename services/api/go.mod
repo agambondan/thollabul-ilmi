@@ -4,6 +4,7 @@ go 1.26
 
 require (
 	github.com/AfterShip/email-verifier v1.3.3
+	github.com/SherClockHolmes/webpush-go v1.4.0
 	github.com/getsentry/sentry-go v0.46.2
 	github.com/getsentry/sentry-go/fiber v0.46.2
 	github.com/go-playground/validator/v10 v10.15.5

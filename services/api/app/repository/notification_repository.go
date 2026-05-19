@@ -58,6 +58,8 @@ func (r *notificationRepository) UpsertPushToken(token model.PushToken) (model.P
 			"platform":     token.Platform,
 			"provider":     token.Provider,
 			"device_id":    token.DeviceID,
+			"key_p256_dh":  token.KeyP256DH,
+			"key_auth":     token.KeyAuth,
 			"is_active":    true,
 			"last_seen_at": now,
 			"updated_at":   now,
