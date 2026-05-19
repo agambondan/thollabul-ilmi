@@ -354,7 +354,7 @@ const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadit
                                     <button
                                         className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-left'
 	                                        onClick={() => {
-	                                            copyText(detailUrl() || `${window.location.href}#${hadith.number}`);
+	                                            copyText(detailUrl() || `${window.location.href}#${params.slug}-${hadith.number}`);
 	                                        }}
                                     >
                                         <IoIosLink />

@@ -391,7 +391,7 @@ export const TafsirSurahContent = ({
 
                                                 {/* Link to quran */}
                                                 <Link
-                                                    href={`${quranBasePath}/${encodeURIComponent(decodedSlug)}#${ayah.number}`}
+                                                    href={`${quranBasePath}/${encodeURIComponent(decodedSlug)}#ayah-${ayah.number}`}
                                                     className='text-xs text-emerald-600 dark:text-emerald-400 hover:underline'
                                                 >
                                                     {t('tafsir.read_in_quran')}

@@ -14,7 +14,7 @@ const SUNNAH_SLUG_MAP = {
 
 const normalizeBookKey = (value) => value.toLowerCase().replaceAll(' ', '');
 
-const quranSourceHref = (surah, ayah) => `/quran/surah/${encodeURIComponent(surah.trim())}#${ayah}`;
+const quranSourceHref = (surah, ayah) => `/quran/surah/${encodeURIComponent(surah.trim())}#ayah-${ayah}`;
 
 export function parseSource(source) {
     if (!source) return [];
