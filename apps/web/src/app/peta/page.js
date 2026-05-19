@@ -24,9 +24,7 @@ export function PetaContent({ className = '' }) {
                     {t('peta.subtitle') ?? 'Lokasi bersejarah dalam peradaban Islam'}
                 </p>
             </div>
-            <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden' style={{ height: '500px' }}>
-                <MapComponent />
-            </div>
+            <MapComponent />
         </ContentWidth>
     );
 }

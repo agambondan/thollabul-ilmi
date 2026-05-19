@@ -3,6 +3,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { useEffect, useState } from 'react';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -11,36 +12,116 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
 
-const LOCATIONS = [
-    { lat: 21.4225, lng: 39.8262, name: "Makkah Al-Mukarramah", desc: "Kelahiran Nabi ﷺ, Masjidil Haram, Ka'bah" },
-    { lat: 24.4672, lng: 39.6112, name: "Madinah Al-Munawwarah", desc: "Masjid Nabawi, hijrah Rasulullah ﷺ" },
-    { lat: 21.3891, lng: 39.8579, name: "Ka'bah (Kiblat)", desc: "Kiblat umat Islam sedunia" },
-    { lat: 31.7683, lng: 35.2137, name: "Baitul Maqdis (Al-Quds)", desc: "Kiblat pertama, Masjidil Aqsha" },
-    { lat: 25.2048, lng: 55.2708, name: "Dubai", desc: "Pusat peradaban Islam modern" },
-    { lat: 33.3152, lng: 44.3661, name: "Baghdad", desc: "Baitul Hikmah, pusat ilmu Abbasiah" },
-    { lat: 30.0444, lng: 31.2357, name: "Kairo", desc: "Universitas Al-Azhar" },
-    { lat: 36.8065, lng: 10.1815, name: "Kairouan", desc: "Masjid Uqbah, pusat ilmu di Afrika Utara" },
-    { lat: 37.8889, lng: -4.7794, name: "Cordoba", desc: "Masjid Cordoba, pusat Islam di Andalusia" },
-    { lat: 41.0082, lng: 28.9784, name: "Istanbul", desc: "Kekhalifahan Utsmaniyah" },
-    { lat: 34.0209, lng: -6.8419, name: "Fes", desc: "Universitas Al-Qarawiyyin, tertua di dunia" },
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+const CATEGORIES = [
+    { value: '', label: 'Semua' },
+    { value: 'kota', label: 'Kota' },
+    { value: 'masjid', label: 'Masjid' },
+    { value: 'situs', label: 'Situs' },
+    { value: 'universitas', label: 'Universitas' },
+];
+
+const ERAS = [
+    { value: '', label: 'Semua Masa' },
+    { value: 'pra-islam', label: 'Pra-Islam' },
+    { value: 'khulafa', label: 'Khulafa & Sahabat' },
+    { value: 'umayyah', label: 'Umayyah' },
+    { value: 'abbasiyah', label: 'Abbasiyah' },
+    { value: 'fatimiyah', label: 'Fatimiyah' },
+    { value: 'andallus', label: 'Andalusia' },
+    { value: 'utsmaniyah', label: 'Utsmaniyah' },
+    { value: 'klasik', label: 'Klasik' },
 ];
 
 export default function MapComponent() {
+    const [locations, setLocations] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState('');
+    const [category, setCategory] = useState('');
+    const [era, setEra] = useState('');
+
+    useEffect(() => {
+        const params = new URLSearchParams();
+        if (search) params.set('q', search);
+        if (category) params.set('category', category);
+        if (era) params.set('era', era);
+        params.set('size', '100');
+
+        setLoading(true);
+        fetch(`${API_URL}/api/v1/locations?${params}`)
+            .then((r) => r.json())
+            .then((d) => setLocations(d?.items ?? []))
+            .catch(() => setLocations([]))
+            .finally(() => setLoading(false));
+    }, [search, category, era]);
+
     return (
-        <MapContainer center={[24.5, 43]} zoom={4} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
-            <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {LOCATIONS.map((loc) => (
-                <Marker key={loc.name} position={[loc.lat, loc.lng]}>
-                    <Popup>
-                        <strong>{loc.name}</strong>
-                        <br />
-                        {loc.desc}
-                    </Popup>
-                </Marker>
-            ))}
-        </MapContainer>
+        <div className='flex flex-col gap-4'>
+            <div className='flex flex-wrap items-center gap-3'>
+                <input
+                    type='text'
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder='Cari lokasi...'
+                    className='flex-1 min-w-[200px] rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                />
+                <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className='rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                >
+                    {CATEGORIES.map((c) => (
+                        <option key={c.value} value={c.value}>{c.label}</option>
+                    ))}
+                </select>
+                <select
+                    value={era}
+                    onChange={(e) => setEra(e.target.value)}
+                    className='rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                >
+                    {ERAS.map((e) => (
+                        <option key={e.value} value={e.value}>{e.label}</option>
+                    ))}
+                </select>
+                {loading && (
+                    <span className='text-xs text-gray-400'>Memuat...</span>
+                )}
+                {!loading && (
+                    <span className='text-xs text-gray-400'>{locations.length} lokasi</span>
+                )}
+            </div>
+
+            <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden' style={{ height: '500px' }}>
+                <MapContainer center={[24.5, 43]} zoom={4} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    {locations.map((loc) => (
+                        <Marker key={loc.id || loc.name} position={[loc.latitude, loc.longitude]}>
+                            <Popup>
+                                <div className='min-w-[200px]'>
+                                    <strong className='text-sm'>{loc.name}</strong>
+                                    <p className='text-xs text-gray-500 mt-1'>{loc.description}</p>
+                                    <div className='flex gap-2 mt-2'>
+                                        {loc.category && (
+                                            <span className='inline-block rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-300'>
+                                                {loc.category}
+                                            </span>
+                                        )}
+                                        {loc.era && (
+                                            <span className='inline-block rounded-full bg-blue-100 dark:bg-blue-900/30 px-2 py-0.5 text-[10px] font-medium text-blue-700 dark:text-blue-300'>
+                                                {loc.era}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                            </Popup>
+                        </Marker>
+                    ))}
+                </MapContainer>
+            </div>
+        </div>
     );
 }
