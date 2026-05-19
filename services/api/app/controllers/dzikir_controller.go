@@ -25,12 +25,12 @@ type dzikirController struct {
 }
 
 type dzikirAdminRequest struct {
-	Title           string `json:"title"`
-	Arabic          string `json:"arabic"`
+	Title           string `json:"title" validate:"required"`
+	Arabic          string `json:"arabic" validate:"required"`
 	Transliteration string `json:"transliteration"`
-	Translation     string `json:"translation"`
-	Count           int    `json:"count"`
-	Category        string `json:"category"`
+	Translation     string `json:"translation" validate:"required"`
+	Count           int    `json:"count" validate:"gt=0"`
+	Category        string `json:"category" validate:"required"`
 	Occasion        string `json:"occasion"`
 	Source          string `json:"source"`
 	AudioURL        string `json:"audio_url"`

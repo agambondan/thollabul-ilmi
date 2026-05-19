@@ -24,15 +24,15 @@ type QuizController interface {
 type quizController struct{ svc service.QuizService }
 
 type quizQuestionRequest struct {
-	Question      string   `json:"question"`
-	Options       []string `json:"options"`
-	Answer        int      `json:"answer"`
+	Question      string   `json:"question" validate:"required"`
+	Options       []string `json:"options" validate:"required,min=2"`
+	Answer        int      `json:"answer" validate:"gte=0"`
 	Explanation   string   `json:"explanation"`
-	Category      string   `json:"category"`
-	Difficulty    string   `json:"difficulty"`
+	Category      string   `json:"category" validate:"required"`
+	Difficulty    string   `json:"difficulty" validate:"required"`
 	QuestionText  string   `json:"question_text"`
 	CorrectAnswer string   `json:"correct_answer"`
-	Type          string   `json:"type"`
+	Type          string   `json:"type" validate:"required"`
 }
 
 type quizQuestionResponse struct {

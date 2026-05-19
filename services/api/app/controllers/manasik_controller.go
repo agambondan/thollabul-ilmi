@@ -22,14 +22,14 @@ type ManasikController interface {
 type manasikController struct{ svc service.ManasikService }
 
 type manasikAdminRequest struct {
-	Type            string `json:"type"`
+	Type            string `json:"type" validate:"required"`
 	Step            int    `json:"step"`
 	StepOrder       int    `json:"step_order"`
-	Title           string `json:"title"`
+	Title           string `json:"title" validate:"required"`
 	Arabic          string `json:"arabic"`
 	Latin           string `json:"latin"`
 	Transliteration string `json:"transliteration"`
-	Translation     string `json:"translation"`
+	Translation     string `json:"translation" validate:"required"`
 	Description     string `json:"description"`
 	Notes           string `json:"notes"`
 	IsWajib         bool   `json:"is_wajib"`

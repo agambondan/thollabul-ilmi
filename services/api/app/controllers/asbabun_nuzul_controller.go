@@ -25,15 +25,15 @@ type asbabunNuzulController struct {
 }
 
 type asbabunNuzulRequest struct {
-	Title       string                `json:"title"`
+	Title       string                `json:"title" validate:"required"`
 	Narrator    string                `json:"narrator"`
-	Content     string                `json:"content"`
+	Content     string                `json:"content" validate:"required"`
 	Source      string                `json:"source"`
 	DisplayRef  string                `json:"display_ref"`
-	SurahNumber int                   `json:"surah_number"`
-	AyahNumber  int                   `json:"ayah_number"`
-	AyahStart   int                   `json:"ayah_start"`
-	AyahEnd     int                   `json:"ayah_end"`
+	SurahNumber int                   `json:"surah_number" validate:"required,gt=0"`
+	AyahNumber  int                   `json:"ayah_number" validate:"gt=0"`
+	AyahStart   int                   `json:"ayah_start" validate:"gt=0"`
+	AyahEnd     int                   `json:"ayah_end" validate:"gt=0"`
 	AyahIDs     []int                 `json:"ayah_ids"`
 	AyahRefs    []model.AyahReference `json:"ayah_refs"`
 }

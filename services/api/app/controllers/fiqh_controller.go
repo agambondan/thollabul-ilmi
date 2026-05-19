@@ -29,11 +29,11 @@ type fiqhController struct {
 }
 
 type fiqhAdminItemRequest struct {
-	Category   string `json:"category"`
+	Category   string `json:"category" validate:"required"`
 	CategoryID int    `json:"category_id"`
-	Title      string `json:"title"`
-	Slug       string `json:"slug"`
-	Content    string `json:"content"`
+	Title      string `json:"title" validate:"required"`
+	Slug       string `json:"slug" validate:"required"`
+	Content    string `json:"content" validate:"required"`
 	Source     string `json:"source"`
 	Dalil      string `json:"dalil"`
 	SortOrder  int    `json:"sort_order"`

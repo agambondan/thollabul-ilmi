@@ -24,13 +24,13 @@ type tahlilController struct {
 
 type tahlilAdminRequest struct {
 	Step            int    `json:"step"`
-	Title           string `json:"title"`
-	Arabic          string `json:"arabic"`
+	Title           string `json:"title" validate:"required"`
+	Arabic          string `json:"arabic" validate:"required"`
 	Transliteration string `json:"transliteration"`
-	Translation     string `json:"translation"`
+	Translation     string `json:"translation" validate:"required"`
 	Repeat          int    `json:"repeat"`
-	CollectionID    *int   `json:"collection_id"`
-	CollectionType  string `json:"collection_type"`
+	CollectionID    *int   `json:"collection_id" validate:"gt=0"`
+	CollectionType  string `json:"collection_type" validate:"required"`
 }
 
 type tahlilAdminResponse struct {
