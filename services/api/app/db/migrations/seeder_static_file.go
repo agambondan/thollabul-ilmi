@@ -46,8 +46,7 @@ func SeedStaticFromFiles(db *gorm.DB) {
 	seedJarhTadilFromFile(db)
 	seedPerawiGuruFromFile(db)
 	seedTokohTarikhFromFile(db)
-	seedLocationsFromFile(db)
-	SeedAudioFromCDN(db)
+	SeedLocationsFromFile(db)
 }
 
 // ── helpers ───────────────────────────────────────────────────────────────────
@@ -1134,7 +1133,7 @@ func seedTokohTarikhFromFile(db *gorm.DB) {
 
 // ── Locations ───────────────────────────────────────────────────────────────────
 
-func seedLocationsFromFile(db *gorm.DB) {
+func SeedLocationsFromFile(db *gorm.DB) {
 	var count int64
 	db.Model(&model.Location{}).Count(&count)
 	if count > 0 {
@@ -1170,10 +1169,12 @@ func seedLocationsFromFile(db *gorm.DB) {
 			Category:    r.Category,
 			Era:         r.Era,
 		}
-		db.Clauses(clause.OnConflict{
+		if err := db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "name"}},
 			DoUpdates: clause.AssignmentColumns([]string{"description", "category", "era"}),
-		}).Create(&item)
+		}).Create(&item).Error; err != nil {
+			log.Printf("[seeder] location insert error for %s: %v", r.Name, err)
+		}
 	}
 }
 

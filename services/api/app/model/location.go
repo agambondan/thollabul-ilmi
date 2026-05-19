@@ -11,7 +11,7 @@ const (
 
 type Location struct {
 	BaseID
-	Name        string  `json:"name" gorm:"type:varchar(256);not null;index"`
+	Name        string  `json:"name" gorm:"type:varchar(256);not null;uniqueIndex"`
 	Description string  `json:"description" gorm:"type:text"`
 	Latitude    float64 `json:"latitude" gorm:"type:decimal(10,7);not null;index"`
 	Longitude   float64 `json:"longitude" gorm:"type:decimal(10,7);not null;index"`
