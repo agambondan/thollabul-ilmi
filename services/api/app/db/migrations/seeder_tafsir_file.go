@@ -190,10 +190,10 @@ func updateTafsirIbnuKatsirEnglish(db *gorm.DB, ayahMap map[string]int) {
 	}
 
 	type row struct {
-		ID              int
-		SurahNumber     int
-		AyahNumber      int
-		IbnuKatsirTrID  *int
+		ID             int
+		SurahNumber    int
+		AyahNumber     int
+		IbnuKatsirTrID *int
 	}
 	var rows []row
 	db.Raw(`
@@ -247,6 +247,9 @@ func updateTafsirIbnuKatsirEnglish(db *gorm.DB, ayahMap map[string]int) {
 		}
 	}
 	log.Printf("[seeder] Ibnu Katsir English: %d Translation.En diupdate", updated)
+
+	// ── IbnuKatsirEnTranslationID: buat Translation record terpisah ──
+	seedIbnuKatsirEnTranslationID(db)
 }
 
 func loadIbnuKatsirFile(path string) []ibnuKatsirVerse {
@@ -272,9 +275,9 @@ func updateTafsirTafsirweb(db *gorm.DB, ayahMap map[string]int) {
 	}
 
 	type row struct {
-		SurahNumber     int
-		AyahNumber      int
-		IbnuKatsirTrID  *int
+		SurahNumber    int
+		AyahNumber     int
+		IbnuKatsirTrID *int
 	}
 	var rows []row
 	db.Raw(`
@@ -334,6 +337,60 @@ func updateTafsirTafsirweb(db *gorm.DB, ayahMap map[string]int) {
 		}
 	}
 	log.Printf("[seeder] TafsirWeb: %d Translation.Idn diupdate", updated)
+}
+
+// ── IbnuKatsirEnTranslationID (field terpisah) ────────────────────────────────
+
+func seedIbnuKatsirEnTranslationID(db *gorm.DB) {
+	type row struct {
+		TafsirID         int
+		SurahNumber      int
+		AyahNumber       int
+		IbnuKatsirTrID   *int
+		IbnuKatsirEnTrID *int
+	}
+	var rows []row
+	db.Raw(`
+		SELECT t.id AS tafsir_id, surah.number AS surah_number, ayah.number AS ayah_number,
+		       t.ibnu_katsir_translation_id, t.ibnu_katsir_en_translation_id
+		FROM tafsir t
+		JOIN ayah ON ayah.id = t.ayah_id
+		JOIN surah ON surah.id = ayah.surah_id
+		WHERE t.deleted_at IS NULL
+		  AND t.ibnu_katsir_translation_id IS NOT NULL
+		  AND t.ibnu_katsir_en_translation_id IS NULL
+		  AND ayah.deleted_at IS NULL
+		  AND surah.deleted_at IS NULL
+	`).Scan(&rows)
+
+	updated := 0
+	for _, r := range rows {
+		if r.IbnuKatsirTrID == nil {
+			continue
+		}
+		// Baca English text dari Translation record existing
+		var src model.Translation
+		if err := db.Where("id = ?", *r.IbnuKatsirTrID).First(&src).Error; err != nil {
+			continue
+		}
+		if src.En == nil || *src.En == "" {
+			continue
+		}
+		// Buat Translation record baru khusus English
+		tr := model.Translation{
+			En: src.En,
+		}
+		if err := db.Create(&tr).Error; err != nil {
+			continue
+		}
+		// Update tafsir.ibnu_katsir_en_translation_id
+		if err := db.Model(&model.Tafsir{}).Where("id = ?", r.TafsirID).
+			Update("ibnu_katsir_en_translation_id", tr.ID).Error; err != nil {
+			continue
+		}
+		updated++
+	}
+	log.Printf("[seeder] IbnuKatsirEnTranslationID: %d record diupdate", updated)
 }
 
 func readTafsirwebFile(path string) string {

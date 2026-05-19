@@ -12,7 +12,8 @@
     "tempat_wafat": "Madinah Al-Munawwarah",
     "tabaqah": "nabi",
     "status": "nabi",
-    "biografis": "Rasulullah Muhammad ﷺ, Nabi dan Rasul terakhir, sumber seluruh hadith. Dilahirkan di Makkah, wafat di Madinah pada 11 H."
+    "biografis": "Rasulullah Muhammad ﷺ, Nabi dan Rasul terakhir, sumber seluruh hadith. Dilahirkan di Makkah, wafat di Madinah pada 11 H.",
+    "laqab": ""
   },
   {
     "nama_arab": "أَبُو هُرَيْرَةَ",
@@ -25,7 +26,8 @@
     "tempat_wafat": "Madinah",
     "tabaqah": "sahabat",
     "status": "tsiqah",
-    "biografis": "Sahabat yang paling banyak meriwayatkan hadith (± 5.374 hadith). Masuk Islam tahun 7 H, selalu mendampingi Nabi ﷺ di akhir masa hidupnya."
+    "biografis": "Sahabat yang paling banyak meriwayatkan hadith (± 5.374 hadith). Masuk Islam tahun 7 H, selalu mendampingi Nabi ﷺ di akhir masa hidupnya.",
+    "laqab": ""
   },
   {
     "nama_arab": "عَبْدُ اللَّهِ بْنُ عُمَرَ",
@@ -38,7 +40,8 @@
     "tempat_wafat": "Makkah",
     "tabaqah": "sahabat",
     "status": "tsiqah",
-    "biografis": "Putra Umar bin Khaththab. Terkenal sangat ketat mengikuti sunnah Nabi ﷺ. Meriwayatkan sekitar 2.630 hadith."
+    "biografis": "Putra Umar bin Khaththab. Terkenal sangat ketat mengikuti sunnah Nabi ﷺ. Meriwayatkan sekitar 2.630 hadith.",
+    "laqab": ""
   },
   {
     "nama_arab": "أَنَسُ بْنُ مَالِكٍ",
@@ -51,7 +54,8 @@
     "tempat_wafat": "Bashrah",
     "tabaqah": "sahabat",
     "status": "tsiqah",
-    "biografis": "Pelayan Nabi ﷺ selama 10 tahun. Salah satu sahabat paling produktif dalam periwayatan hadith (± 2.286 hadith). Wafat di Bashrah."
+    "biografis": "Pelayan Nabi ﷺ selama 10 tahun. Salah satu sahabat paling produktif dalam periwayatan hadith (± 2.286 hadith). Wafat di Bashrah.",
+    "laqab": ""
   },
   {
     "nama_arab": "عَائِشَةُ أُمُّ الْمُؤْمِنِينَ",
@@ -64,7 +68,8 @@
     "tempat_wafat": "Madinah",
     "tabaqah": "sahabat",
     "status": "tsiqah",
-    "biografis": "Istri Nabi ﷺ dan putri Abu Bakar ash-Shiddiq. Rujukan utama hadith seputar kehidupan rumah tangga dan ibadah khusus Nabi ﷺ. Meriwayatkan ± 2.210 hadith."
+    "biografis": "Istri Nabi ﷺ dan putri Abu Bakar ash-Shiddiq. Rujukan utama hadith seputar kehidupan rumah tangga dan ibadah khusus Nabi ﷺ. Meriwayatkan ± 2.210 hadith.",
+    "laqab": "Ummul Mukminin, ash-Shiddiqah"
   },
   {
     "nama_arab": "نَافِعٌ",
@@ -77,7 +82,8 @@
     "tempat_wafat": "Madinah",
     "tabaqah": "tabiin",
     "status": "tsiqah_tsiqah",
-    "biografis": "Hamba sahaya (mawla) milik Abdullah bin Umar. Imam Malik menyebut sanad 'Malik – Nafi' – Ibn Umar' sebagai sanad paling shahih (silsilah dzahabiyyah)."
+    "biografis": "Hamba sahaya (mawla) milik Abdullah bin Umar. Imam Malik menyebut sanad 'Malik – Nafi' – Ibn Umar' sebagai sanad paling shahih (silsilah dzahabiyyah).",
+    "laqab": ""
   },
   {
     "nama_arab": "مُحَمَّدُ بْنُ مُسْلِمٍ الزُّهْرِيُّ",
@@ -91,7 +97,8 @@
     "tempat_wafat": "Syam",
     "tabaqah": "tabiin",
     "status": "tsiqah_tsiqah",
-    "biografis": "Imam tabi'in terkemuka, penghimpun sunnah dan hadith pertama secara resmi atas perintah Khalifah Umar bin Abdul Aziz. Guru Imam Malik."
+    "biografis": "Imam tabi'in terkemuka, penghimpun sunnah dan hadith pertama secara resmi atas perintah Khalifah Umar bin Abdul Aziz. Guru Imam Malik.",
+    "laqab": "Ibnu Syihab"
   },
   {
     "nama_arab": "مَالِكُ بْنُ أَنَسٍ",
@@ -106,7 +113,8 @@
     "tempat_wafat": "Madinah",
     "tabaqah": "tabiut_tabiin",
     "status": "tsiqah_tsiqah",
-    "biografis": "Imam madzhab Maliki. Ulama hadith terkemuka Madinah. Karyanya Al-Muwaththa' adalah kitab hadith yang tersusun paling awal. Guru dari Imam Syafi'i."
+    "biografis": "Imam madzhab Maliki. Ulama hadith terkemuka Madinah. Karyanya Al-Muwaththa' adalah kitab hadith yang tersusun paling awal. Guru dari Imam Syafi'i.",
+    "laqab": "Imam Darul Hijrah"
   },
   {
     "nama_arab": "مُحَمَّدُ بْنُ إِسْمَاعِيلَ الْبُخَارِيُّ",
@@ -121,7 +129,8 @@
     "tempat_wafat": "Khartank, dekat Samarkand",
     "tabaqah": "tabaqah_5",
     "status": "tsiqah_tsiqah",
-    "biografis": "Imam al-Bukhari, penyusun Shahih Bukhari — kitab paling shahih setelah Al-Quran. Menghafal 100.000 hadith shahih dan 200.000 hadith. Mulai belajar hadith sejak usia 11 tahun."
+    "biografis": "Imam al-Bukhari, penyusun Shahih Bukhari — kitab paling shahih setelah Al-Quran. Menghafal 100.000 hadith shahih dan 200.000 hadith. Mulai belajar hadith sejak usia 11 tahun.",
+    "laqab": "Amirul Mukminin fil Hadith"
   },
   {
     "nama_arab": "مُسْلِمُ بْنُ الْحَجَّاجِ",
@@ -136,7 +145,8 @@
     "tempat_wafat": "Naisabur (Iran)",
     "tabaqah": "tabaqah_5",
     "status": "tsiqah_tsiqah",
-    "biografis": "Penyusun Shahih Muslim, kitab hadith paling shahih kedua. Murid Imam al-Bukhari. Menyaring 300.000 hadith untuk menghasilkan ± 7.500 hadith shahih."
+    "biografis": "Penyusun Shahih Muslim, kitab hadith paling shahih kedua. Murid Imam al-Bukhari. Menyaring 300.000 hadith untuk menghasilkan ± 7.500 hadith shahih.",
+    "laqab": ""
   },
   {
     "nama_arab": "أَبُو دَاوُدَ السِّجِسْتَانِيُّ",
@@ -151,7 +161,8 @@
     "tempat_wafat": "Bashrah",
     "tabaqah": "tabaqah_5",
     "status": "tsiqah_tsiqah",
-    "biografis": "Penyusun Sunan Abu Dawud. Murid Imam al-Bukhari dan Imam Ahmad. Menyaring 500.000 hadith untuk menghasilkan 4.800 hadith dalam kitabnya."
+    "biografis": "Penyusun Sunan Abu Dawud. Murid Imam al-Bukhari dan Imam Ahmad. Menyaring 500.000 hadith untuk menghasilkan 4.800 hadith dalam kitabnya.",
+    "laqab": ""
   },
   {
     "nama_arab": "مُحَمَّدُ بْنُ عِيسَى التِّرْمِذِيُّ",
@@ -166,7 +177,8 @@
     "tempat_wafat": "Tirmidz",
     "tabaqah": "tabaqah_5",
     "status": "tsiqah_tsiqah",
-    "biografis": "Penyusun Al-Jami' (Sunan Tirmidzi). Murid Imam al-Bukhari dan Imam Abu Dawud. Dikenal dengan inovasi menggolongkan derajat hadith di tiap bab."
+    "biografis": "Penyusun Al-Jami' (Sunan Tirmidzi). Murid Imam al-Bukhari dan Imam Abu Dawud. Dikenal dengan inovasi menggolongkan derajat hadith di tiap bab.",
+    "laqab": ""
   },
   {
     "nama_arab": "قُتَيْبَةُ بْنُ سَعِيدٍ",
@@ -179,6 +191,7 @@
     "tempat_wafat": "Baghlan",
     "tabaqah": "tabaqah_5",
     "status": "tsiqah_tsiqah",
-    "biografis": "Perawi thiqah, guru Imam al-Bukhari, Imam Muslim, dan Abu Dawud. Dikenal sebagai penghubung penting antara generasi tabi'ut tabi'in dengan imam hadith."
+    "biografis": "Perawi thiqah, guru Imam al-Bukhari, Imam Muslim, dan Abu Dawud. Dikenal sebagai penghubung penting antara generasi tabi'ut tabi'in dengan imam hadith.",
+    "laqab": ""
   }
 ]

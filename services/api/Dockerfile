@@ -11,6 +11,7 @@ FROM gcr.io/distroless/base:nonroot
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /app/build/main /app/main
+COPY data/locations.json /app/data/locations.json
 ENV TZ=Asia/Jakarta
 EXPOSE 9900
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 --start-period=15s \

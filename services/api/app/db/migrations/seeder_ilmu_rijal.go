@@ -1,6 +1,8 @@
 package migrations
 
 import (
+	"fmt"
+
 	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"gorm.io/gorm"
@@ -14,17 +16,12 @@ func SeedIlmuRijal(db *gorm.DB) {
 	seedPerawiGuru(db)
 	seedJarhTadil(db)
 	seedSanadHadith(db)
+	seedHadithAyahLinks(db)
 }
 
 // ─── Perawi ──────────────────────────────────────────────────────────────────
 
 func seedPerawi(db *gorm.DB) {
-	var count int64
-	db.Model(&model.Perawi{}).Count(&count)
-	if count > 0 {
-		return
-	}
-
 	hijriTrue := true
 
 	perawi := []model.Perawi{
@@ -218,12 +215,172 @@ func seedPerawi(db *gorm.DB) {
 			Status:      lib.Strptr(string(model.StatusTsiqahTsiqah)),
 			Biografis:   lib.Strptr("Perawi thiqah, guru Imam al-Bukhari, Imam Muslim, dan Abu Dawud. Dikenal sebagai penghubung penting antara generasi tabi'ut tabi'in dengan imam hadith."),
 		},
+		// ── Sahabat tambahan ───────────────────────────────────────────────────
+		{
+			NamaArab:    lib.Strptr("عُمَرُ بْنُ الْخَطَّابِ"),
+			NamaLatin:   lib.Strptr("Umar bin Khattab"),
+			NamaLengkap: lib.Strptr("Umar bin al-Khatthab bin Nufail al-Adawi al-Qurasyi"),
+			Kunyah:      lib.Strptr("Abu Hafs"),
+			Laqab:       lib.Strptr("Al-Faruq"),
+			Nisbah:      lib.Strptr("al-Adawi al-Qurasyi"),
+			TahunLahir:  lib.Intptr(-40),
+			TahunWafat:  lib.Intptr(23),
+			TahunHijri:  &hijriTrue,
+			TempatLahir: lib.Strptr("Makkah"),
+			TempatWafat: lib.Strptr("Madinah"),
+			Tabaqah:     lib.Strptr(string(model.TabaqahSahabat)),
+			Status:      lib.Strptr(string(model.StatusTsiqah)),
+			Biografis:   lib.Strptr("Khalifah kedua, sahabat utama, mertua Nabi ﷺ. Terkenal dengan ketegasan dan keadilannya. Meriwayatkan sekitar 537 hadith. Salah satu dari Khulafa'ur Rasyidin."),
+		},
+		{
+			NamaArab:    lib.Strptr("عَلِيُّ بْنُ أَبِي طَالِبٍ"),
+			NamaLatin:   lib.Strptr("Ali bin Abi Talib"),
+			NamaLengkap: lib.Strptr("Ali bin Abi Thalib bin Abdul Muththalib al-Qurasyi al-Hasyimi"),
+			Kunyah:      lib.Strptr("Abu Hasan"),
+			Laqab:       lib.Strptr("Karramallahu Wajhah, Asadullah"),
+			Nisbah:      lib.Strptr("al-Qurasyi al-Hasyimi"),
+			TahunLahir:  lib.Intptr(-23),
+			TahunWafat:  lib.Intptr(40),
+			TahunHijri:  &hijriTrue,
+			TempatLahir: lib.Strptr("Makkah"),
+			TempatWafat: lib.Strptr("Kufah"),
+			Tabaqah:     lib.Strptr(string(model.TabaqahSahabat)),
+			Status:      lib.Strptr(string(model.StatusTsiqah)),
+			Biografis:   lib.Strptr("Khalifah keempat, sepupu dan menantu Nabi ﷺ. Gerbangnya ilmu. Meriwayatkan sekitar 536 hadith. Termasuk Khulafa'ur Rasyidin."),
+		},
+		{
+			NamaArab:    lib.Strptr("عَبْدُ اللَّهِ بْنُ عَبَّاسٍ"),
+			NamaLatin:   lib.Strptr("Abdullah bin Abbas"),
+			NamaLengkap: lib.Strptr("Abdullah bin Abbas bin Abdul Muththalib al-Qurasyi al-Hasyimi"),
+			Kunyah:      lib.Strptr("Abu Abbas"),
+			Laqab:       lib.Strptr("Habrul Ummah, Turjumanul Quran"),
+			Nisbah:      lib.Strptr("al-Qurasyi al-Hasyimi"),
+			TahunLahir:  lib.Intptr(-3),
+			TahunWafat:  lib.Intptr(68),
+			TahunHijri:  &hijriTrue,
+			TempatLahir: lib.Strptr("Makkah"),
+			TempatWafat: lib.Strptr("Tha'if"),
+			Tabaqah:     lib.Strptr(string(model.TabaqahSahabat)),
+			Status:      lib.Strptr(string(model.StatusTsiqah)),
+			Biografis:   lib.Strptr("Sepupu Nabi ﷺ, ahli tafsir Al-Quran. Dijuluki 'Turjumanul Quran' (penerjemah Al-Quran). Meriwayatkan sekitar 1.660 hadith. Doa Nabi: 'Ya Allah, pahamkanlah ia dalam agama dan ajarkanlah takwil.'"),
+		},
+		{
+			NamaArab:    lib.Strptr("جَابِرُ بْنُ عَبْدِ اللَّهِ"),
+			NamaLatin:   lib.Strptr("Jabir bin Abdullah"),
+			NamaLengkap: lib.Strptr("Jabir bin Abdullah bin Amr bin Haram al-Anshari as-Sulami"),
+			Kunyah:      lib.Strptr("Abu Abdillah"),
+			Nisbah:      lib.Strptr("al-Anshari as-Sulami"),
+			TahunWafat:  lib.Intptr(78),
+			TahunHijri:  &hijriTrue,
+			TempatWafat: lib.Strptr("Madinah"),
+			Tabaqah:     lib.Strptr(string(model.TabaqahSahabat)),
+			Status:      lib.Strptr(string(model.StatusTsiqah)),
+			Biografis:   lib.Strptr("Sahabat yang paling banyak meriwayatkan hadith tentang manasik haji. Meriwayatkan sekitar 1.540 hadith. Ayahnya gugur di Perang Uhud."),
+		},
+		{
+			NamaArab:    lib.Strptr("أَبُو سَعِيدٍ الْخُدْرِيُّ"),
+			NamaLatin:   lib.Strptr("Abu Said al-Khudri"),
+			NamaLengkap: lib.Strptr("Sa'ad bin Malik bin Sinan al-Anshari al-Khudri"),
+			Kunyah:      lib.Strptr("Abu Sa'id"),
+			Nisbah:      lib.Strptr("al-Anshari al-Khudri"),
+			TahunWafat:  lib.Intptr(74),
+			TahunHijri:  &hijriTrue,
+			TempatWafat: lib.Strptr("Madinah"),
+			Tabaqah:     lib.Strptr(string(model.TabaqahSahabat)),
+			Status:      lib.Strptr(string(model.StatusTsiqah)),
+			Biografis:   lib.Strptr("Sahabat yang meriwayatkan sekitar 1.170 hadith. Ikut serta dalam Perang Khandaq dan bai'at Ridhwan. Termasuk sahabat yang banyak berfatwa di Madinah."),
+		},
+		{
+			NamaArab:    lib.Strptr("عَبْدُ اللَّهِ بْنُ مَسْعُودٍ"),
+			NamaLatin:   lib.Strptr("Abdullah bin Mas'ud"),
+			NamaLengkap: lib.Strptr("Abdullah bin Mas'ud bin Ghafil al-Hudzali"),
+			Kunyah:      lib.Strptr("Abu Abdurrahman"),
+			Nisbah:      lib.Strptr("al-Hudzali"),
+			TahunLahir:  lib.Intptr(-37),
+			TahunWafat:  lib.Intptr(32),
+			TahunHijri:  &hijriTrue,
+			TempatLahir: lib.Strptr("Makkah"),
+			TempatWafat: lib.Strptr("Madinah"),
+			Tabaqah:     lib.Strptr(string(model.TabaqahSahabat)),
+			Status:      lib.Strptr(string(model.StatusTsiqah)),
+			Biografis:   lib.Strptr("Sahabat yang pertama kali membaca Al-Quran dengan jahr (keras) di Makkah. Ahli qira'at dan fiqh. Meriwayatkan sekitar 848 hadith. Nabi ﷺ bersabda: 'Berpeganglah pada bacaan Ibnu Mas'ud.'"),
+		},
+		// ── Tabi'in tambahan ──────────────────────────────────────────────────
+		{
+			NamaArab:    lib.Strptr("سَعِيدُ بْنُ الْمُسَيَّبِ"),
+			NamaLatin:   lib.Strptr("Sa'id bin al-Musayyab"),
+			NamaLengkap: lib.Strptr("Sa'id bin al-Musayyab bin Hazn al-Qurasyi al-Makhzumi"),
+			Kunyah:      lib.Strptr("Abu Muhammad"),
+			Laqab:       lib.Strptr("Sayyidut Tabi'in"),
+			Nisbah:      lib.Strptr("al-Qurasyi al-Makhzumi"),
+			TahunLahir:  lib.Intptr(15),
+			TahunWafat:  lib.Intptr(94),
+			TahunHijri:  &hijriTrue,
+			TempatLahir: lib.Strptr("Madinah"),
+			TempatWafat: lib.Strptr("Madinah"),
+			Tabaqah:     lib.Strptr(string(model.TabaqahTabiin)),
+			Status:      lib.Strptr(string(model.StatusTsiqahTsiqah)),
+			Biografis:   lib.Strptr("Pemimpin para tabi'in. Ahli fiqh Madinah, menantu Abu Hurairah. Imam Malik menjadikannya sebagai hujjah utama dalam fiqh."),
+		},
+		{
+			NamaArab:    lib.Strptr("أَبُو سَلَمَةَ بْنُ عَبْدِ الرَّحْمَنِ"),
+			NamaLatin:   lib.Strptr("Abu Salamah bin Abdurrahman"),
+			NamaLengkap: lib.Strptr("Abdullah bin Abdurrahman bin Auf al-Qurasyi az-Zuhri"),
+			Kunyah:      lib.Strptr("Abu Salamah"),
+			Nisbah:      lib.Strptr("al-Qurasyi az-Zuhri"),
+			TahunWafat:  lib.Intptr(104),
+			TahunHijri:  &hijriTrue,
+			Tabaqah:     lib.Strptr(string(model.TabaqahTabiin)),
+			Status:      lib.Strptr(string(model.StatusTsiqah)),
+			Biografis:   lib.Strptr("Tabii terkemuka, anak dari Abdurrahman bin Auf. Guru dari Az-Zuhri. Termasuk fuqaha Madinah dan perawi tsiqah."),
+		},
+		// ── Imam-imam tambahan ────────────────────────────────────────────────
+		{
+			NamaArab:    lib.Strptr("أَحْمَدُ بْنُ حَنْبَلٍ"),
+			NamaLatin:   lib.Strptr("Ahmad bin Hanbal"),
+			NamaLengkap: lib.Strptr("Ahmad bin Muhammad bin Hanbal bin Hilal asy-Syaibani"),
+			Kunyah:      lib.Strptr("Abu Abdillah"),
+			Laqab:       lib.Strptr("Imam Ahlus Sunnah"),
+			Nisbah:      lib.Strptr("asy-Syaibani al-Marwazi al-Baghdadi"),
+			TahunLahir:  lib.Intptr(164),
+			TahunWafat:  lib.Intptr(241),
+			TahunHijri:  &hijriTrue,
+			TempatLahir: lib.Strptr("Baghdad"),
+			TempatWafat: lib.Strptr("Baghdad"),
+			Tabaqah:     lib.Strptr(string(model.TabaqahTabaqahKelima)),
+			Status:      lib.Strptr(string(model.StatusTsiqahTsiqah)),
+			Biografis:   lib.Strptr("Imam madzhab Hanbali. Penyusun Musnad Ahmad (26.000+ hadith). Murid Imam Syafi'i. Dikenal kuat memegang sunnah hingga rela dipenjara dalam fitnah Khalqul Quran."),
+		},
+		{
+			NamaArab:    lib.Strptr("مُحَمَّدُ بْنُ إِدْرِيسَ الشَّافِعِيُّ"),
+			NamaLatin:   lib.Strptr("Muhammad bin Idris asy-Syafi'i"),
+			NamaLengkap: lib.Strptr("Muhammad bin Idris bin Abbas bin Utsman asy-Syafi'i al-Qurasyi"),
+			Kunyah:      lib.Strptr("Abu Abdillah"),
+			Laqab:       lib.Strptr("Imam Syafi'i, Nashirus Sunnah"),
+			Nisbah:      lib.Strptr("asy-Syafi'i al-Qurasyi al-Muththalibi"),
+			TahunLahir:  lib.Intptr(150),
+			TahunWafat:  lib.Intptr(204),
+			TahunHijri:  &hijriTrue,
+			TempatLahir: lib.Strptr("Ghazzah (Palestina)"),
+			TempatWafat: lib.Strptr("Fusthat (Mesir)"),
+			Tabaqah:     lib.Strptr(string(model.TabaqahTabaqahKelima)),
+			Status:      lib.Strptr(string(model.StatusTsiqahTsiqah)),
+			Biografis:   lib.Strptr("Imam madzhab Syafi'i. Mujaddid abad ke-2 H. Murid Imam Malik. Guru Imam Ahmad. Peletak dasar ushul fiqh melalui karyanya Ar-Risalah. Hujjah dalam hadith dan fiqh."),
+		},
 	}
 
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(&perawi)
+	for i := range perawi {
+		db.Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "nama_latin"}},
+			DoUpdates: clause.AssignmentColumns([]string{"nama_arab", "nama_lengkap", "kunyah", "laqab", "nisbah", "tahun_lahir", "tahun_wafat", "tahun_hijri", "tempat_lahir", "tempat_wafat", "tabaqah", "status", "biografis"}),
+		}).Create(&perawi[i])
+	}
 }
 
 func seedPerawiGuru(db *gorm.DB) {
+	var existingCount int64
+	db.Model(&model.PerawiGuru{}).Count(&existingCount)
+
 	getID := func(namaLatin string) *int {
 		var p model.Perawi
 		if err := db.Where("nama_latin = ?", namaLatin).First(&p).Error; err != nil {
@@ -237,17 +394,41 @@ func seedPerawiGuru(db *gorm.DB) {
 		murid string
 	}
 	relations := []relation{
+		// Nabi → Sahabat
 		{guru: "Muhammad Rasulullah ﷺ", murid: "Abu Hurairah"},
 		{guru: "Muhammad Rasulullah ﷺ", murid: "Abdullah bin Umar"},
 		{guru: "Muhammad Rasulullah ﷺ", murid: "Anas bin Malik"},
 		{guru: "Muhammad Rasulullah ﷺ", murid: "Aisyah Ummul Mukminin"},
+		{guru: "Muhammad Rasulullah ﷺ", murid: "Umar bin Khattab"},
+		{guru: "Muhammad Rasulullah ﷺ", murid: "Ali bin Abi Talib"},
+		{guru: "Muhammad Rasulullah ﷺ", murid: "Abdullah bin Abbas"},
+		{guru: "Muhammad Rasulullah ﷺ", murid: "Jabir bin Abdullah"},
+		{guru: "Muhammad Rasulullah ﷺ", murid: "Abu Said al-Khudri"},
+		{guru: "Muhammad Rasulullah ﷺ", murid: "Abdullah bin Mas'ud"},
+		// Sahabat → Tabi'in
 		{guru: "Abdullah bin Umar", murid: "Nafi'"},
+		{guru: "Abu Hurairah", murid: "Sa'id bin al-Musayyab"},
+		{guru: "Abu Hurairah", murid: "Abu Salamah bin Abdurrahman"},
 		{guru: "Anas bin Malik", murid: "Muhammad bin Muslim az-Zuhri (Ibnu Syihab)"},
+		{guru: "Abdullah bin Abbas", murid: "Sa'id bin al-Musayyab"},
+		{guru: "Jabir bin Abdullah", murid: "Abu Salamah bin Abdurrahman"},
+		{guru: "Aisyah Ummul Mukminin", murid: "Abu Salamah bin Abdurrahman"},
+		// Tabi'in → Tabi'ut Tabi'in / Imam
+		{guru: "Sa'id bin al-Musayyab", murid: "Muhammad bin Muslim az-Zuhri (Ibnu Syihab)"},
+		{guru: "Abu Salamah bin Abdurrahman", murid: "Muhammad bin Muslim az-Zuhri (Ibnu Syihab)"},
 		{guru: "Nafi'", murid: "Malik bin Anas"},
 		{guru: "Muhammad bin Muslim az-Zuhri (Ibnu Syihab)", murid: "Malik bin Anas"},
+		{guru: "Muhammad bin Muslim az-Zuhri (Ibnu Syihab)", murid: "Muhammad bin Idris asy-Syafi'i"},
+		{guru: "Malik bin Anas", murid: "Muhammad bin Idris asy-Syafi'i"},
 		{guru: "Malik bin Anas", murid: "Muhammad bin Ismail al-Bukhari"},
+		{guru: "Muhammad bin Idris asy-Syafi'i", murid: "Ahmad bin Hanbal"},
+		{guru: "Muhammad bin Idris asy-Syafi'i", murid: "Muhammad bin Ismail al-Bukhari"},
+		// Imam → Imam / Mukharrij
 		{guru: "Qutaibah bin Sa'id", murid: "Muhammad bin Ismail al-Bukhari"},
 		{guru: "Qutaibah bin Sa'id", murid: "Muslim bin al-Hajjaj"},
+		{guru: "Ahmad bin Hanbal", murid: "Muhammad bin Ismail al-Bukhari"},
+		{guru: "Ahmad bin Hanbal", murid: "Muslim bin al-Hajjaj"},
+		{guru: "Ahmad bin Hanbal", murid: "Abu Dawud as-Sijistani"},
 		{guru: "Muhammad bin Ismail al-Bukhari", murid: "Muslim bin al-Hajjaj"},
 		{guru: "Muhammad bin Ismail al-Bukhari", murid: "Abu Dawud as-Sijistani"},
 		{guru: "Muhammad bin Ismail al-Bukhari", murid: "Muhammad bin Isa at-Tirmidzi"},
@@ -266,18 +447,14 @@ func seedPerawiGuru(db *gorm.DB) {
 	if len(rows) == 0 {
 		return
 	}
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(&rows)
+	for i := range rows {
+		db.Clauses(clause.OnConflict{DoNothing: true}).Create(&rows[i])
+	}
 }
 
 // ─── Jarh wa Ta'dil ──────────────────────────────────────────────────────────
 
 func seedJarhTadil(db *gorm.DB) {
-	var count int64
-	db.Model(&model.JarhTadil{}).Count(&count)
-	if count > 0 {
-		return
-	}
-
 	// Resolve perawi IDs by name
 	getID := func(namaLatin string) *int {
 		var p model.Perawi
@@ -419,7 +596,12 @@ func seedJarhTadil(db *gorm.DB) {
 		},
 	}
 
-	db.Clauses(clause.OnConflict{DoNothing: true}).Create(&penilaian)
+	for i := range penilaian {
+		db.Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "perawi_id"}, {Name: "penilai_id"}},
+			DoUpdates: clause.AssignmentColumns([]string{"jenis_nilai", "tingkat", "teks_nilai", "sumber", "halaman", "catatan"}),
+		}).Create(&penilaian[i])
+	}
 }
 
 // ─── Sanad & MataSanad ───────────────────────────────────────────────────────
@@ -433,18 +615,6 @@ func seedSanadHadith(db *gorm.DB) {
 		return
 	}
 
-	// Cari hadith nomor 1 dari kitab Bukhari
-	var hadith model.Hadith
-	if err := db.Joins("Book").
-		Where(`"Book".slug = ? AND hadith.number = ?`, "bukhari", 1).
-		First(&hadith).Error; err != nil {
-		// Jika tidak ada, ambil hadith pertama yang ada
-		if err2 := db.First(&hadith).Error; err2 != nil {
-			return
-		}
-	}
-
-	// Resolve perawi IDs
 	getID := func(namaLatin string) *int {
 		var p model.Perawi
 		if err := db.Where("nama_latin = ?", namaLatin).First(&p).Error; err != nil {
@@ -453,63 +623,110 @@ func seedSanadHadith(db *gorm.DB) {
 		return p.ID
 	}
 
-	bukhariID := getID("Muhammad bin Ismail al-Bukhari")
-	qutaibahID := getID("Qutaibah bin Sa'id")
-	malikID := getID("Malik bin Anas")
-	nafiID := getID("Nafi'")
-	ibnUmarID := getID("Abdullah bin Umar")
-
-	if bukhariID == nil || ibnUmarID == nil {
-		return
+	getHadith := func(bookSlug string, number int) (*model.Hadith, bool) {
+		var h model.Hadith
+		if err := db.Joins("Book").
+			Where(`"Book".slug = ? AND hadith.number = ?`, bookSlug, number).
+			First(&h).Error; err != nil {
+			return nil, false
+		}
+		return &h, true
 	}
 
 	musnad := model.SanadJenis(model.SanadMusnad)
 	muttashil := model.SanadStatus(model.SanadMuttashil)
-	jalur1 := 1
+	haddatsana := model.MetodePeriwayatan(model.MetodeHaddatsana)
+	ananah := model.MetodePeriwayatan(model.MetodeAnanah)
 
+	// ── Hadith 1: Bukhari #1 — "Innamal a'malu binniyat" ─────────────
+	if h, ok := getHadith("bukhari", 1); ok {
+		buildSanad(db, h, getID, []string{
+			"Muhammad bin Ismail al-Bukhari",
+			"Qutaibah bin Sa'id",
+			"Malik bin Anas",
+			"Nafi'",
+			"Abdullah bin Umar",
+		}, "Jalur: Bukhari ← Qutaibah ← Malik ← Nafi' ← Ibn Umar", &musnad, &muttashil,
+			[]model.MetodePeriwayatan{haddatsana, ananah, ananah, ananah})
+		seedTakhrijHadith(db, h.ID)
+	}
+
+	// ── Hadith 2: Bukhari #50 — Hadith Jibril (Iman, Islam, Ihsan) ──
+	if h, ok := getHadith("bukhari", 50); ok {
+		buildSanad(db, h, getID, []string{
+			"Muhammad bin Ismail al-Bukhari",
+			"Qutaibah bin Sa'id",
+			"Ismail bin Ja'far",
+			"Abu Suhail Nafi' bin Malik",
+			"Malik bin Anas",
+			"Atha' bin Yasar",
+			"Abu Hurairah",
+		}, "Jalur: Bukhari ← Isma'il ← Malik ← Abu Suhail ← Atha' ← Abu Hurairah", &musnad, &muttashil,
+			[]model.MetodePeriwayatan{haddatsana, ananah, ananah, ananah, ananah, ananah})
+	}
+
+	// ── Hadith 3: Bukhari #33 — Tanda-tanda munafik ──────────────
+	if h, ok := getHadith("bukhari", 33); ok {
+		buildSanad(db, h, getID, []string{
+			"Muhammad bin Ismail al-Bukhari",
+			"Sulaiman Abu ar-Rabi'",
+			"Ismail bin Ja'far",
+			"Bukair bin Mismar",
+			"Amir bin Sa'd",
+			"Abu Hurairah",
+		}, "Jalur: Bukhari ← Sulaiman ← Isma'il ← Bukair ← Amir ← Abu Hurairah", &musnad, &muttashil,
+			[]model.MetodePeriwayatan{haddatsana, ananah, ananah, ananah, ananah, ananah})
+	}
+
+	// ── Hadith 4: Bukhari #8 — Islam dibangun 5 perkara ──────────
+	if h, ok := getHadith("bukhari", 8); ok {
+		buildSanad(db, h, getID, []string{
+			"Muhammad bin Ismail al-Bukhari",
+			"Ubaidullah bin Musa",
+			"Hanzhalah bin Abu Sufyan",
+			"Ikrimah bin Khalid",
+			"Abdullah bin Umar",
+		}, "Jalur: Bukhari ← Ubaidullah ← Hanzhalah ← Ikrimah ← Ibn Umar", &musnad, &muttashil,
+			[]model.MetodePeriwayatan{haddatsana, ananah, ananah, ananah, ananah})
+	}
+}
+
+func buildSanad(db *gorm.DB, hadith *model.Hadith, getID func(string) *int, chain []string, catatan string, jenis *model.SanadJenis, status *model.SanadStatus, metode []model.MetodePeriwayatan) {
+	// Resolve semua perawi dalam chain
+	ids := make([]*int, len(chain))
+	for i, nama := range chain {
+		id := getID(nama)
+		if id == nil {
+			return // skip jika ada perawi yang belum terdaftar
+		}
+		ids[i] = id
+	}
+
+	jalur1 := 1
 	sanad := model.Sanad{
 		HadithID:    hadith.ID,
 		NomorJalur:  &jalur1,
-		Jenis:       &musnad,
-		StatusSanad: &muttashil,
-		Catatan:     lib.Strptr("Jalur utama: Bukhari ← Qutaibah ← Malik ← Nafi' ← Ibn Umar"),
+		Jenis:       jenis,
+		StatusSanad: status,
+		Catatan:     lib.Strptr(catatan),
 	}
 
 	if err := db.Create(&sanad).Error; err != nil {
 		return
 	}
 
-	// Mata sanad (urutan dari perawi penerima → Nabi ﷺ)
-	haddatsana := model.MetodePeriwayatan(model.MetodeHaddatsana)
-	ananah := model.MetodePeriwayatan(model.MetodeAnanah)
-
-	urutan := []struct {
-		perawiID *int
-		urutan   int
-		metode   model.MetodePeriwayatan
-	}{
-		{bukhariID, 1, haddatsana},
-		{qutaibahID, 2, haddatsana},
-		{malikID, 3, ananah},
-		{nafiID, 4, ananah},
-		{ibnUmarID, 5, ananah},
-	}
-
-	for _, u := range urutan {
-		if u.perawiID == nil {
-			continue
-		}
+	// Mata sanad: tiap perawi dengan metode
+	for i, id := range ids {
 		m := model.MataSanad{
 			SanadID:  sanad.ID,
-			PerawiID: u.perawiID,
-			Urutan:   lib.Intptr(u.urutan),
-			Metode:   (*model.MetodePeriwayatan)(lib.Strptr(string(u.metode))),
+			PerawiID: id,
+			Urutan:   lib.Intptr(i + 1),
+		}
+		if i < len(metode) {
+			m.Metode = &metode[i]
 		}
 		db.Create(&m)
 	}
-
-	// Takhrij: hadith yang sama ada di Shahih Muslim
-	seedTakhrijHadith(db, hadith.ID)
 }
 
 // ─── Takhrij ─────────────────────────────────────────────────────────────────
@@ -567,5 +784,83 @@ func seedTakhrijHadith(db *gorm.DB, hadithID *int) {
 			Catatan:         lib.Strptr(t.catatan),
 		}
 		db.Clauses(clause.OnConflict{DoNothing: true}).Create(&takhrij)
+	}
+}
+
+// ─── HadithAyah ────────────────────────────────────────────────────────────────
+// Menghubungkan hadith terkenal dengan ayat Al-Quran yang relevan.
+// Mempermudah fitur "Takhrij Ayat" dan "Hadith Terkait".
+
+func seedHadithAyahLinks(db *gorm.DB) {
+	type ayahRef struct {
+		surah int
+		ayah  int
+	}
+	type hadithRef struct {
+		bookSlug string
+		number   int
+		catatan  string
+	}
+
+	links := []struct {
+		hadith hadithRef
+		ayahs  []ayahRef
+	}{
+		{
+			hadith: hadithRef{"bukhari", 1, "Hadits tentang niat — sejalan dengan perintah ikhlas dalam beribadah"},
+			ayahs:  []ayahRef{{98, 5}},
+		},
+		{
+			hadith: hadithRef{"bukhari", 8, "Hadits tentang rukun Islam — dasar-dasar agama"},
+			ayahs:  []ayahRef{{3, 19}, {3, 85}},
+		},
+		{
+			hadith: hadithRef{"bukhari", 33, "Hadits tentang tanda munafik"},
+			ayahs:  []ayahRef{{2, 8}, {2, 9}, {2, 10}},
+		},
+		{
+			hadith: hadithRef{"bukhari", 50, "Hadits Jibril — penjelasan Iman, Islam, Ihsan"},
+			ayahs:  []ayahRef{{2, 177}, {31, 12}},
+		},
+		{
+			hadith: hadithRef{"bukhari", 6018, "Hadits tentang iman dan hari akhir — menjaga lisan"},
+			ayahs:  []ayahRef{{33, 70}, {33, 71}},
+		},
+		{
+			hadith: hadithRef{"bukhari", 5027, "Hadits tentang sebaik-baik manusia — belajar Quran"},
+			ayahs:  []ayahRef{{96, 1}, {96, 3}},
+		},
+	}
+
+	// Build ayah index
+	type ayahIdx struct {
+		ID          int
+		Number      int
+		SurahNumber int
+	}
+	var idxRows []ayahIdx
+	db.Raw(`SELECT ayah.id, ayah.number, surah.number AS surah_number FROM ayah JOIN surah ON surah.id = ayah.surah_id`).Scan(&idxRows)
+	ayahMap := make(map[string]int, len(idxRows))
+	for _, a := range idxRows {
+		ayahMap[fmt.Sprintf("%d:%d", a.SurahNumber, a.Number)] = a.ID
+	}
+
+	for _, link := range links {
+		var hadith model.Hadith
+		if err := db.Joins("Book").Where(`"Book".slug = ? AND hadith.number = ?`, link.hadith.bookSlug, link.hadith.number).First(&hadith).Error; err != nil {
+			continue
+		}
+		for _, ref := range link.ayahs {
+			ayahID, ok := ayahMap[fmt.Sprintf("%d:%d", ref.surah, ref.ayah)]
+			if !ok {
+				continue
+			}
+			item := model.HadithAyah{
+				HadithID: hadith.ID,
+				AyahID:   &ayahID,
+				Catatan:  link.hadith.catatan,
+			}
+			db.Clauses(clause.OnConflict{DoNothing: true}).Create(&item)
+		}
 	}
 }
