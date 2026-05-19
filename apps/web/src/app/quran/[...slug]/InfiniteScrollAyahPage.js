@@ -43,16 +43,19 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 		setPage((prev) => prev + 1);
 	}, [hasMore, isFetchingMore, isInitialLoading]);
 
+	const getTargetAyah = () => {
+		if (typeof window === 'undefined') return 0;
+		const hash = window.location.hash.replace('#', '');
+		if (!hash) return 0;
+		const match = hash.match(/^ayah-?(\d+)$/);
+		if (!match) return 0;
+		return parseInt(match[1], 10);
+	};
+
 	const fetchSurah = useCallback(
 		async (pageIndex, size = PAGE_SIZE) => {
-			const hash = typeof window !== 'undefined' ? window.location.hash.replace('#', '') : '';
-			let nextSize = size;
-			if (hash && pageIndex === 0) {
-				const hashNum = parseInt(hash, 10);
-				if (!Number.isNaN(hashNum) && hashNum > 0) {
-					nextSize = hashNum + (hashNum % PAGE_SIZE);
-				}
-			}
+			const target = pageIndex === 0 ? getTargetAyah() : 0;
+			const nextSize = target > 0 ? target + (target % PAGE_SIZE) : size;
 
 			const res = await fetch(
 				`${process.env.NEXT_PUBLIC_API_URL}/api/v1/surah/name/${slug}?page=${pageIndex}&size=${nextSize}`,
@@ -125,6 +128,16 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 			isActive = false;
 		};
 	}, [fetchSurah, page, surah]);
+
+	useEffect(() => {
+		if (isInitialLoading || !ayahs.length) return;
+		const target = getTargetAyah();
+		if (!target) return;
+		const el = document.getElementById(`ayah-${target}`);
+		if (el) {
+			el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		}
+	}, [isInitialLoading, ayahs.length]);
 
 	if (isInitialLoading) return <SkeletonReader />;
 	if (error)

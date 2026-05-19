@@ -177,7 +177,7 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
     };
 
     return (
-        <div ref={cardRef} id={`${surah.translation.latin_en}-${ayah.number}`}>
+        <div ref={cardRef} id={`ayah-${ayah.number}`}>
             {clipboardPopUp && (
                 <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-full shadow-lg'>
                     {t('ayah.copied_to_clipboard')}
@@ -194,7 +194,7 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                         .concat(`${ayahTranslation}\n`)
                         .concat(
                             `(QS. ${surah.translation.latin_en} ${surah.number}: ${t('common.verse')} ${ayah.number})\n`.concat(
-                                `Via Thullaabul 'Ilmi ${window.location.href}#${ayah.number}`
+                                `Via Thullaabul 'Ilmi ${window.location.href.split('#')[0]}#ayah-${ayah.number}`
                             )
                         )}
                 />
@@ -300,7 +300,7 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                                     <button
                                         className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-left'
                                         onClick={() =>
-                                            copyText(`${window.location.href}#${ayah.number}`)
+                                            copyText(`${window.location.href.split('#')[0]}#ayah-${ayah.number}`)
                                         }
                                     >
                                         <IoIosLink />
@@ -340,7 +340,7 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                                                     .concat(`${ayahTranslation}\n\n`)
                                                     .concat(
                                                         `(QS. ${surah.translation.latin_en} ${surah.number}: ${t('common.verse')} ${ayah.number})\n`.concat(
-                                                            `Via Thullaabul 'Ilmi ${window.location.href}#${ayah.number}`
+                                                            `Via Thullaabul 'Ilmi ${window.location.href.split('#')[0]}#ayah-${ayah.number}`
                                                         )
                                                     )
                                             )
