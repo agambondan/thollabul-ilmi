@@ -17,6 +17,7 @@ export const LOCAL_TOOL_TYPES = [
   'asmaul-flashcard',
   'forum',
   'historical-map',
+  'tokoh',
 ];
 
 const featureIcons = {

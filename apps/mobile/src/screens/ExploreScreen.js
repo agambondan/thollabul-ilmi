@@ -64,6 +64,7 @@ import { getAyahById, getSurahs } from '../api/client';
 import { calculateFaraidh, HEIR_LABELS } from '../lib/faraidh';
 import { hapticMedium, hapticTap } from '../utils/haptics';
 import { HistoricalMapContent } from './HistoricalMapScreen';
+import { TokohTarikhContent } from './TokohTarikhContent';
 
 const quizOptions = ['A', 'B', 'C', 'D'];
 
@@ -74,6 +75,7 @@ const TAFSIR_SOURCE_LABELS = {
 };
 const TAFSIR_MODES = [
   { key: 'all', label: 'Semua' },
+  { key: 'side-by-side', label: 'Bandingkan' },
   { key: 'kemenag', label: 'Kemenag' },
   { key: 'mishbah', label: 'Al-Mishbah' },
 ];
@@ -1420,6 +1422,20 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       if (!isTafsirDetail) return null;
       if (tafsirMode === 'kemenag') return renderTafsirPanel(selectedItem.tafsir, TAFSIR_SOURCE_LABELS.kemenag, false);
       if (tafsirMode === 'mishbah') return renderTafsirPanel(selectedItem.secondaryTafsir, TAFSIR_SOURCE_LABELS.secondary, true);
+      if (tafsirMode === 'side-by-side' && hasBothTafsir) {
+        return (
+          <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+            <View style={{ flex: 1, backgroundColor: '#f0fdf4', borderRadius: radius.md, padding: spacing.md }}>
+              <Text style={{ fontSize: 13, fontWeight: '900', color: colors.ink, marginBottom: spacing.sm }}>Kemenag</Text>
+              <Text style={styles.detailBody}>{selectedItem.tafsir}</Text>
+            </View>
+            <View style={{ flex: 1, backgroundColor: '#f0f9ff', borderRadius: radius.md, padding: spacing.md }}>
+              <Text style={{ fontSize: 13, fontWeight: '900', color: colors.ink, marginBottom: spacing.sm }}>Al-Mishbah</Text>
+              <Text style={styles.detailBody}>{selectedItem.secondaryTafsir}</Text>
+            </View>
+          </View>
+        );
+      }
       return (
         <>
           {renderTafsirPanel(selectedItem.tafsir, TAFSIR_SOURCE_LABELS.kemenag, false)}
@@ -2883,8 +2899,17 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     if (activeFeature.type === 'historical-map') {
       return (
         <Card>
-          <CardTitle meta="11 lokasi bersejarah">Peta Islam Interaktif</CardTitle>
+          <CardTitle meta="Lokasi bersejarah">Peta Islam Interaktif</CardTitle>
           <HistoricalMapContent />
+        </Card>
+      );
+    }
+
+    if (activeFeature.type === 'tokoh') {
+      return (
+        <Card>
+          <CardTitle>Tokoh Tarikh</CardTitle>
+          <TokohTarikhContent />
         </Card>
       );
     }
