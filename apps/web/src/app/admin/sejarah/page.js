@@ -7,9 +7,9 @@ import { useEffect, useState } from 'react';
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from 'react-icons/bs';
 
 const CATEGORIES = [
-    'khulafaur-rasyidin',
-    'dinasti-umayyah',
-    'dinasti-abbasiyah',
+    'khulafa',
+    'dinasti',
+    'peristiwa',
     'perang',
     'ulama',
     'nabi',
@@ -17,11 +17,22 @@ const CATEGORIES = [
     'umum',
 ];
 
+const slugify = (str) =>
+    str
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
 const EMPTY_FORM = {
-    year: '',
+    year_hijri: '',
+    year_miladi: '',
     title: '',
+    slug: '',
     description: '',
     category: 'umum',
+    is_significant: false,
 };
 
 const AdminHistoryPage = () => {
@@ -61,10 +72,13 @@ const AdminHistoryPage = () => {
     const openEdit = (item) => {
         setEditId(item.id ?? item._id);
         setForm({
-            year: item.year ?? '',
-            title: item.title ?? '',
-            description: item.description ?? '',
+            year_hijri: item.year_hijri ?? item.year ?? '',
+            year_miladi: item.year_miladi ?? '',
+            title: getLocalizedField(item, 'title', lang),
+            slug: item.slug ?? '',
+            description: getLocalizedField(item, 'description', lang),
             category: item.category ?? 'umum',
+            is_significant: item.is_significant ?? false,
         });
         setShowModal(true);
     };
@@ -75,11 +89,21 @@ const AdminHistoryPage = () => {
     const save = async () => {
         setSaving(true);
         try {
+            const title = form.title.trim();
+            const payload = {
+                year_hijri: Number(form.year_hijri) || 0,
+                year_miladi: Number(form.year_miladi) || 0,
+                title,
+                slug: form.slug.trim() || slugify(title),
+                description: form.description,
+                category: form.category,
+                is_significant: Boolean(form.is_significant),
+            };
             let res;
             if (editId) {
-                res = await adminSejarahApi.update(editId, form);
+                res = await adminSejarahApi.update(editId, payload);
             } else {
-                res = await adminSejarahApi.create(form);
+                res = await adminSejarahApi.create(payload);
             }
             if (!res.ok) throw new Error(t('admin.error.save'));
             setShowModal(false);
@@ -105,12 +129,15 @@ const AdminHistoryPage = () => {
         }
     };
 
-    const filtered = items.filter(
-        (i) =>
-            i.title?.toLowerCase().includes(search.toLowerCase()) ||
-            i.category?.toLowerCase().includes(search.toLowerCase()) ||
-            String(i.year).includes(search),
-    );
+    const filtered = items.filter((i) => {
+        const q = search.toLowerCase();
+        return (
+            getLocalizedField(i, 'title', lang).toLowerCase().includes(q) ||
+            i.category?.toLowerCase().includes(q) ||
+            String(i.year_hijri ?? '').includes(q) ||
+            String(i.year_miladi ?? '').includes(q)
+        );
+    });
 
     return (
         <div className='p-6'>
@@ -168,7 +195,7 @@ const AdminHistoryPage = () => {
                                     className='hover:bg-gray-50 dark:hover:bg-slate-750'
                                 >
                                     <td className='px-4 py-3 text-gray-500 dark:text-gray-400 font-mono text-xs'>
-                                        {item.year}
+                                        {item.year_hijri ? `${item.year_hijri} H` : '-'}
                                     </td>
                                     <td className='px-4 py-3 text-gray-900 dark:text-white font-medium'>
                                         {getLocalizedField(item, 'title', lang)}
@@ -238,15 +265,31 @@ const AdminHistoryPage = () => {
                                         {t('admin.history.year_hijri')}
                                     </label>
                                     <input
-                                        type='text'
-                                        value={form.year}
+                                        type='number'
+                                        value={form.year_hijri}
                                         onChange={(e) =>
-                                            setForm({ ...form, year: e.target.value })
+                                            setForm({ ...form, year_hijri: e.target.value })
                                         }
-                                        placeholder='e.g. 1 H'
+                                        placeholder='1'
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
                                 </div>
+                                <div>
+                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                        Tahun Masehi
+                                    </label>
+                                    <input
+                                        type='number'
+                                        value={form.year_miladi}
+                                        onChange={(e) =>
+                                            setForm({ ...form, year_miladi: e.target.value })
+                                        }
+                                        placeholder='622'
+                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                    />
+                                </div>
+                            </div>
+                            <div className='grid grid-cols-2 gap-4'>
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t('admin.field.category')}
@@ -265,6 +308,20 @@ const AdminHistoryPage = () => {
                                         ))}
                                     </select>
                                 </div>
+                                <div>
+                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                        {t('admin.field.slug')}
+                                    </label>
+                                    <input
+                                        type='text'
+                                        value={form.slug}
+                                        onChange={(e) =>
+                                            setForm({ ...form, slug: e.target.value })
+                                        }
+                                        placeholder='auto dari judul'
+                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                    />
+                                </div>
                             </div>
                             <div>
                                 <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
@@ -273,9 +330,17 @@ const AdminHistoryPage = () => {
                                 <input
                                     type='text'
                                     value={form.title}
-                                    onChange={(e) =>
-                                        setForm({ ...form, title: e.target.value })
-                                    }
+                                    onChange={(e) => {
+                                        const nextTitle = e.target.value;
+                                        setForm({
+                                            ...form,
+                                            title: nextTitle,
+                                            slug:
+                                                !form.slug || form.slug === slugify(form.title)
+                                                    ? slugify(nextTitle)
+                                                    : form.slug,
+                                        });
+                                    }}
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
@@ -292,6 +357,20 @@ const AdminHistoryPage = () => {
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
+                            <label className='flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300'>
+                                <input
+                                    type='checkbox'
+                                    checked={form.is_significant}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            is_significant: e.target.checked,
+                                        })
+                                    }
+                                    className='rounded border-gray-300 dark:border-slate-600 text-emerald-700 focus:ring-emerald-500'
+                                />
+                                Peristiwa penting
+                            </label>
                         </div>
                         <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
                             <button
