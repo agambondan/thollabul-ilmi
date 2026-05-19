@@ -75,7 +75,7 @@ const InfiniteScrollHadithPage = ({ params, searchParams, basePath = '/hadith' }
 		fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/books?size=20`)
 			.then((res) => res.json())
 			.then((data) => setBookList(data?.items ?? []))
-			.catch(() => {});
+			.catch(e => console.error(e));
 	}, []);
 
 	useEffect(() => {
@@ -104,8 +104,8 @@ const InfiniteScrollHadithPage = ({ params, searchParams, basePath = '/hadith' }
 								setIsLoading(false);
 								const firstHadith = res3?.items?.[0];
 								if (firstHadith) {
-									progressApi.saveHadith(params.slug, firstHadith.id).catch(() => {});
-									streakApi.logActivity('hadith').catch(() => {});
+									progressApi.saveHadith(params.slug, firstHadith.id).catch(e => console.error(e));
+									streakApi.logActivity('hadith').catch(e => console.error(e));
 								}
 							}
 						);

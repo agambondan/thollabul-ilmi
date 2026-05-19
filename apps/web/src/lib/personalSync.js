@@ -4,7 +4,7 @@ export const parseApiJson = async (response) => {
     if (!response?.ok) {
         let message = `Request failed: ${response?.status ?? 'unknown'}`;
         try {
-            const body = await response.json();
+            const body = await response.clone().json();
             message = body?.message ?? body?.error ?? message;
         } catch {}
         throw new Error(message);

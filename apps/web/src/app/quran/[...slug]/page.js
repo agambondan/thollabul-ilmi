@@ -1,4 +1,4 @@
-'use client';;
+'use client';
 import { use } from "react";
 
 import InfiniteScrollAyahPage from '@/app/quran/[...slug]/InfiniteScrollAyahPage';
