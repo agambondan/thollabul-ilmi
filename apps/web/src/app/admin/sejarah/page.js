@@ -69,17 +69,24 @@ const AdminHistoryPage = () => {
         setShowModal(true);
     };
 
+    const fb = (type, msg) =>
+        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+
     const save = async () => {
         setSaving(true);
         try {
+            let res;
             if (editId) {
-                await adminSejarahApi.update(editId, form);
+                res = await adminSejarahApi.update(editId, form);
             } else {
-                await adminSejarahApi.create(form);
+                res = await adminSejarahApi.create(form);
             }
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setShowModal(false);
             load();
-        } catch {
+            fb('admin:success', t('admin.crud.save_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
         } finally {
             setSaving(false);
         }
@@ -88,10 +95,14 @@ const AdminHistoryPage = () => {
     const confirmDelete = async () => {
         if (!deleteId) return;
         try {
-            await adminSejarahApi.delete(deleteId);
+            const res = await adminSejarahApi.delete(deleteId);
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setDeleteId(null);
             load();
-        } catch {}
+            fb('admin:success', t('admin.crud.delete_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
+        }
     };
 
     const filtered = items.filter(

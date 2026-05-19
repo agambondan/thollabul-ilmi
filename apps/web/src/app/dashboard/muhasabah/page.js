@@ -27,6 +27,8 @@ const getMoodEmoji = (v) => MOODS.find((m) => m.value === v)?.emoji ?? '😐';
 const MuhasabahPage = () => {
     const { t, lang } = useLocale();
     const { isAuthenticated } = useAuth();
+    const fb = (type, msg) =>
+        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
     const [list, setList] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [form, setForm] = useState({ date: todayISO(), mood: 'baik', content: '' });
@@ -77,6 +79,7 @@ const MuhasabahPage = () => {
                 );
                 persist([saved, ...list]);
                 setSyncError('');
+                fb('admin:success', t('admin.crud.save_success'));
             } catch {
                 setSyncError('Muhasabah tersimpan lokal. Sinkron cloud belum berhasil.');
             }
@@ -92,6 +95,7 @@ const MuhasabahPage = () => {
             try {
                 await parseApiJson(await muhasabahApi.delete(id));
                 setSyncError('');
+                fb('admin:success', t('admin.crud.delete_success'));
             } catch {
                 setSyncError('Muhasabah dihapus lokal. Sinkron cloud belum berhasil.');
             }
@@ -159,6 +163,7 @@ const MuhasabahPage = () => {
                                 </div>
                                 <button
                                     onClick={() => remove(entry.id)}
+                                    aria-label={t('muhasabah.delete')}
                                     className='text-gray-300 dark:text-slate-600 hover:text-red-500 transition-colors shrink-0'
                                 >
                                     <BsTrash />

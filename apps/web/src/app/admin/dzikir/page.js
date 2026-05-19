@@ -66,17 +66,24 @@ const AdminDhikrPage = () => {
         setShowModal(true);
     };
 
+    const fb = (type, msg) =>
+        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+
     const save = async () => {
         setSaving(true);
         try {
+            let res;
             if (editId) {
-                await adminDzikirApi.update(editId, form);
+                res = await adminDzikirApi.update(editId, form);
             } else {
-                await adminDzikirApi.create(form);
+                res = await adminDzikirApi.create(form);
             }
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setShowModal(false);
             load();
-        } catch {
+            fb('admin:success', t('admin.crud.save_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
         } finally {
             setSaving(false);
         }
@@ -85,10 +92,14 @@ const AdminDhikrPage = () => {
     const confirmDelete = async () => {
         if (!deleteId) return;
         try {
-            await adminDzikirApi.delete(deleteId);
+            const res = await adminDzikirApi.delete(deleteId);
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setDeleteId(null);
             load();
-        } catch {}
+            fb('admin:success', t('admin.crud.delete_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
+        }
     };
 
     const filtered = items.filter(

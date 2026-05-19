@@ -36,6 +36,8 @@ const renderMarkdownInline = (text) => {
 const NotesPage = () => {
     const { t, lang } = useLocale();
     const { isAuthenticated } = useAuth();
+    const fb = (type, msg) =>
+        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
     const [notes, setNotes] = useState([]);
     const [search, setSearch] = useState('');
     const [showModal, setShowModal] = useState(false);
@@ -109,6 +111,7 @@ const NotesPage = () => {
                     );
                     persist(notes.map((n) => (n.id === editNote.id ? saved : n)));
                     setSyncError('');
+                    fb('admin:success', t('admin.crud.save_success'));
                 } catch {
                     setSyncError('Catatan tersimpan lokal. Sinkron cloud belum berhasil.');
                 }
@@ -135,6 +138,7 @@ const NotesPage = () => {
                     );
                     persist([saved, ...notes]);
                     setSyncError('');
+                    fb('admin:success', t('admin.crud.save_success'));
                 } catch {
                     setSyncError('Catatan tersimpan lokal. Sinkron cloud belum berhasil.');
                 }
@@ -150,6 +154,7 @@ const NotesPage = () => {
             try {
                 await parseApiJson(await notesApi.delete(id));
                 setSyncError('');
+                fb('admin:success', t('admin.crud.delete_success'));
             } catch {
                 setSyncError('Catatan dihapus lokal. Sinkron cloud belum berhasil.');
             }
@@ -261,6 +266,7 @@ const NotesPage = () => {
                                         e.stopPropagation();
                                         remove(note.id);
                                     }}
+                                    aria-label={t('notes.delete')}
                                     className='text-gray-300 dark:text-slate-600 hover:text-red-500 transition-colors shrink-0'
                                 >
                                     <BsTrash />

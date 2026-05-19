@@ -60,18 +60,25 @@ const AdminTahlilPage = () => {
         setShowModal(true);
     };
 
+    const fb = (type, msg) =>
+        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+
     const save = async () => {
         setSaving(true);
         try {
             const payload = { ...form, step: Number(form.step) };
+            let res;
             if (editId) {
-                await adminTahlilApi.update(editId, payload);
+                res = await adminTahlilApi.update(editId, payload);
             } else {
-                await adminTahlilApi.create(payload);
+                res = await adminTahlilApi.create(payload);
             }
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setShowModal(false);
             load();
-        } catch {
+            fb('admin:success', t('admin.crud.save_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
         } finally {
             setSaving(false);
         }
@@ -80,10 +87,14 @@ const AdminTahlilPage = () => {
     const confirmDelete = async () => {
         if (!deleteId) return;
         try {
-            await adminTahlilApi.delete(deleteId);
+            const res = await adminTahlilApi.delete(deleteId);
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setDeleteId(null);
             load();
-        } catch {}
+            fb('admin:success', t('admin.crud.delete_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
+        }
     };
 
     return (

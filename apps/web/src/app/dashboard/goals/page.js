@@ -31,6 +31,8 @@ const emptyForm = () => ({
 const GoalsPage = () => {
     const { t } = useLocale();
     const { isAuthenticated } = useAuth();
+    const fb = (type, msg) =>
+        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
     const [goals, setGoals] = useState([]);
     const [tab, setTab] = useState('aktif');
     const [showModal, setShowModal] = useState(false);
@@ -99,6 +101,7 @@ const GoalsPage = () => {
                     const saved = normalizeGoal(await parseApiJson(await goalsApi.update(editGoal.id, goalUpdatePayload(payload))));
                     persist(goals.map((g) => (g.id === editGoal.id ? saved : g)));
                     setSyncError('');
+                    fb('admin:success', t('admin.crud.save_success'));
                 } catch {
                     setSyncError('Perubahan tersimpan lokal. Sinkron cloud belum berhasil.');
                 }
@@ -120,6 +123,7 @@ const GoalsPage = () => {
                     const saved = normalizeGoal(await parseApiJson(await goalsApi.create(goalCreatePayload(entry))));
                     persist([saved, ...goals]);
                     setSyncError('');
+                    fb('admin:success', t('admin.crud.save_success'));
                 } catch {
                     setSyncError('Target tersimpan lokal. Sinkron cloud belum berhasil.');
                 }
@@ -134,11 +138,12 @@ const GoalsPage = () => {
         if (isAuthenticated) {
             try {
                 const saved = normalizeGoal(await parseApiJson(await goalsApi.update(id, goalUpdatePayload({ ...current, completed: true }))));
-                persist(goals.map((g) => (g.id === id ? saved : g)));
-                setSyncError('');
-            } catch {
-                setSyncError('Status selesai tersimpan lokal. Sinkron cloud belum berhasil.');
-            }
+                    persist(goals.map((g) => (g.id === id ? saved : g)));
+                    setSyncError('');
+                    fb('admin:success', '✓ ' + t('goals.mark_done'));
+                } catch {
+                    setSyncError('Status selesai tersimpan lokal. Sinkron cloud belum berhasil.');
+                }
         }
     };
 
@@ -147,11 +152,12 @@ const GoalsPage = () => {
         persist(goals.filter((g) => g.id !== id));
         if (isAuthenticated) {
             try {
-                await parseApiJson(await goalsApi.delete(id));
-                setSyncError('');
-            } catch {
-                setSyncError('Target dihapus lokal. Sinkron cloud belum berhasil.');
-            }
+                    await parseApiJson(await goalsApi.delete(id));
+                    setSyncError('');
+                    fb('admin:success', t('admin.crud.delete_success'));
+                } catch {
+                    setSyncError('Target dihapus lokal. Sinkron cloud belum berhasil.');
+                }
         }
     };
 
@@ -249,6 +255,7 @@ const GoalsPage = () => {
                                                 </button>
                                                 <button
                                                     onClick={() => markComplete(goal.id)}
+                                                    aria-label={t('goals.mark_done')}
                                                     className='text-emerald-500 hover:text-emerald-700 transition-colors'
                                                     title={t('goals.mark_done')}
                                                 >
@@ -258,6 +265,7 @@ const GoalsPage = () => {
                                         )}
                                         <button
                                             onClick={() => remove(goal.id)}
+                                            aria-label={t('goals.delete')}
                                             className='text-gray-300 dark:text-slate-600 hover:text-red-500 transition-colors'
                                         >
                                             <BsTrash />

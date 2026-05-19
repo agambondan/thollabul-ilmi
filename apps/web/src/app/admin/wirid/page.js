@@ -64,17 +64,24 @@ const AdminWirdPage = () => {
         setShowModal(true);
     };
 
+    const fb = (type, msg) =>
+        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+
     const save = async () => {
         setSaving(true);
         try {
+            let res;
             if (editId) {
-                await adminWiridApi.update(editId, form);
+                res = await adminWiridApi.update(editId, form);
             } else {
-                await adminWiridApi.create(form);
+                res = await adminWiridApi.create(form);
             }
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setShowModal(false);
             load();
-        } catch {
+            fb('admin:success', t('admin.crud.save_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
         } finally {
             setSaving(false);
         }
@@ -83,10 +90,14 @@ const AdminWirdPage = () => {
     const confirmDelete = async () => {
         if (!deleteId) return;
         try {
-            await adminWiridApi.delete(deleteId);
+            const res = await adminWiridApi.delete(deleteId);
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setDeleteId(null);
             load();
-        } catch {}
+            fb('admin:success', t('admin.crud.delete_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
+        }
     };
 
     const filtered = items.filter(

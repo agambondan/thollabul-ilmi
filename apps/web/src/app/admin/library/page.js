@@ -108,17 +108,24 @@ const AdminLibraryPage = () => {
         setShowModal(true);
     };
 
+    const fb = (type, msg) =>
+        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+
     const save = async () => {
         setSaving(true);
         try {
+            let res;
             if (editId) {
-                await adminLibraryApi.update(editId, toPayload(form));
+                res = await adminLibraryApi.update(editId, toPayload(form));
             } else {
-                await adminLibraryApi.create(toPayload(form));
+                res = await adminLibraryApi.create(toPayload(form));
             }
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setShowModal(false);
             load();
-        } catch {
+            fb('admin:success', t('admin.crud.save_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
         } finally {
             setSaving(false);
         }
@@ -127,10 +134,14 @@ const AdminLibraryPage = () => {
     const confirmDelete = async () => {
         if (!deleteId) return;
         try {
-            await adminLibraryApi.delete(deleteId);
+            const res = await adminLibraryApi.delete(deleteId);
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setDeleteId(null);
             load();
-        } catch {}
+            fb('admin:success', t('admin.crud.delete_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
+        }
     };
 
     const uploadResource = async () => {
@@ -144,7 +155,8 @@ const AdminLibraryPage = () => {
             setForm(toForm(book));
             setResourceFile(null);
             load();
-        } catch {
+        } catch (err) {
+            fb('admin:mutation-error', err.message || 'Gagal unggah resource.');
         } finally {
             setUploadingResource(false);
         }
@@ -161,7 +173,8 @@ const AdminLibraryPage = () => {
             setForm(toForm(book));
             setResourceFile(null);
             load();
-        } catch {
+        } catch (err) {
+            fb('admin:mutation-error', err.message || 'Gagal hapus resource.');
         } finally {
             setClearingResource(false);
         }

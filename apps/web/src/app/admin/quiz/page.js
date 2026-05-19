@@ -72,6 +72,9 @@ const AdminQuizPage = () => {
         setShowModal(true);
     };
 
+    const fb = (type, msg) =>
+        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+
     const save = async () => {
         setSaving(true);
         try {
@@ -82,14 +85,18 @@ const AdminQuizPage = () => {
                 explanation: form.explanation,
                 category: form.category,
             };
+            let res;
             if (editId) {
-                await adminQuizApi.update(editId, payload);
+                res = await adminQuizApi.update(editId, payload);
             } else {
-                await adminQuizApi.create(payload);
+                res = await adminQuizApi.create(payload);
             }
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setShowModal(false);
             load();
-        } catch {
+            fb('admin:success', t('admin.crud.save_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
         } finally {
             setSaving(false);
         }
@@ -98,10 +105,14 @@ const AdminQuizPage = () => {
     const confirmDelete = async () => {
         if (!deleteId) return;
         try {
-            await adminQuizApi.delete(deleteId);
+            const res = await adminQuizApi.delete(deleteId);
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setDeleteId(null);
             load();
-        } catch {}
+            fb('admin:success', t('admin.crud.delete_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
+        }
     };
 
     const filtered = items.filter(

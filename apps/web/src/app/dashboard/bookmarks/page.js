@@ -85,10 +85,12 @@ const BookmarksPage = () => {
     const remove = async (id) => {
         if (!confirm(t('bookmarks.delete_confirm'))) return;
         try {
-            await bookmarkApi.remove(id);
+            const res = await bookmarkApi.remove(id);
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setBookmarks((prev) => prev.filter((b) => (b.id ?? b._id) !== id));
+            window.dispatchEvent(new CustomEvent('admin:success', { detail: { message: t('bookmarks.deleted') } }));
         } catch {
-            // best effort
+            window.dispatchEvent(new CustomEvent('admin:mutation-error', { detail: { message: t('bookmarks.delete_error') } }));
         }
     };
 
@@ -197,6 +199,7 @@ const BookmarksPage = () => {
                                                 </div>
                                                 <button
                                                     onClick={() => remove(id)}
+                                                    aria-label={t('bookmarks.delete')}
                                                     className='text-gray-300 dark:text-slate-600 hover:text-red-500 dark:hover:text-red-400 transition-colors shrink-0 mt-0.5'
                                                 >
                                                     <BsTrash />

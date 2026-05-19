@@ -57,17 +57,24 @@ const AdminDictionaryPage = () => {
         setShowModal(true);
     };
 
+    const fb = (type, msg) =>
+        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+
     const save = async () => {
         setSaving(true);
         try {
+            let res;
             if (editId) {
-                await adminKamusApi.update(editId, form);
+                res = await adminKamusApi.update(editId, form);
             } else {
-                await adminKamusApi.create(form);
+                res = await adminKamusApi.create(form);
             }
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setShowModal(false);
             load();
-        } catch {
+            fb('admin:success', t('admin.crud.save_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
         } finally {
             setSaving(false);
         }
@@ -76,10 +83,14 @@ const AdminDictionaryPage = () => {
     const confirmDelete = async () => {
         if (!deleteId) return;
         try {
-            await adminKamusApi.delete(deleteId);
+            const res = await adminKamusApi.delete(deleteId);
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setDeleteId(null);
             load();
-        } catch {}
+            fb('admin:success', t('admin.crud.delete_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
+        }
     };
 
     const filtered = items.filter(

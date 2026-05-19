@@ -71,18 +71,26 @@ export function WiridCustomContent() {
         setShowModal(true);
     };
 
+    const fb = (type, msg) =>
+        typeof window !== 'undefined' &&
+        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+
     const save = async () => {
         if (!form.title.trim()) return;
         setSaving(true);
         try {
+            let res;
             if (editId) {
-                await userWirdApi.update(editId, form);
+                res = await userWirdApi.update(editId, form);
             } else {
-                await userWirdApi.create(form);
+                res = await userWirdApi.create(form);
             }
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setShowModal(false);
             load();
-        } catch {
+            fb('admin:success', t('admin.crud.save_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
         } finally {
             setSaving(false);
         }
@@ -91,9 +99,13 @@ export function WiridCustomContent() {
     const remove = async (id) => {
         if (!confirm(t('wirid_custom.delete_confirm') ?? 'Hapus wirid ini?')) return;
         try {
-            await userWirdApi.delete(id);
+            const res = await userWirdApi.delete(id);
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setItems((prev) => prev.filter((w) => w.id !== id));
-        } catch {}
+            fb('admin:success', t('admin.crud.delete_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
+        }
     };
 
     if (!isAuthenticated) {
@@ -188,6 +200,7 @@ export function WiridCustomContent() {
                                         <button
                                             type='button'
                                             onClick={() => openEdit(item)}
+                                            aria-label={t('common.edit')}
                                             className='p-1.5 text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors'
                                         >
                                             <BsPencilSquare />
@@ -195,6 +208,7 @@ export function WiridCustomContent() {
                                         <button
                                             type='button'
                                             onClick={() => remove(item.id)}
+                                            aria-label={t('common.delete')}
                                             className='p-1.5 text-gray-400 hover:text-red-500 transition-colors'
                                         >
                                             <BsTrash />

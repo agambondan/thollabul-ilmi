@@ -698,6 +698,8 @@ export const translations = {
         'admin.crud.no_data': 'Belum ada data',
         'admin.crud.delete_title': 'Hapus {item}?',
         'admin.crud.delete_body': 'Data yang dihapus tidak dapat dikembalikan.',
+        'admin.crud.save_success': 'Data berhasil disimpan.',
+        'admin.crud.delete_success': 'Data berhasil dihapus.',
         'admin.asbabun.search_placeholder': 'Cari judul atau nomor surah...',
         'admin.asbabun.surah_number': 'No. Surah',
         'admin.asbabun.ayah_number': 'No. Ayat',
@@ -1165,6 +1167,7 @@ export const translations = {
         'goals.label_category': 'Kategori',
         'goals.label_deadline': 'Deadline (opsional)',
         'goals.title_placeholder': 'Hafal surah Al-Mulk...',
+        'goals.delete': 'Hapus target',
         // Dashboard – Notes
         'notes.title': 'Catatan',
         'notes.search_placeholder': 'Cari catatan...',
@@ -1181,6 +1184,7 @@ export const translations = {
         'notes.label_title': 'Judul',
         'notes.label_content': 'Isi Catatan',
         'notes.label_tags': 'Tag (pisahkan dengan koma)',
+        'notes.delete': 'Hapus catatan',
         // Dashboard – Bookmarks
         'bookmarks.title': 'Bookmark',
         'bookmarks.empty': 'Belum ada bookmark.',
@@ -1191,6 +1195,9 @@ export const translations = {
         'bookmarks.type_dzikir': 'Dzikir',
         'bookmarks.type_asmaul': 'Asmaul Husna',
         'bookmarks.type_article': 'Artikel',
+        'bookmarks.delete': 'Hapus bookmark',
+        'bookmarks.deleted': 'Bookmark dihapus',
+        'bookmarks.delete_error': 'Gagal menghapus bookmark',
         // Dashboard – Sholat Tracker
         'sholat.title': 'Sholat Tracker',
         'sholat.date_col': 'Tanggal',
@@ -1210,6 +1217,7 @@ export const translations = {
         'muhasabah.label_date': 'Tanggal',
         'muhasabah.label_mood': 'Mood',
         'muhasabah.label_notes': 'Catatan',
+        'muhasabah.delete': 'Hapus muhasabah',
         // Dashboard – Muroja\'ah
         'muroja.title': "Muroja'ah",
         'muroja.subtitle': 'Ulangi hafalan yang sudah dikuasai',
@@ -1423,6 +1431,7 @@ export const translations = {
         'notif.muroja_title': "Muroja'ah Mendesak",
         'notif.muroja_body_prefix': 'Ada',
         'notif.muroja_body_suffix': 'surah yang butuh segera dimuroja\'ah.',
+        'notif.test_success': 'Push terkirim! Cek perangkat Anda.',
         // Dashboard – Profile
         'profile.title': 'Profil',
         'profile.edit': 'Edit Profil →',
@@ -2433,6 +2442,8 @@ export const translations = {
         'admin.crud.no_data': 'No data yet',
         'admin.crud.delete_title': 'Delete {item}?',
         'admin.crud.delete_body': 'Deleted data cannot be restored.',
+        'admin.crud.save_success': 'Data saved successfully.',
+        'admin.crud.delete_success': 'Data deleted successfully.',
         'admin.asbabun.search_placeholder': 'Search title or surah number...',
         'admin.asbabun.surah_number': 'Surah No.',
         'admin.asbabun.ayah_number': 'Ayah No.',
@@ -2900,6 +2911,7 @@ export const translations = {
         'goals.label_category': 'Category',
         'goals.label_deadline': 'Deadline (optional)',
         'goals.title_placeholder': 'Memorize Surah Al-Mulk...',
+        'goals.delete': 'Delete goal',
         // Dashboard – Notes
         'notes.title': 'Notes',
         'notes.search_placeholder': 'Search notes...',
@@ -2916,6 +2928,7 @@ export const translations = {
         'notes.label_title': 'Title',
         'notes.label_content': 'Note Content',
         'notes.label_tags': 'Tags (comma separated)',
+        'notes.delete': 'Delete note',
         // Dashboard – Bookmarks
         'bookmarks.title': 'Bookmarks',
         'bookmarks.empty': 'No bookmarks yet.',
@@ -2926,6 +2939,9 @@ export const translations = {
         'bookmarks.type_dzikir': 'Dhikr',
         'bookmarks.type_asmaul': "Asma'ul Husna",
         'bookmarks.type_article': 'Article',
+        'bookmarks.delete': 'Delete bookmark',
+        'bookmarks.deleted': 'Bookmark deleted',
+        'bookmarks.delete_error': 'Failed to delete bookmark',
         // Dashboard – Sholat Tracker
         'sholat.title': 'Prayer Tracker',
         'sholat.date_col': 'Date',
@@ -2945,6 +2961,7 @@ export const translations = {
         'muhasabah.label_date': 'Date',
         'muhasabah.label_mood': 'Mood',
         'muhasabah.label_notes': 'Notes',
+        'muhasabah.delete': 'Delete muhasabah',
         // Dashboard – Muroja\'ah
         'muroja.title': 'Review',
         'muroja.subtitle': 'Repeat the memorization you have mastered',
@@ -3157,6 +3174,7 @@ export const translations = {
         'notif.muroja_title': 'Urgent Review',
         'notif.muroja_body_prefix': 'You have',
         'notif.muroja_body_suffix': 'surahs that urgently need review.',
+        'notif.test_success': 'Push sent! Check your device.',
         // Dashboard – Profile
         'profile.title': 'Profile',
         'profile.edit': 'Edit Profile →',

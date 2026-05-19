@@ -105,6 +105,9 @@ const AdminAsbabunNuzulPage = () => {
         setShowModal(true);
     };
 
+    const fb = (type, msg) =>
+        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+
     const save = async () => {
         setSaving(true);
         try {
@@ -119,14 +122,18 @@ const AdminAsbabunNuzulPage = () => {
                 ayah_end: ayahEnd,
                 ayah_refs: buildAyahRefs(surahNumber, ayahStart, ayahEnd),
             };
+            let res;
             if (editId) {
-                await adminAsbabunNuzulApi.update(editId, payload);
+                res = await adminAsbabunNuzulApi.update(editId, payload);
             } else {
-                await adminAsbabunNuzulApi.create(payload);
+                res = await adminAsbabunNuzulApi.create(payload);
             }
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setShowModal(false);
             load();
-        } catch {
+            fb('admin:success', t('admin.crud.save_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
         } finally {
             setSaving(false);
         }
@@ -135,10 +142,14 @@ const AdminAsbabunNuzulPage = () => {
     const confirmDelete = async () => {
         if (!deleteId) return;
         try {
-            await adminAsbabunNuzulApi.delete(deleteId);
+            const res = await adminAsbabunNuzulApi.delete(deleteId);
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setDeleteId(null);
             load();
-        } catch {}
+            fb('admin:success', t('admin.crud.delete_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
+        }
     };
 
     const filtered = items.filter(

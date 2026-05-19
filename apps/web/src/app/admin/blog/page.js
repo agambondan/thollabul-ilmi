@@ -119,6 +119,7 @@ const AdminBlogPage = () => {
     };
 
     const handleDeleteTag = async (id) => {
+        if (!confirm('Hapus tag ini?')) return;
         const prev = tags;
         setTags((t) => t.filter((x) => x.id !== id));
         setActionError('');

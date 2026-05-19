@@ -64,17 +64,24 @@ const AdminPrayersPage = () => {
         setShowModal(true);
     };
 
+    const fb = (type, msg) =>
+        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+
     const save = async () => {
         setSaving(true);
         try {
+            let res;
             if (editId) {
-                await adminDoaApi.update(editId, form);
+                res = await adminDoaApi.update(editId, form);
             } else {
-                await adminDoaApi.create(form);
+                res = await adminDoaApi.create(form);
             }
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setShowModal(false);
             load();
-        } catch {
+            fb('admin:success', t('admin.crud.save_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
         } finally {
             setSaving(false);
         }
@@ -83,10 +90,14 @@ const AdminPrayersPage = () => {
     const confirmDelete = async () => {
         if (!deleteId) return;
         try {
-            await adminDoaApi.delete(deleteId);
+            const res = await adminDoaApi.delete(deleteId);
+            if (!res.ok) throw new Error(t('admin.error.save'));
             setDeleteId(null);
             load();
-        } catch {}
+            fb('admin:success', t('admin.crud.delete_success'));
+        } catch (err) {
+            fb('admin:mutation-error', err.message);
+        }
     };
 
     const filtered = items.filter(

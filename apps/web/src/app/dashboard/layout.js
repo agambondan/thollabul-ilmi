@@ -1,5 +1,6 @@
 'use client';
 
+import AdminMutationToast from '@/components/admin/AdminMutationToast';
 import { useAuth } from '@/context/Auth';
 import { useLocale } from '@/context/Locale';
 import { ConvertFLagLanguage } from '@/lib/converter';
@@ -479,6 +480,7 @@ const DashboardLayout = ({ children }) => {
                     </div>
                 </header>
 
+                <AdminMutationToast />
                 <div className={isWide ? 'w-full' : 'max-w-5xl mx-auto'}>
                     {children}
                 </div>

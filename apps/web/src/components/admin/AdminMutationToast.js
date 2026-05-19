@@ -1,37 +1,32 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 const AdminMutationToast = () => {
-    const [message, setMessage] = useState('');
-
     useEffect(() => {
-        let timeoutId;
-
         const handleError = (event) => {
-            setMessage(event.detail?.message ?? 'Aksi admin gagal diproses.');
-            window.clearTimeout(timeoutId);
-            timeoutId = window.setTimeout(() => setMessage(''), 4500);
+            toast.error(event.detail?.message ?? 'Aksi admin gagal diproses.', {
+                duration: 4500,
+            });
+        };
+
+        const handleSuccess = (event) => {
+            toast.success(event.detail?.message ?? 'Data berhasil diproses.', {
+                duration: 3500,
+            });
         };
 
         window.addEventListener('admin:mutation-error', handleError);
+        window.addEventListener('admin:success', handleSuccess);
 
         return () => {
-            window.clearTimeout(timeoutId);
             window.removeEventListener('admin:mutation-error', handleError);
+            window.removeEventListener('admin:success', handleSuccess);
         };
     }, []);
 
-    if (!message) return null;
-
-    return (
-        <div
-            role='alert'
-            className='fixed right-4 top-4 z-[80] max-w-sm rounded-xl border border-red-200 bg-white px-4 py-3 text-sm text-red-700 shadow-lg dark:border-red-900/60 dark:bg-slate-900 dark:text-red-300'
-        >
-            {message}
-        </div>
-    );
+    return <Toaster position='top-right' />;
 };
 
 export default AdminMutationToast;
