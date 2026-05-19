@@ -91,7 +91,6 @@ var ModelMigrations []interface{} = []interface{}{
 	model.Munasabah{},
 	model.PageView{},
 	model.NotificationTemplate{},
-	model.PushToken{},
 	model.TokohTarikh{},
 	model.Location{},
 }

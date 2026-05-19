@@ -46,6 +46,7 @@ func SeedStaticFromFiles(db *gorm.DB) {
 	seedJarhTadilFromFile(db)
 	seedPerawiGuruFromFile(db)
 	seedTokohTarikhFromFile(db)
+	seedLocationsFromFile(db)
 }
 
 // ── helpers ───────────────────────────────────────────────────────────────────
@@ -1100,6 +1101,8 @@ func seedTokohTarikhFromFile(db *gorm.DB) {
 	if !readStaticJSON("tokoh_tarikh.json", &rows) {
 		return
 	}
+	// ── Locations ───────────────────────────────────────────────────────────────
+
 	log.Printf("[seeder] seedTokohTarikhFromFile: %d entri", len(rows))
 	for _, r := range rows {
 		tr := model.Translation{
@@ -1124,6 +1127,51 @@ func seedTokohTarikhFromFile(db *gorm.DB) {
 		db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "nama"}},
 			DoUpdates: clause.AssignmentColumns([]string{"era", "biografi", "kontribusi", "kategori", "image_url", "translation_id"}),
+		}).Create(&item)
+	}
+}
+
+// ── Locations ───────────────────────────────────────────────────────────────────
+
+func seedLocationsFromFile(db *gorm.DB) {
+	var count int64
+	db.Model(&model.Location{}).Count(&count)
+	if count > 0 {
+		return
+	}
+	type row struct {
+		Name        string  `json:"name"`
+		Description string  `json:"description"`
+		Latitude    float64 `json:"latitude"`
+		Longitude   float64 `json:"longitude"`
+		Category    string  `json:"category"`
+		Era         string  `json:"era"`
+	}
+	var rows []row
+	path := "data/locations.json"
+	f, err := os.Open(path)
+	if err != nil {
+		log.Printf("[seeder] %s tidak ditemukan — skip", path)
+		return
+	}
+	defer f.Close()
+	if err := json.NewDecoder(f).Decode(&rows); err != nil {
+		log.Printf("[seeder] parse %s gagal: %v", path, err)
+		return
+	}
+	log.Printf("[seeder] seedLocationsFromFile: %d entri", len(rows))
+	for _, r := range rows {
+		item := model.Location{
+			Name:        r.Name,
+			Description: r.Description,
+			Latitude:    r.Latitude,
+			Longitude:   r.Longitude,
+			Category:    r.Category,
+			Era:         r.Era,
+		}
+		db.Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "name"}},
+			DoUpdates: clause.AssignmentColumns([]string{"description", "category", "era"}),
 		}).Create(&item)
 	}
 }
