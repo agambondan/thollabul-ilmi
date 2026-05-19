@@ -125,7 +125,7 @@ export function PanduanSholatContent() {
                     .map(normalizeStep);
                 setApiSteps(items);
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setIsLoading(false));
     }, []);
 

@@ -83,7 +83,7 @@ const MuhasabahPage = () => {
             } catch {
                 setSyncError('Muhasabah tersimpan lokal. Sinkron cloud belum berhasil.');
             }
-            streakApi.logActivity('muhasabah').catch(() => {});
+            streakApi.logActivity('muhasabah').catch(e => console.error(e));
         }
         setShowModal(false);
     };

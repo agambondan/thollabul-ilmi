@@ -92,8 +92,8 @@ const AmalanPage = () => {
         } catch {}
 
         if (isAuthenticated) {
-            if (item.serverId !== null) amalanApi.check(item.serverId).catch(() => {});
-            if (newDone) streakApi.logActivity('amalan').catch(() => {});
+            if (item.serverId !== null) amalanApi.check(item.serverId).catch(e => console.error(e));
+            if (newDone) streakApi.logActivity('amalan').catch(e => console.error(e));
         }
     };
 

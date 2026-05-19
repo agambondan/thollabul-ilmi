@@ -153,19 +153,19 @@ const StatsPage = () => {
                 const items = d?.items ?? d ?? [];
                 setBookmarkCount(Array.isArray(items) ? items.length : 0);
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
 
         if (isAuthenticated) {
             achievementApi
                 .mine()
                 .then((r) => r.json())
                 .then((d) => setAchievements(Array.isArray(d) ? d : (d?.data ?? [])))
-                .catch(() => {});
+                .catch(e => console.error(e));
             achievementApi
                 .points()
                 .then((r) => r.json())
                 .then((d) => setPoints(d?.total_points ?? d?.data?.total_points ?? 0))
-                .catch(() => {});
+                .catch(e => console.error(e));
         }
 
     }, [isAuthenticated]);

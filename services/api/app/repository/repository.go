@@ -276,6 +276,8 @@ func (s *Repositories) Seeder() error {
 	}
 	// IlmuRijal: PerawiGuru, Sanad, MataSanad, Takhrij — depends on Perawi + Hadith being seeded first
 	migrations.SeedIlmuRijal(s.db)
+	// Hadith grade: set derajat keshahihan — depends on Hadith being seeded
+	migrations.SeedHadithGrade(s.db)
 	return nil
 }
 

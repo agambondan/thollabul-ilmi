@@ -35,7 +35,7 @@ export function AchievementContent() {
                 setEarnedIds(earned);
                 setPoints(pointsData?.total_points ?? pointsData?.points ?? null);
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setLoading(false));
     }, [isAuthenticated]);
 

@@ -108,7 +108,7 @@ const TilawahPage = () => {
                     setSyncError('Catatan tilawah tersimpan di perangkat, tetapi belum tersinkron ke server.');
                 });
             }
-            streakApi.logActivity('tilawah').catch(() => {});
+            streakApi.logActivity('tilawah').catch(e => console.error(e));
         }
         setShowModal(false);
     };

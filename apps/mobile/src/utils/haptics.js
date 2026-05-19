@@ -6,7 +6,7 @@ const isNative = Platform.OS !== 'web';
 const safeRun = (fn) => {
   if (!isNative) return;
   try {
-    Promise.resolve(fn()).catch(() => {});
+    Promise.resolve(fn()).catch(e => console.error(e));
   } catch {}
 };
 

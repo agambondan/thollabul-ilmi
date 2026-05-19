@@ -37,7 +37,7 @@ export function TokohListContent({ className = '' }) {
         tokohTarikhApi.list(params)
             .then((r) => r.json())
             .then((d) => setItems(d?.items ?? []))
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setLoading(false));
     }, [search, era]);
 

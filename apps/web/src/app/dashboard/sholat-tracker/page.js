@@ -128,7 +128,7 @@ const SholatTrackerPage = () => {
                 .catch(() => {
                     setSyncError('Perubahan sholat tersimpan di perangkat, tetapi belum tersinkron ke server.');
                 });
-            streakApi.logActivity('prayer').catch(() => {});
+            streakApi.logActivity('prayer').catch(e => console.error(e));
         }
         setLast7((prev) =>
             prev.map((row) => {

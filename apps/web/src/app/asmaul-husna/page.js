@@ -40,7 +40,7 @@ export const AsmaulHusnaContent = () => {
                 }));
                 if (items.length > 0) setNames(items);
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setIsLoading(false));
     }, []);
 

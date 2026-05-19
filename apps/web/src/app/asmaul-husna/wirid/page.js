@@ -46,7 +46,7 @@ export function AsmaulWiridContent({ basePath = '/asmaul-husna' }) {
                 const items = (data?.items ?? data ?? []).sort((a, b) => (a.number ?? 0) - (b.number ?? 0));
                 if (items.length > 0) setNames(items);
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setIsLoading(false));
     }, []);
 

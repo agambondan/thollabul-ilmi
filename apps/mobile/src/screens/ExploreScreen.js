@@ -332,7 +332,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
             }, {}),
           );
         })
-        .catch(() => {});
+        .catch(e => console.error(e));
       setActiveFeature(feature);
       setFeatureReturnRoute(options.returnTo ?? null);
       setItems([]);
@@ -403,7 +403,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
             .then((price) => {
               if (price) setZakatGoldPrice(`${price}`);
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
         }
 
         if (feature.type === 'forum') {
@@ -1747,7 +1747,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
           const nextCount = (prev[nameId] ?? 0) + 1;
           if (nextCount === 33 || nextCount === 99) hapticMedium();
           const nextCounts = { ...prev, [nameId]: nextCount };
-          setAsmaulWiridCount(nextCounts, nameId, nextCount).catch(() => {});
+          setAsmaulWiridCount(nextCounts, nameId, nextCount).catch(e => console.error(e));
           return nextCounts;
         });
       };
@@ -1758,7 +1758,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         setAsmaulCounts((prev) => {
           const nextCounts = { ...prev };
           delete nextCounts[nameId];
-          setAsmaulWiridCount(nextCounts, nameId, 0).catch(() => {});
+          setAsmaulWiridCount(nextCounts, nameId, 0).catch(e => console.error(e));
           return nextCounts;
         });
       };

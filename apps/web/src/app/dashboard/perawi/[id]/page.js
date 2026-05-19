@@ -95,7 +95,7 @@ export function PerawiDetailContent({ params, basePath = '/dashboard/perawi' }) 
                 setGuru(Array.isArray(g?.items ?? g) ? (g?.items ?? g) : []);
                 setMurid(Array.isArray(m?.items ?? m) ? (m?.items ?? m) : []);
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setLoading(false));
     }, [id]);
 

@@ -42,7 +42,7 @@ const AnalyticsTracker = () => {
                 source: sourceFromPath(pathname),
                 referrer: document.referrer || '',
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, [pathname]);
 
     return null;

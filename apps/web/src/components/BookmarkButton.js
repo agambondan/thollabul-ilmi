@@ -55,7 +55,7 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
                     setLabelDraft(finalMeta.label ?? '');
                 }
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, [isAuthenticated, refType, refId, refSlug]);
 
     const toggleBookmark = async () => {

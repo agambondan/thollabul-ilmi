@@ -28,6 +28,7 @@ func (r *tafsirRepo) FindByAyahID(ayahID int) (*model.Tafsir, error) {
 	err := r.db.
 		Preload("KemenagTranslation").
 		Preload("IbnuKatsirTranslation").
+		Preload("IbnuKatsirEnTranslation").
 		Preload("Ayah").Preload("Ayah.Translation").Preload("Ayah.Surah").
 		Where("ayah_id = ?", ayahID).First(&t).Error
 	if err != nil {
@@ -48,6 +49,7 @@ func (r *tafsirRepo) FindBySurahNumber(surahNumber, limit, offset int) ([]model.
 	err := r.db.
 		Preload("KemenagTranslation").
 		Preload("IbnuKatsirTranslation").
+		Preload("IbnuKatsirEnTranslation").
 		Preload("Ayah").Preload("Ayah.Translation").
 		Joins("JOIN ayah ON ayah.id = tafsir.ayah_id").
 		Joins("JOIN surah ON surah.id = ayah.surah_id").
@@ -84,6 +86,7 @@ func (r *tafsirRepo) Search(query string, limit, offset int) ([]model.Tafsir, er
 	err := r.db.
 		Preload("KemenagTranslation").
 		Preload("IbnuKatsirTranslation").
+		Preload("IbnuKatsirEnTranslation").
 		Preload("Ayah").Preload("Ayah.Translation").Preload("Ayah.Surah").
 		Joins("LEFT JOIN translation AS kemenag_t ON kemenag_t.id = tafsir.kemenag_translation_id").
 		Joins("LEFT JOIN translation AS ibnu_katsir_t ON ibnu_katsir_t.id = tafsir.ibnu_katsir_translation_id").

@@ -168,19 +168,19 @@ const DashboardPage = () => {
                 const items = d?.items ?? d ?? [];
                 setBookmarks(Array.isArray(items) ? items : []);
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
 
         progressApi
             .getQuran()
             .then((r) => r.json())
             .then((d) => setQuranProgress(d ?? null))
-            .catch(() => {});
+            .catch(e => console.error(e));
 
         progressApi
             .getHadith()
             .then((r) => r.json())
             .then((d) => setHadithProgress(d ?? null))
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, [isAuthenticated, authLoading]);
 
     const prayerCount = countDonePrayers(prayerLog);

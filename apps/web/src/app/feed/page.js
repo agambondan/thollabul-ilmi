@@ -30,7 +30,7 @@ function CommentSection({ postId, lang, t }) {
         commentApi.list({ ref_id: postId, ref_type: 'feed_post' })
             .then((r) => r.json())
             .then((d) => setComments(d?.data ?? d?.items ?? []))
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setLoading(false));
     }, [postId]);
 
@@ -45,7 +45,7 @@ function CommentSection({ postId, lang, t }) {
         }).then((r) => r.json()).then(() => {
             setText('');
             fetchComments();
-        }).catch(() => {});
+        }).catch(e => console.error(e));
     };
 
     return (
@@ -116,7 +116,7 @@ export function FeedContent({ basePath = '/feed' }) {
                 setPosts(items);
                 setTotal(d?.total ?? d?.last === false ? (p - 1) * size + items.length + 1 : items.length);
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setLoading(false));
     };
 
@@ -128,28 +128,28 @@ export function FeedContent({ basePath = '/feed' }) {
             setPosts((prev) => prev.map((p) =>
                 p.id === post.id ? { ...p, likes: (p.likes ?? 0) + 1 } : p
             ));
-        }).catch(() => {});
+        }).catch(e => console.error(e));
     };
 
     const handleHide = (post) => {
         if (!token) return;
         feedApi.hide(post.id).then(() => {
             setPosts((prev) => prev.filter((p) => p.id !== post.id));
-        }).catch(() => {});
+        }).catch(e => console.error(e));
     };
 
     const handleReport = (post) => {
         if (!token) return;
         feedApi.report(post.id).then(() => {
             alert(t('feed.reported') ?? 'Postingan dilaporkan');
-        }).catch(() => {});
+        }).catch(e => console.error(e));
     };
 
     const handleDelete = (post) => {
         if (!token) return;
         feedApi.delete(post.id).then(() => {
             setPosts((prev) => prev.filter((p) => p.id !== post.id));
-        }).catch(() => {});
+        }).catch(e => console.error(e));
     };
 
     const handleCreate = () => {
@@ -164,7 +164,7 @@ export function FeedContent({ basePath = '/feed' }) {
                 setPage(1);
                 fetchPosts(1);
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setCreating(false));
     };
 

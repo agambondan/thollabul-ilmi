@@ -51,7 +51,7 @@ const KajianPage = () => {
             .then((data) => {
                 setKajian(Array.isArray(data) ? data : []);
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, []);
 
     const filtered = kajian.filter((k) => {

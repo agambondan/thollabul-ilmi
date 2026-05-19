@@ -54,7 +54,7 @@ const NoteButton = ({ refType, refId, className = '' }) => {
                     setContent(found.content ?? '');
                 }
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, [isAuthenticated, refType, refId]);
 
     const openModal = () => {

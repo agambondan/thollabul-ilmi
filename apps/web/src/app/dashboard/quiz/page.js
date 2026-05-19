@@ -89,7 +89,7 @@ const QuizPage = () => {
                 localStorage.setItem('tholabul_quiz_history', JSON.stringify(updated));
             } catch {}
             if (isAuthenticated && sessionResults.length > 0) {
-                quizApi.submit(sessionResults).catch(() => {});
+                quizApi.submit(sessionResults).catch(e => console.error(e));
             }
             setDone(true);
         } else {

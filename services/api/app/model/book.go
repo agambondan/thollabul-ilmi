@@ -44,6 +44,7 @@ func (b *Book) Seed(db *gorm.DB) []Book {
 		if err != nil || book == nil {
 			book.Translation = &Translation{
 				Idn: lib.Strptr(v),
+				En:  lib.Strptr(v),
 			}
 			book.DefaultLanguage = lib.Strptr("idn")
 			book.Slug = lib.Strptr(booksSlug[i])

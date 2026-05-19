@@ -37,7 +37,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             .listCategories()
             .then((r) => r.json())
             .then((data) => setCategories(data?.items ?? data ?? []))
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, []);
 
     const handleTitleChange = (val) => {

@@ -96,7 +96,7 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
                     setBookmarkId(existing.id);
                 }
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, [book?.id, isAuthenticated]);
 
     useEffect(() => {
@@ -114,7 +114,7 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
                     status: item.status ?? 'reading',
                 });
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, [book?.id, isAuthenticated]);
 
     const toggleBookmark = async () => {

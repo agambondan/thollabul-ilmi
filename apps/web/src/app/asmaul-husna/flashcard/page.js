@@ -43,7 +43,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = '/asmaul-husna' }) {
                     setOrder(sorted.map((_, i) => i));
                 }
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setLoading(false));
     }, []);
 

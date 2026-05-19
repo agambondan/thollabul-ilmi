@@ -29,7 +29,7 @@ export default function DashboardFiqhPage() {
                 const arr = d?.items ?? d ?? [];
                 if (Array.isArray(arr) && arr.length > 0) setItems(arr);
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setLoading(false));
     }, []);
 

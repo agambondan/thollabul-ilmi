@@ -107,7 +107,7 @@ const HafalanPage = () => {
             hafalanApi.update(item.surah_id, newStatus).catch(() => {
                 setSyncError('Perubahan hafalan tersimpan di perangkat, tetapi belum tersinkron ke server.');
             });
-            streakApi.logActivity('hafalan').catch(() => {});
+            streakApi.logActivity('hafalan').catch(e => console.error(e));
         }
     };
 

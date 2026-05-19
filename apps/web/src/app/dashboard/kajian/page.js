@@ -32,7 +32,7 @@ export default function KajianDashboardPage() {
                 const list = data?.items ?? data ?? [];
                 setItems(Array.isArray(list) ? list : []);
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setLoading(false));
     }, []);
 

@@ -33,7 +33,7 @@ export default function PuasaSunnahPanel() {
                 setTodayHijri(h);
                 await buildUpcoming(h);
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setLoading(false));
     }, []);
 

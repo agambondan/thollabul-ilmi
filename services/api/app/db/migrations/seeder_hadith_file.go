@@ -174,7 +174,10 @@ func (imp *hadithImporter) findOrCreateTheme(key, name string, bookID int) (int,
 		return r.ThemeID, nil
 	}
 
-	tr := &model.Translation{En: lib.Strptr(name)}
+	tr := &model.Translation{
+		En:  lib.Strptr(name),
+		Idn: lib.Strptr(name),
+	}
 	if err := imp.db.Create(tr).Error; err != nil {
 		return 0, err
 	}
@@ -202,7 +205,10 @@ func (imp *hadithImporter) findOrCreateChapter(key, name string, themeID int) (i
 		imp.chapterCache[key] = *existing.ID
 		return *existing.ID, nil
 	}
-	tr := &model.Translation{En: lib.Strptr(name)}
+	tr := &model.Translation{
+		En:  lib.Strptr(name),
+		Idn: lib.Strptr(name),
+	}
 	if err := imp.db.Create(tr).Error; err != nil {
 		return 0, err
 	}

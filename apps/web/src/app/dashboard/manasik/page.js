@@ -33,7 +33,7 @@ export default function DashboardManasikPage() {
                 if (haji.length > 0) setHajiItems(haji);
                 if (umrah.length > 0) setUmrahItems(umrah);
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, []);
 
     const activeItems = tab === 'haji' ? hajiItems : umrahItems;

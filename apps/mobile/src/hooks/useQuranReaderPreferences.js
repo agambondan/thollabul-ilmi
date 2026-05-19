@@ -74,7 +74,7 @@ export function useQuranReaderPreferences({ onMemorizationModeChange } = {}) {
       const normalized = normalizeArabicFontKey(value);
       if (mounted && VALID_ARABIC_FONTS.has(normalized)) {
         setArabicFont(normalized);
-        if (normalized !== value) writePreference(preferenceKeys.quranArabicFont, normalized).catch(() => {});
+        if (normalized !== value) writePreference(preferenceKeys.quranArabicFont, normalized).catch(e => console.error(e));
       }
     });
 
@@ -82,7 +82,7 @@ export function useQuranReaderPreferences({ onMemorizationModeChange } = {}) {
       const normalized = normalizeDisplayMode(value);
       if (mounted && VALID_DISPLAY_MODES.has(normalized)) {
         setDisplayMode(normalized);
-        if (normalized !== value) writePreference(preferenceKeys.quranDisplayMode, normalized).catch(() => {});
+        if (normalized !== value) writePreference(preferenceKeys.quranDisplayMode, normalized).catch(e => console.error(e));
       }
     });
 

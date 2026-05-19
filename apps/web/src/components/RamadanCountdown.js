@@ -19,7 +19,7 @@ export default function RamadanCountdown({ compact = false }) {
                 const h = data?.hijri ?? data;
                 setHijri(h);
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setLoading(false));
     }, []);
 

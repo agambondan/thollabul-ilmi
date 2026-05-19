@@ -183,7 +183,7 @@ export const BlogDetailContent = ({ params, basePath = '/blog' }) => {
                     setBookmarkId(existing.id);
                 }
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, [isAuthenticated, params.slug]);
 
     const toggleBookmark = async () => {

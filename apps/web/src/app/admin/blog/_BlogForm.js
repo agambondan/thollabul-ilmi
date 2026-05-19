@@ -44,7 +44,7 @@ const BlogForm = ({ initialData = null, postId = null }) => {
         ]).then(([cats, tgs]) => {
             setCategories(cats?.items ?? cats ?? []);
             setTags(tgs?.items ?? tgs ?? []);
-        }).catch(() => {});
+        }).catch(e => console.error(e));
     }, []);
 
     const handleTitleChange = (val) => {

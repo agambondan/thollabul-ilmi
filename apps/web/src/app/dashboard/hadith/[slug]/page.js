@@ -443,7 +443,7 @@ export function HadithDetailContent({ params, basePath = '/dashboard/hadith' }) 
                     );
                 }
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setLoading(false));
     }, [slug, lang]);
 
@@ -456,7 +456,7 @@ export function HadithDetailContent({ params, basePath = '/dashboard/hadith' }) 
                 setChapters(list);
                 setSelectedChapter(list.length > 0 ? list[0] : null);
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, [selectedTheme, slug]);
 
     useEffect(() => {

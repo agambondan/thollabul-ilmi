@@ -353,7 +353,7 @@ export function PrayerScreen({ isActive, navigation }) {
       if (lastPrayerAlertRef.current !== alertKey) {
         lastPrayerAlertRef.current = alertKey;
         const label = prayerLabels[prayerKey] ?? 'Sholat';
-        showPrayerTimeNotification({ label, prayer: prayerKey }).catch(() => {});
+        showPrayerTimeNotification({ label, prayer: prayerKey }).catch(e => console.error(e));
         playAdzan(prayerKey);
       }
       const nextTimer = setTimeout(() => updateNextPrayerCountdown(), 1200);

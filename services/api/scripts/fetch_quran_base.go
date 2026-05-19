@@ -24,7 +24,7 @@ const (
 	aqBase      = "https://api.alquran.cloud/v1"
 	edAr        = "quran-uthmani"
 	edIdn       = "id.indonesian"
-	edEn        = "en.asad"
+	edEn        = "en.sahih"   // Saheeh International (bukan en.saheeh — itu arabic!)
 	fetchDelay  = 300 * time.Millisecond
 )
 

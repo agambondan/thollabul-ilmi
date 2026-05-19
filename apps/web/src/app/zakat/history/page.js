@@ -49,7 +49,7 @@ export function ZakatHistoryContent() {
             .list()
             .then((r) => r.json())
             .then((data) => setItems(data?.items ?? data ?? []))
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setLoading(false));
     };
 
@@ -59,7 +59,7 @@ export function ZakatHistoryContent() {
     }, [isAuthenticated]);
 
     const handleDelete = async (id) => {
-        await kalkulasiZakatApi.delete(id).catch(() => {});
+        await kalkulasiZakatApi.delete(id).catch(e => console.error(e));
         setItems((prev) => prev.filter((i) => i.id !== id));
     };
 

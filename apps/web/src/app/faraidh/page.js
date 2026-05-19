@@ -134,7 +134,7 @@ export function FaraidhContent() {
                     return [...items, ...localOnly].slice(0, 20);
                 });
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, [isAuthenticated]);
 
     const persistHistory = (updated) => {
@@ -196,7 +196,7 @@ export function FaraidhContent() {
     const deleteHistory = (id) => {
         const entry = history.find((h) => h.id === id);
         if (entry?._beId && isAuthenticated) {
-            faraidhSimpanApi.delete(entry._beId).catch(() => {});
+            faraidhSimpanApi.delete(entry._beId).catch(e => console.error(e));
         }
         persistHistory(history.filter((h) => h.id !== id));
     };

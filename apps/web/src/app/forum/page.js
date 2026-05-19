@@ -29,7 +29,7 @@ export function ForumListContent({ basePath = '/forum' }) {
                 setQuestions(d?.items ?? []);
                 setTotal(d?.total ?? 0);
             })
-            .catch(() => {})
+            .catch(e => console.error(e))
             .finally(() => setLoading(false));
     };
 

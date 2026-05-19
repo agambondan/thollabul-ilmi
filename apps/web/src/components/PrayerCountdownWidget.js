@@ -42,7 +42,7 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
         )
             .then((r) => r.json())
             .then((d) => setPrayers(d?.data?.prayers ?? null))
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, []);
 
     useEffect(() => {

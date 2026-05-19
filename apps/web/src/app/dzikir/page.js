@@ -128,13 +128,13 @@ export const DzikirContent = () => {
                 });
                 setLogged(map);
             })
-            .catch(() => {});
+            .catch(e => console.error(e));
     }, [isAuthenticated]);
 
     const toggleLog = async (dzikir) => {
         const existingLogId = logged[dzikir.id];
         if (existingLogId) {
-            await dzikirLogApi.delete(existingLogId).catch(() => {});
+            await dzikirLogApi.delete(existingLogId).catch(e => console.error(e));
             setLogged((prev) => {
                 const next = { ...prev };
                 delete next[dzikir.id];

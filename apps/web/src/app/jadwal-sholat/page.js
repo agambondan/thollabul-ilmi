@@ -120,7 +120,7 @@ export default function JadwalSholatPage() {
                     const s = Math.floor((diff % 60000) / 1000);
                     if (diff < 10000 && adzanEnabled && lastNotifRef.current !== p.key) {
                         lastNotifRef.current = p.key;
-                        if (audioRef.current) audioRef.current.play().catch(() => {});
+                        if (audioRef.current) audioRef.current.play().catch(e => console.error(e));
                         if (notifGranted) {
                             new Notification(`${t('prayer_schedule.adzan') ?? 'Waktu'} ${t(p.labelKey)}`, {
                                 body: `${t('prayer_schedule.adzan_body') ?? 'Sudah masuk waktu'} ${t(p.labelKey)}`,
