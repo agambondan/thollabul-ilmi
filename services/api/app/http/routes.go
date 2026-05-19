@@ -111,6 +111,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	newPageViewController := controllers.NewPageViewController(newServices)
 	newNotificationTemplateController := controllers.NewNotificationTemplateController(newServices)
 	newTokohTarikhController := controllers.NewTokohTarikhController(newServices)
+	newLocationController := controllers.NewLocationController(newServices)
 	newSholatController := controllers.NewSholatController(newServices)
 	newMurojaahController := controllers.NewMurojaahController(newServices)
 	newFiqhController := controllers.NewFiqhController(newServices)
@@ -734,6 +735,12 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/tokoh-tarikh/:id", newTokohTarikhController.FindByID)
 	master.Post("/tokoh-tarikh", admin, newTokohTarikhController.Create)
 	master.Delete("/tokoh-tarikh/:id", admin, newTokohTarikhController.Delete)
+
+	// Location / Peta Islam (public read, admin write)
+	master.Get("/locations", newLocationController.FindAll)
+	master.Get("/locations/:id", newLocationController.FindByID)
+	master.Post("/locations", admin, newLocationController.Create)
+	master.Delete("/locations/:id", admin, newLocationController.Delete)
 
 	// #53 Sanad & Mata Sanad (public read, editor/admin write)
 	master.Get("/sanad/:id", newSanadController.FindByID)

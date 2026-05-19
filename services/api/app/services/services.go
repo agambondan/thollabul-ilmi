@@ -49,6 +49,7 @@ type Services struct {
 	PageView             PageViewService
 	NotificationTemplate NotificationTemplateService
 	TokohTarikh          TokohTarikhService
+	Location             LocationService
 	Sholat               SholatService
 	Murojaah             MurojaahService
 	Fiqh                 FiqhService
@@ -136,6 +137,7 @@ func NewServices(repo *repository.Repositories) *Services {
 		PageView:             NewPageViewService(repo.PageView),
 		NotificationTemplate: NewNotificationTemplateService(repo.NotificationTemplate),
 		TokohTarikh:          NewTokohTarikhServiceWithCache(repo.TokohTarikh, cache),
+		Location:             NewLocationServiceWithCache(repo.Location, cache),
 		Sholat:               NewSholatService(repo.Sholat),
 		Murojaah:             NewMurojaahService(repo.Murojaah, repo.Hafalan),
 		Fiqh:                 NewFiqhServiceWithCache(repo.Fiqh, cache),

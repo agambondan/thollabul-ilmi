@@ -72,6 +72,7 @@ type Repositories struct {
 	PageView             PageViewRepository
 	NotificationTemplate NotificationTemplateRepository
 	TokohTarikh          TokohTarikhRepository
+	Location             LocationRepository
 	AsbabunNuzul         AsbabunNuzulRepository
 	Perawi               PerawiRepository
 	JarhTadil            JarhTadilRepository
@@ -154,6 +155,7 @@ func NewRepositories(db *gorm.DB, client *redis.Client) (*Repositories, error) {
 		PageView:             NewPageViewRepository(db),
 		NotificationTemplate: NewNotificationTemplateRepository(db),
 		TokohTarikh:          NewTokohTarikhRepository(db),
+		Location:             NewLocationRepository(db),
 		AsbabunNuzul:         NewAsbabunNuzulRepository(db),
 		Perawi:               NewPerawiRepository(db, pg),
 		JarhTadil:            NewJarhTadilRepository(db),
