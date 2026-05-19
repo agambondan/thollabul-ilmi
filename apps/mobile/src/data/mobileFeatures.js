@@ -104,9 +104,8 @@ export const featureGroups = [
         key: 'tokoh',
         title: 'Tokoh Tarikh',
         subtitle: 'Biografi tokoh Islam',
-        badges: ['Baru'],
-        type: 'list',
-        endpoint: '/api/v1/tokoh-tarikh',
+        badges: [],
+        type: 'tokoh',
       },
       {
         key: 'sejarah',
@@ -118,7 +117,7 @@ export const featureGroups = [
       {
         key: 'historical-map',
         title: 'Peta Islam Interaktif',
-        subtitle: '11 lokasi bersejarah',
+        subtitle: '49 lokasi bersejarah',
         badges: ['Baru'],
         type: 'historical-map',
       },
