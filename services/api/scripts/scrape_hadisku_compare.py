@@ -7,6 +7,8 @@ Use the JSONL output as a candidate source for Arabic backfill after review.
 
 Examples:
   python3 scripts/scrape_hadisku_compare.py --sample 10
+  python3 scripts/scrape_hadisku_compare.py --books ahmad --full --scrape-cache --scrape-only --delay 0.7
+  python3 scripts/scrape_hadisku_compare.py --books ahmad --full --from-cache
   python3 scripts/scrape_hadisku_compare.py --books ahmad,darimi --sample 50
   python3 scripts/scrape_hadisku_compare.py --books ahmad --full --workers 8
   python3 scripts/scrape_hadisku_compare.py --books ahmad --numbers 1,2,100,26363
@@ -21,6 +23,7 @@ import json
 import re
 import time
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -36,6 +39,7 @@ BASE_URL = "https://hadisku.flagodna.com/hadith"
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_DATA_DIR = SCRIPT_DIR.parent / "data"
 DEFAULT_OUT_DIR = SCRIPT_DIR.parent / "data" / "hadisku_compare"
+DEFAULT_RAW_DIR = SCRIPT_DIR.parent / "data" / "hadisku_raw"
 
 BOOK_SLUGS = {
     "abudaud": "abudawud",
@@ -129,6 +133,37 @@ def sample_numbers(rows: list[dict[str, Any]], sample: int) -> list[int]:
     return sorted(set(selected))[:sample]
 
 
+def choose_local_numbers(
+    rows: list[dict[str, Any]],
+    sample: int,
+    full: bool,
+    explicit_numbers: set[int] | None,
+) -> list[int]:
+    by_number = {row["number"]: row for row in rows}
+    if explicit_numbers is not None:
+        return sorted(n for n in explicit_numbers if n in by_number)
+    if full:
+        return sorted(by_number)
+    return sample_numbers(rows, sample)
+
+
+def choose_remote_numbers(
+    rows: list[dict[str, Any]],
+    remote_slug: str,
+    sample: int,
+    full: bool,
+    explicit_numbers: set[int] | None,
+) -> list[int]:
+    if explicit_numbers is not None:
+        return sorted(explicit_numbers)
+    if full:
+        declared_count = HADISKU_COUNTS.get(remote_slug)
+        if not declared_count:
+            raise SystemExit(f"Missing HadisKu declared count for remote slug: {remote_slug}")
+        return list(range(1, declared_count + 1))
+    return sample_numbers(rows, sample)
+
+
 def extract_hadisku(html_text: str) -> dict[str, str]:
     soup = BeautifulSoup(html_text, "html.parser")
     article = soup.find("article") or soup
@@ -184,11 +219,37 @@ def fetch_hadisku(remote_slug: str, number: int, retries: int = 3) -> dict[str, 
     return {"ok": False, "status": 0, "url": url, "error": last_error}
 
 
-def compare_one(slug: str, remote_slug: str, row: dict[str, Any], threshold: float) -> dict[str, Any]:
+def normalize_cached_remote(remote: dict[str, Any] | None, remote_slug: str, number: int) -> dict[str, Any]:
+    if remote is None:
+        return {
+            "ok": False,
+            "status": 0,
+            "url": f"{BASE_URL}/{remote_slug}/{number}",
+            "error": "missing_cache",
+        }
+    return {
+        "ok": bool(remote.get("ok")),
+        "status": remote.get("status", 0),
+        "url": remote.get("url") or f"{BASE_URL}/{remote_slug}/{number}",
+        "arabic": remote.get("arabic", ""),
+        "idn": remote.get("idn", ""),
+        "status_ahmad_syakir": remote.get("status_ahmad_syakir", ""),
+        "status_al_arnaut": remote.get("status_al_arnaut", ""),
+        "error": remote.get("error", ""),
+    }
+
+
+def compare_payload(
+    slug: str,
+    remote_slug: str,
+    row: dict[str, Any],
+    remote_payload: dict[str, Any] | None,
+    threshold: float,
+) -> dict[str, Any]:
     number = row["number"]
     local_idn = row_idn(row)
     local_ar = clean_text(row.get("ar") or "")
-    remote = fetch_hadisku(remote_slug, number)
+    remote = normalize_cached_remote(remote_payload, remote_slug, number)
     result = {
         "book_slug": slug,
         "remote_slug": remote_slug,
@@ -226,6 +287,10 @@ def compare_one(slug: str, remote_slug: str, row: dict[str, Any], threshold: flo
     return result
 
 
+def compare_one(slug: str, remote_slug: str, row: dict[str, Any], threshold: float) -> dict[str, Any]:
+    return compare_payload(slug, remote_slug, row, fetch_hadisku(remote_slug, row["number"]), threshold)
+
+
 def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as handle:
@@ -233,16 +298,95 @@ def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
             handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
 
 
+def append_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        for row in rows:
+            handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+
+
+def raw_cache_path(raw_dir: Path, slug: str) -> Path:
+    return raw_dir / f"{slug}.jsonl"
+
+
+def load_raw_cache(raw_dir: Path, slug: str) -> dict[int, dict[str, Any]]:
+    path = raw_cache_path(raw_dir, slug)
+    if not path.exists():
+        return {}
+    records: dict[int, dict[str, Any]] = {}
+    with path.open(encoding="utf-8") as handle:
+        for line in handle:
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            number = row.get("number")
+            if isinstance(number, int):
+                records[number] = row
+    return records
+
+
+def scrape_raw_cache(
+    raw_dir: Path,
+    slug: str,
+    remote_slug: str,
+    numbers: list[int],
+    refresh_cache: bool,
+    delay: float,
+) -> dict[str, Any]:
+    path = raw_cache_path(raw_dir, slug)
+    existing = load_raw_cache(raw_dir, slug)
+    target_numbers = numbers if refresh_cache else [number for number in numbers if number not in existing]
+    print(f"[{slug}] raw cache target={len(numbers)} existing={len(existing)} scrape={len(target_numbers)} path={path}")
+    started = time.time()
+    ok_count = 0
+    error_count = 0
+    for idx, number in enumerate(target_numbers, 1):
+        remote = fetch_hadisku(remote_slug, number)
+        record = {
+            "book_slug": slug,
+            "remote_slug": remote_slug,
+            "number": number,
+            "scraped_at": datetime.now(timezone.utc).isoformat(),
+            **remote,
+        }
+        append_jsonl(path, [record])
+        if record["ok"]:
+            ok_count += 1
+        else:
+            error_count += 1
+        if idx % 50 == 0 or idx == len(target_numbers):
+            print(f"[{slug}] raw cache {idx}/{len(target_numbers)} scraped")
+        if delay > 0 and idx < len(target_numbers):
+            time.sleep(delay)
+    return {
+        "book_slug": slug,
+        "remote_slug": remote_slug,
+        "target": len(numbers),
+        "skipped_existing": 0 if refresh_cache else len(numbers) - len(target_numbers),
+        "scraped": len(target_numbers),
+        "ok": ok_count,
+        "errors": error_count,
+        "elapsed_seconds": round(time.time() - started, 2),
+        "output": str(path),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Scrape and compare HadisKu hadith pages.")
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
+    parser.add_argument("--raw-dir", type=Path, default=DEFAULT_RAW_DIR)
     parser.add_argument("--books", default=",".join(BOOK_SLUGS.keys()), help="Comma-separated local book slugs")
     parser.add_argument("--numbers", help="Comma-separated hadith numbers. Only valid for one or more selected books.")
     parser.add_argument("--sample", type=int, default=10, help="Deterministic sample size per book. Use 0 with --full.")
     parser.add_argument("--full", action="store_true", help="Compare every local row for selected books.")
     parser.add_argument("--workers", type=int, default=6)
     parser.add_argument("--threshold", type=float, default=0.85)
+    parser.add_argument("--scrape-cache", action="store_true", help="Scrape HadisKu pages into raw JSONL cache before compare.")
+    parser.add_argument("--scrape-only", action="store_true", help="Only populate raw cache, do not compare.")
+    parser.add_argument("--from-cache", action="store_true", help="Compare using raw JSONL cache only; never hit HadisKu.")
+    parser.add_argument("--refresh-cache", action="store_true", help="Re-scrape selected raw cache rows even when already cached.")
+    parser.add_argument("--delay", type=float, default=0.7, help="Delay in seconds between raw cache scrape requests.")
     args = parser.parse_args()
 
     selected_books = [book.strip() for book in args.books.split(",") if book.strip()]
@@ -254,33 +398,55 @@ def main() -> None:
     if args.numbers:
         explicit_numbers = {int(part.strip()) for part in args.numbers.split(",") if part.strip()}
 
+    if args.scrape_only and not args.scrape_cache:
+        raise SystemExit("--scrape-only requires --scrape-cache")
+
+    scrape_summaries: list[dict[str, Any]] = []
+    if args.scrape_cache:
+        for slug in selected_books:
+            remote_slug = BOOK_SLUGS[slug]
+            rows = load_local_rows(args.data_dir, slug)
+            numbers = choose_remote_numbers(rows, remote_slug, args.sample, args.full, explicit_numbers)
+            summary = scrape_raw_cache(args.raw_dir, slug, remote_slug, numbers, args.refresh_cache, args.delay)
+            scrape_summaries.append(summary)
+            print(json.dumps(summary, ensure_ascii=False, sort_keys=True))
+
+        summary_path = args.raw_dir / "summary.json"
+        summary_path.parent.mkdir(parents=True, exist_ok=True)
+        summary_path.write_text(json.dumps(scrape_summaries, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
+        print(f"Raw cache summary written to {summary_path}")
+
+    if args.scrape_only:
+        return
+
     all_summaries: list[dict[str, Any]] = []
     for slug in selected_books:
         remote_slug = BOOK_SLUGS[slug]
         rows = load_local_rows(args.data_dir, slug)
         by_number = {row["number"]: row for row in rows}
         duplicates = len(rows) - len(by_number)
+        numbers = choose_local_numbers(rows, args.sample, args.full, explicit_numbers)
 
-        if explicit_numbers is not None:
-            numbers = sorted(n for n in explicit_numbers if n in by_number)
-        elif args.full:
-            numbers = sorted(by_number)
-        else:
-            numbers = sample_numbers(rows, args.sample)
-
-        print(f"[{slug}] comparing {len(numbers)} rows against HadisKu slug={remote_slug}")
+        compare_from_cache = args.from_cache or args.scrape_cache
+        raw_cache = load_raw_cache(args.raw_dir, slug) if compare_from_cache else {}
+        source_label = f"cache={raw_cache_path(args.raw_dir, slug)}" if compare_from_cache else f"HadisKu slug={remote_slug}"
+        print(f"[{slug}] comparing {len(numbers)} rows against {source_label}")
         started = time.time()
         results: list[dict[str, Any]] = []
-        with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, args.workers)) as executor:
-            futures = [
-                executor.submit(compare_one, slug, remote_slug, by_number[number], args.threshold)
-                for number in numbers
-            ]
-            for idx, future in enumerate(concurrent.futures.as_completed(futures), 1):
-                result = future.result()
-                results.append(result)
-                if idx % 100 == 0:
-                    print(f"[{slug}] {idx}/{len(numbers)} done")
+        if compare_from_cache:
+            for number in numbers:
+                results.append(compare_payload(slug, remote_slug, by_number[number], raw_cache.get(number), args.threshold))
+        else:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, args.workers)) as executor:
+                futures = [
+                    executor.submit(compare_one, slug, remote_slug, by_number[number], args.threshold)
+                    for number in numbers
+                ]
+                for idx, future in enumerate(concurrent.futures.as_completed(futures), 1):
+                    result = future.result()
+                    results.append(result)
+                    if idx % 100 == 0:
+                        print(f"[{slug}] {idx}/{len(numbers)} done")
 
         results.sort(key=lambda item: item["number"])
         out_path = args.out_dir / f"{slug}.jsonl"
@@ -305,6 +471,7 @@ def main() -> None:
             ),
             "elapsed_seconds": round(time.time() - started, 2),
             "output": str(out_path),
+            "source": "cache" if compare_from_cache else "network",
         }
         all_summaries.append(summary)
         print(json.dumps(summary, ensure_ascii=False, sort_keys=True))
