@@ -25,6 +25,8 @@ next-env.d.ts
 bin/
 dist/
 coverage.out
+__pycache__/
+*.py[cod]
 
 # API service local data and generated command binaries
 # Hadith, tafsir, audio — besar, tidak di-commit
@@ -33,6 +35,7 @@ services/api/data/tafsir/
 services/api/data/tafsirweb/
 services/api/data/ibnukatsir/
 services/api/data/audio/
+services/api/data/hadisku_compare/
 # quran_base.json dan mufrodat.json DI-COMMIT sebagai source of truth seed data
 services/api/build/
 services/api/fill_gaps
