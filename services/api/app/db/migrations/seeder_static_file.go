@@ -47,6 +47,7 @@ func SeedStaticFromFiles(db *gorm.DB) {
 	seedPerawiGuruFromFile(db)
 	seedTokohTarikhFromFile(db)
 	seedLocationsFromFile(db)
+	SeedAudioFromCDN(db)
 }
 
 // ── helpers ───────────────────────────────────────────────────────────────────
