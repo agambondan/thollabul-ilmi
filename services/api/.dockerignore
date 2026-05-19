@@ -3,6 +3,7 @@
 *.md
 build/
 data/
+!data/locations.json
 .firecrawl/
 .playwright-mcp/
 .claude/

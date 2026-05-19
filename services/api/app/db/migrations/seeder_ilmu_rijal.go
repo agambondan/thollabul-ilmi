@@ -370,10 +370,27 @@ func seedPerawi(db *gorm.DB) {
 	}
 
 	for i := range perawi {
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "nama_latin"}},
-			DoUpdates: clause.AssignmentColumns([]string{"nama_arab", "nama_lengkap", "kunyah", "laqab", "nisbah", "tahun_lahir", "tahun_wafat", "tahun_hijri", "tempat_lahir", "tempat_wafat", "tabaqah", "status", "biografis"}),
-		}).Create(&perawi[i])
+		item := perawi[i]
+		if item.NamaLatin == nil {
+			continue
+		}
+		db.Where("nama_latin = ?", *item.NamaLatin).
+			Assign(model.Perawi{
+				NamaArab:    item.NamaArab,
+				NamaLengkap: item.NamaLengkap,
+				Kunyah:      item.Kunyah,
+				Laqab:       item.Laqab,
+				Nisbah:      item.Nisbah,
+				TahunLahir:  item.TahunLahir,
+				TahunWafat:  item.TahunWafat,
+				TahunHijri:  item.TahunHijri,
+				TempatLahir: item.TempatLahir,
+				TempatWafat: item.TempatWafat,
+				Tabaqah:     item.Tabaqah,
+				Status:      item.Status,
+				Biografis:   item.Biografis,
+			}).
+			FirstOrCreate(&item)
 	}
 }
 
@@ -597,10 +614,20 @@ func seedJarhTadil(db *gorm.DB) {
 	}
 
 	for i := range penilaian {
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "perawi_id"}, {Name: "penilai_id"}},
-			DoUpdates: clause.AssignmentColumns([]string{"jenis_nilai", "tingkat", "teks_nilai", "sumber", "halaman", "catatan"}),
-		}).Create(&penilaian[i])
+		item := penilaian[i]
+		if item.PerawiID == nil || item.PenilaiID == nil {
+			continue
+		}
+		db.Where("perawi_id = ? AND penilai_id = ?", *item.PerawiID, *item.PenilaiID).
+			Assign(model.JarhTadil{
+				JenisNilai: item.JenisNilai,
+				Tingkat:    item.Tingkat,
+				TeksNilai:  item.TeksNilai,
+				Sumber:     item.Sumber,
+				Halaman:    item.Halaman,
+				Catatan:    item.Catatan,
+			}).
+			FirstOrCreate(&item)
 	}
 }
 
