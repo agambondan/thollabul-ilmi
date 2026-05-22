@@ -39,10 +39,12 @@ import { ImBook } from 'react-icons/im';
 import {
     MdAccessTime,
     MdCalendarMonth,
+    MdClose,
     MdExplore,
     MdFlag,
     MdFormatListBulleted,
     MdLogout,
+    MdMenu,
     MdMenuBook,
     MdMosque,
     MdOutlineAutoStories,
@@ -66,6 +68,7 @@ const DashboardLayout = ({ children }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [accountOpen, setAccountOpen] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const accountRef = useRef(null);
 
     useEffect(() => {
@@ -211,14 +214,20 @@ const DashboardLayout = ({ children }) => {
     if (isLoading || !isAuthenticated) return null;
 
     const sidebarWidth = isCollapsed ? 'w-16' : 'w-60';
-    const mainOffset = isCollapsed ? 'ml-16' : 'ml-60';
+    const mainOffset = isCollapsed ? 'md:ml-16' : 'md:ml-60';
     const sidebarToggleLabel = isCollapsed ? t('sidebar.expand') : t('sidebar.collapse');
+    const mobilePrimaryLinks = [
+        { labelKey: 'link.dashboard', href: '/dashboard', icon: <BsBarChart /> },
+        { labelKey: 'link.quran', href: '/dashboard/quran', icon: <FaQuran /> },
+        { labelKey: 'link.hadith', href: '/dashboard/hadith', icon: <ImBook /> },
+        { labelKey: 'link.search', href: '/dashboard/search', icon: <BsSearch /> },
+    ];
 
     return (
         <div className='min-h-screen flex bg-gray-50 dark:bg-gray-950'>
             {/* Sidebar */}
             <aside
-                className={`${sidebarWidth} shrink-0 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col fixed inset-y-0 left-0 z-40 transition-[width] duration-200`}
+                className={`${sidebarWidth} hidden md:flex shrink-0 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex-col fixed inset-y-0 left-0 z-40 transition-[width] duration-200`}
             >
                 {/* Logo */}
                 <div
@@ -336,19 +345,33 @@ const DashboardLayout = ({ children }) => {
 
             {/* Main content */}
             <main
-                className={`${mainOffset} flex-1 min-h-screen overflow-auto transition-[margin] duration-200`}
+                className={`${mainOffset} flex-1 min-h-screen overflow-auto pb-20 md:pb-0 transition-[margin] duration-200`}
             >
                 {/* Header */}
-                <header className='sticky top-0 z-30 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between px-6 h-14'>
-                    <button
-                        type='button'
-                        onClick={toggleSidebar}
-                        aria-label={sidebarToggleLabel}
-                        title={sidebarToggleLabel}
-                        className='inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors'
-                    >
-                        {isCollapsed ? <BsChevronRight /> : <BsChevronLeft />}
-                    </button>
+                <header className='sticky top-0 z-30 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between px-3 md:px-6 h-14'>
+                    <div className='flex items-center gap-2'>
+                        <button
+                            type='button'
+                            onClick={toggleSidebar}
+                            aria-label={sidebarToggleLabel}
+                            title={sidebarToggleLabel}
+                            className='hidden md:inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors'
+                        >
+                            {isCollapsed ? <BsChevronRight /> : <BsChevronLeft />}
+                        </button>
+                        <Link
+                            href='/dashboard'
+                            className='md:hidden flex items-center gap-2 min-w-0'
+                            aria-label="Thullaabul 'Ilmi"
+                        >
+                            <div className='w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center shrink-0'>
+                                <span className='text-white text-xs font-bold'>ط</span>
+                            </div>
+                            <span className='text-sm font-bold text-gray-900 dark:text-white truncate'>
+                                Thullaabul &apos;Ilmi
+                            </span>
+                        </Link>
+                    </div>
 
                     {/* Account dropdown */}
                     <div className='relative' ref={accountRef}>
@@ -484,6 +507,105 @@ const DashboardLayout = ({ children }) => {
                 <div className={isWide ? 'w-full' : 'max-w-5xl mx-auto'}>
                     {children}
                 </div>
+
+                {mobileMenuOpen && (
+                    <div className='md:hidden fixed inset-0 z-50'>
+                        <button
+                            type='button'
+                            aria-label={t('nav.close_menu')}
+                            className='absolute inset-0 bg-slate-950/50'
+                            onClick={() => setMobileMenuOpen(false)}
+                        />
+                        <div className='absolute inset-x-0 bottom-0 max-h-[78vh] overflow-y-auto rounded-t-2xl bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 shadow-2xl'>
+                            <div className='sticky top-0 z-10 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 px-4 py-3 flex items-center justify-between'>
+                                <div>
+                                    <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                        {t('nav.menu')}
+                                    </p>
+                                    <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                        {user?.name ?? t('common.user')}
+                                    </p>
+                                </div>
+                                <button
+                                    type='button'
+                                    aria-label={t('nav.close_menu')}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className='h-9 w-9 inline-flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800'
+                                >
+                                    <MdClose />
+                                </button>
+                            </div>
+                            <div className='px-4 py-3 space-y-5'>
+                                {GROUPS.map((group) => (
+                                    <section key={group.titleKey}>
+                                        <p className='text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2'>
+                                            {t(group.titleKey)}
+                                        </p>
+                                        <div className='grid grid-cols-2 gap-2'>
+                                            {group.links.map((link) => {
+                                                const isActive =
+                                                    pathname === link.href ||
+                                                    (link.href !== '/' && pathname.startsWith(link.href + '/'));
+                                                return (
+                                                    <Link
+                                                        key={link.href}
+                                                        href={link.href}
+                                                        onClick={() => setMobileMenuOpen(false)}
+                                                        className={`min-h-11 flex items-center gap-2 rounded-xl border px-3 py-2 text-sm transition-colors ${
+                                                            isActive
+                                                                ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
+                                                                : 'border-gray-100 dark:border-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+                                                        }`}
+                                                    >
+                                                        <span className='text-base shrink-0'>{link.icon}</span>
+                                                        <span className='truncate'>{t(link.labelKey)}</span>
+                                                    </Link>
+                                                );
+                                            })}
+                                        </div>
+                                    </section>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <nav className='md:hidden fixed inset-x-0 bottom-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-t border-gray-100 dark:border-slate-800 px-2 pb-2 pt-1.5'>
+                    <div className='grid grid-cols-5 gap-1'>
+                        {mobilePrimaryLinks.map((link) => {
+                            const isActive =
+                                pathname === link.href ||
+                                (link.href !== '/dashboard' && pathname.startsWith(link.href + '/'));
+                            return (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className={`min-h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 text-[10px] transition-colors ${
+                                        isActive
+                                            ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30'
+                                            : 'text-gray-500 dark:text-gray-400'
+                                    }`}
+                                >
+                                    <span className='text-base'>{link.icon}</span>
+                                    <span className='max-w-full px-1 truncate'>{t(link.labelKey)}</span>
+                                </Link>
+                            );
+                        })}
+                        <button
+                            type='button'
+                            onClick={() => setMobileMenuOpen(true)}
+                            aria-label={t('nav.open_menu')}
+                            className={`min-h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 text-[10px] transition-colors ${
+                                mobileMenuOpen
+                                    ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30'
+                                    : 'text-gray-500 dark:text-gray-400'
+                            }`}
+                        >
+                            <MdMenu className='text-lg' />
+                            <span className='max-w-full px-1 truncate'>{t('nav.menu')}</span>
+                        </button>
+                    </div>
+                </nav>
             </main>
         </div>
     );

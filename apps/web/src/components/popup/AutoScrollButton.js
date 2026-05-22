@@ -1,6 +1,7 @@
 'use client';
 
 import { useLocale } from '@/context/Locale';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { BsPauseFill, BsPlayFill } from 'react-icons/bs';
 import { MdSpeed } from 'react-icons/md';
@@ -9,6 +10,7 @@ const SPEED_KEY = 'autoScrollSpeed';
 
 const AutoScrollButton = () => {
     const { t } = useLocale();
+    const pathname = usePathname();
     const [isPlaying, setIsPlaying] = useState(false);
     const [speed, setSpeed] = useState(3);
     const [showPanel, setShowPanel] = useState(false);
@@ -117,11 +119,19 @@ const AutoScrollButton = () => {
         setIsPlaying(next);
         if (next) setShowPanel(true);
     };
+    const isDashboard = pathname?.startsWith('/dashboard');
+    const bottomClass = isDashboard
+        ? navBarVisible
+            ? 'bottom-[84px] md:bottom-[52px]'
+            : 'bottom-[72px] md:bottom-2'
+        : navBarVisible
+            ? 'bottom-[52px]'
+            : 'bottom-2';
 
     return (
         <div
             id='auto-scroll-panel'
-            className={`fixed left-2 z-10 transition-[bottom] duration-200 ${navBarVisible ? 'bottom-[52px]' : 'bottom-2'}`}
+            className={`fixed left-2 z-10 transition-[bottom] duration-200 ${bottomClass}`}
         >
             {showPanel && (
                 <div className='absolute left-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-52 p-3 shadow-lg text-sm text-emerald-900 dark:text-white mb-1'>

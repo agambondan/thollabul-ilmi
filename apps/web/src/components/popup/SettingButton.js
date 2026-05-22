@@ -4,12 +4,14 @@ import { useLocale } from '@/context/Locale';
 import { useLayoutMode } from '@/lib/useLayoutMode';
 import { QURAN_FONTS, useQuranFont } from '@/lib/useQuranFont';
 import classNames from 'classnames';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { RiSettings3Fill } from 'react-icons/ri';
 import { TbLayoutDistributeHorizontal, TbLayoutSidebarRight } from 'react-icons/tb';
 
 const SettingButton = () => {
     const { t } = useLocale();
+    const pathname = usePathname();
     const [showPopup, setShowPopup] = useState(false);
     const [navBarVisible, setNavBarVisible] = useState(false);
     const { isWide, setLayout } = useLayoutMode();
@@ -41,15 +43,25 @@ const SettingButton = () => {
         };
     }, []);
 
+    const isDashboard = pathname?.startsWith('/dashboard');
+    const bottomClass = isDashboard
+        ? navBarVisible
+            ? 'bottom-[84px] md:bottom-[52px]'
+            : 'bottom-[72px] md:bottom-2'
+        : navBarVisible
+            ? 'bottom-[52px]'
+            : 'bottom-2';
+
     return (
         <div
             ref={popupRef}
-            className={`fixed right-2 z-10 transition-[bottom] duration-200 ${navBarVisible ? 'bottom-[52px]' : 'bottom-2'}`}
+            className={`fixed right-2 z-10 transition-[bottom] duration-200 ${bottomClass}`}
         >
             <button
                 className='dark:bg-slate-200 bg-slate-800 dark:text-black text-white rounded-full p-3 shadow hover:opacity-80 transition-opacity'
                 onClick={() => setShowPopup((p) => !p)}
                 title={t('settings.title')}
+                aria-label={t('settings.title')}
             >
                 <RiSettings3Fill size={24} />
             </button>
