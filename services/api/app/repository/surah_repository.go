@@ -1,6 +1,9 @@
 package repository
 
 import (
+	"strconv"
+	"strings"
+
 	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/gofiber/fiber/v2"
@@ -27,6 +30,59 @@ type surahRepo struct {
 
 func NewSurahRepository(db *gorm.DB, pg *paginate.Pagination) SurahRepository {
 	return &surahRepo{db, pg}
+}
+
+func parseSurahNumberLookup(name string) (*int, bool) {
+	value := strings.TrimSpace(name)
+	if value == "" {
+		return nil, false
+	}
+
+	end := 0
+	for end < len(value) && value[end] >= '0' && value[end] <= '9' {
+		end++
+	}
+	if end == 0 {
+		return nil, false
+	}
+	if end < len(value) && !strings.ContainsRune("-_/ ", rune(value[end])) {
+		return nil, false
+	}
+
+	number, err := strconv.Atoi(value[:end])
+	if err != nil || number < 1 || number > 114 {
+		return nil, false
+	}
+	return &number, true
+}
+
+func surahNameCandidates(name string) []string {
+	seen := map[string]bool{}
+	var candidates []string
+	add := func(value string) {
+		value = strings.TrimSpace(strings.Trim(value, "/"))
+		if value == "" {
+			return
+		}
+		value = strings.ToLower(value)
+		if !seen[value] {
+			seen[value] = true
+			candidates = append(candidates, value)
+		}
+	}
+
+	base := strings.ReplaceAll(name, "_", "-")
+	add(base)
+	add(strings.ReplaceAll(base, " ", "-"))
+	add(strings.ReplaceAll(base, "-", " "))
+
+	for _, candidate := range append([]string(nil), candidates...) {
+		if strings.HasSuffix(candidate, "h") {
+			add(strings.TrimSuffix(candidate, "h"))
+		}
+	}
+
+	return candidates
 }
 
 func (c *surahRepo) Save(Surah *model.Surah) (*model.Surah, error) {
@@ -100,10 +156,16 @@ func (c *surahRepo) FindByNumber(ctx *fiber.Ctx, number *int) (*model.Surah, err
 }
 
 func (c *surahRepo) FindByName(ctx *fiber.Ctx, name *string) (*model.Surah, error) {
+	if number, ok := parseSurahNumberLookup(*name); ok {
+		return c.FindByNumber(ctx, number)
+	}
+
 	var surah *model.Surah
+	candidates := surahNameCandidates(*name)
 	if err := c.db.Joins("Translation").
-		First(&surah, `"Translation".latin_idn = ? OR "Translation".latin_en = ? OR 
-		"Translation".idn = ? OR "Translation".en = ? OR "Translation".ar = ?`, name, name, name, name, name).Error; err != nil {
+		First(&surah, `LOWER("Translation".latin_idn) IN ? OR LOWER("Translation".latin_en) IN ?
+		OR LOWER("Translation".idn) IN ? OR LOWER("Translation".en) IN ? OR LOWER("Translation".ar) IN ?`,
+			candidates, candidates, candidates, candidates, candidates).Error; err != nil {
 		return nil, err
 	}
 	if err := c.loadSurahParallel(surah, ctx); err != nil {

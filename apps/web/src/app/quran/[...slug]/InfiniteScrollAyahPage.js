@@ -19,7 +19,12 @@ import { TbPlayerTrackNext, TbPlayerTrackPrev } from 'react-icons/tb';
 
 const PAGE_SIZE = 10;
 
-const normalizeAyahs = (data) => data?.ayahs ?? data?.items ?? data ?? [];
+const normalizeAyahs = (data) => {
+	if (Array.isArray(data?.ayahs)) return data.ayahs;
+	if (Array.isArray(data?.items)) return data.items;
+	if (Array.isArray(data)) return data;
+	return [];
+};
 
 const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah' }) => {
 	const { t, lang } = useLocale();
@@ -40,14 +45,14 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 
 	const loadMoreAyah = useCallback(() => {
 		if (isInitialLoading || isFetchingMore || !hasMore) return;
-		setPage((prev) => prev + 1);
-	}, [hasMore, isFetchingMore, isInitialLoading]);
+		setPage(Math.floor(ayahs.length / PAGE_SIZE));
+	}, [ayahs.length, hasMore, isFetchingMore, isInitialLoading]);
 
 	const getTargetAyah = () => {
 		if (typeof window === 'undefined') return 0;
 		const hash = window.location.hash.replace('#', '');
 		if (!hash) return 0;
-		const match = hash.match(/^ayah-?(\d+)$/);
+		const match = hash.match(/^(?:ayah-?)?(\d+)$/);
 		if (!match) return 0;
 		return parseInt(match[1], 10);
 	};
@@ -55,7 +60,7 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 	const fetchSurah = useCallback(
 		async (pageIndex, size = PAGE_SIZE) => {
 			const target = pageIndex === 0 ? getTargetAyah() : 0;
-			const nextSize = target > 0 ? target + (target % PAGE_SIZE) : size;
+			const nextSize = target > 0 ? Math.max(size, Math.ceil(target / PAGE_SIZE) * PAGE_SIZE) : size;
 
 			const res = await fetch(
 				`${process.env.NEXT_PUBLIC_API_URL}/api/v1/surah/name/${slug}?page=${pageIndex}&size=${nextSize}`,
@@ -111,6 +116,10 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 			.then((data) => {
 				if (!isActive) return;
 				const nextAyahs = normalizeAyahs(data);
+				if (!nextAyahs.length) {
+					setHasMore(false);
+					return;
+				}
 				setAyahs((prev) => {
 					const merged = [...prev, ...nextAyahs];
 					setHasMore(merged.length < (surah.number_of_ayahs ?? merged.length));
