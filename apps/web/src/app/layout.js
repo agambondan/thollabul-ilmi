@@ -5,6 +5,7 @@ import { LocaleProvider } from '@/context/Locale';
 import AnalyticsTracker from '@/components/AnalyticsTracker';
 import { Toaster } from 'react-hot-toast';
 import InAppNotification from '@/components/InAppNotification';
+import NotificationPermissionPrompt from '@/components/NotificationPermissionPrompt';
 
 const SITE_URL =
     process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tholabul-ilmi.com';
@@ -87,6 +88,7 @@ export default function RootLayout({ children }) {
                         <AnalyticsTracker />
                         {children}
                         <SettingButton />
+                        <NotificationPermissionPrompt />
                         <Toaster
                             position='top-right'
                             toastOptions={{
