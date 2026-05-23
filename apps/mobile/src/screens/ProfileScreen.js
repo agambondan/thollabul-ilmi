@@ -23,8 +23,10 @@ import {
     ScrollView,
     StyleSheet,
     Text,
+    TextInput,
     View,
 } from 'react-native';
+import { updatePassword, updateProfile } from '../api/auth';
 import {
     getAchievements,
     getHafalanSummary,
@@ -40,6 +42,7 @@ import { OfflinePackCard } from '../components/OfflinePackCard';
 import { Screen } from '../components/Screen';
 import { SessionCard } from '../components/SessionCard';
 import { useSession } from '../context/SessionContext';
+import { preferenceKeys, readPreference, writePreference } from '../storage/preferences';
 import { colors, radius, spacing } from '../theme';
 
 const DEFAULT_BADGES = [
@@ -48,6 +51,24 @@ const DEFAULT_BADGES = [
     { code: 'starter', description: 'Akun belajar sudah aktif.', icon: '🌟', label: 'Penuntut Ilmi', unlocked: true },
     { code: 'streak_7', description: 'Jaga aktivitas belajar selama 7 hari.', icon: '🔥', label: 'Streak 7 Hari', unlocked: false },
 ];
+
+const THEME_OPTIONS = [
+    { key: 'system', label: 'Ikuti Sistem', meta: 'Gunakan preferensi perangkat sebagai default.' },
+    { key: 'light', label: 'Terang', meta: 'Palet terang klasik Thullabul Ilmi.' },
+    { key: 'dark', label: 'Gelap', meta: 'Disimpan sebagai preferensi perangkat untuk mode layout berikutnya.' },
+];
+
+const LANGUAGE_OPTIONS = [
+    { key: 'idn', label: 'Indonesia', meta: 'Konten dan API memakai preferensi Indonesia.' },
+    { key: 'en', label: 'English', meta: 'Konten yang sudah punya terjemahan EN akan diprioritaskan.' },
+];
+
+const LAYOUT_OPTIONS = [
+    { key: 'classic', label: 'Classic', meta: 'Baseline native app saat ini.' },
+    { key: 'web_app', label: 'Web App', meta: 'Preferensi mode dashboard mobile web untuk rollout bertahap.' },
+];
+
+const getResponseUser = (payload) => payload?.data ?? payload;
 
 const normalizeAchievement = (item = {}, options = {}) => {
     const source = item.achievement ?? item;
@@ -194,6 +215,300 @@ function SettingsList({ onNavigate }) {
     );
 }
 
+function ChoiceRow({ active, label, meta, onPress }) {
+    return (
+        <Pressable
+            accessibilityRole="button"
+            accessibilityState={{ selected: active }}
+            android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
+            onPress={onPress}
+            style={[styles.choiceRow, active && styles.choiceRowActive]}
+        >
+            <View style={styles.choiceBody}>
+                <Text style={[styles.choiceLabel, active && styles.choiceLabelActive]}>{label}</Text>
+                {meta ? <Text style={styles.choiceMeta}>{meta}</Text> : null}
+            </View>
+            <View style={[styles.choiceDot, active && styles.choiceDotActive]}>
+                {active ? <View style={styles.choiceDotInner} /> : null}
+            </View>
+        </Pressable>
+    );
+}
+
+function AppearanceSettings({ onUserUpdated, user }) {
+    const [theme, setTheme] = useState('system');
+    const [language, setLanguage] = useState(user?.preferred_lang ?? 'idn');
+    const [layoutMode, setLayoutMode] = useState('classic');
+    const [saving, setSaving] = useState('');
+    const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        let mounted = true;
+        const load = async () => {
+            const [storedTheme, storedLanguage, storedLayoutMode] = await Promise.all([
+                readPreference(preferenceKeys.appTheme, 'system'),
+                readPreference(preferenceKeys.appLanguage, user?.preferred_lang ?? 'idn'),
+                readPreference(preferenceKeys.appLayoutMode, 'classic'),
+            ]);
+
+            if (!mounted) return;
+            setTheme(storedTheme);
+            setLanguage(user?.preferred_lang ?? storedLanguage);
+            setLayoutMode(storedLayoutMode);
+        };
+
+        load();
+
+        return () => {
+            mounted = false;
+        };
+    }, [user?.preferred_lang]);
+
+    const saveTheme = async (nextTheme) => {
+        setSaving('theme');
+        setMessage('');
+        try {
+            await writePreference(preferenceKeys.appTheme, nextTheme);
+            setTheme(nextTheme);
+            setMessage('Preferensi tema tersimpan di perangkat ini.');
+        } catch (err) {
+            setMessage(err?.message ?? 'Preferensi tema belum bisa disimpan.');
+        } finally {
+            setSaving('');
+        }
+    };
+
+    const saveLayoutMode = async (nextMode) => {
+        setSaving('layout');
+        setMessage('');
+        try {
+            await writePreference(preferenceKeys.appLayoutMode, nextMode);
+            setLayoutMode(nextMode);
+            setMessage('Mode layout tersimpan di perangkat ini.');
+        } catch (err) {
+            setMessage(err?.message ?? 'Mode layout belum bisa disimpan.');
+        } finally {
+            setSaving('');
+        }
+    };
+
+    const saveLanguage = async (nextLanguage) => {
+        setSaving('language');
+        setMessage('');
+        try {
+            await writePreference(preferenceKeys.appLanguage, nextLanguage);
+            setLanguage(nextLanguage);
+            if (user) {
+                const updatedUser = getResponseUser(await updateProfile({ preferredLang: nextLanguage }));
+                await onUserUpdated?.(updatedUser);
+                setMessage('Bahasa konten tersimpan ke akun dan perangkat ini.');
+            } else {
+                setMessage('Bahasa konten tersimpan di perangkat ini.');
+            }
+        } catch (err) {
+            setMessage(err?.message ?? 'Bahasa konten belum bisa disimpan.');
+        } finally {
+            setSaving('');
+        }
+    };
+
+    return (
+        <>
+            <Card>
+                <Text style={styles.appearanceLabel}>Tema</Text>
+                <Text style={styles.appearanceMeta}>
+                    Pilihan ini disimpan sebagai preferensi perangkat dan dipakai oleh mode layout yang mendukung tema.
+                </Text>
+                <View style={styles.choiceGroup}>
+                    {THEME_OPTIONS.map((item) => (
+                        <ChoiceRow
+                            active={theme === item.key}
+                            key={item.key}
+                            label={item.label}
+                            meta={item.meta}
+                            onPress={() => saveTheme(item.key)}
+                        />
+                    ))}
+                </View>
+            </Card>
+
+            <Card>
+                <Text style={styles.appearanceLabel}>Bahasa Konten</Text>
+                <Text style={styles.appearanceMeta}>
+                    Akun yang login akan menyimpan bahasa ke backend sebagai `preferred_lang`.
+                </Text>
+                <View style={styles.choiceGroup}>
+                    {LANGUAGE_OPTIONS.map((item) => (
+                        <ChoiceRow
+                            active={language === item.key}
+                            key={item.key}
+                            label={item.label}
+                            meta={item.meta}
+                            onPress={() => saveLanguage(item.key)}
+                        />
+                    ))}
+                </View>
+            </Card>
+
+            <Card>
+                <Text style={styles.appearanceLabel}>Mode Layout</Text>
+                <Text style={styles.appearanceMeta}>
+                    Mode ini mengikuti dokumen layout mobile: classic sebagai baseline dan web app sebagai opt-in.
+                </Text>
+                <View style={styles.choiceGroup}>
+                    {LAYOUT_OPTIONS.map((item) => (
+                        <ChoiceRow
+                            active={layoutMode === item.key}
+                            key={item.key}
+                            label={item.label}
+                            meta={item.meta}
+                            onPress={() => saveLayoutMode(item.key)}
+                        />
+                    ))}
+                </View>
+            </Card>
+
+            {saving ? <ActivityIndicator color={colors.primary} /> : null}
+            {message ? <Text style={styles.settingsStatus}>{message}</Text> : null}
+        </>
+    );
+}
+
+function SecuritySettings({ onSignOut, user }) {
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [saving, setSaving] = useState(false);
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+
+    const submitPassword = async () => {
+        setMessage('');
+        setError('');
+
+        if (!oldPassword || !newPassword) {
+            setError('Isi sandi saat ini dan sandi baru.');
+            return;
+        }
+        if (newPassword.length < 8) {
+            setError('Sandi baru minimal 8 karakter.');
+            return;
+        }
+        if (newPassword !== confirmPassword) {
+            setError('Konfirmasi sandi baru belum sama.');
+            return;
+        }
+
+        setSaving(true);
+        try {
+            await updatePassword({ oldPassword, newPassword });
+            setOldPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
+            setMessage('Sandi berhasil diperbarui.');
+        } catch (err) {
+            setError(err?.message ?? 'Sandi belum bisa diperbarui.');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    if (!user) {
+        return (
+            <Card>
+                <Text style={styles.appearanceLabel}>Keamanan Akun</Text>
+                <Text style={styles.appearanceMeta}>
+                    Masuk dulu untuk mengelola sesi perangkat dan sandi akun.
+                </Text>
+            </Card>
+        );
+    }
+
+    return (
+        <>
+            <Card>
+                <Text style={styles.appearanceLabel}>Sesi Aktif</Text>
+                <View style={styles.sessionDeviceCard}>
+                    <View style={styles.sessionDeviceIcon}>
+                        <ShieldCheck color={colors.primary} size={20} strokeWidth={2.4} />
+                    </View>
+                    <View style={styles.sessionDeviceBody}>
+                        <Text style={styles.sessionDeviceTitle}>Perangkat ini</Text>
+                        <Text style={styles.sessionDeviceMeta}>
+                            {user.email || 'Sesi mobile aktif dengan token perangkat ini.'}
+                        </Text>
+                    </View>
+                </View>
+                <Pressable
+                    android_ripple={{ color: 'rgba(185, 28, 28, 0.12)', borderless: false }}
+                    onPress={onSignOut}
+                    style={[styles.formButton, styles.formButtonDanger]}
+                >
+                    <LogOut color={colors.danger} size={16} strokeWidth={2.4} />
+                    <Text style={styles.formButtonDangerText}>Keluar dari perangkat ini</Text>
+                </Pressable>
+            </Card>
+
+            <Card>
+                <Text style={styles.appearanceLabel}>Ganti Sandi</Text>
+                <Text style={styles.appearanceMeta}>Perbarui sandi langsung melalui endpoint akun mobile.</Text>
+                <View style={styles.formBlock}>
+                    <TextInput
+                        accessibilityLabel="Sandi saat ini"
+                        onChangeText={setOldPassword}
+                        placeholder="Sandi saat ini"
+                        placeholderTextColor={colors.muted}
+                        secureTextEntry
+                        style={styles.formInput}
+                        value={oldPassword}
+                    />
+                    <TextInput
+                        accessibilityLabel="Sandi baru"
+                        onChangeText={setNewPassword}
+                        placeholder="Sandi baru minimal 8 karakter"
+                        placeholderTextColor={colors.muted}
+                        secureTextEntry
+                        style={styles.formInput}
+                        value={newPassword}
+                    />
+                    <TextInput
+                        accessibilityLabel="Konfirmasi sandi baru"
+                        onChangeText={setConfirmPassword}
+                        placeholder="Konfirmasi sandi baru"
+                        placeholderTextColor={colors.muted}
+                        secureTextEntry
+                        style={styles.formInput}
+                        value={confirmPassword}
+                    />
+                    <Pressable
+                        accessibilityRole="button"
+                        accessibilityState={{ disabled: saving }}
+                        android_ripple={{ color: 'rgba(255, 255, 255, 0.16)', borderless: false }}
+                        disabled={saving}
+                        onPress={submitPassword}
+                        style={[styles.formButton, saving && styles.formButtonDisabled]}
+                    >
+                        {saving ? (
+                            <ActivityIndicator color={colors.onPrimary} />
+                        ) : (
+                            <Text style={styles.formButtonText}>Simpan Sandi Baru</Text>
+                        )}
+                    </Pressable>
+                </View>
+                {error ? <Text style={[styles.settingsStatus, styles.settingsStatusError]}>{error}</Text> : null}
+                {message ? <Text style={styles.settingsStatus}>{message}</Text> : null}
+            </Card>
+
+            <Card>
+                <Text style={styles.appearanceLabel}>Hapus Akun</Text>
+                <Text style={styles.appearanceMeta}>
+                    Penghapusan akun masih melalui kontak tim agar data personal bisa diverifikasi lebih dulu.
+                </Text>
+            </Card>
+        </>
+    );
+}
+
 function AchievementsDetail({ achievements, loading, message, onBack, points, stats, user }) {
     const earnedCount = achievements.filter((item) => item.unlocked).length;
 
@@ -316,7 +631,7 @@ function AchievementsDetail({ achievements, loading, message, onBack, points, st
 }
 
 export function ProfileScreen({ isActive, navigation, onOpenTab }) {
-    const { loading: sessionLoading, session, signOut, user } = useSession();
+    const { loading: sessionLoading, session, signOut, updateCurrentUser, user } = useSession();
     const [stack, setStack] = useState([]);
     const [stats, setStats] = useState(null);
     const [achievements, setAchievements] = useState(DEFAULT_BADGES);
@@ -521,18 +836,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
     if (currentScreen === 'settings-appearance') {
         return (
             <SubScreen title="Tampilan" onBack={pop}>
-                <Card>
-                    <Text style={styles.appearanceLabel}>Tema</Text>
-                    <Text style={styles.appearanceMeta}>
-                        Opsi tema gelap dan terang akan tersedia segera.
-                    </Text>
-                    <Text style={[styles.appearanceLabel, styles.appearanceLabelGap]}>
-                        Bahasa
-                    </Text>
-                    <Text style={styles.appearanceMeta}>
-                        Dukungan multi bahasa sedang disiapkan.
-                    </Text>
-                </Card>
+                <AppearanceSettings onUserUpdated={updateCurrentUser} user={user} />
             </SubScreen>
         );
     }
@@ -540,24 +844,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
     if (currentScreen === 'settings-security') {
         return (
             <SubScreen title="Keamanan" onBack={pop}>
-                <Card>
-                    <Text style={styles.appearanceLabel}>Sesi Aktif</Text>
-                    <Text style={styles.appearanceMeta}>
-                        Manajemen sesi aktif dan riwayat login akan tersedia segera.
-                    </Text>
-                    <Text style={[styles.appearanceLabel, styles.appearanceLabelGap]}>
-                        Ganti Sandi
-                    </Text>
-                    <Text style={styles.appearanceMeta}>
-                        Fitur ganti sandi sedang disiapkan. Gunakan lupa sandi untuk saat ini.
-                    </Text>
-                    <Text style={[styles.appearanceLabel, styles.appearanceLabelGap]}>
-                        Hapus Akun
-                    </Text>
-                    <Text style={styles.appearanceMeta}>
-                        Untuk menghapus akun, hubungi tim Tholabul Ilmi.
-                    </Text>
-                </Card>
+                <SecuritySettings onSignOut={signOut} user={user} />
             </SubScreen>
         );
     }
@@ -1201,6 +1488,151 @@ const styles = StyleSheet.create({
         color: colors.danger,
         fontSize: 13,
         fontWeight: '800',
+    },
+    choiceGroup: {
+        gap: spacing.sm,
+        marginTop: spacing.md,
+    },
+    choiceRow: {
+        alignItems: 'center',
+        backgroundColor: colors.bg,
+        borderColor: colors.faint,
+        borderRadius: radius.md,
+        borderWidth: 1,
+        flexDirection: 'row',
+        gap: spacing.md,
+        minHeight: 58,
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.sm,
+    },
+    choiceRowActive: {
+        backgroundColor: colors.surfaceMuted,
+        borderColor: colors.primary,
+    },
+    choiceBody: {
+        flex: 1,
+        minWidth: 0,
+    },
+    choiceLabel: {
+        color: colors.ink,
+        fontSize: 13,
+        fontWeight: '900',
+    },
+    choiceLabelActive: {
+        color: colors.primaryDark,
+    },
+    choiceMeta: {
+        color: colors.muted,
+        fontSize: 11,
+        lineHeight: 16,
+        marginTop: 2,
+    },
+    choiceDot: {
+        alignItems: 'center',
+        borderColor: colors.faint,
+        borderRadius: 10,
+        borderWidth: 2,
+        height: 20,
+        justifyContent: 'center',
+        width: 20,
+    },
+    choiceDotActive: {
+        borderColor: colors.primary,
+    },
+    choiceDotInner: {
+        backgroundColor: colors.primary,
+        borderRadius: 5,
+        height: 10,
+        width: 10,
+    },
+    formBlock: {
+        gap: spacing.sm,
+        marginTop: spacing.md,
+    },
+    formInput: {
+        backgroundColor: colors.bg,
+        borderColor: colors.faint,
+        borderRadius: radius.md,
+        borderWidth: 1,
+        color: colors.ink,
+        fontSize: 14,
+        minHeight: 46,
+        paddingHorizontal: spacing.md,
+    },
+    formButton: {
+        alignItems: 'center',
+        backgroundColor: colors.primary,
+        borderRadius: radius.md,
+        flexDirection: 'row',
+        gap: spacing.sm,
+        justifyContent: 'center',
+        minHeight: 46,
+        paddingHorizontal: spacing.md,
+    },
+    formButtonDisabled: {
+        opacity: 0.65,
+    },
+    formButtonText: {
+        color: colors.onPrimary,
+        fontSize: 13,
+        fontWeight: '900',
+    },
+    formButtonDanger: {
+        backgroundColor: '#fef2f2',
+        borderColor: '#fecaca',
+        borderWidth: 1,
+        marginTop: spacing.md,
+    },
+    formButtonDangerText: {
+        color: colors.danger,
+        fontSize: 13,
+        fontWeight: '900',
+    },
+    sessionDeviceCard: {
+        alignItems: 'center',
+        backgroundColor: colors.bg,
+        borderColor: colors.faint,
+        borderRadius: radius.md,
+        borderWidth: 1,
+        flexDirection: 'row',
+        gap: spacing.md,
+        marginTop: spacing.md,
+        padding: spacing.md,
+    },
+    sessionDeviceIcon: {
+        alignItems: 'center',
+        backgroundColor: colors.surfaceMuted,
+        borderColor: colors.faint,
+        borderRadius: radius.md,
+        borderWidth: 1,
+        height: 42,
+        justifyContent: 'center',
+        width: 42,
+    },
+    sessionDeviceBody: {
+        flex: 1,
+        minWidth: 0,
+    },
+    sessionDeviceTitle: {
+        color: colors.ink,
+        fontSize: 13,
+        fontWeight: '900',
+    },
+    sessionDeviceMeta: {
+        color: colors.muted,
+        fontSize: 12,
+        lineHeight: 17,
+        marginTop: 2,
+    },
+    settingsStatus: {
+        color: colors.primary,
+        fontSize: 12,
+        fontWeight: '800',
+        lineHeight: 18,
+        textAlign: 'center',
+    },
+    settingsStatusError: {
+        color: colors.danger,
     },
     appearanceLabel: {
         color: colors.ink,

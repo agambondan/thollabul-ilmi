@@ -147,6 +147,29 @@ describe('useSession', () => {
     expect(ctx.user).toBeNull();
   });
 
+  test('updateCurrentUser persists merged user data', async () => {
+    session.readSession.mockResolvedValue(null);
+    auth.login.mockResolvedValue({ token: 'tok', refreshToken: 'rt', user: { name: 'Dewi', preferred_lang: 'idn' } });
+
+    let ctx;
+    function Capture() {
+      ctx = useSession();
+      return null;
+    }
+
+    renderWithSession(<Capture />);
+    await waitFor(() => expect(ctx).toBeDefined());
+    await act(async () => { await ctx.signIn({ email: 'a@b.com', password: 'x' }); });
+    await act(async () => { await ctx.updateCurrentUser({ preferred_lang: 'en' }); });
+
+    expect(session.saveSession).toHaveBeenLastCalledWith({
+      token: 'tok',
+      refreshToken: 'rt',
+      user: { name: 'Dewi', preferred_lang: 'en' },
+    });
+    expect(ctx.user).toEqual({ name: 'Dewi', preferred_lang: 'en' });
+  });
+
   test('throws when used outside SessionProvider', () => {
     expect(() => renderHook(() => useSession())).toThrow('useSession must be used inside SessionProvider');
   });

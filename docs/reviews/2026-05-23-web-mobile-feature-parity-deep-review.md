@@ -7,9 +7,11 @@ Scope: `apps/web`, `apps/mobile`, `docs/features/feature-manifest.json`, dan che
 
 Tidak ada blocker parity di level manifest route/key. Semua 50 fitur aktif di manifest punya route web dan entry mobile yang dikenali checker. Sebaliknya, semua mobile feature key yang bukan section/group internal juga sudah tercatat di manifest.
 
-Yang masih ada bukan missing feature besar, melainkan gap kedalaman dan beberapa surface yang sengaja platform-specific:
+Yang masih ada bukan missing feature besar, melainkan gap kedalaman dan beberapa surface yang sengaja platform-specific.
 
-- Mobile masih punya stub nyata di halaman profil untuk tampilan, keamanan, sesi aktif, riwayat login, dan ganti sandi.
+Update follow-up 2026-05-23: mobile Profile settings sudah dikerjakan untuk current-device session, ganti sandi, bahasa konten, preferensi tema lokal, dan preferensi layout mode. Catatan follow-up ada di `docs/features/progress/2026-05-23-web-mobile-parity-gap-followup.md`.
+
+- Mobile Profile tidak lagi menampilkan stub kosong untuk tampilan/keamanan, tetapi app-wide dark theme penuh, riwayat login multi-device, dan delete-account self-service masih tracked sebagai work lanjutan.
 - Web punya utility/admin/dev surface yang tidak punya padanan mobile, dan ini tampak intentional.
 - Mobile punya offline pack/native reminder behavior yang tidak punya padanan web langsung.
 - Achievements/stats masih tidak setara secara kedalaman UI: web punya dashboard khusus, mobile lebih ringan lewat profile/feature surface.
@@ -96,8 +98,8 @@ Stub/coming-soon eksplisit yang ditemukan:
 
 | Platform | File | Surface | Catatan |
 |---|---|---|---|
-| Mobile | `apps/mobile/src/screens/ProfileScreen.js` | Profile > Tampilan | Tema gelap/terang dan multi bahasa ditampilkan sebagai "akan tersedia segera/sedang disiapkan". |
-| Mobile | `apps/mobile/src/screens/ProfileScreen.js` | Profile > Keamanan | Sesi aktif, riwayat login, dan ganti sandi masih "akan tersedia segera/sedang disiapkan". |
+| Mobile | `apps/mobile/src/screens/ProfileScreen.js` | Profile > Tampilan | Follow-up implemented: pilihan tema lokal, bahasa konten, dan mode layout. App-wide dark theme penuh masih tracked karena butuh theme provider. |
+| Mobile | `apps/mobile/src/screens/ProfileScreen.js` | Profile > Keamanan | Follow-up implemented: current-device session, sign-out, dan form ganti sandi. Login history multi-device masih tracked karena butuh backend endpoint. |
 | Web | `apps/web/src/app/dev/DevPageClient.js` via `apps/web/src/lib/i18n.js` | Dev docs | Copy `dev.full_docs_soon` menyatakan dokumentasi lengkap request/response belum tersedia. Ini utility docs, bukan user feature utama. |
 
 Empty state seperti "artikel sedang disiapkan", "tidak ada hasil", atau "belum ada data" muncul di banyak route. Itu bukan otomatis stub; sebagian besar adalah state data kosong dari API/koleksi.

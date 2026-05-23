@@ -1,4 +1,4 @@
-import { postJson, requestJson } from './client';
+import { postJson, putJson, requestJson } from './client';
 
 const normalizeSession = (payload) => ({
   token: payload?.token,
@@ -30,3 +30,18 @@ export const logout = async (refreshToken) => {
 };
 
 export const getMe = async () => requestJson('/api/v1/auth/me', { auth: true });
+
+export const updateProfile = async ({ avatar, name, preferredLang } = {}) => (
+  putJson('/api/v1/auth/me', {
+    ...(avatar !== undefined ? { avatar } : {}),
+    ...(name !== undefined ? { name } : {}),
+    ...(preferredLang !== undefined ? { preferred_lang: preferredLang } : {}),
+  }, { auth: true })
+);
+
+export const updatePassword = async ({ oldPassword, newPassword }) => (
+  putJson('/api/v1/auth/password', {
+    old_password: oldPassword,
+    new_password: newPassword,
+  }, { auth: true })
+);

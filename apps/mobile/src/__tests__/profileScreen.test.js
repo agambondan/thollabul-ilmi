@@ -12,6 +12,11 @@ jest.mock('../api/personal', () => ({
   getTilawahSummary: jest.fn(),
 }));
 
+jest.mock('../api/auth', () => ({
+  updatePassword: jest.fn(),
+  updateProfile: jest.fn(),
+}));
+
 jest.mock('lucide-react-native', () => {
   const icons = {};
   const names = [
@@ -60,6 +65,7 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { ProfileScreen } from '../screens/ProfileScreen';
 
 const { useSession } = require('../context/SessionContext');
+const authApi = require('../api/auth');
 const personalApi = require('../api/personal');
 
 const defaultSession = {
@@ -68,12 +74,14 @@ const defaultSession = {
   session: null,
   signIn: jest.fn(),
   signOut: jest.fn(),
+  updateCurrentUser: jest.fn(),
   user: null,
 };
 
 const loggedInSession = {
   ...defaultSession,
   session: { user: { id: '1', email: 'test@test.com', name: 'Test User' }, token: 'abc' },
+  updateCurrentUser: jest.fn(),
   user: { id: '1', email: 'test@test.com', name: 'Test User' },
 };
 
@@ -87,6 +95,8 @@ beforeEach(() => {
   personalApi.getHafalanSummary.mockResolvedValue(null);
   personalApi.getPrayerStats.mockResolvedValue(null);
   personalApi.getTilawahSummary.mockResolvedValue(null);
+  authApi.updatePassword.mockResolvedValue({});
+  authApi.updateProfile.mockResolvedValue({ id: '1', email: 'test@test.com', name: 'Test User', preferred_lang: 'en' });
 });
 
 describe('ProfileScreen', () => {
@@ -197,6 +207,53 @@ describe('ProfileScreen', () => {
     fireEvent.press(getByLabelText('Buka pengaturan profil'));
     fireEvent.press(getByText('Penyimpanan'));
     expect(getByText('OfflinePackCard')).toBeTruthy();
+  });
+
+  test('appearance sub-screen saves language preference to account', async () => {
+    const updateCurrentUser = jest.fn();
+    useSession.mockReturnValue({ ...loggedInSession, updateCurrentUser });
+
+    const { getByLabelText, getByText, findByText } = render(<ProfileScreen isActive />);
+    await waitFor(() => expect(getByText('Test User')).toBeTruthy());
+
+    fireEvent.press(getByLabelText('Buka pengaturan profil'));
+    fireEvent.press(getByText('Tampilan'));
+    expect(getByText('Ikuti Sistem')).toBeTruthy();
+    expect(getByText('Bahasa Konten')).toBeTruthy();
+
+    fireEvent.press(getByText('English'));
+
+    await waitFor(() => expect(authApi.updateProfile).toHaveBeenCalledWith({ preferredLang: 'en' }));
+    expect(updateCurrentUser).toHaveBeenCalledWith({
+      id: '1',
+      email: 'test@test.com',
+      name: 'Test User',
+      preferred_lang: 'en',
+    });
+    expect(await findByText('Bahasa konten tersimpan ke akun dan perangkat ini.')).toBeTruthy();
+  });
+
+  test('security sub-screen updates password and shows current device session', async () => {
+    useSession.mockReturnValue(loggedInSession);
+
+    const { getByLabelText, getByPlaceholderText, getByText, findByText } = render(<ProfileScreen isActive />);
+    await waitFor(() => expect(getByText('Test User')).toBeTruthy());
+
+    fireEvent.press(getByLabelText('Buka pengaturan profil'));
+    fireEvent.press(getByText('Keamanan'));
+    expect(getByText('Perangkat ini')).toBeTruthy();
+    expect(getByText('test@test.com')).toBeTruthy();
+
+    fireEvent.changeText(getByPlaceholderText('Sandi saat ini'), 'old-pass');
+    fireEvent.changeText(getByPlaceholderText('Sandi baru minimal 8 karakter'), 'new-pass-123');
+    fireEvent.changeText(getByPlaceholderText('Konfirmasi sandi baru'), 'new-pass-123');
+    fireEvent.press(getByText('Simpan Sandi Baru'));
+
+    await waitFor(() => expect(authApi.updatePassword).toHaveBeenCalledWith({
+      oldPassword: 'old-pass',
+      newPassword: 'new-pass-123',
+    }));
+    expect(await findByText('Sandi berhasil diperbarui.')).toBeTruthy();
   });
 
   test('achievements are displayed', async () => {

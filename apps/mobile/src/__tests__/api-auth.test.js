@@ -1,9 +1,10 @@
 jest.mock('../api/client', () => ({
   postJson: jest.fn(),
+  putJson: jest.fn(),
   requestJson: jest.fn(),
 }));
 
-const { postJson, requestJson } = require('../api/client');
+const { postJson, putJson, requestJson } = require('../api/client');
 const {
   login,
   register,
@@ -11,6 +12,8 @@ const {
   refreshSession,
   logout,
   getMe,
+  updatePassword,
+  updateProfile,
 } = require('../api/auth');
 
 describe('auth api', () => {
@@ -98,5 +101,22 @@ describe('auth api', () => {
       auth: true,
     });
     expect(result).toEqual({ id: 1, name: 'Me' });
+  });
+
+  test('updateProfile calls putJson with preferred language', async () => {
+    putJson.mockResolvedValueOnce({ id: 1, preferred_lang: 'en' });
+    const result = await updateProfile({ preferredLang: 'en' });
+    expect(putJson).toHaveBeenCalledWith('/api/v1/auth/me', {
+      preferred_lang: 'en',
+    }, { auth: true });
+    expect(result).toEqual({ id: 1, preferred_lang: 'en' });
+  });
+
+  test('updatePassword calls putJson with backend field names', async () => {
+    await updatePassword({ oldPassword: 'old-pass', newPassword: 'new-pass-123' });
+    expect(putJson).toHaveBeenCalledWith('/api/v1/auth/password', {
+      old_password: 'old-pass',
+      new_password: 'new-pass-123',
+    }, { auth: true });
   });
 });

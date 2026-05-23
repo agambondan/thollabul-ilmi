@@ -103,6 +103,16 @@ export function SessionProvider({ children }) {
     }
   }, [persist, session?.refreshToken]);
 
+  const updateCurrentUser = useCallback(
+    async (nextUser) => {
+      if (!session?.token || !nextUser) return null;
+      const next = { ...session, user: { ...(session.user ?? {}), ...nextUser } };
+      await persist(next);
+      return next;
+    },
+    [persist, session],
+  );
+
   useEffect(() => {
     restore();
   }, [restore]);
@@ -115,9 +125,10 @@ export function SessionProvider({ children }) {
       session,
       signIn,
       signOut,
+      updateCurrentUser,
       user: session?.user ?? null,
     }),
-    [error, loading, restore, session, signIn, signOut],
+    [error, loading, restore, session, signIn, signOut, updateCurrentUser],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

@@ -11,6 +11,8 @@ Last verified: 2026-05-23
 - Route parity checker: `node scripts/check-feature-parity.js`
 - Web package shortcut: `cd apps/web && npm run check:feature-parity`
 - Review history:
+  - `docs/reviews/2026-05-23-web-mobile-feature-parity-deep-review.md`
+  - `docs/features/progress/2026-05-23-web-mobile-parity-gap-followup.md`
   - `docs/reviews/2026-05-17-web-mobile-performance-sync-deep-review.md`
   - `docs/reviews/2026-05-17-followup-journey-cta-sync-review.md`
   - `docs/features/progress/2026-05-17-sync-performance-task-breakdown.md`
@@ -99,7 +101,11 @@ should stay visible for future planning:
 
 | Feature | Delta |
 | --- | --- |
+| Mobile Profile settings | Follow-up implemented current-device session, password change, language preference, local theme preference, and layout mode preference. Still tracked: app-wide dark theme provider, login history endpoint, and delete-account self-service. |
 | Achievements and Stats | Web has dedicated dashboard pages; mobile exposes profile/feature surfaces but not the same chart-heavy layout. |
+| Offline packs | Mobile has explicit offline pack management; web has no equivalent PWA offline pack manager yet. |
+| Admin/dev surfaces | Web-only by design; not a public/mobile feature gap. |
+| Jarh Ta'dil taxonomy | Mobile has a dedicated catalog entry; web still maps it through Perawi routes. |
 
 ## Mobile Rendering Model
 
