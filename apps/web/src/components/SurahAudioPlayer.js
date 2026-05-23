@@ -130,26 +130,41 @@ export default function SurahAudioPlayer({
         let active = true;
         setLoading(true);
         setError('');
-        audioApi
-            .bySurah(surahNumber)
-            .then((r) => r.json())
-            .then((data) => {
+        const loadQariOptions = async () => {
+            const ayahRes = await quranApi.bySurahPage(surahNumber, 0, 1);
+            if (!ayahRes.ok) throw new Error('ayah');
+            const firstAyah = normalizeItems(await ayahRes.json())
+                .map((item) => normalizeAyah(item, surahNumber))
+                .find((ayah) => ayah.id);
+            if (!firstAyah?.id) throw new Error('ayah');
+
+            const audioRes = await audioApi.byAyah(firstAyah.id);
+            if (!audioRes.ok) throw new Error('audio');
+            const items = normalizeItems(await audioRes.json()).filter((item) => item.audio_url);
+            if (items.length) return items;
+
+            const surahRes = await audioApi.bySurah(surahNumber);
+            if (!surahRes.ok) throw new Error('surah-audio');
+            return normalizeItems(await surahRes.json()).filter((item) => item.audio_url);
+        };
+
+        loadQariOptions()
+            .then((items) => {
                 if (!active) return;
-                const items = normalizeItems(data);
                 setAudioList(items);
                 if (items.length && !items.some((item) => item.qari_slug === qariRef.current)) {
                     setSelectedQari(items[0].qari_slug);
                     qariRef.current = items[0].qari_slug;
                 }
             })
-            .catch(() => setError(t('audio.error') ?? 'Gagal memuat audio.'))
+            .catch(() => setError('Gagal memuat audio.'))
             .finally(() => {
                 if (active) setLoading(false);
             });
         return () => {
             active = false;
         };
-    }, [open, surahNumber, t]);
+    }, [open, surahNumber]);
 
     useEffect(() => {
         return () => {

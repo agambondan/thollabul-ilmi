@@ -104,11 +104,13 @@ describe('SurahAudioPlayer', () => {
     fireEvent.click(screen.getByText('1.25x'));
     fireEvent.click(screen.getByLabelText('Repeat'));
     await waitFor(() => {
-      expect(screen.getByText('Putar range')).toBeEnabled();
+      expect(screen.getByRole('button', { name: /Putar range/i })).toBeEnabled();
     });
-    fireEvent.click(screen.getByText('Putar range'));
+    fireEvent.click(screen.getByRole('button', { name: /Putar range/i }));
 
     await waitFor(() => {
+      expect(mockBySurahPage).toHaveBeenCalledWith(1, 0, 1);
+      expect(mockBySurah).not.toHaveBeenCalled();
       expect(mockBySurahPage).toHaveBeenCalledWith(1, 0, 300);
       expect(mockByAyah).toHaveBeenCalledWith(11);
       expect(global.Audio).toHaveBeenCalledWith('https://example.com/sudais-11.mp3');
