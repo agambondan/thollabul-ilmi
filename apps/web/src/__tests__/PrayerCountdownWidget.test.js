@@ -20,6 +20,7 @@ jest.mock('next/navigation', () => ({
 
 const mockPrayers = {
   fajr: '04:30',
+  sunrise: '05:54',
   dhuhr: '12:00',
   asr: '15:30',
   maghrib: '18:00',
@@ -51,11 +52,10 @@ describe('PrayerCountdownWidget', () => {
     });
 
     render(<PrayerCountdownWidget />);
-    expect(await screen.findByText('prayer_schedule.next')).toBeInTheDocument();
-    const prayerInfo = screen.getByText(/prayer.fajr/);
-    expect(prayerInfo).toBeInTheDocument();
-    expect(prayerInfo.textContent).toContain('04:30');
-    expect(screen.getByText('prayer_schedule.in')).toBeInTheDocument();
+    expect(await screen.findByText('Kecamatan Cileungsi')).toBeInTheDocument();
+    expect(screen.getByText('Menuju Subuh')).toBeInTheDocument();
+    expect(screen.getAllByText('04:30').length).toBeGreaterThan(0);
+    expect(screen.getByText('Terbit')).toBeInTheDocument();
   });
 
   test('countdown shows remaining time format', async () => {
@@ -67,7 +67,8 @@ describe('PrayerCountdownWidget', () => {
     });
 
     render(<PrayerCountdownWidget />);
-    expect(await screen.findByText(/prayer.fajr/)).toBeInTheDocument();
+    expect(await screen.findByText('Menuju Subuh')).toBeInTheDocument();
+    expect(screen.getByText(/Subuh dalam/)).toBeInTheDocument();
   });
 
   test('links to schedule page', async () => {
@@ -79,5 +80,14 @@ describe('PrayerCountdownWidget', () => {
     expect(await screen.findByRole('link')).toBeInTheDocument();
     const link = screen.getByRole('link');
     expect(link.getAttribute('href')).toBe('/jadwal-sholat');
+  });
+
+  test('supports direct prayers API response', async () => {
+    mockFetch.mockResolvedValue({
+      json: async () => ({ prayers: mockPrayers }),
+    });
+
+    render(<PrayerCountdownWidget />);
+    expect(await screen.findByText('Kecamatan Cileungsi')).toBeInTheDocument();
   });
 });

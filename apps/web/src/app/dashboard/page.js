@@ -211,6 +211,10 @@ const DashboardPage = () => {
                     {syncError}
                 </div>
             ) : null}
+            {/* Prayer schedule */}
+            <div className='mb-6'>
+                <PrayerCountdownWidget basePath='/dashboard/jadwal-sholat' />
+            </div>
             {/* Stat cards */}
             <div className='grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6'>
                 <Link
@@ -261,10 +265,6 @@ const DashboardPage = () => {
                         {t('bookmarks.title')}
                     </p>
                 </Link>
-            </div>
-            {/* Prayer countdown */}
-            <div className='mb-4'>
-                <PrayerCountdownWidget basePath='/dashboard/jadwal-sholat' />
             </div>
             {/* Daily Ayah */}
             <div className='mb-4'>
