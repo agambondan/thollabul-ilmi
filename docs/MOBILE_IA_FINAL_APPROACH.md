@@ -26,6 +26,19 @@ Gunakan 5 tab utama:
 
 Profil tidak menjadi tab utama. Profil tetap penting, tetapi di mobile ia lebih tepat menjadi account/settings surface yang bisa diakses dari avatar/header dan section Personal di tab Belajar. Keputusan ini menjaga tab bar tetap 5 item sambil mempertahankan Quran dan Hadis sebagai dua konten utama aplikasi Islamic.
 
+## Layout Mode Policy
+
+IA final ini mengatur struktur navigasi utama, bukan memaksa satu visual layout
+untuk semua user.
+
+Mobile app boleh punya layout mode yang bisa dipilih user selama tetap patuh ke
+5 tab final: Beranda, Quran, Hadis, Ibadah, Belajar. Kode dan UX mobile app
+lama tetap dipertahankan sebagai mode `classic`, sedangkan layout baru yang
+terinspirasi mobile web dashboard menjadi mode `web_app`.
+
+Detail keputusan layout mode ada di
+[`MOBILE_LAYOUT_MODES.md`](./MOBILE_LAYOUT_MODES.md).
+
 ## Why This Hybrid Wins
 
 Approach A benar bahwa Quran dan Hadis adalah primary content. Kalau Hadis dimasukkan ke katalog Belajar, ia berisiko terasa seperti fitur sekunder, padahal hadis adalah salah satu alasan utama user membuka app.

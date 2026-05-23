@@ -112,6 +112,9 @@ Mobile app has two render paths:
 Design constraints:
 
 - Mobile IA follows `docs/MOBILE_IA_FINAL_APPROACH.md`.
+- Mobile layout mode strategy follows `docs/MOBILE_LAYOUT_MODES.md`; existing
+  native mobile screens remain as the `classic` baseline while the newer mobile
+  web-inspired shell can be introduced as an opt-in `web_app` mode.
 - Detail UI uses bottom-sheet modal or detail page. Do not add inline
   expand/collapse.
 - Android back navigation must use `setBack`/`clearBack` for sub-navigation.
