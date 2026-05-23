@@ -192,6 +192,19 @@ const AutoScrollButton = () => {
                             ● {t('auto_scroll.running')}
                         </p>
                     )}
+                    <button
+                        type='button'
+                        title={isPlaying ? t('auto_scroll.pause') : t('auto_scroll.start')}
+                        onClick={toggle}
+                        className={`mt-3 flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold shadow-sm transition-colors ${
+                            isPlaying
+                                ? 'bg-emerald-600 text-white hover:bg-emerald-500'
+                                : 'bg-slate-800 text-white hover:opacity-90 dark:bg-slate-200 dark:text-black'
+                        }`}
+                    >
+                        {isPlaying ? <BsPauseFill size={18} /> : <BsPlayFill size={18} />}
+                        {isPlaying ? t('auto_scroll.pause') : t('auto_scroll.start')}
+                    </button>
                 </div>
             )}
 
@@ -199,20 +212,13 @@ const AutoScrollButton = () => {
                 <button
                     title={t('auto_scroll.speed_settings')}
                     onClick={() => setShowPanel((p) => !p)}
-                    className='bg-slate-800 dark:bg-slate-200 text-white dark:text-black rounded-full p-2.5 shadow hover:opacity-80 transition-opacity'
-                >
-                    <MdSpeed size={18} />
-                </button>
-                <button
-                    title={isPlaying ? t('auto_scroll.pause') : t('auto_scroll.start')}
-                    onClick={toggle}
-                    className={`rounded-full p-3 shadow transition-colors ${
+                    className={`rounded-full p-2.5 shadow transition-colors hover:opacity-90 ${
                         isPlaying
-                            ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
-                            : 'bg-slate-800 dark:bg-slate-200 text-white dark:text-black hover:opacity-80'
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-slate-800 text-white dark:bg-slate-200 dark:text-black'
                     }`}
                 >
-                    {isPlaying ? <BsPauseFill size={22} /> : <BsPlayFill size={22} />}
+                    <MdSpeed size={18} />
                 </button>
             </div>
         </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useLocale } from '@/context/Locale';
+import { useActionPosition } from '@/lib/useActionPosition';
 import { useLayoutMode } from '@/lib/useLayoutMode';
 import { QURAN_FONTS, useQuranFont } from '@/lib/useQuranFont';
 import classNames from 'classnames';
@@ -14,9 +15,25 @@ const SettingButton = () => {
     const pathname = usePathname();
     const [showPopup, setShowPopup] = useState(false);
     const [navBarVisible, setNavBarVisible] = useState(false);
+    const [isCompactViewport, setIsCompactViewport] = useState(false);
+    const [mobileControlsVisible, setMobileControlsVisible] = useState(false);
     const { isWide, setLayout } = useLayoutMode();
+    const { isMenu, setPosition } = useActionPosition();
     const { fontId, setFont } = useQuranFont();
     const popupRef = useRef(null);
+    const mobileControlsTimeoutRef = useRef(null);
+    const label = (key, fallback) => {
+        const value = t(key);
+        return value === key ? fallback : value;
+    };
+
+    useEffect(() => {
+        const media = window.matchMedia('(max-width: 767px)');
+        const updateViewport = () => setIsCompactViewport(media.matches);
+        updateViewport();
+        media.addEventListener('change', updateViewport);
+        return () => media.removeEventListener('change', updateViewport);
+    }, []);
 
     useEffect(() => {
         if (!showPopup) return;
@@ -33,13 +50,23 @@ const SettingButton = () => {
         let tid;
         const handler = () => {
             setNavBarVisible(true);
+            setMobileControlsVisible(true);
             clearTimeout(tid);
+            clearTimeout(mobileControlsTimeoutRef.current);
             tid = setTimeout(() => setNavBarVisible(false), 2000);
+            mobileControlsTimeoutRef.current = setTimeout(() => {
+                setMobileControlsVisible(false);
+            }, 2200);
         };
         window.addEventListener('scroll', handler);
+        document.addEventListener('scroll', handler, true);
+        window.addEventListener('touchmove', handler, { passive: true });
         return () => {
             window.removeEventListener('scroll', handler);
+            document.removeEventListener('scroll', handler, true);
+            window.removeEventListener('touchmove', handler);
             clearTimeout(tid);
+            clearTimeout(mobileControlsTimeoutRef.current);
         };
     }, []);
 
@@ -51,11 +78,15 @@ const SettingButton = () => {
         : navBarVisible
             ? 'bottom-[52px]'
             : 'bottom-2';
+    const shouldShowMobileControls = !isCompactViewport || mobileControlsVisible || showPopup;
+    const visibilityClass = shouldShowMobileControls
+        ? 'translate-y-0 opacity-100 pointer-events-auto'
+        : 'translate-y-2 opacity-0 pointer-events-none';
 
     return (
         <div
             ref={popupRef}
-            className={`fixed right-2 z-10 transition-[bottom] duration-200 ${bottomClass}`}
+            className={`fixed right-2 z-10 transition-all duration-200 ${bottomClass} ${visibilityClass}`}
         >
             <button
                 className='dark:bg-slate-200 bg-slate-800 dark:text-black text-white rounded-full p-3 shadow hover:opacity-80 transition-opacity'
@@ -107,6 +138,43 @@ const SettingButton = () => {
                             >
                                 <TbLayoutDistributeHorizontal size={18} />
                                 {t('settings.wide')}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Action layout */}
+                    <div className='mb-3'>
+                        <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                            {label('settings.action_position', 'Aksi Ayat/Hadith')}
+                        </p>
+                        <div className='flex gap-2'>
+                            <button
+                                onClick={() => setPosition('side')}
+                                className={classNames(
+                                    'flex-1 py-2 px-1 rounded-lg border text-xs transition-all',
+                                    {
+                                        'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold':
+                                            !isMenu,
+                                        'border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500':
+                                            isMenu,
+                                    }
+                                )}
+                            >
+                                {label('settings.action_side', 'Samping')}
+                            </button>
+                            <button
+                                onClick={() => setPosition('menu')}
+                                className={classNames(
+                                    'flex-1 py-2 px-1 rounded-lg border text-xs transition-all',
+                                    {
+                                        'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold':
+                                            isMenu,
+                                        'border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500':
+                                            !isMenu,
+                                    }
+                                )}
+                            >
+                                {label('settings.action_menu', 'Menu')}
                             </button>
                         </div>
                     </div>

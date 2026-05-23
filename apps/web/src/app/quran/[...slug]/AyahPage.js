@@ -9,6 +9,7 @@ import { listMasjidImage } from '@/lib/const';
 import { NumberToArabic } from '@/lib/converter';
 import { CopyImageToClipboard, CopyToClipboard } from '@/lib/copy';
 import { getLocalizedTranslation } from '@/lib/translation';
+import { useActionPosition } from '@/lib/useActionPosition';
 import { useQuranFont } from '@/lib/useQuranFont';
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
@@ -27,6 +28,7 @@ import { IoIosLink, IoMdCopy, IoMdImages } from 'react-icons/io';
 const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selectedQari, onQariChange }) => {
     const { t, lang } = useLocale();
     const { fontCls } = useQuranFont();
+    const { isMenu: actionsMenu } = useActionPosition();
     const cardRef = useRef();
     const audioRef = useRef(null);
     const [isCopied, SetIsCopied] = useState(false);
@@ -62,6 +64,9 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
         SetClipboardPopUp(true);
         setTimeout(() => SetClipboardPopUp(false), 2000);
     };
+
+    const actionMenuButtonClass =
+        'flex w-full items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-left';
 
     useEffect(() => {
         if (!cardRef?.current) return;
@@ -208,11 +213,14 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                     'text-gray-900 dark:text-white': true,
                 })}
             >
-                <ul className='flex flex-col p-2 space-y-1' style={{ direction: 'ltr' }}>
+                <ul
+                    className='flex flex-col p-2 space-y-1'
+                    style={{ direction: 'ltr' }}
+                >
                     <li className='flex justify-center text-sm font-medium text-gray-500 dark:text-gray-400 pb-1'>
                         {surah.number}:{ayah.number}
                     </li>
-                    <li className='flex justify-center'>
+                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
                         <button
                             title={isPlaying ? 'Pause' : 'Putar Audio'}
                             onClick={handleAudio}
@@ -232,7 +240,7 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                             )}
                         </button>
                     </li>
-                    <li className='flex justify-center'>
+                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
                         <button
                             title={t('tafsir.title')}
                             onClick={toggleTafsir}
@@ -245,7 +253,7 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                             <BsBook />
                         </button>
                     </li>
-                    <li className='flex justify-center'>
+                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
                         <button
                             title={t('ayah.mufrodat_title')}
                             onClick={toggleMufrodat}
@@ -258,7 +266,7 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                             <BsTranslate />
                         </button>
                     </li>
-                    <li className='flex justify-center'>
+                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
                         <button
                             title={t('munasabah.title') ?? 'Ayat Terkait'}
                             onClick={toggleMunasabah}
@@ -271,13 +279,13 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                             <BsLink45Deg />
                         </button>
                     </li>
-                    <li className='flex justify-center'>
+                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
                         <BookmarkButton refType='ayah' refId={ayah.id} />
                     </li>
-                    <li className='flex justify-center'>
+                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
                         <NoteButton refType='ayah' refId={ayah.id} />
                     </li>
-                    <li className='flex justify-center'>
+                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
                         <button
                             title={t('common.share')}
                             onClick={() => SetShareImagePopUp(true)}
@@ -296,9 +304,72 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                         </button>
                         {settingPopUp && (
                             <div className='absolute left-9 top-0 z-10'>
-                                <div className='flex flex-col bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-40 p-1 shadow-lg text-emerald-900 dark:text-white'>
+                                <div className='flex flex-col bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-56 p-1 shadow-lg text-emerald-900 dark:text-white'>
+                                    {actionsMenu && (
+                                        <div className='border-b border-emerald-50 dark:border-slate-700 pb-1 mb-1'>
+                                            <button
+                                                className={actionMenuButtonClass}
+                                                onClick={() => {
+                                                    handleAudio();
+                                                    SetSettingPopUp(false);
+                                                }}
+                                                disabled={audioLoading}
+                                            >
+                                                {isPlaying ? <BsPauseFill /> : <BsFileEarmarkPlay />}
+                                                {audioLoading ? 'Memuat audio...' : isPlaying ? 'Pause Audio' : 'Putar Audio'}
+                                            </button>
+                                            <button
+                                                className={actionMenuButtonClass}
+                                                onClick={() => {
+                                                    toggleTafsir();
+                                                    SetSettingPopUp(false);
+                                                }}
+                                            >
+                                                <BsBook />
+                                                {t('tafsir.title')}
+                                            </button>
+                                            <button
+                                                className={actionMenuButtonClass}
+                                                onClick={() => {
+                                                    toggleMufrodat();
+                                                    SetSettingPopUp(false);
+                                                }}
+                                            >
+                                                <BsTranslate />
+                                                {t('ayah.mufrodat_title')}
+                                            </button>
+                                            <button
+                                                className={actionMenuButtonClass}
+                                                onClick={() => {
+                                                    toggleMunasabah();
+                                                    SetSettingPopUp(false);
+                                                }}
+                                            >
+                                                <BsLink45Deg />
+                                                {t('munasabah.title') ?? 'Ayat Terkait'}
+                                            </button>
+                                            <div className='flex items-center justify-between gap-3 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'>
+                                                <span>Bookmark</span>
+                                                <BookmarkButton refType='ayah' refId={ayah.id} />
+                                            </div>
+                                            <div className='flex items-center justify-between gap-3 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'>
+                                                <span>Catatan</span>
+                                                <NoteButton refType='ayah' refId={ayah.id} />
+                                            </div>
+                                            <button
+                                                className={actionMenuButtonClass}
+                                                onClick={() => {
+                                                    SetShareImagePopUp(true);
+                                                    SetSettingPopUp(false);
+                                                }}
+                                            >
+                                                <BsShare />
+                                                {t('common.share')}
+                                            </button>
+                                        </div>
+                                    )}
                                     <button
-                                        className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-left'
+                                        className={actionMenuButtonClass}
                                         onClick={() =>
                                             copyText(`${window.location.href.split('#')[0]}#ayah-${ayah.number}`)
                                         }
@@ -307,7 +378,7 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                                         Copy Link
                                     </button>
                                     <button
-                                        className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-left'
+                                        className={actionMenuButtonClass}
                                         onClick={() => {
                                             SetSettingPopUp(false);
                                             setTimeout(() => {
@@ -331,7 +402,7 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                                         Copy Image
                                     </button>
                                     <button
-                                        className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-left'
+                                        className={actionMenuButtonClass}
                                         onClick={() =>
                                             copyText(
                                                 `Allah Subhanahu Wa Ta'ala berfirman:\n\n`

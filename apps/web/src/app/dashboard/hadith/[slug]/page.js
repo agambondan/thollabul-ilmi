@@ -8,6 +8,7 @@ import { useLocale } from '@/context/Locale';
 import { listMasjidImage } from '@/lib/const';
 import { CopyImageToClipboard, CopyToClipboard } from '@/lib/copy';
 import { getLocalizedTranslation } from '@/lib/translation';
+import { useActionPosition } from '@/lib/useActionPosition';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState, use } from 'react';
 import {
@@ -157,6 +158,7 @@ const chapterName = (c, lang) =>
 // ─── Hadith Card ─────────────────────────────────────────────────────────────
 
 function HadithCard({ h, idx, lang, t, slug, basePath }) {
+    const { isMenu: actionsMenu } = useActionPosition();
     const [showSanad, setShowSanad] = useState(false);
     const [showTakhrij, setShowTakhrij] = useState(false);
     const [clipboardPopUp, setClipboardPopUp] = useState(false);
@@ -187,6 +189,9 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
         setClipboardPopUp(true);
         setTimeout(() => setClipboardPopUp(false), 2000);
     };
+
+    const actionMenuButtonClass =
+        'flex w-full items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-left text-gray-700 dark:text-gray-300';
 
     const stopAudio = () => {
         if (audioRef.current) {
@@ -255,7 +260,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
 	                        <Link
 	                            href={detailPath}
 	                            title='Buka halaman detail'
-	                            className='p-2 rounded-lg text-base text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors'
+	                            className={`${actionsMenu ? 'hidden' : ''} p-2 rounded-lg text-base text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors`}
 	                        >
 	                            <IoIosLink />
 	                        </Link>
@@ -266,7 +271,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                             title={isPlayingAudio ? 'Pause Audio' : firstAudioSource ? 'Putar Audio' : 'Audio belum tersedia'}
                             onClick={handleAudio}
                             disabled={audioLoading || !firstAudioSource}
-                            className={`p-2 rounded-lg text-base transition-colors disabled:opacity-40 ${
+                            className={`${actionsMenu ? 'hidden' : ''} p-2 rounded-lg text-base transition-colors disabled:opacity-40 ${
                                 isPlayingAudio
                                     ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20'
                                     : 'text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-700'
@@ -275,12 +280,12 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                             {audioLoading ? <span className='text-[10px]'>...</span> : isPlayingAudio ? <BsPauseFill /> : <BsFileEarmarkPlay />}
                         </button>
                     )}
-                    {h.id && <BookmarkButton refType='hadith' refId={h.id} />}
+                    {h.id && !actionsMenu && <BookmarkButton refType='hadith' refId={h.id} />}
                     <button
                         type='button'
                         title={t('common.share')}
                         onClick={() => setShareImagePopUp(true)}
-                        className='p-2 rounded-lg text-base text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors'
+                        className={`${actionsMenu ? 'hidden' : ''} p-2 rounded-lg text-base text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors`}
                     >
                         <BsShare />
                     </button>
@@ -295,10 +300,59 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                         </button>
                         {settingPopUp && (
                             <div className='absolute right-0 top-9 z-20'>
-                                <div className='flex flex-col bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl w-40 p-1 shadow-lg'>
+                                <div className='flex flex-col bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl w-56 p-1 shadow-lg'>
+                                    {actionsMenu && (
+                                        <div className='border-b border-gray-100 dark:border-slate-700 pb-1 mb-1'>
+                                            {detailPath && (
+                                                <Link
+                                                    href={detailPath}
+                                                    className={actionMenuButtonClass}
+                                                    onClick={() => setSettingPopUp(false)}
+                                                >
+                                                    <IoIosLink /> Buka Detail
+                                                </Link>
+                                            )}
+                                            {h.id && (
+                                                <button
+                                                    type='button'
+                                                    className={actionMenuButtonClass}
+                                                    onClick={() => {
+                                                        handleAudio();
+                                                        setSettingPopUp(false);
+                                                    }}
+                                                    disabled={audioLoading || !firstAudioSource}
+                                                >
+                                                    {isPlayingAudio ? <BsPauseFill /> : <BsFileEarmarkPlay />}
+                                                    {audioLoading
+                                                        ? 'Memuat audio...'
+                                                        : isPlayingAudio
+                                                            ? 'Pause Audio'
+                                                            : firstAudioSource
+                                                                ? 'Putar Audio'
+                                                                : 'Audio belum tersedia'}
+                                                </button>
+                                            )}
+                                            {h.id && (
+                                                <div className='flex items-center justify-between gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-gray-700 dark:text-gray-300'>
+                                                    <span>Bookmark</span>
+                                                    <BookmarkButton refType='hadith' refId={h.id} />
+                                                </div>
+                                            )}
+                                            <button
+                                                type='button'
+                                                className={actionMenuButtonClass}
+                                                onClick={() => {
+                                                    setShareImagePopUp(true);
+                                                    setSettingPopUp(false);
+                                                }}
+                                            >
+                                                <BsShare /> {t('common.share')}
+                                            </button>
+                                        </div>
+                                    )}
                                     <button
                                         type='button'
-                                        className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-left text-gray-700 dark:text-gray-300'
+                                        className={actionMenuButtonClass}
                                         onClick={() => {
                                             copyText(getCardUrl());
                                             setSettingPopUp(false);
@@ -308,7 +362,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                     </button>
                                     <button
                                         type='button'
-                                        className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-left text-gray-700 dark:text-gray-300'
+                                        className={actionMenuButtonClass}
                                         onClick={() => {
                                             setSettingPopUp(false);
                                             setTimeout(async () => {
@@ -325,7 +379,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                     </button>
                                     <button
                                         type='button'
-                                        className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-left text-gray-700 dark:text-gray-300'
+                                        className={actionMenuButtonClass}
                                         onClick={() => {
                                             copyText(`${arabicText}\n\n${hadithText}\n\n(HR. ${slug}: ${h.number})\nVia Thullaabul 'Ilmi`);
                                             setSettingPopUp(false);

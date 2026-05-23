@@ -7,6 +7,7 @@ import { useLocale } from '@/context/Locale';
 import { listMasjidImage } from '@/lib/const';
 import { CopyImageToClipboard, CopyToClipboard } from '@/lib/copy';
 import { getLocalizedTranslation } from '@/lib/translation';
+import { useActionPosition } from '@/lib/useActionPosition';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -130,6 +131,7 @@ function TakhrijPanel({ hadithId }) {
 
 const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadith' }) => {
     const { t, lang } = useLocale();
+    const { isMenu: actionsMenu } = useActionPosition();
     const cardRef = useRef();
     const audioRef = useRef(null);
     const [isCopied, SetIsCopied] = useState(false);
@@ -223,6 +225,9 @@ const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadit
         }, 2000);
     };
 
+    const actionMenuButtonClass =
+        'flex w-full items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-left';
+
     useEffect(() => {
         if (!cardRef?.current) return;
 
@@ -289,7 +294,7 @@ const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadit
 	                        </li>
 	                    )}
 	                    {detailPath && (
-	                        <li className='flex justify-center'>
+	                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
 	                            <Link
 	                                href={detailPath}
 	                                title='Buka halaman detail'
@@ -299,7 +304,7 @@ const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadit
 	                            </Link>
 	                        </li>
 	                    )}
-	                    <li className='flex justify-center'>
+	                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
 	                        <button
                             title={
                                 firstAudioSource
@@ -328,10 +333,10 @@ const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadit
                             )}
                         </button>
                     </li>
-                    <li className='flex justify-center'>
+                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
                         <BookmarkButton refType='hadith' refId={hadith.id} />
                     </li>
-                    <li className='flex justify-center'>
+                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
                         <button
                             title={t('common.share')}
                             onClick={toggleShareImagePopUp}
@@ -350,9 +355,52 @@ const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadit
                         </button>
                         {settingPopUp ? (
                             <div className='absolute left-9 top-0 z-10'>
-                                <div className='flex flex-col bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-40 p-1 shadow-lg text-emerald-900 dark:text-white'>
+                                <div className='flex flex-col bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-56 p-1 shadow-lg text-emerald-900 dark:text-white'>
+                                    {actionsMenu && (
+                                        <div className='border-b border-emerald-50 dark:border-slate-700 pb-1 mb-1'>
+                                            {detailPath && (
+                                                <Link
+                                                    href={detailPath}
+                                                    className={actionMenuButtonClass}
+                                                    onClick={() => SetSettingPopUp(false)}
+                                                >
+                                                    <IoIosLink />
+                                                    Buka Detail
+                                                </Link>
+                                            )}
+                                            <button
+                                                className={actionMenuButtonClass}
+                                                onClick={() => {
+                                                    handleAudio();
+                                                    SetSettingPopUp(false);
+                                                }}
+                                                disabled={audioLoading}
+                                            >
+                                                {isPlayingAudio ? <BsPauseFill /> : <BsFileEarmarkPlay />}
+                                                {audioLoading
+                                                    ? 'Memuat audio...'
+                                                    : isPlayingAudio
+                                                        ? 'Pause Audio'
+                                                        : 'Putar Audio'}
+                                            </button>
+                                            <div className='flex items-center justify-between gap-3 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'>
+                                                <span>Bookmark</span>
+                                                <BookmarkButton refType='hadith' refId={hadith.id} />
+                                            </div>
+                                            <button
+                                                className={actionMenuButtonClass}
+                                                onClick={() => {
+                                                    toggleShareImagePopUp();
+                                                    SetSettingPopUp(false);
+                                                }}
+                                            >
+                                                <BsShare />
+                                                {t('common.share')}
+                                            </button>
+                                        </div>
+                                    )}
                                     <button
-                                        className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-left'
+                                        className={actionMenuButtonClass}
 	                                        onClick={() => {
 	                                            copyText(detailUrl() || `${window.location.href}#${params.slug}-${hadith.number}`);
 	                                        }}
@@ -361,7 +409,7 @@ const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadit
                                         Copy Link
                                     </button>
                                     <button
-                                        className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-left'
+                                        className={actionMenuButtonClass}
                                         onClick={() => {
                                             SetSettingPopUp(false);
                                             setTimeout(async () => {
@@ -384,7 +432,7 @@ const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadit
                                         Copy Image
                                     </button>
                                     <button
-                                        className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-left'
+                                        className={actionMenuButtonClass}
                                         onClick={() => {
                                             copyText(
                                                 `${hadith.translation.ar}\n`
