@@ -231,15 +231,83 @@ apps/mobile/src/
 Nama file final boleh mengikuti pola existing repo saat implementasi, tetapi
 batas tanggung jawabnya harus tetap jelas.
 
+## Current Code Impact Map
+
+Status kode saat ini:
+
+- `apps/mobile/src/storage/preferences.js` sudah memiliki
+  `preferenceKeys.appLayoutMode`.
+- `apps/mobile/src/screens/ProfileScreen.js` sudah bisa menyimpan pilihan
+  layout mode ke preference lokal.
+- `apps/mobile/App.js` masih menjadi shell tunggal: ia menyimpan `activeTab`,
+  `deepLinkTarget`, `internalRoutes`, `returnRoutes`, hardware back handler,
+  render semua screen pane, dan render `TabBar` langsung.
+- `apps/mobile/src/components/TabBar.js` adalah bottom tab existing untuk 5 tab
+  final, dengan auto-hide behavior.
+- Screen besar seperti `HomeScreen`, `QuranScreen`, `HadithScreen`,
+  `IbadahScreen`, `ExploreScreen`, dan `ProfileScreen` sudah punya state,
+  API/cache, sub-navigation, dan test coverage sendiri. Screen ini tidak boleh
+  dipecah atau diganti pada fase awal.
+
+Area yang kemungkinan kena impact:
+
+| Area | Risiko | Guardrail |
+| --- | --- | --- |
+| `App.js` shell | Salah wiring bisa merusak semua tab, deep link, hardware back, dan analytics | Fase pertama hanya membaca preference dan memilih shell wrapper; navigation state tetap satu sumber. |
+| `TabBar` | Perubahan visual bisa mengubah behavior auto-hide dan tab accessibility | Jangan ubah `TabBar` existing untuk `classic`; buat komponen baru untuk `web_app` bila perlu. |
+| Quran reader | Layout baru bisa konflik dengan audio player, bottom action, font preference, dan back handler | Jangan ubah business logic Quran di fase shell; hanya bungkus/presentasikan. |
+| Home/prayer cockpit | Lokasi, jadwal, notification, dan cache bisa drift dari web contract | Reuse storage/API yang sudah ada; jangan hardcode lokasi atau jadwal. |
+| Profile settings | Layout preference sudah tersimpan, tapi belum mengubah shell | Tambahkan provider/hook yang membaca preference dan fallback ke `classic`. |
+| Deep links | `parseDeepLink` dan `openTabState` harus tetap mengarah ke tab/screen yang sama | Layout mode tidak boleh mengubah tab key atau internal route shape. |
+| Android back | `setBack`/`clearBack` dan `hardwareBackState` rawan regression | Tambah/pertahankan test navigation sebelum shell baru dianggap usable. |
+| Offline/cache | Mobile punya offline packs dan local-first storage | `web_app` tidak boleh memaksa online-only UX. |
+| Analytics | `AnalyticsTracker` bergantung pada `activeTab` dan `internalRoutes` | Shell baru tetap mengirim state yang sama, bukan route name baru yang memecah analytics. |
+
+## Implementation Guardrails
+
+Sebelum ada kode behavior baru, ikuti batas ini:
+
+- Default harus tetap `classic`.
+- `web_app` harus opt-in dan bisa dikembalikan ke `classic` dari settings.
+- Jangan rename tab key: tetap `home`, `quran`, `hadith`, `ibadah`,
+  `belajar`, dan internal `profile`.
+- Jangan embed mobile web lewat WebView. `web_app` adalah native layout.
+- Jangan fork API client, cache, audio player, notes/bookmark service, atau
+  prayer service hanya karena beda layout.
+- Jangan hapus test existing. Tambahkan test untuk provider/shell selection
+  sebelum refactor visual.
+- Jangan ubah semua tab sekaligus. Fase awal cukup foundation dan satu-dua
+  surface yang risikonya paling terkontrol.
+
+Jika `web_app` gagal render atau preference invalid, fallback harus kembali ke
+`classic` tanpa crash.
+
 ## Rollout Plan
 
-1. Tambah preference layout mode.
-2. Tambah setting UI untuk memilih `classic` atau `web_app`.
-3. Buat shell `web_app` tanpa mengubah isi screen besar.
-4. Terapkan dulu ke Beranda dan Quran.
-5. Verifikasi Android back navigation dengan `setBack`/`clearBack`.
-6. Setelah stabil, lanjut Hadis, Ibadah, dan Belajar.
-7. Baru setelah itu pertimbangkan theme visual tambahan.
+0. Impact baseline:
+   - Pastikan `classic` test pass sebelum edit shell.
+   - Catat screenshot/behavior baseline untuk Home, Quran, Hadith, Ibadah,
+     Belajar, Profile settings, deep link Quran, dan Android back.
+1. Foundation:
+   - Tambah `LayoutModeProvider`/hook pembaca `appLayoutMode`.
+   - Hubungkan provider di `App.js` tanpa mengubah render output saat mode
+     `classic`.
+   - Tambah test preference normalization: invalid value harus menjadi
+     `classic`.
+2. Shell opt-in:
+   - Buat shell `web_app` yang masih memakai screen existing.
+   - Jangan ubah isi screen besar; hanya top header, bottom nav/menu shell.
+   - Pastikan setting Profile bisa switch `classic`/`web_app`.
+3. Limited surface:
+   - Terapkan dulu ke Beranda dan Quran shell behavior.
+   - Quran tidak boleh kehilangan audio, ayah actions, reader preferences,
+     bookmark, notes, dan back behavior.
+4. Expand surface:
+   - Setelah Home/Quran stabil, lanjut Hadith, Ibadah, dan Belajar.
+   - Long-tail feature masuk menu sheet/search/hub, bukan dihapus.
+5. Polish:
+   - Baru pertimbangkan theme visual tambahan, density tuning, dan animation.
+   - Theme tetap tidak boleh tercampur dengan layout mode.
 
 ## QA Checklist
 
@@ -253,3 +321,12 @@ Untuk setiap screen yang mendapat mode `web_app`:
 - Floating action tidak overlap dengan bottom nav.
 - Reader/audio/bookmark/notes tetap memakai data dan behavior yang sama.
 - Expo export atau test mobile relevan harus pass sebelum ditutup.
+
+Minimum verification per phase:
+
+| Phase | Required checks |
+| --- | --- |
+| Foundation | `apps/mobile/src/__tests__/preferences.test.js`, navigation tests, and profile settings test. |
+| Shell opt-in | Existing `components.test.js` for `TabBar`, new shell/provider tests, and manual switch `classic` -> `web_app` -> `classic`. |
+| Home/Quran | `homeScreen.test.js`, `quranScreen.test.js`, `useQuranReaderPreferences.test.js`, audio player tests, and Android back smoke. |
+| Full rollout | `node scripts/check-feature-parity.js`, full mobile Jest, deep link tests, notification/prayer tests, and real-device smoke for permission, audio, and bottom sheet. |
