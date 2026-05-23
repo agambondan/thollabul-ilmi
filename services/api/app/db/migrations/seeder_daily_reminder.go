@@ -1,0 +1,88 @@
+package migrations
+
+import "github.com/agambondan/islamic-explorer/app/model"
+
+func seedDailyReminders() []model.DailyReminder {
+	return []model.DailyReminder{
+		{
+			Type:         model.DailyReminderTypeUlama,
+			Title:        "Ilmu dan Adab",
+			Text:         "Adab yang sedikit namun kokoh sering menjadi pintu bagi ilmu yang banyak.",
+			Author:       "Abdullah bin Al-Mubarak",
+			Source:       "Siyar A'lam An-Nubala",
+			Lang:         "idn",
+			IsActive:     true,
+			DisplayOrder: 10,
+		},
+		{
+			Type:         model.DailyReminderTypeUlama,
+			Title:        "Kebutuhan Ilmu",
+			Text:         "Manusia lebih membutuhkan ilmu daripada makan dan minum, karena ilmu dibutuhkan di setiap keadaan.",
+			Author:       "Imam Ahmad bin Hanbal",
+			Source:       "Madarij As-Salikin",
+			Lang:         "idn",
+			IsActive:     true,
+			DisplayOrder: 20,
+		},
+		{
+			Type:         model.DailyReminderTypeUlama,
+			Title:        "Menjaga Waktu",
+			Text:         "Waktu adalah modal perjalanan seorang hamba; siapa yang menjaganya, ia menjaga jalan pulangnya.",
+			Author:       "Ibnul Qayyim Al-Jauziyyah",
+			Source:       "Al-Fawa'id",
+			Lang:         "idn",
+			IsActive:     true,
+			DisplayOrder: 30,
+		},
+		{
+			Type:         model.DailyReminderTypeUlama,
+			Title:        "Ilmu Bermanfaat",
+			Text:         "Tanda ilmu yang bermanfaat adalah bertambahnya rasa takut kepada Allah dan baiknya amal.",
+			Author:       "Ibnu Rajab Al-Hanbali",
+			Source:       "Jami' Al-'Ulum wal Hikam",
+			Lang:         "idn",
+			IsActive:     true,
+			DisplayOrder: 40,
+		},
+		{
+			Type:         model.DailyReminderTypeUlama,
+			Title:        "Keikhlasan Amal",
+			Text:         "Keikhlasan adalah ruh amal; dengannya amal kecil dapat menjadi besar di sisi Allah.",
+			Author:       "Imam An-Nawawi",
+			Source:       "Riyadhus Shalihin",
+			Lang:         "idn",
+			IsActive:     true,
+			DisplayOrder: 50,
+		},
+		{
+			Type:         model.DailyReminderTypeUlama,
+			Title:        "Hati yang Hidup",
+			Text:         "Hati menjadi hidup dengan nasihat, dzikir, rasa takut kepada Allah, dan amal yang dijaga.",
+			Author:       "Hasan Al-Bashri",
+			Source:       "Hilyatul Auliya",
+			Lang:         "idn",
+			IsActive:     true,
+			DisplayOrder: 60,
+		},
+		{
+			Type:         model.DailyReminderTypeAdvice,
+			Title:        "Amal Kecil",
+			Text:         "Mulai dari amal yang kecil, lalu jaga agar tetap hidup setiap hari.",
+			Author:       "Thullaabul 'Ilmi",
+			Source:       "Pengingat harian",
+			Lang:         "idn",
+			IsActive:     true,
+			DisplayOrder: 70,
+		},
+		{
+			Type:         model.DailyReminderTypeAdvice,
+			Title:        "Ilmu yang Menundukkan",
+			Text:         "Ilmu yang bermanfaat adalah ilmu yang membuat hati semakin tunduk dan amal semakin terarah.",
+			Author:       "Thullaabul 'Ilmi",
+			Source:       "Pengingat harian",
+			Lang:         "idn",
+			IsActive:     true,
+			DisplayOrder: 80,
+		},
+	}
+}

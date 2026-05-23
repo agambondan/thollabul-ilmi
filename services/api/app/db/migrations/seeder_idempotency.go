@@ -20,6 +20,7 @@ type seedDedupeRule struct {
 func DeduplicateSeedData(db *gorm.DB) {
 	rules := []seedDedupeRule{
 		{model: model.Doa{}, groupColumns: []string{"category", "title"}},
+		{model: model.DailyReminder{}, groupColumns: []string{"title", "author", "source"}},
 		{model: model.AmalanItem{}, groupColumns: []string{"category", "name"}},
 		{model: model.Dzikir{}, groupColumns: []string{"category", "title"}},
 		{model: model.SholatGuide{}, groupColumns: []string{"step"}},
@@ -44,6 +45,9 @@ func UpsertSeedData(db *gorm.DB) error {
 		return err
 	}
 	if err := upsertDoaSeeds(db); err != nil {
+		return err
+	}
+	if err := upsertDailyReminderSeeds(db); err != nil {
 		return err
 	}
 	if err := upsertAmalanSeeds(db); err != nil {
@@ -160,6 +164,19 @@ func upsertAmalanSeeds(db *gorm.DB) error {
 		if err := db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "category"}, {Name: "name"}},
 			DoUpdates: clause.AssignmentColumns([]string{"description", "is_active"}),
+		}).Create(&items[i]).Error; err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func upsertDailyReminderSeeds(db *gorm.DB) error {
+	items := seedDailyReminders()
+	for i := range items {
+		if err := db.Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "title"}, {Name: "author"}, {Name: "source"}},
+			DoUpdates: clause.AssignmentColumns([]string{"type", "text", "lang", "is_active", "display_order"}),
 		}).Create(&items[i]).Error; err != nil {
 			return err
 		}

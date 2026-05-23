@@ -43,6 +43,7 @@ const NAV_GROUPS = [
             { href: '/admin/siroh', labelKey: 'admin.nav.sirah', icon: <BsJournalText /> },
             { href: '/admin/sejarah', labelKey: 'admin.nav.history', icon: <BsClock /> },
             { href: '/admin/asbabun-nuzul', labelKey: 'admin.nav.asbabun', icon: <BsBookmark /> },
+            { href: '/admin/reminders', label: 'Reminder Carousel', icon: <BsStar /> },
             { href: '/admin/fiqh', labelKey: 'admin.nav.fiqh', icon: <BsListCheck /> },
         ],
     },
@@ -254,7 +255,7 @@ const AdminLayout = ({ children }) => {
                                         <li key={link.href}>
                                             <Link
                                                 href={link.href}
-                                                title={t(link.labelKey)}
+                                                title={link.label ?? t(link.labelKey)}
                                                 className={`flex items-center py-1.5 rounded-lg text-sm transition-colors ${
                                                     isCollapsed ? 'justify-center px-0' : 'gap-2.5 px-3'
                                                 } ${
@@ -267,7 +268,7 @@ const AdminLayout = ({ children }) => {
                                                     {link.icon}
                                                 </span>
                                                 {!isCollapsed && (
-                                                    <span className='truncate'>{t(link.labelKey)}</span>
+                                                    <span className='truncate'>{link.label ?? t(link.labelKey)}</span>
                                                 )}
                                             </Link>
                                         </li>

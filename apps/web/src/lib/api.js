@@ -577,6 +577,16 @@ export const adminDoaApi = {
     delete: (id) => authFetch(`/api/v1/doa/${id}`, { method: 'DELETE' }),
 };
 
+export const adminReminderApi = {
+    list: (page = 0, size = 100) =>
+        authFetch(`/api/v1/reminders/admin?page=${page}&size=${size}&active=all`),
+    create: (data) =>
+        authFetch('/api/v1/reminders', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) =>
+        authFetch(`/api/v1/reminders/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    delete: (id) => authFetch(`/api/v1/reminders/${id}`, { method: 'DELETE' }),
+};
+
 export const adminDzikirApi = {
     list: (page = 0, size = 100) => authFetch(`/api/v1/dzikir?page=${page}&size=${size}`),
     create: (data) => authFetch('/api/v1/dzikir', { method: 'POST', body: JSON.stringify(data) }),
@@ -696,6 +706,14 @@ export const hadithApi = {
     detail: (id) => fetch(`${API_URL}/api/v1/hadiths/${id}`),
     detailByBookNumber: (bookSlug, number) =>
         fetch(`${API_URL}/api/v1/hadiths/book/${bookSlug}/number/${number}`),
+};
+
+export const remindersApi = {
+    list: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return fetch(`${API_URL}/api/v1/reminders${qs ? `?${qs}` : ''}`);
+    },
+    detail: (id) => fetch(`${API_URL}/api/v1/reminders/${id}`),
 };
 
 export const achievementApi = {

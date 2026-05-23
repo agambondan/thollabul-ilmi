@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale } from '@/context/Locale';
-import { hadithApi } from '@/lib/api';
+import { hadithApi, remindersApi } from '@/lib/api';
 import { getLocalizedTranslation } from '@/lib/translation';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
@@ -123,6 +123,30 @@ const normalizeHadith = (payload, lang, basePath) => {
     };
 };
 
+const unwrapListPayload = (payload) => {
+    const data = unwrapPayload(payload);
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data?.items)) return data.items;
+    return [];
+};
+
+const normalizeReminder = (item) => {
+    if (!item?.text) return null;
+    const source = [item.author, item.source].filter(Boolean).join(' · ');
+    const title =
+        item.type === 'ulama'
+            ? item.title || 'Nasihat Ulama'
+            : item.title || 'Pengingat Harian';
+
+    return {
+        type: 'Nasihat Ulama',
+        icon: MdFormatQuote,
+        title,
+        text: item.text,
+        source: source || 'Pengingat harian',
+    };
+};
+
 export default function DailyReminderCarousel({
     hadithBasePath = '/hadith',
     ayahBasePath = '/quran',
@@ -143,6 +167,10 @@ export default function DailyReminderCarousel({
                 if (!r.ok) throw new Error('hadith failed');
                 return r.json();
             }),
+            remindersApi.list({ active: 'true', limit: '20', lang: 'idn' }).then((r) => {
+                if (!r.ok) throw new Error('reminders failed');
+                return r.json();
+            }),
         ]).then((results) => {
             if (ignore) return;
 
@@ -153,6 +181,9 @@ export default function DailyReminderCarousel({
                 results[1].status === 'fulfilled'
                     ? normalizeHadith(results[1].value, lang, hadithBasePath)
                     : null,
+                ...(results[2].status === 'fulfilled'
+                    ? unwrapListPayload(results[2].value).map(normalizeReminder)
+                    : []),
             ].filter(Boolean);
 
             setDynamicSlides(nextSlides);

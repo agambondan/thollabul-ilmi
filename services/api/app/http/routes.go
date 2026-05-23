@@ -88,6 +88,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	newFeedController := controllers.NewFeedController(newServices)
 	newTafsirController := controllers.NewTafsirController(newServices)
 	newDoaController := controllers.NewDoaController(newServices)
+	newDailyReminderController := controllers.NewDailyReminderController(newServices)
 	newAsmaUlHusnaController := controllers.NewAsmaUlHusnaController(newServices)
 	newAudioController := controllers.NewAudioController(newServices)
 	newSirohController := controllers.NewSirohController(newServices)
@@ -391,6 +392,14 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/doa/:id", newDoaController.FindByID)
 	master.Put("/doa/:id", middlewares.EditorOrAdminMiddleware(), newDoaController.Update)
 	master.Delete("/doa/:id", middlewares.EditorOrAdminMiddleware(), newDoaController.Delete)
+
+	// Daily Reminders (public read, editor/admin write)
+	master.Get("/reminders", newDailyReminderController.FindAll)
+	master.Get("/reminders/admin", middlewares.EditorOrAdminMiddleware(), newDailyReminderController.FindAllAdmin)
+	master.Get("/reminders/:id", newDailyReminderController.FindByID)
+	master.Post("/reminders", middlewares.EditorOrAdminMiddleware(), newDailyReminderController.Create)
+	master.Put("/reminders/:id", middlewares.EditorOrAdminMiddleware(), newDailyReminderController.Update)
+	master.Delete("/reminders/:id", middlewares.EditorOrAdminMiddleware(), newDailyReminderController.Delete)
 
 	// Asmaul Husna (public)
 	master.Get("/asmaul-husna", newAsmaUlHusnaController.FindAll)

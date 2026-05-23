@@ -27,6 +27,7 @@ type Services struct {
 	Feed                 FeedService
 	Tafsir               TafsirService
 	Doa                  DoaService
+	DailyReminder        DailyReminderService
 	AsmaUlHusna          AsmaUlHusnaService
 	Audio                AudioService
 	Siroh                SirohService
@@ -92,6 +93,7 @@ func NewServices(repo *repository.Repositories) *Services {
 
 	streak := NewStreakService(repo.UserActivity)
 	doaSvc := NewDoaServiceWithCache(repo.Doa, cache)
+	dailyReminderSvc := NewDailyReminderServiceWithCache(repo.DailyReminder, cache)
 	dzikirSvc := NewDzikirServiceWithCache(repo.Dzikir, cache)
 	asmaulHusnaSvc := NewAsmaUlHusnaServiceWithCache(repo.AsmaUlHusna, cache)
 	svc := &Services{
@@ -115,6 +117,7 @@ func NewServices(repo *repository.Repositories) *Services {
 		Feed:                 NewFeedService(repo.Feed, repo.SocialModeration, NewAyahService(repo.Ayah), NewHadithService(repo.Hadith)),
 		Tafsir:               NewTafsirServiceWithCache(repo.Tafsir, cache),
 		Doa:                  doaSvc,
+		DailyReminder:        dailyReminderSvc,
 		AsmaUlHusna:          asmaulHusnaSvc,
 		Audio:                NewAudioService(repo.Audio),
 		Siroh:                NewSirohServiceWithCache(repo.Siroh, cache),

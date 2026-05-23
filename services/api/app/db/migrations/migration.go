@@ -35,6 +35,7 @@ var ModelMigrations []interface{} = []interface{}{
 	model.HafalanProgress{},
 	model.UserActivity{},
 	model.Doa{},
+	model.DailyReminder{},
 	model.AsmaUlHusna{},
 	model.SurahAudio{},
 	model.AyahAudio{},

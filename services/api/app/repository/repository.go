@@ -37,6 +37,7 @@ type Repositories struct {
 	SocialModeration     SocialModerationRepository
 	Tafsir               TafsirRepository
 	Doa                  DoaRepository
+	DailyReminder        DailyReminderRepository
 	AsmaUlHusna          AsmaUlHusnaRepository
 	Audio                AudioRepository
 	Siroh                SirohRepository
@@ -120,6 +121,7 @@ func NewRepositories(db *gorm.DB, client *redis.Client) (*Repositories, error) {
 		SocialModeration:     NewSocialModerationRepository(db),
 		Tafsir:               NewTafsirRepository(db, pg),
 		Doa:                  NewDoaRepository(db),
+		DailyReminder:        NewDailyReminderRepository(db),
 		AsmaUlHusna:          NewAsmaUlHusnaRepository(db),
 		Audio:                NewAudioRepository(db),
 		Siroh:                NewSirohRepository(db, pg),
