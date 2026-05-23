@@ -11,13 +11,19 @@ import {
     subscriptionToPlainObject,
 } from '@/lib/pushSubscription';
 import { useAuth } from '@/context/Auth';
+import {
+    getLocationPermissionState,
+    readStoredUserLocation,
+    requestAndStoreUserLocation,
+} from '@/lib/userLocation';
 
-const DISMISSED_KEY = 'tholabul_notification_permission_dismissed';
+const DISMISSED_KEY = 'tholabul_site_permission_dismissed';
 
 export default function NotificationPermissionPrompt() {
     const { isAuthenticated, isLoading } = useAuth();
     const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(false);
+    const locationRequestedRef = useRef(false);
     const syncedRef = useRef(false);
 
     const registerPushToken = useCallback(async () => {
@@ -51,23 +57,43 @@ export default function NotificationPermissionPrompt() {
 
         const boot = async () => {
             if (typeof window === 'undefined' || isLoading) return;
-            if (!('Notification' in window)) return;
+            const hasNotification = 'Notification' in window;
+            const hasLocation = 'geolocation' in navigator;
 
-            const permission = await getPushPermissionStatus();
-            if (permission === 'granted') {
-                if (isAuthenticated && !syncedRef.current) {
-                    syncedRef.current = true;
-                    registerPushToken().catch(() => {
-                        syncedRef.current = false;
-                    });
-                }
-                return;
+            const notificationPermission = hasNotification
+                ? await getPushPermissionStatus()
+                : 'unsupported';
+            const locationPermission = hasLocation
+                ? await getLocationPermissionState()
+                : 'unsupported';
+            const hasStoredLocation = Boolean(readStoredUserLocation());
+
+            if (!hasStoredLocation && locationPermission === 'granted') {
+                requestAndStoreUserLocation().catch(() => {});
             }
 
-            if (permission === 'denied') return;
+            const canAskNotification = notificationPermission === 'default';
+            const canAskLocation =
+                hasLocation &&
+                !hasStoredLocation &&
+                (locationPermission === 'prompt' || locationPermission === 'unknown');
+
+            if (notificationPermission === 'granted' && isAuthenticated && !syncedRef.current) {
+                syncedRef.current = true;
+                registerPushToken().catch(() => {
+                    syncedRef.current = false;
+                });
+            }
+
+            if (!canAskNotification && !canAskLocation) return;
             if (localStorage.getItem(DISMISSED_KEY) === '1') return;
 
             if (!cancelled) setVisible(true);
+
+            if (canAskLocation && !locationRequestedRef.current) {
+                locationRequestedRef.current = true;
+                requestAndStoreUserLocation().catch(() => {});
+            }
         };
 
         boot();
@@ -80,11 +106,14 @@ export default function NotificationPermissionPrompt() {
     const handleEnable = async () => {
         setLoading(true);
         try {
-            const result = await requestNotificationPermission();
-            if (result.granted) {
+            const [notificationResult] = await Promise.all([
+                requestNotificationPermission(),
+                requestAndStoreUserLocation().catch(() => null),
+            ]);
+            if (notificationResult.granted) {
                 await registerPushToken().catch(() => {});
-                setVisible(false);
             }
+            setVisible(false);
         } finally {
             setLoading(false);
         }
@@ -113,10 +142,10 @@ export default function NotificationPermissionPrompt() {
                 </span>
                 <div className='min-w-0 flex-1'>
                     <p className='text-sm font-bold text-slate-900 dark:text-white'>
-                        Aktifkan notifikasi Thullaabul 'Ilmi
+                        Aktifkan lokasi & notifikasi
                     </p>
                     <p className='mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400'>
-                        Dapatkan pengingat adzan, bacaan harian, dan reminder ibadah dari browser ini.
+                        Izinkan lokasi untuk jadwal sholat akurat dan notifikasi untuk pengingat adzan, bacaan harian, serta reminder ibadah.
                     </p>
                     <div className='mt-3 flex flex-wrap gap-2'>
                         <button
@@ -126,7 +155,7 @@ export default function NotificationPermissionPrompt() {
                             className='inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-3 py-2 text-xs font-bold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60'
                         >
                             <BsBell />
-                            {loading ? 'Mengaktifkan...' : 'Aktifkan'}
+                            {loading ? 'Mengaktifkan...' : 'Aktifkan lokasi & notifikasi'}
                         </button>
                         <button
                             type='button'

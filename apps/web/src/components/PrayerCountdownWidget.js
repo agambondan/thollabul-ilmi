@@ -1,6 +1,11 @@
 'use client';
 
 import { useLocale } from '@/context/Locale';
+import {
+    DEFAULT_PRAYER_LOCATION,
+    readStoredUserLocation,
+    USER_LOCATION_EVENT,
+} from '@/lib/userLocation';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import {
@@ -12,12 +17,6 @@ import {
 } from 'react-icons/md';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
-
-const DASHBOARD_LOCATION = {
-    label: 'Kecamatan Cileungsi',
-    lat: -6.399,
-    lng: 106.959,
-};
 
 const PRAYER_KEYS = [
     { key: 'fajr', label: 'Subuh', icon: MdNightsStay },
@@ -82,18 +81,33 @@ const formatHijriDate = (date) => {
 
 export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
     const { t } = useLocale();
+    const [location, setLocation] = useState(DEFAULT_PRAYER_LOCATION);
     const [prayers, setPrayers] = useState(null);
     const [now, setNow] = useState(new Date());
 
     useEffect(() => {
+        const stored = readStoredUserLocation();
+        if (stored) setLocation(stored);
+
+        const handleLocationUpdate = (event) => {
+            if (event.detail) setLocation(event.detail);
+        };
+        window.addEventListener(USER_LOCATION_EVENT, handleLocationUpdate);
+        return () => window.removeEventListener(USER_LOCATION_EVENT, handleLocationUpdate);
+    }, []);
+
+    useEffect(() => {
+        if (!Number.isFinite(Number(location?.lat)) || !Number.isFinite(Number(location?.lng))) {
+            return;
+        }
         const today = new Date().toISOString().slice(0, 10);
         fetch(
-            `${API_URL}/api/v1/sholat-times?lat=${DASHBOARD_LOCATION.lat}&lng=${DASHBOARD_LOCATION.lng}&method=kemenag&madhab=shafi&date=${today}`,
+            `${API_URL}/api/v1/sholat-times?lat=${location.lat}&lng=${location.lng}&method=kemenag&madhab=shafi&date=${today}`,
         )
             .then((r) => r.json())
             .then((d) => setPrayers(d?.data?.prayers ?? d?.prayers ?? null))
             .catch(e => console.error(e));
-    }, []);
+    }, [location?.lat, location?.lng]);
 
     useEffect(() => {
         const iv = setInterval(() => setNow(new Date()), 1000);
@@ -133,7 +147,7 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
             <div className='flex flex-wrap items-start justify-between gap-3'>
                 <div className='inline-flex max-w-full items-center gap-1.5 rounded-lg border border-emerald-100 bg-emerald-50 px-2.5 py-2 text-[10px] font-extrabold uppercase tracking-wide text-emerald-800 dark:border-emerald-900/40 dark:bg-emerald-900/20 dark:text-emerald-300'>
                     <MdAccessTime className='text-sm' />
-                    <span className='truncate'>{DASHBOARD_LOCATION.label}</span>
+                    <span className='truncate'>{location.label}</span>
                 </div>
                 <div className='text-right text-xs font-bold text-slate-700 dark:text-slate-200'>
                     {hijriDate ? (
