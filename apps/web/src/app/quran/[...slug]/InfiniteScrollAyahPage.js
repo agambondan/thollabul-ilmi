@@ -13,7 +13,7 @@ import { useLayoutMode } from '@/lib/useLayoutMode';
 import { useQuranFont } from '@/lib/useQuranFont';
 import classNames from 'classnames';
 import Link from 'next/link';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import { TbPlayerTrackNext, TbPlayerTrackPrev } from 'react-icons/tb';
 
@@ -32,20 +32,27 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 	const { fontCls } = useQuranFont();
 	const [surah, setSurah] = useState(null);
 	const [ayahs, setAyahs] = useState([]);
-	const [page, setPage] = useState(0);
+	const [pageRequest, setPageRequest] = useState(null);
 	const [isInitialLoading, setIsInitialLoading] = useState(true);
 	const [isFetchingMore, setIsFetchingMore] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 	const [error, setError] = useState('');
 	const [hafalanMode, setHafalanMode] = useState('off');
 	const [selectedQari, setSelectedQari] = useState('');
+	const loadMoreSentinelRef = useRef(null);
+	const pendingPageRef = useRef(null);
+	const retryAfterRef = useRef(0);
 
 	const rawSlug = params.slug;
 	const slug = decodeURIComponent(Array.isArray(rawSlug) ? (rawSlug[1] ?? '') : (rawSlug ?? ''));
 
 	const loadMoreAyah = useCallback(() => {
 		if (isInitialLoading || isFetchingMore || !hasMore) return;
-		setPage(Math.floor(ayahs.length / PAGE_SIZE));
+		if (Date.now() < retryAfterRef.current) return;
+		const nextPage = Math.floor(ayahs.length / PAGE_SIZE);
+		if (nextPage <= 0 || pendingPageRef.current === nextPage) return;
+		pendingPageRef.current = nextPage;
+		setPageRequest({ index: nextPage, requestedAt: Date.now() });
 	}, [ayahs.length, hasMore, isFetchingMore, isInitialLoading]);
 
 	const getTargetAyah = () => {
@@ -66,7 +73,10 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 				`${process.env.NEXT_PUBLIC_API_URL}/api/v1/surah/name/${slug}?page=${pageIndex}&size=${nextSize}`,
 			);
 			if (!res.ok) {
-				throw new Error('failed');
+				const err = new Error('failed');
+				err.status = res.status;
+				err.retryAfter = Number.parseInt(res.headers.get('retry-after') ?? '', 10);
+				throw err;
 			}
 			return res.json();
 		},
@@ -77,7 +87,9 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 		let isActive = true;
 		setIsInitialLoading(true);
 		setError('');
-		setPage(0);
+		setPageRequest(null);
+		pendingPageRef.current = null;
+		retryAfterRef.current = 0;
 		setAyahs([]);
 		setSurah(null);
 		setHasMore(true);
@@ -108,35 +120,81 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 	}, [fetchSurah]);
 
 	useEffect(() => {
-		if (page === 0 || !surah) return;
+		if (!pageRequest || !surah) return;
 
 		let isActive = true;
 		setIsFetchingMore(true);
-		fetchSurah(page)
+		fetchSurah(pageRequest.index)
 			.then((data) => {
 				if (!isActive) return;
 				const nextAyahs = normalizeAyahs(data);
 				if (!nextAyahs.length) {
-					setHasMore(false);
+					const totalAyahs = surah.number_of_ayahs ?? ayahs.length;
+					if (ayahs.length >= totalAyahs) setHasMore(false);
 					return;
 				}
 				setAyahs((prev) => {
-					const merged = [...prev, ...nextAyahs];
+					const seen = new Set(prev.map((item) => item.number));
+					const merged = [
+						...prev,
+						...nextAyahs.filter((item) => !seen.has(item.number)),
+					];
 					setHasMore(merged.length < (surah.number_of_ayahs ?? merged.length));
 					return merged;
 				});
 			})
-			.catch(() => {
-				if (isActive) setHasMore(false);
+			.catch((err) => {
+				if (isActive) {
+					const retryAfterSeconds = Number.isFinite(err?.retryAfter)
+						? Math.max(1, err.retryAfter)
+						: 2;
+					retryAfterRef.current =
+						err?.status === 429
+							? Date.now() + retryAfterSeconds * 1000
+							: Date.now() + 1500;
+					pendingPageRef.current = null;
+				}
 			})
 			.finally(() => {
-				if (isActive) setIsFetchingMore(false);
+				if (isActive) {
+					pendingPageRef.current = null;
+					setIsFetchingMore(false);
+				}
 			});
 
 		return () => {
 			isActive = false;
 		};
-	}, [fetchSurah, page, surah]);
+	}, [fetchSurah, pageRequest, surah]);
+
+	useEffect(() => {
+		if (isInitialLoading || !hasMore) return;
+		const sentinel = loadMoreSentinelRef.current;
+		if (!sentinel) return;
+
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting) loadMoreAyah();
+			},
+			{ rootMargin: '700px 0px' },
+		);
+		observer.observe(sentinel);
+		return () => observer.disconnect();
+	}, [ayahs.length, hasMore, isInitialLoading, loadMoreAyah]);
+
+	useEffect(() => {
+		if (isInitialLoading || !hasMore) return;
+
+		const maybeLoadMore = () => {
+			const remaining =
+				document.documentElement.scrollHeight - (window.innerHeight + window.scrollY);
+			if (remaining < 900) loadMoreAyah();
+		};
+
+		window.addEventListener('scroll', maybeLoadMore, { passive: true });
+		maybeLoadMore();
+		return () => window.removeEventListener('scroll', maybeLoadMore);
+	}, [hasMore, isInitialLoading, loadMoreAyah]);
 
 	useEffect(() => {
 		if (isInitialLoading || !ayahs.length) return;
@@ -278,13 +336,14 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 							key={ayah.number}
 							ayah={ayah}
 							newLimit={loadMoreAyah}
-							isLast={index === ayahs.length - 2}
+							isLast={false}
 							hafalanMode={hafalanMode}
 							selectedQari={selectedQari}
 							onQariChange={setSelectedQari}
 						/>
 					))}
 				</ul>
+				<div ref={loadMoreSentinelRef} className='h-px' aria-hidden='true' />
 			</div>
 
 			{isFetchingMore && (
@@ -293,7 +352,7 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 				</div>
 			)}
 
-			{!hasMore && ayahs.length > 0 && (
+			{!hasMore && ayahs.length >= (surah?.number_of_ayahs ?? ayahs.length) && (
 				<p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
 					{t('quran.all_displayed')}
 				</p>

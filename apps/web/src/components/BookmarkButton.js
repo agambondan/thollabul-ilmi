@@ -15,6 +15,33 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { BsBookmark, BsBookmarkFill, BsCheck2, BsX } from 'react-icons/bs';
 
+let bookmarkListCache = null;
+let bookmarkListPromise = null;
+
+const resetBookmarkListCache = () => {
+    bookmarkListCache = null;
+    bookmarkListPromise = null;
+};
+
+const loadBookmarkList = () => {
+    if (bookmarkListCache) return Promise.resolve(bookmarkListCache);
+    if (bookmarkListPromise) return bookmarkListPromise;
+
+    bookmarkListPromise = bookmarkApi
+        .list()
+        .then((r) => r.json())
+        .then((data) => {
+            const items = data?.items ?? data ?? [];
+            bookmarkListCache = Array.isArray(items) ? items : [];
+            return bookmarkListCache;
+        })
+        .finally(() => {
+            bookmarkListPromise = null;
+        });
+
+    return bookmarkListPromise;
+};
+
 const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = '' }) => {
     const { isAuthenticated } = useAuth();
     const { t, lang } = useLocale();
@@ -28,11 +55,11 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
 
     useEffect(() => {
         if (!isAuthenticated) return;
-        bookmarkApi
-            .list()
-            .then((r) => r.json())
-            .then((data) => {
-                const found = (data?.items ?? []).find(
+        let isActive = true;
+        loadBookmarkList()
+            .then((items) => {
+                if (!isActive) return;
+                const found = items.find(
                     (b) =>
                         b.ref_type === refType &&
                         (String(b.ref_id) === String(refId) ||
@@ -56,6 +83,9 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
                 }
             })
             .catch(e => console.error(e));
+        return () => {
+            isActive = false;
+        };
     }, [isAuthenticated, refType, refId, refSlug]);
 
     const toggleBookmark = async () => {
@@ -73,6 +103,7 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
         try {
             if (isBookmarked) {
                 await bookmarkApi.remove(bookmarkId);
+                resetBookmarkListCache();
                 clearBookmarkMeta(refType, refId);
                 setIsBookmarked(false);
                 setBookmarkId(null);
@@ -86,6 +117,7 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
                 });
                 if (!res.ok) throw new Error('bookmark failed');
                 const data = await res.json();
+                resetBookmarkListCache();
                 setIsBookmarked(true);
                 setBookmarkId(data.id ?? data._id);
             }
@@ -105,6 +137,7 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
         if (bookmarkId) {
             try {
                 await bookmarkApi.update(bookmarkId, patch);
+                resetBookmarkListCache();
             } catch {
                 // Silently fall back to localStorage.
             }

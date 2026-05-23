@@ -8,6 +8,33 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { BsSticky, BsStickyFill, BsTrash, BsX, BsTypeBold, BsTypeItalic, BsListUl } from 'react-icons/bs';
 
+let noteListCache = null;
+let noteListPromise = null;
+
+const resetNoteListCache = () => {
+    noteListCache = null;
+    noteListPromise = null;
+};
+
+const loadNoteList = () => {
+    if (noteListCache) return Promise.resolve(noteListCache);
+    if (noteListPromise) return noteListPromise;
+
+    noteListPromise = notesApi
+        .list()
+        .then((r) => r.json())
+        .then((data) => {
+            const items = data?.items ?? data ?? [];
+            noteListCache = Array.isArray(items) ? items : [];
+            return noteListCache;
+        })
+        .finally(() => {
+            noteListPromise = null;
+        });
+
+    return noteListPromise;
+};
+
 const NoteButton = ({ refType, refId, className = '' }) => {
     const { isAuthenticated } = useAuth();
     const { t } = useLocale();
@@ -39,11 +66,10 @@ const NoteButton = ({ refType, refId, className = '' }) => {
 
     useEffect(() => {
         if (!isAuthenticated || !refId) return;
-        notesApi
-            .list()
-            .then((r) => r.json())
-            .then((data) => {
-                const items = data?.items ?? data ?? [];
+        let isActive = true;
+        loadNoteList()
+            .then((items) => {
+                if (!isActive) return;
                 const found = items.find(
                     (n) =>
                         n.ref_type === refType &&
@@ -55,6 +81,9 @@ const NoteButton = ({ refType, refId, className = '' }) => {
                 }
             })
             .catch(e => console.error(e));
+        return () => {
+            isActive = false;
+        };
     }, [isAuthenticated, refType, refId]);
 
     const openModal = () => {
@@ -80,6 +109,7 @@ const NoteButton = ({ refType, refId, className = '' }) => {
                 });
                 if (!res.ok) throw new Error('update failed');
                 const data = await res.json();
+                resetNoteListCache();
                 setNote({ ...(note ?? {}), ...(data ?? {}), content: content.trim() });
             } else {
                 const res = await notesApi.create({
@@ -89,6 +119,7 @@ const NoteButton = ({ refType, refId, className = '' }) => {
                 });
                 if (!res.ok) throw new Error('create failed');
                 const data = await res.json();
+                resetNoteListCache();
                 setNote(data ?? { content: content.trim() });
             }
             setShowModal(false);
@@ -104,6 +135,7 @@ const NoteButton = ({ refType, refId, className = '' }) => {
         try {
             const res = await notesApi.delete(note.id ?? note._id);
             if (!res.ok) throw new Error('delete failed');
+            resetNoteListCache();
             setNote(null);
             setContent('');
             setShowModal(false);
