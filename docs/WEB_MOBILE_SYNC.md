@@ -3,7 +3,7 @@
 > Tujuan: menjaga parity fitur web (public + dashboard) dan mobile agar agent
 > berikutnya tidak menganggap baseline lama sebagai status current.
 
-Last verified: 2026-05-18
+Last verified: 2026-05-23
 
 ## Source Of Truth
 
@@ -22,7 +22,7 @@ Feature parity check passed.
 - manifest features: 50
 - manifest utility routes: 14
 - mobile feature keys: 43
-- web app routes scanned: 151
+- web app routes scanned: 153
 ```
 
 ## Current Parity Rule
@@ -62,7 +62,7 @@ The manifest is the authoritative table. Current active coverage includes:
 | --- | --- |
 | Core worship | Quran, Hadith, Doa, Dzikir, Wirid, Tahlil, Panduan Sholat, Jadwal Sholat, Kiblat, Khatam |
 | Quran learning | Tafsir, Asbabun Nuzul, Siroh, Tokoh Tarikh, Sejarah Islam, Peta Islam Interaktif |
-| Knowledge | Fiqh, Manasik, Kajian, Perpustakaan Ilmu, Artikel, Perawi, Jarh wa Ta'dil, Forum Tanya Jawab, Kamus Arab |
+| Knowledge | Fiqh, Manasik, Kajian, Perpustakaan Ilmu, Artikel, Perawi, Jarh wa Ta'dil, Forum Tanya Jawab, Komunitas, Kamus Arab |
 | Tools | Quiz, Kalender Hijri, Imsakiyah, Tasbih, Zakat, Faraidh |
 | Personal | Wirid Pribadi, Amalan Harian, Sholat Tracker, Bookmarks, Notes, Notifications, Goals, Muhasabah, Hafalan, Murojaah, Tilawah, Stats, Leaderboard, Achievements |
 
@@ -78,6 +78,7 @@ These route patterns are part of the current journey contract:
 | Asmaul Husna wirid | `/asmaul-husna/wirid` | `/dashboard/asmaul-husna/wirid` | Web and mobile both expose the 99-name wirid counter. Mobile stores per-name counts in AsyncStorage, keeps counts when switching names, supports reset/previous/next, fires tap haptics on each count, and uses stronger haptics at 33/99 milestones. |
 | Quran audio range player | Quran reader | Dashboard Quran reader | Web and mobile readers both support qari selection, start/end surah range, end ayah limit, repeat, and playback speed. Per-ayah play still works from the ayah action sheet/detail sheet. |
 | Perpustakaan Ilmu | `/library`, `/library/:slug` | `/dashboard/library`, `/dashboard/library/:slug` | Web and mobile both expose the same public catalog through `GET /api/v1/library/books` with paginated loading, while admin uses `GET /api/v1/library/admin/books` so draft resources remain manageable without leaking to public catalog. Admin can upload PDF/EPUB/HTML files through `POST /api/v1/library/books/:id/resource` and clear wrong uploads through `DELETE /api/v1/library/books/:id/resource`; web and mobile consume the resulting `source_url` plus file metadata. Dashboard/detail journeys keep notes, bookmarks, source/license verification metadata, study progress badges/filters, and resume surfaces inside the personal shell with `library_book` references and `/api/v1/library/progress`; mobile mirrors progress filters in the feature list. |
+| Feed Komunitas | `/feed` | `/dashboard/feed` | Web public and dashboard routes share `FeedContent`, while mobile exposes the same journey as `feature:community-feed`. Feed remains auth-gated for create/action flows, but browse and handoff surfaces must stay tracked in the manifest so web and mobile do not drift. |
 | Forum Q&A | `/forum`, `/forum/:slug`, `/forum/ask` | `/dashboard/forum`, `/dashboard/forum/:slug`, `/dashboard/forum/ask` | Mobile now mirrors the forum journey through `feature:forum`: list/search/pagination, question detail, ask form, answer form, question vote, answer vote, and accept-answer action backed by the same `/api/v1/forum/*` endpoints. |
 | Zakat/Faraidh saved history | `/zakat/history`, `/faraidh` | `/dashboard/zakat/history`, `/dashboard/faraidh` | Mobile calculators now keep local device history without login and merge it with backend history when the user is authenticated, matching the web local + account-sync journey. Mobile zakat also auto-loads the backend gold price endpoint for current nisab calculations and keeps the manual field editable as fallback. |
 | Jadwal Sholat adzan behavior | `/jadwal-sholat` | `/dashboard/jadwal-sholat` | Mobile now has countdown, foreground prayer-time notification, optional adzan audio toggle, reminder scheduling, offline schedule cache, and manual correction controls. |

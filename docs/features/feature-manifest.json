@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-05-17",
+  "updatedAt": "2026-05-23",
   "routes": {
     "mobileRouteFormat": "tab:<tab>, feature:<mobileFeatureKey>, ibadah:<internalView>, or internal:<view>",
     "notes": "Use aliases to document route/key drift such as peta on web and historical-map on mobile."
@@ -363,13 +363,13 @@
     {
       "key": "community-feed",
       "title": "Komunitas",
-      "publicWebRoute": null,
-      "dashboardWebRoute": null,
+      "publicWebRoute": "/feed",
+      "dashboardWebRoute": "/dashboard/feed",
       "mobileRoute": "feature:community-feed",
       "authRequired": true,
       "ctaLabel": "Buka Komunitas",
       "searchable": false,
-      "status": "mobile-only"
+      "status": "active"
     },
     {
       "key": "kajian",
