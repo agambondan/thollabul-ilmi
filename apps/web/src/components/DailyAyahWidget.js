@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { FaQuran } from 'react-icons/fa';
 
 const TOTAL_AYAH = 6236;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 const getDailyAyahNumber = () => {
     const now = new Date();
@@ -24,15 +25,20 @@ export default function DailyAyahWidget({
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const ayahNumber = getDailyAyahNumber();
-        fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/v1/ayah/number/${ayahNumber}`,
-        )
+        fetch(`${API_URL}/api/v1/ayah/daily`)
             .then((r) => {
                 if (!r.ok) throw new Error('not ok');
                 return r.json();
             })
-            .then((data) => setAyah(data?.data ?? data))
+            .then((data) => {
+                const payload = data?.data ?? data;
+                if (Array.isArray(payload?.items)) {
+                    const ayahNumber = getDailyAyahNumber();
+                    setAyah(payload.items[ayahNumber % payload.items.length] ?? null);
+                    return;
+                }
+                setAyah(payload);
+            })
             .catch(() => setAyah(null))
             .finally(() => setLoading(false));
     }, []);

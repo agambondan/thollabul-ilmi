@@ -65,14 +65,6 @@ const fmtRemainingText = (secs, label) => {
     return `${label} dalam ${h} jam ${m} menit`;
 };
 
-const formatGregorianDate = (date) =>
-    date.toLocaleDateString('id-ID', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    });
-
 const formatHijriDate = (date) => {
     try {
         return new Intl.DateTimeFormat('id-ID-u-ca-islamic-civil', {
@@ -144,9 +136,8 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
                     <span className='truncate'>{DASHBOARD_LOCATION.label}</span>
                 </div>
                 <div className='text-right text-xs font-bold text-stone-800 dark:text-slate-200'>
-                    <p>{formatGregorianDate(now)}</p>
                     {hijriDate ? (
-                        <p className='mt-1 flex items-center justify-end gap-1 text-amber-700 dark:text-amber-300'>
+                        <p className='flex items-center justify-end gap-1 text-amber-700 dark:text-amber-300'>
                             <MdCalendarToday className='text-sm' />
                             {hijriDate}
                         </p>
@@ -199,7 +190,7 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
                                     aria-hidden='true'
                                 />
                                 <span className='text-[11px] font-extrabold tabular-nums leading-tight'>
-                                    {formatTime(prayers[prayer.key])}
+                                    {isActive ? 'Berikutnya' : formatTime(prayers[prayer.key])}
                                 </span>
                             </div>
                         );

@@ -1,15 +1,11 @@
 'use client';
 
-import DailyAyahWidget from '@/components/DailyAyahWidget';
-import DailyHadithWidget from '@/components/DailyHadithWidget';
+import DailyReminderCarousel from '@/components/DailyReminderCarousel';
 import PrayerCountdownWidget from '@/components/PrayerCountdownWidget';
 import { useAuth } from '@/context/Auth';
 import { useLocale } from '@/context/Locale';
-import { bookmarkApi, goalsApi, muhasabahApi, progressApi, sholatTrackerApi, streakApi } from '@/lib/api';
+import { muhasabahApi, progressApi, sholatTrackerApi } from '@/lib/api';
 import {
-    calcLocalPrayerStreak,
-    countDonePrayers,
-    normalizeGoal,
     normalizeMuhasabah,
     normalizePrayerLog,
     parseApiJson,
@@ -29,7 +25,6 @@ import {
     BsBookmark,
     BsCheckCircleFill,
     BsCircle,
-    BsFire,
     BsJournalCheck,
     BsPencilSquare,
     BsPerson,
@@ -113,10 +108,7 @@ const DashboardPage = () => {
     ];
 
     const [prayerLog, setPrayerLog] = useState({});
-    const [goals, setGoals] = useState([]);
     const [muhasabahList, setMuhasabahList] = useState([]);
-    const [bookmarks, setBookmarks] = useState([]);
-    const [streak, setStreak] = useState(0);
     const [quranProgress, setQuranProgress] = useState(null);
     const [hadithProgress, setHadithProgress] = useState(null);
     const [syncError, setSyncError] = useState('');
@@ -128,24 +120,19 @@ const DashboardPage = () => {
             const today = todayISO();
             const localPrayer = readLocalPrayerLog(today);
             setPrayerLog(localPrayer);
-            setGoals(readLocalArray('tholabul_goals').map(normalizeGoal));
             setMuhasabahList(readLocalArray('tholabul_muhasabah').map(normalizeMuhasabah));
 
             try {
-                const [prayerPayload, goalsPayload, muhasabahPayload] = await Promise.all([
+                const [prayerPayload, muhasabahPayload] = await Promise.all([
                     sholatTrackerApi.today().then(parseApiJson),
-                    goalsApi.list().then(parseApiJson),
                     muhasabahApi.list().then(parseApiJson),
                 ]);
                 const serverPrayer = normalizePrayerLog(prayerPayload);
                 const mergedPrayer = { ...localPrayer, ...serverPrayer };
-                const serverGoals = pickItems(goalsPayload).map(normalizeGoal);
                 const serverMuhasabah = pickItems(muhasabahPayload).map(normalizeMuhasabah);
                 setPrayerLog(mergedPrayer);
-                setGoals(serverGoals);
                 setMuhasabahList(serverMuhasabah);
                 writeLocalPrayerLog(today, mergedPrayer);
-                writeLocalArray('tholabul_goals', serverGoals);
                 writeLocalArray('tholabul_muhasabah', serverMuhasabah);
                 setSyncError('');
             } catch {
@@ -154,21 +141,6 @@ const DashboardPage = () => {
         };
 
         loadPersonalSummary();
-
-        streakApi
-            .get()
-            .then((r) => r.json())
-            .then((d) => setStreak(d?.current ?? d?.streak ?? 0))
-            .catch(() => setStreak(calcLocalPrayerStreak()));
-
-        bookmarkApi
-            .list()
-            .then((r) => r.json())
-            .then((d) => {
-                const items = d?.items ?? d ?? [];
-                setBookmarks(Array.isArray(items) ? items : []);
-            })
-            .catch(e => console.error(e));
 
         progressApi
             .getQuran()
@@ -183,8 +155,6 @@ const DashboardPage = () => {
             .catch(e => console.error(e));
     }, [isAuthenticated, authLoading]);
 
-    const prayerCount = countDonePrayers(prayerLog);
-    const activeGoals = goals.filter((g) => !g.completed);
     const lastMuhasabah = muhasabahList[0] ?? null;
 
     if (authLoading) return null;
@@ -215,66 +185,11 @@ const DashboardPage = () => {
             <div className='mb-6'>
                 <PrayerCountdownWidget basePath='/dashboard/jadwal-sholat' />
             </div>
-            {/* Stat cards */}
-            <div className='grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6'>
-                <Link
-                    href='/dashboard/sholat-tracker'
-                    className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 text-center hover:border-emerald-200 dark:hover:border-emerald-700 transition-colors group'
-                    aria-label={t('dash.prayers_today')}
-                >
-                    <p className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
-                        {prayerCount}/5
-                    </p>
-                    <p className='text-[11px] text-gray-500 dark:text-gray-400 mt-0.5'>
-                        {t('dash.prayers_today')}
-                    </p>
-                </Link>
-                <Link
-                    href='/dashboard/stats'
-                    className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 text-center hover:border-orange-200 dark:hover:border-orange-700 transition-colors group'
-                >
-                    <p className='text-2xl font-bold text-orange-500 dark:text-orange-400 flex items-center justify-center gap-1'>
-                        <BsFire className='text-xl' />
-                        {streak}
-                    </p>
-                    <p className='text-[11px] text-gray-500 dark:text-gray-400 mt-0.5'>
-                        {t('stats.prayer_streak')}
-                    </p>
-                </Link>
-                <Link
-                    href='/dashboard/goals'
-                    className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 text-center hover:border-blue-200 dark:hover:border-blue-700 transition-colors group'
-                    aria-label={t('dash.active_goals_count')}
-                >
-                    <p className='text-2xl font-bold text-blue-600 dark:text-blue-400'>
-                        {activeGoals.length}
-                    </p>
-                    <p className='text-[11px] text-gray-500 dark:text-gray-400 mt-0.5'>
-                        {t('dash.active_goals_count')}
-                    </p>
-                </Link>
-                <Link
-                    href='/dashboard/bookmarks'
-                    className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 text-center hover:border-amber-200 dark:hover:border-amber-700 transition-colors group'
-                    aria-label={t('bookmarks.title')}
-                >
-                    <p className='text-2xl font-bold text-amber-600 dark:text-amber-400'>
-                        {bookmarks.length}
-                    </p>
-                    <p className='text-[11px] text-gray-500 dark:text-gray-400 mt-0.5'>
-                        {t('bookmarks.title')}
-                    </p>
-                </Link>
-            </div>
-            {/* Daily Ayah */}
-            <div className='mb-4'>
-                <DailyAyahWidget
-                    buildHref={({ surahSlug, ayahNum }) => `/dashboard/quran/${surahSlug}#${ayahNum}`}
-                />
-            </div>
-            {/* Daily Hadith */}
             <div className='mb-5'>
-                <DailyHadithWidget basePath='/dashboard/hadith' />
+                <DailyReminderCarousel
+                    ayahBasePath='/dashboard/quran'
+                    hadithBasePath='/dashboard/hadith'
+                />
             </div>
             {/* Continue Reading */}
             {(quranProgress?.surah_latin || hadithProgress?.book_slug) && (
@@ -364,64 +279,7 @@ const DashboardPage = () => {
                     })}
                 </div>
             </div>
-            <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5'>
-                {/* Active goals */}
-                <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4'>
-                    <div className='flex items-center justify-between mb-3'>
-                        <p className='text-sm font-semibold text-gray-800 dark:text-white'>
-                            {t('dash.active_goals')}
-                        </p>
-                        <Link
-                            href='/dashboard/goals'
-                            className='text-xs text-emerald-600 dark:text-emerald-400 hover:underline'
-                        >
-                            {t('common.see_all')}
-                        </Link>
-                    </div>
-                    {activeGoals.length === 0 ? (
-                        <div className='text-center py-4'>
-                            <p className='text-xs text-gray-400 dark:text-gray-500'>
-                                {t('dash.no_active_goals')}
-                            </p>
-                            <Link
-                                href='/dashboard/goals'
-                                className='text-xs text-emerald-600 dark:text-emerald-400 hover:underline mt-1 inline-block'
-                            >
-                                {t('dash.add_goal')}
-                            </Link>
-                        </div>
-                    ) : (
-                        <ul className='space-y-2'>
-                            {activeGoals.slice(0, 3).map((goal) => {
-                                const pct = Math.min(
-                                    100,
-                                    Math.round(
-                                        ((goal.current ?? 0) / (goal.target ?? 1)) * 100,
-                                    ),
-                                );
-                                return (
-                                    <li key={goal.id}>
-                                        <div className='flex items-center justify-between text-xs mb-1'>
-                                            <span className='text-gray-700 dark:text-gray-300 truncate max-w-[70%]'>
-                                                {goal.title}
-                                            </span>
-                                            <span className='text-gray-400 dark:text-gray-500'>
-                                                {pct}%
-                                            </span>
-                                        </div>
-                                        <div className='h-1.5 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden'>
-                                            <div
-                                                className='h-full bg-emerald-500 rounded-full transition-all'
-                                                style={{ width: `${pct}%` }}
-                                            />
-                                        </div>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    )}
-                </div>
-
+            <div className='mb-5'>
                 {/* Last muhasabah */}
                 <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4'>
                     <div className='flex items-center justify-between mb-3'>
