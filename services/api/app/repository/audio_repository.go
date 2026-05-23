@@ -23,6 +23,40 @@ func NewAudioRepository(db *gorm.DB) AudioRepository {
 }
 
 func (r *audioRepo) FindSurahAudioBySurahID(surahID int) ([]model.SurahAudio, error) {
+	var firstAyah struct {
+		ID int
+	}
+	if err := r.db.Model(&model.Ayah{}).
+		Select("id").
+		Where("surah_id = ?", surahID).
+		Order("number ASC").
+		Limit(1).
+		Scan(&firstAyah).Error; err != nil {
+		return nil, err
+	}
+
+	if firstAyah.ID > 0 {
+		var ayahAudio []model.AyahAudio
+		if err := r.db.Where("ayah_id = ?", firstAyah.ID).
+			Order("qari_name ASC").
+			Find(&ayahAudio).Error; err != nil {
+			return nil, err
+		}
+		if len(ayahAudio) > 0 {
+			list := make([]model.SurahAudio, 0, len(ayahAudio))
+			surahIDValue := surahID
+			for _, item := range ayahAudio {
+				list = append(list, model.SurahAudio{
+					SurahID:  &surahIDValue,
+					QariName: item.QariName,
+					QariSlug: item.QariSlug,
+					AudioURL: item.AudioURL,
+				})
+			}
+			return list, nil
+		}
+	}
+
 	var list []model.SurahAudio
 	err := r.db.Where("surah_id = ?", surahID).Find(&list).Error
 	return list, err
