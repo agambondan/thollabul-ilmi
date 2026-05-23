@@ -97,6 +97,64 @@ Karakter target:
 - floating actions tidak boleh menabrak bottom nav;
 - konten utama memakai spacing compact, bukan kartu bertumpuk berlebihan.
 
+## Guest vs Authenticated Dashboard
+
+Mode `web_app` meniru layout dashboard mobile web yang sudah login, tetapi
+mobile app tidak boleh memaksa user login untuk memakai aplikasi.
+
+Shell visual tetap sama untuk guest dan authenticated user:
+
+- top header tetap tampil;
+- bottom nav tetap tampil;
+- Beranda tetap menjadi cockpit harian;
+- Quran, Hadis, Ibadah, dan Belajar tetap bisa dibuka tanpa login selama data
+  yang dibutuhkan bersifat public atau lokal;
+- account/avatar surface berubah menjadi entry "Masuk" atau "Akun" sesuai
+  state login.
+
+Perbedaannya ada pada data yang ditampilkan.
+
+| Area | Guest / belum login | Authenticated / sudah login |
+| --- | --- | --- |
+| Greeting | `Assalamu'alaikum` atau nama lokal bila user pernah isi profil lokal | Nama akun dari backend |
+| Sholat hari ini | Bisa memakai status lokal device untuk sesi hari ini | Sinkron dengan akun dan histori backend |
+| Streak sholat | Local-only streak atau prompt ringan untuk login | Streak akun dari backend |
+| Target aktif | CTA "Buat target" atau target lokal | Target belajar akun |
+| Bookmark | Bookmark lokal bila tersedia, atau CTA login untuk sync | Bookmark akun dari backend |
+| Ayat hari ini | Public daily ayah dari API/cache | Sama, plus status sudah dibaca bila ada |
+| Hadis hari ini | Public daily hadith dari API/cache | Sama, plus status simpan/catatan personal |
+| Jadwal sholat | Lokasi device/manual, cache lokal | Lokasi/preference akun bila tersedia |
+| Lanjutkan terakhir | Local recent item | Recent item akun + local merge |
+| Notifikasi | Local reminders/device permission | Reminder akun + device notification |
+
+Rules:
+
+- Guest state harus tetap berguna, bukan halaman kosong yang hanya meminta
+  login.
+- Fitur public content boleh langsung dipakai: Quran, Hadis, jadwal sholat,
+  doa, dzikir, asmaul husna, tafsir public, dan artikel/library public.
+- Fitur personal boleh punya local-first fallback: recent item, reader
+  preference, kalkulator history, progress ringan, dan temporary bookmarks.
+- Fitur yang membutuhkan akun harus menampilkan CTA kecil dan kontekstual,
+  bukan modal login blocking.
+- Saat user login, local data yang relevan boleh ditawarkan untuk merge/sync,
+  bukan otomatis menimpa data akun.
+
+Contoh susunan Beranda `web_app` untuk guest:
+
+1. Header: brand, "Masuk" account button, layout/settings entry.
+2. Greeting: `Assalamu'alaikum`.
+3. Quick stats:
+   - Sholat hari ini: local session status.
+   - Streak: local streak atau `0`.
+   - Target aktif: CTA `Buat target`.
+   - Bookmark: local bookmark count atau CTA `Login untuk sync`.
+4. Ayat hari ini: public daily ayah.
+5. Hadis hari ini: public daily hadith.
+6. Sholat hari ini: jadwal dari lokasi/manual.
+7. Lanjutkan terakhir: dari local storage.
+8. CTA kecil: `Masuk untuk sinkronisasi bookmark, target, dan progres`.
+
 ## Architecture Direction
 
 Implementasi harus menghindari duplikasi logic.
@@ -152,4 +210,3 @@ Untuk setiap screen yang mendapat mode `web_app`:
 - Floating action tidak overlap dengan bottom nav.
 - Reader/audio/bookmark/notes tetap memakai data dan behavior yang sama.
 - Expo export atau test mobile relevan harus pass sebelum ditutup.
-
