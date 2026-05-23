@@ -1,18 +1,17 @@
 import * as Linking from 'expo-linking';
 import { useFonts } from 'expo-font';
-import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, BackHandler, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, BackHandler, Keyboard, Platform, StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import AnalyticsTracker from './src/components/AnalyticsTracker';
 import { SwipeBackView } from './src/components/SwipeBackView';
-import { TabBar } from './src/components/TabBar';
 import { FeedbackProvider } from './src/context/FeedbackContext';
 import { SessionProvider } from './src/context/SessionContext';
 import { TabActivityProvider } from './src/context/TabActivityContext';
 import { quranFontAssets } from './src/constants/quranFonts';
 import { LayoutModeProvider } from './src/layout/LayoutModeProvider';
+import { MobileAppShell } from './src/layout/MobileAppShell';
 import { ExploreScreen } from './src/screens/ExploreScreen';
 import { HadithScreen } from './src/screens/HadithScreen';
 import { HomeScreen } from './src/screens/HomeScreen';
@@ -215,12 +214,11 @@ export default function App() {
             <LayoutModeProvider>
               <TabActivityProvider>
                 <AnalyticsTracker activeTab={activeTab} internalRoutes={internalRoutes} />
-                <SafeAreaView edges={['top', 'left', 'right']} style={styles.safeArea}>
-                  <KeyboardAvoidingView
-                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                    keyboardVerticalOffset={0}
-                    style={styles.container}
-                  >
+                <MobileAppShell
+                  activeTab={activeTab}
+                  keyboardVisible={keyboardVisible}
+                  onTabChange={openTab}
+                >
                     {(['home', 'quran', 'hadith', 'ibadah', 'belajar', 'profile']).map((tab) => {
                       const isActive = activeTab === tab;
                       const hasInternalView = !!internalRoutes[tab];
@@ -240,10 +238,7 @@ export default function App() {
                         </View>
                       );
                     })}
-                  </KeyboardAvoidingView>
-                  {activeTab === 'quran' || keyboardVisible ? null : <TabBar active={activeTab} onChange={openTab} />}
-                  <StatusBar style="dark" backgroundColor={colors.bg} />
-                </SafeAreaView>
+                </MobileAppShell>
               </TabActivityProvider>
             </LayoutModeProvider>
         </FeedbackProvider>
@@ -258,10 +253,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   safeArea: {
-    flex: 1,
-    backgroundColor: colors.bg,
-  },
-  container: {
     flex: 1,
     backgroundColor: colors.bg,
   },

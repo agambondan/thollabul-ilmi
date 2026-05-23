@@ -107,7 +107,46 @@ Results:
 
 | Slice | Scope |
 | --- | --- |
-| 2 | Add native `WebAppShell` skeleton with current screens inside it. |
+| 2 | Add native `WebAppShell` skeleton with current screens inside it. Done as a non-visual delegate shell: `MobileAppShell` selects `ClassicAppShell` or `WebAppShell`, while `WebAppShell` still delegates to the classic shell render path. |
 | 3 | Apply `web_app` header/bottom nav to Home and Quran only. |
 | 4 | Validate Quran ayah action menu, audio range, qari, font size, notes, bookmark, and back behavior. |
 | 5 | Expand to Hadith, Ibadah, and Belajar after Home/Quran are stable. |
+
+## Shell Skeleton Update
+
+Status: completed for the non-visual shell selection slice.
+
+Implemented:
+
+- Added `apps/mobile/src/layout/ClassicAppShell.js`.
+- Added `apps/mobile/src/layout/WebAppShell.js`.
+- Added `apps/mobile/src/layout/MobileAppShell.js`.
+- Moved the existing safe-area, keyboard avoiding view, status bar, and current
+  `TabBar` render path into `ClassicAppShell`.
+- `MobileAppShell` now selects `ClassicAppShell` or `WebAppShell` from
+  `useLayoutModePreference`.
+- `WebAppShell` currently delegates to `ClassicAppShell`, with only a separate
+  shell path/test id. This is intentional to avoid visual or navigation
+  regression before Home/Quran-specific work.
+- Added `mobileAppShell.test.js` for classic default and stored `web_app`
+  shell selection.
+
+Shell skeleton verification:
+
+```bash
+cd apps/mobile
+npm test -- mobileAppShell.test.js layoutModeProvider.test.js preferences.test.js profileScreen.test.js appNavigation.test.js components.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-shell-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted shell tests passed: 7 suites, 149 tests.
+- Full mobile Jest passed: 44 suites, 588 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-shell-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
