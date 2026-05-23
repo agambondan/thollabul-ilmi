@@ -13,7 +13,7 @@ import {
 } from '@/lib/pushSubscription';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
-import { BsBell, BsBellFill, BsCheckAll, BsPhone, BsLaptop } from 'react-icons/bs';
+import { BsBell, BsBellFill, BsCheckAll, BsPhone, BsLaptop, BsClock, BsChevronDown, BsChevronUp } from 'react-icons/bs';
 
 const todayStr = () => {
     const d = new Date();
@@ -53,8 +53,85 @@ const NotificationsPage = () => {
     });
     const [testLoading, setTestLoading] = useState(false);
     const [testMessage, setTestMessage] = useState('');
+    const [settingsOpen, setSettingsOpen] = useState(false);
+    const [reminderSettings, setReminderSettings] = useState(null);
+    const [settingsLoading, setSettingsLoading] = useState(false);
+    const [settingsSaving, setSettingsSaving] = useState(false);
+    const [saveMsg, setSaveMsg] = useState('');
 
-    // --- Push notification setup ---
+    const REMINDER_TYPES = [
+        { key: 'daily_quran', labelKey: 'notifications.daily_quran', descKey: 'notifications.daily_quran_desc', defaultTime: '06:00' },
+        { key: 'daily_hadith', labelKey: 'notifications.daily_hadith', descKey: 'notifications.daily_hadith_desc', defaultTime: '07:00' },
+        { key: 'doa', labelKey: 'notifications.doa_dzikir', descKey: 'notifications.doa_dzikir_desc', defaultTime: '08:00' },
+    ];
+
+    // --- Load reminder settings ---
+    useEffect(() => {
+        if (!isAuthenticated) return;
+        setSettingsLoading(true);
+        notificationApi.getSettings()
+            .then((r) => r.json())
+            .then((data) => {
+                const items = Array.isArray(data) ? data : [];
+                const map = {};
+                for (const item of items) { map[item.type] = item; }
+                setReminderSettings(map);
+            })
+            .catch(() => setReminderSettings({}))
+            .finally(() => setSettingsLoading(false));
+    }, [isAuthenticated]);
+
+    const handleToggleReminder = (typeKey, active) => {
+        setReminderSettings((prev) => ({
+            ...prev,
+            [typeKey]: { ...(prev?.[typeKey] || {}), is_active: active },
+        }));
+    };
+
+    const handleTimeChange = (typeKey, time) => {
+        setReminderSettings((prev) => ({
+            ...prev,
+            [typeKey]: { ...(prev?.[typeKey] || {}), time },
+        }));
+    };
+
+    const handleSaveSettings = async () => {
+        if (!isAuthenticated || !reminderSettings) return;
+        setSettingsSaving(true);
+        setSaveMsg('');
+        const payload = {
+            settings: REMINDER_TYPES.map((r) => {
+                const s = reminderSettings[r.key];
+                return {
+                    type: r.key,
+                    time: s?.time || r.defaultTime,
+                    is_active: s?.is_active ?? true,
+                };
+            }),
+        };
+        try {
+            await notificationApi.updateSettings(payload);
+            setSaveMsg(t('notifications.save_success'));
+        } catch {
+            setSaveMsg(t('notifications.save_error'));
+        } finally {
+            setSettingsSaving(false);
+            setTimeout(() => setSaveMsg(''), 3000);
+        }
+    };
+
+    const allActive = reminderSettings
+        ? REMINDER_TYPES.every((r) => reminderSettings[r.key]?.is_active !== false)
+        : true;
+
+    const handleToggleAll = (active) => {
+        const updated = { ...(reminderSettings || {}) };
+        for (const r of REMINDER_TYPES) {
+            updated[r.key] = { ...(updated[r.key] || {}), is_active: active };
+        }
+        setReminderSettings(updated);
+    };
+
     const initPush = useCallback(async () => {
         const perm = await getPushPermissionStatus();
 
@@ -307,6 +384,116 @@ const NotificationsPage = () => {
                     </button>
                 )}
             </div>
+
+            {/* Reminder Settings */}
+            {isAuthenticated && (
+                <div className='mb-6 bg-white dark:bg-slate-800 rounded-xl border border-emerald-100 dark:border-emerald-900/30'>
+                    <button
+                        onClick={() => setSettingsOpen((v) => !v)}
+                        className='w-full flex items-center justify-between p-4 text-left'
+                    >
+                        <div className='flex items-center gap-2'>
+                            <BsClock className='text-emerald-500' />
+                            <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                                {t('notifications.title')}
+                            </h2>
+                        </div>
+                        {settingsOpen ? <BsChevronUp className='text-gray-400' /> : <BsChevronDown className='text-gray-400' />}
+                    </button>
+                    {settingsOpen && (
+                        <div className='px-4 pb-4 space-y-4'>
+                            <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                {t('notifications.subtitle')}
+                            </p>
+
+                            {settingsLoading ? (
+                                <div className='flex items-center gap-2 text-sm text-gray-400'>
+                                    <span className='w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin' />
+                                    Memuat...
+                                </div>
+                            ) : reminderSettings ? (
+                                <>
+                                    {/* Bulk actions */}
+                                    <div className='flex gap-2'>
+                                        <button onClick={() => handleToggleAll(true)} className='text-xs text-emerald-600 dark:text-emerald-400 hover:underline'>
+                                            {t('notifications.enable_all')}
+                                        </button>
+                                        <span className='text-xs text-gray-300 dark:text-slate-600'>|</span>
+                                        <button onClick={() => handleToggleAll(false)} className='text-xs text-gray-500 hover:text-red-500 underline'>
+                                            {t('notifications.disable_all')}
+                                        </button>
+                                    </div>
+
+                                    {/* Reminder list */}
+                                    <div className='space-y-3'>
+                                        {REMINDER_TYPES.map((r) => {
+                                            const s = reminderSettings[r.key] || {};
+                                            const active = s.is_active !== false;
+                                            const time = s.time || r.defaultTime;
+                                            return (
+                                                <div key={r.key} className={`flex items-center justify-between p-3 rounded-lg border ${active ? 'border-emerald-100 dark:border-emerald-900/30 bg-emerald-50/40 dark:bg-emerald-900/10' : 'border-gray-100 dark:border-slate-700 bg-gray-50/40 dark:bg-slate-800/50'}`}>
+                                                    <div className='flex-1 min-w-0'>
+                                                        <label className='flex items-center gap-2 cursor-pointer'>
+                                                            <input
+                                                                type='checkbox'
+                                                                checked={active}
+                                                                onChange={(e) => handleToggleReminder(r.key, e.target.checked)}
+                                                                className='w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500'
+                                                            />
+                                                            <span className={`text-sm font-medium ${active ? 'text-gray-800 dark:text-white' : 'text-gray-400 dark:text-gray-500'}`}>
+                                                                {t(r.labelKey)}
+                                                            </span>
+                                                        </label>
+                                                        <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 ml-6'>
+                                                            {t(r.descKey)}
+                                                        </p>
+                                                    </div>
+                                                    <div className='shrink-0 ml-3'>
+                                                        {active ? (
+                                                            <input
+                                                                type='time'
+                                                                value={time}
+                                                                onChange={(e) => handleTimeChange(r.key, e.target.value)}
+                                                                className='border border-gray-200 dark:border-slate-600 rounded-lg px-2 py-1 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
+                                                            />
+                                                        ) : (
+                                                            <span className='text-xs text-gray-400 dark:text-gray-500 italic'>
+                                                                {t('notifications.inactive_reminder')}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+                                    {/* Save button */}
+                                    <div className='flex items-center gap-3'>
+                                        <button
+                                            onClick={handleSaveSettings}
+                                            disabled={settingsSaving}
+                                            className='inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-emerald-700 disabled:opacity-50'
+                                        >
+                                            {settingsSaving ? (
+                                                <><span className='w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin' /> Menyimpan...</>
+                                            ) : (
+                                                t('notifications.save_all')
+                                            )}
+                                        </button>
+                                        {saveMsg && (
+                                            <span className={`text-xs ${saveMsg.includes('gagal') || saveMsg.includes('Failed') ? 'text-red-500' : 'text-emerald-600 dark:text-emerald-400'}`}>
+                                                {saveMsg}
+                                            </span>
+                                        )}
+                                    </div>
+                                </>
+                            ) : (
+                                <p className='text-xs text-gray-400'>{t('notifications.save_error')}</p>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* Push Notification Settings */}
             {!pushState.loading && pushState.supported && (

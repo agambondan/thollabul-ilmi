@@ -11,7 +11,7 @@ export default function InAppNotification() {
         if (!('serviceWorker' in navigator)) return;
 
         const handler = (event) => {
-            if (event.data?.type !== 'PUSH_NOTIFICATION') return;
+            if (event.data?.type !== 'PUSH_NOTIFICATION' && event.data?.type !== 'ADZAN_NOTIFICATION') return;
 
             const { title, body, url } = event.data;
 

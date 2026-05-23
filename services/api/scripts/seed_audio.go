@@ -37,7 +37,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/minio/minio-go/v7"
@@ -59,11 +58,67 @@ type qariInfo struct {
 	QuranicAudio string // directory name on quranicaudio CDN
 }
 
-var defaultQari = qariInfo{
-	Name:         "Mishary Rashid Al-Afasy",
-	Slug:         "mishary-rashid-alafasy",
-	EveryAyahDir: "Alafasy_128kbps",
-	QuranicAudio: "mishaari_raashid_al-`afaasee",
+var qariCatalog = []qariInfo{
+	{
+		Name:         "Mishary Rashid Al-Afasy",
+		Slug:         "mishary-rashid-alafasy",
+		EveryAyahDir: "Alafasy_128kbps",
+		QuranicAudio: "mishaari_raashid_al-`afaasee",
+	},
+	{
+		Name:         "Abdurrahman As-Sudais",
+		Slug:         "abdurrahman-as-sudais",
+		EveryAyahDir: "Abdurrahmaan_As-Sudais_192kbps",
+		QuranicAudio: "abdurrahmaan_as-sudays",
+	},
+	{
+		Name:         "Abdul Basit Abdul Samad",
+		Slug:         "abdul-basit",
+		EveryAyahDir: "Abdul_Basit_Murattal_192kbps",
+		QuranicAudio: "abdul_basit",
+	},
+	{
+		Name:         "Saad Al-Ghamidi",
+		Slug:         "saad-al-ghamidi",
+		EveryAyahDir: "Saad_Al-Ghamidi_128kbps",
+		QuranicAudio: "sa`d_al-ghaamidi",
+	},
+	{
+		Name:         "Yasser Al-Dosari",
+		Slug:         "yasser-al-dosari",
+		EveryAyahDir: "Yasser_Ad-Dosari_128kbps",
+		QuranicAudio: "yaasir_ad-dusaari",
+	},
+	{
+		Name:         "Maher Al-Muaiqly",
+		Slug:         "maher-al-muaiqly",
+		EveryAyahDir: "Maher_Al-Muaiqly_128kbps",
+		QuranicAudio: "maahir_ibnaa_`ali_haashim_ibn_`abdul_`aziiz_al-mu`ayqiliy",
+	},
+	{
+		Name:         "Hani Ar-Rifai",
+		Slug:         "hani-ar-rifai",
+		EveryAyahDir: "Hani_Rifai_192kbps",
+		QuranicAudio: "haani_ar-rifaa`i",
+	},
+	{
+		Name:         "Salah Bukhatir",
+		Slug:         "salah-bukhatir",
+		EveryAyahDir: "Salah_Bukhatir_128kbps",
+		QuranicAudio: "salaah_`abdul_`aziiz_bukhaatir",
+	},
+	{
+		Name:         "Abdullah Al-Juhany",
+		Slug:         "abdullah-al-juhany",
+		EveryAyahDir: "Abdullah_Al_Juhany_128kbps",
+		QuranicAudio: "abdullaah_`abdul_`aziiz_`abdullaah_aal-juhany",
+	},
+	{
+		Name:         "Ali Abdurrahman Al-Hudhaify",
+		Slug:         "ali-al-hudhaify",
+		EveryAyahDir: "Ali_Bin_Abdur_Rahman_Al_Huthaify_128kbps",
+		QuranicAudio: "`ali_ibn_`abd_ar-rahman_al-hudhaify",
+	},
 }
 
 // ── URL builders ─────────────────────────────────────────────────────────────
@@ -294,27 +349,28 @@ func seedAyahAudio(db *gorm.DB, q qariInfo, mc *minioClient) {
 func main() {
 	mode := flag.String("mode", "surah", "surah | ayah | all")
 	useMinio := flag.Bool("minio", false, "download dari CDN dan upload ke MinIO sebelum insert DB")
-	qariSlug := flag.String("qari", "mishary", "mishary | sudais (tambah entry di catalog untuk qari lain)")
+	qariSlug := flag.String("qari", "mishary-rashid-alafasy", "slug qari — lihat daftar lengkap di catalog")
+	listQari := flag.Bool("list", false, "tampilkan daftar qari yang tersedia")
 	flag.Parse()
 
-	qariCatalog := map[string]qariInfo{
-		"mishary": defaultQari,
-		"sudais": {
-			Name:         "Abdurrahman As-Sudais",
-			Slug:         "abdurrahman-as-sudais",
-			EveryAyahDir: "Abdurrahmaan_As-Sudais_192kbps",
-			QuranicAudio: "abdurrahmaan_as-sudays",
-		},
-		"abdulbasit": {
-			Name:         "Abdul Basit",
-			Slug:         "abdul-basit",
-			EveryAyahDir: "Abdul_Basit_Murattal_192kbps",
-			QuranicAudio: "abdul_basit",
-		},
+	if *listQari {
+		fmt.Println("Qari yang tersedia:")
+		for _, q := range qariCatalog {
+			fmt.Printf("  %-20s → %s\n", q.Slug, q.Name)
+		}
+		return
 	}
-	q, ok := qariCatalog[*qariSlug]
-	if !ok {
-		log.Fatalf("qari '%s' tidak ada di catalog. Pilih: %s", *qariSlug, strings.Join(keys(qariCatalog), ", "))
+
+	var q *qariInfo
+	for i := range qariCatalog {
+		if qariCatalog[i].Slug == *qariSlug {
+			q = &qariCatalog[i]
+			break
+		}
+	}
+	if q == nil {
+		fmt.Printf("Qari '%s' tidak ditemukan. Gunakan -list untuk melihat daftar.\n", *qariSlug)
+		return
 	}
 
 	db := openDB()
@@ -329,21 +385,13 @@ func main() {
 
 	switch *mode {
 	case "surah":
-		seedSurahAudio(db, q, mc)
+		seedSurahAudio(db, *q, mc)
 	case "ayah":
-		seedAyahAudio(db, q, mc)
+		seedAyahAudio(db, *q, mc)
 	case "all":
-		seedSurahAudio(db, q, mc)
-		seedAyahAudio(db, q, mc)
+		seedSurahAudio(db, *q, mc)
+		seedAyahAudio(db, *q, mc)
 	default:
 		log.Fatalf("mode tidak dikenal: %s. Pilih: surah | ayah | all", *mode)
 	}
-}
-
-func keys(m map[string]qariInfo) []string {
-	out := make([]string, 0, len(m))
-	for k := range m {
-		out = append(out, k)
-	}
-	return out
 }

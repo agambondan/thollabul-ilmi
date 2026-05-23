@@ -261,6 +261,9 @@ func reminderMessage(notificationType model.NotificationType) reminderContent {
 	case model.NotificationTypeStreakRisk:
 		title = "Streak Hampir Putus!"
 		description = "Jangan sampai streak ibadah kamu putus. Luangkan waktu sejenak untuk menjaga konsistensi."
+	case model.NotificationTypeAdzan:
+		title = "Waktunya Sholat!"
+		description = "Sudah masuk waktu sholat. Segera tunaikan sholat tepat waktu."
 	}
 
 	body := fmt.Sprintf(`

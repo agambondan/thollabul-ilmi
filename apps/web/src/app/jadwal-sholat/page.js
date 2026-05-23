@@ -118,16 +118,28 @@ export default function JadwalSholatPage() {
                     const h = Math.floor(diff / 3600000);
                     const m = Math.floor((diff % 3600000) / 60000);
                     const s = Math.floor((diff % 60000) / 1000);
-                    if (diff < 10000 && adzanEnabled && lastNotifRef.current !== p.key) {
-                        lastNotifRef.current = p.key;
-                        if (audioRef.current) audioRef.current.play().catch(e => console.error(e));
-                        if (notifGranted) {
-                            new Notification(`${t('prayer_schedule.adzan') ?? 'Waktu'} ${t(p.labelKey)}`, {
-                                body: `${t('prayer_schedule.adzan_body') ?? 'Sudah masuk waktu'} ${t(p.labelKey)}`,
-                                icon: '/icon.png',
-                            });
+                        if (diff < 10000 && adzanEnabled && lastNotifRef.current !== p.key) {
+                            lastNotifRef.current = p.key;
+                            if (audioRef.current) {
+                                audioRef.current.play().catch(() => {
+                                    const play = () => audioRef.current?.play().catch(() => {});
+                                    document.addEventListener('click', play, { once: true });
+                                });
+                            }
+                            const nTitle = `${t('prayer_schedule.adzan') ?? 'Waktu'} ${t(p.labelKey)}`;
+                            const nBody = `${t('prayer_schedule.adzan_body') ?? 'Sudah masuk waktu'} ${t(p.labelKey)}`;
+                            if (notifGranted) {
+                                new Notification(nTitle, { body: nBody, icon: '/icon.png' });
+                            }
+                            if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                                navigator.serviceWorker.controller.postMessage({
+                                    type: 'ADZAN_NOTIFICATION',
+                                    title: nTitle,
+                                    body: nBody,
+                                    url: '/jadwal-sholat',
+                                });
+                            }
                         }
-                    }
                     setCountdown(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`);
                     return;
                 }
@@ -416,7 +428,7 @@ export default function JadwalSholatPage() {
                 </p>
             </ContentWidth>
             <Footer />
-            {adzanEnabled && <audio ref={audioRef} src='https://www.islamcan.com/audio/adzan/azan1.mp3' preload='auto' />}
+            {adzanEnabled && <audio ref={audioRef} src='/audio/adzan.mp3' preload='auto' onError={(e) => { if (e.target.src !== 'https://www.islamcan.com/audio/adzan/azan1.mp3') e.target.src = 'https://www.islamcan.com/audio/adzan/azan1.mp3'; }} />}
         </main>
     );
 }

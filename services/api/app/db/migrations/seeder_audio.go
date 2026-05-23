@@ -30,10 +30,52 @@ var qariCatalog = []qariInfo{
 		QuranicAudio: "abdurrahmaan_as-sudays",
 	},
 	{
-		Name:         "Abdul Basit",
+		Name:         "Abdul Basit Abdul Samad",
 		Slug:         "abdul-basit",
 		EveryAyahDir: "Abdul_Basit_Murattal_192kbps",
 		QuranicAudio: "abdul_basit",
+	},
+	{
+		Name:         "Saad Al-Ghamidi",
+		Slug:         "saad-al-ghamidi",
+		EveryAyahDir: "Saad_Al-Ghamidi_128kbps",
+		QuranicAudio: "sa`d_al-ghaamidi",
+	},
+	{
+		Name:         "Yasser Al-Dosari",
+		Slug:         "yasser-al-dosari",
+		EveryAyahDir: "Yasser_Ad-Dosari_128kbps",
+		QuranicAudio: "yaasir_ad-dusaari",
+	},
+	{
+		Name:         "Maher Al-Muaiqly",
+		Slug:         "maher-al-muaiqly",
+		EveryAyahDir: "Maher_Al-Muaiqly_128kbps",
+		QuranicAudio: "maahir_ibnaa_`ali_haashim_ibn_`abdul_`aziiz_al-mu`ayqiliy",
+	},
+	{
+		Name:         "Hani Ar-Rifai",
+		Slug:         "hani-ar-rifai",
+		EveryAyahDir: "Hani_Rifai_192kbps",
+		QuranicAudio: "haani_ar-rifaa`i",
+	},
+	{
+		Name:         "Salah Bukhatir",
+		Slug:         "salah-bukhatir",
+		EveryAyahDir: "Salah_Bukhatir_128kbps",
+		QuranicAudio: "salaah_`abdul_`aziiz_bukhaatir",
+	},
+	{
+		Name:         "Abdullah Al-Juhany",
+		Slug:         "abdullah-al-juhany",
+		EveryAyahDir: "Abdullah_Al_Juhany_128kbps",
+		QuranicAudio: "abdullaah_`abdul_`aziiz_`abdullaah_aal-juhany",
+	},
+	{
+		Name:         "Ali Abdurrahman Al-Hudhaify",
+		Slug:         "ali-al-hudhaify",
+		EveryAyahDir: "Ali_Bin_Abdur_Rahman_Al_Huthaify_128kbps",
+		QuranicAudio: "`ali_ibn_`abd_ar-rahman_al-hudhaify",
 	},
 }
 

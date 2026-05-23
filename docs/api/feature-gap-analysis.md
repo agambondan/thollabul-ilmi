@@ -106,9 +106,9 @@ Dokumen ini **belum berarti semua gap sudah selesai**. Hasil cek ulang terhadap 
 | Multi-metode perhitungan (Kemenag/MWL/ISNA/UmmAlQura) | ⚠️ BE+FE | M | BE sudah punya param `method` dan beberapa metode custom; mobile sudah expose selector. Web publik masih perlu parity, tambah Umm al-Qura naming/validasi, dan idealnya ganti ke [`mnadev/adhango`](https://github.com/mnadev/adhango) agar tidak hand-rolled. |
 | Madzhab Ashar (Syafi'i / Hanafi) | ✅ BE+Mobile | S | BE menerima `madhab=shafi|hanafi`; mobile menyimpan pilihan via AsyncStorage. |
 | Koreksi manual per waktu (+/- menit) | ⚠️ Mobile | S | Mobile sudah simpan lokal via AsyncStorage. Belum tersinkron ke `UserSettings` backend/web. |
-| **Adzan audio + push notification** | ❌ FE+SW | L | Web Push API + service worker. Audio file di `public/`. |
+| **Adzan audio + push notification** | ✅ FE+SW (Mei 2026) | L | Local MP3 di `public/audio/adzan.mp3` + CDN fallback. Service Worker `ADZAN_NOTIFICATION` message handler + `showNotification()` + `postMessage` ke InAppNotification. |
 | Countdown ke waktu shalat berikutnya | ✅ FE (Mei 2026) | — | Component countdown HH:MM:SS di [/jadwal-sholat](../../apps/web/src/app/jadwal-sholat/page.js) + "Semua waktu telah berlalu" message. |
-| Adzan subuh dengan "Allahu Akbar 2x" | ❌ FE | S | Bagian dari adzan audio. |
+| Adzan subuh dengan "Allahu Akbar 2x" | ⚠️ FE | S | Bagian dari adzan audio. MP3 adzan standar sudah, butuh file spesifik adzan subuh. |
 | Auto-detect lokasi via GPS | ✅ FE (Mei 2026) | — | Auto-detect on mount dengan spinner "Mendeteksi lokasi..." di [/jadwal-sholat](../../apps/web/src/app/jadwal-sholat/page.js) + fallback ke kota default. |
 
 ---
@@ -172,7 +172,7 @@ Dokumen ini **belum berarti semua gap sudah selesai**. Hasil cek ulang terhadap 
 ### Kurang
 | Fitur | Status | Effort | Catatan |
 |---|---|---|---|
-| **Audio pelafalan** | ⚠️ BE data | S | Model `AsmaUlHusna` punya `AudioURL` field. FE sudah ada play/pause button di list + detail. Tinggal seed audio URL di DB. |
+| **Audio pelafalan** | ✅ BE data (Mei 2026) | S | Model `AsmaUlHusna` punya `AudioURL` field. FE sudah ada play/pause button. |
 | **Flashcard mode** (random / sequential, tutup teks) | ✅ FE (Mei 2026) | — | Page [`/asmaul-husna/flashcard`](../../apps/web/src/app/asmaul-husna/flashcard/page.js) + dashboard mirror. Tap untuk reveal arti, shuffle/reset, prev/next nav. |
 | Wirid Asmaul Husna dengan counter | ✅ FE (Mei 2026) | — | Page [/asmaul-husna/wirid](../../apps/web/src/app/asmaul-husna/wirid/page.js) + dashboard mirror. Reuse tasbih pattern: 99 nama, counter, localStorage, vibrate, prev/next name. Shortcut di Asmaul Husna list. |
 
@@ -310,10 +310,10 @@ Dokumen ini **belum berarti semua gap sudah selesai**. Hasil cek ulang terhadap 
 |---|---|---|---|
 | **Inbox notifikasi** (BE-backed) | ✅ BE+Mobile (Mei 2026) | — | Model `UserNotification`, endpoint list/mark-read/mark-all-read, dan mobile Explore Notification Center sudah ada. Delete endpoint belum ada. |
 | `notification_templates` table | ✅ BE (Mei 2026) | — | Model `NotificationTemplate` + CRUD endpoints + migration. |
-| Push notification — Web Push (VAPID) | ❌ BE+FE+SW | L | Library `webpush-go`. Service worker subscribe + handle. |
+| Push notification — Web Push (VAPID) | ✅ BE+FE+SW (Mei 2026) | L | Library `webpush-go` ✅. Service worker subscribe + handle ✅. Notification settings UI ✅. VAPID keys sudah aktif di `.env`. Backend `DispatchDueReminders` + `sendWebPush` sudah berfungsi. |
 | Push notification — Mobile FCM | ❌ BE | M | Mobile sudah punya local notification reminder; push server tetap butuh token registration + FCM. |
-| `push_tokens` registration | ❌ BE | S | |
-| Auto-trigger adzan, dzikir reminder, hadis harian, ayat harian | ⚠️ BE partial | M | Cron-like scheduler internal sudah ada untuk daily Quran/Hadith/Doa via email. Belum ada adzan, dzikir pagi/petang, ayat/hadis content picker, push delivery, atau inbox record. |
+| `push_tokens` registration | ✅ BE (Mei 2026) | S | Model `PushToken` + endpoint `PUT /notifications/push-token` + FE integration di dashboard/notifications. |
+| Auto-trigger adzan, dzikir reminder, hadis harian, ayat harian | ⚠️ BE partial | M | Cron-like scheduler internal sudah ada untuk daily Quran/Hadith/Doa via email. Adzan push notification via client-side SW + notification settings UI sudah ada. Backend-side adzan trigger still needs user location data. |
 
 ---
 
@@ -332,7 +332,7 @@ Referensi: [integrasi-eksternal-opensource.md](./integrasi-eksternal-opensource.
 | Leaflet + OSM tile (peta) | ❌ missing | Belum ada peta interaktif (untuk siroh, masjid terdekat, dll). |
 | Overpass API (masjid terdekat) | ❌ missing | Belum ada query masjid by location. |
 | Azkar API / Hisnul Muslim dataset | ⚠️ seed lokal | Dzikir/doa ada, tapi belum ada importer yang jelas dari Azkar DB/Hisnul Muslim. |
-| Audio QuranicAudio / EveryAyah / Quran.com | ⚠️ data model ada | `SurahAudio`/`AyahAudio` dan endpoint ada, tapi belum ada documented importer untuk populate multi-qori. |
+| Audio QuranicAudio / EveryAyah | ✅ data model + seeder (Mei 2026) | `SurahAudio`/`AyahAudio` model + endpoint + seeder runtime (`seeder_audio.go`) + standalone script (`scripts/seed_audio.go`). 10 qari di catalog (Mishary, Sudais, Abdul Basit, Al-Ghamidi, Al-Dosari, Al-Muaiqly, Ar-Rifai, Bukhatir, Al-Juhany, Al-Hudhaify). CDN URL dari quranicaudio.com + everyayah.com. |
 | Web Push (VAPID) / ntfy / FCM | ❌ missing | Email reminder via `DispatchDueReminders` ada; **push stack tidak ada sama sekali**. |
 | Meilisearch / PostgreSQL FTS pg_trgm | ❌ missing | Search global ada (`/search`), tapi belum ada engine typo-tolerant/fuzzy Arab/Indonesia. |
 | metals.live (harga emas) | ❌ missing | Zakat masih pakai input/default harga emas; belum auto-fetch/cache. |
@@ -417,7 +417,7 @@ Referensi: [integrasi-eksternal-opensource.md](./integrasi-eksternal-opensource.
 | Dzikir Hisnul Muslim | ⚠️ seeded manual | Ada di seeder Go, bukan import dari API/dataset open. |
 | Asmaul Husna 99 | ✅ seeded | Cek `seeder.go`. |
 | Tafsir multi-kitab | ❌ tidak ada | Hanya 1 kitab (sumber tidak jelas). |
-| Audio multi-qori | ⚠️ mobile fallback | Model siap, data DB kosong; mobile Quran fallback ke EveryAyah Alafasy saat endpoint `/audio/ayah/:id` kosong. |
+| Audio multi-qori | ✅ 10 qari di catalog (Mei 2026) | Model + seeder runtime + standalone script. CDN URL dari quranicaudio.com + everyayah.com. Mobile fallback ke EveryAyah Alafasy saat endpoint `/audio/ayah/:id` kosong. |
 | Hari istimewa Hijri 5 tahun ke depan | ⚠️ ada | Lihat `hijri/events`. Cek seed script. |
 
 ---
