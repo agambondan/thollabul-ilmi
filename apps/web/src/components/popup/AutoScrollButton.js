@@ -15,12 +15,23 @@ const AutoScrollButton = () => {
     const [speed, setSpeed] = useState(3);
     const [showPanel, setShowPanel] = useState(false);
     const [navBarVisible, setNavBarVisible] = useState(false);
+    const [isCompactViewport, setIsCompactViewport] = useState(false);
+    const [mobileControlsVisible, setMobileControlsVisible] = useState(false);
 
     const rafRef = useRef(null);
     const isPlayingRef = useRef(false);
     const speedRef = useRef(3);
     const userTouchingRef = useRef(false);
     const resumeTimeoutRef = useRef(null);
+    const mobileControlsTimeoutRef = useRef(null);
+
+    useEffect(() => {
+        const media = window.matchMedia('(max-width: 767px)');
+        const updateViewport = () => setIsCompactViewport(media.matches);
+        updateViewport();
+        media.addEventListener('change', updateViewport);
+        return () => media.removeEventListener('change', updateViewport);
+    }, []);
 
     // Load speed from localStorage on mount
     useEffect(() => {
@@ -89,18 +100,28 @@ const AutoScrollButton = () => {
         };
     }, []);
 
-    // Track prev/next nav bar visibility (same 2s timeout as ScrollableComponent)
+    // Track scroll activity so mobile controls only appear while useful.
     useEffect(() => {
         let tid;
         const handler = () => {
             setNavBarVisible(true);
+            setMobileControlsVisible(true);
             clearTimeout(tid);
+            clearTimeout(mobileControlsTimeoutRef.current);
             tid = setTimeout(() => setNavBarVisible(false), 2000);
+            mobileControlsTimeoutRef.current = setTimeout(() => {
+                if (!isPlayingRef.current) setMobileControlsVisible(false);
+            }, 2200);
         };
         window.addEventListener('scroll', handler);
+        document.addEventListener('scroll', handler, true);
+        window.addEventListener('touchmove', handler, { passive: true });
         return () => {
             window.removeEventListener('scroll', handler);
+            document.removeEventListener('scroll', handler, true);
+            window.removeEventListener('touchmove', handler);
             clearTimeout(tid);
+            clearTimeout(mobileControlsTimeoutRef.current);
         };
     }, []);
 
@@ -117,7 +138,13 @@ const AutoScrollButton = () => {
     const toggle = () => {
         const next = !isPlaying;
         setIsPlaying(next);
-        if (next) setShowPanel(true);
+        if (next) {
+            setMobileControlsVisible(true);
+            setShowPanel(true);
+        } else if (isCompactViewport) {
+            clearTimeout(mobileControlsTimeoutRef.current);
+            mobileControlsTimeoutRef.current = setTimeout(() => setMobileControlsVisible(false), 1200);
+        }
     };
     const isDashboard = pathname?.startsWith('/dashboard');
     const bottomClass = isDashboard
@@ -127,11 +154,15 @@ const AutoScrollButton = () => {
         : navBarVisible
             ? 'bottom-[52px]'
             : 'bottom-2';
+    const shouldShowMobileControls = !isCompactViewport || mobileControlsVisible || isPlaying || showPanel;
+    const visibilityClass = shouldShowMobileControls
+        ? 'translate-y-0 opacity-100 pointer-events-auto'
+        : 'translate-y-2 opacity-0 pointer-events-none';
 
     return (
         <div
             id='auto-scroll-panel'
-            className={`fixed left-2 z-10 transition-[bottom] duration-200 ${bottomClass}`}
+            className={`fixed left-2 z-10 transition-all duration-200 ${bottomClass} ${visibilityClass}`}
         >
             {showPanel && (
                 <div className='absolute left-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-52 p-3 shadow-lg text-sm text-emerald-900 dark:text-white mb-1'>
