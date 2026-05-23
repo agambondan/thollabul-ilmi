@@ -127,17 +127,17 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
     return (
         <Link
             href={basePath}
-            className='block rounded-2xl border border-stone-200 bg-[#f8f5ed] px-4 py-4 text-stone-900 shadow-sm transition-colors hover:border-emerald-200 hover:bg-[#fbf8f1] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:border-emerald-700'
+            className='block rounded-2xl border border-emerald-100 bg-white px-4 py-4 text-slate-900 shadow-sm transition-colors hover:border-emerald-200 hover:bg-emerald-50/30 dark:border-emerald-900/30 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-emerald-700'
             aria-label='Jadwal sholat hari ini'
         >
             <div className='flex flex-wrap items-start justify-between gap-3'>
-                <div className='inline-flex max-w-full items-center gap-1.5 rounded-lg border border-stone-200 bg-white/55 px-2.5 py-2 text-[10px] font-extrabold uppercase tracking-wide text-emerald-800 dark:border-slate-700 dark:bg-slate-900/60 dark:text-emerald-300'>
+                <div className='inline-flex max-w-full items-center gap-1.5 rounded-lg border border-emerald-100 bg-emerald-50 px-2.5 py-2 text-[10px] font-extrabold uppercase tracking-wide text-emerald-800 dark:border-emerald-900/40 dark:bg-emerald-900/20 dark:text-emerald-300'>
                     <MdAccessTime className='text-sm' />
                     <span className='truncate'>{DASHBOARD_LOCATION.label}</span>
                 </div>
-                <div className='text-right text-xs font-bold text-stone-800 dark:text-slate-200'>
+                <div className='text-right text-xs font-bold text-slate-700 dark:text-slate-200'>
                     {hijriDate ? (
-                        <p className='flex items-center justify-end gap-1 text-amber-700 dark:text-amber-300'>
+                        <p className='flex items-center justify-end gap-1 text-emerald-700 dark:text-emerald-300'>
                             <MdCalendarToday className='text-sm' />
                             {hijriDate}
                         </p>
@@ -146,16 +146,16 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
             </div>
 
             <div className='py-7 text-center'>
-                <p className='text-xs font-extrabold uppercase tracking-wide text-emerald-800 dark:text-emerald-300'>
+                <p className='text-xs font-extrabold uppercase tracking-wide text-emerald-700 dark:text-emerald-300'>
                     Menuju {nextPrayer.label}
                 </p>
-                <p className='mt-2 text-5xl font-extrabold leading-none text-stone-800 tabular-nums dark:text-white'>
+                <p className='mt-2 text-5xl font-extrabold leading-none text-slate-950 tabular-nums dark:text-white'>
                     {formatTime(prayers[nextPrayer.key])}
                 </p>
-                <p className='mt-3 text-sm font-semibold text-stone-500 dark:text-slate-400'>
+                <p className='mt-3 text-sm font-semibold text-slate-500 dark:text-slate-400'>
                     {secsLeft !== null ? fmtRemainingText(secsLeft, nextPrayer.label) : ''}
                 </p>
-                <div className='mt-4 inline-flex items-center gap-1.5 rounded-xl border border-stone-200 bg-white/65 px-3 py-2 text-sm font-extrabold text-stone-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200'>
+                <div className='mt-4 inline-flex items-center gap-1.5 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-sm font-extrabold text-emerald-800 shadow-sm dark:border-emerald-900/40 dark:bg-emerald-900/20 dark:text-emerald-200'>
                     <MdAccessTime className='text-emerald-700 dark:text-emerald-300' />
                     <span className='tabular-nums'>
                         {secsLeft !== null ? fmtCountdown(secsLeft) : '--:--:--'}
@@ -163,7 +163,7 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
                 </div>
             </div>
 
-            <div className='border-t border-stone-200 pt-3 dark:border-slate-700'>
+            <div className='border-t border-slate-100 pt-3 dark:border-slate-800'>
                 <div className='grid grid-cols-3 gap-y-3 min-[390px]:grid-cols-6'>
                     {DISPLAY_PRAYERS.map((prayer) => {
                         const Icon = prayer.icon;
@@ -174,8 +174,8 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
                                 key={prayer.key}
                                 className={`flex min-w-0 flex-col items-center gap-1 text-center ${
                                     isActive
-                                        ? 'text-amber-700 dark:text-amber-300'
-                                        : 'text-stone-600 dark:text-slate-400'
+                                        ? 'text-emerald-700 dark:text-emerald-300'
+                                        : 'text-slate-600 dark:text-slate-400'
                                 }`}
                             >
                                 <span className='text-[11px] font-extrabold leading-tight'>
@@ -184,8 +184,8 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
                                 <Icon
                                     className={`text-2xl ${
                                         isActive
-                                            ? 'text-amber-700 dark:text-amber-300'
-                                            : 'text-emerald-800/75 dark:text-slate-400'
+                                            ? 'text-emerald-700 dark:text-emerald-300'
+                                            : 'text-slate-400 dark:text-slate-500'
                                     }`}
                                     aria-hidden='true'
                                 />
