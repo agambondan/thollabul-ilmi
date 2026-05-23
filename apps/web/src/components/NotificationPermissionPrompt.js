@@ -68,7 +68,7 @@ export default function NotificationPermissionPrompt() {
                 : 'unsupported';
             const hasStoredLocation = Boolean(readStoredUserLocation());
 
-            if (!hasStoredLocation && locationPermission === 'granted') {
+            if (locationPermission === 'granted') {
                 requestAndStoreUserLocation().catch(() => {});
             }
 
