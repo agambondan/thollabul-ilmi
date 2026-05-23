@@ -1,5 +1,6 @@
 export const USER_LOCATION_STORAGE_KEY = 'tholabul_user_location';
 export const USER_LOCATION_EVENT = 'tholabul:user-location-updated';
+export const USER_LOCATION_MAX_AGE_MS = 6 * 60 * 60 * 1000;
 
 export const DEFAULT_PRAYER_LOCATION = {
     label: 'Jakarta',
@@ -34,6 +35,15 @@ export const readStoredUserLocation = () => {
     } catch {
         return null;
     }
+};
+
+export const isStoredUserLocationFresh = (
+    location,
+    maxAge = USER_LOCATION_MAX_AGE_MS,
+) => {
+    if (!location?.updatedAt) return false;
+    const updatedAt = Number(location.updatedAt);
+    return Number.isFinite(updatedAt) && Date.now() - updatedAt <= maxAge;
 };
 
 export const writeStoredUserLocation = (location) => {

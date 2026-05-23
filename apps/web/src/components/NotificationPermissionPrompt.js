@@ -13,11 +13,19 @@ import {
 import { useAuth } from '@/context/Auth';
 import {
     getLocationPermissionState,
+    isStoredUserLocationFresh,
     readStoredUserLocation,
     requestAndStoreUserLocation,
 } from '@/lib/userLocation';
 
 const DISMISSED_KEY = 'tholabul_site_permission_dismissed';
+const DISMISS_TTL_MS = 24 * 60 * 60 * 1000;
+
+const isPromptDismissed = () => {
+    if (typeof window === 'undefined') return false;
+    const value = Number(localStorage.getItem(DISMISSED_KEY));
+    return Number.isFinite(value) && Date.now() - value < DISMISS_TTL_MS;
+};
 
 export default function NotificationPermissionPrompt() {
     const { isAuthenticated, isLoading } = useAuth();
@@ -66,7 +74,8 @@ export default function NotificationPermissionPrompt() {
             const locationPermission = hasLocation
                 ? await getLocationPermissionState()
                 : 'unsupported';
-            const hasStoredLocation = Boolean(readStoredUserLocation());
+            const storedLocation = readStoredUserLocation();
+            const hasFreshStoredLocation = isStoredUserLocationFresh(storedLocation);
 
             if (locationPermission === 'granted') {
                 requestAndStoreUserLocation().catch(() => {});
@@ -75,7 +84,7 @@ export default function NotificationPermissionPrompt() {
             const canAskNotification = notificationPermission === 'default';
             const canAskLocation =
                 hasLocation &&
-                !hasStoredLocation &&
+                !hasFreshStoredLocation &&
                 (locationPermission === 'prompt' || locationPermission === 'unknown');
 
             if (notificationPermission === 'granted' && isAuthenticated && !syncedRef.current) {
@@ -86,7 +95,7 @@ export default function NotificationPermissionPrompt() {
             }
 
             if (!canAskNotification && !canAskLocation) return;
-            if (localStorage.getItem(DISMISSED_KEY) === '1') return;
+            if (isPromptDismissed()) return;
 
             if (!cancelled) setVisible(true);
 
@@ -120,7 +129,7 @@ export default function NotificationPermissionPrompt() {
     };
 
     const handleDismiss = () => {
-        localStorage.setItem(DISMISSED_KEY, '1');
+        localStorage.setItem(DISMISSED_KEY, String(Date.now()));
         setVisible(false);
     };
 

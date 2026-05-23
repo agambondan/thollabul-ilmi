@@ -1,6 +1,7 @@
 'use client';
 
 import { useLocale } from '@/context/Locale';
+import { toLocalISODate } from '@/lib/date';
 import {
     DEFAULT_PRAYER_LOCATION,
     readStoredUserLocation,
@@ -81,13 +82,13 @@ const formatHijriDate = (date) => {
 
 export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
     const { t } = useLocale();
-    const [location, setLocation] = useState(DEFAULT_PRAYER_LOCATION);
+    const [location, setLocation] = useState(null);
     const [prayers, setPrayers] = useState(null);
     const [now, setNow] = useState(new Date());
 
     useEffect(() => {
         const stored = readStoredUserLocation();
-        if (stored) setLocation(stored);
+        setLocation(stored || DEFAULT_PRAYER_LOCATION);
 
         const handleLocationUpdate = (event) => {
             if (event.detail) setLocation(event.detail);
@@ -100,7 +101,7 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
         if (!Number.isFinite(Number(location?.lat)) || !Number.isFinite(Number(location?.lng))) {
             return;
         }
-        const today = new Date().toISOString().slice(0, 10);
+        const today = toLocalISODate();
         fetch(
             `${API_URL}/api/v1/sholat-times?lat=${location.lat}&lng=${location.lng}&method=kemenag&madhab=shafi&date=${today}`,
         )

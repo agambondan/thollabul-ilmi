@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useLocale } from '@/context/Locale';
 import { useLayoutMode } from '@/lib/useLayoutMode';
+import { toLocalISODate } from '@/lib/date';
 import {
     DEFAULT_PRAYER_LOCATION,
     readStoredUserLocation,
@@ -33,11 +34,11 @@ const JadwalSholatPage = () => {
     const [prayers, setPrayers] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [location, setLocation] = useState(DEFAULT_PRAYER_LOCATION);
+    const [location, setLocation] = useState(null);
 
     useEffect(() => {
         const stored = readStoredUserLocation();
-        if (stored) setLocation(stored);
+        setLocation(stored || DEFAULT_PRAYER_LOCATION);
 
         const handleLocationUpdate = (event) => {
             if (event.detail) setLocation(event.detail);
@@ -55,7 +56,7 @@ const JadwalSholatPage = () => {
             setLoading(true);
             setError(false);
             try {
-                const today = new Date().toISOString().slice(0, 10);
+                const today = toLocalISODate();
                 const res = await fetch(
                     `${API_URL}/api/v1/sholat-times?lat=${location.lat}&lng=${location.lng}&method=kemenag&madhab=shafi&date=${today}`,
                 );
@@ -105,7 +106,7 @@ const JadwalSholatPage = () => {
                 })}
             </p>
             <p className='text-xs text-gray-400 dark:text-gray-500 mb-6'>
-                {location.label} · Metode Kemenag
+                {(location || DEFAULT_PRAYER_LOCATION).label} · Metode Kemenag
             </p>
 
             {loading ? (

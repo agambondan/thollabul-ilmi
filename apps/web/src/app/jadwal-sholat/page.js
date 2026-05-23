@@ -4,7 +4,9 @@ import Footer from '@/components/Footer';
 import ContentWidth from '@/components/layout/ContentWidth';
 import { NavbarTailwindCss } from '@/components/Navbar';
 import { useLocale } from '@/context/Locale';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { toLocalISODate } from '@/lib/date';
+import { requestAndStoreUserLocation } from '@/lib/userLocation';
+import { useEffect, useRef, useState } from 'react';
 import { BsBell, BsBellFill, BsGeoAlt } from 'react-icons/bs';
 import { MdAccessTime, MdTimer } from 'react-icons/md';
 
@@ -97,14 +99,16 @@ export default function JadwalSholatPage() {
         if (!navigator.geolocation) return;
         gpsTriedRef.current = true;
         setGpsStatus('detecting');
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                fetchByCoords(pos.coords.latitude, pos.coords.longitude, t('geo.my_location'));
-                setGpsStatus('done');
-            },
-            () => setGpsStatus('error'),
-            { timeout: 10000, maximumAge: 300000 },
-        );
+        requestAndStoreUserLocation({ fallbackLabel: t('geo.my_location') })
+            .then((result) => {
+                if (result.ok && result.location) {
+                    fetchByCoords(result.location.lat, result.location.lng, result.location.label);
+                    setGpsStatus('done');
+                    return;
+                }
+                setGpsStatus('error');
+            })
+            .catch(() => setGpsStatus('error'));
     }, [city.lat, city.lng]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
@@ -155,7 +159,7 @@ export default function JadwalSholatPage() {
     const fetchByCoords = (lat, lng, label) => {
         setLoading(true);
         setError('');
-        const today = new Date().toISOString().slice(0, 10);
+        const today = toLocalISODate();
         fetch(
             `${API_URL}/api/v1/sholat-times?lat=${lat}&lng=${lng}&method=${method}&madhab=${madhab}&date=${today}`,
         )
@@ -183,15 +187,19 @@ export default function JadwalSholatPage() {
             return;
         }
         setLoading(true);
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                fetchByCoords(pos.coords.latitude, pos.coords.longitude, t('geo.my_location'));
-            },
-            () => {
+        requestAndStoreUserLocation({ fallbackLabel: t('geo.my_location') })
+            .then((result) => {
+                if (result.ok && result.location) {
+                    fetchByCoords(result.location.lat, result.location.lng, result.location.label);
+                    return;
+                }
                 setLoading(false);
                 setError(t('geo.permission_error'));
-            },
-        );
+            })
+            .catch(() => {
+                setLoading(false);
+                setError(t('geo.permission_error'));
+            });
     };
 
     const nextPrayer = (() => {
