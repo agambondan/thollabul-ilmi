@@ -155,6 +155,48 @@ Contoh susunan Beranda `web_app` untuk guest:
 7. Lanjutkan terakhir: dari local storage.
 8. CTA kecil: `Masuk untuk sinkronisasi bookmark, target, dan progres`.
 
+## Feature Parity Across Layout Modes
+
+Layout mode tidak boleh mengurangi fitur.
+
+`classic` dan `web_app` harus mengekspos feature set yang sama, meskipun
+posisi, grouping, dan visual hierarchy boleh berbeda. Pergantian layout hanya
+boleh mengubah cara user menemukan dan memakai fitur, bukan menghapus fitur
+dari pengalaman mobile app.
+
+Source of truth feature tetap:
+
+- `docs/features/feature-manifest.json`
+- `apps/mobile/src/data/mobileFeatures.js`
+- screen-level routes di `apps/mobile/src/screens/*Screen.js`
+- parity rule di `docs/WEB_MOBILE_SYNC.md`
+
+Rules:
+
+- Semua 5 tab final wajib ada di setiap layout: Beranda, Quran, Hadis,
+  Ibadah, Belajar.
+- Fitur utama seperti Quran, Hadis, Jadwal Sholat, Qibla, Hafalan, Tafsir,
+  Doa/Dzikir, Journal, Kuis, Kajian, Bookmark, Notes, Target, dan Profile/
+  Settings tetap harus reachable.
+- `web_app` boleh memindahkan fitur long-tail ke bottom-sheet menu, hub,
+  search, pinned shortcut, atau recent item.
+- Fitur yang butuh akun tetap muncul sebagai locked/personal action dengan CTA
+  login, bukan hilang dari navigasi.
+- Data source dan action handler harus shared sejauh mungkin agar switching
+  layout tidak menciptakan drift data.
+- Saat fitur baru ditambahkan ke mobile, kedua layout harus dipertimbangkan di
+  task yang sama: apakah masuk tab, hub, menu sheet, search, atau shortcut.
+
+Contoh mapping:
+
+| Feature type | `classic` | `web_app` |
+| --- | --- | --- |
+| Primary tab | Bottom tab / existing screen | Bottom nav 5 tab |
+| Daily cockpit | Existing Beranda card stack | Compact dashboard cards |
+| Long-tail feature | Hub/grid/list existing | Menu sheet, hub, search, pinned/recent |
+| Personal feature | Profile/settings/account area | Account sheet/settings plus contextual CTA |
+| Auth-required action | Existing login handoff | Inline CTA, locked action, or account sheet |
+
 ## Architecture Direction
 
 Implementasi harus menghindari duplikasi logic.
@@ -205,6 +247,7 @@ Untuk setiap screen yang mendapat mode `web_app`:
 
 - `classic` masih render dan navigasinya tidak berubah.
 - `web_app` memakai 5 tab final.
+- Semua feature dari manifest tetap reachable di layout yang diuji.
 - Android back navigation tetap benar.
 - Bottom-sheet menu bisa dibuka/tutup dengan tap luar dan tombol close.
 - Floating action tidak overlap dengan bottom nav.

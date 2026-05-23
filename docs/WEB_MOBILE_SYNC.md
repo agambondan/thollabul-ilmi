@@ -115,6 +115,9 @@ Design constraints:
 - Mobile layout mode strategy follows `docs/MOBILE_LAYOUT_MODES.md`; existing
   native mobile screens remain as the `classic` baseline while the newer mobile
   web-inspired shell can be introduced as an opt-in `web_app` mode.
+- Layout mode is presentation-only for parity purposes. `classic` and
+  `web_app` must keep the same mobile feature availability; a feature may move
+  between tab, hub, search, shortcut, or menu sheet, but must not disappear.
 - Detail UI uses bottom-sheet modal or detail page. Do not add inline
   expand/collapse.
 - Android back navigation must use `setBack`/`clearBack` for sub-navigation.
