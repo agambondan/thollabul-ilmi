@@ -3,6 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useLocale } from '@/context/Locale';
 import { useLayoutMode } from '@/lib/useLayoutMode';
+import {
+    DEFAULT_PRAYER_LOCATION,
+    readStoredUserLocation,
+    USER_LOCATION_EVENT,
+} from '@/lib/userLocation';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
@@ -28,23 +33,41 @@ const JadwalSholatPage = () => {
     const [prayers, setPrayers] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [location, setLocation] = useState(DEFAULT_PRAYER_LOCATION);
 
     useEffect(() => {
+        const stored = readStoredUserLocation();
+        if (stored) setLocation(stored);
+
+        const handleLocationUpdate = (event) => {
+            if (event.detail) setLocation(event.detail);
+        };
+        window.addEventListener(USER_LOCATION_EVENT, handleLocationUpdate);
+        return () => window.removeEventListener(USER_LOCATION_EVENT, handleLocationUpdate);
+    }, []);
+
+    useEffect(() => {
+        if (!Number.isFinite(Number(location?.lat)) || !Number.isFinite(Number(location?.lng))) {
+            return;
+        }
+
         const fetchSchedule = async () => {
+            setLoading(true);
+            setError(false);
             try {
                 const today = new Date().toISOString().slice(0, 10);
                 const res = await fetch(
-                    `${API_URL}/api/v1/sholat-times?lat=-6.2088&lng=106.8456&method=kemenag&madhab=shafi&date=${today}`,
+                    `${API_URL}/api/v1/sholat-times?lat=${location.lat}&lng=${location.lng}&method=kemenag&madhab=shafi&date=${today}`,
                 );
                 const data = await res.json();
-                setPrayers(data?.data?.prayers ?? null);
+                setPrayers(data?.data?.prayers ?? data?.prayers ?? null);
             } catch {
                 setError(true);
             }
             setLoading(false);
         };
         fetchSchedule();
-    }, []);
+    }, [location?.lat, location?.lng]);
 
     const now = new Date();
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
@@ -82,7 +105,7 @@ const JadwalSholatPage = () => {
                 })}
             </p>
             <p className='text-xs text-gray-400 dark:text-gray-500 mb-6'>
-                {t('jadwal.subtitle')}
+                {location.label} · Metode Kemenag
             </p>
 
             {loading ? (

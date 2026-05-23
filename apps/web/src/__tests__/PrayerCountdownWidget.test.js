@@ -52,7 +52,7 @@ describe('PrayerCountdownWidget', () => {
     });
 
     render(<PrayerCountdownWidget />);
-    expect(await screen.findByText('Kecamatan Cileungsi')).toBeInTheDocument();
+    expect(await screen.findByText('Jakarta')).toBeInTheDocument();
     expect(screen.getByText('Menuju Subuh')).toBeInTheDocument();
     expect(screen.getAllByText('04:30').length).toBeGreaterThan(0);
     expect(screen.getByText('Terbit')).toBeInTheDocument();
@@ -88,6 +88,6 @@ describe('PrayerCountdownWidget', () => {
     });
 
     render(<PrayerCountdownWidget />);
-    expect(await screen.findByText('Kecamatan Cileungsi')).toBeInTheDocument();
+    expect(await screen.findByText('Jakarta')).toBeInTheDocument();
   });
 });
