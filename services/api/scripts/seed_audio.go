@@ -80,19 +80,19 @@ var qariCatalog = []qariInfo{
 	{
 		Name:         "Saad Al-Ghamidi",
 		Slug:         "saad-al-ghamidi",
-		EveryAyahDir: "Saad_Al-Ghamidi_128kbps",
+		EveryAyahDir: "Ghamadi_40kbps",
 		QuranicAudio: "sa`d_al-ghaamidi",
 	},
 	{
 		Name:         "Yasser Al-Dosari",
 		Slug:         "yasser-al-dosari",
-		EveryAyahDir: "Yasser_Ad-Dosari_128kbps",
+		EveryAyahDir: "Yasser_Ad-Dussary_128kbps",
 		QuranicAudio: "yaasir_ad-dusaari",
 	},
 	{
 		Name:         "Maher Al-Muaiqly",
 		Slug:         "maher-al-muaiqly",
-		EveryAyahDir: "Maher_Al-Muaiqly_128kbps",
+		EveryAyahDir: "MaherAlMuaiqly128kbps",
 		QuranicAudio: "maahir_ibnaa_`ali_haashim_ibn_`abdul_`aziiz_al-mu`ayqiliy",
 	},
 	{
@@ -104,19 +104,19 @@ var qariCatalog = []qariInfo{
 	{
 		Name:         "Salah Bukhatir",
 		Slug:         "salah-bukhatir",
-		EveryAyahDir: "Salah_Bukhatir_128kbps",
+		EveryAyahDir: "Salaah_AbdulRahman_Bukhatir_128kbps",
 		QuranicAudio: "salaah_`abdul_`aziiz_bukhaatir",
 	},
 	{
 		Name:         "Abdullah Al-Juhany",
 		Slug:         "abdullah-al-juhany",
-		EveryAyahDir: "Abdullah_Al_Juhany_128kbps",
+		EveryAyahDir: "Abdullaah_3awwaad_Al-Juhaynee_128kbps",
 		QuranicAudio: "abdullaah_`abdul_`aziiz_`abdullaah_aal-juhany",
 	},
 	{
 		Name:         "Ali Abdurrahman Al-Hudhaify",
 		Slug:         "ali-al-hudhaify",
-		EveryAyahDir: "Ali_Bin_Abdur_Rahman_Al_Huthaify_128kbps",
+		EveryAyahDir: "Hudhaify_128kbps",
 		QuranicAudio: "`ali_ibn_`abd_ar-rahman_al-hudhaify",
 	},
 }
@@ -349,7 +349,7 @@ func seedAyahAudio(db *gorm.DB, q qariInfo, mc *minioClient) {
 func main() {
 	mode := flag.String("mode", "surah", "surah | ayah | all")
 	useMinio := flag.Bool("minio", false, "download dari CDN dan upload ke MinIO sebelum insert DB")
-	qariSlug := flag.String("qari", "mishary-rashid-alafasy", "slug qari — lihat daftar lengkap di catalog")
+	qariSlug := flag.String("qari", "mishary-rashid-alafasy", "slug qari atau 'all' — lihat daftar lengkap di catalog")
 	listQari := flag.Bool("list", false, "tampilkan daftar qari yang tersedia")
 	flag.Parse()
 
@@ -361,14 +361,18 @@ func main() {
 		return
 	}
 
-	var q *qariInfo
-	for i := range qariCatalog {
-		if qariCatalog[i].Slug == *qariSlug {
-			q = &qariCatalog[i]
-			break
+	var selectedQaris []qariInfo
+	if *qariSlug == "all" {
+		selectedQaris = qariCatalog
+	} else {
+		for i := range qariCatalog {
+			if qariCatalog[i].Slug == *qariSlug {
+				selectedQaris = append(selectedQaris, qariCatalog[i])
+				break
+			}
 		}
 	}
-	if q == nil {
+	if len(selectedQaris) == 0 {
 		fmt.Printf("Qari '%s' tidak ditemukan. Gunakan -list untuk melihat daftar.\n", *qariSlug)
 		return
 	}
@@ -383,15 +387,17 @@ func main() {
 		log.Println("[audio] mode CDN URL langsung (tanpa upload MinIO). Gunakan -minio untuk upload ke MinIO.")
 	}
 
-	switch *mode {
-	case "surah":
-		seedSurahAudio(db, *q, mc)
-	case "ayah":
-		seedAyahAudio(db, *q, mc)
-	case "all":
-		seedSurahAudio(db, *q, mc)
-		seedAyahAudio(db, *q, mc)
-	default:
-		log.Fatalf("mode tidak dikenal: %s. Pilih: surah | ayah | all", *mode)
+	for _, q := range selectedQaris {
+		switch *mode {
+		case "surah":
+			seedSurahAudio(db, q, mc)
+		case "ayah":
+			seedAyahAudio(db, q, mc)
+		case "all":
+			seedSurahAudio(db, q, mc)
+			seedAyahAudio(db, q, mc)
+		default:
+			log.Fatalf("mode tidak dikenal: %s. Pilih: surah | ayah | all", *mode)
+		}
 	}
 }

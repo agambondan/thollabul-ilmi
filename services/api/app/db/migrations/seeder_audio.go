@@ -38,19 +38,19 @@ var qariCatalog = []qariInfo{
 	{
 		Name:         "Saad Al-Ghamidi",
 		Slug:         "saad-al-ghamidi",
-		EveryAyahDir: "Saad_Al-Ghamidi_128kbps",
+		EveryAyahDir: "Ghamadi_40kbps",
 		QuranicAudio: "sa`d_al-ghaamidi",
 	},
 	{
 		Name:         "Yasser Al-Dosari",
 		Slug:         "yasser-al-dosari",
-		EveryAyahDir: "Yasser_Ad-Dosari_128kbps",
+		EveryAyahDir: "Yasser_Ad-Dussary_128kbps",
 		QuranicAudio: "yaasir_ad-dusaari",
 	},
 	{
 		Name:         "Maher Al-Muaiqly",
 		Slug:         "maher-al-muaiqly",
-		EveryAyahDir: "Maher_Al-Muaiqly_128kbps",
+		EveryAyahDir: "MaherAlMuaiqly128kbps",
 		QuranicAudio: "maahir_ibnaa_`ali_haashim_ibn_`abdul_`aziiz_al-mu`ayqiliy",
 	},
 	{
@@ -62,19 +62,19 @@ var qariCatalog = []qariInfo{
 	{
 		Name:         "Salah Bukhatir",
 		Slug:         "salah-bukhatir",
-		EveryAyahDir: "Salah_Bukhatir_128kbps",
+		EveryAyahDir: "Salaah_AbdulRahman_Bukhatir_128kbps",
 		QuranicAudio: "salaah_`abdul_`aziiz_bukhaatir",
 	},
 	{
 		Name:         "Abdullah Al-Juhany",
 		Slug:         "abdullah-al-juhany",
-		EveryAyahDir: "Abdullah_Al_Juhany_128kbps",
+		EveryAyahDir: "Abdullaah_3awwaad_Al-Juhaynee_128kbps",
 		QuranicAudio: "abdullaah_`abdul_`aziiz_`abdullaah_aal-juhany",
 	},
 	{
 		Name:         "Ali Abdurrahman Al-Hudhaify",
 		Slug:         "ali-al-hudhaify",
-		EveryAyahDir: "Ali_Bin_Abdur_Rahman_Al_Huthaify_128kbps",
+		EveryAyahDir: "Hudhaify_128kbps",
 		QuranicAudio: "`ali_ibn_`abd_ar-rahman_al-hudhaify",
 	},
 }
@@ -126,14 +126,6 @@ func seedSurahAudioForQari(db *gorm.DB, surahs *[]struct {
 	ID     int
 	Number int
 }, q qariInfo) {
-	var count int64
-	db.Model(&model.SurahAudio{}).
-		Where("qari_slug = ?", q.Slug).
-		Count(&count)
-	if count > 0 {
-		return
-	}
-
 	log.Printf("[seeder] surah audio: %s (%s)", q.Name, q.Slug)
 	for _, s := range *surahs {
 		row := model.SurahAudio{
@@ -154,14 +146,6 @@ func seedAyahAudioForQari(db *gorm.DB, ayahs *[]struct {
 	Number      int
 	SurahNumber int
 }, q qariInfo) {
-	var count int64
-	db.Model(&model.AyahAudio{}).
-		Where("qari_slug = ?", q.Slug).
-		Count(&count)
-	if count > 0 {
-		return
-	}
-
 	log.Printf("[seeder] ayah audio: %s (%s) — %d ayah", q.Name, q.Slug, len(*ayahs))
 	batchSize := 100
 	for i := 0; i < len(*ayahs); i += batchSize {
