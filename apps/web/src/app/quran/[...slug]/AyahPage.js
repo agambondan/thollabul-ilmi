@@ -27,8 +27,8 @@ import { IoIosLink, IoMdCopy, IoMdImages } from 'react-icons/io';
 
 const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selectedQari, onQariChange }) => {
     const { t, lang } = useLocale();
-    const { fontCls } = useQuranFont();
-    const { isMenu: actionsMenu } = useActionPosition();
+    const { arabicFontSize, fontCls } = useQuranFont();
+    const { isHidden: actionsHidden, isMenu: actionsMenu } = useActionPosition();
     const cardRef = useRef();
     const audioRef = useRef(null);
     const [isCopied, SetIsCopied] = useState(false);
@@ -49,6 +49,7 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
     const [munasabahLoading, setMunasabahLoading] = useState(false);
 
     const [audioUrls, setAudioUrls] = useState([]);
+    const [audioError, setAudioError] = useState('');
     const [isPlaying, setIsPlaying] = useState(false);
     const [audioLoading, setAudioLoading] = useState(false);
     const [showQariMenu, setShowQariMenu] = useState(false);
@@ -149,15 +150,14 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                 const data = await res.json();
                 const urls = data?.items ?? data ?? [];
                 setAudioUrls(urls);
-                const chosen = pickQariUrl(urls);
-                if (chosen) playAudio(chosen.audio_url);
+                await playFirstAvailableAudio(urls);
             } catch {
+                setAudioError('Audio ayat belum bisa diputar.');
             } finally {
                 setAudioLoading(false);
             }
         } else {
-            const chosen = pickQariUrl(audioUrls);
-            if (chosen) playAudio(chosen.audio_url);
+            await playFirstAvailableAudio(audioUrls);
         }
     };
 
@@ -170,15 +170,45 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
         }
     };
 
+    const playFirstAvailableAudio = async (urls) => {
+        const chosen = pickQariUrl(urls);
+        const candidates = [
+            ...(chosen ? [chosen] : []),
+            ...(urls ?? []).filter((item) => item.audio_url && item.qari_slug !== chosen?.qari_slug),
+        ];
+        for (const candidate of candidates) {
+            try {
+                await playAudio(candidate.audio_url);
+                setAudioError('');
+                return;
+            } catch {
+                // Try the next qari when the selected CDN URL is unavailable.
+            }
+        }
+        setAudioError('Audio qari ini belum tersedia.');
+    };
+
     const playAudio = (url) => {
         if (!url) return;
+        return new Promise((resolve, reject) => {
         if (!audioRef.current) {
             audioRef.current = new Audio(url);
             audioRef.current.onended = () => setIsPlaying(false);
         } else {
             audioRef.current.src = url;
         }
-        audioRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+        audioRef.current.onerror = () => {
+            setIsPlaying(false);
+            reject(new Error('audio'));
+        };
+        audioRef.current.play().then(() => {
+            setIsPlaying(true);
+            resolve();
+        }).catch((err) => {
+            setIsPlaying(false);
+            reject(err);
+        });
+        });
     };
 
     return (
@@ -204,6 +234,11 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                         )}
                 />
             )}
+            {audioError && (
+                <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full shadow-lg'>
+                    {audioError}
+                </div>
+            )}
 
             <ul
                 className={classNames({
@@ -213,88 +248,89 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                     'text-gray-900 dark:text-white': true,
                 })}
             >
-                <ul
-                    className='flex flex-col p-2 space-y-1'
-                    style={{ direction: 'ltr' }}
-                >
-                    <li className='flex justify-center text-sm font-medium text-gray-500 dark:text-gray-400 pb-1'>
-                        {surah.number}:{ayah.number}
-                    </li>
-                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
-                        <button
-                            title={isPlaying ? 'Pause' : 'Putar Audio'}
-                            onClick={handleAudio}
-                            disabled={audioLoading}
-                            className={`p-2 rounded-lg text-lg transition-colors disabled:opacity-50 ${
-                                isPlaying
-                                    ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20'
-                                    : 'text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700'
-                            }`}
-                        >
-                            {audioLoading ? (
-                                <span className='text-xs'>...</span>
-                            ) : isPlaying ? (
-                                <BsPauseFill />
-                            ) : (
-                                <BsFileEarmarkPlay />
-                            )}
-                        </button>
-                    </li>
-                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
-                        <button
-                            title={t('tafsir.title')}
-                            onClick={toggleTafsir}
-                            className={`p-2 rounded-lg text-lg transition-colors ${
-                                tafsirOpen
-                                    ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20'
-                                    : 'text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700'
-                            }`}
-                        >
-                            <BsBook />
-                        </button>
-                    </li>
-                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
-                        <button
-                            title={t('ayah.mufrodat_title')}
-                            onClick={toggleMufrodat}
-                            className={`p-2 rounded-lg text-lg transition-colors ${
-                                mufrodatOpen
-                                    ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20'
-                                    : 'text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700'
-                            }`}
-                        >
-                            <BsTranslate />
-                        </button>
-                    </li>
-                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
-                        <button
-                            title={t('munasabah.title') ?? 'Ayat Terkait'}
-                            onClick={toggleMunasabah}
-                            className={`p-2 rounded-lg text-lg transition-colors ${
-                                munasabahOpen
-                                    ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20'
-                                    : 'text-gray-400 dark:text-gray-500 hover:bg-purple-100 dark:hover:bg-slate-700'
-                            }`}
-                        >
-                            <BsLink45Deg />
-                        </button>
-                    </li>
-                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
-                        <BookmarkButton refType='ayah' refId={ayah.id} />
-                    </li>
-                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
-                        <NoteButton refType='ayah' refId={ayah.id} />
-                    </li>
-                    <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
-                        <button
-                            title={t('common.share')}
-                            onClick={() => SetShareImagePopUp(true)}
-                            className='p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
-                        >
-                            <BsShare />
-                        </button>
-                    </li>
-                    <li className='flex justify-center relative'>
+                {!actionsHidden && (
+                    <ul
+                        className='flex flex-col p-2 space-y-1'
+                        style={{ direction: 'ltr' }}
+                    >
+                        <li className='flex justify-center text-sm font-medium text-gray-500 dark:text-gray-400 pb-1'>
+                            {surah.number}:{ayah.number}
+                        </li>
+                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                            <button
+                                title={isPlaying ? 'Pause' : 'Putar Audio'}
+                                onClick={handleAudio}
+                                disabled={audioLoading}
+                                className={`p-2 rounded-lg text-lg transition-colors disabled:opacity-50 ${
+                                    isPlaying
+                                        ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20'
+                                        : 'text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700'
+                                }`}
+                            >
+                                {audioLoading ? (
+                                    <span className='text-xs'>...</span>
+                                ) : isPlaying ? (
+                                    <BsPauseFill />
+                                ) : (
+                                    <BsFileEarmarkPlay />
+                                )}
+                            </button>
+                        </li>
+                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                            <button
+                                title={t('tafsir.title')}
+                                onClick={toggleTafsir}
+                                className={`p-2 rounded-lg text-lg transition-colors ${
+                                    tafsirOpen
+                                        ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20'
+                                        : 'text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700'
+                                }`}
+                            >
+                                <BsBook />
+                            </button>
+                        </li>
+                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                            <button
+                                title={t('ayah.mufrodat_title')}
+                                onClick={toggleMufrodat}
+                                className={`p-2 rounded-lg text-lg transition-colors ${
+                                    mufrodatOpen
+                                        ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20'
+                                        : 'text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700'
+                                }`}
+                            >
+                                <BsTranslate />
+                            </button>
+                        </li>
+                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                            <button
+                                title={t('munasabah.title') ?? 'Ayat Terkait'}
+                                onClick={toggleMunasabah}
+                                className={`p-2 rounded-lg text-lg transition-colors ${
+                                    munasabahOpen
+                                        ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20'
+                                        : 'text-gray-400 dark:text-gray-500 hover:bg-purple-100 dark:hover:bg-slate-700'
+                                }`}
+                            >
+                                <BsLink45Deg />
+                            </button>
+                        </li>
+                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                            <BookmarkButton refType='ayah' refId={ayah.id} />
+                        </li>
+                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                            <NoteButton refType='ayah' refId={ayah.id} />
+                        </li>
+                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                            <button
+                                title={t('common.share')}
+                                onClick={() => SetShareImagePopUp(true)}
+                                className='p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
+                            >
+                                <BsShare />
+                            </button>
+                        </li>
+                        <li className='flex justify-center relative'>
                         <button
                             title={t('common.more')}
                             onClick={() => SetSettingPopUp(!settingPopUp)}
@@ -423,12 +459,13 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                                 </div>
                             </div>
                         )}
-                    </li>
-                </ul>
+                        </li>
+                    </ul>
+                )}
 
                 <ul className={`flex flex-col w-full justify-center ${fontCls}`} style={{ direction: 'rtl' }}>
                     <li
-                        style={{ fontSize: '200%', lineHeight: '2.10' }}
+                        style={{ fontSize: `${arabicFontSize}px`, lineHeight: '2.10' }}
                         className={hideArabic || hideAll ? 'blur-sm select-none' : ''}
                         dangerouslySetInnerHTML={{
                             __html: (

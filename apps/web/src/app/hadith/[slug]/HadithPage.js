@@ -131,7 +131,7 @@ function TakhrijPanel({ hadithId }) {
 
 const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadith' }) => {
     const { t, lang } = useLocale();
-    const { isMenu: actionsMenu } = useActionPosition();
+    const { isHidden: actionsHidden, isMenu: actionsMenu } = useActionPosition();
     const cardRef = useRef();
     const audioRef = useRef(null);
     const [isCopied, SetIsCopied] = useState(false);
@@ -284,6 +284,7 @@ const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadit
                 })}
                 ref={cardRef}
             >
+                {!actionsHidden && (
                 <ul className='flex flex-col p-2 space-y-1' style={{ direction: 'ltr' }}>
                     <li className='flex justify-center text-sm font-medium text-gray-500 dark:text-gray-400 pb-1'>
                         {book.slug}:{hadith.number}
@@ -457,6 +458,7 @@ const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadit
                         )}
                     </li>
                 </ul>
+                )}
                 <ul
                     className='flex flex-col w-full justify-center'
                     style={{ direction: 'rtl' }}

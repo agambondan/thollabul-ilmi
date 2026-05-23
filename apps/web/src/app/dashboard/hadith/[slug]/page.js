@@ -158,7 +158,7 @@ const chapterName = (c, lang) =>
 // ─── Hadith Card ─────────────────────────────────────────────────────────────
 
 function HadithCard({ h, idx, lang, t, slug, basePath }) {
-    const { isMenu: actionsMenu } = useActionPosition();
+    const { isHidden: actionsHidden, isMenu: actionsMenu } = useActionPosition();
     const [showSanad, setShowSanad] = useState(false);
     const [showTakhrij, setShowTakhrij] = useState(false);
     const [clipboardPopUp, setClipboardPopUp] = useState(false);
@@ -255,6 +255,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                 </div>
 
 	                {/* Action toolbar */}
+	                {!actionsHidden && (
 	                <div className='flex items-center gap-1'>
 	                    {detailPath && (
 	                        <Link
@@ -392,6 +393,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                         )}
                     </div>
                 </div>
+	                )}
             </div>
 
             {arabicText && (

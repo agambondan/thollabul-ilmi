@@ -76,6 +76,10 @@ export default function SurahAudioPlayer({
     const [repeat, setRepeat] = useState(false);
     const [selectedQari, setSelectedQari] = useState(DEFAULT_QARI);
     const [speed, setSpeed] = useState(1);
+    const label = (key, fallback) => {
+        const value = t(key);
+        return value === key || value == null ? fallback : value;
+    };
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -201,8 +205,13 @@ export default function SurahAudioPlayer({
         return items;
     };
 
-    const pickAudioSource = (sources) =>
-        sources.find((item) => item.qari_slug === qariRef.current) ?? sources[0] ?? null;
+    const buildAudioCandidates = (sources) => {
+        const selected = sources.find((item) => item.qari_slug === qariRef.current);
+        return [
+            ...(selected ? [selected] : []),
+            ...sources.filter((item) => item.audio_url && item.qari_slug !== selected?.qari_slug),
+        ];
+    };
 
     const fetchRangeQueue = async ({ endAyah, endSurah, startSurah }) => {
         const nextQueue = [];
@@ -238,23 +247,55 @@ export default function SurahAudioPlayer({
 
         try {
             const sources = await getAyahSources(ayah);
-            const source = pickAudioSource(sources);
+            const candidates = buildAudioCandidates(sources);
             if (sessionId !== sessionRef.current) return;
-            if (!source?.audio_url) {
+            if (!candidates.length) {
                 await playQueueItem(nextIndex + 1, sessionId);
                 return;
             }
 
-            if (audioRef.current) audioRef.current.pause();
-            const audio = new Audio(source.audio_url);
-            audio.playbackRate = speedRef.current;
-            audio.onended = () => playQueueItem(nextIndex + 1, sessionId);
-            audio.onpause = () => setIsPlaying(false);
-            audio.onplay = () => setIsPlaying(true);
-            audioRef.current = audio;
-            await audio.play();
-            setLoading(false);
-            setIsPlaying(true);
+            const playCandidate = async (candidateIndex) => {
+                if (sessionId !== sessionRef.current) return;
+                const source = candidates[candidateIndex];
+                if (!source?.audio_url) {
+                    await playQueueItem(nextIndex + 1, sessionId);
+                    return;
+                }
+
+                if (audioRef.current) audioRef.current.pause();
+                const audio = new Audio(source.audio_url);
+                let movedToNextCandidate = false;
+                const tryNextCandidate = async () => {
+                    if (movedToNextCandidate || sessionId !== sessionRef.current) return;
+                    movedToNextCandidate = true;
+                    if (audioRef.current === audio) {
+                        audioRef.current = null;
+                    }
+                    if (candidateIndex + 1 < candidates.length) {
+                        setError('Audio qari ini belum tersedia, mencoba qari lain.');
+                        await playCandidate(candidateIndex + 1);
+                        return;
+                    }
+                    await playQueueItem(nextIndex + 1, sessionId);
+                };
+
+                audio.playbackRate = speedRef.current;
+                audio.onended = () => playQueueItem(nextIndex + 1, sessionId);
+                audio.onerror = () => tryNextCandidate();
+                audio.onpause = () => setIsPlaying(false);
+                audio.onplay = () => setIsPlaying(true);
+                audioRef.current = audio;
+                try {
+                    await audio.play();
+                    setLoading(false);
+                    setError('');
+                    setIsPlaying(true);
+                } catch {
+                    await tryNextCandidate();
+                }
+            };
+
+            await playCandidate(0);
         } catch {
             if (sessionId !== sessionRef.current) return;
             setError(t('audio.play_error') ?? 'Tidak dapat memutar audio.');
@@ -359,7 +400,7 @@ export default function SurahAudioPlayer({
                 className='inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-medium hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors'
             >
                 <BsVolumeUpFill />
-                {t('audio.listen_surah') ?? 'Dengar Surah'}
+                {label('audio.listen_surah', 'Dengar Surah')}
             </button>
         );
     }
@@ -437,7 +478,7 @@ export default function SurahAudioPlayer({
 
                 {loading && (
                     <p className='text-xs text-gray-400 dark:text-gray-500 text-center py-1'>
-                        {t('common.loading') ?? 'Memuat...'}
+                        {label('common.loading', 'Memuat...')}
                     </p>
                 )}
 

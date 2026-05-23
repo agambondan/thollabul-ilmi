@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 const ACTION_POSITION_KEY = 'actionPosition';
 const DEFAULT_POSITION = 'side';
-const VALID_POSITIONS = ['side', 'menu'];
+const VALID_POSITIONS = ['side', 'menu', 'hidden'];
 
 export const useActionPosition = () => {
     const [position, setPositionState] = useState(DEFAULT_POSITION);
@@ -30,5 +30,10 @@ export const useActionPosition = () => {
         setPositionState(value);
     };
 
-    return { isMenu: position === 'menu', position, setPosition };
+    return {
+        isMenu: position === 'menu',
+        isHidden: position === 'hidden',
+        position,
+        setPosition,
+    };
 };

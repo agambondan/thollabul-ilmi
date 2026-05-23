@@ -18,8 +18,15 @@ const SettingButton = () => {
     const [isCompactViewport, setIsCompactViewport] = useState(false);
     const [mobileControlsVisible, setMobileControlsVisible] = useState(false);
     const { isWide, setLayout } = useLayoutMode();
-    const { isMenu, setPosition } = useActionPosition();
-    const { fontId, setFont } = useQuranFont();
+    const { isMenu, position, setPosition } = useActionPosition();
+    const {
+        arabicFontSize,
+        decreaseArabicFontSize,
+        fontId,
+        increaseArabicFontSize,
+        resetArabicFontSize,
+        setFont,
+    } = useQuranFont();
     const popupRef = useRef(null);
     const mobileControlsTimeoutRef = useRef(null);
     const label = (key, fallback) => {
@@ -98,7 +105,7 @@ const SettingButton = () => {
             </button>
 
             {showPopup && (
-                <div className='absolute right-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-52 p-3 shadow-lg text-sm text-emerald-900 dark:text-white'>
+                <div className='absolute right-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-60 p-3 shadow-lg text-sm text-emerald-900 dark:text-white'>
                     <p className='font-semibold mb-3 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide'>
                         {t('settings.title')}
                     </p>
@@ -147,16 +154,16 @@ const SettingButton = () => {
                         <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
                             {label('settings.action_position', 'Aksi Ayat/Hadith')}
                         </p>
-                        <div className='flex gap-2'>
+                        <div className='grid grid-cols-3 gap-2'>
                             <button
                                 onClick={() => setPosition('side')}
                                 className={classNames(
-                                    'flex-1 py-2 px-1 rounded-lg border text-xs transition-all',
+                                    'py-2 px-1 rounded-lg border text-xs transition-all',
                                     {
                                         'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold':
-                                            !isMenu,
+                                            position === 'side',
                                         'border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500':
-                                            isMenu,
+                                            position !== 'side',
                                     }
                                 )}
                             >
@@ -165,7 +172,7 @@ const SettingButton = () => {
                             <button
                                 onClick={() => setPosition('menu')}
                                 className={classNames(
-                                    'flex-1 py-2 px-1 rounded-lg border text-xs transition-all',
+                                    'py-2 px-1 rounded-lg border text-xs transition-all',
                                     {
                                         'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold':
                                             isMenu,
@@ -175,6 +182,52 @@ const SettingButton = () => {
                                 )}
                             >
                                 {label('settings.action_menu', 'Menu')}
+                            </button>
+                            <button
+                                onClick={() => setPosition('hidden')}
+                                className={classNames(
+                                    'py-2 px-1 rounded-lg border text-xs transition-all',
+                                    {
+                                        'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold':
+                                            position === 'hidden',
+                                        'border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500':
+                                            position !== 'hidden',
+                                    }
+                                )}
+                            >
+                                {label('settings.action_hidden', 'Hide')}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Arabic font size */}
+                    <div className='mb-3'>
+                        <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                            {label('settings.arabic_size', 'Ukuran Arab')}
+                        </p>
+                        <div className='flex items-center gap-2'>
+                            <button
+                                type='button'
+                                onClick={decreaseArabicFontSize}
+                                className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                aria-label='Perkecil huruf Arab'
+                            >
+                                A-
+                            </button>
+                            <button
+                                type='button'
+                                onClick={resetArabicFontSize}
+                                className='h-9 flex-1 rounded-lg border border-gray-200 dark:border-slate-600 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                            >
+                                {arabicFontSize}px
+                            </button>
+                            <button
+                                type='button'
+                                onClick={increaseArabicFontSize}
+                                className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                aria-label='Perbesar huruf Arab'
+                            >
+                                A+
                             </button>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 'use client';
 /* eslint-disable @next/next/no-img-element */
 
-import { CopyImageToClipboard } from '@/lib/copy';
+import { CopyImageToClipboard, CopyToClipboard } from '@/lib/copy';
 import { useLocale } from '@/context/Locale';
 import { useState } from 'react';
 import { IoClose } from 'react-icons/io5';
@@ -10,6 +10,36 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
     const { t } = useLocale();
     const [isCopied, SetIsCopied] = useState(false);
     const [isProcessing, SetIsProcessing] = useState(false);
+    const [status, setStatus] = useState('');
+
+    const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+    const shareText = text || shareUrl;
+    const encodedText = encodeURIComponent(shareText);
+    const encodedUrl = encodeURIComponent(shareUrl);
+
+    const openShareWindow = (url) => {
+        window.open(url, '_blank', 'noopener,noreferrer');
+    };
+
+    const nativeShare = async () => {
+        if (!navigator?.share) return;
+        try {
+            await navigator.share({
+                title: "Thullaabul 'Ilmi",
+                text: shareText,
+                url: shareUrl,
+            });
+            isCopiedCallback();
+        } catch {
+            // Browser share sheet can be cancelled by the user.
+        }
+    };
+
+    const copyShareText = async () => {
+        await CopyToClipboard(shareText);
+        setStatus('Teks siap dibagikan sudah disalin.');
+        setTimeout(() => setStatus(''), 2200);
+    };
 
     const copyImageToClipboard = (src) => {
         if (isProcessing) return;
@@ -126,14 +156,19 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                     context.fillText(line, x, y + index * lineHeight);
                 });
 
-                CopyImageToClipboard(canvas).then(() => {
-                    SetIsCopied(true);
-                    SetIsProcessing(false);
-                    setTimeout(() => {
-                        isCopiedCallback();
-                        SetIsCopied(false);
-                    }, 2000);
-                });
+                CopyImageToClipboard(canvas)
+                    .then(() => {
+                        SetIsCopied(true);
+                        SetIsProcessing(false);
+                        setTimeout(() => {
+                            SetIsCopied(false);
+                        }, 2000);
+                    })
+                    .catch(() => {
+                        SetIsProcessing(false);
+                        setStatus('Gambar belum bisa disalin di browser ini.');
+                        setTimeout(() => setStatus(''), 2200);
+                    });
             };
             img.onerror = () => SetIsProcessing(false);
             img.src = src;
@@ -152,7 +187,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
             >
                 <div className='flex items-center justify-between mb-3'>
                     <h3 className='text-sm font-semibold text-emerald-900 dark:text-white'>
-                        {t('share_image.pick_background')}
+                        Bagikan Ayat
                     </h3>
                     <button
                         onClick={isCopiedCallback}
@@ -161,6 +196,48 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                         <IoClose size={20} />
                     </button>
                 </div>
+                <div className='grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4'>
+                    {typeof navigator !== 'undefined' && navigator.share && (
+                        <button
+                            type='button'
+                            onClick={nativeShare}
+                            className='rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300'
+                        >
+                            Share Sheet
+                        </button>
+                    )}
+                    <button
+                        type='button'
+                        onClick={() => openShareWindow(`https://wa.me/?text=${encodedText}`)}
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
+                    >
+                        WhatsApp
+                    </button>
+                    <button
+                        type='button'
+                        onClick={() => openShareWindow(`https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`)}
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
+                    >
+                        Telegram
+                    </button>
+                    <button
+                        type='button'
+                        onClick={() => openShareWindow(`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`)}
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
+                    >
+                        LinkedIn
+                    </button>
+                    <button
+                        type='button'
+                        onClick={copyShareText}
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
+                    >
+                        Copy Text
+                    </button>
+                </div>
+                <p className='mb-2 text-xs font-semibold text-gray-500 dark:text-gray-400'>
+                    {t('share_image.pick_background')}
+                </p>
                 <div className='grid grid-cols-3 md:grid-cols-4 gap-2'>
                     {images.map((image, index) => (
                         <button
@@ -185,6 +262,11 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                 {isCopied && (
                     <p className='text-center text-sm text-emerald-600 dark:text-emerald-400 font-semibold mt-3'>
                         {t('share_image.copied_clipboard')}
+                    </p>
+                )}
+                {status && (
+                    <p className='text-center text-sm text-emerald-600 dark:text-emerald-400 font-semibold mt-3'>
+                        {status}
                     </p>
                 )}
             </div>
