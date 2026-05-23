@@ -159,11 +159,6 @@ export const listMasjidImage = [
 	},
 	{
 		label: 'Masjid Al-Haram',
-		src: '/assets/images/masjid/Haram2.jpg',
-		alt: 'Masjid Al-Haram',
-	},
-	{
-		label: 'Masjid Al-Haram',
 		src: '/assets/images/masjid/Haram3.jpg',
 		alt: 'Masjid Al-Haram',
 	},
@@ -172,16 +167,9 @@ export const listMasjidImage = [
 		src: '/assets/images/masjid/Haram4.jpg',
 		alt: 'Masjid Al-Haram',
 	},
-	{ label: 'Masjid', src: '/assets/images/masjid/Masjid.jpg', alt: 'Masjid' },
-	{ label: 'Masjid', src: '/assets/images/masjid/Masjid1.jpg', alt: 'Masjid' },
 	{ label: 'Masjid', src: '/assets/images/masjid/Masjid2.jpg', alt: 'Masjid' },
 	{ label: 'Masjid', src: '/assets/images/masjid/Masjid3.jpg', alt: 'Masjid' },
 	{ label: 'Masjid', src: '/assets/images/masjid/Masjid4.jpg', alt: 'Masjid' },
-	{
-		label: 'Masjid Nabawi',
-		src: '/assets/images/masjid/Nabawi.jpg',
-		alt: 'Masjid Nabawi',
-	},
 	{
 		label: 'Masjid Nabawi',
 		src: '/assets/images/masjid/Nabawi1.jpg',
@@ -195,16 +183,6 @@ export const listMasjidImage = [
 	{
 		label: 'Masjid Nabawi',
 		src: '/assets/images/masjid/Nabawi3.jpg',
-		alt: 'Masjid Nabawi',
-	},
-	{
-		label: 'Masjid Nabawi',
-		src: '/assets/images/masjid/Nabawi4.jpg',
-		alt: 'Masjid Nabawi',
-	},
-	{
-		label: 'Masjid Nabawi',
-		src: '/assets/images/masjid/Nabawi5.jpg',
 		alt: 'Masjid Nabawi',
 	},
 	{

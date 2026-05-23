@@ -26,6 +26,7 @@ func NewUserActivityRepository(db *gorm.DB) UserActivityRepository {
 func (r *userActivityRepo) Record(userID uuid.UUID, actType model.ActivityType) error {
 	today := time.Now().Truncate(24 * time.Hour)
 	activity := &model.UserActivity{
+		BaseUUID:     model.BaseUUID{ID: uuid.New()},
 		UserID:       userID,
 		ActivityDate: today,
 		Type:         actType,

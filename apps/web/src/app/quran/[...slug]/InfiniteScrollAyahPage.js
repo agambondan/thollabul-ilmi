@@ -103,7 +103,7 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 				setAyahs(nextAyahs);
 				setHasMore(nextAyahs.length < (nextSurah.number_of_ayahs ?? nextAyahs.length));
 				if (nextSurah.number && nextAyahs[0]) {
-					progressApi.saveQuran(nextSurah.number, nextAyahs[0].number).catch(e => console.error(e));
+					progressApi.saveQuran(nextSurah.number, nextAyahs[0].number, nextAyahs[0].id).catch(e => console.error(e));
 					streakApi.logActivity('quran').catch(e => console.error(e));
 				}
 			})

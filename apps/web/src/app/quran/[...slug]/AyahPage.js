@@ -55,6 +55,7 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
     const [showQariMenu, setShowQariMenu] = useState(false);
     const [revealed, setRevealed] = useState(false);
     const ayahTranslation = getLocalizedTranslation(ayah.translation, lang);
+    const ayahLatin = ayah.translation?.latin_idn ?? ayah.translation?.latin_en ?? '';
 
     const hideArabic = hafalanMode === 'hide_arabic' && !revealed;
     const hideTranslation = hafalanMode === 'hide_translation' && !revealed;
@@ -225,7 +226,7 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                     text={`Allah Subhanahu Wa Ta'ala berfirman:\n`
                         .concat(`${ayah.translation.ar} `)
                         .concat(`۝${NumberToArabic(ayah.number)}\n`)
-                        .concat(`${ayah.translation.latin_idn}\n`)
+                        .concat(ayahLatin ? `${ayahLatin}\n` : '')
                         .concat(`${ayahTranslation}\n`)
                         .concat(
                             `(QS. ${surah.translation.latin_en} ${surah.number}: ${t('common.verse')} ${ayah.number})\n`.concat(
@@ -443,7 +444,7 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
                                             copyText(
                                                 `Allah Subhanahu Wa Ta'ala berfirman:\n\n`
                                                     .concat(`${ayah.translation.ar}\n\n`)
-                                                    .concat(`${ayah.translation.latin_idn}\n\n`)
+                                                    .concat(ayahLatin ? `${ayahLatin}\n\n` : '')
                                                     .concat(`${ayahTranslation}\n\n`)
                                                     .concat(
                                                         `(QS. ${surah.translation.latin_en} ${surah.number}: ${t('common.verse')} ${ayah.number})\n`.concat(

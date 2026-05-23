@@ -178,10 +178,10 @@ export const bookmarkApi = {
 
 export const progressApi = {
     getQuran: () => authFetch('/api/v1/progress/quran'),
-    saveQuran: (surahNumber, ayahNumber) =>
+    saveQuran: (surahNumber, ayahNumber, ayahId) =>
         authFetch('/api/v1/progress/quran', {
             method: 'PUT',
-            body: JSON.stringify({ surah_number: surahNumber, ayah_number: ayahNumber }),
+            body: JSON.stringify({ surah_number: surahNumber, ayah_number: ayahNumber, ayah_id: ayahId }),
         }),
     getHadith: () => authFetch('/api/v1/progress/hadith'),
     saveHadith: (bookSlug, hadithId) =>
