@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import { BsSearch } from 'react-icons/bs';
 import { MdOutlineAutoStories } from 'react-icons/md';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 export const TafsirIndexContent = ({ tafsirBasePath = '/tafsir' }) => {
     const { t, lang } = useLocale();

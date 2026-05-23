@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState, use } from 'react';
 import { useLocale } from '@/context/Locale';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 const STATUS_COLORS = {
     tsiqah_tsiqah: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',

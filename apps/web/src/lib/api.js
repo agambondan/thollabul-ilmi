@@ -1,6 +1,12 @@
 import { getLocalizedTranslation } from '@/lib/translation';
 
-const API_URL = process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
+const API_URL =
+    typeof window === 'undefined'
+        ? process.env.API_INTERNAL_URL ||
+          process.env.API_PROXY_URL ||
+          process.env.NEXT_PUBLIC_API_URL ||
+          'http://localhost:29900'
+        : process.env.NEXT_PUBLIC_API_URL || '';
 
 const getToken = () =>
     typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;

@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {

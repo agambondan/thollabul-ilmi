@@ -53,12 +53,10 @@ services:
     build:
       context: ./apps/web
       dockerfile: Dockerfile
-      args:
-        - NEXT_PUBLIC_API_URL=http://localhost:29900
     ports:
       - "23000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:29900
+      - NEXT_PUBLIC_API_URL=
       - API_INTERNAL_URL=http://tholabul-ilmi-api:9900
     depends_on:
       - tholabul-ilmi-api

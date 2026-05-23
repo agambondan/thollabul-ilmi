@@ -18,7 +18,7 @@ import {
 } from 'react-icons/bs';
 import { IoIosLink, IoMdCopy, IoMdImages } from 'react-icons/io';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 function SanadPanel({ hadithId }) {
     const { t } = useLocale();

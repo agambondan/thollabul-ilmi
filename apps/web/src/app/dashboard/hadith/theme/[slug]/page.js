@@ -11,7 +11,7 @@ export default async function DashboardHadithThemePage(props) {
 
     try {
         const res = await fetch(
-            `${process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL}/api/v1/hadiths/theme/slug/${slugLowercase}?size=1`,
+            `${process.env.API_INTERNAL_URL || process.env.API_PROXY_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:29900'}/api/v1/hadiths/theme/slug/${slugLowercase}?size=1`,
         );
         const tempHadiths = await res.json();
         const total = tempHadiths?.total ?? 0;
@@ -19,7 +19,7 @@ export default async function DashboardHadithThemePage(props) {
         let page = 0;
         while (hadiths.length < total) {
             const pageRes = await fetch(
-                `${process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL}/api/v1/hadiths/theme/slug/${slugLowercase}?size=1000&page=${page}`,
+                `${process.env.API_INTERNAL_URL || process.env.API_PROXY_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:29900'}/api/v1/hadiths/theme/slug/${slugLowercase}?size=1000&page=${page}`,
             );
             const data = await pageRes.json();
             hadiths = hadiths.concat(data?.items ?? []);

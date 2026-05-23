@@ -3,7 +3,7 @@ import { getLocalizedTranslation } from '@/lib/translation';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-const API_URL = process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.API_INTERNAL_URL || process.env.API_PROXY_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:29900';
 
 export const normalizeHadithNumber = (value) => {
     const number = Number(value);

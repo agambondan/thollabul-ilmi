@@ -5,7 +5,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { BsSearch, BsPeopleFill } from 'react-icons/bs';
 import { useLocale } from '@/context/Locale';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
 const TABAQAH_LABELS = {
     nabi: { id: 'Nabi', en: 'Prophet' },
