@@ -1,7 +1,7 @@
 # Mobile Web App Layout Impact Plan
 
 Date: 2026-05-24
-Status: PLANNED
+Status: IN_PROGRESS
 
 ## Context
 
@@ -45,6 +45,33 @@ opt-in native layout mode, not as a rewrite of the current app.
 
 No visual redesign should happen in this first slice.
 
+## Foundation Implementation Update
+
+Status: completed for the non-visual foundation slice.
+
+Implemented:
+
+- Added `apps/mobile/src/layout/LayoutModeProvider.js`.
+- Added `apps/mobile/src/hooks/useLayoutModePreference.js` as the stable hook
+  entry for future shell/components.
+- Added layout mode normalization for `classic` and `web_app`.
+- Added fallback to `classic` for invalid stored preferences.
+- Wrapped `apps/mobile/App.js` with `LayoutModeProvider` without changing the
+  current `classic` render path.
+- Connected `ProfileScreen` appearance layout selection to the provider setter
+  so future shell selection can react to the same preference source.
+- Added Jest coverage for normalization, stored preference read/write, provider
+  load state, and provider setter.
+
+Not implemented yet:
+
+- No `WebAppShell` visual layer.
+- No top header redesign.
+- No new bottom nav/menu sheet.
+- No Home/Quran visual remapping.
+
+This keeps the first slice reversible and low impact.
+
 ## Acceptance Criteria Before Visual Work
 
 - `classic` still renders exactly through the existing shell.
@@ -53,6 +80,28 @@ No visual redesign should happen in this first slice.
 - Existing navigation tests pass.
 - Existing profile settings tests pass.
 - Feature parity checker still passes.
+
+## Foundation Verification
+
+Commands:
+
+```bash
+cd apps/mobile
+npm test -- layoutModeProvider.test.js preferences.test.js profileScreen.test.js appNavigation.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-layout-foundation-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted foundation tests passed: 5 suites, 63 tests.
+- Full mobile Jest passed: 43 suites, 586 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-layout-foundation-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
 
 ## Later Slices
 

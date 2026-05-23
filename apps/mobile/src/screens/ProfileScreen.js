@@ -42,6 +42,7 @@ import { OfflinePackCard } from '../components/OfflinePackCard';
 import { Screen } from '../components/Screen';
 import { SessionCard } from '../components/SessionCard';
 import { useSession } from '../context/SessionContext';
+import { useLayoutMode } from '../layout/LayoutModeProvider';
 import { preferenceKeys, readPreference, writePreference } from '../storage/preferences';
 import { colors, radius, spacing } from '../theme';
 
@@ -236,6 +237,7 @@ function ChoiceRow({ active, label, meta, onPress }) {
 }
 
 function AppearanceSettings({ onUserUpdated, user }) {
+    const { setLayoutMode: setAppLayoutMode } = useLayoutMode();
     const [theme, setTheme] = useState('system');
     const [language, setLanguage] = useState(user?.preferred_lang ?? 'idn');
     const [layoutMode, setLayoutMode] = useState('classic');
@@ -282,8 +284,8 @@ function AppearanceSettings({ onUserUpdated, user }) {
         setSaving('layout');
         setMessage('');
         try {
-            await writePreference(preferenceKeys.appLayoutMode, nextMode);
-            setLayoutMode(nextMode);
+            const storedMode = await setAppLayoutMode(nextMode);
+            setLayoutMode(storedMode);
             setMessage('Mode layout tersimpan di perangkat ini.');
         } catch (err) {
             setMessage(err?.message ?? 'Mode layout belum bisa disimpan.');

@@ -12,6 +12,7 @@ import { FeedbackProvider } from './src/context/FeedbackContext';
 import { SessionProvider } from './src/context/SessionContext';
 import { TabActivityProvider } from './src/context/TabActivityContext';
 import { quranFontAssets } from './src/constants/quranFonts';
+import { LayoutModeProvider } from './src/layout/LayoutModeProvider';
 import { ExploreScreen } from './src/screens/ExploreScreen';
 import { HadithScreen } from './src/screens/HadithScreen';
 import { HomeScreen } from './src/screens/HomeScreen';
@@ -211,38 +212,40 @@ export default function App() {
       <SafeAreaProvider>
         <SessionProvider>
           <FeedbackProvider>
-            <TabActivityProvider>
-              <AnalyticsTracker activeTab={activeTab} internalRoutes={internalRoutes} />
-              <SafeAreaView edges={['top', 'left', 'right']} style={styles.safeArea}>
-              <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                keyboardVerticalOffset={0}
-                style={styles.container}
-              >
-                {(['home', 'quran', 'hadith', 'ibadah', 'belajar', 'profile']).map((tab) => {
-                  const isActive = activeTab === tab;
-                  const hasInternalView = !!internalRoutes[tab];
-                  let screen = null;
-                  if (tab === 'home') screen = <HomeScreen isActive={isActive} navigation={navigation} onOpenTab={openTab} />;
-                  if (tab === 'quran') screen = <QuranScreen deepLinkTarget={isActive ? currentTarget : null} isActive={isActive} navigation={navigation} />;
-                  if (tab === 'hadith') screen = <HadithScreen deepLinkTarget={isActive ? currentTarget : null} isActive={isActive} navigation={navigation} />;
-                  if (tab === 'ibadah') screen = <IbadahScreen isActive={isActive} navigation={navigation} onOpenTab={openTab} />;
-                  if (tab === 'belajar') screen = <ExploreScreen deepLinkTarget={isActive ? currentTarget : null} isActive={isActive} navigation={navigation} onOpenTab={openTab} />;
-                  if (tab === 'profile') screen = <ProfileScreen isActive={isActive} navigation={navigation} onOpenTab={openTab} />;
+            <LayoutModeProvider>
+              <TabActivityProvider>
+                <AnalyticsTracker activeTab={activeTab} internalRoutes={internalRoutes} />
+                <SafeAreaView edges={['top', 'left', 'right']} style={styles.safeArea}>
+                  <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                    keyboardVerticalOffset={0}
+                    style={styles.container}
+                  >
+                    {(['home', 'quran', 'hadith', 'ibadah', 'belajar', 'profile']).map((tab) => {
+                      const isActive = activeTab === tab;
+                      const hasInternalView = !!internalRoutes[tab];
+                      let screen = null;
+                      if (tab === 'home') screen = <HomeScreen isActive={isActive} navigation={navigation} onOpenTab={openTab} />;
+                      if (tab === 'quran') screen = <QuranScreen deepLinkTarget={isActive ? currentTarget : null} isActive={isActive} navigation={navigation} />;
+                      if (tab === 'hadith') screen = <HadithScreen deepLinkTarget={isActive ? currentTarget : null} isActive={isActive} navigation={navigation} />;
+                      if (tab === 'ibadah') screen = <IbadahScreen isActive={isActive} navigation={navigation} onOpenTab={openTab} />;
+                      if (tab === 'belajar') screen = <ExploreScreen deepLinkTarget={isActive ? currentTarget : null} isActive={isActive} navigation={navigation} onOpenTab={openTab} />;
+                      if (tab === 'profile') screen = <ProfileScreen isActive={isActive} navigation={navigation} onOpenTab={openTab} />;
 
-                  return (
-                    <View key={tab} style={[styles.screenPane, isActive ? styles.screenPaneVisible : styles.screenPaneHidden]}>
-                      <SwipeBackView enabled={isActive && hasInternalView} onSwipeBack={() => closeInternalView(tab)}>
-                        {screen}
-                      </SwipeBackView>
-                    </View>
-                  );
-                })}
-              </KeyboardAvoidingView>
-              {activeTab === 'quran' || keyboardVisible ? null : <TabBar active={activeTab} onChange={openTab} />}
-              <StatusBar style="dark" backgroundColor={colors.bg} />
-            </SafeAreaView>
-          </TabActivityProvider>
+                      return (
+                        <View key={tab} style={[styles.screenPane, isActive ? styles.screenPaneVisible : styles.screenPaneHidden]}>
+                          <SwipeBackView enabled={isActive && hasInternalView} onSwipeBack={() => closeInternalView(tab)}>
+                            {screen}
+                          </SwipeBackView>
+                        </View>
+                      );
+                    })}
+                  </KeyboardAvoidingView>
+                  {activeTab === 'quran' || keyboardVisible ? null : <TabBar active={activeTab} onChange={openTab} />}
+                  <StatusBar style="dark" backgroundColor={colors.bg} />
+                </SafeAreaView>
+              </TabActivityProvider>
+            </LayoutModeProvider>
         </FeedbackProvider>
       </SessionProvider>
     </SafeAreaProvider>
