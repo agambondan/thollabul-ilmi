@@ -3,6 +3,7 @@
 
 import { useLocale } from '@/context/Locale';
 import { audioApi, quranApi } from '@/lib/api';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import {
     BsPauseFill,
@@ -51,6 +52,7 @@ export default function SurahAudioPlayer({
     totalAyahs,
 }) {
     const { t } = useLocale();
+    const pathname = usePathname();
     const audioRef = useRef(null);
     const queueRef = useRef([]);
     const queueIndexRef = useRef(0);
@@ -346,6 +348,8 @@ export default function SurahAudioPlayer({
     };
 
     const currentAudio = audioList.find((item) => item.qari_slug === selectedQari) ?? audioList[0];
+    const isDashboard = pathname?.startsWith('/dashboard');
+    const bottomClass = isDashboard ? 'bottom-[84px] md:bottom-4' : 'bottom-4';
 
     if (!open) {
         return (
@@ -361,8 +365,8 @@ export default function SurahAudioPlayer({
     }
 
     return (
-        <div className='fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-full max-w-lg px-3'>
-            <div className='bg-white dark:bg-slate-800 rounded-2xl border border-emerald-100 dark:border-slate-700 shadow-xl p-3'>
+        <div className={`fixed ${bottomClass} left-1/2 -translate-x-1/2 z-40 w-full max-w-lg px-3 transition-[bottom] duration-200`}>
+            <div className='max-h-[calc(100vh-120px)] overflow-y-auto bg-white dark:bg-slate-800 rounded-2xl border border-emerald-100 dark:border-slate-700 shadow-xl p-3'>
                 <div className='flex items-center justify-between gap-2 mb-3'>
                     <div className='min-w-0'>
                         <p className='text-xs text-emerald-600 dark:text-emerald-400 font-semibold truncate'>
