@@ -93,6 +93,12 @@ jest.mock('../data/mobileFeatures', () => ({
 import React from 'react';
 import { act, render, fireEvent, waitFor } from '@testing-library/react-native';
 import { HomeScreen } from '../screens/HomeScreen';
+import {
+  getHomeDashboardRenderer,
+  homeDashboardLayouts,
+  PaperHomeDashboard,
+  WebAppHomeDashboard,
+} from '../screens/home/HomeDashboardContent';
 import { flushAsyncWork } from '../test-utils/async';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -101,6 +107,13 @@ const { useLayoutModePreference } = require('../hooks/useLayoutModePreference');
 const clientApi = require('../api/client');
 const Location = require('expo-location');
 const { readPinnedFeatures, readRecentFeatures } = require('../storage/recentFeatures');
+
+describe('home dashboard renderers', () => {
+  test('selects paper and web app renderers explicitly', () => {
+    expect(getHomeDashboardRenderer(homeDashboardLayouts.paper)).toBe(PaperHomeDashboard);
+    expect(getHomeDashboardRenderer(homeDashboardLayouts.webApp)).toBe(WebAppHomeDashboard);
+  });
+});
 
 const mockAyah = {
   id: 1,

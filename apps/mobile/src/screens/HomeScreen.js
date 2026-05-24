@@ -9,11 +9,9 @@ import {
   Compass,
   FileText,
   Globe,
-  Grid,
   HelpCircle,
   ListChecks,
   MessageCircle,
-  Moon,
   Scale,
   Search,
   Smile,
@@ -25,36 +23,23 @@ import {
 } from 'lucide-react-native';
 import * as Location from 'expo-location';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { getDailyAyah, getDailyHadith, getHijriToday, getPrayerTimes } from '../api/client';
 import { ContentCard } from '../components/ContentCard';
 import { DetailHeader } from '../components/DetailHeader';
 import { useSession } from '../context/SessionContext';
 import { useTabActivity } from '../context/TabActivityContext';
 import { GlobalSearchScreen } from './GlobalSearchScreen';
+import {
+  HomeDashboardContent,
+  prayerKeyLabels,
+  prayerScheduleItems,
+} from './home/HomeDashboardContent';
 import { featureGroups } from '../data/mobileFeatures';
 import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
-import { arabicTypography } from '../styles/arabicTypography';
 import { readPinnedFeatures, readRecentFeatures } from '../storage/recentFeatures';
 import { preferenceKeys, readPreference, writePreference } from '../storage/preferences';
-import { colors, radius, shadows, spacing } from '../theme';
-
-const prayerKeyLabels = {
-  asr: 'Ashar',
-  dhuhr: 'Dzuhur',
-  fajr: 'Subuh',
-  isha: 'Isya',
-  maghrib: 'Maghrib',
-};
-
-const prayerScheduleItems = [
-  { Icon: Moon, key: 'fajr', label: 'Subuh' },
-  { Icon: Sun, key: 'sunrise', label: 'Terbit' },
-  { Icon: Sun, key: 'dhuhr', label: 'Dzuhur' },
-  { Icon: Sunset, key: 'asr', label: 'Ashar' },
-  { Icon: Sunset, key: 'maghrib', label: 'Maghrib' },
-  { Icon: Moon, key: 'isha', label: 'Isya' },
-];
+import { colors, radius, spacing } from '../theme';
 
 const homeDateFormatOptions = {
   day: 'numeric',
@@ -96,16 +81,6 @@ const formatHijriHomeDate = (hijri, fallbackDate) => {
   return parts.length ? parts.join(' ') : formatFallbackHijriHomeDate(fallbackDate);
 };
 
-const menuItems = [
-  { Icon: Compass, key: 'ibadah', label: 'Kiblat', params: { view: 'qibla' } },
-  { Icon: BookOpenCheck, key: 'quran', label: 'Hafalan' },
-  { Icon: Smile, featureKey: 'muhasabah', key: 'belajar', label: 'Jurnal' },
-  { Icon: HelpCircle, featureKey: 'quiz', key: 'belajar', label: 'Kuis' },
-  { Icon: Video, featureKey: 'kajian', key: 'belajar', label: 'Kajian' },
-  { Icon: FileText, featureKey: 'tafsir', key: 'belajar', label: 'Tafsir' },
-  { Icon: Book, key: 'hadith', label: 'Hadis' },
-  { Icon: Grid, internalView: 'feature-directory', key: 'belajar', label: 'Lainnya' },
-];
 const featureDirectoryReturnTo = { tab: 'home', view: 'feature-directory' };
 
 const scheduleOrder = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
@@ -185,11 +160,6 @@ const formatPrayerSummary = (nextPrayer, hasPrayerSchedule) => {
 const hasUsablePrayerTimes = (prayers) =>
   prayerScheduleItems.some(({ key }) => toSeconds(prayers?.[key]) !== null);
 
-const formatHadisSource = (value = '') => {
-  if (!value) return '';
-  return value.replace(/\bHadith\b/g, 'Hadis');
-};
-
 const waitingLocationLabel = 'MENUNGGU LOKASI';
 const locationErrorLabels = new Set(['LOKASI NONAKTIF', 'LOKASI BELUM TERSEDIA', waitingLocationLabel]);
 const currentLocationTimeoutMs = 3000;
@@ -198,23 +168,6 @@ const prayerRetryDelays = [2500, 5000, 10000, 15000];
 const homePrayerMethod = 'kemenag';
 const homePrayerMadhab = 'shafi';
 const emptyPrayerState = { countdown: '--:--:--', key: 'asr', time: '--:--' };
-const webDashboardColors = {
-  accent: '#b45309',
-  bg: '#f8fafc',
-  border: '#e5e7eb',
-  borderSoft: '#f3f4f6',
-  card: '#ffffff',
-  iconBg: '#f3f4f6',
-  muted: '#64748b',
-  primary: '#047857',
-  primarySoft: '#ecfdf5',
-  text: '#374151',
-  title: '#111827',
-};
-const webDashboardFontFamily = Platform.select({
-  android: 'sans-serif',
-  ios: 'System',
-});
 
 const withTimeout = (promise, timeoutMs) =>
   new Promise((resolve, reject) => {
@@ -855,276 +808,32 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
     );
   }
   return (
-    <ScrollView
-      contentContainerStyle={[styles.screen, isWebAppLayout && styles.webAppScreen]}
-      onMomentumScrollBegin={handleScrollActivity}
-      refreshControl={
-        <RefreshControl
-          colors={[isWebAppLayout ? webDashboardColors.primary : colors.primary]}
-          onRefresh={() => loadHomeData({ refresh: true })}
-          refreshing={refreshing}
-          tintColor={isWebAppLayout ? webDashboardColors.primary : colors.primary}
-        />
-      }
-      onScroll={handleScrollActivity}
-      onScrollBeginDrag={handleScrollActivity}
-      scrollEventThrottle={250}
-      showsVerticalScrollIndicator={false}
-      style={[styles.scroll, isWebAppLayout && styles.webAppScroll]}
-      testID="home-scroll"
-    >
-      {isWebAppLayout ? (
-        <View style={styles.webAppGreeting} testID="home-web-app-greeting">
-          <Text style={styles.webAppGreetingTitle}>{`Assalamu'alaikum, ${displayName}`}</Text>
-          <Text style={styles.webAppGreetingDate}>{gregorianDate}</Text>
-        </View>
-      ) : (
-        <View style={styles.header} testID="home-classic-header">
-          <Pressable android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }} onPress={() => onOpenTab('profile')} style={styles.profile}>
-            <View style={styles.avatar}>
-              <Text style={styles.avatarText}>{initials || 'TI'}</Text>
-            </View>
-            <View>
-              <Text style={styles.name}>{displayName}</Text>
-              <Text style={styles.location}>{locationLabel}</Text>
-            </View>
-          </Pressable>
-          <View style={styles.headerActions}>
-            <Pressable
-              android_ripple={{ color: 'rgba(91, 110, 91, 0.16)', borderless: true }}
-              onPress={() => {
-                if (navigation?.open) {
-                  navigation.open('home', 'global-search');
-                } else {
-                  onOpenTab('belajar', { featureKey: 'kamus', focusSearch: true });
-                }
-              }}
-            >
-              <Search color={colors.muted} size={18} strokeWidth={2.2} />
-            </Pressable>
-            <Pressable android_ripple={{ color: 'rgba(91, 110, 91, 0.16)', borderless: true }} onPress={() => onOpenTab('belajar', { featureKey: 'notifications' })}>
-              <Bell color={colors.muted} size={18} strokeWidth={2.2} />
-            </Pressable>
-          </View>
-        </View>
-      )}
-
-      <View style={[styles.prayerCard, isWebAppLayout && styles.webAppPrayerCard]} testID="home-prayer-card">
-        <View style={styles.prayerHeader}>
-          <View style={[styles.prayerStatusPill, isWebAppLayout && styles.webAppPill]}>
-            <Clock3 color={isWebAppLayout ? webDashboardColors.primary : colors.primary} size={13} strokeWidth={2.4} />
-            <Text style={[styles.prayerStatusText, isWebAppLayout && styles.webAppPrimaryText]}>
-              {prayerStatusLabel}
-            </Text>
-          </View>
-          <View style={styles.prayerDateStack}>
-            <Text style={[styles.gregorianDate, isWebAppLayout && styles.webAppTitleText]}>{gregorianDate}</Text>
-            <View style={styles.hijriRow}>
-              <Moon color={isWebAppLayout ? webDashboardColors.accent : colors.accent} size={13} strokeWidth={2.3} />
-              <Text style={[styles.hijriDate, isWebAppLayout && styles.webAppAccentText]}>{hijriDate}</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.prayerHero}>
-          <Text style={[styles.prayerKicker, isWebAppLayout && styles.webAppPrimaryText]}>
-            {`Menuju ${prayerKeyLabels[nextPrayer.key] || 'Sholat'}`}
-          </Text>
-          <Text style={[styles.prayerTime, isWebAppLayout && styles.webAppTitleText]}>{nextPrayer.time}</Text>
-          <Text style={[styles.prayerSummary, isWebAppLayout && styles.webAppMutedText]}>
-            {prayerMessage || prayerSummary}
-          </Text>
-          <View style={[styles.countdown, isWebAppLayout && styles.webAppPill]}>
-            <Clock3 color={isWebAppLayout ? webDashboardColors.primary : colors.primary} size={13} strokeWidth={2.4} />
-            <Text style={[styles.countdownText, isWebAppLayout && styles.webAppPrimaryText]}>
-              {hasPrayerSchedule ? nextPrayer.countdown : 'Belum aktif'}
-            </Text>
-          </View>
-        </View>
-
-        <View style={[styles.prayerTimeline, isWebAppLayout && styles.webAppDivider]} />
-        <View style={styles.prayerScheduleRow}>
-          {prayerScheduleItems.map(({ Icon, key, label }) => {
-            const isNext = key === nextPrayer.key && hasPrayerSchedule;
-            return (
-              <View key={key} style={styles.prayerScheduleItem}>
-                <Text
-                  style={[
-                    styles.prayerScheduleLabel,
-                    isWebAppLayout && styles.webAppMutedText,
-                    isNext ? (isWebAppLayout ? styles.webAppAccentText : styles.prayerScheduleActive) : null,
-                  ]}
-                >
-                  {label}
-                </Text>
-                <Icon
-                  color={
-                    isNext
-                      ? (isWebAppLayout ? webDashboardColors.accent : colors.accent)
-                      : (isWebAppLayout ? webDashboardColors.primary : colors.primary)
-                  }
-                  size={16}
-                  strokeWidth={2.2}
-                />
-                <Text
-                  style={[
-                    styles.prayerScheduleTime,
-                    isWebAppLayout && styles.webAppTitleText,
-                    isNext ? (isWebAppLayout ? styles.webAppAccentText : styles.prayerScheduleActive) : null,
-                  ]}
-                >
-                  {prayerTimes?.[key] ?? '--:--'}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
-      </View>
-
-      <View style={[styles.menuGrid, isWebAppLayout && styles.webAppMenuGrid]} testID="home-menu-grid">
-        {menuItems.map(({ Icon, featureKey, internalView, key, label, params }) => (
-          <Pressable
-            android_ripple={{ color: 'rgba(91, 110, 91, 0.14)', borderless: false }}
-            key={label}
-            onPress={() => {
-              if (internalView && navigation?.open) {
-                navigation.open('home', internalView);
-                return;
-              }
-              onOpenTab(key, params ?? (featureKey ? { featureKey } : null));
-            }}
-            style={styles.menuItem}
-          >
-            <View style={[styles.menuIcon, isWebAppLayout && styles.webAppIconTile]}>
-              <Icon color={isWebAppLayout ? webDashboardColors.primary : colors.primary} size={18} strokeWidth={2.1} />
-            </View>
-            <Text style={[styles.menuLabel, isWebAppLayout && styles.webAppMenuLabel]}>{label}</Text>
-          </Pressable>
-        ))}
-      </View>
-
-      <View style={[styles.dailyCard, isWebAppLayout && styles.webAppDailyCard]} testID="home-daily-card">
-        <View style={styles.dailyHeader}>
-          <Text style={[styles.dailyTitle, isWebAppLayout && styles.webAppTitleText]}>Bacaan Hari Ini</Text>
-          <Text style={[styles.dailyMeta, isWebAppLayout && styles.webAppMutedText]}>Quran & Hadis</Text>
-        </View>
-        <Pressable
-          android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
-          onPress={() => onOpenTab('quran', { surahNumber: 1 })}
-          style={[styles.dailyItem, isWebAppLayout && styles.webAppDailyItem]}
-        >
-          <View style={[styles.dailyAccent, isWebAppLayout && styles.webAppDailyAccent]} />
-          <View style={styles.dailyBody}>
-            <Text style={[styles.dailyLabel, isWebAppLayout && styles.webAppPrimaryText]}>Ayat Hari Ini</Text>
-            {dailyAyah?.arabic ? <Text style={[styles.dailyArabic, isWebAppLayout && styles.webAppTitleText]}>{dailyAyah.arabic}</Text> : null}
-            <Text style={[styles.dailyText, isWebAppLayout && styles.webAppText]}>
-              {loadingDaily ? 'Memuat ayat harian...' : dailyAyah?.translation || dailyMessage || 'Ayat harian belum tersedia.'}
-            </Text>
-            {dailyAyah?.ref ? <Text style={[styles.dailySource, isWebAppLayout && styles.webAppMutedText]}>{dailyAyah.ref}</Text> : null}
-          </View>
-        </Pressable>
-        <Pressable android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }} onPress={() => onOpenTab('hadith')} style={[styles.dailyItem, isWebAppLayout && styles.webAppDailyItem]}>
-          <View style={[styles.dailyAccent, isWebAppLayout && styles.webAppDailyAccent]} />
-          <View style={styles.dailyBody}>
-            <Text style={[styles.dailyLabel, isWebAppLayout && styles.webAppPrimaryText]}>Hadis Hari Ini</Text>
-            {dailyHadith?.arabic ? <Text style={[styles.dailyArabic, isWebAppLayout && styles.webAppTitleText]}>{dailyHadith.arabic}</Text> : null}
-            <Text style={[styles.dailyText, isWebAppLayout && styles.webAppText]}>
-              {loadingDaily
-                ? 'Memuat hadis harian...'
-                : dailyHadith?.translation || 'Hadis harian belum tersedia dari server.'}
-            </Text>
-            {dailyHadith?.book ? <Text style={[styles.dailySource, isWebAppLayout && styles.webAppMutedText]}>{formatHadisSource(dailyHadith.book)}</Text> : null}
-          </View>
-        </Pressable>
-      </View>
-
-      {contextualShortcuts.length ? (
-        <View style={[styles.contextCard, isWebAppLayout && styles.webAppCard]}>
-          <Text style={[styles.contextLabel, isWebAppLayout && styles.webAppMutedText]}>SARAN SEKARANG</Text>
-          <View style={styles.contextRow}>
-            {contextualShortcuts.map(({ Icon, featureKey, label, params, sub, tab }) => (
-              <Pressable
-                android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
-                key={label}
-                onPress={() => onOpenTab(tab, params ?? (featureKey ? { featureKey } : null))}
-                style={[styles.contextItem, isWebAppLayout && styles.webAppActionTile]}
-              >
-                <View style={[styles.contextIcon, isWebAppLayout && styles.webAppIconTile]}>
-                  <Icon color={isWebAppLayout ? webDashboardColors.primary : colors.primary} size={16} strokeWidth={2.2} />
-                </View>
-                <Text style={[styles.contextItemLabel, isWebAppLayout && styles.webAppTitleText]}>{label}</Text>
-                <Text style={[styles.contextItemSub, isWebAppLayout && styles.webAppMutedText]}>{sub}</Text>
-              </Pressable>
-            ))}
-          </View>
-        </View>
-      ) : null}
-
-      {pinnedFeatures.length ? (
-        <View style={[styles.recentCard, isWebAppLayout && styles.webAppCard]}>
-          <View style={styles.recentHeader}>
-            <View>
-              <Text style={[styles.recentTitle, isWebAppLayout && styles.webAppTitleText]}>Disematkan</Text>
-              <Text style={[styles.recentMeta, isWebAppLayout && styles.webAppMutedText]}>Shortcut fitur pilihanmu</Text>
-            </View>
-            <Star color={isWebAppLayout ? webDashboardColors.primary : colors.primary} size={18} strokeWidth={2.2} />
-          </View>
-          {pinnedFeatures.map((feature) => (
-            <ContentCard
-              Icon={Star}
-              iconStyle={[styles.recentIcon, isWebAppLayout && styles.webAppIconTile]}
-              key={feature.key}
-              onPress={() => onOpenTab('belajar', { featureKey: feature.key })}
-              style={[styles.recentRow, isWebAppLayout && styles.webAppRow]}
-              subtitle={feature.subtitle || feature.group || 'Belajar'}
-              subtitleStyle={[styles.recentRowSubtitle, isWebAppLayout && styles.webAppMutedText]}
-              title={feature.title}
-              titleStyle={[styles.recentRowTitle, isWebAppLayout && styles.webAppTitleText]}
-              trailing={<ChevronRight color={isWebAppLayout ? webDashboardColors.muted : colors.muted} size={18} strokeWidth={2.4} />}
-            />
-          ))}
-        </View>
-      ) : null}
-
-      {recentFeatures.length ? (
-        <View style={[styles.recentCard, isWebAppLayout && styles.webAppCard]}>
-          <View style={styles.recentHeader}>
-            <View>
-              <Text style={[styles.recentTitle, isWebAppLayout && styles.webAppTitleText]}>Terakhir Dibuka</Text>
-              <Text style={[styles.recentMeta, isWebAppLayout && styles.webAppMutedText]}>Lanjutkan fitur yang baru kamu pakai</Text>
-            </View>
-            <Clock3 color={isWebAppLayout ? webDashboardColors.primary : colors.primary} size={18} strokeWidth={2.2} />
-          </View>
-          {recentFeatures.map((feature) => (
-            <ContentCard
-              Icon={Clock3}
-              iconStyle={[styles.recentIcon, isWebAppLayout && styles.webAppIconTile]}
-              key={feature.key}
-              onPress={() => onOpenTab('belajar', { featureKey: feature.key })}
-              style={[styles.recentRow, isWebAppLayout && styles.webAppRow]}
-              subtitle={feature.subtitle || feature.group || 'Belajar'}
-              subtitleStyle={[styles.recentRowSubtitle, isWebAppLayout && styles.webAppMutedText]}
-              title={feature.title}
-              titleStyle={[styles.recentRowTitle, isWebAppLayout && styles.webAppTitleText]}
-              trailing={<ChevronRight color={isWebAppLayout ? webDashboardColors.muted : colors.muted} size={18} strokeWidth={2.4} />}
-            />
-          ))}
-        </View>
-      ) : null}
-
-      <ContentCard
-        Icon={Smile}
-        iconStyle={[styles.journalIcon, isWebAppLayout && styles.webAppIconTile]}
-        onPress={() => onOpenTab('belajar', { featureKey: 'muhasabah' })}
-        style={[styles.journalCard, isWebAppLayout && styles.webAppCard]}
-        subtitle="Bagaimana imanmu hari ini?"
-        subtitleStyle={[styles.journalDesc, isWebAppLayout && styles.webAppMutedText]}
-        title="Jurnal Muhasabah"
-        titleStyle={[styles.journalTitle, isWebAppLayout && styles.webAppTitleText]}
-        trailing={<ChevronRight color={isWebAppLayout ? webDashboardColors.muted : colors.muted} size={18} strokeWidth={2.4} />}
-      />
-
-    </ScrollView>
+    <HomeDashboardContent
+      contextualShortcuts={contextualShortcuts}
+      dailyAyah={dailyAyah}
+      dailyHadith={dailyHadith}
+      dailyMessage={dailyMessage}
+      displayName={displayName}
+      gregorianDate={gregorianDate}
+      handleScrollActivity={handleScrollActivity}
+      hasPrayerSchedule={hasPrayerSchedule}
+      hijriDate={hijriDate}
+      initials={initials}
+      isWebAppLayout={isWebAppLayout}
+      loadingDaily={loadingDaily}
+      loadHomeData={loadHomeData}
+      locationLabel={locationLabel}
+      navigation={navigation}
+      nextPrayer={nextPrayer}
+      onOpenTab={onOpenTab}
+      pinnedFeatures={pinnedFeatures}
+      prayerMessage={prayerMessage}
+      prayerStatusLabel={prayerStatusLabel}
+      prayerSummary={prayerSummary}
+      prayerTimes={prayerTimes}
+      recentFeatures={recentFeatures}
+      refreshing={refreshing}
+    />
   );
 }
 
@@ -1132,37 +841,6 @@ const styles = StyleSheet.create({
   scroll: {
     backgroundColor: colors.bg,
     flex: 1,
-  },
-  webAppScroll: {
-    backgroundColor: webDashboardColors.bg,
-  },
-  screen: {
-    backgroundColor: colors.bg,
-    flexGrow: 1,
-    padding: spacing.lg,
-    paddingBottom: spacing.xl,
-    paddingTop: spacing.xl,
-  },
-  webAppScreen: {
-    backgroundColor: webDashboardColors.bg,
-    paddingBottom: spacing.lg,
-    paddingTop: spacing.lg,
-  },
-  webAppGreeting: {
-    marginBottom: spacing.lg,
-  },
-  webAppGreetingTitle: {
-    color: '#064e3b',
-    fontSize: 20,
-    fontWeight: '900',
-    letterSpacing: 0,
-  },
-  webAppGreetingDate: {
-    color: webDashboardColors.muted,
-    fontSize: 13,
-    fontWeight: '600',
-    letterSpacing: 0,
-    marginTop: spacing.xs,
   },
   directoryScreen: {
     backgroundColor: colors.bg,
@@ -1190,10 +868,10 @@ const styles = StyleSheet.create({
   directoryRow: {
     alignItems: 'center',
     backgroundColor: 'transparent',
+    borderRadius: 0,
     borderTopColor: colors.faint,
     borderTopWidth: 1,
     borderWidth: 0,
-    borderRadius: 0,
     marginTop: 0,
     minHeight: 58,
     paddingHorizontal: spacing.md,
@@ -1218,498 +896,5 @@ const styles = StyleSheet.create({
     color: colors.muted,
     fontSize: 11,
     lineHeight: 15,
-  },
-  header: {
-    alignItems: 'center',
-    borderBottomColor: colors.faint,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: spacing.lg,
-    paddingBottom: spacing.md,
-  },
-  profile: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  avatar: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceMuted,
-    borderColor: colors.faint,
-    borderRadius: 16,
-    borderWidth: 1,
-    height: 34,
-    justifyContent: 'center',
-    width: 34,
-  },
-  avatarText: {
-    color: colors.primary,
-    fontFamily: 'serif',
-    fontSize: 12,
-    fontWeight: '900',
-  },
-  name: {
-    color: colors.ink,
-    fontFamily: 'serif',
-    fontSize: 14,
-    fontWeight: '900',
-  },
-  location: {
-    color: colors.muted,
-    fontSize: 12,
-    fontWeight: '900',
-    letterSpacing: 0,
-  },
-  headerActions: {
-    flexDirection: 'row',
-    gap: spacing.md,
-  },
-  prayerHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.md,
-    justifyContent: 'space-between',
-    marginBottom: spacing.lg,
-  },
-  prayerStatusPill: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceMuted,
-    borderColor: colors.faint,
-    borderWidth: 1,
-    borderRadius: radius.sm,
-    flexDirection: 'row',
-    gap: spacing.xs,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 7,
-    maxWidth: '48%',
-  },
-  prayerStatusText: {
-    color: colors.primary,
-    flexShrink: 1,
-    fontSize: 11,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-  },
-  prayerDateStack: {
-    alignItems: 'flex-end',
-    flex: 1,
-    gap: 5,
-  },
-  gregorianDate: {
-    color: colors.ink,
-    fontSize: 13,
-    fontWeight: '900',
-    textAlign: 'right',
-  },
-  hijriRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 5,
-    justifyContent: 'flex-end',
-  },
-  hijriDate: {
-    color: colors.accent,
-    flexShrink: 1,
-    fontSize: 12,
-    fontWeight: '800',
-    textAlign: 'right',
-  },
-  prayerCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.faint,
-    borderWidth: 1,
-    borderRadius: radius.lg,
-    marginBottom: spacing.md,
-    overflow: 'hidden',
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.sm,
-    ...shadows.paper,
-  },
-  webAppPrayerCard: {
-    backgroundColor: webDashboardColors.card,
-    borderColor: webDashboardColors.borderSoft,
-    borderRadius: radius.md,
-  },
-  webAppCard: {
-    backgroundColor: webDashboardColors.card,
-    borderColor: webDashboardColors.borderSoft,
-    borderRadius: radius.md,
-  },
-  webAppPill: {
-    backgroundColor: webDashboardColors.primarySoft,
-    borderColor: '#a7f3d0',
-  },
-  webAppDivider: {
-    backgroundColor: webDashboardColors.border,
-  },
-  webAppTitleText: {
-    color: webDashboardColors.title,
-    fontFamily: webDashboardFontFamily,
-  },
-  webAppText: {
-    color: webDashboardColors.text,
-  },
-  webAppMutedText: {
-    color: webDashboardColors.muted,
-  },
-  webAppPrimaryText: {
-    color: webDashboardColors.primary,
-  },
-  webAppAccentText: {
-    color: webDashboardColors.accent,
-  },
-  prayerKicker: {
-    color: colors.primary,
-    fontSize: 12,
-    fontWeight: '900',
-    letterSpacing: 0,
-    textTransform: 'uppercase',
-  },
-  prayerHero: {
-    alignItems: 'center',
-    marginBottom: spacing.md,
-  },
-  prayerTime: {
-    color: colors.ink,
-    fontFamily: 'serif',
-    fontSize: 42,
-    fontWeight: '900',
-    marginTop: spacing.xs,
-  },
-  prayerSummary: {
-    color: colors.muted,
-    fontSize: 12,
-    fontWeight: '700',
-    lineHeight: 17,
-    marginTop: 2,
-    textAlign: 'center',
-  },
-  countdown: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceMuted,
-    borderColor: colors.faint,
-    borderWidth: 1,
-    borderRadius: radius.sm,
-    flexDirection: 'row',
-    gap: 4,
-    marginTop: spacing.sm,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 5,
-  },
-  countdownText: {
-    color: colors.primary,
-    fontSize: 12,
-    fontWeight: '800',
-  },
-  prayerTimeline: {
-    backgroundColor: colors.faint,
-    height: 1,
-    marginBottom: spacing.sm,
-    width: '100%',
-  },
-  prayerScheduleRow: {
-    flexDirection: 'row',
-    gap: 4,
-    justifyContent: 'space-between',
-    marginBottom: spacing.md,
-  },
-  prayerScheduleItem: {
-    alignItems: 'center',
-    flex: 1,
-    gap: 4,
-    minWidth: 0,
-  },
-  prayerScheduleLabel: {
-    color: colors.muted,
-    fontSize: 10,
-    fontWeight: '800',
-    textAlign: 'center',
-  },
-  prayerScheduleTime: {
-    color: colors.ink,
-    fontSize: 10,
-    fontWeight: '900',
-    textAlign: 'center',
-  },
-  prayerScheduleActive: {
-    color: colors.accent,
-  },
-  menuGrid: {
-    backgroundColor: colors.surface,
-    borderColor: colors.faint,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: spacing.md,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.md,
-    ...shadows.paper,
-  },
-  webAppMenuGrid: {
-    backgroundColor: webDashboardColors.card,
-    borderColor: webDashboardColors.border,
-    borderRadius: radius.md,
-    marginTop: spacing.xs,
-  },
-  webAppIconTile: {
-    backgroundColor: webDashboardColors.iconBg,
-    borderColor: webDashboardColors.border,
-  },
-  webAppActionTile: {
-    backgroundColor: webDashboardColors.bg,
-    borderColor: webDashboardColors.border,
-  },
-  webAppRow: {
-    backgroundColor: webDashboardColors.bg,
-    borderColor: webDashboardColors.border,
-  },
-  menuItem: {
-    alignItems: 'center',
-    marginBottom: spacing.md,
-    width: '25%',
-  },
-  menuIcon: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceMuted,
-    borderColor: colors.faint,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    height: 42,
-    justifyContent: 'center',
-    marginBottom: spacing.sm,
-    width: 42,
-  },
-  menuLabel: {
-    color: colors.ink,
-    fontSize: 12,
-    fontWeight: '900',
-    letterSpacing: 0,
-    textTransform: 'uppercase',
-  },
-  contextCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.faint,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    marginBottom: spacing.md,
-    padding: spacing.md,
-    ...shadows.paper,
-  },
-  contextLabel: {
-    color: colors.muted,
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 1,
-    marginBottom: spacing.sm,
-    textTransform: 'uppercase',
-  },
-  contextRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  contextItem: {
-    alignItems: 'center',
-    backgroundColor: colors.bg,
-    borderColor: colors.faint,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    flex: 1,
-    gap: 4,
-    paddingVertical: spacing.md,
-  },
-  contextIcon: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceMuted,
-    borderColor: colors.faint,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    height: 34,
-    justifyContent: 'center',
-    width: 34,
-  },
-  contextItemLabel: {
-    color: colors.ink,
-    fontSize: 12,
-    fontWeight: '900',
-    textAlign: 'center',
-  },
-  contextItemSub: {
-    color: colors.muted,
-    fontSize: 10,
-    textAlign: 'center',
-  },
-  recentCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.faint,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    marginBottom: spacing.md,
-    padding: spacing.md,
-    ...shadows.paper,
-  },
-  recentHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: spacing.sm,
-  },
-  recentTitle: {
-    color: colors.ink,
-    fontFamily: 'serif',
-    fontSize: 14,
-    fontWeight: '900',
-  },
-  recentMeta: {
-    color: colors.muted,
-    fontSize: 12,
-    marginTop: 2,
-  },
-  recentRow: {
-    alignItems: 'center',
-    backgroundColor: colors.bg,
-    borderColor: colors.faint,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: spacing.sm,
-    marginTop: spacing.sm,
-    minHeight: 52,
-    paddingHorizontal: spacing.sm,
-  },
-  recentIcon: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceMuted,
-    borderColor: colors.faint,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    height: 34,
-    justifyContent: 'center',
-    width: 34,
-  },
-  recentRowTitle: {
-    color: colors.ink,
-    fontSize: 13,
-    fontWeight: '900',
-  },
-  recentRowSubtitle: {
-    color: colors.muted,
-    fontSize: 12,
-    marginTop: 2,
-  },
-  journalCard: {
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-    borderColor: colors.faint,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: spacing.md,
-    padding: spacing.md,
-    ...shadows.paper,
-  },
-  journalIcon: {
-    alignItems: 'center',
-    backgroundColor: colors.surfaceMuted,
-    borderColor: colors.faint,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    height: 42,
-    justifyContent: 'center',
-    width: 42,
-  },
-  journalTitle: {
-    color: colors.ink,
-    fontFamily: 'serif',
-    fontSize: 14,
-    fontWeight: '900',
-  },
-  journalDesc: {
-    color: colors.muted,
-    fontSize: 12,
-    marginTop: 2,
-  },
-  dailyCard: {
-    backgroundColor: colors.surface,
-    borderColor: colors.faint,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    gap: spacing.sm,
-    marginBottom: spacing.lg,
-    marginTop: spacing.md,
-    padding: spacing.md,
-    ...shadows.paper,
-  },
-  webAppDailyCard: {
-    backgroundColor: webDashboardColors.card,
-    borderColor: webDashboardColors.borderSoft,
-    borderRadius: radius.md,
-    marginTop: 0,
-  },
-  webAppDailyItem: {
-    backgroundColor: webDashboardColors.bg,
-    borderColor: webDashboardColors.border,
-  },
-  webAppDailyAccent: {
-    backgroundColor: webDashboardColors.primary,
-  },
-  dailyHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  dailyTitle: {
-    color: colors.ink,
-    fontFamily: 'serif',
-    fontSize: 15,
-    fontWeight: '900',
-  },
-  dailyMeta: {
-    color: colors.muted,
-    fontSize: 12,
-    fontWeight: '800',
-  },
-  dailyItem: {
-    backgroundColor: colors.bg,
-    borderColor: colors.faint,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    flexDirection: 'row',
-    overflow: 'hidden',
-  },
-  dailyAccent: {
-    backgroundColor: colors.primary,
-    width: 4,
-  },
-  dailyBody: {
-    flex: 1,
-    padding: spacing.md,
-  },
-  dailyLabel: {
-    color: colors.primary,
-    fontSize: 12,
-    fontWeight: '900',
-    letterSpacing: 0,
-    textTransform: 'uppercase',
-  },
-  dailyArabic: {
-    ...arabicTypography.small,
-    color: colors.ink,
-    marginTop: spacing.xs,
-  },
-  dailyText: {
-    color: colors.text,
-    fontSize: 12,
-    lineHeight: 18,
-    marginTop: spacing.xs,
-  },
-  dailySource: {
-    color: colors.muted,
-    fontSize: 12,
-    fontWeight: '800',
-    marginTop: spacing.xs,
   },
 });
