@@ -2775,9 +2775,11 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                             onPress={closeAyahDetail}
                         />
                     )}
+                    contentStyle={isWebAppLayout ? styles.webAppQuranDetailSurface : null}
                     subtitle={`${selectedSurah?.name ?? "Al-Qur'an"} · Ayat ${selectedDetailAyah.number}`}
                     title="Detail Ayat"
                 >
+                    <View testID={isWebAppLayout ? 'quran-web-app-detail' : 'quran-classic-detail'} />
                     <Card style={styles.quranDetailCard}>
                         <Text style={styles.quranDetailKicker}>
                             {selectedSurah?.name ?? "Al-Qur'an"} · Ayat {selectedDetailAyah.number}
@@ -4598,6 +4600,11 @@ const styles = StyleSheet.create({
     },
     quranDetailCard: {
         padding: spacing.lg,
+    },
+    webAppQuranDetailSurface: {
+        backgroundColor: '#f8fafc',
+        borderRadius: radius.md,
+        padding: spacing.sm,
     },
     quranDetailKicker: {
         color: colors.primary,

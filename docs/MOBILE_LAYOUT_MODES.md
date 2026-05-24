@@ -307,7 +307,8 @@ Jika `web_app` gagal render atau preference invalid, fallback harus kembali ke
    - Terapkan dulu ke Beranda dan Quran shell behavior.
    - Quran tidak boleh kehilangan audio, ayah actions, reader preferences,
      bookmark, notes, dan back behavior.
-   - Status: completed for Home and Quran first-pass surfaces.
+   - Status: completed for Home and Quran first-pass surfaces, including the
+     Quran ayah detail surface.
 4. Expand surface:
    - Setelah Home/Quran stabil, lanjut Hadith, Ibadah, dan Belajar.
    - Long-tail feature masuk menu sheet/search/hub, bukan dihapus.

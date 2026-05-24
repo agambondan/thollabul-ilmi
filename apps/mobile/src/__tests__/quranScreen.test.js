@@ -315,6 +315,20 @@ describe('QuranScreen', () => {
     });
   });
 
+  it('uses web app Quran detail surface without changing ayah detail flow', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    const { getAllByText, getByTestId, getByText, queryByTestId } = await renderQuranScreen();
+
+    fireEvent.press(await waitFor(() => getByText('Surah 1')));
+    fireEvent.press((await waitFor(() => getAllByText('Ketuk untuk membaca lengkap')))[0]);
+
+    await waitFor(() => {
+      expect(getByText('Detail Ayat')).toBeTruthy();
+      expect(getByTestId('quran-web-app-detail')).toBeTruthy();
+    });
+    expect(queryByTestId('quran-classic-detail')).toBeNull();
+  });
+
   it('shows loading state when surahs not yet loaded', async () => {
     client.getSurahs.mockImplementation(() => new Promise(() => {}));
 

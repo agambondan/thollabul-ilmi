@@ -626,3 +626,41 @@ Results:
   `/tmp/thollabul-webapp-global-search-surface-export`.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
+
+## Web App Quran Detail Surface Update
+
+Status: completed for the opt-in Quran ayah detail surface pass.
+
+Implemented:
+
+- `QuranScreen` ayah detail view now uses the web-app surface wrapper in
+  `web_app` mode.
+- Added explicit test IDs for classic and `web_app` Quran detail surfaces.
+- Ayah detail actions, audio, tafsir, asbabun nuzul, ayat terkait, hadis
+  terkait, bookmark, notes, and navigation handlers remain unchanged.
+
+Scope guardrail:
+
+- This slice only changes the Quran ayah detail container styling in `web_app`
+  mode. It does not change reader pagination, ayah action handlers, audio
+  loading, bookmark/note persistence, or reference modals.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- quranScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-quran-detail-surface-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted Quran/shell tests passed: 3 suites, 34 tests.
+- Full mobile Jest passed: 44 suites, 609 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-quran-detail-surface-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
