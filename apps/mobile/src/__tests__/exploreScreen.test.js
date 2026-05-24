@@ -82,9 +82,9 @@ jest.mock('../components/Screen', () => {
   return {
     Screen: ({
       children, title, subtitle, actions, searchSlot, listData,
-      renderListItem, listKeyExtractor, listFooter, onEndReached,
+      renderListItem, listKeyExtractor, listFooter, onEndReached, contentStyle,
     }) => (
-      <View>
+      <View style={contentStyle}>
         <View>
           <Text testID="screen-title">{title}</Text>
           {subtitle ? <Text testID="screen-subtitle">{subtitle}</Text> : null}
@@ -241,6 +241,10 @@ jest.mock('../data/mobileFeatures', () => {
   return { allFeatures, belajarFeatureGroups };
 });
 
+jest.mock('../hooks/useLayoutModePreference', () => ({
+  useLayoutModePreference: jest.fn(),
+}));
+
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { flushAsyncWork } from '../test-utils/async';
@@ -255,6 +259,7 @@ const forumApi = require('../api/forum');
 const clientApi = require('../api/client');
 const personalApi = require('../api/personal');
 const haptics = require('../utils/haptics');
+const { useLayoutModePreference } = require('../hooks/useLayoutModePreference');
 const { readPinnedFeatures, readRecentFeatures, rememberFeatureOpen, togglePinnedFeature } = require('../storage/recentFeatures');
 
 const defaultNavigation = {
@@ -288,6 +293,7 @@ beforeEach(() => {
   useFeedback.mockReturnValue({
     showError: jest.fn(), showInfo: jest.fn(), showSuccess: jest.fn(),
   });
+  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
   readPinnedFeatures.mockResolvedValue([]);
   readRecentFeatures.mockResolvedValue([]);
   rememberFeatureOpen.mockResolvedValue([]);
@@ -299,6 +305,15 @@ describe('ExploreScreen', () => {
     const { getByTestId } = await renderExploreScreen();
     expect(getByTestId('screen-title')).toBeTruthy();
     expect(getByTestId('screen-subtitle')).toBeTruthy();
+    expect(getByTestId('explore-classic-surface')).toBeTruthy();
+  });
+
+  test('uses web app Explore surface when web app layout is active', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    const { getByTestId, queryByTestId } = await renderExploreScreen();
+
+    expect(getByTestId('explore-web-app-surface')).toBeTruthy();
+    expect(queryByTestId('explore-classic-surface')).toBeNull();
   });
 
   test('renders search input for feature catalog', async () => {

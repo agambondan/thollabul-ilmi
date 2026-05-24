@@ -29,6 +29,7 @@ import { ActionPill, IconActionButton, PaperSearchInput } from '../components/Pa
 import { Screen } from '../components/Screen';
 import { useFeedback } from '../context/FeedbackContext';
 import { useSession } from '../context/SessionContext';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 import { FeatureCatalog, findFeatureByKey, isPaginatedFeature, LOCAL_TOOL_TYPES } from './explore/FeatureCatalog';
 import {
   deleteCalculatorHistory,
@@ -177,6 +178,7 @@ const normalizeUserWirdItem = (item, index = 0) => ({
 export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab }) {
   const { session } = useSession();
   const { showError, showInfo, showSuccess } = useFeedback();
+  const { isWebAppLayout } = useLayoutModePreference();
   const handledDeepLinkId = useRef(null);
   const dictionaryInputRef = useRef(null);
   const zakatTimerRef = useRef(null);
@@ -1540,9 +1542,11 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
             onPress={closeDetailView}
           />
         )}
+        contentStyle={isWebAppLayout ? styles.webAppSurface : null}
         subtitle={selectedItem.meta || activeFeature?.title}
         title={selectedItem.title}
       >
+        <View testID={isWebAppLayout ? 'explore-web-app-detail' : 'explore-classic-detail'} />
         <Card style={styles.detailCard}>
           {selectedItem.arabic ? (
             <Text style={[isTafsirDetail ? styles.detailArabic : styles.arabic]}>{selectedItem.arabic}</Text>
@@ -2967,6 +2971,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   return (
     <Screen
+      contentStyle={isWebAppLayout ? styles.webAppSurface : null}
       title={screenTitle}
       subtitle={screenSubtitle}
       onEndReached={shouldLoadMore ? loadMoreFeature : undefined}
@@ -2990,6 +2995,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         )
       }
     >
+      <View testID={isWebAppLayout ? 'explore-web-app-surface' : 'explore-classic-surface'} />
       {!activeFeature && (
         <>
           <PaperSearchInput
@@ -3055,6 +3061,11 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontSize: 12,
     fontWeight: '900',
+  },
+  webAppSurface: {
+    backgroundColor: '#f8fafc',
+    borderRadius: radius.md,
+    padding: spacing.sm,
   },
   searchRow: {
     flexDirection: 'row',

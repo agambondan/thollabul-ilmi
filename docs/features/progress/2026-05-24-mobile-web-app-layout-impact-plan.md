@@ -430,3 +430,46 @@ Results:
   `/tmp/thollabul-webapp-ibadah-surface-export`.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
+
+## Web App Explore/Belajar Surface Update
+
+Status: completed for the first opt-in Explore/Belajar surface pass.
+
+Implemented:
+
+- `ExploreScreen` now reads `useLayoutModePreference`.
+- In `web_app` mode, the Belajar catalog, active feature view, and detail view
+  use the web-app surface wrapper.
+- Added explicit test IDs for classic and `web_app` Explore surfaces.
+- Feature catalog search, pinned/recent features, forum, feed, notes,
+  bookmarks, library progress, tafsir, quiz, calculators, and local tools keep
+  their existing handlers.
+- `classic` Explore/Belajar surfaces remain available and covered.
+
+Scope guardrail:
+
+- This slice only changes the presentational container for Explore/Belajar in
+  `web_app` mode. It does not change feature routing, API fetching, personal
+  data handlers, or forum/feed behavior.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-explore-surface-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted Explore/shell tests passed: 3 suites, 37 tests.
+- Full mobile Jest passed: 44 suites, 603 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-explore-surface-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- Existing Explore test warning remains: React Native `VirtualizedList` emits an
+  `act(...)` warning in Jest, but the suite passes.
