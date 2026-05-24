@@ -1,5 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { useEffect } from 'react';
+import { KeyboardAvoidingView, Platform, StatusBar, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TabBar } from '../components/TabBar';
 import { colors } from '../theme';
@@ -11,6 +11,10 @@ export function ClassicAppShell({
   onTabChange,
   testID = 'classic-app-shell',
 }) {
+  useEffect(() => {
+    StatusBar.setBarStyle('dark-content');
+  }, []);
+
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.safeArea} testID={testID}>
       <KeyboardAvoidingView
@@ -23,7 +27,6 @@ export function ClassicAppShell({
       {activeTab === 'quran' || keyboardVisible ? null : (
         <TabBar active={activeTab} onChange={onTabChange} />
       )}
-      <StatusBar style="dark" backgroundColor={colors.bg} />
     </SafeAreaView>
   );
 }

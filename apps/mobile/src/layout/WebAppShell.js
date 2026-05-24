@@ -1,6 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
-import { useCallback, useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { KeyboardAvoidingView, Platform, StatusBar, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSession } from '../context/SessionContext';
 import { colors } from '../theme';
@@ -19,6 +18,10 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
   const [accountMenuVisible, setAccountMenuVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const accountLabel = getWebAppAccountLabel(user);
+
+  useEffect(() => {
+    StatusBar.setBarStyle('light-content');
+  }, []);
 
   const closeAccountMenu = useCallback(() => setAccountMenuVisible(false), []);
   const openAccountMenu = useCallback(() => setAccountMenuVisible(true), []);
@@ -77,7 +80,6 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
         onSignOut={signOut}
         visible={accountMenuVisible}
       />
-      <StatusBar style="light" backgroundColor="#0f172a" />
     </SafeAreaView>
   );
 }

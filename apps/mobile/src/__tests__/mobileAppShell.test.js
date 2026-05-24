@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
-import { Text } from 'react-native';
+import { StatusBar, Text } from 'react-native';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import { TabActivityProvider } from '../context/TabActivityContext';
 import { LayoutModeProvider } from '../layout/LayoutModeProvider';
@@ -19,13 +19,11 @@ jest.mock('react-native-safe-area-context', () => {
   };
 });
 
-jest.mock('expo-status-bar', () => ({
-  StatusBar: () => null,
-}));
-
 jest.mock('../context/SessionContext', () => ({
   useSession: jest.fn(),
 }));
+
+const setBarStyleSpy = jest.spyOn(StatusBar, 'setBarStyle').mockImplementation(() => {});
 
 function renderShell(props = {}) {
   const onOpenProfile = props.onOpenProfile ?? jest.fn();
@@ -87,6 +85,7 @@ describe('MobileAppShell', () => {
     expect(getByText('Hadith')).toBeTruthy();
     expect(getByText('Cari')).toBeTruthy();
     expect(getByText('Menu')).toBeTruthy();
+    expect(setBarStyleSpy).toHaveBeenCalledWith('light-content');
   });
 
   test('uses logged-in user initial in web app shell header', async () => {
