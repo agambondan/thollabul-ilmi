@@ -84,7 +84,7 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: colors.bg,
+    backgroundColor: '#0f172a',
     flex: 1,
   },
   container: {
