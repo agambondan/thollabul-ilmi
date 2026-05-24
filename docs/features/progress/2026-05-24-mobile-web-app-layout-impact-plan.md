@@ -471,8 +471,8 @@ Results:
   `/tmp/thollabul-webapp-explore-surface-export`.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
-- Existing Explore test warning remains: React Native `VirtualizedList` emits an
-  `act(...)` warning in Jest, but the suite passes.
+- Explore test warning cleaned up: the test mock now renders list data
+  synchronously instead of mounting React Native `VirtualizedList`.
 
 ## Web App Ibadah Sub-Screen Surface Update
 
@@ -559,5 +559,30 @@ Results:
   `/tmp/thollabul-webapp-profile-surface-export`.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
-- Existing Explore test warning remains: React Native `VirtualizedList` emits an
-  `act(...)` warning in Jest, but the suite passes.
+- Explore test warning cleaned up: the test mock now renders list data
+  synchronously instead of mounting React Native `VirtualizedList`.
+
+## Web App Test Noise Cleanup
+
+Status: completed for the Explore/Belajar Jest warning cleanup.
+
+Implemented:
+
+- `exploreScreen.test.js` no longer mounts React Native `FlatList` inside the
+  mocked `Screen` component.
+- The mocked list now renders `listData` synchronously using `renderListItem`,
+  preserving the existing feature tests without VirtualizedList timers.
+- No production code changed in this cleanup slice.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+```
+
+Results:
+
+- Targeted Explore test passed: 1 suite, 21 tests.
+- The previous `VirtualizedList` `act(...)` warning no longer appears in the
+  targeted Explore test output.

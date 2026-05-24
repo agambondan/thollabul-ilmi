@@ -78,11 +78,11 @@ jest.mock('../storage/recentFeatures', () => ({
 }));
 
 jest.mock('../components/Screen', () => {
-  const { View, Text, TextInput, FlatList } = require('react-native');
+  const { View, Text } = require('react-native');
   return {
     Screen: ({
       children, title, subtitle, actions, searchSlot, listData,
-      renderListItem, listKeyExtractor, listFooter, onEndReached, contentStyle,
+      renderListItem, listKeyExtractor, listFooter, contentStyle,
     }) => (
       <View style={contentStyle}>
         <View>
@@ -93,13 +93,14 @@ jest.mock('../components/Screen', () => {
         {searchSlot}
         {children}
         {Array.isArray(listData) && renderListItem ? (
-          <FlatList
-            data={listData}
-            keyExtractor={listKeyExtractor}
-            renderItem={renderListItem}
-            ListFooterComponent={listFooter}
-            onEndReached={onEndReached}
-          />
+          <View testID="screen-list">
+            {listData.map((item, index) => (
+              <View key={listKeyExtractor?.(item, index) ?? String(index)}>
+                {renderListItem({ item, index })}
+              </View>
+            ))}
+            {listFooter}
+          </View>
         ) : null}
       </View>
     ),
