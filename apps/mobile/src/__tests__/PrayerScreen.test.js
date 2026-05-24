@@ -18,8 +18,8 @@ import * as Location from 'expo-location';
 jest.mock('../components/Screen', () => {
   const { View, Text, ActivityIndicator } = require('react-native');
   return {
-    Screen: ({ children, title, subtitle, refreshing, actions }) => (
-      <View>
+    Screen: ({ children, title, subtitle, refreshing, actions, contentStyle }) => (
+      <View style={contentStyle}>
         <Text testID="screen-title">{title}</Text>
         {subtitle ? <Text testID="screen-subtitle">{subtitle}</Text> : null}
         <View testID="screen-actions">{actions}</View>
@@ -69,6 +69,10 @@ jest.mock('../context/FeedbackContext', () => ({
   FeedbackProvider: ({ children }) => children,
 }));
 
+jest.mock('../hooks/useLayoutModePreference', () => ({
+  useLayoutModePreference: jest.fn(),
+}));
+
 jest.mock('../api/client', () => ({
   getPrayerTimes: jest.fn(),
 }));
@@ -104,6 +108,7 @@ jest.mock('../utils/prayerNotifications', () => ({
 
 import { PrayerScreen } from '../screens/PrayerScreen';
 import { useFeedback } from '../context/FeedbackContext';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 import { getPrayerTimes } from '../api/client';
 import { readPreference, writePreference } from '../storage/preferences';
 import { getPrayerOfflineOverview } from '../storage/offlineContent';
@@ -148,6 +153,7 @@ describe('PrayerScreen', () => {
       showInfo: jest.fn(),
       showSuccess: jest.fn(),
     });
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
   });
 
   test('renders screen title', async () => {
@@ -157,6 +163,15 @@ describe('PrayerScreen', () => {
     expect(getByTestId('screen-title').props.children).toBe(
       'Jadwal Sholat',
     );
+    expect(getByTestId('prayer-classic-main')).toBeTruthy();
+  });
+
+  test('uses web app prayer main surface when web app layout is active', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    const { getByTestId, queryByTestId } = await renderPrayerScreen();
+
+    expect(getByTestId('prayer-web-app-main')).toBeTruthy();
+    expect(queryByTestId('prayer-classic-main')).toBeNull();
   });
 
   test('shows loader while loading', async () => {
@@ -259,6 +274,7 @@ describe('PrayerScreen', () => {
       expect(getByTestId('screen-title').props.children).toBe(
         'Pengaturan Sholat',
       );
+      expect(getByTestId('prayer-classic-settings')).toBeTruthy();
     });
 
     expect(getByText('Kemenag')).toBeTruthy();

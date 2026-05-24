@@ -12,8 +12,8 @@ import * as Location from 'expo-location';
 jest.mock('../components/Screen', () => {
   const { View, Text, ActivityIndicator } = require('react-native');
   return {
-    Screen: ({ children, title, subtitle, refreshing, actions }) => (
-      <View>
+    Screen: ({ children, title, subtitle, refreshing, actions, contentStyle }) => (
+      <View style={contentStyle}>
         <Text testID="screen-title">{title}</Text>
         {subtitle ? <Text testID="screen-subtitle">{subtitle}</Text> : null}
         <View testID="screen-actions">{actions}</View>
@@ -74,6 +74,10 @@ jest.mock('../components/Paper', () => {
   };
 });
 
+jest.mock('../hooks/useLayoutModePreference', () => ({
+  useLayoutModePreference: jest.fn(),
+}));
+
 const mockWatchCompass = jest.fn();
 const mockRemoveSubscription = jest.fn();
 
@@ -85,6 +89,7 @@ jest.mock('../utils/compass', () => ({
 }));
 
 import { QiblaScreen } from '../screens/QiblaScreen';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 
 const mockCoords = { latitude: -6.2, longitude: 106.8, accuracy: 100 };
 
@@ -136,6 +141,7 @@ describe('QiblaScreen', () => {
     Location.getCurrentPositionAsync.mockResolvedValue({
       coords: mockCoords,
     });
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
   });
 
   test('renders screen title', async () => {
@@ -145,6 +151,17 @@ describe('QiblaScreen', () => {
       expect(getByTestId('screen-title')).toBeTruthy();
     });
     expect(getByTestId('screen-title').props.children).toBe('Qibla');
+    expect(getByTestId('qibla-classic-surface')).toBeTruthy();
+  });
+
+  test('uses web app Qibla surface when web app layout is active', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    const { getByTestId, queryByTestId } = render(<QiblaScreen onBack={jest.fn()} />);
+
+    await waitFor(() => {
+      expect(getByTestId('qibla-web-app-surface')).toBeTruthy();
+    });
+    expect(queryByTestId('qibla-classic-surface')).toBeNull();
   });
 
   test('shows loader while loading location', () => {

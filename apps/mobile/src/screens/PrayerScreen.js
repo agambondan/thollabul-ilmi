@@ -8,6 +8,7 @@ import { Card, CardTitle } from '../components/Card';
 import { IconActionButton } from '../components/Paper';
 import { Screen } from '../components/Screen';
 import { useFeedback } from '../context/FeedbackContext';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 import {
   buildPrayerOfflinePack,
   clearPrayerOfflinePack,
@@ -81,6 +82,7 @@ const formatMinutes = (value) => {
 
 export function PrayerScreen({ isActive, navigation }) {
   const { showError, showInfo, showSuccess } = useFeedback();
+  const { isWebAppLayout } = useLayoutModePreference();
   const [coords, setCoords] = useState(null);
   const [prayers, setPrayers] = useState(null);
   const [message, setMessage] = useState('');
@@ -574,12 +576,14 @@ export function PrayerScreen({ isActive, navigation }) {
   if (view === 'settings') {
     return (
       <Screen
+        contentStyle={isWebAppLayout ? styles.webAppSurface : null}
         title="Pengaturan Sholat"
         subtitle="Atur metode jadwal, koreksi waktu, pengingat, dan jadwal offline."
         refreshing={loading}
         onRefresh={refreshAll}
         actions={<IconActionButton Icon={ArrowLeft} label="Kembali ke jadwal sholat" onPress={() => setView('main')} />}
       >
+        <View testID={isWebAppLayout ? 'prayer-web-app-settings' : 'prayer-classic-settings'} />
         {message ? <Text style={styles.message}>{message}</Text> : null}
 
         <Card>
@@ -749,6 +753,7 @@ export function PrayerScreen({ isActive, navigation }) {
 
   return (
     <Screen
+      contentStyle={isWebAppLayout ? styles.webAppSurface : null}
       title="Jadwal Sholat"
       subtitle="Lihat jadwal sholat hari ini sesuai lokasi dan metode."
       refreshing={loading}
@@ -760,6 +765,7 @@ export function PrayerScreen({ isActive, navigation }) {
         </>
       }
     >
+      <View testID={isWebAppLayout ? 'prayer-web-app-main' : 'prayer-classic-main'} />
       {message ? <Text style={styles.message}>{message}</Text> : null}
 
       {!coords && !loading ? (
@@ -858,6 +864,11 @@ export function PrayerScreen({ isActive, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  webAppSurface: {
+    backgroundColor: '#f8fafc',
+    borderRadius: radius.md,
+    padding: spacing.sm,
+  },
   message: {
     backgroundColor: '#fffbeb',
     borderColor: '#fde68a',

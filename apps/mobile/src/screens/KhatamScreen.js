@@ -6,6 +6,7 @@ import { Card, CardTitle } from '../components/Card';
 import { EmptyState, IconActionButton } from '../components/Paper';
 import { Screen } from '../components/Screen';
 import { useSession } from '../context/SessionContext';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 import { colors, radius, spacing } from '../theme';
 import { ayahIndex, dailyTarget, juzProgress, progressPct, TOTAL_AYAH } from '../utils/khatam';
 
@@ -30,6 +31,7 @@ const formatLastRead = (value) => {
 
 export function KhatamScreen({ isActive, navigation, onOpenTab }) {
   const { user } = useSession();
+  const { isWebAppLayout } = useLayoutModePreference();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(null);
@@ -95,6 +97,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
 
   return (
     <Screen
+      contentStyle={isWebAppLayout ? styles.webAppSurface : null}
       title="Khatam"
       subtitle="Pantau progress khatam Quran dari posisi baca terakhir."
       refreshing={loading}
@@ -106,6 +109,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
         </>
       }
     >
+      <View testID={isWebAppLayout ? 'khatam-web-app-surface' : 'khatam-classic-surface'} />
       {!user ? (
         <EmptyState
           Icon={BookOpenCheck}
@@ -195,6 +199,11 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
 }
 
 const styles = StyleSheet.create({
+  webAppSurface: {
+    backgroundColor: '#f8fafc',
+    borderRadius: radius.md,
+    padding: spacing.sm,
+  },
   heroCard: {
     backgroundColor: colors.surface,
   },

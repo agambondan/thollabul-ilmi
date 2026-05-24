@@ -21,6 +21,7 @@ import {
 import { Card, CardTitle } from "../components/Card";
 import { ActionPill, EmptyState, IconActionButton } from "../components/Paper";
 import { Screen } from "../components/Screen";
+import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { colors, radius, spacing } from "../theme";
 import {
     compassSupported,
@@ -88,6 +89,7 @@ function StatusChip({ Icon, label, tone = "neutral" }) {
 }
 
 export function QiblaScreen({ onBack, onOpenTab }) {
+    const { isWebAppLayout } = useLayoutModePreference();
     const { width } = useWindowDimensions();
     const [coords, setCoords] = useState(null);
     const [direction, setDirection] = useState(null);
@@ -295,6 +297,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
 
     return (
         <Screen
+            contentStyle={isWebAppLayout ? styles.webAppSurface : null}
             title='Qibla'
             subtitle='Arahkan perangkatmu untuk menemukan arah kiblat.'
             refreshing={loading}
@@ -321,6 +324,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                 </>
             }
         >
+            <View testID={isWebAppLayout ? 'qibla-web-app-surface' : 'qibla-classic-surface'} />
             {message ? <Text style={styles.message}>{message}</Text> : null}
             {compassMessage ? (
                 <Text style={styles.message}>{compassMessage}</Text>
@@ -698,6 +702,11 @@ export function QiblaScreen({ onBack, onOpenTab }) {
 }
 
 const styles = StyleSheet.create({
+    webAppSurface: {
+        backgroundColor: "#f8fafc",
+        borderRadius: radius.md,
+        padding: spacing.sm,
+    },
     message: {
         backgroundColor: "#fffbeb",
         borderColor: "#fde68a",

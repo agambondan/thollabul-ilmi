@@ -474,6 +474,50 @@ Results:
 - Existing Explore test warning remains: React Native `VirtualizedList` emits an
   `act(...)` warning in Jest, but the suite passes.
 
+## Web App Ibadah Sub-Screen Surface Update
+
+Status: completed for the first opt-in Ibadah sub-screen surface pass.
+
+Implemented:
+
+- `PrayerScreen`, `QiblaScreen`, and `KhatamScreen` now read
+  `useLayoutModePreference` for presentation only.
+- In `web_app` mode, Jadwal Sholat main/settings, Qibla, and Khatam screens use
+  the web-app surface wrapper.
+- Added explicit test IDs for classic and `web_app` surfaces on the affected
+  sub-screens.
+- Prayer location permission, manual coordinates, prayer-time fetching,
+  correction settings, reminder scheduling, adzan audio toggle, offline prayer
+  pack, Qibla compass math, Qibla manual location, and Khatam progress routing
+  keep their existing handlers.
+- `classic` Prayer/Qibla/Khatam surfaces remain available and covered.
+
+Scope guardrail:
+
+- This slice only changes presentational containers in `web_app` mode. It does
+  not change GPS permission flow, notification scheduling, audio playback,
+  offline pack data, compass animation/math, or Quran progress APIs.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- PrayerScreen.test.js QiblaScreen.test.js khatam.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-ibadah-subscreen-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted Ibadah sub-screen/shell tests passed: 5 suites, 44 tests.
+- Full mobile Jest passed: 44 suites, 607 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-ibadah-subscreen-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+
 ## Web App Profile/Settings Surface Update
 
 Status: completed for the first opt-in Profile and settings surface pass.

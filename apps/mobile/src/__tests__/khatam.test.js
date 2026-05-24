@@ -10,8 +10,8 @@ jest.mock('lucide-react-native', () => ({
 jest.mock('../components/Screen', () => {
   const { View, Text, ActivityIndicator } = require('react-native');
   return {
-    Screen: ({ actions, children, refreshing, subtitle, title }) => (
-      <View>
+    Screen: ({ actions, children, refreshing, subtitle, title, contentStyle }) => (
+      <View style={contentStyle}>
         <Text testID="screen-title">{title}</Text>
         {subtitle ? <Text testID="screen-subtitle">{subtitle}</Text> : null}
         <View testID="screen-actions">{actions}</View>
@@ -57,12 +57,17 @@ jest.mock('../context/SessionContext', () => ({
   useSession: jest.fn(),
 }));
 
+jest.mock('../hooks/useLayoutModePreference', () => ({
+  useLayoutModePreference: jest.fn(),
+}));
+
 jest.mock('../api/personal', () => ({
   getQuranProgress: jest.fn(),
 }));
 
 import { KhatamScreen } from '../screens/KhatamScreen';
 import { useSession } from '../context/SessionContext';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 import { getQuranProgress } from '../api/personal';
 
 const navigation = {
@@ -74,6 +79,7 @@ const navigation = {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
 });
 
 describe('KhatamScreen', () => {
@@ -87,7 +93,22 @@ describe('KhatamScreen', () => {
     await waitFor(() => {
       expect(getByText('Masuk untuk melacak Khatam')).toBeTruthy();
     });
+    expect(getByText('Khatam')).toBeTruthy();
     expect(getQuranProgress).not.toHaveBeenCalled();
+  });
+
+  test('uses web app Khatam surface when web app layout is active', async () => {
+    useSession.mockReturnValue({ user: null });
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+
+    const { getByTestId, queryByTestId } = render(
+      <KhatamScreen isActive navigation={navigation} onOpenTab={jest.fn()} />,
+    );
+
+    await waitFor(() => {
+      expect(getByTestId('khatam-web-app-surface')).toBeTruthy();
+    });
+    expect(queryByTestId('khatam-classic-surface')).toBeNull();
   });
 
   test('renders khatam progress for signed in user', async () => {
