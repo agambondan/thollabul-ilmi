@@ -39,6 +39,7 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 	const [error, setError] = useState('');
 	const [hafalanMode, setHafalanMode] = useState('off');
 	const [selectedQari, setSelectedQari] = useState('');
+	const [openActionMenuAyahId, setOpenActionMenuAyahId] = useState(null);
 	const loadMoreSentinelRef = useRef(null);
 	const pendingPageRef = useRef(null);
 	const retryAfterRef = useRef(0);
@@ -93,6 +94,7 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 		setAyahs([]);
 		setSurah(null);
 		setHasMore(true);
+		setOpenActionMenuAyahId(null);
 
 		fetchSurah(0)
 			.then((data) => {
@@ -330,18 +332,23 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 					key={`${surahTitle}-${surah?.number ?? ''}`}
 					id={`${surahTitle}-${surah?.number ?? ''}`}
 				>
-					{ayahs.map((ayah, index) => (
-						<AyahPage
-							surah={surah}
-							key={ayah.number}
-							ayah={ayah}
-							newLimit={loadMoreAyah}
-							isLast={false}
-							hafalanMode={hafalanMode}
-							selectedQari={selectedQari}
-							onQariChange={setSelectedQari}
-						/>
-					))}
+					{ayahs.map((ayah) => {
+						const actionMenuKey = ayah.id ?? `${surah?.number ?? 'surah'}:${ayah.number}`;
+						return (
+							<AyahPage
+								surah={surah}
+								key={ayah.number}
+								ayah={ayah}
+								newLimit={loadMoreAyah}
+								isLast={false}
+								hafalanMode={hafalanMode}
+								selectedQari={selectedQari}
+								onQariChange={setSelectedQari}
+								isActionMenuOpen={openActionMenuAyahId === actionMenuKey}
+								onActionMenuToggle={(isOpen) => setOpenActionMenuAyahId(isOpen ? actionMenuKey : null)}
+							/>
+						);
+					})}
 				</ul>
 				<div ref={loadMoreSentinelRef} className='h-px' aria-hidden='true' />
 			</div>

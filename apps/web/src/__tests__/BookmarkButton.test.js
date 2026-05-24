@@ -73,6 +73,27 @@ describe('BookmarkButton', () => {
     mockUseAuth.user = null;
   });
 
+  test('normalizes wrapped bookmark response from API', async () => {
+    mockUseAuth.isAuthenticated = true;
+    mockUseAuth.user = { name: 'Fulan' };
+    mockAdd.mockResolvedValueOnce({ ok: true, json: async () => ({ data: { id: 'wrapped-bm' } }) });
+    render(<BookmarkButton refType="ayah" refId="1" />);
+    fireEvent.click(screen.getByTitle('bookmarks.save'));
+
+    await waitFor(() => {
+      expect(screen.getByTitle('bookmarks.remove')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByTitle('bookmarks.remove'));
+    fireEvent.click(screen.getByText('bookmarks.remove'));
+
+    await waitFor(() => {
+      expect(mockRemove).toHaveBeenCalledWith('wrapped-bm');
+    });
+    mockUseAuth.isAuthenticated = false;
+    mockUseAuth.user = null;
+  });
+
   test('shows loading state during toggle', () => {
     mockUseAuth.isAuthenticated = true;
     mockUseAuth.user = { name: 'Fulan' };

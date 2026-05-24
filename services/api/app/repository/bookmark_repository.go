@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"errors"
+
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -24,6 +26,28 @@ func NewBookmarkRepository(db *gorm.DB) BookmarkRepository {
 }
 
 func (r *bookmarkRepo) Save(b *model.Bookmark) (*model.Bookmark, error) {
+	var existing model.Bookmark
+	err := r.db.Unscoped().
+		Where("user_id = ? AND ref_type = ? AND ref_id = ?", b.UserID, b.RefType, b.RefID).
+		First(&existing).Error
+	if err == nil {
+		if existing.DeletedAt.Valid {
+			if err := r.db.Unscoped().Model(&existing).Updates(map[string]interface{}{
+				"deleted_at": nil,
+				"ref_slug":   b.RefSlug,
+				"color":      b.Color,
+				"label":      b.Label,
+			}).Error; err != nil {
+				return nil, err
+			}
+			return r.FindByID(existing.ID)
+		}
+		return nil, gorm.ErrDuplicatedKey
+	}
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+
 	if err := r.db.Create(b).Error; err != nil {
 		return nil, err
 	}
@@ -75,5 +99,5 @@ func (r *bookmarkRepo) UpdateMeta(id, userID uuid.UUID, color, label *string) (*
 }
 
 func (r *bookmarkRepo) DeleteByID(id, userID uuid.UUID) error {
-	return r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.Bookmark{}).Error
+	return r.db.Unscoped().Where("id = ? AND user_id = ?", id, userID).Delete(&model.Bookmark{}).Error
 }

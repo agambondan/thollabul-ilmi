@@ -25,14 +25,24 @@ import {
 } from 'react-icons/bs';
 import { IoIosLink, IoMdCopy, IoMdImages } from 'react-icons/io';
 
-const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selectedQari, onQariChange }) => {
+const AyahPage = ({
+    surah,
+    ayah,
+    newLimit,
+    isLast,
+    hafalanMode = 'off',
+    selectedQari,
+    onQariChange,
+    isActionMenuOpen,
+    onActionMenuToggle,
+}) => {
     const { t, lang } = useLocale();
     const { arabicFontSize, fontCls } = useQuranFont();
     const { isHidden: actionsHidden, isMenu: actionsMenu } = useActionPosition();
     const cardRef = useRef();
     const audioRef = useRef(null);
     const [isCopied, SetIsCopied] = useState(false);
-    const [settingPopUp, SetSettingPopUp] = useState(false);
+    const [localSettingPopUp, setLocalSettingPopUp] = useState(false);
     const [clipboardPopUp, SetClipboardPopUp] = useState(false);
     const [shareImagePopUp, SetShareImagePopUp] = useState(false);
 
@@ -56,6 +66,15 @@ const AyahPage = ({ surah, ayah, newLimit, isLast, hafalanMode = 'off', selected
     const [revealed, setRevealed] = useState(false);
     const ayahTranslation = getLocalizedTranslation(ayah.translation, lang);
     const ayahLatin = ayah.translation?.latin_idn ?? ayah.translation?.latin_en ?? '';
+    const settingPopUp = typeof isActionMenuOpen === 'boolean' ? isActionMenuOpen : localSettingPopUp;
+    const SetSettingPopUp = (nextValue) => {
+        const next = typeof nextValue === 'function' ? nextValue(settingPopUp) : nextValue;
+        if (onActionMenuToggle) {
+            onActionMenuToggle(next);
+            return;
+        }
+        setLocalSettingPopUp(next);
+    };
 
     const hideArabic = hafalanMode === 'hide_arabic' && !revealed;
     const hideTranslation = hafalanMode === 'hide_translation' && !revealed;

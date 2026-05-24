@@ -42,6 +42,9 @@ const loadBookmarkList = () => {
     return bookmarkListPromise;
 };
 
+const unwrapBookmark = (payload) => payload?.data ?? payload;
+const bookmarkRecordId = (bookmark) => bookmark?.id ?? bookmark?._id ?? bookmark?.ID ?? null;
+
 const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = '' }) => {
     const { isAuthenticated } = useAuth();
     const { t, lang } = useLocale();
@@ -67,7 +70,7 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
                 );
                 if (found) {
                     setIsBookmarked(true);
-                    setBookmarkId(found.id ?? found._id);
+                    setBookmarkId(bookmarkRecordId(found));
                     // Prefer BE meta (cross-device); fallback to localStorage if BE empty.
                     const beMeta = {
                         color: found.color || undefined,
@@ -102,7 +105,8 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
         const prevBookmarkId = bookmarkId;
         try {
             if (isBookmarked) {
-                await bookmarkApi.remove(bookmarkId);
+                const res = await bookmarkApi.remove(bookmarkId);
+                if (!res.ok) throw new Error('bookmark remove failed');
                 resetBookmarkListCache();
                 clearBookmarkMeta(refType, refId);
                 setIsBookmarked(false);
@@ -116,10 +120,10 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
                     ...(refSlug ? { ref_slug: refSlug } : {}),
                 });
                 if (!res.ok) throw new Error('bookmark failed');
-                const data = await res.json();
+                const data = unwrapBookmark(await res.json());
                 resetBookmarkListCache();
                 setIsBookmarked(true);
-                setBookmarkId(data.id ?? data._id);
+                setBookmarkId(bookmarkRecordId(data));
             }
         } catch {
             setIsBookmarked(prevBookmarked);
