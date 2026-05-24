@@ -586,3 +586,43 @@ Results:
 - Targeted Explore test passed: 1 suite, 21 tests.
 - The previous `VirtualizedList` `act(...)` warning no longer appears in the
   targeted Explore test output.
+
+## Web App Global Search Surface Update
+
+Status: completed for the first opt-in Global Search surface pass.
+
+Implemented:
+
+- `GlobalSearchScreen` now reads `useLayoutModePreference` for presentation
+  only.
+- In `web_app` mode, Global Search uses the web-app surface wrapper.
+- Added explicit test IDs for classic and `web_app` Global Search surfaces.
+- Search filters, recent searches, quick suggestions, remote search fetching,
+  result routing, and load-more behavior keep their existing handlers.
+- `classic` Global Search remains available and covered.
+
+Scope guardrail:
+
+- This slice only changes the Global Search container styling in `web_app`
+  mode. It does not change search debounce, API calls, recent search storage,
+  result grouping, or navigation targets.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- globalSearchScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-global-search-surface-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted GlobalSearch/shell tests passed: 3 suites, 30 tests.
+- Full mobile Jest passed: 44 suites, 608 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-global-search-surface-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.

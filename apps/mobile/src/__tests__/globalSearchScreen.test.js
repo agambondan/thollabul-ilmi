@@ -30,10 +30,10 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 
 jest.mock('../components/Screen', () => ({
-  Screen: ({ children, searchSlot, headerExtra, title }) => {
+  Screen: ({ children, searchSlot, headerExtra, title, contentStyle }) => {
     const { View, Text } = require('react-native');
     return (
-      <View>
+      <View style={contentStyle}>
         <Text testID="screen-title">{title}</Text>
         {searchSlot}
         {headerExtra}
@@ -41,6 +41,10 @@ jest.mock('../components/Screen', () => ({
       </View>
     );
   },
+}));
+
+jest.mock('../hooks/useLayoutModePreference', () => ({
+  useLayoutModePreference: jest.fn(),
 }));
 
 jest.mock('../components/Paper', () => {
@@ -93,6 +97,7 @@ import { flushAsyncWork } from '../test-utils/async';
 
 const client = require('../api/client');
 const recentSearches = require('../storage/recentSearches');
+const { useLayoutModePreference } = require('../hooks/useLayoutModePreference');
 
 const mockAyah = (id, overrides = {}) => ({
   id, number: id, surahNumber: 1, surahName: 'Al-Fatihah',
@@ -126,6 +131,7 @@ beforeEach(() => {
   client.getSurahs.mockResolvedValue([]);
   recentSearches.readRecentSearches.mockResolvedValue([]);
   recentSearches.rememberRecentSearch.mockResolvedValue([]);
+  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
 });
 
 afterEach(() => {
@@ -137,6 +143,7 @@ describe('GlobalSearchScreen', () => {
     const { getByTestId, getByText } = await renderGlobalSearchScreen();
 
     expect(getByTestId('search-input')).toBeTruthy();
+    expect(getByTestId('global-search-classic-surface')).toBeTruthy();
     expect(getByText('Semua')).toBeTruthy();
     expect(getByText('Quran')).toBeTruthy();
     expect(getByText('Hadis')).toBeTruthy();
@@ -145,6 +152,14 @@ describe('GlobalSearchScreen', () => {
     expect(getByText('Kamus')).toBeTruthy();
     expect(getByText('Perawi')).toBeTruthy();
     expect(getByText('Fitur')).toBeTruthy();
+  });
+
+  it('uses web app Global Search surface when web app layout is active', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    const { getByTestId, queryByTestId } = await renderGlobalSearchScreen();
+
+    expect(getByTestId('global-search-web-app-surface')).toBeTruthy();
+    expect(queryByTestId('global-search-classic-surface')).toBeNull();
   });
 
   it('shows quick suggestions when no query', async () => {

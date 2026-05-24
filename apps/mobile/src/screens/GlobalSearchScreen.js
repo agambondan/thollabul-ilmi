@@ -6,6 +6,7 @@ import { ContentCard } from '../components/ContentCard';
 import { IconActionButton, PaperSearchInput } from '../components/Paper';
 import { Screen } from '../components/Screen';
 import { allFeatures } from '../data/mobileFeatures';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 import { readRecentSearches, rememberRecentSearch } from '../storage/recentSearches';
 import { colors, radius, shadows, spacing } from '../theme';
 
@@ -211,6 +212,7 @@ const LoadingSearchState = ({ label }) => (
 );
 
 export function GlobalSearchScreen({ initialFilter = 'all', initialQuery = '', onBack, onOpenTab }) {
+  const { isWebAppLayout } = useLayoutModePreference();
   const [query, setQuery] = useState(initialQuery);
   const [activeFilter, setActiveFilter] = useState('all');
   const [recentSearches, setRecentSearches] = useState([]);
@@ -472,6 +474,7 @@ export function GlobalSearchScreen({ initialFilter = 'all', initialQuery = '', o
   return (
     <Screen
       actions={<IconActionButton Icon={ArrowLeft} label="Kembali ke Beranda" onPress={onBack} />}
+      contentStyle={isWebAppLayout ? styles.webAppSurface : null}
       searchSlot={
         <PaperSearchInput
           autoFocus
@@ -526,6 +529,7 @@ export function GlobalSearchScreen({ initialFilter = 'all', initialQuery = '', o
       subtitle="Satu tempat untuk menemukan bacaan, hadis, referensi, dan fitur aplikasi."
       title="Cari"
     >
+      <View testID={isWebAppLayout ? 'global-search-web-app-surface' : 'global-search-classic-surface'} />
       {!hasQuery ? (
         <View style={styles.hintCard}>
           <View style={styles.hintIcon}>
@@ -729,6 +733,11 @@ export function GlobalSearchScreen({ initialFilter = 'all', initialQuery = '', o
 }
 
 const styles = StyleSheet.create({
+  webAppSurface: {
+    backgroundColor: '#f8fafc',
+    borderRadius: radius.md,
+    padding: spacing.sm,
+  },
   filterChip: {
     backgroundColor: colors.surface,
     borderColor: colors.faint,
