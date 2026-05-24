@@ -671,3 +671,38 @@ Results:
   `/tmp/thollabul-webapp-quran-detail-surface-export`.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
+
+## Layout Mode Fallback Coverage
+
+Status: completed for provider and shell fallback coverage.
+
+Implemented:
+
+- `layoutModeProvider.test.js` now verifies that an invalid stored layout mode
+  falls back to `classic` provider state.
+- `mobileAppShell.test.js` now verifies that an invalid stored layout mode
+  renders `classic-app-shell` and does not render `web-app-shell`.
+- No production code changed in this slice.
+
+Scope guardrail:
+
+- This slice only strengthens regression coverage for the documented fallback
+  rule. It does not change layout storage, shell selection, navigation,
+  preferences, or screen rendering.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted shell/provider tests passed: 2 suites, 18 tests.
+- Full mobile Jest passed: 44 suites, 611 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.

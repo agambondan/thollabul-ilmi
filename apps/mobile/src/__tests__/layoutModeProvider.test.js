@@ -73,6 +73,19 @@ describe('LayoutModeProvider', () => {
     expect(getByText('web-app')).toBeTruthy();
   });
 
+  test('falls back to classic state when stored mode is invalid', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce('"unexpected"');
+    const { getByText } = render(
+      <LayoutModeProvider>
+        <LayoutModeProbe />
+      </LayoutModeProvider>,
+    );
+
+    await waitFor(() => expect(getByText(layoutModes.classic)).toBeTruthy());
+    expect(getByText('ready')).toBeTruthy();
+    expect(getByText('classic-shell')).toBeTruthy();
+  });
+
   test('updates mode through context setter', async () => {
     AsyncStorage.getItem.mockResolvedValueOnce(null);
     const { getByText } = render(

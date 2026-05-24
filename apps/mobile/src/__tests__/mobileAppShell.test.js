@@ -62,6 +62,15 @@ describe('MobileAppShell', () => {
     expect(getByText('Beranda')).toBeTruthy();
   });
 
+  test('falls back to classic shell when stored layout mode is invalid', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce('"unexpected"');
+    const { getByText, getByTestId, queryByTestId } = renderShell();
+
+    await waitFor(() => expect(getByTestId('classic-app-shell')).toBeTruthy());
+    expect(getByText('Shell content')).toBeTruthy();
+    expect(queryByTestId('web-app-shell')).toBeNull();
+  });
+
   test('uses web app shell chrome when stored mode is web_app', async () => {
     AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
     const { getByText, getByTestId, queryByTestId } = renderShell();
