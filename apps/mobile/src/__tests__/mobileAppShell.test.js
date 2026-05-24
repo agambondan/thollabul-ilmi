@@ -49,7 +49,7 @@ function renderShell(props = {}) {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  useSession.mockReturnValue({ user: null });
+  useSession.mockReturnValue({ loading: false, signOut: jest.fn(), user: null });
 });
 
 describe('MobileAppShell', () => {
@@ -82,7 +82,11 @@ describe('MobileAppShell', () => {
     expect(queryByTestId('classic-app-shell')).toBeNull();
     expect(getByText("Thullaabul 'Ilmi")).toBeTruthy();
     expect(getByText('T')).toBeTruthy();
-    expect(getByText('Beranda')).toBeTruthy();
+    expect(getByText('Dashboard')).toBeTruthy();
+    expect(getByText('Al-Quran')).toBeTruthy();
+    expect(getByText('Hadith')).toBeTruthy();
+    expect(getByText('Cari')).toBeTruthy();
+    expect(getByText('Menu')).toBeTruthy();
   });
 
   test('uses logged-in user initial in web app shell header', async () => {
@@ -94,26 +98,61 @@ describe('MobileAppShell', () => {
     expect(getByText('B')).toBeTruthy();
   });
 
-  test('opens profile from web app header account control', async () => {
+  test('opens and closes account menu from web app header account control', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
+    useSession.mockReturnValue({
+      loading: false,
+      signOut: jest.fn(),
+      user: { name: 'Admin', email: 'admin@tholabul-ilmi.com' },
+    });
+    const { getByText, getByTestId, queryByTestId } = renderShell();
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+    expect(queryByTestId('mobile-account-menu')).toBeNull();
+
+    fireEvent.press(getByTestId('mobile-top-header-profile'));
+
+    expect(getByTestId('mobile-account-menu')).toBeTruthy();
+    expect(getByText('Profil')).toBeTruthy();
+    expect(getByText('Bookmark')).toBeTruthy();
+    expect(getByText('Gelap')).toBeTruthy();
+
+    fireEvent.press(getByTestId('mobile-account-menu-close'));
+    expect(queryByTestId('mobile-account-menu')).toBeNull();
+  });
+
+  test('routes account menu profile and sign out actions', async () => {
     AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
     const onOpenProfile = jest.fn();
+    const signOut = jest.fn();
+    useSession.mockReturnValue({
+      loading: false,
+      signOut,
+      user: { name: 'Admin', email: 'admin@tholabul-ilmi.com' },
+    });
     const { getByTestId } = renderShell({ onOpenProfile });
 
     await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
     fireEvent.press(getByTestId('mobile-top-header-profile'));
-
+    fireEvent.press(getByTestId('mobile-account-menu-item-profile'));
     expect(onOpenProfile).toHaveBeenCalledTimes(1);
+
+    fireEvent.press(getByTestId('mobile-top-header-profile'));
+    fireEvent.press(getByTestId('mobile-account-menu-sign-out'));
+    expect(signOut).toHaveBeenCalledTimes(1);
   });
 
   test('opens and closes web app secondary menu sheet', async () => {
     AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
-    const { getByTestId, queryByTestId } = renderShell();
+    const { getByLabelText, getByText, getByTestId, queryByTestId } = renderShell();
 
     await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
     expect(queryByTestId('mobile-menu-sheet')).toBeNull();
 
-    fireEvent.press(getByTestId('mobile-top-header-menu'));
+    fireEvent.press(getByLabelText('Menu'));
     expect(getByTestId('mobile-menu-sheet')).toBeTruthy();
+    expect(getByText('BACAAN UTAMA')).toBeTruthy();
+    expect(getByText('IBADAH & TRACKER')).toBeTruthy();
     expect(getByTestId('mobile-menu-item-profile')).toBeTruthy();
 
     fireEvent.press(getByTestId('mobile-menu-sheet-close'));
@@ -123,23 +162,23 @@ describe('MobileAppShell', () => {
   test('routes web app menu sheet tab shortcuts through existing tab handler', async () => {
     AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
     const onTabChange = jest.fn();
-    const { getByTestId, queryByTestId } = renderShell({ onTabChange });
+    const { getByLabelText, getByTestId, queryByTestId } = renderShell({ onTabChange });
 
     await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
-    fireEvent.press(getByTestId('mobile-top-header-menu'));
-    fireEvent.press(getByTestId('mobile-menu-item-ibadah'));
+    fireEvent.press(getByLabelText('Menu'));
+    fireEvent.press(getByTestId('mobile-menu-item-sholat-tracker'));
 
-    expect(onTabChange).toHaveBeenCalledWith('ibadah');
+    expect(onTabChange).toHaveBeenCalledWith('ibadah', null);
     expect(queryByTestId('mobile-menu-sheet')).toBeNull();
   });
 
   test('routes web app menu profile shortcut through existing profile handler', async () => {
     AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
     const onOpenProfile = jest.fn();
-    const { getByTestId } = renderShell({ onOpenProfile });
+    const { getByLabelText, getByTestId } = renderShell({ onOpenProfile });
 
     await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
-    fireEvent.press(getByTestId('mobile-top-header-menu'));
+    fireEvent.press(getByLabelText('Menu'));
     fireEvent.press(getByTestId('mobile-menu-item-profile'));
 
     expect(onOpenProfile).toHaveBeenCalledTimes(1);
@@ -151,9 +190,22 @@ describe('MobileAppShell', () => {
     const { getByLabelText, getByTestId } = renderShell({ onTabChange });
 
     await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
-    fireEvent.press(getByLabelText("Al-Qur'an"));
+    fireEvent.press(getByLabelText('Al-Quran'));
 
     expect(onTabChange).toHaveBeenCalledWith('quran');
+  });
+
+  test('opens global search and menu from web app bottom nav actions', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
+    const onTabChange = jest.fn();
+    const { getByLabelText, getByTestId } = renderShell({ onTabChange });
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+    fireEvent.press(getByLabelText('Cari'));
+    expect(onTabChange).toHaveBeenCalledWith('home', { view: 'global-search' });
+
+    fireEvent.press(getByLabelText('Menu'));
+    expect(getByTestId('mobile-menu-sheet')).toBeTruthy();
   });
 
   test('uses active tab state for web app bottom nav and menu selection', async () => {
@@ -161,13 +213,13 @@ describe('MobileAppShell', () => {
     const { getByLabelText, getByTestId } = renderShell({ activeTab: 'quran' });
 
     await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
-    expect(getByLabelText("Al-Qur'an").props.accessibilityState).toEqual({ selected: true });
-    expect(getByLabelText('Beranda').props.accessibilityState).toEqual({ selected: false });
+    expect(getByLabelText('Al-Quran').props.accessibilityState).toEqual({ selected: true });
+    expect(getByLabelText('Dashboard').props.accessibilityState).toEqual({ selected: false });
 
-    fireEvent.press(getByTestId('mobile-top-header-menu'));
+    fireEvent.press(getByLabelText('Menu'));
 
     expect(getByTestId('mobile-menu-item-quran').props.accessibilityState).toEqual({ selected: true });
-    expect(getByTestId('mobile-menu-item-home').props.accessibilityState).toEqual({ selected: false });
+    expect(getByTestId('mobile-menu-item-hadith').props.accessibilityState).toEqual({ selected: false });
   });
 
   test('hides web app bottom nav while keyboard is visible', async () => {

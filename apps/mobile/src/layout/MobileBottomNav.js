@@ -1,18 +1,26 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { tabs } from '../components/TabBar';
+import { BarChart3, BookOpen, LibraryBig, Menu, Search } from 'lucide-react-native';
 import { radius, spacing } from '../theme';
 import { hapticSelection } from '../utils/haptics';
 
 const nav = {
-  active: '#007f63',
-  activeBg: '#e9fff5',
-  bg: '#ffffff',
-  border: '#e5e7eb',
-  inactive: '#64748b',
+  active: '#34d399',
+  activeBg: 'rgba(16, 185, 129, 0.18)',
+  bg: '#0f172a',
+  border: '#1f2937',
+  inactive: '#cbd5e1',
 };
 
-export function MobileBottomNav({ active, onChange }) {
+export const webDashboardBottomItems = [
+  { Icon: BarChart3, key: 'home', label: 'Dashboard' },
+  { Icon: BookOpen, key: 'quran', label: 'Al-Quran' },
+  { Icon: LibraryBig, key: 'hadith', label: 'Hadith' },
+  { Icon: Search, key: 'search', label: 'Cari' },
+  { Icon: Menu, key: 'menu', label: 'Menu' },
+];
+
+export function MobileBottomNav({ active, onChange, onOpenMenu, onOpenSearch }) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -20,20 +28,29 @@ export function MobileBottomNav({ active, onChange }) {
       style={[styles.wrap, { paddingBottom: Math.max(insets.bottom, spacing.xs) }]}
       testID="mobile-bottom-nav"
     >
-      {tabs.map((tab) => {
+      {webDashboardBottomItems.map((tab) => {
         const selected = active === tab.key;
         const Icon = tab.Icon;
+        const isAction = tab.key === 'menu' || tab.key === 'search';
 
         return (
           <Pressable
             accessibilityLabel={tab.label}
-            accessibilityRole="tab"
-            accessibilityState={{ selected }}
+            accessibilityRole={isAction ? 'button' : 'tab'}
+            accessibilityState={isAction ? undefined : { selected }}
             android_ripple={{ color: nav.activeBg, borderless: false }}
             key={tab.key}
             onPress={() => {
-              if (!selected) hapticSelection();
-              onChange(tab.key);
+              if (!selected || isAction) hapticSelection();
+              if (tab.key === 'menu') {
+                onOpenMenu?.();
+                return;
+              }
+              if (tab.key === 'search') {
+                onOpenSearch?.();
+                return;
+              }
+              onChange?.(tab.key);
             }}
             style={[styles.item, selected && styles.itemActive]}
           >

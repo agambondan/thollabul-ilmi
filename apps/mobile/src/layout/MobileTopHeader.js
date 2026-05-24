@@ -1,16 +1,16 @@
-import { ChevronDown, Menu } from 'lucide-react-native';
+import { ChevronDown } from 'lucide-react-native';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { radius, spacing } from '../theme';
 
 const header = {
-  bg: '#ffffff',
-  border: '#e5e7eb',
+  bg: '#0f172a',
+  border: '#1f2937',
   brand: '#007f63',
-  ink: '#111827',
-  muted: '#64748b',
+  ink: '#f8fafc',
+  muted: '#cbd5e1',
 };
 
-export function MobileTopHeader({ accountLabel = 'T', onOpenMenu, onOpenProfile }) {
+export function MobileTopHeader({ accountLabel = 'T', accountMenuOpen = false, onOpenAccountMenu }) {
   const normalizedAccountLabel = accountLabel?.trim() || 'T';
 
   return (
@@ -26,20 +26,10 @@ export function MobileTopHeader({ accountLabel = 'T', onOpenMenu, onOpenProfile 
 
       <View style={styles.actions}>
         <Pressable
-          accessibilityLabel="Buka menu"
+          accessibilityLabel="Buka menu akun"
           accessibilityRole="button"
-          android_ripple={{ color: '#e9fff5', borderless: true }}
-          onPress={onOpenMenu}
-          style={styles.iconButton}
-          testID="mobile-top-header-menu"
-        >
-          <Menu color={header.muted} size={20} strokeWidth={2.2} />
-        </Pressable>
-        <Pressable
-          accessibilityLabel="Buka profil"
-          accessibilityRole="button"
-          android_ripple={{ color: '#e9fff5', borderless: true }}
-          onPress={onOpenProfile}
+          android_ripple={{ color: 'rgba(52, 211, 153, 0.14)', borderless: true }}
+          onPress={onOpenAccountMenu}
           style={styles.accountButton}
           testID="mobile-top-header-profile"
         >
@@ -48,7 +38,12 @@ export function MobileTopHeader({ accountLabel = 'T', onOpenMenu, onOpenProfile 
               {normalizedAccountLabel.slice(0, 1).toUpperCase()}
             </Text>
           </View>
-          <ChevronDown color={header.muted} size={17} strokeWidth={2} />
+          <ChevronDown
+            color={header.muted}
+            size={17}
+            strokeWidth={2}
+            style={accountMenuOpen ? styles.chevronOpen : undefined}
+          />
         </Pressable>
       </View>
     </View>
@@ -101,13 +96,6 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     paddingLeft: spacing.sm,
   },
-  iconButton: {
-    alignItems: 'center',
-    borderRadius: 999,
-    height: 36,
-    justifyContent: 'center',
-    width: 36,
-  },
   accountButton: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -126,5 +114,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '900',
     letterSpacing: 0,
+  },
+  chevronOpen: {
+    transform: [{ rotate: '180deg' }],
   },
 });

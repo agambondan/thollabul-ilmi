@@ -4,6 +4,7 @@ import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSession } from '../context/SessionContext';
 import { colors } from '../theme';
+import { MobileAccountMenu } from './MobileAccountMenu';
 import { MobileBottomNav } from './MobileBottomNav';
 import { MobileMenuSheet } from './MobileMenuSheet';
 import { MobileTopHeader } from './MobileTopHeader';
@@ -14,19 +15,26 @@ export function getWebAppAccountLabel(user) {
 }
 
 export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfile, onTabChange }) {
-  const { user } = useSession();
+  const { loading, signOut, user } = useSession();
+  const [accountMenuVisible, setAccountMenuVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
+  const accountLabel = getWebAppAccountLabel(user);
 
+  const closeAccountMenu = useCallback(() => setAccountMenuVisible(false), []);
+  const openAccountMenu = useCallback(() => setAccountMenuVisible(true), []);
   const closeMenu = useCallback(() => setMenuVisible(false), []);
   const openMenu = useCallback(() => setMenuVisible(true), []);
+  const openSearch = useCallback(() => {
+    onTabChange?.('home', { view: 'global-search' });
+  }, [onTabChange]);
   const handleMenuSelect = useCallback(
-    (key) => {
+    (item) => {
       setMenuVisible(false);
-      if (key === 'profile') {
+      if (item?.tab === 'profile') {
         onOpenProfile?.();
         return;
       }
-      onTabChange?.(key);
+      onTabChange?.(item?.tab ?? item?.key, item?.params ?? null);
     },
     [onOpenProfile, onTabChange],
   );
@@ -34,9 +42,9 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.safeArea} testID="web-app-shell">
       <MobileTopHeader
-        accountLabel={getWebAppAccountLabel(user)}
-        onOpenMenu={openMenu}
-        onOpenProfile={onOpenProfile}
+        accountMenuOpen={accountMenuVisible}
+        accountLabel={accountLabel}
+        onOpenAccountMenu={openAccountMenu}
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -45,12 +53,29 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
       >
         {children}
       </KeyboardAvoidingView>
-      {keyboardVisible ? null : <MobileBottomNav active={activeTab} onChange={onTabChange} />}
+      {keyboardVisible ? null : (
+        <MobileBottomNav
+          active={activeTab}
+          onChange={onTabChange}
+          onOpenMenu={openMenu}
+          onOpenSearch={openSearch}
+        />
+      )}
       <MobileMenuSheet
+        accountLabel={accountLabel}
         active={activeTab}
         onClose={closeMenu}
         onSelect={handleMenuSelect}
         visible={menuVisible}
+      />
+      <MobileAccountMenu
+        accountEmail={user?.email}
+        accountLabel={accountLabel}
+        loading={loading}
+        onClose={closeAccountMenu}
+        onSelectProfile={onOpenProfile}
+        onSignOut={signOut}
+        visible={accountMenuVisible}
       />
       <StatusBar style="dark" backgroundColor={colors.bg} />
     </SafeAreaView>
