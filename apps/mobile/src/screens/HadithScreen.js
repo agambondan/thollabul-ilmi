@@ -25,6 +25,7 @@ import { SectionHeader } from '../components/SectionHeader';
 import { Screen } from '../components/Screen';
 import { useFeedback } from '../context/FeedbackContext';
 import { useSession } from '../context/SessionContext';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 import { getOfflineItems, getOfflineOverview } from '../storage/offlineContent';
 import { arabicTypography } from '../styles/arabicTypography';
 import { colors, radius, spacing } from '../theme';
@@ -133,6 +134,7 @@ const getHadithTopicLabel = (hadith) => {
 export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
   const { user } = useSession();
   const { showError, showInfo, showSuccess } = useFeedback();
+  const { isWebAppLayout } = useLayoutModePreference();
   const handledDeepLinkId = useRef(null);
   const loadingMoreRef = useRef(false);
   const [books, setBooks] = useState([]);
@@ -641,10 +643,12 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
       <Screen
         title="Detail Hadis"
         subtitle={`${selectedHadithBook} · ${selectedHadithNumber} · ${selectedHadithGrade}`}
+        contentStyle={isWebAppLayout ? styles.webAppSurface : null}
         refreshing={detailLoading}
         onRefresh={() => openHadith(selectedHadith)}
         actions={<IconActionButton Icon={ArrowLeft} label="Kembali ke daftar hadis" onPress={() => setSelectedHadith(null)} />}
       >
+        <View testID={isWebAppLayout ? 'hadith-web-app-detail' : 'hadith-classic-detail'} />
         {message ? <Text style={styles.message}>{message}</Text> : null}
         {renderDetailTabs()}
 
@@ -881,6 +885,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     <Screen
       title="Hadis"
       subtitle="Baca hadis beserta sanad, perawi, dan rujukan takhrij."
+      contentStyle={isWebAppLayout ? styles.webAppSurface : null}
       refreshing={loading}
       onRefresh={refreshAll}
       onEndReached={loadMoreHadiths}
@@ -892,6 +897,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
         />
       }
     >
+      <View testID={isWebAppLayout ? 'hadith-web-app-list' : 'hadith-classic-list'} />
       {message ? <Text style={styles.message}>{message}</Text> : null}
       {!user ? <Text style={styles.notice}>Buka Profil untuk masuk dan menyimpan bookmark hadis.</Text> : null}
 
@@ -991,6 +997,11 @@ const styles = StyleSheet.create({
     ...arabicTypography.body,
     color: colors.ink,
     marginBottom: spacing.md,
+  },
+  webAppSurface: {
+    backgroundColor: '#f8fafc',
+    borderRadius: radius.md,
+    padding: spacing.sm,
   },
   translation: {
     color: colors.text,

@@ -6,6 +6,10 @@ jest.mock('../context/FeedbackContext', () => ({
   useFeedback: jest.fn(),
 }));
 
+jest.mock('../hooks/useLayoutModePreference', () => ({
+  useLayoutModePreference: jest.fn(),
+}));
+
 jest.mock('../api/client', () => ({
   getAyahsForHadith: jest.fn(),
   getHadithBooks: jest.fn(),
@@ -147,6 +151,7 @@ import { HadithScreen } from '../screens/HadithScreen';
 
 const { useSession } = require('../context/SessionContext');
 const { useFeedback } = require('../context/FeedbackContext');
+const { useLayoutModePreference } = require('../hooks/useLayoutModePreference');
 const clientApi = require('../api/client');
 const personalApi = require('../api/personal');
 const { getOfflineOverview } = require('../storage/offlineContent');
@@ -182,6 +187,7 @@ beforeEach(() => {
     showInfo: jest.fn(),
     showSuccess: jest.fn(),
   });
+  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
   getOfflineOverview.mockResolvedValue({ supported: false });
   clientApi.getHadithBooks.mockResolvedValue(mockBooks);
   clientApi.getHadithPage.mockResolvedValue({
@@ -209,7 +215,19 @@ describe('HadithScreen', () => {
     await waitFor(() => {
       expect(getByText('Hadis')).toBeTruthy();
       expect(getByTestId('search-input')).toBeTruthy();
+      expect(getByTestId('hadith-classic-list')).toBeTruthy();
     });
+  });
+
+  test('uses web app Hadith list surface when web app layout is active', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    const { getByTestId, getByText, queryByTestId } = render(<HadithScreen isActive />);
+
+    await waitFor(() => {
+      expect(getByText('Hadis')).toBeTruthy();
+      expect(getByTestId('hadith-web-app-list')).toBeTruthy();
+    });
+    expect(queryByTestId('hadith-classic-list')).toBeNull();
   });
 
   test('loads books and displays them in filter row', async () => {
@@ -302,6 +320,22 @@ describe('HadithScreen', () => {
     fireEvent.press(cards[0]);
 
     expect(await findByText('Detail Hadis')).toBeTruthy();
+  });
+
+  test('uses web app Hadith detail surface without changing detail loading', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    clientApi.getHadithDetail.mockResolvedValue({
+      id: 1, book: 'Shahih Bukhari', bookSlug: 'bukhari',
+      number: 1, grade: 'Shahih', translation: 'Detail text',
+    });
+
+    const { findAllByTestId, findByText, getByTestId } = render(<HadithScreen isActive />);
+    const cards = await findAllByTestId('content-card');
+
+    fireEvent.press(cards[0]);
+
+    expect(await findByText('Detail Hadis')).toBeTruthy();
+    expect(getByTestId('hadith-web-app-detail')).toBeTruthy();
   });
 
   test('detail view shows tab buttons', async () => {

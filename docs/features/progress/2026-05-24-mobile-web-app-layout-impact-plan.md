@@ -352,3 +352,42 @@ Results:
   `/tmp/thollabul-webapp-quran-surface-export`.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
+
+## Web App Hadith Surface Update
+
+Status: completed for the first opt-in Hadith surface pass.
+
+Implemented:
+
+- `HadithScreen` now reads `useLayoutModePreference`.
+- In `web_app` mode, Hadith list and detail screens use the web-app surface
+  wrapper.
+- Added explicit test IDs for classic and `web_app` Hadith list/detail surfaces.
+- Hadith fetching, book filters, search, detail tabs, related ayah navigation,
+  bookmark, notes, sanad, perawi, and takhrij logic remain unchanged.
+- `classic` Hadith list/detail surfaces remain available and covered.
+
+Scope guardrail:
+
+- This slice only changes the presentational container for Hadith surfaces in
+  `web_app` mode. It does not change data loading or feature handlers.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- hadithScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-hadith-surface-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted Hadith/shell tests passed: 3 suites, 31 tests.
+- Full mobile Jest passed: 44 suites, 601 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-hadith-surface-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
