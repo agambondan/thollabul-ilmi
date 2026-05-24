@@ -473,6 +473,13 @@ Results:
   mobile feature keys, 154 web app routes scanned.
 - Explore test warning cleaned up: the test mock now renders list data
   synchronously instead of mounting React Native `VirtualizedList`.
+- Follow-up coverage verifies that the `web_app` Explore surface remains active
+  after opening an Explore feature, so subfeatures such as Kamus, Tokoh Tarikh,
+  and Peta Islam stay covered by the parent layout wrapper.
+- Follow-up verification passed: targeted Explore/shell tests passed 3 suites,
+  37 tests; full mobile Jest passed 44 suites, 609 tests; feature parity checker
+  passed with 50 manifest features, 14 utility routes, 43 mobile feature keys,
+  and 154 web app routes scanned.
 
 ## Web App Ibadah Sub-Screen Surface Update
 

@@ -311,10 +311,17 @@ describe('ExploreScreen', () => {
 
   test('uses web app Explore surface when web app layout is active', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
-    const { getByTestId, queryByTestId } = await renderExploreScreen();
+    const { getByTestId, getByText, queryByTestId } = await renderExploreScreen();
 
     expect(getByTestId('explore-web-app-surface')).toBeTruthy();
     expect(queryByTestId('explore-classic-surface')).toBeNull();
+
+    fireEvent.press(getByText('Kamus Arab'));
+
+    await waitFor(() => {
+      expect(getByTestId('action-Kembali ke Belajar')).toBeTruthy();
+      expect(getByTestId('explore-web-app-surface')).toBeTruthy();
+    });
   });
 
   test('renders search input for feature catalog', async () => {
