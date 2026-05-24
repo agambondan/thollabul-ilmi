@@ -1,6 +1,6 @@
 # Mobile Layout Modes
 
-> Status: `PLANNED`
+> Status: `IN_PROGRESS`
 > Scope: `apps/mobile`
 > Created: 2026-05-23
 > Source of truth terkait:
@@ -22,7 +22,7 @@ Target awal:
 | Mode | Status | Tujuan |
 | --- | --- | --- |
 | `classic` | Existing baseline | Mempertahankan pengalaman mobile app saat ini sebagai fallback stabil. |
-| `web_app` | Planned | Membawa rasa mobile web terbaru ke native app: top header, bottom nav, konten fokus, dan bottom-sheet menu. |
+| `web_app` | In progress | Membawa rasa mobile web terbaru ke native app: top header, bottom nav, konten fokus, dan bottom-sheet menu. |
 
 Mode tambahan boleh ditambahkan setelah dua mode awal stabil, tetapi harus
 tetap mengikuti IA final 5 tab.
@@ -239,15 +239,19 @@ Status kode saat ini:
   `preferenceKeys.appLayoutMode`.
 - `apps/mobile/src/screens/ProfileScreen.js` sudah bisa menyimpan pilihan
   layout mode ke preference lokal.
-- `apps/mobile/App.js` masih menjadi shell tunggal: ia menyimpan `activeTab`,
-  `deepLinkTarget`, `internalRoutes`, `returnRoutes`, hardware back handler,
-  render semua screen pane, dan render `TabBar` langsung.
+- `apps/mobile/App.js` sudah memakai `LayoutModeProvider` dan memilih shell
+  presentation berdasarkan `classic` atau `web_app`, tetapi navigation state
+  tetap satu sumber: `activeTab`, `deepLinkTarget`, `internalRoutes`,
+  `returnRoutes`, dan hardware back handler.
 - `apps/mobile/src/components/TabBar.js` adalah bottom tab existing untuk 5 tab
-  final, dengan auto-hide behavior.
+  final, dengan auto-hide behavior untuk `classic`.
+- `apps/mobile/src/components/MobileAppShell.js` menyediakan top header,
+  bottom navigation, dan menu sheet untuk `web_app`.
 - Screen besar seperti `HomeScreen`, `QuranScreen`, `HadithScreen`,
-  `IbadahScreen`, `ExploreScreen`, dan `ProfileScreen` sudah punya state,
-  API/cache, sub-navigation, dan test coverage sendiri. Screen ini tidak boleh
-  dipecah atau diganti pada fase awal.
+  `IbadahScreen`, `ExploreScreen`, dan `ProfileScreen` sudah punya opt-in
+  `web_app` surface wrapper tanpa mengubah data/action handler. Sub-screen
+  Ibadah utama (`PrayerScreen`, `QiblaScreen`, `KhatamScreen`) juga sudah
+  mendapat wrapper yang sama.
 
 Area yang kemungkinan kena impact:
 
@@ -257,7 +261,7 @@ Area yang kemungkinan kena impact:
 | `TabBar` | Perubahan visual bisa mengubah behavior auto-hide dan tab accessibility | Jangan ubah `TabBar` existing untuk `classic`; buat komponen baru untuk `web_app` bila perlu. |
 | Quran reader | Layout baru bisa konflik dengan audio player, bottom action, font preference, dan back handler | Jangan ubah business logic Quran di fase shell; hanya bungkus/presentasikan. |
 | Home/prayer cockpit | Lokasi, jadwal, notification, dan cache bisa drift dari web contract | Reuse storage/API yang sudah ada; jangan hardcode lokasi atau jadwal. |
-| Profile settings | Layout preference sudah tersimpan, tapi belum mengubah shell | Tambahkan provider/hook yang membaca preference dan fallback ke `classic`. |
+| Profile settings | Layout preference mengubah shell dan surface, tetapi theme gelap masih follow-up | Pertahankan provider/hook fallback ke `classic`; jangan campur theme dengan layout. |
 | Deep links | `parseDeepLink` dan `openTabState` harus tetap mengarah ke tab/screen yang sama | Layout mode tidak boleh mengubah tab key atau internal route shape. |
 | Android back | `setBack`/`clearBack` dan `hardwareBackState` rawan regression | Tambah/pertahankan test navigation sebelum shell baru dianggap usable. |
 | Offline/cache | Mobile punya offline packs dan local-first storage | `web_app` tidak boleh memaksa online-only UX. |
@@ -276,8 +280,8 @@ Sebelum ada kode behavior baru, ikuti batas ini:
   prayer service hanya karena beda layout.
 - Jangan hapus test existing. Tambahkan test untuk provider/shell selection
   sebelum refactor visual.
-- Jangan ubah semua tab sekaligus. Fase awal cukup foundation dan satu-dua
-  surface yang risikonya paling terkontrol.
+- Perluasan surface tetap incremental per slice dan harus disertai targeted
+  test, full mobile Jest, parity checker, dan Expo export.
 
 Jika `web_app` gagal render atau preference invalid, fallback harus kembali ke
 `classic` tanpa crash.
@@ -298,16 +302,21 @@ Jika `web_app` gagal render atau preference invalid, fallback harus kembali ke
    - Buat shell `web_app` yang masih memakai screen existing.
    - Jangan ubah isi screen besar; hanya top header, bottom nav/menu shell.
    - Pastikan setting Profile bisa switch `classic`/`web_app`.
+   - Status: completed for initial shell/menu/header wiring.
 3. Limited surface:
    - Terapkan dulu ke Beranda dan Quran shell behavior.
    - Quran tidak boleh kehilangan audio, ayah actions, reader preferences,
      bookmark, notes, dan back behavior.
+   - Status: completed for Home and Quran first-pass surfaces.
 4. Expand surface:
    - Setelah Home/Quran stabil, lanjut Hadith, Ibadah, dan Belajar.
    - Long-tail feature masuk menu sheet/search/hub, bukan dihapus.
+   - Status: in progress; Hadith, Ibadah hub, Prayer, Qibla, Khatam,
+     Explore/Belajar, and Profile first-pass surfaces are implemented.
 5. Polish:
    - Baru pertimbangkan theme visual tambahan, density tuning, dan animation.
    - Theme tetap tidak boleh tercampur dengan layout mode.
+   - Status: pending; visual polish and real-device smoke remain.
 
 ## QA Checklist
 

@@ -107,7 +107,7 @@ should stay visible for future planning:
 | Mobile Profile settings | Follow-up implemented current-device session, password change, language preference, local theme preference, and layout mode preference. Still tracked: app-wide dark theme provider, login history endpoint, and delete-account self-service. |
 | Achievements and Stats | Web has dedicated dashboard pages; mobile exposes profile/feature surfaces but not the same chart-heavy layout. |
 | Offline packs | Mobile has explicit offline pack management; web has no equivalent PWA offline pack manager yet. |
-| Mobile web-inspired layout | Web dashboard mobile viewport is now the preferred visual reference for a future mobile `web_app` layout option. Native mobile `classic` layout remains supported and must keep feature parity while `web_app` is introduced incrementally. |
+| Mobile web-inspired layout | `web_app` is now implemented as an opt-in native mobile shell plus first-pass surfaces for Home, Quran, Hadith, Ibadah, Prayer, Qibla, Khatam, Explore/Belajar, and Profile. Native mobile `classic` layout remains supported and must keep feature parity while visual polish continues incrementally. |
 | Admin/dev surfaces | Web-only by design; not a public/mobile feature gap. |
 | Jarh Ta'dil taxonomy | Mobile has a dedicated catalog entry; web still maps it through Perawi routes. |
 
@@ -125,7 +125,7 @@ Design constraints:
 - Mobile IA follows `docs/MOBILE_IA_FINAL_APPROACH.md`.
 - Mobile layout mode strategy follows `docs/MOBILE_LAYOUT_MODES.md`; existing
   native mobile screens remain as the `classic` baseline while the newer mobile
-  web-inspired shell can be introduced as an opt-in `web_app` mode.
+  web-inspired shell is introduced as an opt-in `web_app` mode.
 - Layout mode is presentation-only for parity purposes. `classic` and
   `web_app` must keep the same mobile feature availability; a feature may move
   between tab, hub, search, shortcut, or menu sheet, but must not disappear.
