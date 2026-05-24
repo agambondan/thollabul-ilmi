@@ -77,7 +77,7 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
         onSignOut={signOut}
         visible={accountMenuVisible}
       />
-      <StatusBar style="dark" backgroundColor={colors.bg} />
+      <StatusBar style="light" backgroundColor="#0f172a" />
     </SafeAreaView>
   );
 }

@@ -113,6 +113,9 @@ describe('MobileAppShell', () => {
     fireEvent.press(getByTestId('mobile-top-header-profile'));
 
     expect(getByTestId('mobile-account-menu')).toBeTruthy();
+    expect(getByTestId('mobile-account-menu-card').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ alignSelf: 'flex-end' }), { marginTop: 56 }]),
+    );
     expect(getByText('Profil')).toBeTruthy();
     expect(getByText('Bookmark')).toBeTruthy();
     expect(getByText('Gelap')).toBeTruthy();

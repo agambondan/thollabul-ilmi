@@ -9,6 +9,7 @@ import {
   X,
 } from 'lucide-react-native';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { radius, spacing } from '../theme';
 import { hapticSelection } from '../utils/haptics';
 
@@ -30,6 +31,8 @@ const accountItems = [
   { Icon: Bell, key: 'notifications', label: 'Notifikasi' },
 ];
 
+const HEADER_HEIGHT = 56;
+
 export function MobileAccountMenu({
   accountEmail,
   accountLabel = 'Tamu',
@@ -39,6 +42,7 @@ export function MobileAccountMenu({
   onSignOut,
   visible,
 }) {
+  const insets = useSafeAreaInsets();
   const normalizedAccountLabel = accountLabel?.trim() || 'Tamu';
   const accountInitial = normalizedAccountLabel.slice(0, 1).toUpperCase();
   const subtitle = accountEmail?.trim() || 'Belum masuk';
@@ -65,7 +69,10 @@ export function MobileAccountMenu({
           style={styles.backdrop}
           testID="mobile-account-menu-backdrop"
         />
-        <View style={styles.card}>
+        <View
+          style={[styles.card, { marginTop: Math.max(insets.top + HEADER_HEIGHT, spacing.xl) }]}
+          testID="mobile-account-menu-card"
+        >
           <View style={styles.header}>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>{accountInitial}</Text>
@@ -163,7 +170,6 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     borderWidth: 1,
     marginRight: spacing.md,
-    marginTop: spacing.xl,
     maxWidth: 288,
     overflow: 'hidden',
     width: '64%',
