@@ -108,7 +108,7 @@ Results:
 | Slice | Scope |
 | --- | --- |
 | 2 | Add native `WebAppShell` skeleton with current screens inside it. Done as a non-visual delegate shell: `MobileAppShell` selects `ClassicAppShell` or `WebAppShell`, while `WebAppShell` still delegates to the classic shell render path. |
-| 3 | Apply `web_app` header/bottom nav to Home and Quran only. |
+| 3 | Apply `web_app` header/bottom nav to Home and Quran only. In progress: shell chrome is now active for all existing screen panes when `web_app` is selected, without changing screen internals. |
 | 4 | Validate Quran ayah action menu, audio range, qari, font size, notes, bookmark, and back behavior. |
 | 5 | Expand to Hadith, Ibadah, and Belajar after Home/Quran are stable. |
 
@@ -148,5 +148,48 @@ Results:
 - Full mobile Jest passed: 44 suites, 588 tests.
 - Expo Android export passed and generated bundle under
   `/tmp/thollabul-webapp-shell-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+
+## Web App Shell Chrome Update
+
+Status: completed for the first visual shell slice.
+
+Implemented:
+
+- Added `apps/mobile/src/layout/MobileTopHeader.js` for the native
+  `web_app` brand/account header.
+- Added `apps/mobile/src/layout/MobileBottomNav.js` for the native
+  `web_app` 5-tab bottom navigation.
+- Updated `WebAppShell` to use the new header/nav while keeping the same
+  existing screen panes and tab keys.
+- Kept `ClassicAppShell` and the existing `TabBar` unchanged for `classic`.
+- Added profile entry handling from the `web_app` header account control.
+- Added Jest coverage for web-app shell chrome render, profile entry,
+  bottom-nav routing, and keyboard bottom-nav hiding.
+
+Not implemented in this slice:
+
+- No Home/Quran screen content remap yet.
+- No bottom-sheet feature menu yet.
+- No reader/action behavior changes.
+
+Chrome verification:
+
+```bash
+cd apps/mobile
+npm test -- mobileAppShell.test.js layoutModeProvider.test.js components.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-shell-chrome-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted shell chrome tests passed: 3 suites, 95 tests.
+- Full mobile Jest passed: 44 suites, 591 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-shell-chrome-export`.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.

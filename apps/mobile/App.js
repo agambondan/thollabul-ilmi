@@ -217,6 +217,7 @@ export default function App() {
                 <MobileAppShell
                   activeTab={activeTab}
                   keyboardVisible={keyboardVisible}
+                  onOpenProfile={() => openTab('profile')}
                   onTabChange={openTab}
                 >
                     {(['home', 'quran', 'hadith', 'ibadah', 'belajar', 'profile']).map((tab) => {
