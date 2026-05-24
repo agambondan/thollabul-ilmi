@@ -228,3 +228,43 @@ Results:
   `/tmp/thollabul-webapp-auth-header-export`.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
+
+## Web App Shell Menu Sheet Update
+
+Status: completed for the initial secondary menu-sheet foundation.
+
+Implemented:
+
+- Added `apps/mobile/src/layout/MobileMenuSheet.js`.
+- Added a header menu button in `MobileTopHeader` for `web_app` mode.
+- `WebAppShell` now owns menu visibility state and closes the sheet after
+  selection.
+- Menu shortcuts route through the same existing `onTabChange` handler for
+  `home`, `quran`, `hadith`, `ibadah`, and `belajar`.
+- Profile shortcut routes through the same existing `onOpenProfile` handler.
+- `classic` shell and existing `TabBar` remain unchanged.
+
+Scope guardrail:
+
+- This is only a shell-level bottom-sheet foundation. It does not move or
+  remove any Home/Quran/Hadith/Ibadah/Belajar feature logic yet.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-menu-sheet-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted shell tests passed: 2 suites, 16 tests.
+- Full mobile Jest passed: 44 suites, 596 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-menu-sheet-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.

@@ -1,4 +1,4 @@
-import { ChevronDown } from 'lucide-react-native';
+import { ChevronDown, Menu } from 'lucide-react-native';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { radius, spacing } from '../theme';
 
@@ -10,7 +10,7 @@ const header = {
   muted: '#64748b',
 };
 
-export function MobileTopHeader({ accountLabel = 'T', onOpenProfile }) {
+export function MobileTopHeader({ accountLabel = 'T', onOpenMenu, onOpenProfile }) {
   const normalizedAccountLabel = accountLabel?.trim() || 'T';
 
   return (
@@ -24,21 +24,33 @@ export function MobileTopHeader({ accountLabel = 'T', onOpenProfile }) {
         </Text>
       </View>
 
-      <Pressable
-        accessibilityLabel="Buka profil"
-        accessibilityRole="button"
-        android_ripple={{ color: '#e9fff5', borderless: true }}
-        onPress={onOpenProfile}
-        style={styles.accountButton}
-        testID="mobile-top-header-profile"
-      >
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText} numberOfLines={1}>
-            {normalizedAccountLabel.slice(0, 1).toUpperCase()}
-          </Text>
-        </View>
-        <ChevronDown color={header.muted} size={17} strokeWidth={2} />
-      </Pressable>
+      <View style={styles.actions}>
+        <Pressable
+          accessibilityLabel="Buka menu"
+          accessibilityRole="button"
+          android_ripple={{ color: '#e9fff5', borderless: true }}
+          onPress={onOpenMenu}
+          style={styles.iconButton}
+          testID="mobile-top-header-menu"
+        >
+          <Menu color={header.muted} size={20} strokeWidth={2.2} />
+        </Pressable>
+        <Pressable
+          accessibilityLabel="Buka profil"
+          accessibilityRole="button"
+          android_ripple={{ color: '#e9fff5', borderless: true }}
+          onPress={onOpenProfile}
+          style={styles.accountButton}
+          testID="mobile-top-header-profile"
+        >
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText} numberOfLines={1}>
+              {normalizedAccountLabel.slice(0, 1).toUpperCase()}
+            </Text>
+          </View>
+          <ChevronDown color={header.muted} size={17} strokeWidth={2} />
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -83,11 +95,23 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 0,
   },
+  actions: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.xs,
+    paddingLeft: spacing.sm,
+  },
+  iconButton: {
+    alignItems: 'center',
+    borderRadius: 999,
+    height: 36,
+    justifyContent: 'center',
+    width: 36,
+  },
   accountButton: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: spacing.xs,
-    paddingLeft: spacing.md,
   },
   avatar: {
     alignItems: 'center',

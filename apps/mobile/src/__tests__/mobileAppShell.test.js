@@ -96,6 +96,46 @@ describe('MobileAppShell', () => {
     expect(onOpenProfile).toHaveBeenCalledTimes(1);
   });
 
+  test('opens and closes web app secondary menu sheet', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
+    const { getByTestId, queryByTestId } = renderShell();
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+    expect(queryByTestId('mobile-menu-sheet')).toBeNull();
+
+    fireEvent.press(getByTestId('mobile-top-header-menu'));
+    expect(getByTestId('mobile-menu-sheet')).toBeTruthy();
+    expect(getByTestId('mobile-menu-item-profile')).toBeTruthy();
+
+    fireEvent.press(getByTestId('mobile-menu-sheet-close'));
+    expect(queryByTestId('mobile-menu-sheet')).toBeNull();
+  });
+
+  test('routes web app menu sheet tab shortcuts through existing tab handler', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
+    const onTabChange = jest.fn();
+    const { getByTestId, queryByTestId } = renderShell({ onTabChange });
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+    fireEvent.press(getByTestId('mobile-top-header-menu'));
+    fireEvent.press(getByTestId('mobile-menu-item-ibadah'));
+
+    expect(onTabChange).toHaveBeenCalledWith('ibadah');
+    expect(queryByTestId('mobile-menu-sheet')).toBeNull();
+  });
+
+  test('routes web app menu profile shortcut through existing profile handler', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
+    const onOpenProfile = jest.fn();
+    const { getByTestId } = renderShell({ onOpenProfile });
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+    fireEvent.press(getByTestId('mobile-top-header-menu'));
+    fireEvent.press(getByTestId('mobile-menu-item-profile'));
+
+    expect(onOpenProfile).toHaveBeenCalledTimes(1);
+  });
+
   test('routes web app bottom nav taps through existing tab handler', async () => {
     AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
     const onTabChange = jest.fn();
