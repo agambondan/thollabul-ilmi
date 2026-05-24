@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 jest.mock('../context/SessionContext', () => ({
   useSession: jest.fn(),
 }));
@@ -248,6 +250,27 @@ describe('ProfileScreen', () => {
       preferred_lang: 'en',
     });
     expect(await findByText('Bahasa konten tersimpan ke akun dan perangkat ini.')).toBeTruthy();
+  });
+
+  test('appearance sub-screen saves layout mode without changing theme preference', async () => {
+    const { getByLabelText, getByText, findByText } = render(<ProfileScreen isActive />);
+    await waitFor(() => expect(getByText('Thullabul Ilmi')).toBeTruthy());
+
+    fireEvent.press(getByLabelText('Buka pengaturan profil'));
+    fireEvent.press(getByText('Tampilan'));
+    fireEvent.press(getByText('Web App'));
+
+    await waitFor(() => {
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        'tholabul:pref:app-layout-mode',
+        '"web_app"',
+      );
+    });
+    expect(AsyncStorage.setItem).not.toHaveBeenCalledWith(
+      'tholabul:pref:app-theme',
+      expect.any(String),
+    );
+    expect(await findByText('Mode layout tersimpan di perangkat ini.')).toBeTruthy();
   });
 
   test('security sub-screen updates password and shows current device session', async () => {

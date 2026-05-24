@@ -706,3 +706,38 @@ Results:
 - Full mobile Jest passed: 44 suites, 611 tests.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
+
+## Layout Mode Preference Separation Coverage
+
+Status: completed for layout/theme preference separation coverage.
+
+Implemented:
+
+- `profileScreen.test.js` now verifies that selecting `Web App` from Profile
+  appearance settings writes only `app-layout-mode`.
+- The same test asserts that layout selection does not write `app-theme`,
+  preserving the documented separation between layout mode and theme.
+- No production code changed in this slice.
+
+Scope guardrail:
+
+- This slice only strengthens regression coverage for the Profile appearance
+  settings journey. It does not change Profile UI, theme handling, layout
+  persistence, account updates, or shell selection.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- profileScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted Profile/shell/provider tests passed: 3 suites, 35 tests.
+- Full mobile Jest passed: 44 suites, 612 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
