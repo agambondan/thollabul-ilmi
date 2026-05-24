@@ -25,7 +25,7 @@ import {
 } from 'lucide-react-native';
 import * as Location from 'expo-location';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { getDailyAyah, getDailyHadith, getHijriToday, getPrayerTimes } from '../api/client';
 import { ContentCard } from '../components/ContentCard';
 import { DetailHeader } from '../components/DetailHeader';
@@ -198,6 +198,23 @@ const prayerRetryDelays = [2500, 5000, 10000, 15000];
 const homePrayerMethod = 'kemenag';
 const homePrayerMadhab = 'shafi';
 const emptyPrayerState = { countdown: '--:--:--', key: 'asr', time: '--:--' };
+const webDashboardColors = {
+  accent: '#b45309',
+  bg: '#f8fafc',
+  border: '#e5e7eb',
+  borderSoft: '#f3f4f6',
+  card: '#ffffff',
+  iconBg: '#f3f4f6',
+  muted: '#64748b',
+  primary: '#047857',
+  primarySoft: '#ecfdf5',
+  text: '#374151',
+  title: '#111827',
+};
+const webDashboardFontFamily = Platform.select({
+  android: 'sans-serif',
+  ios: 'System',
+});
 
 const withTimeout = (promise, timeoutMs) =>
   new Promise((resolve, reject) => {
@@ -843,17 +860,18 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
       onMomentumScrollBegin={handleScrollActivity}
       refreshControl={
         <RefreshControl
-          colors={[colors.primary]}
+          colors={[isWebAppLayout ? webDashboardColors.primary : colors.primary]}
           onRefresh={() => loadHomeData({ refresh: true })}
           refreshing={refreshing}
-          tintColor={colors.primary}
+          tintColor={isWebAppLayout ? webDashboardColors.primary : colors.primary}
         />
       }
       onScroll={handleScrollActivity}
       onScrollBeginDrag={handleScrollActivity}
       scrollEventThrottle={250}
       showsVerticalScrollIndicator={false}
-      style={styles.scroll}
+      style={[styles.scroll, isWebAppLayout && styles.webAppScroll]}
+      testID="home-scroll"
     >
       {isWebAppLayout ? (
         <View style={styles.webAppGreeting} testID="home-web-app-greeting">
@@ -891,44 +909,70 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
         </View>
       )}
 
-      <View style={[styles.prayerCard, isWebAppLayout && styles.webAppPrayerCard]}>
+      <View style={[styles.prayerCard, isWebAppLayout && styles.webAppPrayerCard]} testID="home-prayer-card">
         <View style={styles.prayerHeader}>
-          <View style={styles.prayerStatusPill}>
-            <Clock3 color={colors.primary} size={13} strokeWidth={2.4} />
-            <Text style={styles.prayerStatusText}>{prayerStatusLabel}</Text>
+          <View style={[styles.prayerStatusPill, isWebAppLayout && styles.webAppPill]}>
+            <Clock3 color={isWebAppLayout ? webDashboardColors.primary : colors.primary} size={13} strokeWidth={2.4} />
+            <Text style={[styles.prayerStatusText, isWebAppLayout && styles.webAppPrimaryText]}>
+              {prayerStatusLabel}
+            </Text>
           </View>
           <View style={styles.prayerDateStack}>
-            <Text style={styles.gregorianDate}>{gregorianDate}</Text>
+            <Text style={[styles.gregorianDate, isWebAppLayout && styles.webAppTitleText]}>{gregorianDate}</Text>
             <View style={styles.hijriRow}>
-              <Moon color={colors.accent} size={13} strokeWidth={2.3} />
-              <Text style={styles.hijriDate}>{hijriDate}</Text>
+              <Moon color={isWebAppLayout ? webDashboardColors.accent : colors.accent} size={13} strokeWidth={2.3} />
+              <Text style={[styles.hijriDate, isWebAppLayout && styles.webAppAccentText]}>{hijriDate}</Text>
             </View>
           </View>
         </View>
 
         <View style={styles.prayerHero}>
-          <Text style={styles.prayerKicker}>{`Menuju ${prayerKeyLabels[nextPrayer.key] || 'Sholat'}`}</Text>
-          <Text style={styles.prayerTime}>{nextPrayer.time}</Text>
-          <Text style={styles.prayerSummary}>{prayerMessage || prayerSummary}</Text>
-          <View style={styles.countdown}>
-            <Clock3 color={colors.primary} size={13} strokeWidth={2.4} />
-            <Text style={styles.countdownText}>{hasPrayerSchedule ? nextPrayer.countdown : 'Belum aktif'}</Text>
+          <Text style={[styles.prayerKicker, isWebAppLayout && styles.webAppPrimaryText]}>
+            {`Menuju ${prayerKeyLabels[nextPrayer.key] || 'Sholat'}`}
+          </Text>
+          <Text style={[styles.prayerTime, isWebAppLayout && styles.webAppTitleText]}>{nextPrayer.time}</Text>
+          <Text style={[styles.prayerSummary, isWebAppLayout && styles.webAppMutedText]}>
+            {prayerMessage || prayerSummary}
+          </Text>
+          <View style={[styles.countdown, isWebAppLayout && styles.webAppPill]}>
+            <Clock3 color={isWebAppLayout ? webDashboardColors.primary : colors.primary} size={13} strokeWidth={2.4} />
+            <Text style={[styles.countdownText, isWebAppLayout && styles.webAppPrimaryText]}>
+              {hasPrayerSchedule ? nextPrayer.countdown : 'Belum aktif'}
+            </Text>
           </View>
         </View>
 
-        <View style={styles.prayerTimeline} />
+        <View style={[styles.prayerTimeline, isWebAppLayout && styles.webAppDivider]} />
         <View style={styles.prayerScheduleRow}>
           {prayerScheduleItems.map(({ Icon, key, label }) => {
             const isNext = key === nextPrayer.key && hasPrayerSchedule;
             return (
               <View key={key} style={styles.prayerScheduleItem}>
-                <Text style={[styles.prayerScheduleLabel, isNext ? styles.prayerScheduleActive : null]}>{label}</Text>
+                <Text
+                  style={[
+                    styles.prayerScheduleLabel,
+                    isWebAppLayout && styles.webAppMutedText,
+                    isNext ? (isWebAppLayout ? styles.webAppAccentText : styles.prayerScheduleActive) : null,
+                  ]}
+                >
+                  {label}
+                </Text>
                 <Icon
-                  color={isNext ? colors.accent : colors.primary}
+                  color={
+                    isNext
+                      ? (isWebAppLayout ? webDashboardColors.accent : colors.accent)
+                      : (isWebAppLayout ? webDashboardColors.primary : colors.primary)
+                  }
                   size={16}
                   strokeWidth={2.2}
                 />
-                <Text style={[styles.prayerScheduleTime, isNext ? styles.prayerScheduleActive : null]}>
+                <Text
+                  style={[
+                    styles.prayerScheduleTime,
+                    isWebAppLayout && styles.webAppTitleText,
+                    isNext ? (isWebAppLayout ? styles.webAppAccentText : styles.prayerScheduleActive) : null,
+                  ]}
+                >
                   {prayerTimes?.[key] ?? '--:--'}
                 </Text>
               </View>
@@ -937,7 +981,7 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
         </View>
       </View>
 
-      <View style={[styles.menuGrid, isWebAppLayout && styles.webAppMenuGrid]}>
+      <View style={[styles.menuGrid, isWebAppLayout && styles.webAppMenuGrid]} testID="home-menu-grid">
         {menuItems.map(({ Icon, featureKey, internalView, key, label, params }) => (
           <Pressable
             android_ripple={{ color: 'rgba(91, 110, 91, 0.14)', borderless: false }}
@@ -951,65 +995,65 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
             }}
             style={styles.menuItem}
           >
-            <View style={styles.menuIcon}>
-              <Icon color={colors.primary} size={18} strokeWidth={2.1} />
+            <View style={[styles.menuIcon, isWebAppLayout && styles.webAppIconTile]}>
+              <Icon color={isWebAppLayout ? webDashboardColors.primary : colors.primary} size={18} strokeWidth={2.1} />
             </View>
-            <Text style={styles.menuLabel}>{label}</Text>
+            <Text style={[styles.menuLabel, isWebAppLayout && styles.webAppMenuLabel]}>{label}</Text>
           </Pressable>
         ))}
       </View>
 
-      <View style={[styles.dailyCard, isWebAppLayout && styles.webAppDailyCard]}>
+      <View style={[styles.dailyCard, isWebAppLayout && styles.webAppDailyCard]} testID="home-daily-card">
         <View style={styles.dailyHeader}>
-          <Text style={styles.dailyTitle}>Bacaan Hari Ini</Text>
-          <Text style={styles.dailyMeta}>Quran & Hadis</Text>
+          <Text style={[styles.dailyTitle, isWebAppLayout && styles.webAppTitleText]}>Bacaan Hari Ini</Text>
+          <Text style={[styles.dailyMeta, isWebAppLayout && styles.webAppMutedText]}>Quran & Hadis</Text>
         </View>
         <Pressable
           android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
           onPress={() => onOpenTab('quran', { surahNumber: 1 })}
-          style={styles.dailyItem}
+          style={[styles.dailyItem, isWebAppLayout && styles.webAppDailyItem]}
         >
-          <View style={styles.dailyAccent} />
+          <View style={[styles.dailyAccent, isWebAppLayout && styles.webAppDailyAccent]} />
           <View style={styles.dailyBody}>
-            <Text style={styles.dailyLabel}>Ayat Hari Ini</Text>
-            {dailyAyah?.arabic ? <Text style={styles.dailyArabic}>{dailyAyah.arabic}</Text> : null}
-            <Text style={styles.dailyText}>
+            <Text style={[styles.dailyLabel, isWebAppLayout && styles.webAppPrimaryText]}>Ayat Hari Ini</Text>
+            {dailyAyah?.arabic ? <Text style={[styles.dailyArabic, isWebAppLayout && styles.webAppTitleText]}>{dailyAyah.arabic}</Text> : null}
+            <Text style={[styles.dailyText, isWebAppLayout && styles.webAppText]}>
               {loadingDaily ? 'Memuat ayat harian...' : dailyAyah?.translation || dailyMessage || 'Ayat harian belum tersedia.'}
             </Text>
-            {dailyAyah?.ref ? <Text style={styles.dailySource}>{dailyAyah.ref}</Text> : null}
+            {dailyAyah?.ref ? <Text style={[styles.dailySource, isWebAppLayout && styles.webAppMutedText]}>{dailyAyah.ref}</Text> : null}
           </View>
         </Pressable>
-        <Pressable android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }} onPress={() => onOpenTab('hadith')} style={styles.dailyItem}>
-          <View style={styles.dailyAccent} />
+        <Pressable android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }} onPress={() => onOpenTab('hadith')} style={[styles.dailyItem, isWebAppLayout && styles.webAppDailyItem]}>
+          <View style={[styles.dailyAccent, isWebAppLayout && styles.webAppDailyAccent]} />
           <View style={styles.dailyBody}>
-            <Text style={styles.dailyLabel}>Hadis Hari Ini</Text>
-            {dailyHadith?.arabic ? <Text style={styles.dailyArabic}>{dailyHadith.arabic}</Text> : null}
-            <Text style={styles.dailyText}>
+            <Text style={[styles.dailyLabel, isWebAppLayout && styles.webAppPrimaryText]}>Hadis Hari Ini</Text>
+            {dailyHadith?.arabic ? <Text style={[styles.dailyArabic, isWebAppLayout && styles.webAppTitleText]}>{dailyHadith.arabic}</Text> : null}
+            <Text style={[styles.dailyText, isWebAppLayout && styles.webAppText]}>
               {loadingDaily
                 ? 'Memuat hadis harian...'
                 : dailyHadith?.translation || 'Hadis harian belum tersedia dari server.'}
             </Text>
-            {dailyHadith?.book ? <Text style={styles.dailySource}>{formatHadisSource(dailyHadith.book)}</Text> : null}
+            {dailyHadith?.book ? <Text style={[styles.dailySource, isWebAppLayout && styles.webAppMutedText]}>{formatHadisSource(dailyHadith.book)}</Text> : null}
           </View>
         </Pressable>
       </View>
 
       {contextualShortcuts.length ? (
-        <View style={styles.contextCard}>
-          <Text style={styles.contextLabel}>SARAN SEKARANG</Text>
+        <View style={[styles.contextCard, isWebAppLayout && styles.webAppCard]}>
+          <Text style={[styles.contextLabel, isWebAppLayout && styles.webAppMutedText]}>SARAN SEKARANG</Text>
           <View style={styles.contextRow}>
             {contextualShortcuts.map(({ Icon, featureKey, label, params, sub, tab }) => (
               <Pressable
                 android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
                 key={label}
                 onPress={() => onOpenTab(tab, params ?? (featureKey ? { featureKey } : null))}
-                style={styles.contextItem}
+                style={[styles.contextItem, isWebAppLayout && styles.webAppActionTile]}
               >
-                <View style={styles.contextIcon}>
-                  <Icon color={colors.primary} size={16} strokeWidth={2.2} />
+                <View style={[styles.contextIcon, isWebAppLayout && styles.webAppIconTile]}>
+                  <Icon color={isWebAppLayout ? webDashboardColors.primary : colors.primary} size={16} strokeWidth={2.2} />
                 </View>
-                <Text style={styles.contextItemLabel}>{label}</Text>
-                <Text style={styles.contextItemSub}>{sub}</Text>
+                <Text style={[styles.contextItemLabel, isWebAppLayout && styles.webAppTitleText]}>{label}</Text>
+                <Text style={[styles.contextItemSub, isWebAppLayout && styles.webAppMutedText]}>{sub}</Text>
               </Pressable>
             ))}
           </View>
@@ -1017,52 +1061,52 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
       ) : null}
 
       {pinnedFeatures.length ? (
-        <View style={styles.recentCard}>
+        <View style={[styles.recentCard, isWebAppLayout && styles.webAppCard]}>
           <View style={styles.recentHeader}>
             <View>
-              <Text style={styles.recentTitle}>Disematkan</Text>
-              <Text style={styles.recentMeta}>Shortcut fitur pilihanmu</Text>
+              <Text style={[styles.recentTitle, isWebAppLayout && styles.webAppTitleText]}>Disematkan</Text>
+              <Text style={[styles.recentMeta, isWebAppLayout && styles.webAppMutedText]}>Shortcut fitur pilihanmu</Text>
             </View>
-            <Star color={colors.primary} size={18} strokeWidth={2.2} />
+            <Star color={isWebAppLayout ? webDashboardColors.primary : colors.primary} size={18} strokeWidth={2.2} />
           </View>
           {pinnedFeatures.map((feature) => (
             <ContentCard
               Icon={Star}
-              iconStyle={styles.recentIcon}
+              iconStyle={[styles.recentIcon, isWebAppLayout && styles.webAppIconTile]}
               key={feature.key}
               onPress={() => onOpenTab('belajar', { featureKey: feature.key })}
-              style={styles.recentRow}
+              style={[styles.recentRow, isWebAppLayout && styles.webAppRow]}
               subtitle={feature.subtitle || feature.group || 'Belajar'}
-              subtitleStyle={styles.recentRowSubtitle}
+              subtitleStyle={[styles.recentRowSubtitle, isWebAppLayout && styles.webAppMutedText]}
               title={feature.title}
-              titleStyle={styles.recentRowTitle}
-              trailing={<ChevronRight color={colors.muted} size={18} strokeWidth={2.4} />}
+              titleStyle={[styles.recentRowTitle, isWebAppLayout && styles.webAppTitleText]}
+              trailing={<ChevronRight color={isWebAppLayout ? webDashboardColors.muted : colors.muted} size={18} strokeWidth={2.4} />}
             />
           ))}
         </View>
       ) : null}
 
       {recentFeatures.length ? (
-        <View style={styles.recentCard}>
+        <View style={[styles.recentCard, isWebAppLayout && styles.webAppCard]}>
           <View style={styles.recentHeader}>
             <View>
-              <Text style={styles.recentTitle}>Terakhir Dibuka</Text>
-              <Text style={styles.recentMeta}>Lanjutkan fitur yang baru kamu pakai</Text>
+              <Text style={[styles.recentTitle, isWebAppLayout && styles.webAppTitleText]}>Terakhir Dibuka</Text>
+              <Text style={[styles.recentMeta, isWebAppLayout && styles.webAppMutedText]}>Lanjutkan fitur yang baru kamu pakai</Text>
             </View>
-            <Clock3 color={colors.primary} size={18} strokeWidth={2.2} />
+            <Clock3 color={isWebAppLayout ? webDashboardColors.primary : colors.primary} size={18} strokeWidth={2.2} />
           </View>
           {recentFeatures.map((feature) => (
             <ContentCard
               Icon={Clock3}
-              iconStyle={styles.recentIcon}
+              iconStyle={[styles.recentIcon, isWebAppLayout && styles.webAppIconTile]}
               key={feature.key}
               onPress={() => onOpenTab('belajar', { featureKey: feature.key })}
-              style={styles.recentRow}
+              style={[styles.recentRow, isWebAppLayout && styles.webAppRow]}
               subtitle={feature.subtitle || feature.group || 'Belajar'}
-              subtitleStyle={styles.recentRowSubtitle}
+              subtitleStyle={[styles.recentRowSubtitle, isWebAppLayout && styles.webAppMutedText]}
               title={feature.title}
-              titleStyle={styles.recentRowTitle}
-              trailing={<ChevronRight color={colors.muted} size={18} strokeWidth={2.4} />}
+              titleStyle={[styles.recentRowTitle, isWebAppLayout && styles.webAppTitleText]}
+              trailing={<ChevronRight color={isWebAppLayout ? webDashboardColors.muted : colors.muted} size={18} strokeWidth={2.4} />}
             />
           ))}
         </View>
@@ -1070,14 +1114,14 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
 
       <ContentCard
         Icon={Smile}
-        iconStyle={styles.journalIcon}
+        iconStyle={[styles.journalIcon, isWebAppLayout && styles.webAppIconTile]}
         onPress={() => onOpenTab('belajar', { featureKey: 'muhasabah' })}
-        style={styles.journalCard}
+        style={[styles.journalCard, isWebAppLayout && styles.webAppCard]}
         subtitle="Bagaimana imanmu hari ini?"
-        subtitleStyle={styles.journalDesc}
+        subtitleStyle={[styles.journalDesc, isWebAppLayout && styles.webAppMutedText]}
         title="Jurnal Muhasabah"
-        titleStyle={styles.journalTitle}
-        trailing={<ChevronRight color={colors.muted} size={18} strokeWidth={2.4} />}
+        titleStyle={[styles.journalTitle, isWebAppLayout && styles.webAppTitleText]}
+        trailing={<ChevronRight color={isWebAppLayout ? webDashboardColors.muted : colors.muted} size={18} strokeWidth={2.4} />}
       />
 
     </ScrollView>
@@ -1089,6 +1133,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bg,
     flex: 1,
   },
+  webAppScroll: {
+    backgroundColor: webDashboardColors.bg,
+  },
   screen: {
     backgroundColor: colors.bg,
     flexGrow: 1,
@@ -1097,7 +1144,7 @@ const styles = StyleSheet.create({
     paddingTop: spacing.xl,
   },
   webAppScreen: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: webDashboardColors.bg,
     paddingBottom: spacing.lg,
     paddingTop: spacing.lg,
   },
@@ -1111,7 +1158,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
   },
   webAppGreetingDate: {
-    color: '#64748b',
+    color: webDashboardColors.muted,
     fontSize: 13,
     fontWeight: '600',
     letterSpacing: 0,
@@ -1282,9 +1329,37 @@ const styles = StyleSheet.create({
     ...shadows.paper,
   },
   webAppPrayerCard: {
-    backgroundColor: '#ffffff',
-    borderColor: '#d1fae5',
-    borderRadius: radius.lg,
+    backgroundColor: webDashboardColors.card,
+    borderColor: webDashboardColors.borderSoft,
+    borderRadius: radius.md,
+  },
+  webAppCard: {
+    backgroundColor: webDashboardColors.card,
+    borderColor: webDashboardColors.borderSoft,
+    borderRadius: radius.md,
+  },
+  webAppPill: {
+    backgroundColor: webDashboardColors.primarySoft,
+    borderColor: '#a7f3d0',
+  },
+  webAppDivider: {
+    backgroundColor: webDashboardColors.border,
+  },
+  webAppTitleText: {
+    color: webDashboardColors.title,
+    fontFamily: webDashboardFontFamily,
+  },
+  webAppText: {
+    color: webDashboardColors.text,
+  },
+  webAppMutedText: {
+    color: webDashboardColors.muted,
+  },
+  webAppPrimaryText: {
+    color: webDashboardColors.primary,
+  },
+  webAppAccentText: {
+    color: webDashboardColors.accent,
   },
   prayerKicker: {
     color: colors.primary,
@@ -1375,10 +1450,22 @@ const styles = StyleSheet.create({
     ...shadows.paper,
   },
   webAppMenuGrid: {
-    backgroundColor: '#ffffff',
-    borderColor: '#e5e7eb',
+    backgroundColor: webDashboardColors.card,
+    borderColor: webDashboardColors.border,
     borderRadius: radius.md,
     marginTop: spacing.xs,
+  },
+  webAppIconTile: {
+    backgroundColor: webDashboardColors.iconBg,
+    borderColor: webDashboardColors.border,
+  },
+  webAppActionTile: {
+    backgroundColor: webDashboardColors.bg,
+    borderColor: webDashboardColors.border,
+  },
+  webAppRow: {
+    backgroundColor: webDashboardColors.bg,
+    borderColor: webDashboardColors.border,
   },
   menuItem: {
     alignItems: 'center',
@@ -1557,10 +1644,17 @@ const styles = StyleSheet.create({
     ...shadows.paper,
   },
   webAppDailyCard: {
-    backgroundColor: '#ffffff',
-    borderColor: '#d1fae5',
+    backgroundColor: webDashboardColors.card,
+    borderColor: webDashboardColors.borderSoft,
     borderRadius: radius.md,
     marginTop: 0,
+  },
+  webAppDailyItem: {
+    backgroundColor: webDashboardColors.bg,
+    borderColor: webDashboardColors.border,
+  },
+  webAppDailyAccent: {
+    backgroundColor: webDashboardColors.primary,
   },
   dailyHeader: {
     alignItems: 'center',

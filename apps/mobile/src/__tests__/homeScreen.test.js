@@ -203,6 +203,28 @@ describe('HomeScreen', () => {
     expect(queryByTestId('home-classic-header')).toBeNull();
   });
 
+  test('uses dashboard web palette for web app home cards', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+
+    const { getByTestId } = await renderHomeScreen();
+
+    await waitFor(() => {
+      expect(getByTestId('home-web-app-greeting')).toBeTruthy();
+    });
+    expect(getByTestId('home-scroll').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#f8fafc' })]),
+    );
+    expect(getByTestId('home-prayer-card').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#f3f4f6' })]),
+    );
+    expect(getByTestId('home-menu-grid').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#e5e7eb' })]),
+    );
+    expect(getByTestId('home-daily-card').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#f3f4f6' })]),
+    );
+  });
+
   test('renders user name when logged in', async () => {
     useSession.mockReturnValue({
       user: { id: '1', name: 'Ahmad', email: 'ahmad@test.com' },
