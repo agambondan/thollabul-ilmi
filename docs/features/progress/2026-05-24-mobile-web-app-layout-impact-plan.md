@@ -311,3 +311,44 @@ Results:
   `/tmp/thollabul-webapp-home-remap-export`.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
+
+## Web App Quran Surface Update
+
+Status: completed for the first opt-in Quran surface pass.
+
+Implemented:
+
+- `QuranScreen` now reads `useLayoutModePreference`.
+- In `web_app` mode, Quran list, reader, and mushaf reader use the web-app
+  surface background and compact vertical padding.
+- Added explicit test IDs for classic and `web_app` Quran list/reader surfaces
+  so future layout work can verify the active path.
+- Audio range, ayah action sheet, tafsir/asbab/munasabah/hadith references,
+  bookmark, notes, reader preferences, and pagination logic remain unchanged.
+- `classic` Quran list/reader surfaces remain available and covered.
+
+Scope guardrail:
+
+- This slice only changes the presentational container for Quran surfaces in
+  `web_app` mode. It does not move ayah actions, change reader display modes,
+  alter audio fetching, or change bookmark/notes behavior.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- quranScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-quran-surface-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted Quran/shell tests passed: 3 suites, 33 tests.
+- Full mobile Jest passed: 44 suites, 599 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-quran-surface-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.

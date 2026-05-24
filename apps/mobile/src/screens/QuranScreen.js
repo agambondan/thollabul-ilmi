@@ -66,6 +66,7 @@ import { QURAN_FONT_FAMILIES } from '../constants/quranFonts';
 import { useFeedback } from '../context/FeedbackContext';
 import { useSession } from '../context/SessionContext';
 import { useTabActivity } from '../context/TabActivityContext';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 import { useQuranReaderPreferences } from '../hooks/useQuranReaderPreferences';
 import { preferenceKeys, readPreference, writePreference } from '../storage/preferences';
 import { colors, radius, spacing } from '../theme';
@@ -522,6 +523,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     const { user } = useSession();
     const { showError, showInfo, showSuccess } = useFeedback();
     const { notifyTabActivity } = useTabActivity();
+    const { isWebAppLayout } = useLayoutModePreference();
     const handledDeepLinkId = useRef(null);
     const readerListRef = useRef(null);
     const targetScrollKeyRef = useRef(null);
@@ -3612,7 +3614,10 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                     {renderMunasabahModal()}
                     {renderHadithAyahModal()}
                     <ScrollView
-                        contentContainerStyle={styles.mushafScrollContent}
+                        contentContainerStyle={[
+                            styles.mushafScrollContent,
+                            isWebAppLayout ? styles.webAppMushafScrollContent : null,
+                        ]}
                         directionalLockEnabled
                         keyboardShouldPersistTaps="handled"
                         onMomentumScrollBegin={handleScrollActivity}
@@ -3633,7 +3638,8 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                         }
                         scrollEventThrottle={250}
                         showsVerticalScrollIndicator={false}
-                        style={styles.readerList}
+                        style={[styles.readerList, isWebAppLayout ? styles.webAppReaderList : null]}
+                        testID={isWebAppLayout ? 'quran-web-app-mushaf-reader' : 'quran-classic-mushaf-reader'}
                     >
                         <View style={styles.mushafGestureSurface}>
                             {renderReaderHeader()}
@@ -3660,6 +3666,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                     contentContainerStyle={[
                         styles.readerListContent,
                         displayMode === 'mushaf' ? styles.mushafListContent : null,
+                        isWebAppLayout ? styles.webAppReaderListContent : null,
                     ]}
                     data={ayahs}
                     extraData={readerExtraData}
@@ -3713,7 +3720,8 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                     }}
                     scrollEventThrottle={250}
                     showsVerticalScrollIndicator={false}
-                    style={styles.readerList}
+                    style={[styles.readerList, isWebAppLayout ? styles.webAppReaderList : null]}
+                    testID={isWebAppLayout ? 'quran-web-app-reader' : 'quran-classic-reader'}
                 />
             </>
         );
@@ -3721,7 +3729,10 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
 
     return (
         <FlatList
-            contentContainerStyle={styles.quranListContent}
+            contentContainerStyle={[
+                styles.quranListContent,
+                isWebAppLayout ? styles.webAppQuranListContent : null,
+            ]}
             data={quranTab === 'surah' ? filteredSurahs : []}
             keyExtractor={(surah) => `${surah.number}-${surah.name}`}
             keyboardShouldPersistTaps="handled"
@@ -3749,7 +3760,8 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             renderItem={renderSurahRow}
             scrollEventThrottle={250}
             showsVerticalScrollIndicator={false}
-            style={styles.quranScroll}
+            style={[styles.quranScroll, isWebAppLayout ? styles.webAppQuranScroll : null]}
+            testID={isWebAppLayout ? 'quran-web-app-list' : 'quran-classic-list'}
         />
     );
 }
@@ -3759,6 +3771,9 @@ const styles = StyleSheet.create({
         backgroundColor: colors.bg,
         flex: 1,
     },
+    webAppQuranScroll: {
+        backgroundColor: '#f8fafc',
+    },
     quranListContent: {
         backgroundColor: colors.bg,
         flexGrow: 1,
@@ -3766,9 +3781,17 @@ const styles = StyleSheet.create({
         paddingBottom: spacing.xl,
         paddingTop: spacing.xl,
     },
+    webAppQuranListContent: {
+        backgroundColor: '#f8fafc',
+        paddingBottom: spacing.lg,
+        paddingTop: spacing.lg,
+    },
     readerList: {
         backgroundColor: colors.bg,
         flex: 1,
+    },
+    webAppReaderList: {
+        backgroundColor: '#f8fafc',
     },
     readerListContent: {
         backgroundColor: colors.bg,
@@ -3777,11 +3800,21 @@ const styles = StyleSheet.create({
         padding: spacing.lg,
         paddingBottom: spacing.xl,
     },
+    webAppReaderListContent: {
+        backgroundColor: '#f8fafc',
+        paddingBottom: spacing.lg,
+        paddingTop: spacing.lg,
+    },
     mushafScrollContent: {
         backgroundColor: colors.bg,
         flexGrow: 1,
         padding: spacing.md,
         paddingBottom: spacing.xl,
+    },
+    webAppMushafScrollContent: {
+        backgroundColor: '#f8fafc',
+        paddingBottom: spacing.lg,
+        paddingTop: spacing.lg,
     },
     mushafListContent: {
         gap: 0,

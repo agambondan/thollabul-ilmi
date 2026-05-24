@@ -60,6 +60,10 @@ jest.mock('../hooks/useQuranReaderPreferences', () => ({
   }),
 }));
 
+jest.mock('../hooks/useLayoutModePreference', () => ({
+  useLayoutModePreference: jest.fn(),
+}));
+
 jest.mock('../context/SessionContext', () => ({
   useSession: jest.fn(),
 }));
@@ -208,6 +212,7 @@ import { flushAsyncWork } from '../test-utils/async';
 const { useSession } = require('../context/SessionContext');
 const { useFeedback } = require('../context/FeedbackContext');
 const { useTabActivity } = require('../context/TabActivityContext');
+const { useLayoutModePreference } = require('../hooks/useLayoutModePreference');
 const client = require('../api/client');
 const personal = require('../api/personal');
 const audioPlayer = require('../utils/audioPlayer');
@@ -243,6 +248,7 @@ beforeEach(() => {
     showError: jest.fn(), showInfo: jest.fn(), showSuccess: jest.fn(),
   });
   useTabActivity.mockReturnValue({ notifyTabActivity: jest.fn() });
+  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
   client.getSurahs.mockResolvedValue([mockSurah(1), mockSurah(2)]);
   client.getAyahsForSurahPage.mockResolvedValue({
     items: [mockAyah(1, 1), mockAyah(2, 1), mockAyah(3, 1)],
@@ -268,16 +274,44 @@ afterEach(() => {
 
 describe('QuranScreen', () => {
   it('renders surah list on mount', async () => {
-    const { getByText, queryByTestId } = await renderQuranScreen();
+    const { getByTestId, getByText } = await renderQuranScreen();
 
     await waitFor(() => {
       expect(getByText('Al-Qur\'an')).toBeTruthy();
+      expect(getByTestId('quran-classic-list')).toBeTruthy();
     });
 
     await waitFor(() => {
       expect(client.getSurahs).toHaveBeenCalled();
       expect(getByText('Surah 1')).toBeTruthy();
       expect(getByText('Surah 2')).toBeTruthy();
+    });
+  });
+
+  it('uses web app Quran list surface when web app layout is active', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    const { getByTestId, getByText, queryByTestId } = await renderQuranScreen();
+
+    await waitFor(() => {
+      expect(getByText('Al-Qur\'an')).toBeTruthy();
+      expect(getByTestId('quran-web-app-list')).toBeTruthy();
+    });
+    expect(queryByTestId('quran-classic-list')).toBeNull();
+  });
+
+  it('uses web app Quran reader surface without changing ayah loading', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    const { getByTestId, getByText } = await renderQuranScreen();
+
+    await waitFor(() => {
+      expect(getByText('Surah 1')).toBeTruthy();
+    });
+
+    fireEvent.press(getByText('Surah 1'));
+
+    await waitFor(() => {
+      expect(client.getAyahsForSurahPage).toHaveBeenCalledWith(1, expect.any(Object));
+      expect(getByTestId('quran-web-app-reader')).toBeTruthy();
     });
   });
 
