@@ -156,6 +156,20 @@ describe('MobileAppShell', () => {
     expect(onTabChange).toHaveBeenCalledWith('quran');
   });
 
+  test('uses active tab state for web app bottom nav and menu selection', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
+    const { getByLabelText, getByTestId } = renderShell({ activeTab: 'quran' });
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+    expect(getByLabelText("Al-Qur'an").props.accessibilityState).toEqual({ selected: true });
+    expect(getByLabelText('Beranda').props.accessibilityState).toEqual({ selected: false });
+
+    fireEvent.press(getByTestId('mobile-top-header-menu'));
+
+    expect(getByTestId('mobile-menu-item-quran').props.accessibilityState).toEqual({ selected: true });
+    expect(getByTestId('mobile-menu-item-home').props.accessibilityState).toEqual({ selected: false });
+  });
+
   test('hides web app bottom nav while keyboard is visible', async () => {
     AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
     const { getByTestId, queryByTestId } = renderShell({ keyboardVisible: true });

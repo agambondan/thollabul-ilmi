@@ -741,3 +741,38 @@ Results:
 - Full mobile Jest passed: 44 suites, 612 tests.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
+
+## Web App Navigation State Coverage
+
+Status: completed for active tab state coverage in the `web_app` shell.
+
+Implemented:
+
+- `mobileAppShell.test.js` now verifies that `web_app` bottom navigation marks
+  the current `activeTab` as selected.
+- The same test verifies that the secondary menu sheet uses the same active tab
+  state for selected menu items.
+- No production code changed in this slice.
+
+Scope guardrail:
+
+- This slice only strengthens regression coverage for shell navigation state.
+  It does not change `App.js`, navigation reducers, hardware back behavior,
+  bottom navigation handlers, or menu handlers.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- mobileAppShell.test.js appNavigation.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted shell/navigation/provider tests passed: 3 suites, 40 tests.
+- Full mobile Jest passed: 44 suites, 613 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
