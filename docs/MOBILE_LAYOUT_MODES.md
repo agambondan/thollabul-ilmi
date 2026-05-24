@@ -248,10 +248,10 @@ Status kode saat ini:
 - `apps/mobile/src/components/MobileAppShell.js` menyediakan top header,
   bottom navigation, dan menu sheet untuk `web_app`.
 - Screen besar seperti `HomeScreen`, `QuranScreen`, `HadithScreen`,
-  `IbadahScreen`, `ExploreScreen`, dan `ProfileScreen` sudah punya opt-in
-  `web_app` surface wrapper tanpa mengubah data/action handler. Sub-screen
-  Ibadah utama (`PrayerScreen`, `QiblaScreen`, `KhatamScreen`) juga sudah
-  mendapat wrapper yang sama.
+  `IbadahScreen`, `ExploreScreen`, `ProfileScreen`, dan `GlobalSearchScreen`
+  sudah punya opt-in `web_app` surface wrapper tanpa mengubah data/action
+  handler. Sub-screen Ibadah utama (`PrayerScreen`, `QiblaScreen`,
+  `KhatamScreen`) juga sudah mendapat wrapper yang sama.
 
 Area yang kemungkinan kena impact:
 
@@ -312,7 +312,8 @@ Jika `web_app` gagal render atau preference invalid, fallback harus kembali ke
    - Setelah Home/Quran stabil, lanjut Hadith, Ibadah, dan Belajar.
    - Long-tail feature masuk menu sheet/search/hub, bukan dihapus.
    - Status: in progress; Hadith, Ibadah hub, Prayer, Qibla, Khatam,
-     Explore/Belajar, and Profile first-pass surfaces are implemented.
+     Explore/Belajar, Profile, and Global Search first-pass surfaces are
+     implemented.
 5. Polish:
    - Baru pertimbangkan theme visual tambahan, density tuning, dan animation.
    - Theme tetap tidak boleh tercampur dengan layout mode.
