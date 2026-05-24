@@ -193,3 +193,38 @@ Results:
   `/tmp/thollabul-webapp-shell-chrome-export`.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
+
+## Web App Shell Account Header Update
+
+Status: completed for guest/auth-aware header behavior.
+
+Implemented:
+
+- `WebAppShell` now reads `SessionContext` for the current mobile user.
+- Header account avatar uses the user name first, then email, then guest label
+  `Tamu`.
+- Guest users still see the web-app-style shell without being forced to login.
+- Profile entry behavior remains the same: tapping the header account control
+  opens the existing `profile` tab.
+- Added Jest coverage for guest label fallback, logged-in user initial, and
+  label helper behavior.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-auth-header-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted shell tests passed: 2 suites, 13 tests.
+- Full mobile Jest passed: 44 suites, 593 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-auth-header-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.

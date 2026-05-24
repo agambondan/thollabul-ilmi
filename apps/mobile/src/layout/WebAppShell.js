@@ -1,14 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
 import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSession } from '../context/SessionContext';
 import { colors } from '../theme';
 import { MobileBottomNav } from './MobileBottomNav';
 import { MobileTopHeader } from './MobileTopHeader';
 
+export function getWebAppAccountLabel(user) {
+  const candidate = user?.name || user?.email;
+  return candidate?.trim() || 'Tamu';
+}
+
 export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfile, onTabChange }) {
+  const { user } = useSession();
+
   return (
     <SafeAreaView edges={['top', 'left', 'right']} style={styles.safeArea} testID="web-app-shell">
-      <MobileTopHeader onOpenProfile={onOpenProfile} />
+      <MobileTopHeader accountLabel={getWebAppAccountLabel(user)} onOpenProfile={onOpenProfile} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={0}

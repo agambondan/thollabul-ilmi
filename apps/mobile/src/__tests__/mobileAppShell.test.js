@@ -5,6 +5,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import { TabActivityProvider } from '../context/TabActivityContext';
 import { LayoutModeProvider } from '../layout/LayoutModeProvider';
 import { MobileAppShell } from '../layout/MobileAppShell';
+import { getWebAppAccountLabel } from '../layout/WebAppShell';
+import { useSession } from '../context/SessionContext';
 
 jest.mock('react-native-safe-area-context', () => {
   const inset = { top: 0, right: 0, bottom: 0, left: 0 };
@@ -19,6 +21,10 @@ jest.mock('react-native-safe-area-context', () => {
 
 jest.mock('expo-status-bar', () => ({
   StatusBar: () => null,
+}));
+
+jest.mock('../context/SessionContext', () => ({
+  useSession: jest.fn(),
 }));
 
 function renderShell(props = {}) {
@@ -43,6 +49,7 @@ function renderShell(props = {}) {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  useSession.mockReturnValue({ user: null });
 });
 
 describe('MobileAppShell', () => {
@@ -65,7 +72,17 @@ describe('MobileAppShell', () => {
     expect(getByTestId('mobile-bottom-nav')).toBeTruthy();
     expect(queryByTestId('classic-app-shell')).toBeNull();
     expect(getByText("Thullaabul 'Ilmi")).toBeTruthy();
+    expect(getByText('T')).toBeTruthy();
     expect(getByText('Beranda')).toBeTruthy();
+  });
+
+  test('uses logged-in user initial in web app shell header', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
+    useSession.mockReturnValue({ user: { name: 'Budi', email: 'budi@example.com' } });
+    const { getByText, getByTestId } = renderShell();
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+    expect(getByText('B')).toBeTruthy();
   });
 
   test('opens profile from web app header account control', async () => {
@@ -96,5 +113,14 @@ describe('MobileAppShell', () => {
 
     await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
     expect(queryByTestId('mobile-bottom-nav')).toBeNull();
+  });
+});
+
+describe('getWebAppAccountLabel', () => {
+  test('prefers name, falls back to email, then guest label', () => {
+    expect(getWebAppAccountLabel({ name: 'Ahmad', email: 'a@example.com' })).toBe('Ahmad');
+    expect(getWebAppAccountLabel({ email: 'mail@example.com' })).toBe('mail@example.com');
+    expect(getWebAppAccountLabel({ name: '   ' })).toBe('Tamu');
+    expect(getWebAppAccountLabel(null)).toBe('Tamu');
   });
 });

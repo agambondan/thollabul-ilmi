@@ -10,7 +10,9 @@ const header = {
   muted: '#64748b',
 };
 
-export function MobileTopHeader({ accountLabel = 'A', onOpenProfile }) {
+export function MobileTopHeader({ accountLabel = 'T', onOpenProfile }) {
+  const normalizedAccountLabel = accountLabel?.trim() || 'T';
+
   return (
     <View style={styles.wrap} testID="mobile-top-header">
       <View style={styles.brandGroup}>
@@ -32,7 +34,7 @@ export function MobileTopHeader({ accountLabel = 'A', onOpenProfile }) {
       >
         <View style={styles.avatar}>
           <Text style={styles.avatarText} numberOfLines={1}>
-            {accountLabel.slice(0, 1).toUpperCase()}
+            {normalizedAccountLabel.slice(0, 1).toUpperCase()}
           </Text>
         </View>
         <ChevronDown color={header.muted} size={17} strokeWidth={2} />
