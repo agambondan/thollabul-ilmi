@@ -391,3 +391,42 @@ Results:
   `/tmp/thollabul-webapp-hadith-surface-export`.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
+
+## Web App Ibadah Surface Update
+
+Status: completed for the first opt-in Ibadah hub surface pass.
+
+Implemented:
+
+- `IbadahScreen` hub now reads `useLayoutModePreference`.
+- In `web_app` mode, the Ibadah hub uses the web-app surface wrapper.
+- Added explicit test IDs for classic and `web_app` Ibadah hub surfaces.
+- Jadwal Sholat, Qibla, Khatam, and feature-key routing to Belajar remain
+  unchanged.
+- `classic` Ibadah hub remains available and covered.
+
+Scope guardrail:
+
+- This slice only changes the presentational container for the Ibadah hub in
+  `web_app` mode. It does not change sub-view routing, Prayer/Qibla/Khatam
+  screens, or feature availability.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- ibadahScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-ibadah-surface-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted Ibadah/shell tests passed: 3 suites, 31 tests.
+- Full mobile Jest passed: 44 suites, 602 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-ibadah-surface-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.

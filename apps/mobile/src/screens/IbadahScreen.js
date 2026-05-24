@@ -15,7 +15,8 @@ import { StyleSheet, View } from 'react-native';
 import { Card } from '../components/Card';
 import { CompactRow, SectionHeader } from '../components/Paper';
 import { Screen } from '../components/Screen';
-import { spacing } from '../theme';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
+import { radius, spacing } from '../theme';
 import { KhatamScreen } from './KhatamScreen';
 import { PrayerScreen } from './PrayerScreen';
 import { QiblaScreen } from './QiblaScreen';
@@ -157,6 +158,8 @@ const sections = [
 ];
 
 function IbadahHub({ navigation, onOpenTab }) {
+  const { isWebAppLayout } = useLayoutModePreference();
+
   const openRow = (row) => {
     if (row.view) {
       navigation?.open?.('ibadah', row.view);
@@ -175,9 +178,11 @@ function IbadahHub({ navigation, onOpenTab }) {
 
   return (
     <Screen
+      contentStyle={isWebAppLayout ? styles.webAppSurface : null}
       subtitle="Sholat, qibla, dzikir, bacaan, dan alat ibadah dalam satu hub ringkas."
       title="Ibadah"
     >
+      <View testID={isWebAppLayout ? 'ibadah-web-app-hub' : 'ibadah-classic-hub'} />
       {sections.map((section) => (
         <View key={section.key} style={styles.section}>
           <SectionHeader meta={section.meta} title={section.title} />
@@ -224,5 +229,10 @@ const styles = StyleSheet.create({
   sectionCard: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
+  },
+  webAppSurface: {
+    backgroundColor: '#f8fafc',
+    borderRadius: radius.md,
+    padding: spacing.sm,
   },
 });

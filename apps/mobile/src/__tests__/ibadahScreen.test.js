@@ -38,8 +38,8 @@ jest.mock('../components/Paper', () => {
 jest.mock('../components/Screen', () => {
   const { View, Text } = require('react-native');
   return {
-    Screen: ({ children, title, subtitle }) => (
-      <View>
+    Screen: ({ children, title, subtitle, contentStyle }) => (
+      <View style={contentStyle}>
         <Text testID="screen-title">{title}</Text>
         {subtitle ? <Text testID="screen-subtitle">{subtitle}</Text> : null}
         {children}
@@ -73,9 +73,15 @@ jest.mock('../screens/KhatamScreen', () => ({
   },
 }));
 
+jest.mock('../hooks/useLayoutModePreference', () => ({
+  useLayoutModePreference: jest.fn(),
+}));
+
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { IbadahScreen } from '../screens/IbadahScreen';
+
+const { useLayoutModePreference } = require('../hooks/useLayoutModePreference');
 
 const defaultNavigation = {
   current: { view: undefined, params: {} },
@@ -87,6 +93,7 @@ const defaultNavigation = {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
 });
 
 describe('IbadahScreen', () => {
@@ -96,6 +103,17 @@ describe('IbadahScreen', () => {
     );
     expect(getByTestId('screen-title')).toBeTruthy();
     expect(getByTestId('screen-subtitle')).toBeTruthy();
+    expect(getByTestId('ibadah-classic-hub')).toBeTruthy();
+  });
+
+  test('uses web app Ibadah hub surface when web app layout is active', () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    const { getByTestId, queryByTestId } = render(
+      <IbadahScreen isActive navigation={defaultNavigation} onOpenTab={jest.fn()} />,
+    );
+
+    expect(getByTestId('ibadah-web-app-hub')).toBeTruthy();
+    expect(queryByTestId('ibadah-classic-hub')).toBeNull();
   });
 
   test('renders all section headers', () => {
