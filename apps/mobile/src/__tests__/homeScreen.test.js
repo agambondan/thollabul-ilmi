@@ -18,6 +18,10 @@ jest.mock('../context/TabActivityContext', () => ({
   useTabActivity: () => ({ notifyTabActivity: jest.fn() }),
 }));
 
+jest.mock('../hooks/useLayoutModePreference', () => ({
+  useLayoutModePreference: jest.fn(),
+}));
+
 jest.mock('expo-location', () => ({
   requestForegroundPermissionsAsync: jest.fn(),
   getCurrentPositionAsync: jest.fn(),
@@ -93,6 +97,7 @@ import { flushAsyncWork } from '../test-utils/async';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { useSession } = require('../context/SessionContext');
+const { useLayoutModePreference } = require('../hooks/useLayoutModePreference');
 const clientApi = require('../api/client');
 const Location = require('expo-location');
 const { readPinnedFeatures, readRecentFeatures } = require('../storage/recentFeatures');
@@ -160,6 +165,7 @@ beforeEach(() => {
     signOut: jest.fn(),
     user: null,
   });
+  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
 
   Location.requestForegroundPermissionsAsync.mockResolvedValue({ status: 'denied' });
   Location.getLastKnownPositionAsync.mockResolvedValue(null);
@@ -179,10 +185,22 @@ afterEach(() => {
 
 describe('HomeScreen', () => {
   test('renders header with guest name', async () => {
-    const { getByText } = await renderHomeScreen();
+    const { getByTestId, getByText } = await renderHomeScreen();
     await waitFor(() => {
       expect(getByText('Tamu')).toBeTruthy();
+      expect(getByTestId('home-classic-header')).toBeTruthy();
     });
+  });
+
+  test('renders web app greeting instead of duplicate profile header when web app layout is active', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+
+    const { getByTestId, queryByTestId } = await renderHomeScreen();
+
+    await waitFor(() => {
+      expect(getByTestId('home-web-app-greeting')).toBeTruthy();
+    });
+    expect(queryByTestId('home-classic-header')).toBeNull();
   });
 
   test('renders user name when logged in', async () => {

@@ -33,6 +33,7 @@ import { useSession } from '../context/SessionContext';
 import { useTabActivity } from '../context/TabActivityContext';
 import { GlobalSearchScreen } from './GlobalSearchScreen';
 import { featureGroups } from '../data/mobileFeatures';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 import { arabicTypography } from '../styles/arabicTypography';
 import { readPinnedFeatures, readRecentFeatures } from '../storage/recentFeatures';
 import { preferenceKeys, readPreference, writePreference } from '../storage/preferences';
@@ -338,6 +339,7 @@ const resolvePrayerState = (prayers, now = new Date()) => {
 export function HomeScreen({ isActive, navigation, onOpenTab }) {
   const { user } = useSession();
   const { notifyTabActivity } = useTabActivity();
+  const { isWebAppLayout } = useLayoutModePreference();
   const mountedRef = useRef(true);
   const prayerRetryTimerRef = useRef(null);
   const locationRetryTimerRef = useRef(null);
@@ -837,7 +839,7 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
   }
   return (
     <ScrollView
-      contentContainerStyle={styles.screen}
+      contentContainerStyle={[styles.screen, isWebAppLayout && styles.webAppScreen]}
       onMomentumScrollBegin={handleScrollActivity}
       refreshControl={
         <RefreshControl
@@ -853,36 +855,43 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
       showsVerticalScrollIndicator={false}
       style={styles.scroll}
     >
-      <View style={styles.header}>
-        <Pressable android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }} onPress={() => onOpenTab('profile')} style={styles.profile}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{initials || 'TI'}</Text>
-          </View>
-          <View>
-            <Text style={styles.name}>{displayName}</Text>
-            <Text style={styles.location}>{locationLabel}</Text>
-          </View>
-        </Pressable>
-        <View style={styles.headerActions}>
-          <Pressable
-            android_ripple={{ color: 'rgba(91, 110, 91, 0.16)', borderless: true }}
-            onPress={() => {
-              if (navigation?.open) {
-                navigation.open('home', 'global-search');
-              } else {
-                onOpenTab('belajar', { featureKey: 'kamus', focusSearch: true });
-              }
-            }}
-          >
-            <Search color={colors.muted} size={18} strokeWidth={2.2} />
-          </Pressable>
-          <Pressable android_ripple={{ color: 'rgba(91, 110, 91, 0.16)', borderless: true }} onPress={() => onOpenTab('belajar', { featureKey: 'notifications' })}>
-            <Bell color={colors.muted} size={18} strokeWidth={2.2} />
-          </Pressable>
+      {isWebAppLayout ? (
+        <View style={styles.webAppGreeting} testID="home-web-app-greeting">
+          <Text style={styles.webAppGreetingTitle}>{`Assalamu'alaikum, ${displayName}`}</Text>
+          <Text style={styles.webAppGreetingDate}>{gregorianDate}</Text>
         </View>
-      </View>
+      ) : (
+        <View style={styles.header} testID="home-classic-header">
+          <Pressable android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }} onPress={() => onOpenTab('profile')} style={styles.profile}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>{initials || 'TI'}</Text>
+            </View>
+            <View>
+              <Text style={styles.name}>{displayName}</Text>
+              <Text style={styles.location}>{locationLabel}</Text>
+            </View>
+          </Pressable>
+          <View style={styles.headerActions}>
+            <Pressable
+              android_ripple={{ color: 'rgba(91, 110, 91, 0.16)', borderless: true }}
+              onPress={() => {
+                if (navigation?.open) {
+                  navigation.open('home', 'global-search');
+                } else {
+                  onOpenTab('belajar', { featureKey: 'kamus', focusSearch: true });
+                }
+              }}
+            >
+              <Search color={colors.muted} size={18} strokeWidth={2.2} />
+            </Pressable>
+            <Pressable android_ripple={{ color: 'rgba(91, 110, 91, 0.16)', borderless: true }} onPress={() => onOpenTab('belajar', { featureKey: 'notifications' })}>
+              <Bell color={colors.muted} size={18} strokeWidth={2.2} />
+            </Pressable>
+          </View>
+        </View>
+      )}
 
-      <View style={styles.prayerCard}>
+      <View style={[styles.prayerCard, isWebAppLayout && styles.webAppPrayerCard]}>
         <View style={styles.prayerHeader}>
           <View style={styles.prayerStatusPill}>
             <Clock3 color={colors.primary} size={13} strokeWidth={2.4} />
@@ -928,7 +937,7 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
         </View>
       </View>
 
-      <View style={styles.menuGrid}>
+      <View style={[styles.menuGrid, isWebAppLayout && styles.webAppMenuGrid]}>
         {menuItems.map(({ Icon, featureKey, internalView, key, label, params }) => (
           <Pressable
             android_ripple={{ color: 'rgba(91, 110, 91, 0.14)', borderless: false }}
@@ -950,7 +959,7 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
         ))}
       </View>
 
-      <View style={styles.dailyCard}>
+      <View style={[styles.dailyCard, isWebAppLayout && styles.webAppDailyCard]}>
         <View style={styles.dailyHeader}>
           <Text style={styles.dailyTitle}>Bacaan Hari Ini</Text>
           <Text style={styles.dailyMeta}>Quran & Hadis</Text>
@@ -1086,6 +1095,27 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     paddingBottom: spacing.xl,
     paddingTop: spacing.xl,
+  },
+  webAppScreen: {
+    backgroundColor: '#f8fafc',
+    paddingBottom: spacing.lg,
+    paddingTop: spacing.lg,
+  },
+  webAppGreeting: {
+    marginBottom: spacing.lg,
+  },
+  webAppGreetingTitle: {
+    color: '#064e3b',
+    fontSize: 20,
+    fontWeight: '900',
+    letterSpacing: 0,
+  },
+  webAppGreetingDate: {
+    color: '#64748b',
+    fontSize: 13,
+    fontWeight: '600',
+    letterSpacing: 0,
+    marginTop: spacing.xs,
   },
   directoryScreen: {
     backgroundColor: colors.bg,
@@ -1251,6 +1281,11 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.sm,
     ...shadows.paper,
   },
+  webAppPrayerCard: {
+    backgroundColor: '#ffffff',
+    borderColor: '#d1fae5',
+    borderRadius: radius.lg,
+  },
   prayerKicker: {
     color: colors.primary,
     fontSize: 12,
@@ -1338,6 +1373,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.md,
     ...shadows.paper,
+  },
+  webAppMenuGrid: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: radius.md,
+    marginTop: spacing.xs,
   },
   menuItem: {
     alignItems: 'center',
@@ -1514,6 +1555,12 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
     padding: spacing.md,
     ...shadows.paper,
+  },
+  webAppDailyCard: {
+    backgroundColor: '#ffffff',
+    borderColor: '#d1fae5',
+    borderRadius: radius.md,
+    marginTop: 0,
   },
   dailyHeader: {
     alignItems: 'center',

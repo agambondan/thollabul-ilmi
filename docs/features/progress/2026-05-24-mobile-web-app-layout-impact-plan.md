@@ -268,3 +268,46 @@ Results:
   `/tmp/thollabul-webapp-menu-sheet-export`.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
+
+## Web App Home Surface Update
+
+Status: completed for the first opt-in Home surface remap.
+
+Implemented:
+
+- `HomeScreen` now reads `useLayoutModePreference`.
+- In `web_app` mode, Home hides the duplicate in-screen profile header because
+  the shell already provides brand/account controls.
+- In `web_app` mode, Home shows a compact dashboard-style greeting with the
+  current user/guest name and Gregorian date.
+- Prayer, quick actions, daily ayah/hadith, pinned features, recent features,
+  and journal entry still use the same existing data and action handlers.
+- Added opt-in web-app styling to the Home screen background, prayer card,
+  quick action grid, and daily content card.
+- `classic` Home header and behavior remain unchanged.
+
+Scope guardrail:
+
+- This slice does not rewrite Home data loading, prayer location behavior,
+  daily content fetching, or feature navigation. It only changes the Home
+  presentation when `web_app` layout is active.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- homeScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-home-remap-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted Home/shell tests passed: 3 suites, 35 tests.
+- Full mobile Jest passed: 44 suites, 597 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-home-remap-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
