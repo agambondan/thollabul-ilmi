@@ -80,7 +80,12 @@ export function MobileMenuSheet({ active, onClose, onSelect, visible }) {
                   <View style={[styles.iconWrap, selected && styles.iconWrapActive]}>
                     <Icon color={selected ? sheet.active : sheet.muted} size={20} strokeWidth={2.2} />
                   </View>
-                  <Text style={[styles.itemLabel, selected && styles.itemLabelActive]}>
+                  <Text
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.82}
+                    numberOfLines={2}
+                    style={[styles.itemLabel, selected && styles.itemLabelActive]}
+                  >
                     {item.label}
                   </Text>
                 </Pressable>
@@ -180,6 +185,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 0,
+    lineHeight: 14,
     textAlign: 'center',
   },
   itemLabelActive: {
