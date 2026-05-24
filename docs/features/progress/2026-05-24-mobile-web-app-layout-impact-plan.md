@@ -473,3 +473,47 @@ Results:
   mobile feature keys, 154 web app routes scanned.
 - Existing Explore test warning remains: React Native `VirtualizedList` emits an
   `act(...)` warning in Jest, but the suite passes.
+
+## Web App Profile/Settings Surface Update
+
+Status: completed for the first opt-in Profile and settings surface pass.
+
+Implemented:
+
+- `ProfileScreen` now reads `useLayoutModePreference` for presentation only.
+- In `web_app` mode, Profile main content and Profile sub-screens use the
+  web-app surface wrapper.
+- Added explicit test IDs for classic and `web_app` Profile surfaces.
+- Account, notification, storage, appearance, security, achievement, sign-out,
+  language preference, and layout-mode saving flows keep their existing
+  handlers.
+- `classic` Profile and settings surfaces remain available and covered.
+
+Scope guardrail:
+
+- This slice only changes the Profile/settings container styling in `web_app`
+  mode. It does not change session behavior, account update APIs, password
+  update APIs, notification center behavior, offline packs, or layout-mode
+  persistence.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- profileScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-profile-surface-export
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted Profile/shell tests passed: 3 suites, 32 tests.
+- Full mobile Jest passed: 44 suites, 604 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-profile-surface-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- Existing Explore test warning remains: React Native `VirtualizedList` emits an
+  `act(...)` warning in Jest, but the suite passes.

@@ -42,6 +42,7 @@ import { OfflinePackCard } from '../components/OfflinePackCard';
 import { Screen } from '../components/Screen';
 import { SessionCard } from '../components/SessionCard';
 import { useSession } from '../context/SessionContext';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 import { useLayoutMode } from '../layout/LayoutModeProvider';
 import { preferenceKeys, readPreference, writePreference } from '../storage/preferences';
 import { colors, radius, spacing } from '../theme';
@@ -118,6 +119,8 @@ const getAchievementProgress = (achievement, stats) => {
 };
 
 function SubScreen({ title, onBack, children }) {
+    const { isWebAppLayout } = useLayoutModePreference();
+
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -136,9 +139,10 @@ function SubScreen({ title, onBack, children }) {
                 <Text style={styles.subTitle}>{title}</Text>
             </View>
             <ScrollView
-                contentContainerStyle={styles.subContent}
+                contentContainerStyle={[styles.subContent, isWebAppLayout && styles.webAppSurface]}
                 keyboardShouldPersistTaps="handled"
             >
+                <View testID={isWebAppLayout ? 'profile-web-app-subscreen' : 'profile-classic-subscreen'} />
                 {children}
             </ScrollView>
         </KeyboardAvoidingView>
@@ -634,6 +638,7 @@ function AchievementsDetail({ achievements, loading, message, onBack, points, st
 
 export function ProfileScreen({ isActive, navigation, onOpenTab }) {
     const { loading: sessionLoading, session, signOut, updateCurrentUser, user } = useSession();
+    const { isWebAppLayout } = useLayoutModePreference();
     const [stack, setStack] = useState([]);
     const [stats, setStats] = useState(null);
     const [achievements, setAchievements] = useState(DEFAULT_BADGES);
@@ -852,7 +857,12 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
     }
 
     return (
-        <Screen subtitle="Kelola akun, progress belajar, dan preferensi pribadimu." title="Profil">
+        <Screen
+            contentStyle={isWebAppLayout ? styles.webAppSurface : null}
+            subtitle="Kelola akun, progress belajar, dan preferensi pribadimu."
+            title="Profil"
+        >
+            <View testID={isWebAppLayout ? 'profile-web-app-surface' : 'profile-classic-surface'} />
             <Card style={styles.profileCard}>
                 <View style={styles.avatar}>
                     <Text style={styles.avatarText}>{initials || 'TI'}</Text>
@@ -1015,6 +1025,11 @@ const styles = StyleSheet.create({
     flex: {
         flex: 1,
         backgroundColor: colors.bg,
+    },
+    webAppSurface: {
+        backgroundColor: '#f8fafc',
+        borderRadius: radius.md,
+        padding: spacing.sm,
     },
     subHeader: {
         alignItems: 'center',

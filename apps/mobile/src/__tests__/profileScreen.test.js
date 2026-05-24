@@ -29,10 +29,10 @@ jest.mock('lucide-react-native', () => {
 });
 
 jest.mock('../components/Screen', () => ({
-  Screen: ({ children, title }) => {
+  Screen: ({ children, title, contentStyle }) => {
     const { View, Text } = require('react-native');
     return (
-      <View>
+      <View style={contentStyle}>
         <Text>{title}</Text>
         {children}
       </View>
@@ -60,11 +60,16 @@ jest.mock('../components/OfflinePackCard', () => {
   return { OfflinePackCard: () => <Text>OfflinePackCard</Text> };
 });
 
+jest.mock('../hooks/useLayoutModePreference', () => ({
+  useLayoutModePreference: jest.fn(),
+}));
+
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { ProfileScreen } from '../screens/ProfileScreen';
 
 const { useSession } = require('../context/SessionContext');
+const { useLayoutModePreference } = require('../hooks/useLayoutModePreference');
 const authApi = require('../api/auth');
 const personalApi = require('../api/personal');
 
@@ -88,6 +93,7 @@ const loggedInSession = {
 beforeEach(() => {
   jest.clearAllMocks();
   useSession.mockReturnValue(defaultSession);
+  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
   personalApi.getAchievements.mockResolvedValue([]);
   personalApi.getMyAchievements.mockResolvedValue([]);
   personalApi.getMyPoints.mockResolvedValue(null);
@@ -107,6 +113,16 @@ describe('ProfileScreen', () => {
       expect(getByText('Thullabul Ilmi')).toBeTruthy();
       expect(getByText('Belum masuk ke akun')).toBeTruthy();
     });
+  });
+
+  test('uses web app Profile surface when web app layout is active', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    const { getByTestId, queryByTestId } = render(<ProfileScreen isActive />);
+
+    await waitFor(() => {
+      expect(getByTestId('profile-web-app-surface')).toBeTruthy();
+    });
+    expect(queryByTestId('profile-classic-surface')).toBeNull();
   });
 
   test('renders user info when logged in', async () => {
@@ -153,11 +169,12 @@ describe('ProfileScreen', () => {
   test('settings navigation opens settings screen', async () => {
     useSession.mockReturnValue(loggedInSession);
 
-    const { getByText, getByLabelText } = render(<ProfileScreen isActive />);
+    const { getByText, getByLabelText, getByTestId } = render(<ProfileScreen isActive />);
     await waitFor(() => expect(getByText('Test User')).toBeTruthy());
 
     fireEvent.press(getByLabelText('Buka pengaturan profil'));
     expect(getByText('Pengaturan')).toBeTruthy();
+    expect(getByTestId('profile-classic-subscreen')).toBeTruthy();
     expect(getByText('Akun')).toBeTruthy();
     expect(getByText('Notifikasi')).toBeTruthy();
   });
