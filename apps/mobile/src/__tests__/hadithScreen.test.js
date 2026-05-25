@@ -221,13 +221,33 @@ describe('HadithScreen', () => {
 
   test('uses web app Hadith list surface when web app layout is active', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
-    const { getByTestId, getByText, queryByTestId } = render(<HadithScreen isActive />);
+    const { getAllByText, getByPlaceholderText, getByTestId, getByText, queryByTestId } =
+      render(<HadithScreen isActive />);
 
     await waitFor(() => {
-      expect(getByText('Hadis')).toBeTruthy();
+      expect(getByText('Book')).toBeTruthy();
+      expect(getByText('Theme')).toBeTruthy();
+      expect(getByText('Chapter')).toBeTruthy();
+      expect(getAllByText('Hadith').length).toBeGreaterThanOrEqual(1);
+      expect(getByPlaceholderText('Cari nomor, kitab, tema, atau teks hadis')).toBeTruthy();
+      expect(getAllByText('Buka Reader').length).toBeGreaterThanOrEqual(1);
       expect(getByTestId('hadith-web-app-list')).toBeTruthy();
     });
     expect(queryByTestId('hadith-classic-list')).toBeNull();
+  });
+
+  test('opens a web app Hadith book reader using the existing book filter', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    const { getAllByText, findAllByText } = render(<HadithScreen isActive />);
+
+    fireEvent.press((await waitFor(() => getAllByText('Buka Reader')))[0]);
+
+    expect((await findAllByText('Shahih Bukhari')).length).toBeGreaterThanOrEqual(1);
+    await waitFor(() => {
+      expect(clientApi.getHadithPage).toHaveBeenCalledWith(
+        expect.objectContaining({ bookSlug: 'bukhari' }),
+      );
+    });
   });
 
   test('loads books and displays them in filter row', async () => {
@@ -330,6 +350,7 @@ describe('HadithScreen', () => {
     });
 
     const { findAllByTestId, findByText, getByTestId } = render(<HadithScreen isActive />);
+    fireEvent.press((await waitFor(() => getByTestId('hadith-web-app-book-bukhari'))));
     const cards = await findAllByTestId('content-card');
 
     fireEvent.press(cards[0]);

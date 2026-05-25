@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, BookOpen, Bookmark, BookmarkCheck } from 'lucide-react-native';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ArrowLeft, BookOpen, Bookmark, BookmarkCheck, Search } from 'lucide-react-native';
+import { ActivityIndicator, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import {
   getAyahsForHadith,
   getHadithBooks,
@@ -31,6 +31,28 @@ import { arabicTypography } from '../styles/arabicTypography';
 import { colors, radius, spacing } from '../theme';
 
 const HADITH_LIST_PAGE_SIZE = 20;
+const WEB_APP_HADITH_BG = '#020617';
+const WEB_APP_HADITH_SURFACE = '#1e293b';
+const WEB_APP_HADITH_BORDER = '#334155';
+const WEB_APP_HADITH_MUTED = '#94a3b8';
+const WEB_APP_HADITH_ACCENT = '#10b981';
+
+const WEB_APP_HADITH_TABS = [
+  { key: 'book', label: 'Book' },
+  { key: 'theme', label: 'Theme' },
+  { key: 'chapter', label: 'Chapter' },
+  { key: 'hadith', label: 'Hadith' },
+];
+
+const WEB_APP_BOOK_COVER_STYLES = {
+  bukhari: { backgroundColor: '#991b1b', borderColor: '#ef4444' },
+  muslim: { backgroundColor: '#111827', borderColor: '#d97706' },
+  'abu-daud': { backgroundColor: '#166534', borderColor: '#d97706' },
+  tirmidzi: { backgroundColor: '#0f766e', borderColor: '#f59e0b' },
+  nasai: { backgroundColor: '#1e40af', borderColor: '#94a3b8' },
+  'ibnu-majah': { backgroundColor: '#7c2d12', borderColor: '#f97316' },
+  malik: { backgroundColor: '#3f3f46', borderColor: '#a3a3a3' },
+};
 
 const HADITH_DETAIL_TABS = [
   { key: 'text', label: 'Teks' },
@@ -103,6 +125,9 @@ const formatHadithGrade = (grade) => {
 
 const formatHadithCount = (count) => Number(count || 0).toLocaleString('id-ID');
 
+const getHadithBookCount = (book) =>
+  Number(book?.count ?? book?.hadith_count ?? book?.hadithCount ?? book?.total ?? 0);
+
 const getHadithBookLabel = (hadith) => {
   const rawBook = cleanHadithText(hadith?.book || hadith?.bookName || hadith?.collection || '');
   if (rawBook && !isGenericHadithLabel(rawBook)) return rawBook;
@@ -130,6 +155,12 @@ const getHadithTopicLabel = (hadith) => {
   const topic = cleanHadithText(hadith?.chapterName || hadith?.themeName || hadith?.title || '');
   return isGenericHadithLabel(topic) ? '' : topic;
 };
+
+const getBookCoverStyle = (book) =>
+  WEB_APP_BOOK_COVER_STYLES[cleanHadithText(book?.slug).toLowerCase()] ?? {
+    backgroundColor: '#0f172a',
+    borderColor: WEB_APP_HADITH_BORDER,
+  };
 
 export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
   const { user } = useSession();
@@ -542,6 +573,133 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     );
   };
 
+  const renderWebAppHadithTabs = () => {
+    const activeTab = selectedBook || query ? 'hadith' : 'book';
+
+    return (
+      <View style={styles.webAppHadithTabs}>
+        {WEB_APP_HADITH_TABS.map((tab) => (
+          <Pressable
+            key={tab.key}
+            onPress={() => {
+              if (tab.key === 'book') {
+                setQuery('');
+                selectBook(null);
+              }
+            }}
+            style={[
+              styles.webAppHadithTab,
+              activeTab === tab.key ? styles.webAppHadithTabActive : null,
+            ]}
+          >
+            <Text
+              style={[
+                styles.webAppHadithTabText,
+                activeTab === tab.key ? styles.webAppHadithTabTextActive : null,
+              ]}
+            >
+              {tab.label}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+    );
+  };
+
+  const renderWebAppHadithHeader = () => (
+    <View style={styles.webAppHadithHeader}>
+      {renderWebAppHadithTabs()}
+      <View style={styles.webAppHadithSearch}>
+        <Search color={WEB_APP_HADITH_MUTED} size={16} strokeWidth={2.1} />
+        <TextInput
+          onChangeText={setQuery}
+          placeholder="Cari nomor, kitab, tema, atau teks hadis"
+          placeholderTextColor={WEB_APP_HADITH_MUTED}
+          style={styles.webAppHadithSearchInput}
+          value={query}
+        />
+      </View>
+    </View>
+  );
+
+  const renderWebAppBookCard = (book) => {
+    const count = getHadithBookCount(book);
+    const shortLabel = getHadithBookShortLabel({ book: book.name, bookSlug: book.slug });
+
+    return (
+      <View key={book.slug ?? book.name} style={styles.webAppBookCard}>
+        <View style={[styles.webAppBookCover, getBookCoverStyle(book)]}>
+          <Text numberOfLines={2} style={styles.webAppBookCoverTitle}>{shortLabel}</Text>
+          <View style={styles.webAppBookCoverRule} />
+          <Text style={styles.webAppBookCoverMeta}>Hadith</Text>
+        </View>
+        <View style={styles.webAppBookCopy}>
+          <Text style={styles.webAppBookTitle}>{book.name}</Text>
+          <Text style={styles.webAppBookMeta}>
+            {count ? `${count} Hadith` : 'Koleksi Hadith'}
+          </Text>
+          <Pressable
+            onPress={() => selectBook(book.slug)}
+            style={styles.webAppBookAction}
+            testID={`hadith-web-app-book-${book.slug}`}
+          >
+            <Text style={styles.webAppBookActionText}>Buka Reader</Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  };
+
+  const renderWebAppHadithResults = () => (
+    <>
+      <View style={styles.webAppListSummary}>
+        <View style={styles.listSummaryCopy}>
+          <Text style={styles.webAppListSummaryTitle}>{selectedBookName}</Text>
+          <Text style={styles.webAppListSummaryMeta}>{summaryMeta}</Text>
+        </View>
+        <Text numberOfLines={1} style={styles.webAppQueryBadge}>{summaryBadge}</Text>
+      </View>
+
+      {loading && hadiths.length === 0 ? (
+        <ActivityIndicator color={WEB_APP_HADITH_ACCENT} />
+      ) : filteredHadiths.length === 0 ? (
+        <View style={styles.webAppEmptyCard}>
+          <Text style={styles.webAppEmptyTitle}>Hadis belum ditemukan</Text>
+          <Text style={styles.webAppEmptyText}>
+            {query
+              ? 'Coba kata kunci lain, nomor hadis, nama kitab, atau tema yang lebih umum.'
+              : 'Daftar hadis untuk filter ini belum tersedia.'}
+          </Text>
+        </View>
+      ) : (
+        <>
+          <View style={styles.webAppHadithResultCard}>
+            {visibleHadiths.map((hadith) => (
+              <View key={`${hadith.id}-${hadith.title}`} style={styles.hadithListItem}>
+                {renderCompactHadithCard(hadith, 'web-app-list')}
+              </View>
+            ))}
+          </View>
+          {hasMoreHadiths ? (
+            <Pressable
+              disabled={loadingMore}
+              onPress={loadMoreHadiths}
+              style={styles.webAppLoadMoreButton}
+            >
+              <Text style={styles.webAppLoadMoreText}>
+                {loadingMore
+                  ? 'Memuat hadis berikutnya...'
+                  : hasBufferedHadiths
+                    ? `Muat lagi (${filteredHadiths.length - visibleCount} tersisa)`
+                    : 'Muat hadis berikutnya'}
+              </Text>
+            </Pressable>
+          ) : null}
+        </>
+      )}
+    </>
+  );
+
   const sanadPerawi = sanad
     .flatMap((path) => path.mata_sanad ?? [])
     .map((mata) => mata.perawi)
@@ -881,6 +1039,42 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     );
   }
 
+  if (isWebAppLayout) {
+    const showBookShelf = !selectedBook && !query;
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppHadithContent}
+        keyboardShouldPersistTaps="handled"
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={refreshAll}
+            tintColor={WEB_APP_HADITH_ACCENT}
+          />
+        }
+        scrollEventThrottle={250}
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppHadithScroll}
+      >
+        <View testID="hadith-web-app-list" />
+        {renderWebAppHadithHeader()}
+        {message ? <Text style={styles.webAppMessage}>{message}</Text> : null}
+        {showBookShelf ? (
+          <>
+            {loading && books.length === 0 ? (
+              <ActivityIndicator color={WEB_APP_HADITH_ACCENT} />
+            ) : null}
+            {books.map(renderWebAppBookCard)}
+          </>
+        ) : (
+          renderWebAppHadithResults()
+        )}
+        {renderHadithActionSheet()}
+      </ScrollView>
+    );
+  }
+
   return (
     <Screen
       title="Hadis"
@@ -1002,6 +1196,214 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8fafc',
     borderRadius: radius.md,
     padding: spacing.sm,
+  },
+  webAppHadithScroll: {
+    backgroundColor: WEB_APP_HADITH_BG,
+    flex: 1,
+  },
+  webAppHadithContent: {
+    backgroundColor: WEB_APP_HADITH_BG,
+    flexGrow: 1,
+    padding: spacing.md,
+    paddingBottom: spacing.xl,
+  },
+  webAppHadithHeader: {
+    marginBottom: spacing.md,
+  },
+  webAppHadithTabs: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginBottom: spacing.lg,
+  },
+  webAppHadithTab: {
+    alignItems: 'center',
+    backgroundColor: '#334155',
+    borderRadius: 999,
+    flex: 1,
+    justifyContent: 'center',
+    minHeight: 36,
+    paddingHorizontal: spacing.sm,
+  },
+  webAppHadithTabActive: {
+    backgroundColor: '#059669',
+  },
+  webAppHadithTabText: {
+    color: '#cbd5e1',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  webAppHadithTabTextActive: {
+    color: '#ffffff',
+  },
+  webAppHadithSearch: {
+    alignItems: 'center',
+    backgroundColor: WEB_APP_HADITH_SURFACE,
+    borderColor: '#475569',
+    borderRadius: 11,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    minHeight: 38,
+    paddingHorizontal: spacing.md,
+  },
+  webAppHadithSearchInput: {
+    color: '#e2e8f0',
+    flex: 1,
+    fontSize: 14,
+    minHeight: 36,
+    padding: 0,
+  },
+  webAppBookCard: {
+    alignItems: 'stretch',
+    backgroundColor: WEB_APP_HADITH_SURFACE,
+    borderColor: WEB_APP_HADITH_BORDER,
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.md,
+    marginBottom: spacing.md,
+    minHeight: 164,
+    padding: spacing.sm,
+  },
+  webAppBookCover: {
+    alignItems: 'center',
+    borderRadius: 4,
+    borderWidth: 1,
+    justifyContent: 'center',
+    padding: spacing.sm,
+    width: 116,
+  },
+  webAppBookCoverTitle: {
+    color: '#f8fafc',
+    fontSize: 15,
+    fontWeight: '900',
+    lineHeight: 19,
+    textAlign: 'center',
+    textTransform: 'uppercase',
+  },
+  webAppBookCoverRule: {
+    backgroundColor: 'rgba(255, 255, 255, 0.42)',
+    height: 1,
+    marginVertical: spacing.sm,
+    width: '76%',
+  },
+  webAppBookCoverMeta: {
+    color: 'rgba(255, 255, 255, 0.78)',
+    fontSize: 10,
+    fontWeight: '900',
+    letterSpacing: 0,
+    textTransform: 'uppercase',
+  },
+  webAppBookCopy: {
+    flex: 1,
+    justifyContent: 'space-between',
+    minWidth: 0,
+    paddingVertical: spacing.sm,
+  },
+  webAppBookTitle: {
+    color: '#f8fafc',
+    fontSize: 17,
+    fontWeight: '900',
+    lineHeight: 22,
+  },
+  webAppBookMeta: {
+    color: WEB_APP_HADITH_MUTED,
+    fontSize: 14,
+    lineHeight: 20,
+    marginTop: spacing.xs,
+  },
+  webAppBookAction: {
+    alignItems: 'center',
+    backgroundColor: '#059669',
+    borderRadius: 6,
+    justifyContent: 'center',
+    minHeight: 34,
+    paddingHorizontal: spacing.md,
+  },
+  webAppBookActionText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  webAppListSummary: {
+    alignItems: 'center',
+    backgroundColor: WEB_APP_HADITH_SURFACE,
+    borderColor: WEB_APP_HADITH_BORDER,
+    borderRadius: 8,
+    borderWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  webAppListSummaryTitle: {
+    color: '#f8fafc',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  webAppListSummaryMeta: {
+    color: WEB_APP_HADITH_MUTED,
+    fontSize: 12,
+    fontWeight: '700',
+    marginTop: 2,
+  },
+  webAppQueryBadge: {
+    backgroundColor: '#0f766e',
+    borderRadius: 6,
+    color: '#ffffff',
+    fontSize: 11,
+    fontWeight: '900',
+    overflow: 'hidden',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    textAlign: 'center',
+  },
+  webAppHadithResultCard: {
+    backgroundColor: WEB_APP_HADITH_SURFACE,
+    borderColor: WEB_APP_HADITH_BORDER,
+    borderRadius: 8,
+    borderWidth: 1,
+    paddingHorizontal: spacing.md,
+  },
+  webAppEmptyCard: {
+    backgroundColor: WEB_APP_HADITH_SURFACE,
+    borderColor: WEB_APP_HADITH_BORDER,
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: spacing.md,
+  },
+  webAppEmptyTitle: {
+    color: '#f8fafc',
+    fontSize: 14,
+    fontWeight: '900',
+    marginBottom: spacing.xs,
+  },
+  webAppEmptyText: {
+    color: WEB_APP_HADITH_MUTED,
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  webAppMessage: {
+    color: WEB_APP_HADITH_ACCENT,
+    fontSize: 12,
+    fontWeight: '700',
+    marginBottom: spacing.md,
+  },
+  webAppLoadMoreButton: {
+    alignItems: 'center',
+    backgroundColor: WEB_APP_HADITH_SURFACE,
+    borderColor: WEB_APP_HADITH_BORDER,
+    borderRadius: 8,
+    borderWidth: 1,
+    justifyContent: 'center',
+    marginTop: spacing.sm,
+    minHeight: 42,
+  },
+  webAppLoadMoreText: {
+    color: WEB_APP_HADITH_ACCENT,
+    fontSize: 13,
+    fontWeight: '900',
   },
   translation: {
     color: colors.text,

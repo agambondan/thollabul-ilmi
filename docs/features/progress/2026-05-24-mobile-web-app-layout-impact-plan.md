@@ -854,3 +854,45 @@ Results:
   mobile feature keys, 154 web app routes scanned.
 - Native emulator smoke captured at
   `output/native-smoke/tholabul-webapp-emulator-quran-route-after.png`.
+
+## Web App Hadith Book Shelf Dashboard Parity
+
+Status: completed for the native `web_app` Hadith list route visual parity pass.
+
+Implemented:
+
+- `HadithScreen` keeps the classic paper Hadith search, filter chips, notice,
+  summary, and compact hadith list on the `classic` path.
+- `web_app` mode now opens the Hadith route on a dashboard-style dark book
+  shelf with `Book`, `Theme`, `Chapter`, and `Hadith` pills, dark search field,
+  book cover panels, hadith counts, and `Buka Reader` CTAs.
+- `Buka Reader` reuses the existing book-filter flow; when a book or search is
+  active, `web_app` switches into the existing hadith result list instead of
+  changing data loading or detail handlers.
+- Added Hadith test coverage for the dashboard book shelf and the book CTA.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Hadith list presentation for
+  `web_app`. It does not change classic Hadith, API calls, offline fallback,
+  bookmarks, notes, sanad, perawi, takhrij, related ayah navigation, or detail
+  screen behavior.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- hadithScreen.test.js mobileAppShell.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted Hadith/shell tests passed: 2 suites, 30 tests.
+- Full mobile Jest passed: 44 suites, 620 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-hadith-route-after.png`.
