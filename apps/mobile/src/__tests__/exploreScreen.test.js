@@ -329,6 +329,46 @@ describe('ExploreScreen', () => {
     });
   });
 
+  test('uses dashboard Bookmark route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useSession.mockReturnValue({
+      ...mockUseSession(),
+      session: { token: 'abc' },
+      user: { id: '1', name: 'Test', email: 'test@test.com' },
+    });
+    personalApi.getBookmarks.mockResolvedValue([]);
+    exploreApi.getBookmarkItems.mockResolvedValueOnce([
+      {
+        id: 'bm-1',
+        title: 'Al-Fatihah ayat 1',
+        body: 'Dengan nama Allah Yang Maha Pengasih.',
+        meta: 'ayah',
+        raw: { ref_type: 'ayah', ref_id: '1:1', ref_slug: 'al-fatihah' },
+      },
+      {
+        id: 'bm-2',
+        title: 'Hadith niat',
+        body: 'Sesungguhnya amal itu tergantung niatnya.',
+        meta: 'hadith',
+        raw: { ref_type: 'hadith', ref_id: '1', ref_slug: 'bukhari' },
+      },
+    ]);
+
+    const { getAllByText, getByTestId, getByText, queryByTestId } = await renderExploreScreen({
+      deepLinkTarget: { id: 'bookmarks-route', params: { featureKey: 'bookmarks' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-bookmarks-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('PERSONAL')).toBeTruthy();
+      expect(getByText('Al-Fatihah ayat 1')).toBeTruthy();
+      expect(getByText('Hadith niat')).toBeTruthy();
+      expect(getAllByText('Al-Quran').length).toBeGreaterThan(0);
+      expect(getAllByText('Hadith').length).toBeGreaterThan(0);
+    });
+  });
+
   test('renders search input for feature catalog', async () => {
     const { getByTestId } = await renderExploreScreen();
     expect(getByTestId('search-input')).toBeTruthy();

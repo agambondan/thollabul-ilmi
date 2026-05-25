@@ -101,6 +101,16 @@ const WEB_APP_EXPLORE_SURFACE = '#111827';
 const WEB_APP_EXPLORE_BORDER = '#243044';
 const WEB_APP_EXPLORE_ACCENT = '#34d399';
 const WEB_APP_EXPLORE_MUTED = '#94a3b8';
+const BOOKMARK_TYPE_LABELS = {
+  ayah: 'Al-Quran',
+  quran: 'Al-Quran',
+  hadith: 'Hadith',
+  doa: 'Doa',
+  dzikir: 'Dzikir',
+  asmaul_husna: 'Asmaul Husna',
+  article: 'Artikel',
+  library_book: 'Perpustakaan',
+};
 
 const emptyUserWirdForm = {
   arabic: '',
@@ -117,6 +127,14 @@ const refKey = (refType, refId) => `${refType}:${refId}`;
 const digitsOnly = (value = '') => `${value}`.replace(/[^\d]/g, '');
 const parseNumericInput = (value = '') => Number(digitsOnly(value)) || 0;
 const normalizeSearchText = (value = '') => `${value}`.trim().toLowerCase();
+const normalizeBookmarkType = (value = '') => {
+  const type = `${value || 'bookmark'}`.trim().toLowerCase();
+  if (type === 'surah') return 'quran';
+  if (type === 'verse') return 'ayah';
+  return type || 'bookmark';
+};
+const getBookmarkTypeLabel = (type = '') =>
+  BOOKMARK_TYPE_LABELS[normalizeBookmarkType(type)] || `${type || 'Bookmark'}`.replace(/_/g, ' ');
 const formatNumericInput = (value = '') => {
   const normalized = digitsOnly(value);
   if (!normalized) return '';
@@ -2970,6 +2988,125 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     </>
   );
 
+  const renderWebAppBookmarkCard = (item, index) => {
+    const raw = item?.raw ?? {};
+    const type = normalizeBookmarkType(raw.ref_type ?? item?.meta);
+    const refId = raw.ref_id ?? item?.id;
+    const label = getBookmarkTypeLabel(type);
+
+    return (
+      <Pressable
+        android_ripple={{ color: 'rgba(52, 211, 153, 0.12)', borderless: false }}
+        key={`${getExploreItemKey(item)}-${index}`}
+        onLongPress={() => setItemActionSheet({ visible: true, item })}
+        onPress={() => openItemDetail(item)}
+        style={styles.webAppBookmarkCard}
+        testID="web-app-bookmark-card"
+      >
+        <View style={styles.webAppBookmarkStripe} />
+        <View style={styles.webAppBookmarkBody}>
+          <View style={styles.webAppBookmarkHeader}>
+            <Text style={styles.webAppBookmarkType}>{label}</Text>
+            <Text style={styles.webAppBookmarkRef}>{refId ? `#${refId}` : 'Tersimpan'}</Text>
+          </View>
+          <Text numberOfLines={2} style={styles.webAppBookmarkTitle}>
+            {item.title || `${label} tersimpan`}
+          </Text>
+          {item.body ? (
+            <Text numberOfLines={3} style={styles.webAppBookmarkText}>
+              {item.body}
+            </Text>
+          ) : null}
+          {raw.ref_slug ? (
+            <Text numberOfLines={1} style={styles.webAppBookmarkSlug}>
+              {raw.ref_slug}
+            </Text>
+          ) : null}
+          <View style={styles.webAppBookmarkFooter}>
+            <Text style={styles.webAppBookmarkHint}>Ketuk untuk detail</Text>
+            <Pressable
+              hitSlop={10}
+              onPress={() => setItemActionSheet({ visible: true, item })}
+              style={styles.webAppBookmarkManage}
+              testID="web-app-bookmark-manage"
+            >
+              <Text style={styles.webAppBookmarkManageText}>Kelola</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Pressable>
+    );
+  };
+
+  const renderWebAppBookmarksScreen = () => {
+    const groupedBookmarks = visibleItems.reduce((acc, item) => {
+      const type = normalizeBookmarkType(item?.raw?.ref_type ?? item?.meta);
+      if (!acc[type]) acc[type] = [];
+      acc[type].push(item);
+      return acc;
+    }, {});
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppBookmarksContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppBookmarksRoot}
+      >
+        <View testID="explore-web-app-bookmarks-surface" />
+        <View style={styles.webAppBookmarksHeader}>
+          <Pressable
+            accessibilityLabel="Kembali ke Belajar"
+            onPress={clearFeature}
+            style={styles.webAppBookmarksBack}
+            testID="web-app-bookmarks-back"
+          >
+            <Text style={styles.webAppBookmarksBackText}>Kembali</Text>
+          </Pressable>
+          <Text style={styles.webAppCatalogEyebrow}>PERSONAL</Text>
+          <View style={styles.webAppBookmarksTitleRow}>
+            <Text style={styles.webAppCatalogTitle}>Bookmark</Text>
+            <Text style={styles.webAppBookmarksCount}>{items.length} item</Text>
+          </View>
+          <Text style={styles.webAppCatalogSubtitle}>
+            Ayat, hadith, dan referensi yang kamu simpan dari dashboard belajar.
+          </Text>
+        </View>
+
+        {error ? <Text style={styles.webAppBookmarksError}>{error}</Text> : null}
+        {loading ? (
+          <View style={styles.webAppBookmarksState}>
+            <ActivityIndicator color={WEB_APP_EXPLORE_ACCENT} size="small" />
+            <Text style={styles.webAppBookmarksStateText}>Memuat bookmark...</Text>
+          </View>
+        ) : null}
+        {!loading && !error && !items.length ? (
+          <View style={styles.webAppBookmarksEmpty}>
+            <Bookmark color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
+            <Text style={styles.webAppBookmarksEmptyTitle}>Belum ada bookmark.</Text>
+            <Text style={styles.webAppBookmarksEmptyText}>
+              Tandai ayat atau hadith favoritmu saat membaca.
+            </Text>
+          </View>
+        ) : null}
+        {!loading && !error && items.length > 0 ? (
+          <View style={styles.webAppBookmarksGroups}>
+            {Object.entries(groupedBookmarks).map(([type, groupItems]) => (
+              <View key={type} style={styles.webAppBookmarksGroup}>
+                <View style={styles.webAppBookmarksGroupHeader}>
+                  <Text style={styles.webAppBookmarksGroupTitle}>{getBookmarkTypeLabel(type)}</Text>
+                  <Text style={styles.webAppBookmarksGroupCount}>{groupItems.length}</Text>
+                </View>
+                {groupItems.map(renderWebAppBookmarkCard)}
+              </View>
+            ))}
+          </View>
+        ) : null}
+        {renderItemActionSheet()}
+      </ScrollView>
+    );
+  };
+
   if (selectedItem) {
     return renderDetailScreen();
   }
@@ -3011,6 +3148,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         {renderItemActionSheet()}
       </ScrollView>
     );
+  }
+
+  if (activeFeature?.type === 'bookmarks' && isWebAppLayout) {
+    return renderWebAppBookmarksScreen();
   }
 
   return (
@@ -3158,6 +3299,219 @@ const styles = StyleSheet.create({
     fontSize: 14,
     minHeight: 42,
     padding: 0,
+  },
+  webAppBookmarksRoot: {
+    backgroundColor: WEB_APP_EXPLORE_BG,
+    flex: 1,
+  },
+  webAppBookmarksContent: {
+    backgroundColor: WEB_APP_EXPLORE_BG,
+    flexGrow: 1,
+    padding: spacing.md,
+    paddingBottom: spacing.xl,
+  },
+  webAppBookmarksHeader: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    padding: spacing.md,
+  },
+  webAppBookmarksBack: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: 999,
+    borderWidth: 1,
+    marginBottom: spacing.md,
+    minHeight: 34,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+  },
+  webAppBookmarksBackText: {
+    color: '#d1fae5',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  webAppBookmarksTitleRow: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    justifyContent: 'space-between',
+    marginTop: spacing.xs,
+  },
+  webAppBookmarksCount: {
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: 999,
+    borderWidth: 1,
+    color: WEB_APP_EXPLORE_MUTED,
+    fontSize: 11,
+    fontWeight: '900',
+    overflow: 'hidden',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 5,
+  },
+  webAppBookmarksError: {
+    backgroundColor: '#3f1d1d',
+    borderColor: '#7f1d1d',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    color: '#fecaca',
+    fontSize: 13,
+    fontWeight: '800',
+    lineHeight: 18,
+    marginTop: spacing.md,
+    padding: spacing.md,
+  },
+  webAppBookmarksState: {
+    alignItems: 'center',
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    gap: spacing.sm,
+    justifyContent: 'center',
+    marginTop: spacing.md,
+    minHeight: 130,
+    padding: spacing.md,
+  },
+  webAppBookmarksStateText: {
+    color: WEB_APP_EXPLORE_MUTED,
+    fontSize: 13,
+    fontWeight: '800',
+  },
+  webAppBookmarksEmpty: {
+    alignItems: 'center',
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    justifyContent: 'center',
+    marginTop: spacing.md,
+    minHeight: 180,
+    padding: spacing.lg,
+  },
+  webAppBookmarksEmptyTitle: {
+    color: '#f8fafc',
+    fontSize: 16,
+    fontWeight: '900',
+    marginTop: spacing.sm,
+  },
+  webAppBookmarksEmptyText: {
+    color: WEB_APP_EXPLORE_MUTED,
+    fontSize: 13,
+    lineHeight: 20,
+    marginTop: spacing.xs,
+    textAlign: 'center',
+  },
+  webAppBookmarksGroups: {
+    gap: spacing.md,
+    marginTop: spacing.md,
+  },
+  webAppBookmarksGroup: {
+    gap: spacing.sm,
+  },
+  webAppBookmarksGroupHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    justifyContent: 'space-between',
+    paddingHorizontal: 2,
+  },
+  webAppBookmarksGroupTitle: {
+    color: '#cbd5e1',
+    fontSize: 12,
+    fontWeight: '900',
+    letterSpacing: 0,
+    textTransform: 'uppercase',
+  },
+  webAppBookmarksGroupCount: {
+    color: WEB_APP_EXPLORE_MUTED,
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  webAppBookmarkCard: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexDirection: 'row',
+    minHeight: 118,
+    overflow: 'hidden',
+  },
+  webAppBookmarkStripe: {
+    backgroundColor: WEB_APP_EXPLORE_ACCENT,
+    width: 4,
+  },
+  webAppBookmarkBody: {
+    flex: 1,
+    minWidth: 0,
+    padding: spacing.md,
+  },
+  webAppBookmarkHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    justifyContent: 'space-between',
+    marginBottom: spacing.xs,
+  },
+  webAppBookmarkType: {
+    color: WEB_APP_EXPLORE_ACCENT,
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0,
+    textTransform: 'uppercase',
+  },
+  webAppBookmarkRef: {
+    color: WEB_APP_EXPLORE_MUTED,
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  webAppBookmarkTitle: {
+    color: '#f8fafc',
+    fontSize: 15,
+    fontWeight: '900',
+    lineHeight: 20,
+  },
+  webAppBookmarkText: {
+    color: '#cbd5e1',
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: spacing.xs,
+  },
+  webAppBookmarkSlug: {
+    color: WEB_APP_EXPLORE_MUTED,
+    fontSize: 12,
+    fontWeight: '800',
+    marginTop: spacing.xs,
+  },
+  webAppBookmarkFooter: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    justifyContent: 'space-between',
+    marginTop: spacing.md,
+  },
+  webAppBookmarkHint: {
+    color: WEB_APP_EXPLORE_MUTED,
+    flex: 1,
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  webAppBookmarkManage: {
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: 999,
+    borderWidth: 1,
+    minHeight: 30,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 6,
+  },
+  webAppBookmarkManageText: {
+    color: '#d1fae5',
+    fontSize: 12,
+    fontWeight: '900',
   },
   webAppSurface: {
     backgroundColor: '#f8fafc',
