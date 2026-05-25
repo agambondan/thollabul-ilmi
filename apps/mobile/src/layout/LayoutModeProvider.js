@@ -6,6 +6,7 @@ export const layoutModes = {
   webApp: 'web_app',
 };
 
+export const defaultLayoutMode = layoutModes.webApp;
 const validLayoutModes = new Set(Object.values(layoutModes));
 
 export const normalizeLayoutMode = (value) => (
@@ -13,7 +14,7 @@ export const normalizeLayoutMode = (value) => (
 );
 
 export const readStoredLayoutMode = async () => normalizeLayoutMode(
-  await readPreference(preferenceKeys.appLayoutMode, layoutModes.classic),
+  await readPreference(preferenceKeys.appLayoutMode, defaultLayoutMode),
 );
 
 export const writeStoredLayoutMode = async (nextMode) => {
@@ -24,8 +25,8 @@ export const writeStoredLayoutMode = async (nextMode) => {
 
 const defaultContext = {
   isLoading: false,
-  isWebAppLayout: false,
-  layoutMode: layoutModes.classic,
+  isWebAppLayout: true,
+  layoutMode: defaultLayoutMode,
   refreshLayoutMode: readStoredLayoutMode,
   setLayoutMode: writeStoredLayoutMode,
 };
@@ -33,7 +34,7 @@ const defaultContext = {
 const LayoutModeContext = createContext(defaultContext);
 
 export function LayoutModeProvider({ children }) {
-  const [layoutMode, setLayoutModeState] = useState(layoutModes.classic);
+  const [layoutMode, setLayoutModeState] = useState(defaultLayoutMode);
   const [isLoading, setIsLoading] = useState(true);
 
   const refreshLayoutMode = useCallback(async () => {

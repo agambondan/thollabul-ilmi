@@ -16,14 +16,15 @@ Mobile app native tidak dibuang dan tidak di-rewrite total.
 Kode mobile app yang sudah ada tetap menjadi baseline layout lama. Ke depan,
 mobile app boleh punya beberapa mode layout yang bisa dipilih user dari
 pengaturan. Layout baru yang terinspirasi dari mobile web dashboard menjadi
-opsi tambahan, bukan pengganti paksa untuk semua user.
+default untuk instalasi baru, tetapi layout lama tetap tersedia dari
+pengaturan untuk user yang membutuhkan fallback native lama.
 
 Target awal:
 
 | Mode | Status | Tujuan |
 | --- | --- | --- |
-| `classic` | Existing baseline | Mempertahankan pengalaman mobile app saat ini sebagai fallback stabil. |
-| `web_app` | In progress | Membawa rasa mobile web terbaru ke native app: top header, bottom nav, konten fokus, dan bottom-sheet menu. |
+| `classic` | Supported fallback | Mempertahankan pengalaman mobile app lama untuk user yang memilihnya atau saat stored preference invalid. |
+| `web_app` | Default | Membawa rasa mobile web terbaru ke native app: top header, bottom nav, konten fokus, dan bottom-sheet menu. |
 
 Mode tambahan boleh ditambahkan setelah dua mode awal stabil, tetapi harus
 tetap mengikuti IA final 5 tab.
@@ -263,7 +264,7 @@ Status kode saat ini:
   bottom navigation, dan menu sheet untuk `web_app`.
 - Screen besar seperti `HomeScreen`, `QuranScreen`, `HadithScreen`,
   `IbadahScreen`, `ExploreScreen`, `ProfileScreen`, dan `GlobalSearchScreen`
-  sudah punya opt-in `web_app` surface wrapper tanpa mengubah data/action
+  sudah punya default `web_app` surface wrapper tanpa mengubah data/action
   handler. Sub-screen Ibadah utama (`PrayerScreen`, `QiblaScreen`,
   `KhatamScreen`) juga sudah mendapat wrapper yang sama.
 - `apps/mobile/src/screens/HomeScreen.js` sudah mulai mengikuti boundary baru:
@@ -289,8 +290,8 @@ Area yang kemungkinan kena impact:
 
 Sebelum ada kode behavior baru, ikuti batas ini:
 
-- Default harus tetap `classic`.
-- `web_app` harus opt-in dan bisa dikembalikan ke `classic` dari settings.
+- Default untuk install baru adalah `web_app`.
+- User tetap bisa mengembalikan layout ke `classic` dari settings.
 - Jangan rename tab key: tetap `home`, `quran`, `hadith`, `ibadah`,
   `belajar`, dan internal `profile`.
 - Jangan embed mobile web lewat WebView. `web_app` adalah native layout.
@@ -361,6 +362,6 @@ Minimum verification per phase:
 | Phase | Required checks |
 | --- | --- |
 | Foundation | `apps/mobile/src/__tests__/preferences.test.js`, navigation tests, and profile settings test. |
-| Shell opt-in | Existing `components.test.js` for `TabBar`, new shell/provider tests, and manual switch `classic` -> `web_app` -> `classic`. |
+| Shell default | Existing `components.test.js` for `TabBar`, new shell/provider tests, and manual switch `web_app` -> `classic` -> `web_app`. |
 | Home/Quran | `homeScreen.test.js`, `quranScreen.test.js`, `useQuranReaderPreferences.test.js`, audio player tests, and Android back smoke. |
 | Full rollout | `node scripts/check-feature-parity.js`, full mobile Jest, deep link tests, notification/prayer tests, and real-device smoke for permission, audio, and bottom sheet. |

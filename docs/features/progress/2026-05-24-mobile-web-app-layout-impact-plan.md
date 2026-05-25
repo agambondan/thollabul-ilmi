@@ -30,7 +30,7 @@ opt-in native layout mode, not as a rewrite of the current app.
 | Quran regressions | Do not touch Quran business logic in shell foundation; test audio/actions/preferences before rollout. |
 | Auth/guest confusion | Public content must remain usable without login; personal actions use auth handoff or local-first storage. |
 | Permission drift | Reuse native location/notification flows; no hardcoded district names. |
-| Hard-to-revert UI | Default to `classic`; invalid/failed mode falls back to `classic`. |
+| Hard-to-revert UI | New installs default to `web_app`; explicit `classic` preferences and invalid-value fallback keep the old shell recoverable. |
 
 ## Recommended First Implementation Slice
 
@@ -946,3 +946,44 @@ Results:
 - `git diff --check` passed.
 - Native emulator smoke captured at
   `output/native-smoke/tholabul-webapp-emulator-search-route-after.png`.
+
+## Web App Layout Default Update
+
+Status: completed for making `web_app` the native mobile default layout mode.
+
+Implemented:
+
+- `LayoutModeProvider` now uses `web_app` as the default when no
+  `app-layout-mode` preference is stored.
+- Existing stored preferences still win: users who already selected `classic`
+  keep the classic shell, and invalid stored values still normalize to
+  `classic` as a fail-safe.
+- Profile Appearance uses the same default layout constant, so the settings UI
+  reflects the default instead of hardcoding `classic`.
+- Updated layout docs to record `web_app` as the default and `classic` as a
+  supported fallback.
+
+Scope guardrail:
+
+- This slice changes only the default layout-mode fallback and documentation.
+  It does not remove `classic`, change tab keys, alter screen data/action
+  handlers, or change theme preference behavior.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- layoutModeProvider.test.js mobileAppShell.test.js profileScreen.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted provider/shell/profile tests passed: 3 suites, 40 tests.
+- Full mobile Jest passed: 44 suites, 622 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.

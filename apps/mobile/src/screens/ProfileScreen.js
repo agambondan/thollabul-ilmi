@@ -43,7 +43,7 @@ import { Screen } from '../components/Screen';
 import { SessionCard } from '../components/SessionCard';
 import { useSession } from '../context/SessionContext';
 import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
-import { useLayoutMode } from '../layout/LayoutModeProvider';
+import { defaultLayoutMode, useLayoutMode } from '../layout/LayoutModeProvider';
 import { preferenceKeys, readPreference, writePreference } from '../storage/preferences';
 import { colors, radius, spacing } from '../theme';
 
@@ -244,7 +244,7 @@ function AppearanceSettings({ onUserUpdated, user }) {
     const { setLayoutMode: setAppLayoutMode } = useLayoutMode();
     const [theme, setTheme] = useState('system');
     const [language, setLanguage] = useState(user?.preferred_lang ?? 'idn');
-    const [layoutMode, setLayoutMode] = useState('classic');
+    const [layoutMode, setLayoutMode] = useState(defaultLayoutMode);
     const [saving, setSaving] = useState('');
     const [message, setMessage] = useState('');
 
@@ -254,7 +254,7 @@ function AppearanceSettings({ onUserUpdated, user }) {
             const [storedTheme, storedLanguage, storedLayoutMode] = await Promise.all([
                 readPreference(preferenceKeys.appTheme, 'system'),
                 readPreference(preferenceKeys.appLanguage, user?.preferred_lang ?? 'idn'),
-                readPreference(preferenceKeys.appLayoutMode, 'classic'),
+                readPreference(preferenceKeys.appLayoutMode, defaultLayoutMode),
             ]);
 
             if (!mounted) return;

@@ -1,4 +1,5 @@
 export {
+  defaultLayoutMode,
   layoutModes,
   normalizeLayoutMode,
   readStoredLayoutMode,

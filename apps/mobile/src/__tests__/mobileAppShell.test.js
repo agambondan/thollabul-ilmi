@@ -51,13 +51,24 @@ beforeEach(() => {
 });
 
 describe('MobileAppShell', () => {
-  test('uses classic shell by default', async () => {
+  test('uses web app shell by default', async () => {
     AsyncStorage.getItem.mockResolvedValueOnce(null);
-    const { getByText, getByTestId } = renderShell();
+    const { getByText, getByTestId, queryByTestId } = renderShell();
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+    expect(getByText('Shell content')).toBeTruthy();
+    expect(getByText('Dashboard')).toBeTruthy();
+    expect(queryByTestId('classic-app-shell')).toBeNull();
+  });
+
+  test('uses classic shell when stored mode is classic', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce('"classic"');
+    const { getByText, getByTestId, queryByTestId } = renderShell();
 
     await waitFor(() => expect(getByTestId('classic-app-shell')).toBeTruthy());
     expect(getByText('Shell content')).toBeTruthy();
     expect(getByText('Beranda')).toBeTruthy();
+    expect(queryByTestId('web-app-shell')).toBeNull();
   });
 
   test('falls back to classic shell when stored layout mode is invalid', async () => {

@@ -3,6 +3,7 @@ import React from 'react';
 import { Pressable, Text } from 'react-native';
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import {
+  defaultLayoutMode,
   LayoutModeProvider,
   layoutModes,
   normalizeLayoutMode,
@@ -36,15 +37,22 @@ describe('layout mode normalization', () => {
   });
 
   test('accepts only supported layout modes', () => {
+    expect(defaultLayoutMode).toBe(layoutModes.webApp);
     expect(normalizeLayoutMode(layoutModes.classic)).toBe(layoutModes.classic);
     expect(normalizeLayoutMode(layoutModes.webApp)).toBe(layoutModes.webApp);
     expect(normalizeLayoutMode('broken')).toBe(layoutModes.classic);
     expect(normalizeLayoutMode(null)).toBe(layoutModes.classic);
   });
 
-  test('reads stored mode with classic fallback', async () => {
+  test('reads stored mode with web app default and classic invalid fallback', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce(null);
+    await expect(readStoredLayoutMode()).resolves.toBe(layoutModes.webApp);
+
     AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
     await expect(readStoredLayoutMode()).resolves.toBe(layoutModes.webApp);
+
+    AsyncStorage.getItem.mockResolvedValueOnce('"classic"');
+    await expect(readStoredLayoutMode()).resolves.toBe(layoutModes.classic);
 
     AsyncStorage.getItem.mockResolvedValueOnce('"unexpected"');
     await expect(readStoredLayoutMode()).resolves.toBe(layoutModes.classic);
@@ -87,7 +95,7 @@ describe('LayoutModeProvider', () => {
   });
 
   test('updates mode through context setter', async () => {
-    AsyncStorage.getItem.mockResolvedValueOnce(null);
+    AsyncStorage.getItem.mockResolvedValueOnce('"classic"');
     const { getByText } = render(
       <LayoutModeProvider>
         <LayoutModeProbe />
