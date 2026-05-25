@@ -70,6 +70,13 @@ const LAYOUT_OPTIONS = [
     { key: 'web_app', label: 'Web App', meta: 'Preferensi mode dashboard mobile web untuk rollout bertahap.' },
 ];
 
+const WEB_APP_PROFILE_BG = '#020617';
+const WEB_APP_PROFILE_SURFACE = '#111827';
+const WEB_APP_PROFILE_TILE = '#1e293b';
+const WEB_APP_PROFILE_BORDER = '#243044';
+const WEB_APP_PROFILE_ACCENT = '#34d399';
+const WEB_APP_PROFILE_MUTED = '#94a3b8';
+
 const getResponseUser = (payload) => payload?.data ?? payload;
 
 const normalizeAchievement = (item = {}, options = {}) => {
@@ -856,6 +863,145 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
         );
     }
 
+    if (isWebAppLayout) {
+        const accountActions = user
+            ? [
+                { Icon: Trophy, key: 'leaderboard', label: 'Leaderboard', meta: 'Peringkat streak komunitas', onPress: () => onOpenTab('belajar', { featureKey: 'leaderboard' }) },
+                { Icon: Target, key: 'goals', label: 'Target Belajar', meta: 'Target pembelajaran personal', onPress: () => onOpenTab('belajar', { featureKey: 'goals' }) },
+                { Icon: Settings, key: 'settings', label: 'Pengaturan', meta: 'Akun, tampilan, keamanan', onPress: () => push('settings') },
+                { Icon: LogOut, danger: true, key: 'logout', label: 'Keluar', meta: 'Akhiri sesi perangkat ini', onPress: signOut },
+            ]
+            : [
+                { Icon: User, key: 'login', label: 'Masuk / Daftar', meta: 'Login untuk fitur personal', onPress: () => push('settings-account') },
+                { Icon: Settings, key: 'settings', label: 'Pengaturan', meta: 'Tampilan dan penyimpanan lokal', onPress: () => push('settings') },
+            ];
+
+        return (
+            <ScrollView
+                contentContainerStyle={styles.webAppProfileContent}
+                showsVerticalScrollIndicator={false}
+                style={styles.webAppProfileRoot}
+            >
+                <View testID="profile-web-app-surface" />
+                <View style={styles.webAppProfileHero}>
+                    <View style={styles.webAppAvatar}>
+                        <Text style={styles.webAppAvatarText}>{initials || 'TI'}</Text>
+                    </View>
+                    <Text style={styles.webAppEyebrow}>AKUN</Text>
+                    <Text style={styles.webAppProfileName}>{user?.name || 'Thullabul Ilmi'}</Text>
+                    <Text style={styles.webAppProfileEmail}>{user?.email || 'Belum masuk ke akun'}</Text>
+                    <Pressable
+                        accessibilityLabel="Buka pengaturan profil"
+                        android_ripple={{ color: '#1f2937', borderless: false }}
+                        onPress={() => push('settings')}
+                        style={styles.webAppSettingsButton}
+                    >
+                        <Settings color="#ffffff" size={16} strokeWidth={2.2} />
+                        <Text style={styles.webAppSettingsText}>Pengaturan</Text>
+                    </Pressable>
+                </View>
+
+                {stats ? (
+                    <View style={styles.webAppStatsGrid}>
+                        <View style={styles.webAppStatTile}>
+                            <Text style={styles.webAppStatValue}>{stats.points.toLocaleString('id-ID')}</Text>
+                            <Text style={styles.webAppStatLabel}>Total Poin</Text>
+                        </View>
+                        <View style={styles.webAppStatTile}>
+                            <Text style={styles.webAppStatValue}>{stats.streak}</Text>
+                            <Text style={styles.webAppStatLabel}>Hari Streak</Text>
+                        </View>
+                    </View>
+                ) : null}
+
+                {stats && (stats.hafalanCount !== null || stats.sholatWeekly !== null || stats.tilawahPages !== null) ? (
+                    <View style={styles.webAppSection}>
+                        <Text style={styles.webAppSectionTitle}>RINGKASAN PROGRESS</Text>
+                        <View style={styles.webAppProgressGrid}>
+                            {stats.hafalanCount !== null ? (
+                                <Pressable onPress={() => onOpenTab('quran', { tab: 'hafalan' })} style={styles.webAppProgressTile}>
+                                    <BookOpen color={WEB_APP_PROFILE_ACCENT} size={19} strokeWidth={2.2} />
+                                    <Text style={styles.webAppProgressValue}>{stats.hafalanCount}</Text>
+                                    <Text style={styles.webAppProgressLabel}>Surah Hafalan</Text>
+                                </Pressable>
+                            ) : null}
+                            {stats.sholatWeekly !== null ? (
+                                <Pressable onPress={() => onOpenTab('ibadah')} style={styles.webAppProgressTile}>
+                                    <Target color={WEB_APP_PROFILE_ACCENT} size={19} strokeWidth={2.2} />
+                                    <Text style={styles.webAppProgressValue}>{stats.sholatWeekly}%</Text>
+                                    <Text style={styles.webAppProgressLabel}>Sholat Minggu Ini</Text>
+                                </Pressable>
+                            ) : null}
+                            {stats.tilawahPages !== null ? (
+                                <Pressable onPress={() => onOpenTab('quran')} style={styles.webAppProgressTile}>
+                                    <Trophy color={WEB_APP_PROFILE_ACCENT} size={19} strokeWidth={2.2} />
+                                    <Text style={styles.webAppProgressValue}>{stats.tilawahPages}</Text>
+                                    <Text style={styles.webAppProgressLabel}>Halaman Tilawah</Text>
+                                </Pressable>
+                            ) : null}
+                        </View>
+                    </View>
+                ) : null}
+
+                <View style={styles.webAppSection}>
+                    <View style={styles.webAppSectionHeader}>
+                        <Text style={styles.webAppSectionTitle}>PENCAPAIAN</Text>
+                        {achievementsLoading ? <ActivityIndicator color={WEB_APP_PROFILE_ACCENT} size="small" /> : null}
+                        <Pressable
+                            accessibilityLabel="Lihat semua pencapaian"
+                            onPress={() => push('achievements')}
+                            style={styles.webAppSectionLink}
+                        >
+                            <Text style={styles.webAppSectionLinkText}>Lihat semua</Text>
+                            <ChevronRight color={WEB_APP_PROFILE_ACCENT} size={14} strokeWidth={2.4} />
+                        </Pressable>
+                    </View>
+                    {achievementsMessage ? <Text style={styles.webAppSectionHint}>{achievementsMessage}</Text> : null}
+                    <View style={styles.webAppBadgeGrid}>
+                        {achievements.slice(0, 6).map((badge) => (
+                            <Pressable
+                                android_ripple={{ color: '#1f2937', borderless: false }}
+                                key={badge.code ?? badge.label}
+                                onPress={() => push('achievements')}
+                                style={[styles.webAppBadge, !badge.unlocked && styles.webAppBadgeLocked]}
+                            >
+                                <Text style={styles.webAppBadgeIcon}>{badge.unlocked ? badge.icon : '•'}</Text>
+                                <Text numberOfLines={2} style={[styles.webAppBadgeLabel, !badge.unlocked && styles.webAppBadgeLabelLocked]}>
+                                    {badge.label}
+                                </Text>
+                            </Pressable>
+                        ))}
+                    </View>
+                </View>
+
+                <View style={styles.webAppSection}>
+                    <Text style={styles.webAppSectionTitle}>AKSI AKUN</Text>
+                    <View style={styles.webAppActionGrid}>
+                        {accountActions.map((item) => {
+                            const Icon = item.Icon;
+                            return (
+                                <Pressable
+                                    android_ripple={{ color: '#1f2937', borderless: false }}
+                                    key={item.key}
+                                    onPress={item.onPress}
+                                    style={[styles.webAppActionTile, item.danger && styles.webAppActionTileDanger]}
+                                >
+                                    <View style={[styles.webAppActionIcon, item.danger && styles.webAppActionIconDanger]}>
+                                        <Icon color={item.danger ? '#fca5a5' : WEB_APP_PROFILE_ACCENT} size={18} strokeWidth={2.2} />
+                                    </View>
+                                    <Text style={[styles.webAppActionLabel, item.danger && styles.webAppActionLabelDanger]}>
+                                        {item.label}
+                                    </Text>
+                                    {item.meta ? <Text style={styles.webAppActionMeta}>{item.meta}</Text> : null}
+                                </Pressable>
+                            );
+                        })}
+                    </View>
+                </View>
+            </ScrollView>
+        );
+    }
+
     return (
         <Screen
             contentStyle={isWebAppLayout ? styles.webAppSurface : null}
@@ -1030,6 +1176,250 @@ const styles = StyleSheet.create({
         backgroundColor: '#f8fafc',
         borderRadius: radius.md,
         padding: spacing.sm,
+    },
+    webAppProfileRoot: {
+        backgroundColor: WEB_APP_PROFILE_BG,
+        flex: 1,
+    },
+    webAppProfileContent: {
+        backgroundColor: WEB_APP_PROFILE_BG,
+        flexGrow: 1,
+        padding: spacing.md,
+        paddingBottom: spacing.xl,
+    },
+    webAppProfileHero: {
+        alignItems: 'center',
+        backgroundColor: WEB_APP_PROFILE_SURFACE,
+        borderColor: WEB_APP_PROFILE_BORDER,
+        borderRadius: radius.md,
+        borderWidth: 1,
+        padding: spacing.lg,
+    },
+    webAppAvatar: {
+        alignItems: 'center',
+        backgroundColor: '#059669',
+        borderRadius: 34,
+        height: 68,
+        justifyContent: 'center',
+        marginBottom: spacing.md,
+        width: 68,
+    },
+    webAppAvatarText: {
+        color: '#ffffff',
+        fontSize: 22,
+        fontWeight: '900',
+    },
+    webAppEyebrow: {
+        color: WEB_APP_PROFILE_ACCENT,
+        fontSize: 11,
+        fontWeight: '900',
+        letterSpacing: 0,
+        marginBottom: 4,
+    },
+    webAppProfileName: {
+        color: '#f8fafc',
+        fontSize: 24,
+        fontWeight: '900',
+        letterSpacing: 0,
+        textAlign: 'center',
+    },
+    webAppProfileEmail: {
+        color: WEB_APP_PROFILE_MUTED,
+        fontSize: 13,
+        lineHeight: 19,
+        marginTop: spacing.xs,
+        textAlign: 'center',
+    },
+    webAppSettingsButton: {
+        alignItems: 'center',
+        backgroundColor: '#059669',
+        borderRadius: 10,
+        flexDirection: 'row',
+        gap: spacing.xs,
+        justifyContent: 'center',
+        marginTop: spacing.md,
+        minHeight: 42,
+        paddingHorizontal: spacing.md,
+    },
+    webAppSettingsText: {
+        color: '#ffffff',
+        fontSize: 13,
+        fontWeight: '900',
+    },
+    webAppStatsGrid: {
+        flexDirection: 'row',
+        gap: spacing.sm,
+        marginTop: spacing.lg,
+    },
+    webAppStatTile: {
+        alignItems: 'center',
+        backgroundColor: WEB_APP_PROFILE_TILE,
+        borderColor: WEB_APP_PROFILE_BORDER,
+        borderRadius: 8,
+        borderWidth: 1,
+        flex: 1,
+        padding: spacing.md,
+    },
+    webAppStatValue: {
+        color: WEB_APP_PROFILE_ACCENT,
+        fontSize: 24,
+        fontWeight: '900',
+    },
+    webAppStatLabel: {
+        color: '#cbd5e1',
+        fontSize: 11,
+        fontWeight: '800',
+        marginTop: spacing.xs,
+        textAlign: 'center',
+        textTransform: 'uppercase',
+    },
+    webAppSection: {
+        marginTop: spacing.lg,
+    },
+    webAppSectionHeader: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: spacing.sm,
+        marginBottom: spacing.sm,
+    },
+    webAppSectionTitle: {
+        color: WEB_APP_PROFILE_ACCENT,
+        flex: 1,
+        fontSize: 11,
+        fontWeight: '900',
+        letterSpacing: 0,
+    },
+    webAppSectionLink: {
+        alignItems: 'center',
+        backgroundColor: WEB_APP_PROFILE_TILE,
+        borderColor: WEB_APP_PROFILE_BORDER,
+        borderRadius: 8,
+        borderWidth: 1,
+        flexDirection: 'row',
+        gap: 2,
+        minHeight: 30,
+        paddingHorizontal: spacing.sm,
+    },
+    webAppSectionLinkText: {
+        color: WEB_APP_PROFILE_ACCENT,
+        fontSize: 11,
+        fontWeight: '900',
+    },
+    webAppSectionHint: {
+        color: WEB_APP_PROFILE_MUTED,
+        fontSize: 12,
+        lineHeight: 17,
+        marginBottom: spacing.sm,
+    },
+    webAppProgressGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: spacing.sm,
+    },
+    webAppProgressTile: {
+        alignItems: 'center',
+        backgroundColor: WEB_APP_PROFILE_TILE,
+        borderColor: WEB_APP_PROFILE_BORDER,
+        borderRadius: 8,
+        borderWidth: 1,
+        flexBasis: '31%',
+        flexGrow: 1,
+        minHeight: 98,
+        padding: spacing.sm,
+    },
+    webAppProgressValue: {
+        color: '#f8fafc',
+        fontSize: 20,
+        fontWeight: '900',
+        marginTop: spacing.xs,
+    },
+    webAppProgressLabel: {
+        color: '#cbd5e1',
+        fontSize: 10,
+        fontWeight: '800',
+        marginTop: 3,
+        textAlign: 'center',
+        textTransform: 'uppercase',
+    },
+    webAppBadgeGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: spacing.sm,
+    },
+    webAppBadge: {
+        alignItems: 'center',
+        backgroundColor: WEB_APP_PROFILE_TILE,
+        borderColor: WEB_APP_PROFILE_BORDER,
+        borderRadius: 8,
+        borderWidth: 1,
+        flexBasis: '31%',
+        flexGrow: 1,
+        minHeight: 96,
+        padding: spacing.sm,
+    },
+    webAppBadgeLocked: {
+        opacity: 0.72,
+    },
+    webAppBadgeIcon: {
+        color: '#f8fafc',
+        fontSize: 22,
+        marginBottom: spacing.xs,
+    },
+    webAppBadgeLabel: {
+        color: '#f8fafc',
+        fontSize: 11,
+        fontWeight: '800',
+        lineHeight: 15,
+        textAlign: 'center',
+    },
+    webAppBadgeLabelLocked: {
+        color: WEB_APP_PROFILE_MUTED,
+    },
+    webAppActionGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: spacing.sm,
+    },
+    webAppActionTile: {
+        backgroundColor: WEB_APP_PROFILE_TILE,
+        borderColor: WEB_APP_PROFILE_BORDER,
+        borderRadius: 8,
+        borderWidth: 1,
+        flexBasis: '48%',
+        flexGrow: 1,
+        minHeight: 112,
+        padding: spacing.md,
+    },
+    webAppActionTileDanger: {
+        backgroundColor: '#2a1720',
+        borderColor: '#7f1d1d',
+    },
+    webAppActionIcon: {
+        alignItems: 'center',
+        backgroundColor: 'rgba(52, 211, 153, 0.10)',
+        borderRadius: 8,
+        height: 34,
+        justifyContent: 'center',
+        marginBottom: spacing.sm,
+        width: 34,
+    },
+    webAppActionIconDanger: {
+        backgroundColor: 'rgba(248, 113, 113, 0.12)',
+    },
+    webAppActionLabel: {
+        color: '#f8fafc',
+        fontSize: 15,
+        fontWeight: '900',
+        letterSpacing: 0,
+    },
+    webAppActionLabelDanger: {
+        color: '#fecaca',
+    },
+    webAppActionMeta: {
+        color: '#cbd5e1',
+        fontSize: 12,
+        lineHeight: 17,
+        marginTop: 4,
     },
     subHeader: {
         alignItems: 'center',

@@ -939,6 +939,65 @@ git diff --check
 
 Results:
 
+- Targeted Profile test passed: 1 suite, 17 tests.
+- Full mobile Jest passed: 44 suites, 622 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-profile-route-after.png`.
+
+Results:
+
+- Targeted Explore test passed: 1 suite, 21 tests.
+- Full mobile Jest passed: 44 suites, 622 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-belajar-route-after.png`.
+
+## Web App Profile Dashboard Parity
+
+Status: completed for the native `web_app` Profile main screen visual parity
+pass.
+
+Implemented:
+
+- `ProfileScreen` keeps the classic paper profile card, stats cards, progress
+  cards, achievements grid, menu rows, and sub-screen settings flow on the
+  `classic` path.
+- `web_app` mode now renders the Profile main screen with a dedicated dark
+  dashboard account surface: `AKUN` hero, larger avatar, account email/status,
+  green settings CTA, dark stats tiles, progress tiles, achievement tiles, and
+  account action tiles.
+- Settings, account, notifications, storage, appearance, security, achievements
+  detail, sign-out, language preference, and layout-mode saving still reuse the
+  existing handlers and sub-screen paths.
+- Added Profile test coverage to ensure the `web_app` main screen uses the
+  dashboard surface instead of the classic `Screen` title path.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Profile main screen presentation in
+  `web_app`. It does not change classic Profile, session behavior, account
+  update APIs, password update APIs, notification center behavior, offline
+  packs, layout-mode persistence, achievements fetching, or Profile sub-screen
+  navigation.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- profileScreen.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
 - Targeted Explore test passed: 1 suite, 21 tests.
 - Full mobile Jest passed: 44 suites, 622 tests.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43

@@ -119,12 +119,17 @@ describe('ProfileScreen', () => {
 
   test('uses web app Profile surface when web app layout is active', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
-    const { getByTestId, queryByTestId } = render(<ProfileScreen isActive />);
+    const { getAllByText, getByText, getByTestId, queryByTestId } = render(<ProfileScreen isActive />);
 
     await waitFor(() => {
       expect(getByTestId('profile-web-app-surface')).toBeTruthy();
     });
     expect(queryByTestId('profile-classic-surface')).toBeNull();
+    expect(getByText('AKUN')).toBeTruthy();
+    expect(getAllByText('Pengaturan').length).toBeGreaterThan(0);
+    expect(getByText('PENCAPAIAN')).toBeTruthy();
+    expect(getByText('AKSI AKUN')).toBeTruthy();
+    expect(queryByTestId('screen-title')).toBeNull();
   });
 
   test('renders user info when logged in', async () => {
