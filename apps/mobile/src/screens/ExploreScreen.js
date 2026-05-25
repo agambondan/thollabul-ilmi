@@ -269,6 +269,45 @@ const getHafalanItemProgress = (item = {}) => {
   if (status === 'in_progress') return 50;
   return 0;
 };
+const getMurojaahDays = (item = {}) => {
+  const raw = item?.raw ?? {};
+  const explicit = parseGoalNumber(raw.days ?? raw.days_since_review ?? raw.daysSinceReview, NaN);
+  if (Number.isFinite(explicit)) return explicit;
+  const reviewedAt = raw.last_reviewed_at ?? raw.reviewed_at ?? raw.lastReviewAt ?? item.date;
+  if (!reviewedAt) return null;
+  const parsed = new Date(`${reviewedAt}`.includes('T') ? reviewedAt : `${reviewedAt}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return null;
+  return Math.max(0, Math.floor((Date.now() - parsed.getTime()) / 86400000));
+};
+const getMurojaahStatus = (item = {}) => {
+  const days = getMurojaahDays(item);
+  if (days === null || days >= 14) return 'urgent';
+  if (days < 7) return 'recent';
+  return 'due';
+};
+const getMurojaahStatusLabel = (item = {}) => {
+  const days = getMurojaahDays(item);
+  if (days === null) return 'Belum direview';
+  if (days >= 14) return `${days} hari urgent`;
+  return `${days} hari lalu`;
+};
+const getMurojaahSummary = (items = []) => ({
+  recent: items.filter((item) => getMurojaahStatus(item) === 'recent').length,
+  total: items.length,
+  urgent: items.filter((item) => getMurojaahStatus(item) === 'urgent').length,
+});
+const getMurojaahItemTitle = (item = {}, index = 0) => {
+  const raw = item?.raw ?? {};
+  return pickText(raw.surah_name, raw.surah?.latin_name, raw.surah?.name_latin, raw.name, item.title, `Surah ${index + 1}`);
+};
+const getMurojaahMetaLine = (item = {}) => {
+  const raw = item?.raw ?? {};
+  return [
+    raw.surah_number ?? raw.surah_id ?? raw.number ? `Surah ${raw.surah_number ?? raw.surah_id ?? raw.number}` : '',
+    raw.juz ? `Juz ${raw.juz}` : '',
+    raw.last_reviewed_at ? `Review: ${formatNoteDate(raw.last_reviewed_at)}` : '',
+  ].filter(Boolean).join(' · ');
+};
 const normalizeAsmaulName = (item = {}, index = 0) => ({
   arabic: pickText(item.arabic, item.translation?.arab, item.translation?.ar, item.name),
   id: item.id ?? item.number ?? index + 1,
@@ -3778,6 +3817,143 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     );
   };
 
+  const renderWebAppMurojaahCard = (item, index) => {
+    const status = getMurojaahStatus(item);
+    const statusLabel = getMurojaahStatusLabel(item);
+    const metaLine = getMurojaahMetaLine(item);
+
+    return (
+      <Pressable
+        android_ripple={{ color: 'rgba(52, 211, 153, 0.12)', borderless: false }}
+        key={`${getExploreItemKey(item)}-${index}`}
+        onLongPress={() => setItemActionSheet({ visible: true, item })}
+        onPress={() => openItemDetail(item)}
+        style={styles.webAppMurojaahCard}
+        testID="web-app-murojaah-card"
+      >
+        <View style={styles.webAppGoalHeader}>
+          <View style={styles.webAppGoalIcon}>
+            {status === 'recent' ? (
+              <CheckCircle2 color={WEB_APP_EXPLORE_ACCENT} size={18} strokeWidth={2.2} />
+            ) : (
+              <Flag color={status === 'urgent' ? '#f87171' : '#fbbf24'} size={18} strokeWidth={2.2} />
+            )}
+          </View>
+          <View style={styles.webAppGoalTitleBlock}>
+            <Text numberOfLines={2} style={styles.webAppBookmarkTitle}>
+              {getMurojaahItemTitle(item, index)}
+            </Text>
+            {metaLine ? (
+              <Text numberOfLines={1} style={styles.webAppBookmarkText}>
+                {metaLine}
+              </Text>
+            ) : null}
+          </View>
+          <Text
+            style={[
+              styles.webAppMurojaahStatus,
+              status === 'recent' && styles.webAppHafalanStatusDone,
+              status === 'due' && styles.webAppHafalanStatusProgress,
+              status === 'urgent' && styles.webAppMurojaahStatusUrgent,
+            ]}
+          >
+            {statusLabel}
+          </Text>
+        </View>
+        {item.body ? (
+          <Text numberOfLines={3} style={styles.webAppGoalBody}>
+            {item.body}
+          </Text>
+        ) : null}
+        <View style={styles.webAppBookmarkFooter}>
+          <Text style={styles.webAppBookmarkHint}>
+            {status === 'recent' ? 'Sudah direview pekan ini' : 'Prioritas murajaah'}
+          </Text>
+          <Pressable
+            hitSlop={10}
+            onPress={() => setItemActionSheet({ visible: true, item })}
+            style={styles.webAppBookmarkManage}
+            testID="web-app-murojaah-manage"
+          >
+            <Text style={styles.webAppBookmarkManageText}>Kelola</Text>
+          </Pressable>
+        </View>
+      </Pressable>
+    );
+  };
+
+  const renderWebAppMurojaahScreen = () => {
+    const summary = getMurojaahSummary(visibleItems);
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppBookmarksContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppBookmarksRoot}
+      >
+        <View testID="explore-web-app-murojaah-surface" />
+        <View style={styles.webAppBookmarksHeader}>
+          <Pressable
+            accessibilityLabel="Kembali ke Belajar"
+            onPress={clearFeature}
+            style={styles.webAppBookmarksBack}
+            testID="web-app-murojaah-back"
+          >
+            <Text style={styles.webAppBookmarksBackText}>Kembali</Text>
+          </Pressable>
+          <Text style={styles.webAppCatalogEyebrow}>PROGRESS SAYA</Text>
+          <View style={styles.webAppBookmarksTitleRow}>
+            <Text style={styles.webAppCatalogTitle}>Murojaah</Text>
+            <Text style={styles.webAppBookmarksCount}>{summary.total} surah</Text>
+          </View>
+          <Text style={styles.webAppCatalogSubtitle}>
+            Jadwal ulang hafalan, prioritas review, dan sesi murajaah personal.
+          </Text>
+        </View>
+
+        {error ? <Text style={styles.webAppBookmarksError}>{error}</Text> : null}
+        {loading ? (
+          <View style={styles.webAppBookmarksState}>
+            <ActivityIndicator color={WEB_APP_EXPLORE_ACCENT} size="small" />
+            <Text style={styles.webAppBookmarksStateText}>Memuat murojaah...</Text>
+          </View>
+        ) : null}
+        {!loading && !error && !items.length ? (
+          <View style={styles.webAppBookmarksEmpty}>
+            <BookOpen color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
+            <Text style={styles.webAppBookmarksEmptyTitle}>Belum ada jadwal murojaah.</Text>
+            <Text style={styles.webAppBookmarksEmptyText}>
+              Tambahkan hafalan dulu agar jadwal review bisa disusun.
+            </Text>
+          </View>
+        ) : null}
+        {!loading && !error && visibleItems.length > 0 ? (
+          <>
+            <View style={styles.webAppGoalsSummary}>
+              <View style={styles.webAppGoalSummaryPill}>
+                <BookOpen color={WEB_APP_EXPLORE_ACCENT} size={14} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{summary.total} total</Text>
+              </View>
+              <View style={styles.webAppGoalSummaryPill}>
+                <CheckCircle2 color={WEB_APP_EXPLORE_ACCENT} size={14} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{summary.recent} reviewed</Text>
+              </View>
+              <View style={styles.webAppGoalSummaryPill}>
+                <Flag color="#f87171" size={14} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{summary.urgent} urgent</Text>
+              </View>
+            </View>
+            <View style={styles.webAppGoalsList}>
+              {visibleItems.map(renderWebAppMurojaahCard)}
+            </View>
+          </>
+        ) : null}
+        {renderItemActionSheet()}
+      </ScrollView>
+    );
+  };
+
   const renderWebAppNotificationsScreen = () => (
     <ScrollView
       contentContainerStyle={styles.webAppNotificationsContent}
@@ -3871,6 +4047,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   if (activeFeature?.key === 'hafalan' && isWebAppLayout) {
     return renderWebAppHafalanScreen();
+  }
+
+  if (activeFeature?.key === 'murojaah' && isWebAppLayout) {
+    return renderWebAppMurojaahScreen();
   }
 
   if (activeFeature?.type === 'notifications' && isWebAppLayout) {
@@ -4479,6 +4659,32 @@ const styles = StyleSheet.create({
     height: 8,
     marginTop: spacing.md,
     overflow: 'hidden',
+  },
+  webAppMurojaahCard: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    minHeight: 126,
+    padding: spacing.md,
+  },
+  webAppMurojaahStatus: {
+    backgroundColor: '#1f2937',
+    borderColor: '#374151',
+    borderRadius: 999,
+    borderWidth: 1,
+    color: '#d1d5db',
+    fontSize: 11,
+    fontWeight: '900',
+    maxWidth: 104,
+    overflow: 'hidden',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+  },
+  webAppMurojaahStatusUrgent: {
+    backgroundColor: 'rgba(248, 113, 113, 0.12)',
+    borderColor: 'rgba(248, 113, 113, 0.32)',
+    color: '#fecaca',
   },
   webAppSurface: {
     backgroundColor: '#f8fafc',

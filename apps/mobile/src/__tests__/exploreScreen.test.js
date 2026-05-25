@@ -212,6 +212,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'goals', title: 'Target Belajar', subtitle: 'Target pembelajaran personal', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/goals' },
     { key: 'muhasabah', title: 'Muhasabah', subtitle: 'Jurnal refleksi diri', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/muhasabah' },
     { key: 'hafalan', title: 'Hafalan', subtitle: 'Ringkasan hafalan Quran', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/hafalan/summary' },
+    { key: 'murojaah', title: 'Murojaah', subtitle: 'Jadwal ulang hafalan', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/murojaah/session' },
     { key: 'community-feed', title: 'Komunitas', subtitle: 'Refleksi', group: 'Ilmu', type: 'feed' },
     { key: 'kajian', title: 'Kajian', subtitle: 'Sesi belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/kajian' },
     { key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi seputar Islam', group: 'Ilmu', type: 'forum' },
@@ -245,7 +246,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'personal',
       label: 'Personal',
       meta: 'Akun',
-      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications', 'goals', 'muhasabah', 'hafalan'].includes(f.key)),
+      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications', 'goals', 'muhasabah', 'hafalan', 'murojaah'].includes(f.key)),
     },
   ];
 
@@ -638,6 +639,67 @@ describe('ExploreScreen', () => {
 
     expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
       expect.objectContaining({ key: 'hafalan', endpoint: '/api/v1/hafalan/summary' }),
+      { page: 0, size: 20 },
+    );
+  });
+
+  test('uses dashboard Murojaah route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useSession.mockReturnValue({
+      ...mockUseSession(),
+      session: { token: 'abc' },
+      user: { id: '1', name: 'Test', email: 'test@test.com' },
+    });
+    personalApi.getBookmarks.mockResolvedValue([]);
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 'murojaah-1',
+          title: 'Al-Mulk',
+          body: 'Review pekan ini sudah lancar.',
+          meta: 'recent',
+          raw: {
+            days_since_review: 3,
+            last_reviewed_at: '2026-05-23',
+            surah_name: 'Al-Mulk',
+            surah_number: 67,
+          },
+        },
+        {
+          id: 'murojaah-2',
+          title: 'Yasin',
+          body: 'Butuh review segera.',
+          meta: 'urgent',
+          raw: {
+            days_since_review: 16,
+            surah_name: 'Yasin',
+            surah_number: 36,
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getByText, getByTestId, queryByTestId } = await renderExploreScreen({
+      deepLinkTarget: { id: 'murojaah-route', params: { featureKey: 'murojaah' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-murojaah-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('PROGRESS SAYA')).toBeTruthy();
+      expect(getByText('Murojaah')).toBeTruthy();
+      expect(getByText('2 surah')).toBeTruthy();
+      expect(getByText('2 total')).toBeTruthy();
+      expect(getByText('1 reviewed')).toBeTruthy();
+      expect(getByText('1 urgent')).toBeTruthy();
+      expect(getByText('Al-Mulk')).toBeTruthy();
+      expect(getByText('Yasin')).toBeTruthy();
+      expect(getAllByTestId('web-app-murojaah-card')).toHaveLength(2);
+    });
+
+    expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
+      expect.objectContaining({ key: 'murojaah', endpoint: '/api/v1/murojaah/session' }),
       { page: 0, size: 20 },
     );
   });
