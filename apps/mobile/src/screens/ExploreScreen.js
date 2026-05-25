@@ -117,6 +117,11 @@ const MUHASABAH_MOOD_LABELS = {
   berat: 'Berat',
   syukur: 'Syukur',
 };
+const HAFALAN_STATUS_LABELS = {
+  in_progress: 'Proses',
+  memorized: 'Hafal',
+  not_started: 'Belum',
+};
 
 const emptyUserWirdForm = {
   arabic: '',
@@ -202,6 +207,67 @@ const getMuhasabahDateLabel = (item = {}) => {
 const getMuhasabahContent = (item = {}) => {
   const raw = item?.raw ?? {};
   return pickText(raw.content, raw.notes, raw.note, item.body, item.content, item.title);
+};
+const normalizeHafalanStatus = (value = '') => {
+  const status = `${value}`.trim().toLowerCase();
+  if (['hafal', 'memorized', 'selesai', 'done'].includes(status)) return 'memorized';
+  if (['sedang', 'in_progress', 'progress', 'proses'].includes(status)) return 'in_progress';
+  return 'not_started';
+};
+const getHafalanStatus = (item = {}) => {
+  const raw = item?.raw ?? {};
+  return normalizeHafalanStatus(raw.status ?? item.status ?? item.meta);
+};
+const getHafalanStatusLabel = (status = '') =>
+  HAFALAN_STATUS_LABELS[normalizeHafalanStatus(status)] ?? HAFALAN_STATUS_LABELS.not_started;
+const getHafalanSummary = (items = []) => {
+  const summary = items.length === 1 ? items[0]?.raw ?? {} : {};
+  const memorizedFromSummary = parseGoalNumber(
+    summary.memorized_count ?? summary.memorized ?? summary.hafalan ?? summary.completed,
+    NaN,
+  );
+  const inProgressFromSummary = parseGoalNumber(
+    summary.in_progress_count ?? summary.in_progress ?? summary.progressing,
+    NaN,
+  );
+  const totalFromSummary = parseGoalNumber(
+    summary.total ?? summary.total_surah ?? summary.surah_count ?? summary.total_count,
+    NaN,
+  );
+  const memorized = Number.isFinite(memorizedFromSummary)
+    ? memorizedFromSummary
+    : items.filter((item) => getHafalanStatus(item) === 'memorized').length;
+  const inProgress = Number.isFinite(inProgressFromSummary)
+    ? inProgressFromSummary
+    : items.filter((item) => getHafalanStatus(item) === 'in_progress').length;
+  const total = Number.isFinite(totalFromSummary) ? totalFromSummary : items.length;
+  return {
+    inProgress,
+    memorized,
+    notStarted: Math.max(0, total - memorized - inProgress),
+    total,
+  };
+};
+const getHafalanItemTitle = (item = {}, index = 0) => {
+  const raw = item?.raw ?? {};
+  return pickText(raw.surah_name, raw.surah?.latin_name, raw.surah?.name_latin, raw.name, item.title, `Surah ${index + 1}`);
+};
+const getHafalanMetaLine = (item = {}) => {
+  const raw = item?.raw ?? {};
+  return [
+    raw.surah_number ?? raw.surah_id ? `Surah ${raw.surah_number ?? raw.surah_id}` : '',
+    raw.juz ? `Juz ${raw.juz}` : '',
+    raw.last_reviewed_at ? `Review: ${formatNoteDate(raw.last_reviewed_at)}` : '',
+  ].filter(Boolean).join(' · ');
+};
+const getHafalanItemProgress = (item = {}) => {
+  const raw = item?.raw ?? {};
+  const explicit = parseGoalNumber(raw.progress ?? raw.percent ?? raw.percentage, NaN);
+  if (Number.isFinite(explicit)) return Math.min(100, Math.max(0, explicit));
+  const status = getHafalanStatus(item);
+  if (status === 'memorized') return 100;
+  if (status === 'in_progress') return 50;
+  return 0;
 };
 const normalizeAsmaulName = (item = {}, index = 0) => ({
   arabic: pickText(item.arabic, item.translation?.arab, item.translation?.ar, item.name),
@@ -3561,6 +3627,157 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     );
   };
 
+  const renderWebAppHafalanCard = (item, index) => {
+    const status = getHafalanStatus(item);
+    const statusLabel = getHafalanStatusLabel(status);
+    const progress = getHafalanItemProgress(item);
+    const metaLine = getHafalanMetaLine(item);
+
+    return (
+      <Pressable
+        android_ripple={{ color: 'rgba(52, 211, 153, 0.12)', borderless: false }}
+        key={`${getExploreItemKey(item)}-${index}`}
+        onLongPress={() => setItemActionSheet({ visible: true, item })}
+        onPress={() => openItemDetail(item)}
+        style={styles.webAppHafalanCard}
+        testID="web-app-hafalan-card"
+      >
+        <View style={styles.webAppGoalHeader}>
+          <View style={styles.webAppGoalIcon}>
+            {status === 'memorized' ? (
+              <CheckCircle2 color={WEB_APP_EXPLORE_ACCENT} size={18} strokeWidth={2.2} />
+            ) : (
+              <BookOpen color={WEB_APP_EXPLORE_ACCENT} size={18} strokeWidth={2.2} />
+            )}
+          </View>
+          <View style={styles.webAppGoalTitleBlock}>
+            <Text numberOfLines={2} style={styles.webAppBookmarkTitle}>
+              {getHafalanItemTitle(item, index)}
+            </Text>
+            {metaLine ? (
+              <Text numberOfLines={1} style={styles.webAppBookmarkText}>
+                {metaLine}
+              </Text>
+            ) : null}
+          </View>
+          <Text
+            style={[
+              styles.webAppHafalanStatus,
+              status === 'memorized' && styles.webAppHafalanStatusDone,
+              status === 'in_progress' && styles.webAppHafalanStatusProgress,
+            ]}
+          >
+            {statusLabel}
+          </Text>
+        </View>
+        {item.body ? (
+          <Text numberOfLines={3} style={styles.webAppGoalBody}>
+            {item.body}
+          </Text>
+        ) : null}
+        <View style={styles.webAppGoalProgressTrack}>
+          <View
+            style={[
+              styles.webAppGoalProgressFill,
+              status !== 'memorized' && styles.webAppHafalanProgressFill,
+              { width: `${progress}%` },
+            ]}
+            testID="web-app-hafalan-progress-fill"
+          />
+        </View>
+        <View style={styles.webAppBookmarkFooter}>
+          <Text style={styles.webAppBookmarkHint}>{progress}% hafalan</Text>
+          <Pressable
+            hitSlop={10}
+            onPress={() => setItemActionSheet({ visible: true, item })}
+            style={styles.webAppBookmarkManage}
+            testID="web-app-hafalan-manage"
+          >
+            <Text style={styles.webAppBookmarkManageText}>Kelola</Text>
+          </Pressable>
+        </View>
+      </Pressable>
+    );
+  };
+
+  const renderWebAppHafalanScreen = () => {
+    const summary = getHafalanSummary(visibleItems);
+    const progress = summary.total > 0 ? Math.round((summary.memorized / summary.total) * 100) : 0;
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppBookmarksContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppBookmarksRoot}
+      >
+        <View testID="explore-web-app-hafalan-surface" />
+        <View style={styles.webAppBookmarksHeader}>
+          <Pressable
+            accessibilityLabel="Kembali ke Belajar"
+            onPress={clearFeature}
+            style={styles.webAppBookmarksBack}
+            testID="web-app-hafalan-back"
+          >
+            <Text style={styles.webAppBookmarksBackText}>Kembali</Text>
+          </Pressable>
+          <Text style={styles.webAppCatalogEyebrow}>PROGRESS SAYA</Text>
+          <View style={styles.webAppBookmarksTitleRow}>
+            <Text style={styles.webAppCatalogTitle}>Hafalan</Text>
+            <Text style={styles.webAppBookmarksCount}>
+              {summary.memorized}/{summary.total} surah
+            </Text>
+          </View>
+          <Text style={styles.webAppCatalogSubtitle}>
+            Ringkasan hafalan Quran, status murajaah, dan progres personal.
+          </Text>
+          <View style={styles.webAppHafalanProgressTrack}>
+            <View style={[styles.webAppGoalProgressFill, { width: `${progress}%` }]} />
+          </View>
+        </View>
+
+        {error ? <Text style={styles.webAppBookmarksError}>{error}</Text> : null}
+        {loading ? (
+          <View style={styles.webAppBookmarksState}>
+            <ActivityIndicator color={WEB_APP_EXPLORE_ACCENT} size="small" />
+            <Text style={styles.webAppBookmarksStateText}>Memuat hafalan...</Text>
+          </View>
+        ) : null}
+        {!loading && !error && !items.length ? (
+          <View style={styles.webAppBookmarksEmpty}>
+            <BookOpen color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
+            <Text style={styles.webAppBookmarksEmptyTitle}>Belum ada data hafalan.</Text>
+            <Text style={styles.webAppBookmarksEmptyText}>
+              Kelola hafalan dari dashboard web atau lanjutkan setelah masuk akun.
+            </Text>
+          </View>
+        ) : null}
+        {!loading && !error && visibleItems.length > 0 ? (
+          <>
+            <View style={styles.webAppGoalsSummary}>
+              <View style={styles.webAppGoalSummaryPill}>
+                <CheckCircle2 color={WEB_APP_EXPLORE_ACCENT} size={14} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{summary.memorized} hafal</Text>
+              </View>
+              <View style={styles.webAppGoalSummaryPill}>
+                <Circle color="#f59e0b" size={13} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{summary.inProgress} proses</Text>
+              </View>
+              <View style={styles.webAppGoalSummaryPill}>
+                <BookOpen color="#9ca3af" size={14} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{summary.notStarted} belum</Text>
+              </View>
+            </View>
+            <View style={styles.webAppGoalsList}>
+              {visibleItems.map(renderWebAppHafalanCard)}
+            </View>
+          </>
+        ) : null}
+        {renderItemActionSheet()}
+      </ScrollView>
+    );
+  };
+
   const renderWebAppNotificationsScreen = () => (
     <ScrollView
       contentContainerStyle={styles.webAppNotificationsContent}
@@ -3650,6 +3867,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   if (activeFeature?.key === 'muhasabah' && isWebAppLayout) {
     return renderWebAppMuhasabahScreen();
+  }
+
+  if (activeFeature?.key === 'hafalan' && isWebAppLayout) {
+    return renderWebAppHafalanScreen();
   }
 
   if (activeFeature?.type === 'notifications' && isWebAppLayout) {
@@ -4218,6 +4439,46 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 21,
     marginTop: spacing.md,
+  },
+  webAppHafalanCard: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    minHeight: 138,
+    padding: spacing.md,
+  },
+  webAppHafalanStatus: {
+    backgroundColor: '#1f2937',
+    borderColor: '#374151',
+    borderRadius: 999,
+    borderWidth: 1,
+    color: '#d1d5db',
+    fontSize: 11,
+    fontWeight: '900',
+    overflow: 'hidden',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+  },
+  webAppHafalanStatusDone: {
+    backgroundColor: 'rgba(52, 211, 153, 0.12)',
+    borderColor: 'rgba(52, 211, 153, 0.32)',
+    color: WEB_APP_EXPLORE_ACCENT,
+  },
+  webAppHafalanStatusProgress: {
+    backgroundColor: 'rgba(245, 158, 11, 0.12)',
+    borderColor: 'rgba(245, 158, 11, 0.32)',
+    color: '#fbbf24',
+  },
+  webAppHafalanProgressFill: {
+    backgroundColor: '#f59e0b',
+  },
+  webAppHafalanProgressTrack: {
+    backgroundColor: '#1f2937',
+    borderRadius: 999,
+    height: 8,
+    marginTop: spacing.md,
+    overflow: 'hidden',
   },
   webAppSurface: {
     backgroundColor: '#f8fafc',

@@ -211,6 +211,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'notifications', title: 'Notifikasi', subtitle: 'Inbox dan pengingat', group: 'Personal', type: 'notifications' },
     { key: 'goals', title: 'Target Belajar', subtitle: 'Target pembelajaran personal', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/goals' },
     { key: 'muhasabah', title: 'Muhasabah', subtitle: 'Jurnal refleksi diri', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/muhasabah' },
+    { key: 'hafalan', title: 'Hafalan', subtitle: 'Ringkasan hafalan Quran', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/hafalan/summary' },
     { key: 'community-feed', title: 'Komunitas', subtitle: 'Refleksi', group: 'Ilmu', type: 'feed' },
     { key: 'kajian', title: 'Kajian', subtitle: 'Sesi belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/kajian' },
     { key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi seputar Islam', group: 'Ilmu', type: 'forum' },
@@ -244,7 +245,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'personal',
       label: 'Personal',
       meta: 'Akun',
-      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications', 'goals', 'muhasabah'].includes(f.key)),
+      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications', 'goals', 'muhasabah', 'hafalan'].includes(f.key)),
     },
   ];
 
@@ -561,6 +562,82 @@ describe('ExploreScreen', () => {
 
     expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
       expect.objectContaining({ key: 'muhasabah', endpoint: '/api/v1/muhasabah' }),
+      { page: 0, size: 20 },
+    );
+  });
+
+  test('uses dashboard Hafalan route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useSession.mockReturnValue({
+      ...mockUseSession(),
+      session: { token: 'abc' },
+      user: { id: '1', name: 'Test', email: 'test@test.com' },
+    });
+    personalApi.getBookmarks.mockResolvedValue([]);
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 'hafalan-1',
+          title: 'Al-Mulk',
+          body: 'Sudah lancar dan siap murajaah.',
+          meta: 'memorized',
+          raw: {
+            last_reviewed_at: '2026-05-25',
+            progress: 100,
+            status: 'memorized',
+            surah_name: 'Al-Mulk',
+            surah_number: 67,
+          },
+        },
+        {
+          id: 'hafalan-2',
+          title: 'Yasin',
+          body: 'Sedang menguatkan ayat awal.',
+          meta: 'in_progress',
+          raw: {
+            progress: 45,
+            status: 'in_progress',
+            surah_name: 'Yasin',
+            surah_number: 36,
+          },
+        },
+        {
+          id: 'hafalan-3',
+          title: 'Ar-Rahman',
+          body: 'Belum dimulai.',
+          meta: 'not_started',
+          raw: {
+            status: 'not_started',
+            surah_name: 'Ar-Rahman',
+            surah_number: 55,
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getByText, getByTestId, queryByTestId } = await renderExploreScreen({
+      deepLinkTarget: { id: 'hafalan-route', params: { featureKey: 'hafalan' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-hafalan-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('PROGRESS SAYA')).toBeTruthy();
+      expect(getByText('Hafalan')).toBeTruthy();
+      expect(getByText('1/3 surah')).toBeTruthy();
+      expect(getByText('1 hafal')).toBeTruthy();
+      expect(getByText('1 proses')).toBeTruthy();
+      expect(getByText('1 belum')).toBeTruthy();
+      expect(getByText('Al-Mulk')).toBeTruthy();
+      expect(getByText('Yasin')).toBeTruthy();
+      expect(getByText('Ar-Rahman')).toBeTruthy();
+      expect(getAllByTestId('web-app-hafalan-card')).toHaveLength(3);
+      expect(getAllByTestId('web-app-hafalan-progress-fill')).toHaveLength(3);
+    });
+
+    expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
+      expect.objectContaining({ key: 'hafalan', endpoint: '/api/v1/hafalan/summary' }),
       { page: 0, size: 20 },
     );
   });
