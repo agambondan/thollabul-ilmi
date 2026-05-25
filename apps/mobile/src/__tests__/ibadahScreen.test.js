@@ -108,12 +108,18 @@ describe('IbadahScreen', () => {
 
   test('uses web app Ibadah hub surface when web app layout is active', () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
-    const { getByTestId, queryByTestId } = render(
+    const { getByText, getByTestId, queryByTestId } = render(
       <IbadahScreen isActive navigation={defaultNavigation} onOpenTab={jest.fn()} />,
     );
 
     expect(getByTestId('ibadah-web-app-hub')).toBeTruthy();
     expect(queryByTestId('ibadah-classic-hub')).toBeNull();
+    expect(queryByTestId('screen-title')).toBeNull();
+    expect(getByText('IBADAH & TRACKER')).toBeTruthy();
+    expect(getByText('HARIAN')).toBeTruthy();
+    expect(getByText('ALAT')).toBeTruthy();
+    expect(getByText('Jadwal Sholat')).toBeTruthy();
+    expect(getByText('Qibla')).toBeTruthy();
   });
 
   test('renders all section headers', () => {

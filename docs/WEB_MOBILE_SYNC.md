@@ -107,7 +107,7 @@ should stay visible for future planning:
 | Mobile Profile settings | Follow-up implemented current-device session, password change, language preference, local theme preference, and layout mode preference. Still tracked: app-wide dark theme provider, login history endpoint, and delete-account self-service. |
 | Achievements and Stats | Web has dedicated dashboard pages; mobile exposes profile/feature surfaces but not the same chart-heavy layout. |
 | Offline packs | Mobile has explicit offline pack management; web has no equivalent PWA offline pack manager yet. |
-| Mobile web-inspired layout | `web_app` is now the default native mobile shell for new installs, with dashboard-aligned surfaces for Home, Quran list, Hadith book shelf, and Global Search/Cari, plus first-pass surfaces for Quran reader/detail, Hadith detail, Ibadah, Prayer, Qibla, Khatam, Explore/Belajar, and Profile. Native mobile `classic` layout remains supported from settings and must keep feature parity while visual polish continues incrementally. |
+| Mobile web-inspired layout | `web_app` is now the default native mobile shell for new installs, with dashboard-aligned surfaces for Home, Quran list, Hadith book shelf, Global Search/Cari, and the Ibadah hub, plus first-pass surfaces for Quran reader/detail, Hadith detail, Prayer, Qibla, Khatam, Explore/Belajar, and Profile. Native mobile `classic` layout remains supported from settings and must keep feature parity while visual polish continues incrementally. |
 | Admin/dev surfaces | Web-only by design; not a public/mobile feature gap. |
 | Jarh Ta'dil taxonomy | Mobile has a dedicated catalog entry; web still maps it through Perawi routes. |
 

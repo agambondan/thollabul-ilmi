@@ -987,3 +987,51 @@ Results:
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
 - `git diff --check` passed.
+
+## Web App Ibadah Hub Dashboard Parity
+
+Status: completed for the native `web_app` Ibadah hub visual parity pass.
+
+Implemented:
+
+- `IbadahScreen` keeps the classic paper Ibadah hub, section headers, cards,
+  compact rows, and route handlers on the `classic` path.
+- `web_app` mode now renders a dedicated dark dashboard-style Ibadah hub with
+  an `IBADAH & TRACKER` hero, compact subtitle, uppercase group labels, and
+  two-column tiles for Harian, Arah & Waktu, Dzikir & Bacaan, Alat, and
+  Rencana.
+- Primary native sub-routes (`Jadwal Sholat`, `Qibla`, and `Khatam`) get
+  stronger green tile treatment while reusing the existing `navigation.open`
+  handlers.
+- Feature rows such as Doa, Dzikir, Tasbih, Zakat, Faraidh, and Manasik still
+  route through the existing `onOpenTab('belajar', { featureKey })` path.
+- Added Ibadah test coverage to ensure the `web_app` branch uses the dedicated
+  dashboard hub instead of the classic `Screen` title surface.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Ibadah hub presentation in
+  `web_app`. It does not change classic Ibadah, Prayer/Qibla/Khatam sub-screen
+  routing, feature keys, notification/location flows, calculator logic, or
+  data persistence.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- ibadahScreen.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted Ibadah test passed: 1 suite, 15 tests.
+- Full mobile Jest passed: 44 suites, 622 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-ibadah-route-after.png`.
