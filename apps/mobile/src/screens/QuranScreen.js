@@ -128,6 +128,13 @@ const AUDIO_SPEED_OPTIONS = [0.75, 1, 1.25, 1.5, 2];
 
 const SWIPE_TRIGGER_DISTANCE = 34;
 const SWIPE_EDGE_GUARD = 48;
+const WEB_APP_QURAN_BG = '#020617';
+const WEB_APP_QURAN_SURFACE = '#1e293b';
+const WEB_APP_QURAN_BORDER = '#334155';
+const WEB_APP_QURAN_MUTED = '#94a3b8';
+const WEB_APP_QURAN_ACCENT = '#34d399';
+const WEB_APP_QURAN_ACCENT_BG = '#0f2f2f';
+const SURAH_PREFIX_PATTERN = /^\s*(سُورَةُ|سُورَة|سورة)\s+/u;
 const SURAH_PAGE_SIZE = 20;
 const SURAH_TARGET_PREFETCH_RADIUS = 1;
 const SURAH_PREFETCH_DISTANCE = 620;
@@ -353,6 +360,8 @@ const buildMushafLineGroups = (items) => {
     if (current.length) groups.push(current);
     return groups;
 };
+
+const getCompactArabicSurahName = (value) => `${value ?? ''}`.replace(SURAH_PREFIX_PATTERN, '');
 
 const TAJWEED_GROUPS = [
     {
@@ -3221,8 +3230,44 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         targetAyahIndex,
     ]);
 
+    useEffect(() => {
+        if (isWebAppLayout && quranTab !== 'surah') {
+            setQuranTab('surah');
+        }
+    }, [isWebAppLayout, quranTab]);
+
     const renderSurahRow = ({ item: surah }) => {
         const isProgressSurah = progressSurahNumber === Number(surah.number);
+        if (isWebAppLayout) {
+            return (
+                <Pressable onPress={() => openSurah(surah)} style={styles.webAppSurahRow}>
+                    <View style={styles.webAppSurahLeft}>
+                        <View style={styles.webAppSurahNumberBadge}>
+                            <Text style={styles.webAppSurahNumberText}>{surah.number}</Text>
+                        </View>
+                        <View style={styles.webAppSurahInfo}>
+                            <View style={styles.surahNameRow}>
+                                <Text style={styles.webAppSurahName}>{surah.name}</Text>
+                                {isProgressSurah ? (
+                                    <CheckCircle2
+                                        color={WEB_APP_QURAN_ACCENT}
+                                        size={13}
+                                        strokeWidth={2.2}
+                                    />
+                                ) : null}
+                            </View>
+                            <Text style={styles.webAppSurahMeta}>
+                                · {surah.meaning} · {surah.ayahs} ayat
+                            </Text>
+                        </View>
+                    </View>
+                    <Text style={styles.webAppSurahArabic}>
+                        {getCompactArabicSurahName(surah.arabic)}
+                    </Text>
+                </Pressable>
+            );
+        }
+
         return (
             <Pressable onPress={() => openSurah(surah)} style={styles.surahRow}>
                 <View style={styles.surahLeft}>
@@ -3252,42 +3297,82 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         );
     };
 
-    const renderQuranListHeader = () => (
-        <>
-            <Text style={styles.quranTitle}>Al-Qur'an</Text>
-            <View style={styles.quranSearch}>
-                <Search color={colors.muted} size={16} strokeWidth={2.1} />
+    const renderWebAppQuranListHeader = () => (
+        <View style={styles.webAppQuranHeader}>
+            <Text style={styles.webAppQuranArabicTitle}>القُرآنُ الكَرِيم</Text>
+            <Text style={styles.webAppQuranTitle}>Al-Quran</Text>
+            <Text style={styles.webAppQuranSubtitle}>
+                114 Surah · Lengkap dengan Tajweed berwarna, transliterasi, dan terjemahan
+            </Text>
+            <View style={styles.webAppQuranSearch}>
+                <Search color={WEB_APP_QURAN_MUTED} size={16} strokeWidth={2.1} />
                 <TextInput
                     onChangeText={setSurahQuery}
-                    placeholder="Cari..."
-                    placeholderTextColor={colors.muted}
-                    style={styles.quranSearchInput}
+                    placeholder="Cari surah..."
+                    placeholderTextColor={WEB_APP_QURAN_MUTED}
+                    style={styles.webAppQuranSearchInput}
                     value={surahQuery}
                 />
             </View>
-            <View style={styles.quranTabs}>
-                {QURAN_TABS.map((tab) => (
-                    <Pressable
-                        key={tab.key}
-                        onPress={() => setQuranTab(tab.key)}
-                        style={[
-                            styles.quranTabButton,
-                            quranTab === tab.key ? styles.quranTabButtonActive : null,
-                        ]}
-                    >
-                        <Text
+            <Pressable
+                onPress={() => openPage(pageInput)}
+                style={styles.webAppMushafCta}
+                testID="quran-web-app-mushaf-cta"
+            >
+                <View style={styles.webAppMushafCtaIcon}>
+                    <BookOpen color={WEB_APP_QURAN_ACCENT} size={22} strokeWidth={2.4} />
+                </View>
+                <View style={styles.webAppMushafCtaCopy}>
+                    <Text style={styles.webAppMushafCtaTitle}>Navigasi Mushaf</Text>
+                    <Text style={styles.webAppMushafCtaSubtitle}>
+                        Buka ayat berdasarkan halaman mushaf atau hizb.
+                    </Text>
+                </View>
+                <ArrowRight color={WEB_APP_QURAN_ACCENT} size={16} strokeWidth={2.4} />
+            </Pressable>
+        </View>
+    );
+
+    const renderQuranListHeader = () => {
+        if (isWebAppLayout) return renderWebAppQuranListHeader();
+
+        return (
+            <>
+                <Text style={styles.quranTitle}>Al-Qur'an</Text>
+                <View style={styles.quranSearch}>
+                    <Search color={colors.muted} size={16} strokeWidth={2.1} />
+                    <TextInput
+                        onChangeText={setSurahQuery}
+                        placeholder="Cari..."
+                        placeholderTextColor={colors.muted}
+                        style={styles.quranSearchInput}
+                        value={surahQuery}
+                    />
+                </View>
+                <View style={styles.quranTabs}>
+                    {QURAN_TABS.map((tab) => (
+                        <Pressable
+                            key={tab.key}
+                            onPress={() => setQuranTab(tab.key)}
                             style={[
-                                styles.quranTabText,
-                                quranTab === tab.key ? styles.quranTabTextActive : null,
+                                styles.quranTabButton,
+                                quranTab === tab.key ? styles.quranTabButtonActive : null,
                             ]}
                         >
-                            {tab.label}
-                        </Text>
-                    </Pressable>
-                ))}
-            </View>
-        </>
-    );
+                            <Text
+                                style={[
+                                    styles.quranTabText,
+                                    quranTab === tab.key ? styles.quranTabTextActive : null,
+                                ]}
+                            >
+                                {tab.label}
+                            </Text>
+                        </Pressable>
+                    ))}
+                </View>
+            </>
+        );
+    };
 
     const renderNavigatorPanel = () => (
         <Card>
@@ -3347,6 +3432,10 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
 
     const renderQuranListFooter = () => {
         if (quranTab === 'surah') {
+            if (isWebAppLayout) {
+                return message ? <Text style={styles.webAppMessage}>{message}</Text> : null;
+            }
+
             return (
                 <>
                     {renderNavigatorPanel()}
@@ -3774,7 +3863,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     webAppQuranScroll: {
-        backgroundColor: '#f8fafc',
+        backgroundColor: WEB_APP_QURAN_BG,
     },
     quranListContent: {
         backgroundColor: colors.bg,
@@ -3784,7 +3873,7 @@ const styles = StyleSheet.create({
         paddingTop: spacing.xl,
     },
     webAppQuranListContent: {
-        backgroundColor: '#f8fafc',
+        backgroundColor: WEB_APP_QURAN_BG,
         paddingBottom: spacing.lg,
         paddingTop: spacing.lg,
     },
@@ -3907,6 +3996,32 @@ const styles = StyleSheet.create({
         fontWeight: '900',
         marginBottom: spacing.sm,
     },
+    webAppQuranHeader: {
+        marginBottom: spacing.md,
+    },
+    webAppQuranArabicTitle: {
+        color: WEB_APP_QURAN_ACCENT,
+        fontFamily: QURAN_FONT_FAMILIES.kitab,
+        fontSize: 31,
+        lineHeight: 44,
+        marginBottom: 2,
+        textAlign: 'left',
+        writingDirection: 'rtl',
+    },
+    webAppQuranTitle: {
+        color: '#f8fafc',
+        fontSize: 28,
+        fontWeight: '900',
+        letterSpacing: 0,
+        lineHeight: 34,
+        marginBottom: spacing.xs,
+    },
+    webAppQuranSubtitle: {
+        color: WEB_APP_QURAN_MUTED,
+        fontSize: 14,
+        lineHeight: 20,
+        marginBottom: spacing.md,
+    },
     quranSearch: {
         alignItems: 'center',
         backgroundColor: colors.surface,
@@ -3924,6 +4039,58 @@ const styles = StyleSheet.create({
         fontSize: 13,
         minHeight: 32,
         padding: 0,
+    },
+    webAppQuranSearch: {
+        alignItems: 'center',
+        backgroundColor: WEB_APP_QURAN_SURFACE,
+        borderColor: '#475569',
+        borderRadius: 11,
+        borderWidth: 1,
+        flexDirection: 'row',
+        gap: spacing.sm,
+        minHeight: 38,
+        paddingHorizontal: spacing.md,
+    },
+    webAppQuranSearchInput: {
+        color: '#e2e8f0',
+        flex: 1,
+        fontSize: 14,
+        minHeight: 36,
+        padding: 0,
+    },
+    webAppMushafCta: {
+        alignItems: 'center',
+        backgroundColor: WEB_APP_QURAN_BG,
+        borderColor: '#059669',
+        borderRadius: 10,
+        borderWidth: 1,
+        flexDirection: 'row',
+        gap: spacing.sm,
+        marginTop: spacing.lg,
+        minHeight: 60,
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.sm,
+    },
+    webAppMushafCtaIcon: {
+        alignItems: 'center',
+        height: 30,
+        justifyContent: 'center',
+        width: 30,
+    },
+    webAppMushafCtaCopy: {
+        flex: 1,
+        minWidth: 0,
+    },
+    webAppMushafCtaTitle: {
+        color: WEB_APP_QURAN_ACCENT,
+        fontSize: 15,
+        fontWeight: '900',
+        lineHeight: 20,
+    },
+    webAppMushafCtaSubtitle: {
+        color: WEB_APP_QURAN_ACCENT,
+        fontSize: 12,
+        lineHeight: 16,
     },
     quranTabs: {
         backgroundColor: colors.surface,
@@ -3968,7 +4135,26 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.md,
         paddingVertical: spacing.sm,
     },
+    webAppSurahRow: {
+        alignItems: 'center',
+        backgroundColor: WEB_APP_QURAN_SURFACE,
+        borderColor: WEB_APP_QURAN_BORDER,
+        borderRadius: 10,
+        borderWidth: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: spacing.sm,
+        minHeight: 72,
+        paddingHorizontal: spacing.md,
+        paddingVertical: spacing.sm,
+    },
     surahLeft: {
+        alignItems: 'center',
+        flex: 1,
+        flexDirection: 'row',
+        minWidth: 0,
+    },
+    webAppSurahLeft: {
         alignItems: 'center',
         flex: 1,
         flexDirection: 'row',
@@ -3997,7 +4183,25 @@ const styles = StyleSheet.create({
         fontWeight: '900',
         transform: [{ rotate: '-45deg' }],
     },
+    webAppSurahNumberBadge: {
+        alignItems: 'center',
+        backgroundColor: WEB_APP_QURAN_ACCENT_BG,
+        borderRadius: 4,
+        height: 38,
+        justifyContent: 'center',
+        marginRight: spacing.md,
+        width: 38,
+    },
+    webAppSurahNumberText: {
+        color: WEB_APP_QURAN_ACCENT,
+        fontSize: 12,
+        fontWeight: '900',
+    },
     surahInfo: {
+        flex: 1,
+        minWidth: 0,
+    },
+    webAppSurahInfo: {
         flex: 1,
         minWidth: 0,
     },
@@ -4012,10 +4216,23 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '900',
     },
+    webAppSurahName: {
+        color: '#f8fafc',
+        flexShrink: 1,
+        fontSize: 15,
+        fontWeight: '900',
+        lineHeight: 20,
+    },
     surahMeta: {
         color: colors.muted,
         fontSize: 12,
         marginTop: 2,
+    },
+    webAppSurahMeta: {
+        color: WEB_APP_QURAN_MUTED,
+        fontSize: 12,
+        lineHeight: 17,
+        marginTop: 1,
     },
     surahArabic: {
         color: colors.ink,
@@ -4025,6 +4242,16 @@ const styles = StyleSheet.create({
         lineHeight: 28,
         marginLeft: spacing.sm,
         maxWidth: '38%',
+        textAlign: 'right',
+        writingDirection: 'rtl',
+    },
+    webAppSurahArabic: {
+        color: '#cbd5e1',
+        fontFamily: QURAN_FONT_FAMILIES.kitab,
+        fontSize: 20,
+        lineHeight: 30,
+        marginLeft: spacing.sm,
+        maxWidth: '34%',
         textAlign: 'right',
         writingDirection: 'rtl',
     },
@@ -4055,6 +4282,12 @@ const styles = StyleSheet.create({
     message: {
         color: colors.primary,
         fontSize: 12,
+        marginTop: spacing.sm,
+    },
+    webAppMessage: {
+        color: WEB_APP_QURAN_ACCENT,
+        fontSize: 12,
+        fontWeight: '700',
         marginTop: spacing.sm,
     },
     targetPreview: {

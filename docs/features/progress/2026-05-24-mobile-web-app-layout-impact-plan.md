@@ -814,3 +814,43 @@ Results:
 - Full mobile Jest passed: 44 suites, 618 tests.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
+
+## Web App Quran List Dashboard Parity
+
+Status: completed for the native `web_app` Quran list route visual parity pass.
+
+Implemented:
+
+- `QuranScreen` now keeps the classic paper Quran list, tabs, and navigator panel
+  on the `classic` path.
+- `web_app` mode now renders the Quran list with the mobile web dashboard visual
+  structure: dark surface, Arabic Quran heading, `Al-Quran` title, dashboard
+  subtitle, dark search field, `Navigasi Mushaf` CTA, and dark surah cards.
+- Added Quran test coverage for the `web_app` dashboard header/search/CTA path
+  and the CTA opening the existing mushaf reader flow.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Quran list presentation for
+  `web_app`. It does not change classic Quran, surah/ayah data loading, reader
+  preferences, audio, bookmarks, notes, tafsir/asbab/munasabah actions, or
+  shell navigation.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- quranScreen.test.js mobileAppShell.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted Quran/shell tests passed: 2 suites, 33 tests.
+- Full mobile Jest passed: 44 suites, 619 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-quran-route-after.png`.

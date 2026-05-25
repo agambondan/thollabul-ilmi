@@ -290,13 +290,34 @@ describe('QuranScreen', () => {
 
   it('uses web app Quran list surface when web app layout is active', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
-    const { getByTestId, getByText, queryByTestId } = await renderQuranScreen();
+    const { getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } =
+      await renderQuranScreen();
 
     await waitFor(() => {
-      expect(getByText('Al-Qur\'an')).toBeTruthy();
+      expect(getByText('القُرآنُ الكَرِيم')).toBeTruthy();
+      expect(getByText('Al-Quran')).toBeTruthy();
+      expect(getByText(/114 Surah/)).toBeTruthy();
+      expect(getByPlaceholderText('Cari surah...')).toBeTruthy();
+      expect(getByText('Navigasi Mushaf')).toBeTruthy();
       expect(getByTestId('quran-web-app-list')).toBeTruthy();
     });
+    expect(queryByText('Hafalan')).toBeNull();
+    expect(queryByText('Murojaah')).toBeNull();
     expect(queryByTestId('quran-classic-list')).toBeNull();
+  });
+
+  it('opens mushaf navigation from the web app Quran CTA', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    client.getAyahsForPage.mockResolvedValue([mockAyah(1, 1)]);
+
+    const { getByTestId } = await renderQuranScreen();
+
+    fireEvent.press(await waitFor(() => getByTestId('quran-web-app-mushaf-cta')));
+
+    await waitFor(() => {
+      expect(client.getAyahsForPage).toHaveBeenCalledWith(1);
+      expect(getByTestId('quran-web-app-reader')).toBeTruthy();
+    });
   });
 
   it('uses web app Quran reader surface without changing ayah loading', async () => {
