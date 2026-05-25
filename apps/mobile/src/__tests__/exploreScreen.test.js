@@ -210,6 +210,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'notes', title: 'Catatan', subtitle: 'Catatan pribadi', group: 'Personal', type: 'notes' },
     { key: 'notifications', title: 'Notifikasi', subtitle: 'Inbox dan pengingat', group: 'Personal', type: 'notifications' },
     { key: 'goals', title: 'Target Belajar', subtitle: 'Target pembelajaran personal', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/goals' },
+    { key: 'muhasabah', title: 'Muhasabah', subtitle: 'Jurnal refleksi diri', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/muhasabah' },
     { key: 'community-feed', title: 'Komunitas', subtitle: 'Refleksi', group: 'Ilmu', type: 'feed' },
     { key: 'kajian', title: 'Kajian', subtitle: 'Sesi belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/kajian' },
     { key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi seputar Islam', group: 'Ilmu', type: 'forum' },
@@ -243,7 +244,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'personal',
       label: 'Personal',
       meta: 'Akun',
-      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications', 'goals'].includes(f.key)),
+      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications', 'goals', 'muhasabah'].includes(f.key)),
     },
   ];
 
@@ -502,6 +503,64 @@ describe('ExploreScreen', () => {
 
     expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
       expect.objectContaining({ key: 'goals', endpoint: '/api/v1/goals' }),
+      { page: 0, size: 20 },
+    );
+  });
+
+  test('uses dashboard Muhasabah route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useSession.mockReturnValue({
+      ...mockUseSession(),
+      session: { token: 'abc' },
+      user: { id: '1', name: 'Test', email: 'test@test.com' },
+    });
+    personalApi.getBookmarks.mockResolvedValue([]);
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 'muhasabah-1',
+          title: 'Refleksi hari ini',
+          body: 'Menjaga niat belajar dan memperbaiki adab.',
+          meta: 'syukur',
+          raw: {
+            content: 'Menjaga niat belajar dan memperbaiki adab.',
+            date: new Date().toISOString().slice(0, 10),
+            mood: 'syukur',
+          },
+        },
+        {
+          id: 'muhasabah-2',
+          title: 'Catatan pekanan',
+          body: 'Perlu lebih konsisten murajaah.',
+          meta: 'biasa',
+          raw: {
+            content: 'Perlu lebih konsisten murajaah.',
+            date: '2026-05-24',
+            mood: 'biasa',
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getByText, getByTestId, queryByTestId } = await renderExploreScreen({
+      deepLinkTarget: { id: 'muhasabah-route', params: { featureKey: 'muhasabah' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-muhasabah-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('PERSONAL')).toBeTruthy();
+      expect(getByText('Muhasabah')).toBeTruthy();
+      expect(getByText('2 refleksi')).toBeTruthy();
+      expect(getByText('Hari ini terisi')).toBeTruthy();
+      expect(getByText('Menjaga niat belajar dan memperbaiki adab.')).toBeTruthy();
+      expect(getByText('Perlu lebih konsisten murajaah.')).toBeTruthy();
+      expect(getAllByTestId('web-app-muhasabah-card')).toHaveLength(2);
+    });
+
+    expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
+      expect.objectContaining({ key: 'muhasabah', endpoint: '/api/v1/muhasabah' }),
       { page: 0, size: 20 },
     );
   });

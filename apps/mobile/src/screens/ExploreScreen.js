@@ -111,6 +111,12 @@ const BOOKMARK_TYPE_LABELS = {
   article: 'Artikel',
   library_book: 'Perpustakaan',
 };
+const MUHASABAH_MOOD_LABELS = {
+  baik: 'Baik',
+  biasa: 'Biasa',
+  berat: 'Berat',
+  syukur: 'Syukur',
+};
 
 const emptyUserWirdForm = {
   arabic: '',
@@ -183,6 +189,19 @@ const getGoalMetaLine = (item = {}) => {
     target ? `${current}/${target} ${unit}` : '',
     deadline ? `Deadline: ${formatNoteDate(deadline)}` : '',
   ].filter(Boolean).join(' · ');
+};
+const getMuhasabahMoodLabel = (item = {}) => {
+  const raw = item?.raw ?? {};
+  const mood = `${raw.mood ?? item.mood ?? item.meta ?? ''}`.trim().toLowerCase();
+  return MUHASABAH_MOOD_LABELS[mood] ?? pickText(item.meta, mood, 'Refleksi');
+};
+const getMuhasabahDateLabel = (item = {}) => {
+  const raw = item?.raw ?? {};
+  return formatNoteDate(raw.date ?? raw.created_at ?? item.date ?? '');
+};
+const getMuhasabahContent = (item = {}) => {
+  const raw = item?.raw ?? {};
+  return pickText(raw.content, raw.notes, raw.note, item.body, item.content, item.title);
 };
 const normalizeAsmaulName = (item = {}, index = 0) => ({
   arabic: pickText(item.arabic, item.translation?.arab, item.translation?.ar, item.name),
@@ -3422,6 +3441,126 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     );
   };
 
+  const renderWebAppMuhasabahCard = (item, index) => {
+    const moodLabel = getMuhasabahMoodLabel(item);
+    const dateLabel = getMuhasabahDateLabel(item);
+    const content = getMuhasabahContent(item);
+
+    return (
+      <Pressable
+        android_ripple={{ color: 'rgba(52, 211, 153, 0.12)', borderless: false }}
+        key={`${getExploreItemKey(item)}-${index}`}
+        onLongPress={() => setItemActionSheet({ visible: true, item })}
+        onPress={() => openItemDetail(item)}
+        style={styles.webAppMuhasabahCard}
+        testID="web-app-muhasabah-card"
+      >
+        <View style={styles.webAppMuhasabahHeader}>
+          <View style={styles.webAppNoteIcon}>
+            <Pencil color={WEB_APP_EXPLORE_ACCENT} size={18} strokeWidth={2} />
+          </View>
+          <View style={styles.webAppMuhasabahTitleBlock}>
+            <Text style={styles.webAppBookmarkType}>MUHASABAH</Text>
+            <Text numberOfLines={1} style={styles.webAppBookmarkTitle}>
+              {dateLabel || item.title || 'Refleksi diri'}
+            </Text>
+          </View>
+          <Text style={styles.webAppMuhasabahMood}>{moodLabel}</Text>
+        </View>
+        {content ? (
+          <Text numberOfLines={4} style={styles.webAppMuhasabahText}>
+            {content}
+          </Text>
+        ) : null}
+        <View style={styles.webAppBookmarkFooter}>
+          <Text style={styles.webAppBookmarkHint}>Ketuk untuk membaca</Text>
+          <Pressable
+            hitSlop={10}
+            onPress={() => setItemActionSheet({ visible: true, item })}
+            style={styles.webAppBookmarkManage}
+            testID="web-app-muhasabah-manage"
+          >
+            <Text style={styles.webAppBookmarkManageText}>Kelola</Text>
+          </Pressable>
+        </View>
+      </Pressable>
+    );
+  };
+
+  const renderWebAppMuhasabahScreen = () => {
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const hasTodayEntry = visibleItems.some((item) => {
+      const raw = item?.raw ?? {};
+      return `${raw.date ?? item.date ?? ''}`.slice(0, 10) === todayKey;
+    });
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppBookmarksContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppBookmarksRoot}
+      >
+        <View testID="explore-web-app-muhasabah-surface" />
+        <View style={styles.webAppBookmarksHeader}>
+          <Pressable
+            accessibilityLabel="Kembali ke Belajar"
+            onPress={clearFeature}
+            style={styles.webAppBookmarksBack}
+            testID="web-app-muhasabah-back"
+          >
+            <Text style={styles.webAppBookmarksBackText}>Kembali</Text>
+          </Pressable>
+          <Text style={styles.webAppCatalogEyebrow}>PERSONAL</Text>
+          <View style={styles.webAppBookmarksTitleRow}>
+            <Text style={styles.webAppCatalogTitle}>Muhasabah</Text>
+            <Text style={styles.webAppBookmarksCount}>{items.length} catatan</Text>
+          </View>
+          <Text style={styles.webAppCatalogSubtitle}>
+            Jurnal refleksi harian untuk menjaga arah belajar dan ibadah.
+          </Text>
+        </View>
+
+        {error ? <Text style={styles.webAppBookmarksError}>{error}</Text> : null}
+        {loading ? (
+          <View style={styles.webAppBookmarksState}>
+            <ActivityIndicator color={WEB_APP_EXPLORE_ACCENT} size="small" />
+            <Text style={styles.webAppBookmarksStateText}>Memuat muhasabah...</Text>
+          </View>
+        ) : null}
+        {!loading && !error && !items.length ? (
+          <View style={styles.webAppBookmarksEmpty}>
+            <Pencil color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
+            <Text style={styles.webAppBookmarksEmptyTitle}>Belum ada muhasabah.</Text>
+            <Text style={styles.webAppBookmarksEmptyText}>
+              Tulis refleksi dari dashboard web atau lanjutkan saat sudah login.
+            </Text>
+          </View>
+        ) : null}
+        {!loading && !error && visibleItems.length > 0 ? (
+          <>
+            <View style={styles.webAppMuhasabahSummary}>
+              <View style={styles.webAppGoalSummaryPill}>
+                <StickyNote color={WEB_APP_EXPLORE_ACCENT} size={14} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{visibleItems.length} refleksi</Text>
+              </View>
+              <View style={styles.webAppGoalSummaryPill}>
+                <CheckCircle2 color={hasTodayEntry ? WEB_APP_EXPLORE_ACCENT : '#9ca3af'} size={14} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>
+                  {hasTodayEntry ? 'Hari ini terisi' : 'Hari ini kosong'}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.webAppNotesList}>
+              {visibleItems.map(renderWebAppMuhasabahCard)}
+            </View>
+          </>
+        ) : null}
+        {renderItemActionSheet()}
+      </ScrollView>
+    );
+  };
+
   const renderWebAppNotificationsScreen = () => (
     <ScrollView
       contentContainerStyle={styles.webAppNotificationsContent}
@@ -3507,6 +3646,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   if (activeFeature?.key === 'goals' && isWebAppLayout) {
     return renderWebAppGoalsScreen();
+  }
+
+  if (activeFeature?.key === 'muhasabah' && isWebAppLayout) {
+    return renderWebAppMuhasabahScreen();
   }
 
   if (activeFeature?.type === 'notifications' && isWebAppLayout) {
@@ -4034,6 +4177,47 @@ const styles = StyleSheet.create({
   },
   webAppGoalProgressFillDone: {
     backgroundColor: '#9ca3af',
+  },
+  webAppMuhasabahSummary: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginTop: spacing.md,
+  },
+  webAppMuhasabahCard: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    minHeight: 136,
+    padding: spacing.md,
+  },
+  webAppMuhasabahHeader: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  webAppMuhasabahTitleBlock: {
+    flex: 1,
+    minWidth: 0,
+  },
+  webAppMuhasabahMood: {
+    backgroundColor: 'rgba(52, 211, 153, 0.12)',
+    borderColor: 'rgba(52, 211, 153, 0.32)',
+    borderRadius: 999,
+    borderWidth: 1,
+    color: WEB_APP_EXPLORE_ACCENT,
+    fontSize: 11,
+    fontWeight: '900',
+    overflow: 'hidden',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+  },
+  webAppMuhasabahText: {
+    color: '#cbd5e1',
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: spacing.md,
   },
   webAppSurface: {
     backgroundColor: '#f8fafc',

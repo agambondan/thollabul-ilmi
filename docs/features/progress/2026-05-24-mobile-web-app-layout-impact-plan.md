@@ -1333,3 +1333,53 @@ Results:
   `output/native-smoke/tholabul-webapp-emulator-goals-route-after.png`; emulator
   was logged out, so the route showed the dark Goals dashboard shell with the
   existing protected-feature auth error.
+
+## Web App Muhasabah Route Dashboard Parity
+
+Status: completed for the native `web_app` Muhasabah feature route visual
+parity pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic paper active-feature `Screen` path for the
+  Muhasabah feature on the `classic` layout.
+- `web_app` mode now renders the Muhasabah feature route with a dedicated dark
+  dashboard surface modeled after `/dashboard/muhasabah`: personal header,
+  reflection count, today-status summary, dark reflection cards, mood chips,
+  dates, excerpt text, and management affordance.
+- Muhasabah loading still uses the existing protected-list endpoint flow through
+  `getFeatureItemPage`; detail opening and management still reuse
+  `openItemDetail` and the item action-sheet handlers.
+- Added Explore test coverage to ensure the `web_app` Muhasabah feature route
+  uses the dedicated dashboard surface instead of the generic `Screen` title
+  path.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Muhasabah feature route
+  presentation in `web_app`. It does not change classic Explore, muhasabah API
+  calls, create/delete behavior, item detail behavior, feature keys, or auth
+  gating.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted Explore test passed: 1 suite, 26 tests.
+- Full mobile Jest passed: 44 suites, 627 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-muhasabah-route-after.png`;
+  emulator was logged out, so the route showed the dark Muhasabah dashboard
+  shell with the existing protected-feature auth error.
