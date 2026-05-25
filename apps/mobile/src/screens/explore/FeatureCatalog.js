@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { BookOpen, Bookmark, Globe, HelpCircle, ListChecks, MessageCircle, Scale, Star, StickyNote, Users, Video } from 'lucide-react-native';
 import { Card, CardTitle } from '../../components/Card';
 import { CompactRow, SectionHeader } from '../../components/Paper';
@@ -99,6 +99,7 @@ function FeatureCatalogBase({
   onTogglePinnedFeature,
   pinnedFeatureKeys,
   recentFeatureKeys,
+  variant = 'classic',
 }) {
   const visibleSections = useMemo(() => getVisibleCatalogSections(featureSearch), [featureSearch]);
   const handleFeaturePress = useCallback(
@@ -117,12 +118,51 @@ function FeatureCatalogBase({
   );
 
   if (!visibleSections.length) {
+    if (variant === 'webApp') {
+      return (
+        <View style={styles.webAppEmpty}>
+          <Text style={styles.webAppEmptyTitle}>Tidak ada hasil</Text>
+          <Text style={styles.webAppEmptyText}>Coba kata lain seperti tafsir, kamus, siroh, atau quiz.</Text>
+        </View>
+      );
+    }
+
     return (
       <Card>
         <CardTitle meta="Kosong">Tidak ada hasil</CardTitle>
         <Text style={styles.body}>Coba kata lain seperti tafsir, kamus, siroh, atau quiz.</Text>
       </Card>
     );
+  }
+
+  if (variant === 'webApp') {
+    return visibleSections.map((section) => (
+      <View key={section.key} style={styles.webAppSection}>
+        <View style={styles.webAppSectionHeader}>
+          <Text style={styles.webAppSectionTitle}>{section.title.toUpperCase()}</Text>
+          {section.meta ? <Text style={styles.webAppSectionMeta}>{section.meta}</Text> : null}
+        </View>
+        <View style={styles.webAppGrid}>
+          {section.rows.map((row) => {
+            const pinned = Boolean(pinnedFeatureKeys[row.feature.key]);
+            const badgeLabels = getFeatureBadges(row.feature, recentFeatureKeys).join('|');
+            return (
+              <WebAppFeatureTile
+                badgeLabels={badgeLabels}
+                Icon={row.Icon}
+                featureKey={row.feature.key}
+                key={row.feature.key}
+                onFeaturePress={handleFeaturePress}
+                onTogglePinnedFeature={handleTogglePinnedFeature}
+                pinned={pinned}
+                subtitle={row.feature.subtitle}
+                title={row.feature.title}
+              />
+            );
+          })}
+        </View>
+      </View>
+    ));
   }
 
   return visibleSections.map((section) => (
@@ -204,6 +244,62 @@ const FeatureRow = memo(function FeatureRow({
   );
 });
 
+const WebAppFeatureTile = memo(function WebAppFeatureTile({
+  Icon,
+  badgeLabels,
+  featureKey,
+  onFeaturePress,
+  onTogglePinnedFeature,
+  pinned,
+  subtitle,
+  title,
+}) {
+  const badges = useMemo(() => (badgeLabels ? badgeLabels.split('|') : []), [badgeLabels]);
+  const handlePress = useCallback(() => onFeaturePress(featureKey), [featureKey, onFeaturePress]);
+  const handleTogglePinned = useCallback(
+    (event) => onTogglePinnedFeature(event, featureKey),
+    [featureKey, onTogglePinnedFeature],
+  );
+
+  return (
+    <Pressable
+      android_ripple={{ color: '#1f2937', borderless: false }}
+      onPress={handlePress}
+      style={styles.webAppTile}
+    >
+      <View style={styles.webAppTileTop}>
+        <View style={styles.webAppIconWrap}>
+          <Icon color="#34d399" size={18} strokeWidth={2.2} />
+        </View>
+        <Pressable
+          accessibilityLabel={pinned ? `Lepas ${title} dari Beranda` : `Sematkan ${title} ke Beranda`}
+          accessibilityRole="button"
+          accessibilityState={{ selected: pinned }}
+          android_ripple={{ color: '#1f2937', borderless: true }}
+          onPress={handleTogglePinned}
+          style={[styles.webAppPinButton, pinned && styles.webAppPinButtonActive]}
+        >
+          <Star
+            color={pinned ? '#ffffff' : '#34d399'}
+            fill={pinned ? '#ffffff' : 'transparent'}
+            size={14}
+            strokeWidth={2.2}
+          />
+        </Pressable>
+      </View>
+      <Text numberOfLines={1} style={styles.webAppTileTitle}>{title}</Text>
+      {subtitle ? <Text numberOfLines={2} style={styles.webAppTileSubtitle}>{subtitle}</Text> : null}
+      {badges.length ? (
+        <View style={styles.webAppBadges}>
+          {badges.map((badge) => (
+            <Text key={`${featureKey}-${badge}`} numberOfLines={1} style={styles.webAppBadge}>{badge}</Text>
+          ))}
+        </View>
+      ) : null}
+    </Pressable>
+  );
+});
+
 const styles = StyleSheet.create({
   body: {
     color: colors.muted,
@@ -230,5 +326,112 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
+  },
+  webAppBadges: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 5,
+    marginTop: spacing.sm,
+  },
+  webAppBadge: {
+    backgroundColor: 'rgba(52, 211, 153, 0.12)',
+    borderRadius: 999,
+    color: '#86efac',
+    fontSize: 10,
+    fontWeight: '800',
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+  },
+  webAppEmpty: {
+    backgroundColor: '#111827',
+    borderColor: '#243044',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    padding: spacing.md,
+  },
+  webAppEmptyText: {
+    color: '#94a3b8',
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: spacing.xs,
+  },
+  webAppEmptyTitle: {
+    color: '#f8fafc',
+    fontSize: 16,
+    fontWeight: '900',
+  },
+  webAppGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
+  webAppIconWrap: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(52, 211, 153, 0.10)',
+    borderRadius: 8,
+    height: 34,
+    justifyContent: 'center',
+    width: 34,
+  },
+  webAppPinButton: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(15, 23, 42, 0.72)',
+    borderColor: '#334155',
+    borderRadius: 8,
+    borderWidth: 1,
+    height: 30,
+    justifyContent: 'center',
+    width: 30,
+  },
+  webAppPinButtonActive: {
+    backgroundColor: '#059669',
+    borderColor: '#34d399',
+  },
+  webAppSection: {
+    marginTop: spacing.lg,
+  },
+  webAppSectionHeader: {
+    marginBottom: spacing.sm,
+  },
+  webAppSectionMeta: {
+    color: '#94a3b8',
+    fontSize: 12,
+    fontWeight: '700',
+    marginTop: 2,
+  },
+  webAppSectionTitle: {
+    color: '#34d399',
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0,
+  },
+  webAppTile: {
+    backgroundColor: '#1e293b',
+    borderColor: '#243044',
+    borderRadius: 8,
+    borderWidth: 1,
+    flexBasis: '48%',
+    flexGrow: 1,
+    minHeight: 132,
+    minWidth: 146,
+    padding: spacing.md,
+  },
+  webAppTileSubtitle: {
+    color: '#cbd5e1',
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: 4,
+  },
+  webAppTileTitle: {
+    color: '#f8fafc',
+    fontSize: 15,
+    fontWeight: '900',
+    letterSpacing: 0,
+  },
+  webAppTileTop: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: spacing.sm,
   },
 });

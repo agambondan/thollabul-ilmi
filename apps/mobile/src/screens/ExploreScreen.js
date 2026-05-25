@@ -96,6 +96,11 @@ const PRAYER_ITEMS = [
   { key: 'maghrib', label: 'Maghrib' },
   { key: 'isya', label: 'Isya' },
 ];
+const WEB_APP_EXPLORE_BG = '#020617';
+const WEB_APP_EXPLORE_SURFACE = '#111827';
+const WEB_APP_EXPLORE_BORDER = '#243044';
+const WEB_APP_EXPLORE_ACCENT = '#34d399';
+const WEB_APP_EXPLORE_MUTED = '#94a3b8';
 
 const emptyUserWirdForm = {
   arabic: '',
@@ -2969,6 +2974,45 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     return renderDetailScreen();
   }
 
+  if (!activeFeature && isWebAppLayout) {
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppCatalogContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppCatalogRoot}
+      >
+        <View testID="explore-web-app-surface" />
+        <View style={styles.webAppCatalogHero}>
+          <Text style={styles.webAppCatalogEyebrow}>KONTEN ISLAM</Text>
+          <Text style={styles.webAppCatalogTitle}>Belajar</Text>
+          <Text style={styles.webAppCatalogSubtitle}>
+            Kajian, referensi Islam, dan fitur personal dalam katalog dashboard.
+          </Text>
+        </View>
+        <View style={styles.webAppCatalogSearch}>
+          <TextInput
+            onChangeText={setFeatureSearch}
+            placeholder="Cari kajian, tafsir, kamus, perawi, quiz..."
+            placeholderTextColor={WEB_APP_EXPLORE_MUTED}
+            style={styles.webAppCatalogInput}
+            testID="search-input"
+            value={featureSearch}
+          />
+        </View>
+        <FeatureCatalog
+          featureSearch={featureSearch}
+          onFeaturePress={loadFeature}
+          onTogglePinnedFeature={handleTogglePinnedFeature}
+          pinnedFeatureKeys={pinnedFeatureKeys}
+          recentFeatureKeys={recentFeatureKeys}
+          variant="webApp"
+        />
+        {renderItemActionSheet()}
+      </ScrollView>
+    );
+  }
+
   return (
     <Screen
       contentStyle={isWebAppLayout ? styles.webAppSurface : null}
@@ -3061,6 +3105,59 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontSize: 12,
     fontWeight: '900',
+  },
+  webAppCatalogRoot: {
+    backgroundColor: WEB_APP_EXPLORE_BG,
+    flex: 1,
+  },
+  webAppCatalogContent: {
+    backgroundColor: WEB_APP_EXPLORE_BG,
+    flexGrow: 1,
+    padding: spacing.md,
+    paddingBottom: spacing.xl,
+  },
+  webAppCatalogHero: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    padding: spacing.md,
+  },
+  webAppCatalogEyebrow: {
+    color: WEB_APP_EXPLORE_ACCENT,
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0,
+    marginBottom: spacing.xs,
+  },
+  webAppCatalogTitle: {
+    color: '#f8fafc',
+    fontSize: 28,
+    fontWeight: '900',
+    letterSpacing: 0,
+    lineHeight: 34,
+  },
+  webAppCatalogSubtitle: {
+    color: WEB_APP_EXPLORE_MUTED,
+    fontSize: 13,
+    lineHeight: 20,
+    marginTop: spacing.xs,
+  },
+  webAppCatalogSearch: {
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_ACCENT,
+    borderRadius: 12,
+    borderWidth: 2,
+    justifyContent: 'center',
+    marginTop: spacing.md,
+    minHeight: 46,
+    paddingHorizontal: spacing.md,
+  },
+  webAppCatalogInput: {
+    color: '#e2e8f0',
+    fontSize: 14,
+    minHeight: 42,
+    padding: 0,
   },
   webAppSurface: {
     backgroundColor: '#f8fafc',

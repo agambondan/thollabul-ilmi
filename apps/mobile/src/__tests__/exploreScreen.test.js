@@ -315,6 +315,11 @@ describe('ExploreScreen', () => {
 
     expect(getByTestId('explore-web-app-surface')).toBeTruthy();
     expect(queryByTestId('explore-classic-surface')).toBeNull();
+    expect(queryByTestId('screen-title')).toBeNull();
+    expect(getByText('KONTEN ISLAM')).toBeTruthy();
+    expect(getByText('Belajar')).toBeTruthy();
+    expect(getByText('KAJIAN & ARTIKEL')).toBeTruthy();
+    expect(getByText('REFERENSI')).toBeTruthy();
 
     fireEvent.press(getByText('Kamus Arab'));
 

@@ -939,6 +939,16 @@ git diff --check
 
 Results:
 
+- Targeted Explore test passed: 1 suite, 21 tests.
+- Full mobile Jest passed: 44 suites, 622 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-belajar-route-after.png`.
+
+Results:
+
 - Targeted GlobalSearch/shell tests passed: 2 suites, 29 tests.
 - Full mobile Jest passed: 44 suites, 621 tests.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
@@ -1035,3 +1045,43 @@ Results:
 - `git diff --check` passed.
 - Native emulator smoke captured at
   `output/native-smoke/tholabul-webapp-emulator-ibadah-route-after.png`.
+
+## Web App Explore/Belajar Hub Dashboard Parity
+
+Status: completed for the native `web_app` Explore/Belajar hub visual parity
+pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic paper Belajar catalog, search slot, profile
+  action, feature rows, pinned/recent behavior, and active feature view on the
+  `classic` path.
+- `web_app` mode now renders the idle Belajar catalog with a dedicated dark
+  dashboard-style hub: `KONTEN ISLAM` hero, dark search input, uppercase
+  section labels, and two-column feature tiles.
+- `FeatureCatalog` now supports a `webApp` variant while reusing the same
+  catalog section filtering, feature lookup, badge logic, feature press handler,
+  and pin/unpin handler.
+- Active feature views still use the existing `Screen` path so forum, feed,
+  notes, bookmarks, library progress, tafsir, quiz, calculators, and local
+  tools keep their existing handlers.
+- Added Explore test coverage to ensure the `web_app` idle hub uses the
+  dashboard catalog instead of the classic `Screen` title surface.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Explore/Belajar idle hub
+  presentation in `web_app`. It does not change classic Explore, feature keys,
+  API fetching, personal data handlers, forum/feed behavior, calculators,
+  library progress, or active feature detail views.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
