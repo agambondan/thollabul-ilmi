@@ -1191,3 +1191,49 @@ Results:
 - `git diff --check` passed.
 - Native emulator smoke captured at
   `output/native-smoke/tholabul-webapp-emulator-bookmarks-route-after.png`.
+
+## Web App Notes Route Dashboard Parity
+
+Status: completed for the native `web_app` Notes feature route visual parity
+pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic paper active-feature `Screen` path for the
+  Notes feature on the `classic` layout.
+- `web_app` mode now renders the Notes feature route with a dedicated dark
+  dashboard surface modeled after `/dashboard/notes`: personal header, item
+  count, dark search field, note cards, date metadata, tags, and management
+  affordance.
+- Notes loading still uses `getAllNotes`; detail opening and management still
+  reuse the existing `openItemDetail` and item action-sheet handlers.
+- Added Explore test coverage to ensure the `web_app` Notes feature route uses
+  the dedicated dashboard surface instead of the generic `Screen` title path,
+  including dashboard-style note search filtering.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Notes feature route presentation in
+  `web_app`. It does not change classic Explore, notes API calls, note
+  creation/update/deletion, item detail behavior, feature keys, or auth gating.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted Explore test passed: 1 suite, 23 tests.
+- Full mobile Jest passed: 44 suites, 624 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-notes-route-after.png`.

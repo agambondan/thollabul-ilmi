@@ -135,6 +135,18 @@ const normalizeBookmarkType = (value = '') => {
 };
 const getBookmarkTypeLabel = (type = '') =>
   BOOKMARK_TYPE_LABELS[normalizeBookmarkType(type)] || `${type || 'Bookmark'}`.replace(/_/g, ' ');
+const formatNoteDate = (value = '') => {
+  if (!value) return '';
+  const parsed = new Date(`${value}`.includes('T') ? value : `${value}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return `${value}`;
+  return parsed.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+};
+const getNoteTags = (item = {}) => {
+  const tags = item?.raw?.tags ?? item?.tags;
+  if (Array.isArray(tags)) return tags.filter(Boolean);
+  if (typeof tags === 'string') return tags.split(',').map((tag) => tag.trim()).filter(Boolean);
+  return [];
+};
 const formatNumericInput = (value = '') => {
   const normalized = digitsOnly(value);
   if (!normalized) return '';
@@ -268,6 +280,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
   const [commentLoading, setCommentLoading] = useState(false);
   const [commentSaving, setCommentSaving] = useState(false);
   const [likingFeedId, setLikingFeedId] = useState('');
+  const [notesSearch, setNotesSearch] = useState('');
   const [editingUserWirdId, setEditingUserWirdId] = useState('');
   const [savingUserWird, setSavingUserWird] = useState(false);
   const [userWirdForm, setUserWirdForm] = useState(emptyUserWirdForm);
@@ -367,6 +380,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       setLibraryProgressFilter('');
       setFeedComments([]);
       setCommentDraft('');
+      setNotesSearch('');
       setEditingUserWirdId('');
       setUserWirdForm(emptyUserWirdForm);
       setError('');
@@ -2953,6 +2967,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     setError('');
     setActiveNoteRef('');
     setLibraryProgressFilter('');
+    setNotesSearch('');
     if (returnRoute?.tab && returnRoute?.view) {
       navigation?.open?.(returnRoute.tab, returnRoute.view, { returnTab: null });
     }
@@ -3107,6 +3122,140 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     );
   };
 
+  const renderWebAppNoteCard = (item, index) => {
+    const tags = getNoteTags(item);
+    const date = formatNoteDate(item?.raw?.date ?? item?.raw?.created_at ?? item?.date);
+
+    return (
+      <Pressable
+        android_ripple={{ color: 'rgba(52, 211, 153, 0.12)', borderless: false }}
+        key={`${getExploreItemKey(item)}-${index}`}
+        onLongPress={() => setItemActionSheet({ visible: true, item })}
+        onPress={() => openItemDetail(item)}
+        style={styles.webAppNoteCard}
+        testID="web-app-note-card"
+      >
+        <View style={styles.webAppNoteIcon}>
+          <StickyNote color={WEB_APP_EXPLORE_ACCENT} size={18} strokeWidth={2} />
+        </View>
+        <View style={styles.webAppNoteBody}>
+          <View style={styles.webAppBookmarkHeader}>
+            <Text style={styles.webAppBookmarkType}>CATATAN</Text>
+            {date ? <Text style={styles.webAppBookmarkRef}>{date}</Text> : null}
+          </View>
+          <Text numberOfLines={2} style={styles.webAppBookmarkTitle}>
+            {item.title || 'Catatan pribadi'}
+          </Text>
+          {item.body ? (
+            <Text numberOfLines={4} style={styles.webAppBookmarkText}>
+              {item.body}
+            </Text>
+          ) : null}
+          {tags.length ? (
+            <View style={styles.webAppNoteTags}>
+              {tags.slice(0, 4).map((tag) => (
+                <Text key={tag} style={styles.webAppNoteTag}>
+                  {tag}
+                </Text>
+              ))}
+            </View>
+          ) : null}
+          <View style={styles.webAppBookmarkFooter}>
+            <Text style={styles.webAppBookmarkHint}>Ketuk untuk membaca</Text>
+            <Pressable
+              hitSlop={10}
+              onPress={() => setItemActionSheet({ visible: true, item })}
+              style={styles.webAppBookmarkManage}
+              testID="web-app-note-manage"
+            >
+              <Text style={styles.webAppBookmarkManageText}>Kelola</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Pressable>
+    );
+  };
+
+  const renderWebAppNotesScreen = () => {
+    const normalizedQuery = normalizeSearchText(notesSearch);
+    const filteredNotes = normalizedQuery
+      ? visibleItems.filter((item) =>
+          [item.title, item.body, item.meta, ...(getNoteTags(item))]
+            .some((value) => normalizeSearchText(value).includes(normalizedQuery)))
+      : visibleItems;
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppBookmarksContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppBookmarksRoot}
+      >
+        <View testID="explore-web-app-notes-surface" />
+        <View style={styles.webAppBookmarksHeader}>
+          <Pressable
+            accessibilityLabel="Kembali ke Belajar"
+            onPress={clearFeature}
+            style={styles.webAppBookmarksBack}
+            testID="web-app-notes-back"
+          >
+            <Text style={styles.webAppBookmarksBackText}>Kembali</Text>
+          </Pressable>
+          <Text style={styles.webAppCatalogEyebrow}>PERSONAL</Text>
+          <View style={styles.webAppBookmarksTitleRow}>
+            <Text style={styles.webAppCatalogTitle}>Catatan</Text>
+            <Text style={styles.webAppBookmarksCount}>{items.length} item</Text>
+          </View>
+          <Text style={styles.webAppCatalogSubtitle}>
+            Ringkasan tadabbur, kajian, dan refleksi pribadi dalam tampilan dashboard.
+          </Text>
+        </View>
+
+        <View style={styles.webAppNotesSearch}>
+          <TextInput
+            onChangeText={setNotesSearch}
+            placeholder="Cari judul, isi, atau tag catatan..."
+            placeholderTextColor={WEB_APP_EXPLORE_MUTED}
+            style={styles.webAppCatalogInput}
+            testID="web-app-notes-search"
+            value={notesSearch}
+          />
+        </View>
+
+        {error ? <Text style={styles.webAppBookmarksError}>{error}</Text> : null}
+        {loading ? (
+          <View style={styles.webAppBookmarksState}>
+            <ActivityIndicator color={WEB_APP_EXPLORE_ACCENT} size="small" />
+            <Text style={styles.webAppBookmarksStateText}>Memuat catatan...</Text>
+          </View>
+        ) : null}
+        {!loading && !error && !items.length ? (
+          <View style={styles.webAppBookmarksEmpty}>
+            <StickyNote color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
+            <Text style={styles.webAppBookmarksEmptyTitle}>Belum ada catatan.</Text>
+            <Text style={styles.webAppBookmarksEmptyText}>
+              Buka detail konten untuk menambahkan catatan pertama.
+            </Text>
+          </View>
+        ) : null}
+        {!loading && !error && items.length > 0 && filteredNotes.length === 0 ? (
+          <View style={styles.webAppBookmarksEmpty}>
+            <Text style={styles.webAppBookmarksEmptyTitle}>Catatan tidak ditemukan.</Text>
+            <Text style={styles.webAppBookmarksEmptyText}>
+              Coba kata kunci lain atau kosongkan pencarian.
+            </Text>
+          </View>
+        ) : null}
+        {!loading && !error && filteredNotes.length > 0 ? (
+          <View style={styles.webAppNotesList}>
+            {filteredNotes.map(renderWebAppNoteCard)}
+          </View>
+        ) : null}
+        {renderItemActionSheet()}
+      </ScrollView>
+    );
+  };
+
   if (selectedItem) {
     return renderDetailScreen();
   }
@@ -3152,6 +3301,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   if (activeFeature?.type === 'bookmarks' && isWebAppLayout) {
     return renderWebAppBookmarksScreen();
+  }
+
+  if (activeFeature?.type === 'notes' && isWebAppLayout) {
+    return renderWebAppNotesScreen();
   }
 
   return (
@@ -3512,6 +3665,62 @@ const styles = StyleSheet.create({
     color: '#d1fae5',
     fontSize: 12,
     fontWeight: '900',
+  },
+  webAppNotesSearch: {
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: 12,
+    borderWidth: 1,
+    justifyContent: 'center',
+    marginTop: spacing.md,
+    minHeight: 46,
+    paddingHorizontal: spacing.md,
+  },
+  webAppNotesList: {
+    gap: spacing.md,
+    marginTop: spacing.md,
+  },
+  webAppNoteCard: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.md,
+    minHeight: 128,
+    padding: spacing.md,
+  },
+  webAppNoteIcon: {
+    alignItems: 'center',
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: 14,
+    borderWidth: 1,
+    height: 42,
+    justifyContent: 'center',
+    width: 42,
+  },
+  webAppNoteBody: {
+    flex: 1,
+    minWidth: 0,
+  },
+  webAppNoteTags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+    marginTop: spacing.sm,
+  },
+  webAppNoteTag: {
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: 999,
+    borderWidth: 1,
+    color: '#cbd5e1',
+    fontSize: 11,
+    fontWeight: '800',
+    overflow: 'hidden',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
   },
   webAppSurface: {
     backgroundColor: '#f8fafc',

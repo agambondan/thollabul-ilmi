@@ -369,6 +369,50 @@ describe('ExploreScreen', () => {
     });
   });
 
+  test('uses dashboard Notes route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useSession.mockReturnValue({
+      ...mockUseSession(),
+      session: { token: 'abc' },
+      user: { id: '1', name: 'Test', email: 'test@test.com' },
+    });
+    personalApi.getBookmarks.mockResolvedValue([]);
+    exploreApi.getAllNotes.mockResolvedValueOnce([
+      {
+        id: 'note-1',
+        title: 'Catatan Tadabbur',
+        body: 'Refleksi dari kajian tafsir.',
+        meta: 'catatan',
+        raw: { date: '2026-05-25', tags: ['quran', 'tadabbur'] },
+      },
+      {
+        id: 'note-2',
+        title: 'Fiqh Muamalah',
+        body: 'Ringkasan materi pekanan.',
+        meta: 'catatan',
+        raw: { date: '2026-05-24', tags: ['fiqh'] },
+      },
+    ]);
+
+    const { getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
+      deepLinkTarget: { id: 'notes-route', params: { featureKey: 'notes' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-notes-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('PERSONAL')).toBeTruthy();
+      expect(getByText('Catatan')).toBeTruthy();
+      expect(getByText('Catatan Tadabbur')).toBeTruthy();
+      expect(getByText('Fiqh Muamalah')).toBeTruthy();
+    });
+
+    fireEvent.changeText(getByTestId('web-app-notes-search'), 'tadabbur');
+
+    expect(getByText('Catatan Tadabbur')).toBeTruthy();
+    expect(queryByText('Fiqh Muamalah')).toBeNull();
+  });
+
   test('renders search input for feature catalog', async () => {
     const { getByTestId } = await renderExploreScreen();
     expect(getByTestId('search-input')).toBeTruthy();
