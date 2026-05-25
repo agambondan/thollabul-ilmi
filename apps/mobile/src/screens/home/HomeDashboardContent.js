@@ -1,8 +1,10 @@
+import { useMemo, useState } from 'react';
 import {
   Bell,
   Book,
   BookOpenCheck,
-  ChevronRight,
+  ChevronLeft,
+  ChevronRight as ChevronRightIcon,
   Clock3,
   Compass,
   FileText,
@@ -78,6 +80,33 @@ const webDashboardFontFamily = Platform.select({
 const formatHadisSource = (value = '') => {
   if (!value) return '';
   return value.replace(/\bHadith\b/g, 'Hadis');
+};
+
+const buildWebAppDailySlides = ({ dailyAyah, dailyHadith, dailyMessage, loadingDaily }) => {
+  const ayahSlide = {
+    Icon: Book,
+    accentColor: webDashboardColors.primary,
+    arabic: dailyAyah?.arabic,
+    key: 'ayah',
+    source: dailyAyah?.ref,
+    text: loadingDaily
+      ? 'Memuat ayat harian...'
+      : dailyAyah?.translation || dailyMessage || 'Ayat harian belum tersedia.',
+    title: 'Ayat Hari Ini',
+  };
+  const hadithSlide = {
+    Icon: BookOpenCheck,
+    accentColor: webDashboardColors.accent,
+    arabic: dailyHadith?.arabic,
+    key: 'hadith',
+    source: dailyHadith?.book ? formatHadisSource(dailyHadith.book) : '',
+    text: loadingDaily
+      ? 'Memuat hadis harian...'
+      : dailyHadith?.translation || 'Hadis harian belum tersedia dari server.',
+    title: 'Hadis Hari Ini',
+  };
+
+  return [ayahSlide, hadithSlide];
 };
 
 export function getHomeDashboardRenderer(layoutMode) {
@@ -299,50 +328,54 @@ function DashboardContent({
 
       {!isWebApp ? menuGrid : null}
 
-      <View style={[styles.dailyCard, isWebApp && styles.webAppDailyCard]} testID="home-daily-card">
-        <View style={styles.dailyHeader}>
-          <Text style={[styles.dailyTitle, isWebApp && styles.webAppTitleText]}>Bacaan Hari Ini</Text>
-          <Text style={[styles.dailyMeta, isWebApp && styles.webAppMutedText]}>Quran & Hadis</Text>
+      {isWebApp ? (
+        <WebAppDailyReminderCard
+          dailyAyah={dailyAyah}
+          dailyHadith={dailyHadith}
+          dailyMessage={dailyMessage}
+          loadingDaily={loadingDaily}
+          onOpenTab={onOpenTab}
+        />
+      ) : (
+        <View style={styles.dailyCard} testID="home-daily-card">
+          <View style={styles.dailyHeader}>
+            <Text style={styles.dailyTitle}>Bacaan Hari Ini</Text>
+            <Text style={styles.dailyMeta}>Quran & Hadis</Text>
+          </View>
+          <Pressable
+            android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
+            onPress={() => onOpenTab('quran', { surahNumber: 1 })}
+            style={styles.dailyItem}
+          >
+            <View style={styles.dailyAccent} />
+            <View style={styles.dailyBody}>
+              <Text style={styles.dailyLabel}>Ayat Hari Ini</Text>
+              {dailyAyah?.arabic ? <Text style={styles.dailyArabic}>{dailyAyah.arabic}</Text> : null}
+              <Text style={styles.dailyText}>
+                {loadingDaily ? 'Memuat ayat harian...' : dailyAyah?.translation || dailyMessage || 'Ayat harian belum tersedia.'}
+              </Text>
+              {dailyAyah?.ref ? <Text style={styles.dailySource}>{dailyAyah.ref}</Text> : null}
+            </View>
+          </Pressable>
+          <Pressable
+            android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
+            onPress={() => onOpenTab('hadith')}
+            style={styles.dailyItem}
+          >
+            <View style={styles.dailyAccent} />
+            <View style={styles.dailyBody}>
+              <Text style={styles.dailyLabel}>Hadis Hari Ini</Text>
+              {dailyHadith?.arabic ? <Text style={styles.dailyArabic}>{dailyHadith.arabic}</Text> : null}
+              <Text style={styles.dailyText}>
+                {loadingDaily
+                  ? 'Memuat hadis harian...'
+                  : dailyHadith?.translation || 'Hadis harian belum tersedia dari server.'}
+              </Text>
+              {dailyHadith?.book ? <Text style={styles.dailySource}>{formatHadisSource(dailyHadith.book)}</Text> : null}
+            </View>
+          </Pressable>
         </View>
-        <Pressable
-          android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
-          onPress={() => onOpenTab('quran', { surahNumber: 1 })}
-          style={[styles.dailyItem, isWebApp && styles.webAppDailyItem]}
-        >
-          <View style={[styles.dailyAccent, isWebApp && styles.webAppDailyAccent]} />
-          <View style={styles.dailyBody}>
-            <Text style={[styles.dailyLabel, isWebApp && styles.webAppPrimaryText]}>Ayat Hari Ini</Text>
-            {dailyAyah?.arabic ? (
-              <Text style={[styles.dailyArabic, isWebApp && styles.webAppTitleText]}>{dailyAyah.arabic}</Text>
-            ) : null}
-            <Text style={[styles.dailyText, isWebApp && styles.webAppText]}>
-              {loadingDaily ? 'Memuat ayat harian...' : dailyAyah?.translation || dailyMessage || 'Ayat harian belum tersedia.'}
-            </Text>
-            {dailyAyah?.ref ? <Text style={[styles.dailySource, isWebApp && styles.webAppMutedText]}>{dailyAyah.ref}</Text> : null}
-          </View>
-        </Pressable>
-        <Pressable
-          android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
-          onPress={() => onOpenTab('hadith')}
-          style={[styles.dailyItem, isWebApp && styles.webAppDailyItem]}
-        >
-          <View style={[styles.dailyAccent, isWebApp && styles.webAppDailyAccent]} />
-          <View style={styles.dailyBody}>
-            <Text style={[styles.dailyLabel, isWebApp && styles.webAppPrimaryText]}>Hadis Hari Ini</Text>
-            {dailyHadith?.arabic ? (
-              <Text style={[styles.dailyArabic, isWebApp && styles.webAppTitleText]}>{dailyHadith.arabic}</Text>
-            ) : null}
-            <Text style={[styles.dailyText, isWebApp && styles.webAppText]}>
-              {loadingDaily
-                ? 'Memuat hadis harian...'
-                : dailyHadith?.translation || 'Hadis harian belum tersedia dari server.'}
-            </Text>
-            {dailyHadith?.book ? (
-              <Text style={[styles.dailySource, isWebApp && styles.webAppMutedText]}>{formatHadisSource(dailyHadith.book)}</Text>
-            ) : null}
-          </View>
-        </Pressable>
-      </View>
+      )}
 
       {contextualShortcuts.length ? (
         <ContextShortcutsCard
@@ -395,9 +428,97 @@ function DashboardContent({
         subtitleStyle={[styles.journalDesc, isWebApp && styles.webAppMutedText]}
         title="Jurnal Muhasabah"
         titleStyle={[styles.journalTitle, isWebApp && styles.webAppTitleText]}
-        trailing={<ChevronRight color={muted} size={18} strokeWidth={2.4} />}
+        trailing={<ChevronRightIcon color={muted} size={18} strokeWidth={2.4} />}
       />
     </ScrollView>
+  );
+}
+
+function WebAppDailyReminderCard({ dailyAyah, dailyHadith, dailyMessage, loadingDaily, onOpenTab }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const slides = useMemo(
+    () => buildWebAppDailySlides({ dailyAyah, dailyHadith, dailyMessage, loadingDaily }),
+    [dailyAyah, dailyHadith, dailyMessage, loadingDaily],
+  );
+  const active = slides[activeIndex % slides.length];
+  const Icon = active.Icon;
+
+  const goPrev = () => setActiveIndex((current) => (current - 1 + slides.length) % slides.length);
+  const goNext = () => setActiveIndex((current) => (current + 1) % slides.length);
+  const openActive = () => {
+    if (active.key === 'hadith') {
+      onOpenTab('hadith');
+      return;
+    }
+    onOpenTab('quran', { surahNumber: 1 });
+  };
+
+  return (
+    <Pressable
+      android_ripple={{ color: 'rgba(16, 185, 129, 0.12)', borderless: false }}
+      onPress={openActive}
+      style={styles.webAppReminderCard}
+      testID="home-daily-card"
+    >
+      <View style={styles.webAppReminderHeader}>
+        <View style={styles.webAppReminderTitleRow}>
+          <Icon color={active.accentColor} size={17} strokeWidth={2.2} />
+          <Text style={[styles.webAppReminderTitle, { color: active.accentColor }]}>{active.title}</Text>
+        </View>
+        <View style={styles.webAppReminderControls}>
+          <Pressable
+            accessibilityLabel="Sebelumnya"
+            accessibilityRole="button"
+            android_ripple={{ color: 'rgba(16, 185, 129, 0.14)', borderless: true }}
+            onPress={goPrev}
+            style={styles.webAppReminderButton}
+            testID="home-daily-prev"
+          >
+            <ChevronLeft color={active.accentColor} size={18} strokeWidth={2.2} />
+          </Pressable>
+          <Pressable
+            accessibilityLabel="Berikutnya"
+            accessibilityRole="button"
+            android_ripple={{ color: 'rgba(16, 185, 129, 0.14)', borderless: true }}
+            onPress={goNext}
+            style={styles.webAppReminderButton}
+            testID="home-daily-next"
+          >
+            <ChevronRightIcon color={active.accentColor} size={18} strokeWidth={2.2} />
+          </Pressable>
+        </View>
+      </View>
+
+      {active.arabic ? (
+        <Text numberOfLines={3} style={styles.webAppReminderArabic}>
+          {active.arabic}
+        </Text>
+      ) : null}
+      <Text numberOfLines={4} style={styles.webAppReminderText}>
+        {`"${active.text}"`}
+      </Text>
+      <View style={styles.webAppReminderFooter}>
+        <Text numberOfLines={1} style={[styles.webAppReminderSource, { color: active.accentColor }]}>
+          {active.source || 'Pengingat harian'}
+        </Text>
+        <Text style={styles.webAppReminderLink}>Selengkapnya →</Text>
+      </View>
+      <View style={styles.webAppReminderDots}>
+        {slides.map((slide, index) => (
+          <Pressable
+            accessibilityLabel={`Tampilkan ${slide.title}`}
+            accessibilityRole="button"
+            key={slide.key}
+            onPress={() => setActiveIndex(index)}
+            style={[
+              styles.webAppReminderDot,
+              index === activeIndex && [styles.webAppReminderDotActive, { backgroundColor: active.accentColor }],
+            ]}
+            testID={`home-daily-dot-${slide.key}`}
+          />
+        ))}
+      </View>
+    </Pressable>
   );
 }
 
@@ -446,7 +567,7 @@ function FeatureListCard({ Icon, features, isWebApp, meta, muted, onOpenTab, pri
           subtitleStyle={[styles.recentRowSubtitle, isWebApp && styles.webAppMutedText]}
           title={feature.title}
           titleStyle={[styles.recentRowTitle, isWebApp && styles.webAppTitleText]}
-          trailing={<ChevronRight color={muted} size={18} strokeWidth={2.4} />}
+          trailing={<ChevronRightIcon color={muted} size={18} strokeWidth={2.4} />}
         />
       ))}
     </View>
@@ -925,18 +1046,94 @@ const styles = StyleSheet.create({
     padding: spacing.md,
     ...shadows.paper,
   },
-  webAppDailyCard: {
+  webAppReminderCard: {
+    backgroundColor: '#052e2b',
+    borderColor: webDashboardColors.borderSoft,
+    borderRadius: 16,
+    borderWidth: 1,
+    marginBottom: spacing.lg,
+    overflow: 'hidden',
+    padding: spacing.lg,
+  },
+  webAppReminderHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: spacing.md,
+  },
+  webAppReminderTitleRow: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    gap: spacing.xs,
+    minWidth: 0,
+  },
+  webAppReminderTitle: {
+    flex: 1,
+    fontSize: 12,
+    fontWeight: '900',
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
+  webAppReminderControls: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+  },
+  webAppReminderButton: {
+    alignItems: 'center',
     backgroundColor: webDashboardColors.card,
     borderColor: webDashboardColors.border,
-    borderRadius: radius.md,
-    marginTop: 0,
+    borderRadius: 999,
+    borderWidth: 1,
+    height: 32,
+    justifyContent: 'center',
+    width: 32,
   },
-  webAppDailyItem: {
-    backgroundColor: webDashboardColors.cardDeep,
-    borderColor: webDashboardColors.border,
+  webAppReminderArabic: {
+    ...arabicTypography.small,
+    color: webDashboardColors.title,
+    fontFamily: webDashboardFontFamily,
+    fontSize: 24,
+    lineHeight: 40,
+    marginBottom: spacing.sm,
+    textAlign: 'right',
+    writingDirection: 'rtl',
   },
-  webAppDailyAccent: {
-    backgroundColor: webDashboardColors.primaryStrong,
+  webAppReminderText: {
+    color: webDashboardColors.text,
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: spacing.sm,
+  },
+  webAppReminderFooter: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    justifyContent: 'space-between',
+  },
+  webAppReminderSource: {
+    flex: 1,
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  webAppReminderLink: {
+    color: webDashboardColors.primary,
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  webAppReminderDots: {
+    flexDirection: 'row',
+    gap: 6,
+    marginTop: spacing.md,
+  },
+  webAppReminderDot: {
+    backgroundColor: '#475569',
+    borderRadius: 999,
+    height: 6,
+    width: 6,
+  },
+  webAppReminderDotActive: {
+    width: 24,
   },
   dailyHeader: {
     alignItems: 'center',

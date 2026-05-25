@@ -3,7 +3,7 @@
 > Tujuan: menjaga parity fitur web (public + dashboard) dan mobile agar agent
 > berikutnya tidak menganggap baseline lama sebagai status current.
 
-Last verified: 2026-05-24
+Last verified: 2026-05-25
 
 ## Source Of Truth
 
@@ -86,7 +86,7 @@ These route patterns are part of the current journey contract:
 | Forum Q&A | `/forum`, `/forum/:slug`, `/forum/ask` | `/dashboard/forum`, `/dashboard/forum/:slug`, `/dashboard/forum/ask` | Mobile now mirrors the forum journey through `feature:forum`: list/search/pagination, question detail, ask form, answer form, question vote, answer vote, and accept-answer action backed by the same `/api/v1/forum/*` endpoints. |
 | Zakat/Faraidh saved history | `/zakat/history`, `/faraidh` | `/dashboard/zakat/history`, `/dashboard/faraidh` | Mobile calculators now keep local device history without login and merge it with backend history when the user is authenticated, matching the web local + account-sync journey. Mobile zakat also auto-loads the backend gold price endpoint for current nisab calculations and keeps the manual field editable as fallback. |
 | Jadwal Sholat adzan behavior | `/jadwal-sholat` | `/dashboard/jadwal-sholat` | Mobile now has countdown, foreground prayer-time notification, optional adzan audio toggle, reminder scheduling, offline schedule cache, and manual correction controls. Web requests location and notification permission early, stores a shared prayer location, refreshes stale GPS location after 6 hours, dismisses the permission prompt for 24 hours, and uses local calendar dates for schedule requests. Mobile should mirror the same data contract with native permission APIs and local storage, not hardcoded district labels. |
-| Dashboard reminder carousel | `/dashboard` | `/dashboard` | Dashboard rotates Quran daily, Hadith daily, and dynamic reminder content from `GET /api/v1/reminders`. Web admin manages reminder rows at `/admin/reminders`; mobile should consume the same endpoint when the web-inspired mobile layout is implemented so ulama names, sources, active status, and ordering stay synced. |
+| Dashboard reminder carousel | `/dashboard` | `/dashboard` | Dashboard rotates Quran daily, Hadith daily, and dynamic reminder content from `GET /api/v1/reminders`. Native mobile `web_app` now mirrors the carousel-style presentation for Quran/Hadith daily content instead of the classic two-row "Bacaan Hari Ini" card. Mobile still needs the dynamic reminders endpoint wired into this surface so ulama names, sources, active status, and ordering stay synced with web admin reminders. |
 | Admin analytics | `/admin` | admin-only | Web now records page-view events through `POST /api/v1/analytics/page-view` and renders admin visitor metrics plus traffic insights from `GET /api/v1/analytics/admin/summary`. Authenticated events keep both `visitor_id` and `user_id`; unique visitor aggregation counts `user_id` first and falls back to `visitor_id` for guests. The admin dashboard also derives review queue, content health, content status charts, active user ranking, top pages per source, recent activity rows for tracing user/guest journeys, a 7/14/30/90-day analytics window selector, and previous-period trend deltas for visitor/view cards. Mobile does not mirror admin analytics because this is an admin web surface, not a public/mobile feature. |
 
 Closed historical gaps:

@@ -1,7 +1,7 @@
 jest.mock('lucide-react-native', () => {
   const icons = {};
   const names = [
-    'Bell', 'Book', 'Bookmark', 'BookOpen', 'BookOpenCheck', 'ChevronRight',
+    'Bell', 'Book', 'Bookmark', 'BookOpen', 'BookOpenCheck', 'ChevronLeft', 'ChevronRight',
     'Clock3', 'Compass', 'FileText', 'Globe', 'Grid', 'HelpCircle',
     'ListChecks', 'MessageCircle', 'Moon', 'Scale', 'Search', 'Smile', 'Star',
     'Sun', 'Sunset', 'Users', 'Video',
@@ -234,8 +234,27 @@ describe('HomeScreen', () => {
       expect.arrayContaining([expect.objectContaining({ backgroundColor: '#0f172a', borderColor: '#1e293b' })]),
     );
     expect(getByTestId('home-daily-card').props.style).toEqual(
-      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#0f172a', borderColor: '#1e293b' })]),
+      expect.objectContaining({ backgroundColor: '#052e2b', borderColor: '#064e3b' }),
     );
+  });
+
+  test('uses carousel-style daily reminder card for web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+
+    const { getByTestId, getByText, queryByText } = await renderHomeScreen();
+
+    await waitFor(() => {
+      expect(getByTestId('home-daily-card')).toBeTruthy();
+      expect(getByText('Ayat Hari Ini')).toBeTruthy();
+    });
+    expect(queryByText('Bacaan Hari Ini')).toBeNull();
+    expect(getByTestId('home-daily-prev')).toBeTruthy();
+    expect(getByTestId('home-daily-next')).toBeTruthy();
+
+    fireEvent.press(getByTestId('home-daily-next'));
+
+    expect(getByText('Hadis Hari Ini')).toBeTruthy();
+    expect(getByText(`"${mockHadith.translation}"`)).toBeTruthy();
   });
 
   test('renders user name when logged in', async () => {

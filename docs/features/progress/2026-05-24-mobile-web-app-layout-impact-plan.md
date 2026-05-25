@@ -776,3 +776,41 @@ Results:
 - Full mobile Jest passed: 44 suites, 613 tests.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
+
+## Web App Dashboard Reminder Card Parity
+
+Status: completed for the first native `web_app` daily reminder presentation
+pass.
+
+Implemented:
+
+- `HomeDashboardContent` now keeps the classic two-row `Bacaan Hari Ini` card
+  only for the `paper` layout.
+- `web_app` mode now renders a dashboard-style daily reminder card with a
+  single active slide, previous/next controls, dots, Quran/Hadith labels,
+  Arabic text, source text, and the same dark dashboard color family.
+- Added Home test coverage to ensure `web_app` uses the carousel-style daily
+  card and can switch from Ayat Hari Ini to Hadis Hari Ini.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Home dashboard presentation for
+  `web_app`. It does not change classic Home, data fetching, API contracts,
+  account state, or shell navigation.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- homeScreen.test.js mobileAppShell.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+```
+
+Results:
+
+- Targeted Home/shell tests passed: 2 suites, 36 tests.
+- Full mobile Jest passed: 44 suites, 618 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
