@@ -11,6 +11,7 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 | [MOBILE_IA_FINAL_APPROACH.md](./MOBILE_IA_FINAL_APPROACH.md) | **Arsitektur navigasi mobile** — 5 tab final, feature placement, urutan implementasi | ✅ Aktif |
 | [MOBILE_DESIGN_PATTERNS.md](./MOBILE_DESIGN_PATTERNS.md) | **Pola desain mobile mengikat** — detail UI harus modal/page (bukan inline expand), modal style, back navigation | ✅ Aktif |
 | [MOBILE_LAYOUT_MODES.md](./MOBILE_LAYOUT_MODES.md) | **Strategi layout mobile app** — mobile app lama tetap dipertahankan, layout baru bisa dipilih user | 🟡 Planned |
+| [MOBILE_APP_DEVELOPMENT_GUIDELINES.md](./MOBILE_APP_DEVELOPMENT_GUIDELINES.md) | **Arahan development mobile app** — pemisahan orchestration vs renderer layout, DRY/KISS/SOLID, testing | ✅ Aktif |
 | [api/FEATURE_ROADMAP.md](./api/FEATURE_ROADMAP.md) | Roadmap fitur backend, tier, dan status pengerjaan | ✅ Aktif |
 | [api/roadmap-status.md](./api/roadmap-status.md) | Status terkini tiap fitur backend | ✅ Aktif |
 | [web/web-status.md](./web/web-status.md) | Status halaman dan komponen web (Next.js) | ✅ Aktif |
@@ -26,6 +27,7 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 | **[MOBILE_IA_FINAL_APPROACH.md](./MOBILE_IA_FINAL_APPROACH.md)** | **← Acuan utama IA mobile. Baca ini dulu.** |
 | **[MOBILE_DESIGN_PATTERNS.md](./MOBILE_DESIGN_PATTERNS.md)** | **← Pola desain mengikat: modal vs page detail, anti-expand-inline, modal style.** |
 | **[MOBILE_LAYOUT_MODES.md](./MOBILE_LAYOUT_MODES.md)** | **← Keputusan layout mode: Classic tetap ada, Web App layout jadi opsi baru.** |
+| **[MOBILE_APP_DEVELOPMENT_GUIDELINES.md](./MOBILE_APP_DEVELOPMENT_GUIDELINES.md)** | **← Arahan engineering mobile: renderer per layout, shared data/action, test guard.** |
 | [MOBILE_FEATURE_REFERENCE.md](./MOBILE_FEATURE_REFERENCE.md) | Daftar lengkap fitur mobile dan mapping ke backend |
 | [MOBILE_UX_REVIEW.md](./MOBILE_UX_REVIEW.md) | Review UX dan daftar issue yang ditemukan |
 | [MOBILE_DESIGN_REWORK_TASKLIST.md](./MOBILE_DESIGN_REWORK_TASKLIST.md) | Checklist design contract mobile (sudah selesai) |
@@ -111,3 +113,8 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 - `Screen` — layout scrollable dengan header
 - `Paper` — `SegmentedTabs`, `ActionPill`, `IconActionButton`, `EmptyState`
 - `setBack`/`clearBack` — back navigation pattern (wajib di semua sub-navigation)
+
+**Development mobile → [`MOBILE_APP_DEVELOPMENT_GUIDELINES.md`](./MOBILE_APP_DEVELOPMENT_GUIDELINES.md)**
+- Screen utama mengurus data/state/navigation.
+- Renderer layout (`classic`/internal `paper` dan `web_app`) dipisah saat struktur UI mulai berbeda.
+- API, storage, feature registry, navigation key, dan action handler tetap shared.

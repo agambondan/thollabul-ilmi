@@ -6,6 +6,7 @@
 > Source of truth terkait:
 > - `docs/MOBILE_IA_FINAL_APPROACH.md`
 > - `docs/MOBILE_DESIGN_PATTERNS.md`
+> - `docs/MOBILE_APP_DEVELOPMENT_GUIDELINES.md`
 > - `docs/WEB_MOBILE_SYNC.md`
 
 ## Decision
@@ -201,6 +202,12 @@ Contoh mapping:
 
 Implementasi harus menghindari duplikasi logic.
 
+Arahan engineering detail ada di
+[`MOBILE_APP_DEVELOPMENT_GUIDELINES.md`](./MOBILE_APP_DEVELOPMENT_GUIDELINES.md).
+Ringkasnya: screen utama mengurus orchestration, sedangkan presentasi
+`classic`/internal `paper` dan `web_app` dipisah ke renderer/component
+tersendiri ketika struktur UI mulai berbeda.
+
 Prinsip:
 
 - Business logic, API calls, cache, audio state, dan reader state tetap
@@ -226,6 +233,8 @@ apps/mobile/src/
   screens/
     QuranScreen.js
     HomeScreen.js
+    home/
+      HomeDashboardContent.js
 ```
 
 Nama file final boleh mengikuti pola existing repo saat implementasi, tetapi
@@ -252,6 +261,10 @@ Status kode saat ini:
   sudah punya opt-in `web_app` surface wrapper tanpa mengubah data/action
   handler. Sub-screen Ibadah utama (`PrayerScreen`, `QiblaScreen`,
   `KhatamScreen`) juga sudah mendapat wrapper yang sama.
+- `apps/mobile/src/screens/HomeScreen.js` sudah mulai mengikuti boundary baru:
+  data/orchestration tetap di screen utama, sedangkan dashboard presentation
+  dipindah ke `apps/mobile/src/screens/home/HomeDashboardContent.js` dengan
+  renderer `PaperHomeDashboard` dan `WebAppHomeDashboard`.
 
 Area yang kemungkinan kena impact:
 
