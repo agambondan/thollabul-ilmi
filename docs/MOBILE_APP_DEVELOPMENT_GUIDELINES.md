@@ -58,6 +58,111 @@ Catatan naming:
 - Theme tidak sama dengan layout. Jangan campur logic warna/theme dengan
   pemilihan struktur layout.
 
+## Web App Dashboard Parity Contract
+
+Mode `web_app` harus mengikuti desain mobile view dari web dashboard
+`/dashboard`. Ini adalah contract visual dan interaction utama untuk
+refactor `web_app`.
+
+Source of truth:
+
+- primary: `apps/web` route `/dashboard` pada viewport mobile;
+- comparison viewport default: sekitar `412x915`;
+- native target: `apps/mobile` dengan layout preference
+  `tholabul:pref:app-layout-mode` bernilai JSON string `"web_app"`;
+- shell reference: topbar, account menu, bottom nav, menu sheet, dashboard
+  density, card hierarchy, spacing, warna, dan typography treatment dari
+  `/dashboard` mobile view.
+
+Rules:
+
+- Jangan mengubah web dashboard hanya untuk memudahkan native parity. Web
+  dashboard hanya boleh diubah jika ada bug web yang jelas dan terverifikasi.
+- Jangan memakai screenshot lama sebagai satu-satunya acuan. Ambil ulang
+  screenshot browser mobile view ketika refactor visual signifikan.
+- Jangan menyamakan `web_app` dengan theme app. `web_app` adalah layout mode
+  dan composition contract; theme gelap/terang tetap concern terpisah.
+- Jangan membuat `web_app` kehilangan fitur atau route yang ada di `classic`.
+- Jangan menyalin implementation web mentah-mentah jika membuat native behavior
+  buruk. Ikuti desain dan interaction intent, tetap pakai native component.
+
+Minimum compare path:
+
+```bash
+# Web dashboard reference
+http://localhost:23000/dashboard
+
+# Expo web/native app target
+cd apps/mobile
+EXPO_PUBLIC_API_URL=http://localhost:29900 npx expo start --web --port 23010 --host localhost
+```
+
+Untuk Expo web target, pastikan AsyncStorage layout mode diset ke:
+
+```js
+localStorage.setItem('tholabul:pref:app-layout-mode', JSON.stringify('web_app'));
+```
+
+Catat mismatch visual sebelum patch. Patch native mobile dulu, bukan web,
+kecuali mismatch tersebut terbukti berasal dari bug web dashboard.
+
+## Refactor Isolation Rules
+
+Karena `web_app` akan mengikuti banyak detail `/dashboard`, refactor harus
+dibatasi per slice.
+
+Allowed untuk task `web_app` shell/layout:
+
+- `apps/mobile/src/layout/WebAppShell.js`
+- `apps/mobile/src/layout/MobileTopHeader.js`
+- `apps/mobile/src/layout/MobileBottomNav.js`
+- `apps/mobile/src/layout/MobileMenuSheet.js`
+- `apps/mobile/src/layout/MobileAccountMenu.js`
+- renderer domain di `apps/mobile/src/screens/<domain>/`
+- test yang relevan di `apps/mobile/src/__tests__/`
+- dokumen mobile terkait.
+
+Allowed dengan alasan kuat dan test lebih luas:
+
+- `apps/mobile/App.js`
+- `apps/mobile/src/layout/LayoutModeProvider.js`
+- `apps/mobile/src/hooks/useLayoutModePreference.js`
+- shared primitive di `apps/mobile/src/components/`
+- shared theme token di `apps/mobile/src/theme.js`.
+
+Normally forbidden untuk task parity visual `web_app`:
+
+- `apps/mobile/src/layout/ClassicAppShell.js`
+- `apps/mobile/src/components/TabBar.js`
+- API clients di `apps/mobile/src/api/`
+- storage schema di `apps/mobile/src/storage/`
+- navigation key atau route shape;
+- web dashboard files di `apps/web`, kecuali bug web jelas.
+
+Jika forbidden area harus disentuh, tulis alasan di commit/PR description dan
+tambahkan test yang membuktikan `classic` tidak berubah.
+
+## No-Touch Classic Rules
+
+Perubahan `web_app` tidak boleh mengubah behavior `classic`.
+
+Checklist wajib:
+
+- `classic` tetap default saat preference kosong atau invalid.
+- `classic` tetap memakai shell, tab bar, spacing, dan navigation lama.
+- test marker/testID classic tetap ada.
+- action callback classic tetap sama.
+- Android back classic tetap sama.
+- tidak ada perubahan snapshot/screenshot classic tanpa alasan eksplisit.
+
+Kalau refactor shared dibutuhkan, lakukan dalam dua tahap:
+
+1. pure extraction tanpa perubahan behavior;
+2. perubahan `web_app` yang memakai hasil extraction.
+
+Jangan gabungkan extraction besar dan redesign visual dalam satu commit jika
+blast radius-nya menyentuh shared logic.
+
 ## Recommended Screen Architecture
 
 Gunakan pola ini untuk screen yang mulai punya divergensi layout:
@@ -192,7 +297,9 @@ Sebelum implementasi:
 2. Jika struktur berbeda, buat renderer per layout.
 3. Pastikan data source dan action handler tetap shared.
 4. Pastikan feature tetap reachable dari kedua layout.
-5. Tentukan test targeted sebelum coding.
+5. Jika task menyentuh `web_app`, ambil atau cek reference `/dashboard`
+   mobile view sebelum patch.
+6. Tentukan test targeted sebelum coding.
 
 Saat implementasi:
 
@@ -208,7 +315,10 @@ Setelah implementasi:
 2. Run full mobile Jest jika menyentuh shared screen, shell, provider, storage,
    navigation, atau feature registry.
 3. Run `git diff --check`.
-4. Untuk UI/shell mobile, lakukan real-device smoke jika device tersedia.
+4. Untuk UI/shell mobile, lakukan browser mobile viewport compare terhadap
+   `/dashboard`.
+5. Untuk native shell/device behavior, lakukan real-device smoke jika device
+   tersedia.
 
 ## Test Guidance
 
@@ -220,6 +330,8 @@ Minimum test untuk perubahan layout mode:
 - action utama tetap memanggil callback yang sama;
 - invalid preference fallback ke `classic`;
 - navigation/back behavior tidak berubah.
+- jika shared component disentuh, test harus membuktikan kedua layout tetap
+  aman.
 
 Contoh guard yang disarankan:
 
@@ -249,6 +361,21 @@ Update docs jika perubahan menyentuh salah satu area ini:
 
 Jika hanya refactor internal tanpa perubahan behavior, cukup update dokumen ini
 atau test architecture guard bila perlu.
+
+## Merge Gate For Web App Parity Work
+
+Sebelum perubahan `web_app` dianggap selesai:
+
+- mismatch terhadap `/dashboard` mobile view sudah dicatat;
+- patch hanya menyentuh area yang perlu;
+- `classic` tidak ikut berubah tanpa alasan eksplisit;
+- targeted Jest pass;
+- full mobile Jest pass untuk perubahan shell/shared;
+- `git diff --check` clean;
+- browser mobile viewport compare dilakukan untuk visual change;
+- real-device smoke dilakukan jika menyentuh native-only behavior atau device
+  tersedia;
+- commit hanya berisi perubahan agent-owned untuk slice tersebut.
 
 ## Current Reference Implementation
 

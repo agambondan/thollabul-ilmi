@@ -88,6 +88,11 @@ akun bisa ditambahkan setelah model settings account-level stabil.
 Mode `web_app` pada mobile native mengacu ke mobile web dashboard terbaru,
 bukan embed webview.
 
+Untuk visual parity, source of truth utama adalah route web `/dashboard` pada
+viewport mobile. Setiap refactor visual `web_app` harus membandingkan native
+target dengan `/dashboard` mobile view terlebih dahulu, lalu patch di native
+mobile kecuali mismatch terbukti sebagai bug di web dashboard.
+
 Karakter target:
 
 - top header dengan brand/account surface;
@@ -291,6 +296,11 @@ Sebelum ada kode behavior baru, ikuti batas ini:
 - Jangan embed mobile web lewat WebView. `web_app` adalah native layout.
 - Jangan fork API client, cache, audio player, notes/bookmark service, atau
   prayer service hanya karena beda layout.
+- Jangan ubah `ClassicAppShell`, `TabBar` classic, storage schema, API client,
+  atau navigation key untuk mengejar visual parity `web_app` kecuali ada
+  alasan teknis yang eksplisit dan test yang melindungi `classic`.
+- Jangan ubah `apps/web` dashboard hanya untuk membuat native lebih mudah
+  mirip. Web dashboard adalah reference, bukan area patch default.
 - Jangan hapus test existing. Tambahkan test untuk provider/shell selection
   sebelum refactor visual.
 - Perluasan surface tetap incremental per slice dan harus disertai targeted
