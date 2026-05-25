@@ -208,6 +208,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'asmaul-wirid', title: 'Wirid Asmaul Husna', subtitle: 'Dzikir 99 nama Allah', group: 'Bacaan', type: 'asmaul-wirid' },
     { key: 'bookmarks', title: 'Bookmark', subtitle: 'Tersimpan', group: 'Personal', type: 'bookmarks' },
     { key: 'notes', title: 'Catatan', subtitle: 'Catatan pribadi', group: 'Personal', type: 'notes' },
+    { key: 'notifications', title: 'Notifikasi', subtitle: 'Inbox dan pengingat', group: 'Personal', type: 'notifications' },
     { key: 'community-feed', title: 'Komunitas', subtitle: 'Refleksi', group: 'Ilmu', type: 'feed' },
     { key: 'kajian', title: 'Kajian', subtitle: 'Sesi belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/kajian' },
     { key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi seputar Islam', group: 'Ilmu', type: 'forum' },
@@ -236,6 +237,12 @@ jest.mock('../data/mobileFeatures', () => {
       label: 'Evaluasi',
       meta: 'Latihan',
       features: allFeatures.filter((f) => ['quiz', 'zakat'].includes(f.key)),
+    },
+    {
+      key: 'personal',
+      label: 'Personal',
+      meta: 'Akun',
+      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications'].includes(f.key)),
     },
   ];
 
@@ -411,6 +418,28 @@ describe('ExploreScreen', () => {
 
     expect(getByText('Catatan Tadabbur')).toBeTruthy();
     expect(queryByText('Fiqh Muamalah')).toBeNull();
+  });
+
+  test('uses dashboard Notifications route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useSession.mockReturnValue({
+      ...mockUseSession(),
+      session: { token: 'abc' },
+      user: { id: '1', name: 'Test', email: 'test@test.com' },
+    });
+    personalApi.getBookmarks.mockResolvedValue([]);
+
+    const { getByTestId, getByText, queryByTestId } = await renderExploreScreen({
+      deepLinkTarget: { id: 'notifications-route', params: { featureKey: 'notifications' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-notifications-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('PERSONAL')).toBeTruthy();
+      expect(getByText('Notifikasi')).toBeTruthy();
+      expect(getByTestId('notification-center')).toBeTruthy();
+    });
   });
 
   test('renders search input for feature catalog', async () => {

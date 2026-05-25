@@ -3256,6 +3256,38 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     );
   };
 
+  const renderWebAppNotificationsScreen = () => (
+    <ScrollView
+      contentContainerStyle={styles.webAppNotificationsContent}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
+      style={styles.webAppBookmarksRoot}
+    >
+      <View testID="explore-web-app-notifications-surface" />
+      <View style={styles.webAppBookmarksHeader}>
+        <Pressable
+          accessibilityLabel="Kembali ke Belajar"
+          onPress={clearFeature}
+          style={styles.webAppBookmarksBack}
+          testID="web-app-notifications-back"
+        >
+          <Text style={styles.webAppBookmarksBackText}>Kembali</Text>
+        </Pressable>
+        <Text style={styles.webAppCatalogEyebrow}>PERSONAL</Text>
+        <View style={styles.webAppBookmarksTitleRow}>
+          <Text style={styles.webAppCatalogTitle}>Notifikasi</Text>
+          <Text style={styles.webAppBookmarksCount}>Inbox</Text>
+        </View>
+        <Text style={styles.webAppCatalogSubtitle}>
+          Inbox, push native, dan pengingat belajar dalam permukaan dashboard.
+        </Text>
+      </View>
+      <View style={styles.webAppNotificationsPanel}>
+        <NotificationCenter variant="webApp" />
+      </View>
+    </ScrollView>
+  );
+
   if (selectedItem) {
     return renderDetailScreen();
   }
@@ -3305,6 +3337,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   if (activeFeature?.type === 'notes' && isWebAppLayout) {
     return renderWebAppNotesScreen();
+  }
+
+  if (activeFeature?.type === 'notifications' && isWebAppLayout) {
+    return renderWebAppNotificationsScreen();
   }
 
   return (
@@ -3679,6 +3715,21 @@ const styles = StyleSheet.create({
   webAppNotesList: {
     gap: spacing.md,
     marginTop: spacing.md,
+  },
+  webAppNotificationsContent: {
+    backgroundColor: WEB_APP_EXPLORE_BG,
+    flexGrow: 1,
+    padding: spacing.md,
+    paddingBottom: spacing.xl,
+  },
+  webAppNotificationsPanel: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    marginTop: spacing.md,
+    overflow: 'hidden',
+    padding: spacing.sm,
   },
   webAppNoteCard: {
     backgroundColor: WEB_APP_EXPLORE_SURFACE,

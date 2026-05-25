@@ -104,9 +104,16 @@ const NOTIF_TABS = [
   { key: 'inbox', label: 'Kotak Masuk' },
 ];
 
-export function NotificationCenter() {
+const WEB_APP_NOTIF_SURFACE = '#111827';
+const WEB_APP_NOTIF_TILE = '#1e293b';
+const WEB_APP_NOTIF_BORDER = '#243044';
+const WEB_APP_NOTIF_ACCENT = '#34d399';
+const WEB_APP_NOTIF_MUTED = '#94a3b8';
+
+export function NotificationCenter({ variant = 'classic' }) {
   const { session } = useSession();
   const { showError, showSuccess } = useFeedback();
+  const isWebApp = variant === 'webApp';
   const hasSession = Boolean(session?.token);
   const [activeTab, setActiveTab] = useState('settings');
   const [settings, setSettings] = useState(defaultSettings);
@@ -471,16 +478,26 @@ export function NotificationCenter() {
   }, [activeTab, hasSession]);
 
   return (
-    <View>
-      <View style={styles.tabs}>
+    <View testID={isWebApp ? 'notification-center-web-app' : 'notification-center-classic'}>
+      <View style={[styles.tabs, isWebApp ? styles.webAppTabs : null]}>
         {visibleTabs.map((tab) => (
           <Pressable
             android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
             key={tab.key}
             onPress={() => { setActiveTab(tab.key); setMessage(''); }}
-            style={[styles.tab, activeTab === tab.key ? styles.tabActive : null]}
+            style={[
+              styles.tab,
+              isWebApp ? styles.webAppTab : null,
+              activeTab === tab.key ? styles.tabActive : null,
+              isWebApp && activeTab === tab.key ? styles.webAppTabActive : null,
+            ]}
           >
-            <Text style={[styles.tabText, activeTab === tab.key ? styles.tabTextActive : null]}>
+            <Text style={[
+              styles.tabText,
+              isWebApp ? styles.webAppTabText : null,
+              activeTab === tab.key ? styles.tabTextActive : null,
+              isWebApp && activeTab === tab.key ? styles.webAppTabTextActive : null,
+            ]}>
               {tab.label}
               {tab.key === 'inbox' && unreadCount > 0 ? ` (${unreadCount})` : ''}
             </Text>
@@ -489,25 +506,29 @@ export function NotificationCenter() {
       </View>
 
       {activeTab === 'settings' ? (
-      <Card>
-        <CardTitle meta={hasSession ? `${activeReminderCount} aktif · sinkron cloud` : `${activeReminderCount} aktif · lokal`}>
+      <Card style={isWebApp ? styles.webAppCard : null}>
+        <CardTitle
+          meta={hasSession ? `${activeReminderCount} aktif · sinkron cloud` : `${activeReminderCount} aktif · lokal`}
+          metaStyle={isWebApp ? styles.webAppCardMeta : null}
+          titleStyle={isWebApp ? styles.webAppCardTitle : null}
+        >
           Pengaturan Notifikasi
         </CardTitle>
         {!hasSession ? (
-          <View style={styles.localNotice}>
-            <Text style={styles.localNoticeTitle}>Reminder lokal tetap aktif</Text>
-            <Text style={styles.localNoticeText}>
+          <View style={[styles.localNotice, isWebApp ? styles.webAppPanel : null]}>
+            <Text style={[styles.localNoticeTitle, isWebApp ? styles.webAppTextStrong : null]}>Reminder lokal tetap aktif</Text>
+            <Text style={[styles.localNoticeText, isWebApp ? styles.webAppTextMuted : null]}>
               Simpan jadwal di HP ini. Login diperlukan hanya untuk push cloud dan kotak masuk.
             </Text>
           </View>
         ) : null}
-        <View style={styles.pushBox}>
-          <View style={styles.pushIcon}>
-            <BellRing color={colors.primary} size={18} strokeWidth={2.2} />
+        <View style={[styles.pushBox, isWebApp ? styles.webAppPanel : null]}>
+          <View style={[styles.pushIcon, isWebApp ? styles.webAppIconBox : null]}>
+            <BellRing color={isWebApp ? WEB_APP_NOTIF_ACCENT : colors.primary} size={18} strokeWidth={2.2} />
           </View>
           <View style={styles.pushCopy}>
-            <Text style={styles.settingTitle}>Push native</Text>
-            <Text style={styles.settingMeta}>
+            <Text style={[styles.settingTitle, isWebApp ? styles.webAppTextStrong : null]}>Push native</Text>
+            <Text style={[styles.settingMeta, isWebApp ? styles.webAppTextMuted : null]}>
               {hasSession ? cleanPushMessage(pushState.message) : 'Login untuk push cloud. Reminder lokal tidak perlu login.'}
             </Text>
           </View>
@@ -515,12 +536,18 @@ export function NotificationCenter() {
             android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
             disabled={!hasSession || pushState.loading || !pushNotificationsSupported()}
             onPress={enablePush}
-            style={[styles.pushButton, (!hasSession || pushState.loading || !pushNotificationsSupported()) ? styles.disabled : null]}
+            style={[
+              styles.pushButton,
+              isWebApp ? styles.webAppSecondaryButton : null,
+              (!hasSession || pushState.loading || !pushNotificationsSupported()) ? styles.disabled : null,
+            ]}
           >
             {pushState.loading ? (
               <ActivityIndicator color={colors.primary} size="small" />
             ) : (
-              <Text style={styles.pushButtonText}>{!hasSession ? 'Login' : pushState.status === 'enabled' ? 'Aktif' : 'Aktifkan'}</Text>
+              <Text style={[styles.pushButtonText, isWebApp ? styles.webAppSecondaryText : null]}>
+                {!hasSession ? 'Login' : pushState.status === 'enabled' ? 'Aktif' : 'Aktifkan'}
+              </Text>
             )}
           </Pressable>
         </View>
@@ -529,15 +556,19 @@ export function NotificationCenter() {
             android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
             disabled={!hasSession || pushState.testLoading || pushState.status !== 'enabled'}
             onPress={testPush}
-            style={[styles.secondaryButtonCompact, (!hasSession || pushState.testLoading || pushState.status !== 'enabled') ? styles.disabled : null]}
+            style={[
+              styles.secondaryButtonCompact,
+              isWebApp ? styles.webAppSecondaryButton : null,
+              (!hasSession || pushState.testLoading || pushState.status !== 'enabled') ? styles.disabled : null,
+            ]}
           >
             {pushState.testLoading ? (
               <ActivityIndicator color={colors.primary} size="small" />
             ) : (
-              <Text style={styles.secondaryText}>Kirim test push</Text>
+              <Text style={[styles.secondaryText, isWebApp ? styles.webAppSecondaryText : null]}>Kirim test push</Text>
             )}
           </Pressable>
-          <Text style={styles.pushHint}>
+          <Text style={[styles.pushHint, isWebApp ? styles.webAppTextMuted : null]}>
             {!hasSession
               ? 'Pengingat lokal akan dijadwalkan dari tombol simpan di bawah.'
               : pushState.activeCount
@@ -545,17 +576,17 @@ export function NotificationCenter() {
                 : 'Aktifkan dulu untuk menyalakan push cloud.'}
           </Text>
         </View>
-        <View style={styles.settingRow}>
+        <View style={[styles.settingRow, isWebApp ? styles.webAppSettingRow : null]}>
           <View style={styles.settingBody}>
-            <Text style={styles.settingTitle}>Quiet hours</Text>
-            <Text style={styles.settingMeta}>Tahan reminder di jam tenang</Text>
+            <Text style={[styles.settingTitle, isWebApp ? styles.webAppTextStrong : null]}>Quiet hours</Text>
+            <Text style={[styles.settingMeta, isWebApp ? styles.webAppTextMuted : null]}>Tahan reminder di jam tenang</Text>
           </View>
           <Pressable
             android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
             onPress={() => setQuietHours((current) => ({ ...current, is_active: !current.is_active }))}
-            style={[styles.toggle, quietHours.is_active ? styles.toggleActive : null]}
+            style={[styles.toggle, isWebApp ? styles.webAppToggle : null, quietHours.is_active ? styles.toggleActive : null]}
           >
-            <Text style={[styles.toggleText, quietHours.is_active ? styles.toggleTextActive : null]}>
+            <Text style={[styles.toggleText, isWebApp ? styles.webAppToggleText : null, quietHours.is_active ? styles.toggleTextActive : null]}>
               {quietHours.is_active ? 'On' : 'Off'}
             </Text>
           </Pressable>
@@ -608,10 +639,10 @@ export function NotificationCenter() {
           </View>
         ) : null}
         {settings.map((item) => (
-          <View key={item.type} style={styles.settingRow}>
+          <View key={item.type} style={[styles.settingRow, isWebApp ? styles.webAppSettingRow : null]}>
             <View style={styles.settingBody}>
-              <Text style={styles.settingTitle}>{item.label}</Text>
-              <Text style={styles.settingMeta}>
+              <Text style={[styles.settingTitle, isWebApp ? styles.webAppTextStrong : null]}>{item.label}</Text>
+              <Text style={[styles.settingMeta, isWebApp ? styles.webAppTextMuted : null]}>
                 {item.serverSync ? 'Reminder harian · sinkron cloud' : 'Reminder harian · lokal aplikasi'}
               </Text>
             </View>
@@ -623,31 +654,31 @@ export function NotificationCenter() {
                 onChangeText={(time) => updateWebTime(item.type, time)}
                 placeholder="HH:MM"
                 placeholderTextColor={colors.muted}
-                style={styles.timeInput}
+                  style={[styles.timeInput, isWebApp ? styles.webAppTimeInput : null]}
                 value={item.time}
               />
             ) : (
               <Pressable
                 android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
                 onPress={() => openTimePicker(item.type, item.time)}
-                style={styles.timeButton}
+                style={[styles.timeButton, isWebApp ? styles.webAppSecondaryButton : null]}
               >
-                <Text style={styles.timeButtonText}>{item.time}</Text>
+                <Text style={[styles.timeButtonText, isWebApp ? styles.webAppSecondaryText : null]}>{item.time}</Text>
               </Pressable>
             )}
             <Pressable
               android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
               onPress={() => updateSetting(item.type, { is_active: !item.is_active })}
-              style={[styles.toggle, item.is_active ? styles.toggleActive : null]}
+              style={[styles.toggle, isWebApp ? styles.webAppToggle : null, item.is_active ? styles.toggleActive : null]}
             >
-              <Text style={[styles.toggleText, item.is_active ? styles.toggleTextActive : null]}>
+              <Text style={[styles.toggleText, isWebApp ? styles.webAppToggleText : null, item.is_active ? styles.toggleTextActive : null]}>
                 {item.is_active ? 'On' : 'Off'}
               </Text>
             </Pressable>
           </View>
         ))}
         {reminderPreview.length ? (
-          <View style={styles.previewBox}>
+          <View style={[styles.previewBox, isWebApp ? styles.webAppPanel : null]}>
             <SectionHeader
               meta={`${reminderPreview.length} reminder`}
               metaStyle={styles.previewMeta}
@@ -671,9 +702,9 @@ export function NotificationCenter() {
             ))}
           </View>
         ) : (
-          <View style={styles.previewBox}>
-            <Text style={styles.previewTitle}>Belum ada reminder aktif</Text>
-            <Text style={styles.previewNote}>Aktifkan minimal satu kategori untuk menjadwalkan pengingat.</Text>
+          <View style={[styles.previewBox, isWebApp ? styles.webAppPanel : null]}>
+            <Text style={[styles.previewTitle, isWebApp ? styles.webAppTextStrong : null]}>Belum ada reminder aktif</Text>
+            <Text style={[styles.previewNote, isWebApp ? styles.webAppTextMuted : null]}>Aktifkan minimal satu kategori untuk menjadwalkan pengingat.</Text>
           </View>
         )}
         <Pressable
@@ -699,7 +730,7 @@ export function NotificationCenter() {
             </Pressable>
           </View>
         ) : null}
-        {message ? <Text style={styles.message}>{message}</Text> : null}
+        {message ? <Text style={[styles.message, isWebApp ? styles.webAppMessage : null]}>{message}</Text> : null}
         {pickerState.open && Platform.OS !== 'web' ? (
           <View style={styles.timePickerWrap}>
             <DateTimePicker
@@ -721,10 +752,16 @@ export function NotificationCenter() {
         ) : null}
       </Card>
       ) : (
-      <Card>
-        <CardTitle meta={`${unreadCount} belum dibaca`}>Kotak Masuk</CardTitle>
+      <Card style={isWebApp ? styles.webAppCard : null}>
+        <CardTitle
+          meta={`${unreadCount} belum dibaca`}
+          metaStyle={isWebApp ? styles.webAppCardMeta : null}
+          titleStyle={isWebApp ? styles.webAppCardTitle : null}
+        >
+          Kotak Masuk
+        </CardTitle>
         {loading ? <ActivityIndicator color={colors.primary} /> : null}
-        {!loading && inbox.length === 0 ? <Text style={styles.body}>Belum ada notifikasi masuk.</Text> : null}
+        {!loading && inbox.length === 0 ? <Text style={[styles.body, isWebApp ? styles.webAppTextMuted : null]}>Belum ada notifikasi masuk.</Text> : null}
         {inbox.map((item) => {
           const presentation = presentationForNotification(item);
           const InboxIcon = presentation.Icon;
@@ -734,11 +771,11 @@ export function NotificationCenter() {
               android_ripple={{ color: 'rgba(91, 110, 91, 0.08)', borderless: false }}
               key={item.id}
               onPress={() => markRead(item.id)}
-              style={[styles.inboxItem, !item.is_read ? styles.unreadItem : null]}
+              style={[styles.inboxItem, isWebApp ? styles.webAppInboxItem : null, !item.is_read ? styles.unreadItem : null]}
             >
               <View style={styles.inboxRow}>
-                <View style={styles.inboxIcon}>
-                  <InboxIcon color={colors.primary} size={17} strokeWidth={2.3} />
+                <View style={[styles.inboxIcon, isWebApp ? styles.webAppIconBox : null]}>
+                  <InboxIcon color={isWebApp ? WEB_APP_NOTIF_ACCENT : colors.primary} size={17} strokeWidth={2.3} />
                 </View>
                 <View style={styles.inboxCopy}>
                   <SectionHeader
@@ -746,10 +783,10 @@ export function NotificationCenter() {
                     metaStyle={styles.inboxType}
                     style={styles.inboxHeader}
                     title={presentation.title}
-                    titleStyle={styles.inboxTitle}
+                    titleStyle={[styles.inboxTitle, isWebApp ? styles.webAppTextStrong : null]}
                   />
-                  {presentation.body ? <Text style={styles.body}>{presentation.body}</Text> : null}
-                  <Text style={styles.settingMeta}>{[presentation.label, item.ref_id].filter(Boolean).join(' · ')}</Text>
+                  {presentation.body ? <Text style={[styles.body, isWebApp ? styles.webAppTextMuted : null]}>{presentation.body}</Text> : null}
+                  <Text style={[styles.settingMeta, isWebApp ? styles.webAppTextMuted : null]}>{[presentation.label, item.ref_id].filter(Boolean).join(' · ')}</Text>
                 </View>
               </View>
             </Pressable>
@@ -760,7 +797,7 @@ export function NotificationCenter() {
             <Text style={styles.secondaryText}>Tandai semua terbaca</Text>
           </Pressable>
         ) : null}
-        {message ? <Text style={styles.message}>{message}</Text> : null}
+        {message ? <Text style={[styles.message, isWebApp ? styles.webAppMessage : null]}>{message}</Text> : null}
       </Card>
       )}
     </View>
@@ -1139,5 +1176,75 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceMuted,
     borderRadius: radius.md,
     paddingHorizontal: spacing.md,
+  },
+  webAppCard: {
+    backgroundColor: WEB_APP_NOTIF_SURFACE,
+    borderColor: WEB_APP_NOTIF_BORDER,
+    borderRadius: radius.md,
+    shadowOpacity: 0,
+  },
+  webAppCardMeta: {
+    color: WEB_APP_NOTIF_ACCENT,
+  },
+  webAppCardTitle: {
+    color: '#f8fafc',
+    fontFamily: undefined,
+  },
+  webAppIconBox: {
+    backgroundColor: WEB_APP_NOTIF_TILE,
+    borderColor: WEB_APP_NOTIF_BORDER,
+  },
+  webAppInboxItem: {
+    borderBottomColor: WEB_APP_NOTIF_BORDER,
+  },
+  webAppMessage: {
+    color: WEB_APP_NOTIF_ACCENT,
+  },
+  webAppPanel: {
+    backgroundColor: WEB_APP_NOTIF_TILE,
+    borderColor: WEB_APP_NOTIF_BORDER,
+  },
+  webAppSecondaryButton: {
+    backgroundColor: WEB_APP_NOTIF_TILE,
+    borderColor: WEB_APP_NOTIF_BORDER,
+  },
+  webAppSecondaryText: {
+    color: '#d1fae5',
+  },
+  webAppSettingRow: {
+    borderBottomColor: WEB_APP_NOTIF_BORDER,
+  },
+  webAppTab: {
+    backgroundColor: WEB_APP_NOTIF_SURFACE,
+  },
+  webAppTabActive: {
+    borderBottomColor: WEB_APP_NOTIF_ACCENT,
+  },
+  webAppTabs: {
+    borderBottomColor: WEB_APP_NOTIF_BORDER,
+  },
+  webAppTabText: {
+    color: WEB_APP_NOTIF_MUTED,
+  },
+  webAppTabTextActive: {
+    color: WEB_APP_NOTIF_ACCENT,
+  },
+  webAppTextMuted: {
+    color: WEB_APP_NOTIF_MUTED,
+  },
+  webAppTextStrong: {
+    color: '#f8fafc',
+  },
+  webAppTimeInput: {
+    backgroundColor: WEB_APP_NOTIF_TILE,
+    borderColor: WEB_APP_NOTIF_BORDER,
+    color: '#f8fafc',
+  },
+  webAppToggle: {
+    backgroundColor: WEB_APP_NOTIF_TILE,
+    borderColor: WEB_APP_NOTIF_BORDER,
+  },
+  webAppToggleText: {
+    color: WEB_APP_NOTIF_MUTED,
   },
 });

@@ -5,11 +5,11 @@ export function Card({ children, style }) {
   return <View style={[styles.card, style]}>{children}</View>;
 }
 
-export function CardTitle({ children, meta }) {
+export function CardTitle({ children, meta, metaStyle, style, titleStyle }) {
   return (
-    <View style={styles.titleRow}>
-      <Text style={styles.title}>{children}</Text>
-      {meta ? <Text style={styles.meta}>{meta}</Text> : null}
+    <View style={[styles.titleRow, style]}>
+      <Text style={[styles.title, titleStyle]}>{children}</Text>
+      {meta ? <Text style={[styles.meta, metaStyle]}>{meta}</Text> : null}
     </View>
   );
 }

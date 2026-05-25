@@ -1237,3 +1237,51 @@ Results:
 - `git diff --check` passed.
 - Native emulator smoke captured at
   `output/native-smoke/tholabul-webapp-emulator-notes-route-after.png`.
+
+## Web App Notifications Route Dashboard Parity
+
+Status: completed for the native `web_app` Notifications feature route visual
+parity pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic paper active-feature `Screen` path for the
+  Notifications feature on the `classic` layout.
+- `web_app` mode now renders the Notifications feature route with a dedicated
+  dark dashboard shell modeled after `/dashboard/notifications`: personal
+  header, inbox label, route subtitle, and dark notification settings/inbox
+  panel.
+- Notification settings, local reminders, push registration, inbox loading,
+  read/unread actions, and pending sync behavior still reuse the existing
+  `NotificationCenter` handlers.
+- Added Explore test coverage to ensure the `web_app` Notifications feature
+  route uses the dedicated dashboard surface instead of the generic `Screen`
+  title path.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Notifications feature route
+  presentation in `web_app`. It does not change classic Explore,
+  notification APIs, push permission flow, local reminder scheduling, inbox
+  actions, feature keys, or auth gating.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted Explore/NotificationCenter tests passed: 2 suites, 36 tests.
+- Full mobile Jest passed: 44 suites, 625 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-notifications-route-after.png`.
