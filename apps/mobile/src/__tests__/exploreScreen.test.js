@@ -2,7 +2,7 @@ jest.mock('lucide-react-native', () => {
   const icons = {};
   const names = [
     'ArrowLeft', 'BookOpen', 'Bookmark', 'BookmarkCheck', 'CheckCircle2',
-    'Circle', 'ExternalLink', 'Globe', 'Heart', 'HelpCircle',
+    'Circle', 'ExternalLink', 'Flag', 'Globe', 'Heart', 'HelpCircle',
     'ListChecks', 'MessageCircle', 'Pencil', 'Scale', 'Star',
     'StickyNote', 'Trash2', 'UserCircle', 'Users', 'Video',
   ];
@@ -209,6 +209,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'bookmarks', title: 'Bookmark', subtitle: 'Tersimpan', group: 'Personal', type: 'bookmarks' },
     { key: 'notes', title: 'Catatan', subtitle: 'Catatan pribadi', group: 'Personal', type: 'notes' },
     { key: 'notifications', title: 'Notifikasi', subtitle: 'Inbox dan pengingat', group: 'Personal', type: 'notifications' },
+    { key: 'goals', title: 'Target Belajar', subtitle: 'Target pembelajaran personal', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/goals' },
     { key: 'community-feed', title: 'Komunitas', subtitle: 'Refleksi', group: 'Ilmu', type: 'feed' },
     { key: 'kajian', title: 'Kajian', subtitle: 'Sesi belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/kajian' },
     { key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi seputar Islam', group: 'Ilmu', type: 'forum' },
@@ -242,7 +243,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'personal',
       label: 'Personal',
       meta: 'Akun',
-      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications'].includes(f.key)),
+      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications', 'goals'].includes(f.key)),
     },
   ];
 
@@ -440,6 +441,69 @@ describe('ExploreScreen', () => {
       expect(getByText('Notifikasi')).toBeTruthy();
       expect(getByTestId('notification-center')).toBeTruthy();
     });
+  });
+
+  test('uses dashboard Goals route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useSession.mockReturnValue({
+      ...mockUseSession(),
+      session: { token: 'abc' },
+      user: { id: '1', name: 'Test', email: 'test@test.com' },
+    });
+    personalApi.getBookmarks.mockResolvedValue([]);
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 'goal-1',
+          title: 'Hafalan Juz 30',
+          body: 'Selesaikan murajaah pekan ini.',
+          meta: 'Quran',
+          raw: {
+            category: 'Quran',
+            current: 18,
+            deadline: '2026-06-01',
+            target: 30,
+            unit: 'ayat',
+          },
+        },
+        {
+          id: 'goal-2',
+          title: 'Kajian Fiqh',
+          body: 'Tuntaskan modul dasar.',
+          meta: 'Ilmu',
+          raw: {
+            category: 'Ilmu',
+            completed: true,
+            current: 4,
+            target: 4,
+            unit: 'pertemuan',
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getByTestId, getByText, queryByTestId } = await renderExploreScreen({
+      deepLinkTarget: { id: 'goals-route', params: { featureKey: 'goals' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-goals-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('PERSONAL')).toBeTruthy();
+      expect(getByText('Target Belajar')).toBeTruthy();
+      expect(getByText('Hafalan Juz 30')).toBeTruthy();
+      expect(getByText('Kajian Fiqh')).toBeTruthy();
+      expect(getByText('1 aktif')).toBeTruthy();
+      expect(getByText('1 selesai')).toBeTruthy();
+      expect(getAllByTestId('web-app-goal-card')).toHaveLength(2);
+      expect(getAllByTestId('web-app-goal-progress-fill')).toHaveLength(2);
+    });
+
+    expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
+      expect.objectContaining({ key: 'goals', endpoint: '/api/v1/goals' }),
+      { page: 0, size: 20 },
+    );
   });
 
   test('renders search input for feature catalog', async () => {

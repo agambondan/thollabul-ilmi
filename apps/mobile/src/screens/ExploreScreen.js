@@ -154,6 +154,36 @@ const formatNumericInput = (value = '') => {
 };
 const formatCurrency = (value = 0) => `Rp ${Math.round(Number(value) || 0).toLocaleString('id-ID')}`;
 const pickText = (...values) => values.find((value) => typeof value === 'string' && value.trim()) ?? '';
+const parseGoalNumber = (value, fallback = 0) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+};
+const getGoalValue = (item = {}, field, fallback) => {
+  const raw = item?.raw ?? {};
+  return raw[field] ?? item[field] ?? fallback;
+};
+const getGoalCompleted = (item = {}) => {
+  const raw = item?.raw ?? {};
+  const status = `${raw.status ?? item.status ?? item.meta ?? ''}`.toLowerCase();
+  return Boolean(raw.completed ?? item.completed) || ['done', 'selesai', 'completed', 'complete'].includes(status);
+};
+const getGoalProgress = (item = {}) => {
+  const current = parseGoalNumber(getGoalValue(item, 'current', 0));
+  const target = Math.max(1, parseGoalNumber(getGoalValue(item, 'target', 1), 1));
+  return Math.min(100, Math.max(0, Math.round((current / target) * 100)));
+};
+const getGoalMetaLine = (item = {}) => {
+  const category = pickText(getGoalValue(item, 'category', ''), item.meta);
+  const current = parseGoalNumber(getGoalValue(item, 'current', 0));
+  const target = parseGoalNumber(getGoalValue(item, 'target', 0));
+  const unit = pickText(getGoalValue(item, 'unit', ''), 'target');
+  const deadline = getGoalValue(item, 'deadline', '') || getGoalValue(item, 'due_date', '');
+  return [
+    category,
+    target ? `${current}/${target} ${unit}` : '',
+    deadline ? `Deadline: ${formatNoteDate(deadline)}` : '',
+  ].filter(Boolean).join(' · ');
+};
 const normalizeAsmaulName = (item = {}, index = 0) => ({
   arabic: pickText(item.arabic, item.translation?.arab, item.translation?.ar, item.name),
   id: item.id ?? item.number ?? index + 1,
@@ -3256,6 +3286,142 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     );
   };
 
+  const renderWebAppGoalCard = (item, index) => {
+    const progress = getGoalProgress(item);
+    const completed = getGoalCompleted(item);
+    const statusLabel = completed ? 'Selesai' : 'Aktif';
+    const metaLine = getGoalMetaLine(item);
+
+    return (
+      <Pressable
+        android_ripple={{ color: 'rgba(52, 211, 153, 0.12)', borderless: false }}
+        key={`${getExploreItemKey(item)}-${index}`}
+        onLongPress={() => setItemActionSheet({ visible: true, item })}
+        onPress={() => openItemDetail(item)}
+        style={styles.webAppGoalCard}
+        testID="web-app-goal-card"
+      >
+        <View style={styles.webAppGoalHeader}>
+          <View style={styles.webAppGoalIcon}>
+            {completed ? (
+              <CheckCircle2 color={WEB_APP_EXPLORE_ACCENT} size={18} strokeWidth={2.2} />
+            ) : (
+              <Flag color={WEB_APP_EXPLORE_ACCENT} size={18} strokeWidth={2.2} />
+            )}
+          </View>
+          <View style={styles.webAppGoalTitleBlock}>
+            <Text numberOfLines={2} style={styles.webAppBookmarkTitle}>
+              {item.title || 'Target belajar'}
+            </Text>
+            {metaLine ? (
+              <Text numberOfLines={2} style={styles.webAppBookmarkText}>
+                {metaLine}
+              </Text>
+            ) : null}
+          </View>
+          <Text style={[styles.webAppGoalStatus, completed && styles.webAppGoalStatusDone]}>
+            {statusLabel}
+          </Text>
+        </View>
+        {item.body ? (
+          <Text numberOfLines={3} style={styles.webAppGoalBody}>
+            {item.body}
+          </Text>
+        ) : null}
+        <View style={styles.webAppGoalProgressTrack}>
+          <View
+            style={[
+              styles.webAppGoalProgressFill,
+              completed && styles.webAppGoalProgressFillDone,
+              { width: `${progress}%` },
+            ]}
+            testID="web-app-goal-progress-fill"
+          />
+        </View>
+        <View style={styles.webAppBookmarkFooter}>
+          <Text style={styles.webAppBookmarkHint}>{progress}% progres</Text>
+          <Pressable
+            hitSlop={10}
+            onPress={() => setItemActionSheet({ visible: true, item })}
+            style={styles.webAppBookmarkManage}
+            testID="web-app-goal-manage"
+          >
+            <Text style={styles.webAppBookmarkManageText}>Kelola</Text>
+          </Pressable>
+        </View>
+      </Pressable>
+    );
+  };
+
+  const renderWebAppGoalsScreen = () => {
+    const activeGoals = visibleItems.filter((item) => !getGoalCompleted(item)).length;
+    const completedGoals = visibleItems.length - activeGoals;
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppBookmarksContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppBookmarksRoot}
+      >
+        <View testID="explore-web-app-goals-surface" />
+        <View style={styles.webAppBookmarksHeader}>
+          <Pressable
+            accessibilityLabel="Kembali ke Belajar"
+            onPress={clearFeature}
+            style={styles.webAppBookmarksBack}
+            testID="web-app-goals-back"
+          >
+            <Text style={styles.webAppBookmarksBackText}>Kembali</Text>
+          </Pressable>
+          <Text style={styles.webAppCatalogEyebrow}>PERSONAL</Text>
+          <View style={styles.webAppBookmarksTitleRow}>
+            <Text style={styles.webAppCatalogTitle}>Target Belajar</Text>
+            <Text style={styles.webAppBookmarksCount}>{items.length} target</Text>
+          </View>
+          <Text style={styles.webAppCatalogSubtitle}>
+            Target hafalan, kajian, dan rutinitas ilmu dalam tampilan dashboard.
+          </Text>
+        </View>
+
+        {error ? <Text style={styles.webAppBookmarksError}>{error}</Text> : null}
+        {loading ? (
+          <View style={styles.webAppBookmarksState}>
+            <ActivityIndicator color={WEB_APP_EXPLORE_ACCENT} size="small" />
+            <Text style={styles.webAppBookmarksStateText}>Memuat target...</Text>
+          </View>
+        ) : null}
+        {!loading && !error && !items.length ? (
+          <View style={styles.webAppBookmarksEmpty}>
+            <Flag color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
+            <Text style={styles.webAppBookmarksEmptyTitle}>Belum ada target.</Text>
+            <Text style={styles.webAppBookmarksEmptyText}>
+              Buat target belajar dari dashboard web atau fitur personal yang tersedia.
+            </Text>
+          </View>
+        ) : null}
+        {!loading && !error && visibleItems.length > 0 ? (
+          <>
+            <View style={styles.webAppGoalsSummary}>
+              <View style={styles.webAppGoalSummaryPill}>
+                <Circle color={WEB_APP_EXPLORE_ACCENT} size={12} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{activeGoals} aktif</Text>
+              </View>
+              <View style={styles.webAppGoalSummaryPill}>
+                <CheckCircle2 color="#9ca3af" size={13} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{completedGoals} selesai</Text>
+              </View>
+            </View>
+            <View style={styles.webAppGoalsList}>
+              {visibleItems.map(renderWebAppGoalCard)}
+            </View>
+          </>
+        ) : null}
+        {renderItemActionSheet()}
+      </ScrollView>
+    );
+  };
+
   const renderWebAppNotificationsScreen = () => (
     <ScrollView
       contentContainerStyle={styles.webAppNotificationsContent}
@@ -3337,6 +3503,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   if (activeFeature?.type === 'notes' && isWebAppLayout) {
     return renderWebAppNotesScreen();
+  }
+
+  if (activeFeature?.key === 'goals' && isWebAppLayout) {
+    return renderWebAppGoalsScreen();
   }
 
   if (activeFeature?.type === 'notifications' && isWebAppLayout) {
@@ -3772,6 +3942,98 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingHorizontal: spacing.sm,
     paddingVertical: 4,
+  },
+  webAppGoalsSummary: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginTop: spacing.md,
+  },
+  webAppGoalSummaryPill: {
+    alignItems: 'center',
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: 999,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.xs,
+    minHeight: 34,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+  },
+  webAppGoalSummaryText: {
+    color: '#cbd5e1',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  webAppGoalsList: {
+    gap: spacing.md,
+    marginTop: spacing.md,
+  },
+  webAppGoalCard: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    minHeight: 146,
+    padding: spacing.md,
+  },
+  webAppGoalHeader: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  webAppGoalIcon: {
+    alignItems: 'center',
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: 14,
+    borderWidth: 1,
+    height: 42,
+    justifyContent: 'center',
+    width: 42,
+  },
+  webAppGoalTitleBlock: {
+    flex: 1,
+    minWidth: 0,
+  },
+  webAppGoalStatus: {
+    backgroundColor: 'rgba(52, 211, 153, 0.12)',
+    borderColor: 'rgba(52, 211, 153, 0.32)',
+    borderRadius: 999,
+    borderWidth: 1,
+    color: WEB_APP_EXPLORE_ACCENT,
+    fontSize: 11,
+    fontWeight: '900',
+    overflow: 'hidden',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+  },
+  webAppGoalStatusDone: {
+    backgroundColor: '#1f2937',
+    borderColor: '#374151',
+    color: '#d1d5db',
+  },
+  webAppGoalBody: {
+    color: '#cbd5e1',
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: spacing.sm,
+  },
+  webAppGoalProgressTrack: {
+    backgroundColor: '#1f2937',
+    borderRadius: 999,
+    height: 8,
+    marginTop: spacing.md,
+    overflow: 'hidden',
+  },
+  webAppGoalProgressFill: {
+    backgroundColor: WEB_APP_EXPLORE_ACCENT,
+    borderRadius: 999,
+    height: '100%',
+  },
+  webAppGoalProgressFillDone: {
+    backgroundColor: '#9ca3af',
   },
   webAppSurface: {
     backgroundColor: '#f8fafc',
