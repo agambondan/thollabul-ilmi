@@ -156,9 +156,21 @@ describe('GlobalSearchScreen', () => {
 
   it('uses web app Global Search surface when web app layout is active', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
-    const { getByTestId, queryByTestId } = await renderGlobalSearchScreen();
+    const { getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } =
+      await renderGlobalSearchScreen();
 
+    expect(getByText('Pencarian')).toBeTruthy();
+    expect(getByPlaceholderText('Cari ayah, hadith, atau terjemahan...')).toBeTruthy();
+    expect(getByText('Al-Quran')).toBeTruthy();
+    expect(getByText('Hadith')).toBeTruthy();
+    expect(getByText('Doa')).toBeTruthy();
+    expect(getByText('Kamus')).toBeTruthy();
+    expect(getByText('Kajian')).toBeTruthy();
+    expect(getByText('Perawi')).toBeTruthy();
     expect(getByTestId('global-search-web-app-surface')).toBeTruthy();
+    expect(getByTestId('search-input')).toBeTruthy();
+    expect(queryByText('Mulai dari dua huruf')).toBeNull();
+    expect(queryByText('Fitur')).toBeNull();
     expect(queryByTestId('global-search-classic-surface')).toBeNull();
   });
 

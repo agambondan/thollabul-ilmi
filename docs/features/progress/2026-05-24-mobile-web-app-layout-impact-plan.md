@@ -896,3 +896,53 @@ Results:
   mobile feature keys, 154 web app routes scanned.
 - Native emulator smoke captured at
   `output/native-smoke/tholabul-webapp-emulator-hadith-route-after.png`.
+
+## Web App Global Search Dashboard Parity
+
+Status: completed for the native `web_app` Global Search/Cari route visual
+parity pass.
+
+Implemented:
+
+- `GlobalSearchScreen` keeps the classic paper Search screen, search slot,
+  quick suggestions, filter chips, results, recent-search storage, and load-more
+  behavior on the `classic` path.
+- `web_app` mode now renders the Search route with the mobile web dashboard
+  structure from `/dashboard/search`: dark page surface, `Pencarian` title,
+  dark bordered input, green `Cari` button, and wrapped dashboard filter pills
+  for `Semua`, `Al-Quran`, `Hadith`, `Doa`, `Kamus`, `Kajian`, and `Perawi`.
+- The `web_app` bottom navigation now marks `Cari` as the active item when the
+  home internal route is `global-search`.
+- `web_app` Search does not auto-focus the input on mount, so native smoke
+  screenshots and first-page usage keep the bottom navigation visible like the
+  web mobile dashboard view.
+- Added Global Search and shell test coverage for the dashboard title/input,
+  dashboard filter set, classic-surface separation, and active `Cari` state.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Global Search presentation and
+  shell active-state mapping for `web_app`. It does not change classic Search,
+  debounce timing, API calls, recent-search persistence, result grouping,
+  result navigation, or load-more behavior.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- globalSearchScreen.test.js mobileAppShell.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted GlobalSearch/shell tests passed: 2 suites, 29 tests.
+- Full mobile Jest passed: 44 suites, 621 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-search-route-after.png`.

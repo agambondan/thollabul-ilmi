@@ -179,6 +179,7 @@ export default function App() {
     () => (deepLinkTarget?.tab === activeTab ? deepLinkTarget : null),
     [activeTab, deepLinkTarget],
   );
+  const shellActiveTab = internalRoutes.home?.view === 'global-search' ? 'search' : activeTab;
   const setBack = useCallback((fn) => { screenBackRef.current = fn; }, []);
   const clearBack = useCallback(() => { screenBackRef.current = null; }, []);
 
@@ -215,7 +216,7 @@ export default function App() {
               <TabActivityProvider>
                 <AnalyticsTracker activeTab={activeTab} internalRoutes={internalRoutes} />
                 <MobileAppShell
-                  activeTab={activeTab}
+                  activeTab={shellActiveTab}
                   keyboardVisible={keyboardVisible}
                   onOpenProfile={() => openTab('profile')}
                   onTabChange={openTab}

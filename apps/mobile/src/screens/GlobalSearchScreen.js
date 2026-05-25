@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ActivityIndicator, Keyboard, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { ArrowLeft, Book, BookOpen, Languages, Layers, Search, UserRound } from 'lucide-react-native';
 import { getSurahs, searchGlobal } from '../api/client';
 import { ContentCard } from '../components/ContentCard';
@@ -14,6 +14,10 @@ const MIN_QUERY_LENGTH = 2;
 const PAGE_SIZE = 20;
 const PREVIEW_SIZE = 3;
 const quickSuggestions = ['shalat', 'sabar', 'zakat', 'tafsir'];
+const WEB_APP_SEARCH_BG = '#020617';
+const WEB_APP_SEARCH_SURFACE = '#1e293b';
+const WEB_APP_SEARCH_MUTED = '#94a3b8';
+const WEB_APP_SEARCH_ACCENT = '#10b981';
 
 const searchFilters = [
   { key: 'all', label: 'Semua', remoteType: 'all' },
@@ -470,67 +474,10 @@ export function GlobalSearchScreen({ initialFilter = 'all', initialQuery = '', o
   const chipLabel = recentSearches.length ? 'Terakhir dicari' : 'Cari cepat';
   const resultSummary = `${totalResults} hasil untuk "${trimmedQuery}"`;
   const emptyState = emptyStateByFilter[activeFilter] ?? emptyStateByFilter.all;
-
-  return (
-    <Screen
-      actions={<IconActionButton Icon={ArrowLeft} label="Kembali ke Beranda" onPress={onBack} />}
-      contentStyle={isWebAppLayout ? styles.webAppSurface : null}
-      searchSlot={
-        <PaperSearchInput
-          autoFocus
-          onChangeText={setQuery}
-          placeholder="Cari Quran, hadis, fitur, kamus..."
-          value={query}
-        />
-      }
-      headerExtra={
-        <>
-          <ScrollView
-            contentContainerStyle={styles.filterContent}
-            horizontal
-            keyboardShouldPersistTaps="handled"
-            showsHorizontalScrollIndicator={false}
-          >
-            {searchFilters.map((filter) => {
-              const active = filter.key === activeFilter;
-              const count = filterCounts[filter.key] ?? 0;
-              const label = hasQuery && count ? `${filter.label} ${count}` : filter.label;
-              return (
-                <Pressable
-                  android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
-                  key={filter.key}
-                  onPress={() => setActiveFilter(filter.key)}
-                  style={[styles.filterChip, active && styles.filterChipActive]}
-                >
-                  <Text style={[styles.filterText, active && styles.filterTextActive]}>{label}</Text>
-                </Pressable>
-              );
-            })}
-          </ScrollView>
-          {!hasQuery ? (
-            <View style={styles.quickWrap}>
-              <Text style={styles.quickLabel}>{chipLabel}</Text>
-              <View style={styles.quickChips}>
-                {searchChips.slice(0, 6).map((item) => (
-                  <Pressable
-                    android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
-                    key={item}
-                    onPress={() => setQuery(item)}
-                    style={styles.quickChip}
-                  >
-                    <Text style={styles.quickText}>{item}</Text>
-                  </Pressable>
-                ))}
-              </View>
-            </View>
-          ) : null}
-        </>
-      }
-      subtitle="Satu tempat untuk menemukan bacaan, hadis, referensi, dan fitur aplikasi."
-      title="Cari"
-    >
+  const renderSearchResults = () => (
+    <>
       <View testID={isWebAppLayout ? 'global-search-web-app-surface' : 'global-search-classic-surface'} />
-      {!hasQuery ? (
+      {!hasQuery && !isWebAppLayout ? (
         <View style={styles.hintCard}>
           <View style={styles.hintIcon}>
             <Search color={colors.primary} size={22} strokeWidth={2.2} />
@@ -728,15 +675,209 @@ export function GlobalSearchScreen({ initialFilter = 'all', initialQuery = '', o
           return null;
         })()
       ) : null}
+    </>
+  );
+
+  if (isWebAppLayout) {
+    const webAppFilterOrder = ['all', 'quran', 'hadith', 'doa', 'dictionary', 'kajian', 'perawi'];
+    const webAppFilters = webAppFilterOrder
+      .map((filterKey) => searchFilters.find((filter) => filter.key === filterKey))
+      .filter(Boolean);
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppSearchContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppSearchScroll}
+      >
+        <Text style={styles.webAppSearchTitle}>Pencarian</Text>
+        <View style={styles.webAppSearchRow}>
+          <View style={styles.webAppSearchInputWrap}>
+            <TextInput
+              onChangeText={setQuery}
+              placeholder="Cari ayah, hadith, atau terjemahan..."
+              placeholderTextColor={WEB_APP_SEARCH_MUTED}
+              style={styles.webAppSearchInput}
+              testID="search-input"
+              value={query}
+            />
+          </View>
+          <Pressable
+            onPress={Keyboard.dismiss}
+            style={styles.webAppSearchButton}
+            testID="global-search-web-app-submit"
+          >
+            <Search color="#ffffff" size={15} strokeWidth={2.2} />
+            <Text style={styles.webAppSearchButtonText}>Cari</Text>
+          </Pressable>
+        </View>
+        <View style={styles.webAppFilterWrap}>
+          {webAppFilters.map((filter) => {
+            const active = filter.key === activeFilter;
+            const count = filterCounts[filter.key] ?? 0;
+            const label = hasQuery && count ? `${filter.label} ${count}` : filter.label;
+            const displayLabel = filter.key === 'quran' ? 'Al-Quran' : filter.key === 'hadith' ? 'Hadith' : label;
+            return (
+              <Pressable
+                key={filter.key}
+                onPress={() => setActiveFilter(filter.key)}
+                style={[styles.webAppFilterChip, active && styles.webAppFilterChipActive]}
+              >
+                <Text style={[styles.webAppFilterText, active && styles.webAppFilterTextActive]}>
+                  {displayLabel}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+        <View style={styles.webAppSearchResults}>{renderSearchResults()}</View>
+      </ScrollView>
+    );
+  }
+
+  return (
+    <Screen
+      actions={<IconActionButton Icon={ArrowLeft} label="Kembali ke Beranda" onPress={onBack} />}
+      searchSlot={
+        <PaperSearchInput
+          autoFocus
+          onChangeText={setQuery}
+          placeholder="Cari Quran, hadis, fitur, kamus..."
+          value={query}
+        />
+      }
+      headerExtra={
+        <>
+          <ScrollView
+            contentContainerStyle={styles.filterContent}
+            horizontal
+            keyboardShouldPersistTaps="handled"
+            showsHorizontalScrollIndicator={false}
+          >
+            {searchFilters.map((filter) => {
+              const active = filter.key === activeFilter;
+              const count = filterCounts[filter.key] ?? 0;
+              const label = hasQuery && count ? `${filter.label} ${count}` : filter.label;
+              return (
+                <Pressable
+                  android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
+                  key={filter.key}
+                  onPress={() => setActiveFilter(filter.key)}
+                  style={[styles.filterChip, active && styles.filterChipActive]}
+                >
+                  <Text style={[styles.filterText, active && styles.filterTextActive]}>{label}</Text>
+                </Pressable>
+              );
+            })}
+          </ScrollView>
+          {!hasQuery ? (
+            <View style={styles.quickWrap}>
+              <Text style={styles.quickLabel}>{chipLabel}</Text>
+              <View style={styles.quickChips}>
+                {searchChips.slice(0, 6).map((item) => (
+                  <Pressable
+                    android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
+                    key={item}
+                    onPress={() => setQuery(item)}
+                    style={styles.quickChip}
+                  >
+                    <Text style={styles.quickText}>{item}</Text>
+                  </Pressable>
+                ))}
+              </View>
+            </View>
+          ) : null}
+        </>
+      }
+      subtitle="Satu tempat untuk menemukan bacaan, hadis, referensi, dan fitur aplikasi."
+      title="Cari"
+    >
+      {renderSearchResults()}
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  webAppSurface: {
-    backgroundColor: '#f8fafc',
-    borderRadius: radius.md,
-    padding: spacing.sm,
+  webAppSearchScroll: {
+    backgroundColor: WEB_APP_SEARCH_BG,
+    flex: 1,
+  },
+  webAppSearchContent: {
+    backgroundColor: WEB_APP_SEARCH_BG,
+    flexGrow: 1,
+    padding: spacing.md,
+    paddingBottom: spacing.xl,
+  },
+  webAppSearchTitle: {
+    color: '#f8fafc',
+    fontSize: 26,
+    fontWeight: '900',
+    letterSpacing: 0,
+    lineHeight: 32,
+    marginBottom: spacing.lg,
+  },
+  webAppSearchRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginBottom: spacing.md,
+  },
+  webAppSearchInputWrap: {
+    backgroundColor: WEB_APP_SEARCH_SURFACE,
+    borderColor: WEB_APP_SEARCH_ACCENT,
+    borderRadius: 12,
+    borderWidth: 2,
+    flex: 1,
+    justifyContent: 'center',
+    minHeight: 44,
+    paddingHorizontal: spacing.md,
+  },
+  webAppSearchInput: {
+    color: '#e2e8f0',
+    fontSize: 14,
+    minHeight: 40,
+    padding: 0,
+  },
+  webAppSearchButton: {
+    alignItems: 'center',
+    backgroundColor: '#059669',
+    borderRadius: 10,
+    flexDirection: 'row',
+    gap: spacing.xs,
+    justifyContent: 'center',
+    minHeight: 44,
+    paddingHorizontal: spacing.md,
+  },
+  webAppSearchButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  webAppFilterWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
+  webAppFilterChip: {
+    backgroundColor: '#334155',
+    borderRadius: 7,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 8,
+  },
+  webAppFilterChipActive: {
+    backgroundColor: '#059669',
+  },
+  webAppFilterText: {
+    color: '#cbd5e1',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  webAppFilterTextActive: {
+    color: '#ffffff',
+  },
+  webAppSearchResults: {
+    marginTop: spacing.lg,
   },
   filterChip: {
     backgroundColor: colors.surface,

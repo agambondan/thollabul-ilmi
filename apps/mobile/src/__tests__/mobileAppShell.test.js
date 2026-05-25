@@ -224,6 +224,15 @@ describe('MobileAppShell', () => {
     expect(getByTestId('mobile-menu-item-hadith').props.accessibilityState).toEqual({ selected: false });
   });
 
+  test('marks search action active when web app shell active tab is search', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
+    const { getByLabelText, getByTestId } = renderShell({ activeTab: 'search' });
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+    expect(getByLabelText('Cari').props.accessibilityState).toEqual({ selected: true });
+    expect(getByLabelText('Dashboard').props.accessibilityState).toEqual({ selected: false });
+  });
+
   test('hides web app bottom nav while keyboard is visible', async () => {
     AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
     const { getByTestId, queryByTestId } = renderShell({ keyboardVisible: true });

@@ -37,7 +37,7 @@ export function MobileBottomNav({ active, onChange, onOpenMenu, onOpenSearch }) 
           <Pressable
             accessibilityLabel={tab.label}
             accessibilityRole={isAction ? 'button' : 'tab'}
-            accessibilityState={isAction ? undefined : { selected }}
+            accessibilityState={tab.key === 'menu' ? undefined : { selected }}
             android_ripple={{ color: nav.activeBg, borderless: false }}
             key={tab.key}
             onPress={() => {
