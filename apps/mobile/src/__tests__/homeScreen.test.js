@@ -216,7 +216,7 @@ describe('HomeScreen', () => {
     expect(queryByTestId('home-classic-header')).toBeNull();
   });
 
-  test('uses dashboard web palette for web app home cards', async () => {
+  test('uses dashboard dark web palette for web app home cards', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
 
     const { getByTestId } = await renderHomeScreen();
@@ -225,16 +225,16 @@ describe('HomeScreen', () => {
       expect(getByTestId('home-web-app-greeting')).toBeTruthy();
     });
     expect(getByTestId('home-scroll').props.style).toEqual(
-      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#f8fafc' })]),
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#020617' })]),
     );
     expect(getByTestId('home-prayer-card').props.style).toEqual(
-      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#f3f4f6' })]),
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#0f172a', borderColor: '#064e3b' })]),
     );
     expect(getByTestId('home-menu-grid').props.style).toEqual(
-      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#e5e7eb' })]),
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#0f172a', borderColor: '#1e293b' })]),
     );
     expect(getByTestId('home-daily-card').props.style).toEqual(
-      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#f3f4f6' })]),
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#0f172a', borderColor: '#1e293b' })]),
     );
   });
 

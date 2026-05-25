@@ -55,17 +55,19 @@ const menuItems = [
 ];
 
 const webDashboardColors = {
-  accent: '#b45309',
-  bg: '#f8fafc',
-  border: '#e5e7eb',
-  borderSoft: '#f3f4f6',
-  card: '#ffffff',
-  iconBg: '#f3f4f6',
-  muted: '#64748b',
-  primary: '#047857',
-  primarySoft: '#ecfdf5',
-  text: '#374151',
-  title: '#111827',
+  accent: '#fbbf24',
+  bg: '#020617',
+  border: '#1e293b',
+  borderSoft: '#064e3b',
+  card: '#0f172a',
+  cardDeep: '#111827',
+  iconBg: '#0f3f3a',
+  muted: '#94a3b8',
+  primary: '#6ee7b7',
+  primaryStrong: '#10b981',
+  primarySoft: '#022c22',
+  text: '#cbd5e1',
+  title: '#f8fafc',
 };
 
 const webDashboardFontFamily = Platform.select({
@@ -186,6 +188,29 @@ function DashboardContent({
   const primary = isWebApp ? webDashboardColors.primary : colors.primary;
   const accent = isWebApp ? webDashboardColors.accent : colors.accent;
   const muted = isWebApp ? webDashboardColors.muted : colors.muted;
+  const menuGrid = (
+    <View style={[styles.menuGrid, isWebApp && styles.webAppMenuGrid]} testID="home-menu-grid">
+      {menuItems.map(({ Icon, featureKey, internalView, key, label, params }) => (
+        <Pressable
+          android_ripple={{ color: 'rgba(91, 110, 91, 0.14)', borderless: false }}
+          key={label}
+          onPress={() => {
+            if (internalView && navigation?.open) {
+              navigation.open('home', internalView);
+              return;
+            }
+            onOpenTab(key, params ?? (featureKey ? { featureKey } : null));
+          }}
+          style={styles.menuItem}
+        >
+          <View style={[styles.menuIcon, isWebApp && styles.webAppIconTile]}>
+            <Icon color={primary} size={18} strokeWidth={2.1} />
+          </View>
+          <Text style={[styles.menuLabel, isWebApp && styles.webAppMenuLabel]}>{label}</Text>
+        </Pressable>
+      ))}
+    </View>
+  );
 
   return (
     <ScrollView
@@ -272,27 +297,7 @@ function DashboardContent({
         </View>
       </View>
 
-      <View style={[styles.menuGrid, isWebApp && styles.webAppMenuGrid]} testID="home-menu-grid">
-        {menuItems.map(({ Icon, featureKey, internalView, key, label, params }) => (
-          <Pressable
-            android_ripple={{ color: 'rgba(91, 110, 91, 0.14)', borderless: false }}
-            key={label}
-            onPress={() => {
-              if (internalView && navigation?.open) {
-                navigation.open('home', internalView);
-                return;
-              }
-              onOpenTab(key, params ?? (featureKey ? { featureKey } : null));
-            }}
-            style={styles.menuItem}
-          >
-            <View style={[styles.menuIcon, isWebApp && styles.webAppIconTile]}>
-              <Icon color={primary} size={18} strokeWidth={2.1} />
-            </View>
-            <Text style={[styles.menuLabel, isWebApp && styles.webAppMenuLabel]}>{label}</Text>
-          </Pressable>
-        ))}
-      </View>
+      {!isWebApp ? menuGrid : null}
 
       <View style={[styles.dailyCard, isWebApp && styles.webAppDailyCard]} testID="home-daily-card">
         <View style={styles.dailyHeader}>
@@ -372,6 +377,13 @@ function DashboardContent({
           primary={primary}
           title="Terakhir Dibuka"
         />
+      ) : null}
+
+      {isWebApp ? (
+        <View style={styles.webAppQuickAccessBlock}>
+          <Text style={styles.webAppSectionTitle}>Akses Cepat</Text>
+          {menuGrid}
+        </View>
       ) : null}
 
       <ContentCard
@@ -465,8 +477,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   webAppGreetingTitle: {
-    color: '#064e3b',
-    fontSize: 20,
+    color: webDashboardColors.title,
+    fontSize: 22,
     fontWeight: '900',
     letterSpacing: 0,
   },
@@ -589,16 +601,16 @@ const styles = StyleSheet.create({
   webAppPrayerCard: {
     backgroundColor: webDashboardColors.card,
     borderColor: webDashboardColors.borderSoft,
-    borderRadius: radius.md,
+    borderRadius: 24,
   },
   webAppCard: {
     backgroundColor: webDashboardColors.card,
-    borderColor: webDashboardColors.borderSoft,
+    borderColor: webDashboardColors.border,
     borderRadius: radius.md,
   },
   webAppPill: {
     backgroundColor: webDashboardColors.primarySoft,
-    borderColor: '#a7f3d0',
+    borderColor: '#065f46',
   },
   webAppDivider: {
     backgroundColor: webDashboardColors.border,
@@ -711,18 +723,27 @@ const styles = StyleSheet.create({
     backgroundColor: webDashboardColors.card,
     borderColor: webDashboardColors.border,
     borderRadius: radius.md,
-    marginTop: spacing.xs,
+    marginTop: 0,
+  },
+  webAppQuickAccessBlock: {
+    marginBottom: spacing.md,
+  },
+  webAppSectionTitle: {
+    color: webDashboardColors.text,
+    fontSize: 14,
+    fontWeight: '900',
+    marginBottom: spacing.sm,
   },
   webAppIconTile: {
     backgroundColor: webDashboardColors.iconBg,
     borderColor: webDashboardColors.border,
   },
   webAppActionTile: {
-    backgroundColor: webDashboardColors.bg,
+    backgroundColor: webDashboardColors.cardDeep,
     borderColor: webDashboardColors.border,
   },
   webAppRow: {
-    backgroundColor: webDashboardColors.bg,
+    backgroundColor: webDashboardColors.cardDeep,
     borderColor: webDashboardColors.border,
   },
   menuItem: {
@@ -747,6 +768,9 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     letterSpacing: 0,
     textTransform: 'uppercase',
+  },
+  webAppMenuLabel: {
+    color: webDashboardColors.text,
   },
   contextCard: {
     backgroundColor: colors.surface,
@@ -903,16 +927,16 @@ const styles = StyleSheet.create({
   },
   webAppDailyCard: {
     backgroundColor: webDashboardColors.card,
-    borderColor: webDashboardColors.borderSoft,
+    borderColor: webDashboardColors.border,
     borderRadius: radius.md,
     marginTop: 0,
   },
   webAppDailyItem: {
-    backgroundColor: webDashboardColors.bg,
+    backgroundColor: webDashboardColors.cardDeep,
     borderColor: webDashboardColors.border,
   },
   webAppDailyAccent: {
-    backgroundColor: webDashboardColors.primary,
+    backgroundColor: webDashboardColors.primaryStrong,
   },
   dailyHeader: {
     alignItems: 'center',
