@@ -213,6 +213,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'muhasabah', title: 'Muhasabah', subtitle: 'Jurnal refleksi diri', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/muhasabah' },
     { key: 'hafalan', title: 'Hafalan', subtitle: 'Ringkasan hafalan Quran', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/hafalan/summary' },
     { key: 'murojaah', title: 'Murojaah', subtitle: 'Jadwal ulang hafalan', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/murojaah/session' },
+    { key: 'tilawah', title: 'Tilawah', subtitle: 'Log dan ringkasan tilawah', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/tilawah/summary' },
     { key: 'community-feed', title: 'Komunitas', subtitle: 'Refleksi', group: 'Ilmu', type: 'feed' },
     { key: 'kajian', title: 'Kajian', subtitle: 'Sesi belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/kajian' },
     { key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi seputar Islam', group: 'Ilmu', type: 'forum' },
@@ -246,7 +247,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'personal',
       label: 'Personal',
       meta: 'Akun',
-      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications', 'goals', 'muhasabah', 'hafalan', 'murojaah'].includes(f.key)),
+      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications', 'goals', 'muhasabah', 'hafalan', 'murojaah', 'tilawah'].includes(f.key)),
     },
   ];
 
@@ -700,6 +701,75 @@ describe('ExploreScreen', () => {
 
     expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
       expect.objectContaining({ key: 'murojaah', endpoint: '/api/v1/murojaah/session' }),
+      { page: 0, size: 20 },
+    );
+  });
+
+  test('uses dashboard Tilawah route surface in web app layout', async () => {
+    const today = (() => {
+      const date = new Date();
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    })();
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useSession.mockReturnValue({
+      ...mockUseSession(),
+      session: { token: 'abc' },
+      user: { id: '1', name: 'Test', email: 'test@test.com' },
+    });
+    personalApi.getBookmarks.mockResolvedValue([]);
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 'tilawah-1',
+          title: 'Al-Kahfi',
+          body: 'Tilawah pagi',
+          meta: today,
+          raw: {
+            ayahFrom: 1,
+            ayahTo: 20,
+            date: today,
+            notes: 'Tilawah pagi',
+            pages: 4,
+            surah: 'Al-Kahfi',
+          },
+        },
+        {
+          id: 'tilawah-2',
+          title: 'Yasin',
+          body: 'Bacaan malam',
+          meta: '2026-05-24',
+          raw: {
+            ayah_from: 1,
+            ayah_to: 83,
+            date: '2026-05-24',
+            notes: 'Bacaan malam',
+            pages_read: 6,
+            surah: 'Yasin',
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getAllByText, getByText, getByTestId, queryByTestId } = await renderExploreScreen({
+      deepLinkTarget: { id: 'tilawah-route', params: { featureKey: 'tilawah' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-tilawah-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('PROGRESS SAYA')).toBeTruthy();
+      expect(getByText('Tilawah')).toBeTruthy();
+      expect(getAllByText('10 halaman').length).toBeGreaterThan(0);
+      expect(getByText('Hari ini sudah tercatat')).toBeTruthy();
+      expect(getByText('Al-Kahfi')).toBeTruthy();
+      expect(getByText('Yasin')).toBeTruthy();
+      expect(getByText('2 log')).toBeTruthy();
+      expect(getAllByTestId('web-app-tilawah-card')).toHaveLength(2);
+    });
+
+    expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
+      expect.objectContaining({ key: 'tilawah', endpoint: '/api/v1/tilawah/summary' }),
       { page: 0, size: 20 },
     );
   });

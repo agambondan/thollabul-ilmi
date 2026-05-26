@@ -308,6 +308,70 @@ const getMurojaahMetaLine = (item = {}) => {
     raw.last_reviewed_at ? `Review: ${formatNoteDate(raw.last_reviewed_at)}` : '',
   ].filter(Boolean).join(' · ');
 };
+const getLocalDateKey = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+const parseTilawahDate = (value = '') => {
+  if (!value) return null;
+  const parsed = new Date(`${value}`.includes('T') ? value : `${value}T00:00:00`);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+const isTilawahSameWeek = (value = '') => {
+  const parsed = parseTilawahDate(value);
+  if (!parsed) return false;
+  const now = new Date();
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - now.getDay());
+  startOfWeek.setHours(0, 0, 0, 0);
+  return parsed >= startOfWeek;
+};
+const isTilawahSameMonth = (value = '') => {
+  const parsed = parseTilawahDate(value);
+  if (!parsed) return false;
+  const now = new Date();
+  return parsed.getMonth() === now.getMonth() && parsed.getFullYear() === now.getFullYear();
+};
+const getTilawahDate = (item = {}) => {
+  const raw = item?.raw ?? {};
+  return raw.date ?? raw.created_at ?? item.date ?? item.meta ?? '';
+};
+const getTilawahPages = (item = {}) => {
+  const raw = item?.raw ?? {};
+  return parseGoalNumber(raw.pages ?? raw.pages_read ?? raw.page_count ?? raw.total_pages ?? item.pages, 0);
+};
+const getTilawahSurah = (item = {}, index = 0) => {
+  const raw = item?.raw ?? {};
+  return pickText(raw.surah, raw.surah_name, raw.surah?.latin_name, raw.surah?.name_latin, item.title, `Tilawah ${index + 1}`);
+};
+const getTilawahAyahLine = (item = {}) => {
+  const raw = item?.raw ?? {};
+  const ayahFrom = raw.ayahFrom ?? raw.ayah_from ?? raw.ayah_start;
+  const ayahTo = raw.ayahTo ?? raw.ayah_to ?? raw.ayah_end ?? ayahFrom;
+  return ayahFrom ? `Ayat ${ayahFrom}-${ayahTo}` : '';
+};
+const getTilawahNotes = (item = {}) => {
+  const raw = item?.raw ?? {};
+  return pickText(raw.notes, raw.note, item.body, item.content);
+};
+const getTilawahSummary = (items = []) => {
+  const today = getLocalDateKey();
+  return items.reduce(
+    (summary, item) => {
+      const date = `${getTilawahDate(item)}`.slice(0, 10);
+      const pages = getTilawahPages(item);
+      return {
+        pagesMonth: summary.pagesMonth + (isTilawahSameMonth(date) ? pages : 0),
+        pagesWeek: summary.pagesWeek + (isTilawahSameWeek(date) ? pages : 0),
+        todayEntry: summary.todayEntry || (date === today ? item : null),
+        totalPages: summary.totalPages + pages,
+      };
+    },
+    { pagesMonth: 0, pagesWeek: 0, todayEntry: null, totalPages: 0 },
+  );
+};
 const normalizeAsmaulName = (item = {}, index = 0) => ({
   arabic: pickText(item.arabic, item.translation?.arab, item.translation?.ar, item.name),
   id: item.id ?? item.number ?? index + 1,
@@ -3954,6 +4018,157 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     );
   };
 
+  const renderWebAppTilawahCard = (item, index) => {
+    const ayahLine = getTilawahAyahLine(item);
+    const dateLabel = formatNoteDate(getTilawahDate(item));
+    const notes = getTilawahNotes(item);
+    const pages = getTilawahPages(item);
+
+    return (
+      <Pressable
+        android_ripple={{ color: 'rgba(52, 211, 153, 0.12)', borderless: false }}
+        key={`${getExploreItemKey(item)}-${index}`}
+        onLongPress={() => setItemActionSheet({ visible: true, item })}
+        onPress={() => openItemDetail(item)}
+        style={styles.webAppTilawahCard}
+        testID="web-app-tilawah-card"
+      >
+        <View style={styles.webAppGoalHeader}>
+          <View style={styles.webAppGoalIcon}>
+            <BookOpen color={WEB_APP_EXPLORE_ACCENT} size={18} strokeWidth={2.2} />
+          </View>
+          <View style={styles.webAppGoalTitleBlock}>
+            <Text style={styles.webAppBookmarkType}>TILAWAH</Text>
+            <Text numberOfLines={2} style={styles.webAppBookmarkTitle}>
+              {getTilawahSurah(item, index)}
+            </Text>
+            {[dateLabel, ayahLine].filter(Boolean).length ? (
+              <Text numberOfLines={1} style={styles.webAppBookmarkText}>
+                {[dateLabel, ayahLine].filter(Boolean).join(' · ')}
+              </Text>
+            ) : null}
+          </View>
+          <Text style={styles.webAppTilawahPageChip}>{pages} halaman</Text>
+        </View>
+        {notes ? (
+          <Text numberOfLines={3} style={styles.webAppGoalBody}>
+            {notes}
+          </Text>
+        ) : null}
+        <View style={styles.webAppBookmarkFooter}>
+          <Text style={styles.webAppBookmarkHint}>Ketuk untuk detail</Text>
+          <Pressable
+            hitSlop={10}
+            onPress={() => setItemActionSheet({ visible: true, item })}
+            style={styles.webAppBookmarkManage}
+            testID="web-app-tilawah-manage"
+          >
+            <Text style={styles.webAppBookmarkManageText}>Kelola</Text>
+          </Pressable>
+        </View>
+      </Pressable>
+    );
+  };
+
+  const renderWebAppTilawahScreen = () => {
+    const summary = getTilawahSummary(visibleItems);
+    const todayEntry = summary.todayEntry;
+    const todaySurah = todayEntry ? getTilawahSurah(todayEntry) : '';
+    const todayPages = todayEntry ? getTilawahPages(todayEntry) : 0;
+    const todayAyahLine = todayEntry ? getTilawahAyahLine(todayEntry) : '';
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppBookmarksContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppBookmarksRoot}
+      >
+        <View testID="explore-web-app-tilawah-surface" />
+        <View style={styles.webAppBookmarksHeader}>
+          <Pressable
+            accessibilityLabel="Kembali ke Belajar"
+            onPress={clearFeature}
+            style={styles.webAppBookmarksBack}
+            testID="web-app-tilawah-back"
+          >
+            <Text style={styles.webAppBookmarksBackText}>Kembali</Text>
+          </Pressable>
+          <Text style={styles.webAppCatalogEyebrow}>PROGRESS SAYA</Text>
+          <View style={styles.webAppBookmarksTitleRow}>
+            <Text style={styles.webAppCatalogTitle}>Tilawah</Text>
+            <Text style={styles.webAppBookmarksCount}>{summary.totalPages} halaman</Text>
+          </View>
+          <Text style={styles.webAppCatalogSubtitle}>
+            Log tilawah, halaman pekanan, dan aktivitas baca Quran.
+          </Text>
+        </View>
+
+        {error ? <Text style={styles.webAppBookmarksError}>{error}</Text> : null}
+        {loading ? (
+          <View style={styles.webAppBookmarksState}>
+            <ActivityIndicator color={WEB_APP_EXPLORE_ACCENT} size="small" />
+            <Text style={styles.webAppBookmarksStateText}>Memuat tilawah...</Text>
+          </View>
+        ) : null}
+        {!loading && !error ? (
+          <View style={[styles.webAppTilawahTodayPanel, todayEntry && styles.webAppTilawahTodayPanelDone]}>
+            <View style={styles.webAppGoalHeader}>
+              <View style={styles.webAppGoalIcon}>
+                {todayEntry ? (
+                  <CheckCircle2 color={WEB_APP_EXPLORE_ACCENT} size={18} strokeWidth={2.2} />
+                ) : (
+                  <BookOpen color="#fbbf24" size={18} strokeWidth={2.2} />
+                )}
+              </View>
+              <View style={styles.webAppGoalTitleBlock}>
+                <Text style={styles.webAppTilawahTodayTitle}>
+                  {todayEntry ? 'Hari ini sudah tercatat' : 'Belum ada tilawah hari ini'}
+                </Text>
+                <Text style={styles.webAppTilawahTodayText}>
+                  {todayEntry
+                    ? [todaySurah, todayAyahLine, `${todayPages} halaman`].filter(Boolean).join(' · ')
+                    : 'Tambahkan log dari dashboard web atau lanjutkan setelah masuk akun.'}
+                </Text>
+              </View>
+            </View>
+          </View>
+        ) : null}
+        {!loading && !error && !items.length ? (
+          <View style={styles.webAppBookmarksEmpty}>
+            <BookOpen color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
+            <Text style={styles.webAppBookmarksEmptyTitle}>Belum ada log tilawah.</Text>
+            <Text style={styles.webAppBookmarksEmptyText}>
+              Catat tilawah dari dashboard web agar ringkasan halaman muncul di sini.
+            </Text>
+          </View>
+        ) : null}
+        {!loading && !error && visibleItems.length > 0 ? (
+          <>
+            <View style={styles.webAppGoalsSummary}>
+              <View style={styles.webAppGoalSummaryPill}>
+                <BookOpen color={WEB_APP_EXPLORE_ACCENT} size={14} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{summary.pagesWeek} pekan ini</Text>
+              </View>
+              <View style={styles.webAppGoalSummaryPill}>
+                <StickyNote color="#60a5fa" size={14} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{summary.pagesMonth} bulan ini</Text>
+              </View>
+              <View style={styles.webAppGoalSummaryPill}>
+                <CheckCircle2 color="#9ca3af" size={14} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{visibleItems.length} log</Text>
+              </View>
+            </View>
+            <View style={styles.webAppGoalsList}>
+              {visibleItems.map(renderWebAppTilawahCard)}
+            </View>
+          </>
+        ) : null}
+        {renderItemActionSheet()}
+      </ScrollView>
+    );
+  };
+
   const renderWebAppNotificationsScreen = () => (
     <ScrollView
       contentContainerStyle={styles.webAppNotificationsContent}
@@ -4051,6 +4266,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   if (activeFeature?.key === 'murojaah' && isWebAppLayout) {
     return renderWebAppMurojaahScreen();
+  }
+
+  if (activeFeature?.key === 'tilawah' && isWebAppLayout) {
+    return renderWebAppTilawahScreen();
   }
 
   if (activeFeature?.type === 'notifications' && isWebAppLayout) {
@@ -4685,6 +4904,50 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(248, 113, 113, 0.12)',
     borderColor: 'rgba(248, 113, 113, 0.32)',
     color: '#fecaca',
+  },
+  webAppTilawahTodayPanel: {
+    backgroundColor: 'rgba(245, 158, 11, 0.12)',
+    borderColor: 'rgba(245, 158, 11, 0.32)',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    marginTop: spacing.md,
+    padding: spacing.md,
+  },
+  webAppTilawahTodayPanelDone: {
+    backgroundColor: 'rgba(52, 211, 153, 0.12)',
+    borderColor: 'rgba(52, 211, 153, 0.32)',
+  },
+  webAppTilawahTodayTitle: {
+    color: '#f8fafc',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  webAppTilawahTodayText: {
+    color: '#cbd5e1',
+    fontSize: 12,
+    lineHeight: 18,
+    marginTop: 4,
+  },
+  webAppTilawahCard: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    minHeight: 132,
+    padding: spacing.md,
+  },
+  webAppTilawahPageChip: {
+    backgroundColor: 'rgba(52, 211, 153, 0.12)',
+    borderColor: 'rgba(52, 211, 153, 0.32)',
+    borderRadius: 999,
+    borderWidth: 1,
+    color: WEB_APP_EXPLORE_ACCENT,
+    fontSize: 11,
+    fontWeight: '900',
+    maxWidth: 104,
+    overflow: 'hidden',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
   },
   webAppSurface: {
     backgroundColor: '#f8fafc',
