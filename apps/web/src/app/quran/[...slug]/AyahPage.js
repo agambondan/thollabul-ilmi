@@ -79,6 +79,7 @@ const AyahPage = ({
     const hideArabic = hafalanMode === 'hide_arabic' && !revealed;
     const hideTranslation = hafalanMode === 'hide_translation' && !revealed;
     const hideAll = hafalanMode === 'hide_all' && !revealed;
+    const arabicHtml = ayah.translation?.ar_html || ayah.translation?.ar || '';
 
     const copyText = (value) => {
         CopyToClipboard(value);
@@ -488,9 +489,9 @@ const AyahPage = ({
                         style={{ fontSize: `${arabicFontSize}px`, lineHeight: '2.10' }}
                         className={hideArabic || hideAll ? 'blur-sm select-none' : ''}
                         dangerouslySetInnerHTML={{
-                            __html: (
-                                ayah.translation.ar_html ?? ayah.translation.ar
-                            ).concat(`&nbsp;<span class="font-kitab">&#x06DD;${NumberToArabic(ayah.number)}</span>`),
+                            __html: arabicHtml.concat(
+                                `&nbsp;<span class="font-kitab">&#x06DD;${NumberToArabic(ayah.number)}</span>`
+                            ),
                         }}
                     />
                     {ayah.translation.latin_idn && (

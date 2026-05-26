@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 const FONT_KEY = 'quranFont';
 const FONT_SIZE_KEY = 'quranArabicFontSize';
 const DEFAULT_ARABIC_FONT_SIZE = 40;
-const MIN_ARABIC_FONT_SIZE = 28;
+const MIN_ARABIC_FONT_SIZE = 14;
 const MAX_ARABIC_FONT_SIZE = 64;
 const FONT_SIZE_STEP = 4;
 

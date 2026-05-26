@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { useQuranFont, QURAN_FONTS } from '@/lib/useQuranFont';
 
 describe('useQuranFont', () => {
@@ -36,6 +36,23 @@ describe('useQuranFont', () => {
     localStorage.setItem('quranFont', 'invalid-font');
     const { result } = renderHook(() => useQuranFont());
     expect(result.current.fontId).toBe('kitab');
+  });
+
+  test('clamps persisted arabic font size to 14px minimum', async () => {
+    localStorage.setItem('quranArabicFontSize', '10');
+    const { result } = renderHook(() => useQuranFont());
+
+    await waitFor(() => expect(result.current.arabicFontSize).toBe(14));
+  });
+
+  test('does not decrease arabic font size below 14px', () => {
+    const { result } = renderHook(() => useQuranFont());
+
+    act(() => result.current.setArabicFontSize(14));
+    act(() => result.current.decreaseArabicFontSize());
+
+    expect(result.current.arabicFontSize).toBe(14);
+    expect(localStorage.getItem('quranArabicFontSize')).toBe('14');
   });
 
   test('QURAN_FONTS has correct structure', () => {

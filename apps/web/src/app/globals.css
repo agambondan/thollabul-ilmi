@@ -173,7 +173,7 @@ tajweed.madda_normal {
     color: #537FFF;
 }
 
-.idgh_mus {
+tajweed.idgh_mus {
     color: #A1A1A1;
 }
 
@@ -206,6 +206,9 @@ tajweed.idgh_mus:hover {
 
 .font-nh {
     font-family: 'NooreHidayah';
+    font-synthesis: none;
+    font-style: normal;
+    font-weight: 400;
 }
 
 @font-face {
