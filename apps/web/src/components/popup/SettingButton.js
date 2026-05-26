@@ -97,9 +97,12 @@ const SettingButton = () => {
     return (
         <div
             ref={popupRef}
+            data-testid='global-setting-control'
             className={`fixed right-2 z-10 transition-all duration-200 ${bottomClass} ${visibilityClass}`}
         >
             <button
+                type='button'
+                data-testid='global-setting-button'
                 className='dark:bg-slate-200 bg-slate-800 dark:text-black text-white rounded-full p-3 shadow hover:opacity-80 transition-opacity'
                 onClick={() => setShowPopup((p) => !p)}
                 title={t('settings.title')}

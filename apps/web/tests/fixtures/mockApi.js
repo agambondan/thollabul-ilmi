@@ -74,13 +74,19 @@ export const mockPerawis = [
   { id: 3, nama_latin: 'Abu Dawud', nama_arab: 'أبو داود', nama_lengkap: 'Sulaiman bin al-Ash\'ats' },
 ];
 
+export const mockAsmaulHusna = [
+  { id: 1, number: 1, arabic: 'الرَّحْمَنُ', latin: 'Ar-Rahman', transliteration: 'Ar-Rahman', indonesian: 'Maha Pengasih' },
+  { id: 2, number: 2, arabic: 'الرَّحِيمُ', latin: 'Ar-Rahim', transliteration: 'Ar-Rahim', indonesian: 'Maha Penyayang' },
+  { id: 3, number: 3, arabic: 'الْمَلِكُ', latin: 'Al-Malik', transliteration: 'Al-Malik', indonesian: 'Maha Merajai' },
+];
+
 export const mockPrayerTimes = {
   imsak: '04:20', fajr: '04:30', sunrise: '05:50',
   dhuhr: '12:00', asr: '15:30', maghrib: '17:50', isha: '19:10',
 };
 
 export async function setupApiMocks(page, options = {}) {
-  const { isAuthenticated = false } = options;
+  const { isAuthenticated = false, mockUser = defaultMockUser } = options;
 
   await page.route('**/api/v1/**', async (route) => {
     const url = new URL(route.request().url());
@@ -105,7 +111,7 @@ export async function setupApiMocks(page, options = {}) {
       if (isAuthenticated) {
         return route.fulfill({
           status: 200, contentType: 'application/json',
-          body: JSON.stringify(defaultMockUser),
+          body: JSON.stringify(mockUser),
         });
       }
       return route.fulfill({
@@ -232,6 +238,13 @@ export async function setupApiMocks(page, options = {}) {
       return route.fulfill({
         status: 200, contentType: 'application/json',
         body: JSON.stringify({ items: mockPerawis, total: mockPerawis.length }),
+      });
+    }
+
+    if (path.match(/\/asmaul-husna/)) {
+      return route.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify({ items: mockAsmaulHusna, total: mockAsmaulHusna.length }),
       });
     }
 

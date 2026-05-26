@@ -47,6 +47,13 @@ import {
 } from 'recharts';
 
 const CHART_COLORS = ['#047857', '#0f766e', '#b45309', '#475569', '#7c3aed'];
+const CHART_INITIAL_DIMENSIONS = {
+    h40: { width: 320, height: 160 },
+    h44: { width: 320, height: 176 },
+    h48: { width: 320, height: 192 },
+    h56: { width: 320, height: 224 },
+    h64: { width: 320, height: 256 },
+};
 const METRIC_TONES = {
     amber: 'bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300',
     emerald: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300',
@@ -680,7 +687,7 @@ const AdminDashboard = () => {
             </section>
 
             <section className='mb-8 grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(360px,0.8fr)]'>
-                <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
+                <div className='min-w-0 rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
                     <div className='mb-4 flex items-start justify-between gap-4'>
                         <div>
                             <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
@@ -783,9 +790,9 @@ const AdminDashboard = () => {
                             </p>
                         </div>
                     </div>
-                    <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-                        <div className='h-64'>
-                            <ResponsiveContainer width='100%' height='100%'>
+                    <div className='grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2'>
+                        <div className='h-64 min-w-0 w-full'>
+                            <ResponsiveContainer width='100%' height='100%' initialDimension={CHART_INITIAL_DIMENSIONS.h64}>
                                 <BarChart data={overview.contentMix} margin={{ top: 8, right: 8, bottom: 8, left: 0 }}>
                                     <XAxis dataKey='name' tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: '#64748b' }} />
                                     <YAxis allowDecimals={false} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: '#64748b' }} />
@@ -805,7 +812,7 @@ const AdminDashboard = () => {
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
-                        <div>
+                        <div className='min-w-0'>
                             <div className='flex items-center justify-between gap-4'>
                                 <div>
                                     <p className='text-xs font-semibold text-gray-900 dark:text-white'>
@@ -816,8 +823,8 @@ const AdminDashboard = () => {
                                     </p>
                                 </div>
                             </div>
-                            <div className='h-48'>
-                                <ResponsiveContainer width='100%' height='100%'>
+                            <div className='h-48 min-w-0 w-full'>
+                                <ResponsiveContainer width='100%' height='100%' initialDimension={CHART_INITIAL_DIMENSIONS.h48}>
                                     <PieChart>
                                         <Pie
                                             data={overview.statusMix}
@@ -843,8 +850,8 @@ const AdminDashboard = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='mt-5 grid grid-cols-1 gap-5 border-t border-gray-100 pt-5 dark:border-slate-700 lg:grid-cols-2'>
-                        <div>
+                    <div className='mt-5 grid min-w-0 grid-cols-1 gap-5 border-t border-gray-100 pt-5 dark:border-slate-700 lg:grid-cols-2'>
+                        <div className='min-w-0'>
                             <div className='mb-3'>
                                 <p className='text-xs font-semibold text-gray-900 dark:text-white'>
                                     {t('admin.metrics.content_health_chart')}
@@ -853,8 +860,8 @@ const AdminDashboard = () => {
                                     {t('admin.metrics.content_health_chart_desc')}
                                 </p>
                             </div>
-                            <div className='h-56'>
-                                <ResponsiveContainer width='100%' height='100%'>
+                            <div className='h-56 min-w-0 w-full'>
+                                <ResponsiveContainer width='100%' height='100%' initialDimension={CHART_INITIAL_DIMENSIONS.h56}>
                                     <BarChart
                                         data={contentHealthChart}
                                         layout='vertical'
@@ -893,7 +900,7 @@ const AdminDashboard = () => {
                                 </ResponsiveContainer>
                             </div>
                         </div>
-                        <div>
+                        <div className='min-w-0'>
                             <div className='mb-3'>
                                 <p className='text-xs font-semibold text-gray-900 dark:text-white'>
                                     {t('admin.metrics.review_queue_chart')}
@@ -902,8 +909,8 @@ const AdminDashboard = () => {
                                     {t('admin.metrics.review_queue_chart_desc')}
                                 </p>
                             </div>
-                            <div className='h-56'>
-                                <ResponsiveContainer width='100%' height='100%'>
+                            <div className='h-56 min-w-0 w-full'>
+                                <ResponsiveContainer width='100%' height='100%' initialDimension={CHART_INITIAL_DIMENSIONS.h56}>
                                     <BarChart data={reviewQueueChart} margin={{ top: 6, right: 8, bottom: 8, left: -12 }}>
                                         <XAxis
                                             dataKey='name'
@@ -938,16 +945,16 @@ const AdminDashboard = () => {
                     </div>
                 </div>
 
-                <div className='grid grid-cols-1 gap-4'>
-                    <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
+                <div className='grid min-w-0 grid-cols-1 gap-4'>
+                    <div className='min-w-0 rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
                         <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
                             {t('admin.metrics.role_chart')}
                         </h2>
                         <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
                             {t('admin.metrics.role_chart_desc')}
                         </p>
-                        <div className='mt-4 h-44'>
-                            <ResponsiveContainer width='100%' height='100%'>
+                        <div className='mt-4 h-44 min-w-0 w-full'>
+                            <ResponsiveContainer width='100%' height='100%' initialDimension={CHART_INITIAL_DIMENSIONS.h44}>
                                 <PieChart>
                                     <Pie
                                         data={overview.roles}
@@ -991,7 +998,7 @@ const AdminDashboard = () => {
                         </div>
                     </div>
 
-                    <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
+                    <div className='min-w-0 rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
                         <div className='mb-4 flex items-start justify-between gap-4'>
                             <div>
                                 <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
@@ -1002,8 +1009,8 @@ const AdminDashboard = () => {
                                 </p>
                             </div>
                         </div>
-                        <div className='h-44'>
-                            <ResponsiveContainer width='100%' height='100%'>
+                        <div className='h-44 min-w-0 w-full'>
+                            <ResponsiveContainer width='100%' height='100%' initialDimension={CHART_INITIAL_DIMENSIONS.h44}>
                                 <PieChart>
                                     <Pie
                                         data={overview.sourceBreakdown}
@@ -1052,15 +1059,15 @@ const AdminDashboard = () => {
                         </div>
                     </div>
 
-                    <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
+                    <div className='min-w-0 rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
                         <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
                             {t('admin.metrics.visitor_chart')}
                         </h2>
                         <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
                             {t('admin.metrics.visitor_chart_desc')}
                         </p>
-                        <div className='mt-4 h-40'>
-                            <ResponsiveContainer width='100%' height='100%'>
+                        <div className='mt-4 h-40 min-w-0 w-full'>
+                            <ResponsiveContainer width='100%' height='100%' initialDimension={CHART_INITIAL_DIMENSIONS.h40}>
                                 <BarChart data={overview.analytics?.daily ?? []} margin={{ top: 4, right: 4, bottom: 4, left: -16 }}>
                                     <XAxis dataKey='date' tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: '#64748b' }} />
                                     <YAxis allowDecimals={false} tickLine={false} axisLine={false} tick={{ fontSize: 10, fill: '#64748b' }} />
