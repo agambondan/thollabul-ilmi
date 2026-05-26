@@ -1530,3 +1530,51 @@ Results:
   `output/native-smoke/tholabul-webapp-emulator-tilawah-route-after.png`;
   emulator was logged out, so the route showed the dark Tilawah dashboard shell
   with the existing protected-feature auth error.
+
+## Web App Stats Route Dashboard Parity
+
+Status: completed for the native `web_app` Stats feature route visual parity
+pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic paper active-feature `Screen` path for the
+  Stats feature on the `classic` layout.
+- `web_app` mode now renders the Stats feature route with a dedicated dark
+  dashboard surface modeled after `/dashboard/stats`: progress header, sholat
+  today card, summary stat tiles, hafalan/tilawah progress rows, and a compact
+  7-day sholat bar chart.
+- Stats loading still uses the existing protected-list endpoint flow through
+  `getFeatureItemPage`; this slice only changes presentation and normalization
+  for the returned stats payload.
+- Added Explore test coverage to ensure the `web_app` Stats feature route uses
+  the dedicated dashboard surface instead of the generic `Screen` title path.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Stats feature route presentation in
+  `web_app`. It does not change classic Explore, stats API calls, profile
+  stats, achievement loading, feature keys, or auth gating.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted Explore test passed: 1 suite, 30 tests.
+- Full mobile Jest passed: 44 suites, 631 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-stats-route-after.png`;
+  emulator was logged out, so the route showed the dark Stats dashboard shell
+  with the existing protected-feature auth error.

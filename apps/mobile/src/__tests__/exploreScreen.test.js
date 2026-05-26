@@ -214,6 +214,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'hafalan', title: 'Hafalan', subtitle: 'Ringkasan hafalan Quran', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/hafalan/summary' },
     { key: 'murojaah', title: 'Murojaah', subtitle: 'Jadwal ulang hafalan', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/murojaah/session' },
     { key: 'tilawah', title: 'Tilawah', subtitle: 'Log dan ringkasan tilawah', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/tilawah/summary' },
+    { key: 'stats', title: 'Statistik', subtitle: 'Ringkasan aktivitas', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/stats' },
     { key: 'community-feed', title: 'Komunitas', subtitle: 'Refleksi', group: 'Ilmu', type: 'feed' },
     { key: 'kajian', title: 'Kajian', subtitle: 'Sesi belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/kajian' },
     { key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi seputar Islam', group: 'Ilmu', type: 'forum' },
@@ -247,7 +248,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'personal',
       label: 'Personal',
       meta: 'Akun',
-      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications', 'goals', 'muhasabah', 'hafalan', 'murojaah', 'tilawah'].includes(f.key)),
+      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications', 'goals', 'muhasabah', 'hafalan', 'murojaah', 'tilawah', 'stats'].includes(f.key)),
     },
   ];
 
@@ -770,6 +771,72 @@ describe('ExploreScreen', () => {
 
     expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
       expect.objectContaining({ key: 'tilawah', endpoint: '/api/v1/tilawah/summary' }),
+      { page: 0, size: 20 },
+    );
+  });
+
+  test('uses dashboard Stats route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useSession.mockReturnValue({
+      ...mockUseSession(),
+      session: { token: 'abc' },
+      user: { id: '1', name: 'Test', email: 'test@test.com' },
+    });
+    personalApi.getBookmarks.mockResolvedValue([]);
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 'stats-summary',
+          title: 'Statistik',
+          raw: {
+            active_goals: 3,
+            hafalan: 14,
+            points: 1200,
+            streak: 7,
+            tilawah_month: 120,
+            tilawah_week: 40,
+            today_prayers: 4,
+            total_bookmarks: 9,
+            total_muhasabah: 12,
+            weekly_activity: [
+              { count: 5, date: '2026-05-20' },
+              { count: 4, date: '2026-05-21' },
+              { count: 5, date: '2026-05-22' },
+              { count: 3, date: '2026-05-23' },
+              { count: 5, date: '2026-05-24' },
+              { count: 4, date: '2026-05-25' },
+              { count: 4, date: '2026-05-26' },
+            ],
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getByText, getByTestId, queryByTestId } = await renderExploreScreen({
+      deepLinkTarget: { id: 'stats-route', params: { featureKey: 'stats' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-stats-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('PROGRESS SAYA')).toBeTruthy();
+      expect(getByText('Statistik')).toBeTruthy();
+      expect(getByText('1.200 poin')).toBeTruthy();
+      expect(getByText('Sholat hari ini')).toBeTruthy();
+      expect(getByText('4/5 tercatat · 7 hari streak')).toBeTruthy();
+      expect(getByText('Total Muhasabah')).toBeTruthy();
+      expect(getByText('Target Aktif')).toBeTruthy();
+      expect(getByText('Total Bookmark')).toBeTruthy();
+      expect(getByText('14 surah')).toBeTruthy();
+      expect(getByText('40 halaman')).toBeTruthy();
+      expect(getByText('120 halaman')).toBeTruthy();
+      expect(getAllByTestId('web-app-stats-tile')).toHaveLength(4);
+      expect(getAllByTestId('web-app-stats-bar')).toHaveLength(7);
+    });
+
+    expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
+      expect.objectContaining({ key: 'stats', endpoint: '/api/v1/stats' }),
       { page: 0, size: 20 },
     );
   });

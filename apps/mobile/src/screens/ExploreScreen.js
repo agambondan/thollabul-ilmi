@@ -372,6 +372,62 @@ const getTilawahSummary = (items = []) => {
     { pagesMonth: 0, pagesWeek: 0, todayEntry: null, totalPages: 0 },
   );
 };
+const getStatsPayload = (items = []) => {
+  const first = items[0]?.raw ?? items[0] ?? {};
+  return first?.data ?? first;
+};
+const getStatsNumber = (source = {}, fields = [], fallback = 0) => {
+  for (const field of fields) {
+    const segments = `${field}`.split('.');
+    let value = source;
+    for (const segment of segments) {
+      value = value?.[segment];
+    }
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) return parsed;
+  }
+  return fallback;
+};
+const formatCompactStat = (value = 0) => Number(value || 0).toLocaleString('id-ID');
+const getStatsSummary = (items = []) => {
+  const source = getStatsPayload(items);
+  const tilawah = source?.tilawah ?? {};
+  const sholat = source?.sholat ?? {};
+  return {
+    activeGoals: getStatsNumber(source, ['active_goals', 'goals.active', 'goals.active_count']),
+    bookmarks: getStatsNumber(source, ['total_bookmarks', 'bookmarks', 'bookmarks.total']),
+    hafalan: getStatsNumber(source, ['hafalan', 'hafalan.memorized', 'hafalan.memorized_count']),
+    muhasabah: getStatsNumber(source, ['total_muhasabah', 'muhasabah', 'muhasabah.total']),
+    points: getStatsNumber(source, ['total_points', 'points', 'achievement_points.total_points']),
+    prayerCount: getStatsNumber(source, ['today_prayers', 'today_prayer_count', 'sholat.today_done', 'sholat.today_count']),
+    prayerStreak: getStatsNumber(source, ['streak', 'current_streak', 'sholat.current_streak_days', 'sholat.best_streak_days']),
+    sholat,
+    tilawahMonth: getStatsNumber(source, ['tilawah_month', 'tilawah.month', 'tilawah.pages_month', 'tilawah.total_pages'], getStatsNumber(tilawah, ['total_pages'])),
+    tilawahWeek: getStatsNumber(source, ['tilawah_week', 'tilawah.week', 'tilawah.pages_week', 'tilawah.weekly_pages']),
+    weeklyActivity: Array.isArray(source?.weekly_activity)
+      ? source.weekly_activity
+      : Array.isArray(source?.last7)
+        ? source.last7
+        : Array.isArray(source?.sholat?.last7)
+          ? source.sholat.last7
+          : [],
+  };
+};
+const getStatsPrayerRows = (stats = {}) => {
+  if (stats.weeklyActivity.length) {
+    return stats.weeklyActivity.slice(-7).map((row, index) => ({
+      count: Math.max(0, Math.min(5, getStatsNumber(row, ['count', 'total', 'done', 'prayers'], 0))),
+      date: row.date ?? row.day ?? `Hari ${index + 1}`,
+    }));
+  }
+
+  const completionPct = getStatsNumber(stats.sholat, ['weekly_completion_pct', 'completion_pct'], NaN);
+  const count = Number.isFinite(completionPct) ? Math.round((Math.max(0, Math.min(100, completionPct)) / 100) * 5) : 0;
+  return Array.from({ length: 7 }, (_, index) => ({
+    count,
+    date: `Hari ${index + 1}`,
+  }));
+};
 const normalizeAsmaulName = (item = {}, index = 0) => ({
   arabic: pickText(item.arabic, item.translation?.arab, item.translation?.ar, item.name),
   id: item.id ?? item.number ?? index + 1,
@@ -4169,6 +4225,154 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     );
   };
 
+  const renderWebAppStatsTile = ({ accent = WEB_APP_EXPLORE_ACCENT, label, value }) => (
+    <View key={label} style={styles.webAppStatsTile} testID="web-app-stats-tile">
+      <Text style={[styles.webAppStatsValue, { color: accent }]}>{value}</Text>
+      <Text style={styles.webAppStatsLabel}>{label}</Text>
+    </View>
+  );
+
+  const renderWebAppStatsScreen = () => {
+    const summary = getStatsSummary(visibleItems);
+    const prayerRows = getStatsPrayerRows(summary);
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppBookmarksContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppBookmarksRoot}
+      >
+        <View testID="explore-web-app-stats-surface" />
+        <View style={styles.webAppBookmarksHeader}>
+          <Pressable
+            accessibilityLabel="Kembali ke Belajar"
+            onPress={clearFeature}
+            style={styles.webAppBookmarksBack}
+            testID="web-app-stats-back"
+          >
+            <Text style={styles.webAppBookmarksBackText}>Kembali</Text>
+          </Pressable>
+          <Text style={styles.webAppCatalogEyebrow}>PROGRESS SAYA</Text>
+          <View style={styles.webAppBookmarksTitleRow}>
+            <Text style={styles.webAppCatalogTitle}>Statistik</Text>
+            <Text style={styles.webAppBookmarksCount}>{formatCompactStat(summary.points)} poin</Text>
+          </View>
+          <Text style={styles.webAppCatalogSubtitle}>
+            Rekap sholat, tilawah, hafalan, target, dan pencapaian personal.
+          </Text>
+        </View>
+
+        {error ? <Text style={styles.webAppBookmarksError}>{error}</Text> : null}
+        {loading ? (
+          <View style={styles.webAppBookmarksState}>
+            <ActivityIndicator color={WEB_APP_EXPLORE_ACCENT} size="small" />
+            <Text style={styles.webAppBookmarksStateText}>Memuat statistik...</Text>
+          </View>
+        ) : null}
+        {!loading && !error && !items.length ? (
+          <View style={styles.webAppBookmarksEmpty}>
+            <Flag color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
+            <Text style={styles.webAppBookmarksEmptyTitle}>Statistik belum tersedia.</Text>
+            <Text style={styles.webAppBookmarksEmptyText}>
+              Masuk dan lanjutkan aktivitas agar ringkasan dashboard bisa dihitung.
+            </Text>
+          </View>
+        ) : null}
+        {!loading && !error && visibleItems.length > 0 ? (
+          <>
+            <View style={styles.webAppStatsHeroCard}>
+              <View style={styles.webAppGoalHeader}>
+                <View style={styles.webAppGoalIcon}>
+                  <CheckCircle2 color={WEB_APP_EXPLORE_ACCENT} size={18} strokeWidth={2.2} />
+                </View>
+                <View style={styles.webAppGoalTitleBlock}>
+                  <Text style={styles.webAppTilawahTodayTitle}>Sholat hari ini</Text>
+                  <Text style={styles.webAppTilawahTodayText}>
+                    {summary.prayerCount}/5 tercatat · {summary.prayerStreak} hari streak
+                  </Text>
+                </View>
+                <Text style={styles.webAppStatsHeroValue}>{summary.prayerCount}/5</Text>
+              </View>
+            </View>
+
+            <View style={styles.webAppStatsGrid}>
+              {renderWebAppStatsTile({
+                accent: WEB_APP_EXPLORE_ACCENT,
+                label: 'Total Muhasabah',
+                value: formatCompactStat(summary.muhasabah),
+              })}
+              {renderWebAppStatsTile({
+                accent: '#60a5fa',
+                label: 'Target Aktif',
+                value: formatCompactStat(summary.activeGoals),
+              })}
+              {renderWebAppStatsTile({
+                accent: '#fbbf24',
+                label: 'Total Bookmark',
+                value: formatCompactStat(summary.bookmarks),
+              })}
+              {renderWebAppStatsTile({
+                accent: '#c084fc',
+                label: 'Total Poin',
+                value: formatCompactStat(summary.points),
+              })}
+            </View>
+
+            <View style={styles.webAppStatsProgressPanel}>
+              <Text style={styles.webAppSectionTitle}>RINGKASAN PROGRESS</Text>
+              <View style={styles.webAppStatsProgressRows}>
+                <View style={styles.webAppStatsProgressRow}>
+                  <BookOpen color={WEB_APP_EXPLORE_ACCENT} size={18} strokeWidth={2.2} />
+                  <Text style={styles.webAppStatsProgressLabel}>Hafalan</Text>
+                  <Text style={styles.webAppStatsProgressValue}>{formatCompactStat(summary.hafalan)} surah</Text>
+                </View>
+                <View style={styles.webAppStatsProgressRow}>
+                  <StickyNote color="#2dd4bf" size={18} strokeWidth={2.2} />
+                  <Text style={styles.webAppStatsProgressLabel}>Tilawah pekan ini</Text>
+                  <Text style={styles.webAppStatsProgressValue}>{formatCompactStat(summary.tilawahWeek)} halaman</Text>
+                </View>
+                <View style={styles.webAppStatsProgressRow}>
+                  <Bookmark color="#60a5fa" size={18} strokeWidth={2.2} />
+                  <Text style={styles.webAppStatsProgressLabel}>Tilawah bulan ini</Text>
+                  <Text style={styles.webAppStatsProgressValue}>{formatCompactStat(summary.tilawahMonth)} halaman</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.webAppStatsChartPanel}>
+              <Text style={styles.webAppSectionTitle}>SHOLAT 7 HARI TERAKHIR</Text>
+              <View style={styles.webAppStatsChart}>
+                {prayerRows.map((row, index) => {
+                  const height = Math.max(8, (row.count / 5) * 96);
+                  return (
+                    <View key={`${row.date}-${index}`} style={styles.webAppStatsBarColumn} testID="web-app-stats-bar">
+                      <Text style={styles.webAppStatsBarCount}>{row.count}</Text>
+                      <View style={styles.webAppStatsBarTrack}>
+                        <View
+                          style={[
+                            styles.webAppStatsBarFill,
+                            row.count >= 5 && styles.webAppStatsBarFillDone,
+                            row.count > 0 && row.count < 5 && styles.webAppStatsBarFillPartial,
+                            { height },
+                          ]}
+                        />
+                      </View>
+                      <Text numberOfLines={1} style={styles.webAppStatsBarLabel}>
+                        {formatNoteDate(row.date).split(' ')[0] || `${index + 1}`}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </View>
+            </View>
+          </>
+        ) : null}
+        {renderItemActionSheet()}
+      </ScrollView>
+    );
+  };
+
   const renderWebAppNotificationsScreen = () => (
     <ScrollView
       contentContainerStyle={styles.webAppNotificationsContent}
@@ -4270,6 +4474,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   if (activeFeature?.key === 'tilawah' && isWebAppLayout) {
     return renderWebAppTilawahScreen();
+  }
+
+  if (activeFeature?.key === 'stats' && isWebAppLayout) {
+    return renderWebAppStatsScreen();
   }
 
   if (activeFeature?.type === 'notifications' && isWebAppLayout) {
@@ -4948,6 +5156,137 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     paddingHorizontal: spacing.sm,
     paddingVertical: 4,
+  },
+  webAppStatsHeroCard: {
+    backgroundColor: 'rgba(52, 211, 153, 0.12)',
+    borderColor: 'rgba(52, 211, 153, 0.32)',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    marginTop: spacing.md,
+    padding: spacing.md,
+  },
+  webAppStatsHeroValue: {
+    color: WEB_APP_EXPLORE_ACCENT,
+    fontSize: 16,
+    fontWeight: '900',
+  },
+  webAppStatsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginTop: spacing.md,
+  },
+  webAppStatsTile: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexBasis: '48%',
+    flexGrow: 1,
+    minHeight: 94,
+    padding: spacing.md,
+  },
+  webAppStatsValue: {
+    fontSize: 24,
+    fontWeight: '900',
+  },
+  webAppStatsLabel: {
+    color: WEB_APP_EXPLORE_MUTED,
+    fontSize: 12,
+    fontWeight: '700',
+    lineHeight: 17,
+    marginTop: spacing.xs,
+  },
+  webAppStatsProgressPanel: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    marginTop: spacing.md,
+    padding: spacing.md,
+  },
+  webAppSectionTitle: {
+    color: WEB_APP_EXPLORE_MUTED,
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0,
+  },
+  webAppStatsProgressRows: {
+    gap: spacing.sm,
+    marginTop: spacing.md,
+  },
+  webAppStatsProgressRow: {
+    alignItems: 'center',
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    minHeight: 48,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  webAppStatsProgressLabel: {
+    color: '#e5e7eb',
+    flex: 1,
+    fontSize: 13,
+    fontWeight: '800',
+  },
+  webAppStatsProgressValue: {
+    color: WEB_APP_EXPLORE_ACCENT,
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  webAppStatsChartPanel: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    marginTop: spacing.md,
+    padding: spacing.md,
+  },
+  webAppStatsChart: {
+    alignItems: 'flex-end',
+    flexDirection: 'row',
+    gap: spacing.xs,
+    height: 152,
+    marginTop: spacing.md,
+  },
+  webAppStatsBarColumn: {
+    alignItems: 'center',
+    flex: 1,
+    gap: 5,
+  },
+  webAppStatsBarCount: {
+    color: '#cbd5e1',
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  webAppStatsBarTrack: {
+    alignItems: 'center',
+    backgroundColor: '#1f2937',
+    borderRadius: 999,
+    height: 100,
+    justifyContent: 'flex-end',
+    overflow: 'hidden',
+    width: '100%',
+  },
+  webAppStatsBarFill: {
+    backgroundColor: '#475569',
+    borderRadius: 999,
+    width: '100%',
+  },
+  webAppStatsBarFillDone: {
+    backgroundColor: WEB_APP_EXPLORE_ACCENT,
+  },
+  webAppStatsBarFillPartial: {
+    backgroundColor: '#fbbf24',
+  },
+  webAppStatsBarLabel: {
+    color: WEB_APP_EXPLORE_MUTED,
+    fontSize: 10,
+    fontWeight: '700',
   },
   webAppSurface: {
     backgroundColor: '#f8fafc',
