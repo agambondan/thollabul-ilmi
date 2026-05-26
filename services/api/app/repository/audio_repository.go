@@ -22,13 +22,35 @@ func NewAudioRepository(db *gorm.DB) AudioRepository {
 	return &audioRepo{db}
 }
 
+func (r *audioRepo) resolveSurahAudioID(surahID int) (int, error) {
+	var surah struct {
+		ID int
+	}
+	if err := r.db.Model(&model.Surah{}).
+		Select("id").
+		Where("number = ?", surahID).
+		Limit(1).
+		Scan(&surah).Error; err != nil {
+		return 0, err
+	}
+	if surah.ID > 0 {
+		return surah.ID, nil
+	}
+	return surahID, nil
+}
+
 func (r *audioRepo) FindSurahAudioBySurahID(surahID int) ([]model.SurahAudio, error) {
+	resolvedSurahID, err := r.resolveSurahAudioID(surahID)
+	if err != nil {
+		return nil, err
+	}
+
 	var firstAyah struct {
 		ID int
 	}
 	if err := r.db.Model(&model.Ayah{}).
 		Select("id").
-		Where("surah_id = ?", surahID).
+		Where("surah_id = ?", resolvedSurahID).
 		Order("number ASC").
 		Limit(1).
 		Scan(&firstAyah).Error; err != nil {
@@ -44,8 +66,8 @@ func (r *audioRepo) FindSurahAudioBySurahID(surahID int) ([]model.SurahAudio, er
 		}
 		if len(ayahAudio) > 0 {
 			list := make([]model.SurahAudio, 0, len(ayahAudio))
-			surahIDValue := surahID
 			for _, item := range ayahAudio {
+				surahIDValue := resolvedSurahID
 				list = append(list, model.SurahAudio{
 					SurahID:  &surahIDValue,
 					QariName: item.QariName,
@@ -58,7 +80,7 @@ func (r *audioRepo) FindSurahAudioBySurahID(surahID int) ([]model.SurahAudio, er
 	}
 
 	var list []model.SurahAudio
-	err := r.db.Where("surah_id = ?", surahID).Find(&list).Error
+	err = r.db.Where("surah_id = ?", resolvedSurahID).Find(&list).Error
 	return list, err
 }
 

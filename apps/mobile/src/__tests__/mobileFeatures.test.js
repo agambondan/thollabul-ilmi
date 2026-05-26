@@ -32,6 +32,22 @@ const expectedBelajarFeatureKeysByGroup = {
   'Personal Ringkas': ['goals', 'stats', 'leaderboard', 'bookmarks', 'notes'],
 };
 
+const localRendererTypes = new Set([
+  'asmaul-flashcard',
+  'asmaul-wirid',
+  'faraidh',
+  'forum',
+  'historical-map',
+  'notifications',
+  'sholat-tracker',
+  'surah-content',
+  'tasbih',
+  'tokoh',
+  'zakat',
+]);
+
+const directLoaderTypes = new Set(['bookmarks', 'feed', 'hijri', 'kamus', 'notes', 'quiz', 'user-wird']);
+
 describe('allFeatures', () => {
   test('is a non-empty array', () => {
     expect(Array.isArray(allFeatures)).toBe(true);
@@ -84,6 +100,19 @@ describe('allFeatures', () => {
       .map((feature) => `${feature.key}:${feature.contentType ?? 'missing'}`);
 
     expect(contentTypeIssues).toEqual([]);
+  });
+
+  test('all features have a concrete Explore loading strategy', () => {
+    const strategyIssues = allFeatures
+      .filter((feature) => {
+        if (localRendererTypes.has(feature.type)) return false;
+        if (directLoaderTypes.has(feature.type)) return false;
+        if (['list', 'protected-list'].includes(feature.type) && typeof feature.endpoint === 'string') return false;
+        return true;
+      })
+      .map((feature) => `${feature.key}:${feature.type}`);
+
+    expect(strategyIssues).toEqual([]);
   });
 });
 
