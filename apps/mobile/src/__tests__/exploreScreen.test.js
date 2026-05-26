@@ -218,6 +218,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'leaderboard', title: 'Leaderboard', subtitle: 'Streak komunitas', group: 'Personal', type: 'list', endpoint: '/api/v1/leaderboard/streak' },
     { key: 'community-feed', title: 'Komunitas', subtitle: 'Refleksi', group: 'Ilmu', type: 'feed' },
     { key: 'kajian', title: 'Kajian', subtitle: 'Sesi belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/kajian' },
+    { key: 'blog', title: 'Artikel', subtitle: 'Tulisan dan pembaruan', group: 'Ilmu', type: 'list', endpoint: '/api/v1/blog/posts?page=0&size=20' },
     { key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi seputar Islam', group: 'Ilmu', type: 'forum' },
     { key: 'library', title: 'Perpustakaan', subtitle: 'Kitab dan bahan belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/library/books?page=0&size=20' },
     { key: 'tasbih', title: 'Tasbih', subtitle: 'Penghitung', group: 'Alat', type: 'tasbih' },
@@ -231,7 +232,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'kajian-artikel',
       label: 'Kajian & Artikel',
       meta: 'Belajar rutin',
-      features: allFeatures.filter((f) => ['community-feed', 'kajian', 'forum'].includes(f.key)),
+      features: allFeatures.filter((f) => ['community-feed', 'kajian', 'blog', 'forum'].includes(f.key)),
     },
     {
       key: 'referensi',
@@ -956,6 +957,67 @@ describe('ExploreScreen', () => {
 
     expect(getByText('Tafsir Juz Amma')).toBeTruthy();
     expect(queryByText('Fiqh Zakat Praktis')).toBeNull();
+  });
+
+  test('uses dashboard Blog route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 'blog-1',
+          title: 'Adab Menuntut Ilmu',
+          body: 'Ringkasan adab bagi penuntut ilmu.',
+          raw: {
+            author: { name: 'Tim Thullaabul' },
+            category: { name: 'Tazkiyah', slug: 'tazkiyah' },
+            excerpt: 'Ringkasan adab bagi penuntut ilmu.',
+            published_at: '2026-05-20',
+            slug: 'adab-menuntut-ilmu',
+            title: 'Adab Menuntut Ilmu',
+          },
+        },
+        {
+          id: 'blog-2',
+          title: 'Fiqh Zakat Harian',
+          body: 'Panduan ringkas zakat maal.',
+          raw: {
+            author: 'Ustadz Ahmad',
+            category: { name: 'Fiqh', slug: 'fiqh' },
+            excerpt: 'Panduan ringkas zakat maal.',
+            published_at: '2026-05-21',
+            slug: 'fiqh-zakat-harian',
+            title: 'Fiqh Zakat Harian',
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
+      deepLinkTarget: { id: 'blog-route', params: { featureKey: 'blog' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-blog-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('Artikel Islam')).toBeTruthy();
+      expect(getByText('Tazkiyah, fiqh praktis, aqidah, dan ilmu Islam lainnya')).toBeTruthy();
+      expect(getByText('Adab Menuntut Ilmu')).toBeTruthy();
+      expect(getByText('Fiqh Zakat Harian')).toBeTruthy();
+      expect(getAllByTestId('web-app-blog-card')).toHaveLength(2);
+    });
+
+    fireEvent.press(getByTestId('web-app-blog-category-fiqh'));
+
+    expect(getByText('Fiqh Zakat Harian')).toBeTruthy();
+    expect(queryByText('Adab Menuntut Ilmu')).toBeNull();
+    expect(getAllByTestId('web-app-blog-card')).toHaveLength(1);
+
+    fireEvent.press(getByTestId('web-app-blog-category-all'));
+    fireEvent.changeText(getByPlaceholderText('Cari artikel, penulis, atau kategori...'), 'adab');
+
+    expect(getByText('Adab Menuntut Ilmu')).toBeTruthy();
+    expect(queryByText('Fiqh Zakat Harian')).toBeNull();
   });
 
   test('renders search input for feature catalog', async () => {

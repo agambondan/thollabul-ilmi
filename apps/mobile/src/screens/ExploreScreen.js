@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, BookOpen, Bookmark, BookmarkCheck, CheckCircle2, Circle, ExternalLink, EyeOff, Flag, Heart, MessageCircle, Pencil, StickyNote, Trash2, UserCircle } from 'lucide-react-native';
-import { ActivityIndicator, Linking, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Image, Linking, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import {
   getAllNotes,
   getAsmaulNames,
@@ -157,6 +157,12 @@ const formatNoteDate = (value = '') => {
   if (Number.isNaN(parsed.getTime())) return `${value}`;
   return parsed.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 };
+const formatBlogDate = (value = '') => {
+  if (!value) return '';
+  const parsed = new Date(`${value}`.includes('T') ? value : `${value}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return `${value}`;
+  return parsed.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+};
 const getNoteTags = (item = {}) => {
   const tags = item?.raw?.tags ?? item?.tags;
   if (Array.isArray(tags)) return tags.filter(Boolean);
@@ -170,6 +176,7 @@ const formatNumericInput = (value = '') => {
 };
 const formatCurrency = (value = 0) => `Rp ${Math.round(Number(value) || 0).toLocaleString('id-ID')}`;
 const pickText = (...values) => values.find((value) => typeof value === 'string' && value.trim()) ?? '';
+const stripHtmlText = (value = '') => `${value}`.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
 const toTextValue = (value) => {
   if (!value) return '';
   if (typeof value === 'string') return value;
@@ -542,6 +549,75 @@ const getKajianSummary = (items = []) => ({
   total: items.length,
   videoCount: items.filter((item) => getKajianType(item) === 'video').length,
 });
+const getBlogRaw = (item = {}) => item?.raw ?? item;
+const getBlogTitle = (item = {}, index = 0) => {
+  const raw = getBlogRaw(item);
+  const translation = raw.translation ?? {};
+  return pickText(
+    item.title,
+    translation.title_idn,
+    translation.title_en,
+    raw.title,
+    raw.name,
+    raw.slug,
+    `Artikel ${index + 1}`,
+  );
+};
+const getBlogExcerpt = (item = {}) => {
+  const raw = getBlogRaw(item);
+  const translation = raw.translation ?? {};
+  return stripHtmlText(pickText(
+    item.body,
+    translation.excerpt_idn,
+    translation.excerpt_en,
+    translation.description_idn,
+    translation.description_en,
+    raw.excerpt,
+    raw.summary,
+    raw.description,
+  ));
+};
+const getBlogAuthor = (item = {}) => {
+  const raw = getBlogRaw(item);
+  return toTextValue(raw.author || raw.user || raw.writer);
+};
+const getBlogCategoryLabel = (item = {}) => {
+  const raw = getBlogRaw(item);
+  const category = raw.category ?? raw.category_name ?? raw.categoryName ?? item.meta;
+  if (typeof category === 'string') return category;
+  return pickText(category?.name, category?.title, category?.label, category?.slug);
+};
+const getBlogCategoryValue = (item = {}) => {
+  const raw = getBlogRaw(item);
+  const category = raw.category ?? raw.category_name ?? raw.categoryName ?? item.meta;
+  if (typeof category === 'string') return category;
+  return `${category?.slug ?? category?.id ?? getBlogCategoryLabel(item) ?? ''}`;
+};
+const getBlogCategories = (items = []) => {
+  const map = new Map();
+  items.forEach((item) => {
+    const value = getBlogCategoryValue(item);
+    const label = getBlogCategoryLabel(item);
+    if (value && label && !map.has(value.toLowerCase())) {
+      map.set(value.toLowerCase(), { label, value });
+    }
+  });
+  return Array.from(map.values());
+};
+const getFilteredBlogItems = (items = [], search = '', category = '') => {
+  const query = normalizeSearchText(search);
+  return items.filter((item, index) => {
+    const text = normalizeSearchText([
+      getBlogTitle(item, index),
+      getBlogExcerpt(item),
+      getBlogAuthor(item),
+      getBlogCategoryLabel(item),
+    ].join(' '));
+    const matchesSearch = query ? text.includes(query) : true;
+    const matchesCategory = category ? getBlogCategoryValue(item).toLowerCase() === category.toLowerCase() : true;
+    return matchesSearch && matchesCategory;
+  });
+};
 const normalizeAsmaulName = (item = {}, index = 0) => ({
   arabic: pickText(item.arabic, item.translation?.arab, item.translation?.ar, item.name),
   id: item.id ?? item.number ?? index + 1,
@@ -671,6 +747,8 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
   const [notesSearch, setNotesSearch] = useState('');
   const [kajianSearch, setKajianSearch] = useState('');
   const [kajianCategory, setKajianCategory] = useState('');
+  const [blogSearch, setBlogSearch] = useState('');
+  const [blogCategory, setBlogCategory] = useState('');
   const [leaderboardTab, setLeaderboardTab] = useState('streak');
   const [editingUserWirdId, setEditingUserWirdId] = useState('');
   const [savingUserWird, setSavingUserWird] = useState(false);
@@ -774,6 +852,8 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       setNotesSearch('');
       setKajianSearch('');
       setKajianCategory('');
+      setBlogSearch('');
+      setBlogCategory('');
       setLeaderboardTab('streak');
       setEditingUserWirdId('');
       setUserWirdForm(emptyUserWirdForm);
@@ -4805,6 +4885,139 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     );
   };
 
+  const renderWebAppBlogCard = (item, index) => {
+    const raw = getBlogRaw(item);
+    const category = getBlogCategoryLabel(item);
+    const author = getBlogAuthor(item);
+    const publishedAt = formatBlogDate(raw.published_at ?? raw.publishedAt ?? raw.created_at);
+    const cover = pickText(raw.cover_image, raw.coverImage, raw.image_url, raw.image);
+
+    return (
+      <Pressable
+        key={`${getExploreItemKey(item)}-${index}`}
+        onPress={() => openItemDetail(item)}
+        style={styles.webAppBlogCard}
+        testID="web-app-blog-card"
+      >
+        {cover ? (
+          <Image
+            accessibilityIgnoresInvertColors
+            source={{ uri: cover }}
+            style={styles.webAppBlogCover}
+          />
+        ) : null}
+        <View style={styles.webAppBlogBody}>
+          {category ? <Text style={styles.webAppBlogCategory}>{category}</Text> : null}
+          <Text numberOfLines={2} style={styles.webAppBlogTitle}>
+            {getBlogTitle(item, index)}
+          </Text>
+          {getBlogExcerpt(item) ? (
+            <Text numberOfLines={2} style={styles.webAppBlogExcerpt}>
+              {getBlogExcerpt(item)}
+            </Text>
+          ) : null}
+          {(author || publishedAt) ? (
+            <View style={styles.webAppBlogMetaRow}>
+              {author ? <Text numberOfLines={1} style={styles.webAppBlogMeta}>{author}</Text> : <View />}
+              {publishedAt ? <Text style={styles.webAppBlogMeta}>{publishedAt}</Text> : null}
+            </View>
+          ) : null}
+        </View>
+      </Pressable>
+    );
+  };
+
+  const renderWebAppBlogScreen = () => {
+    const categories = getBlogCategories(visibleItems);
+    const filteredBlog = getFilteredBlogItems(visibleItems, blogSearch, blogCategory);
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppBlogContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppBlogRoot}
+      >
+        <View testID="explore-web-app-blog-surface" />
+        <View style={styles.webAppBlogHeader}>
+          <Pressable
+            accessibilityLabel="Kembali ke Belajar"
+            onPress={clearFeature}
+            style={styles.webAppKajianBack}
+            testID="web-app-blog-back"
+          >
+            <Text style={styles.webAppKajianBackText}>Kembali</Text>
+          </Pressable>
+          <Text style={styles.webAppBlogHeading}>Artikel Islam</Text>
+          <Text style={styles.webAppBlogSubtitle}>
+            Tazkiyah, fiqh praktis, aqidah, dan ilmu Islam lainnya
+          </Text>
+        </View>
+
+        <View style={styles.webAppBlogSearch}>
+          <TextInput
+            onChangeText={setBlogSearch}
+            placeholder="Cari artikel, penulis, atau kategori..."
+            placeholderTextColor="#9ca3af"
+            style={styles.webAppBlogInput}
+            testID="web-app-blog-search"
+            value={blogSearch}
+          />
+        </View>
+
+        {categories.length ? (
+          <View style={styles.webAppBlogCategories}>
+            <Pressable
+              onPress={() => setBlogCategory('')}
+              style={[styles.webAppBlogCategoryPill, !blogCategory && styles.webAppBlogCategoryPillActive]}
+              testID="web-app-blog-category-all"
+            >
+              <Text style={[styles.webAppBlogCategoryPillText, !blogCategory && styles.webAppBlogCategoryPillTextActive]}>
+                Semua
+              </Text>
+            </Pressable>
+            {categories.map((category) => (
+              <Pressable
+                key={category.value}
+                onPress={() => setBlogCategory(category.value)}
+                style={[styles.webAppBlogCategoryPill, blogCategory.toLowerCase() === category.value.toLowerCase() && styles.webAppBlogCategoryPillActive]}
+                testID={`web-app-blog-category-${category.value}`}
+              >
+                <Text style={[styles.webAppBlogCategoryPillText, blogCategory.toLowerCase() === category.value.toLowerCase() && styles.webAppBlogCategoryPillTextActive]}>
+                  {category.label}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        ) : null}
+
+        {error ? <Text style={styles.webAppBlogError}>{error}</Text> : null}
+        {loading ? (
+          <View style={styles.webAppBlogState}>
+            <ActivityIndicator color="#047857" size="small" />
+            <Text style={styles.webAppBlogStateText}>Memuat artikel...</Text>
+          </View>
+        ) : null}
+        {!loading && !error && filteredBlog.length ? (
+          <View style={styles.webAppBlogList}>
+            {filteredBlog.map(renderWebAppBlogCard)}
+          </View>
+        ) : null}
+        {!loading && !error && !filteredBlog.length ? (
+          <View style={styles.webAppBlogEmpty}>
+            <Text style={styles.webAppBlogEmptyArabic}>كِتَابَةً</Text>
+            <Text style={styles.webAppBlogEmptyTitle}>
+              {visibleItems.length ? 'Tidak ada artikel yang cocok' : 'Belum ada artikel yang dipublikasikan'}
+            </Text>
+            <Text style={styles.webAppBlogEmptyText}>
+              {visibleItems.length ? 'Ubah kata kunci atau reset filter kategori.' : 'Artikel sedang disiapkan oleh tim penulis.'}
+            </Text>
+          </View>
+        ) : null}
+      </ScrollView>
+    );
+  };
+
   const renderWebAppNotificationsScreen = () => (
     <ScrollView
       contentContainerStyle={styles.webAppNotificationsContent}
@@ -4918,6 +5131,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   if (activeFeature?.key === 'kajian' && isWebAppLayout) {
     return renderWebAppKajianScreen();
+  }
+
+  if (activeFeature?.key === 'blog' && isWebAppLayout) {
+    return renderWebAppBlogScreen();
   }
 
   if (activeFeature?.type === 'notifications' && isWebAppLayout) {
@@ -6020,6 +6237,181 @@ const styles = StyleSheet.create({
     color: '#6b7280',
     fontSize: 13,
     lineHeight: 20,
+    marginTop: spacing.xs,
+    textAlign: 'center',
+  },
+  webAppBlogRoot: {
+    backgroundColor: '#f8fafc',
+    flex: 1,
+  },
+  webAppBlogContent: {
+    backgroundColor: '#f8fafc',
+    flexGrow: 1,
+    padding: spacing.md,
+    paddingBottom: spacing.xl,
+  },
+  webAppBlogHeader: {
+    marginBottom: spacing.lg,
+  },
+  webAppBlogHeading: {
+    color: '#064e3b',
+    fontSize: 24,
+    fontWeight: '900',
+    lineHeight: 30,
+  },
+  webAppBlogSubtitle: {
+    color: '#6b7280',
+    fontSize: 14,
+    lineHeight: 21,
+    marginTop: spacing.xs,
+  },
+  webAppBlogSearch: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: 12,
+    borderWidth: 1,
+    justifyContent: 'center',
+    marginBottom: spacing.lg,
+    minHeight: 46,
+    paddingHorizontal: spacing.md,
+  },
+  webAppBlogInput: {
+    color: '#374151',
+    fontSize: 14,
+    minHeight: 42,
+    padding: 0,
+  },
+  webAppBlogCategories: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginBottom: spacing.lg,
+  },
+  webAppBlogCategoryPill: {
+    backgroundColor: '#f3f4f6',
+    borderColor: '#f3f4f6',
+    borderRadius: 999,
+    borderWidth: 1,
+    minHeight: 30,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 7,
+  },
+  webAppBlogCategoryPillActive: {
+    backgroundColor: '#047857',
+    borderColor: '#047857',
+  },
+  webAppBlogCategoryPillText: {
+    color: '#4b5563',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  webAppBlogCategoryPillTextActive: {
+    color: '#ffffff',
+  },
+  webAppBlogList: {
+    gap: spacing.md,
+  },
+  webAppBlogCard: {
+    backgroundColor: '#ffffff',
+    borderColor: '#f3f4f6',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+  webAppBlogCover: {
+    backgroundColor: '#e5e7eb',
+    height: 144,
+    width: '100%',
+  },
+  webAppBlogBody: {
+    padding: spacing.md,
+  },
+  webAppBlogCategory: {
+    color: '#059669',
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0,
+    marginBottom: spacing.xs,
+    textTransform: 'uppercase',
+  },
+  webAppBlogTitle: {
+    color: '#064e3b',
+    fontSize: 16,
+    fontWeight: '900',
+    lineHeight: 21,
+  },
+  webAppBlogExcerpt: {
+    color: '#4b5563',
+    fontSize: 14,
+    lineHeight: 20,
+    marginTop: spacing.xs,
+  },
+  webAppBlogMetaRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    justifyContent: 'space-between',
+    marginTop: spacing.md,
+  },
+  webAppBlogMeta: {
+    color: '#9ca3af',
+    flexShrink: 1,
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  webAppBlogState: {
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderColor: '#f3f4f6',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    gap: spacing.sm,
+    justifyContent: 'center',
+    minHeight: 120,
+    padding: spacing.md,
+  },
+  webAppBlogStateText: {
+    color: '#6b7280',
+    fontSize: 13,
+    fontWeight: '800',
+  },
+  webAppBlogError: {
+    backgroundColor: '#fef2f2',
+    borderColor: '#fecaca',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    color: '#b91c1c',
+    fontSize: 13,
+    fontWeight: '800',
+    marginBottom: spacing.md,
+    padding: spacing.md,
+  },
+  webAppBlogEmpty: {
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderColor: '#f3f4f6',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    justifyContent: 'center',
+    minHeight: 190,
+    padding: spacing.lg,
+  },
+  webAppBlogEmptyArabic: {
+    color: '#6ee7b7',
+    fontFamily: 'serif',
+    fontSize: 34,
+    marginBottom: spacing.sm,
+  },
+  webAppBlogEmptyTitle: {
+    color: '#4b5563',
+    fontSize: 15,
+    fontWeight: '900',
+    textAlign: 'center',
+  },
+  webAppBlogEmptyText: {
+    color: '#9ca3af',
+    fontSize: 13,
+    lineHeight: 19,
     marginTop: spacing.xs,
     textAlign: 'center',
   },

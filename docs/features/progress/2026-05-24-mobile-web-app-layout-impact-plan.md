@@ -1677,3 +1677,51 @@ Results:
   `output/native-smoke/tholabul-webapp-emulator-kajian-route-after.png`;
   the route rendered the light Kajian dashboard content surface with stat
   tiles, search, category pills, and kajian cards populated from the local API.
+
+## Web App Blog Route Dashboard Parity
+
+Status: completed for the native `web_app` Blog feature route visual parity
+pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic generic list path for Blog/Artikel on the
+  `classic` layout.
+- `web_app` mode now renders the Blog feature route with a dedicated light
+  dashboard surface modeled after `/dashboard/blog`: title, subtitle, search
+  input, category pills, empty state, and white article cards with category,
+  excerpt, author, date, and optional cover image.
+- Blog loading still uses the existing `/api/v1/blog/posts` feature endpoint
+  through `getFeatureItemPage`; this slice only changes presentation and local
+  filtering in `web_app`.
+- Added Explore test coverage to ensure the `web_app` Blog feature route uses
+  the dedicated dashboard surface instead of the generic `Screen` title path.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Blog feature route presentation in
+  `web_app`. It does not change classic Explore, blog API calls, detail
+  rendering, feature keys, or pagination contracts.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted Explore test passed: 1 suite, 33 tests.
+- Full mobile Jest passed: 44 suites, 634 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-blog-route-after.png`; the
+  route rendered the light Blog dashboard content surface with search, category
+  pills, and article cards populated from the local API.
