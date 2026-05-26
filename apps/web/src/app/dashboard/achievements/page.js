@@ -4,6 +4,7 @@ import ContentWidth from '@/components/layout/ContentWidth';
 import { useAuth } from '@/context/Auth';
 import { useLocale } from '@/context/Locale';
 import { achievementApi } from '@/lib/api';
+import { getAchievementItems } from '@/lib/achievementPayload';
 import { useEffect, useState } from 'react';
 import { BsAward, BsCheckCircle, BsLightning, BsStar, BsTrophy } from 'react-icons/bs';
 
@@ -26,8 +27,8 @@ export function AchievementContent() {
                 : Promise.resolve({}),
         ])
             .then(([allData, mineData, pointsData]) => {
-                const all = allData?.items ?? allData ?? [];
-                const mine = mineData?.items ?? mineData ?? [];
+                const all = getAchievementItems(allData);
+                const mine = getAchievementItems(mineData);
                 const earned = new Set(
                     mine.map((ua) => ua.achievement_id ?? ua.achievement?.id ?? ua.id),
                 );

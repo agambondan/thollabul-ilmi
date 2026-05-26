@@ -1725,3 +1725,60 @@ Results:
   `output/native-smoke/tholabul-webapp-emulator-blog-route-after.png`; the
   route rendered the light Blog dashboard content surface with search, category
   pills, and article cards populated from the local API.
+
+## Web App Achievements Route Dashboard Parity
+
+Status: completed for the native `web_app` Achievements/Pencapaian route-depth
+visual parity pass.
+
+Implemented:
+
+- `ProfileScreen` keeps the classic Achievements detail journey on the
+  `classic` layout.
+- In `web_app` mode, `profile:achievements` now renders a dedicated light
+  dashboard route surface modeled after `/dashboard/achievements`: centered
+  trophy header, subtitle, amber total-points summary, login notice, white or
+  muted achievement rows, and earned/locked pills.
+- The `web_app` Achievements route no longer uses the classic `SubScreen`
+  header or visible back button, matching the dashboard route surface while
+  preserving hardware/back-stack behavior.
+- Mobile achievement API normalization now accepts `achievements` and
+  `data.achievements` payload shapes.
+- Web `/dashboard/achievements` now normalizes `items`, `achievements`,
+  `data.items`, `data.achievements`, and array payloads so the route does not
+  break if the API responds with the documented `achievements` key.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Achievements route presentation in
+  `web_app`, achievement payload normalization, and the web dashboard
+  Achievements payload guard. It does not change classic Profile settings,
+  account actions, Profile summary, achievement API endpoints, or unrelated web
+  Quran/Mushaf files.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- profileScreen.test.js api-personal.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-achievements-route-export
+cd ../web
+npm test -- achievementPayload.test.js --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted mobile Profile/API tests passed: 2 suites, 57 tests.
+- Targeted web achievement payload test passed: 1 suite, 4 tests.
+- Full mobile Jest passed: 44 suites, 636 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-achievements-route-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Targeted web ESLint could not run because local `apps/web/node_modules` is
+  missing the `typescript` package required by the Next ESLint config.

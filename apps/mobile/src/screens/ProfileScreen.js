@@ -522,8 +522,115 @@ function SecuritySettings({ onSignOut, user }) {
     );
 }
 
-function AchievementsDetail({ achievements, loading, message, onBack, points, stats, user }) {
+function AchievementsDetail({ achievements, isWebAppLayout, loading, message, onBack, points, stats, user }) {
     const earnedCount = achievements.filter((item) => item.unlocked).length;
+
+    if (isWebAppLayout) {
+        return (
+            <ScrollView
+                contentContainerStyle={styles.webAppAchievementsContent}
+                showsVerticalScrollIndicator={false}
+                style={styles.webAppAchievementsRoot}
+            >
+                <View testID="profile-web-app-achievements-route" />
+                <View style={styles.webAppAchievementsHeader}>
+                    <View style={styles.webAppAchievementsIcon}>
+                        <Trophy color="#d97706" size={30} strokeWidth={2.3} />
+                    </View>
+                    <Text style={styles.webAppAchievementsTitle}>Pencapaian</Text>
+                    <Text style={styles.webAppAchievementsSubtitle}>
+                        Kumpulkan badge dengan menyelesaikan aktivitas
+                    </Text>
+                </View>
+
+                {user ? (
+                    <View style={styles.webAppAchievementsHero}>
+                        <Text style={styles.webAppAchievementsHeroLabel}>Total Poin</Text>
+                        <Text style={styles.webAppAchievementsHeroValue}>
+                            {(points ?? 0).toLocaleString('id-ID')}
+                        </Text>
+                        <Text style={styles.webAppAchievementsHeroMeta}>
+                            {earnedCount}/{achievements.length} badge diperoleh
+                        </Text>
+                    </View>
+                ) : (
+                    <View style={styles.webAppAchievementsNotice}>
+                        <Text style={styles.webAppAchievementsNoticeIcon}>🏅</Text>
+                        <Text style={styles.webAppAchievementsNoticeText}>
+                            Login untuk melihat pencapaian kamu.
+                        </Text>
+                    </View>
+                )}
+
+                {message ? <Text style={styles.webAppAchievementsHint}>{message}</Text> : null}
+
+                {loading ? (
+                    <View style={styles.webAppAchievementsState}>
+                        <ActivityIndicator color="#d97706" />
+                    </View>
+                ) : null}
+
+                {!loading && achievements.length ? (
+                    <View style={styles.webAppAchievementsList}>
+                        {achievements.map((achievement) => (
+                            <View
+                                key={achievement.code ?? achievement.label}
+                                style={[
+                                    styles.webAppAchievementsCard,
+                                    !achievement.unlocked && styles.webAppAchievementsCardLocked,
+                                ]}
+                            >
+                                <View
+                                    style={[
+                                        styles.webAppAchievementsBadge,
+                                        achievement.unlocked && styles.webAppAchievementsBadgeEarned,
+                                    ]}
+                                >
+                                    <Text style={styles.webAppAchievementsBadgeIcon}>
+                                        {achievement.icon || '🏅'}
+                                    </Text>
+                                </View>
+                                <View style={styles.webAppAchievementsCardBody}>
+                                    <Text style={styles.webAppAchievementsCardTitle}>
+                                        {achievement.label}
+                                    </Text>
+                                    {achievement.description ? (
+                                        <Text style={styles.webAppAchievementsCardDescription}>
+                                            {achievement.description}
+                                        </Text>
+                                    ) : null}
+                                </View>
+                                <View
+                                    style={[
+                                        styles.webAppAchievementsStatus,
+                                        achievement.unlocked && styles.webAppAchievementsStatusEarned,
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.webAppAchievementsStatusText,
+                                            achievement.unlocked && styles.webAppAchievementsStatusTextEarned,
+                                        ]}
+                                    >
+                                        {achievement.unlocked ? 'Diperoleh' : 'Terkunci'}
+                                    </Text>
+                                </View>
+                            </View>
+                        ))}
+                    </View>
+                ) : null}
+
+                {!loading && !achievements.length ? (
+                    <View style={styles.webAppAchievementsEmpty}>
+                        <Trophy color="#cbd5e1" size={34} strokeWidth={2.2} />
+                        <Text style={styles.webAppAchievementsEmptyText}>
+                            Belum ada pencapaian yang tersedia.
+                        </Text>
+                    </View>
+                ) : null}
+            </ScrollView>
+        );
+    }
 
     return (
         <SubScreen title="Pencapaian" onBack={onBack}>
@@ -800,6 +907,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
         return (
             <AchievementsDetail
                 achievements={achievements}
+                isWebAppLayout={isWebAppLayout}
                 loading={achievementsLoading}
                 message={achievementsMessage}
                 onBack={pop}
@@ -1420,6 +1528,178 @@ const styles = StyleSheet.create({
         fontSize: 12,
         lineHeight: 17,
         marginTop: 4,
+    },
+    webAppAchievementsRoot: {
+        backgroundColor: '#f8fafc',
+        flex: 1,
+    },
+    webAppAchievementsContent: {
+        padding: spacing.lg,
+        paddingBottom: spacing.xl,
+    },
+    webAppAchievementsHeader: {
+        alignItems: 'center',
+        marginBottom: spacing.lg,
+    },
+    webAppAchievementsIcon: {
+        alignItems: 'center',
+        backgroundColor: '#fef3c7',
+        borderRadius: 8,
+        height: 64,
+        justifyContent: 'center',
+        marginBottom: spacing.md,
+        width: 64,
+    },
+    webAppAchievementsTitle: {
+        color: '#111827',
+        fontSize: 24,
+        fontWeight: '900',
+        letterSpacing: 0,
+        lineHeight: 30,
+        textAlign: 'center',
+    },
+    webAppAchievementsSubtitle: {
+        color: '#6b7280',
+        fontSize: 14,
+        lineHeight: 20,
+        marginTop: 4,
+        textAlign: 'center',
+    },
+    webAppAchievementsHero: {
+        alignItems: 'center',
+        backgroundColor: '#b45309',
+        borderRadius: 8,
+        marginBottom: spacing.lg,
+        padding: spacing.lg,
+    },
+    webAppAchievementsHeroLabel: {
+        color: 'rgba(255, 255, 255, 0.82)',
+        fontSize: 11,
+        fontWeight: '800',
+        letterSpacing: 0,
+        textTransform: 'uppercase',
+    },
+    webAppAchievementsHeroValue: {
+        color: '#ffffff',
+        fontSize: 38,
+        fontWeight: '900',
+        lineHeight: 44,
+        marginTop: spacing.xs,
+    },
+    webAppAchievementsHeroMeta: {
+        color: 'rgba(255, 255, 255, 0.76)',
+        fontSize: 12,
+        fontWeight: '700',
+        marginTop: spacing.xs,
+    },
+    webAppAchievementsNotice: {
+        alignItems: 'center',
+        backgroundColor: '#ffffff',
+        borderColor: '#e5e7eb',
+        borderRadius: 8,
+        borderWidth: 1,
+        marginBottom: spacing.lg,
+        padding: spacing.xl,
+    },
+    webAppAchievementsNoticeIcon: {
+        fontSize: 34,
+        marginBottom: spacing.sm,
+    },
+    webAppAchievementsNoticeText: {
+        color: '#6b7280',
+        fontSize: 14,
+        lineHeight: 20,
+        textAlign: 'center',
+    },
+    webAppAchievementsHint: {
+        color: '#6b7280',
+        fontSize: 12,
+        lineHeight: 18,
+        marginBottom: spacing.md,
+        textAlign: 'center',
+    },
+    webAppAchievementsState: {
+        paddingVertical: spacing.md,
+    },
+    webAppAchievementsList: {
+        gap: spacing.sm,
+    },
+    webAppAchievementsCard: {
+        alignItems: 'flex-start',
+        backgroundColor: '#ffffff',
+        borderColor: '#fde68a',
+        borderRadius: 8,
+        borderWidth: 1,
+        flexDirection: 'row',
+        gap: spacing.md,
+        padding: spacing.md,
+    },
+    webAppAchievementsCardLocked: {
+        backgroundColor: '#f9fafb',
+        borderColor: '#e5e7eb',
+        opacity: 0.72,
+    },
+    webAppAchievementsBadge: {
+        alignItems: 'center',
+        backgroundColor: '#e5e7eb',
+        borderRadius: 8,
+        height: 48,
+        justifyContent: 'center',
+        width: 48,
+    },
+    webAppAchievementsBadgeEarned: {
+        backgroundColor: '#fef3c7',
+    },
+    webAppAchievementsBadgeIcon: {
+        fontSize: 22,
+    },
+    webAppAchievementsCardBody: {
+        flex: 1,
+        minWidth: 0,
+    },
+    webAppAchievementsCardTitle: {
+        color: '#111827',
+        fontSize: 14,
+        fontWeight: '900',
+        lineHeight: 19,
+    },
+    webAppAchievementsCardDescription: {
+        color: '#6b7280',
+        fontSize: 12,
+        lineHeight: 17,
+        marginTop: 3,
+    },
+    webAppAchievementsStatus: {
+        backgroundColor: '#f3f4f6',
+        borderRadius: 999,
+        paddingHorizontal: spacing.sm,
+        paddingVertical: 4,
+    },
+    webAppAchievementsStatusEarned: {
+        backgroundColor: '#d1fae5',
+    },
+    webAppAchievementsStatusText: {
+        color: '#6b7280',
+        fontSize: 10,
+        fontWeight: '800',
+    },
+    webAppAchievementsStatusTextEarned: {
+        color: '#047857',
+    },
+    webAppAchievementsEmpty: {
+        alignItems: 'center',
+        backgroundColor: '#ffffff',
+        borderColor: '#e5e7eb',
+        borderRadius: 8,
+        borderWidth: 1,
+        padding: spacing.xl,
+    },
+    webAppAchievementsEmptyText: {
+        color: '#6b7280',
+        fontSize: 14,
+        lineHeight: 20,
+        marginTop: spacing.sm,
+        textAlign: 'center',
     },
     subHeader: {
         alignItems: 'center',

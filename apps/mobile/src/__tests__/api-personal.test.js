@@ -344,7 +344,7 @@ describe('personal api', () => {
   describe('achievements', () => {
     test('getAchievements calls correct endpoint', async () => {
       requestJson.mockResolvedValueOnce({
-        items: [{ id: 1, name: 'A' }],
+        achievements: [{ id: 1, name: 'A' }],
       });
       const result = await getAchievements();
       expect(requestJson).toHaveBeenCalledWith('/api/v1/achievements');

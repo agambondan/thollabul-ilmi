@@ -374,6 +374,50 @@ describe('ProfileScreen', () => {
     expect(getAllByText('Reward 10 poin')).toHaveLength(2);
   });
 
+  test('uses dashboard Achievements route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useSession.mockReturnValue(loggedInSession);
+    personalApi.getMyPoints.mockResolvedValue({ total_points: 120 });
+    personalApi.getAchievements.mockResolvedValue([
+      {
+        id: 1,
+        code: 'streak_7',
+        name: 'Seminggu Penuh',
+        description: 'Streak 7 hari',
+        icon: '⚡',
+      },
+      {
+        id: 2,
+        code: 'hafalan_5',
+        name: '5 Surah Hafal',
+        description: 'Hafal 5 surah',
+        icon: '🕌',
+      },
+    ]);
+    personalApi.getMyAchievements.mockResolvedValue([
+      {
+        achievement_id: 1,
+        achievement: { id: 1, code: 'streak_7', name: 'Seminggu Penuh', icon: '⚡' },
+      },
+    ]);
+
+    const { getByTestId, getByText, queryByLabelText, queryByTestId } = render(<ProfileScreen isActive />);
+    await waitFor(() => expect(getByText('Seminggu Penuh')).toBeTruthy());
+
+    fireEvent.press(getByText('Lihat semua'));
+
+    expect(getByTestId('profile-web-app-achievements-route')).toBeTruthy();
+    expect(queryByTestId('profile-web-app-subscreen')).toBeNull();
+    expect(queryByLabelText('Kembali')).toBeNull();
+    expect(getByText('Pencapaian')).toBeTruthy();
+    expect(getByText('Kumpulkan badge dengan menyelesaikan aktivitas')).toBeTruthy();
+    expect(getByText('Total Poin')).toBeTruthy();
+    expect(getByText('120')).toBeTruthy();
+    expect(getByText('1/2 badge diperoleh')).toBeTruthy();
+    expect(getByText('Diperoleh')).toBeTruthy();
+    expect(getByText('Terkunci')).toBeTruthy();
+  });
+
   test('achievements message shown when not logged in', async () => {
     const { getByText } = render(<ProfileScreen isActive />);
     await waitFor(() => {
