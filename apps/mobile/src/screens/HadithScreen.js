@@ -706,14 +706,25 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     .filter((perawi, index, all) => perawi?.id && all.findIndex((item) => item?.id === perawi.id) === index);
 
   const renderDetailTabs = () => (
-    <View style={styles.detailTabs}>
+    <View style={[styles.detailTabs, isWebAppLayout ? styles.webAppDetailTabs : null]}>
       {HADITH_DETAIL_TABS.map((tab) => (
         <Pressable
           key={tab.key}
           onPress={() => setDetailTab(tab.key)}
-          style={[styles.detailTabButton, detailTab === tab.key ? styles.detailTabButtonActive : null]}
+          style={[
+            styles.detailTabButton,
+            isWebAppLayout ? styles.webAppDetailTabButton : null,
+            detailTab === tab.key ? styles.detailTabButtonActive : null,
+            isWebAppLayout && detailTab === tab.key ? styles.webAppDetailTabButtonActive : null,
+          ]}
         >
-          <Text style={[styles.detailTabText, detailTab === tab.key ? styles.detailTabTextActive : null]}>
+          <Text
+            style={[
+              styles.detailTabText,
+              isWebAppLayout ? styles.webAppDetailTabText : null,
+              detailTab === tab.key ? styles.detailTabTextActive : null,
+            ]}
+          >
             {tab.label}
           </Text>
         </Pressable>
@@ -796,18 +807,37 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     const selectedHadithNumber = formatHadithNumber(selectedHadith);
     const selectedHadithGrade = formatHadithGrade(selectedHadith.grade);
     const selectedHadithTitle = getHadithTopicLabel(selectedHadith) || `${selectedHadithBook} ${selectedHadithNumber}`;
+    const detailScreenTitle = isWebAppLayout ? 'Detail Hadith' : 'Detail Hadis';
+    const detailScreenSubtitle = isWebAppLayout
+      ? `${selectedHadithBook} ${selectedHadithNumber}`
+      : `${selectedHadithBook} · ${selectedHadithNumber} · ${selectedHadithGrade}`;
 
     return (
       <Screen
-        title="Detail Hadis"
-        subtitle={`${selectedHadithBook} · ${selectedHadithNumber} · ${selectedHadithGrade}`}
-        contentStyle={isWebAppLayout ? styles.webAppSurface : null}
+        title={detailScreenTitle}
+        subtitle={detailScreenSubtitle}
+        contentStyle={isWebAppLayout ? styles.webAppDetailSurface : null}
         refreshing={detailLoading}
         onRefresh={() => openHadith(selectedHadith)}
-        actions={<IconActionButton Icon={ArrowLeft} label="Kembali ke daftar hadis" onPress={() => setSelectedHadith(null)} />}
+        actions={isWebAppLayout ? null : <IconActionButton Icon={ArrowLeft} label="Kembali ke daftar hadis" onPress={() => setSelectedHadith(null)} />}
       >
         <View testID={isWebAppLayout ? 'hadith-web-app-detail' : 'hadith-classic-detail'} />
-        {message ? <Text style={styles.message}>{message}</Text> : null}
+        {isWebAppLayout ? (
+          <View style={styles.webAppDetailHero}>
+            <Pressable onPress={() => setSelectedHadith(null)} style={styles.webAppDetailBackLink}>
+              <ArrowLeft color={WEB_APP_HADITH_ACCENT} size={15} strokeWidth={2.2} />
+              <Text style={styles.webAppDetailBackText}>Kembali ke daftar hadith</Text>
+            </Pressable>
+            <Text style={styles.webAppDetailEyebrow}>Detail Hadith</Text>
+            <Text style={styles.webAppDetailTitle}>{selectedHadithTitle}</Text>
+            <View style={styles.webAppDetailMetaRow}>
+              <Text style={styles.webAppDetailMetaChip}>{selectedHadithBook}</Text>
+              <Text style={styles.webAppDetailMetaChip}>{selectedHadithNumber}</Text>
+              <Text style={styles.webAppDetailMetaChip}>{selectedHadithGrade}</Text>
+            </View>
+          </View>
+        ) : null}
+        {message ? <Text style={isWebAppLayout ? styles.webAppMessage : styles.message}>{message}</Text> : null}
         {renderDetailTabs()}
 
         {detailTab === 'text' ? (
@@ -1196,6 +1226,77 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8fafc',
     borderRadius: radius.md,
     padding: spacing.sm,
+  },
+  webAppDetailSurface: {
+    backgroundColor: WEB_APP_HADITH_BG,
+    borderRadius: radius.md,
+    padding: spacing.sm,
+  },
+  webAppDetailHero: {
+    backgroundColor: WEB_APP_HADITH_SURFACE,
+    borderColor: WEB_APP_HADITH_BORDER,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: spacing.md,
+    padding: spacing.md,
+  },
+  webAppDetailBackLink: {
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    gap: spacing.xs,
+    marginBottom: spacing.md,
+    minHeight: 32,
+  },
+  webAppDetailBackText: {
+    color: WEB_APP_HADITH_ACCENT,
+    fontSize: 13,
+    fontWeight: '800',
+  },
+  webAppDetailEyebrow: {
+    color: WEB_APP_HADITH_ACCENT,
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0,
+    marginBottom: spacing.xs,
+    textTransform: 'uppercase',
+  },
+  webAppDetailTitle: {
+    color: '#f8fafc',
+    fontSize: 20,
+    fontWeight: '900',
+    lineHeight: 26,
+  },
+  webAppDetailMetaRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+    marginTop: spacing.md,
+  },
+  webAppDetailMetaChip: {
+    backgroundColor: '#0f172a',
+    borderColor: WEB_APP_HADITH_BORDER,
+    borderRadius: 999,
+    borderWidth: 1,
+    color: '#cbd5e1',
+    fontSize: 11,
+    fontWeight: '900',
+    overflow: 'hidden',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 5,
+  },
+  webAppDetailTabs: {
+    backgroundColor: WEB_APP_HADITH_SURFACE,
+    borderColor: WEB_APP_HADITH_BORDER,
+  },
+  webAppDetailTabButton: {
+    minHeight: 34,
+  },
+  webAppDetailTabButtonActive: {
+    backgroundColor: WEB_APP_HADITH_ACCENT,
+  },
+  webAppDetailTabText: {
+    color: '#cbd5e1',
   },
   webAppHadithScroll: {
     backgroundColor: WEB_APP_HADITH_BG,

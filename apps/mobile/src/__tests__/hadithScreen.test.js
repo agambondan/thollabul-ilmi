@@ -349,13 +349,16 @@ describe('HadithScreen', () => {
       number: 1, grade: 'Shahih', translation: 'Detail text',
     });
 
-    const { findAllByTestId, findByText, getByTestId } = render(<HadithScreen isActive />);
+    const { findAllByTestId, findByText, getAllByText, getByTestId } = render(<HadithScreen isActive />);
     fireEvent.press((await waitFor(() => getByTestId('hadith-web-app-book-bukhari'))));
     const cards = await findAllByTestId('content-card');
 
     fireEvent.press(cards[0]);
 
-    expect(await findByText('Detail Hadis')).toBeTruthy();
+    await waitFor(() => {
+      expect(getAllByText('Detail Hadith').length).toBeGreaterThanOrEqual(1);
+    });
+    expect(await findByText('Kembali ke daftar hadith')).toBeTruthy();
     expect(getByTestId('hadith-web-app-detail')).toBeTruthy();
   });
 

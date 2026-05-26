@@ -7,15 +7,15 @@ Started: 2026-05-26 16:20 WIB
 
 - Route/feature: mobile `web_app` parity against authenticated `/dashboard`
   mobile web views.
-- Completed near-term task: `qibla` / Kiblat route visual polish against
-  `/dashboard/kiblat`, after validating that the Khatam slice was documented,
-  tested, committed, and pushed.
+- Completed near-term task: Hadith detail `web_app` visual polish against
+  `/dashboard/hadith/:slug/:number`, after validating that the Qibla slice was
+  documented, tested, committed, and pushed.
 - Files I may edit after route selection:
   - `apps/mobile/**`
   - relevant `apps/mobile` tests
-  - `apps/web/src/app/dashboard/kiblat/**`
-  - `apps/web/src/app/kiblat/**`
-  - kiblat-specific web code/tests, if needed
+  - `apps/web/src/app/dashboard/hadith/**`
+  - `apps/web/src/app/hadith/**`
+  - hadith-detail-specific web code/tests, if needed
   - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
   - route-specific docs under `docs/**`
 - Files I will avoid unless explicitly handed off:
@@ -47,7 +47,7 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Last completed route: `qibla` / Kiblat. Next active route is not selected
+- Last completed route: Hadith detail. Next active route is not selected
   yet, to avoid colliding with another active agent.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
@@ -59,6 +59,13 @@ Started: 2026-05-26 16:20 WIB
 
 ## Verification
 
+- `node --check apps/mobile/src/screens/HadithScreen.js` passed.
+- `cd apps/mobile && npm test -- hadithScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand` passed: 3 suites, 39 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 44 suites, 655 tests.
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-hadith-detail-route-export` passed.
+- `node scripts/check-feature-parity.js` passed.
+- `git diff --check` passed.
+- Hadith detail line-count gate: `HadithScreen.js` 1890, `hadithScreen.test.js` 440, and no `apps/mobile/src/**/*.js` file remains above 2,000 lines after excluding the `wc` total row.
 - `node --check apps/mobile/src/screens/QiblaScreen.js` passed.
 - `cd apps/mobile && npm test -- QiblaScreen.test.js qibla.test.js compass.test.js ibadahScreen.test.js --runInBand` passed: 4 suites, 53 tests.
 - `cd apps/mobile && npm test -- --runInBand` passed: 44 suites, 654 tests.
