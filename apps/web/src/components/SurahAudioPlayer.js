@@ -6,6 +6,8 @@ import { audioApi, quranApi } from '@/lib/api';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import {
+    BsChevronDown,
+    BsChevronUp,
     BsPauseFill,
     BsPlayFill,
     BsSkipBackwardFill,
@@ -67,6 +69,7 @@ export default function SurahAudioPlayer({
     const [error, setError] = useState('');
     const [isPlaying, setIsPlaying] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [minimized, setMinimized] = useState(false);
     const [open, setOpen] = useState(false);
     const [range, setRange] = useState({
         endAyah: '',
@@ -208,7 +211,10 @@ export default function SurahAudioPlayer({
         setCurrentLabel('');
         setIsPlaying(false);
         setLoading(false);
-        if (!keepOpen) setOpen(false);
+        if (!keepOpen) {
+            setMinimized(false);
+            setOpen(false);
+        }
     };
 
     const getAyahSources = async (ayah) => {
@@ -411,12 +417,62 @@ export default function SurahAudioPlayer({
         return (
             <button
                 type='button'
-                onClick={() => setOpen(true)}
+                onClick={() => {
+                    setMinimized(false);
+                    setOpen(true);
+                }}
                 className='inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-medium hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors'
             >
                 <BsVolumeUpFill />
                 {label('audio.listen_surah', 'Dengar Surah')}
             </button>
+        );
+    }
+
+    if (minimized) {
+        return (
+            <div className={`fixed ${bottomClass} left-1/2 -translate-x-1/2 z-40 w-full max-w-lg px-3 transition-[bottom] duration-200`}>
+                <div className='flex items-center gap-2 rounded-2xl border border-emerald-100 bg-white p-2 shadow-xl dark:border-slate-700 dark:bg-slate-800'>
+                    <button
+                        type='button'
+                        onClick={togglePlay}
+                        disabled={loading}
+                        aria-label={isPlaying ? 'Jeda audio' : 'Putar audio'}
+                        className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white transition-colors hover:bg-emerald-700 disabled:opacity-60'
+                    >
+                        {isPlaying ? <BsPauseFill className='text-xl' /> : <BsPlayFill className='text-xl' />}
+                    </button>
+                    <button
+                        type='button'
+                        onClick={() => setMinimized(false)}
+                        aria-label='Tampilkan player audio'
+                        className='min-w-0 flex-1 text-left'
+                    >
+                        <p className='truncate text-xs font-semibold text-emerald-600 dark:text-emerald-400'>
+                            {currentLabel || surahName || `Surah ${surahNumber}`}
+                        </p>
+                        <p className='truncate text-[11px] text-gray-500 dark:text-gray-400'>
+                            {loading ? 'Memuat audio...' : `${currentAudio?.qari_name ?? 'Pilih qari'} · ${speed}x`}
+                        </p>
+                    </button>
+                    <button
+                        type='button'
+                        onClick={() => setMinimized(false)}
+                        aria-label='Tampilkan player audio'
+                        className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-slate-700 dark:hover:text-white'
+                    >
+                        <BsChevronUp className='text-lg' />
+                    </button>
+                    <button
+                        type='button'
+                        onClick={() => stopPlayback()}
+                        aria-label='Tutup player audio'
+                        className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-slate-700 dark:hover:text-gray-200'
+                    >
+                        <BsX className='text-lg' />
+                    </button>
+                </div>
+            </div>
         );
     }
 
@@ -432,13 +488,24 @@ export default function SurahAudioPlayer({
                             {(currentAudio?.qari_name ?? 'Pilih qari')} · {speed}x
                         </p>
                     </div>
-                    <button
-                        type='button'
-                        onClick={() => stopPlayback()}
-                        className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
-                    >
-                        <BsX className='text-lg' />
-                    </button>
+                    <div className='flex shrink-0 items-center gap-1'>
+                        <button
+                            type='button'
+                            onClick={() => setMinimized(true)}
+                            aria-label='Minimize audio player'
+                            className='flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-slate-700 dark:hover:text-gray-200'
+                        >
+                            <BsChevronDown className='text-base' />
+                        </button>
+                        <button
+                            type='button'
+                            onClick={() => stopPlayback()}
+                            aria-label='Tutup player audio'
+                            className='flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-slate-700 dark:hover:text-gray-200'
+                        >
+                            <BsX className='text-lg' />
+                        </button>
+                    </div>
                 </div>
 
                 <div className='grid grid-cols-3 gap-2 mb-3'>
