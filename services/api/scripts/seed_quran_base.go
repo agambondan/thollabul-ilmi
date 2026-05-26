@@ -19,6 +19,7 @@ import (
 	"os"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
@@ -67,6 +68,7 @@ var quranBasmalahPrefixes = []string{
 }
 
 func cleanQuranArabicText(surahNumber int, ayahNumber int, text string) string {
+	text = trimLeadingQuranTextNoise(text)
 	if ayahNumber != 1 || surahNumber == 1 || surahNumber == 9 {
 		return text
 	}
@@ -74,13 +76,19 @@ func cleanQuranArabicText(surahNumber int, ayahNumber int, text string) string {
 }
 
 func stripLeadingQuranBasmalah(text string) string {
-	trimmed := strings.TrimLeft(text, " \n\t\r")
+	trimmed := trimLeadingQuranTextNoise(text)
 	for _, prefix := range quranBasmalahPrefixes {
 		if strings.HasPrefix(trimmed, prefix) {
-			return strings.TrimLeft(strings.TrimPrefix(trimmed, prefix), " \n\t\r")
+			return trimLeadingQuranTextNoise(strings.TrimPrefix(trimmed, prefix))
 		}
 	}
 	return text
+}
+
+func trimLeadingQuranTextNoise(text string) string {
+	return strings.TrimLeftFunc(text, func(r rune) bool {
+		return unicode.IsSpace(r) || r == '\ufeff'
+	})
 }
 
 // ── Seeder ────────────────────────────────────────────────────────────────────

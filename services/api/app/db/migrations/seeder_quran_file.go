@@ -212,6 +212,7 @@ var quranBasmalahPrefixes = []string{
 }
 
 func cleanQuranArabicText(surahNumber int, ayahNumber int, text string) string {
+	text = trimLeadingQuranTextNoise(text)
 	if ayahNumber != 1 || surahNumber == 1 || surahNumber == 9 {
 		return text
 	}
@@ -219,13 +220,19 @@ func cleanQuranArabicText(surahNumber int, ayahNumber int, text string) string {
 }
 
 func stripLeadingQuranBasmalah(text string) string {
-	trimmed := strings.TrimLeftFunc(text, unicode.IsSpace)
+	trimmed := trimLeadingQuranTextNoise(text)
 	for _, prefix := range quranBasmalahPrefixes {
 		if strings.HasPrefix(trimmed, prefix) {
-			return strings.TrimLeftFunc(strings.TrimPrefix(trimmed, prefix), unicode.IsSpace)
+			return trimLeadingQuranTextNoise(strings.TrimPrefix(trimmed, prefix))
 		}
 	}
 	return text
+}
+
+func trimLeadingQuranTextNoise(text string) string {
+	return strings.TrimLeftFunc(text, func(r rune) bool {
+		return unicode.IsSpace(r) || r == '\ufeff'
+	})
 }
 
 func cleanupEmbeddedBasmalahInQuranAyahs(db *gorm.DB) {

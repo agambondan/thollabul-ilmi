@@ -9,6 +9,17 @@ func TestCleanQuranArabicTextStripsLeadingBasmalahOutsideFatihahAndTawbah(t *tes
 	}
 }
 
+func TestCleanQuranArabicTextStripsLeadingBOM(t *testing.T) {
+	fatihah := "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ"
+	if got := cleanQuranArabicText(1, 1, "\ufeff"+fatihah); got != fatihah {
+		t.Fatalf("expected leading BOM stripped from Al-Fatihah, got %q", got)
+	}
+
+	if got := cleanQuranArabicText(2, 1, "\ufeffبِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ الٓمٓ"); got != "الٓمٓ" {
+		t.Fatalf("expected leading BOM and basmalah stripped from Al-Baqara 2:1, got %q", got)
+	}
+}
+
 func TestCleanQuranArabicTextKeepsFatihahAndTawbah(t *testing.T) {
 	fatihah := "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ"
 	if got := cleanQuranArabicText(1, 1, fatihah); got != fatihah {
