@@ -70,6 +70,7 @@ import { FeatureCatalog } from './FeatureCatalog';
 import { WebAppBlogRoute } from './WebAppBlogRoute';
 import { WebAppFeedRoute } from './WebAppFeedRoute';
 import { WebAppKajianRoute } from './WebAppKajianRoute';
+import { WebAppLibraryRoute } from './WebAppLibraryRoute';
 import { WebAppLeaderboardRoute } from './WebAppLeaderboardRoute';
 
 export function renderExploreWebAppRoute(context) {
@@ -89,6 +90,8 @@ export function renderExploreWebAppRoute(context) {
     kajianCategory,
     kajianSearch,
     leaderboardTab,
+    libraryProgressFilter,
+    libraryProgressMap,
     likingFeedId,
     loadFeature,
     loadMoreFeature,
@@ -109,6 +112,7 @@ export function renderExploreWebAppRoute(context) {
     setKajianCategory,
     setKajianSearch,
     setLeaderboardTab,
+    setLibraryProgressFilter,
     setNotesSearch,
     setSelectedItem,
     visibleItems,
@@ -1385,6 +1389,23 @@ export function renderExploreWebAppRoute(context) {
         onOpenItem={openItemDetail}
         onSearch={setBlogSearch}
         onSelectCategory={setBlogCategory}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'library' ) {
+    return (
+      <WebAppLibraryRoute
+        error={error}
+        items={items}
+        libraryProgressFilter={libraryProgressFilter}
+        libraryProgressMap={libraryProgressMap}
+        loading={loading}
+        onLoadMore={loadMoreFeature}
+        onOpenItem={openItemDetail}
+        onSelectProgressFilter={setLibraryProgressFilter}
+        pagination={pagination}
+        session={session}
       />
     );
   }

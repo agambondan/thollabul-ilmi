@@ -1045,6 +1045,90 @@ describe('ExploreScreen', () => {
     expect(queryByText('Fiqh Zakat Harian')).toBeNull();
   });
 
+  test('uses dashboard Library route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useSession.mockReturnValue({
+      ...mockUseSession(),
+      session: { token: 'abc' },
+      user: { id: '1', name: 'Test', email: 'test@test.com' },
+    });
+    personalApi.getBookmarks.mockResolvedValue([]);
+    personalApi.getLibraryProgressList.mockResolvedValue([
+      { id: 1, library_book_id: 10, status: 'reading', current_page: 12, note: 'Bab adab' },
+      { id: 2, library_book_id: 20, status: 'completed', current_page: 80 },
+    ]);
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 10,
+          title: 'Adab Penuntut Ilmu',
+          body: 'Katalog kitab adab belajar.',
+          raw: {
+            author: 'Ustadz Ahmad',
+            category: 'Akhlak',
+            description: 'Katalog kitab adab belajar.',
+            format: 'pdf',
+            id: 10,
+            level: 'Pemula',
+            source_url: 'https://example.test/adab.pdf',
+            title: 'Adab Penuntut Ilmu',
+          },
+        },
+        {
+          id: 20,
+          title: 'Fiqh Ibadah Ringkas',
+          body: 'Bahan belajar fiqh praktis.',
+          raw: {
+            author: 'Ustadz Zaid',
+            category: 'Fiqh',
+            description: 'Bahan belajar fiqh praktis.',
+            format: 'epub',
+            id: 20,
+            level: 'Menengah',
+            title: 'Fiqh Ibadah Ringkas',
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const {
+      getAllByTestId,
+      getAllByText,
+      getByPlaceholderText,
+      getByTestId,
+      getByText,
+      queryByTestId,
+      queryByText,
+    } = await renderExploreScreen({
+      deepLinkTarget: { id: 'library-route', params: { featureKey: 'library' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-library-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('Perpustakaan Ilmu')).toBeTruthy();
+      expect(getByText('Katalog kitab dan bahan belajar yang bisa dibaca dari sumber resmi, disimpan, dan diberi catatan belajar.')).toBeTruthy();
+      expect(getByText('Progress Saya')).toBeTruthy();
+      expect(getByText('2 resource')).toBeTruthy();
+      expect(getAllByText('Adab Penuntut Ilmu').length).toBeGreaterThan(0);
+      expect(getAllByText('Fiqh Ibadah Ringkas').length).toBeGreaterThan(0);
+      expect(getAllByTestId('web-app-library-card')).toHaveLength(2);
+    });
+
+    fireEvent.press(getByTestId('web-app-library-progress-completed'));
+
+    expect(getAllByText('Fiqh Ibadah Ringkas').length).toBeGreaterThan(0);
+    expect(queryByText('Katalog kitab adab belajar.')).toBeNull();
+    expect(getAllByTestId('web-app-library-card')).toHaveLength(1);
+
+    fireEvent.press(getByTestId('web-app-library-progress-all'));
+    fireEvent.changeText(getByPlaceholderText('Cari judul, penulis, atau topik'), 'adab');
+
+    expect(getAllByText('Adab Penuntut Ilmu').length).toBeGreaterThan(0);
+    expect(queryByText('Bahan belajar fiqh praktis.')).toBeNull();
+  });
+
   test('uses a friendly Blog rate-limit message in web app layout', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
     const rateLimitError = new Error('Request failed: 429');
