@@ -30,17 +30,19 @@ Started: 2026-05-26 16:20 WIB
 
 ## Current Notes
 
-- Existing dirty worktree files are all in the web Quran/Mushaf area and are
-  treated as another agent's active scope.
-- Current refactor claim: mobile Explore large-file split only. I touched
+- Current refactor claim: mobile Quran large-file split only. I touched
+  `apps/mobile/src/screens/QuranScreen.js`,
+  `apps/mobile/src/screens/QuranScreen.helpers.js`,
+  `apps/mobile/src/screens/QuranScreen.styles.js`, and
+  `apps/mobile/src/screens/quran/QuranScreenRenderers.js`.
+- Previous refactor claim: mobile Explore large-file split only. I touched
   `apps/mobile/src/screens/ExploreScreen.js`,
   `apps/mobile/src/screens/ExploreScreen.helpers.js`,
   `apps/mobile/src/screens/ExploreScreen.styles.js`, and
   `apps/mobile/src/screens/explore/*` route renderer files.
-- `ExploreScreen.js` is now below the 2,000-line gate. Remaining mobile files
-  above the gate are existing legacy scope: `QuranScreen.js` and
-  `ProfileScreen.js`; route parity work should stay paused until those are
-  assigned or split in a separate slice.
+- `ExploreScreen.js`, `QuranScreen.js`, and `ProfileScreen.js` are now below
+  the 2,000-line gate. No `apps/mobile/src/**/*.js` file remains above the
+  gate after excluding the `wc` total row.
 - I will not continue to a new route until the previous mobile `web_app` slice
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
@@ -56,6 +58,13 @@ Started: 2026-05-26 16:20 WIB
 
 ## Verification
 
+- `cd apps/mobile && npm test -- quranScreen.test.js --runInBand` passed: 1 suite, 19 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 44 suites, 639 tests.
+- `node scripts/check-feature-parity.js` passed.
+- `git diff --check` passed for the mobile Quran refactor files.
+- Line-count gate after Quran split: `QuranScreen.js` 1753,
+  `QuranScreenRenderers.js` 1986, `QuranScreen.styles.js` 1698, and
+  `QuranScreen.helpers.js` 456.
 - `cd apps/mobile && npm test -- exploreScreen.test.js --runInBand` passed: 1 suite, 36 tests.
 - `cd apps/mobile && npm test -- --runInBand` passed: 44 suites, 639 tests.
 - `node scripts/check-feature-parity.js` passed.
