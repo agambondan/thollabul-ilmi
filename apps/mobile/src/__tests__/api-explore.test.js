@@ -75,6 +75,23 @@ describe('explore api', () => {
       expect(result.meta).toContain('Adz-Dzahabi');
     });
 
+    test('normalizes perawi item', () => {
+      const result = normalizeExploreItem({
+        id: 7,
+        nama_arab: 'أبو هريرة',
+        nama_latin: 'Abu Hurairah',
+        status: 'tsiqah',
+        tabaqah: 'sahabat',
+        tahun_wafat: 59,
+      });
+      expect(result.id).toBe(7);
+      expect(result.title).toBe('Abu Hurairah');
+      expect(result.arabic).toBe('أبو هريرة');
+      expect(result.meta).toContain('sahabat');
+      expect(result.meta).toContain('59 H');
+      expect(result.meta).toContain('tsiqah');
+    });
+
     test('uses fallback title and id', () => {
       const result = normalizeExploreItem({}, 5);
       expect(result.title).toBe('Item 6');

@@ -129,6 +129,18 @@ export const normalizeExploreItem = (item, index = 0) => {
     };
   }
 
+  if (item?.nama_latin || item?.nama_arab || item?.nama_lengkap) {
+    const deathYear = item?.tahun_wafat ? `${item.tahun_wafat} H` : '';
+    return {
+      id: item?.id ?? item?.slug ?? `perawi-${index}`,
+      title: pickText(item?.nama_latin, item?.nama_lengkap, item?.nama_arab, `Perawi ${index + 1}`),
+      arabic: pickText(item?.nama_arab),
+      body: pickText(item?.biografi, item?.bio, item?.keterangan, item?.catatan),
+      meta: joinMeta(item?.tabaqah, deathYear, item?.status),
+      raw: item,
+    };
+  }
+
   if (item?.jenis_nilai || item?.teks_nilai || item?.perawi_id || item?.penilai_id) {
     const perawiName = pickText(item?.perawi?.nama_latin, item?.perawi?.nama_arab, item?.perawi?.nama_lengkap);
     const penilaiName = pickText(item?.penilai?.nama_latin, item?.penilai?.nama_arab, item?.penilai?.nama_lengkap);

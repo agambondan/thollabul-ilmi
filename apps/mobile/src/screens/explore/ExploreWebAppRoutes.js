@@ -72,6 +72,7 @@ import { WebAppFeedRoute } from './WebAppFeedRoute';
 import { WebAppKajianRoute } from './WebAppKajianRoute';
 import { WebAppLibraryRoute } from './WebAppLibraryRoute';
 import { WebAppLeaderboardRoute } from './WebAppLeaderboardRoute';
+import { WebAppPerawiRoute } from './WebAppPerawiRoute';
 
 export function renderExploreWebAppRoute(context) {
   const {
@@ -1406,6 +1407,19 @@ export function renderExploreWebAppRoute(context) {
         onSelectProgressFilter={setLibraryProgressFilter}
         pagination={pagination}
         session={session}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'perawi' ) {
+    return (
+      <WebAppPerawiRoute
+        error={error}
+        items={items}
+        loading={loading}
+        onLoadMore={loadMoreFeature}
+        onOpenItem={openItemDetail}
+        pagination={pagination}
       />
     );
   }

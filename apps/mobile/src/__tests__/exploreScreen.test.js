@@ -222,6 +222,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'community-feed', title: 'Komunitas', subtitle: 'Refleksi', group: 'Ilmu', type: 'feed' },
     { key: 'kajian', title: 'Kajian', subtitle: 'Sesi belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/kajian' },
     { key: 'blog', title: 'Artikel', subtitle: 'Tulisan dan pembaruan', group: 'Ilmu', type: 'list', endpoint: '/api/v1/blog/posts?page=0&size=20' },
+    { key: 'perawi', title: 'Perawi Hadis', subtitle: 'Basis data perawi', group: 'Ilmu', type: 'list', endpoint: '/api/v1/perawi' },
     { key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi seputar Islam', group: 'Ilmu', type: 'forum' },
     { key: 'library', title: 'Perpustakaan', subtitle: 'Kitab dan bahan belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/library/books?page=0&size=20' },
     { key: 'tasbih', title: 'Tasbih', subtitle: 'Penghitung', group: 'Alat', type: 'tasbih' },
@@ -241,7 +242,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'referensi',
       label: 'Referensi',
       meta: 'Kamus dan katalog',
-      features: allFeatures.filter((f) => ['kamus', 'tafsir', 'asmaul-flashcard', 'asmaul-wirid', 'library'].includes(f.key)),
+      features: allFeatures.filter((f) => ['kamus', 'tafsir', 'asmaul-flashcard', 'asmaul-wirid', 'library', 'perawi'].includes(f.key)),
     },
     {
       key: 'evaluasi',
@@ -949,7 +950,7 @@ describe('ExploreScreen', () => {
       meta: { hasMore: false },
     });
 
-    const { getAllByTestId, getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
+    const { getAllByTestId, getAllByText, getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
       deepLinkTarget: { id: 'kajian-route', params: { featureKey: 'kajian' } },
     });
 
@@ -1127,6 +1128,70 @@ describe('ExploreScreen', () => {
 
     expect(getAllByText('Adab Penuntut Ilmu').length).toBeGreaterThan(0);
     expect(queryByText('Bahan belajar fiqh praktis.')).toBeNull();
+  });
+
+  test('uses dashboard Perawi route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 1,
+          title: 'Abu Hurairah',
+          arabic: 'أبو هريرة',
+          meta: 'sahabat · 59 H · tsiqah',
+          raw: {
+            id: 1,
+            nama_arab: 'أبو هريرة',
+            nama_latin: 'Abu Hurairah',
+            status: 'tsiqah',
+            tabaqah: 'sahabat',
+            tahun_wafat: 59,
+          },
+        },
+        {
+          id: 2,
+          title: 'Ibnu Sirin',
+          arabic: 'محمد بن سيرين',
+          meta: 'tabiin · 110 H · tsiqah',
+          raw: {
+            id: 2,
+            nama_arab: 'محمد بن سيرين',
+            nama_latin: 'Ibnu Sirin',
+            status: 'tsiqah',
+            tabaqah: 'tabiin',
+            tahun_wafat: 110,
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getAllByText, getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
+      deepLinkTarget: { id: 'perawi-route', params: { featureKey: 'perawi' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-perawi-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('Perawi Hadis')).toBeTruthy();
+      expect(getByText('2 perawi')).toBeTruthy();
+      expect(getByText('Abu Hurairah')).toBeTruthy();
+      expect(getByText('Ibnu Sirin')).toBeTruthy();
+      expect(getAllByText('Sahabat').length).toBeGreaterThan(0);
+      expect(getAllByTestId('web-app-perawi-card')).toHaveLength(2);
+    });
+
+    fireEvent.press(getByTestId('web-app-perawi-tabaqah-tabiin'));
+
+    expect(getByText('Ibnu Sirin')).toBeTruthy();
+    expect(queryByText('Abu Hurairah')).toBeNull();
+    expect(getAllByTestId('web-app-perawi-card')).toHaveLength(1);
+
+    fireEvent.press(getByTestId('web-app-perawi-tabaqah-all'));
+    fireEvent.changeText(getByPlaceholderText('Cari nama perawi...'), 'hurairah');
+
+    expect(getByText('Abu Hurairah')).toBeTruthy();
+    expect(queryByText('Ibnu Sirin')).toBeNull();
   });
 
   test('uses a friendly Blog rate-limit message in web app layout', async () => {
