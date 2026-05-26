@@ -7,15 +7,15 @@ Started: 2026-05-26 16:20 WIB
 
 - Route/feature: mobile `web_app` parity against authenticated `/dashboard`
   mobile web views.
-- Near-term task: `community-feed` / Feed Komunitas route-depth parity against
-  `/dashboard/feed`, after validating that the previous Achievements slice is
-  documented, tested, committed, and pushed.
+- Near-term task: `jadwal-sholat` / Jadwal Sholat route visual polish against
+  `/dashboard/jadwal-sholat`, after validating that the previous Feed and
+  Achievements slices are documented, tested, committed, and pushed.
 - Files I may edit after route selection:
   - `apps/mobile/**`
   - relevant `apps/mobile` tests
-  - `apps/web/src/app/dashboard/feed/**`
-  - `apps/web/src/app/feed/**`
-  - feed-specific web code/tests, if needed
+  - `apps/web/src/app/dashboard/jadwal-sholat/**`
+  - `apps/web/src/app/jadwal-sholat/**`
+  - prayer-specific web code/tests, if needed
   - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
   - route-specific docs under `docs/**`
 - Files I will avoid unless explicitly handed off:
@@ -47,7 +47,7 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Next active route selected: `community-feed` / Feed Komunitas.
+- Next active route selected: `jadwal-sholat` / Jadwal Sholat.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
   - preserve `classic` native layout;
@@ -58,6 +58,13 @@ Started: 2026-05-26 16:20 WIB
 
 ## Verification
 
+- `cd apps/mobile && npm test -- PrayerScreen.test.js ibadahScreen.test.js --runInBand` passed: 2 suites, 28 tests.
+- `cd apps/mobile && npm test -- PrayerScreen.test.js ibadahScreen.test.js quranScreen.test.js useQuranReaderPreferences.test.js --runInBand` passed: 4 suites, 65 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 44 suites, 648 tests.
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-prayer-route-export` passed.
+- `node scripts/check-feature-parity.js` passed.
+- `npx playwright screenshot --channel=chrome --viewport-size=390,844 ... http://localhost:19006/#/ibadah/jadwal-sholat output/native-smoke/prayer-webapp-route.png` captured the mobile web_app Prayer route; first capture exposed horizontal input overflow, fixed before final capture.
+- Line-count gate after Prayer/Quran audio panel split: `PrayerScreen.js` 1860, `QuranScreenRenderers.js` 1889, `QuranAudioRangePanel.js` 278, and no `apps/mobile/src/**/*.js` file remains above 2,000 lines.
 - `cd apps/mobile && npm test -- quranScreen.test.js --runInBand` passed: 1 suite, 19 tests.
 - `cd apps/mobile && npm test -- --runInBand` passed: 44 suites, 639 tests.
 - `node scripts/check-feature-parity.js` passed.

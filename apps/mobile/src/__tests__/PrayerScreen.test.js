@@ -174,6 +174,46 @@ describe('PrayerScreen', () => {
     expect(queryByTestId('prayer-classic-main')).toBeNull();
   });
 
+  test('web app layout renders dashboard-style prayer schedule', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    getPrayerTimes.mockResolvedValue(mockPrayerTimes);
+    getPrayerOfflineOverview.mockResolvedValue({
+      supported: false,
+      days: 0,
+    });
+
+    const { getByText, getAllByText } = await renderPrayerScreen();
+
+    await waitFor(() => {
+      expect(getByText('BERIKUTNYA')).toBeTruthy();
+    });
+
+    expect(getAllByText('Jadwal Sholat').length).toBeGreaterThan(1);
+    expect(getByText('Kemenag · Shafi')).toBeTruthy();
+    expect(getByText('الفجر')).toBeTruthy();
+  });
+
+  test('web app layout renders dashboard-style settings view', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    getPrayerTimes.mockResolvedValue(mockPrayerTimes);
+    getPrayerOfflineOverview.mockResolvedValue({
+      supported: false,
+      days: 0,
+    });
+
+    const { getByText, getByTestId } = await renderPrayerScreen();
+
+    fireEvent.press(getByText('Buka pengaturan sholat'));
+
+    await waitFor(() => {
+      expect(getByTestId('prayer-web-app-settings')).toBeTruthy();
+    });
+
+    expect(getByText('Pengaturan')).toBeTruthy();
+    expect(getByText('Kemenag · Shafi')).toBeTruthy();
+    expect(getByText('Jadwal Offline 30 Hari')).toBeTruthy();
+  });
+
   test('shows loader while loading', async () => {
     Location.requestForegroundPermissionsAsync.mockReturnValue(
       new Promise(() => {}),

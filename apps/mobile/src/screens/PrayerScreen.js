@@ -55,8 +55,24 @@ const defaultAdjustments = scheduleRows.reduce(
 );
 
 const prayerLabels = Object.fromEntries(scheduleRows);
+const prayerArabicLabels = {
+  imsak: 'الإمساك',
+  fajr: 'الفجر',
+  sunrise: 'الشروق',
+  dhuhr: 'الظهر',
+  asr: 'العصر',
+  maghrib: 'المغرب',
+  isha: 'العشاء',
+};
 const defaultReminderPrayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
 const reminderLeadOptions = [0, 5, 10, 15, 30];
+const WEB_APP_PRAYER_BG = '#f8fafc';
+const WEB_APP_PRAYER_SURFACE = '#ffffff';
+const WEB_APP_PRAYER_BORDER = '#e5e7eb';
+const WEB_APP_PRAYER_MUTED = '#64748b';
+const WEB_APP_PRAYER_TEXT = '#0f172a';
+const WEB_APP_PRAYER_ACCENT = '#059669';
+const WEB_APP_PRAYER_ACCENT_SOFT = '#ecfdf5';
 
 const today = () => {
   const date = new Date();
@@ -281,6 +297,7 @@ export function PrayerScreen({ isActive, navigation }) {
     let next = null;
     let nextDiff = Infinity;
     for (const [key] of scheduleRows) {
+      if (key === 'imsak' || key === 'sunrise') continue;
       const secs = toSeconds(adjustedPrayerTime(key));
       if (secs === null) continue;
       const diff = secs - nowSec;
@@ -291,6 +308,7 @@ export function PrayerScreen({ isActive, navigation }) {
     }
     if (!next) {
       for (const [key] of scheduleRows) {
+        if (key === 'imsak' || key === 'sunrise') continue;
         const secs = toSeconds(adjustedPrayerTime(key));
         if (secs === null) continue;
         const diff = 86400 - nowSec + secs;
@@ -573,7 +591,281 @@ export function PrayerScreen({ isActive, navigation }) {
     };
   }, []);
 
+  const methodLabel = methods.find(([key]) => key === method)?.[1] ?? method;
+  const madhabLabel = madhabs.find(([key]) => key === madhab)?.[1] ?? madhab;
+  const todayLabel = new Date().toLocaleDateString('id-ID', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+  const currentTimeLabel = new Date().toLocaleTimeString('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  const locationLabel = coords
+    ? `${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}`
+    : 'Lokasi belum aktif';
+  const currentPrayerKey = (() => {
+    if (!prayers) return null;
+    const now = new Date();
+    const nowSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+    let current = null;
+    scheduleRows.forEach(([key]) => {
+      if (key === 'imsak' || key === 'sunrise') return;
+      const secs = toSeconds(adjustedPrayerTime(key));
+      if (secs !== null && secs <= nowSec) current = key;
+    });
+    return current;
+  })();
+
+  const renderManualLocationCard = (webApp = false) => (
+    <Card style={webApp ? styles.webAppCard : null}>
+      <CardTitle
+        meta="Koordinat GPS"
+        metaStyle={webApp ? styles.webAppCardMeta : null}
+        titleStyle={webApp ? styles.webAppCardTitle : null}
+      >
+        Lokasi Manual
+      </CardTitle>
+      <Text style={webApp ? styles.webAppMutedText : styles.statsText}>
+        Aktifkan GPS atau masukkan koordinat lokasimu untuk memuat jadwal sholat.
+      </Text>
+      <View style={[styles.manualLocRow, webApp ? styles.webAppManualLocRow : null]}>
+        <TextInput
+          keyboardType="decimal-pad"
+          onChangeText={setManualLatInput}
+          placeholder="-6.2088 (Lintang)"
+          placeholderTextColor={webApp ? WEB_APP_PRAYER_MUTED : colors.muted}
+          returnKeyType="next"
+          style={[styles.manualLocInput, webApp ? styles.webAppManualLocInput : null]}
+          value={manualLatInput}
+        />
+        <TextInput
+          keyboardType="decimal-pad"
+          onChangeText={setManualLngInput}
+          placeholder="106.8456 (Bujur)"
+          placeholderTextColor={webApp ? WEB_APP_PRAYER_MUTED : colors.muted}
+          returnKeyType="done"
+          style={[styles.manualLocInput, webApp ? styles.webAppManualLocInput : null]}
+          value={manualLngInput}
+        />
+      </View>
+      <Pressable
+        disabled={!manualLatInput || !manualLngInput}
+        onPress={applyManualLocation}
+        style={[styles.button, webApp ? styles.webAppPrimaryButton : null, !manualLatInput || !manualLngInput ? styles.disabled : null]}
+      >
+        <Text style={styles.buttonText}>Terapkan Lokasi</Text>
+      </Pressable>
+    </Card>
+  );
+
   if (view === 'settings') {
+    if (isWebAppLayout) {
+      return (
+        <Screen
+          contentStyle={styles.webAppSurface}
+          title="Pengaturan Sholat"
+          subtitle="Metode, koreksi waktu, pengingat, dan jadwal offline."
+          refreshing={loading}
+          onRefresh={refreshAll}
+          actions={<IconActionButton Icon={ArrowLeft} label="Kembali ke jadwal sholat" onPress={() => setView('main')} />}
+        >
+          <View testID="prayer-web-app-settings" />
+          {message ? <Text style={styles.webAppMessage}>{message}</Text> : null}
+
+          <View style={styles.webAppSettingsHero}>
+            <Text style={styles.webAppEyebrow}>JADWAL SHOLAT</Text>
+            <Text style={styles.webAppHeroTitle}>Pengaturan</Text>
+            <Text style={styles.webAppHeroMeta}>{methodLabel} · {madhabLabel}</Text>
+          </View>
+
+          <Card style={styles.webAppCard}>
+            <CardTitle
+              meta="Metode"
+              metaStyle={styles.webAppCardMeta}
+              titleStyle={styles.webAppCardTitle}
+            >
+              Metode Jadwal
+            </CardTitle>
+            <Text style={styles.webAppSettingsLabel}>Metode Perhitungan</Text>
+            <View style={styles.methodGrid}>
+              {methods.map(([key, label]) => (
+                <Pressable
+                  key={key}
+                  onPress={() => selectMethod(key)}
+                  style={[styles.methodButton, styles.webAppChoiceButton, method === key ? styles.webAppChoiceButtonActive : null]}
+                >
+                  <Text style={[styles.methodText, styles.webAppChoiceText, method === key ? styles.webAppChoiceTextActive : null]}>{label}</Text>
+                </Pressable>
+              ))}
+            </View>
+
+            <Text style={styles.webAppSettingsLabel}>Mazhab Ashar</Text>
+            <View style={styles.methodGrid}>
+              {madhabs.map(([key, label]) => (
+                <Pressable
+                  key={key}
+                  onPress={() => selectMadhab(key)}
+                  style={[styles.methodButton, styles.webAppChoiceButton, madhab === key ? styles.webAppChoiceButtonActive : null]}
+                >
+                  <Text style={[styles.methodText, styles.webAppChoiceText, madhab === key ? styles.webAppChoiceTextActive : null]}>{label}</Text>
+                </Pressable>
+              ))}
+            </View>
+          </Card>
+
+          <Card style={styles.webAppCard}>
+            <CardTitle
+              meta="Menit"
+              metaStyle={styles.webAppCardMeta}
+              titleStyle={styles.webAppCardTitle}
+            >
+              Koreksi Manual
+            </CardTitle>
+            <Text style={styles.webAppMutedText}>Sesuaikan jadwal jika masjid setempat memakai koreksi waktu tertentu.</Text>
+            {scheduleRows.map(([key, label]) => (
+              <View key={key} style={styles.webAppCorrectionRow}>
+                <Text style={styles.webAppPrayerLabel}>{label}</Text>
+                <View style={styles.correctionButtons}>
+                  <Pressable onPress={() => adjustPrayer(key, -1)} style={[styles.correctionButton, styles.webAppCorrectionButton]}>
+                    <Text style={styles.webAppCorrectionText}>-1</Text>
+                  </Pressable>
+                  <Text style={styles.webAppCorrectionValue}>
+                    {(adjustments[key] ?? 0) > 0 ? '+' : ''}
+                    {adjustments[key] ?? 0}
+                  </Text>
+                  <Pressable onPress={() => adjustPrayer(key, 1)} style={[styles.correctionButton, styles.webAppCorrectionButton]}>
+                    <Text style={styles.webAppCorrectionText}>+1</Text>
+                  </Pressable>
+                </View>
+              </View>
+            ))}
+            <Pressable onPress={resetAdjustments} style={styles.webAppSecondaryButton}>
+              <Text style={styles.webAppSecondaryButtonText}>Reset koreksi</Text>
+            </Pressable>
+          </Card>
+
+          <Card style={styles.webAppCard}>
+            <CardTitle
+              meta={notificationsSupported() ? `${notificationIds.length} aktif` : 'Aplikasi mobile'}
+              metaStyle={styles.webAppCardMeta}
+              titleStyle={styles.webAppCardTitle}
+            >
+              Pengingat Adzan
+            </CardTitle>
+            <View style={styles.webAppReminderRow}>
+              <View style={styles.webAppReminderCopy}>
+                <Text style={styles.webAppPrayerLabel}>Notifikasi Lokal</Text>
+                <Text style={styles.webAppMutedText}>{reminderEnabled ? 'Aktif' : 'Nonaktif'}</Text>
+              </View>
+              <Pressable
+                onPress={toggleReminder}
+                style={[styles.toggleButton, styles.webAppToggleButton, reminderEnabled ? styles.webAppToggleButtonActive : null]}
+              >
+                <Text style={[styles.toggleText, styles.webAppToggleText, reminderEnabled ? styles.webAppToggleTextActive : null]}>
+                  {reminderEnabled ? 'Aktif' : 'Mati'}
+                </Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.webAppReminderRow}>
+              <View style={styles.webAppReminderCopy}>
+                <Text style={styles.webAppPrayerLabel}>Audio Adzan</Text>
+                <Text style={styles.webAppMutedText}>
+                  {adzanAudioEnabled ? 'Diputar saat waktu masuk dan aplikasi terbuka' : 'Nonaktif'}
+                </Text>
+              </View>
+              <Pressable
+                onPress={toggleAdzanAudio}
+                style={[styles.toggleButton, styles.webAppToggleButton, adzanAudioEnabled ? styles.webAppToggleButtonActive : null]}
+              >
+                <Text style={[styles.toggleText, styles.webAppToggleText, adzanAudioEnabled ? styles.webAppToggleTextActive : null]}>
+                  {adzanAudioEnabled ? 'Aktif' : 'Mati'}
+                </Text>
+              </Pressable>
+            </View>
+
+            <Text style={styles.webAppSettingsLabel}>Jeda Pengingat</Text>
+            <View style={styles.methodGrid}>
+              {reminderLeadOptions.map((minutes) => (
+                <Pressable
+                  key={minutes}
+                  onPress={() => selectReminderLead(minutes)}
+                  style={[styles.methodButton, styles.webAppChoiceButton, reminderLeadMinutes === minutes ? styles.webAppChoiceButtonActive : null]}
+                >
+                  <Text style={[styles.methodText, styles.webAppChoiceText, reminderLeadMinutes === minutes ? styles.webAppChoiceTextActive : null]}>
+                    {minutes ? `${minutes} menit` : 'Saat waktu masuk'}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+
+            <Text style={styles.webAppSettingsLabel}>Waktu Sholat</Text>
+            <View style={styles.methodGrid}>
+              {defaultReminderPrayers.map((key) => {
+                const selected = reminderPrayers.includes(key);
+                return (
+                  <Pressable
+                    key={key}
+                    onPress={() => toggleReminderPrayer(key)}
+                    style={[styles.methodButton, styles.webAppChoiceButton, selected ? styles.webAppChoiceButtonActive : null]}
+                  >
+                    <Text style={[styles.methodText, styles.webAppChoiceText, selected ? styles.webAppChoiceTextActive : null]}>{prayerLabels[key]}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+
+            <Pressable onPress={() => syncPrayerReminders()} style={styles.webAppSecondaryButton}>
+              <Text style={styles.webAppSecondaryButtonText}>Atur ulang pengingat</Text>
+            </Pressable>
+          </Card>
+
+          <Card style={styles.webAppCard}>
+            <CardTitle
+              meta={prayerOffline?.supported === false ? 'Aplikasi mobile' : `${prayerOffline?.days ?? 0} hari`}
+              metaStyle={styles.webAppCardMeta}
+              titleStyle={styles.webAppCardTitle}
+            >
+              Jadwal Offline 30 Hari
+            </CardTitle>
+            <Text style={styles.webAppMutedText}>
+              Simpan jadwal 30 hari untuk lokasi, metode hitung, dan mazhab Ashar saat ini.
+            </Text>
+            <View style={styles.webAppProgressTrack}>
+              <View style={[styles.webAppProgressFill, { width: `${Math.min(offlineProgress, 100)}%` }]} />
+            </View>
+            <Text style={styles.webAppMutedText}>{offlineMessage}</Text>
+            <View style={styles.offlineActions}>
+              <Pressable
+                disabled={offlineBusy || prayerOffline?.supported === false}
+                onPress={downloadPrayerPack}
+                style={[styles.offlineButton, styles.webAppOfflinePrimaryButton, offlineBusy || prayerOffline?.supported === false ? styles.disabled : null]}
+              >
+                {offlineBusy ? <ActivityIndicator color="#ffffff" size="small" /> : <Text style={styles.offlinePrimaryText}>Simpan 30 hari</Text>}
+              </Pressable>
+              <Pressable
+                disabled={offlineBusy || prayerOffline?.supported === false}
+                onPress={useOfflineToday}
+                style={[styles.offlineButton, styles.webAppOfflineButton, offlineBusy || prayerOffline?.supported === false ? styles.disabled : null]}
+              >
+                <Text style={styles.webAppSecondaryButtonText}>Pakai hari ini</Text>
+              </Pressable>
+              <Pressable
+                disabled={offlineBusy || prayerOffline?.supported === false}
+                onPress={clearPrayerPack}
+                style={[styles.offlineButton, styles.webAppOfflineButton, offlineBusy || prayerOffline?.supported === false ? styles.disabled : null]}
+              >
+                <Text style={styles.webAppSecondaryButtonText}>Hapus</Text>
+              </Pressable>
+            </View>
+          </Card>
+        </Screen>
+      );
+    }
+
     return (
       <Screen
         contentStyle={isWebAppLayout ? styles.webAppSurface : null}
@@ -751,6 +1043,120 @@ export function PrayerScreen({ isActive, navigation }) {
     );
   }
 
+  if (isWebAppLayout) {
+    return (
+      <Screen
+        contentStyle={styles.webAppSurface}
+        title="Jadwal Sholat"
+        subtitle="Waktu sholat, hitung mundur, lokasi, dan pengingat."
+        refreshing={loading}
+        onRefresh={refreshAll}
+        actions={
+          <>
+            <IconActionButton Icon={RefreshCw} label="Muat ulang jadwal" onPress={refreshAll} disabled={loading} />
+            <IconActionButton Icon={Settings} label="Buka pengaturan sholat" onPress={() => setView('settings')} />
+          </>
+        }
+      >
+        <View testID="prayer-web-app-main" />
+        {message ? <Text style={styles.webAppMessage}>{message}</Text> : null}
+
+        <View style={styles.webAppHero}>
+          <View style={styles.webAppHeroIcon}>
+            <Text style={styles.webAppHeroIconText}>وقت</Text>
+          </View>
+          <Text style={styles.webAppHeroTitle}>Jadwal Sholat</Text>
+          <Text style={styles.webAppHeroDate}>{todayLabel}</Text>
+          <Text style={styles.webAppHeroMeta}>{locationLabel} · {methodLabel}</Text>
+        </View>
+
+        {!coords && !loading ? renderManualLocationCard(true) : null}
+
+        <View style={styles.webAppClockPanel}>
+          <Text style={styles.webAppClockTime}>{currentTimeLabel}</Text>
+          {prayers && countdown !== null ? (
+            <View style={styles.webAppCountdownRow}>
+              <Text style={styles.webAppCountdownLabel}>
+                {countdown === 0
+                  ? `Waktu ${scheduleRows.find(([key]) => key === nextPrayerKey)?.[1] ?? 'Sholat'} telah tiba`
+                  : `Menuju ${scheduleRows.find(([key]) => key === nextPrayerKey)?.[1] ?? 'sholat'}`}
+              </Text>
+              <Text style={styles.webAppCountdownTime}>
+                {countdown === 0 ? 'Waktunya sholat' : formatCountdown(countdown)}
+              </Text>
+              {adzanPlaying ? (
+                <Pressable onPress={stopAdzan} style={styles.webAppAdzanStopBtn}>
+                  <Square size={18} color="#fff" />
+                  <Text style={styles.webAppAdzanStopText}>Stop</Text>
+                </Pressable>
+              ) : null}
+            </View>
+          ) : (
+            <Text style={styles.webAppMutedText}>Jadwal dimuat sesuai lokasi dan metode yang dipilih.</Text>
+          )}
+        </View>
+
+        <View style={styles.webAppScheduleCard}>
+          <View style={styles.webAppScheduleHeader}>
+            <Text style={styles.webAppScheduleTitle}>Hari ini</Text>
+            <Text style={styles.webAppScheduleMeta}>{methodLabel} · {madhabLabel}</Text>
+          </View>
+          {loading && !prayers ? (
+            <ActivityIndicator color={WEB_APP_PRAYER_ACCENT} />
+          ) : (
+            scheduleRows.map(([key, label], index) => {
+              const adjustment = adjustments[key] ?? 0;
+              const isNext = key === nextPrayerKey && key !== 'imsak' && key !== 'sunrise';
+              const isCurrent = key === currentPrayerKey && !nextPrayerKey;
+              const isInfo = key === 'imsak' || key === 'sunrise';
+              return (
+                <View
+                  key={key}
+                  style={[
+                    styles.webAppPrayerRow,
+                    index === scheduleRows.length - 1 ? styles.webAppPrayerRowLast : null,
+                    isNext || isCurrent ? styles.webAppPrayerRowActive : null,
+                    isInfo ? styles.webAppPrayerRowInfo : null,
+                  ]}
+                >
+                  <View style={styles.webAppPrayerCopy}>
+                    <View style={styles.webAppPrayerLabelRow}>
+                      {isNext ? (
+                        <Text style={styles.webAppNextBadge}>BERIKUTNYA</Text>
+                      ) : null}
+                      <Text style={[styles.webAppPrayerLabel, isNext || isCurrent ? styles.webAppPrayerLabelActive : null]}>
+                        {label}
+                      </Text>
+                    </View>
+                    <Text style={[styles.webAppPrayerArabic, isNext || isCurrent ? styles.webAppPrayerArabicActive : null]}>
+                      {prayerArabicLabels[key]}
+                    </Text>
+                    {adjustment ? <Text style={styles.webAppPrayerBase}>Dasar {prayers?.[key] ?? '--:--'}</Text> : null}
+                  </View>
+                  <View style={styles.webAppPrayerTimeBlock}>
+                    <Text style={[styles.webAppPrayerTime, isNext || isCurrent ? styles.webAppPrayerTimeActive : null]}>
+                      {adjustedPrayerTime(key)}
+                    </Text>
+                    {adjustment ? (
+                      <Text style={[styles.webAppPrayerAdjustment, isNext || isCurrent ? styles.webAppPrayerAdjustmentActive : null]}>
+                        {adjustment > 0 ? '+' : ''}
+                        {adjustment} min
+                      </Text>
+                    ) : null}
+                  </View>
+                </View>
+              );
+            })
+          )}
+        </View>
+
+        <Text style={styles.webAppSourceNote}>
+          Metode: {methodLabel} · Madhab: {madhabLabel}
+        </Text>
+      </Screen>
+    );
+  }
+
   return (
     <Screen
       contentStyle={isWebAppLayout ? styles.webAppSurface : null}
@@ -768,41 +1174,7 @@ export function PrayerScreen({ isActive, navigation }) {
       <View testID={isWebAppLayout ? 'prayer-web-app-main' : 'prayer-classic-main'} />
       {message ? <Text style={styles.message}>{message}</Text> : null}
 
-      {!coords && !loading ? (
-        <Card>
-          <CardTitle meta="Koordinat GPS">Lokasi Manual</CardTitle>
-          <Text style={styles.statsText}>
-            Aktifkan GPS atau masukkan koordinat lokasimu untuk memuat jadwal sholat.
-          </Text>
-          <View style={styles.manualLocRow}>
-            <TextInput
-              keyboardType="decimal-pad"
-              onChangeText={setManualLatInput}
-              placeholder="-6.2088 (Lintang)"
-              placeholderTextColor={colors.muted}
-              returnKeyType="next"
-              style={styles.manualLocInput}
-              value={manualLatInput}
-            />
-            <TextInput
-              keyboardType="decimal-pad"
-              onChangeText={setManualLngInput}
-              placeholder="106.8456 (Bujur)"
-              placeholderTextColor={colors.muted}
-              returnKeyType="done"
-              style={styles.manualLocInput}
-              value={manualLngInput}
-            />
-          </View>
-          <Pressable
-            disabled={!manualLatInput || !manualLngInput}
-            onPress={applyManualLocation}
-            style={[styles.button, !manualLatInput || !manualLngInput ? styles.disabled : null]}
-          >
-            <Text style={styles.buttonText}>Terapkan Lokasi</Text>
-          </Pressable>
-        </Card>
-      ) : null}
+      {!coords && !loading ? renderManualLocationCard(false) : null}
 
       {prayers && countdown !== null ? (
         <Card>
@@ -865,9 +1237,372 @@ export function PrayerScreen({ isActive, navigation }) {
 
 const styles = StyleSheet.create({
   webAppSurface: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: WEB_APP_PRAYER_BG,
     borderRadius: radius.md,
     padding: spacing.sm,
+  },
+  webAppMessage: {
+    backgroundColor: '#fff7ed',
+    borderColor: '#fed7aa',
+    borderRadius: 16,
+    borderWidth: 1,
+    color: '#c2410c',
+    fontSize: 13,
+    fontWeight: '700',
+    lineHeight: 18,
+    marginBottom: spacing.md,
+    padding: spacing.md,
+  },
+  webAppHero: {
+    alignItems: 'center',
+    marginBottom: spacing.lg,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.sm,
+  },
+  webAppSettingsHero: {
+    backgroundColor: WEB_APP_PRAYER_SURFACE,
+    borderColor: WEB_APP_PRAYER_BORDER,
+    borderRadius: 20,
+    borderWidth: 1,
+    marginBottom: spacing.md,
+    padding: spacing.lg,
+  },
+  webAppHeroIcon: {
+    alignItems: 'center',
+    backgroundColor: WEB_APP_PRAYER_ACCENT_SOFT,
+    borderRadius: 18,
+    height: 64,
+    justifyContent: 'center',
+    marginBottom: spacing.md,
+    width: 64,
+  },
+  webAppHeroIconText: {
+    color: WEB_APP_PRAYER_ACCENT,
+    fontSize: 20,
+    fontWeight: '900',
+  },
+  webAppEyebrow: {
+    color: WEB_APP_PRAYER_ACCENT,
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 0,
+    marginBottom: spacing.xs,
+  },
+  webAppHeroTitle: {
+    color: WEB_APP_PRAYER_TEXT,
+    fontSize: 28,
+    fontWeight: '900',
+    letterSpacing: 0,
+    textAlign: 'center',
+  },
+  webAppHeroDate: {
+    color: WEB_APP_PRAYER_MUTED,
+    fontSize: 14,
+    fontWeight: '700',
+    marginTop: spacing.xs,
+    textAlign: 'center',
+  },
+  webAppHeroMeta: {
+    color: WEB_APP_PRAYER_MUTED,
+    fontSize: 12,
+    fontWeight: '800',
+    marginTop: spacing.xs,
+    textAlign: 'center',
+  },
+  webAppCard: {
+    backgroundColor: WEB_APP_PRAYER_SURFACE,
+    borderColor: WEB_APP_PRAYER_BORDER,
+    borderRadius: 18,
+    shadowOpacity: 0,
+  },
+  webAppCardTitle: {
+    color: WEB_APP_PRAYER_TEXT,
+    fontFamily: undefined,
+  },
+  webAppCardMeta: {
+    color: WEB_APP_PRAYER_ACCENT,
+  },
+  webAppMutedText: {
+    color: WEB_APP_PRAYER_MUTED,
+    fontSize: 13,
+    fontWeight: '700',
+    lineHeight: 19,
+    marginBottom: spacing.sm,
+  },
+  webAppClockPanel: {
+    alignItems: 'center',
+    marginBottom: spacing.md,
+    paddingVertical: spacing.md,
+  },
+  webAppClockTime: {
+    color: '#065f46',
+    fontSize: 40,
+    fontWeight: '900',
+    letterSpacing: 0,
+  },
+  webAppCountdownRow: {
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginTop: spacing.sm,
+  },
+  webAppCountdownLabel: {
+    color: WEB_APP_PRAYER_MUTED,
+    fontSize: 13,
+    fontWeight: '800',
+    textAlign: 'center',
+  },
+  webAppCountdownTime: {
+    color: WEB_APP_PRAYER_ACCENT,
+    fontSize: 18,
+    fontWeight: '900',
+    letterSpacing: 0,
+  },
+  webAppAdzanStopBtn: {
+    alignItems: 'center',
+    backgroundColor: '#ef4444',
+    borderRadius: 999,
+    flexDirection: 'row',
+    gap: spacing.xs,
+    marginTop: spacing.xs,
+    minHeight: 36,
+    paddingHorizontal: spacing.md,
+  },
+  webAppAdzanStopText: {
+    color: '#ffffff',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  webAppScheduleCard: {
+    backgroundColor: WEB_APP_PRAYER_SURFACE,
+    borderColor: '#eef2f7',
+    borderRadius: 18,
+    borderWidth: 1,
+    marginBottom: spacing.md,
+    overflow: 'hidden',
+  },
+  webAppScheduleHeader: {
+    borderBottomColor: '#f1f5f9',
+    borderBottomWidth: 1,
+    padding: spacing.md,
+  },
+  webAppScheduleTitle: {
+    color: WEB_APP_PRAYER_TEXT,
+    fontSize: 16,
+    fontWeight: '900',
+  },
+  webAppScheduleMeta: {
+    color: WEB_APP_PRAYER_MUTED,
+    fontSize: 12,
+    fontWeight: '800',
+    marginTop: 2,
+  },
+  webAppPrayerRow: {
+    alignItems: 'center',
+    borderBottomColor: '#f1f5f9',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minHeight: 74,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  webAppPrayerRowLast: {
+    borderBottomWidth: 0,
+  },
+  webAppPrayerRowActive: {
+    backgroundColor: WEB_APP_PRAYER_ACCENT,
+    borderBottomColor: WEB_APP_PRAYER_ACCENT,
+  },
+  webAppPrayerRowInfo: {
+    opacity: 0.68,
+  },
+  webAppPrayerCopy: {
+    flex: 1,
+    minWidth: 0,
+  },
+  webAppPrayerLabelRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  webAppNextBadge: {
+    backgroundColor: 'rgba(255,255,255,0.24)',
+    borderRadius: 999,
+    color: '#ffffff',
+    fontSize: 10,
+    fontWeight: '900',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+  },
+  webAppPrayerLabel: {
+    color: '#1f2937',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  webAppPrayerLabelActive: {
+    color: '#ffffff',
+  },
+  webAppPrayerArabic: {
+    color: WEB_APP_PRAYER_MUTED,
+    fontSize: 13,
+    fontWeight: '700',
+    marginTop: 2,
+  },
+  webAppPrayerArabicActive: {
+    color: '#d1fae5',
+  },
+  webAppPrayerBase: {
+    color: WEB_APP_PRAYER_MUTED,
+    fontSize: 11,
+    fontWeight: '700',
+    marginTop: 2,
+  },
+  webAppPrayerTimeBlock: {
+    alignItems: 'flex-end',
+    marginLeft: spacing.md,
+  },
+  webAppPrayerTime: {
+    color: WEB_APP_PRAYER_ACCENT,
+    fontSize: 21,
+    fontWeight: '900',
+  },
+  webAppPrayerTimeActive: {
+    color: '#ffffff',
+  },
+  webAppPrayerAdjustment: {
+    color: WEB_APP_PRAYER_MUTED,
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  webAppPrayerAdjustmentActive: {
+    color: '#d1fae5',
+  },
+  webAppSourceNote: {
+    color: WEB_APP_PRAYER_MUTED,
+    fontSize: 12,
+    fontWeight: '800',
+    marginBottom: spacing.md,
+    textAlign: 'center',
+  },
+  webAppManualLocRow: {
+    flexDirection: 'column',
+  },
+  webAppManualLocInput: {
+    backgroundColor: '#f8fafc',
+    borderColor: WEB_APP_PRAYER_BORDER,
+    color: WEB_APP_PRAYER_TEXT,
+    flex: 0,
+    width: '100%',
+  },
+  webAppPrimaryButton: {
+    backgroundColor: WEB_APP_PRAYER_ACCENT,
+  },
+  webAppSettingsLabel: {
+    color: WEB_APP_PRAYER_MUTED,
+    fontSize: 12,
+    fontWeight: '900',
+    marginBottom: spacing.sm,
+    marginTop: spacing.md,
+    textTransform: 'uppercase',
+  },
+  webAppChoiceButton: {
+    backgroundColor: '#f8fafc',
+    borderColor: WEB_APP_PRAYER_BORDER,
+  },
+  webAppChoiceButtonActive: {
+    backgroundColor: WEB_APP_PRAYER_ACCENT,
+    borderColor: WEB_APP_PRAYER_ACCENT,
+  },
+  webAppChoiceText: {
+    color: WEB_APP_PRAYER_TEXT,
+  },
+  webAppChoiceTextActive: {
+    color: '#ffffff',
+  },
+  webAppCorrectionRow: {
+    alignItems: 'center',
+    borderBottomColor: '#f1f5f9',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: spacing.sm,
+  },
+  webAppCorrectionButton: {
+    borderColor: WEB_APP_PRAYER_BORDER,
+    backgroundColor: '#f8fafc',
+  },
+  webAppCorrectionText: {
+    color: WEB_APP_PRAYER_TEXT,
+    fontSize: 11,
+    fontWeight: '900',
+  },
+  webAppCorrectionValue: {
+    color: WEB_APP_PRAYER_ACCENT,
+    fontSize: 13,
+    fontWeight: '900',
+    minWidth: 28,
+    textAlign: 'center',
+  },
+  webAppSecondaryButton: {
+    alignItems: 'center',
+    borderColor: WEB_APP_PRAYER_BORDER,
+    borderRadius: 14,
+    borderWidth: 1,
+    justifyContent: 'center',
+    marginTop: spacing.md,
+    minHeight: 44,
+  },
+  webAppSecondaryButtonText: {
+    color: WEB_APP_PRAYER_TEXT,
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  webAppReminderRow: {
+    alignItems: 'center',
+    borderBottomColor: '#f1f5f9',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.md,
+    justifyContent: 'space-between',
+    paddingVertical: spacing.sm,
+  },
+  webAppReminderCopy: {
+    flex: 1,
+    minWidth: 0,
+  },
+  webAppToggleButton: {
+    borderColor: WEB_APP_PRAYER_BORDER,
+    backgroundColor: '#f8fafc',
+  },
+  webAppToggleButtonActive: {
+    backgroundColor: WEB_APP_PRAYER_ACCENT,
+    borderColor: WEB_APP_PRAYER_ACCENT,
+  },
+  webAppToggleText: {
+    color: WEB_APP_PRAYER_TEXT,
+  },
+  webAppToggleTextActive: {
+    color: '#ffffff',
+  },
+  webAppProgressTrack: {
+    backgroundColor: '#e2e8f0',
+    borderRadius: 999,
+    height: 8,
+    marginBottom: spacing.sm,
+    overflow: 'hidden',
+  },
+  webAppProgressFill: {
+    backgroundColor: WEB_APP_PRAYER_ACCENT,
+    height: '100%',
+  },
+  webAppOfflineButton: {
+    borderColor: WEB_APP_PRAYER_BORDER,
+    backgroundColor: '#f8fafc',
+  },
+  webAppOfflinePrimaryButton: {
+    backgroundColor: WEB_APP_PRAYER_ACCENT,
+    borderColor: WEB_APP_PRAYER_ACCENT,
   },
   message: {
     backgroundColor: '#fffbeb',
