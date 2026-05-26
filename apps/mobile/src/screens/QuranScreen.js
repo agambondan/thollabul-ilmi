@@ -185,6 +185,8 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         speed: 1,
         startSurah: '',
     });
+    const [audioQueueInfo, setAudioQueueInfo] = useState({ index: 0, length: 0 });
+    const [audioRangeCollapsed, setAudioRangeCollapsed] = useState(false);
     const [hafalanList, setHafalanList] = useState([]);
     const [hafalanSummary, setHafalanSummary] = useState(null);
     const [hafalanLoading, setHafalanLoading] = useState(false);
@@ -218,10 +220,12 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         displayMode,
         fontSize,
         memorizationMode,
+        translationFontSize,
         updateArabicFont,
         updateDisplayMode,
         updateFontSize,
         updateMemorizationMode,
+        updateTranslationFontSize,
     } = useQuranReaderPreferences({ onMemorizationModeChange: resetRevealedAyahs });
 
     useEffect(() => {
@@ -1041,6 +1045,8 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         audioRangeSessionRef.current += 1;
         audioQueueRef.current = [];
         audioQueueIndexRef.current = 0;
+        setAudioQueueInfo({ index: 0, length: 0 });
+        setAudioRangeCollapsed(false);
         stopAudio();
         setAudioRange((current) => ({
             ...current,
@@ -1070,6 +1076,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         }
 
         audioQueueIndexRef.current = nextIndex;
+        setAudioQueueInfo({ index: nextIndex, length: queue.length });
         setAudioRange((current) => ({
             ...current,
             currentLabel: `${ayah.surahName || `Surah ${ayah.surahNumber}`} · Ayat ${ayah.number}`,
@@ -1183,11 +1190,30 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             }
             audioQueueRef.current = queue;
             audioQueueIndexRef.current = 0;
+            setAudioQueueInfo({ index: 0, length: queue.length });
             playRangeQueueItem(0, sessionId);
         } catch (err) {
             setAudioRange((current) => ({ ...current, loading: false, playing: false }));
             setMessage(err?.message ?? 'Range audio belum bisa dimuat.');
         }
+    };
+
+    const skipRangeAudio = async (delta) => {
+        const queue = audioQueueRef.current;
+        if (!queue.length || audioRange.loading) return;
+
+        let nextIndex = audioQueueIndexRef.current + delta;
+        if (nextIndex < 0) {
+            nextIndex = audioRangeRepeatRef.current ? queue.length - 1 : 0;
+        }
+        if (nextIndex >= queue.length) {
+            nextIndex = audioRangeRepeatRef.current ? 0 : queue.length - 1;
+        }
+
+        stopAudio();
+        const sessionId = audioRangeSessionRef.current + 1;
+        audioRangeSessionRef.current = sessionId;
+        await playRangeQueueItem(nextIndex, sessionId);
     };
 
     const playAyahAudio = async (ayah) => {
@@ -1406,6 +1432,8 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         () => ({
             arabicFont,
             audioRange,
+            audioRangeCollapsed,
+            audioQueueInfo,
             audioState,
             bookmarks,
             displayMode,
@@ -1413,10 +1441,13 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             memorizationMode,
             revealedAyahs,
             targetAyah,
+            translationFontSize,
         }),
         [
             arabicFont,
             audioRange,
+            audioRangeCollapsed,
+            audioQueueInfo,
             audioState,
             bookmarks,
             displayMode,
@@ -1424,6 +1455,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             memorizationMode,
             revealedAyahs,
             targetAyah,
+            translationFontSize,
         ],
     );
 
@@ -1492,6 +1524,8 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         arabicFont,
         audioQariOptions,
         audioRange,
+        audioRangeCollapsed,
+        audioQueueInfo,
         audioState,
         ayahActionSheet,
         ayahs,
@@ -1547,6 +1581,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         selectedSurah,
         setActiveNoteAyah,
         setAyahActionSheet,
+        setAudioRangeCollapsed,
         setHadithAyahModal,
         setHizbInput,
         setMunasabahModal,
@@ -1565,6 +1600,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         settingsVisible,
         startRangeAudio,
         stopRangeAudio,
+        skipRangeAudio,
         submitMurojaah,
         surahQuery,
         surahs,
@@ -1580,6 +1616,8 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         updateDisplayMode,
         updateFontSize,
         updateMemorizationMode,
+        updateTranslationFontSize,
+        translationFontSize,
         user,
     });
 

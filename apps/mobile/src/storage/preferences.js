@@ -30,6 +30,7 @@ export const preferenceKeys = {
   quranDisplayMode: 'quran-display-mode',
   quranFontSize: 'quran-font-size',
   quranMemorizationMode: 'quran-memorization-mode',
+  quranTranslationFontSize: 'quran-translation-font-size',
 };
 
 export const readPreference = async (key, defaultValue) => {

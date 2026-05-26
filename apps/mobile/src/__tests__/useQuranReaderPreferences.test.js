@@ -6,6 +6,7 @@ jest.mock('../storage/preferences', () => ({
     quranArabicFont: 'quran-arabic-font',
     quranDisplayMode: 'quran-display-mode',
     quranMemorizationMode: 'quran-memorization-mode',
+    quranTranslationFontSize: 'quran-translation-font-size',
   },
   readPreference: jest.fn(),
   writePreference: jest.fn(),
@@ -25,6 +26,7 @@ describe('useQuranReaderPreferences', () => {
     await act(async () => {});
 
     expect(result.current.fontSize).toBe(28);
+    expect(result.current.translationFontSize).toBe(16);
     expect(result.current.arabicFont).toBe('kitab');
     expect(result.current.displayMode).toBe('card');
     expect(result.current.memorizationMode).toBe('off');
@@ -33,6 +35,7 @@ describe('useQuranReaderPreferences', () => {
   test('loads saved preferences', async () => {
     readPreference
       .mockResolvedValueOnce(32)
+      .mockResolvedValueOnce(18)
       .mockResolvedValueOnce('hide_arabic')
       .mockResolvedValueOnce('indopak')
       .mockResolvedValueOnce('mushaf');
@@ -41,6 +44,7 @@ describe('useQuranReaderPreferences', () => {
     await act(async () => {});
 
     expect(result.current.fontSize).toBe(32);
+    expect(result.current.translationFontSize).toBe(18);
     expect(result.current.arabicFont).toBe('indopak');
     expect(result.current.displayMode).toBe('mushaf');
     expect(result.current.memorizationMode).toBe('hide_arabic');
@@ -80,6 +84,35 @@ describe('useQuranReaderPreferences', () => {
 
     expect(result.current.fontSize).toBe(48);
     expect(writePreference).toHaveBeenCalledWith('quran-font-size', 48);
+  });
+
+  test('updateTranslationFontSize updates state and persists', async () => {
+    const { result } = renderHook(() => useQuranReaderPreferences());
+    await act(async () => {});
+
+    await act(async () => {
+      await result.current.updateTranslationFontSize(20);
+    });
+
+    expect(result.current.translationFontSize).toBe(20);
+    expect(writePreference).toHaveBeenCalledWith('quran-translation-font-size', 20);
+  });
+
+  test('updateTranslationFontSize clamps to web-aligned bounds', async () => {
+    const { result } = renderHook(() => useQuranReaderPreferences());
+    await act(async () => {});
+
+    await act(async () => {
+      await result.current.updateTranslationFontSize(5);
+    });
+    expect(result.current.translationFontSize).toBe(12);
+    expect(writePreference).toHaveBeenCalledWith('quran-translation-font-size', 12);
+
+    await act(async () => {
+      await result.current.updateTranslationFontSize(100);
+    });
+    expect(result.current.translationFontSize).toBe(28);
+    expect(writePreference).toHaveBeenCalledWith('quran-translation-font-size', 28);
   });
 
   test('updateArabicFont updates and persists a valid font', async () => {

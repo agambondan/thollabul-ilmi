@@ -53,10 +53,12 @@ jest.mock('../hooks/useQuranReaderPreferences', () => ({
     displayMode: 'line',
     memorizationMode: 'off',
     showTranslation: true,
+    translationFontSize: 16,
     updateFontSize: jest.fn(),
     updateArabicFont: jest.fn(),
     updateDisplayMode: jest.fn(),
     updateMemorizationMode: jest.fn(),
+    updateTranslationFontSize: jest.fn(),
   }),
 }));
 
@@ -87,6 +89,7 @@ jest.mock('../storage/preferences', () => ({
     quranAudioRange: 'quranAudioRange',
     quranAudioRepeat: 'quranAudioRepeat',
     quranAudioSpeed: 'quranAudioSpeed',
+    quranTranslationFontSize: 'quranTranslationFontSize',
   },
   readPreference: jest.fn((key, defaultValue) => Promise.resolve(defaultValue)),
   writePreference: jest.fn().mockResolvedValue(undefined),
@@ -96,8 +99,9 @@ jest.mock('lucide-react-native', () => {
   const icons = {};
   const names = [
     'ArrowLeft', 'ArrowRight', 'BookOpen', 'Bookmark', 'BookmarkCheck',
-    'CheckCircle2', 'Info', 'Minus', 'MoreVertical', 'Pause', 'Plus',
-    'Save', 'Search', 'SlidersHorizontal', 'StickyNote', 'Volume2',
+    'ChevronDown', 'ChevronUp', 'CheckCircle2', 'Info', 'Minus', 'MoreVertical',
+    'Pause', 'Plus', 'Save', 'Search', 'SkipBack', 'SkipForward',
+    'SlidersHorizontal', 'StickyNote', 'Volume2',
     'X', 'XCircle', 'AlertCircle',
   ];
   names.forEach((n) => { icons[n] = n; });
@@ -450,6 +454,8 @@ describe('QuranScreen', () => {
     await waitFor(() => {
       expect(getByTestId('modal-sheet')).toBeTruthy();
       expect(getByText('Mode Hafalan')).toBeTruthy();
+      expect(getByText('Ukuran Teks Terjemahan')).toBeTruthy();
+      expect(getByText('16px')).toBeTruthy();
       expect(getByText('Normal')).toBeTruthy();
       expect(getByText('Sembunyikan Arab')).toBeTruthy();
       expect(getByText('Sembunyikan Terjemah')).toBeTruthy();
@@ -552,6 +558,47 @@ describe('QuranScreen', () => {
     );
     expect(preferences.writePreference).toHaveBeenCalledWith('quranAudioSpeed', 1.25);
     expect(preferences.writePreference).toHaveBeenCalledWith('quranAudioRepeat', true);
+  });
+
+  it('minimizes range audio player and skips queue items', async () => {
+    const { getByTestId, getByText } = await renderQuranScreen();
+
+    await waitFor(() => {
+      expect(getByText('Surah 1')).toBeTruthy();
+    });
+
+    fireEvent.press(getByText('Surah 1'));
+
+    await waitFor(() => {
+      expect(getByText('Audio Surat')).toBeTruthy();
+    });
+
+    fireEvent.changeText(getByTestId('audio-start-surah'), '1');
+    fireEvent.changeText(getByTestId('audio-end-surah'), '1');
+    fireEvent.changeText(getByTestId('audio-end-ayah'), '3');
+    fireEvent.press(getByTestId('audio-range-toggle'));
+
+    await waitFor(() => {
+      expect(getByText('1/3')).toBeTruthy();
+    });
+
+    fireEvent.press(getByTestId('audio-range-next'));
+
+    await waitFor(() => {
+      expect(getByText('2/3')).toBeTruthy();
+    });
+
+    fireEvent.press(getByTestId('audio-range-minimize'));
+
+    await waitFor(() => {
+      expect(getByTestId('audio-range-mini')).toBeTruthy();
+    });
+
+    fireEvent.press(getByTestId('audio-range-expand'));
+
+    await waitFor(() => {
+      expect(getByText('Audio Surat')).toBeTruthy();
+    });
   });
 
   it('shows reader menu button when surah is opened', async () => {

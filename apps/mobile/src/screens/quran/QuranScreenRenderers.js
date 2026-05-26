@@ -4,6 +4,8 @@ import {
     BookOpen,
     Bookmark,
     BookmarkCheck,
+    ChevronDown,
+    ChevronUp,
     CheckCircle2,
     Info,
     Link,
@@ -14,8 +16,11 @@ import {
     Save,
     Search,
     SlidersHorizontal,
+    SkipBack,
+    SkipForward,
     StickyNote,
     Volume2,
+    X,
 } from 'lucide-react-native';
 import { ActivityIndicator, FlatList, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
@@ -56,6 +61,8 @@ export function createQuranScreenRenderers(context) {
         arabicFont,
         audioQariOptions,
         audioRange,
+        audioRangeCollapsed,
+        audioQueueInfo,
         audioState,
         ayahActionSheet,
         ayahs,
@@ -111,6 +118,7 @@ export function createQuranScreenRenderers(context) {
         selectedSurah,
         setActiveNoteAyah,
         setAyahActionSheet,
+        setAudioRangeCollapsed,
         setHadithAyahModal,
         setHizbInput,
         setMunasabahModal,
@@ -129,6 +137,7 @@ export function createQuranScreenRenderers(context) {
         settingsVisible,
         startRangeAudio,
         stopRangeAudio,
+        skipRangeAudio,
         submitMurojaah,
         surahQuery,
         surahs,
@@ -144,6 +153,8 @@ export function createQuranScreenRenderers(context) {
         updateDisplayMode,
         updateFontSize,
         updateMemorizationMode,
+        updateTranslationFontSize,
+        translationFontSize,
         user,
     } = context;
 
@@ -158,6 +169,14 @@ export function createQuranScreenRenderers(context) {
             fontWeight: '400',
             lineHeight: Math.round(size * lineHeightRatio),
             ...(font?.fontFamily ? { fontFamily: font.fontFamily } : {}),
+        };
+    };
+
+    const getTranslationTypography = (extraSize = 0, lineHeightRatio = 1.75) => {
+        const size = Math.max(12, Math.min(28 + extraSize, translationFontSize + extraSize));
+        return {
+            fontSize: size,
+            lineHeight: Math.round(size * lineHeightRatio),
         };
     };
 
@@ -245,7 +264,7 @@ export function createQuranScreenRenderers(context) {
                     <Text style={styles.ayahLatin}>{ayah.latin}</Text>
                 ) : null}
                 {ayah.translation && !hideTranslation ? (
-                    <Text style={styles.ayahTranslation}>{ayah.translation}</Text>
+                    <Text style={[styles.ayahTranslation, getTranslationTypography()]}>{ayah.translation}</Text>
                 ) : null}
                 {!isFocus && hideTranslationForMemorization ? (
                     <View style={styles.hiddenBlock}>
@@ -408,7 +427,7 @@ export function createQuranScreenRenderers(context) {
                     </Text>
                 ) : null}
                 {showMushafTranslation && group.some((fragment) => fragment.isAyahEnd && fragment.ayah.translation) ? (
-                    <Text style={styles.mushafPageTranslation}>
+                    <Text style={[styles.mushafPageTranslation, getTranslationTypography(-5, 1.45)]}>
                         {group
                             .filter((fragment) => fragment.isAyahEnd && fragment.ayah.translation)
                             .map((fragment) => `${toArabicDigits(fragment.ayah.number)}. ${fragment.ayah.translation}`)
@@ -465,7 +484,7 @@ export function createQuranScreenRenderers(context) {
                     </View>
                 ) : null}
                 {showMushafTranslation && ayah.translation ? (
-                    <Text style={styles.mushafPerKataFullTranslation}>
+                    <Text style={[styles.mushafPerKataFullTranslation, getTranslationTypography(-4, 1.45)]}>
                         {`(${ayah.number}) ${ayah.translation}`}
                     </Text>
                 ) : null}
@@ -601,6 +620,56 @@ export function createQuranScreenRenderers(context) {
         if (!selectedSurah || selectedSurah.type !== 'surah') return null;
         const activeQari = audioQariOptions.find((item) => item.qari_slug === audioState.qariSlug);
         const isPlaying = audioRange.playing || audioRange.loading;
+        const canSkipBackward = audioQueueInfo.length > 0 && (audioRange.repeat || audioQueueInfo.index > 0);
+        const canSkipForward = audioQueueInfo.length > 0 && (audioRange.repeat || audioQueueInfo.index < audioQueueInfo.length - 1);
+
+        if (audioRangeCollapsed) {
+            return (
+                <View style={styles.audioMiniPanel} testID="audio-range-mini">
+                    <Pressable
+                        disabled={audioRange.loading}
+                        onPress={isPlaying ? stopRangeAudio : startRangeAudio}
+                        style={[
+                            styles.audioMiniPlayButton,
+                            audioRange.loading ? styles.disabled : null,
+                        ]}
+                        testID="audio-range-mini-toggle"
+                    >
+                        {isPlaying ? (
+                            <Pause color={colors.onPrimary} size={16} strokeWidth={2.5} />
+                        ) : (
+                            <Volume2 color={colors.onPrimary} size={16} strokeWidth={2.5} />
+                        )}
+                    </Pressable>
+                    <Pressable
+                        onPress={() => setAudioRangeCollapsed(false)}
+                        style={styles.audioMiniCopy}
+                        testID="audio-range-expand"
+                    >
+                        <Text numberOfLines={1} style={styles.audioMiniTitle}>
+                            {audioRange.currentLabel || selectedSurah.name || 'Audio Surat'}
+                        </Text>
+                        <Text numberOfLines={1} style={styles.audioMiniMeta}>
+                            {audioRange.loading ? 'Memuat audio...' : `${activeQari?.qari_name || 'Pilih qari'} · ${audioRange.speed}x`}
+                        </Text>
+                    </Pressable>
+                    <Pressable
+                        accessibilityLabel="Tampilkan player audio"
+                        onPress={() => setAudioRangeCollapsed(false)}
+                        style={styles.audioMiniIconButton}
+                    >
+                        <ChevronUp color={colors.muted} size={18} strokeWidth={2.4} />
+                    </Pressable>
+                    <Pressable
+                        accessibilityLabel="Tutup player audio"
+                        onPress={stopRangeAudio}
+                        style={styles.audioMiniIconButton}
+                    >
+                        <X color={colors.muted} size={18} strokeWidth={2.4} />
+                    </Pressable>
+                </View>
+            );
+        }
 
         return (
             <View style={styles.audioPanel}>
@@ -614,25 +683,35 @@ export function createQuranScreenRenderers(context) {
                             </Text>
                         </View>
                     </View>
-                    <Pressable
-                        android_ripple={{ color: 'rgba(255,255,255,0.18)', borderless: false }}
-                        disabled={audioRange.loading}
-                        onPress={isPlaying ? stopRangeAudio : startRangeAudio}
-                        style={[
-                            styles.audioPrimaryButton,
-                            audioRange.loading ? styles.disabled : null,
-                        ]}
-                        testID="audio-range-toggle"
-                    >
-                        {isPlaying ? (
-                            <Pause color={colors.onPrimary} size={15} strokeWidth={2.4} />
-                        ) : (
-                            <Volume2 color={colors.onPrimary} size={15} strokeWidth={2.4} />
-                        )}
-                        <Text style={styles.audioPrimaryButtonText}>
-                            {audioRange.loading ? 'Memuat' : isPlaying ? 'Stop' : 'Putar range'}
-                        </Text>
-                    </Pressable>
+                    <View style={styles.audioPanelHeaderActions}>
+                        <Pressable
+                            accessibilityLabel="Minimize audio player"
+                            onPress={() => setAudioRangeCollapsed(true)}
+                            style={styles.audioPanelIconButton}
+                            testID="audio-range-minimize"
+                        >
+                            <ChevronDown color={colors.muted} size={18} strokeWidth={2.4} />
+                        </Pressable>
+                        <Pressable
+                            android_ripple={{ color: 'rgba(255,255,255,0.18)', borderless: false }}
+                            disabled={audioRange.loading}
+                            onPress={isPlaying ? stopRangeAudio : startRangeAudio}
+                            style={[
+                                styles.audioPrimaryButton,
+                                audioRange.loading ? styles.disabled : null,
+                            ]}
+                            testID="audio-range-toggle"
+                        >
+                            {isPlaying ? (
+                                <Pause color={colors.onPrimary} size={15} strokeWidth={2.4} />
+                            ) : (
+                                <Volume2 color={colors.onPrimary} size={15} strokeWidth={2.4} />
+                            )}
+                            <Text style={styles.audioPrimaryButtonText}>
+                                {audioRange.loading ? 'Memuat' : isPlaying ? 'Stop' : 'Putar range'}
+                            </Text>
+                        </Pressable>
+                    </View>
                 </View>
 
                 <View style={styles.audioInputGrid}>
@@ -672,6 +751,38 @@ export function createQuranScreenRenderers(context) {
                             value={audioRange.endAyah}
                         />
                     </View>
+                </View>
+
+                <View style={styles.audioTransportRow}>
+                    <Pressable
+                        accessibilityLabel="Audio ayat sebelumnya"
+                        disabled={!canSkipBackward || audioRange.loading}
+                        onPress={() => skipRangeAudio(-1)}
+                        style={[
+                            styles.audioSkipButton,
+                            !canSkipBackward || audioRange.loading ? styles.disabled : null,
+                        ]}
+                        testID="audio-range-prev"
+                    >
+                        <SkipBack color={colors.text} size={18} strokeWidth={2.4} />
+                    </Pressable>
+                    <Text style={styles.audioQueueText}>
+                        {audioQueueInfo.length > 0
+                            ? `${audioQueueInfo.index + 1}/${audioQueueInfo.length}`
+                            : 'Belum ada antrean'}
+                    </Text>
+                    <Pressable
+                        accessibilityLabel="Audio ayat berikutnya"
+                        disabled={!canSkipForward || audioRange.loading}
+                        onPress={() => skipRangeAudio(1)}
+                        style={[
+                            styles.audioSkipButton,
+                            !canSkipForward || audioRange.loading ? styles.disabled : null,
+                        ]}
+                        testID="audio-range-next"
+                    >
+                        <SkipForward color={colors.text} size={18} strokeWidth={2.4} />
+                    </Pressable>
                 </View>
 
                 <Text style={styles.audioSectionLabel}>Qari</Text>
@@ -948,6 +1059,33 @@ export function createQuranScreenRenderers(context) {
                     ]}
                 >
                     <Plus color={colors.ink} size={16} strokeWidth={2.4} />
+                </Pressable>
+            </View>
+
+            <Text style={styles.settingLabel}>Ukuran Teks Terjemahan</Text>
+            <View style={styles.fontSizeRow}>
+                <Pressable
+                    disabled={translationFontSize <= 12}
+                    onPress={() => updateTranslationFontSize(translationFontSize - 2)}
+                    style={[
+                        styles.fontSizeButton,
+                        translationFontSize <= 12 ? styles.disabled : null,
+                    ]}
+                    testID="translation-font-decrease"
+                >
+                    <Text style={styles.fontSizeButtonText}>T-</Text>
+                </Pressable>
+                <Text style={styles.fontSizeValue}>{translationFontSize}px</Text>
+                <Pressable
+                    disabled={translationFontSize >= 28}
+                    onPress={() => updateTranslationFontSize(translationFontSize + 2)}
+                    style={[
+                        styles.fontSizeButton,
+                        translationFontSize >= 28 ? styles.disabled : null,
+                    ]}
+                    testID="translation-font-increase"
+                >
+                    <Text style={styles.fontSizeButtonText}>T+</Text>
                 </Pressable>
             </View>
 
@@ -1281,7 +1419,9 @@ export function createQuranScreenRenderers(context) {
                         ) : null}
                         {selectedDetailAyah.translation ? (
                             <View style={styles.quranDetailTranslationBox}>
-                                <Text style={styles.quranDetailTranslation}>{selectedDetailAyah.translation}</Text>
+                                <Text style={[styles.quranDetailTranslation, getTranslationTypography(1, 1.7)]}>
+                                    {selectedDetailAyah.translation}
+                                </Text>
                             </View>
                         ) : null}
                         {audioState.activeAyahId === selectedDetailAyah.id ? renderAudioSources(selectedDetailAyah) : null}
