@@ -37,7 +37,7 @@ const AyahPage = ({
     onActionMenuToggle,
 }) => {
     const { t, lang } = useLocale();
-    const { arabicFontSize, fontCls } = useQuranFont();
+    const { arabicFontSize, fontCls, translationFontSize } = useQuranFont();
     const { isHidden: actionsHidden, isMenu: actionsMenu } = useActionPosition();
     const cardRef = useRef();
     const audioRef = useRef(null);
@@ -504,7 +504,7 @@ const AyahPage = ({
                     )}
                     <li
                         className={`text-left p-2 ${hideTranslation || hideAll ? 'blur-sm select-none' : ''}`}
-                        style={{ direction: 'ltr' }}
+                        style={{ direction: 'ltr', fontSize: `${translationFontSize}px`, lineHeight: '1.75' }}
                     >
                         {ayahTranslation}
                     </li>

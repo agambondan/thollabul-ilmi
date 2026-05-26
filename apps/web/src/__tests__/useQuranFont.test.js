@@ -55,6 +55,35 @@ describe('useQuranFont', () => {
     expect(localStorage.getItem('quranArabicFontSize')).toBe('14');
   });
 
+  test('clamps persisted translation font size to 12px minimum', async () => {
+    localStorage.setItem('quranTranslationFontSize', '8');
+    const { result } = renderHook(() => useQuranFont());
+
+    await waitFor(() => expect(result.current.translationFontSize).toBe(12));
+  });
+
+  test('does not decrease translation font size below 12px', () => {
+    const { result } = renderHook(() => useQuranFont());
+
+    act(() => result.current.setTranslationFontSize(12));
+    act(() => result.current.decreaseTranslationFontSize());
+
+    expect(result.current.translationFontSize).toBe(12);
+    expect(localStorage.getItem('quranTranslationFontSize')).toBe('12');
+  });
+
+  test('persists and resets translation font size', () => {
+    const { result } = renderHook(() => useQuranFont());
+
+    act(() => result.current.setTranslationFontSize(22));
+    expect(result.current.translationFontSize).toBe(22);
+    expect(localStorage.getItem('quranTranslationFontSize')).toBe('22');
+
+    act(() => result.current.resetTranslationFontSize());
+    expect(result.current.translationFontSize).toBe(16);
+    expect(localStorage.getItem('quranTranslationFontSize')).toBe('16');
+  });
+
   test('QURAN_FONTS has correct structure', () => {
     expect(QURAN_FONTS).toHaveLength(3);
     QURAN_FONTS.forEach((f) => {

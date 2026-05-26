@@ -15,7 +15,7 @@ jest.mock('@/context/Locale', () => ({
 }));
 
 jest.mock('@/lib/useQuranFont', () => ({
-  useQuranFont: () => ({ arabicFontSize: 32, fontCls: 'font-arabic' }),
+  useQuranFont: () => ({ arabicFontSize: 32, fontCls: 'font-arabic', translationFontSize: 16 }),
 }));
 
 jest.mock('@/lib/useActionPosition', () => ({

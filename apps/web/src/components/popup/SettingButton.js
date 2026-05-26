@@ -22,10 +22,14 @@ const SettingButton = () => {
     const {
         arabicFontSize,
         decreaseArabicFontSize,
+        decreaseTranslationFontSize,
         fontId,
         increaseArabicFontSize,
+        increaseTranslationFontSize,
         resetArabicFontSize,
+        resetTranslationFontSize,
         setFont,
+        translationFontSize,
     } = useQuranFont();
     const popupRef = useRef(null);
     const mobileControlsTimeoutRef = useRef(null);
@@ -105,7 +109,7 @@ const SettingButton = () => {
             </button>
 
             {showPopup && (
-                <div className='absolute right-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-60 p-3 shadow-lg text-sm text-emerald-900 dark:text-white'>
+                <div className='absolute right-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-60 max-h-[calc(100vh-7rem)] overflow-y-auto p-3 shadow-lg text-sm text-emerald-900 dark:text-white'>
                     <p className='font-semibold mb-3 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide'>
                         {t('settings.title')}
                     </p>
@@ -228,6 +232,38 @@ const SettingButton = () => {
                                 aria-label='Perbesar huruf Arab'
                             >
                                 A+
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Translation font size */}
+                    <div className='mb-3'>
+                        <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                            {label('settings.translation_size', 'Ukuran Terjemahan')}
+                        </p>
+                        <div className='flex items-center gap-2'>
+                            <button
+                                type='button'
+                                onClick={decreaseTranslationFontSize}
+                                className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                aria-label='Perkecil huruf terjemahan'
+                            >
+                                T-
+                            </button>
+                            <button
+                                type='button'
+                                onClick={resetTranslationFontSize}
+                                className='h-9 flex-1 rounded-lg border border-gray-200 dark:border-slate-600 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                            >
+                                {translationFontSize}px
+                            </button>
+                            <button
+                                type='button'
+                                onClick={increaseTranslationFontSize}
+                                className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                aria-label='Perbesar huruf terjemahan'
+                            >
+                                T+
                             </button>
                         </div>
                     </div>
