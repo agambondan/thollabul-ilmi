@@ -24,6 +24,7 @@ import (
 const (
 	aqBase     = "https://api.alquran.cloud/v1"
 	edAr       = "quran-uthmani"
+	edTajweed  = "quran-tajweed"
 	edIdn      = "id.indonesian"
 	edEn       = "en.sahih" // Saheeh International (bukan en.saheeh — itu arabic!)
 	fetchDelay = 300 * time.Millisecond
@@ -98,6 +99,7 @@ type SurahFile struct {
 type AyahFile struct {
 	Number      int    `json:"number"`
 	Arabic      string `json:"arabic"`
+	ArHtml      string `json:"ar_html,omitempty"`
 	Indonesian  string `json:"indonesian"`
 	English     string `json:"english"`
 	Juz         int    `json:"juz"`
@@ -139,6 +141,77 @@ func trimLeadingQuranTextNoise(text string) string {
 	})
 }
 
+var tajweedShortcodeMap = map[string]string{
+	"p": "madda_permissible",
+	"m": "madda_necessary",
+	"o": "madda_obligatory",
+	"n": "madda_normal",
+	"q": "qlq",
+	"s": "slnt",
+	"h": "ham_wasl",
+	"g": "ghn",
+	"a": "idgh_ghn",
+	"u": "idgh_w_ghn",
+	"f": "ikhf",
+	"i": "iqlb",
+	"c": "ikhf_shfw",
+	"w": "idghm_shfw",
+	"e": "idgh_mus",
+}
+
+func decodeTajweedBrackets(text string) string {
+	runes := []rune(text)
+	var out strings.Builder
+	out.Grow(len(text) * 2)
+
+	for i := 0; i < len(runes); {
+		if runes[i] != '[' {
+			out.WriteRune(runes[i])
+			i++
+			continue
+		}
+
+		j := i + 1
+		for j < len(runes) && runes[j] != '[' {
+			j++
+		}
+		if j >= len(runes) {
+			out.WriteRune(runes[i])
+			i++
+			continue
+		}
+
+		shortcode := string(runes[i+1 : j])
+		if idx := strings.IndexByte(shortcode, ':'); idx != -1 {
+			shortcode = shortcode[:idx]
+		}
+
+		j++
+		contentStart := j
+		for j < len(runes) && runes[j] != ']' {
+			j++
+		}
+		content := string(runes[contentStart:j])
+
+		if cssClass, ok := tajweedShortcodeMap[shortcode]; ok {
+			out.WriteString(`<tajweed class="`)
+			out.WriteString(cssClass)
+			out.WriteString(`">`)
+			out.WriteString(content)
+			out.WriteString(`</tajweed>`)
+		} else {
+			out.WriteString(content)
+		}
+
+		if j < len(runes) {
+			j++
+		}
+		i = j
+	}
+
+	return out.String()
+}
+
 // ── HTTP helper ───────────────────────────────────────────────────────────────
 
 var client = &http.Client{Timeout: 30 * time.Second}
@@ -174,7 +247,7 @@ func main() {
 	}
 
 	for _, meta := range listResp.Data {
-		url := fmt.Sprintf("%s/surah/%d/editions/%s,%s,%s", aqBase, meta.Number, edAr, edIdn, edEn)
+		url := fmt.Sprintf("%s/surah/%d/editions/%s,%s,%s,%s", aqBase, meta.Number, edAr, edTajweed, edIdn, edEn)
 		var edResp aqEditionsResp
 		if err := getJSON(url, &edResp); err != nil {
 			log.Printf("[surah %3d] ERROR fetch: %v — skip", meta.Number, err)
@@ -206,6 +279,17 @@ func main() {
 
 		idnEd := edMap[edIdn]
 		enEd := edMap[edEn]
+		tajweedEd := edMap[edTajweed]
+		htmlByAyah := map[int]string{}
+		if tajweedEd != nil {
+			for _, tajweedAyah := range tajweedEd.Ayahs {
+				htmlByAyah[tajweedAyah.NumberInSurah] = cleanQuranArabicText(
+					meta.Number,
+					tajweedAyah.NumberInSurah,
+					decodeTajweedBrackets(tajweedAyah.Text),
+				)
+			}
+		}
 
 		for i, arAyah := range arEd.Ayahs {
 			af := AyahFile{
@@ -217,6 +301,9 @@ func main() {
 				Ruku:        arAyah.Ruku,
 				HizbQuarter: arAyah.HizbQuarter,
 				Sajda:       arAyah.Sajda.Value,
+			}
+			if arHTML := htmlByAyah[arAyah.NumberInSurah]; arHTML != "" {
+				af.ArHtml = arHTML
 			}
 			if idnEd != nil && i < len(idnEd.Ayahs) {
 				af.Indonesian = idnEd.Ayahs[i].Text

@@ -20,11 +20,12 @@ import (
 )
 
 const (
-	baseURL      = "https://api.alquran.cloud/v1"
-	editionAr    = "quran-uthmani"
-	editionIdn   = "id.indonesian"
-	editionEn    = "en.asad"
-	requestDelay = 300 * time.Millisecond
+	baseURL        = "https://api.alquran.cloud/v1"
+	editionAr      = "quran-uthmani"
+	editionTajweed = "quran-tajweed"
+	editionIdn     = "id.indonesian"
+	editionEn      = "en.asad"
+	requestDelay   = 300 * time.Millisecond
 )
 
 var quranBasmalahPrefixes = []string{
@@ -56,6 +57,77 @@ func trimLeadingQuranTextNoise(text string) string {
 	return strings.TrimLeftFunc(text, func(r rune) bool {
 		return unicode.IsSpace(r) || r == '\ufeff'
 	})
+}
+
+var tajweedShortcodeMap = map[string]string{
+	"p": "madda_permissible",
+	"m": "madda_necessary",
+	"o": "madda_obligatory",
+	"n": "madda_normal",
+	"q": "qlq",
+	"s": "slnt",
+	"h": "ham_wasl",
+	"g": "ghn",
+	"a": "idgh_ghn",
+	"u": "idgh_w_ghn",
+	"f": "ikhf",
+	"i": "iqlb",
+	"c": "ikhf_shfw",
+	"w": "idghm_shfw",
+	"e": "idgh_mus",
+}
+
+func decodeTajweedBrackets(text string) string {
+	runes := []rune(text)
+	var out strings.Builder
+	out.Grow(len(text) * 2)
+
+	for i := 0; i < len(runes); {
+		if runes[i] != '[' {
+			out.WriteRune(runes[i])
+			i++
+			continue
+		}
+
+		j := i + 1
+		for j < len(runes) && runes[j] != '[' {
+			j++
+		}
+		if j >= len(runes) {
+			out.WriteRune(runes[i])
+			i++
+			continue
+		}
+
+		shortcode := string(runes[i+1 : j])
+		if idx := strings.IndexByte(shortcode, ':'); idx != -1 {
+			shortcode = shortcode[:idx]
+		}
+
+		j++
+		contentStart := j
+		for j < len(runes) && runes[j] != ']' {
+			j++
+		}
+		content := string(runes[contentStart:j])
+
+		if cssClass, ok := tajweedShortcodeMap[shortcode]; ok {
+			out.WriteString(`<tajweed class="`)
+			out.WriteString(cssClass)
+			out.WriteString(`">`)
+			out.WriteString(content)
+			out.WriteString(`</tajweed>`)
+		} else {
+			out.WriteString(content)
+		}
+
+		if j < len(runes) {
+			j++
+		}
+		i = j
+	}
+
+	return out.String()
 }
 
 // ─── API response structs ─────────────────────────────────────────────────────
@@ -154,15 +226,19 @@ func saveTranslation(db *gorm.DB, t *model.Translation) error {
 func saveOrUpdateTranslation(db *gorm.DB, existingID *int, t *model.Translation) error {
 	if existingID != nil {
 		t.ID = existingID
+		updates := map[string]interface{}{
+			"ar":             t.Ar,
+			"idn":            t.Idn,
+			"en":             t.En,
+			"latin_en":       t.LatinEn,
+			"description_ar": t.DescriptionAr,
+		}
+		if t.ArHtml != nil {
+			updates["ar_html"] = t.ArHtml
+		}
 		return db.Model(&model.Translation{}).
 			Where("id = ?", *existingID).
-			Updates(map[string]interface{}{
-				"ar":             t.Ar,
-				"idn":            t.Idn,
-				"en":             t.En,
-				"latin_en":       t.LatinEn,
-				"description_ar": t.DescriptionAr,
-			}).Error
+			Updates(updates).Error
 	}
 	return saveTranslation(db, t)
 }
@@ -210,7 +286,7 @@ func run(db *gorm.DB) error {
 		log.Printf("[%3d/114] Surah %s (%s)...", meta.Number, meta.EnglishName, meta.Name)
 
 		// 2. Fetch surah dengan 3 editions sekaligus
-		url := fmt.Sprintf("%s/surah/%d/editions/%s,%s,%s", baseURL, meta.Number, editionAr, editionIdn, editionEn)
+		url := fmt.Sprintf("%s/surah/%d/editions/%s,%s,%s,%s", baseURL, meta.Number, editionAr, editionTajweed, editionIdn, editionEn)
 		var edResp SurahEditionsResponse
 		if err := fetchJSON(url, &edResp); err != nil {
 			log.Printf("  ERROR fetch surah %d: %v — skip", meta.Number, err)
@@ -224,11 +300,21 @@ func run(db *gorm.DB) error {
 			edMap[edResp.Data[i].Edition.Identifier] = &edResp.Data[i]
 		}
 
-		arEd, idnEd, enEd := edMap[editionAr], edMap[editionIdn], edMap[editionEn]
+		arEd, tajweedEd, idnEd, enEd := edMap[editionAr], edMap[editionTajweed], edMap[editionIdn], edMap[editionEn]
 		if arEd == nil {
 			log.Printf("  WARN: arabic edition not found for surah %d", meta.Number)
 			time.Sleep(requestDelay)
 			continue
+		}
+		htmlByAyah := map[int]string{}
+		if tajweedEd != nil {
+			for _, tajweedAyah := range tajweedEd.Ayahs {
+				htmlByAyah[tajweedAyah.NumberInSurah] = cleanQuranArabicText(
+					meta.Number,
+					tajweedAyah.NumberInSurah,
+					decodeTajweedBrackets(tajweedAyah.Text),
+				)
+			}
 		}
 
 		// 3. Simpan Translation untuk Surah (nama surah)
@@ -279,6 +365,9 @@ func run(db *gorm.DB) error {
 
 			ayahTranslation := &model.Translation{
 				Ar: lib.Strptr(arabic),
+			}
+			if arabicHTML := htmlByAyah[arAyah.NumberInSurah]; arabicHTML != "" {
+				ayahTranslation.ArHtml = lib.Strptr(arabicHTML)
 			}
 			if idnEd != nil && i < len(idnEd.Ayahs) {
 				ayahTranslation.Idn = lib.Strptr(idnEd.Ayahs[i].Text)

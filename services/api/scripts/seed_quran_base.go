@@ -50,6 +50,7 @@ type SurahFile struct {
 type AyahFile struct {
 	Number      int    `json:"number"`
 	Arabic      string `json:"arabic"`
+	ArHtml      string `json:"ar_html,omitempty"`
 	Indonesian  string `json:"indonesian"`
 	English     string `json:"english"`
 	Juz         int    `json:"juz"`
@@ -141,10 +142,14 @@ func seedQuranBase(db *gorm.DB, surahs []SurahFile, from, to int) {
 		ayahCount := 0
 		for _, af := range sf.Ayahs {
 			arabic := cleanQuranArabicText(sf.Number, af.Number, af.Arabic)
+			arabicHTML := cleanQuranArabicText(sf.Number, af.Number, af.ArHtml)
 			ayahTr := model.Translation{
 				Ar:  lib.Strptr(arabic),
 				Idn: lib.Strptr(af.Indonesian),
 				En:  lib.Strptr(af.English),
+			}
+			if arabicHTML != "" {
+				ayahTr.ArHtml = lib.Strptr(arabicHTML)
 			}
 			if err := db.Clauses(clause.OnConflict{DoNothing: true}).Create(&ayahTr).Error; err != nil {
 				log.Printf("[surah %d, ayah %d] ERROR ayah translation: %v", sf.Number, af.Number, err)
