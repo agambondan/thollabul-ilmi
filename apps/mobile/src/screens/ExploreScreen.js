@@ -122,6 +122,10 @@ const HAFALAN_STATUS_LABELS = {
   memorized: 'Hafal',
   not_started: 'Belum',
 };
+const LEADERBOARD_TABS = [
+  { key: 'streak', label: 'Streak Sholat', unit: 'hari' },
+  { key: 'hafalan', label: 'Hafalan', unit: 'surah' },
+];
 
 const emptyUserWirdForm = {
   arabic: '',
@@ -428,6 +432,42 @@ const getStatsPrayerRows = (stats = {}) => {
     date: `Hari ${index + 1}`,
   }));
 };
+const makeLeaderboardDatasetItem = (type, page) => ({
+  id: `leaderboard-${type}`,
+  raw: {
+    entries: page?.items ?? [],
+    meta: page?.meta ?? {},
+    type,
+  },
+  title: type,
+});
+const getLeaderboardEntries = (items = [], tab = 'streak') => {
+  const dataset = items.find((item) => item?.raw?.type === tab);
+  if (Array.isArray(dataset?.raw?.entries)) return dataset.raw.entries;
+  return items;
+};
+const getLeaderboardName = (item = {}, index = 0) => {
+  const raw = item?.raw ?? item;
+  return pickText(raw.name, raw.user_name, raw.user?.name, raw.full_name, item.title, `Peserta ${index + 1}`);
+};
+const getLeaderboardScore = (item = {}) => {
+  const raw = item?.raw ?? item;
+  return getStatsNumber(raw, ['score', 'value', 'streak', 'hafalan_count', 'memorized_count', 'total'], 0);
+};
+const getLeaderboardRank = (item = {}, index = 0) => {
+  const raw = item?.raw ?? item;
+  return getStatsNumber(raw, ['rank', 'position'], index + 1);
+};
+const getLeaderboardSummary = (items = []) => {
+  const streak = getLeaderboardEntries(items, 'streak');
+  const hafalan = getLeaderboardEntries(items, 'hafalan');
+  return {
+    hafalanCount: hafalan.length,
+    streakCount: streak.length,
+    topHafalan: hafalan[0] ?? null,
+    topStreak: streak[0] ?? null,
+  };
+};
 const normalizeAsmaulName = (item = {}, index = 0) => ({
   arabic: pickText(item.arabic, item.translation?.arab, item.translation?.ar, item.name),
   id: item.id ?? item.number ?? index + 1,
@@ -555,6 +595,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
   const [commentSaving, setCommentSaving] = useState(false);
   const [likingFeedId, setLikingFeedId] = useState('');
   const [notesSearch, setNotesSearch] = useState('');
+  const [leaderboardTab, setLeaderboardTab] = useState('streak');
   const [editingUserWirdId, setEditingUserWirdId] = useState('');
   const [savingUserWird, setSavingUserWird] = useState(false);
   const [userWirdForm, setUserWirdForm] = useState(emptyUserWirdForm);
@@ -655,6 +696,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       setFeedComments([]);
       setCommentDraft('');
       setNotesSearch('');
+      setLeaderboardTab('streak');
       setEditingUserWirdId('');
       setUserWirdForm(emptyUserWirdForm);
       setError('');
@@ -771,6 +813,21 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
             hasMore: page.meta.hasMore,
             loadingMore: false,
           });
+        } else if (feature.key === 'leaderboard' && isWebAppLayout) {
+          const [streakResult, hafalanResult] = await Promise.allSettled([
+            getFeatureItemPage({ ...feature, endpoint: '/api/v1/leaderboard/streak' }, { page: 0, size: EXPLORE_PAGE_SIZE }),
+            getFeatureItemPage({ ...feature, endpoint: '/api/v1/leaderboard/hafalan' }, { page: 0, size: EXPLORE_PAGE_SIZE }),
+          ]);
+          const streakPage = streakResult.status === 'fulfilled' ? streakResult.value : { items: [], meta: {} };
+          const hafalanPage = hafalanResult.status === 'fulfilled' ? hafalanResult.value : { items: [], meta: {} };
+          if (streakResult.status === 'rejected' && hafalanResult.status === 'rejected') {
+            setError('Leaderboard belum bisa dimuat.');
+          }
+          nextItems = [
+            makeLeaderboardDatasetItem('streak', streakPage),
+            makeLeaderboardDatasetItem('hafalan', hafalanPage),
+          ];
+          setPagination({ page: 0, hasMore: false, loadingMore: false });
         } else if (feature.type === 'user-wird') {
           const wirds = await getUserWirds();
           nextItems = wirds.map(normalizeUserWirdItem);
@@ -794,7 +851,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         setLoading(false);
       }
     },
-    [session?.token],
+    [isWebAppLayout, session?.token],
   );
 
   const loadMoreFeature = useCallback(async () => {
@@ -4373,6 +4430,162 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     );
   };
 
+  const renderWebAppLeaderboardRow = (item, index) => {
+    const rank = getLeaderboardRank(item, index);
+    const score = getLeaderboardScore(item);
+    const activeMeta = LEADERBOARD_TABS.find((tab) => tab.key === leaderboardTab) ?? LEADERBOARD_TABS[0];
+
+    return (
+      <View
+        key={`${getExploreItemKey(item)}-${leaderboardTab}-${index}`}
+        style={[
+          styles.webAppLeaderboardRow,
+          rank === 1 && styles.webAppLeaderboardRowTop,
+        ]}
+        testID="web-app-leaderboard-row"
+      >
+        <View style={[styles.webAppLeaderboardRank, rank <= 3 && styles.webAppLeaderboardRankTop]}>
+          <Text style={[styles.webAppLeaderboardRankText, rank <= 3 && styles.webAppLeaderboardRankTextTop]}>
+            {rank}
+          </Text>
+        </View>
+        <View style={styles.webAppGoalTitleBlock}>
+          <Text numberOfLines={1} style={styles.webAppBookmarkTitle}>
+            {getLeaderboardName(item, index)}
+          </Text>
+          <Text style={styles.webAppBookmarkText}>
+            {rank <= 3 ? 'Top performer' : 'Peserta leaderboard'}
+          </Text>
+        </View>
+        <Text style={[styles.webAppLeaderboardScore, rank === 1 && styles.webAppLeaderboardScoreTop]}>
+          {formatCompactStat(score)} <Text style={styles.webAppLeaderboardUnit}>{activeMeta.unit}</Text>
+        </Text>
+      </View>
+    );
+  };
+
+  const renderWebAppLeaderboardScreen = () => {
+    const summary = getLeaderboardSummary(visibleItems);
+    const activeMeta = LEADERBOARD_TABS.find((tab) => tab.key === leaderboardTab) ?? LEADERBOARD_TABS[0];
+    const activeEntries = getLeaderboardEntries(visibleItems, leaderboardTab);
+    const topEntry = activeEntries[0] ?? null;
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppBookmarksContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppBookmarksRoot}
+      >
+        <View testID="explore-web-app-leaderboard-surface" />
+        <View style={styles.webAppBookmarksHeader}>
+          <Pressable
+            accessibilityLabel="Kembali ke Belajar"
+            onPress={clearFeature}
+            style={styles.webAppBookmarksBack}
+            testID="web-app-leaderboard-back"
+          >
+            <Text style={styles.webAppBookmarksBackText}>Kembali</Text>
+          </Pressable>
+          <Text style={styles.webAppCatalogEyebrow}>KOMUNITAS</Text>
+          <View style={styles.webAppBookmarksTitleRow}>
+            <Text style={styles.webAppCatalogTitle}>Leaderboard</Text>
+            <Text style={styles.webAppBookmarksCount}>{activeEntries.length} peserta</Text>
+          </View>
+          <Text style={styles.webAppCatalogSubtitle}>
+            Ranking streak sholat dan hafalan untuk memantau konsistensi komunitas.
+          </Text>
+        </View>
+
+        {error ? <Text style={styles.webAppBookmarksError}>{error}</Text> : null}
+        {loading ? (
+          <View style={styles.webAppBookmarksState}>
+            <ActivityIndicator color={WEB_APP_EXPLORE_ACCENT} size="small" />
+            <Text style={styles.webAppBookmarksStateText}>Memuat leaderboard...</Text>
+          </View>
+        ) : null}
+        {!loading && !error && visibleItems.length > 0 ? (
+          <>
+            <View style={styles.webAppLeaderboardHero}>
+              <View style={styles.webAppGoalHeader}>
+                <View style={styles.webAppGoalIcon}>
+                  <Flag color="#fbbf24" size={18} strokeWidth={2.2} />
+                </View>
+                <View style={styles.webAppGoalTitleBlock}>
+                  <Text style={styles.webAppTilawahTodayTitle}>
+                    {topEntry ? getLeaderboardName(topEntry, 0) : 'Belum ada juara'}
+                  </Text>
+                  <Text style={styles.webAppTilawahTodayText}>
+                    {topEntry
+                      ? `Peringkat 1 ${activeMeta.label.toLowerCase()} · ${formatCompactStat(getLeaderboardScore(topEntry))} ${activeMeta.unit}`
+                      : 'Data leaderboard akan muncul setelah aktivitas tercatat.'}
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.webAppLeaderboardTabs}>
+              {LEADERBOARD_TABS.map((tab) => (
+                <Pressable
+                  key={tab.key}
+                  onPress={() => setLeaderboardTab(tab.key)}
+                  style={[
+                    styles.webAppLeaderboardTab,
+                    leaderboardTab === tab.key && styles.webAppLeaderboardTabActive,
+                  ]}
+                  testID={`web-app-leaderboard-tab-${tab.key}`}
+                >
+                  <Text
+                    style={[
+                      styles.webAppLeaderboardTabText,
+                      leaderboardTab === tab.key && styles.webAppLeaderboardTabTextActive,
+                    ]}
+                  >
+                    {tab.label}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+
+            <View style={styles.webAppGoalsSummary}>
+              <View style={styles.webAppGoalSummaryPill}>
+                <CheckCircle2 color={WEB_APP_EXPLORE_ACCENT} size={14} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{summary.streakCount} streak</Text>
+              </View>
+              <View style={styles.webAppGoalSummaryPill}>
+                <BookOpen color="#60a5fa" size={14} strokeWidth={2.2} />
+                <Text style={styles.webAppGoalSummaryText}>{summary.hafalanCount} hafalan</Text>
+              </View>
+            </View>
+
+            {activeEntries.length ? (
+              <View style={styles.webAppLeaderboardList}>
+                {activeEntries.map(renderWebAppLeaderboardRow)}
+              </View>
+            ) : (
+              <View style={styles.webAppBookmarksEmpty}>
+                <Flag color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
+                <Text style={styles.webAppBookmarksEmptyTitle}>Belum ada data leaderboard.</Text>
+                <Text style={styles.webAppBookmarksEmptyText}>
+                  Coba tab lain atau tunggu aktivitas komunitas tersinkron.
+                </Text>
+              </View>
+            )}
+          </>
+        ) : null}
+        {!loading && !error && !visibleItems.length ? (
+          <View style={styles.webAppBookmarksEmpty}>
+            <Flag color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
+            <Text style={styles.webAppBookmarksEmptyTitle}>Belum ada data leaderboard.</Text>
+            <Text style={styles.webAppBookmarksEmptyText}>
+              Ranking akan tampil setelah data streak atau hafalan tersedia.
+            </Text>
+          </View>
+        ) : null}
+      </ScrollView>
+    );
+  };
+
   const renderWebAppNotificationsScreen = () => (
     <ScrollView
       contentContainerStyle={styles.webAppNotificationsContent}
@@ -4478,6 +4691,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   if (activeFeature?.key === 'stats' && isWebAppLayout) {
     return renderWebAppStatsScreen();
+  }
+
+  if (activeFeature?.key === 'leaderboard' && isWebAppLayout) {
+    return renderWebAppLeaderboardScreen();
   }
 
   if (activeFeature?.type === 'notifications' && isWebAppLayout) {
@@ -5286,6 +5503,101 @@ const styles = StyleSheet.create({
   webAppStatsBarLabel: {
     color: WEB_APP_EXPLORE_MUTED,
     fontSize: 10,
+    fontWeight: '700',
+  },
+  webAppLeaderboardHero: {
+    backgroundColor: 'rgba(245, 158, 11, 0.12)',
+    borderColor: 'rgba(245, 158, 11, 0.32)',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    marginTop: spacing.md,
+    padding: spacing.md,
+  },
+  webAppLeaderboardTabs: {
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.xs,
+    marginTop: spacing.md,
+    padding: 4,
+  },
+  webAppLeaderboardTab: {
+    alignItems: 'center',
+    borderRadius: radius.sm,
+    flex: 1,
+    minHeight: 36,
+    justifyContent: 'center',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  webAppLeaderboardTabActive: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderWidth: 1,
+  },
+  webAppLeaderboardTabText: {
+    color: WEB_APP_EXPLORE_MUTED,
+    fontSize: 12,
+    fontWeight: '800',
+    textAlign: 'center',
+  },
+  webAppLeaderboardTabTextActive: {
+    color: WEB_APP_EXPLORE_ACCENT,
+  },
+  webAppLeaderboardList: {
+    gap: spacing.sm,
+    marginTop: spacing.md,
+  },
+  webAppLeaderboardRow: {
+    alignItems: 'center',
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    minHeight: 72,
+    padding: spacing.md,
+  },
+  webAppLeaderboardRowTop: {
+    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+    borderColor: 'rgba(245, 158, 11, 0.32)',
+  },
+  webAppLeaderboardRank: {
+    alignItems: 'center',
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: 999,
+    borderWidth: 1,
+    height: 36,
+    justifyContent: 'center',
+    width: 36,
+  },
+  webAppLeaderboardRankTop: {
+    backgroundColor: 'rgba(245, 158, 11, 0.18)',
+    borderColor: 'rgba(245, 158, 11, 0.42)',
+  },
+  webAppLeaderboardRankText: {
+    color: '#cbd5e1',
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  webAppLeaderboardRankTextTop: {
+    color: '#fbbf24',
+  },
+  webAppLeaderboardScore: {
+    color: '#cbd5e1',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  webAppLeaderboardScoreTop: {
+    color: '#fbbf24',
+  },
+  webAppLeaderboardUnit: {
+    color: WEB_APP_EXPLORE_MUTED,
+    fontSize: 11,
     fontWeight: '700',
   },
   webAppSurface: {

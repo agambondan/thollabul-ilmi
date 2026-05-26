@@ -1578,3 +1578,54 @@ Results:
   `output/native-smoke/tholabul-webapp-emulator-stats-route-after.png`;
   emulator was logged out, so the route showed the dark Stats dashboard shell
   with the existing protected-feature auth error.
+
+## Web App Leaderboard Route Dashboard Parity
+
+Status: completed for the native `web_app` Leaderboard feature route visual
+parity pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic generic list path for Leaderboard on the
+  `classic` layout.
+- `web_app` mode now renders the Leaderboard feature route with a dedicated
+  dark dashboard surface modeled after `/dashboard/leaderboard`: community
+  header, top performer panel, segmented Streak Sholat/Hafalan tabs, summary
+  pills, and ranking rows.
+- Leaderboard `web_app` loads both existing endpoints
+  `/api/v1/leaderboard/streak` and `/api/v1/leaderboard/hafalan`; the classic
+  path keeps using the existing feature endpoint.
+- Added Explore test coverage to ensure the `web_app` Leaderboard feature route
+  uses the dedicated dashboard surface instead of the generic `Screen` title
+  path.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Leaderboard feature route
+  presentation in `web_app`. It does not change classic Explore, leaderboard
+  API contracts, feature keys, auth behavior, or profile account actions.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted Explore test passed: 1 suite, 31 tests.
+- Full mobile Jest passed: 44 suites, 632 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-leaderboard-route-after.png`;
+  the route rendered the dark Leaderboard dashboard shell. The local
+  leaderboard API returned HTTP 500 for both streak and hafalan endpoints, so
+  the smoke screen showed the existing load-error state instead of live ranking
+  rows.

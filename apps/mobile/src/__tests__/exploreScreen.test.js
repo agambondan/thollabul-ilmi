@@ -215,6 +215,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'murojaah', title: 'Murojaah', subtitle: 'Jadwal ulang hafalan', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/murojaah/session' },
     { key: 'tilawah', title: 'Tilawah', subtitle: 'Log dan ringkasan tilawah', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/tilawah/summary' },
     { key: 'stats', title: 'Statistik', subtitle: 'Ringkasan aktivitas', group: 'Personal', type: 'protected-list', endpoint: '/api/v1/stats' },
+    { key: 'leaderboard', title: 'Leaderboard', subtitle: 'Streak komunitas', group: 'Personal', type: 'list', endpoint: '/api/v1/leaderboard/streak' },
     { key: 'community-feed', title: 'Komunitas', subtitle: 'Refleksi', group: 'Ilmu', type: 'feed' },
     { key: 'kajian', title: 'Kajian', subtitle: 'Sesi belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/kajian' },
     { key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi seputar Islam', group: 'Ilmu', type: 'forum' },
@@ -248,7 +249,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'personal',
       label: 'Personal',
       meta: 'Akun',
-      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications', 'goals', 'muhasabah', 'hafalan', 'murojaah', 'tilawah', 'stats'].includes(f.key)),
+      features: allFeatures.filter((f) => ['bookmarks', 'notes', 'notifications', 'goals', 'muhasabah', 'hafalan', 'murojaah', 'tilawah', 'stats', 'leaderboard'].includes(f.key)),
     },
   ];
 
@@ -837,6 +838,59 @@ describe('ExploreScreen', () => {
 
     expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
       expect.objectContaining({ key: 'stats', endpoint: '/api/v1/stats' }),
+      { page: 0, size: 20 },
+    );
+  });
+
+  test('uses dashboard Leaderboard route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    exploreApi.getFeatureItemPage
+      .mockResolvedValueOnce({
+        items: [
+          { id: 'streak-1', title: 'Ahmad', raw: { name: 'Ahmad', rank: 1, score: 21 } },
+          { id: 'streak-2', title: 'Fatimah', raw: { name: 'Fatimah', rank: 2, score: 18 } },
+        ],
+        meta: { hasMore: false },
+      })
+      .mockResolvedValueOnce({
+        items: [
+          { id: 'hafalan-1', title: 'Zaid', raw: { name: 'Zaid', rank: 1, score: 30 } },
+          { id: 'hafalan-2', title: 'Maryam', raw: { name: 'Maryam', rank: 2, score: 24 } },
+          { id: 'hafalan-3', title: 'Umar', raw: { name: 'Umar', rank: 3, score: 20 } },
+        ],
+        meta: { hasMore: false },
+      });
+
+    const { getAllByTestId, getAllByText, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
+      deepLinkTarget: { id: 'leaderboard-route', params: { featureKey: 'leaderboard' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-leaderboard-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('KOMUNITAS')).toBeTruthy();
+      expect(getByText('Leaderboard')).toBeTruthy();
+      expect(getByText('2 peserta')).toBeTruthy();
+      expect(getAllByText('Ahmad').length).toBeGreaterThan(0);
+      expect(getByText('Fatimah')).toBeTruthy();
+      expect(getByText('2 streak')).toBeTruthy();
+      expect(getByText('3 hafalan')).toBeTruthy();
+      expect(getAllByTestId('web-app-leaderboard-row')).toHaveLength(2);
+    });
+
+    fireEvent.press(getByTestId('web-app-leaderboard-tab-hafalan'));
+
+    expect(getAllByText('Zaid').length).toBeGreaterThan(0);
+    expect(getByText('Maryam')).toBeTruthy();
+    expect(queryByText('Fatimah')).toBeNull();
+    expect(getAllByTestId('web-app-leaderboard-row')).toHaveLength(3);
+
+    expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
+      expect.objectContaining({ key: 'leaderboard', endpoint: '/api/v1/leaderboard/streak' }),
+      { page: 0, size: 20 },
+    );
+    expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
+      expect.objectContaining({ key: 'leaderboard', endpoint: '/api/v1/leaderboard/hafalan' }),
       { page: 0, size: 20 },
     );
   });
