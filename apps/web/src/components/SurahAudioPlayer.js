@@ -48,7 +48,6 @@ const normalizeAyah = (item, surahNumber) => ({
 });
 
 export default function SurahAudioPlayer({
-    onSurahChange,
     surahName,
     surahNumber,
     totalAyahs,
@@ -71,6 +70,8 @@ export default function SurahAudioPlayer({
     const [loading, setLoading] = useState(false);
     const [minimized, setMinimized] = useState(false);
     const [open, setOpen] = useState(false);
+    const [queueIndex, setQueueIndex] = useState(0);
+    const [queueLength, setQueueLength] = useState(0);
     const [range, setRange] = useState({
         endAyah: '',
         endSurah: `${surahNumber ?? ''}`,
@@ -203,6 +204,8 @@ export default function SurahAudioPlayer({
         sessionRef.current += 1;
         queueRef.current = [];
         queueIndexRef.current = 0;
+        setQueueIndex(0);
+        setQueueLength(0);
         if (audioRef.current) {
             audioRef.current.pause();
             audioRef.current.currentTime = 0;
@@ -262,6 +265,7 @@ export default function SurahAudioPlayer({
         }
 
         queueIndexRef.current = nextIndex;
+        setQueueIndex(nextIndex);
         setCurrentLabel(`${ayah.surahName || `Surah ${ayah.surahNumber}`} · Ayat ${ayah.number}`);
         setLoading(true);
         setError('');
@@ -361,6 +365,8 @@ export default function SurahAudioPlayer({
             }
             queueRef.current = queue;
             queueIndexRef.current = 0;
+            setQueueIndex(0);
+            setQueueLength(queue.length);
             await playQueueItem(0, sessionId);
         } catch {
             if (sessionId !== sessionRef.current) return;
@@ -380,6 +386,29 @@ export default function SurahAudioPlayer({
             return;
         }
         startRangeAudio();
+    };
+
+    const skipQueueItem = async (delta) => {
+        const queue = queueRef.current;
+        if (!queue.length || loading) return;
+
+        let nextIndex = queueIndexRef.current + delta;
+        if (nextIndex < 0) {
+            nextIndex = repeatRef.current ? queue.length - 1 : 0;
+        }
+        if (nextIndex >= queue.length) {
+            nextIndex = repeatRef.current ? 0 : queue.length - 1;
+        }
+
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+            audioRef.current = null;
+        }
+
+        const sessionId = sessionRef.current + 1;
+        sessionRef.current = sessionId;
+        await playQueueItem(nextIndex, sessionId);
     };
 
     const handleRangeChange = (field, value) => {
@@ -412,6 +441,8 @@ export default function SurahAudioPlayer({
     const currentAudio = audioList.find((item) => item.qari_slug === selectedQari) ?? audioList[0];
     const isDashboard = pathname?.startsWith('/dashboard');
     const bottomClass = isDashboard ? 'bottom-[84px] md:bottom-4' : 'bottom-4';
+    const canSkipBackward = queueLength > 0 && (repeat || queueIndex > 0);
+    const canSkipForward = queueLength > 0 && (repeat || queueIndex < queueLength - 1);
 
     if (!open) {
         return (
@@ -533,8 +564,9 @@ export default function SurahAudioPlayer({
                 <div className='flex items-center justify-center gap-2 mb-3'>
                     <button
                         type='button'
-                        onClick={() => onSurahChange?.(Math.max(1, Number(surahNumber) - 1))}
-                        disabled={Number(surahNumber) <= 1}
+                        onClick={() => skipQueueItem(-1)}
+                        disabled={loading || !canSkipBackward}
+                        aria-label='Audio ayat sebelumnya'
                         className='p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-30 transition-colors'
                     >
                         <BsSkipBackwardFill />
@@ -550,8 +582,9 @@ export default function SurahAudioPlayer({
                     </button>
                     <button
                         type='button'
-                        onClick={() => onSurahChange?.(Math.min(114, Number(surahNumber) + 1))}
-                        disabled={Number(surahNumber) >= 114}
+                        onClick={() => skipQueueItem(1)}
+                        disabled={loading || !canSkipForward}
+                        aria-label='Audio ayat berikutnya'
                         className='p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-30 transition-colors'
                     >
                         <BsSkipForwardFill />

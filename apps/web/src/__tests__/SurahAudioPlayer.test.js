@@ -119,6 +119,42 @@ describe('SurahAudioPlayer', () => {
     expect(screen.getByText('Surah 1 · Ayat 1')).toBeInTheDocument();
   });
 
+  test('skips to next and previous ayah in the active audio queue', async () => {
+    render(<SurahAudioPlayer surahNumber={1} surahName="Al-Fatihah" totalAyahs={7} />);
+
+    fireEvent.click(screen.getByText('Dengar Surah'));
+    await screen.findByText('Abdul Rahman Al-Sudais');
+    fireEvent.change(await screen.findByLabelText('Sampai ayat'), {
+      target: { value: '2' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Putar range/i }));
+
+    await waitFor(() => {
+      expect(global.Audio).toHaveBeenCalledWith('https://example.com/alafasy-11.mp3');
+      expect(screen.getByText('Surah 1 · Ayat 1')).toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Audio ayat berikutnya')).toBeEnabled();
+    });
+    fireEvent.click(screen.getByLabelText('Audio ayat berikutnya'));
+
+    await waitFor(() => {
+      expect(global.Audio).toHaveBeenCalledWith('https://example.com/alafasy-12.mp3');
+      expect(screen.getByText('Surah 1 · Ayat 2')).toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Audio ayat sebelumnya')).toBeEnabled();
+    });
+    fireEvent.click(screen.getByLabelText('Audio ayat sebelumnya'));
+
+    await waitFor(() => {
+      expect(global.Audio).toHaveBeenLastCalledWith('https://example.com/alafasy-11.mp3');
+      expect(screen.getByText('Surah 1 · Ayat 1')).toBeInTheDocument();
+    });
+  });
+
   test('minimizes the player without stopping current audio', async () => {
     render(<SurahAudioPlayer surahNumber={1} surahName="Al-Fatihah" totalAyahs={7} />);
 
