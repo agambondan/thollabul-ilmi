@@ -337,6 +337,8 @@ describe('QuranScreen', () => {
     await waitFor(() => {
       expect(client.getAyahsForSurahPage).toHaveBeenCalledWith(1, expect.any(Object));
       expect(getByTestId('quran-web-app-reader')).toBeTruthy();
+      expect(getByText('The 1 · 7 ayah')).toBeTruthy();
+      expect(getByText('2. Surah 2')).toBeTruthy();
     });
   });
 

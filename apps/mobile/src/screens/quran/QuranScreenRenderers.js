@@ -645,24 +645,49 @@ export function createQuranScreenRenderers(context) {
                   (targetAyah.number && Number(targetAyah.number) === Number(ayah.number)),
               )
             : null;
+        const readerSubtitle =
+            isSeriousMode
+                ? displayMode === 'mushaf'
+                    ? `Halaman ${mushafPageNumber} · mode mushaf`
+                    : selectedSurah.type === 'surah'
+                    ? `${selectedSurah.ayahs} ayah · mode baca fokus`
+                    : selectedSurah.meaning || 'Mode baca fokus'
+                : selectedSurah.type === 'surah'
+                  ? `${selectedSurah.meaning || "Bacaan Al-Qur'an"} · ${selectedSurah.ayahs} ayah`
+                  : selectedSurah.meaning || "Bacaan Al-Qur'an";
+        const arabicSurahName = getCompactArabicSurahName(selectedSurah.arabic) || selectedSurah.arabic || '';
+        const showReaderBismillah =
+            isWebAppLayout &&
+            selectedSurah.type === 'surah' &&
+            Number(selectedSurah.number) !== 1 &&
+            Number(selectedSurah.number) !== 9;
 
         return (
         <>
-            <View style={[styles.readerHeader, isSeriousMode ? styles.readerHeaderSerious : null]}>
+            <View
+                style={[
+                    styles.readerHeader,
+                    isSeriousMode ? styles.readerHeaderSerious : null,
+                    isWebAppLayout ? styles.webAppReaderHeader : null,
+                ]}
+            >
                 <View style={styles.readerHeaderTop}>
                     <View style={styles.readerHeaderCopy}>
-                        <Text style={styles.readerTitle}>{selectedSurah.name}</Text>
-                        <Text style={styles.readerSubtitle}>
-                            {isSeriousMode
-                                ? displayMode === 'mushaf'
-                                    ? `Halaman ${mushafPageNumber} · mode mushaf`
-                                    : selectedSurah.type === 'surah'
-                                    ? `${selectedSurah.ayahs} ayah · mode baca fokus`
-                                    : selectedSurah.meaning || 'Mode baca fokus'
-                                : selectedSurah.type === 'surah'
-                                  ? `${selectedSurah.meaning || "Bacaan Al-Qur'an"} · ${selectedSurah.ayahs} ayah`
-                                  : selectedSurah.meaning || "Bacaan Al-Qur'an"}
+                        {isWebAppLayout ? (
+                            <Text style={styles.webAppReaderEyebrow}>Surah {selectedSurah.number ?? '-'}</Text>
+                        ) : null}
+                        <Text style={[styles.readerTitle, isWebAppLayout ? styles.webAppReaderTitle : null]}>
+                            {selectedSurah.name}
                         </Text>
+                        <Text style={[styles.readerSubtitle, isWebAppLayout ? styles.webAppReaderSubtitle : null]}>
+                            {readerSubtitle}
+                        </Text>
+                        {isWebAppLayout && arabicSurahName ? (
+                            <Text style={styles.webAppReaderArabicTitle}>{arabicSurahName}</Text>
+                        ) : null}
+                        {showReaderBismillah ? (
+                            <Text style={styles.webAppReaderBismillah}>{BISMILLAH}</Text>
+                        ) : null}
                     </View>
                     <View style={styles.readerHeaderActions}>
                         <IconActionButton
@@ -679,7 +704,7 @@ export function createQuranScreenRenderers(context) {
                 </View>
             </View>
             {selectedSurah.type === 'surah' && displayMode !== 'mushaf' ? (
-                <View style={styles.surahPagerRow}>
+                <View style={[styles.surahPagerRow, isWebAppLayout ? styles.webAppSurahPagerRow : null]}>
                     <Pressable
                         accessibilityLabel={
                             previousSurah
@@ -691,11 +716,15 @@ export function createQuranScreenRenderers(context) {
                         onPress={() => triggerAdjacentSurah(-1)}
                         style={[
                             styles.surahPagerButton,
+                            isWebAppLayout ? styles.webAppSurahPagerButton : null,
                             !hasPreviousSurah || readerLoading ? styles.disabled : null,
                         ]}
                     >
-                        <ArrowLeft color={colors.primaryDark} size={16} strokeWidth={2.2} />
-                        <Text numberOfLines={2} style={styles.surahPagerButtonText}>
+                        <ArrowLeft color={isWebAppLayout ? WEB_APP_QURAN_ACCENT : colors.primaryDark} size={16} strokeWidth={2.2} />
+                        <Text
+                            numberOfLines={2}
+                            style={[styles.surahPagerButtonText, isWebAppLayout ? styles.webAppSurahPagerButtonText : null]}
+                        >
                             {previousSurah ? `${previousSurah.number}. ${previousSurah.name}` : '—'}
                         </Text>
                     </Pressable>
@@ -708,13 +737,17 @@ export function createQuranScreenRenderers(context) {
                         onPress={() => triggerAdjacentSurah(1)}
                         style={[
                             styles.surahPagerButton,
+                            isWebAppLayout ? styles.webAppSurahPagerButton : null,
                             !hasNextSurah || readerLoading ? styles.disabled : null,
                         ]}
                     >
-                        <Text numberOfLines={2} style={styles.surahPagerButtonText}>
+                        <Text
+                            numberOfLines={2}
+                            style={[styles.surahPagerButtonText, isWebAppLayout ? styles.webAppSurahPagerButtonText : null]}
+                        >
                             {nextSurah ? `${nextSurah.number}. ${nextSurah.name}` : '—'}
                         </Text>
-                        <ArrowRight color={colors.primaryDark} size={16} strokeWidth={2.2} />
+                        <ArrowRight color={isWebAppLayout ? WEB_APP_QURAN_ACCENT : colors.primaryDark} size={16} strokeWidth={2.2} />
                     </Pressable>
                 </View>
             ) : null}

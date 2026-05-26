@@ -7,15 +7,15 @@ Started: 2026-05-26 16:20 WIB
 
 - Route/feature: mobile `web_app` parity against authenticated `/dashboard`
   mobile web views.
-- Completed near-term task: Hadith detail `web_app` visual polish against
-  `/dashboard/hadith/:slug/:number`, after validating that the Qibla slice was
+- Completed near-term task: Quran reader `web_app` visual polish against
+  `/dashboard/quran/:slug`, after validating that the Hadith detail slice was
   documented, tested, committed, and pushed.
 - Files I may edit after route selection:
   - `apps/mobile/**`
   - relevant `apps/mobile` tests
-  - `apps/web/src/app/dashboard/hadith/**`
-  - `apps/web/src/app/hadith/**`
-  - hadith-detail-specific web code/tests, if needed
+  - `apps/web/src/app/dashboard/quran/**`
+  - `apps/web/src/app/quran/**`
+  - quran-reader-specific web code/tests, if needed
   - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
   - route-specific docs under `docs/**`
 - Files I will avoid unless explicitly handed off:
@@ -47,7 +47,7 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Last completed route: Hadith detail. Next active route is not selected
+- Last completed route: Quran reader. Next active route is not selected
   yet, to avoid colliding with another active agent.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
@@ -59,6 +59,10 @@ Started: 2026-05-26 16:20 WIB
 
 ## Verification
 
+- `node --check apps/mobile/src/screens/quran/QuranScreenRenderers.js` passed.
+- `node --check apps/mobile/src/screens/QuranScreen.styles.js` passed.
+- `cd apps/mobile && npm test -- quranScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand` passed: 3 suites, 43 tests.
+- Quran reader line-count gate: `QuranScreen.js` 1791, `QuranScreenRenderers.js` 1922, `QuranScreen.styles.js` 1843, `quranScreen.test.js` 677, and no `apps/mobile/src/**/*.js` file remains above 2,000 lines after excluding the `wc` total row.
 - `node --check apps/mobile/src/screens/HadithScreen.js` passed.
 - `cd apps/mobile && npm test -- hadithScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand` passed: 3 suites, 39 tests.
 - `cd apps/mobile && npm test -- --runInBand` passed: 44 suites, 655 tests.
