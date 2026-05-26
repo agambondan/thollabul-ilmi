@@ -937,9 +937,9 @@ describe('ExploreScreen', () => {
     await waitFor(() => {
       expect(getByTestId('explore-web-app-kajian-surface')).toBeTruthy();
       expect(queryByTestId('screen-title')).toBeNull();
-      expect(getByText('KAJIAN & ARTIKEL')).toBeTruthy();
-      expect(getByText('Kajian')).toBeTruthy();
-      expect(getByText('2 materi')).toBeTruthy();
+      expect(getByText('Kajian Islam')).toBeTruthy();
+      expect(getByText('Rekaman kajian dari ustadz-ustadz ahlus sunnah')).toBeTruthy();
+      expect(getByText('TOTAL KAJIAN')).toBeTruthy();
       expect(getByText('Ustadz Ahmad')).toBeTruthy();
       expect(getByText('Ustadzah Fatimah')).toBeTruthy();
       expect(getAllByTestId('web-app-kajian-card')).toHaveLength(2);
@@ -952,7 +952,7 @@ describe('ExploreScreen', () => {
     expect(getAllByTestId('web-app-kajian-card')).toHaveLength(1);
 
     fireEvent.press(getByTestId('web-app-kajian-category-all'));
-    fireEvent.changeText(getByPlaceholderText('Cari judul, pemateri, atau deskripsi...'), 'tafsir');
+    fireEvent.changeText(getByPlaceholderText('Cari kajian atau ustadz...'), 'tafsir');
 
     expect(getByText('Tafsir Juz Amma')).toBeTruthy();
     expect(queryByText('Fiqh Zakat Praktis')).toBeNull();

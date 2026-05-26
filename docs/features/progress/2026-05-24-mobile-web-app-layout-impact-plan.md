@@ -1639,7 +1639,7 @@ Implemented:
 
 - `ExploreScreen` keeps the classic generic list path for Kajian on the
   `classic` layout.
-- `web_app` mode now renders the Kajian feature route with a dedicated dark
+- `web_app` mode now renders the Kajian feature route with a dedicated light
   dashboard surface modeled after `/dashboard/kajian`: header, total/video/
   category stat tiles, search input, category pills, and kajian cards with
   type/topic badges.
@@ -1675,5 +1675,5 @@ Results:
 - `git diff --check` passed.
 - Native emulator smoke captured at
   `output/native-smoke/tholabul-webapp-emulator-kajian-route-after.png`;
-  the route rendered the dark Kajian dashboard shell with stat tiles, search,
-  category pills, and kajian cards populated from the local API.
+  the route rendered the light Kajian dashboard content surface with stat
+  tiles, search, category pills, and kajian cards populated from the local API.

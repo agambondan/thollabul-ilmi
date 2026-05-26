@@ -515,7 +515,7 @@ const getKajianSpeaker = (item = {}) => {
 const getKajianDuration = (item = {}) => {
   const raw = getKajianRaw(item);
   const seconds = Number(raw.duration_seconds ?? raw.durationSeconds ?? 0);
-  if (Number.isFinite(seconds) && seconds > 0) return `${Math.round(seconds / 60)} menit`;
+  if (Number.isFinite(seconds) && seconds > 0) return `${seconds} detik`;
   return pickText(raw.duration, raw.duration_label);
 };
 const getKajianUrl = (item = {}) => {
@@ -4689,15 +4689,15 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
             {type ? <Text style={[styles.webAppKajianBadge, type === 'video' && styles.webAppKajianBadgeVideo]}>{type}</Text> : null}
             {topic ? <Text style={styles.webAppKajianBadge}>{topic}</Text> : null}
           </View>
-          {url ? <ExternalLink color={WEB_APP_EXPLORE_MUTED} size={16} strokeWidth={2.2} /> : null}
+          {url ? <ExternalLink color="#9ca3af" size={16} strokeWidth={2.2} /> : null}
         </View>
-        <Text numberOfLines={2} style={styles.webAppBookmarkTitle}>
+        <Text numberOfLines={2} style={styles.webAppKajianCardTitle}>
           {getKajianTitle(item, index)}
         </Text>
         {speaker ? <Text style={styles.webAppKajianSpeaker}>{speaker}</Text> : null}
-        {duration ? <Text style={styles.webAppBookmarkSlug}>{duration}</Text> : null}
+        {duration ? <Text style={styles.webAppKajianDuration}>{duration}</Text> : null}
         {getKajianDescription(item) ? (
-          <Text numberOfLines={3} style={styles.webAppBookmarkText}>
+          <Text numberOfLines={3} style={styles.webAppKajianDescription}>
             {getKajianDescription(item)}
           </Text>
         ) : null}
@@ -4705,49 +4705,52 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     );
   };
 
+  const renderWebAppKajianStat = ({ accent = '#047857', label, value }) => (
+    <View style={styles.webAppKajianStatCard}>
+      <Text style={styles.webAppKajianStatLabel}>{label}</Text>
+      <Text style={[styles.webAppKajianStatValue, { color: accent }]}>{formatCompactStat(value)}</Text>
+    </View>
+  );
+
   const renderWebAppKajianScreen = () => {
     const filteredKajian = getFilteredKajianItems(visibleItems, kajianSearch, kajianCategory);
     const summary = getKajianSummary(visibleItems);
 
     return (
       <ScrollView
-        contentContainerStyle={styles.webAppBookmarksContent}
+        contentContainerStyle={styles.webAppKajianContent}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        style={styles.webAppBookmarksRoot}
+        style={styles.webAppKajianRoot}
       >
         <View testID="explore-web-app-kajian-surface" />
-        <View style={styles.webAppBookmarksHeader}>
+        <View style={styles.webAppKajianHeader}>
           <Pressable
             accessibilityLabel="Kembali ke Belajar"
             onPress={clearFeature}
-            style={styles.webAppBookmarksBack}
+            style={styles.webAppKajianBack}
             testID="web-app-kajian-back"
           >
-            <Text style={styles.webAppBookmarksBackText}>Kembali</Text>
+            <Text style={styles.webAppKajianBackText}>Kembali</Text>
           </Pressable>
-          <Text style={styles.webAppCatalogEyebrow}>KAJIAN & ARTIKEL</Text>
-          <View style={styles.webAppBookmarksTitleRow}>
-            <Text style={styles.webAppCatalogTitle}>Kajian</Text>
-            <Text style={styles.webAppBookmarksCount}>{filteredKajian.length} materi</Text>
-          </View>
-          <Text style={styles.webAppCatalogSubtitle}>
-            Sesi belajar Islam dalam tampilan dashboard dengan pencarian dan kategori.
+          <Text style={styles.webAppKajianTitle}>Kajian Islam</Text>
+          <Text style={styles.webAppKajianSubtitle}>
+            Rekaman kajian dari ustadz-ustadz ahlus sunnah
           </Text>
         </View>
 
-        <View style={styles.webAppStatsGrid}>
-          {renderWebAppStatsTile({ label: 'Total', value: summary.total })}
-          {renderWebAppStatsTile({ accent: '#f87171', label: 'Video', value: summary.videoCount })}
-          {renderWebAppStatsTile({ accent: '#60a5fa', label: 'Kategori', value: summary.categoryCount })}
+        <View style={styles.webAppKajianStats}>
+          {renderWebAppKajianStat({ label: 'TOTAL KAJIAN', value: summary.total })}
+          {renderWebAppKajianStat({ label: 'VIDEO', value: summary.videoCount })}
+          {renderWebAppKajianStat({ label: 'KATEGORI', value: summary.categoryCount })}
         </View>
 
         <View style={styles.webAppKajianSearch}>
           <TextInput
             onChangeText={setKajianSearch}
-            placeholder="Cari judul, pemateri, atau deskripsi..."
-            placeholderTextColor={WEB_APP_EXPLORE_MUTED}
-            style={styles.webAppCatalogInput}
+            placeholder="Cari kajian atau ustadz..."
+            placeholderTextColor="#9ca3af"
+            style={styles.webAppKajianInput}
             testID="web-app-kajian-search"
             value={kajianSearch}
           />
@@ -4790,10 +4793,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
           </View>
         ) : null}
         {!loading && !error && !filteredKajian.length ? (
-          <View style={styles.webAppBookmarksEmpty}>
-            <BookOpen color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
-            <Text style={styles.webAppBookmarksEmptyTitle}>Kajian tidak ditemukan.</Text>
-            <Text style={styles.webAppBookmarksEmptyText}>
+          <View style={styles.webAppKajianEmpty}>
+            <BookOpen color="#9ca3af" size={32} strokeWidth={1.8} />
+            <Text style={styles.webAppKajianEmptyTitle}>Kajian tidak ditemukan.</Text>
+            <Text style={styles.webAppKajianEmptyText}>
               Ubah kata kunci atau pilih kategori lain.
             </Text>
           </View>
@@ -5820,54 +5823,126 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
   },
-  webAppKajianSearch: {
-    backgroundColor: '#1e293b',
-    borderColor: WEB_APP_EXPLORE_BORDER,
-    borderRadius: 12,
+  webAppKajianRoot: {
+    backgroundColor: '#f8fafc',
+    flex: 1,
+  },
+  webAppKajianContent: {
+    backgroundColor: '#f8fafc',
+    flexGrow: 1,
+    padding: spacing.md,
+    paddingBottom: spacing.xl,
+  },
+  webAppKajianHeader: {
+    paddingBottom: spacing.md,
+  },
+  webAppKajianBack: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: 999,
     borderWidth: 1,
+    marginBottom: spacing.md,
+    minHeight: 32,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 6,
+  },
+  webAppKajianBackText: {
+    color: '#047857',
+    fontSize: 12,
+    fontWeight: '900',
+  },
+  webAppKajianTitle: {
+    color: '#1f2937',
+    fontSize: 24,
+    fontWeight: '900',
+    lineHeight: 30,
+  },
+  webAppKajianSubtitle: {
+    color: '#6b7280',
+    fontSize: 16,
+    lineHeight: 24,
+    marginTop: spacing.xs,
+  },
+  webAppKajianStats: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginBottom: spacing.md,
+  },
+  webAppKajianStatCard: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flex: 1,
+    minHeight: 68,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  webAppKajianStatLabel: {
+    color: '#9ca3af',
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 0,
+  },
+  webAppKajianStatValue: {
+    fontSize: 18,
+    fontWeight: '900',
+    marginTop: 4,
+  },
+  webAppKajianSearch: {
+    backgroundColor: '#ffffff',
+    borderColor: '#34d399',
+    borderRadius: 8,
+    borderWidth: 2,
     justifyContent: 'center',
-    marginTop: spacing.md,
+    marginBottom: spacing.md,
     minHeight: 46,
     paddingHorizontal: spacing.md,
+  },
+  webAppKajianInput: {
+    color: '#111827',
+    fontSize: 14,
+    minHeight: 42,
+    padding: 0,
   },
   webAppKajianCategories: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing.sm,
-    marginTop: spacing.md,
+    gap: 8,
+    marginBottom: spacing.lg,
   },
   webAppKajianCategory: {
-    backgroundColor: '#1e293b',
-    borderColor: WEB_APP_EXPLORE_BORDER,
+    backgroundColor: '#f3f4f6',
+    borderColor: '#f3f4f6',
     borderRadius: 999,
     borderWidth: 1,
-    minHeight: 32,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 7,
+    minHeight: 26,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
   },
   webAppKajianCategoryActive: {
-    backgroundColor: WEB_APP_EXPLORE_ACCENT,
-    borderColor: WEB_APP_EXPLORE_ACCENT,
+    backgroundColor: '#10b981',
+    borderColor: '#10b981',
   },
   webAppKajianCategoryText: {
-    color: '#cbd5e1',
+    color: '#4b5563',
     fontSize: 12,
-    fontWeight: '900',
+    fontWeight: '800',
     textTransform: 'capitalize',
   },
   webAppKajianCategoryTextActive: {
-    color: '#022c22',
+    color: '#ffffff',
   },
   webAppKajianGrid: {
     gap: spacing.md,
-    marginTop: spacing.md,
   },
   webAppKajianCard: {
-    backgroundColor: WEB_APP_EXPLORE_SURFACE,
-    borderColor: WEB_APP_EXPLORE_BORDER,
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
     borderRadius: radius.md,
     borderWidth: 1,
-    minHeight: 154,
+    minHeight: 132,
     padding: spacing.md,
   },
   webAppKajianCardHeader: {
@@ -5884,28 +5959,69 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   webAppKajianBadge: {
-    backgroundColor: 'rgba(52, 211, 153, 0.12)',
-    borderColor: 'rgba(52, 211, 153, 0.32)',
+    backgroundColor: '#d1fae5',
+    borderColor: '#d1fae5',
     borderRadius: 999,
     borderWidth: 1,
-    color: WEB_APP_EXPLORE_ACCENT,
-    fontSize: 11,
-    fontWeight: '900',
+    color: '#047857',
+    fontSize: 12,
+    fontWeight: '800',
     overflow: 'hidden',
     paddingHorizontal: spacing.sm,
     paddingVertical: 4,
     textTransform: 'capitalize',
   },
   webAppKajianBadgeVideo: {
-    backgroundColor: 'rgba(248, 113, 113, 0.12)',
-    borderColor: 'rgba(248, 113, 113, 0.32)',
-    color: '#fecaca',
+    backgroundColor: '#fee2e2',
+    borderColor: '#fee2e2',
+    color: '#ef4444',
+  },
+  webAppKajianCardTitle: {
+    color: '#1f2937',
+    fontSize: 14,
+    fontWeight: '900',
+    lineHeight: 19,
   },
   webAppKajianSpeaker: {
-    color: WEB_APP_EXPLORE_ACCENT,
+    color: '#047857',
     fontSize: 12,
     fontWeight: '900',
+    marginTop: 5,
+  },
+  webAppKajianDuration: {
+    color: '#9ca3af',
+    fontSize: 12,
+    fontWeight: '700',
+    marginTop: 5,
+  },
+  webAppKajianDescription: {
+    color: '#6b7280',
+    fontSize: 12,
+    lineHeight: 18,
+    marginTop: 6,
+  },
+  webAppKajianEmpty: {
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    justifyContent: 'center',
+    minHeight: 180,
+    padding: spacing.lg,
+  },
+  webAppKajianEmptyTitle: {
+    color: '#1f2937',
+    fontSize: 16,
+    fontWeight: '900',
+    marginTop: spacing.sm,
+  },
+  webAppKajianEmptyText: {
+    color: '#6b7280',
+    fontSize: 13,
+    lineHeight: 20,
     marginTop: spacing.xs,
+    textAlign: 'center',
   },
   webAppSurface: {
     backgroundColor: '#f8fafc',
