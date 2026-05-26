@@ -6,6 +6,7 @@ import { NavbarTailwindCss } from '@/components/Navbar';
 import { useAuth } from '@/context/Auth';
 import { useLocale } from '@/context/Locale';
 import { feedApi, commentApi } from '@/lib/api';
+import { getFeedItems, getFeedTotal } from '@/lib/feedPagination';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { BsHeart, BsHeartFill, BsChatDots, BsSend, BsEyeSlash, BsFlag, BsTrash, BsGlobe } from 'react-icons/bs';
@@ -112,9 +113,9 @@ export function FeedContent({ basePath = '/feed' }) {
         feedApi.list({ page: String(p - 1), size: String(size) })
             .then((r) => r.json())
             .then((d) => {
-                const items = d?.data ?? d?.items ?? [];
+                const items = getFeedItems(d);
                 setPosts(items);
-                setTotal(d?.total ?? d?.last === false ? (p - 1) * size + items.length + 1 : items.length);
+                setTotal(getFeedTotal(d, p, size, items.length));
             })
             .catch(e => console.error(e))
             .finally(() => setLoading(false));

@@ -1782,3 +1782,56 @@ Results:
 - `git diff --check` passed.
 - Targeted web ESLint could not run because local `apps/web/node_modules` is
   missing the `typescript` package required by the Next ESLint config.
+
+## Web App Feed Route Dashboard Parity
+
+Status: completed for the native `web_app` Feed Komunitas route visual parity
+pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic Feed card path for `classic` layout.
+- In `web_app` mode, `community-feed` now renders a dedicated light dashboard
+  surface modeled after `/dashboard/feed`: centered community header, subtitle,
+  dashed create/login prompt, white post cards, emerald avatars, author/date
+  metadata, optional ayah/hadith reference badge, like/comment actions, and
+  guest-friendly empty/loading states.
+- Generic mobile Feed cards no longer label non-ayah/non-hadith feed posts as
+  `Hadis`; reference badges are now shown only for real ayah/hadith refs.
+- Web `/feed` and `/dashboard/feed` now use tested feed pagination helpers so
+  an explicit API `total` wins over inferred `last === false` pagination. This
+  fixes a web bug where the mixed `??` and ternary expression could infer the
+  wrong total when the API already returned `total`.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Feed feature route presentation in
+  `web_app`, generic feed reference labeling, and the web Feed pagination
+  helper. It does not change classic feature routing, feed create/comment API
+  contracts, unrelated web route audit tests, or another agent's dirty web test
+  files.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-feed-route-export
+cd ../web
+npm test -- feedPagination.test.js --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted mobile Explore test passed: 1 suite, 35 tests.
+- Targeted web feed pagination test passed: 1 suite, 3 tests.
+- Full mobile Jest passed: 44 suites, 637 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-feed-route-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.

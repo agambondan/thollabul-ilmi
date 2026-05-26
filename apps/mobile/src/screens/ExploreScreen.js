@@ -654,6 +654,15 @@ const getFilteredBlogItems = (items = [], search = '', category = '') => {
     return matchesSearch && matchesCategory;
   });
 };
+const getFeedReference = (item = {}) => {
+  const raw = item?.raw ?? {};
+  const refType = raw.ref_type ?? '';
+  if (!['ayah', 'hadith'].includes(refType)) return null;
+  return {
+    id: raw.ref_id ?? '',
+    label: refType === 'ayah' ? 'Ayat Quran' : 'Hadis',
+  };
+};
 const normalizeAsmaulName = (item = {}, index = 0) => ({
   arabic: pickText(item.arabic, item.translation?.arab, item.translation?.ar, item.name),
   id: item.id ?? item.number ?? index + 1,
@@ -1715,8 +1724,8 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     }
 
     if (activeFeature?.type === 'feed') {
-      const ref = getItemRef({ type: 'feed' }, item);
       const isLiking = likingFeedId === item.id;
+      const feedRef = getFeedReference(item);
 
       return (
         <Card key={`${item.id}-${index}`} style={styles.itemCard}>
@@ -1730,10 +1739,12 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
             </View>
           </View>
           <Text style={styles.body}>{item.body}</Text>
-          <View style={styles.feedRefPanel}>
-            <Text style={styles.feedRefLabel}>{ref.refType === 'ayah' ? 'Ayat Quran' : 'Hadis'}</Text>
-            <Text style={styles.feedRefText}>{ref.refType} #{ref.refId}</Text>
-          </View>
+          {feedRef ? (
+            <View style={styles.feedRefPanel}>
+              <Text style={styles.feedRefLabel}>{feedRef.label}</Text>
+              <Text style={styles.feedRefText}>#{feedRef.id}</Text>
+            </View>
+          ) : null}
           <View style={styles.itemActions}>
             <ActionPill
               Icon={Heart}
@@ -5008,6 +5019,145 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     );
   };
 
+  const renderWebAppFeedCard = (item, index) => {
+    const raw = item?.raw ?? {};
+    const author = item.title || raw.author?.name || raw.author?.username || raw.author?.email || 'Pengguna';
+    const createdAt = formatNoteDate(raw.created_at ?? raw.createdAt);
+    const likes = Number(raw.likes ?? raw.like_count ?? 0);
+    const feedRef = getFeedReference(item);
+    const isLiking = likingFeedId === item.id;
+
+    return (
+      <View
+        key={`${item.id}-${index}`}
+        style={styles.webAppFeedCard}
+        testID="web-app-feed-card"
+      >
+        <View style={styles.webAppFeedCardHeader}>
+          <View style={styles.webAppFeedAvatar}>
+            <Text style={styles.webAppFeedAvatarText}>
+              {author[0]?.toUpperCase() ?? 'U'}
+            </Text>
+          </View>
+          <View style={styles.webAppFeedAuthorBlock}>
+            <Text numberOfLines={1} style={styles.webAppFeedAuthor}>{author}</Text>
+            {createdAt ? <Text style={styles.webAppFeedDate}>{createdAt}</Text> : null}
+          </View>
+        </View>
+        {item.body ? (
+          <Text style={styles.webAppFeedBody}>{item.body}</Text>
+        ) : null}
+        {feedRef ? (
+          <View style={styles.webAppFeedRef}>
+            <Text style={styles.webAppFeedRefText}>{feedRef.label}</Text>
+            {feedRef.id ? <Text style={styles.webAppFeedRefId}>#{feedRef.id}</Text> : null}
+          </View>
+        ) : null}
+        <View style={styles.webAppFeedActions}>
+          <Pressable
+            accessibilityLabel="Sukai post komunitas"
+            android_ripple={{ color: '#fee2e2', borderless: false }}
+            disabled={isLiking}
+            onPress={() => handleLikeFeedItem(item)}
+            style={styles.webAppFeedAction}
+          >
+            <Text style={styles.webAppFeedActionText}>{isLiking ? 'Menyukai...' : `♡ ${likes}`}</Text>
+          </Pressable>
+          <Pressable
+            accessibilityLabel="Buka komentar post komunitas"
+            android_ripple={{ color: '#dbeafe', borderless: false }}
+            onPress={() => {
+              setSelectedItem(item);
+              setActiveNoteRef('');
+            }}
+            style={styles.webAppFeedAction}
+          >
+            <Text style={styles.webAppFeedActionText}>Komentar</Text>
+          </Pressable>
+          {session?.token ? (
+            <>
+              <Pressable
+                accessibilityLabel="Sembunyikan post komunitas"
+                android_ripple={{ color: '#fef3c7', borderless: false }}
+                onPress={() => handleHideFeedItem(item)}
+                style={styles.webAppFeedIconAction}
+              >
+                <EyeOff color="#6b7280" size={15} strokeWidth={2.3} />
+              </Pressable>
+              <Pressable
+                accessibilityLabel="Laporkan post komunitas"
+                android_ripple={{ color: '#fee2e2', borderless: false }}
+                onPress={() => handleReportFeedItem(item)}
+                style={styles.webAppFeedIconAction}
+              >
+                <Flag color="#6b7280" size={15} strokeWidth={2.3} />
+              </Pressable>
+            </>
+          ) : null}
+        </View>
+      </View>
+    );
+  };
+
+  const renderWebAppFeedScreen = () => (
+    <ScrollView
+      contentContainerStyle={styles.webAppFeedContent}
+      onScroll={({ nativeEvent }) => {
+        const { contentOffset, contentSize, layoutMeasurement } = nativeEvent;
+        const distanceFromEnd = contentSize.height - (contentOffset.y + layoutMeasurement.height);
+        if (distanceFromEnd < 280) loadMoreFeature();
+      }}
+      scrollEventThrottle={120}
+      showsVerticalScrollIndicator={false}
+      style={styles.webAppFeedRoot}
+    >
+      <View testID="explore-web-app-feed-route" />
+      <View style={styles.webAppFeedHeader}>
+        <View style={styles.webAppFeedHeaderIcon}>
+          <MessageCircle color="#059669" size={30} strokeWidth={2.3} />
+        </View>
+        <Text style={styles.webAppFeedTitle}>Feed Komunitas</Text>
+        <Text style={styles.webAppFeedSubtitle}>
+          Bagikan dan temukan konten dari pengguna lain
+        </Text>
+      </View>
+
+      <View style={styles.webAppFeedCreateBox}>
+        <Text style={styles.webAppFeedCreateText}>
+          {session?.token ? '+ Buat Postingan' : 'Login untuk membuat postingan.'}
+        </Text>
+      </View>
+
+      {error ? <Text style={styles.webAppFeedNotice}>{error}</Text> : null}
+
+      {loading ? (
+        <View style={styles.webAppFeedState}>
+          <ActivityIndicator color="#059669" />
+          <Text style={styles.webAppFeedStateText}>Memuat feed...</Text>
+        </View>
+      ) : null}
+
+      {!loading && !visibleItems.length ? (
+        <View style={styles.webAppFeedEmpty}>
+          <MessageCircle color="#d1d5db" size={34} strokeWidth={2.2} />
+          <Text style={styles.webAppFeedEmptyText}>Belum ada postingan. Jadilah yang pertama!</Text>
+        </View>
+      ) : null}
+
+      {!loading && visibleItems.length ? (
+        <View style={styles.webAppFeedList}>
+          {visibleItems.map(renderWebAppFeedCard)}
+        </View>
+      ) : null}
+
+      {pagination.loadingMore ? (
+        <View style={styles.webAppFeedState}>
+          <ActivityIndicator color="#059669" size="small" />
+        </View>
+      ) : null}
+    </ScrollView>
+  );
+
   const renderWebAppNotificationsScreen = () => (
     <ScrollView
       contentContainerStyle={styles.webAppNotificationsContent}
@@ -5125,6 +5275,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   if (activeFeature?.key === 'blog' && isWebAppLayout) {
     return renderWebAppBlogScreen();
+  }
+
+  if (activeFeature?.type === 'feed' && isWebAppLayout) {
+    return renderWebAppFeedScreen();
   }
 
   if (activeFeature?.type === 'notifications' && isWebAppLayout) {
@@ -6469,6 +6623,193 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 19,
     marginTop: spacing.xs,
+    textAlign: 'center',
+  },
+  webAppFeedRoot: {
+    backgroundColor: '#f8fafc',
+    flex: 1,
+  },
+  webAppFeedContent: {
+    backgroundColor: '#f8fafc',
+    flexGrow: 1,
+    padding: spacing.md,
+    paddingBottom: spacing.xl,
+  },
+  webAppFeedHeader: {
+    alignItems: 'center',
+    marginBottom: spacing.lg,
+  },
+  webAppFeedHeaderIcon: {
+    alignItems: 'center',
+    backgroundColor: '#d1fae5',
+    borderRadius: radius.md,
+    height: 64,
+    justifyContent: 'center',
+    marginBottom: spacing.md,
+    width: 64,
+  },
+  webAppFeedTitle: {
+    color: '#111827',
+    fontSize: 24,
+    fontWeight: '900',
+    letterSpacing: 0,
+    lineHeight: 30,
+    textAlign: 'center',
+  },
+  webAppFeedSubtitle: {
+    color: '#6b7280',
+    fontSize: 14,
+    lineHeight: 20,
+    marginTop: spacing.xs,
+    textAlign: 'center',
+  },
+  webAppFeedCreateBox: {
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: radius.md,
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    justifyContent: 'center',
+    marginBottom: spacing.lg,
+    minHeight: 48,
+    paddingHorizontal: spacing.md,
+  },
+  webAppFeedCreateText: {
+    color: '#6b7280',
+    fontSize: 13,
+    fontWeight: '800',
+    textAlign: 'center',
+  },
+  webAppFeedNotice: {
+    color: '#b91c1c',
+    fontSize: 12,
+    fontWeight: '700',
+    lineHeight: 18,
+    marginBottom: spacing.md,
+    textAlign: 'center',
+  },
+  webAppFeedState: {
+    alignItems: 'center',
+    gap: spacing.xs,
+    paddingVertical: spacing.md,
+  },
+  webAppFeedStateText: {
+    color: '#6b7280',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  webAppFeedList: {
+    gap: spacing.md,
+  },
+  webAppFeedCard: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    padding: spacing.md,
+  },
+  webAppFeedCardHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginBottom: spacing.sm,
+  },
+  webAppFeedAvatar: {
+    alignItems: 'center',
+    backgroundColor: '#d1fae5',
+    borderRadius: 20,
+    height: 40,
+    justifyContent: 'center',
+    width: 40,
+  },
+  webAppFeedAvatarText: {
+    color: '#059669',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  webAppFeedAuthorBlock: {
+    flex: 1,
+    minWidth: 0,
+  },
+  webAppFeedAuthor: {
+    color: '#111827',
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  webAppFeedDate: {
+    color: '#9ca3af',
+    fontSize: 11,
+    marginTop: 2,
+  },
+  webAppFeedBody: {
+    color: '#374151',
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: spacing.sm,
+  },
+  webAppFeedRef: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#fffbeb',
+    borderColor: '#fde68a',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.xs,
+    marginBottom: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 6,
+  },
+  webAppFeedRefText: {
+    color: '#b45309',
+    fontSize: 11,
+    fontWeight: '900',
+  },
+  webAppFeedRefId: {
+    color: '#d97706',
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  webAppFeedActions: {
+    alignItems: 'center',
+    borderTopColor: '#f3f4f6',
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    paddingTop: spacing.sm,
+  },
+  webAppFeedAction: {
+    alignItems: 'center',
+    borderRadius: radius.md,
+    justifyContent: 'center',
+    minHeight: 32,
+    paddingHorizontal: spacing.sm,
+  },
+  webAppFeedActionText: {
+    color: '#6b7280',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  webAppFeedIconAction: {
+    alignItems: 'center',
+    borderRadius: radius.md,
+    height: 32,
+    justifyContent: 'center',
+    width: 32,
+  },
+  webAppFeedEmpty: {
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    padding: spacing.xl,
+  },
+  webAppFeedEmptyText: {
+    color: '#6b7280',
+    fontSize: 14,
+    lineHeight: 20,
+    marginTop: spacing.sm,
     textAlign: 'center',
   },
   webAppSurface: {

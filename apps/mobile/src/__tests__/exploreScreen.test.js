@@ -34,7 +34,9 @@ jest.mock('../api/social', () => ({
   createComment: jest.fn(),
   getCommentsByRef: jest.fn(),
   getFeedPostPage: jest.fn(),
+  hideFeedPost: jest.fn(),
   likeFeedPost: jest.fn(),
+  reportFeedPost: jest.fn(),
 }));
 
 jest.mock('../api/forum', () => ({
@@ -272,6 +274,7 @@ import { ExploreScreen } from '../screens/ExploreScreen';
 const { useSession } = require('../context/SessionContext');
 const { useFeedback } = require('../context/FeedbackContext');
 const exploreApi = require('../api/explore');
+const socialApi = require('../api/social');
 const forumApi = require('../api/forum');
 const clientApi = require('../api/client');
 const personalApi = require('../api/personal');
@@ -1040,6 +1043,62 @@ describe('ExploreScreen', () => {
 
     expect(getByText('Adab Menuntut Ilmu')).toBeTruthy();
     expect(queryByText('Fiqh Zakat Harian')).toBeNull();
+  });
+
+  test('uses dashboard Feed route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    socialApi.getFeedPostPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 'feed-1',
+          title: 'Ustadz Ahmad',
+          body: 'Faedah singkat tentang adab belajar.',
+          meta: '3 suka',
+          raw: {
+            author: { name: 'Ustadz Ahmad' },
+            caption: 'Faedah singkat tentang adab belajar.',
+            created_at: '2026-05-22',
+            id: 10,
+            likes: 3,
+          },
+        },
+        {
+          id: 'feed-2',
+          title: 'Tim Thullaabul',
+          body: 'Rujukan ayat untuk tadabbur.',
+          meta: 'Ayat 2:255 · 5 suka',
+          raw: {
+            author: { name: 'Tim Thullaabul' },
+            caption: 'Rujukan ayat untuk tadabbur.',
+            created_at: '2026-05-23',
+            id: 11,
+            likes: 5,
+            ref_id: 255,
+            ref_type: 'ayah',
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
+      deepLinkTarget: { id: 'feed-route', params: { featureKey: 'community-feed' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-feed-route')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('Feed Komunitas')).toBeTruthy();
+      expect(getByText('Bagikan dan temukan konten dari pengguna lain')).toBeTruthy();
+      expect(getByText('Login untuk membuat postingan.')).toBeTruthy();
+      expect(getByText('Ustadz Ahmad')).toBeTruthy();
+      expect(getByText('Tim Thullaabul')).toBeTruthy();
+      expect(getByText('Faedah singkat tentang adab belajar.')).toBeTruthy();
+      expect(getByText('Ayat Quran')).toBeTruthy();
+      expect(getByText('#255')).toBeTruthy();
+      expect(getAllByTestId('web-app-feed-card')).toHaveLength(2);
+    });
+    expect(queryByText('Hadis')).toBeNull();
   });
 
   test('renders search input for feature catalog', async () => {
