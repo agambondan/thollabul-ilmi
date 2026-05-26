@@ -15,6 +15,11 @@ Last verified: 2026-05-26
     `src/app` page routes.
   - The GitHub `web-e2e` job runs the full Playwright suite through
     `npm run test:e2e`, so this audit is part of routine CI.
+- Mobile feature route audit: `cd apps/mobile && npm run test:feature-routes`
+  - Verifies `mobileFeatures.js` route types, API-backed feature endpoints,
+    surah content contracts, and the Explore/Belajar feature inventory.
+  - The GitHub `mobile-test` job runs the full Jest suite, so this audit is
+    covered by routine mobile CI.
 - Review history:
   - `docs/features/progress/2026-05-24-web-mobile-runtime-sync.md`
   - `docs/reviews/2026-05-23-web-mobile-feature-parity-deep-review.md`
@@ -39,6 +44,12 @@ Current route UI audit output:
 154 passed
 ```
 
+Current mobile feature route audit output:
+
+```text
+1 passed, 9 tests
+```
+
 ## Routine UI Route Checklist
 
 Run this checklist when a change touches web route layout, dashboard/public
@@ -56,6 +67,16 @@ git diff --check
 The route audit verifies mobile viewport rendering for every `page.js` route,
 HTTP status, body readiness, console/page errors, Recharts chart-size warnings,
 duplicate global settings controls, horizontal overflow, and raw i18n keys.
+
+For mobile feature catalog or Explore route changes, run:
+
+```bash
+cd apps/mobile
+npm run test:feature-routes
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
 
 ## Current Parity Rule
 
@@ -190,4 +211,7 @@ When adding or changing a feature:
    proper screen/tab route.
 4. Run `node scripts/check-feature-parity.js`.
 5. If this changes web route structure, also run `cd apps/web && npm run build`.
-6. If it changes mobile behavior, run the relevant mobile Jest/E2E checks.
+6. If it changes mobile feature inventory or Explore route handling, run
+   `cd apps/mobile && npm run test:feature-routes`.
+7. If it changes mobile behavior outside feature inventory, run the relevant
+   mobile Jest/E2E checks.

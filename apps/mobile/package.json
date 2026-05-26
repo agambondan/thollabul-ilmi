@@ -6,6 +6,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:feature-routes": "jest --runTestsByPath src/__tests__/mobileFeatures.test.js --runInBand",
     "test:navigation": "jest --testPathPattern='navigation/appNavigation'",
     "test:utils": "jest --testPathPattern='__tests__'",
     "start": "expo start",
