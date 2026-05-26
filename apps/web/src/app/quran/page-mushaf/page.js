@@ -34,6 +34,8 @@ const PageMushafContent = () => {
 
     const max = mode === 'page' ? 604 : 240;
     const minLabel = t(mode === 'page' ? 'mushaf.go_to_page' : 'mushaf.go_to_hizb');
+    const inputId = `quran-mushaf-${mode}-value`;
+    const inputName = mode === 'page' ? 'page' : 'hizb';
 
     return (
         <ContentWidth compact='max-w-3xl' className='px-4'>
@@ -49,11 +51,13 @@ const PageMushafContent = () => {
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 mb-6'>
                 <div className='flex gap-2 mb-4'>
                     <button
+                        type='button'
                         onClick={() => {
                             setMode('page');
                             setValue(1);
                             setAyahs([]);
                         }}
+                        aria-pressed={mode === 'page'}
                         className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                             mode === 'page'
                                 ? 'bg-emerald-700 text-white'
@@ -63,11 +67,13 @@ const PageMushafContent = () => {
                         {t('mushaf.by_page')}
                     </button>
                     <button
+                        type='button'
                         onClick={() => {
                             setMode('hizb');
                             setValue(1);
                             setAyahs([]);
                         }}
+                        aria-pressed={mode === 'hizb'}
                         className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                             mode === 'hizb'
                                 ? 'bg-emerald-700 text-white'
@@ -78,12 +84,19 @@ const PageMushafContent = () => {
                     </button>
                 </div>
 
-                <label className='block text-xs text-gray-500 dark:text-gray-400 mb-1'>
+                <label
+                    htmlFor={inputId}
+                    className='block text-xs text-gray-500 dark:text-gray-400 mb-1'
+                >
                     {minLabel} (1 - {max})
                 </label>
                 <div className='flex gap-2'>
                     <input
+                        id={inputId}
+                        name={inputName}
                         type='number'
+                        inputMode='numeric'
+                        autoComplete='off'
                         min={1}
                         max={max}
                         value={value}
@@ -92,9 +105,10 @@ const PageMushafContent = () => {
                                 Math.max(1, Math.min(max, Number(e.target.value) || 1)),
                             )
                         }
-                        className='flex-1 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-gray-200 outline-none focus:border-emerald-500'
+                        className='min-w-0 flex-1 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-gray-200 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 dark:focus:ring-emerald-900'
                     />
                     <button
+                        type='button'
                         onClick={fetchData}
                         disabled={loading}
                         className='px-5 py-2 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 disabled:opacity-50'

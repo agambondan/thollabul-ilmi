@@ -4,24 +4,50 @@ import { getLocalizedField } from '@/lib/translation';
 import { useQuranFont } from '@/lib/useQuranFont';
 import Link from 'next/link';
 
-const getSurahReaderSlug = (surah, lang) =>
-    surah?.translation?.latin_en ||
-    surah?.translation?.latin_idn ||
-    surah?.slug ||
-    surah?.identifier ||
-    getLocalizedField(surah, 'name', lang) ||
-    surah?.number ||
-    surah?.id ||
-    '';
+const getSurahReaderSlug = (ayah, lang) => {
+    const surah = ayah?.surah ?? {};
+    return (
+        surah?.translation?.latin_en ||
+        surah?.translation?.latin_idn ||
+        surah?.slug ||
+        surah?.identifier ||
+        ayah?.surah_slug ||
+        ayah?.surahSlug ||
+        ayah?.surah_identifier ||
+        ayah?.surahIdentifier ||
+        ayah?.surah_name ||
+        ayah?.surahName ||
+        ayah?.surah_latin ||
+        ayah?.surahLatin ||
+        getLocalizedField(surah, 'name', lang) ||
+        surah?.number ||
+        ayah?.surah_number ||
+        ayah?.surahNumber ||
+        surah?.id ||
+        ''
+    );
+};
 
-const getSurahDisplayName = (surah, lang) =>
-    getLocalizedField(surah, 'name', lang) ||
-    surah?.translation?.latin_en ||
-    surah?.translation?.latin_idn ||
-    surah?.translation?.name ||
-    surah?.slug ||
-    surah?.identifier ||
-    '';
+const getSurahDisplayName = (ayah, lang) => {
+    const surah = ayah?.surah ?? {};
+    return (
+        getLocalizedField(surah, 'name', lang) ||
+        surah?.translation?.latin_en ||
+        surah?.translation?.latin_idn ||
+        surah?.translation?.name ||
+        ayah?.surah_name ||
+        ayah?.surahName ||
+        ayah?.surah_latin ||
+        ayah?.surahLatin ||
+        ayah?.surah_slug ||
+        ayah?.surahSlug ||
+        surah?.slug ||
+        surah?.identifier ||
+        ''
+    );
+};
+
+const getSurahNumber = (ayah) => ayah?.surah?.number || ayah?.surah_number || ayah?.surahNumber;
 
 const getArabicHTML = (ayah) =>
     ayah?.translation?.ar_html ||
@@ -51,9 +77,9 @@ export default function MushafAyahList({
                 {ayahs.length} {t('mushaf.ayah_unit')}
             </p>
             {ayahs.map((ayah) => {
-                const surah = ayah.surah ?? {};
-                const slug = getSurahReaderSlug(surah, lang);
-                const displayName = getSurahDisplayName(surah, lang);
+                const slug = getSurahReaderSlug(ayah, lang);
+                const displayName = getSurahDisplayName(ayah, lang);
+                const surahNumber = getSurahNumber(ayah);
                 const arabicHtml = getArabicHTML(ayah);
                 const translation = getAyahTranslation(ayah, lang);
                 const href = `${readerBasePath}/${encodeURIComponent(slug)}#ayah-${ayah.number}`;
@@ -63,12 +89,12 @@ export default function MushafAyahList({
                         key={ayah.id}
                         className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4'
                     >
-                        <div className='flex items-center justify-between mb-2 text-xs text-gray-400 dark:text-gray-500'>
+                        <div className='flex min-w-0 items-center justify-between gap-3 mb-2 text-xs text-gray-400 dark:text-gray-500'>
                             <Link
                                 href={href}
-                                className='font-semibold text-emerald-700 dark:text-emerald-400 hover:underline'
+                                className='min-w-0 truncate font-semibold text-emerald-700 dark:text-emerald-400 hover:underline'
                             >
-                                {surah?.number}. {displayName}
+                                {surahNumber}. {displayName}
                             </Link>
                             <span>
                                 {t('mushaf.ayah')} {ayah.number}

@@ -52,10 +52,7 @@ const alBaqaraSurah = {
   },
 };
 
-const alBaqaraPageAyahs = alBaqaraAyahs.map((ayah) => ({
-  ...ayah,
-  surah: alBaqaraSurah,
-}));
+const alBaqaraPageAyahs = alBaqaraAyahs;
 
 const audioItemsForAyah = (ayahId) => ({
   items: [
@@ -166,6 +163,19 @@ async function setupQuranRegressionMocks(page) {
       });
     }
 
+    if (path === '/api/v1/auth/me') {
+      return route.fulfill({
+        body: JSON.stringify({
+          id: 1,
+          email: 'test@example.com',
+          name: 'Test User',
+          role: 'user',
+        }),
+        contentType: 'application/json',
+        status: 200,
+      });
+    }
+
     return route.fulfill({
       body: JSON.stringify(method === 'GET' ? { items: [], total: 0 } : { message: 'ok' }),
       contentType: 'application/json',
@@ -272,5 +282,26 @@ test.describe('Quran reader regression', () => {
     await expect(page).toHaveURL(/\/quran\/surah\/Al-Baqara#ayah-1$/);
     await expect(page.getByRole('heading', { name: 'Al-Baqara' })).toBeVisible();
     await expect(page.locator('#ayah-1 tajweed.madda_necessary')).toHaveCount(1);
+  });
+
+  test('dashboard page mushaf keeps dashboard links and one settings button', async ({ page }) => {
+    await page.setViewportSize({ width: 412, height: 915 });
+    await page.addInitScript(() => {
+      localStorage.setItem('auth_token', 'mock-token-123');
+    });
+    await page.goto('/dashboard/quran/page-mushaf');
+    await dismissPermissionPrompt(page);
+
+    await expect(page.getByRole('heading', { name: 'Navigasi Mushaf' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Pengaturan' })).toHaveCount(1);
+
+    await page.getByRole('button', { name: 'Buka', exact: true }).click();
+
+    const firstAyahLink = page.locator('a[href="/dashboard/quran/Al-Baqara#ayah-1"]').first();
+    await expect(firstAyahLink).toBeVisible();
+    const firstAyahCard = firstAyahLink.locator(
+      'xpath=ancestor::div[contains(@class, "rounded-xl")][1]',
+    );
+    await expect(firstAyahCard.locator('tajweed.madda_necessary')).toHaveCount(1);
   });
 });

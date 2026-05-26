@@ -53,4 +53,31 @@ describe('MushafAyahList', () => {
       '/dashboard/quran/Al-Baqara#ayah-1',
     );
   });
+
+  test('falls back to top-level surah fields when relation payload is absent', () => {
+    render(
+      <MushafAyahList
+        ayahs={[
+          {
+            id: 202,
+            number: 2,
+            surah_number: 2,
+            surah_name: 'Al-Baqara',
+            translation: {
+              ar_html: '<tajweed class="ikhf">هُدًى</tajweed>',
+              idn: 'Petunjuk bagi mereka yang bertakwa.',
+            },
+          },
+        ]}
+        lang="ID"
+        readerBasePath="/quran/surah"
+        t={t}
+      />,
+    );
+
+    expect(screen.getByRole('link', { name: '2. Al-Baqara' })).toHaveAttribute(
+      'href',
+      '/quran/surah/Al-Baqara#ayah-2',
+    );
+  });
 });

@@ -64,6 +64,7 @@ const dashboardRoutes = [
   '/dashboard/jadwal-sholat',
   '/dashboard/wirid-custom',
   '/dashboard/quran',
+  '/dashboard/quran/page-mushaf',
   '/dashboard/dzikir',
   '/dashboard/tasbih',
   '/dashboard/sholat-tracker',
