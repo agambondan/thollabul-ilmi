@@ -32,6 +32,15 @@ Started: 2026-05-26 16:20 WIB
 
 - Existing dirty worktree files are all in the web Quran/Mushaf area and are
   treated as another agent's active scope.
+- Current refactor claim: mobile Explore large-file split only. I touched
+  `apps/mobile/src/screens/ExploreScreen.js`,
+  `apps/mobile/src/screens/ExploreScreen.helpers.js`,
+  `apps/mobile/src/screens/ExploreScreen.styles.js`, and
+  `apps/mobile/src/screens/explore/*` route renderer files.
+- `ExploreScreen.js` is now below the 2,000-line gate. Remaining mobile files
+  above the gate are existing legacy scope: `QuranScreen.js` and
+  `ProfileScreen.js`; route parity work should stay paused until those are
+  assigned or split in a separate slice.
 - I will not continue to a new route until the previous mobile `web_app` slice
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
@@ -47,6 +56,14 @@ Started: 2026-05-26 16:20 WIB
 
 ## Verification
 
+- `cd apps/mobile && npm test -- exploreScreen.test.js --runInBand` passed: 1 suite, 36 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 44 suites, 639 tests.
+- `node scripts/check-feature-parity.js` passed.
+- `git diff --check` passed for the mobile Explore refactor files.
+- Line-count gate after Explore split: `ExploreScreen.js` 1231,
+  `ExploreClassicRenderers.js` 1947, `ExploreWebAppRoutes.js` 1421,
+  `ExploreScreen.styles.js` 1571, `ExploreScreen.helpers.js` 659, and each
+  extracted `WebApp*Route.js` file under 400 lines.
 - `cd apps/mobile && npm test -- exploreScreen.test.js --runInBand` passed: 1 suite, 35 tests.
 - `cd apps/web && npm test -- feedPagination.test.js --runInBand` passed: 1 suite, 3 tests.
 - `cd apps/mobile && npm test -- --runInBand` passed: 44 suites, 637 tests.
