@@ -52,6 +52,11 @@ const alBaqaraSurah = {
   },
 };
 
+const alBaqaraPageAyahs = alBaqaraAyahs.map((ayah) => ({
+  ...ayah,
+  surah: alBaqaraSurah,
+}));
+
 const audioItemsForAyah = (ayahId) => ({
   items: [
     {
@@ -111,6 +116,14 @@ async function setupQuranRegressionMocks(page) {
     if (path === '/api/v1/ayah/surah/number/2') {
       return route.fulfill({
         body: JSON.stringify({ items: alBaqaraAyahs, total: alBaqaraAyahs.length }),
+        contentType: 'application/json',
+        status: 200,
+      });
+    }
+
+    if (path === '/api/v1/ayah/page/1') {
+      return route.fulfill({
+        body: JSON.stringify({ items: alBaqaraPageAyahs, total: alBaqaraPageAyahs.length }),
         contentType: 'application/json',
         status: 200,
       });
@@ -238,5 +251,26 @@ test.describe('Quran reader regression', () => {
     await page.getByLabel('Tampilkan player audio').first().click();
     await expect(page.getByLabel('Sampai ayat')).toBeVisible();
     await expect(page.getByText('Al-Baqara · Ayat 1')).toBeVisible();
+  });
+
+  test('page mushaf preserves tajweed HTML and links back to reader ayah', async ({ page }) => {
+    await page.setViewportSize({ width: 412, height: 915 });
+    await page.goto('/quran/page-mushaf');
+    await dismissPermissionPrompt(page);
+
+    await page.getByRole('button', { name: 'Buka', exact: true }).click();
+
+    const firstAyahLink = page.locator('a[href="/quran/surah/Al-Baqara#ayah-1"]').first();
+    await expect(firstAyahLink).toBeVisible();
+
+    const firstAyahCard = firstAyahLink.locator('xpath=ancestor::div[contains(@class, "rounded-xl")][1]');
+    await expect(firstAyahCard.locator('tajweed.madda_necessary')).toHaveCount(1);
+    await expect(firstAyahCard).toContainText('Alif laam miim.');
+    await expect(firstAyahLink).toHaveAttribute('href', '/quran/surah/Al-Baqara#ayah-1');
+
+    await firstAyahLink.click();
+    await expect(page).toHaveURL(/\/quran\/surah\/Al-Baqara#ayah-1$/);
+    await expect(page.getByRole('heading', { name: 'Al-Baqara' })).toBeVisible();
+    await expect(page.locator('#ayah-1 tajweed.madda_necessary')).toHaveCount(1);
   });
 });
