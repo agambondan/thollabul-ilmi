@@ -5,11 +5,11 @@ import { radius, spacing } from '../theme';
 import { hapticSelection } from '../utils/haptics';
 
 const nav = {
-  active: '#34d399',
-  activeBg: 'rgba(16, 185, 129, 0.18)',
-  bg: '#0f172a',
-  border: '#1f2937',
-  inactive: '#cbd5e1',
+  active: '#047857',
+  activeBg: '#ecfdf5',
+  bg: '#ffffff',
+  border: '#f3f4f6',
+  inactive: '#6b7280',
 };
 
 export const webDashboardBottomItems = [

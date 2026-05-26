@@ -212,6 +212,11 @@ export const getFeatureItems = async (feature, pagination) => {
   return page.items;
 };
 
+export const getBlogCategoryItems = async () => {
+  const payload = await requestJson('/api/v1/blog/categories');
+  return pickItems(payload);
+};
+
 export const getZakatGoldPrice = async () => {
   const payload = await requestJson('/api/v1/zakat/gold-price');
   const data = payload?.data ?? payload;

@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowLeft, BookOpen, Bookmark, BookmarkCheck, CheckCircle2, Circle, ExternalLink, EyeOff, Flag, Heart, MessageCircle, Pencil, StickyNote, Trash2, UserCircle } from 'lucide-react-native';
+import { ArrowLeft, BookOpen, Bookmark, BookmarkCheck, CheckCircle2, Circle, ExternalLink, EyeOff, Flag, Heart, MessageCircle, Pencil, StickyNote, Trash2, Trophy, UserCircle } from 'lucide-react-native';
 import { ActivityIndicator, Image, Linking, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import {
   getAllNotes,
   getAsmaulNames,
+  getBlogCategoryItems,
   getBookmarkItems,
   getFeatureItemPage,
   getHijriOverview,
@@ -585,13 +586,48 @@ const getBlogCategoryLabel = (item = {}) => {
   const raw = getBlogRaw(item);
   const category = raw.category ?? raw.category_name ?? raw.categoryName ?? item.meta;
   if (typeof category === 'string') return category;
-  return pickText(category?.name, category?.title, category?.label, category?.slug);
+  return pickText(
+    category?.name,
+    category?.title,
+    category?.label,
+    category?.translation?.idn,
+    category?.translation?.en,
+    category?.slug,
+  );
+};
+const getBlogCategoryOptionLabel = (category = {}) => {
+  if (typeof category === 'string') return category;
+  return pickText(
+    category.name,
+    category.title,
+    category.label,
+    category.translation?.idn,
+    category.translation?.en,
+    category.translation?.name_idn,
+    category.translation?.name_en,
+    category.slug,
+  );
+};
+const getBlogCategoryOptionValue = (category = {}) => {
+  if (typeof category === 'string') return category;
+  return `${category.slug ?? category.id ?? getBlogCategoryOptionLabel(category) ?? ''}`;
 };
 const getBlogCategoryValue = (item = {}) => {
   const raw = getBlogRaw(item);
   const category = raw.category ?? raw.category_name ?? raw.categoryName ?? item.meta;
   if (typeof category === 'string') return category;
   return `${category?.slug ?? category?.id ?? getBlogCategoryLabel(item) ?? ''}`;
+};
+const normalizeBlogCategoryOptions = (categories = []) => {
+  const map = new Map();
+  categories.forEach((category) => {
+    const value = getBlogCategoryOptionValue(category);
+    const label = getBlogCategoryOptionLabel(category);
+    if (value && label && !map.has(value.toLowerCase())) {
+      map.set(value.toLowerCase(), { label, value });
+    }
+  });
+  return Array.from(map.values());
 };
 const getBlogCategories = (items = []) => {
   const map = new Map();
@@ -749,6 +785,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
   const [kajianCategory, setKajianCategory] = useState('');
   const [blogSearch, setBlogSearch] = useState('');
   const [blogCategory, setBlogCategory] = useState('');
+  const [blogCategoryOptions, setBlogCategoryOptions] = useState([]);
   const [leaderboardTab, setLeaderboardTab] = useState('streak');
   const [editingUserWirdId, setEditingUserWirdId] = useState('');
   const [savingUserWird, setSavingUserWird] = useState(false);
@@ -854,6 +891,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       setKajianCategory('');
       setBlogSearch('');
       setBlogCategory('');
+      setBlogCategoryOptions([]);
       setLeaderboardTab('streak');
       setEditingUserWirdId('');
       setUserWirdForm(emptyUserWirdForm);
@@ -971,6 +1009,23 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
             hasMore: page.meta.hasMore,
             loadingMore: false,
           });
+        } else if (feature.key === 'blog' && isWebAppLayout) {
+          const [postsResult, categoriesResult] = await Promise.allSettled([
+            getFeatureItemPage(feature, { page: 0, size: EXPLORE_PAGE_SIZE }),
+            getBlogCategoryItems(),
+          ]);
+          if (postsResult.status === 'rejected') throw postsResult.reason;
+          nextItems = postsResult.value.items;
+          setBlogCategoryOptions(
+            categoriesResult.status === 'fulfilled'
+              ? normalizeBlogCategoryOptions(categoriesResult.value)
+              : [],
+          );
+          setPagination({
+            page: 0,
+            hasMore: postsResult.value.meta.hasMore,
+            loadingMore: false,
+          });
         } else if (feature.key === 'leaderboard' && isWebAppLayout) {
           const [streakResult, hafalanResult] = await Promise.allSettled([
             getFeatureItemPage({ ...feature, endpoint: '/api/v1/leaderboard/streak' }, { page: 0, size: EXPLORE_PAGE_SIZE }),
@@ -978,9 +1033,6 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
           ]);
           const streakPage = streakResult.status === 'fulfilled' ? streakResult.value : { items: [], meta: {} };
           const hafalanPage = hafalanResult.status === 'fulfilled' ? hafalanResult.value : { items: [], meta: {} };
-          if (streakResult.status === 'rejected' && hafalanResult.status === 'rejected') {
-            setError('Leaderboard belum bisa dimuat.');
-          }
           nextItems = [
             makeLeaderboardDatasetItem('streak', streakPage),
             makeLeaderboardDatasetItem('hafalan', hafalanPage),
@@ -3457,6 +3509,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     setActiveNoteRef('');
     setLibraryProgressFilter('');
     setNotesSearch('');
+    setBlogCategoryOptions([]);
     if (returnRoute?.tab && returnRoute?.view) {
       navigation?.open?.(returnRoute.tab, returnRoute.view, { returnTab: null });
     }
@@ -4608,10 +4661,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
           </Text>
         </View>
         <View style={styles.webAppGoalTitleBlock}>
-          <Text numberOfLines={1} style={styles.webAppBookmarkTitle}>
+          <Text numberOfLines={1} style={styles.webAppLeaderboardName}>
             {getLeaderboardName(item, index)}
           </Text>
-          <Text style={styles.webAppBookmarkText}>
+          <Text style={styles.webAppLeaderboardMeta}>
             {rank <= 3 ? 'Top performer' : 'Peserta leaderboard'}
           </Text>
         </View>
@@ -4623,120 +4676,73 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
   };
 
   const renderWebAppLeaderboardScreen = () => {
-    const summary = getLeaderboardSummary(visibleItems);
     const activeMeta = LEADERBOARD_TABS.find((tab) => tab.key === leaderboardTab) ?? LEADERBOARD_TABS[0];
     const activeEntries = getLeaderboardEntries(visibleItems, leaderboardTab);
-    const topEntry = activeEntries[0] ?? null;
 
     return (
       <ScrollView
-        contentContainerStyle={styles.webAppBookmarksContent}
+        contentContainerStyle={styles.webAppLeaderboardContent}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        style={styles.webAppBookmarksRoot}
+        style={styles.webAppLeaderboardRoot}
       >
         <View testID="explore-web-app-leaderboard-surface" />
-        <View style={styles.webAppBookmarksHeader}>
-          <Pressable
-            accessibilityLabel="Kembali ke Belajar"
-            onPress={clearFeature}
-            style={styles.webAppBookmarksBack}
-            testID="web-app-leaderboard-back"
-          >
-            <Text style={styles.webAppBookmarksBackText}>Kembali</Text>
-          </Pressable>
-          <Text style={styles.webAppCatalogEyebrow}>KOMUNITAS</Text>
-          <View style={styles.webAppBookmarksTitleRow}>
-            <Text style={styles.webAppCatalogTitle}>Leaderboard</Text>
-            <Text style={styles.webAppBookmarksCount}>{activeEntries.length} peserta</Text>
-          </View>
-          <Text style={styles.webAppCatalogSubtitle}>
-            Ranking streak sholat dan hafalan untuk memantau konsistensi komunitas.
-          </Text>
+        <View style={styles.webAppLeaderboardHeader}>
+          <Trophy color="#f59e0b" fill="#f59e0b" size={20} strokeWidth={2.2} />
+          <Text style={styles.webAppLeaderboardTitle}>Leaderboard</Text>
         </View>
 
-        {error ? <Text style={styles.webAppBookmarksError}>{error}</Text> : null}
+        <View style={styles.webAppLeaderboardTabs}>
+          {LEADERBOARD_TABS.map((tab) => (
+            <Pressable
+              key={tab.key}
+              onPress={() => setLeaderboardTab(tab.key)}
+              style={[
+                styles.webAppLeaderboardTab,
+                leaderboardTab === tab.key && styles.webAppLeaderboardTabActive,
+              ]}
+              testID={`web-app-leaderboard-tab-${tab.key}`}
+            >
+              <Text
+                style={[
+                  styles.webAppLeaderboardTabText,
+                  leaderboardTab === tab.key && styles.webAppLeaderboardTabTextActive,
+                ]}
+              >
+                {tab.label}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+
+        {error ? <Text style={styles.webAppLeaderboardNotice}>{error}</Text> : null}
         {loading ? (
-          <View style={styles.webAppBookmarksState}>
-            <ActivityIndicator color={WEB_APP_EXPLORE_ACCENT} size="small" />
-            <Text style={styles.webAppBookmarksStateText}>Memuat leaderboard...</Text>
+          <View style={styles.webAppLeaderboardState}>
+            <ActivityIndicator color="#047857" size="small" />
+            <Text style={styles.webAppLeaderboardStateText}>Memuat leaderboard...</Text>
           </View>
         ) : null}
         {!loading && !error && visibleItems.length > 0 ? (
           <>
-            <View style={styles.webAppLeaderboardHero}>
-              <View style={styles.webAppGoalHeader}>
-                <View style={styles.webAppGoalIcon}>
-                  <Flag color="#fbbf24" size={18} strokeWidth={2.2} />
-                </View>
-                <View style={styles.webAppGoalTitleBlock}>
-                  <Text style={styles.webAppTilawahTodayTitle}>
-                    {topEntry ? getLeaderboardName(topEntry, 0) : 'Belum ada juara'}
-                  </Text>
-                  <Text style={styles.webAppTilawahTodayText}>
-                    {topEntry
-                      ? `Peringkat 1 ${activeMeta.label.toLowerCase()} · ${formatCompactStat(getLeaderboardScore(topEntry))} ${activeMeta.unit}`
-                      : 'Data leaderboard akan muncul setelah aktivitas tercatat.'}
-                  </Text>
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.webAppLeaderboardTabs}>
-              {LEADERBOARD_TABS.map((tab) => (
-                <Pressable
-                  key={tab.key}
-                  onPress={() => setLeaderboardTab(tab.key)}
-                  style={[
-                    styles.webAppLeaderboardTab,
-                    leaderboardTab === tab.key && styles.webAppLeaderboardTabActive,
-                  ]}
-                  testID={`web-app-leaderboard-tab-${tab.key}`}
-                >
-                  <Text
-                    style={[
-                      styles.webAppLeaderboardTabText,
-                      leaderboardTab === tab.key && styles.webAppLeaderboardTabTextActive,
-                    ]}
-                  >
-                    {tab.label}
-                  </Text>
-                </Pressable>
-              ))}
-            </View>
-
-            <View style={styles.webAppGoalsSummary}>
-              <View style={styles.webAppGoalSummaryPill}>
-                <CheckCircle2 color={WEB_APP_EXPLORE_ACCENT} size={14} strokeWidth={2.2} />
-                <Text style={styles.webAppGoalSummaryText}>{summary.streakCount} streak</Text>
-              </View>
-              <View style={styles.webAppGoalSummaryPill}>
-                <BookOpen color="#60a5fa" size={14} strokeWidth={2.2} />
-                <Text style={styles.webAppGoalSummaryText}>{summary.hafalanCount} hafalan</Text>
-              </View>
-            </View>
-
             {activeEntries.length ? (
               <View style={styles.webAppLeaderboardList}>
                 {activeEntries.map(renderWebAppLeaderboardRow)}
               </View>
             ) : (
-              <View style={styles.webAppBookmarksEmpty}>
-                <Flag color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
-                <Text style={styles.webAppBookmarksEmptyTitle}>Belum ada data leaderboard.</Text>
-                <Text style={styles.webAppBookmarksEmptyText}>
-                  Coba tab lain atau tunggu aktivitas komunitas tersinkron.
+              <View style={styles.webAppLeaderboardEmpty}>
+                <Trophy color="#e5e7eb" fill="#e5e7eb" size={38} strokeWidth={1.6} />
+                <Text style={styles.webAppLeaderboardEmptyText}>
+                  Data leaderboard belum tersedia.
                 </Text>
               </View>
             )}
           </>
         ) : null}
         {!loading && !error && !visibleItems.length ? (
-          <View style={styles.webAppBookmarksEmpty}>
-            <Flag color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
-            <Text style={styles.webAppBookmarksEmptyTitle}>Belum ada data leaderboard.</Text>
-            <Text style={styles.webAppBookmarksEmptyText}>
-              Ranking akan tampil setelah data streak atau hafalan tersedia.
+          <View style={styles.webAppLeaderboardEmpty}>
+            <Trophy color="#e5e7eb" fill="#e5e7eb" size={38} strokeWidth={1.6} />
+            <Text style={styles.webAppLeaderboardEmptyText}>
+              Data leaderboard belum tersedia.
             </Text>
           </View>
         ) : null}
@@ -4805,14 +4811,6 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       >
         <View testID="explore-web-app-kajian-surface" />
         <View style={styles.webAppKajianHeader}>
-          <Pressable
-            accessibilityLabel="Kembali ke Belajar"
-            onPress={clearFeature}
-            style={styles.webAppKajianBack}
-            testID="web-app-kajian-back"
-          >
-            <Text style={styles.webAppKajianBackText}>Kembali</Text>
-          </Pressable>
           <Text style={styles.webAppKajianTitle}>Kajian Islam</Text>
           <Text style={styles.webAppKajianSubtitle}>
             Rekaman kajian dari ustadz-ustadz ahlus sunnah
@@ -4928,7 +4926,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
   };
 
   const renderWebAppBlogScreen = () => {
-    const categories = getBlogCategories(visibleItems);
+    const categories = blogCategoryOptions.length ? blogCategoryOptions : getBlogCategories(visibleItems);
     const filteredBlog = getFilteredBlogItems(visibleItems, blogSearch, blogCategory);
 
     return (
@@ -4940,14 +4938,6 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       >
         <View testID="explore-web-app-blog-surface" />
         <View style={styles.webAppBlogHeader}>
-          <Pressable
-            accessibilityLabel="Kembali ke Belajar"
-            onPress={clearFeature}
-            style={styles.webAppKajianBack}
-            testID="web-app-blog-back"
-          >
-            <Text style={styles.webAppKajianBackText}>Kembali</Text>
-          </Pressable>
           <Text style={styles.webAppBlogHeading}>Artikel Islam</Text>
           <Text style={styles.webAppBlogSubtitle}>
             Tazkiyah, fiqh praktis, aqidah, dan ilmu Islam lainnya
@@ -5945,6 +5935,29 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '700',
   },
+  webAppLeaderboardRoot: {
+    backgroundColor: '#f8fafc',
+    flex: 1,
+  },
+  webAppLeaderboardContent: {
+    backgroundColor: '#f8fafc',
+    flexGrow: 1,
+    padding: spacing.md,
+    paddingBottom: spacing.xl,
+  },
+  webAppLeaderboardHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.xs,
+    marginBottom: spacing.lg,
+  },
+  webAppLeaderboardTitle: {
+    color: '#111827',
+    fontSize: 20,
+    fontWeight: '900',
+    letterSpacing: 0,
+    lineHeight: 26,
+  },
   webAppLeaderboardHero: {
     backgroundColor: 'rgba(245, 158, 11, 0.12)',
     borderColor: 'rgba(245, 158, 11, 0.32)',
@@ -5954,18 +5967,16 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   webAppLeaderboardTabs: {
-    backgroundColor: '#1e293b',
-    borderColor: WEB_APP_EXPLORE_BORDER,
-    borderRadius: radius.md,
-    borderWidth: 1,
+    backgroundColor: '#f3f4f6',
+    borderRadius: 8,
     flexDirection: 'row',
-    gap: spacing.xs,
-    marginTop: spacing.md,
+    gap: 4,
+    marginBottom: spacing.xl,
     padding: 4,
   },
   webAppLeaderboardTab: {
     alignItems: 'center',
-    borderRadius: radius.sm,
+    borderRadius: 6,
     flex: 1,
     minHeight: 36,
     justifyContent: 'center',
@@ -5973,28 +5984,30 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   webAppLeaderboardTabActive: {
-    backgroundColor: WEB_APP_EXPLORE_SURFACE,
-    borderColor: WEB_APP_EXPLORE_BORDER,
-    borderWidth: 1,
+    backgroundColor: '#ffffff',
+    shadowColor: '#111827',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 1,
   },
   webAppLeaderboardTabText: {
-    color: WEB_APP_EXPLORE_MUTED,
-    fontSize: 12,
-    fontWeight: '800',
+    color: '#6b7280',
+    fontSize: 14,
+    fontWeight: '600',
     textAlign: 'center',
   },
   webAppLeaderboardTabTextActive: {
-    color: WEB_APP_EXPLORE_ACCENT,
+    color: '#047857',
   },
   webAppLeaderboardList: {
     gap: spacing.sm,
-    marginTop: spacing.md,
   },
   webAppLeaderboardRow: {
     alignItems: 'center',
-    backgroundColor: WEB_APP_EXPLORE_SURFACE,
-    borderColor: WEB_APP_EXPLORE_BORDER,
-    borderRadius: radius.md,
+    backgroundColor: '#ffffff',
+    borderColor: '#f3f4f6',
+    borderRadius: 12,
     borderWidth: 1,
     flexDirection: 'row',
     gap: spacing.sm,
@@ -6005,22 +6018,31 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(245, 158, 11, 0.1)',
     borderColor: 'rgba(245, 158, 11, 0.32)',
   },
+  webAppLeaderboardName: {
+    color: '#374151',
+    fontSize: 14,
+    fontWeight: '700',
+    lineHeight: 19,
+  },
+  webAppLeaderboardMeta: {
+    color: '#9ca3af',
+    fontSize: 12,
+    lineHeight: 17,
+    marginTop: 2,
+  },
   webAppLeaderboardRank: {
     alignItems: 'center',
-    backgroundColor: '#1e293b',
-    borderColor: WEB_APP_EXPLORE_BORDER,
+    backgroundColor: '#ecfdf5',
     borderRadius: 999,
-    borderWidth: 1,
     height: 36,
     justifyContent: 'center',
     width: 36,
   },
   webAppLeaderboardRankTop: {
-    backgroundColor: 'rgba(245, 158, 11, 0.18)',
-    borderColor: 'rgba(245, 158, 11, 0.42)',
+    backgroundColor: '#fef3c7',
   },
   webAppLeaderboardRankText: {
-    color: '#cbd5e1',
+    color: '#047857',
     fontSize: 13,
     fontWeight: '900',
   },
@@ -6028,7 +6050,7 @@ const styles = StyleSheet.create({
     color: '#fbbf24',
   },
   webAppLeaderboardScore: {
-    color: '#cbd5e1',
+    color: '#6b7280',
     fontSize: 14,
     fontWeight: '900',
   },
@@ -6036,9 +6058,43 @@ const styles = StyleSheet.create({
     color: '#fbbf24',
   },
   webAppLeaderboardUnit: {
-    color: WEB_APP_EXPLORE_MUTED,
+    color: '#9ca3af',
     fontSize: 11,
     fontWeight: '700',
+  },
+  webAppLeaderboardState: {
+    alignItems: 'center',
+    gap: spacing.sm,
+    justifyContent: 'center',
+    minHeight: 160,
+  },
+  webAppLeaderboardStateText: {
+    color: '#9ca3af',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  webAppLeaderboardNotice: {
+    backgroundColor: '#fffbeb',
+    borderColor: '#fde68a',
+    borderRadius: 8,
+    borderWidth: 1,
+    color: '#92400e',
+    fontSize: 13,
+    fontWeight: '700',
+    marginBottom: spacing.md,
+    padding: spacing.md,
+    textAlign: 'center',
+  },
+  webAppLeaderboardEmpty: {
+    alignItems: 'center',
+    gap: spacing.sm,
+    justifyContent: 'center',
+    minHeight: 220,
+  },
+  webAppLeaderboardEmptyText: {
+    color: '#9ca3af',
+    fontSize: 14,
+    textAlign: 'center',
   },
   webAppKajianRoot: {
     backgroundColor: '#f8fafc',

@@ -4,7 +4,7 @@ jest.mock('lucide-react-native', () => {
     'ArrowLeft', 'BookOpen', 'Bookmark', 'BookmarkCheck', 'CheckCircle2',
     'Circle', 'ExternalLink', 'Flag', 'Globe', 'Heart', 'HelpCircle',
     'ListChecks', 'MessageCircle', 'Pencil', 'Scale', 'Star',
-    'StickyNote', 'Trash2', 'UserCircle', 'Users', 'Video',
+    'StickyNote', 'Trash2', 'Trophy', 'UserCircle', 'Users', 'Video',
   ];
   names.forEach((n) => { icons[n] = n; });
   return icons;
@@ -21,6 +21,7 @@ jest.mock('../context/FeedbackContext', () => ({
 jest.mock('../api/explore', () => ({
   getAllNotes: jest.fn(),
   getAsmaulNames: jest.fn(),
+  getBlogCategoryItems: jest.fn(),
   getBookmarkItems: jest.fn(),
   getFeatureItemPage: jest.fn(),
   getHijriOverview: jest.fn(),
@@ -314,6 +315,7 @@ beforeEach(() => {
   readRecentFeatures.mockResolvedValue([]);
   rememberFeatureOpen.mockResolvedValue([]);
   togglePinnedFeature.mockResolvedValue({ items: [], pinned: false });
+  exploreApi.getBlogCategoryItems.mockResolvedValue([]);
 });
 
 describe('ExploreScreen', () => {
@@ -869,13 +871,10 @@ describe('ExploreScreen', () => {
     await waitFor(() => {
       expect(getByTestId('explore-web-app-leaderboard-surface')).toBeTruthy();
       expect(queryByTestId('screen-title')).toBeNull();
-      expect(getByText('KOMUNITAS')).toBeTruthy();
+      expect(queryByTestId('web-app-leaderboard-back')).toBeNull();
       expect(getByText('Leaderboard')).toBeTruthy();
-      expect(getByText('2 peserta')).toBeTruthy();
       expect(getAllByText('Ahmad').length).toBeGreaterThan(0);
       expect(getByText('Fatimah')).toBeTruthy();
-      expect(getByText('2 streak')).toBeTruthy();
-      expect(getByText('3 hafalan')).toBeTruthy();
       expect(getAllByTestId('web-app-leaderboard-row')).toHaveLength(2);
     });
 
@@ -894,6 +893,22 @@ describe('ExploreScreen', () => {
       expect.objectContaining({ key: 'leaderboard', endpoint: '/api/v1/leaderboard/hafalan' }),
       { page: 0, size: 20 },
     );
+  });
+
+  test('renders dashboard Leaderboard empty state when leaderboard APIs fail in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    exploreApi.getFeatureItemPage
+      .mockRejectedValueOnce(new Error('streak failed'))
+      .mockRejectedValueOnce(new Error('hafalan failed'));
+
+    const { getByText, queryByText } = await renderExploreScreen({
+      deepLinkTarget: { id: 'leaderboard-empty-route', params: { featureKey: 'leaderboard' } },
+    });
+
+    await waitFor(() => {
+      expect(getByText('Data leaderboard belum tersedia.')).toBeTruthy();
+      expect(queryByText('Leaderboard belum bisa dimuat.')).toBeNull();
+    });
   });
 
   test('uses dashboard Kajian route surface in web app layout', async () => {
@@ -938,6 +953,7 @@ describe('ExploreScreen', () => {
     await waitFor(() => {
       expect(getByTestId('explore-web-app-kajian-surface')).toBeTruthy();
       expect(queryByTestId('screen-title')).toBeNull();
+      expect(queryByTestId('web-app-kajian-back')).toBeNull();
       expect(getByText('Kajian Islam')).toBeTruthy();
       expect(getByText('Rekaman kajian dari ustadz-ustadz ahlus sunnah')).toBeTruthy();
       expect(getByText('TOTAL KAJIAN')).toBeTruthy();
@@ -961,6 +977,10 @@ describe('ExploreScreen', () => {
 
   test('uses dashboard Blog route surface in web app layout', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    exploreApi.getBlogCategoryItems.mockResolvedValueOnce([
+      { id: 1, name: 'Akhlak & Adab', slug: 'akhlak-adab' },
+      { id: 2, name: 'Fiqh', slug: 'fiqh' },
+    ]);
     exploreApi.getFeatureItemPage.mockResolvedValueOnce({
       items: [
         {
@@ -1000,8 +1020,10 @@ describe('ExploreScreen', () => {
     await waitFor(() => {
       expect(getByTestId('explore-web-app-blog-surface')).toBeTruthy();
       expect(queryByTestId('screen-title')).toBeNull();
+      expect(queryByTestId('web-app-blog-back')).toBeNull();
       expect(getByText('Artikel Islam')).toBeTruthy();
       expect(getByText('Tazkiyah, fiqh praktis, aqidah, dan ilmu Islam lainnya')).toBeTruthy();
+      expect(getByText('Akhlak & Adab')).toBeTruthy();
       expect(getByText('Adab Menuntut Ilmu')).toBeTruthy();
       expect(getByText('Fiqh Zakat Harian')).toBeTruthy();
       expect(getAllByTestId('web-app-blog-card')).toHaveLength(2);

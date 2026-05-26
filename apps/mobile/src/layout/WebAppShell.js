@@ -20,7 +20,7 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
   const accountLabel = getWebAppAccountLabel(user);
 
   useEffect(() => {
-    StatusBar.setBarStyle('light-content');
+    StatusBar.setBarStyle('dark-content');
   }, []);
 
   const closeAccountMenu = useCallback(() => setAccountMenuVisible(false), []);
@@ -86,7 +86,7 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#0f172a',
+    backgroundColor: '#ffffff',
     flex: 1,
   },
   container: {

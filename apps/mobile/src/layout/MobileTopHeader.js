@@ -3,11 +3,11 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { radius, spacing } from '../theme';
 
 const header = {
-  bg: '#0f172a',
-  border: '#1f2937',
+  bg: '#ffffff',
+  border: '#f3f4f6',
   brand: '#007f63',
-  ink: '#f8fafc',
-  muted: '#cbd5e1',
+  ink: '#111827',
+  muted: '#9ca3af',
 };
 
 export function MobileTopHeader({ accountLabel = 'T', accountMenuOpen = false, onOpenAccountMenu }) {
@@ -28,7 +28,7 @@ export function MobileTopHeader({ accountLabel = 'T', accountMenuOpen = false, o
         <Pressable
           accessibilityLabel="Buka menu akun"
           accessibilityRole="button"
-          android_ripple={{ color: 'rgba(52, 211, 153, 0.14)', borderless: true }}
+          android_ripple={{ color: 'rgba(17, 24, 39, 0.08)', borderless: true }}
           onPress={onOpenAccountMenu}
           style={styles.accountButton}
           testID="mobile-top-header-profile"

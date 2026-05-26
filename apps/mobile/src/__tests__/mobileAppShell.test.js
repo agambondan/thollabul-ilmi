@@ -96,7 +96,13 @@ describe('MobileAppShell', () => {
     expect(getByText('Hadith')).toBeTruthy();
     expect(getByText('Cari')).toBeTruthy();
     expect(getByText('Menu')).toBeTruthy();
-    expect(setBarStyleSpy).toHaveBeenCalledWith('light-content');
+    expect(setBarStyleSpy).toHaveBeenCalledWith('dark-content');
+    expect(getByTestId('mobile-top-header').props.style).toEqual(
+      expect.objectContaining({ backgroundColor: '#ffffff' }),
+    );
+    expect(getByTestId('mobile-bottom-nav').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff' })]),
+    );
   });
 
   test('uses logged-in user initial in web app shell header', async () => {
