@@ -10,13 +10,18 @@ jest.mock('expo-location', () => ({
 import * as Location from 'expo-location';
 
 jest.mock('../components/Screen', () => {
-  const { View, Text, ActivityIndicator } = require('react-native');
+  const { View, Text, ActivityIndicator, Pressable } = require('react-native');
   return {
-    Screen: ({ children, title, subtitle, refreshing, actions, contentStyle }) => (
+    Screen: ({ children, title, subtitle, refreshing, actions, contentStyle, onRefresh }) => (
       <View style={contentStyle}>
         <Text testID="screen-title">{title}</Text>
         {subtitle ? <Text testID="screen-subtitle">{subtitle}</Text> : null}
         <View testID="screen-actions">{actions}</View>
+        {onRefresh ? (
+          <Pressable testID="screen-refresh" onPress={onRefresh}>
+            <Text>Refresh</Text>
+          </Pressable>
+        ) : null}
         {refreshing ? (
           <ActivityIndicator testID="screen-loader" />
         ) : null}
@@ -43,37 +48,6 @@ jest.mock('../components/Card', () => {
   };
 });
 
-jest.mock('../components/Paper', () => {
-  const { Pressable, Text, View } = require('react-native');
-  return {
-    IconActionButton: ({ label, onPress, disabled }) => (
-      <Pressable
-        onPress={onPress}
-        disabled={disabled}
-        testID={`action-${label}`}
-      >
-        <Text>{label}</Text>
-      </Pressable>
-    ),
-    ActionPill: ({ label, onPress, disabled }) => (
-      <Pressable
-        onPress={onPress}
-        disabled={disabled}
-        testID={`pill-${label}`}
-      >
-        <Text>{label}</Text>
-      </Pressable>
-    ),
-    EmptyState: ({ title, description, action }) => (
-      <View testID="empty-state">
-        <Text testID="empty-title">{title}</Text>
-        {description ? <Text>{description}</Text> : null}
-        {action}
-      </View>
-    ),
-  };
-});
-
 jest.mock('../hooks/useLayoutModePreference', () => ({
   useLayoutModePreference: jest.fn(),
 }));
@@ -88,21 +62,10 @@ jest.mock('../utils/compass', () => ({
   signedOffset: jest.fn(() => null),
 }));
 
-import { QiblaScreen } from '../screens/QiblaScreen';
-import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
-
-const mockCoords = { latitude: -6.2, longitude: 106.8, accuracy: 100 };
-
-var mockRefreshOnPress;
-
 jest.mock('../components/Paper', () => {
   const { Pressable, Text, View } = require('react-native');
   return {
-    IconActionButton: ({ label, onPress, disabled }) => {
-      if (label === 'Muat ulang arah kiblat') {
-        mockRefreshOnPress = onPress;
-      }
-      return (
+    IconActionButton: ({ label, onPress, disabled }) => (
         <Pressable
           onPress={onPress}
           disabled={disabled}
@@ -110,8 +73,7 @@ jest.mock('../components/Paper', () => {
         >
           <Text>{label}</Text>
         </Pressable>
-      );
-    },
+    ),
     ActionPill: ({ label, onPress, disabled }) => (
       <Pressable
         onPress={onPress}
@@ -130,6 +92,11 @@ jest.mock('../components/Paper', () => {
     ),
   };
 });
+
+import { QiblaScreen } from '../screens/QiblaScreen';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
+
+const mockCoords = { latitude: -6.2, longitude: 106.8, accuracy: 100 };
 
 describe('QiblaScreen', () => {
   beforeEach(() => {
@@ -156,12 +123,27 @@ describe('QiblaScreen', () => {
 
   test('uses web app Qibla surface when web app layout is active', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
-    const { getByTestId, queryByTestId } = render(<QiblaScreen onBack={jest.fn()} />);
+    const { getAllByText, getByTestId, getByText, queryByTestId } = render(<QiblaScreen onBack={jest.fn()} />);
 
     await waitFor(() => {
       expect(getByTestId('qibla-web-app-surface')).toBeTruthy();
     });
+    expect(getByTestId('screen-title').props.children).toBe('Kiblat');
+    expect(getByText("Temukan arah Ka'bah dari lokasi kamu")).toBeTruthy();
     expect(queryByTestId('qibla-classic-surface')).toBeNull();
+    expect(queryByTestId('action-Kembali ke Ibadah')).toBeNull();
+
+    await waitFor(() => {
+      expect(getAllByText('Arah Kiblat').length).toBeGreaterThanOrEqual(1);
+      expect(getByText('Sudut Kiblat')).toBeTruthy();
+      expect(getByText("Jarak ke Ka'bah")).toBeTruthy();
+      expect(getByText('Lokasi Kamu')).toBeTruthy();
+      expect(
+        getByText(
+          'Arah dihitung menggunakan koordinat GPS. Untuk akurasi tertinggi, pastikan GPS aktif.',
+        ),
+      ).toBeTruthy();
+    });
   });
 
   test('shows loader while loading location', () => {
@@ -312,10 +294,11 @@ describe('QiblaScreen', () => {
 
     await waitFor(() => {
       expect(getByTestId('card-title')).toBeTruthy();
+      expect(Location.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     });
 
     await act(async () => {
-      mockRefreshOnPress();
+      fireEvent.press(getByTestId('screen-refresh'));
     });
 
     await waitFor(() => {

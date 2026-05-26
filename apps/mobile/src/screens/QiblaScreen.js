@@ -162,6 +162,34 @@ export function QiblaScreen({ onBack, onOpenTab }) {
             : `Akurasi ${Math.round(locationAccuracy)} m`;
     const compassLabel =
         heading === null ? "Kalibrasi kompas" : `HP ${formatDegrees(heading)}`;
+    const screenTitle = isWebAppLayout ? "Kiblat" : "Qibla";
+    const screenSubtitle = isWebAppLayout
+        ? "Temukan arah Ka'bah dari lokasi kamu."
+        : "Arahkan perangkatmu untuk menemukan arah kiblat.";
+    const screenActions = isWebAppLayout ? (
+        <IconActionButton
+            Icon={RefreshCw}
+            label='Muat ulang arah kiblat'
+            onPress={load}
+            disabled={loading}
+        />
+    ) : (
+        <>
+            {onBack || onOpenTab ? (
+                <IconActionButton
+                    Icon={ArrowLeft}
+                    label={onBack ? "Kembali ke Ibadah" : "Kembali ke Beranda"}
+                    onPress={onBack ?? (() => onOpenTab("home"))}
+                />
+            ) : null}
+            <IconActionButton
+                Icon={RefreshCw}
+                label='Muat ulang arah kiblat'
+                onPress={load}
+                disabled={loading}
+            />
+        </>
+    );
 
     const smoothHeading = useCallback((nextHeading) => {
         const previous = headingDegrees.current;
@@ -298,42 +326,37 @@ export function QiblaScreen({ onBack, onOpenTab }) {
     return (
         <Screen
             contentStyle={isWebAppLayout ? styles.webAppSurface : null}
-            title='Qibla'
-            subtitle='Arahkan perangkatmu untuk menemukan arah kiblat.'
+            title={screenTitle}
+            subtitle={screenSubtitle}
             refreshing={loading}
             onRefresh={load}
-            actions={
-                <>
-                    {onBack || onOpenTab ? (
-                        <IconActionButton
-                            Icon={ArrowLeft}
-                            label={
-                                onBack
-                                    ? "Kembali ke Ibadah"
-                                    : "Kembali ke Beranda"
-                            }
-                            onPress={onBack ?? (() => onOpenTab("home"))}
-                        />
-                    ) : null}
-                    <IconActionButton
-                        Icon={RefreshCw}
-                        label='Muat ulang arah kiblat'
-                        onPress={load}
-                        disabled={loading}
-                    />
-                </>
-            }
+            actions={screenActions}
         >
             <View testID={isWebAppLayout ? 'qibla-web-app-surface' : 'qibla-classic-surface'} />
-            {message ? <Text style={styles.message}>{message}</Text> : null}
+            {isWebAppLayout ? (
+                <View style={styles.webAppHeader}>
+                    <View style={styles.webAppIconBox}>
+                        <KaabaIcon aligned={aligned} />
+                    </View>
+                    <Text style={styles.webAppTitle}>Arah Kiblat</Text>
+                    <Text style={styles.webAppSubtitle}>Temukan arah Ka'bah dari lokasi kamu</Text>
+                </View>
+            ) : null}
+            {message ? <Text style={[styles.message, isWebAppLayout ? styles.webAppMessage : null]}>{message}</Text> : null}
             {compassMessage ? (
-                <Text style={styles.message}>{compassMessage}</Text>
+                <Text style={[styles.message, isWebAppLayout ? styles.webAppMessage : null]}>{compassMessage}</Text>
             ) : null}
 
             {!coords && !loading ? (
-                <Card>
-                    <CardTitle meta='Koordinat GPS'>Lokasi Manual</CardTitle>
-                    <Text style={styles.muted}>
+                <Card style={isWebAppLayout ? styles.webAppPanel : null}>
+                    <CardTitle
+                        meta='Koordinat GPS'
+                        metaStyle={isWebAppLayout ? styles.webAppCardMeta : null}
+                        titleStyle={isWebAppLayout ? styles.webAppCardTitle : null}
+                    >
+                        Lokasi Manual
+                    </CardTitle>
+                    <Text style={[styles.muted, isWebAppLayout ? styles.webAppMuted : null]}>
                         Aktifkan GPS atau masukkan koordinat untuk menghitung
                         arah kiblat.
                     </Text>
@@ -344,7 +367,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                             placeholder='-6.2088 (Lintang)'
                             placeholderTextColor={colors.muted}
                             returnKeyType='next'
-                            style={styles.manualLocInput}
+                            style={[styles.manualLocInput, isWebAppLayout ? styles.webAppManualInput : null]}
                             value={manualLatInput}
                         />
                         <TextInput
@@ -353,7 +376,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                             placeholder='106.8456 (Bujur)'
                             placeholderTextColor={colors.muted}
                             returnKeyType='done'
-                            style={styles.manualLocInput}
+                            style={[styles.manualLocInput, isWebAppLayout ? styles.webAppManualInput : null]}
                             value={manualLngInput}
                         />
                     </View>
@@ -362,6 +385,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                         onPress={applyManualLocation}
                         style={[
                             styles.button,
+                            isWebAppLayout ? styles.webAppButton : null,
                             !manualLatInput || !manualLngInput
                                 ? styles.disabled
                                 : null,
@@ -374,16 +398,21 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                 </Card>
             ) : null}
 
-            <Card style={styles.compassCard}>
+            <Card style={[styles.compassCard, isWebAppLayout ? styles.webAppCompassPanel : null]}>
                 <CardTitle
                     meta={
-                        heading === null ? "Bearing dari utara" : "Kompas aktif"
+                        heading === null ? "Bearing utara" : "Kompas aktif"
                     }
+                    metaStyle={isWebAppLayout ? styles.webAppCardMeta : null}
+                    titleStyle={isWebAppLayout ? styles.webAppCardTitle : null}
                 >
                     Arah Kiblat
                 </CardTitle>
                 {loading ? (
-                    <ActivityIndicator color={colors.primary} />
+                    <View style={isWebAppLayout ? styles.webAppLoading : null}>
+                        <ActivityIndicator color={colors.primary} />
+                        {isWebAppLayout ? <Text style={styles.webAppLoadingText}>Mendeteksi lokasi...</Text> : null}
+                    </View>
                 ) : !hasDirection ? (
                     <EmptyState
                         Icon={MapPinOff}
@@ -427,6 +456,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                         <View
                             style={[
                                 styles.compass,
+                                isWebAppLayout ? styles.webAppCompass : null,
                                 {
                                     borderRadius: compassSize / 2,
                                     height: compassSize,
@@ -648,39 +678,43 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                         </View>
 
                         <View style={styles.directionSummary}>
-                            <Text style={styles.degrees}>
+                            <Text style={[styles.degrees, isWebAppLayout ? styles.webAppDegrees : null]}>
                                 {formatDegrees(direction ?? 0)}
                             </Text>
-                            <Text style={styles.directionLabel}>
+                            <Text style={[styles.directionLabel, isWebAppLayout ? styles.webAppDirectionLabel : null]}>
                                 {aligned ? "sejajar kiblat" : "bearing kiblat"}
                             </Text>
                         </View>
-                        <Text style={styles.muted}>{guidanceText}</Text>
+                        <Text style={[styles.muted, isWebAppLayout ? styles.webAppMuted : null]}>{guidanceText}</Text>
                     </>
                 )}
             </Card>
 
             <View style={styles.metrics}>
-                <View style={styles.metric}>
-                    <Text style={styles.metricLabel}>Jarak</Text>
-                    <Text style={styles.metricValue}>
+                <View style={[styles.metric, isWebAppLayout ? styles.webAppMetric : null]}>
+                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null]}>
+                        {isWebAppLayout ? "Jarak ke Ka'bah" : "Jarak"}
+                    </Text>
+                    <Text style={[styles.metricValue, isWebAppLayout ? styles.webAppMetricValue : null]}>
                         {distance?.toLocaleString("en-US") ?? "-"}
                     </Text>
-                    <Text style={styles.metricLabel}>km</Text>
+                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null]}>km</Text>
                 </View>
-                <View style={styles.metric}>
-                    <Text style={styles.metricLabel}>Qibla</Text>
-                    <Text style={styles.metricValueSmall}>
+                <View style={[styles.metric, isWebAppLayout ? styles.webAppMetric : null]}>
+                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null]}>
+                        {isWebAppLayout ? "Sudut Kiblat" : "Qibla"}
+                    </Text>
+                    <Text style={[styles.metricValueSmall, isWebAppLayout ? styles.webAppMetricValueSmall : null]}>
                         {hasDirection ? formatDegrees(direction) : "-"}
                     </Text>
-                    <Text style={styles.metricLabel}>utara sebenarnya</Text>
+                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null]}>utara sebenarnya</Text>
                 </View>
             </View>
 
             <View style={styles.metrics}>
-                <View style={styles.metric}>
-                    <Text style={styles.metricLabel}>Kompas</Text>
-                    <Text style={styles.metricValueSmall}>
+                <View style={[styles.metric, isWebAppLayout ? styles.webAppMetric : null]}>
+                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null]}>Kompas</Text>
+                    <Text style={[styles.metricValueSmall, isWebAppLayout ? styles.webAppMetricValueSmall : null]}>
                         {heading === null
                             ? hasCompass
                                 ? "Kalibrasi"
@@ -688,15 +722,33 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                             : formatDegrees(heading)}
                     </Text>
                 </View>
-                <View style={styles.metric}>
-                    <Text style={styles.metricLabel}>Lokasi</Text>
-                    <Text style={styles.metricValueSmall}>
+                <View style={[styles.metric, isWebAppLayout ? styles.webAppMetric : null]}>
+                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null]}>Lokasi</Text>
+                    <Text style={[styles.metricValueSmall, isWebAppLayout ? styles.webAppMetricValueSmall : null]}>
                         {coords
                             ? `${locationMode === "manual" ? "Manual " : ""}${coords.lat.toFixed(3)}, ${coords.lng.toFixed(3)}`
                             : "-"}
                     </Text>
                 </View>
             </View>
+
+            {isWebAppLayout && coords ? (
+                <View style={styles.webAppLocationCard}>
+                    <View style={styles.webAppLocationTitleRow}>
+                        <MapPin color="#059669" size={16} strokeWidth={2.2} />
+                        <Text style={styles.webAppLocationTitle}>Lokasi Kamu</Text>
+                    </View>
+                    <Text style={styles.webAppLocationText}>
+                        {coords.lat.toFixed(4)} derajat lintang, {coords.lng.toFixed(4)} derajat bujur
+                    </Text>
+                </View>
+            ) : null}
+
+            {isWebAppLayout ? (
+                <Text style={styles.webAppGpsNote}>
+                    Arah dihitung menggunakan koordinat GPS. Untuk akurasi tertinggi, pastikan GPS aktif.
+                </Text>
+            ) : null}
         </Screen>
     );
 }
@@ -706,6 +758,150 @@ const styles = StyleSheet.create({
         backgroundColor: "#f8fafc",
         borderRadius: radius.md,
         padding: spacing.sm,
+    },
+    webAppHeader: {
+        alignItems: "center",
+        marginBottom: spacing.lg,
+        paddingTop: spacing.sm,
+    },
+    webAppIconBox: {
+        alignItems: "center",
+        backgroundColor: "#d1fae5",
+        borderRadius: 18,
+        height: 64,
+        justifyContent: "center",
+        marginBottom: spacing.md,
+        width: 64,
+    },
+    webAppTitle: {
+        color: "#064e3b",
+        fontSize: 28,
+        fontWeight: "900",
+        letterSpacing: 0,
+        textAlign: "center",
+    },
+    webAppSubtitle: {
+        color: "#64748b",
+        fontSize: 14,
+        fontWeight: "700",
+        lineHeight: 20,
+        marginTop: spacing.xs,
+        textAlign: "center",
+    },
+    webAppMessage: {
+        backgroundColor: "#fff7ed",
+        borderColor: "#fed7aa",
+        borderRadius: 16,
+        color: "#c2410c",
+    },
+    webAppPanel: {
+        backgroundColor: "#ffffff",
+        borderColor: "#e5e7eb",
+        borderRadius: 18,
+        shadowOpacity: 0,
+    },
+    webAppCompassPanel: {
+        alignItems: "stretch",
+        backgroundColor: "#ffffff",
+        borderColor: "#e5e7eb",
+        borderRadius: 22,
+        paddingHorizontal: spacing.md,
+        shadowOpacity: 0,
+    },
+    webAppCardTitle: {
+        color: "#0f172a",
+        fontSize: 15,
+    },
+    webAppCardMeta: {
+        color: "#059669",
+    },
+    webAppMuted: {
+        color: "#64748b",
+        fontWeight: "700",
+    },
+    webAppManualInput: {
+        backgroundColor: "#f8fafc",
+        borderColor: "#d1d5db",
+    },
+    webAppButton: {
+        backgroundColor: "#047857",
+        borderRadius: 14,
+    },
+    webAppLoading: {
+        alignItems: "center",
+        paddingVertical: spacing.xl,
+    },
+    webAppLoadingText: {
+        color: "#64748b",
+        fontSize: 13,
+        fontWeight: "800",
+        marginTop: spacing.sm,
+    },
+    webAppCompass: {
+        backgroundColor: "#ffffff",
+        borderColor: "#a7f3d0",
+        borderWidth: 4,
+    },
+    webAppDegrees: {
+        color: "#047857",
+    },
+    webAppDirectionLabel: {
+        color: "#64748b",
+    },
+    webAppMetric: {
+        backgroundColor: "#ffffff",
+        borderColor: "#e5e7eb",
+        borderRadius: 18,
+        minHeight: 112,
+        padding: spacing.md,
+    },
+    webAppMetricLabel: {
+        color: "#64748b",
+        fontSize: 11,
+        fontWeight: "800",
+    },
+    webAppMetricValue: {
+        color: "#047857",
+    },
+    webAppMetricValueSmall: {
+        color: "#047857",
+        fontSize: 16,
+        fontWeight: "900",
+    },
+    webAppLocationCard: {
+        backgroundColor: "#ffffff",
+        borderColor: "#e5e7eb",
+        borderRadius: 18,
+        borderWidth: 1,
+        marginBottom: spacing.md,
+        padding: spacing.md,
+    },
+    webAppLocationTitleRow: {
+        alignItems: "center",
+        flexDirection: "row",
+        gap: spacing.xs,
+        marginBottom: spacing.xs,
+    },
+    webAppLocationTitle: {
+        color: "#64748b",
+        fontSize: 12,
+        fontWeight: "900",
+        letterSpacing: 0,
+        textTransform: "uppercase",
+    },
+    webAppLocationText: {
+        color: "#334155",
+        fontSize: 13,
+        fontWeight: "700",
+        lineHeight: 19,
+    },
+    webAppGpsNote: {
+        color: "#94a3b8",
+        fontSize: 12,
+        fontWeight: "700",
+        lineHeight: 18,
+        marginTop: spacing.sm,
+        textAlign: "center",
     },
     message: {
         backgroundColor: "#fffbeb",
