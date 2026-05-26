@@ -895,6 +895,69 @@ describe('ExploreScreen', () => {
     );
   });
 
+  test('uses dashboard Kajian route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 'kajian-1',
+          title: 'Fiqh Zakat Praktis',
+          body: 'Pembahasan zakat maal harian.',
+          raw: {
+            description: 'Pembahasan zakat maal harian.',
+            duration_seconds: 1800,
+            speaker: 'Ustadz Ahmad',
+            title: 'Fiqh Zakat Praktis',
+            topic: 'fiqh',
+            type: 'video',
+            url: 'https://example.test/kajian-1',
+          },
+        },
+        {
+          id: 'kajian-2',
+          title: 'Tafsir Juz Amma',
+          body: 'Kajian tafsir ringkas.',
+          raw: {
+            description: 'Kajian tafsir ringkas.',
+            duration_seconds: 900,
+            speaker: 'Ustadzah Fatimah',
+            title: 'Tafsir Juz Amma',
+            topic: 'tafsir',
+            type: 'audio',
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
+      deepLinkTarget: { id: 'kajian-route', params: { featureKey: 'kajian' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-kajian-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('KAJIAN & ARTIKEL')).toBeTruthy();
+      expect(getByText('Kajian')).toBeTruthy();
+      expect(getByText('2 materi')).toBeTruthy();
+      expect(getByText('Ustadz Ahmad')).toBeTruthy();
+      expect(getByText('Ustadzah Fatimah')).toBeTruthy();
+      expect(getAllByTestId('web-app-kajian-card')).toHaveLength(2);
+    });
+
+    fireEvent.press(getByTestId('web-app-kajian-category-fiqh'));
+
+    expect(getByText('Fiqh Zakat Praktis')).toBeTruthy();
+    expect(queryByText('Tafsir Juz Amma')).toBeNull();
+    expect(getAllByTestId('web-app-kajian-card')).toHaveLength(1);
+
+    fireEvent.press(getByTestId('web-app-kajian-category-all'));
+    fireEvent.changeText(getByPlaceholderText('Cari judul, pemateri, atau deskripsi...'), 'tafsir');
+
+    expect(getByText('Tafsir Juz Amma')).toBeTruthy();
+    expect(queryByText('Fiqh Zakat Praktis')).toBeNull();
+  });
+
   test('renders search input for feature catalog', async () => {
     const { getByTestId } = await renderExploreScreen();
     expect(getByTestId('search-input')).toBeTruthy();

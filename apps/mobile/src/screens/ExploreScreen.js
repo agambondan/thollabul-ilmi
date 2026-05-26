@@ -80,6 +80,7 @@ const TAFSIR_MODES = [
   { key: 'kemenag', label: 'Kemenag' },
   { key: 'mishbah', label: 'Al-Mishbah' },
 ];
+const KAJIAN_CATEGORIES = ['aqidah', 'fiqh', 'akhlak', 'tafsir', 'hadits', 'sirah', 'umum'];
 const LIBRARY_PROGRESS_STATUSES = [
   { key: 'planned', label: 'Rencana' },
   { key: 'reading', label: 'Dibaca' },
@@ -169,6 +170,11 @@ const formatNumericInput = (value = '') => {
 };
 const formatCurrency = (value = 0) => `Rp ${Math.round(Number(value) || 0).toLocaleString('id-ID')}`;
 const pickText = (...values) => values.find((value) => typeof value === 'string' && value.trim()) ?? '';
+const toTextValue = (value) => {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  return pickText(value.name, value.title, value.label, value.value);
+};
 const parseGoalNumber = (value, fallback = 0) => {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
@@ -468,6 +474,74 @@ const getLeaderboardSummary = (items = []) => {
     topStreak: streak[0] ?? null,
   };
 };
+const getKajianRaw = (item = {}) => item?.raw ?? item;
+const getKajianTitle = (item = {}, index = 0) => {
+  const raw = getKajianRaw(item);
+  const translation = raw.translation ?? {};
+  return pickText(
+    item.title,
+    translation.title_idn,
+    translation.title_en,
+    raw.title,
+    raw.name,
+    raw.slug,
+    `Kajian ${index + 1}`,
+  );
+};
+const getKajianDescription = (item = {}) => {
+  const raw = getKajianRaw(item);
+  const translation = raw.translation ?? {};
+  return pickText(
+    item.body,
+    translation.description_idn,
+    translation.description_en,
+    raw.description,
+    raw.summary,
+    raw.content,
+  );
+};
+const getKajianType = (item = {}) => {
+  const raw = getKajianRaw(item);
+  return toTextValue(raw.type || item.meta || raw.format || raw.platform).toLowerCase();
+};
+const getKajianTopic = (item = {}) => {
+  const raw = getKajianRaw(item);
+  return toTextValue(raw.topic || raw.category || raw.subject).toLowerCase();
+};
+const getKajianSpeaker = (item = {}) => {
+  const raw = getKajianRaw(item);
+  return toTextValue(raw.speaker || raw.ustadz || raw.author || raw.teacher);
+};
+const getKajianDuration = (item = {}) => {
+  const raw = getKajianRaw(item);
+  const seconds = Number(raw.duration_seconds ?? raw.durationSeconds ?? 0);
+  if (Number.isFinite(seconds) && seconds > 0) return `${Math.round(seconds / 60)} menit`;
+  return pickText(raw.duration, raw.duration_label);
+};
+const getKajianUrl = (item = {}) => {
+  const raw = getKajianRaw(item);
+  return pickText(raw.url, raw.source_url, raw.link);
+};
+const getFilteredKajianItems = (items = [], search = '', category = '') => {
+  const query = normalizeSearchText(search);
+  return items.filter((item, index) => {
+    const text = normalizeSearchText([
+      getKajianTitle(item, index),
+      getKajianDescription(item),
+      getKajianSpeaker(item),
+      getKajianTopic(item),
+      getKajianType(item),
+    ].join(' '));
+    const matchesSearch = query ? text.includes(query) : true;
+    const matchesCategory = category ? getKajianTopic(item) === category : true;
+    return matchesSearch && matchesCategory;
+  });
+};
+const getKajianSummary = (items = []) => ({
+  categoryCount: new Set(items.map(getKajianTopic).filter(Boolean)).size,
+  total: items.length,
+  videoCount: items.filter((item) => getKajianType(item) === 'video').length,
+});
 const normalizeAsmaulName = (item = {}, index = 0) => ({
   arabic: pickText(item.arabic, item.translation?.arab, item.translation?.ar, item.name),
   id: item.id ?? item.number ?? index + 1,
@@ -595,6 +669,8 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
   const [commentSaving, setCommentSaving] = useState(false);
   const [likingFeedId, setLikingFeedId] = useState('');
   const [notesSearch, setNotesSearch] = useState('');
+  const [kajianSearch, setKajianSearch] = useState('');
+  const [kajianCategory, setKajianCategory] = useState('');
   const [leaderboardTab, setLeaderboardTab] = useState('streak');
   const [editingUserWirdId, setEditingUserWirdId] = useState('');
   const [savingUserWird, setSavingUserWird] = useState(false);
@@ -696,6 +772,8 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       setFeedComments([]);
       setCommentDraft('');
       setNotesSearch('');
+      setKajianSearch('');
+      setKajianCategory('');
       setLeaderboardTab('streak');
       setEditingUserWirdId('');
       setUserWirdForm(emptyUserWirdForm);
@@ -4586,6 +4664,144 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     );
   };
 
+  const renderWebAppKajianCard = (item, index) => {
+    const type = getKajianType(item);
+    const topic = getKajianTopic(item);
+    const speaker = getKajianSpeaker(item);
+    const duration = getKajianDuration(item);
+    const url = getKajianUrl(item);
+
+    return (
+      <Pressable
+        key={`${getExploreItemKey(item)}-${index}`}
+        onPress={() => {
+          if (url) {
+            Linking.openURL(url).catch(() => setError('Tautan kajian belum bisa dibuka.'));
+            return;
+          }
+          openItemDetail(item);
+        }}
+        style={styles.webAppKajianCard}
+        testID="web-app-kajian-card"
+      >
+        <View style={styles.webAppKajianCardHeader}>
+          <View style={styles.webAppKajianBadges}>
+            {type ? <Text style={[styles.webAppKajianBadge, type === 'video' && styles.webAppKajianBadgeVideo]}>{type}</Text> : null}
+            {topic ? <Text style={styles.webAppKajianBadge}>{topic}</Text> : null}
+          </View>
+          {url ? <ExternalLink color={WEB_APP_EXPLORE_MUTED} size={16} strokeWidth={2.2} /> : null}
+        </View>
+        <Text numberOfLines={2} style={styles.webAppBookmarkTitle}>
+          {getKajianTitle(item, index)}
+        </Text>
+        {speaker ? <Text style={styles.webAppKajianSpeaker}>{speaker}</Text> : null}
+        {duration ? <Text style={styles.webAppBookmarkSlug}>{duration}</Text> : null}
+        {getKajianDescription(item) ? (
+          <Text numberOfLines={3} style={styles.webAppBookmarkText}>
+            {getKajianDescription(item)}
+          </Text>
+        ) : null}
+      </Pressable>
+    );
+  };
+
+  const renderWebAppKajianScreen = () => {
+    const filteredKajian = getFilteredKajianItems(visibleItems, kajianSearch, kajianCategory);
+    const summary = getKajianSummary(visibleItems);
+
+    return (
+      <ScrollView
+        contentContainerStyle={styles.webAppBookmarksContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        style={styles.webAppBookmarksRoot}
+      >
+        <View testID="explore-web-app-kajian-surface" />
+        <View style={styles.webAppBookmarksHeader}>
+          <Pressable
+            accessibilityLabel="Kembali ke Belajar"
+            onPress={clearFeature}
+            style={styles.webAppBookmarksBack}
+            testID="web-app-kajian-back"
+          >
+            <Text style={styles.webAppBookmarksBackText}>Kembali</Text>
+          </Pressable>
+          <Text style={styles.webAppCatalogEyebrow}>KAJIAN & ARTIKEL</Text>
+          <View style={styles.webAppBookmarksTitleRow}>
+            <Text style={styles.webAppCatalogTitle}>Kajian</Text>
+            <Text style={styles.webAppBookmarksCount}>{filteredKajian.length} materi</Text>
+          </View>
+          <Text style={styles.webAppCatalogSubtitle}>
+            Sesi belajar Islam dalam tampilan dashboard dengan pencarian dan kategori.
+          </Text>
+        </View>
+
+        <View style={styles.webAppStatsGrid}>
+          {renderWebAppStatsTile({ label: 'Total', value: summary.total })}
+          {renderWebAppStatsTile({ accent: '#f87171', label: 'Video', value: summary.videoCount })}
+          {renderWebAppStatsTile({ accent: '#60a5fa', label: 'Kategori', value: summary.categoryCount })}
+        </View>
+
+        <View style={styles.webAppKajianSearch}>
+          <TextInput
+            onChangeText={setKajianSearch}
+            placeholder="Cari judul, pemateri, atau deskripsi..."
+            placeholderTextColor={WEB_APP_EXPLORE_MUTED}
+            style={styles.webAppCatalogInput}
+            testID="web-app-kajian-search"
+            value={kajianSearch}
+          />
+        </View>
+
+        <View style={styles.webAppKajianCategories}>
+          <Pressable
+            onPress={() => setKajianCategory('')}
+            style={[styles.webAppKajianCategory, !kajianCategory && styles.webAppKajianCategoryActive]}
+            testID="web-app-kajian-category-all"
+          >
+            <Text style={[styles.webAppKajianCategoryText, !kajianCategory && styles.webAppKajianCategoryTextActive]}>
+              Semua
+            </Text>
+          </Pressable>
+          {KAJIAN_CATEGORIES.map((category) => (
+            <Pressable
+              key={category}
+              onPress={() => setKajianCategory(kajianCategory === category ? '' : category)}
+              style={[styles.webAppKajianCategory, kajianCategory === category && styles.webAppKajianCategoryActive]}
+              testID={`web-app-kajian-category-${category}`}
+            >
+              <Text style={[styles.webAppKajianCategoryText, kajianCategory === category && styles.webAppKajianCategoryTextActive]}>
+                {category}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+
+        {error ? <Text style={styles.webAppBookmarksError}>{error}</Text> : null}
+        {loading ? (
+          <View style={styles.webAppBookmarksState}>
+            <ActivityIndicator color={WEB_APP_EXPLORE_ACCENT} size="small" />
+            <Text style={styles.webAppBookmarksStateText}>Memuat kajian...</Text>
+          </View>
+        ) : null}
+        {!loading && !error && filteredKajian.length ? (
+          <View style={styles.webAppKajianGrid}>
+            {filteredKajian.map(renderWebAppKajianCard)}
+          </View>
+        ) : null}
+        {!loading && !error && !filteredKajian.length ? (
+          <View style={styles.webAppBookmarksEmpty}>
+            <BookOpen color={WEB_APP_EXPLORE_MUTED} size={32} strokeWidth={1.8} />
+            <Text style={styles.webAppBookmarksEmptyTitle}>Kajian tidak ditemukan.</Text>
+            <Text style={styles.webAppBookmarksEmptyText}>
+              Ubah kata kunci atau pilih kategori lain.
+            </Text>
+          </View>
+        ) : null}
+      </ScrollView>
+    );
+  };
+
   const renderWebAppNotificationsScreen = () => (
     <ScrollView
       contentContainerStyle={styles.webAppNotificationsContent}
@@ -4695,6 +4911,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   if (activeFeature?.key === 'leaderboard' && isWebAppLayout) {
     return renderWebAppLeaderboardScreen();
+  }
+
+  if (activeFeature?.key === 'kajian' && isWebAppLayout) {
+    return renderWebAppKajianScreen();
   }
 
   if (activeFeature?.type === 'notifications' && isWebAppLayout) {
@@ -5599,6 +5819,93 @@ const styles = StyleSheet.create({
     color: WEB_APP_EXPLORE_MUTED,
     fontSize: 11,
     fontWeight: '700',
+  },
+  webAppKajianSearch: {
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: 12,
+    borderWidth: 1,
+    justifyContent: 'center',
+    marginTop: spacing.md,
+    minHeight: 46,
+    paddingHorizontal: spacing.md,
+  },
+  webAppKajianCategories: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginTop: spacing.md,
+  },
+  webAppKajianCategory: {
+    backgroundColor: '#1e293b',
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: 999,
+    borderWidth: 1,
+    minHeight: 32,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 7,
+  },
+  webAppKajianCategoryActive: {
+    backgroundColor: WEB_APP_EXPLORE_ACCENT,
+    borderColor: WEB_APP_EXPLORE_ACCENT,
+  },
+  webAppKajianCategoryText: {
+    color: '#cbd5e1',
+    fontSize: 12,
+    fontWeight: '900',
+    textTransform: 'capitalize',
+  },
+  webAppKajianCategoryTextActive: {
+    color: '#022c22',
+  },
+  webAppKajianGrid: {
+    gap: spacing.md,
+    marginTop: spacing.md,
+  },
+  webAppKajianCard: {
+    backgroundColor: WEB_APP_EXPLORE_SURFACE,
+    borderColor: WEB_APP_EXPLORE_BORDER,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    minHeight: 154,
+    padding: spacing.md,
+  },
+  webAppKajianCardHeader: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    justifyContent: 'space-between',
+    marginBottom: spacing.sm,
+  },
+  webAppKajianBadges: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    flex: 1,
+    gap: spacing.xs,
+  },
+  webAppKajianBadge: {
+    backgroundColor: 'rgba(52, 211, 153, 0.12)',
+    borderColor: 'rgba(52, 211, 153, 0.32)',
+    borderRadius: 999,
+    borderWidth: 1,
+    color: WEB_APP_EXPLORE_ACCENT,
+    fontSize: 11,
+    fontWeight: '900',
+    overflow: 'hidden',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    textTransform: 'capitalize',
+  },
+  webAppKajianBadgeVideo: {
+    backgroundColor: 'rgba(248, 113, 113, 0.12)',
+    borderColor: 'rgba(248, 113, 113, 0.32)',
+    color: '#fecaca',
+  },
+  webAppKajianSpeaker: {
+    color: WEB_APP_EXPLORE_ACCENT,
+    fontSize: 12,
+    fontWeight: '900',
+    marginTop: spacing.xs,
   },
   webAppSurface: {
     backgroundColor: '#f8fafc',

@@ -1629,3 +1629,51 @@ Results:
   leaderboard API returned HTTP 500 for both streak and hafalan endpoints, so
   the smoke screen showed the existing load-error state instead of live ranking
   rows.
+
+## Web App Kajian Route Dashboard Parity
+
+Status: completed for the native `web_app` Kajian feature route visual parity
+pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic generic list path for Kajian on the
+  `classic` layout.
+- `web_app` mode now renders the Kajian feature route with a dedicated dark
+  dashboard surface modeled after `/dashboard/kajian`: header, total/video/
+  category stat tiles, search input, category pills, and kajian cards with
+  type/topic badges.
+- Kajian loading still uses the existing `/api/v1/kajian` feature endpoint
+  through `getFeatureItemPage`; this slice only changes presentation and local
+  filtering in `web_app`.
+- Added Explore test coverage to ensure the `web_app` Kajian feature route uses
+  the dedicated dashboard surface instead of the generic `Screen` title path.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Kajian feature route presentation
+  in `web_app`. It does not change classic Explore, kajian API calls, external
+  link behavior outside the Kajian card, feature keys, or pagination contracts.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted Explore test passed: 1 suite, 32 tests.
+- Full mobile Jest passed: 44 suites, 633 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Native emulator smoke captured at
+  `output/native-smoke/tholabul-webapp-emulator-kajian-route-after.png`;
+  the route rendered the dark Kajian dashboard shell with stat tiles, search,
+  category pills, and kajian cards populated from the local API.
