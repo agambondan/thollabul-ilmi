@@ -19,6 +19,8 @@ import {
 const AUDIO_SPEED_OPTIONS = [0.75, 1, 1.25, 1.5, 2];
 const AUDIO_PREF_KEY = 'tholabul:quran-audio-web';
 const DEFAULT_QARI = 'mishary-rashid-alafasy';
+const MIN_SURAH_NUMBER = 1;
+const MAX_SURAH_NUMBER = 114;
 
 const normalizeItems = (payload) => {
     if (Array.isArray(payload)) return payload;
@@ -33,6 +35,9 @@ const toPositiveInt = (value) => {
     const numeric = Number.parseInt(`${value ?? ''}`, 10);
     return Number.isFinite(numeric) && numeric > 0 ? numeric : null;
 };
+
+const isValidSurahNumber = (value) =>
+    Number.isInteger(value) && value >= MIN_SURAH_NUMBER && value <= MAX_SURAH_NUMBER;
 
 const clampSpeed = (value) => {
     const numeric = Number(value);
@@ -337,6 +342,10 @@ export default function SurahAudioPlayer({
 
         if (startSurah > endSurah) {
             setError('Range audio belum valid: surat awal tidak boleh melewati surat akhir.');
+            return;
+        }
+        if (!isValidSurahNumber(startSurah) || !isValidSurahNumber(endSurah)) {
+            setError(`Range audio belum valid: nomor surat harus ${MIN_SURAH_NUMBER}-${MAX_SURAH_NUMBER}.`);
             return;
         }
 

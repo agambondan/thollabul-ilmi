@@ -3,11 +3,10 @@
 import Footer from '@/components/Footer';
 import ContentWidth from '@/components/layout/ContentWidth';
 import { NavbarTailwindCss } from '@/components/Navbar';
+import MushafAyahList from '@/components/quran/MushafAyahList';
 import Section from '@/components/Section';
 import { useLocale } from '@/context/Locale';
 import { quranApi } from '@/lib/api';
-import { getLocalizedField } from '@/lib/translation';
-import Link from 'next/link';
 import { useState } from 'react';
 
 const PageMushafContent = () => {
@@ -106,42 +105,7 @@ const PageMushafContent = () => {
             </div>
 
             {ayahs.length > 0 && (
-                <div className='space-y-3'>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
-                        {ayahs.length} {t('mushaf.ayah_unit')}
-                    </p>
-                    {ayahs.map((a) => (
-                        <div
-                            key={a.id}
-                            className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4'
-                        >
-                            <div className='flex items-center justify-between mb-2 text-xs text-gray-400 dark:text-gray-500'>
-                                <Link
-                                    href={`/quran/${a.surah?.number}-${getLocalizedField(a.surah, 'name', lang) || a.surah?.id}`}
-                                    className='font-semibold text-emerald-700 dark:text-emerald-400 hover:underline'
-                                >
-                                    {a.surah?.number}.{' '}
-                                    {getLocalizedField(a.surah, 'name', lang) ||
-                                        a.surah?.translation?.name}
-                                </Link>
-                                <span>
-                                    {t('mushaf.ayah')} {a.number}
-                                </span>
-                            </div>
-                            <p
-                                className='text-2xl leading-[2.2] text-right text-emerald-900 dark:text-white'
-                                style={{ direction: 'rtl', fontFamily: 'Amiri, serif' }}
-                            >
-                                {a.translation?.ar}
-                            </p>
-                            {a.translation?.[lang === 'EN' ? 'en' : 'idn'] && (
-                                <p className='text-sm text-gray-600 dark:text-gray-300 mt-2'>
-                                    {a.translation[lang === 'EN' ? 'en' : 'idn']}
-                                </p>
-                            )}
-                        </div>
-                    ))}
-                </div>
+                <MushafAyahList ayahs={ayahs} lang={lang} readerBasePath='/quran/surah' t={t} />
             )}
 
             {!loading && ayahs.length === 0 && (

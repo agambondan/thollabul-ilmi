@@ -123,7 +123,7 @@ func (c *surahRepo) loadSurahParallel(surah *model.Surah, ctx *fiber.Ctx) error 
 	if ctx != nil {
 		g.Go(func() error {
 			limit, offset := lib.GetLimitOffset(ctx)
-			return c.db.Where(`surah_id = ?`, surah.Number).Offset(offset).Limit(limit).
+			return c.db.Where(`surah_id = ?`, surah.ID).Offset(offset).Limit(limit).
 				Order("number").Joins("Translation").
 				Find(&surah.Ayahs).Error
 		})

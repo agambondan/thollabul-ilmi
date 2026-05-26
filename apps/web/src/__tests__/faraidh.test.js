@@ -5,6 +5,7 @@ describe('HEIR_LABELS', () => {
     expect(Object.keys(HEIR_LABELS)).toEqual([
       'suami', 'istri', 'anak_laki', 'anak_perempuan', 'ayah',
       'ayah_residue', 'ibu', 'kakek', 'nenek', 'saudara_laki', 'saudara_perempuan',
+      'ibu_musytarakah',
     ]);
   });
   test('suami has idn/en labels', () => {

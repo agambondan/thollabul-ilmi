@@ -27,7 +27,7 @@ describe('parseSource', () => {
     const result = parseSource('QS. Al-Fatihah: 1');
     expect(result).toHaveLength(1);
     expect(result[0].external).toBe(false);
-    expect(result[0].url).toBe('/quran/surah/Al-Fatihah#1');
+    expect(result[0].url).toBe('/quran/surah/Al-Fatihah#ayah-1');
   });
 
   test('parses multiple sources separated by semicolon', () => {
@@ -78,7 +78,7 @@ describe('SourceBadges', () => {
   test('renders internal link for quran source', () => {
     render(<SourceBadges source="QS. Al-Fatihah: 1" />);
     const link = screen.getByText('QS. Al-Fatihah: 1');
-    expect(link.getAttribute('href')).toBe('/quran/surah/Al-Fatihah#1');
+    expect(link.getAttribute('href')).toBe('/quran/surah/Al-Fatihah#ayah-1');
   });
 
   test('renders plain text for unrecognized source', () => {

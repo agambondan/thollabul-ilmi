@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { preferenceKeys, readPreference, writePreference } from '../storage/preferences';
 
-const MIN_ARABIC_FONT_SIZE = 12;
+const MIN_ARABIC_FONT_SIZE = 14;
 const MAX_ARABIC_FONT_SIZE = 48;
 
 const VALID_ARABIC_FONTS = new Set(['kitab', 'indopak', 'naskh']);

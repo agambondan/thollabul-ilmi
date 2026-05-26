@@ -183,4 +183,19 @@ describe('SurahAudioPlayer', () => {
     expect(screen.getByLabelText('Sampai ayat')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Jeda/i })).toBeInTheDocument();
   });
+
+  test('rejects audio range outside Quran surah bounds', async () => {
+    render(<SurahAudioPlayer surahNumber={1} surahName="Al-Fatihah" totalAyahs={7} />);
+
+    fireEvent.click(screen.getByText('Dengar Surah'));
+    await screen.findByText('Abdul Rahman Al-Sudais');
+    fireEvent.change(await screen.findByLabelText('Sampai surat'), {
+      target: { value: '999' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Putar range/i }));
+
+    expect(await screen.findByText('Range audio belum valid: nomor surat harus 1-114.')).toBeInTheDocument();
+    expect(mockBySurahPage).not.toHaveBeenCalledWith(1, 0, 300);
+    expect(global.Audio).not.toHaveBeenCalled();
+  });
 });

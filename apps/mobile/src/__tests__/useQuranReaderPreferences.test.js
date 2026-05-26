@@ -66,8 +66,8 @@ describe('useQuranReaderPreferences', () => {
       await result.current.updateFontSize(5);
     });
 
-    expect(result.current.fontSize).toBe(12);
-    expect(writePreference).toHaveBeenCalledWith('quran-font-size', 12);
+    expect(result.current.fontSize).toBe(14);
+    expect(writePreference).toHaveBeenCalledWith('quran-font-size', 14);
   });
 
   test('updateFontSize clamps above maximum', async () => {
@@ -191,7 +191,7 @@ describe('useQuranReaderPreferences', () => {
     const { result } = renderHook(() => useQuranReaderPreferences());
     await act(async () => {});
 
-    expect(result.current.fontSize).toBe(12);
+    expect(result.current.fontSize).toBe(14);
   });
 
   test('loads saved memorization mode picks valid values only', async () => {
