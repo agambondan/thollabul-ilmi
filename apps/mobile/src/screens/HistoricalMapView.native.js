@@ -2,9 +2,16 @@ import MapView, { Callout, Marker } from 'react-native-maps';
 import { StyleSheet, Text, View } from 'react-native';
 import { radius } from '../theme';
 
-export function HistoricalMapView({ locations = [] }) {
+const hasValidCoordinate = (loc) => Number.isFinite(Number(loc?.latitude)) && Number.isFinite(Number(loc?.longitude));
+
+export function HistoricalMapView({ locations = [], isWebAppLayout = false }) {
+  const visibleLocations = locations.filter(hasValidCoordinate);
+
   return (
-    <View style={styles.mapContainer} testID="historical-map-native">
+    <View
+      style={[styles.mapContainer, isWebAppLayout && styles.webAppMapContainer]}
+      testID="historical-map-native"
+    >
       <MapView
         initialRegion={{
           latitude: 28,
@@ -14,10 +21,10 @@ export function HistoricalMapView({ locations = [] }) {
         }}
         style={styles.map}
       >
-        {locations.map((loc) => (
+        {visibleLocations.map((loc) => (
           <Marker
             key={loc.id || loc.name}
-            coordinate={{ latitude: loc.latitude, longitude: loc.longitude }}
+            coordinate={{ latitude: Number(loc.latitude), longitude: Number(loc.longitude) }}
             title={loc.name}
           >
             <Callout>
@@ -48,6 +55,12 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     height: 400,
     overflow: 'hidden',
+  },
+  webAppMapContainer: {
+    borderColor: '#e5e7eb',
+    borderRadius: 16,
+    borderWidth: 1,
+    height: 500,
   },
   map: {
     height: '100%',

@@ -34,6 +34,8 @@ const ERAS = [
     { value: 'klasik', label: 'Klasik' },
 ];
 
+const hasValidCoordinate = (loc) => Number.isFinite(Number(loc?.latitude)) && Number.isFinite(Number(loc?.longitude));
+
 export default function MapComponent() {
     const [locations, setLocations] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -55,6 +57,8 @@ export default function MapComponent() {
             .catch(() => setLocations([]))
             .finally(() => setLoading(false));
     }, [search, category, era]);
+
+    const visibleLocations = locations.filter(hasValidCoordinate);
 
     return (
         <div className='flex flex-col gap-4'>
@@ -98,8 +102,8 @@ export default function MapComponent() {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    {locations.map((loc) => (
-                        <Marker key={loc.id || loc.name} position={[loc.latitude, loc.longitude]}>
+                    {visibleLocations.map((loc) => (
+                        <Marker key={loc.id || loc.name} position={[Number(loc.latitude), Number(loc.longitude)]}>
                             <Popup>
                                 <div className='min-w-[200px]'>
                                     <strong className='text-sm'>{loc.name}</strong>

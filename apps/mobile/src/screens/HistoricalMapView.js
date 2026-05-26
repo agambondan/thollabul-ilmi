@@ -1,18 +1,25 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { colors, radius, spacing } from '../theme';
 
-export function HistoricalMapView({ locations = [] }) {
+export function HistoricalMapView({ locations = [], isWebAppLayout = false }) {
   return (
-    <View style={styles.container} testID="historical-map-web-fallback">
-      <Text style={styles.title}>Peta tersedia di aplikasi native</Text>
-      <Text style={styles.subtitle}>
+    <View
+      style={[styles.container, isWebAppLayout && styles.webAppContainer]}
+      testID="historical-map-web-fallback"
+    >
+      <Text style={[styles.title, isWebAppLayout && styles.webAppTitle]}>
+        Peta tersedia di aplikasi native
+      </Text>
+      <Text style={[styles.subtitle, isWebAppLayout && styles.webAppSubtitle]}>
         Expo web menampilkan daftar lokasi agar fitur tarikh tetap bisa dibuka dari browser.
       </Text>
       <ScrollView contentContainerStyle={styles.list} nestedScrollEnabled showsVerticalScrollIndicator={false}>
         {locations.slice(0, 8).map((loc) => (
-          <View key={loc.id || loc.name} style={styles.locationCard}>
-            <Text style={styles.locationName}>{loc.name}</Text>
-            <Text numberOfLines={2} style={styles.locationDesc}>
+          <View key={loc.id || loc.name} style={[styles.locationCard, isWebAppLayout && styles.webAppLocationCard]}>
+            <Text style={[styles.locationName, isWebAppLayout && styles.webAppLocationName]}>
+              {loc.name}
+            </Text>
+            <Text numberOfLines={2} style={[styles.locationDesc, isWebAppLayout && styles.webAppLocationDesc]}>
               {loc.description}
             </Text>
             {(loc.category || loc.era) && (
@@ -91,5 +98,27 @@ const styles = StyleSheet.create({
   tagEra: {
     backgroundColor: '#dbeafe',
     color: '#1e40af',
+  },
+  webAppContainer: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: 16,
+    minHeight: 500,
+  },
+  webAppTitle: {
+    color: '#111827',
+  },
+  webAppSubtitle: {
+    color: '#64748b',
+    fontWeight: '600',
+  },
+  webAppLocationCard: {
+    borderColor: '#e5e7eb',
+  },
+  webAppLocationName: {
+    color: '#111827',
+  },
+  webAppLocationDesc: {
+    color: '#64748b',
   },
 });

@@ -1835,3 +1835,62 @@ Results:
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
 - `git diff --check` passed.
+
+## Web App Peta Islam Interaktif Route Dashboard Parity
+
+Status: completed for the native `web_app` Peta Islam Interaktif route visual
+parity pass.
+
+Implemented:
+
+- `HistoricalMapContent` keeps the existing classic map/list flow for
+  `classic` layout.
+- In `web_app` mode, Peta Islam Interaktif now renders a light dashboard
+  surface modeled after `/dashboard/peta`: centered title/subtitle, search
+  field, location count, map/list segmented control, category chips, era chips,
+  and a taller white map panel.
+- Mobile category/era filters now include the web route's `Universitas` and
+  `Fatimiyah` options, and the `Khulafa` label matches the web wording.
+- The native map and web Leaflet map now ignore records without valid numeric
+  coordinates before rendering markers, preventing bad backend rows from
+  breaking the map surface.
+
+Scope guardrail:
+
+- This slice changes only Peta Islam Interaktif presentation in mobile
+  `web_app`, its map-view props, a route-scoped web marker guard, and route
+  docs. It does not touch classic Explore routing or another agent's dirty
+  Explore/Fiqh files.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/HistoricalMapScreen.js
+node --check apps/mobile/src/screens/HistoricalMapView.js
+node --check apps/mobile/src/screens/HistoricalMapView.native.js
+node --check apps/mobile/src/__tests__/historicalMapScreen.test.js
+node --check apps/web/src/app/peta/MapComponent.js
+cd apps/mobile
+npm test -- historicalMapScreen.test.js --runInBand
+npm test -- historicalMapScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-peta-route-export
+cd ../..
+cd apps/web
+npm run build
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted mobile Historical Map test passed: 1 suite, 3 tests.
+- Targeted mobile Historical Map/shell/layout tests passed: 3 suites, 26 tests.
+- Full mobile Jest passed: 45 suites, 658 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-peta-route-export`.
+- Web production build passed.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.

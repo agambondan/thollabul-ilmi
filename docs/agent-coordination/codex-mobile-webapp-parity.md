@@ -7,15 +7,15 @@ Started: 2026-05-26 16:20 WIB
 
 - Route/feature: mobile `web_app` parity against authenticated `/dashboard`
   mobile web views.
-- Completed near-term task: Quran reader `web_app` visual polish against
-  `/dashboard/quran/:slug`, after validating that the Hadith detail slice was
+- Completed near-term task: Peta Islam Interaktif `web_app` visual polish against
+  `/dashboard/peta`, after validating that the Quran reader slice was
   documented, tested, committed, and pushed.
 - Files I may edit after route selection:
   - `apps/mobile/**`
   - relevant `apps/mobile` tests
-  - `apps/web/src/app/dashboard/quran/**`
-  - `apps/web/src/app/quran/**`
-  - quran-reader-specific web code/tests, if needed
+  - `apps/web/src/app/dashboard/peta/**`
+  - `apps/web/src/app/peta/**`
+  - peta-route-specific web code/tests, if needed
   - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
   - route-specific docs under `docs/**`
 - Files I will avoid unless explicitly handed off:
@@ -47,7 +47,7 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Last completed route: Quran reader. Next active route is not selected
+- Last completed route: Peta Islam Interaktif. Next active route is not selected
   yet, to avoid colliding with another active agent.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
@@ -59,6 +59,18 @@ Started: 2026-05-26 16:20 WIB
 
 ## Verification
 
+- `node --check apps/mobile/src/screens/HistoricalMapScreen.js` passed.
+- `node --check apps/mobile/src/screens/HistoricalMapView.js` passed.
+- `node --check apps/mobile/src/screens/HistoricalMapView.native.js` passed.
+- `node --check apps/mobile/src/__tests__/historicalMapScreen.test.js` passed.
+- `node --check apps/web/src/app/peta/MapComponent.js` passed.
+- `cd apps/mobile && npm test -- historicalMapScreen.test.js --runInBand` passed: 1 suite, 3 tests.
+- `cd apps/mobile && npm test -- historicalMapScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand` passed: 3 suites, 26 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 45 suites, 658 tests.
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-peta-route-export` passed.
+- `cd apps/web && npm run build` passed.
+- `node scripts/check-feature-parity.js` passed.
+- `git diff --check` passed.
 - `node --check apps/mobile/src/screens/quran/QuranScreenRenderers.js` passed.
 - `node --check apps/mobile/src/screens/QuranScreen.styles.js` passed.
 - `cd apps/mobile && npm test -- quranScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand` passed: 3 suites, 43 tests.
