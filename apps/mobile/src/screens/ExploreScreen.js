@@ -178,6 +178,15 @@ const formatNumericInput = (value = '') => {
 const formatCurrency = (value = 0) => `Rp ${Math.round(Number(value) || 0).toLocaleString('id-ID')}`;
 const pickText = (...values) => values.find((value) => typeof value === 'string' && value.trim()) ?? '';
 const stripHtmlText = (value = '') => `${value}`.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+const isRateLimitError = (error) =>
+  Number(error?.status) === 429 || /\b429\b|too many requests|terlalu sering/i.test(`${error?.message ?? ''}`);
+const getFeatureLoadErrorMessage = (feature, error, isWebAppLayout) => {
+  if (isWebAppLayout && feature?.key === 'blog' && isRateLimitError(error)) {
+    return 'Artikel sedang terlalu sering dimuat. Coba lagi sebentar.';
+  }
+
+  return error?.message ?? 'Fitur ini belum bisa dimuat.';
+};
 const toTextValue = (value) => {
   if (!value) return '';
   if (typeof value === 'string') return value;
@@ -1065,7 +1074,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         }
         setItems(nextItems);
       } catch (err) {
-        setError(err?.message ?? 'Fitur ini belum bisa dimuat.');
+        setError(getFeatureLoadErrorMessage(feature, err, isWebAppLayout));
       } finally {
         setLoading(false);
       }

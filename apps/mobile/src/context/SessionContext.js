@@ -4,6 +4,14 @@ import { clearSession, readSession, saveSession } from '../storage/session';
 
 const SessionContext = createContext(null);
 
+const isSessionInvalidError = (error) => {
+  const status = Number(error?.status);
+  if (status === 401 || status === 403) return true;
+
+  const message = `${error?.message ?? ''}`.toLowerCase();
+  return /\b(401|403)\b/.test(message) || /unauth|invalid|expired|berakhir/.test(message);
+};
+
 export function SessionProvider({ children }) {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -38,7 +46,12 @@ export function SessionProvider({ children }) {
       const next = { ...stored, user };
       await persist(next);
       return next;
-    } catch {
+    } catch (err) {
+      if (!isSessionInvalidError(err)) {
+        setLoading(false);
+        return stored;
+      }
+
       if (!stored.refreshToken) {
         await persist(null);
         setError('Sesi kamu sudah berakhir. Masuk lagi dari tab Profil.');
@@ -56,10 +69,15 @@ export function SessionProvider({ children }) {
         };
         await persist(next);
         return next;
-      } catch {
-        await persist(null);
-        setError('Sesi kamu sudah berakhir. Masuk lagi dari tab Profil.');
-        return null;
+      } catch (refreshErr) {
+        if (isSessionInvalidError(refreshErr)) {
+          await persist(null);
+          setError('Sesi kamu sudah berakhir. Masuk lagi dari tab Profil.');
+          return null;
+        }
+
+        setLoading(false);
+        return stored;
       } finally {
         setLoading(false);
       }

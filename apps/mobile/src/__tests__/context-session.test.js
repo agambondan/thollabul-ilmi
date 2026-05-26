@@ -73,6 +73,19 @@ describe('SessionProvider', () => {
     expect(auth.refreshSession).toHaveBeenCalledWith('rt');
   });
 
+  test('restore keeps cached session when getMe is rate limited', async () => {
+    const rateLimitError = new Error('Request failed: 429');
+    rateLimitError.status = 429;
+    session.readSession.mockResolvedValue({ token: 'tok', refreshToken: 'rt', user: { name: 'Ali' } });
+    auth.getMe.mockRejectedValue(rateLimitError);
+
+    const { getByText } = renderWithSession(<TestConsumer />);
+
+    await waitFor(() => expect(getByText('Ali')).toBeTruthy());
+    expect(auth.refreshSession).not.toHaveBeenCalled();
+    expect(session.clearSession).not.toHaveBeenCalled();
+  });
+
   test('restore clears session when getMe and refresh both fail', async () => {
     session.readSession.mockResolvedValue({ token: 'tok', refreshToken: 'rt' });
     auth.getMe.mockRejectedValue(new Error('expired'));

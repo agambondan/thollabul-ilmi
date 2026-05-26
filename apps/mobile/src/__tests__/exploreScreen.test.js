@@ -1045,6 +1045,24 @@ describe('ExploreScreen', () => {
     expect(queryByText('Fiqh Zakat Harian')).toBeNull();
   });
 
+  test('uses a friendly Blog rate-limit message in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    const rateLimitError = new Error('Request failed: 429');
+    rateLimitError.status = 429;
+    exploreApi.getFeatureItemPage.mockRejectedValueOnce(rateLimitError);
+    exploreApi.getBlogCategoryItems.mockResolvedValueOnce([]);
+
+    const { getByTestId, getByText, queryByText } = await renderExploreScreen({
+      deepLinkTarget: { id: 'blog-route', params: { featureKey: 'blog' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-blog-surface')).toBeTruthy();
+      expect(getByText('Artikel sedang terlalu sering dimuat. Coba lagi sebentar.')).toBeTruthy();
+    });
+    expect(queryByText('Request failed: 429')).toBeNull();
+  });
+
   test('uses dashboard Feed route surface in web app layout', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
     socialApi.getFeedPostPage.mockResolvedValueOnce({

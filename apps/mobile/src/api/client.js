@@ -47,7 +47,9 @@ export const requestJson = async (path, options = {}) => {
       // Keep the status-based message when the response body is not JSON.
     }
 
-    throw new Error(message);
+    const error = new Error(message);
+    error.status = response.status;
+    throw error;
   }
 
   return response.json();
