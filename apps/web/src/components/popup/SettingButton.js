@@ -115,7 +115,7 @@ const SettingButton = () => {
                     </p>
 
                     {/* Layout toggle */}
-                    <div className='mb-3'>
+                    <div className='hidden md:block mb-3'>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
                             {t('settings.ayah_layout')}
                         </p>
