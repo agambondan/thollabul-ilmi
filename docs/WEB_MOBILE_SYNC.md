@@ -10,6 +10,11 @@ Last verified: 2026-05-26
 - Feature manifest: `docs/features/feature-manifest.json`
 - Route parity checker: `node scripts/check-feature-parity.js`
 - Web package shortcut: `cd apps/web && npm run check:feature-parity`
+- Web route UI audit: `cd apps/web && npm run test:e2e:routes`
+  - Runs `tests/flows/all-routes-ui-audit.spec.js` against the 154 current
+    `src/app` page routes.
+  - The GitHub `web-e2e` job runs the full Playwright suite through
+    `npm run test:e2e`, so this audit is part of routine CI.
 - Review history:
   - `docs/features/progress/2026-05-24-web-mobile-runtime-sync.md`
   - `docs/reviews/2026-05-23-web-mobile-feature-parity-deep-review.md`
@@ -27,6 +32,30 @@ Feature parity check passed.
 - mobile feature keys: 43
 - web app routes scanned: 154
 ```
+
+Current route UI audit output:
+
+```text
+154 passed
+```
+
+## Routine UI Route Checklist
+
+Run this checklist when a change touches web route layout, dashboard/public
+journeys, route wrappers, global floating controls, Playwright mocks, or route
+generation:
+
+```bash
+cd apps/web
+npm run test:e2e:routes
+npm run build
+cd ../..
+git diff --check
+```
+
+The route audit verifies mobile viewport rendering for every `page.js` route,
+HTTP status, body readiness, console/page errors, Recharts chart-size warnings,
+duplicate global settings controls, horizontal overflow, and raw i18n keys.
 
 ## Current Parity Rule
 

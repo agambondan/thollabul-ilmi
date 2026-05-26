@@ -9,6 +9,7 @@
     "check:feature-parity": "node ../../scripts/check-feature-parity.js",
     "lint": "eslint .",
     "test:e2e": "playwright test",
+    "test:e2e:routes": "playwright test tests/flows/all-routes-ui-audit.spec.js --project=chromium",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"

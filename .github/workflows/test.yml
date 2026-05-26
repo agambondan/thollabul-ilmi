@@ -247,7 +247,7 @@ jobs:
         run: npx playwright install chromium
 
       - name: Run E2E tests
-        run: npx playwright test --reporter=list 2>&1 | tee /tmp/e2e-output.txt
+        run: npm run test:e2e -- --reporter=list 2>&1 | tee /tmp/e2e-output.txt
 
       - name: Check test results
         run: |
