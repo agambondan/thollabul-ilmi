@@ -1354,9 +1354,7 @@ export function renderExploreWebAppRoute(context) {
         kajianSearch={kajianSearch}
         loading={loading}
         onOpenItem={openItemDetail}
-        onOpenUrl={(url) => {
-          Linking.openURL(url).catch(() => setError('Tautan kajian belum bisa dibuka.'));
-        }}
+        onOpenUrl={onOpenKajianUrl}
         onSearch={setKajianSearch}
         onSelectCategory={setKajianCategory}
         summary={summary}
