@@ -18,6 +18,12 @@ import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import { TbPlayerTrackNext, TbPlayerTrackPrev } from 'react-icons/tb';
 
 const PAGE_SIZE = 10;
+const BASMALAH_ARABIC = 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ';
+
+const shouldShowSurahBasmalah = (surahNumber) => {
+	const number = Number(surahNumber);
+	return number > 1 && number !== 9;
+};
 
 const normalizeAyahs = (data) => {
 	if (Array.isArray(data?.ayahs)) return data.ayahs;
@@ -229,6 +235,7 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 	const nextHref = surah?.next_surah?.translation?.latin_en
 		? `${basePath}/${surah.next_surah.translation.latin_en}`
 		: '';
+	const showSurahBasmalah = shouldShowSurahBasmalah(surah?.number);
 
 	return (
 		<div className={isWide ? 'w-full' : 'max-w-3xl mx-auto'}>
@@ -260,6 +267,14 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 					>
 						{surah?.translation?.ar?.replace('سُورَةُ', '').trim() ?? ''}
 					</p>
+					{showSurahBasmalah && (
+						<p
+							className={`${fontCls} mt-1 text-3xl leading-[1.8] text-gray-800 dark:text-gray-100`}
+							style={{ direction: 'rtl' }}
+						>
+							{BASMALAH_ARABIC}
+						</p>
+					)}
 				</div>
 
 				<div className='flex flex-wrap items-center gap-2 px-4 py-2 text-xs border-b border-gray-100 dark:border-slate-800 bg-emerald-50/40 dark:bg-emerald-900/10'>

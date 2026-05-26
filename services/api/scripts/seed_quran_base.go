@@ -17,6 +17,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
@@ -36,12 +37,12 @@ type QuranBaseFile struct {
 }
 
 type SurahFile struct {
-	Number          int       `json:"number"`
-	NameAr          string    `json:"name_ar"`
-	NameEn          string    `json:"name_en"`
-	NameTranslation string    `json:"name_translation"`
-	Slug            string    `json:"slug"`
-	RevelationType  string    `json:"revelation_type"`
+	Number          int        `json:"number"`
+	NameAr          string     `json:"name_ar"`
+	NameEn          string     `json:"name_en"`
+	NameTranslation string     `json:"name_translation"`
+	Slug            string     `json:"slug"`
+	RevelationType  string     `json:"revelation_type"`
 	Ayahs           []AyahFile `json:"ayahs"`
 }
 
@@ -56,6 +57,30 @@ type AyahFile struct {
 	Ruku        int    `json:"ruku"`
 	HizbQuarter int    `json:"hizb_quarter"`
 	Sajda       bool   `json:"sajda"`
+}
+
+var quranBasmalahPrefixes = []string{
+	"بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+	"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+	"بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ",
+	"بسم الله الرحمن الرحيم",
+}
+
+func cleanQuranArabicText(surahNumber int, ayahNumber int, text string) string {
+	if ayahNumber != 1 || surahNumber == 1 || surahNumber == 9 {
+		return text
+	}
+	return stripLeadingQuranBasmalah(text)
+}
+
+func stripLeadingQuranBasmalah(text string) string {
+	trimmed := strings.TrimLeft(text, " \n\t\r")
+	for _, prefix := range quranBasmalahPrefixes {
+		if strings.HasPrefix(trimmed, prefix) {
+			return strings.TrimLeft(strings.TrimPrefix(trimmed, prefix), " \n\t\r")
+		}
+	}
+	return text
 }
 
 // ── Seeder ────────────────────────────────────────────────────────────────────
@@ -88,7 +113,7 @@ func seedQuranBase(db *gorm.DB, surahs []SurahFile, from, to int) {
 			Identifier:     lib.Strptr(sf.NameEn),
 		}
 		if err := db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "number"}},
+			Columns: []clause.Column{{Name: "number"}},
 			DoUpdates: clause.AssignmentColumns([]string{
 				"translation_id", "number_of_ayahs", "revelation_type", "slug", "identifier", "updated_at",
 			}),
@@ -107,8 +132,9 @@ func seedQuranBase(db *gorm.DB, surahs []SurahFile, from, to int) {
 
 		ayahCount := 0
 		for _, af := range sf.Ayahs {
+			arabic := cleanQuranArabicText(sf.Number, af.Number, af.Arabic)
 			ayahTr := model.Translation{
-				Ar:  lib.Strptr(af.Arabic),
+				Ar:  lib.Strptr(arabic),
 				Idn: lib.Strptr(af.Indonesian),
 				En:  lib.Strptr(af.English),
 			}
@@ -142,8 +168,8 @@ func seedQuranBase(db *gorm.DB, surahs []SurahFile, from, to int) {
 
 func main() {
 	fromFlag := flag.Int("from", 1, "Mulai dari surah (inklusif)")
-	toFlag   := flag.Int("to", 114, "Sampai surah (inklusif)")
-	inFlag   := flag.String("in", "data/quran_base.json", "Path file input")
+	toFlag := flag.Int("to", 114, "Sampai surah (inklusif)")
+	inFlag := flag.String("in", "data/quran_base.json", "Path file input")
 	flag.Parse()
 
 	for _, f := range []string{".env.local", ".env"} {

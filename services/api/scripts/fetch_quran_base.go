@@ -21,17 +21,17 @@ import (
 )
 
 const (
-	aqBase      = "https://api.alquran.cloud/v1"
-	edAr        = "quran-uthmani"
-	edIdn       = "id.indonesian"
-	edEn        = "en.sahih"   // Saheeh International (bukan en.saheeh — itu arabic!)
-	fetchDelay  = 300 * time.Millisecond
+	aqBase     = "https://api.alquran.cloud/v1"
+	edAr       = "quran-uthmani"
+	edIdn      = "id.indonesian"
+	edEn       = "en.sahih" // Saheeh International (bukan en.saheeh — itu arabic!)
+	fetchDelay = 300 * time.Millisecond
 )
 
 // ── API response types ────────────────────────────────────────────────────────
 
 type aqSurahListResp struct {
-	Code int        `json:"code"`
+	Code int           `json:"code"`
 	Data []aqSurahMeta `json:"data"`
 }
 
@@ -45,13 +45,13 @@ type aqSurahMeta struct {
 }
 
 type aqEditionsResp struct {
-	Code int          `json:"code"`
-	Data []aqEdition  `json:"data"`
+	Code int         `json:"code"`
+	Data []aqEdition `json:"data"`
 }
 
 type aqEdition struct {
-	Edition  aqEditionMeta `json:"edition"`
-	Ayahs    []aqAyahRaw   `json:"ayahs"`
+	Edition aqEditionMeta `json:"edition"`
+	Ayahs   []aqAyahRaw   `json:"ayahs"`
 }
 
 type aqEditionMeta struct {
@@ -85,12 +85,12 @@ type QuranBaseFile struct {
 }
 
 type SurahFile struct {
-	Number          int       `json:"number"`
-	NameAr          string    `json:"name_ar"`
-	NameEn          string    `json:"name_en"`
-	NameTranslation string    `json:"name_translation"`
-	Slug            string    `json:"slug"`
-	RevelationType  string    `json:"revelation_type"`
+	Number          int        `json:"number"`
+	NameAr          string     `json:"name_ar"`
+	NameEn          string     `json:"name_en"`
+	NameTranslation string     `json:"name_translation"`
+	Slug            string     `json:"slug"`
+	RevelationType  string     `json:"revelation_type"`
 	Ayahs           []AyahFile `json:"ayahs"`
 }
 
@@ -105,6 +105,34 @@ type AyahFile struct {
 	Ruku        int    `json:"ruku"`
 	HizbQuarter int    `json:"hizb_quarter"`
 	Sajda       bool   `json:"sajda"`
+}
+
+var quranBasmalahPrefixes = []string{
+	"بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+	"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+	"بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ",
+	"بسم الله الرحمن الرحيم",
+}
+
+func cleanQuranArabicText(surahNumber int, ayahNumber int, text string) string {
+	if ayahNumber != 1 || surahNumber == 1 || surahNumber == 9 {
+		return text
+	}
+	return stripLeadingQuranBasmalah(text)
+}
+
+func stripLeadingQuranBasmalah(text string) string {
+	trimmed := strings.TrimLeftFunc(text, func(r rune) bool {
+		return r == ' ' || r == '\n' || r == '\t' || r == '\r'
+	})
+	for _, prefix := range quranBasmalahPrefixes {
+		if strings.HasPrefix(trimmed, prefix) {
+			return strings.TrimLeftFunc(strings.TrimPrefix(trimmed, prefix), func(r rune) bool {
+				return r == ' ' || r == '\n' || r == '\t' || r == '\r'
+			})
+		}
+	}
+	return text
 }
 
 // ── HTTP helper ───────────────────────────────────────────────────────────────
@@ -178,7 +206,7 @@ func main() {
 		for i, arAyah := range arEd.Ayahs {
 			af := AyahFile{
 				Number:      arAyah.NumberInSurah,
-				Arabic:      arAyah.Text,
+				Arabic:      cleanQuranArabicText(meta.Number, arAyah.NumberInSurah, arAyah.Text),
 				Juz:         arAyah.Juz,
 				Page:        arAyah.Page,
 				Manzil:      arAyah.Manzil,

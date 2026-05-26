@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
+	"unicode"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
@@ -69,6 +71,7 @@ type wordItem struct {
 // No-op if the file does not exist or if ayahs are already fully seeded.
 func SeedQuranFromFile(db *gorm.DB) {
 	cleanupDuplicateQuranAyahs(db)
+	cleanupEmbeddedBasmalahInQuranAyahs(db)
 
 	var distinctAyahCount int64
 	db.Model(&model.Ayah{}).
@@ -141,7 +144,7 @@ func SeedQuranFromFile(db *gorm.DB) {
 				HizbQuarter: lib.Intptr(af.HizbQuarter),
 				Sajda:       lib.Boolptr(af.Sajda),
 			}
-			if err := upsertQuranAyahFromFile(db, &ayah, af); err != nil {
+			if err := upsertQuranAyahFromFile(db, &ayah, sf.Number, af); err != nil {
 				continue
 			}
 			seeded++
@@ -150,7 +153,8 @@ func SeedQuranFromFile(db *gorm.DB) {
 	log.Printf("[seeder] SeedQuranFromFile: %d ayahs seeded", seeded)
 }
 
-func upsertQuranAyahFromFile(db *gorm.DB, ayah *model.Ayah, af ayahJSON) error {
+func upsertQuranAyahFromFile(db *gorm.DB, ayah *model.Ayah, surahNumber int, af ayahJSON) error {
+	arabic := cleanQuranArabicText(surahNumber, af.Number, af.Arabic)
 	var existing model.Ayah
 	err := db.Where("surah_id = ? AND number = ?", ayah.SurahID, af.Number).First(&existing).Error
 	if err == nil {
@@ -158,14 +162,14 @@ func upsertQuranAyahFromFile(db *gorm.DB, ayah *model.Ayah, af ayahJSON) error {
 			db.Model(&model.Translation{}).
 				Where("id = ?", *existing.TranslationID).
 				Updates(map[string]interface{}{
-					"ar":  af.Arabic,
+					"ar":  arabic,
 					"idn": af.Indonesian,
 					"en":  af.English,
 				})
 			ayah.TranslationID = existing.TranslationID
 		} else {
 			tr := model.Translation{
-				Ar:  lib.Strptr(af.Arabic),
+				Ar:  lib.Strptr(arabic),
 				Idn: lib.Strptr(af.Indonesian),
 				En:  lib.Strptr(af.English),
 			}
@@ -189,7 +193,7 @@ func upsertQuranAyahFromFile(db *gorm.DB, ayah *model.Ayah, af ayahJSON) error {
 	}
 
 	ayahTr := model.Translation{
-		Ar:  lib.Strptr(af.Arabic),
+		Ar:  lib.Strptr(arabic),
 		Idn: lib.Strptr(af.Indonesian),
 		En:  lib.Strptr(af.English),
 	}
@@ -198,6 +202,81 @@ func upsertQuranAyahFromFile(db *gorm.DB, ayah *model.Ayah, af ayahJSON) error {
 	}
 	ayah.TranslationID = ayahTr.ID
 	return db.Create(ayah).Error
+}
+
+var quranBasmalahPrefixes = []string{
+	"بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+	"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+	"بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ",
+	"بسم الله الرحمن الرحيم",
+}
+
+func cleanQuranArabicText(surahNumber int, ayahNumber int, text string) string {
+	if ayahNumber != 1 || surahNumber == 1 || surahNumber == 9 {
+		return text
+	}
+	return stripLeadingQuranBasmalah(text)
+}
+
+func stripLeadingQuranBasmalah(text string) string {
+	trimmed := strings.TrimLeftFunc(text, unicode.IsSpace)
+	for _, prefix := range quranBasmalahPrefixes {
+		if strings.HasPrefix(trimmed, prefix) {
+			return strings.TrimLeftFunc(strings.TrimPrefix(trimmed, prefix), unicode.IsSpace)
+		}
+	}
+	return text
+}
+
+func cleanupEmbeddedBasmalahInQuranAyahs(db *gorm.DB) {
+	type quranAyahTranslationRow struct {
+		TranslationID int     `gorm:"column:translation_id"`
+		SurahNumber   int     `gorm:"column:surah_number"`
+		AyahNumber    int     `gorm:"column:ayah_number"`
+		Ar            *string `gorm:"column:ar"`
+		ArHtml        *string `gorm:"column:ar_html"`
+	}
+
+	var rows []quranAyahTranslationRow
+	if err := db.Table("ayah a").
+		Select("a.translation_id, s.number AS surah_number, a.number AS ayah_number, tr.ar, tr.ar_html").
+		Joins("JOIN surah s ON s.id = a.surah_id").
+		Joins("JOIN translation tr ON tr.id = a.translation_id").
+		Where("a.deleted_at IS NULL AND a.number = 1 AND s.number NOT IN ?", []int{1, 9}).
+		Find(&rows).Error; err != nil {
+		log.Printf("[seeder] cleanup basmalah Quran gagal query: %v", err)
+		return
+	}
+
+	updated := 0
+	for _, row := range rows {
+		changes := map[string]interface{}{}
+		if row.Ar != nil {
+			cleaned := cleanQuranArabicText(row.SurahNumber, row.AyahNumber, *row.Ar)
+			if cleaned != *row.Ar {
+				changes["ar"] = cleaned
+			}
+		}
+		if row.ArHtml != nil {
+			cleaned := cleanQuranArabicText(row.SurahNumber, row.AyahNumber, *row.ArHtml)
+			if cleaned != *row.ArHtml {
+				changes["ar_html"] = cleaned
+			}
+		}
+		if len(changes) == 0 {
+			continue
+		}
+		if err := db.Model(&model.Translation{}).
+			Where("id = ?", row.TranslationID).
+			Updates(changes).Error; err != nil {
+			log.Printf("[seeder] cleanup basmalah translation %d gagal: %v", row.TranslationID, err)
+			continue
+		}
+		updated++
+	}
+	if updated > 0 {
+		log.Printf("[seeder] cleanup basmalah Quran: %d translations updated", updated)
+	}
 }
 
 func cleanupDuplicateQuranAyahs(db *gorm.DB) {

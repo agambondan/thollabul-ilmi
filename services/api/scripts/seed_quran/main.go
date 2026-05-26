@@ -26,6 +26,30 @@ const (
 	requestDelay = 300 * time.Millisecond
 )
 
+var quranBasmalahPrefixes = []string{
+	"بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+	"بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+	"بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ",
+	"بسم الله الرحمن الرحيم",
+}
+
+func cleanQuranArabicText(surahNumber int, ayahNumber int, text string) string {
+	if ayahNumber != 1 || surahNumber == 1 || surahNumber == 9 {
+		return text
+	}
+	return stripLeadingQuranBasmalah(text)
+}
+
+func stripLeadingQuranBasmalah(text string) string {
+	trimmed := strings.TrimLeft(text, " \n\t\r")
+	for _, prefix := range quranBasmalahPrefixes {
+		if strings.HasPrefix(trimmed, prefix) {
+			return strings.TrimLeft(strings.TrimPrefix(trimmed, prefix), " \n\t\r")
+		}
+	}
+	return text
+}
+
 // ─── API response structs ─────────────────────────────────────────────────────
 
 type SurahListResponse struct {
@@ -243,9 +267,10 @@ func run(db *gorm.DB) error {
 		totalAyah := len(arEd.Ayahs)
 		for i := 0; i < totalAyah; i++ {
 			arAyah := arEd.Ayahs[i]
+			arabic := cleanQuranArabicText(meta.Number, arAyah.NumberInSurah, arAyah.Text)
 
 			ayahTranslation := &model.Translation{
-				Ar: lib.Strptr(arAyah.Text),
+				Ar: lib.Strptr(arabic),
 			}
 			if idnEd != nil && i < len(idnEd.Ayahs) {
 				ayahTranslation.Idn = lib.Strptr(idnEd.Ayahs[i].Text)

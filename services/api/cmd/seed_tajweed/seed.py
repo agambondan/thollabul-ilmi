@@ -62,6 +62,12 @@ SHORTCODE_MAP = {
 
 TAG_RE = re.compile(r'\[([a-z]+)(?::\d+)?\[([^\]]*)\]')
 SUP_RE = re.compile(r'<sup\b[^>]*>.*?</sup>', re.IGNORECASE | re.DOTALL)
+BASMALAH_PREFIXES = (
+    "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+    "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+    "بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ",
+    "بسم الله الرحمن الرحيم",
+)
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -86,6 +92,20 @@ def decode_brackets(text: str) -> str:
 def strip_footnotes(html: str) -> str:
     """Remove <sup foot_note=...>N</sup> annotations from quran.com translation."""
     return SUP_RE.sub("", html).strip()
+
+
+def strip_leading_basmalah(text: str) -> str:
+    stripped = text.lstrip()
+    for prefix in BASMALAH_PREFIXES:
+        if stripped.startswith(prefix):
+            return stripped[len(prefix):].lstrip()
+    return text
+
+
+def clean_quran_arabic_text(surah_number: int, ayah_number: int, text: str) -> str:
+    if ayah_number != 1 or surah_number in (1, 9):
+        return text
+    return strip_leading_basmalah(text)
 
 
 def fetch_json(url: str) -> dict:
@@ -162,7 +182,7 @@ def main():
                     num = v["verse_number"]
                     updates.setdefault(num, {})
                     if v.get("text_uthmani"):
-                        updates[num]["ar"] = v["text_uthmani"]
+                        updates[num]["ar"] = clean_quran_arabic_text(n, num, v["text_uthmani"])
                     ts = v.get("translations") or []
                     if ts and ts[0].get("text"):
                         updates[num]["en"] = strip_footnotes(ts[0]["text"])
