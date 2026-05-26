@@ -7,15 +7,15 @@ Started: 2026-05-26 16:20 WIB
 
 - Route/feature: mobile `web_app` parity against authenticated `/dashboard`
   mobile web views.
-- Near-term task: `jadwal-sholat` / Jadwal Sholat route visual polish against
-  `/dashboard/jadwal-sholat`, after validating that the previous Feed and
-  Achievements slices are documented, tested, committed, and pushed.
+- Completed near-term task: `khatam` / Khatam route visual polish against
+  `/dashboard/khatam`, after validating that the Prayer/Jadwal Sholat slice was
+  documented, tested, committed, and pushed.
 - Files I may edit after route selection:
   - `apps/mobile/**`
   - relevant `apps/mobile` tests
-  - `apps/web/src/app/dashboard/jadwal-sholat/**`
-  - `apps/web/src/app/jadwal-sholat/**`
-  - prayer-specific web code/tests, if needed
+  - `apps/web/src/app/dashboard/khatam/**`
+  - `apps/web/src/app/khatam/**`
+  - khatam-specific web code/tests, if needed
   - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
   - route-specific docs under `docs/**`
 - Files I will avoid unless explicitly handed off:
@@ -47,7 +47,8 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Next active route selected: `jadwal-sholat` / Jadwal Sholat.
+- Last completed route: `khatam` / Khatam. Next active route is not selected
+  yet, to avoid colliding with another active agent.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
   - preserve `classic` native layout;
@@ -58,6 +59,13 @@ Started: 2026-05-26 16:20 WIB
 
 ## Verification
 
+- `node --check apps/mobile/src/screens/KhatamScreen.js` passed.
+- `cd apps/mobile && npm test -- khatam.test.js khatamUtils.test.js ibadahScreen.test.js --runInBand` passed: 3 suites, 24 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 44 suites, 652 tests.
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-khatam-route-export` passed.
+- `node scripts/check-feature-parity.js` passed.
+- `git diff --check` passed.
+- Khatam line-count gate: `KhatamScreen.js` 795, `khatam.test.js` 220, and no `apps/mobile/src/**/*.js` file remains above 2,000 lines after excluding the `wc` total row.
 - `cd apps/mobile && npm test -- PrayerScreen.test.js ibadahScreen.test.js --runInBand` passed: 2 suites, 28 tests.
 - `cd apps/mobile && npm test -- PrayerScreen.test.js ibadahScreen.test.js quranScreen.test.js useQuranReaderPreferences.test.js --runInBand` passed: 4 suites, 65 tests.
 - `cd apps/mobile && npm test -- --runInBand` passed: 44 suites, 648 tests.

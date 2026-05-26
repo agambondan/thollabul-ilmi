@@ -65,10 +65,19 @@ jest.mock('../api/personal', () => ({
   getQuranProgress: jest.fn(),
 }));
 
+jest.mock('../storage/preferences', () => ({
+  preferenceKeys: {
+    khatamTargetDays: 'khatam-target-days',
+  },
+  readPreference: jest.fn(),
+  writePreference: jest.fn(),
+}));
+
 import { KhatamScreen } from '../screens/KhatamScreen';
 import { useSession } from '../context/SessionContext';
 import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 import { getQuranProgress } from '../api/personal';
+import { readPreference, writePreference } from '../storage/preferences';
 
 const navigation = {
   clearBack: jest.fn(),
@@ -80,6 +89,8 @@ const navigation = {
 beforeEach(() => {
   jest.clearAllMocks();
   useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+  readPreference.mockResolvedValue(30);
+  writePreference.mockResolvedValue(60);
 });
 
 describe('KhatamScreen', () => {
@@ -109,6 +120,58 @@ describe('KhatamScreen', () => {
       expect(getByTestId('khatam-web-app-surface')).toBeTruthy();
     });
     expect(queryByTestId('khatam-classic-surface')).toBeNull();
+  });
+
+  test('uses dashboard Khatam route surface in web app layout', async () => {
+    useSession.mockReturnValue({ user: { id: '1' } });
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    getQuranProgress.mockResolvedValue({
+      data: {
+        ayah_number: 75,
+        last_read_at: '2026-05-17T00:00:00Z',
+        surah_number: 18,
+      },
+    });
+
+    const { getByText, getByTestId, queryByTestId } = render(
+      <KhatamScreen isActive navigation={navigation} onOpenTab={jest.fn()} />,
+    );
+
+    await waitFor(() => {
+      expect(getByTestId('khatam-web-app-surface')).toBeTruthy();
+      expect(getByText('Khatam Tracker')).toBeTruthy();
+    });
+
+    expect(getByText('Target Khatam')).toBeTruthy();
+    expect(getByText('Progress per Juz')).toBeTruthy();
+    expect(getByText('30d')).toBeTruthy();
+    expect(getByText('Menit/hari')).toBeTruthy();
+    expect(queryByTestId('action-Kembali ke Ibadah')).toBeNull();
+  });
+
+  test('persists web app Khatam target duration', async () => {
+    useSession.mockReturnValue({ user: { id: '1' } });
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    getQuranProgress.mockResolvedValue({
+      data: {
+        ayah_number: 75,
+        surah_number: 18,
+      },
+    });
+
+    const { getByText } = render(
+      <KhatamScreen isActive navigation={navigation} onOpenTab={jest.fn()} />,
+    );
+
+    await waitFor(() => {
+      expect(getByText('60d')).toBeTruthy();
+    });
+
+    fireEvent.press(getByText('60d'));
+
+    await waitFor(() => {
+      expect(writePreference).toHaveBeenCalledWith('khatam-target-days', 60);
+    });
   });
 
   test('renders khatam progress for signed in user', async () => {

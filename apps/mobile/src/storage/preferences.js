@@ -9,6 +9,7 @@ export const preferenceKeys = {
   prayerAdzanAudioEnabled: 'prayer-adzan-audio-enabled',
   homeLastLocation: 'home-last-location',
   homePrayerTimes: 'home-prayer-times',
+  khatamTargetDays: 'khatam-target-days',
   prayerMadhab: 'prayer-madhab',
   prayerMethod: 'prayer-method',
   prayerReminderEnabled: 'prayer-reminder-enabled',
