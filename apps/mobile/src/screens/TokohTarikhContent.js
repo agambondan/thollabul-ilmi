@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { colors, radius, spacing } from '../theme';
 import { requestJson } from '../api/client';
+import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 
 const ERA_FILTERS = [
   { value: '', label: 'Semua' },
@@ -24,7 +25,36 @@ const ERA_FILTERS = [
   { value: 'Khalifah', label: 'Khalifah' },
 ];
 
+const getTokohTitle = (tokoh) =>
+  tokoh?.translation?.title_idn ??
+  tokoh?.translation?.title_en ??
+  tokoh?.nama ??
+  tokoh?.name ??
+  'Tokoh';
+
+const getTokohInitial = (tokoh) => getTokohTitle(tokoh).charAt(0).toUpperCase();
+
+const getTokohMeta = (tokoh) => tokoh?.era || tokoh?.kategori || '';
+
+const getTokohYears = (tokoh) => {
+  if (!tokoh?.tahun_lahir && !tokoh?.tahun_wafat) return '';
+  return `${tokoh.tahun_lahir || '?'} - ${tokoh.tahun_wafat || '...'}`;
+};
+
+const getTokohBio = (tokoh) =>
+  tokoh?.biografi ??
+  tokoh?.translation?.description_idn ??
+  tokoh?.translation?.description_en ??
+  '';
+
+const getTokohContribution = (tokoh) =>
+  tokoh?.kontribusi ??
+  tokoh?.translation?.idn ??
+  tokoh?.translation?.en ??
+  '';
+
 export function TokohTarikhContent() {
+  const { isWebAppLayout } = useLayoutModePreference();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -51,79 +81,116 @@ export function TokohTarikhContent() {
     fetchTokoh();
   }, [fetchTokoh]);
 
-  return (
-    <View style={styles.container}>
-      {/* Search */}
-      <TextInput
-        onChangeText={setSearch}
-        placeholder="Cari tokoh..."
-        placeholderTextColor={colors.muted}
-        returnKeyType="search"
-        style={styles.searchInput}
-        value={search}
-      />
+  const renderSearch = () => (
+    <TextInput
+      onChangeText={setSearch}
+      placeholder="Cari tokoh..."
+      placeholderTextColor={isWebAppLayout ? '#94a3b8' : colors.muted}
+      returnKeyType="search"
+      style={[styles.searchInput, isWebAppLayout && styles.webAppSearchInput]}
+      value={search}
+    />
+  );
 
-      {/* Era filter chips */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterRow}>
-        {ERA_FILTERS.map((f) => (
-          <Pressable
-            key={f.value}
-            onPress={() => setEra(f.value === era ? '' : f.value)}
-            style={[styles.chip, era === f.value && styles.chipActive]}
-          >
-            <Text style={[styles.chipText, era === f.value && styles.chipTextActive]}>
-              {f.label}
+  const renderFilters = () => (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterRow}>
+      {ERA_FILTERS.map((f) => (
+        <Pressable
+          key={f.value}
+          onPress={() => setEra(f.value === era ? '' : f.value)}
+          style={[
+            styles.chip,
+            isWebAppLayout && styles.webAppChip,
+            era === f.value && styles.chipActive,
+            isWebAppLayout && era === f.value && styles.webAppChipActive,
+          ]}
+        >
+          <Text style={[styles.chipText, era === f.value && styles.chipTextActive]}>
+            {f.label}
+          </Text>
+        </Pressable>
+      ))}
+    </ScrollView>
+  );
+
+  const renderLoading = () => (
+    <View style={[styles.loadingContainer, isWebAppLayout && styles.webAppLoadingContainer]}>
+      <ActivityIndicator size="large" color={isWebAppLayout ? '#4f46e5' : colors.primary} />
+      {isWebAppLayout ? <Text style={styles.webAppLoadingText}>Memuat tokoh...</Text> : null}
+    </View>
+  );
+
+  const renderEmpty = () => (
+    <View style={isWebAppLayout ? styles.webAppEmpty : null}>
+      <Text style={[styles.empty, isWebAppLayout && styles.webAppEmptyText]}>
+        {isWebAppLayout ? 'Belum ada data tokoh.' : 'Tidak ditemukan'}
+      </Text>
+    </View>
+  );
+
+  const renderTokohCard = (tokoh) => {
+    const title = getTokohTitle(tokoh);
+    const meta = getTokohMeta(tokoh);
+    const years = getTokohYears(tokoh);
+    const cardStyle = isWebAppLayout ? styles.webAppCard : styles.card;
+    const avatarStyle = isWebAppLayout ? styles.webAppCardAvatar : styles.cardAvatar;
+
+    return (
+      <Pressable
+        key={tokoh.id ?? title}
+        android_ripple={{ color: 'rgba(79, 70, 229, 0.12)', borderless: false }}
+        onPress={() => setSelected(tokoh)}
+        style={cardStyle}
+      >
+        <View style={avatarStyle}>
+          {tokoh.image_url ? (
+            <Image source={{ uri: tokoh.image_url }} style={styles.avatarImage} />
+          ) : (
+            <Text style={[styles.avatarFallback, isWebAppLayout && styles.webAppAvatarFallback]}>
+              {getTokohInitial(tokoh)}
             </Text>
-          </Pressable>
-        ))}
-      </ScrollView>
-
-      {loading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.primary} />
+          )}
         </View>
+        <View style={styles.cardBody}>
+          <Text style={[styles.cardName, isWebAppLayout && styles.webAppCardName]} numberOfLines={1}>
+            {title}
+          </Text>
+          <View style={styles.cardMetaRow}>
+            {meta ? <Text style={[styles.cardEra, isWebAppLayout && styles.webAppCardEra]}>{meta}</Text> : null}
+            {years ? <Text style={[styles.cardTahun, isWebAppLayout && styles.webAppCardTahun]}>{years}</Text> : null}
+          </View>
+        </View>
+      </Pressable>
+    );
+  };
+
+  const renderContent = () => (
+    <>
+      {loading ? (
+        renderLoading()
       ) : items.length === 0 ? (
-        <Text style={styles.empty}>Tidak ditemukan</Text>
+        renderEmpty()
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.resultCount}>{items.length} tokoh</Text>
-          {items.map((tokoh) => (
-            <Pressable
-              key={tokoh.id}
-              android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
-              onPress={() => setSelected(tokoh)}
-              style={styles.card}
-            >
-              <View style={styles.cardAvatar}>
-                {tokoh.image_url ? (
-                  <Image source={{ uri: tokoh.image_url }} style={styles.avatarImage} />
-                ) : (
-                  <Text style={styles.avatarFallback}>
-                    {tokoh.nama?.charAt(0) ?? '?'}
-                  </Text>
-                )}
-              </View>
-              <View style={styles.cardBody}>
-                <Text style={styles.cardName} numberOfLines={1}>
-                  {tokoh.translation?.title_idn ?? tokoh.translation?.title_en ?? tokoh.nama}
-                </Text>
-                <View style={styles.cardMetaRow}>
-                  {(tokoh.era || tokoh.kategori) && (
-                    <Text style={styles.cardEra}>{tokoh.era || tokoh.kategori}</Text>
-                  )}
-                  {tokoh.tahun_lahir && tokoh.tahun_wafat && (
-                    <Text style={styles.cardTahun}>
-                      {tokoh.tahun_lahir} – {tokoh.tahun_wafat}
-                    </Text>
-                  )}
-                </View>
-              </View>
-            </Pressable>
-          ))}
+          <Text style={[styles.resultCount, isWebAppLayout && styles.webAppResultCount]}>
+            {items.length} tokoh
+          </Text>
+          <View style={isWebAppLayout ? styles.webAppCardGrid : null}>
+            {items.map(renderTokohCard)}
+          </View>
         </ScrollView>
       )}
+    </>
+  );
 
-      {/* Detail Modal */}
+  const renderDetailModal = () => {
+    const title = getTokohTitle(selected);
+    const meta = getTokohMeta(selected);
+    const years = getTokohYears(selected);
+    const bio = getTokohBio(selected);
+    const contribution = getTokohContribution(selected);
+
+    return (
       <Modal
         visible={!!selected}
         transparent
@@ -134,70 +201,84 @@ export function TokohTarikhContent() {
           <Pressable style={styles.modalContent} onPress={() => {}}>
             {selected && (
               <ScrollView showsVerticalScrollIndicator={false}>
-                {/* Close button */}
                 <Pressable style={styles.modalClose} onPress={() => setSelected(null)}>
                   <Text style={styles.modalCloseText}>Tutup</Text>
                 </Pressable>
 
-                {/* Avatar */}
                 <View style={styles.modalAvatarWrap}>
                   {selected.image_url ? (
                     <Image source={{ uri: selected.image_url }} style={styles.modalAvatar} />
                   ) : (
                     <View style={styles.modalAvatarFallback}>
                       <Text style={styles.modalAvatarFallbackText}>
-                        {selected.nama?.charAt(0) ?? '?'}
+                        {getTokohInitial(selected)}
                       </Text>
                     </View>
                   )}
                 </View>
 
-                {/* Name */}
                 <Text style={styles.modalName}>
-                  {selected.translation?.title_idn ?? selected.translation?.title_en ?? selected.nama}
+                  {title}
                 </Text>
 
-                {/* Era + Kategori badges */}
                 <View style={styles.modalBadgeRow}>
-                  {selected.era && <Text style={styles.modalBadge}>{selected.era}</Text>}
-                  {selected.kategori && (
+                  {meta ? <Text style={styles.modalBadge}>{meta}</Text> : null}
+                  {selected.kategori && selected.kategori !== meta ? (
                     <Text style={[styles.modalBadge, styles.modalBadgeKategori]}>
                       {selected.kategori}
                     </Text>
-                  )}
+                  ) : null}
                 </View>
 
-                {/* Tahun */}
-                {selected.tahun_lahir && selected.tahun_wafat && (
-                  <Text style={styles.modalTahun}>
-                    {selected.tahun_lahir} – {selected.tahun_wafat}
-                  </Text>
-                )}
+                {years ? <Text style={styles.modalTahun}>{years}</Text> : null}
 
-                {/* Biografi */}
-                {(selected.translation?.description_idn || selected.translation?.description_en) && (
+                {bio ? (
                   <View style={styles.modalSection}>
                     <Text style={styles.modalSectionTitle}>Biografi</Text>
-                    <Text style={styles.modalBody}>
-                      {selected.translation.description_idn ?? selected.translation.description_en}
-                    </Text>
+                    <Text style={styles.modalBody}>{bio}</Text>
                   </View>
-                )}
+                ) : null}
 
-                {/* Kontribusi */}
-                {(selected.kontribusi || selected.translation?.en || selected.translation?.idn) && (
+                {contribution ? (
                   <View style={[styles.modalSection, styles.modalSectionHighlight]}>
                     <Text style={styles.modalSectionTitle}>Kontribusi</Text>
-                    <Text style={styles.modalBody}>
-                      {selected.kontribusi || selected.translation?.idn || selected.translation?.en}
-                    </Text>
+                    <Text style={styles.modalBody}>{contribution}</Text>
                   </View>
-                )}
+                ) : null}
               </ScrollView>
             )}
           </Pressable>
         </Pressable>
       </Modal>
+    );
+  };
+
+  if (isWebAppLayout) {
+    return (
+      <View style={styles.webAppRoot} testID="tokoh-web-app-surface">
+        <View style={styles.webAppHeader}>
+          <View style={styles.webAppIcon}>
+            <Text style={styles.webAppIconText}>T</Text>
+          </View>
+          <Text style={styles.webAppTitle}>Tokoh Tarikh</Text>
+          <Text style={styles.webAppSubtitle}>Biografi ulama, ilmuwan, dan tokoh Islam</Text>
+        </View>
+        <View style={styles.webAppControls}>
+          {renderSearch()}
+          {renderFilters()}
+        </View>
+        {renderContent()}
+        {renderDetailModal()}
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      {renderSearch()}
+      {renderFilters()}
+      {renderContent()}
+      {renderDetailModal()}
     </View>
   );
 }
@@ -406,6 +487,123 @@ const styles = StyleSheet.create({
     color: colors.muted,
     fontSize: 14,
     lineHeight: 22,
+  },
+  webAppRoot: {
+    backgroundColor: '#f8fafc',
+    flex: 1,
+    gap: spacing.md,
+  },
+  webAppHeader: {
+    alignItems: 'center',
+    marginBottom: spacing.xs,
+  },
+  webAppIcon: {
+    alignItems: 'center',
+    backgroundColor: '#e0e7ff',
+    borderRadius: 16,
+    height: 56,
+    justifyContent: 'center',
+    marginBottom: spacing.sm,
+    width: 56,
+  },
+  webAppIconText: {
+    color: '#4f46e5',
+    fontSize: 26,
+    fontWeight: '900',
+  },
+  webAppTitle: {
+    color: '#111827',
+    fontSize: 24,
+    fontWeight: '900',
+    letterSpacing: 0,
+    textAlign: 'center',
+  },
+  webAppSubtitle: {
+    color: '#64748b',
+    fontSize: 13,
+    fontWeight: '600',
+    lineHeight: 19,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  webAppControls: {
+    gap: spacing.xs,
+  },
+  webAppSearchInput: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: 12,
+    color: '#111827',
+  },
+  webAppChip: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+  },
+  webAppChipActive: {
+    backgroundColor: '#4f46e5',
+    borderColor: '#4f46e5',
+  },
+  webAppLoadingContainer: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: 16,
+    borderWidth: 1,
+    gap: spacing.sm,
+  },
+  webAppLoadingText: {
+    color: '#64748b',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  webAppEmpty: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: 16,
+    borderWidth: 1,
+  },
+  webAppEmptyText: {
+    color: '#94a3b8',
+  },
+  webAppResultCount: {
+    color: '#64748b',
+    fontWeight: '800',
+    marginBottom: spacing.sm,
+  },
+  webAppCardGrid: {
+    gap: spacing.sm,
+  },
+  webAppCard: {
+    alignItems: 'flex-start',
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+    borderRadius: 16,
+    borderWidth: 1,
+    flexDirection: 'row',
+    padding: spacing.md,
+  },
+  webAppCardAvatar: {
+    borderRadius: 12,
+    height: 48,
+    marginRight: spacing.md,
+    overflow: 'hidden',
+    width: 48,
+  },
+  webAppAvatarFallback: {
+    backgroundColor: '#e0e7ff',
+    borderRadius: 12,
+    color: '#4f46e5',
+    fontSize: 20,
+    lineHeight: 48,
+  },
+  webAppCardName: {
+    color: '#111827',
+  },
+  webAppCardEra: {
+    backgroundColor: '#e0e7ff',
+    color: '#4f46e5',
+  },
+  webAppCardTahun: {
+    color: '#94a3b8',
   },
 });
 

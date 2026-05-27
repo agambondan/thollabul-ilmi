@@ -944,6 +944,55 @@ Results:
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
 - `git diff --check` passed.
+
+## Web App Tokoh Tarikh Route Dashboard Parity
+
+Status: completed for the native `web_app` Tokoh Tarikh route visual parity
+pass.
+
+Implemented:
+
+- `TokohTarikhContent` keeps the existing classic search/filter/list/detail
+  flow for `classic` layout.
+- In `web_app` mode, Tokoh Tarikh now renders a light dashboard surface modeled
+  after `/dashboard/tokoh`: centered icon/title/subtitle, white search field,
+  era chips, result count, white tokoh cards, avatar fallback, year metadata,
+  and the existing bottom-sheet detail modal.
+- Mobile Tokoh detail now accepts both backend `biografi`/`kontribusi` fields
+  and the existing translation fallback fields, matching the web route's data
+  shape while preserving older mobile payload compatibility.
+
+Scope guardrail:
+
+- This slice changes only Tokoh Tarikh presentation/data normalization in
+  mobile `web_app`, its focused mobile tests, and route docs. It does not touch
+  classic Explore routing or another agent's dirty Explore/Fiqh files.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/TokohTarikhContent.js
+node --check apps/mobile/src/__tests__/tokohTarikhContent.test.js
+cd apps/mobile
+npm test -- tokohTarikhContent.test.js --runInBand
+npm test -- tokohTarikhContent.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-tokoh-route-export
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted mobile Tokoh Tarikh test passed: 1 suite, 3 tests.
+- Targeted mobile Tokoh Tarikh/shell/layout tests passed: 3 suites, 26 tests.
+- Full mobile Jest passed: 46 suites, 661 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-tokoh-route-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
 - Native emulator smoke captured at
   `output/native-smoke/tholabul-webapp-emulator-profile-route-after.png`.
 
