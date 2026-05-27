@@ -33,6 +33,7 @@ jest.mock('expo-location', () => ({
 jest.mock('../api/client', () => ({
   getDailyAyah: jest.fn(),
   getDailyHadith: jest.fn(),
+  getDailyReminders: jest.fn(),
   getHijriToday: jest.fn(),
   getPrayerTimes: jest.fn(),
 }));
@@ -130,6 +131,13 @@ const mockHadith = {
   book: 'Shahih Bukhari',
 };
 
+const mockReminder = {
+  id: 'reminder-1',
+  source: 'Imam Ibnul Qayyim',
+  text: 'Ilmu membuat hati semakin tunduk.',
+  title: 'Nasihat Ulama',
+};
+
 const mockPrayerTimes = {
   fajr: '04:30',
   sunrise: '05:45',
@@ -186,6 +194,7 @@ beforeEach(() => {
   AsyncStorage.setItem.mockResolvedValue();
   clientApi.getDailyAyah.mockResolvedValue(mockAyah);
   clientApi.getDailyHadith.mockResolvedValue(mockHadith);
+  clientApi.getDailyReminders.mockResolvedValue([]);
   clientApi.getHijriToday.mockResolvedValue({ dateStr: '1 Ramadan 1445 H' });
   clientApi.getPrayerTimes.mockResolvedValue(mockPrayerTimes);
   readPinnedFeatures.mockResolvedValue([]);
@@ -255,6 +264,25 @@ describe('HomeScreen', () => {
 
     expect(getByText('Hadis Hari Ini')).toBeTruthy();
     expect(getByText(`"${mockHadith.translation}"`)).toBeTruthy();
+  });
+
+  test('loads dynamic reminders into the web app daily carousel', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    clientApi.getDailyReminders.mockResolvedValue([mockReminder]);
+
+    const { getByTestId, getByText } = await renderHomeScreen();
+
+    await waitFor(() => {
+      expect(getByText('Ayat Hari Ini')).toBeTruthy();
+    });
+    expect(clientApi.getDailyReminders).toHaveBeenCalledWith({ lang: 'idn', limit: 20 });
+
+    fireEvent.press(getByTestId('home-daily-next'));
+    fireEvent.press(getByTestId('home-daily-next'));
+
+    expect(getByText('Nasihat Ulama')).toBeTruthy();
+    expect(getByText(`"${mockReminder.text}"`)).toBeTruthy();
+    expect(getByText(mockReminder.source)).toBeTruthy();
   });
 
   test('renders user name when logged in', async () => {

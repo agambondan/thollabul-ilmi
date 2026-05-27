@@ -7,15 +7,16 @@ Started: 2026-05-26 16:20 WIB
 
 - Route/feature: mobile `web_app` parity against authenticated `/dashboard`
   mobile web views.
-- Completed near-term task: Tokoh Tarikh `web_app` visual polish against
-  `/dashboard/tokoh`, after validating that the Peta Islam Interaktif slice was
+- Completed near-term task: Home/dashboard reminder carousel parity against
+  `/dashboard`, after validating that the Tokoh Tarikh slice was
   documented, tested, committed, and pushed.
 - Files I may edit after route selection:
   - `apps/mobile/**`
   - relevant `apps/mobile` tests
-  - `apps/web/src/app/dashboard/tokoh/**`
-  - `apps/web/src/app/tokoh/**`
-  - tokoh-route-specific web code/tests, if needed
+  - `apps/mobile/src/screens/HomeScreen.js`
+  - `apps/mobile/src/screens/home/HomeDashboardContent.js`
+  - `apps/mobile/src/api/client.js`
+  - home/dashboard-specific tests/docs
   - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
   - route-specific docs under `docs/**`
 - Files I will avoid unless explicitly handed off:
@@ -47,7 +48,7 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Last completed route: Tokoh Tarikh. Next active route is not selected
+- Last completed route: Home/dashboard reminder carousel. Next active route is not selected
   yet, to avoid colliding with another active agent.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
@@ -59,6 +60,16 @@ Started: 2026-05-26 16:20 WIB
 
 ## Verification
 
+- `node --check apps/mobile/src/api/client.js` passed.
+- `node --check apps/mobile/src/screens/HomeScreen.js` passed.
+- `node --check apps/mobile/src/screens/home/HomeDashboardContent.js` passed.
+- `cd apps/mobile && npm test -- homeScreen.test.js --runInBand` passed: 1 suite, 23 tests.
+- `cd apps/mobile && npm test -- homeScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand` passed: 3 suites, 46 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 46 suites, 662 tests.
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-home-reminders-export` passed.
+- `node scripts/check-feature-parity.js` passed.
+- `git diff --check` passed.
+- Home reminder line-count gate: `HomeScreen.js` 909, `HomeDashboardContent.js` 1211, `client.js` 745, `homeScreen.test.js` 587, and no `apps/mobile/src/**/*.js` file remains above 2,000 lines after excluding the `wc` total row.
 - `node --check apps/mobile/src/screens/TokohTarikhContent.js` passed.
 - `node --check apps/mobile/src/__tests__/tokohTarikhContent.test.js` passed.
 - `cd apps/mobile && npm test -- tokohTarikhContent.test.js --runInBand` passed: 1 suite, 3 tests.

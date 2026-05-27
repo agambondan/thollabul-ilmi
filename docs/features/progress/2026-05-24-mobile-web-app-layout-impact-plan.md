@@ -993,6 +993,54 @@ Results:
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
 - `git diff --check` passed.
+
+## Web App Home Reminder Carousel Dashboard Parity
+
+Status: completed for the native `web_app` Home/dashboard reminder carousel
+data parity pass.
+
+Implemented:
+
+- Mobile Home now loads active daily reminders from `/api/v1/reminders` with
+  the same active/idn/limit contract used by the web dashboard carousel.
+- The native `web_app` daily carousel now appends dynamic reminder slides after
+  the Quran and Hadith slides, preserving the existing carousel controls and
+  classic Home "Bacaan Hari Ini" layout.
+- Reminder normalization keeps title, text, source, author, and `ulama` type
+  fallback aligned with the web dashboard behavior.
+
+Scope guardrail:
+
+- This slice changes only Home dashboard daily reminder data wiring, mobile API
+  normalization, focused Home tests, and route docs. It does not touch classic
+  Explore routing or another agent's dirty Explore/Fiqh files.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/api/client.js
+node --check apps/mobile/src/screens/HomeScreen.js
+node --check apps/mobile/src/screens/home/HomeDashboardContent.js
+cd apps/mobile
+npm test -- homeScreen.test.js --runInBand
+npm test -- homeScreen.test.js mobileAppShell.test.js layoutModeProvider.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-home-reminders-export
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted mobile Home test passed: 1 suite, 23 tests.
+- Targeted mobile Home/shell/layout tests passed: 3 suites, 46 tests.
+- Full mobile Jest passed: 46 suites, 662 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-home-reminders-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
 - Native emulator smoke captured at
   `output/native-smoke/tholabul-webapp-emulator-profile-route-after.png`.
 

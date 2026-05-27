@@ -590,6 +590,38 @@ export const searchKajian = async (query, { limit = 8 } = {}) =>
     query,
   });
 
+const normalizeDailyReminder = (item) => {
+  const text = pickText(
+    item?.text,
+    item?.body,
+    item?.content,
+    item?.translation?.text_idn,
+    item?.translation?.text_en,
+  );
+  if (!text) return null;
+
+  const source = [item?.author, item?.source].filter(Boolean).join(' · ');
+  return {
+    id: item?.id ?? item?.slug ?? text,
+    source: source || 'Pengingat harian',
+    text,
+    title: item?.type === 'ulama'
+      ? pickText(item?.title, item?.translation?.title_idn, item?.translation?.title_en, 'Nasihat Ulama')
+      : pickText(item?.title, item?.translation?.title_idn, item?.translation?.title_en, 'Pengingat Harian'),
+    type: item?.type ?? 'reminder',
+  };
+};
+
+export const getDailyReminders = async ({ limit = 20, lang = 'idn' } = {}) => {
+  const params = new URLSearchParams({
+    active: 'true',
+    lang,
+    limit: `${limit}`,
+  });
+  const payload = await requestJson(`/api/v1/reminders?${params.toString()}`);
+  return pickItems(payload).map(normalizeDailyReminder).filter(Boolean);
+};
+
 export const getDailyHadith = async () => {
   const payload = await requestJson('/api/v1/hadiths/daily');
   return normalizeHadith(payload?.data ?? payload?.item ?? payload);

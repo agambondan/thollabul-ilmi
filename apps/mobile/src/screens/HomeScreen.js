@@ -24,7 +24,7 @@ import {
 import * as Location from 'expo-location';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { getDailyAyah, getDailyHadith, getHijriToday, getPrayerTimes } from '../api/client';
+import { getDailyAyah, getDailyHadith, getDailyReminders, getHijriToday, getPrayerTimes } from '../api/client';
 import { ContentCard } from '../components/ContentCard';
 import { DetailHeader } from '../components/DetailHeader';
 import { useSession } from '../context/SessionContext';
@@ -316,6 +316,7 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
   const hasDisplayedPrayerTimesRef = useRef(false);
   const [dailyHadith, setDailyHadith] = useState(null);
   const [dailyAyah, setDailyAyah] = useState(null);
+  const [dailyReminders, setDailyReminders] = useState([]);
   const [dateSnapshot, setDateSnapshot] = useState(() => new Date());
   const [hijriDate, setHijriDate] = useState('Memuat tanggal Hijriah');
   const [locationLabel, setLocationLabel] = useState('Memuat lokasi');
@@ -617,10 +618,11 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
       }
     }
 
-    const [hadithResult, ayahResult, hijriResult] = await Promise.allSettled([
+    const [hadithResult, ayahResult, hijriResult, remindersResult] = await Promise.allSettled([
       getDailyHadith(),
       getDailyAyah(),
       getHijriToday(),
+      getDailyReminders({ lang: 'idn', limit: 20 }),
     ]);
 
     if (!mountedRef.current) return;
@@ -647,6 +649,12 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
       setHijriDate(formatHijriHomeDate(hijriResult.value, currentDate));
     } else {
       setHijriDate(formatFallbackHijriHomeDate(currentDate));
+    }
+
+    if (remindersResult.status === 'fulfilled') {
+      setDailyReminders(Array.isArray(remindersResult.value) ? remindersResult.value : []);
+    } else {
+      setDailyReminders([]);
     }
 
     if (coords) {
@@ -812,6 +820,7 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
       contextualShortcuts={contextualShortcuts}
       dailyAyah={dailyAyah}
       dailyHadith={dailyHadith}
+      dailyReminders={dailyReminders}
       dailyMessage={dailyMessage}
       displayName={displayName}
       gregorianDate={gregorianDate}

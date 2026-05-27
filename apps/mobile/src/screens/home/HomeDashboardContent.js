@@ -10,6 +10,7 @@ import {
   FileText,
   Grid,
   HelpCircle,
+  MessageCircle,
   Moon,
   Search,
   Smile,
@@ -82,7 +83,7 @@ const formatHadisSource = (value = '') => {
   return value.replace(/\bHadith\b/g, 'Hadis');
 };
 
-const buildWebAppDailySlides = ({ dailyAyah, dailyHadith, dailyMessage, loadingDaily }) => {
+const buildWebAppDailySlides = ({ dailyAyah, dailyHadith, dailyMessage, dailyReminders, loadingDaily }) => {
   const ayahSlide = {
     Icon: Book,
     accentColor: webDashboardColors.primary,
@@ -106,7 +107,17 @@ const buildWebAppDailySlides = ({ dailyAyah, dailyHadith, dailyMessage, loadingD
     title: 'Hadis Hari Ini',
   };
 
-  return [ayahSlide, hadithSlide];
+  const reminderSlides = (dailyReminders ?? []).map((reminder, index) => ({
+    Icon: MessageCircle,
+    accentColor: '#38bdf8',
+    arabic: null,
+    key: `reminder-${reminder.id ?? index}`,
+    source: reminder.source || 'Pengingat harian',
+    text: reminder.text,
+    title: reminder.title || 'Pengingat Harian',
+  })).filter((slide) => slide.text);
+
+  return [ayahSlide, hadithSlide, ...reminderSlides];
 };
 
 export function getHomeDashboardRenderer(layoutMode) {
@@ -193,6 +204,7 @@ function DashboardContent({
   contextualShortcuts,
   dailyAyah,
   dailyHadith,
+  dailyReminders,
   dailyMessage,
   gregorianDate,
   handleScrollActivity,
@@ -332,6 +344,7 @@ function DashboardContent({
         <WebAppDailyReminderCard
           dailyAyah={dailyAyah}
           dailyHadith={dailyHadith}
+          dailyReminders={dailyReminders}
           dailyMessage={dailyMessage}
           loadingDaily={loadingDaily}
           onOpenTab={onOpenTab}
@@ -434,11 +447,11 @@ function DashboardContent({
   );
 }
 
-function WebAppDailyReminderCard({ dailyAyah, dailyHadith, dailyMessage, loadingDaily, onOpenTab }) {
+function WebAppDailyReminderCard({ dailyAyah, dailyHadith, dailyMessage, dailyReminders, loadingDaily, onOpenTab }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const slides = useMemo(
-    () => buildWebAppDailySlides({ dailyAyah, dailyHadith, dailyMessage, loadingDaily }),
-    [dailyAyah, dailyHadith, dailyMessage, loadingDaily],
+    () => buildWebAppDailySlides({ dailyAyah, dailyHadith, dailyMessage, dailyReminders, loadingDaily }),
+    [dailyAyah, dailyHadith, dailyMessage, dailyReminders, loadingDaily],
   );
   const active = slides[activeIndex % slides.length];
   const Icon = active.Icon;
@@ -448,6 +461,10 @@ function WebAppDailyReminderCard({ dailyAyah, dailyHadith, dailyMessage, loading
   const openActive = () => {
     if (active.key === 'hadith') {
       onOpenTab('hadith');
+      return;
+    }
+    if (active.key.startsWith('reminder-')) {
+      onOpenTab('belajar', { featureKey: 'notifications' });
       return;
     }
     onOpenTab('quran', { surahNumber: 1 });
