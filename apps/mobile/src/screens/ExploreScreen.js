@@ -1166,6 +1166,8 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       pinnedFeatureKeys,
       recentFeatureKeys,
       renderItemActionSheet,
+      renderFeatureContent,
+      renderItem,
       runDictionarySearch,
       selectedSurahNumber,
       session,

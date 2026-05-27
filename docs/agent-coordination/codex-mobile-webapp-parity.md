@@ -7,13 +7,15 @@ Started: 2026-05-26 16:20 WIB
 
 - Route/feature: mobile `web_app` parity against authenticated `/dashboard`
   mobile web views.
-- Completed near-term task: Doa `web_app` route parity against `/dashboard/doa`,
-  after validating the Asbabun Nuzul slice was already committed and clean.
+- Completed near-term task: finished remaining Explore/Belajar `web_app` route
+  fallbacks with shared reference/list and local tool dashboard shells after the
+  Doa slice was committed and pushed.
 - Files I may edit after route selection:
   - `apps/mobile/**`
   - relevant `apps/mobile` tests
-  - `apps/mobile/src/screens/explore/WebAppDoaRoute.js`
-  - Doa/Explore-specific tests/docs
+  - `apps/mobile/src/screens/explore/WebAppReferenceListRoute.js`
+  - `apps/mobile/src/screens/explore/WebAppToolRoute.js`
+  - reference/list/tool Explore-specific tests/docs
   - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
   - route-specific docs under `docs/**`
 - Files I will avoid unless explicitly handed off:
@@ -45,8 +47,8 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Last completed route: Doa. Next active route is not selected yet, to avoid
-  colliding with another active agent.
+- Last completed route batch: Explore/Belajar reference/list and local tool
+  fallbacks.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
   - preserve `classic` native layout;
@@ -54,6 +56,24 @@ Started: 2026-05-26 16:20 WIB
   - run targeted mobile/web tests, full mobile Jest, feature parity checker,
     Expo export when mobile UI changed, and `git diff --check`;
   - do not edit unrelated dirty files owned by another agent.
+
+## Latest Verification
+
+- `node --check apps/mobile/src/screens/explore/WebAppReferenceListRoute.js`
+  passed.
+- `node --check apps/mobile/src/screens/explore/WebAppToolRoute.js` passed.
+- `node --check apps/mobile/src/__tests__/exploreWebAppRoutes.test.js` passed.
+- `cd apps/mobile && npm test -- exploreScreen.test.js api-explore.test.js exploreWebAppRoutes.test.js --runInBand`
+  passed: 3 suites, 64 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 47 suites, 671 tests.
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-reference-routes-export`
+  passed.
+- `node scripts/check-feature-parity.js` passed.
+- `git diff --check` passed.
+- Browser mobile smoke artifacts:
+  `output/playwright/web-dashboard-dzikir-reference-412x915.png`,
+  `output/playwright/web-public-dzikir-reference-412x915.png`, and
+  `output/playwright/mobile-webapp-dzikir-reference-412x915.png`.
 
 ## Verification
 

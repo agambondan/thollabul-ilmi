@@ -77,8 +77,10 @@ import { WebAppKamusRoute } from './WebAppKamusRoute';
 import { WebAppLibraryRoute } from './WebAppLibraryRoute';
 import { WebAppLeaderboardRoute } from './WebAppLeaderboardRoute';
 import { WebAppPerawiRoute } from './WebAppPerawiRoute';
+import { WEB_APP_REFERENCE_ROUTE_CONFIGS, WebAppReferenceListRoute } from './WebAppReferenceListRoute';
 import { WebAppSirohRoute } from './WebAppSirohRoute';
 import { WebAppTafsirRoute } from './WebAppTafsirRoute';
+import { WEB_APP_TOOL_ROUTE_CONFIGS, WebAppToolRoute } from './WebAppToolRoute';
 
 export function renderExploreWebAppRoute(context) {
   const {
@@ -131,6 +133,8 @@ export function renderExploreWebAppRoute(context) {
     pinnedFeatureKeys,
     recentFeatureKeys,
     renderItemActionSheet,
+    renderFeatureContent,
+    renderItem,
     runDictionarySearch,
     selectedSurahNumber,
     session,
@@ -1398,6 +1402,36 @@ export function renderExploreWebAppRoute(context) {
         onLoadMore={loadMoreFeature}
         onOpenItem={openItemDetail}
         pagination={pagination}
+      />
+    );
+  }
+
+  if (WEB_APP_TOOL_ROUTE_CONFIGS[activeFeature?.type]) {
+    return (
+      <WebAppToolRoute
+        activeFeature={activeFeature}
+        error={error}
+        items={items}
+        loading={loading}
+        renderFeatureContent={renderFeatureContent}
+        renderItem={renderItem}
+        routeKey={activeFeature.type}
+        visibleItems={visibleItems}
+      />
+    );
+  }
+
+  if (WEB_APP_REFERENCE_ROUTE_CONFIGS[activeFeature?.key]) {
+    return (
+      <WebAppReferenceListRoute
+        config={WEB_APP_REFERENCE_ROUTE_CONFIGS[activeFeature.key]}
+        error={error}
+        items={items}
+        loading={loading}
+        onLoadMore={loadMoreFeature}
+        onOpenItem={openItemDetail}
+        pagination={pagination}
+        routeKey={activeFeature.key}
       />
     );
   }

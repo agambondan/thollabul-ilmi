@@ -350,8 +350,8 @@ describe('ExploreScreen', () => {
     fireEvent.press(getByText('Quiz Islami'));
 
     await waitFor(() => {
-      expect(getByTestId('action-Kembali ke Belajar')).toBeTruthy();
-      expect(getByTestId('explore-web-app-surface')).toBeTruthy();
+      expect(getByTestId('explore-web-app-quiz-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
     });
   });
 

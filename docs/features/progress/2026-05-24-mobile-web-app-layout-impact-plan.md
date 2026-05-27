@@ -2140,6 +2140,115 @@ Results:
   `exploreScreen.test.js` 1999. No `apps/mobile/src/**/*.js` file remains above
   2,000 lines after excluding the `wc` total row.
 
+## Web App Reference/List Route Dashboard Parity Batch
+
+Status: completed for the native `web_app` shared reference/list route pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic generic list/detail path for Dzikir, Wirid,
+  Tahlil, Asmaul Husna, Panduan Sholat, Sejarah, Manasik, Jarh wa Ta'dil,
+  Imsakiyah, and Amalan Harian on the `classic` layout.
+- In `web_app` mode, those routes now render through
+  `WebAppReferenceListRoute`, a light dashboard surface modeled after the same
+  family of dashboard web pages: title/Arabic heading when available, search,
+  category pills, count row, white content cards, Arabic/body previews, loading
+  state, empty state, and load-more affordance.
+- Native cards still open through the existing item detail handler instead of
+  adding inline expand/collapse, preserving the mobile detail UI rule while
+  removing the old generic `Screen` title fallback for these routes.
+
+Scope guardrail:
+
+- This slice changes only the shared native mobile reference/list feature route
+  presentation in `web_app`, its route test coverage, and docs. It does not
+  change classic Explore routing, route API endpoints, dashboard web code, or
+  local tool/calculator routes.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/explore/WebAppReferenceListRoute.js
+node --check apps/mobile/src/__tests__/exploreWebAppRoutes.test.js
+cd apps/mobile
+npm test -- exploreWebAppRoutes.test.js --runInBand
+npm test -- exploreScreen.test.js exploreWebAppRoutes.test.js --runInBand
+npm test -- exploreScreen.test.js api-explore.test.js exploreWebAppRoutes.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-reference-routes-export
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- `node --check` passed for `WebAppReferenceListRoute.js` and
+  `exploreWebAppRoutes.test.js`.
+- Targeted web app route tests passed: 1 suite, 3 tests.
+- Combined Explore route tests passed: 2 suites, 48 tests.
+- Explore/API/reference tests passed: 3 suites, 64 tests.
+- Full mobile Jest passed: 47 suites, 671 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-reference-routes-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- Browser mobile smoke captured unauthenticated `/dashboard/dzikir` redirect,
+  public `/dzikir`, and native Expo `web_app` `#/belajar/dzikir` at 412x915 in
+  `output/playwright/`. Expo web showed the new dashboard surface; data stayed
+  in the existing API error state because local API `29900` was not running.
+- `git diff --check` passed.
+- Reference/list line-count gate: `WebAppReferenceListRoute.js` 629,
+  `ExploreWebAppRoutes.js` 1672, `exploreWebAppRoutes.test.js` 94, and
+  `exploreScreen.test.js` 1999. No `apps/mobile/src/**/*.js` file is above the
+  2,000-line gate.
+
+## Web App Local Tool Route Dashboard Shell Batch
+
+Status: completed for the native `web_app` local tool route shell pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic local tool logic for Quiz, Kalender Hijri,
+  Tasbih, Zakat, Faraidh, Sholat Tracker, Wirid Saya, Wirid Asmaul Husna,
+  Flashcard Asmaul Husna, Peta Islam Interaktif, and Tokoh Tarikh.
+- In `web_app` mode, those routes now render through `WebAppToolRoute`, a
+  dashboard-style shell with icon header, route eyebrow/title/subtitle, and the
+  existing tool renderer/list content inside a light dashboard surface.
+- This removes the generic `Screen` title/back fallback from the remaining
+  local tools without rewriting calculator, quiz, counter, or personal form
+  behavior.
+
+Scope guardrail:
+
+- This slice changes only the `web_app` presentation shell for local
+  Explore/Belajar tools. It does not change calculator formulas, quiz scoring,
+  sholat log persistence, user-wird CRUD, Asmaul storage, or `classic` layout.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/explore/WebAppToolRoute.js
+node --check apps/mobile/src/screens/explore/WebAppReferenceListRoute.js
+node --check apps/mobile/src/__tests__/exploreWebAppRoutes.test.js
+cd apps/mobile
+npm test -- exploreWebAppRoutes.test.js --runInBand
+npm test -- exploreScreen.test.js exploreWebAppRoutes.test.js --runInBand
+npm test -- --runInBand
+```
+
+Results:
+
+- `node --check` passed for the new tool/reference route files and route test.
+- Targeted web app route tests passed: 1 suite, 3 tests.
+- Combined Explore route tests passed: 2 suites, 48 tests.
+- Full mobile Jest passed: 47 suites, 671 tests.
+- Tool shell line-count gate: `WebAppToolRoute.js` 181,
+  `WebAppReferenceListRoute.js` 629, `ExploreWebAppRoutes.js` 1672,
+  `ExploreScreen.js` 1290, `exploreWebAppRoutes.test.js` 94, and
+  `exploreScreen.test.js` 1999. No `apps/mobile/src/**/*.js` file is above the
+  2,000-line gate.
+
 ## Web App Siroh Route Dashboard Parity
 
 Status: completed for the native `web_app` Siroh route visual parity pass.
