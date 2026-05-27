@@ -2080,6 +2080,95 @@ Results:
   `ExploreWebAppRoutes.js` 1610, `WebAppTafsirRoute.js` 652, and
   `exploreScreen.test.js` 1894.
 
+## Web App Doa Route Dashboard Parity
+
+Status: completed for the native `web_app` Doa route visual parity pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic generic list/detail path for Doa on the
+  `classic` layout.
+- In `web_app` mode, `doa` now renders a dedicated light dashboard surface
+  modeled after `/dashboard/doa`: centered Arabic/title/subtitle header,
+  bordered search field, category pills, count row, white doa cards, Arabic
+  text preview, transliteration, translation, source/audio badges, empty state,
+  and load-more affordance.
+- Native Doa cards still open through the existing item detail handler instead
+  of adding inline expand/collapse, preserving the mobile detail UI rule while
+  matching the web list surface.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Doa feature route presentation in
+  `web_app`, its Explore test coverage, and route docs. It does not change
+  classic Explore routing, Doa API calls, dashboard web code, or unrelated route
+  work owned by another agent.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/explore/WebAppDoaRoute.js
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+```
+
+Results:
+
+- Pending final verification in this slice.
+
+## Web App Siroh Route Dashboard Parity
+
+Status: completed for the native `web_app` Siroh route visual parity pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic generic list path for Siroh on the
+  `classic` layout.
+- In `web_app` mode, `siroh` now renders a dedicated light dashboard surface
+  modeled after `/dashboard/siroh`: title/subtitle, white bordered search
+  field, white story cards, category badges, numbered tiles, excerpt text, and
+  load-more affordance.
+- Native Siroh cards still open through the existing item detail handler instead
+  of adding inline expand/collapse, preserving the mobile detail UI rule while
+  matching the web list surface.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Siroh feature route presentation in
+  `web_app`, its Explore test coverage, and route docs. It does not change
+  classic Explore routing, Siroh API calls, dashboard web code, or the active
+  Doa route work owned by another agent.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+npm test -- exploreScreen.test.js api-explore.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted Siroh Explore test passed: 1 suite, 1 matching test.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-siroh-route-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Browser mobile smoke captured unauthenticated `/dashboard/siroh` redirect and
+  native Expo `web_app` Siroh at 412x915 in `output/playwright/`.
+- Full Explore/API and full mobile Jest are pending because the current
+  worktree also contains active Doa route WIP owned by another agent in
+  `ExploreWebAppRoutes.js`, `exploreScreen.test.js`, and
+  `WebAppDoaRoute.js`; the Doa test currently fails before downstream Explore
+  tests due to duplicate `Masjid` text and mock queue leakage.
+- Siroh line-count gate: `WebAppSirohRoute.js` 321,
+  `ExploreWebAppRoutes.js` 1638, and `exploreScreen.test.js` 1999.
+
 ## Web App Feed Route Dashboard Parity
 
 Status: completed for the native `web_app` Feed Komunitas route visual parity

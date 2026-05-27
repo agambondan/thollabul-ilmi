@@ -244,7 +244,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'referensi',
       label: 'Referensi',
       meta: 'Kamus dan katalog',
-      features: allFeatures.filter((f) => ['kamus', 'tafsir', 'asbabun-nuzul', 'asmaul-flashcard', 'asmaul-wirid', 'library', 'perawi', 'fiqh'].includes(f.key)),
+      features: allFeatures.filter((f) => ['kamus', 'tafsir', 'asbabun-nuzul', 'asmaul-flashcard', 'asmaul-wirid', 'library', 'perawi', 'fiqh', 'siroh'].includes(f.key)),
     },
     {
       key: 'evaluasi',
@@ -1260,6 +1260,61 @@ describe('ExploreScreen', () => {
 
     expect(getByText('Adab Wudhu')).toBeTruthy();
     expect(queryByText('Zakat Perdagangan')).toBeNull();
+  });
+
+  test('uses dashboard Siroh route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 'siroh-1',
+          title: 'Kelahiran Nabi',
+          body: 'Kisah awal kehidupan Rasulullah.',
+          raw: {
+            category: 'Makkah',
+            excerpt: 'Kisah awal kehidupan Rasulullah.',
+            slug: 'kelahiran-nabi',
+            title: 'Kelahiran Nabi',
+          },
+        },
+        {
+          id: 'siroh-2',
+          title: 'Hijrah ke Madinah',
+          body: 'Perjalanan hijrah bersama Abu Bakar.',
+          raw: {
+            category: 'Madinah',
+            excerpt: 'Perjalanan hijrah bersama Abu Bakar.',
+            slug: 'hijrah-ke-madinah',
+            title: 'Hijrah ke Madinah',
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
+      deepLinkTarget: { id: 'siroh-route', params: { featureKey: 'siroh' } },
+    });
+
+    await waitFor(() => {
+      expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
+        expect.objectContaining({ key: 'siroh' }),
+        { page: 0, size: 20 },
+      );
+      expect(getByTestId('explore-web-app-siroh-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('Siroh Nabawiyah')).toBeTruthy();
+      expect(getByText('Kisah perjalanan hidup Rasulullah Muhammad ﷺ')).toBeTruthy();
+      expect(getByText('Makkah')).toBeTruthy();
+      expect(getByText('Madinah')).toBeTruthy();
+      expect(getAllByTestId('web-app-siroh-card')).toHaveLength(2);
+    });
+
+    fireEvent.changeText(getByTestId('web-app-siroh-search'), 'hijrah');
+
+    expect(getByText('Hijrah ke Madinah')).toBeTruthy();
+    expect(queryByText('Kelahiran Nabi')).toBeNull();
+    expect(getAllByTestId('web-app-siroh-card')).toHaveLength(1);
   });
 
   test('uses dashboard Forum route surface in web app layout', async () => {

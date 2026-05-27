@@ -76,6 +76,7 @@ import { WebAppKamusRoute } from './WebAppKamusRoute';
 import { WebAppLibraryRoute } from './WebAppLibraryRoute';
 import { WebAppLeaderboardRoute } from './WebAppLeaderboardRoute';
 import { WebAppPerawiRoute } from './WebAppPerawiRoute';
+import { WebAppSirohRoute } from './WebAppSirohRoute';
 import { WebAppTafsirRoute } from './WebAppTafsirRoute';
 
 export function renderExploreWebAppRoute(context) {
@@ -1477,6 +1478,19 @@ export function renderExploreWebAppRoute(context) {
   if (activeFeature?.key === 'fiqh' ) {
     return (
       <WebAppFiqhRoute
+        error={error}
+        items={items}
+        loading={loading}
+        onLoadMore={loadMoreFeature}
+        onOpenItem={openItemDetail}
+        pagination={pagination}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'siroh' ) {
+    return (
+      <WebAppSirohRoute
         error={error}
         items={items}
         loading={loading}
