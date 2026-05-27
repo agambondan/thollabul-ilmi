@@ -8,18 +8,27 @@ const header = {
   brand: '#007f63',
   ink: '#111827',
   muted: '#9ca3af',
+  darkBg: '#020617',
+  darkBorder: '#1e293b',
+  darkInk: '#f8fafc',
+  darkMuted: '#94a3b8',
 };
 
-export function MobileTopHeader({ accountLabel = 'T', accountMenuOpen = false, onOpenAccountMenu }) {
+export function MobileTopHeader({
+  accountLabel = 'T',
+  accountMenuOpen = false,
+  isDarkTheme = false,
+  onOpenAccountMenu,
+}) {
   const normalizedAccountLabel = accountLabel?.trim() || 'T';
 
   return (
-    <View style={styles.wrap} testID="mobile-top-header">
+    <View style={[styles.wrap, isDarkTheme && styles.wrapDark]} testID="mobile-top-header">
       <View style={styles.brandGroup}>
         <View style={styles.logo}>
           <Text style={styles.logoText}>ط</Text>
         </View>
-        <Text style={styles.brandName} numberOfLines={1}>
+        <Text style={[styles.brandName, isDarkTheme && styles.brandNameDark]} numberOfLines={1}>
           Thullaabul 'Ilmi
         </Text>
       </View>
@@ -39,7 +48,7 @@ export function MobileTopHeader({ accountLabel = 'T', accountMenuOpen = false, o
             </Text>
           </View>
           <ChevronDown
-            color={header.muted}
+            color={isDarkTheme ? header.darkMuted : header.muted}
             size={17}
             strokeWidth={2}
             style={accountMenuOpen ? styles.chevronOpen : undefined}
@@ -61,6 +70,10 @@ const styles = StyleSheet.create({
     minHeight: 56,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
+  },
+  wrapDark: {
+    backgroundColor: header.darkBg,
+    borderBottomColor: header.darkBorder,
   },
   brandGroup: {
     alignItems: 'center',
@@ -89,6 +102,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '800',
     letterSpacing: 0,
+  },
+  brandNameDark: {
+    color: header.darkInk,
   },
   actions: {
     alignItems: 'center',

@@ -47,6 +47,8 @@ function renderShell(props = {}) {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  AsyncStorage.getItem.mockImplementation(() => Promise.resolve(null));
+  AsyncStorage.setItem.mockImplementation(() => Promise.resolve());
   useSession.mockReturnValue({ loading: false, signOut: jest.fn(), user: null });
 });
 
@@ -98,10 +100,28 @@ describe('MobileAppShell', () => {
     expect(getByText('Menu')).toBeTruthy();
     expect(setBarStyleSpy).toHaveBeenCalledWith('dark-content');
     expect(getByTestId('mobile-top-header').props.style).toEqual(
-      expect.objectContaining({ backgroundColor: '#ffffff' }),
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff' })]),
     );
     expect(getByTestId('mobile-bottom-nav').props.style).toEqual(
       expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff' })]),
+    );
+  });
+
+  test('applies stored dark theme to web app shell chrome and status bar', async () => {
+    AsyncStorage.getItem.mockImplementation(async (key) => {
+      if (key === 'tholabul:pref:app-layout-mode') return '"web_app"';
+      if (key === 'tholabul:pref:app-theme') return '"dark"';
+      return null;
+    });
+    const { getByTestId } = renderShell();
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+    await waitFor(() => expect(setBarStyleSpy).toHaveBeenCalledWith('light-content'));
+    expect(getByTestId('mobile-top-header').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#020617' })]),
+    );
+    expect(getByTestId('mobile-bottom-nav').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#020617' })]),
     );
   });
 
@@ -138,6 +158,29 @@ describe('MobileAppShell', () => {
 
     fireEvent.press(getByTestId('mobile-account-menu-close'));
     expect(queryByTestId('mobile-account-menu')).toBeNull();
+  });
+
+  test('toggles web app dark theme from account menu', async () => {
+    AsyncStorage.getItem.mockImplementation(async (key) => {
+      if (key === 'tholabul:pref:app-layout-mode') return '"web_app"';
+      if (key === 'tholabul:pref:app-theme') return '"dark"';
+      return null;
+    });
+    const { getByTestId } = renderShell();
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+    fireEvent.press(getByTestId('mobile-top-header-profile'));
+
+    expect(getByTestId('mobile-account-menu-theme-toggle').props.accessibilityState).toEqual({ checked: true });
+    fireEvent.press(getByTestId('mobile-account-menu-theme-toggle'));
+
+    await waitFor(() => {
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        'tholabul:pref:app-theme',
+        '"light"',
+      );
+    });
+    await waitFor(() => expect(setBarStyleSpy).toHaveBeenCalledWith('dark-content'));
   });
 
   test('routes account menu profile and sign out actions', async () => {

@@ -10,6 +10,11 @@ const nav = {
   bg: '#ffffff',
   border: '#f3f4f6',
   inactive: '#6b7280',
+  darkActive: '#34d399',
+  darkActiveBg: '#064e3b',
+  darkBg: '#020617',
+  darkBorder: '#1e293b',
+  darkInactive: '#94a3b8',
 };
 
 export const webDashboardBottomItems = [
@@ -20,12 +25,18 @@ export const webDashboardBottomItems = [
   { Icon: Menu, key: 'menu', label: 'Menu' },
 ];
 
-export function MobileBottomNav({ active, onChange, onOpenMenu, onOpenSearch }) {
+export function MobileBottomNav({ active, isDarkTheme = false, onChange, onOpenMenu, onOpenSearch }) {
   const insets = useSafeAreaInsets();
+  const activeColor = isDarkTheme ? nav.darkActive : nav.active;
+  const inactiveColor = isDarkTheme ? nav.darkInactive : nav.inactive;
 
   return (
     <View
-      style={[styles.wrap, { paddingBottom: Math.max(insets.bottom, spacing.xs) }]}
+      style={[
+        styles.wrap,
+        isDarkTheme && styles.wrapDark,
+        { paddingBottom: Math.max(insets.bottom, spacing.xs) },
+      ]}
       testID="mobile-bottom-nav"
     >
       {webDashboardBottomItems.map((tab) => {
@@ -38,7 +49,7 @@ export function MobileBottomNav({ active, onChange, onOpenMenu, onOpenSearch }) 
             accessibilityLabel={tab.label}
             accessibilityRole={isAction ? 'button' : 'tab'}
             accessibilityState={tab.key === 'menu' ? undefined : { selected }}
-            android_ripple={{ color: nav.activeBg, borderless: false }}
+            android_ripple={{ color: isDarkTheme ? nav.darkActiveBg : nav.activeBg, borderless: false }}
             key={tab.key}
             onPress={() => {
               if (!selected || isAction) hapticSelection();
@@ -52,14 +63,22 @@ export function MobileBottomNav({ active, onChange, onOpenMenu, onOpenSearch }) 
               }
               onChange?.(tab.key);
             }}
-            style={[styles.item, selected && styles.itemActive]}
+            style={[styles.item, selected && styles.itemActive, selected && isDarkTheme && styles.itemActiveDark]}
           >
             <Icon
-              color={selected ? nav.active : nav.inactive}
+              color={selected ? activeColor : inactiveColor}
               size={19}
               strokeWidth={selected ? 2.5 : 1.9}
             />
-            <Text style={[styles.label, selected && styles.labelActive]} numberOfLines={1}>
+            <Text
+              style={[
+                styles.label,
+                isDarkTheme && styles.labelDark,
+                selected && styles.labelActive,
+                selected && isDarkTheme && styles.labelActiveDark,
+              ]}
+              numberOfLines={1}
+            >
               {tab.label}
             </Text>
           </Pressable>
@@ -79,6 +98,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingTop: spacing.xs,
   },
+  wrapDark: {
+    backgroundColor: nav.darkBg,
+    borderTopColor: nav.darkBorder,
+  },
   item: {
     alignItems: 'center',
     borderRadius: radius.md,
@@ -92,14 +115,23 @@ const styles = StyleSheet.create({
   itemActive: {
     backgroundColor: nav.activeBg,
   },
+  itemActiveDark: {
+    backgroundColor: nav.darkActiveBg,
+  },
   label: {
     color: nav.inactive,
     fontSize: 10,
     fontWeight: '600',
     letterSpacing: 0,
   },
+  labelDark: {
+    color: nav.darkInactive,
+  },
   labelActive: {
     color: nav.active,
     fontWeight: '800',
+  },
+  labelActiveDark: {
+    color: nav.darkActive,
   },
 });

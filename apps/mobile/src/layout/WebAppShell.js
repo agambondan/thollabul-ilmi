@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, Platform, StatusBar, StyleSheet } from 'react-nat
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSession } from '../context/SessionContext';
 import { colors } from '../theme';
+import { useLayoutMode } from './LayoutModeProvider';
 import { MobileAccountMenu } from './MobileAccountMenu';
 import { MobileBottomNav } from './MobileBottomNav';
 import { MobileMenuSheet } from './MobileMenuSheet';
@@ -15,13 +16,14 @@ export function getWebAppAccountLabel(user) {
 
 export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfile, onTabChange }) {
   const { loading, signOut, user } = useSession();
+  const { isDarkTheme, setThemePreference, themePreference } = useLayoutMode();
   const [accountMenuVisible, setAccountMenuVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const accountLabel = getWebAppAccountLabel(user);
 
   useEffect(() => {
-    StatusBar.setBarStyle('dark-content');
-  }, []);
+    StatusBar.setBarStyle(isDarkTheme ? 'light-content' : 'dark-content');
+  }, [isDarkTheme]);
 
   const closeAccountMenu = useCallback(() => setAccountMenuVisible(false), []);
   const openAccountMenu = useCallback(() => setAccountMenuVisible(true), []);
@@ -43,22 +45,28 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
   );
 
   return (
-    <SafeAreaView edges={['top', 'left', 'right']} style={styles.safeArea} testID="web-app-shell">
+    <SafeAreaView
+      edges={['top', 'left', 'right']}
+      style={[styles.safeArea, isDarkTheme && styles.safeAreaDark]}
+      testID="web-app-shell"
+    >
       <MobileTopHeader
         accountMenuOpen={accountMenuVisible}
         accountLabel={accountLabel}
+        isDarkTheme={isDarkTheme}
         onOpenAccountMenu={openAccountMenu}
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={0}
-        style={styles.container}
+        style={[styles.container, isDarkTheme && styles.containerDark]}
       >
         {children}
       </KeyboardAvoidingView>
       {keyboardVisible ? null : (
         <MobileBottomNav
           active={activeTab}
+          isDarkTheme={isDarkTheme}
           onChange={onTabChange}
           onOpenMenu={openMenu}
           onOpenSearch={openSearch}
@@ -74,10 +82,13 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
       <MobileAccountMenu
         accountEmail={user?.email}
         accountLabel={accountLabel}
+        isDarkTheme={isDarkTheme}
         loading={loading}
         onClose={closeAccountMenu}
         onSelectProfile={onOpenProfile}
         onSignOut={signOut}
+        onToggleTheme={() => setThemePreference(isDarkTheme ? 'light' : 'dark')}
+        themePreference={themePreference}
         visible={accountMenuVisible}
       />
     </SafeAreaView>
@@ -89,8 +100,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     flex: 1,
   },
+  safeAreaDark: {
+    backgroundColor: '#020617',
+  },
   container: {
     backgroundColor: colors.bg,
     flex: 1,
+  },
+  containerDark: {
+    backgroundColor: '#020617',
   },
 });

@@ -47,8 +47,8 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Last completed route batch: Explore/Belajar 100% route-surface gate across
-  all 43 mobile feature keys.
+- Last completed route batch: native `web_app` shell theme toggle fix, after
+  the Explore/Belajar 100% route-surface gate.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
   - preserve `classic` native layout;
@@ -59,6 +59,18 @@ Started: 2026-05-26 16:20 WIB
 
 ## Latest Verification
 
+- `node --check apps/mobile/src/layout/LayoutModeProvider.js`,
+  `WebAppShell.js`, `MobileTopHeader.js`, `MobileBottomNav.js`,
+  `MobileAccountMenu.js`, and `ProfileScreen.js` passed.
+- `cd apps/mobile && npm test -- mobileAppShell.test.js layoutModeProvider.test.js profileScreen.test.js --runInBand`
+  passed: 3 suites, 46 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 47 suites, 677 tests.
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-theme-toggle-export`
+  passed.
+- `node scripts/check-feature-parity.js` passed.
+- `git diff --check` passed.
+- Native emulator smoke artifact:
+  `output/native-smoke/emulator-webapp-theme-dark-shell.png`.
 - `node --check apps/mobile/src/screens/explore/WebAppReferenceListRoute.js`
   passed.
 - `node --check apps/mobile/src/screens/explore/WebAppToolRoute.js` passed.

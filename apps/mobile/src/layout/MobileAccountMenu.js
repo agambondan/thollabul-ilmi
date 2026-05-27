@@ -21,6 +21,12 @@ const menu = {
   ink: '#f8fafc',
   muted: '#94a3b8',
   surface: '#1e293b',
+  lightActive: '#047857',
+  lightBackdrop: 'rgba(15, 23, 42, 0.18)',
+  lightBorder: '#e5e7eb',
+  lightInk: '#111827',
+  lightMuted: '#64748b',
+  lightSurface: '#ffffff',
 };
 
 const accountItems = [
@@ -36,10 +42,13 @@ const HEADER_HEIGHT = 56;
 export function MobileAccountMenu({
   accountEmail,
   accountLabel = 'Tamu',
+  isDarkTheme = false,
   loading = false,
   onClose,
   onSelectProfile,
   onSignOut,
+  onToggleTheme,
+  themePreference = 'system',
   visible,
 }) {
   const insets = useSafeAreaInsets();
@@ -59,6 +68,11 @@ export function MobileAccountMenu({
     onSignOut?.();
   };
 
+  const handleToggleTheme = () => {
+    hapticSelection();
+    onToggleTheme?.();
+  };
+
   return (
     <Modal animationType="fade" onRequestClose={onClose} transparent visible={visible}>
       <View style={styles.root} pointerEvents="box-none" testID="mobile-account-menu">
@@ -66,34 +80,38 @@ export function MobileAccountMenu({
           accessibilityLabel="Tutup menu akun"
           accessibilityRole="button"
           onPress={onClose}
-          style={styles.backdrop}
+          style={[styles.backdrop, !isDarkTheme && styles.backdropLight]}
           testID="mobile-account-menu-backdrop"
         />
         <View
-          style={[styles.card, { marginTop: Math.max(insets.top + HEADER_HEIGHT, spacing.xl) }]}
+          style={[
+            styles.card,
+            !isDarkTheme && styles.cardLight,
+            { marginTop: Math.max(insets.top + HEADER_HEIGHT, spacing.xl) },
+          ]}
           testID="mobile-account-menu-card"
         >
-          <View style={styles.header}>
+          <View style={[styles.header, !isDarkTheme && styles.headerLight]}>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>{accountInitial}</Text>
             </View>
             <View style={styles.accountCopy}>
-              <Text numberOfLines={1} style={styles.accountName}>
+              <Text numberOfLines={1} style={[styles.accountName, !isDarkTheme && styles.accountNameLight]}>
                 {normalizedAccountLabel}
               </Text>
-              <Text numberOfLines={1} style={styles.accountEmail}>
+              <Text numberOfLines={1} style={[styles.accountEmail, !isDarkTheme && styles.accountEmailLight]}>
                 {subtitle}
               </Text>
             </View>
             <Pressable
               accessibilityLabel="Tutup menu akun"
               accessibilityRole="button"
-              android_ripple={{ color: '#334155', borderless: true }}
+              android_ripple={{ color: isDarkTheme ? '#334155' : '#e5e7eb', borderless: true }}
               onPress={onClose}
               style={styles.closeButton}
               testID="mobile-account-menu-close"
             >
-              <X color={menu.muted} size={17} strokeWidth={2.2} />
+              <X color={isDarkTheme ? menu.muted : menu.lightMuted} size={17} strokeWidth={2.2} />
             </Pressable>
           </View>
 
@@ -103,36 +121,52 @@ export function MobileAccountMenu({
               return (
                 <Pressable
                   accessibilityRole="button"
-                  android_ripple={{ color: '#334155', borderless: false }}
+                  android_ripple={{ color: isDarkTheme ? '#334155' : '#e5e7eb', borderless: false }}
                   key={item.key}
                   onPress={handleProfileItem}
                   style={styles.row}
                   testID={`mobile-account-menu-item-${item.key}`}
                 >
-                  <Icon color={menu.muted} size={17} strokeWidth={1.9} />
-                  <Text style={styles.rowLabel}>{item.label}</Text>
+                  <Icon color={isDarkTheme ? menu.muted : menu.lightMuted} size={17} strokeWidth={1.9} />
+                  <Text style={[styles.rowLabel, !isDarkTheme && styles.rowLabelLight]}>{item.label}</Text>
                 </Pressable>
               );
             })}
           </View>
 
-          <View style={styles.preferences}>
-            <View style={styles.prefRow}>
-              <Text style={styles.prefLabel}>Gelap</Text>
-              <View style={styles.switchTrack}>
-                <View style={styles.switchThumb}>
-                  <Moon color="#0f766e" size={12} strokeWidth={2.4} />
+          <View style={[styles.preferences, !isDarkTheme && styles.preferencesLight]}>
+            <Pressable
+              accessibilityLabel="Toggle tema gelap"
+              accessibilityRole="switch"
+              accessibilityState={{ checked: isDarkTheme }}
+              android_ripple={{ color: isDarkTheme ? '#334155' : '#e5e7eb', borderless: false }}
+              onPress={handleToggleTheme}
+              style={styles.prefRow}
+              testID="mobile-account-menu-theme-toggle"
+            >
+              <View>
+                <Text style={[styles.prefLabel, !isDarkTheme && styles.prefLabelLight]}>Gelap</Text>
+                <Text style={[styles.prefMeta, !isDarkTheme && styles.prefMetaLight]}>
+                  {themePreference === 'system' ? 'Mengikuti sistem' : isDarkTheme ? 'Tema gelap aktif' : 'Tema terang aktif'}
+                </Text>
+              </View>
+              <View style={[styles.switchTrack, !isDarkTheme && styles.switchTrackOff]}>
+                <View style={[styles.switchThumb, !isDarkTheme && styles.switchThumbOff]}>
+                  <Moon color={isDarkTheme ? '#0f766e' : '#64748b'} size={12} strokeWidth={2.4} />
                 </View>
               </View>
-            </View>
+            </Pressable>
             <View style={styles.langRow}>
-              <Pressable accessibilityRole="button" style={[styles.langPill, styles.langPillActive]}>
+              <Pressable
+                accessibilityRole="button"
+                style={[styles.langPill, !isDarkTheme && styles.langPillLight, styles.langPillActive]}
+              >
                 <Text style={styles.flag}>🇮🇩</Text>
                 <Text style={[styles.langText, styles.langTextActive]}>Indonesia</Text>
               </Pressable>
-              <Pressable accessibilityRole="button" style={styles.langPill}>
+              <Pressable accessibilityRole="button" style={[styles.langPill, !isDarkTheme && styles.langPillLight]}>
                 <Text style={styles.flag}>🇬🇧</Text>
-                <Text style={styles.langText}>English</Text>
+                <Text style={[styles.langText, !isDarkTheme && styles.langTextLight]}>English</Text>
               </Pressable>
             </View>
           </View>
@@ -140,7 +174,7 @@ export function MobileAccountMenu({
           <Pressable
             accessibilityLabel="Keluar"
             accessibilityRole="button"
-            android_ripple={{ color: '#334155', borderless: false }}
+            android_ripple={{ color: isDarkTheme ? '#334155' : '#fee2e2', borderless: false }}
             disabled={loading}
             onPress={handleSignOut}
             style={styles.signOutRow}
@@ -163,6 +197,9 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: menu.backdrop,
   },
+  backdropLight: {
+    backgroundColor: menu.lightBackdrop,
+  },
   card: {
     alignSelf: 'flex-end',
     backgroundColor: menu.surface,
@@ -174,6 +211,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     width: '64%',
   },
+  cardLight: {
+    backgroundColor: menu.lightSurface,
+    borderColor: menu.lightBorder,
+  },
   header: {
     alignItems: 'center',
     borderBottomColor: menu.border,
@@ -182,6 +223,9 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
+  },
+  headerLight: {
+    borderBottomColor: menu.lightBorder,
   },
   avatar: {
     alignItems: 'center',
@@ -207,12 +251,18 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 0,
   },
+  accountNameLight: {
+    color: menu.lightInk,
+  },
   accountEmail: {
     color: menu.muted,
     fontSize: 11,
     fontWeight: '500',
     letterSpacing: 0,
     marginTop: 1,
+  },
+  accountEmailLight: {
+    color: menu.lightMuted,
   },
   closeButton: {
     alignItems: 'center',
@@ -238,6 +288,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 0,
   },
+  rowLabelLight: {
+    color: menu.lightInk,
+  },
   preferences: {
     borderBottomColor: menu.border,
     borderBottomWidth: 1,
@@ -246,6 +299,10 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
+  },
+  preferencesLight: {
+    borderBottomColor: menu.lightBorder,
+    borderTopColor: menu.lightBorder,
   },
   prefRow: {
     alignItems: 'center',
@@ -258,6 +315,19 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 0,
   },
+  prefLabelLight: {
+    color: menu.lightInk,
+  },
+  prefMeta: {
+    color: menu.muted,
+    fontSize: 10,
+    fontWeight: '600',
+    letterSpacing: 0,
+    marginTop: 1,
+  },
+  prefMetaLight: {
+    color: menu.lightMuted,
+  },
   switchTrack: {
     alignItems: 'flex-end',
     backgroundColor: '#10b981',
@@ -267,6 +337,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     width: 48,
   },
+  switchTrackOff: {
+    alignItems: 'flex-start',
+    backgroundColor: '#e5e7eb',
+  },
   switchThumb: {
     alignItems: 'center',
     backgroundColor: '#ecfdf5',
@@ -274,6 +348,9 @@ const styles = StyleSheet.create({
     height: 18,
     justifyContent: 'center',
     width: 18,
+  },
+  switchThumbOff: {
+    backgroundColor: '#ffffff',
   },
   langRow: {
     flexDirection: 'row',
@@ -291,6 +368,9 @@ const styles = StyleSheet.create({
     minHeight: 30,
     paddingHorizontal: spacing.sm,
   },
+  langPillLight: {
+    borderColor: menu.lightBorder,
+  },
   langPillActive: {
     borderColor: '#10b981',
   },
@@ -302,6 +382,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 0,
+  },
+  langTextLight: {
+    color: menu.lightMuted,
   },
   langTextActive: {
     color: menu.active,

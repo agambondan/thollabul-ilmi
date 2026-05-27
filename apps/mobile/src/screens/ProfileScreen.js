@@ -241,7 +241,10 @@ function ChoiceRow({ active, label, meta, onPress }) {
 }
 
 function AppearanceSettings({ onUserUpdated, user }) {
-    const { setLayoutMode: setAppLayoutMode } = useLayoutMode();
+    const {
+        setLayoutMode: setAppLayoutMode,
+        setThemePreference: setAppThemePreference,
+    } = useLayoutMode();
     const [theme, setTheme] = useState('system');
     const [language, setLanguage] = useState(user?.preferred_lang ?? 'idn');
     const [layoutMode, setLayoutMode] = useState(defaultLayoutMode);
@@ -274,8 +277,8 @@ function AppearanceSettings({ onUserUpdated, user }) {
         setSaving('theme');
         setMessage('');
         try {
-            await writePreference(preferenceKeys.appTheme, nextTheme);
-            setTheme(nextTheme);
+            const storedTheme = await setAppThemePreference(nextTheme);
+            setTheme(storedTheme);
             setMessage('Preferensi tema tersimpan di perangkat ini.');
         } catch (err) {
             setMessage(err?.message ?? 'Preferensi tema belum bisa disimpan.');

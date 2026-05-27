@@ -2524,3 +2524,58 @@ Results:
 - `git diff --check` passed.
 - Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
   2,000-line gate.
+
+## Web App Shell Theme Toggle Fix
+
+Status: completed for native `web_app` shell light/dark chrome parity.
+
+Implemented:
+
+- Promoted `app-theme` from a stored-only Profile preference into the shared
+  mobile layout provider, with `system`, `light`, and `dark` normalization.
+- `WebAppShell` now resolves the stored theme and applies it to the native
+  status bar, safe area, topbar, content container, and bottom navigation.
+- The account menu `Gelap` control is now an actual switch that writes the
+  theme preference and immediately updates the shell chrome.
+- Profile appearance theme saves now use the shared provider setter, so changes
+  from Profile and from the account menu stay in sync.
+
+Scope guardrail:
+
+- This slice changes native mobile shell theming only. It does not change route
+  content rendering, classic shell navigation, account menu navigation actions,
+  language storage, or API behavior.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/layout/LayoutModeProvider.js
+node --check apps/mobile/src/layout/WebAppShell.js
+node --check apps/mobile/src/layout/MobileTopHeader.js
+node --check apps/mobile/src/layout/MobileBottomNav.js
+node --check apps/mobile/src/layout/MobileAccountMenu.js
+node --check apps/mobile/src/screens/ProfileScreen.js
+cd apps/mobile
+npm test -- mobileAppShell.test.js layoutModeProvider.test.js profileScreen.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-theme-toggle-export
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- `node --check` passed for the touched shell/provider/profile files.
+- Targeted mobile shell/theme tests passed: 3 suites, 46 tests.
+- Full mobile Jest passed: 47 suites, 677 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-theme-toggle-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
+  2,000-line gate.
+- Native emulator smoke captured the fixed dark chrome at
+  `output/native-smoke/emulator-webapp-theme-dark-shell.png`; after toggling
+  `Gelap`, the status bar, topbar, and bottom nav rendered dark.
