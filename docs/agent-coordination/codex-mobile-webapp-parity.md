@@ -47,8 +47,9 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Last completed route batch: native `web_app` shell theme toggle fix, after
-  the Explore/Belajar 100% route-surface gate.
+- Last completed route batch: native `web_app` Global Search/Cari light-theme
+  content follow-up, after the shell theme toggle fix and the Explore/Belajar
+  100% route-surface gate.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
   - preserve `classic` native layout;
@@ -71,6 +72,16 @@ Started: 2026-05-26 16:20 WIB
 - `git diff --check` passed.
 - Native emulator smoke artifact:
   `output/native-smoke/emulator-webapp-theme-dark-shell.png`.
+- `node --check apps/mobile/src/screens/GlobalSearchScreen.js` passed.
+- `cd apps/mobile && npm test -- globalSearchScreen.test.js --runInBand`
+  passed: 1 suite, 15 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 47 suites, 678 tests.
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-global-search-theme-export`
+  passed.
+- `node scripts/check-feature-parity.js` passed.
+- `git diff --check` passed.
+- Native emulator smoke artifact:
+  `output/native-smoke/emulator-global-search-light-theme-after-fix-closed.png`.
 - `node --check apps/mobile/src/screens/explore/WebAppReferenceListRoute.js`
   passed.
 - `node --check apps/mobile/src/screens/explore/WebAppToolRoute.js` passed.

@@ -36,6 +36,7 @@ Feature parity check passed.
 - manifest utility routes: 14
 - mobile feature keys: 43
 - web app routes scanned: 154
+- dashboard page routes scanned: 64
 ```
 
 Current route UI audit output:
@@ -90,6 +91,48 @@ git diff --check
    `profile:<view>`, or `internal:<view>`.
 4. Non-feature routes are not hidden in script exceptions anymore. They must be
    declared in `utilityRoutes`.
+5. Dashboard child/detail routes are tracked as journey parity, not route-count
+   parity. A `/dashboard/...` page may be omitted from the manifest only when it
+   lives under a manifest-tracked dashboard feature route and the equivalent
+   mobile journey exists through a detail screen, detail view, or bottom sheet.
+   It must not become a top-level mobile tab/menu item unless the IA explicitly
+   requires that surface.
+
+## Dashboard Child Route Contract
+
+The web app currently has 64 `/dashboard` page routes. The manifest tracks 50
+active feature dashboard routes plus `/dashboard` and `/dashboard/profile` as
+utility routes. The remaining dashboard page routes are child/detail journeys
+under tracked features:
+
+| Web dashboard child route | Mobile parity target |
+| --- | --- |
+| `/dashboard/blog/[slug]` | Blog feature detail screen or sheet |
+| `/dashboard/forum/[slug]` | Forum detail view inside `feature:forum` |
+| `/dashboard/forum/ask` | Forum ask form inside `feature:forum` |
+| `/dashboard/hadith/[slug]` | Hadith tab book/detail stack |
+| `/dashboard/hadith/[slug]/[number]` | Hadith numbered detail stack |
+| `/dashboard/hadith/theme/[slug]` | Hadith theme detail/list stack |
+| `/dashboard/library/[slug]` | Library book detail or reader flow |
+| `/dashboard/perawi/[id]` | Perawi detail screen or bottom sheet |
+| `/dashboard/quran/[slug]` | Quran reader/detail stack |
+| `/dashboard/quran/page-mushaf` | Quran mushaf mode or screen |
+| `/dashboard/siroh/[slug]` | Siroh story detail screen or sheet |
+| `/dashboard/tafsir/[slug]` | Tafsir detail/comparison view |
+| `/dashboard/zakat/history` | Zakat history section, screen, or sheet |
+
+Development rule:
+
+1. Do not chase `64 == 64` route-count parity on native mobile.
+2. Do cover every child route as a reachable mobile journey.
+3. In `web_app`, the child journey visual treatment should follow the
+   corresponding dashboard mobile web view as closely as the native interaction
+   model allows.
+4. Keep child journeys out of the primary tab/menu catalog unless they are
+   promoted to first-class features in `docs/features/feature-manifest.json`.
+5. When adding a new `/dashboard/...` page, either add it as a feature/utility
+   route in the manifest or keep it under a manifest-tracked dashboard feature
+   route and document/update the mobile journey coverage here.
 
 ## Utility Routes
 
@@ -155,7 +198,7 @@ should stay visible for future planning:
 
 | Feature | Delta |
 | --- | --- |
-| Mobile Profile settings | Follow-up implemented current-device session, password change, language preference, local theme preference, layout mode preference, and a native `web_app` shell theme provider. The account menu dark toggle now updates the stored app theme and applies dark chrome to the topbar, footer, safe area, and status bar. Still tracked: login history endpoint and delete-account self-service. |
+| Mobile Profile settings | Follow-up implemented current-device session, password change, language preference, local theme preference, layout mode preference, and a native `web_app` shell theme provider. The account menu dark toggle now updates the stored app theme and applies dark chrome to the topbar, footer, safe area, status bar, and the Global Search/Cari `web_app` content surface. Still tracked: login history endpoint and delete-account self-service. |
 | Achievements and Stats | Stats and Achievements now have dedicated native `web_app` dashboard-style route surfaces. Achievements remains reachable from Profile, but `profile:achievements` renders a dashboard route view aligned with `/dashboard/achievements`. |
 | Offline packs | Mobile has explicit offline pack management; web has no equivalent PWA offline pack manager yet. |
 | Mobile web-inspired layout | `web_app` is now the default native mobile shell for new installs, with dashboard-aligned surfaces for Home, Quran list/reader/detail surfaces, Hadith book shelf/detail surfaces, Global Search/Cari, the Ibadah hub, the Explore/Belajar hub, the Profile main screen, Prayer/Jadwal Sholat, Khatam, Qibla/Kiblat, Peta Islam Interaktif, Tokoh Tarikh, and the Bookmark/Notes/Notifications/Goals/Muhasabah/Hafalan/Murojaah/Tilawah/Stats/Leaderboard/Doa/Dzikir/Wirid/Tahlil/Asmaul Husna/Panduan Sholat/Sejarah/Manasik/Jarh wa Ta'dil/Imsakiyah/Amalan Harian/Quiz/Hijri/Tasbih/Zakat/Faraidh/Sholat Tracker/Wirid Saya/Asmaul Husna Wirid/Asmaul Husna Flashcard/Kajian/Blog/Library/Perawi/Fiqh/Siroh/Forum/Kamus/Tafsir/Asbabun Nuzul/Achievements/Feed feature routes. Native mobile `classic` layout remains supported from settings and must keep feature parity while visual polish continues incrementally. |

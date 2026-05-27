@@ -2579,3 +2579,42 @@ Results:
 - Native emulator smoke captured the fixed dark chrome at
   `output/native-smoke/emulator-webapp-theme-dark-shell.png`; after toggling
   `Gelap`, the status bar, topbar, and bottom nav rendered dark.
+
+## Web App Global Search Theme Follow-Up
+
+Status: completed for native `web_app` Global Search light/dark content parity.
+
+Implemented:
+
+- Fixed `GlobalSearchScreen` hardcoded dark dashboard colors in `web_app` mode.
+- The `Cari` route now reads `isDarkTheme` from the shared layout/theme
+  provider and applies the correct background, title, input, and filter-chip
+  colors for both light and dark themes.
+- Added test IDs and assertions covering light and dark `web_app` Search
+  surfaces so the route cannot silently stay dark after switching to light.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/GlobalSearchScreen.js
+cd apps/mobile
+npm test -- globalSearchScreen.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-global-search-theme-export
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- `node --check` passed for `GlobalSearchScreen.js`.
+- Targeted Global Search tests passed: 1 suite, 15 tests.
+- Full mobile Jest passed: 47 suites, 678 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-global-search-theme-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Native emulator smoke captured the fixed light `Cari` route at
+  `output/native-smoke/emulator-global-search-light-theme-after-fix-closed.png`.

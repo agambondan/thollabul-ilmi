@@ -131,7 +131,7 @@ beforeEach(() => {
   client.getSurahs.mockResolvedValue([]);
   recentSearches.readRecentSearches.mockResolvedValue([]);
   recentSearches.rememberRecentSearch.mockResolvedValue([]);
-  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+  useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: false });
 });
 
 afterEach(() => {
@@ -155,11 +155,14 @@ describe('GlobalSearchScreen', () => {
   });
 
   it('uses web app Global Search surface when web app layout is active', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     const { getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } =
       await renderGlobalSearchScreen();
 
     expect(getByText('Pencarian')).toBeTruthy();
+    expect(getByText('Pencarian').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ color: '#0f172a' })]),
+    );
     expect(getByPlaceholderText('Cari ayah, hadith, atau terjemahan...')).toBeTruthy();
     expect(getByText('Al-Quran')).toBeTruthy();
     expect(getByText('Hadith')).toBeTruthy();
@@ -168,10 +171,31 @@ describe('GlobalSearchScreen', () => {
     expect(getByText('Kajian')).toBeTruthy();
     expect(getByText('Perawi')).toBeTruthy();
     expect(getByTestId('global-search-web-app-surface')).toBeTruthy();
+    expect(getByTestId('global-search-web-app-scroll').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff' })]),
+    );
+    expect(getByTestId('global-search-web-app-input-wrap').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff' })]),
+    );
     expect(getByTestId('search-input')).toBeTruthy();
     expect(queryByText('Mulai dari dua huruf')).toBeNull();
     expect(queryByText('Fitur')).toBeNull();
     expect(queryByTestId('global-search-classic-surface')).toBeNull();
+  });
+
+  it('uses dark web app Global Search surface when dark theme is active', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: true, isWebAppLayout: true });
+    const { getByTestId, getByText } = await renderGlobalSearchScreen();
+
+    expect(getByText('Pencarian').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ color: '#f8fafc' })]),
+    );
+    expect(getByTestId('global-search-web-app-scroll').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#020617' })]),
+    );
+    expect(getByTestId('global-search-web-app-input-wrap').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#1e293b' })]),
+    );
   });
 
   it('shows quick suggestions when no query', async () => {

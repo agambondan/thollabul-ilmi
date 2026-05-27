@@ -14,9 +14,28 @@ const MIN_QUERY_LENGTH = 2;
 const PAGE_SIZE = 20;
 const PREVIEW_SIZE = 3;
 const quickSuggestions = ['shalat', 'sabar', 'zakat', 'tafsir'];
-const WEB_APP_SEARCH_BG = '#020617';
-const WEB_APP_SEARCH_SURFACE = '#1e293b';
-const WEB_APP_SEARCH_MUTED = '#94a3b8';
+const WEB_APP_SEARCH_DARK = {
+  active: '#059669',
+  activeText: '#ffffff',
+  bg: '#020617',
+  chip: '#334155',
+  chipText: '#cbd5e1',
+  inputText: '#e2e8f0',
+  muted: '#94a3b8',
+  surface: '#1e293b',
+  title: '#f8fafc',
+};
+const WEB_APP_SEARCH_LIGHT = {
+  active: '#059669',
+  activeText: '#ffffff',
+  bg: '#ffffff',
+  chip: '#e2e8f0',
+  chipText: '#475569',
+  inputText: '#0f172a',
+  muted: '#64748b',
+  surface: '#ffffff',
+  title: '#0f172a',
+};
 const WEB_APP_SEARCH_ACCENT = '#10b981';
 
 const searchFilters = [
@@ -216,7 +235,7 @@ const LoadingSearchState = ({ label }) => (
 );
 
 export function GlobalSearchScreen({ initialFilter = 'all', initialQuery = '', onBack, onOpenTab }) {
-  const { isWebAppLayout } = useLayoutModePreference();
+  const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
   const [query, setQuery] = useState(initialQuery);
   const [activeFilter, setActiveFilter] = useState('all');
   const [recentSearches, setRecentSearches] = useState([]);
@@ -679,6 +698,7 @@ export function GlobalSearchScreen({ initialFilter = 'all', initialQuery = '', o
   );
 
   if (isWebAppLayout) {
+    const webAppSearchTheme = isDarkTheme ? WEB_APP_SEARCH_DARK : WEB_APP_SEARCH_LIGHT;
     const webAppFilterOrder = ['all', 'quran', 'hadith', 'doa', 'dictionary', 'kajian', 'perawi'];
     const webAppFilters = webAppFilterOrder
       .map((filterKey) => searchFilters.find((filter) => filter.key === filterKey))
@@ -686,26 +706,33 @@ export function GlobalSearchScreen({ initialFilter = 'all', initialQuery = '', o
 
     return (
       <ScrollView
-        contentContainerStyle={styles.webAppSearchContent}
+        contentContainerStyle={[
+          styles.webAppSearchContent,
+          { backgroundColor: webAppSearchTheme.bg },
+        ]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        style={styles.webAppSearchScroll}
+        style={[styles.webAppSearchScroll, { backgroundColor: webAppSearchTheme.bg }]}
+        testID="global-search-web-app-scroll"
       >
-        <Text style={styles.webAppSearchTitle}>Pencarian</Text>
+        <Text style={[styles.webAppSearchTitle, { color: webAppSearchTheme.title }]}>Pencarian</Text>
         <View style={styles.webAppSearchRow}>
-          <View style={styles.webAppSearchInputWrap}>
+          <View
+            style={[styles.webAppSearchInputWrap, { backgroundColor: webAppSearchTheme.surface }]}
+            testID="global-search-web-app-input-wrap"
+          >
             <TextInput
               onChangeText={setQuery}
               placeholder="Cari ayah, hadith, atau terjemahan..."
-              placeholderTextColor={WEB_APP_SEARCH_MUTED}
-              style={styles.webAppSearchInput}
+              placeholderTextColor={webAppSearchTheme.muted}
+              style={[styles.webAppSearchInput, { color: webAppSearchTheme.inputText }]}
               testID="search-input"
               value={query}
             />
           </View>
           <Pressable
             onPress={Keyboard.dismiss}
-            style={styles.webAppSearchButton}
+            style={[styles.webAppSearchButton, { backgroundColor: webAppSearchTheme.active }]}
             testID="global-search-web-app-submit"
           >
             <Search color="#ffffff" size={15} strokeWidth={2.2} />
@@ -722,9 +749,17 @@ export function GlobalSearchScreen({ initialFilter = 'all', initialQuery = '', o
               <Pressable
                 key={filter.key}
                 onPress={() => setActiveFilter(filter.key)}
-                style={[styles.webAppFilterChip, active && styles.webAppFilterChipActive]}
+                style={[
+                  styles.webAppFilterChip,
+                  { backgroundColor: active ? webAppSearchTheme.active : webAppSearchTheme.chip },
+                ]}
               >
-                <Text style={[styles.webAppFilterText, active && styles.webAppFilterTextActive]}>
+                <Text
+                  style={[
+                    styles.webAppFilterText,
+                    { color: active ? webAppSearchTheme.activeText : webAppSearchTheme.chipText },
+                  ]}
+                >
                   {displayLabel}
                 </Text>
               </Pressable>
@@ -800,11 +835,9 @@ export function GlobalSearchScreen({ initialFilter = 'all', initialQuery = '', o
 
 const styles = StyleSheet.create({
   webAppSearchScroll: {
-    backgroundColor: WEB_APP_SEARCH_BG,
     flex: 1,
   },
   webAppSearchContent: {
-    backgroundColor: WEB_APP_SEARCH_BG,
     flexGrow: 1,
     padding: spacing.md,
     paddingBottom: spacing.xl,
@@ -824,7 +857,6 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   webAppSearchInputWrap: {
-    backgroundColor: WEB_APP_SEARCH_SURFACE,
     borderColor: WEB_APP_SEARCH_ACCENT,
     borderRadius: 12,
     borderWidth: 2,
@@ -860,21 +892,13 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   webAppFilterChip: {
-    backgroundColor: '#334155',
     borderRadius: 7,
     paddingHorizontal: spacing.md,
     paddingVertical: 8,
   },
-  webAppFilterChipActive: {
-    backgroundColor: '#059669',
-  },
   webAppFilterText: {
-    color: '#cbd5e1',
     fontSize: 14,
     fontWeight: '700',
-  },
-  webAppFilterTextActive: {
-    color: '#ffffff',
   },
   webAppSearchResults: {
     marginTop: spacing.lg,
