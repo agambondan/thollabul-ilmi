@@ -1018,7 +1018,7 @@ describe('ExploreScreen', () => {
       meta: { hasMore: false },
     });
 
-    const { getAllByTestId, getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
+    const { getAllByTestId, getAllByText, getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
       deepLinkTarget: { id: 'blog-route', params: { featureKey: 'blog' } },
     });
 
@@ -1230,7 +1230,7 @@ describe('ExploreScreen', () => {
       meta: { hasMore: false },
     });
 
-    const { getAllByTestId, getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
+    const { getAllByTestId, getAllByText, getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
       deepLinkTarget: { id: 'fiqh-route', params: { featureKey: 'fiqh' } },
     });
 
@@ -1241,6 +1241,7 @@ describe('ExploreScreen', () => {
       expect(getByText('2 materi fiqh')).toBeTruthy();
       expect(getByText('Adab Wudhu')).toBeTruthy();
       expect(getByText('Zakat Perdagangan')).toBeTruthy();
+      expect(getAllByText('Zakat').length).toBeGreaterThan(1);
       expect(getAllByTestId('web-app-fiqh-card')).toHaveLength(2);
     });
 

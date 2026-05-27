@@ -74,8 +74,9 @@ Started: 2026-05-26 16:20 WIB
 - `git diff --check` passed.
 - Browser mobile smoke captured `/dashboard/fiqh` and native `#/belajar/fiqh`
   at 412x915 in `output/playwright/`.
-- `/dashboard/fiqh` and native Fiqh filters now use API `slug` as the category
-  fallback when `category` is absent.
+- `/dashboard/fiqh` and native Fiqh filters/cards now use API `slug` as the
+  category fallback when `category` is absent, so the filter works and the
+  card badge does not render blank.
 - `cd apps/web && npx eslint src/app/dashboard/fiqh/page.js` could not run
   because local `apps/web/node_modules` is missing `typescript`.
 - `cd apps/web && npm run build` passed.

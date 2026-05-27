@@ -21,6 +21,7 @@ const normalizeFiqhCategory = (value) => {
 
 const getFiqhFilterCategory = (item) =>
     normalizeFiqhCategory(item?.category ?? item?.slug ?? item?.name);
+const getFiqhDisplayCategory = (item) => toStr(item?.category ?? item?.slug);
 
 export default function DashboardFiqhPage() {
     const { t, lang } = useLocale();
@@ -112,7 +113,7 @@ export default function DashboardFiqhPage() {
                                 className='w-full text-left px-4 py-3 flex items-center justify-between gap-3'>
                                 <div className='flex items-center gap-2'>
                                     <span className='px-2 py-0.5 bg-lime-100 dark:bg-lime-900/20 text-lime-700 dark:text-lime-400 rounded text-xs capitalize shrink-0'>
-                                        {toStr(item.category)}
+                                        {getFiqhDisplayCategory(item)}
                                     </span>
                                     <span className='text-sm font-semibold text-gray-900 dark:text-white'>
                                         {getLocalizedField(item, 'title', lang)}

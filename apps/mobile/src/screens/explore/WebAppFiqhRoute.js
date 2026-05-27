@@ -47,7 +47,7 @@ const normalizeFiqhCategory = (value) => {
   if (normalized.startsWith('haji')) return 'haji';
   return normalized;
 };
-const getFiqhDisplayCategory = (item) => toStr(getRaw(item).category ?? item?.meta);
+const getFiqhDisplayCategory = (item) => toStr(getRaw(item).category ?? getRaw(item).slug ?? item?.meta);
 const getFiqhFilterCategory = (item) =>
   normalizeFiqhCategory(getRaw(item).category ?? getRaw(item).slug ?? getRaw(item).name ?? item?.meta);
 

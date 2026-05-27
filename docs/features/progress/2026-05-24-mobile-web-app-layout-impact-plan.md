@@ -2007,9 +2007,10 @@ Implemented:
 - Native Fiqh detail behavior stays routed through the existing item detail
   handler instead of adding inline expand/collapse, preserving the mobile
   detail UI rule while matching the web list surface.
-- The web and mobile Fiqh filters now treat API `slug` values as category
-  fallbacks, so dashboard chips keep working with the current `/api/v1/fiqh`
-  payload that does not always include an explicit `category` field.
+- The web and mobile Fiqh filters/cards now treat API `slug` values as category
+  fallbacks, so dashboard chips keep working and card badges do not render blank
+  with the current `/api/v1/fiqh` payload that does not always include an
+  explicit `category` field.
 
 Scope guardrail:
 
