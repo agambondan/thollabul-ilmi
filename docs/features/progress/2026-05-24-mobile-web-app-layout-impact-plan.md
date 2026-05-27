@@ -1976,6 +1976,53 @@ Results:
   1570, `WebAppKamusRoute.js` 303, `exploreScreen.test.js` 1792, and
   `api-explore.test.js` 241.
 
+## Web App Tafsir Route Dashboard Parity
+
+Status: completed for the native `web_app` Tafsir route visual parity pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic Tafsir surah selector and classic tafsir
+  detail sheet behavior for the `classic` layout.
+- In `web_app` mode, Tafsir now renders a dedicated light dashboard surface
+  modeled after `/dashboard/tafsir`: icon title row, amber data note, bordered
+  search input, full surah grid, active surah state, result header, and compact
+  tafsir ayah cards.
+- The route reuses the existing `/api/v1/surah?size=114&sort=number` and
+  `/api/v1/tafsir/surah/:number` loading flows, and detail opening still uses
+  the existing Tafsir comparison detail renderer.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Tafsir feature route presentation in
+  `web_app`, its Explore test coverage, and route docs. It does not change
+  classic Explore routing, Tafsir API contracts, or web Tafsir code.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-tafsir-route-export
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted mobile Explore test passed: 1 suite, 42 tests.
+- `node --check apps/mobile/src/screens/explore/WebAppTafsirRoute.js` passed.
+- Full mobile Jest passed: 46 suites, 665 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-tafsir-route-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Tafsir line-count gate: `ExploreScreen.js` 1288, `ExploreWebAppRoutes.js`
+  1592, `WebAppTafsirRoute.js` 390, and `exploreScreen.test.js` 1844.
+
 ## Web App Feed Route Dashboard Parity
 
 Status: completed for the native `web_app` Feed Komunitas route visual parity

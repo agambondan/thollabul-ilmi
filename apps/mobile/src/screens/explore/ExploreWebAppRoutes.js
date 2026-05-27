@@ -76,6 +76,7 @@ import { WebAppKamusRoute } from './WebAppKamusRoute';
 import { WebAppLibraryRoute } from './WebAppLibraryRoute';
 import { WebAppLeaderboardRoute } from './WebAppLeaderboardRoute';
 import { WebAppPerawiRoute } from './WebAppPerawiRoute';
+import { WebAppTafsirRoute } from './WebAppTafsirRoute';
 
 export function renderExploreWebAppRoute(context) {
   const {
@@ -118,6 +119,7 @@ export function renderExploreWebAppRoute(context) {
     libraryProgressMap,
     likingFeedId,
     loadFeature,
+    loadSurahContent,
     loadMoreFeature,
     loading,
     notesSearch,
@@ -128,6 +130,7 @@ export function renderExploreWebAppRoute(context) {
     recentFeatureKeys,
     renderItemActionSheet,
     runDictionarySearch,
+    selectedSurahNumber,
     session,
     setActiveNoteRef,
     setBlogCategory,
@@ -158,8 +161,11 @@ export function renderExploreWebAppRoute(context) {
     setLibraryProgressFilter,
     setNotesSearch,
     setSelectedItem,
+    setSurahSearch,
     showError,
     showInfo,
+    surahSearch,
+    surahs,
     visibleItems,
   } = context;
 
@@ -1492,6 +1498,22 @@ export function renderExploreWebAppRoute(context) {
         loading={loading}
         onSearch={runDictionarySearch}
         onUpdateQuery={setDictionaryQuery}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'tafsir' ) {
+    return (
+      <WebAppTafsirRoute
+        error={error}
+        items={items}
+        loading={loading}
+        onOpenItem={openItemDetail}
+        onSearchSurah={setSurahSearch}
+        onSelectSurah={loadSurahContent}
+        selectedSurahNumber={selectedSurahNumber}
+        surahSearch={surahSearch}
+        surahs={surahs}
       />
     );
   }

@@ -1154,6 +1154,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       libraryProgressMap,
       likingFeedId,
       loadFeature,
+      loadSurahContent,
       loadMoreFeature,
       loading,
       notesSearch,
@@ -1166,6 +1167,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       recentFeatureKeys,
       renderItemActionSheet,
       runDictionarySearch,
+      selectedSurahNumber,
       session,
       setActiveNoteRef,
       setBlogCategory,
@@ -1196,8 +1198,11 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       setLibraryProgressFilter,
       setNotesSearch,
       setSelectedItem,
+      setSurahSearch,
       showError,
       showInfo,
+      surahSearch,
+      surahs,
       visibleItems,
     });
 

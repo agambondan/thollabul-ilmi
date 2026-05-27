@@ -1340,6 +1340,58 @@ describe('ExploreScreen', () => {
     });
   });
 
+  test('uses dashboard Tafsir route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    clientApi.getSurahs.mockResolvedValueOnce([
+      { number: 1, name: 'Al-Fatihah', meaning: 'Pembuka', ayahs: 7 },
+      { number: 2, name: 'Al-Baqarah', meaning: 'Sapi Betina', ayahs: 286 },
+    ]);
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 'tafsir-1',
+          title: 'Ayat 1',
+          arabic: 'بِسْمِ اللّٰهِ',
+          body: 'Dengan nama Allah',
+          meta: 'Al-Fatihah · Tafsir Kemenag',
+          tafsir: 'Kemenag detail',
+          raw: { ayah_id: 1 },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
+      deepLinkTarget: { id: 'tafsir-route', params: { featureKey: 'tafsir' } },
+    });
+
+    await waitFor(() => {
+      expect(clientApi.getSurahs).toHaveBeenCalled();
+      expect(getByTestId('explore-web-app-tafsir-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('Tafsir')).toBeTruthy();
+      expect(getByText('Pilih surah untuk membaca penjelasan ayat.')).toBeTruthy();
+      expect(getAllByTestId('web-app-tafsir-surah-card')).toHaveLength(2);
+    });
+
+    fireEvent.changeText(getByTestId('web-app-tafsir-search'), 'baqarah');
+    expect(getByText('Al-Baqarah')).toBeTruthy();
+    expect(queryByText('Al-Fatihah')).toBeNull();
+
+    fireEvent.changeText(getByTestId('web-app-tafsir-search'), '');
+    fireEvent.press(getByText('Al-Fatihah'));
+
+    await waitFor(() => {
+      expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
+        expect.objectContaining({ endpoint: '/api/v1/tafsir/surah/1' }),
+        { page: 0, size: 20 },
+      );
+      expect(getByText('Ayat 1')).toBeTruthy();
+      expect(getByText('Kemenag detail')).toBeTruthy();
+      expect(getAllByTestId('web-app-tafsir-result-card')).toHaveLength(1);
+    });
+  });
+
   test('uses a friendly Blog rate-limit message in web app layout', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
     const rateLimitError = new Error('Request failed: 429');
