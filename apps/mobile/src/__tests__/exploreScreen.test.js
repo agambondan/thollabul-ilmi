@@ -2,7 +2,7 @@ jest.mock('lucide-react-native', () => {
   const icons = {};
   const names = [
     'ArrowLeft', 'BookOpen', 'Bookmark', 'BookmarkCheck', 'CheckCircle2', 'ChevronDown',
-    'Circle', 'ExternalLink', 'Flag', 'Globe', 'Heart', 'HelpCircle',
+    'Circle', 'ExternalLink', 'FileText', 'Flag', 'Globe', 'Heart', 'HelpCircle',
     'ListChecks', 'MessageCircle', 'Pencil', 'Plus', 'Scale', 'Star',
     'Search', 'StickyNote', 'ThumbsDown', 'ThumbsUp', 'Trash2', 'Trophy', 'UserCircle', 'Users', 'Video',
   ];
@@ -203,6 +203,7 @@ jest.mock('../components/NotificationCenter', () => ({
 jest.mock('../data/mobileFeatures', () => {
   const allFeatures = [
     { key: 'tafsir', title: 'Tafsir', subtitle: 'Tafsir per surah', group: 'Ilmu', type: 'surah-content', contentType: 'tafsir' },
+    { key: 'asbabun-nuzul', title: 'Asbabun Nuzul', subtitle: 'Sebab turun ayat', group: 'Ilmu', type: 'surah-content', contentType: 'asbabun-nuzul' },
     { key: 'asmaul-flashcard', title: 'Flashcard Asmaul Husna', subtitle: 'Latihan hafalan', group: 'Ilmu', type: 'asmaul-flashcard' },
     { key: 'kamus', title: 'Kamus Arab', subtitle: 'Cari kosakata Arab', group: 'Alat', type: 'kamus' },
     { key: 'quiz', title: 'Quiz Islami', subtitle: 'Latihan soal', group: 'Alat', type: 'quiz' },
@@ -243,7 +244,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'referensi',
       label: 'Referensi',
       meta: 'Kamus dan katalog',
-      features: allFeatures.filter((f) => ['kamus', 'tafsir', 'asmaul-flashcard', 'asmaul-wirid', 'library', 'perawi', 'fiqh'].includes(f.key)),
+      features: allFeatures.filter((f) => ['kamus', 'tafsir', 'asbabun-nuzul', 'asmaul-flashcard', 'asmaul-wirid', 'library', 'perawi', 'fiqh'].includes(f.key)),
     },
     {
       key: 'evaluasi',
@@ -500,7 +501,7 @@ describe('ExploreScreen', () => {
       meta: { hasMore: false },
     });
 
-    const { getAllByTestId, getByTestId, getByText, queryByTestId } = await renderExploreScreen({
+    const { getAllByTestId, getAllByText, getByTestId, getByText, queryByTestId } = await renderExploreScreen({
       deepLinkTarget: { id: 'goals-route', params: { featureKey: 'goals' } },
     });
 
@@ -1389,6 +1390,55 @@ describe('ExploreScreen', () => {
       expect(getByText('Ayat 1')).toBeTruthy();
       expect(getByText('Kemenag detail')).toBeTruthy();
       expect(getAllByTestId('web-app-tafsir-result-card')).toHaveLength(1);
+    });
+  });
+
+  test('uses dashboard Asbabun Nuzul route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 'asbabun-1',
+          title: 'Ayat 1',
+          body: 'Sebab turun ayat pertama.',
+          meta: 'Ayat 1',
+          raw: {
+            ayah_number: 1,
+            content: 'Sebab turun ayat pertama.',
+            display_ref: 'Ayat 1',
+            source: 'Al-Wahidi',
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getAllByText, getByTestId, getByText, queryByTestId } = await renderExploreScreen({
+      deepLinkTarget: { id: 'asbabun-route', params: { featureKey: 'asbabun-nuzul' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-asbabun-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('أَسْبَابُ النُّزُول')).toBeTruthy();
+      expect(getByText('Asbabun Nuzul')).toBeTruthy();
+      expect(getByText('Masukkan nomor surah atau pilih contoh cepat.')).toBeTruthy();
+      expect(getAllByTestId('web-app-asbabun-quick-surah')).toHaveLength(7);
+    });
+
+    fireEvent.changeText(getByTestId('web-app-asbabun-search'), '1');
+    fireEvent.press(getByTestId('web-app-asbabun-submit'));
+
+    await waitFor(() => {
+      expect(clientApi.getSurahs).not.toHaveBeenCalled();
+      expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
+        expect.objectContaining({ endpoint: '/api/v1/asbabun-nuzul/surah/1' }),
+        { page: 0, size: 20 },
+      );
+      expect(getAllByText('Surah 1').length).toBeGreaterThan(0);
+      expect(getByText('Al-Wahidi')).toBeTruthy();
+      expect(getByText('Sebab turun ayat pertama.')).toBeTruthy();
+      expect(getAllByTestId('web-app-asbabun-result-card')).toHaveLength(1);
     });
   });
 

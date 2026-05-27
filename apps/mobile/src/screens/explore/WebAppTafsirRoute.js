@@ -1,8 +1,10 @@
-import { BookOpen, Search } from 'lucide-react-native';
+import { BookOpen, FileText, Search } from 'lucide-react-native';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { radius, spacing } from '../../theme';
 import { normalizeSearchText } from '../ExploreScreen.helpers';
+
+const ASBABUN_QUICK_SURAHS = [1, 2, 4, 18, 36, 67, 112];
 
 const filterSurahs = (surahs, query) => {
   const normalized = normalizeSearchText(query);
@@ -12,12 +14,28 @@ const filterSurahs = (surahs, query) => {
   );
 };
 
-function SurahCard({ active, onPress, surah }) {
+const getAsbabunAyahNumber = (item) =>
+  item?.raw?.ayah_number ?? item?.raw?.ayah_start ?? item?.raw?.ayah_refs?.[0]?.ayah_number ?? item?.raw?.ayah_id;
+
+const getAsbabunAyahLabel = (item) => {
+  if (item?.raw?.display_ref) return item.raw.display_ref;
+  if (item?.meta) return item.meta;
+  if (item?.title) return item.title;
+  const start = getAsbabunAyahNumber(item);
+  const end = item?.raw?.ayah_end ?? item?.raw?.ayah_refs?.[item?.raw?.ayah_refs?.length - 1]?.ayah_number;
+  if (!start) return 'Ayat';
+  return end && Number(end) !== Number(start) ? `Ayat ${start}-${end}` : `Ayat ${start}`;
+};
+
+const getAsbabunSource = (item) => item?.raw?.source ?? item?.source ?? '';
+const getAsbabunContent = (item) => item?.body ?? item?.raw?.content ?? item?.raw?.description ?? item?.raw?.text ?? '';
+
+function SurahCard({ active, onPress, surah, testID }) {
   return (
     <Pressable
       onPress={onPress}
       style={[styles.surahCard, active && styles.surahCardActive]}
-      testID="web-app-tafsir-surah-card"
+      testID={testID}
     >
       <View style={[styles.surahNumber, active && styles.surahNumberActive]}>
         <Text style={[styles.surahNumberText, active && styles.surahNumberTextActive]}>{surah.number}</Text>
@@ -30,9 +48,9 @@ function SurahCard({ active, onPress, surah }) {
   );
 }
 
-function TafsirResultCard({ item, onOpen }) {
+function TafsirResultCard({ item, onOpen, testID }) {
   return (
-    <Pressable onPress={() => onOpen(item)} style={styles.resultCard} testID="web-app-tafsir-result-card">
+    <Pressable onPress={() => onOpen(item)} style={styles.resultCard} testID={testID}>
       <View style={styles.resultHeader}>
         <Text style={styles.resultTitle}>{item.title || 'Ayat'}</Text>
         {item.meta ? <Text numberOfLines={1} style={styles.resultMeta}>{item.meta}</Text> : null}
@@ -53,7 +71,33 @@ function TafsirResultCard({ item, onOpen }) {
   );
 }
 
+function AsbabunResultCard({ item, onOpen, testID }) {
+  const content = getAsbabunContent(item);
+  const source = getAsbabunSource(item);
+
+  return (
+    <Pressable onPress={() => onOpen(item)} style={styles.resultCard} testID={testID}>
+      <View style={styles.asbabunMetaRow}>
+        <Text numberOfLines={1} style={styles.asbabunAyahPill}>
+          {getAsbabunAyahLabel(item)}
+        </Text>
+        {source ? (
+          <Text numberOfLines={1} style={styles.asbabunSource}>
+            {source}
+          </Text>
+        ) : null}
+      </View>
+      {content ? (
+        <Text style={styles.asbabunContent}>{content}</Text>
+      ) : (
+        <Text style={styles.emptyText}>Ringkasan asbabun nuzul belum tersedia.</Text>
+      )}
+    </Pressable>
+  );
+}
+
 export function WebAppTafsirRoute({
+  arabicTitle,
   error,
   items,
   loading,
@@ -63,8 +107,33 @@ export function WebAppTafsirRoute({
   selectedSurahNumber,
   surahSearch,
   surahs,
+  variant = 'tafsir',
 }) {
+  const isAsbabun = variant === 'asbabun';
   const filteredSurahs = filterSurahs(surahs, surahSearch);
+  const selectedNumber = Number(selectedSurahNumber);
+  const selectedSurah = surahs.find((surah) => Number(surah.number) === selectedNumber);
+  const typedSurahNumber = Number.parseInt(surahSearch, 10);
+  const canSubmitAsbabun = Number.isInteger(typedSurahNumber) && typedSurahNumber >= 1 && typedSurahNumber <= 114;
+  const Icon = isAsbabun ? FileText : BookOpen;
+  const surfaceTestID = isAsbabun ? 'explore-web-app-asbabun-surface' : 'explore-web-app-tafsir-surface';
+  const searchTestID = isAsbabun ? 'web-app-asbabun-search' : 'web-app-tafsir-search';
+  const surahCardTestID = isAsbabun ? 'web-app-asbabun-surah-card' : 'web-app-tafsir-surah-card';
+  const resultCardTestID = isAsbabun ? 'web-app-asbabun-result-card' : 'web-app-tafsir-result-card';
+  const title = isAsbabun ? 'Asbabun Nuzul' : 'Tafsir';
+  const subtitle = isAsbabun
+    ? 'Cari latar belakang turunnya ayat berdasarkan nomor surah.'
+    : 'Pilih surah untuk membaca penjelasan ayat.';
+  const loadingText = isAsbabun ? 'Memuat asbabun nuzul...' : 'Memuat tafsir...';
+  const placeholder = isAsbabun ? 'Masukkan nomor surah (1-114)' : 'Cari nama atau nomor surah';
+  const emptyResultText = isAsbabun
+    ? 'Data asbabun nuzul untuk surah ini belum tersedia. Coba pilih contoh lain.'
+    : 'Tafsir untuk surah ini belum tersedia. Coba pilih surah lain.';
+  const showInitialAsbabunState = isAsbabun && !selectedSurahNumber && !loading && !error;
+
+  const handleSubmitAsbabun = () => {
+    if (canSubmitAsbabun) onSelectSurah(typedSurahNumber);
+  };
 
   return (
     <ScrollView
@@ -73,53 +142,94 @@ export function WebAppTafsirRoute({
       showsVerticalScrollIndicator={false}
       style={styles.root}
     >
-      <View testID="explore-web-app-tafsir-surface" />
-      <View style={styles.header}>
+      <View testID={surfaceTestID} />
+      <View style={[styles.header, isAsbabun && styles.headerCentered]}>
+        {isAsbabun && arabicTitle ? (
+          <Text style={styles.arabicHeading}>{arabicTitle}</Text>
+        ) : null}
         <View style={styles.iconWrap}>
-          <BookOpen color="#047857" size={22} strokeWidth={2.1} />
+          <Icon color="#047857" size={22} strokeWidth={2.1} />
         </View>
-        <View style={styles.headerText}>
-          <Text style={styles.title}>Tafsir</Text>
-          <Text style={styles.subtitle}>Pilih surah untuk membaca penjelasan ayat.</Text>
+        <View style={[styles.headerText, isAsbabun && styles.headerTextCentered]}>
+          <Text style={[styles.title, isAsbabun && styles.titleCentered]}>{title}</Text>
+          <Text style={[styles.subtitle, isAsbabun && styles.subtitleCentered]}>{subtitle}</Text>
         </View>
       </View>
 
-      <View style={styles.notice}>
-        <Text style={styles.noticeText}>
-          <Text style={styles.noticeStrong}>Catatan: </Text>
-          Data tafsir mengikuti ketersediaan backend dan bisa bertambah bertahap.
-        </Text>
+      {!isAsbabun ? (
+        <View style={styles.notice}>
+          <Text style={styles.noticeText}>
+            <Text style={styles.noticeStrong}>Catatan: </Text>
+            Data tafsir mengikuti ketersediaan backend dan bisa bertambah bertahap.
+          </Text>
+        </View>
+      ) : null}
+
+      <View style={isAsbabun ? styles.asbabunSearchRow : null}>
+        <View style={[styles.searchBox, isAsbabun && styles.asbabunSearchBox]}>
+          <Search color="#9ca3af" size={16} strokeWidth={2} />
+          <TextInput
+            autoCapitalize="none"
+            keyboardType={isAsbabun ? 'number-pad' : 'default'}
+            onChangeText={onSearchSurah}
+            placeholder={placeholder}
+            placeholderTextColor="#9ca3af"
+            style={styles.input}
+            testID={searchTestID}
+            value={surahSearch}
+          />
+        </View>
+        {isAsbabun ? (
+          <Pressable
+            disabled={!canSubmitAsbabun || loading}
+            onPress={handleSubmitAsbabun}
+            style={[styles.asbabunSubmit, (!canSubmitAsbabun || loading) && styles.asbabunSubmitDisabled]}
+            testID="web-app-asbabun-submit"
+          >
+            <Text style={styles.asbabunSubmitText}>{loading ? '...' : 'Cari'}</Text>
+          </Pressable>
+        ) : null}
       </View>
 
-      <View style={styles.searchBox}>
-        <Search color="#9ca3af" size={16} strokeWidth={2} />
-        <TextInput
-          autoCapitalize="none"
-          onChangeText={onSearchSurah}
-          placeholder="Cari nama atau nomor surah"
-          placeholderTextColor="#9ca3af"
-          style={styles.input}
-          testID="web-app-tafsir-search"
-          value={surahSearch}
-        />
-      </View>
+      {isAsbabun ? (
+        <View style={styles.quickSection}>
+          <Text style={styles.quickLabel}>Contoh cepat</Text>
+          <View style={styles.quickList}>
+            {ASBABUN_QUICK_SURAHS.map((number) => (
+              <Pressable
+                key={number}
+                onPress={() => {
+                  onSearchSurah(String(number));
+                  onSelectSurah(number);
+                }}
+                style={[styles.quickPill, selectedNumber === number && styles.quickPillActive]}
+                testID="web-app-asbabun-quick-surah"
+              >
+                <Text style={[styles.quickPillText, selectedNumber === number && styles.quickPillTextActive]}>
+                  Surah {number}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+      ) : null}
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color="#047857" size="small" />
-          <Text style={styles.stateText}>Memuat tafsir...</Text>
+          <Text style={styles.stateText}>{loadingText}</Text>
         </View>
       ) : null}
 
-      {!loading && !filteredSurahs.length ? (
+      {!isAsbabun && !loading && !filteredSurahs.length ? (
         <View style={styles.empty}>
           <BookOpen color="#cbd5e1" size={38} strokeWidth={1.7} />
           <Text style={styles.emptyText}>Surah tidak ditemukan.</Text>
         </View>
       ) : null}
 
-      {filteredSurahs.length ? (
+      {!isAsbabun && filteredSurahs.length ? (
         <View style={styles.surahGrid}>
           {filteredSurahs.map((surah) => (
             <SurahCard
@@ -127,26 +237,50 @@ export function WebAppTafsirRoute({
               key={surah.number}
               onPress={() => onSelectSurah(surah.number)}
               surah={surah}
+              testID={surahCardTestID}
             />
           ))}
         </View>
       ) : null}
 
+      {showInitialAsbabunState ? (
+        <View style={styles.asbabunInitialState}>
+          <Text style={styles.emptyText}>Masukkan nomor surah atau pilih contoh cepat.</Text>
+          <Text style={styles.asbabunSourceHint}>Sumber data mengikuti koleksi asbabun nuzul backend.</Text>
+        </View>
+      ) : null}
+
       {selectedSurahNumber && !loading ? (
         <View style={styles.resultsHeader}>
-          <Text style={styles.resultsTitle}>Surah {selectedSurahNumber}</Text>
-          <Text style={styles.resultsCount}>{items.length} ayat</Text>
+          <Text style={styles.resultsTitle}>
+            {selectedSurah ? selectedSurah.name : `Surah ${selectedSurahNumber}`}
+          </Text>
+          <Text style={styles.resultsCount}>{items.length} {isAsbabun ? 'riwayat' : 'ayat'}</Text>
         </View>
       ) : null}
 
       {!loading && selectedSurahNumber && !error && !items.length ? (
-        <Text style={styles.emptyText}>Tafsir untuk surah ini belum tersedia. Coba pilih surah lain.</Text>
+        <Text style={styles.emptyText}>{emptyResultText}</Text>
       ) : null}
 
       {!loading && items.length ? (
         <View style={styles.results}>
           {items.map((item, index) => (
-            <TafsirResultCard item={item} key={`${item?.id ?? 'tafsir'}-${index}`} onOpen={onOpenItem} />
+            isAsbabun ? (
+              <AsbabunResultCard
+                item={item}
+                key={`${item?.id ?? 'asbabun'}-${index}`}
+                onOpen={onOpenItem}
+                testID={resultCardTestID}
+              />
+            ) : (
+              <TafsirResultCard
+                item={item}
+                key={`${item?.id ?? 'tafsir'}-${index}`}
+                onOpen={onOpenItem}
+                testID={resultCardTestID}
+              />
+            )
           ))}
         </View>
       ) : null}
@@ -171,6 +305,11 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     marginBottom: spacing.md,
   },
+  headerCentered: {
+    flexDirection: 'column',
+    gap: spacing.xs,
+    marginBottom: spacing.lg,
+  },
   iconWrap: {
     alignItems: 'center',
     backgroundColor: '#d1fae5',
@@ -182,17 +321,37 @@ const styles = StyleSheet.create({
   headerText: {
     flex: 1,
   },
+  headerTextCentered: {
+    alignItems: 'center',
+    flex: 0,
+  },
+  arabicHeading: {
+    color: '#047857',
+    fontFamily: 'Kitab-Regular',
+    fontSize: 28,
+    lineHeight: 38,
+    textAlign: 'center',
+    writingDirection: 'rtl',
+  },
   title: {
     color: '#064e3b',
     fontSize: 22,
     fontWeight: '900',
     lineHeight: 28,
   },
+  titleCentered: {
+    textAlign: 'center',
+  },
   subtitle: {
     color: '#64748b',
     fontSize: 13,
     fontWeight: '600',
     marginTop: 2,
+  },
+  subtitleCentered: {
+    lineHeight: 19,
+    maxWidth: 280,
+    textAlign: 'center',
   },
   notice: {
     backgroundColor: '#fffbeb',
@@ -222,6 +381,63 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
     minHeight: 46,
     paddingHorizontal: spacing.md,
+  },
+  asbabunSearchRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginBottom: spacing.lg,
+  },
+  asbabunSearchBox: {
+    flex: 1,
+    marginBottom: 0,
+  },
+  asbabunSubmit: {
+    alignItems: 'center',
+    backgroundColor: '#047857',
+    borderRadius: 12,
+    justifyContent: 'center',
+    minHeight: 46,
+    paddingHorizontal: spacing.lg,
+  },
+  asbabunSubmitDisabled: {
+    opacity: 0.45,
+  },
+  asbabunSubmitText: {
+    color: '#ffffff',
+    fontSize: 13,
+    fontWeight: '900',
+  },
+  quickSection: {
+    marginBottom: spacing.lg,
+  },
+  quickLabel: {
+    color: '#94a3b8',
+    fontSize: 12,
+    fontWeight: '800',
+    marginBottom: spacing.xs,
+  },
+  quickList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  quickPill: {
+    backgroundColor: '#f1f5f9',
+    borderRadius: 999,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 7,
+  },
+  quickPillActive: {
+    backgroundColor: '#d1fae5',
+  },
+  quickPillText: {
+    color: '#64748b',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  quickPillTextActive: {
+    color: '#047857',
   },
   input: {
     color: '#111827',
@@ -356,6 +572,52 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
     lineHeight: 19,
+  },
+  asbabunMetaRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+    marginBottom: spacing.sm,
+  },
+  asbabunAyahPill: {
+    backgroundColor: '#ecfdf5',
+    borderRadius: 999,
+    color: '#047857',
+    fontSize: 12,
+    fontWeight: '900',
+    maxWidth: 160,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 5,
+  },
+  asbabunSource: {
+    color: '#94a3b8',
+    flexShrink: 1,
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  asbabunContent: {
+    color: '#475569',
+    fontSize: 14,
+    fontWeight: '600',
+    lineHeight: 21,
+  },
+  asbabunInitialState: {
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderColor: '#f1f5f9',
+    borderRadius: 18,
+    borderWidth: 1,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xl,
+  },
+  asbabunSourceHint: {
+    color: '#94a3b8',
+    fontSize: 12,
+    fontWeight: '700',
+    lineHeight: 18,
+    marginTop: spacing.sm,
+    textAlign: 'center',
   },
   state: {
     alignItems: 'center',

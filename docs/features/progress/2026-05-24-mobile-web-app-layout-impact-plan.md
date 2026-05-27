@@ -2023,6 +2023,63 @@ Results:
 - Tafsir line-count gate: `ExploreScreen.js` 1288, `ExploreWebAppRoutes.js`
   1592, `WebAppTafsirRoute.js` 390, and `exploreScreen.test.js` 1844.
 
+## Web App Asbabun Nuzul Route Dashboard Parity
+
+Status: completed for the native `web_app` Asbabun Nuzul route visual parity
+pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic `surah-content` path for Asbabun Nuzul on
+  the `classic` layout.
+- In `web_app` mode, `asbabun-nuzul` now uses the Tafsir route surface as a
+  reusable Quran-content renderer configured for `/dashboard/asbabun-nuzul`:
+  centered Arabic heading, title/subtitle, numeric surah lookup, quick surah
+  pills, initial empty prompt, and compact white result cards with ayah/source
+  metadata.
+- Native Asbabun result cards still open through the existing item detail
+  handler instead of adding inline expand/collapse, preserving the mobile
+  detail UI rule while matching the web list surface.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Asbabun Nuzul feature route
+  presentation in `web_app`, the shared Tafsir/Asbabun renderer configuration,
+  its Explore test coverage, and route docs. It does not change classic Explore
+  routing, Asbabun API calls, Tafsir defaults, or unrelated web/dashboard code.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+npm test -- exploreScreen.test.js api-explore.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted mobile Explore test passed: 1 suite, 43 tests.
+- Targeted mobile Explore/API tests passed: 2 suites, 60 tests.
+- Full mobile Jest passed: 46 suites, 666 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-asbabun-route-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Browser mobile smoke captured public web Asbabun, unauthenticated dashboard
+  redirect, and native Expo `web_app` Asbabun at 412x915 in
+  `output/playwright/`. The authenticated dashboard route redirected to login in
+  the current browser state; the public route uses the same `AsbabunNuzulContent`
+  component as `/dashboard/asbabun-nuzul`, and the native route now matches the
+  content surface without surfacing the old pre-search surah API error.
+- Asbabun line-count gate: `ExploreScreen.js` 1288,
+  `ExploreWebAppRoutes.js` 1610, `WebAppTafsirRoute.js` 652, and
+  `exploreScreen.test.js` 1894.
+
 ## Web App Feed Route Dashboard Parity
 
 Status: completed for the native `web_app` Feed Komunitas route visual parity

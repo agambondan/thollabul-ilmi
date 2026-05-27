@@ -7,13 +7,13 @@ Started: 2026-05-26 16:20 WIB
 
 - Route/feature: mobile `web_app` parity against authenticated `/dashboard`
   mobile web views.
-- Completed near-term task: Tafsir `web_app` route parity against
-  `/dashboard/tafsir`, after validating the Kamus Arab slice was clean.
+- Completed near-term task: Asbabun Nuzul `web_app` route parity against
+  `/dashboard/asbabun-nuzul`, after validating the Tafsir slice was clean.
 - Files I may edit after route selection:
   - `apps/mobile/**`
   - relevant `apps/mobile` tests
   - `apps/mobile/src/screens/explore/WebAppTafsirRoute.js`
-  - Tafsir/Explore-specific tests/docs
+  - Asbabun/Tafsir/Explore-specific tests/docs
   - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
   - route-specific docs under `docs/**`
 - Files I will avoid unless explicitly handed off:
@@ -45,7 +45,7 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Last completed route: Tafsir. Next active route is not selected
+- Last completed route: Asbabun Nuzul. Next active route is not selected
   yet, to avoid colliding with another active agent.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
@@ -78,6 +78,18 @@ Started: 2026-05-26 16:20 WIB
   card badge does not render blank.
 - `cd apps/web && npx eslint src/app/dashboard/fiqh/page.js` could not run
   because local `apps/web/node_modules` is missing `typescript`.
+- `cd apps/mobile && npm test -- exploreScreen.test.js --runInBand` passed:
+  1 suite, 43 tests.
+- `cd apps/mobile && npm test -- exploreScreen.test.js api-explore.test.js --runInBand`
+  passed: 2 suites, 60 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 46 suites, 666 tests.
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-asbabun-route-export`
+  passed.
+- Browser mobile smoke captured public web Asbabun, unauthenticated dashboard
+  redirect, and native Expo `web_app` Asbabun at 412x915 in
+  `output/playwright/`.
+- `node scripts/check-feature-parity.js` passed.
+- `git diff --check` passed.
 - `cd apps/web && npm run build` passed.
 - Fiqh line-count gate: `ExploreScreen.js` 1234, `ExploreWebAppRoutes.js`
   1468, `WebAppFiqhRoute.js` 421, and `exploreScreen.test.js` 1709.

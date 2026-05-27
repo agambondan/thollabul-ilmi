@@ -1518,6 +1518,24 @@ export function renderExploreWebAppRoute(context) {
     );
   }
 
+  if (activeFeature?.key === 'asbabun-nuzul' ) {
+    return (
+      <WebAppTafsirRoute
+        arabicTitle="أَسْبَابُ النُّزُول"
+        error={error}
+        items={items}
+        loading={loading}
+        onOpenItem={openItemDetail}
+        onSearchSurah={setSurahSearch}
+        onSelectSurah={loadSurahContent}
+        selectedSurahNumber={selectedSurahNumber}
+        surahSearch={surahSearch}
+        surahs={surahs}
+        variant="asbabun"
+      />
+    );
+  }
+
   if (activeFeature?.type === 'forum' ) {
     return (
       <WebAppForumRoute

@@ -372,7 +372,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       }
 
       if (LOCAL_TOOL_TYPES.includes(feature.type)) {
-        if (feature.type === 'surah-content') {
+        if (feature.type === 'surah-content' && !(isWebAppLayout && feature.contentType === 'asbabun-nuzul')) {
           setLoading(true);
           try {
             setSurahs(await getSurahs());
