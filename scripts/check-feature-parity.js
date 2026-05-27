@@ -149,6 +149,13 @@ const publicRouteNeedsManifest = (route, manifestRoutes) => {
   return route.split('/').filter(Boolean).length <= 2;
 };
 
+const dashboardRouteNeedsManifest = (route, manifestRoutes) => {
+  if (!route || route === '/dashboard') return false;
+  if (manifestRoutes.has(route)) return false;
+  if (isChildRouteOfManifestRoute(route, manifestRoutes)) return false;
+  return true;
+};
+
 const main = () => {
   const manifest = readJson(manifestPath);
   const features = manifest.features ?? [];
@@ -273,6 +280,14 @@ const main = () => {
     }
   }
 
+  for (const route of allWebRoutes.filter((candidate) => candidate.startsWith('/dashboard'))) {
+    if (dashboardRouteNeedsManifest(route, manifestRoutes)) {
+      errors.push(
+        `Dashboard route ${route} must be mapped in feature-manifest.json or live under a manifest-tracked dashboard feature route.`,
+      );
+    }
+  }
+
   if (warnings.length) {
     console.warn('Feature parity warnings:');
     for (const warning of warnings) console.warn(`- ${warning}`);
@@ -289,6 +304,7 @@ const main = () => {
   console.log(`- manifest utility routes: ${utilityRoutes.length}`);
   console.log(`- mobile feature keys: ${mobileFeatureKeys.size}`);
   console.log(`- web app routes scanned: ${allWebRoutes.length}`);
+  console.log(`- dashboard page routes scanned: ${allWebRoutes.filter((route) => route.startsWith('/dashboard')).length}`);
 };
 
 main();
