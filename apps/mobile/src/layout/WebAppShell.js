@@ -15,11 +15,12 @@ export function getWebAppAccountLabel(user) {
 }
 
 export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfile, onTabChange }) {
-  const { loading, signOut, user } = useSession();
+  const { loading, session, signOut, user } = useSession();
   const { isDarkTheme, setThemePreference, themePreference } = useLayoutMode();
   const [accountMenuVisible, setAccountMenuVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const accountLabel = getWebAppAccountLabel(user);
+  const canSignOut = Boolean(session?.token || user);
 
   useEffect(() => {
     StatusBar.setBarStyle(isDarkTheme ? 'light-content' : 'dark-content');
@@ -82,6 +83,7 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
       <MobileAccountMenu
         accountEmail={user?.email}
         accountLabel={accountLabel}
+        canSignOut={canSignOut}
         isDarkTheme={isDarkTheme}
         loading={loading}
         onClose={closeAccountMenu}

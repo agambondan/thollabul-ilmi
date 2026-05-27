@@ -42,6 +42,7 @@ const HEADER_HEIGHT = 56;
 export function MobileAccountMenu({
   accountEmail,
   accountLabel = 'Tamu',
+  canSignOut = false,
   isDarkTheme = false,
   loading = false,
   onClose,
@@ -63,6 +64,7 @@ export function MobileAccountMenu({
   };
 
   const handleSignOut = () => {
+    if (!canSignOut) return;
     hapticSelection();
     onClose?.();
     onSignOut?.();
@@ -171,18 +173,20 @@ export function MobileAccountMenu({
             </View>
           </View>
 
-          <Pressable
-            accessibilityLabel="Keluar"
-            accessibilityRole="button"
-            android_ripple={{ color: isDarkTheme ? '#334155' : '#fee2e2', borderless: false }}
-            disabled={loading}
-            onPress={handleSignOut}
-            style={styles.signOutRow}
-            testID="mobile-account-menu-sign-out"
-          >
-            <LogOut color={menu.danger} size={17} strokeWidth={2} />
-            <Text style={styles.signOutLabel}>{loading ? 'Keluar...' : 'Keluar'}</Text>
-          </Pressable>
+          {canSignOut ? (
+            <Pressable
+              accessibilityLabel="Keluar"
+              accessibilityRole="button"
+              android_ripple={{ color: isDarkTheme ? '#334155' : '#fee2e2', borderless: false }}
+              disabled={loading}
+              onPress={handleSignOut}
+              style={styles.signOutRow}
+              testID="mobile-account-menu-sign-out"
+            >
+              <LogOut color={menu.danger} size={17} strokeWidth={2} />
+              <Text style={styles.signOutLabel}>{loading ? 'Keluar...' : 'Keluar'}</Text>
+            </Pressable>
+          ) : null}
         </View>
       </View>
     </Modal>

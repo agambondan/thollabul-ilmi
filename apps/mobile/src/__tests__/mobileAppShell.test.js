@@ -138,6 +138,7 @@ describe('MobileAppShell', () => {
     AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
     useSession.mockReturnValue({
       loading: false,
+      session: { token: 'token' },
       signOut: jest.fn(),
       user: { name: 'Admin', email: 'admin@tholabul-ilmi.com' },
     });
@@ -155,9 +156,29 @@ describe('MobileAppShell', () => {
     expect(getByText('Profil')).toBeTruthy();
     expect(getByText('Bookmark')).toBeTruthy();
     expect(getByText('Gelap')).toBeTruthy();
+    expect(getByTestId('mobile-account-menu-sign-out')).toBeTruthy();
 
     fireEvent.press(getByTestId('mobile-account-menu-close'));
     expect(queryByTestId('mobile-account-menu')).toBeNull();
+  });
+
+  test('hides account menu sign out action for guest users', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
+    useSession.mockReturnValue({
+      loading: false,
+      session: null,
+      signOut: jest.fn(),
+      user: null,
+    });
+    const { getByTestId, getByText, queryByTestId, queryByText } = renderShell();
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+    fireEvent.press(getByTestId('mobile-top-header-profile'));
+
+    expect(getByText('Tamu')).toBeTruthy();
+    expect(getByText('Belum masuk')).toBeTruthy();
+    expect(queryByTestId('mobile-account-menu-sign-out')).toBeNull();
+    expect(queryByText('Keluar')).toBeNull();
   });
 
   test('toggles web app dark theme from account menu', async () => {
@@ -189,6 +210,7 @@ describe('MobileAppShell', () => {
     const signOut = jest.fn();
     useSession.mockReturnValue({
       loading: false,
+      session: { token: 'token' },
       signOut,
       user: { name: 'Admin', email: 'admin@tholabul-ilmi.com' },
     });
