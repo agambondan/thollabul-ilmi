@@ -1,6 +1,6 @@
 # Mobile Layout Modes
 
-> Status: `IN_PROGRESS`
+> Status: `VERIFIED`
 > Scope: `apps/mobile`
 > Created: 2026-05-23
 > Source of truth terkait:
@@ -260,7 +260,7 @@ Status kode saat ini:
   `returnRoutes`, dan hardware back handler.
 - `apps/mobile/src/components/TabBar.js` adalah bottom tab existing untuk 5 tab
   final, dengan auto-hide behavior untuk `classic`.
-- `apps/mobile/src/components/MobileAppShell.js` menyediakan top header,
+- `apps/mobile/src/layout/MobileAppShell.js` menyediakan top header,
   bottom navigation, dan menu sheet untuk `web_app`.
 - Screen besar seperti `HomeScreen`, `QuranScreen`, `HadithScreen`,
   `IbadahScreen`, `ExploreScreen`, `ProfileScreen`, dan `GlobalSearchScreen`
@@ -280,7 +280,7 @@ Area yang kemungkinan kena impact:
 | `TabBar` | Perubahan visual bisa mengubah behavior auto-hide dan tab accessibility | Jangan ubah `TabBar` existing untuk `classic`; buat komponen baru untuk `web_app` bila perlu. |
 | Quran reader | Layout baru bisa konflik dengan audio player, bottom action, font preference, dan back handler | Jangan ubah business logic Quran di fase shell; hanya bungkus/presentasikan. |
 | Home/prayer cockpit | Lokasi, jadwal, notification, dan cache bisa drift dari web contract | Reuse storage/API yang sudah ada; jangan hardcode lokasi atau jadwal. |
-| Profile settings | Layout preference mengubah shell dan surface, tetapi theme gelap masih follow-up | Pertahankan provider/hook fallback ke `classic`; jangan campur theme dengan layout. |
+| Profile settings | Layout preference mengubah shell dan surface, sementara theme tetap concern terpisah | Pertahankan provider/hook fallback invalid ke `classic`; jangan campur theme dengan layout. |
 | Deep links | `parseDeepLink` dan `openTabState` harus tetap mengarah ke tab/screen yang sama | Layout mode tidak boleh mengubah tab key atau internal route shape. |
 | Android back | `setBack`/`clearBack` dan `hardwareBackState` rawan regression | Tambah/pertahankan test navigation sebelum shell baru dianggap usable. |
 | Offline/cache | Mobile punya offline packs dan local-first storage | `web_app` tidak boleh memaksa online-only UX. |
@@ -336,13 +336,14 @@ Jika `web_app` gagal render atau preference invalid, fallback harus kembali ke
 4. Expand surface:
    - Setelah Home/Quran stabil, lanjut Hadith, Ibadah, dan Belajar.
    - Long-tail feature masuk menu sheet/search/hub, bukan dihapus.
-   - Status: in progress; Hadith, Ibadah hub, Prayer, Qibla, Khatam,
-     Explore/Belajar, Profile, and Global Search first-pass surfaces are
-     implemented.
+   - Status: completed for the current route rollout; Hadith, Ibadah hub,
+     Prayer, Qibla, Khatam, Explore/Belajar, Profile, Global Search, and
+     long-tail feature routes now have `web_app` surfaces or dashboard shells.
 5. Polish:
    - Baru pertimbangkan theme visual tambahan, density tuning, dan animation.
    - Theme tetap tidak boleh tercampur dengan layout mode.
-   - Status: pending; visual polish and real-device smoke remain.
+   - Status: verified for current parity coverage; future visual polish remains
+     incremental and must keep the layout/theme boundary.
 
 ## QA Checklist
 

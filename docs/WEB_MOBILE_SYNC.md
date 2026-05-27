@@ -3,7 +3,7 @@
 > Tujuan: menjaga parity fitur web (public + dashboard) dan mobile agar agent
 > berikutnya tidak menganggap baseline lama sebagai status current.
 
-Last verified: 2026-05-26
+Last verified: 2026-05-27
 
 ## Source Of Truth
 
@@ -47,7 +47,7 @@ Current route UI audit output:
 Current mobile feature route audit output:
 
 ```text
-1 passed, 9 tests
+1 passed, 10 tests
 ```
 
 ## Routine UI Route Checklist

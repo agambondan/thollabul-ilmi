@@ -148,7 +148,8 @@ Perubahan `web_app` tidak boleh mengubah behavior `classic`.
 
 Checklist wajib:
 
-- `classic` tetap default saat preference kosong atau invalid.
+- install baru tanpa preference memakai `web_app`, sementara preference invalid
+  tetap fallback ke `classic`.
 - `classic` tetap memakai shell, tab bar, spacing, dan navigation lama.
 - test marker/testID classic tetap ada.
 - action callback classic tetap sama.
