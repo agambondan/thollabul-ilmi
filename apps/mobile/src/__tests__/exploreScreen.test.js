@@ -1,10 +1,10 @@
 jest.mock('lucide-react-native', () => {
   const icons = {};
   const names = [
-    'ArrowLeft', 'BookOpen', 'Bookmark', 'BookmarkCheck', 'CheckCircle2',
+    'ArrowLeft', 'BookOpen', 'Bookmark', 'BookmarkCheck', 'CheckCircle2', 'ChevronDown',
     'Circle', 'ExternalLink', 'Flag', 'Globe', 'Heart', 'HelpCircle',
     'ListChecks', 'MessageCircle', 'Pencil', 'Scale', 'Star',
-    'StickyNote', 'Trash2', 'Trophy', 'UserCircle', 'Users', 'Video',
+    'Search', 'StickyNote', 'Trash2', 'Trophy', 'UserCircle', 'Users', 'Video',
   ];
   names.forEach((n) => { icons[n] = n; });
   return icons;
@@ -225,6 +225,7 @@ jest.mock('../data/mobileFeatures', () => {
     { key: 'perawi', title: 'Perawi Hadis', subtitle: 'Basis data perawi', group: 'Ilmu', type: 'list', endpoint: '/api/v1/perawi' },
     { key: 'forum', title: 'Forum Tanya Jawab', subtitle: 'Diskusi seputar Islam', group: 'Ilmu', type: 'forum' },
     { key: 'library', title: 'Perpustakaan', subtitle: 'Kitab dan bahan belajar', group: 'Ilmu', type: 'list', endpoint: '/api/v1/library/books?page=0&size=20' },
+    { key: 'fiqh', title: 'Fiqh Ringkas', subtitle: 'Pelajaran fiqh ringkas', group: 'Ilmu', type: 'list', endpoint: '/api/v1/fiqh' },
     { key: 'tasbih', title: 'Tasbih', subtitle: 'Penghitung', group: 'Alat', type: 'tasbih' },
     { key: 'zakat', title: 'Kalkulator Zakat', subtitle: 'Hitung zakat maal', group: 'Alat', type: 'zakat' },
     { key: 'siroh', title: 'Siroh', subtitle: 'Biografi Nabi', group: 'Ilmu', type: 'list', endpoint: '/api/v1/siroh' },
@@ -242,7 +243,7 @@ jest.mock('../data/mobileFeatures', () => {
       key: 'referensi',
       label: 'Referensi',
       meta: 'Kamus dan katalog',
-      features: allFeatures.filter((f) => ['kamus', 'tafsir', 'asmaul-flashcard', 'asmaul-wirid', 'library', 'perawi'].includes(f.key)),
+      features: allFeatures.filter((f) => ['kamus', 'tafsir', 'asmaul-flashcard', 'asmaul-wirid', 'library', 'perawi', 'fiqh'].includes(f.key)),
     },
     {
       key: 'evaluasi',
@@ -1192,6 +1193,68 @@ describe('ExploreScreen', () => {
 
     expect(getByText('Abu Hurairah')).toBeTruthy();
     expect(queryByText('Ibnu Sirin')).toBeNull();
+  });
+
+  test('uses dashboard Fiqh route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 1,
+          title: 'Adab Wudhu',
+          body: 'Membaca basmalah dan membasuh anggota wudhu dengan tertib.',
+          meta: 'thaharah',
+          raw: {
+            category: 'thaharah',
+            content: 'Membaca basmalah dan membasuh anggota wudhu dengan tertib.',
+            dalil: 'إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ',
+            id: 1,
+            source: 'Fiqh Sunnah',
+            title: 'Adab Wudhu',
+          },
+        },
+        {
+          id: 2,
+          title: 'Zakat Perdagangan',
+          body: 'Zakat perdagangan dihitung dari modal dan barang dagangan.',
+          meta: 'zakat',
+          raw: {
+            category: 'zakat',
+            content: 'Zakat perdagangan dihitung dari modal dan barang dagangan.',
+            id: 2,
+            source: 'Al-Mulakhkhas Al-Fiqhi',
+            title: 'Zakat Perdagangan',
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
+      deepLinkTarget: { id: 'fiqh-route', params: { featureKey: 'fiqh' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-fiqh-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('Fiqh Ringkas')).toBeTruthy();
+      expect(getByText('2 materi fiqh')).toBeTruthy();
+      expect(getByText('Adab Wudhu')).toBeTruthy();
+      expect(getByText('Zakat Perdagangan')).toBeTruthy();
+      expect(getAllByTestId('web-app-fiqh-card')).toHaveLength(2);
+    });
+
+    fireEvent.press(getByTestId('web-app-fiqh-category-zakat'));
+
+    expect(getByText('Zakat Perdagangan')).toBeTruthy();
+    expect(queryByText('Adab Wudhu')).toBeNull();
+    expect(getAllByTestId('web-app-fiqh-card')).toHaveLength(1);
+
+    fireEvent.press(getByTestId('web-app-fiqh-category-all'));
+    fireEvent.changeText(getByPlaceholderText('Cari materi...'), 'wudhu');
+
+    expect(getByText('Adab Wudhu')).toBeTruthy();
+    expect(queryByText('Zakat Perdagangan')).toBeNull();
   });
 
   test('uses a friendly Blog rate-limit message in web app layout', async () => {

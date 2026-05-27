@@ -69,6 +69,7 @@ import {
 import { FeatureCatalog } from './FeatureCatalog';
 import { WebAppBlogRoute } from './WebAppBlogRoute';
 import { WebAppFeedRoute } from './WebAppFeedRoute';
+import { WebAppFiqhRoute } from './WebAppFiqhRoute';
 import { WebAppKajianRoute } from './WebAppKajianRoute';
 import { WebAppLibraryRoute } from './WebAppLibraryRoute';
 import { WebAppLeaderboardRoute } from './WebAppLeaderboardRoute';
@@ -1414,6 +1415,19 @@ export function renderExploreWebAppRoute(context) {
   if (activeFeature?.key === 'perawi' ) {
     return (
       <WebAppPerawiRoute
+        error={error}
+        items={items}
+        loading={loading}
+        onLoadMore={loadMoreFeature}
+        onOpenItem={openItemDetail}
+        pagination={pagination}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'fiqh' ) {
+    return (
+      <WebAppFiqhRoute
         error={error}
         items={items}
         loading={loading}

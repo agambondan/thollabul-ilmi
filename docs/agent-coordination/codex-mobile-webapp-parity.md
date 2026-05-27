@@ -7,16 +7,14 @@ Started: 2026-05-26 16:20 WIB
 
 - Route/feature: mobile `web_app` parity against authenticated `/dashboard`
   mobile web views.
-- Completed near-term task: Home/dashboard reminder carousel parity against
-  `/dashboard`, after validating that the Tokoh Tarikh slice was
+- Completed near-term task: Fiqh `web_app` route parity against
+  `/dashboard/fiqh`, after validating that the Home/dashboard reminder slice was
   documented, tested, committed, and pushed.
 - Files I may edit after route selection:
   - `apps/mobile/**`
   - relevant `apps/mobile` tests
-  - `apps/mobile/src/screens/HomeScreen.js`
-  - `apps/mobile/src/screens/home/HomeDashboardContent.js`
-  - `apps/mobile/src/api/client.js`
-  - home/dashboard-specific tests/docs
+  - `apps/mobile/src/screens/explore/WebAppFiqhRoute.js`
+  - Fiqh/Explore-specific tests/docs
   - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
   - route-specific docs under `docs/**`
 - Files I will avoid unless explicitly handed off:
@@ -48,7 +46,7 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Last completed route: Home/dashboard reminder carousel. Next active route is not selected
+- Last completed route: Fiqh. Next active route is not selected
   yet, to avoid colliding with another active agent.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
@@ -70,6 +68,14 @@ Started: 2026-05-26 16:20 WIB
 - `node scripts/check-feature-parity.js` passed.
 - `git diff --check` passed.
 - Home reminder line-count gate: `HomeScreen.js` 909, `HomeDashboardContent.js` 1211, `client.js` 745, `homeScreen.test.js` 587, and no `apps/mobile/src/**/*.js` file remains above 2,000 lines after excluding the `wc` total row.
+- `cd apps/mobile && npm test -- exploreScreen.test.js api-explore.test.js --runInBand` passed: 2 suites, 56 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 46 suites, 662 tests.
+- `node scripts/check-feature-parity.js` passed.
+- `git diff --check` passed.
+- Browser mobile smoke captured `/dashboard/fiqh` and native `#/belajar/fiqh`
+  at 412x915 in `output/playwright/`.
+- Fiqh line-count gate: `ExploreScreen.js` 1234, `ExploreWebAppRoutes.js`
+  1468, `WebAppFiqhRoute.js` 421, and `exploreScreen.test.js` 1709.
 - `node --check apps/mobile/src/screens/TokohTarikhContent.js` passed.
 - `node --check apps/mobile/src/__tests__/tokohTarikhContent.test.js` passed.
 - `cd apps/mobile && npm test -- tokohTarikhContent.test.js --runInBand` passed: 1 suite, 3 tests.

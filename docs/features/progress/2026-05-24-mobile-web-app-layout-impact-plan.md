@@ -1991,3 +1991,47 @@ Results:
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
 - `git diff --check` passed.
+
+## Web App Fiqh Route Dashboard Parity
+
+Status: completed for the native `web_app` Fiqh route visual parity pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic paper active-feature path for Fiqh on the
+  `classic` layout.
+- In `web_app` mode, Fiqh now renders a dedicated light dashboard surface
+  modeled after `/dashboard/fiqh`: compact title/count, search field with icon,
+  category pills, and compact white list rows with the same lime indicator and
+  chevron affordance.
+- Native Fiqh detail behavior stays routed through the existing item detail
+  handler instead of adding inline expand/collapse, preserving the mobile
+  detail UI rule while matching the web list surface.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Fiqh feature route presentation in
+  `web_app`, its Explore test coverage, and route docs. It does not change the
+  web dashboard route, classic Explore routing, Fiqh API calls, or another
+  agent's route files.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js api-explore.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted mobile Explore/API tests passed: 2 suites, 56 tests.
+- Full mobile Jest passed: 46 suites, 662 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- Browser mobile smoke captured authenticated `/dashboard/fiqh` and native
+  Expo web-app `#/belajar/fiqh` at 412x915 in `output/playwright/`.
+- `git diff --check` passed.
