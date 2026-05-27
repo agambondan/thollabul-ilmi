@@ -333,6 +333,9 @@ describe('ExploreScreen', () => {
 
   test('uses web app Explore surface when web app layout is active', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    exploreApi.getQuizQuestions.mockResolvedValueOnce([
+      { id: 'q1', title: 'Quiz 1', raw: { question: 'Apa?', option_a: 'A', option_b: 'B', option_c: 'C', option_d: 'D', correct_answer: 'A' } },
+    ]);
     const { getByTestId, getByText, queryByTestId } = await renderExploreScreen();
 
     expect(getByTestId('explore-web-app-surface')).toBeTruthy();
@@ -343,7 +346,7 @@ describe('ExploreScreen', () => {
     expect(getByText('KAJIAN & ARTIKEL')).toBeTruthy();
     expect(getByText('REFERENSI')).toBeTruthy();
 
-    fireEvent.press(getByText('Kamus Arab'));
+    fireEvent.press(getByText('Quiz Islami'));
 
     await waitFor(() => {
       expect(getByTestId('action-Kembali ke Belajar')).toBeTruthy();
@@ -1295,6 +1298,46 @@ describe('ExploreScreen', () => {
 
     fireEvent.press(getByTestId('web-app-forum-ask'));
     expect(getByText('Ajukan Pertanyaan')).toBeTruthy();
+  });
+
+  test('uses dashboard Kamus route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    exploreApi.searchDictionary.mockResolvedValueOnce([
+      {
+        id: 'dict-1',
+        title: 'iman',
+        arabic: 'إيمان',
+        body: 'Percaya dan membenarkan.',
+        raw: {
+          arabic: 'إيمان',
+          definition: 'Percaya dan membenarkan.',
+          id: 1,
+          latin: 'iman',
+          root: 'أمن',
+        },
+      },
+    ]);
+
+    const { getAllByTestId, getByTestId, getByText, queryByTestId } = await renderExploreScreen({
+      deepLinkTarget: { id: 'kamus-route', params: { featureKey: 'kamus' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-kamus-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('Kamus Arab')).toBeTruthy();
+      expect(getByText('Ketik minimal 2 karakter.')).toBeTruthy();
+    });
+
+    fireEvent.changeText(getByTestId('web-app-kamus-search'), 'iman');
+    fireEvent.press(getByTestId('web-app-kamus-submit'));
+
+    await waitFor(() => {
+      expect(exploreApi.searchDictionary).toHaveBeenCalledWith('iman');
+      expect(getByText('إيمان')).toBeTruthy();
+      expect(getByText('Percaya dan membenarkan.')).toBeTruthy();
+      expect(getAllByTestId('web-app-kamus-result-card')).toHaveLength(1);
+    });
   });
 
   test('uses a friendly Blog rate-limit message in web app layout', async () => {

@@ -7,14 +7,13 @@ Started: 2026-05-26 16:20 WIB
 
 - Route/feature: mobile `web_app` parity against authenticated `/dashboard`
   mobile web views.
-- Completed near-term task: Forum Q&A `web_app` route parity against
-  `/dashboard/forum`, after validating and fixing the Fiqh slug category
-  fallback bug on both web and mobile.
+- Completed near-term task: Kamus Arab `web_app` route parity against
+  `/dashboard/kamus`, after validating the Forum Q&A slice was clean.
 - Files I may edit after route selection:
   - `apps/mobile/**`
   - relevant `apps/mobile` tests
-  - `apps/mobile/src/screens/explore/WebAppForumRoute.js`
-  - Forum/Explore-specific tests/docs
+  - `apps/mobile/src/screens/explore/WebAppKamusRoute.js`
+  - Kamus/Explore-specific tests/docs
   - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
   - route-specific docs under `docs/**`
 - Files I will avoid unless explicitly handed off:
@@ -46,7 +45,7 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Last completed route: Forum Q&A. Next active route is not selected
+- Last completed route: Kamus Arab. Next active route is not selected
   yet, to avoid colliding with another active agent.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
@@ -90,6 +89,14 @@ Started: 2026-05-26 16:20 WIB
 - Forum route line-count gate: `ExploreScreen.js` 1278,
   `ExploreWebAppRoutes.js` 1549, `WebAppForumRoute.js` 773, and
   `exploreScreen.test.js` 1749.
+- `cd apps/mobile && npm test -- exploreScreen.test.js api-explore.test.js --runInBand` passed: 2 suites, 58 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 46 suites, 664 tests.
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-kamus-route-export` passed.
+- `node scripts/check-feature-parity.js` passed.
+- `git diff --check` passed.
+- Kamus route line-count gate: `ExploreScreen.js` 1283,
+  `ExploreWebAppRoutes.js` 1570, `WebAppKamusRoute.js` 303, `exploreScreen.test.js`
+  1792, and `api-explore.test.js` 241.
 - `node --check apps/mobile/src/screens/TokohTarikhContent.js` passed.
 - `node --check apps/mobile/src/__tests__/tokohTarikhContent.test.js` passed.
 - `cd apps/mobile && npm test -- tokohTarikhContent.test.js --runInBand` passed: 1 suite, 3 tests.

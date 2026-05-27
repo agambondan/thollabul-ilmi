@@ -1929,6 +1929,53 @@ Results:
 - Forum line-count gate: `ExploreScreen.js` 1278, `ExploreWebAppRoutes.js`
   1549, `WebAppForumRoute.js` 773, and `exploreScreen.test.js` 1749.
 
+## Web App Kamus Route Dashboard Parity
+
+Status: completed for the native `web_app` Kamus Arab route visual parity pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic Kamus search card and generic result list
+  for the `classic` layout.
+- In `web_app` mode, Kamus now renders a dedicated light dashboard surface
+  modeled after `/dashboard/kamus`: title/subtitle, bordered search input with
+  icon, emerald `Cari` action, prompt/no-result states, and a compact
+  table-like result list with Arabic, Latin, meaning, and root fields.
+- Mobile dictionary search now sends `size=20`, matching the web dashboard
+  request size for `/api/v1/dictionary`.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Kamus feature route presentation in
+  `web_app`, the route-scoped dictionary request size, its Explore/API test
+  coverage, and route docs. It does not change classic Explore routing or web
+  Kamus code.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js api-explore.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-kamus-route-export
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted mobile Explore/API tests passed: 2 suites, 58 tests.
+- Full mobile Jest passed: 46 suites, 664 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-kamus-route-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Kamus line-count gate: `ExploreScreen.js` 1283, `ExploreWebAppRoutes.js`
+  1570, `WebAppKamusRoute.js` 303, `exploreScreen.test.js` 1792, and
+  `api-explore.test.js` 241.
+
 ## Web App Feed Route Dashboard Parity
 
 Status: completed for the native `web_app` Feed Komunitas route visual parity

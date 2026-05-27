@@ -72,6 +72,7 @@ import { WebAppFeedRoute } from './WebAppFeedRoute';
 import { WebAppFiqhRoute } from './WebAppFiqhRoute';
 import { WebAppForumRoute } from './WebAppForumRoute';
 import { WebAppKajianRoute } from './WebAppKajianRoute';
+import { WebAppKamusRoute } from './WebAppKamusRoute';
 import { WebAppLibraryRoute } from './WebAppLibraryRoute';
 import { WebAppLeaderboardRoute } from './WebAppLeaderboardRoute';
 import { WebAppPerawiRoute } from './WebAppPerawiRoute';
@@ -83,8 +84,11 @@ export function renderExploreWebAppRoute(context) {
     blogCategoryOptions,
     blogSearch,
     clearFeature,
+    dictionaryInputRef,
+    dictionaryQuery,
     error,
     featureSearch,
+    focusDictionaryInput,
     forumAnswerDraft,
     forumAnswers,
     forumAskBody,
@@ -123,10 +127,12 @@ export function renderExploreWebAppRoute(context) {
     pinnedFeatureKeys,
     recentFeatureKeys,
     renderItemActionSheet,
+    runDictionarySearch,
     session,
     setActiveNoteRef,
     setBlogCategory,
     setBlogSearch,
+    setDictionaryQuery,
     setFeatureSearch,
     setForumAnswerDraft,
     setForumAnswers,
@@ -1471,6 +1477,21 @@ export function renderExploreWebAppRoute(context) {
         onLoadMore={loadMoreFeature}
         onOpenItem={openItemDetail}
         pagination={pagination}
+      />
+    );
+  }
+
+  if (activeFeature?.type === 'kamus' ) {
+    return (
+      <WebAppKamusRoute
+        dictionaryInputRef={dictionaryInputRef}
+        dictionaryQuery={dictionaryQuery}
+        error={error}
+        focusDictionaryInput={focusDictionaryInput}
+        items={items}
+        loading={loading}
+        onSearch={runDictionarySearch}
+        onUpdateQuery={setDictionaryQuery}
       />
     );
   }

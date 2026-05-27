@@ -138,7 +138,7 @@ describe('explore api', () => {
       });
       const result = await searchDictionary('iman');
       expect(requestJson).toHaveBeenCalledWith(
-        '/api/v1/dictionary?q=iman',
+        '/api/v1/dictionary?q=iman&size=20',
       );
       expect(result).toHaveLength(1);
       expect(result[0].title).toBe('Iman');
@@ -148,7 +148,7 @@ describe('explore api', () => {
       requestJson.mockResolvedValueOnce({ items: [] });
       await searchDictionary('al kitab');
       expect(requestJson).toHaveBeenCalledWith(
-        '/api/v1/dictionary?q=al%20kitab',
+        '/api/v1/dictionary?q=al%20kitab&size=20',
       );
     });
 
