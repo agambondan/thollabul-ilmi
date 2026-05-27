@@ -2175,7 +2175,7 @@ npm test -- exploreWebAppRoutes.test.js --runInBand
 npm test -- exploreScreen.test.js exploreWebAppRoutes.test.js --runInBand
 npm test -- exploreScreen.test.js api-explore.test.js exploreWebAppRoutes.test.js --runInBand
 npm test -- --runInBand
-npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-reference-routes-export
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-explore-100-route-export
 cd ../..
 node scripts/check-feature-parity.js
 git diff --check
@@ -2190,7 +2190,7 @@ Results:
 - Explore/API/reference tests passed: 3 suites, 64 tests.
 - Full mobile Jest passed: 47 suites, 671 tests.
 - Expo Android export passed and generated bundle under
-  `/tmp/thollabul-webapp-reference-routes-export`.
+  `/tmp/thollabul-webapp-explore-100-route-export`.
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
 - Browser mobile smoke captured unauthenticated `/dashboard/dzikir` redirect,
@@ -2235,6 +2235,10 @@ cd apps/mobile
 npm test -- exploreWebAppRoutes.test.js --runInBand
 npm test -- exploreScreen.test.js exploreWebAppRoutes.test.js --runInBand
 npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-explore-100-route-export
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
 ```
 
 Results:
@@ -2243,7 +2247,12 @@ Results:
 - Targeted web app route tests passed: 1 suite, 3 tests.
 - Combined Explore route tests passed: 2 suites, 48 tests.
 - Full mobile Jest passed: 47 suites, 671 tests.
-- Tool shell line-count gate: `WebAppToolRoute.js` 181,
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-explore-100-route-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Tool shell line-count gate: `WebAppToolRoute.js` 191,
   `WebAppReferenceListRoute.js` 629, `ExploreWebAppRoutes.js` 1672,
   `ExploreScreen.js` 1290, `exploreWebAppRoutes.test.js` 94, and
   `exploreScreen.test.js` 1999. No `apps/mobile/src/**/*.js` file is above the

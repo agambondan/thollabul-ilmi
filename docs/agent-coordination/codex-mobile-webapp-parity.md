@@ -66,7 +66,7 @@ Started: 2026-05-26 16:20 WIB
 - `cd apps/mobile && npm test -- exploreScreen.test.js api-explore.test.js exploreWebAppRoutes.test.js --runInBand`
   passed: 3 suites, 64 tests.
 - `cd apps/mobile && npm test -- --runInBand` passed: 47 suites, 671 tests.
-- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-reference-routes-export`
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-explore-100-route-export`
   passed.
 - `node scripts/check-feature-parity.js` passed.
 - `git diff --check` passed.
