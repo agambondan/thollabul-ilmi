@@ -1880,6 +1880,55 @@ Results:
 - Targeted web ESLint could not run because local `apps/web/node_modules` is
   missing the `typescript` package required by the Next ESLint config.
 
+## Web App Forum Route Dashboard Parity
+
+Status: completed for the native `web_app` Forum Tanya Jawab route visual parity
+pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic Forum Q&A path for the `classic` layout.
+- In `web_app` mode, Forum now renders a dedicated light dashboard surface
+  modeled after `/dashboard/forum`: centered forum header, search box, blue
+  `Tanya` action, white question cards, answered badges, author/answer/vote
+  metadata, empty state, and load-more control.
+- Forum ask/detail views stay as route-style subviews instead of inline
+  expand/collapse. Android back now returns from Forum ask/detail to the Forum
+  list before leaving the feature route.
+- Existing forum APIs and auth prompts are preserved for list, search, ask,
+  detail, vote, accept-answer, and answer submission flows.
+
+Scope guardrail:
+
+- This slice changes only the native mobile Forum feature route presentation in
+  `web_app`, the Forum sub-navigation Android back behavior, its Explore test
+  coverage, and route docs. It does not change classic Explore routing, forum
+  API contracts, or web Forum code.
+
+Verification:
+
+```bash
+cd apps/mobile
+npm test -- exploreScreen.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-forum-route-export
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- Targeted mobile Explore test passed: 1 suite, 40 tests.
+- Full mobile Jest passed: 46 suites, 663 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-forum-route-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Forum line-count gate: `ExploreScreen.js` 1278, `ExploreWebAppRoutes.js`
+  1549, `WebAppForumRoute.js` 773, and `exploreScreen.test.js` 1749.
+
 ## Web App Feed Route Dashboard Parity
 
 Status: completed for the native `web_app` Feed Komunitas route visual parity

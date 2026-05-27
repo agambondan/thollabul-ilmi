@@ -70,6 +70,7 @@ import { FeatureCatalog } from './FeatureCatalog';
 import { WebAppBlogRoute } from './WebAppBlogRoute';
 import { WebAppFeedRoute } from './WebAppFeedRoute';
 import { WebAppFiqhRoute } from './WebAppFiqhRoute';
+import { WebAppForumRoute } from './WebAppForumRoute';
 import { WebAppKajianRoute } from './WebAppKajianRoute';
 import { WebAppLibraryRoute } from './WebAppLibraryRoute';
 import { WebAppLeaderboardRoute } from './WebAppLeaderboardRoute';
@@ -84,6 +85,23 @@ export function renderExploreWebAppRoute(context) {
     clearFeature,
     error,
     featureSearch,
+    forumAnswerDraft,
+    forumAnswers,
+    forumAskBody,
+    forumAskTags,
+    forumAskTitle,
+    forumDetail,
+    forumError,
+    forumHasMore,
+    forumLoading,
+    forumPage,
+    forumQuestions,
+    forumSaving,
+    forumSearch,
+    forumSlug,
+    forumTotal,
+    forumView,
+    forumVotingId,
     handleHideFeedItem,
     handleLikeFeedItem,
     handleReportFeedItem,
@@ -110,6 +128,23 @@ export function renderExploreWebAppRoute(context) {
     setBlogCategory,
     setBlogSearch,
     setFeatureSearch,
+    setForumAnswerDraft,
+    setForumAnswers,
+    setForumAskBody,
+    setForumAskTags,
+    setForumAskTitle,
+    setForumDetail,
+    setForumError,
+    setForumHasMore,
+    setForumLoading,
+    setForumPage,
+    setForumQuestions,
+    setForumSaving,
+    setForumSearch,
+    setForumSlug,
+    setForumTotal,
+    setForumView,
+    setForumVotingId,
     setItemActionSheet,
     setKajianCategory,
     setKajianSearch,
@@ -117,6 +152,8 @@ export function renderExploreWebAppRoute(context) {
     setLibraryProgressFilter,
     setNotesSearch,
     setSelectedItem,
+    showError,
+    showInfo,
     visibleItems,
   } = context;
 
@@ -1434,6 +1471,50 @@ export function renderExploreWebAppRoute(context) {
         onLoadMore={loadMoreFeature}
         onOpenItem={openItemDetail}
         pagination={pagination}
+      />
+    );
+  }
+
+  if (activeFeature?.type === 'forum' ) {
+    return (
+      <WebAppForumRoute
+        forumAnswerDraft={forumAnswerDraft}
+        forumAnswers={forumAnswers}
+        forumAskBody={forumAskBody}
+        forumAskTags={forumAskTags}
+        forumAskTitle={forumAskTitle}
+        forumDetail={forumDetail}
+        forumError={forumError}
+        forumHasMore={forumHasMore}
+        forumLoading={forumLoading}
+        forumPage={forumPage}
+        forumQuestions={forumQuestions}
+        forumSaving={forumSaving}
+        forumSearch={forumSearch}
+        forumSlug={forumSlug}
+        forumTotal={forumTotal}
+        forumView={forumView}
+        forumVotingId={forumVotingId}
+        session={session}
+        setForumAnswerDraft={setForumAnswerDraft}
+        setForumAnswers={setForumAnswers}
+        setForumAskBody={setForumAskBody}
+        setForumAskTags={setForumAskTags}
+        setForumAskTitle={setForumAskTitle}
+        setForumDetail={setForumDetail}
+        setForumError={setForumError}
+        setForumHasMore={setForumHasMore}
+        setForumLoading={setForumLoading}
+        setForumPage={setForumPage}
+        setForumQuestions={setForumQuestions}
+        setForumSaving={setForumSaving}
+        setForumSearch={setForumSearch}
+        setForumSlug={setForumSlug}
+        setForumTotal={setForumTotal}
+        setForumView={setForumView}
+        setForumVotingId={setForumVotingId}
+        showError={showError}
+        showInfo={showInfo}
       />
     );
   }

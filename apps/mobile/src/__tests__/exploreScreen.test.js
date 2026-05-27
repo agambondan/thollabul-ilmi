@@ -3,8 +3,8 @@ jest.mock('lucide-react-native', () => {
   const names = [
     'ArrowLeft', 'BookOpen', 'Bookmark', 'BookmarkCheck', 'CheckCircle2', 'ChevronDown',
     'Circle', 'ExternalLink', 'Flag', 'Globe', 'Heart', 'HelpCircle',
-    'ListChecks', 'MessageCircle', 'Pencil', 'Scale', 'Star',
-    'Search', 'StickyNote', 'Trash2', 'Trophy', 'UserCircle', 'Users', 'Video',
+    'ListChecks', 'MessageCircle', 'Pencil', 'Plus', 'Scale', 'Star',
+    'Search', 'StickyNote', 'ThumbsDown', 'ThumbsUp', 'Trash2', 'Trophy', 'UserCircle', 'Users', 'Video',
   ];
   names.forEach((n) => { icons[n] = n; });
   return icons;
@@ -1256,6 +1256,45 @@ describe('ExploreScreen', () => {
 
     expect(getByText('Adab Wudhu')).toBeTruthy();
     expect(queryByText('Zakat Perdagangan')).toBeNull();
+  });
+
+  test('uses dashboard Forum route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    forumApi.getForumQuestions.mockResolvedValueOnce({
+      hasMore: false,
+      items: [
+        {
+          id: 'forum-1',
+          title: 'Apa hukum zakat emas?',
+          body: 'Mohon penjelasan ringkas tentang zakat emas.',
+          slug: 'zakat-emas',
+          tags: ['zakat'],
+          answerCount: 1,
+          voteCount: 2,
+          user: { name: 'Ahmad' },
+        },
+      ],
+      total: 1,
+    });
+
+    const { getAllByTestId, getByTestId, getByText, queryByTestId } = await renderExploreScreen({
+      deepLinkTarget: { id: 'forum-route', params: { featureKey: 'forum' } },
+    });
+
+    await waitFor(() => {
+      expect(forumApi.getForumQuestions).toHaveBeenCalledWith({ page: 0, size: 10 });
+      expect(getByTestId('explore-web-app-forum-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('Forum Tanya Jawab')).toBeTruthy();
+      expect(getByText('Diskusi seputar Islam')).toBeTruthy();
+      expect(getByText('Apa hukum zakat emas?')).toBeTruthy();
+      expect(getByText('1 jawaban')).toBeTruthy();
+      expect(getByText('2 suara')).toBeTruthy();
+      expect(getAllByTestId('web-app-forum-question-card')).toHaveLength(1);
+    });
+
+    fireEvent.press(getByTestId('web-app-forum-ask'));
+    expect(getByText('Ajukan Pertanyaan')).toBeTruthy();
   });
 
   test('uses a friendly Blog rate-limit message in web app layout', async () => {

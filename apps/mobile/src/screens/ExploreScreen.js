@@ -1040,6 +1040,14 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     if (!isActive) return;
     if (selectedItem) {
       navigation?.setBack(() => { setSelectedItem(null); return true; });
+    } else if (activeFeature?.type === 'forum' && forumView !== 'list') {
+      navigation?.setBack(() => {
+        setForumView('list');
+        setForumDetail(null);
+        setForumAnswers([]);
+        setForumError('');
+        return true;
+      });
     } else if (activeFeature) {
       navigation?.setBack(() => {
         clearFeature();
@@ -1048,7 +1056,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     } else {
       navigation?.clearBack?.();
     }
-  }, [isActive, selectedItem, activeFeature, navigation, featureReturnRoute]);
+  }, [isActive, selectedItem, activeFeature, forumView, navigation, featureReturnRoute]);
 
   const scoreQuiz = () => {
     if (!items.length) return 0;
@@ -1114,6 +1122,23 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       clearFeature,
       error,
       featureSearch,
+      forumAnswerDraft,
+      forumAnswers,
+      forumAskBody,
+      forumAskTags,
+      forumAskTitle,
+      forumDetail,
+      forumError,
+      forumHasMore,
+      forumLoading,
+      forumPage,
+      forumQuestions,
+      forumSaving,
+      forumSearch,
+      forumSlug,
+      forumTotal,
+      forumView,
+      forumVotingId,
       handleHideFeedItem,
       handleLikeFeedItem,
       handleReportFeedItem,
@@ -1142,6 +1167,23 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       setBlogCategory,
       setBlogSearch,
       setFeatureSearch,
+      setForumAnswerDraft,
+      setForumAnswers,
+      setForumAskBody,
+      setForumAskTags,
+      setForumAskTitle,
+      setForumDetail,
+      setForumError,
+      setForumHasMore,
+      setForumLoading,
+      setForumPage,
+      setForumQuestions,
+      setForumSaving,
+      setForumSearch,
+      setForumSlug,
+      setForumTotal,
+      setForumView,
+      setForumVotingId,
       setItemActionSheet,
       setKajianCategory,
       setKajianSearch,
@@ -1149,6 +1191,8 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       setLibraryProgressFilter,
       setNotesSearch,
       setSelectedItem,
+      showError,
+      showInfo,
       visibleItems,
     });
 

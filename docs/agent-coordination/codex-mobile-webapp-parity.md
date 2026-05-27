@@ -7,14 +7,14 @@ Started: 2026-05-26 16:20 WIB
 
 - Route/feature: mobile `web_app` parity against authenticated `/dashboard`
   mobile web views.
-- Completed near-term task: Fiqh `web_app` route parity against
-  `/dashboard/fiqh`, after validating that the Home/dashboard reminder slice was
-  documented, tested, committed, and pushed.
+- Completed near-term task: Forum Q&A `web_app` route parity against
+  `/dashboard/forum`, after validating and fixing the Fiqh slug category
+  fallback bug on both web and mobile.
 - Files I may edit after route selection:
   - `apps/mobile/**`
   - relevant `apps/mobile` tests
-  - `apps/mobile/src/screens/explore/WebAppFiqhRoute.js`
-  - Fiqh/Explore-specific tests/docs
+  - `apps/mobile/src/screens/explore/WebAppForumRoute.js`
+  - Forum/Explore-specific tests/docs
   - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
   - route-specific docs under `docs/**`
 - Files I will avoid unless explicitly handed off:
@@ -46,7 +46,7 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Last completed route: Fiqh. Next active route is not selected
+- Last completed route: Forum Q&A. Next active route is not selected
   yet, to avoid colliding with another active agent.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
@@ -82,6 +82,14 @@ Started: 2026-05-26 16:20 WIB
 - `cd apps/web && npm run build` passed.
 - Fiqh line-count gate: `ExploreScreen.js` 1234, `ExploreWebAppRoutes.js`
   1468, `WebAppFiqhRoute.js` 421, and `exploreScreen.test.js` 1709.
+- `cd apps/mobile && npm test -- exploreScreen.test.js --runInBand` passed: 1 suite, 40 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 46 suites, 663 tests.
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-forum-route-export` passed.
+- `node scripts/check-feature-parity.js` passed.
+- `git diff --check` passed.
+- Forum route line-count gate: `ExploreScreen.js` 1278,
+  `ExploreWebAppRoutes.js` 1549, `WebAppForumRoute.js` 773, and
+  `exploreScreen.test.js` 1749.
 - `node --check apps/mobile/src/screens/TokohTarikhContent.js` passed.
 - `node --check apps/mobile/src/__tests__/tokohTarikhContent.test.js` passed.
 - `cd apps/mobile && npm test -- tokohTarikhContent.test.js --runInBand` passed: 1 suite, 3 tests.
