@@ -1,7 +1,9 @@
 # Mobile Web App Layout Impact Plan
 
 Date: 2026-05-24
-Status: VERIFIED
+Status: VERIFIED and completed for the current native mobile `web_app`
+dashboard parity scope. Remaining items in `docs/WEB_MOBILE_SYNC.md` are
+explicit depth or web-only deltas, not missing native mobile route surfaces.
 
 ## Context
 
@@ -2474,3 +2476,51 @@ Results:
 - `git diff --check` passed.
 - Targeted web ESLint could not run because local `apps/web/node_modules` is
   missing the `typescript` package required by the Next ESLint config.
+
+## Web App Explore Route Completion Gate
+
+Status: completed for the 100% mobile Explore/Belajar `web_app` route surface
+gate.
+
+Implemented:
+
+- Added a route-level regression gate that iterates every `allFeatures` entry
+  from `apps/mobile/src/data/mobileFeatures.js` and verifies that
+  `renderExploreWebAppRoute` returns a native `web_app` surface instead of the
+  generic `Screen` fallback.
+- Added the canonical `explore-web-app-community-feed-surface` marker to Feed
+  Komunitas while keeping the existing `explore-web-app-feed-route` marker for
+  backward-compatible tests.
+
+Scope guardrail:
+
+- This slice only strengthens web-app route completion coverage and the Feed
+  route surface marker. It does not change Feed behavior, classic routing,
+  API calls, pagination, or create/action auth gating.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/explore/WebAppFeedRoute.js
+node --check apps/mobile/src/__tests__/exploreWebAppRoutes.test.js
+cd apps/mobile
+npm test -- exploreWebAppRoutes.test.js --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-explore-completion-gate-export
+```
+
+Results:
+
+- `node --check` passed for `WebAppFeedRoute.js` and
+  `exploreWebAppRoutes.test.js`.
+- Targeted Explore web-app route gate passed: 1 suite, 4 tests.
+- The new completion gate covered all 43 mobile Explore feature keys and
+  verified no route returned the generic `screen-title` fallback.
+- Combined Explore/API web-app tests passed: 3 suites, 66 tests.
+- Full mobile Jest passed: 47 suites, 672 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-explore-completion-gate-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
+  2,000-line gate.

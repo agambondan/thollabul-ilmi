@@ -117,6 +117,7 @@ export function WebAppFeedRoute({
       style={styles.root}
     >
       <View testID="explore-web-app-feed-route" />
+      <View testID="explore-web-app-community-feed-surface" />
       <View style={styles.header}>
         <View style={styles.headerIcon}>
           <MessageCircle color="#059669" size={30} strokeWidth={2.3} />

@@ -1,7 +1,12 @@
 jest.mock('lucide-react-native', () => {
-  const icons = {};
-  ['BookOpen', 'ChevronDown', 'Search'].forEach((name) => { icons[name] = name; });
-  return icons;
+  const icon = () => null;
+  return new Proxy({}, {
+    get: (target, prop) => {
+      if (prop === '__esModule') return false;
+      if (!target[prop]) target[prop] = icon;
+      return target[prop];
+    },
+  });
 });
 
 jest.mock('../components/NotificationCenter', () => ({
@@ -12,24 +17,121 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
+import { allFeatures } from '../data/mobileFeatures';
 import { renderExploreWebAppRoute } from '../screens/explore/ExploreWebAppRoutes';
 import { WEB_APP_REFERENCE_ROUTE_CONFIGS } from '../screens/explore/WebAppReferenceListRoute';
 import { WEB_APP_TOOL_ROUTE_CONFIGS } from '../screens/explore/WebAppToolRoute';
 
 const baseContext = (activeFeature, overrides = {}) => ({
   activeFeature,
+  blogCategory: 'all',
+  blogCategoryOptions: [],
+  blogSearch: '',
+  clearFeature: jest.fn(),
+  dictionaryQuery: '',
   error: '',
+  featureSearch: '',
+  focusDictionaryInput: jest.fn(),
+  forumAnswerDraft: '',
+  forumAnswers: [],
+  forumAskBody: '',
+  forumAskTags: '',
+  forumAskTitle: '',
+  forumDetail: null,
+  forumError: '',
+  forumHasMore: false,
+  forumLoading: false,
+  forumPage: 0,
+  forumQuestions: [],
+  forumSaving: false,
+  forumSearch: '',
+  forumSlug: '',
+  forumTotal: 0,
+  forumView: 'list',
+  forumVotingId: null,
+  handleHideFeedItem: jest.fn(),
+  handleLikeFeedItem: jest.fn(),
+  handleReportFeedItem: jest.fn(),
+  handleTogglePinnedFeature: jest.fn(),
   items: [],
+  kajianCategory: 'all',
+  kajianSearch: '',
+  leaderboardTab: 'streak',
+  libraryProgressFilter: '',
+  libraryProgressMap: {},
+  likingFeedId: null,
+  loadFeature: jest.fn(),
   loading: false,
+  notesSearch: '',
+  onOpenKajianUrl: jest.fn(),
   loadMoreFeature: jest.fn(),
   openItemDetail: jest.fn(),
   pagination: { hasMore: false, loadingMore: false },
+  pinnedFeatureKeys: {},
+  recentFeatureKeys: {},
+  renderFeatureContent: () => <Text>Tool content</Text>,
+  renderItem: jest.fn(),
   renderItemActionSheet: () => null,
+  runDictionarySearch: jest.fn(),
+  selectedSurahNumber: null,
+  session: null,
+  setActiveNoteRef: jest.fn(),
+  setBlogCategory: jest.fn(),
+  setBlogSearch: jest.fn(),
+  setDictionaryQuery: jest.fn(),
+  setFeatureSearch: jest.fn(),
+  setForumAnswerDraft: jest.fn(),
+  setForumAnswers: jest.fn(),
+  setForumAskBody: jest.fn(),
+  setForumAskTags: jest.fn(),
+  setForumAskTitle: jest.fn(),
+  setForumDetail: jest.fn(),
+  setForumError: jest.fn(),
+  setForumHasMore: jest.fn(),
+  setForumLoading: jest.fn(),
+  setForumPage: jest.fn(),
+  setForumQuestions: jest.fn(),
+  setForumSaving: jest.fn(),
+  setForumSearch: jest.fn(),
+  setForumSlug: jest.fn(),
+  setForumTotal: jest.fn(),
+  setForumView: jest.fn(),
+  setForumVotingId: jest.fn(),
+  setItemActionSheet: jest.fn(),
+  setKajianCategory: jest.fn(),
+  setKajianSearch: jest.fn(),
+  setLeaderboardTab: jest.fn(),
+  setLibraryProgressFilter: jest.fn(),
+  setNotesSearch: jest.fn(),
+  setSelectedItem: jest.fn(),
+  setSurahSearch: jest.fn(),
+  showError: jest.fn(),
+  showInfo: jest.fn(),
+  surahSearch: '',
+  surahs: [],
   visibleItems: [],
   ...overrides,
 });
 
+const getExpectedSurfaceTestID = (feature) => {
+  if (feature.key === 'asbabun-nuzul') return 'explore-web-app-asbabun-surface';
+  if (feature.key === 'community-feed') return 'explore-web-app-community-feed-surface';
+  return `explore-web-app-${feature.key}-surface`;
+};
+
 describe('Explore web app reference list routes', () => {
+  test('renders every mobile Explore feature through a web app route surface', () => {
+    for (const feature of allFeatures) {
+      const route = renderExploreWebAppRoute(baseContext(feature));
+      expect(route).toBeTruthy();
+
+      const view = render(route);
+      expect(view.getByTestId(getExpectedSurfaceTestID(feature))).toBeTruthy();
+      expect(view.queryByTestId('screen-title')).toBeNull();
+      view.unmount();
+    }
+  });
+
   test('renders every configured reference/list route without generic Screen fallback', () => {
     for (const key of Object.keys(WEB_APP_REFERENCE_ROUTE_CONFIGS)) {
       const route = renderExploreWebAppRoute(baseContext({ key, type: key === 'amalan' ? 'protected-list' : 'list' }));

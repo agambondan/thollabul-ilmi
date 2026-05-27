@@ -8,8 +8,8 @@ Started: 2026-05-26 16:20 WIB
 - Route/feature: mobile `web_app` parity against authenticated `/dashboard`
   mobile web views.
 - Completed near-term task: finished remaining Explore/Belajar `web_app` route
-  fallbacks with shared reference/list and local tool dashboard shells after the
-  Doa slice was committed and pushed.
+  fallbacks with shared reference/list and local tool dashboard shells, then
+  added a 100% route-surface gate across every mobile Explore feature key.
 - Files I may edit after route selection:
   - `apps/mobile/**`
   - relevant `apps/mobile` tests
@@ -47,8 +47,8 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Last completed route batch: Explore/Belajar reference/list and local tool
-  fallbacks.
+- Last completed route batch: Explore/Belajar 100% route-surface gate across
+  all 43 mobile feature keys.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
   - preserve `classic` native layout;
@@ -63,9 +63,13 @@ Started: 2026-05-26 16:20 WIB
   passed.
 - `node --check apps/mobile/src/screens/explore/WebAppToolRoute.js` passed.
 - `node --check apps/mobile/src/__tests__/exploreWebAppRoutes.test.js` passed.
+- `cd apps/mobile && npm test -- exploreWebAppRoutes.test.js --runInBand`
+  passed: 1 suite, 4 tests, including the 43-feature completion gate.
 - `cd apps/mobile && npm test -- exploreScreen.test.js api-explore.test.js exploreWebAppRoutes.test.js --runInBand`
-  passed: 3 suites, 64 tests.
-- `cd apps/mobile && npm test -- --runInBand` passed: 47 suites, 671 tests.
+  passed: 3 suites, 66 tests.
+- `cd apps/mobile && npm test -- --runInBand` passed: 47 suites, 672 tests.
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-explore-completion-gate-export`
+  passed.
 - `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-explore-100-route-export`
   passed.
 - `node scripts/check-feature-parity.js` passed.
