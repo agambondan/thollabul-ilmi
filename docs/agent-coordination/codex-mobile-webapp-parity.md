@@ -7,13 +7,13 @@ Started: 2026-05-26 16:20 WIB
 
 - Route/feature: mobile `web_app` parity against authenticated `/dashboard`
   mobile web views.
-- Completed near-term task: Asbabun Nuzul `web_app` route parity against
-  `/dashboard/asbabun-nuzul`, after validating the Tafsir slice was clean.
+- Completed near-term task: Doa `web_app` route parity against `/dashboard/doa`,
+  after validating the Asbabun Nuzul slice was already committed and clean.
 - Files I may edit after route selection:
   - `apps/mobile/**`
   - relevant `apps/mobile` tests
-  - `apps/mobile/src/screens/explore/WebAppTafsirRoute.js`
-  - Asbabun/Tafsir/Explore-specific tests/docs
+  - `apps/mobile/src/screens/explore/WebAppDoaRoute.js`
+  - Doa/Explore-specific tests/docs
   - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
   - route-specific docs under `docs/**`
 - Files I will avoid unless explicitly handed off:
@@ -45,8 +45,8 @@ Started: 2026-05-26 16:20 WIB
   is checked against the real web dashboard reference and tests.
 - If I find a web-app bug while comparing a route, I will fix both web and
   mobile only inside that route's scope and update this claim first.
-- Last completed route: Asbabun Nuzul. Next active route is not selected
-  yet, to avoid colliding with another active agent.
+- Last completed route: Doa. Next active route is not selected yet, to avoid
+  colliding with another active agent.
 - Current gate for every new route:
   - compare against authenticated `/dashboard/*` mobile web behavior/surface;
   - preserve `classic` native layout;

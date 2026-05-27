@@ -856,9 +856,8 @@ describe('ExploreScreen', () => {
 
   test('uses dashboard Leaderboard route surface in web app layout', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
-    exploreApi.getFeatureItemPage
-      .mockResolvedValueOnce({
-        items: [
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
           { id: 'streak-1', title: 'Ahmad', raw: { name: 'Ahmad', rank: 1, score: 21 } },
           { id: 'streak-2', title: 'Fatimah', raw: { name: 'Fatimah', rank: 2, score: 18 } },
         ],
@@ -869,9 +868,9 @@ describe('ExploreScreen', () => {
           { id: 'hafalan-1', title: 'Zaid', raw: { name: 'Zaid', rank: 1, score: 30 } },
           { id: 'hafalan-2', title: 'Maryam', raw: { name: 'Maryam', rank: 2, score: 24 } },
           { id: 'hafalan-3', title: 'Umar', raw: { name: 'Umar', rank: 3, score: 20 } },
-        ],
-        meta: { hasMore: false },
-      });
+      ],
+      meta: { hasMore: false },
+    });
 
     const { getAllByTestId, getAllByText, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
       deepLinkTarget: { id: 'leaderboard-route', params: { featureKey: 'leaderboard' } },
@@ -918,6 +917,57 @@ describe('ExploreScreen', () => {
       expect(getByText('Data leaderboard belum tersedia.')).toBeTruthy();
       expect(queryByText('Leaderboard belum bisa dimuat.')).toBeNull();
     });
+  });
+
+  test('uses dashboard Doa route surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    exploreApi.getFeatureItemPage
+      .mockResolvedValueOnce({
+        items: [
+          {
+            id: 'doa-1', title: 'Doa Bangun Tidur', arabic: 'الْحَمْدُ لِلَّهِ', body: 'Segala puji bagi Allah.',
+            meta: 'bangun · Hisnul Muslim',
+            raw: { audio_url: 'https://example.test/doa.mp3', category: 'bangun', source: 'Hisnul Muslim',
+              title: 'Doa Bangun Tidur', translation: { ar: 'الْحَمْدُ لِلَّهِ', idn: 'Segala puji bagi Allah.', latin_idn: 'Alhamdulillah' } },
+          },
+          {
+            id: 'doa-2', title: 'Doa Masuk Masjid', arabic: 'اللَّهُمَّ افْتَحْ لِي',
+            body: 'Ya Allah bukakan untukku pintu rahmat-Mu.', meta: 'masjid',
+            raw: {
+              category: 'masjid', title: 'Doa Masuk Masjid',
+              translation: { ar: 'اللَّهُمَّ افْتَحْ لِي', idn: 'Ya Allah bukakan untukku pintu rahmat-Mu.' },
+            },
+          },
+        ],
+        meta: { hasMore: false },
+      });
+
+    const { getAllByTestId, getByTestId, getByText, queryByTestId, queryByText } = await renderExploreScreen({
+      deepLinkTarget: { id: 'doa-route', params: { featureKey: 'doa' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-doa-surface')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('Doa')).toBeTruthy();
+      expect(getByText('2 doa tersedia')).toBeTruthy();
+      expect(getAllByTestId('web-app-doa-card')).toHaveLength(2);
+      expect(getByText('Alhamdulillah')).toBeTruthy();
+      expect(getByText('Audio')).toBeTruthy();
+    });
+
+    fireEvent.press(getAllByTestId('web-app-doa-category')[7]);
+
+    expect(getByText('Doa Masuk Masjid')).toBeTruthy();
+    expect(queryByText('Doa Bangun Tidur')).toBeNull();
+    expect(getAllByTestId('web-app-doa-card')).toHaveLength(1);
+
+    fireEvent.changeText(getByTestId('web-app-doa-search'), 'rahmat');
+    expect(getByText('Menampilkan 1 dari 2 doa')).toBeTruthy();
+    expect(exploreApi.getFeatureItemPage).toHaveBeenCalledWith(
+      expect.objectContaining({ key: 'doa', endpoint: '/api/v1/doa' }),
+      { page: 0, size: 20 },
+    );
   });
 
   test('uses dashboard Kajian route surface in web app layout', async () => {

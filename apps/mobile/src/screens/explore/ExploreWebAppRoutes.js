@@ -68,6 +68,7 @@ import {
 } from '../ExploreScreen.helpers';
 import { FeatureCatalog } from './FeatureCatalog';
 import { WebAppBlogRoute } from './WebAppBlogRoute';
+import { WebAppDoaRoute } from './WebAppDoaRoute';
 import { WebAppFeedRoute } from './WebAppFeedRoute';
 import { WebAppFiqhRoute } from './WebAppFiqhRoute';
 import { WebAppForumRoute } from './WebAppForumRoute';
@@ -1384,6 +1385,19 @@ export function renderExploreWebAppRoute(context) {
         loading={loading}
         onSelectTab={setLeaderboardTab}
         tabs={LEADERBOARD_TABS}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'doa' ) {
+    return (
+      <WebAppDoaRoute
+        error={error}
+        items={items}
+        loading={loading}
+        onLoadMore={loadMoreFeature}
+        onOpenItem={openItemDetail}
+        pagination={pagination}
       />
     );
   }

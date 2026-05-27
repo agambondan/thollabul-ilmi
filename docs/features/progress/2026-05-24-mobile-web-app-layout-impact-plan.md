@@ -2110,11 +2110,35 @@ Verification:
 node --check apps/mobile/src/screens/explore/WebAppDoaRoute.js
 cd apps/mobile
 npm test -- exploreScreen.test.js --runInBand
+npm test -- --runInBand
+npx expo export --platform android --dev --output-dir /tmp/thollabul-webapp-doa-route-export
+cd ../..
+cd services/api
+go test ./app/http/middlewares
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
 ```
 
 Results:
 
-- Pending final verification in this slice.
+- `node --check apps/mobile/src/screens/explore/WebAppDoaRoute.js` passed.
+- Targeted Explore test passed: 1 suite, 45 tests.
+- Full mobile Jest passed: 46 suites, 668 tests.
+- Expo Android export passed and generated bundle under
+  `/tmp/thollabul-webapp-doa-route-export`.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `go test ./app/http/middlewares` passed after adding the Expo web parity
+  port `23010` to the API CORS defaults and `.env.example`.
+- `git diff --check` passed.
+- Browser mobile smoke captured `/dashboard/doa` and native Expo `web_app` Doa
+  at 412x915 in `output/playwright/`. The first native smoke exposed the API
+  CORS miss for Expo web port `23010`; this slice patches the API CORS defaults.
+- Doa line-count gate: `WebAppDoaRoute.js` 416,
+  `ExploreWebAppRoutes.js` 1638, `ExploreScreen.js` 1288, and
+  `exploreScreen.test.js` 1999. No `apps/mobile/src/**/*.js` file remains above
+  2,000 lines after excluding the `wc` total row.
 
 ## Web App Siroh Route Dashboard Parity
 
@@ -2161,11 +2185,9 @@ Results:
 - `git diff --check` passed.
 - Browser mobile smoke captured unauthenticated `/dashboard/siroh` redirect and
   native Expo `web_app` Siroh at 412x915 in `output/playwright/`.
-- Full Explore/API and full mobile Jest are pending because the current
-  worktree also contains active Doa route WIP owned by another agent in
-  `ExploreWebAppRoutes.js`, `exploreScreen.test.js`, and
-  `WebAppDoaRoute.js`; the Doa test currently fails before downstream Explore
-  tests due to duplicate `Masjid` text and mock queue leakage.
+- Full Explore/API and full mobile Jest were rerun successfully after the Doa
+  route WIP was fixed, so the earlier duplicate `Masjid` test selector and mock
+  queue leakage blocker is no longer present.
 - Siroh line-count gate: `WebAppSirohRoute.js` 321,
   `ExploreWebAppRoutes.js` 1638, and `exploreScreen.test.js` 1999.
 

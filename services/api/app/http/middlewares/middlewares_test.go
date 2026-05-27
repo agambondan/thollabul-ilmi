@@ -180,23 +180,25 @@ func TestCorsAllowsDefaultExpoWebOrigin(t *testing.T) {
 		return c.SendStatus(fiber.StatusOK)
 	})
 
-	req := httptest.NewRequest(fiber.MethodOptions, "/api/v1/sholat-times", nil)
-	req.Header.Set(fiber.HeaderOrigin, "http://localhost:19006")
-	req.Header.Set(fiber.HeaderAccessControlRequestMethod, fiber.MethodGet)
-	req.Header.Set(fiber.HeaderAccessControlRequestHeaders, "Authorization,Content-Type")
+	for _, origin := range []string{"http://localhost:19006", "http://localhost:23010", "http://127.0.0.1:23010"} {
+		req := httptest.NewRequest(fiber.MethodOptions, "/api/v1/sholat-times", nil)
+		req.Header.Set(fiber.HeaderOrigin, origin)
+		req.Header.Set(fiber.HeaderAccessControlRequestMethod, fiber.MethodGet)
+		req.Header.Set(fiber.HeaderAccessControlRequestHeaders, "Authorization,Content-Type")
 
-	resp, err := app.Test(req)
-	if err != nil {
-		t.Fatalf("preflight request failed: %v", err)
-	}
-	if resp.StatusCode != fiber.StatusNoContent {
-		t.Fatalf("expected status %d, got %d", fiber.StatusNoContent, resp.StatusCode)
-	}
-	if got := resp.Header.Get(fiber.HeaderAccessControlAllowOrigin); got != "http://localhost:19006" {
-		t.Fatalf("expected allow origin http://localhost:19006, got %q", got)
-	}
-	if got := resp.Header.Get(fiber.HeaderAccessControlAllowCredentials); got != "true" {
-		t.Fatalf("expected allow credentials true, got %q", got)
+		resp, err := app.Test(req)
+		if err != nil {
+			t.Fatalf("preflight request failed for %s: %v", origin, err)
+		}
+		if resp.StatusCode != fiber.StatusNoContent {
+			t.Fatalf("expected status %d for %s, got %d", fiber.StatusNoContent, origin, resp.StatusCode)
+		}
+		if got := resp.Header.Get(fiber.HeaderAccessControlAllowOrigin); got != origin {
+			t.Fatalf("expected allow origin %s, got %q", origin, got)
+		}
+		if got := resp.Header.Get(fiber.HeaderAccessControlAllowCredentials); got != "true" {
+			t.Fatalf("expected allow credentials true, got %q", got)
+		}
 	}
 }
 
