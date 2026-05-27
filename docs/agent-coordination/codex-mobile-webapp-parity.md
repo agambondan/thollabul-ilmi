@@ -74,6 +74,11 @@ Started: 2026-05-26 16:20 WIB
 - `git diff --check` passed.
 - Browser mobile smoke captured `/dashboard/fiqh` and native `#/belajar/fiqh`
   at 412x915 in `output/playwright/`.
+- `/dashboard/fiqh` and native Fiqh filters now use API `slug` as the category
+  fallback when `category` is absent.
+- `cd apps/web && npx eslint src/app/dashboard/fiqh/page.js` could not run
+  because local `apps/web/node_modules` is missing `typescript`.
+- `cd apps/web && npm run build` passed.
 - Fiqh line-count gate: `ExploreScreen.js` 1234, `ExploreWebAppRoutes.js`
   1468, `WebAppFiqhRoute.js` 421, and `exploreScreen.test.js` 1709.
 - `node --check apps/mobile/src/screens/TokohTarikhContent.js` passed.

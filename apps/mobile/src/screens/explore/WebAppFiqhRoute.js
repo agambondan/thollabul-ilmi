@@ -42,11 +42,18 @@ const getFiqhContent = (item) =>
   );
 const getFiqhDalil = (item) => toStr(getRaw(item).dalil);
 const getFiqhSource = (item) => pickText(getRaw(item).source, item?.meta);
-const getFiqhCategory = (item) => toStr(getRaw(item).category ?? item?.meta);
+const normalizeFiqhCategory = (value) => {
+  const normalized = toStr(value).toLowerCase().replace(/_/g, '-').trim();
+  if (normalized.startsWith('haji')) return 'haji';
+  return normalized;
+};
+const getFiqhDisplayCategory = (item) => toStr(getRaw(item).category ?? item?.meta);
+const getFiqhFilterCategory = (item) =>
+  normalizeFiqhCategory(getRaw(item).category ?? getRaw(item).slug ?? getRaw(item).name ?? item?.meta);
 
 const getCategories = (items) => {
   const seen = new Set();
-  return [...DEFAULT_CATEGORIES, ...items.map(getFiqhCategory)]
+  return [...DEFAULT_CATEGORIES, ...items.map(getFiqhFilterCategory)]
     .filter(Boolean)
     .filter((item) => {
       if (seen.has(item)) return false;
@@ -68,7 +75,7 @@ function CategoryPill({ active, label, onPress, testID }) {
 }
 
 function FiqhCard({ index, item, onOpen }) {
-  const category = getFiqhCategory(item);
+  const category = getFiqhDisplayCategory(item);
 
   return (
     <Pressable onPress={() => onOpen(item)} style={styles.card} testID="web-app-fiqh-card">
@@ -101,7 +108,7 @@ export function WebAppFiqhRoute({
   const filteredItems = useMemo(() => {
     const query = normalizeSearchText(search);
     return items.filter((item) => {
-      const itemCategory = getFiqhCategory(item);
+      const itemCategory = getFiqhFilterCategory(item);
       const text = [
         getFiqhTitle(item),
         getFiqhContent(item),

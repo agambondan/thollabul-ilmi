@@ -1217,11 +1217,11 @@ describe('ExploreScreen', () => {
           id: 2,
           title: 'Zakat Perdagangan',
           body: 'Zakat perdagangan dihitung dari modal dan barang dagangan.',
-          meta: 'zakat',
+          meta: '',
           raw: {
-            category: 'zakat',
             content: 'Zakat perdagangan dihitung dari modal dan barang dagangan.',
             id: 2,
+            slug: 'zakat',
             source: 'Al-Mulakhkhas Al-Fiqhi',
             title: 'Zakat Perdagangan',
           },

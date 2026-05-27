@@ -13,6 +13,15 @@ const toStr = (v) => {
     return v.name ?? v.title ?? v.label ?? v.value ?? '';
 };
 
+const normalizeFiqhCategory = (value) => {
+    const normalized = toStr(value).toLowerCase().replace(/_/g, '-').trim();
+    if (normalized.startsWith('haji')) return 'haji';
+    return normalized;
+};
+
+const getFiqhFilterCategory = (item) =>
+    normalizeFiqhCategory(item?.category ?? item?.slug ?? item?.name);
+
 export default function DashboardFiqhPage() {
     const { t, lang } = useLocale();
     const [items, setItems] = useState([]);
@@ -35,12 +44,12 @@ export default function DashboardFiqhPage() {
 
     const filtered = items.filter(
         (i) =>
-            (!cat || toStr(i.category) === cat) &&
+            (!cat || getFiqhFilterCategory(i) === cat) &&
             (!search ||
                 [
                     getLocalizedField(i, 'title', lang),
                     getLocalizedField(i, 'content', lang),
-                    toStr(i.category),
+                    getFiqhFilterCategory(i),
                 ]
                     .filter(Boolean)
                     .join(' ')

@@ -2007,13 +2007,16 @@ Implemented:
 - Native Fiqh detail behavior stays routed through the existing item detail
   handler instead of adding inline expand/collapse, preserving the mobile
   detail UI rule while matching the web list surface.
+- The web and mobile Fiqh filters now treat API `slug` values as category
+  fallbacks, so dashboard chips keep working with the current `/api/v1/fiqh`
+  payload that does not always include an explicit `category` field.
 
 Scope guardrail:
 
 - This slice changes only the native mobile Fiqh feature route presentation in
-  `web_app`, its Explore test coverage, and route docs. It does not change the
-  web dashboard route, classic Explore routing, Fiqh API calls, or another
-  agent's route files.
+  `web_app`, a route-scoped `/dashboard/fiqh` filter fallback, its Explore test
+  coverage, and route docs. It does not change classic Explore routing, Fiqh API
+  calls, or another agent's route files.
 
 Verification:
 
@@ -2024,6 +2027,9 @@ npm test -- --runInBand
 cd ../..
 node scripts/check-feature-parity.js
 git diff --check
+npx eslint src/app/dashboard/fiqh/page.js
+cd apps/web
+npm run build
 ```
 
 Results:
@@ -2034,4 +2040,7 @@ Results:
   mobile feature keys, 154 web app routes scanned.
 - Browser mobile smoke captured authenticated `/dashboard/fiqh` and native
   Expo web-app `#/belajar/fiqh` at 412x915 in `output/playwright/`.
+- Web production build passed.
 - `git diff --check` passed.
+- Targeted web ESLint could not run because local `apps/web/node_modules` is
+  missing the `typescript` package required by the Next ESLint config.
