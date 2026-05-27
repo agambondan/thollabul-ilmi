@@ -533,20 +533,8 @@ export function createExploreClassicRenderers(context) {
       );
     };
 
-    return (
-      <Screen
-        actions={(
-          <IconActionButton
-            Icon={ArrowLeft}
-            label="Kembali"
-            onPress={closeDetailView}
-          />
-        )}
-        contentStyle={isWebAppLayout ? styles.webAppSurface : null}
-        subtitle={selectedItem.meta || activeFeature?.title}
-        title={selectedItem.title}
-      >
-        <View testID={isWebAppLayout ? 'explore-web-app-detail' : 'explore-classic-detail'} />
+    const renderDetailBody = () => (
+      <>
         <Card style={styles.detailCard}>
           {selectedItem.arabic ? (
             <Text style={[isTafsirDetail ? styles.detailArabic : styles.arabic]}>{selectedItem.arabic}</Text>
@@ -600,6 +588,57 @@ export function createExploreClassicRenderers(context) {
         {activeNoteRef === noteKey ? (
           <NotesPanel refType={ref.refType} refId={ref.refId} />
         ) : null}
+      </>
+    );
+
+    if (isWebAppLayout) {
+      return (
+        <ScrollView
+          contentContainerStyle={styles.webAppDetailContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          style={styles.webAppDetailRoot}
+        >
+          <View testID="explore-web-app-detail" />
+          <View style={styles.webAppDetailHeader}>
+            <Pressable
+              accessibilityLabel="Kembali ke daftar"
+              onPress={closeDetailView}
+              style={styles.webAppDetailBack}
+              testID="web-app-detail-back"
+            >
+              <ArrowLeft color={colors.primary} size={16} strokeWidth={2.4} />
+              <Text style={styles.webAppDetailBackText}>Kembali</Text>
+            </Pressable>
+            <Text style={styles.webAppDetailEyebrow}>
+              {(activeFeature?.group || 'Detail').toUpperCase()}
+            </Text>
+            <Text style={styles.webAppDetailTitle}>{selectedItem.title}</Text>
+            {selectedItem.meta || activeFeature?.title ? (
+              <Text style={styles.webAppDetailSubtitle}>
+                {selectedItem.meta || activeFeature?.title}
+              </Text>
+            ) : null}
+          </View>
+          {renderDetailBody()}
+        </ScrollView>
+      );
+    }
+
+    return (
+      <Screen
+        actions={(
+          <IconActionButton
+            Icon={ArrowLeft}
+            label="Kembali"
+            onPress={closeDetailView}
+          />
+        )}
+        subtitle={selectedItem.meta || activeFeature?.title}
+        title={selectedItem.title}
+      >
+        <View testID="explore-classic-detail" />
+        {renderDetailBody()}
       </Screen>
     );
   };

@@ -1565,6 +1565,49 @@ describe('ExploreScreen', () => {
     expect(queryByText('Request failed: 429')).toBeNull();
   });
 
+  test('opens Blog child detail in a web app dashboard detail surface', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    exploreApi.getFeatureItemPage.mockResolvedValueOnce({
+      items: [
+        {
+          id: 'blog-1',
+          title: 'Adab Menuntut Ilmu',
+          body: 'Ringkasan adab belajar dari para ulama.',
+          meta: 'Artikel',
+          raw: {
+            author: { name: 'Ustadz Ahmad' },
+            category: 'akhlak',
+            excerpt: 'Ringkasan adab belajar.',
+            published_at: '2026-05-25',
+            slug: 'adab-menuntut-ilmu',
+          },
+        },
+      ],
+      meta: { hasMore: false },
+    });
+
+    const { getAllByTestId, getByTestId, getByText, queryByTestId } = await renderExploreScreen({
+      deepLinkTarget: { id: 'blog-route', params: { featureKey: 'blog' } },
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-blog-surface')).toBeTruthy();
+      expect(getByText('Adab Menuntut Ilmu')).toBeTruthy();
+    });
+
+    fireEvent.press(getAllByTestId('web-app-blog-card')[0]);
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-detail')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+      expect(getByText('ILMU')).toBeTruthy();
+      expect(getByText('Ringkasan adab belajar dari para ulama.')).toBeTruthy();
+    });
+
+    fireEvent.press(getByTestId('web-app-detail-back'));
+    await waitFor(() => expect(getByTestId('explore-web-app-blog-surface')).toBeTruthy());
+  });
+
   test('uses dashboard Feed route surface in web app layout', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
     socialApi.getFeedPostPage.mockResolvedValueOnce({
