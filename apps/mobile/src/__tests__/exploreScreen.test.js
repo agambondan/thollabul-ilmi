@@ -57,12 +57,18 @@ jest.mock('../api/personal', () => ({
   addBookmark: jest.fn(),
   createUserWird: jest.fn(),
   deleteBookmark: jest.fn(),
+  deleteFaraidh: jest.fn(),
+  deleteKalkulasiZakat: jest.fn(),
   deleteUserWird: jest.fn(),
   getBookmarks: jest.fn(),
+  getFaraidhHistory: jest.fn(),
+  getKalkulasiZakat: jest.fn(),
   getLibraryProgress: jest.fn(),
   getLibraryProgressList: jest.fn(),
   getTodayPrayerLog: jest.fn(),
   getUserWirds: jest.fn(),
+  saveFaraidh: jest.fn(),
+  saveKalkulasiZakat: jest.fn(),
   saveLibraryProgress: jest.fn(),
   savePrayerLog: jest.fn(),
   updateUserWird: jest.fn(),
@@ -353,6 +359,49 @@ describe('ExploreScreen', () => {
       expect(getByTestId('explore-web-app-quiz-surface')).toBeTruthy();
       expect(queryByTestId('screen-title')).toBeNull();
     });
+  });
+
+  test('uses dashboard Zakat history child surface in web app layout', async () => {
+    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useSession.mockReturnValue({
+      ...mockUseSession(),
+      session: { token: 'abc' },
+      user: { id: '1', name: 'Test', email: 'test@test.com' },
+    });
+    exploreApi.getZakatGoldPrice.mockResolvedValueOnce(1400000);
+    personalApi.getKalkulasiZakat.mockResolvedValueOnce([
+      {
+        id: 'zakat-1',
+        jenis: 'maal',
+        nama_jenis: 'Zakat Maal',
+        jumlah_zakat: 2500000,
+        nilai_harta: 100000000,
+        nisab: 85000000,
+        sudah_dibayar: false,
+        created_at: '2026-05-20T00:00:00Z',
+      },
+    ]);
+
+    const { getByTestId, getByText, queryByTestId } = await renderExploreScreen();
+
+    fireEvent.press(getByText('Kalkulator Zakat'));
+    await waitFor(() => expect(getByTestId('explore-web-app-zakat-surface')).toBeTruthy());
+
+    fireEvent.press(getByTestId('pill-Riwayat'));
+
+    await waitFor(() => {
+      expect(getByTestId('explore-web-app-zakat-history-surface')).toBeTruthy();
+      expect(getByTestId('web-app-zakat-history-card')).toBeTruthy();
+      expect(getByText('Riwayat Zakat')).toBeTruthy();
+      expect(getByText('Zakat Maal')).toBeTruthy();
+      expect(getByText('Total Harta: Rp 100.000.000')).toBeTruthy();
+      expect(getByText('Nisab: Rp 85.000.000')).toBeTruthy();
+      expect(getByText('Belum Dibayar')).toBeTruthy();
+      expect(queryByTestId('screen-title')).toBeNull();
+    });
+
+    fireEvent.press(getByTestId('web-app-zakat-history-back'));
+    await waitFor(() => expect(queryByTestId('explore-web-app-zakat-history-surface')).toBeNull());
   });
 
   test('uses dashboard Bookmark route surface in web app layout', async () => {
