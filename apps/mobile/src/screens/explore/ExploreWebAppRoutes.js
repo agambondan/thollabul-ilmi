@@ -67,6 +67,7 @@ import {
   normalizeSearchText,
 } from '../ExploreScreen.helpers';
 import { FeatureCatalog } from './FeatureCatalog';
+import { WebAppAmalanRoute } from './WebAppAmalanRoute';
 import { WebAppBlogRoute } from './WebAppBlogRoute';
 import { WebAppDoaRoute } from './WebAppDoaRoute';
 import { WebAppFeedRoute } from './WebAppFeedRoute';
@@ -127,6 +128,7 @@ export function renderExploreWebAppRoute(context) {
     loadMoreFeature,
     loading,
     notesSearch,
+    onToggleAmalan,
     onOpenKajianUrl,
     openItemDetail,
     pagination,
@@ -1402,6 +1404,17 @@ export function renderExploreWebAppRoute(context) {
         onLoadMore={loadMoreFeature}
         onOpenItem={openItemDetail}
         pagination={pagination}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'amalan' ) {
+    return (
+      <WebAppAmalanRoute
+        error={error}
+        items={visibleItems}
+        loading={loading}
+        onToggleItem={onToggleAmalan}
       />
     );
   }

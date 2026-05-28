@@ -363,32 +363,23 @@ describe('ExploreScreen', () => {
 
   test('uses dashboard Zakat history child surface in web app layout', async () => {
     useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
-    useSession.mockReturnValue({
-      ...mockUseSession(),
-      session: { token: 'abc' },
-      user: { id: '1', name: 'Test', email: 'test@test.com' },
-    });
+    useSession.mockReturnValue({ ...mockUseSession(), session: { token: 'abc' }, user: { email: 'test@test.com', id: '1', name: 'Test' } });
     exploreApi.getZakatGoldPrice.mockResolvedValueOnce(1400000);
-    personalApi.getKalkulasiZakat.mockResolvedValueOnce([
-      {
-        id: 'zakat-1',
-        jenis: 'maal',
-        nama_jenis: 'Zakat Maal',
-        jumlah_zakat: 2500000,
-        nilai_harta: 100000000,
-        nisab: 85000000,
-        sudah_dibayar: false,
-        created_at: '2026-05-20T00:00:00Z',
-      },
-    ]);
+    personalApi.getKalkulasiZakat.mockResolvedValueOnce([{
+      id: 'zakat-1',
+      jenis: 'maal',
+      nama_jenis: 'Zakat Maal',
+      jumlah_zakat: 2500000,
+      nilai_harta: 100000000,
+      nisab: 85000000,
+      sudah_dibayar: false,
+      created_at: '2026-05-20T00:00:00Z',
+    }]);
 
     const { getByTestId, getByText, queryByTestId } = await renderExploreScreen();
-
     fireEvent.press(getByText('Kalkulator Zakat'));
     await waitFor(() => expect(getByTestId('explore-web-app-zakat-surface')).toBeTruthy());
-
     fireEvent.press(getByTestId('pill-Riwayat'));
-
     await waitFor(() => {
       expect(getByTestId('explore-web-app-zakat-history-surface')).toBeTruthy();
       expect(getByTestId('web-app-zakat-history-card')).toBeTruthy();
@@ -399,7 +390,6 @@ describe('ExploreScreen', () => {
       expect(getByText('Belum Dibayar')).toBeTruthy();
       expect(queryByTestId('screen-title')).toBeNull();
     });
-
     fireEvent.press(getByTestId('web-app-zakat-history-back'));
     await waitFor(() => expect(queryByTestId('explore-web-app-zakat-history-surface')).toBeNull());
   });

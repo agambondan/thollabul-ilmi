@@ -112,15 +112,6 @@ export const WEB_APP_REFERENCE_ROUTE_CONFIGS = {
     title: 'Imsakiyah',
     unit: 'jadwal',
   },
-  amalan: {
-    categories: ['wajib', 'sunnah', 'quran', 'dzikir', 'puasa'],
-    emptyText: 'Checklist amalan belum tersedia.',
-    loadingText: 'Memuat amalan harian...',
-    searchPlaceholder: 'Cari amalan harian...',
-    subtitle: 'Checklist ibadah harian dari dashboard personal.',
-    title: 'Amalan Harian',
-    unit: 'amalan',
-  },
 };
 
 export const WEB_APP_REFERENCE_LIST_ROUTE_KEYS = new Set(Object.keys(WEB_APP_REFERENCE_ROUTE_CONFIGS));

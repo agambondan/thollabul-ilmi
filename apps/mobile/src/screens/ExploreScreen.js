@@ -45,6 +45,7 @@ import { readPinnedFeatures, readRecentFeatures, rememberFeatureOpen, togglePinn
 import { colors, radius, spacing } from '../theme';
 import {
   addBookmark,
+  checkAmalan,
   createUserWird,
   deleteBookmark,
   deleteFaraidh,
@@ -57,6 +58,7 @@ import {
   getLibraryProgressList,
   getTodayPrayerLog,
   getUserWirds,
+  logActivity,
   saveFaraidh,
   saveKalkulasiZakat,
   saveLibraryProgress,
@@ -576,6 +578,43 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       setZakatHistory(mergeCalculatorHistory(remoteItems, localItems));
     } catch { /* silent */ }
   }, [session?.token]);
+
+  const handleToggleAmalan = useCallback(async (item) => {
+    const raw = item?.raw ?? {};
+    const id = raw.id ?? item?.id;
+    if (id == null) return;
+
+    const key = getExploreItemKey(item);
+    const currentDone = Boolean(raw.is_checked ?? raw.done ?? raw.checked ?? item?.done);
+    const nextDone = !currentDone;
+    const previousItems = items;
+
+    setItems((current) =>
+      current.map((entry) => {
+        if (getExploreItemKey(entry) !== key) return entry;
+        return {
+          ...entry,
+          done: nextDone,
+          raw: {
+            ...(entry.raw ?? {}),
+            checked: nextDone,
+            done: nextDone,
+            is_checked: nextDone,
+          },
+        };
+      }),
+    );
+
+    try {
+      await checkAmalan(id);
+      if (nextDone) {
+        logActivity('amalan').catch(() => {});
+      }
+    } catch {
+      setItems(previousItems);
+      showError('Amalan gagal diperbarui.');
+    }
+  }, [items, showError]);
 
   const loadBookmarks = useCallback(async () => {
     if (!session?.token) {
@@ -1158,6 +1197,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       loadMoreFeature,
       loading,
       notesSearch,
+      onToggleAmalan: handleToggleAmalan,
       onOpenKajianUrl: (url) => {
         Linking.openURL(url).catch(() => setError('Tautan kajian belum bisa dibuka.'));
       },

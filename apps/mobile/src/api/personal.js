@@ -179,6 +179,10 @@ export const getMyPoints = () => requestJson('/api/v1/achievements/points', { au
 
 export const getMyStreak = () => requestJson('/api/v1/streak', { auth: true });
 
+export const logActivity = (type) => postJson('/api/v1/activity', { type }, { auth: true });
+
+export const checkAmalan = (id) => putJson(`/api/v1/amalan/${id}/check`, {}, { auth: true });
+
 export const getTilawahSummary = () => requestJson('/api/v1/tilawah/summary', { auth: true });
 
 export const getHafalanList = async () => {

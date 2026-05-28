@@ -193,4 +193,31 @@ describe('Explore web app reference list routes', () => {
     fireEvent.press(getAllByTestId('web-app-reference-card')[0]);
     expect(openItemDetail).toHaveBeenCalledWith(expect.objectContaining({ id: 'dzikir-2' }));
   });
+
+  test('renders Amalan route as dashboard checklist and toggles an item', () => {
+    const onToggleAmalan = jest.fn();
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'amalan', title: 'Amalan Harian', type: 'protected-list' },
+      {
+        items: [
+          { id: 'amalan-1', title: 'Subuh berjamaah', raw: { id: 1, name_id: 'Subuh berjamaah', is_checked: true } },
+          { id: 'amalan-2', title: 'Sholat Dhuha', raw: { id: 2, name_id: 'Sholat Dhuha', is_checked: false } },
+        ],
+        onToggleAmalan,
+        visibleItems: [
+          { id: 'amalan-1', title: 'Subuh berjamaah', raw: { id: 1, name_id: 'Subuh berjamaah', is_checked: true } },
+          { id: 'amalan-2', title: 'Sholat Dhuha', raw: { id: 2, name_id: 'Sholat Dhuha', is_checked: false } },
+        ],
+      },
+    ));
+    const { getAllByTestId, getByText, queryByTestId } = render(route);
+
+    expect(queryByTestId('screen-title')).toBeNull();
+    expect(getByText('Amalan Harian')).toBeTruthy();
+    expect(getByText('1/2')).toBeTruthy();
+    expect(getAllByTestId('web-app-amalan-row')).toHaveLength(2);
+
+    fireEvent.press(getAllByTestId('web-app-amalan-row')[1]);
+    expect(onToggleAmalan).toHaveBeenCalledWith(expect.objectContaining({ id: 'amalan-2' }));
+  });
 });

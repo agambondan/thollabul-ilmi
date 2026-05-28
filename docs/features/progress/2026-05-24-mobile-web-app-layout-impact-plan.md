@@ -2618,3 +2618,49 @@ Results:
 - `git diff --check` passed.
 - Native emulator smoke captured the fixed light `Cari` route at
   `output/native-smoke/emulator-global-search-light-theme-after-fix-closed.png`.
+
+## Web App Amalan Route Dashboard Parity
+
+Status: completed for the native `web_app` Amalan Harian route visual and
+interaction parity pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic/protected-list path unchanged for paper
+  layout.
+- In `web_app` mode, Amalan now renders through `WebAppAmalanRoute`, a
+  dedicated dashboard checklist surface modeled after `/dashboard/amalan`:
+  title/subtitle, progress card, percentage bar, and tappable checklist rows.
+- Added mobile API wrappers for `/api/v1/amalan/{id}/check` and
+  `/api/v1/activity` so toggling an item mirrors the web dashboard behavior and
+  logs the `amalan` activity when a row is completed.
+- Split the Zakat history presentation into `WebAppZakatHistoryRoute` and a
+  small classic-history row component, keeping `ExploreClassicRenderers.js`
+  below the 2,000-line gate while preserving classic Zakat history behavior.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/explore/WebAppAmalanRoute.js
+node --check apps/mobile/src/screens/explore/WebAppZakatHistoryRoute.js
+node --check apps/mobile/src/screens/explore/ExploreClassicRenderers.js
+cd apps/mobile
+npm test -- exploreScreen.test.js exploreWebAppRoutes.test.js api-personal.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+find apps/mobile/src -name '*.js' -print0 | xargs -0 wc -l | sort -nr | head -8
+```
+
+Results:
+
+- `node --check` passed for the touched route/render files.
+- Targeted Explore route/API tests passed: 3 suites, 89 tests.
+- Full mobile Jest passed: 48 suites, 685 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Line-count gate is clean: highest mobile JS files are
+  `exploreScreen.test.js` at 1,998 lines and `ExploreClassicRenderers.js` at
+  1,988 lines.

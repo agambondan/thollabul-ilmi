@@ -36,6 +36,8 @@ const {
   getMyAchievements,
   getMyPoints,
   getMyStreak,
+  logActivity,
+  checkAmalan,
   getTilawahSummary,
   getHafalanList,
   getHafalanSummary,
@@ -379,6 +381,26 @@ describe('personal api', () => {
         auth: true,
       });
       expect(result).toEqual({ days: 5 });
+    });
+
+    test('logActivity calls correct endpoint', async () => {
+      postJson.mockResolvedValueOnce({});
+      await logActivity('amalan');
+      expect(postJson).toHaveBeenCalledWith(
+        '/api/v1/activity',
+        { type: 'amalan' },
+        { auth: true },
+      );
+    });
+
+    test('checkAmalan calls correct endpoint', async () => {
+      putJson.mockResolvedValueOnce({});
+      await checkAmalan(7);
+      expect(putJson).toHaveBeenCalledWith(
+        '/api/v1/amalan/7/check',
+        {},
+        { auth: true },
+      );
     });
 
     test('getTilawahSummary calls correct endpoint', async () => {
