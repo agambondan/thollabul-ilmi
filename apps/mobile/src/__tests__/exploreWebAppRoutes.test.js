@@ -220,4 +220,41 @@ describe('Explore web app reference list routes', () => {
     fireEvent.press(getAllByTestId('web-app-amalan-row')[1]);
     expect(onToggleAmalan).toHaveBeenCalledWith(expect.objectContaining({ id: 'amalan-2' }));
   });
+
+  test('renders Imsakiyah route as dashboard schedule table', () => {
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'imsakiyah', title: 'Imsakiyah', type: 'list' },
+      {
+        items: [
+          {
+            id: 'imsak-1',
+            raw: { city: 'Bandung (WIB)', date: '2026-05-01', prayers: { imsak: '04:20', fajr: '04:30', sunrise: '05:44', dhuhr: '11:51', asr: '15:12', maghrib: '17:49', isha: '18:59' } },
+          },
+          {
+            id: 'imsak-2',
+            raw: { day: 2, date: '2 Ramadan 1447', prayers: { imsak: '04:21', fajr: '04:31', sunrise: '05:44', dhuhr: '11:51', asr: '15:12', maghrib: '17:49', isha: '18:59' } },
+          },
+        ],
+        visibleItems: [
+          {
+            id: 'imsak-1',
+            raw: { city: 'Bandung (WIB)', date: '2026-05-01', prayers: { imsak: '04:20', fajr: '04:30', sunrise: '05:44', dhuhr: '11:51', asr: '15:12', maghrib: '17:49', isha: '18:59' } },
+          },
+          {
+            id: 'imsak-2',
+            raw: { day: 2, date: '2 Ramadan 1447', prayers: { imsak: '04:21', fajr: '04:31', sunrise: '05:44', dhuhr: '11:51', asr: '15:12', maghrib: '17:49', isha: '18:59' } },
+          },
+        ],
+      },
+    ));
+    const { getAllByTestId, getByTestId, getByText, queryByTestId } = render(route);
+
+    expect(getByTestId('explore-web-app-imsakiyah-surface')).toBeTruthy();
+    expect(queryByTestId('screen-title')).toBeNull();
+    expect(getByText('Jadwal imsak & sholat bulanan · Bandung (WIB)')).toBeTruthy();
+    expect(getByText('Mei 2026')).toBeTruthy();
+    expect(getByText('2')).toBeTruthy();
+    expect(getAllByTestId('web-app-imsakiyah-row')).toHaveLength(2);
+    expect(getByText('04:20')).toBeTruthy();
+  });
 });

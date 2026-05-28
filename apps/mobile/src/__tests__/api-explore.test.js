@@ -92,6 +92,17 @@ describe('explore api', () => {
       expect(result.meta).toContain('tsiqah');
     });
 
+    test('normalizes imsakiyah schedule row', () => {
+      const result = normalizeExploreItem({
+        date: '2026-05-01',
+        prayers: { imsak: '04:20', fajr: '04:30', maghrib: '17:50' },
+      });
+      expect(result.id).toBe('2026-05-01');
+      expect(result.title).toBe('2026-05-01');
+      expect(result.body).toContain('04:20');
+      expect(result.meta).toBe('Imsakiyah');
+    });
+
     test('uses fallback title and id', () => {
       const result = normalizeExploreItem({}, 5);
       expect(result.title).toBe('Item 6');
@@ -223,6 +234,23 @@ describe('explore api', () => {
       const url = requestJson.mock.calls[0][0];
       expect(url).toContain('page=1');
       expect(url).toContain('size=10');
+    });
+
+    test('picks imsakiyah schedule rows from response data', async () => {
+      requestJson.mockResolvedValueOnce({
+        data: {
+          schedule: [
+            { date: '2026-05-01', prayers: { imsak: '04:20' } },
+            { date: '2026-05-02', prayers: { imsak: '04:21' } },
+          ],
+        },
+      });
+      const result = await getFeatureItemPage({
+        endpoint: '/api/v1/imsakiyah',
+        type: 'list',
+      });
+      expect(result.items).toHaveLength(2);
+      expect(result.items[0].id).toBe('2026-05-01');
     });
   });
 

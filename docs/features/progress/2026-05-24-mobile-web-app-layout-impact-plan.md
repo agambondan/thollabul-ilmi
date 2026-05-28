@@ -2664,3 +2664,45 @@ Results:
 - Line-count gate is clean: highest mobile JS files are
   `exploreScreen.test.js` at 1,998 lines and `ExploreClassicRenderers.js` at
   1,988 lines.
+
+## Web App Imsakiyah Route Dashboard Parity
+
+Status: completed for the native `web_app` Imsakiyah route visual parity pass.
+
+Implemented:
+
+- `web_app` Imsakiyah now renders through `WebAppImsakiyahRoute`, a dedicated
+  mobile dashboard schedule surface modeled after `/dashboard/imsakiyah`:
+  title/subtitle, month label, table header, day rows, horizontal prayer-time
+  cells, today highlight, loading/error/empty states.
+- Mobile Explore API parsing now understands backend imsakiyah responses with
+  `data.schedule`/`schedule` arrays and normalizes individual prayer-time rows
+  instead of collapsing the monthly response into one generic item.
+- Removed Imsakiyah from the generic reference-list config so the route cannot
+  regress to generic cards while the web dashboard keeps a table schedule.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/explore/WebAppImsakiyahRoute.js
+node --check apps/mobile/src/screens/explore/ExploreWebAppRoutes.js
+node --check apps/mobile/src/api/explore.js
+cd apps/mobile
+npm test -- exploreWebAppRoutes.test.js api-explore.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+find apps/mobile/src -name '*.js' -print0 | xargs -0 wc -l | sort -nr | head -8
+```
+
+Results:
+
+- `node --check` passed for the touched route/API files.
+- Targeted route/API tests passed: 2 suites, 25 tests.
+- Full mobile Jest passed: 48 suites, 688 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
+  2,000-line gate.

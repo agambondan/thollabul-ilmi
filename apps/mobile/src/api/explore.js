@@ -5,6 +5,8 @@ const pickItems = (payload) => {
   if (Array.isArray(payload)) return payload;
   if (Array.isArray(payload?.items)) return payload.items;
   if (Array.isArray(payload?.data?.items)) return payload.data.items;
+  if (Array.isArray(payload?.data?.schedule)) return payload.data.schedule;
+  if (Array.isArray(payload?.schedule)) return payload.schedule;
   if (Array.isArray(payload?.data)) return payload.data;
   if (Array.isArray(payload?.questions)) return payload.questions;
   if (Array.isArray(payload?.events)) return payload.events;
@@ -160,6 +162,18 @@ export const normalizeExploreItem = (item, index = 0) => {
       arabic: '',
       body,
       meta: joinMeta(jenis, item?.tingkat ? `Tingkat ${item.tingkat}` : '', item?.sumber),
+      raw: item,
+    };
+  }
+
+  if (item?.prayers || item?.timings) {
+    const prayers = item.prayers ?? item.timings ?? {};
+    return {
+      id: item?.date ?? `imsakiyah-${index}`,
+      title: pickText(item?.date, item?.day ? `Tanggal ${item.day}` : '', `Jadwal ${index + 1}`),
+      arabic: '',
+      body: joinMeta(prayers.imsak ?? prayers.Imsak, prayers.fajr ?? prayers.Fajr, prayers.maghrib ?? prayers.Maghrib),
+      meta: pickText(item?.hijri, item?.city, item?.location, 'Imsakiyah'),
       raw: item,
     };
   }

@@ -73,6 +73,7 @@ import { WebAppDoaRoute } from './WebAppDoaRoute';
 import { WebAppFeedRoute } from './WebAppFeedRoute';
 import { WebAppFiqhRoute } from './WebAppFiqhRoute';
 import { WebAppForumRoute } from './WebAppForumRoute';
+import { WebAppImsakiyahRoute } from './WebAppImsakiyahRoute';
 import { WebAppKajianRoute } from './WebAppKajianRoute';
 import { WebAppKamusRoute } from './WebAppKamusRoute';
 import { WebAppLibraryRoute } from './WebAppLibraryRoute';
@@ -1415,6 +1416,16 @@ export function renderExploreWebAppRoute(context) {
         items={visibleItems}
         loading={loading}
         onToggleItem={onToggleAmalan}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'imsakiyah' ) {
+    return (
+      <WebAppImsakiyahRoute
+        error={error}
+        items={visibleItems}
+        loading={loading}
       />
     );
   }

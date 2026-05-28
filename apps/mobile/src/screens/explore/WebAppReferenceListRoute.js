@@ -104,14 +104,6 @@ export const WEB_APP_REFERENCE_ROUTE_CONFIGS = {
     title: "Jarh wa Ta'dil",
     unit: 'penilaian',
   },
-  imsakiyah: {
-    emptyText: 'Jadwal imsakiyah belum tersedia.',
-    loadingText: 'Memuat imsakiyah...',
-    searchPlaceholder: 'Cari kota, tanggal, atau waktu sholat...',
-    subtitle: 'Jadwal imsak dan sholat dalam tampilan dashboard.',
-    title: 'Imsakiyah',
-    unit: 'jadwal',
-  },
 };
 
 export const WEB_APP_REFERENCE_LIST_ROUTE_KEYS = new Set(Object.keys(WEB_APP_REFERENCE_ROUTE_CONFIGS));
