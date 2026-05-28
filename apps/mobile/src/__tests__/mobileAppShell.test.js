@@ -226,6 +226,39 @@ describe('MobileAppShell', () => {
     expect(signOut).toHaveBeenCalledTimes(1);
   });
 
+  test('routes account menu shortcuts to their matching web app feature routes', async () => {
+    AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
+    const onOpenProfile = jest.fn();
+    const onTabChange = jest.fn();
+    useSession.mockReturnValue({
+      loading: false,
+      session: { token: 'token' },
+      signOut: jest.fn(),
+      user: { name: 'Admin', email: 'admin@tholabul-ilmi.com' },
+    });
+    const { getByTestId, queryByTestId } = renderShell({ onOpenProfile, onTabChange });
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+
+    fireEvent.press(getByTestId('mobile-top-header-profile'));
+    fireEvent.press(getByTestId('mobile-account-menu-item-bookmarks'));
+    expect(onTabChange).toHaveBeenCalledWith('belajar', { featureKey: 'bookmarks' });
+    expect(queryByTestId('mobile-account-menu')).toBeNull();
+
+    fireEvent.press(getByTestId('mobile-top-header-profile'));
+    fireEvent.press(getByTestId('mobile-account-menu-item-notes'));
+    expect(onTabChange).toHaveBeenCalledWith('belajar', { featureKey: 'notes' });
+
+    fireEvent.press(getByTestId('mobile-top-header-profile'));
+    fireEvent.press(getByTestId('mobile-account-menu-item-stats'));
+    expect(onTabChange).toHaveBeenCalledWith('belajar', { featureKey: 'stats' });
+
+    fireEvent.press(getByTestId('mobile-top-header-profile'));
+    fireEvent.press(getByTestId('mobile-account-menu-item-notifications'));
+    expect(onTabChange).toHaveBeenCalledWith('belajar', { featureKey: 'notifications' });
+    expect(onOpenProfile).not.toHaveBeenCalled();
+  });
+
   test('opens and closes web app secondary menu sheet', async () => {
     AsyncStorage.getItem.mockResolvedValueOnce('"web_app"');
     const { getByLabelText, getByText, getByTestId, queryByTestId } = renderShell();

@@ -44,6 +44,13 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
     },
     [onOpenProfile, onTabChange],
   );
+  const handleAccountMenuSelect = useCallback(
+    (item) => {
+      if (!item?.key) return;
+      onTabChange?.('belajar', { featureKey: item.key });
+    },
+    [onTabChange],
+  );
 
   return (
     <SafeAreaView
@@ -87,6 +94,7 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
         isDarkTheme={isDarkTheme}
         loading={loading}
         onClose={closeAccountMenu}
+        onSelectItem={handleAccountMenuSelect}
         onSelectProfile={onOpenProfile}
         onSignOut={signOut}
         onToggleTheme={() => setThemePreference(isDarkTheme ? 'light' : 'dark')}

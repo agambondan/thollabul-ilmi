@@ -46,6 +46,7 @@ export function MobileAccountMenu({
   isDarkTheme = false,
   loading = false,
   onClose,
+  onSelectItem,
   onSelectProfile,
   onSignOut,
   onToggleTheme,
@@ -57,10 +58,14 @@ export function MobileAccountMenu({
   const accountInitial = normalizedAccountLabel.slice(0, 1).toUpperCase();
   const subtitle = accountEmail?.trim() || 'Belum masuk';
 
-  const handleProfileItem = () => {
+  const handleAccountItem = (item) => {
     hapticSelection();
     onClose?.();
-    onSelectProfile?.();
+    if (item?.key === 'profile') {
+      onSelectProfile?.();
+      return;
+    }
+    onSelectItem?.(item);
   };
 
   const handleSignOut = () => {
@@ -125,7 +130,7 @@ export function MobileAccountMenu({
                   accessibilityRole="button"
                   android_ripple={{ color: isDarkTheme ? '#334155' : '#e5e7eb', borderless: false }}
                   key={item.key}
-                  onPress={handleProfileItem}
+                  onPress={() => handleAccountItem(item)}
                   style={styles.row}
                   testID={`mobile-account-menu-item-${item.key}`}
                 >
