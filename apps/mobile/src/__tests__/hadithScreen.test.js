@@ -147,6 +147,7 @@ jest.mock('../components/SectionHeader', () => ({
 
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { HadithScreen } from '../screens/HadithScreen';
 
 const { useSession } = require('../context/SessionContext');
@@ -187,7 +188,7 @@ beforeEach(() => {
     showInfo: jest.fn(),
     showSuccess: jest.fn(),
   });
-  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+  useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: false });
   getOfflineOverview.mockResolvedValue({ supported: false });
   clientApi.getHadithBooks.mockResolvedValue(mockBooks);
   clientApi.getHadithPage.mockResolvedValue({
@@ -220,7 +221,7 @@ describe('HadithScreen', () => {
   });
 
   test('uses web app Hadith list surface when web app layout is active', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     const { getAllByText, getByPlaceholderText, getByTestId, getByText, queryByTestId } =
       render(<HadithScreen isActive />);
 
@@ -236,8 +237,36 @@ describe('HadithScreen', () => {
     expect(queryByTestId('hadith-classic-list')).toBeNull();
   });
 
+  test('uses light web app Hadith palette when theme is light', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
+    const { getByTestId, getByText } = render(<HadithScreen isActive />);
+
+    await waitFor(() => expect(getByText('Book')).toBeTruthy());
+
+    expect(StyleSheet.flatten(getByTestId('hadith-web-app-scroll').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#ffffff' }),
+    );
+    expect(StyleSheet.flatten(getByTestId('hadith-web-app-search').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#a7f3d0' }),
+    );
+  });
+
+  test('keeps dark web app Hadith palette when theme is dark', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: true, isWebAppLayout: true });
+    const { getByTestId, getByText } = render(<HadithScreen isActive />);
+
+    await waitFor(() => expect(getByText('Book')).toBeTruthy());
+
+    expect(StyleSheet.flatten(getByTestId('hadith-web-app-scroll').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#020617' }),
+    );
+    expect(StyleSheet.flatten(getByTestId('hadith-web-app-search').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#1e293b', borderColor: '#475569' }),
+    );
+  });
+
   test('opens a web app Hadith book reader using the existing book filter', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     const { getAllByText, findAllByText } = render(<HadithScreen isActive />);
 
     fireEvent.press((await waitFor(() => getAllByText('Buka Reader')))[0]);
@@ -343,7 +372,7 @@ describe('HadithScreen', () => {
   });
 
   test('uses web app Hadith detail surface without changing detail loading', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     clientApi.getHadithDetail.mockResolvedValue({
       id: 1, book: 'Shahih Bukhari', bookSlug: 'bukhari',
       number: 1, grade: 'Shahih', translation: 'Detail text',

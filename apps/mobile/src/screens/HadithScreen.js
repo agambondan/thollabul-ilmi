@@ -36,6 +36,38 @@ const WEB_APP_HADITH_SURFACE = '#1e293b';
 const WEB_APP_HADITH_BORDER = '#334155';
 const WEB_APP_HADITH_MUTED = '#94a3b8';
 const WEB_APP_HADITH_ACCENT = '#10b981';
+const WEB_APP_HADITH_THEMES = {
+  dark: {
+    accent: WEB_APP_HADITH_ACCENT,
+    activeTab: '#059669',
+    bg: WEB_APP_HADITH_BG,
+    border: WEB_APP_HADITH_BORDER,
+    input: '#e2e8f0',
+    metaBg: '#0f172a',
+    muted: WEB_APP_HADITH_MUTED,
+    searchBorder: '#475569',
+    surface: WEB_APP_HADITH_SURFACE,
+    tab: '#334155',
+    tabText: '#cbd5e1',
+    text: '#cbd5e1',
+    title: '#f8fafc',
+  },
+  light: {
+    accent: '#047857',
+    activeTab: '#059669',
+    bg: '#ffffff',
+    border: '#e5e7eb',
+    input: '#0f172a',
+    metaBg: '#f8fafc',
+    muted: '#64748b',
+    searchBorder: '#a7f3d0',
+    surface: '#ffffff',
+    tab: '#e2e8f0',
+    tabText: '#475569',
+    text: '#475569',
+    title: '#111827',
+  },
+};
 
 const WEB_APP_HADITH_TABS = [
   { key: 'book', label: 'Book' },
@@ -165,7 +197,8 @@ const getBookCoverStyle = (book) =>
 export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
   const { user } = useSession();
   const { showError, showInfo, showSuccess } = useFeedback();
-  const { isWebAppLayout } = useLayoutModePreference();
+  const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+  const webAppTheme = isDarkTheme ? WEB_APP_HADITH_THEMES.dark : WEB_APP_HADITH_THEMES.light;
   const handledDeepLinkId = useRef(null);
   const loadingMoreRef = useRef(false);
   const [books, setBooks] = useState([]);
@@ -589,12 +622,15 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             }}
             style={[
               styles.webAppHadithTab,
+              { backgroundColor: activeTab === tab.key ? webAppTheme.activeTab : webAppTheme.tab },
               activeTab === tab.key ? styles.webAppHadithTabActive : null,
             ]}
+            testID={`hadith-web-app-tab-${tab.key}`}
           >
             <Text
               style={[
                 styles.webAppHadithTabText,
+                { color: activeTab === tab.key ? '#ffffff' : webAppTheme.tabText },
                 activeTab === tab.key ? styles.webAppHadithTabTextActive : null,
               ]}
             >
@@ -609,13 +645,19 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
   const renderWebAppHadithHeader = () => (
     <View style={styles.webAppHadithHeader}>
       {renderWebAppHadithTabs()}
-      <View style={styles.webAppHadithSearch}>
-        <Search color={WEB_APP_HADITH_MUTED} size={16} strokeWidth={2.1} />
+      <View
+        style={[
+          styles.webAppHadithSearch,
+          { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.searchBorder },
+        ]}
+        testID="hadith-web-app-search"
+      >
+        <Search color={webAppTheme.muted} size={16} strokeWidth={2.1} />
         <TextInput
           onChangeText={setQuery}
           placeholder="Cari nomor, kitab, tema, atau teks hadis"
-          placeholderTextColor={WEB_APP_HADITH_MUTED}
-          style={styles.webAppHadithSearchInput}
+          placeholderTextColor={webAppTheme.muted}
+          style={[styles.webAppHadithSearchInput, { color: webAppTheme.input }]}
           value={query}
         />
       </View>
@@ -627,15 +669,21 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     const shortLabel = getHadithBookShortLabel({ book: book.name, bookSlug: book.slug });
 
     return (
-      <View key={book.slug ?? book.name} style={styles.webAppBookCard}>
+      <View
+        key={book.slug ?? book.name}
+        style={[
+          styles.webAppBookCard,
+          { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
+        ]}
+      >
         <View style={[styles.webAppBookCover, getBookCoverStyle(book)]}>
           <Text numberOfLines={2} style={styles.webAppBookCoverTitle}>{shortLabel}</Text>
           <View style={styles.webAppBookCoverRule} />
           <Text style={styles.webAppBookCoverMeta}>Hadith</Text>
         </View>
         <View style={styles.webAppBookCopy}>
-          <Text style={styles.webAppBookTitle}>{book.name}</Text>
-          <Text style={styles.webAppBookMeta}>
+          <Text style={[styles.webAppBookTitle, { color: webAppTheme.title }]}>{book.name}</Text>
+          <Text style={[styles.webAppBookMeta, { color: webAppTheme.muted }]}>
             {count ? `${count} Hadith` : 'Koleksi Hadith'}
           </Text>
           <Pressable
@@ -652,20 +700,30 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
 
   const renderWebAppHadithResults = () => (
     <>
-      <View style={styles.webAppListSummary}>
+      <View
+        style={[
+          styles.webAppListSummary,
+          { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
+        ]}
+      >
         <View style={styles.listSummaryCopy}>
-          <Text style={styles.webAppListSummaryTitle}>{selectedBookName}</Text>
-          <Text style={styles.webAppListSummaryMeta}>{summaryMeta}</Text>
+          <Text style={[styles.webAppListSummaryTitle, { color: webAppTheme.title }]}>{selectedBookName}</Text>
+          <Text style={[styles.webAppListSummaryMeta, { color: webAppTheme.muted }]}>{summaryMeta}</Text>
         </View>
         <Text numberOfLines={1} style={styles.webAppQueryBadge}>{summaryBadge}</Text>
       </View>
 
       {loading && hadiths.length === 0 ? (
-        <ActivityIndicator color={WEB_APP_HADITH_ACCENT} />
+        <ActivityIndicator color={webAppTheme.accent} />
       ) : filteredHadiths.length === 0 ? (
-        <View style={styles.webAppEmptyCard}>
-          <Text style={styles.webAppEmptyTitle}>Hadis belum ditemukan</Text>
-          <Text style={styles.webAppEmptyText}>
+        <View
+          style={[
+            styles.webAppEmptyCard,
+            { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
+          ]}
+        >
+          <Text style={[styles.webAppEmptyTitle, { color: webAppTheme.title }]}>Hadis belum ditemukan</Text>
+          <Text style={[styles.webAppEmptyText, { color: webAppTheme.muted }]}>
             {query
               ? 'Coba kata kunci lain, nomor hadis, nama kitab, atau tema yang lebih umum.'
               : 'Daftar hadis untuk filter ini belum tersedia.'}
@@ -673,7 +731,12 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
         </View>
       ) : (
         <>
-          <View style={styles.webAppHadithResultCard}>
+          <View
+            style={[
+              styles.webAppHadithResultCard,
+              { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
+            ]}
+          >
             {visibleHadiths.map((hadith) => (
               <View key={`${hadith.id}-${hadith.title}`} style={styles.hadithListItem}>
                 {renderCompactHadithCard(hadith, 'web-app-list')}
@@ -684,9 +747,12 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             <Pressable
               disabled={loadingMore}
               onPress={loadMoreHadiths}
-              style={styles.webAppLoadMoreButton}
+              style={[
+                styles.webAppLoadMoreButton,
+                { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
+              ]}
             >
-              <Text style={styles.webAppLoadMoreText}>
+              <Text style={[styles.webAppLoadMoreText, { color: webAppTheme.accent }]}>
                 {loadingMore
                   ? 'Memuat hadis berikutnya...'
                   : hasBufferedHadiths
@@ -706,7 +772,13 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     .filter((perawi, index, all) => perawi?.id && all.findIndex((item) => item?.id === perawi.id) === index);
 
   const renderDetailTabs = () => (
-    <View style={[styles.detailTabs, isWebAppLayout ? styles.webAppDetailTabs : null]}>
+    <View
+      style={[
+        styles.detailTabs,
+        isWebAppLayout ? styles.webAppDetailTabs : null,
+        isWebAppLayout ? { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border } : null,
+      ]}
+    >
       {HADITH_DETAIL_TABS.map((tab) => (
         <Pressable
           key={tab.key}
@@ -716,12 +788,14 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             isWebAppLayout ? styles.webAppDetailTabButton : null,
             detailTab === tab.key ? styles.detailTabButtonActive : null,
             isWebAppLayout && detailTab === tab.key ? styles.webAppDetailTabButtonActive : null,
+            isWebAppLayout && detailTab === tab.key ? { backgroundColor: webAppTheme.accent } : null,
           ]}
         >
           <Text
             style={[
               styles.detailTabText,
               isWebAppLayout ? styles.webAppDetailTabText : null,
+              isWebAppLayout && detailTab !== tab.key ? { color: webAppTheme.text } : null,
               detailTab === tab.key ? styles.detailTabTextActive : null,
             ]}
           >
@@ -816,28 +890,38 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
       <Screen
         title={detailScreenTitle}
         subtitle={detailScreenSubtitle}
-        contentStyle={isWebAppLayout ? styles.webAppDetailSurface : null}
+        contentStyle={
+          isWebAppLayout
+            ? [styles.webAppDetailSurface, { backgroundColor: webAppTheme.bg }]
+            : null
+        }
         refreshing={detailLoading}
         onRefresh={() => openHadith(selectedHadith)}
         actions={isWebAppLayout ? null : <IconActionButton Icon={ArrowLeft} label="Kembali ke daftar hadis" onPress={() => setSelectedHadith(null)} />}
       >
         <View testID={isWebAppLayout ? 'hadith-web-app-detail' : 'hadith-classic-detail'} />
         {isWebAppLayout ? (
-          <View style={styles.webAppDetailHero}>
+          <View
+            style={[
+              styles.webAppDetailHero,
+              { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
+            ]}
+            testID="hadith-web-app-detail-hero"
+          >
             <Pressable onPress={() => setSelectedHadith(null)} style={styles.webAppDetailBackLink}>
-              <ArrowLeft color={WEB_APP_HADITH_ACCENT} size={15} strokeWidth={2.2} />
-              <Text style={styles.webAppDetailBackText}>Kembali ke daftar hadith</Text>
+              <ArrowLeft color={webAppTheme.accent} size={15} strokeWidth={2.2} />
+              <Text style={[styles.webAppDetailBackText, { color: webAppTheme.accent }]}>Kembali ke daftar hadith</Text>
             </Pressable>
-            <Text style={styles.webAppDetailEyebrow}>Detail Hadith</Text>
-            <Text style={styles.webAppDetailTitle}>{selectedHadithTitle}</Text>
+            <Text style={[styles.webAppDetailEyebrow, { color: webAppTheme.accent }]}>Detail Hadith</Text>
+            <Text style={[styles.webAppDetailTitle, { color: webAppTheme.title }]}>{selectedHadithTitle}</Text>
             <View style={styles.webAppDetailMetaRow}>
-              <Text style={styles.webAppDetailMetaChip}>{selectedHadithBook}</Text>
-              <Text style={styles.webAppDetailMetaChip}>{selectedHadithNumber}</Text>
-              <Text style={styles.webAppDetailMetaChip}>{selectedHadithGrade}</Text>
+              <Text style={[styles.webAppDetailMetaChip, { backgroundColor: webAppTheme.metaBg, borderColor: webAppTheme.border, color: webAppTheme.text }]}>{selectedHadithBook}</Text>
+              <Text style={[styles.webAppDetailMetaChip, { backgroundColor: webAppTheme.metaBg, borderColor: webAppTheme.border, color: webAppTheme.text }]}>{selectedHadithNumber}</Text>
+              <Text style={[styles.webAppDetailMetaChip, { backgroundColor: webAppTheme.metaBg, borderColor: webAppTheme.border, color: webAppTheme.text }]}>{selectedHadithGrade}</Text>
             </View>
           </View>
         ) : null}
-        {message ? <Text style={isWebAppLayout ? styles.webAppMessage : styles.message}>{message}</Text> : null}
+        {message ? <Text style={isWebAppLayout ? [styles.webAppMessage, { color: webAppTheme.accent }] : styles.message}>{message}</Text> : null}
         {renderDetailTabs()}
 
         {detailTab === 'text' ? (
@@ -1074,26 +1158,27 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
 
     return (
       <ScrollView
-        contentContainerStyle={styles.webAppHadithContent}
+        contentContainerStyle={[styles.webAppHadithContent, { backgroundColor: webAppTheme.bg }]}
         keyboardShouldPersistTaps="handled"
         refreshControl={
           <RefreshControl
             refreshing={loading}
             onRefresh={refreshAll}
-            tintColor={WEB_APP_HADITH_ACCENT}
+            tintColor={webAppTheme.accent}
           />
         }
         scrollEventThrottle={250}
         showsVerticalScrollIndicator={false}
-        style={styles.webAppHadithScroll}
+        style={[styles.webAppHadithScroll, { backgroundColor: webAppTheme.bg }]}
+        testID="hadith-web-app-scroll"
       >
         <View testID="hadith-web-app-list" />
         {renderWebAppHadithHeader()}
-        {message ? <Text style={styles.webAppMessage}>{message}</Text> : null}
+        {message ? <Text style={[styles.webAppMessage, { color: webAppTheme.accent }]}>{message}</Text> : null}
         {showBookShelf ? (
           <>
             {loading && books.length === 0 ? (
-              <ActivityIndicator color={WEB_APP_HADITH_ACCENT} />
+              <ActivityIndicator color={webAppTheme.accent} />
             ) : null}
             {books.map(renderWebAppBookCard)}
           </>
