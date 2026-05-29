@@ -3103,6 +3103,46 @@ Results:
 - Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above
   2,000 lines.
 
+## Web App Qibla Theme Parity
+
+Status: completed for the native `web_app` Qibla/Kiblat light/dark palette
+pass.
+
+Implemented:
+
+- `QiblaScreen` now reads `isDarkTheme` in addition to `isWebAppLayout`.
+- The `web_app` Qibla route keeps the existing light dashboard palette when
+  light mode is active, and switches the route surface, header, manual-location
+  panel, compass panel, metric tiles, location card, status messages, inputs,
+  and helper note to a dark dashboard palette when the app theme is dark.
+- Added regression coverage for both light and dark `web_app` Qibla palettes.
+- Classic Qibla GPS permission, manual coordinate, compass animation/math, and
+  refresh behavior remain unchanged.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/QiblaScreen.js
+cd apps/mobile
+npm test -- QiblaScreen.test.js mobileAppShell.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check -- apps/mobile/src/screens/QiblaScreen.js apps/mobile/src/__tests__/QiblaScreen.test.js docs/WEB_MOBILE_SYNC.md docs/features/progress/2026-05-24-mobile-web-app-layout-impact-plan.md
+find apps/mobile/src -name '*.js' -print0 | xargs -0 wc -l | sort -nr | head -10
+```
+
+Results:
+
+- `node --check` passed for `QiblaScreen.js`.
+- Targeted Qibla/shell tests passed: 2 suites, 35 tests.
+- Full mobile Jest passed: 48 suites, 723 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed for touched files.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above
+  2,000 lines.
+
 ## Web App Khatam Theme Parity
 
 Status: completed for the native `web_app` Khatam light/dark palette pass.

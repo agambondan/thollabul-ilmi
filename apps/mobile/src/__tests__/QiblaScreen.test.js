@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 
 jest.mock('expo-location', () => ({
   requestForegroundPermissionsAsync: jest.fn(),
@@ -108,7 +109,7 @@ describe('QiblaScreen', () => {
     Location.getCurrentPositionAsync.mockResolvedValue({
       coords: mockCoords,
     });
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: false });
   });
 
   test('renders screen title', async () => {
@@ -122,7 +123,7 @@ describe('QiblaScreen', () => {
   });
 
   test('uses web app Qibla surface when web app layout is active', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     const { getAllByText, getByTestId, getByText, queryByTestId } = render(<QiblaScreen onBack={jest.fn()} />);
 
     await waitFor(() => {
@@ -144,6 +145,38 @@ describe('QiblaScreen', () => {
         ),
       ).toBeTruthy();
     });
+  });
+
+  test('uses light web app Qibla palette when theme is light', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
+    const { getByTestId } = render(<QiblaScreen onBack={jest.fn()} />);
+
+    await waitFor(() => {
+      expect(getByTestId('qibla-web-app-location-card')).toBeTruthy();
+    });
+
+    expect(StyleSheet.flatten(getByTestId('qibla-web-app-surface').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#f8fafc' }),
+    );
+    expect(StyleSheet.flatten(getByTestId('qibla-web-app-location-card').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#e5e7eb' }),
+    );
+  });
+
+  test('uses dark web app Qibla palette when theme is dark', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: true, isWebAppLayout: true });
+    const { getByTestId } = render(<QiblaScreen onBack={jest.fn()} />);
+
+    await waitFor(() => {
+      expect(getByTestId('qibla-web-app-location-card')).toBeTruthy();
+    });
+
+    expect(StyleSheet.flatten(getByTestId('qibla-web-app-surface').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#020617' }),
+    );
+    expect(StyleSheet.flatten(getByTestId('qibla-web-app-location-card').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#111827', borderColor: '#334155' }),
+    );
   });
 
   test('shows loader while loading location', () => {
