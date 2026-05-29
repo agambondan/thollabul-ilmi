@@ -294,16 +294,16 @@ export const getHijriOverview = async () => {
 
   const items = [];
   if (today.status === 'fulfilled') {
+    const hijri = today.value?.data ?? today.value ?? {};
+    const dateText = hijri?.date_str ?? hijri?.date_hijri ?? hijri?.hijri ?? hijri?.date ?? JSON.stringify(today.value);
     items.push(
-      normalizeExploreItem({
+      {
+        id: 'hijri-today',
         title: 'Today',
-        description:
-          today.value?.date_hijri ??
-          today.value?.hijri ??
-          today.value?.data?.hijri ??
-          today.value?.date ??
-          JSON.stringify(today.value),
-      }),
+        body: dateText,
+        meta: 'Hijri',
+        raw: { ...hijri, type: 'hijri_today' },
+      },
     );
   }
   if (events.status === 'fulfilled') {

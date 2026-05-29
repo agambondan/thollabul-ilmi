@@ -257,4 +257,48 @@ describe('Explore web app reference list routes', () => {
     expect(getAllByTestId('web-app-imsakiyah-row')).toHaveLength(2);
     expect(getByText('04:20')).toBeTruthy();
   });
+
+  test('renders Hijri route as dashboard calendar surface', () => {
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'hijri', title: 'Kalender Hijri', type: 'hijri' },
+      {
+        items: [
+          {
+            id: 'hijri-today',
+            title: 'Today',
+            body: '12 Dzulhijjah 1447 H',
+            raw: { day: 12, month: 12, month_name: 'Dzulhijjah', type: 'hijri_today', year: 1447, gregorian_year: 2026, gregorian_month: 5, gregorian_day: 29 },
+          },
+          {
+            id: 'event-1',
+            title: 'Idul Adha',
+            body: 'Hari raya kurban.',
+            raw: { category: 'eid', hijri_day: 10, hijri_month: 12, translation: { title_idn: 'Idul Adha', description_idn: 'Hari raya kurban.' } },
+          },
+        ],
+        visibleItems: [
+          {
+            id: 'hijri-today',
+            title: 'Today',
+            body: '12 Dzulhijjah 1447 H',
+            raw: { day: 12, month: 12, month_name: 'Dzulhijjah', type: 'hijri_today', year: 1447, gregorian_year: 2026, gregorian_month: 5, gregorian_day: 29 },
+          },
+          {
+            id: 'event-1',
+            title: 'Idul Adha',
+            body: 'Hari raya kurban.',
+            raw: { category: 'eid', hijri_day: 10, hijri_month: 12, translation: { title_idn: 'Idul Adha', description_idn: 'Hari raya kurban.' } },
+          },
+        ],
+      },
+    ));
+    const { getAllByText, getByTestId, getByText, queryByTestId } = render(route);
+
+    expect(getByTestId('explore-web-app-hijri-surface')).toBeTruthy();
+    expect(queryByTestId('screen-title')).toBeNull();
+    expect(getAllByText('12 Dzulhijjah 1447 هـ').length).toBeGreaterThan(0);
+    expect(getByText('Puasa Sunnah')).toBeTruthy();
+    expect(getByText('Konversi Tanggal')).toBeTruthy();
+    expect(getByText('Idul Adha')).toBeTruthy();
+  });
 });

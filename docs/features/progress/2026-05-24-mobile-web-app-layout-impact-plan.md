@@ -2525,6 +2525,53 @@ Results:
 - Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
   2,000-line gate.
 
+## Web App Hijri Route Dashboard Parity
+
+Status: completed for the native `web_app` Kalender Hijriah route visual parity
+pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic local tool logic unchanged for Kalender
+  Hijri/Hijriah on the paper layout.
+- In `web_app` mode, Hijri now renders through `WebAppHijriRoute`, a dedicated
+  dashboard calendar surface modeled after `/dashboard/hijri`: title, emerald
+  "Hari Ini" Hijri date card, Ramadan countdown card, Puasa Sunnah panel,
+  converter card, and Hijri event list.
+- Mobile Explore API parsing now preserves the raw `/api/v1/hijri/today`
+  payload as a typed `hijri_today` item so the dashboard surface can read day,
+  month, year, and Gregorian conversion fields without changing the classic
+  event list behavior.
+- Removed Hijri from the generic tool-route config so `web_app` cannot regress
+  to the old generic `Screen`/card presentation.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/explore/WebAppHijriRoute.js
+node --check apps/mobile/src/screens/explore/ExploreWebAppRoutes.js
+node --check apps/mobile/src/api/explore.js
+cd apps/mobile
+npm test -- exploreWebAppRoutes.test.js api-explore.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+find apps/mobile/src -name '*.js' -print0 | xargs -0 wc -l | sort -nr | head -8
+```
+
+Results:
+
+- `node --check` passed for the touched route/API files.
+- Targeted route/API tests passed: 2 suites, 26 tests.
+- Full mobile Jest passed: 48 suites, 693 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned, 64 dashboard page routes
+  scanned.
+- `git diff --check` passed.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
+  2,000-line gate.
+
 ## Web App Shell Theme Toggle Fix
 
 Status: completed for native `web_app` shell light/dark chrome parity.

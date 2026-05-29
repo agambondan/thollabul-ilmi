@@ -197,6 +197,7 @@ describe('explore api', () => {
       expect(result).toHaveLength(2);
       expect(result[0].title).toBe('Today');
       expect(result[0].body).toBe('1 Ramadhan 1446');
+      expect(result[0].raw.type).toBe('hijri_today');
     });
 
     test('handles today failure gracefully', async () => {

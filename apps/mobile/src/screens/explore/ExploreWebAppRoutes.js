@@ -73,6 +73,7 @@ import { WebAppDoaRoute } from './WebAppDoaRoute';
 import { WebAppFeedRoute } from './WebAppFeedRoute';
 import { WebAppFiqhRoute } from './WebAppFiqhRoute';
 import { WebAppForumRoute } from './WebAppForumRoute';
+import { WebAppHijriRoute } from './WebAppHijriRoute';
 import { WebAppImsakiyahRoute } from './WebAppImsakiyahRoute';
 import { WebAppKajianRoute } from './WebAppKajianRoute';
 import { WebAppKamusRoute } from './WebAppKamusRoute';
@@ -1423,6 +1424,16 @@ export function renderExploreWebAppRoute(context) {
   if (activeFeature?.key === 'imsakiyah' ) {
     return (
       <WebAppImsakiyahRoute
+        error={error}
+        items={visibleItems}
+        loading={loading}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'hijri' ) {
+    return (
+      <WebAppHijriRoute
         error={error}
         items={visibleItems}
         loading={loading}
