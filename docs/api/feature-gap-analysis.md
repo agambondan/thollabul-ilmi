@@ -55,7 +55,7 @@ Dokumen ini **belum berarti semua gap sudah selesai**. Hasil cek ulang terhadap 
 - ✅ **Notes per ayat** — model `Note` dengan `ref_type='ayah'` + endpoint `/notes` (CRUD). **UI inline sudah ada via [NoteButton.js](../../apps/web/src/components/NoteButton.js).**
 - ✅ **Reading progress** — `/progress/quran` (PUT/GET)
 - ✅ **Hafalan tracker** — `/hafalan/surah/:id`, `/hafalan/summary`
-- ✅ **Tilawah tracker** — `/tilawah` (CRUD + summary)
+- ✅ **Tilawah tracker** — `/tilawah` (CRUD + summary; delete is user-scoped and returns 404 for missing/other-user logs)
 - ✅ **Mode baca**: dark mode, ukuran font (via [useQuranFont.js](../../apps/web/src/lib/useQuranFont.js))
 - ✅ **Hafalan Mode (hide ayat)** — toggle 4 mode di [InfiniteScrollAyahPage.js](../../apps/web/src/app/quran/[...slug]/InfiniteScrollAyahPage.js): off / hide_arabic / hide_translation / hide_all + tombol "Tampilkan" per ayat.
 - ✅ **Share ayah** — `/share/ayah/:id` (image generator) + UI [ShareAyah component](../../apps/web/src/components/popup/ListImage.js).
