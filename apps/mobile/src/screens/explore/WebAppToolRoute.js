@@ -20,16 +20,6 @@ export const WEB_APP_TOOL_ROUTE_CONFIGS = {
     subtitle: 'Planner pembagian waris dengan riwayat kalkulasi.',
     title: 'Faraidh',
   },
-  'historical-map': {
-    eyebrow: 'PETA',
-    subtitle: 'Lokasi bersejarah Islam dengan filter dan mode peta.',
-    title: 'Peta Islam Interaktif',
-  },
-  tokoh: {
-    eyebrow: 'TARIKH',
-    subtitle: 'Biografi tokoh Islam dalam katalog dashboard.',
-    title: 'Tokoh Tarikh',
-  },
 };
 
 export const WEB_APP_TOOL_ROUTE_KEYS = new Set(Object.keys(WEB_APP_TOOL_ROUTE_CONFIGS));

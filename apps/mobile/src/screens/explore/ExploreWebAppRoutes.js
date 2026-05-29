@@ -88,6 +88,8 @@ import { WebAppSirohRoute } from './WebAppSirohRoute';
 import { WebAppTafsirRoute } from './WebAppTafsirRoute';
 import { WebAppTasbihRoute } from './WebAppTasbihRoute';
 import { WEB_APP_TOOL_ROUTE_CONFIGS, WebAppToolRoute } from './WebAppToolRoute';
+import { HistoricalMapContent } from '../HistoricalMapScreen';
+import { TokohTarikhContent } from '../TokohTarikhContent';
 
 export function renderExploreWebAppRoute(context) {
   const {
@@ -1516,6 +1518,24 @@ export function renderExploreWebAppRoute(context) {
         setAsmaulCounts={setAsmaulCounts}
         setAsmaulIndex={setAsmaulIndex}
       />
+    );
+  }
+
+  if (activeFeature?.key === 'historical-map' ) {
+    return (
+      <>
+        <View testID="explore-web-app-historical-map-surface" />
+        <HistoricalMapContent />
+      </>
+    );
+  }
+
+  if (activeFeature?.key === 'tokoh' ) {
+    return (
+      <>
+        <View testID="explore-web-app-tokoh-surface" />
+        <TokohTarikhContent />
+      </>
     );
   }
 

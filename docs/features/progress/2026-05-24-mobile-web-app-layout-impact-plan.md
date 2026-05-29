@@ -2762,6 +2762,60 @@ Results:
 - Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
   2,000-line gate.
 
+## Web App Peta And Tokoh Route Dashboard Parity
+
+Status: completed for the native `web_app` Peta Islam and Tokoh Tarikh route
+wrapper parity pass.
+
+Implemented:
+
+- `web_app` Historical Map now routes directly to the existing
+  `HistoricalMapContent` dashboard-aligned surface instead of wrapping it in
+  the generic local-tool shell. The route keeps the Peta header, search,
+  category/era controls, map/list toggle, and endpoint behavior owned by the
+  existing content component.
+- `web_app` Tokoh Tarikh now routes directly to the existing
+  `TokohTarikhContent` dashboard-aligned surface instead of wrapping it in the
+  generic local-tool shell. The route keeps the Tokoh header, search, era
+  filters, cards, and detail modal behavior owned by the existing content
+  component.
+- Removed `historical-map` and `tokoh` from `WEB_APP_TOOL_ROUTE_CONFIGS` so
+  both routes cannot regress to the generic card wrapper while classic/paper
+  rendering remains unchanged.
+- Added route coverage to assert both routes use their dedicated dashboard
+  surfaces and do not render generic tool content.
+
+Scope guardrail:
+
+- This slice changes only native mobile Explore routing for layout
+  `web_app`. It does not change classic Peta/Tokoh rendering, map/native view
+  behavior, API calls, filters, cards, modals, or dashboard web pages.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/explore/ExploreWebAppRoutes.js
+cd apps/mobile
+npm test -- exploreWebAppRoutes.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+find apps/mobile/src -name '*.js' -print0 | xargs -0 wc -l | sort -nr | head -8
+```
+
+Results:
+
+- `node --check` passed for `ExploreWebAppRoutes.js`.
+- Targeted route test passed: 1 suite, 14 tests.
+- Full mobile Jest passed: 48 suites, 706 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned, 64 dashboard page routes
+  scanned.
+- `git diff --check` passed.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
+  2,000-line gate.
+
 ## Web App Shell Theme Toggle Fix
 
 Status: completed for native `web_app` shell light/dark chrome parity.

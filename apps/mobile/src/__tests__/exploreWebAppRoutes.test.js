@@ -13,6 +13,34 @@ jest.mock('../components/NotificationCenter', () => ({
   NotificationCenter: () => null,
 }));
 
+jest.mock('../screens/HistoricalMapScreen', () => {
+  const React = require('react');
+  const { Text, View } = require('react-native');
+
+  return {
+    HistoricalMapContent: () => (
+      <View testID="historical-map-web-app-surface">
+        <Text>Peta Islam Interaktif</Text>
+        <Text>Lokasi bersejarah dalam peradaban Islam</Text>
+      </View>
+    ),
+  };
+});
+
+jest.mock('../screens/TokohTarikhContent', () => {
+  const React = require('react');
+  const { Text, View } = require('react-native');
+
+  return {
+    TokohTarikhContent: () => (
+      <View testID="tokoh-web-app-surface">
+        <Text>Tokoh Tarikh</Text>
+        <Text>Biografi ulama, ilmuwan, dan tokoh Islam</Text>
+      </View>
+    ),
+  };
+});
+
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import { Text } from 'react-native';
@@ -424,6 +452,34 @@ describe('Explore web app reference list routes', () => {
 
     fireEvent.press(getAllByTestId('web-app-sholat-prayer-row')[0]);
     expect(togglePrayer).toHaveBeenCalledWith('subuh');
+  });
+
+  test('renders Historical Map route as the dedicated dashboard map surface', () => {
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'historical-map', title: 'Peta Islam Interaktif', type: 'historical-map' },
+      { renderFeatureContent: () => <Text>Tool content</Text> },
+    ));
+    const { getByTestId, getByText, queryByText } = render(route);
+
+    expect(getByTestId('explore-web-app-historical-map-surface')).toBeTruthy();
+    expect(getByTestId('historical-map-web-app-surface')).toBeTruthy();
+    expect(queryByText('Tool content')).toBeNull();
+    expect(getByText('Peta Islam Interaktif')).toBeTruthy();
+    expect(getByText('Lokasi bersejarah dalam peradaban Islam')).toBeTruthy();
+  });
+
+  test('renders Tokoh route as the dedicated dashboard biography surface', () => {
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'tokoh', title: 'Tokoh Tarikh', type: 'tokoh' },
+      { renderFeatureContent: () => <Text>Tool content</Text> },
+    ));
+    const { getByTestId, getByText, queryByText } = render(route);
+
+    expect(getByTestId('explore-web-app-tokoh-surface')).toBeTruthy();
+    expect(getByTestId('tokoh-web-app-surface')).toBeTruthy();
+    expect(queryByText('Tool content')).toBeNull();
+    expect(getByText('Tokoh Tarikh')).toBeTruthy();
+    expect(getByText('Biografi ulama, ilmuwan, dan tokoh Islam')).toBeTruthy();
   });
 
   test('renders Asmaul Flashcard route as dashboard card surface', () => {
