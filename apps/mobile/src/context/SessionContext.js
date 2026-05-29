@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { getMe, login, logout, refreshSession } from '../api/auth';
+import { deleteAccount as deleteAccountApi, getMe, login, logout, refreshSession } from '../api/auth';
 import { clearSession, readSession, saveSession } from '../storage/session';
 
 const SessionContext = createContext(null);
@@ -131,6 +131,21 @@ export function SessionProvider({ children }) {
     [persist, session],
   );
 
+  const deleteAccount = useCallback(async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      await deleteAccountApi();
+      await persist(null);
+    } catch (err) {
+      setError(err?.message ?? 'Akun belum bisa dihapus.');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [persist]);
+
   useEffect(() => {
     restore();
   }, [restore]);
@@ -141,12 +156,13 @@ export function SessionProvider({ children }) {
       loading,
       refresh: restore,
       session,
+      deleteAccount,
       signIn,
       signOut,
       updateCurrentUser,
       user: session?.user ?? null,
     }),
-    [error, loading, restore, session, signIn, signOut, updateCurrentUser],
+    [deleteAccount, error, loading, restore, session, signIn, signOut, updateCurrentUser],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

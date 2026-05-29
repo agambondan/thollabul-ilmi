@@ -1,11 +1,14 @@
 jest.mock('../api/client', () => ({
+  deleteJson: jest.fn(),
   postJson: jest.fn(),
   putJson: jest.fn(),
   requestJson: jest.fn(),
 }));
 
-const { postJson, putJson, requestJson } = require('../api/client');
+const { deleteJson, postJson, putJson, requestJson } = require('../api/client');
 const {
+  deleteAccount,
+  getAuthSessions,
   login,
   register,
   forgotPassword,
@@ -103,6 +106,16 @@ describe('auth api', () => {
     expect(result).toEqual({ id: 1, name: 'Me' });
   });
 
+  test('getAuthSessions sends refresh token header and normalizes data array', async () => {
+    requestJson.mockResolvedValueOnce({ data: [{ id: 1, current: true }] });
+    const result = await getAuthSessions('refresh-token');
+    expect(requestJson).toHaveBeenCalledWith('/api/v1/auth/sessions', {
+      auth: true,
+      headers: { 'X-Refresh-Token': 'refresh-token' },
+    });
+    expect(result).toEqual([{ id: 1, current: true }]);
+  });
+
   test('updateProfile calls putJson with preferred language', async () => {
     putJson.mockResolvedValueOnce({ id: 1, preferred_lang: 'en' });
     const result = await updateProfile({ preferredLang: 'en' });
@@ -118,5 +131,10 @@ describe('auth api', () => {
       old_password: 'old-pass',
       new_password: 'new-pass-123',
     }, { auth: true });
+  });
+
+  test('deleteAccount calls self-delete endpoint with auth', async () => {
+    await deleteAccount();
+    expect(deleteJson).toHaveBeenCalledWith('/api/v1/auth/me', { auth: true });
   });
 });

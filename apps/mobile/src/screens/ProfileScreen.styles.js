@@ -1044,6 +1044,28 @@ export const styles = StyleSheet.create({
         lineHeight: 17,
         marginTop: 2,
     },
+    sessionList: {
+        gap: spacing.xs,
+        marginTop: spacing.sm,
+    },
+    sessionListRow: {
+        backgroundColor: colors.surfaceMuted,
+        borderColor: colors.faint,
+        borderRadius: radius.sm,
+        borderWidth: 1,
+        paddingHorizontal: spacing.sm,
+        paddingVertical: spacing.xs,
+    },
+    sessionListTitle: {
+        color: colors.ink,
+        fontSize: 12,
+        fontWeight: '900',
+    },
+    sessionListMeta: {
+        color: colors.muted,
+        fontSize: 11,
+        marginTop: 1,
+    },
     settingsStatus: {
         color: colors.primary,
         fontSize: 12,

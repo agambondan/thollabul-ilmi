@@ -8,8 +8,8 @@ import (
 	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/repository"
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/morkid/paginate"
 	"github.com/spf13/viper"
@@ -19,6 +19,7 @@ type UserService interface {
 	Register(*model.RegisterRequest) (*model.User, error)
 	Login(*model.LoginRequest) (*model.LoginResponse, error)
 	RefreshAccessToken(refreshToken string) (*model.LoginResponse, error)
+	FindSessions(userID, currentRefreshToken string) ([]model.AuthSession, error)
 	Logout(refreshToken string) error
 	ForgotPassword(email string) error
 	ResetPassword(token, newPassword string) error
@@ -27,6 +28,7 @@ type UserService interface {
 	UpdateById(string, *model.User) (*model.User, error)
 	UpdatePassword(string, *model.UpdatePasswordRequest) error
 	UpdateRole(string, *model.UpdateRoleRequest) (*model.User, error)
+	DeleteSelf(string) error
 	DeleteById(string) error
 	Count() (*int64, error)
 }
@@ -110,6 +112,28 @@ func (s *userService) RefreshAccessToken(refreshToken string) (*model.LoginRespo
 	return &model.LoginResponse{Token: newToken, User: user}, nil
 }
 
+func (s *userService) FindSessions(userID, currentRefreshToken string) ([]model.AuthSession, error) {
+	tokens, err := s.user.FindRefreshTokensByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	sessions := make([]model.AuthSession, 0, len(tokens))
+	now := time.Now()
+	for _, token := range tokens {
+		if now.After(token.ExpiresAt) {
+			continue
+		}
+		sessions = append(sessions, model.AuthSession{
+			ID:        token.ID,
+			CreatedAt: token.CreatedAt,
+			ExpiresAt: token.ExpiresAt,
+			Current:   currentRefreshToken != "" && token.Token == currentRefreshToken,
+		})
+	}
+	return sessions, nil
+}
+
 func (s *userService) Logout(refreshToken string) error {
 	return s.user.DeleteRefreshToken(refreshToken)
 }
@@ -182,6 +206,13 @@ func (s *userService) UpdatePassword(id string, req *model.UpdatePasswordRequest
 
 func (s *userService) UpdateRole(id string, req *model.UpdateRoleRequest) (*model.User, error) {
 	return s.user.UpdateById(id, &model.User{Role: req.Role})
+}
+
+func (s *userService) DeleteSelf(id string) error {
+	if err := s.user.DeleteUserRefreshTokens(id); err != nil {
+		return err
+	}
+	return s.user.DeleteById(id)
 }
 
 func (s *userService) DeleteById(id string) error {

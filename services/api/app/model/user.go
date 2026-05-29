@@ -42,6 +42,13 @@ type LoginResponse struct {
 	User         *User  `json:"user"`
 }
 
+type AuthSession struct {
+	ID        uint      `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	ExpiresAt time.Time `json:"expires_at"`
+	Current   bool      `json:"current"`
+}
+
 type RefreshToken struct {
 	ID        uint      `json:"id" gorm:"primaryKey;autoIncrement"`
 	UserID    string    `json:"user_id" gorm:"type:varchar(36);not null;index"`

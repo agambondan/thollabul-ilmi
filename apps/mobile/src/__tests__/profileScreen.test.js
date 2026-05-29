@@ -15,6 +15,7 @@ jest.mock('../api/personal', () => ({
 }));
 
 jest.mock('../api/auth', () => ({
+  getAuthSessions: jest.fn(),
   updatePassword: jest.fn(),
   updateProfile: jest.fn(),
 }));
@@ -79,6 +80,7 @@ const defaultSession = {
   error: '',
   loading: false,
   session: null,
+  deleteAccount: jest.fn(),
   signIn: jest.fn(),
   signOut: jest.fn(),
   updateCurrentUser: jest.fn(),
@@ -105,6 +107,7 @@ beforeEach(() => {
   personalApi.getTilawahSummary.mockResolvedValue(null);
   authApi.updatePassword.mockResolvedValue({});
   authApi.updateProfile.mockResolvedValue({ id: '1', email: 'test@test.com', name: 'Test User', preferred_lang: 'en' });
+  authApi.getAuthSessions.mockResolvedValue([]);
 });
 
 describe('ProfileScreen', () => {
@@ -280,6 +283,9 @@ describe('ProfileScreen', () => {
 
   test('security sub-screen updates password and shows current device session', async () => {
     useSession.mockReturnValue(loggedInSession);
+    authApi.getAuthSessions.mockResolvedValue([
+      { id: 1, current: true, created_at: '2026-05-29T01:00:00Z' },
+    ]);
 
     const { getByLabelText, getByPlaceholderText, getByText, findByText } = render(<ProfileScreen isActive />);
     await waitFor(() => expect(getByText('Test User')).toBeTruthy());
@@ -288,6 +294,8 @@ describe('ProfileScreen', () => {
     fireEvent.press(getByText('Keamanan'));
     expect(getByText('Perangkat ini')).toBeTruthy();
     expect(getByText('test@test.com')).toBeTruthy();
+    await waitFor(() => expect(authApi.getAuthSessions).toHaveBeenCalled());
+    expect(getByText(/Aktif sejak/)).toBeTruthy();
 
     fireEvent.changeText(getByPlaceholderText('Sandi saat ini'), 'old-pass');
     fireEvent.changeText(getByPlaceholderText('Sandi baru minimal 8 karakter'), 'new-pass-123');
@@ -299,6 +307,25 @@ describe('ProfileScreen', () => {
       newPassword: 'new-pass-123',
     }));
     expect(await findByText('Sandi berhasil diperbarui.')).toBeTruthy();
+  });
+
+  test('security sub-screen confirms account deletion before deleting', async () => {
+    const deleteAccount = jest.fn().mockResolvedValue({});
+    useSession.mockReturnValue({ ...loggedInSession, deleteAccount });
+
+    const { getAllByText, getByLabelText, getByText, findByText } = render(<ProfileScreen isActive />);
+    await waitFor(() => expect(getByText('Test User')).toBeTruthy());
+
+    fireEvent.press(getByLabelText('Buka pengaturan profil'));
+    fireEvent.press(getByText('Keamanan'));
+    await waitFor(() => expect(authApi.getAuthSessions).toHaveBeenCalled());
+    fireEvent.press(getAllByText('Hapus Akun').at(-1));
+
+    expect(deleteAccount).not.toHaveBeenCalled();
+    expect(await findByText('Tekan sekali lagi untuk menghapus akun dan keluar dari perangkat ini.')).toBeTruthy();
+
+    fireEvent.press(getByText('Konfirmasi Hapus Akun'));
+    await waitFor(() => expect(deleteAccount).toHaveBeenCalled());
   });
 
   test('achievements are displayed', async () => {

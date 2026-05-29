@@ -4,6 +4,7 @@ import { Text } from 'react-native';
 import { flushAsyncWork } from '../test-utils/async';
 
 jest.mock('../api/auth', () => ({
+  deleteAccount: jest.fn(),
   getMe: jest.fn(),
   login: jest.fn(),
   logout: jest.fn(),
@@ -181,6 +182,27 @@ describe('useSession', () => {
       user: { name: 'Dewi', preferred_lang: 'en' },
     });
     expect(ctx.user).toEqual({ name: 'Dewi', preferred_lang: 'en' });
+  });
+
+  test('deleteAccount calls API and clears local session', async () => {
+    session.readSession.mockResolvedValue(null);
+    auth.login.mockResolvedValue({ token: 'tok', refreshToken: 'rt', user: { name: 'Dewi' } });
+    auth.deleteAccount.mockResolvedValue({});
+
+    let ctx;
+    function Capture() {
+      ctx = useSession();
+      return null;
+    }
+
+    renderWithSession(<Capture />);
+    await waitFor(() => expect(ctx).toBeDefined());
+    await act(async () => { await ctx.signIn({ email: 'a@b.com', password: 'x' }); });
+    await act(async () => { await ctx.deleteAccount(); });
+
+    expect(auth.deleteAccount).toHaveBeenCalled();
+    expect(session.clearSession).toHaveBeenCalled();
+    expect(ctx.session).toBeNull();
   });
 
   test('throws when used outside SessionProvider', () => {

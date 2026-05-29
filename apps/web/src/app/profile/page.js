@@ -58,6 +58,10 @@ const ProfilePage = () => {
     const [selectedLang, setSelectedLang] = useState('idn');
     const [langLoading, setLangLoading] = useState(false);
     const [langMsg, setLangMsg] = useState({ type: '', text: '' });
+    const [sessions, setSessions] = useState([]);
+    const [sessionsLoading, setSessionsLoading] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+    const [deleteMsg, setDeleteMsg] = useState({ type: '', text: '' });
 
     useEffect(() => {
         if (authLoading || !isAuthenticated) return;
@@ -79,6 +83,17 @@ const ProfilePage = () => {
         if (user?.name) setEditName(user.name);
         if (user?.preferred_lang) setSelectedLang(user.preferred_lang);
     }, [user]);
+
+    useEffect(() => {
+        if (!isAuthenticated) return;
+        setSessionsLoading(true);
+        userApi
+            .sessions()
+            .then((r) => r.json())
+            .then((data) => setSessions(Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : []))
+            .catch(() => setSessions([]))
+            .finally(() => setSessionsLoading(false));
+    }, [isAuthenticated]);
 
     const handleEditProfile = async (e) => {
         e.preventDefault();
@@ -141,6 +156,22 @@ const ProfilePage = () => {
             setLangMsg({ type: 'error', text: t('profile.lang_error') });
         } finally {
             setLangLoading(false);
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        setDeleteMsg({ type: '', text: '' });
+        const confirmed = window.confirm('Hapus akun ini? Aksi ini akan mengakhiri sesi kamu dan tidak dapat dibatalkan dari aplikasi.');
+        if (!confirmed) return;
+        setDeleteLoading(true);
+        try {
+            const res = await userApi.deleteMe();
+            if (!res.ok) throw new Error();
+            await logout();
+        } catch {
+            setDeleteMsg({ type: 'error', text: 'Akun belum bisa dihapus. Coba lagi nanti.' });
+        } finally {
+            setDeleteLoading(false);
         }
     };
 
@@ -505,7 +536,7 @@ const ProfilePage = () => {
                     </div>
 
                     {/* Ganti password */}
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden'>
+                    <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 mb-3 overflow-hidden'>
                         <button
                             onClick={() => {
                                 setPwdOpen((v) => !v);
@@ -580,6 +611,67 @@ const ProfilePage = () => {
                                 </button>
                             </form>
                         )}
+                    </div>
+
+                    <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 mb-3 p-5'>
+                        <div className='flex items-center justify-between gap-3'>
+                            <div>
+                                <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                    Sesi Aktif
+                                </p>
+                                <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                                    Daftar sesi login yang masih aktif di akun ini.
+                                </p>
+                            </div>
+                            {sessionsLoading ? (
+                                <span className='text-xs font-semibold text-emerald-700 dark:text-emerald-300'>
+                                    Memuat...
+                                </span>
+                            ) : null}
+                        </div>
+                        {sessions.length ? (
+                            <div className='mt-4 space-y-2'>
+                                {sessions.slice(0, 3).map((sessionItem) => (
+                                    <div
+                                        key={sessionItem.id}
+                                        className='rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900/40'
+                                    >
+                                        <p className='font-semibold text-gray-800 dark:text-gray-100'>
+                                            {sessionItem.current ? 'Perangkat ini' : 'Sesi login'}
+                                        </p>
+                                        <p className='mt-0.5 text-gray-500 dark:text-gray-400'>
+                                            Aktif sejak {new Date(sessionItem.created_at).toLocaleDateString('id-ID')}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : !sessionsLoading ? (
+                            <p className='mt-3 text-xs text-gray-500 dark:text-gray-400'>
+                                Riwayat sesi aktif belum tersedia.
+                            </p>
+                        ) : null}
+                    </div>
+
+                    <div className='bg-red-50 dark:bg-red-950/20 rounded-2xl border border-red-100 dark:border-red-900/50 p-5'>
+                        <p className='text-sm font-semibold text-red-700 dark:text-red-300'>
+                            Hapus Akun
+                        </p>
+                        <p className='mt-1 text-xs text-red-600/80 dark:text-red-200/80'>
+                            Menghapus akun akan mengakhiri sesi aktif dan menonaktifkan akses personal.
+                        </p>
+                        {deleteMsg.text ? (
+                            <p className='mt-3 text-xs font-semibold text-red-600 dark:text-red-300'>
+                                {deleteMsg.text}
+                            </p>
+                        ) : null}
+                        <button
+                            type='button'
+                            disabled={deleteLoading}
+                            onClick={handleDeleteAccount}
+                            className='mt-4 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-100 disabled:opacity-60 dark:border-red-900/60 dark:bg-slate-900 dark:text-red-300 dark:hover:bg-red-950/40'
+                        >
+                            {deleteLoading ? t('common.saving') : 'Hapus Akun'}
+                        </button>
                     </div>
                 </div>
             </Section>

@@ -30,7 +30,25 @@ Started: 2026-05-26 16:20 WIB
 
 ## Current Notes
 
-- Current refactor claim: mobile Quran large-file split only. I touched
+- Current implementation claim: Profile account/security parity follow-up only.
+  I may touch `services/api/app/model/user.go`,
+  `services/api/app/repository/user_repository.go`,
+  `services/api/app/services/user_service.go`,
+  `services/api/app/controllers/user_controller.go`,
+  `services/api/app/http/routes.go`, `apps/mobile/src/api/auth.js`,
+  `apps/mobile/src/context/SessionContext.js`,
+  `apps/mobile/src/screens/ProfileScreen.js`,
+  `apps/mobile/src/__tests__/api-auth.test.js`,
+  `apps/mobile/src/__tests__/profileScreen.test.js`,
+  `apps/web/src/lib/api.js`, `apps/web/src/app/profile/page.js`, and docs.
+- I will avoid dirty `apps/mobile/src/api/explore.js`; current diff there is
+  treated as another agent's Hijri work unless explicitly handed off.
+- Profile account/security parity follow-up completed: API now exposes
+  `GET /api/v1/auth/sessions` and `DELETE /api/v1/auth/me`; mobile Profile
+  security shows active sessions and two-step self-delete; web profile update
+  uses `/auth/me` instead of admin-only `/users/:id` and web `/profile` exposes
+  sessions/self-delete.
+- Previous refactor claim: mobile Quran large-file split only. I touched
   `apps/mobile/src/screens/QuranScreen.js`,
   `apps/mobile/src/screens/QuranScreen.helpers.js`,
   `apps/mobile/src/screens/QuranScreen.styles.js`, and
@@ -60,6 +78,20 @@ Started: 2026-05-26 16:20 WIB
 
 ## Latest Verification
 
+- `node --check` passed for touched mobile Profile/auth/session files and web
+  profile/api helper files.
+- `cd apps/mobile && npm test -- api-auth.test.js context-session.test.js profileScreen.test.js --runInBand`
+  passed: 3 suites, 43 tests.
+- `cd services/api && go test ./app/model ./app/repository ./app/services ./app/controllers ./app/http/...`
+  passed.
+- `cd apps/mobile && npm test -- --runInBand` passed: 48 suites, 693 tests.
+- `node scripts/check-feature-parity.js` passed.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above
+  2,000 lines.
+- `git diff --check` passed.
+- `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-profile-security-parity-export`
+  passed.
+- `cd apps/web && npm run build` passed.
 - `node --check apps/mobile/src/layout/LayoutModeProvider.js`,
   `WebAppShell.js`, `MobileTopHeader.js`, `MobileBottomNav.js`,
   `MobileAccountMenu.js`, and `ProfileScreen.js` passed.

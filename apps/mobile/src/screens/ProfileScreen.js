@@ -25,7 +25,7 @@ import {
     TextInput,
     View,
 } from 'react-native';
-import { updatePassword, updateProfile } from '../api/auth';
+import { getAuthSessions, updatePassword, updateProfile } from '../api/auth';
 import {
     getAchievements,
     getHafalanSummary,
@@ -71,6 +71,17 @@ const LAYOUT_OPTIONS = [
 ];
 
 const getResponseUser = (payload) => payload?.data ?? payload;
+
+const formatSessionDate = (value) => {
+    if (!value) return 'sekarang';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return 'sekarang';
+    return date.toLocaleDateString('id-ID', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+    });
+};
 
 const normalizeAchievement = (item = {}, options = {}) => {
     const source = item.achievement ?? item;
@@ -383,13 +394,59 @@ function AppearanceSettings({ onUserUpdated, user }) {
     );
 }
 
-function SecuritySettings({ onSignOut, user }) {
+function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
+    const { session } = useSession();
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [saving, setSaving] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [sessions, setSessions] = useState([]);
+    const [sessionsLoading, setSessionsLoading] = useState(false);
+
+    useEffect(() => {
+        let mounted = true;
+        const loadSessions = async () => {
+            if (!user) return;
+            setSessionsLoading(true);
+            try {
+                const items = await getAuthSessions(session?.refreshToken ?? '');
+                if (mounted) setSessions(items);
+            } catch {
+                if (mounted) setSessions([]);
+            } finally {
+                if (mounted) setSessionsLoading(false);
+            }
+        };
+
+        loadSessions();
+        return () => {
+            mounted = false;
+        };
+    }, [session?.refreshToken, user]);
+
+    const submitDeleteAccount = async () => {
+        setMessage('');
+        setError('');
+        if (!deleteConfirm) {
+            setDeleteConfirm(true);
+            setMessage('Tekan sekali lagi untuk menghapus akun dan keluar dari perangkat ini.');
+            return;
+        }
+
+        setDeleting(true);
+        try {
+            await onDeleteAccount();
+        } catch (err) {
+            setError(err?.message ?? 'Akun belum bisa dihapus.');
+            setDeleteConfirm(false);
+        } finally {
+            setDeleting(false);
+        }
+    };
 
     const submitPassword = async () => {
         setMessage('');
@@ -448,6 +505,21 @@ function SecuritySettings({ onSignOut, user }) {
                         </Text>
                     </View>
                 </View>
+                {sessionsLoading ? <ActivityIndicator color={colors.primary} size="small" /> : null}
+                {sessions.length ? (
+                    <View style={styles.sessionList}>
+                        {sessions.slice(0, 3).map((item) => (
+                            <View key={item.id} style={styles.sessionListRow}>
+                                <Text style={styles.sessionListTitle}>
+                                    {item.current ? 'Perangkat ini' : 'Sesi login'}
+                                </Text>
+                                <Text style={styles.sessionListMeta}>
+                                    Aktif sejak {formatSessionDate(item.created_at)}
+                                </Text>
+                            </View>
+                        ))}
+                    </View>
+                ) : null}
                 <Pressable
                     android_ripple={{ color: 'rgba(185, 28, 28, 0.12)', borderless: false }}
                     onPress={onSignOut}
@@ -511,8 +583,24 @@ function SecuritySettings({ onSignOut, user }) {
             <Card>
                 <Text style={styles.appearanceLabel}>Hapus Akun</Text>
                 <Text style={styles.appearanceMeta}>
-                    Penghapusan akun masih melalui kontak tim agar data personal bisa diverifikasi lebih dulu.
+                    Akun, token login, dan akses personal akan dinonaktifkan dari perangkat ini.
                 </Text>
+                <Pressable
+                    accessibilityRole="button"
+                    accessibilityState={{ disabled: deleting }}
+                    android_ripple={{ color: 'rgba(185, 28, 28, 0.12)', borderless: false }}
+                    disabled={deleting}
+                    onPress={submitDeleteAccount}
+                    style={[styles.formButton, styles.formButtonDanger]}
+                >
+                    {deleting ? (
+                        <ActivityIndicator color={colors.danger} size="small" />
+                    ) : (
+                        <Text style={styles.formButtonDangerText}>
+                            {deleteConfirm ? 'Konfirmasi Hapus Akun' : 'Hapus Akun'}
+                        </Text>
+                    )}
+                </Pressable>
             </Card>
         </>
     );
@@ -747,7 +835,7 @@ function AchievementsDetail({ achievements, isWebAppLayout, loading, message, on
 }
 
 export function ProfileScreen({ isActive, navigation, onOpenTab }) {
-    const { loading: sessionLoading, session, signOut, updateCurrentUser, user } = useSession();
+    const { deleteAccount, loading: sessionLoading, session, signOut, updateCurrentUser, user } = useSession();
     const { isWebAppLayout } = useLayoutModePreference();
     const [stack, setStack] = useState([]);
     const [stats, setStats] = useState(null);
@@ -962,7 +1050,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
     if (currentScreen === 'settings-security') {
         return (
             <SubScreen title="Keamanan" onBack={pop}>
-                <SecuritySettings onSignOut={signOut} user={user} />
+                <SecuritySettings onDeleteAccount={deleteAccount} onSignOut={signOut} user={user} />
             </SubScreen>
         );
     }

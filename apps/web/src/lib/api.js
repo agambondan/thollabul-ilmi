@@ -119,16 +119,18 @@ export const authFetch = async (path, options = {}) => {
 };
 
 export const userApi = {
-    updateMe: (id, data) =>
-        authFetch(`/api/v1/users/${id}`, {
+    updateMe: (_id, data) =>
+        authFetch('/api/v1/auth/me', {
             method: 'PUT',
             body: JSON.stringify(data),
         }),
+    sessions: () => authFetch('/api/v1/auth/sessions'),
     changePassword: (oldPassword, newPassword) =>
         authFetch('/api/v1/auth/password', {
             method: 'PUT',
             body: JSON.stringify({ old_password: oldPassword, new_password: newPassword }),
         }),
+    deleteMe: () => authFetch('/api/v1/auth/me', { method: 'DELETE' }),
 };
 
 export const adminUserApi = {

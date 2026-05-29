@@ -1,4 +1,4 @@
-import { postJson, putJson, requestJson } from './client';
+import { deleteJson, postJson, putJson, requestJson } from './client';
 
 const normalizeSession = (payload) => ({
   token: payload?.token,
@@ -31,6 +31,14 @@ export const logout = async (refreshToken) => {
 
 export const getMe = async () => requestJson('/api/v1/auth/me', { auth: true });
 
+export const getAuthSessions = async (refreshToken = '') => {
+  const payload = await requestJson('/api/v1/auth/sessions', {
+    auth: true,
+    headers: refreshToken ? { 'X-Refresh-Token': refreshToken } : undefined,
+  });
+  return Array.isArray(payload?.data) ? payload.data : Array.isArray(payload) ? payload : [];
+};
+
 export const updateProfile = async ({ avatar, name, preferredLang } = {}) => (
   putJson('/api/v1/auth/me', {
     ...(avatar !== undefined ? { avatar } : {}),
@@ -45,3 +53,5 @@ export const updatePassword = async ({ oldPassword, newPassword }) => (
     new_password: newPassword,
   }, { auth: true })
 );
+
+export const deleteAccount = async () => deleteJson('/api/v1/auth/me', { auth: true });

@@ -19,6 +19,7 @@ type UserRepository interface {
 	Count() (*int64, error)
 	SaveRefreshToken(userID, token string, expiresAt time.Time) error
 	FindRefreshToken(token string) (*model.RefreshToken, error)
+	FindRefreshTokensByUserID(userID string) ([]model.RefreshToken, error)
 	DeleteRefreshToken(token string) error
 	DeleteUserRefreshTokens(userID string) error
 	SavePasswordResetToken(userID, token string, expiresAt time.Time) error
@@ -93,6 +94,12 @@ func (r *userRepo) FindRefreshToken(token string) (*model.RefreshToken, error) {
 		return nil, err
 	}
 	return &rt, nil
+}
+
+func (r *userRepo) FindRefreshTokensByUserID(userID string) ([]model.RefreshToken, error) {
+	var tokens []model.RefreshToken
+	err := r.db.Where("user_id = ?", userID).Order("created_at desc").Find(&tokens).Error
+	return tokens, err
 }
 
 func (r *userRepo) DeleteRefreshToken(token string) error {

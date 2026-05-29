@@ -14,6 +14,7 @@ type UserController interface {
 	Register(ctx *fiber.Ctx) error
 	Login(ctx *fiber.Ctx) error
 	Refresh(ctx *fiber.Ctx) error
+	Sessions(ctx *fiber.Ctx) error
 	Logout(ctx *fiber.Ctx) error
 	ForgotPassword(ctx *fiber.Ctx) error
 	ResetPassword(ctx *fiber.Ctx) error
@@ -23,6 +24,7 @@ type UserController interface {
 	UpdateProfile(ctx *fiber.Ctx) error
 	UpdateById(ctx *fiber.Ctx) error
 	UpdatePassword(ctx *fiber.Ctx) error
+	DeleteMe(ctx *fiber.Ctx) error
 	UpdateRole(ctx *fiber.Ctx) error
 	DeleteById(ctx *fiber.Ctx) error
 }
@@ -334,6 +336,35 @@ func (c *userController) Refresh(ctx *fiber.Ctx) error {
 	return lib.OK(ctx, resp)
 }
 
+// Sessions lists active refresh-token sessions for the current user.
+// @Summary List current user sessions
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Success 200 {object} lib.Response
+// @Failure 401 {object} lib.Response
+// @Router /auth/sessions [get]
+func (c *userController) Sessions(ctx *fiber.Ctx) error {
+	claims, err := lib.ExtractToken(ctx)
+	if err != nil {
+		return lib.ErrorUnauthorized(ctx)
+	}
+	userID, ok := claims["user_id"].(string)
+	if !ok {
+		return lib.ErrorUnauthorized(ctx)
+	}
+	currentRefreshToken := ctx.Get("X-Refresh-Token")
+	if currentRefreshToken == "" {
+		currentRefreshToken = ctx.Cookies("refresh_token")
+	}
+	sessions, err := c.user.FindSessions(userID, currentRefreshToken)
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, sessions)
+}
+
 // Logout User
 // @Summary Logout user
 // @Tags Auth
@@ -395,6 +426,31 @@ func (c *userController) ResetPassword(ctx *fiber.Ctx) error {
 		return lib.ErrorBadRequest(ctx, err)
 	}
 	return lib.OK(ctx, "Password has been reset successfully.")
+}
+
+// DeleteMe deletes the authenticated user's own account.
+// @Summary Delete current user account
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Success 200 {object} lib.Response
+// @Failure 401 {object} lib.Response
+// @Router /auth/me [delete]
+func (c *userController) DeleteMe(ctx *fiber.Ctx) error {
+	claims, err := lib.ExtractToken(ctx)
+	if err != nil {
+		return lib.ErrorUnauthorized(ctx)
+	}
+	userID, ok := claims["user_id"].(string)
+	if !ok {
+		return lib.ErrorUnauthorized(ctx)
+	}
+	if err := c.user.DeleteSelf(userID); err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	clearAuthCookies(ctx)
+	return lib.OK(ctx)
 }
 
 // DeleteById Delete user by ID (admin only)
