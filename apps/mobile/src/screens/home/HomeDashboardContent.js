@@ -57,7 +57,7 @@ const menuItems = [
   { Icon: Grid, internalView: 'feature-directory', key: 'belajar', label: 'Lainnya' },
 ];
 
-const webDashboardColors = {
+const webDashboardDarkColors = {
   accent: '#fbbf24',
   bg: '#020617',
   border: '#1e293b',
@@ -73,9 +73,49 @@ const webDashboardColors = {
   title: '#f8fafc',
 };
 
+const webDashboardLightColors = {
+  accent: '#0f766e',
+  bg: '#ffffff',
+  border: '#e5e7eb',
+  borderSoft: '#a7f3d0',
+  card: '#ffffff',
+  cardDeep: '#f8fafc',
+  iconBg: '#ecfdf5',
+  muted: '#64748b',
+  primary: '#047857',
+  primaryStrong: '#059669',
+  primarySoft: '#ecfdf5',
+  reminderCard: '#ecfdf5',
+  text: '#475569',
+  title: '#111827',
+};
+
+const getWebDashboardColors = (isDarkTheme) => (
+  isDarkTheme ? webDashboardDarkColors : webDashboardLightColors
+);
+
 const webDashboardFontFamily = Platform.select({
   android: 'sans-serif',
   ios: 'System',
+});
+
+const createWebDashboardStyles = (dashboardColors) => ({
+  accentText: { color: dashboardColors.accent },
+  actionTile: { backgroundColor: dashboardColors.cardDeep, borderColor: dashboardColors.border },
+  card: { backgroundColor: dashboardColors.card, borderColor: dashboardColors.border },
+  divider: { backgroundColor: dashboardColors.border },
+  iconTile: { backgroundColor: dashboardColors.iconBg, borderColor: dashboardColors.border },
+  menuGrid: { backgroundColor: dashboardColors.card, borderColor: dashboardColors.border },
+  menuLabel: { color: dashboardColors.text },
+  mutedText: { color: dashboardColors.muted },
+  pill: { backgroundColor: dashboardColors.primarySoft, borderColor: dashboardColors.borderSoft },
+  prayerCard: { backgroundColor: dashboardColors.card, borderColor: dashboardColors.borderSoft },
+  primaryText: { color: dashboardColors.primary },
+  row: { backgroundColor: dashboardColors.cardDeep, borderColor: dashboardColors.border },
+  screen: { backgroundColor: dashboardColors.bg },
+  scroll: { backgroundColor: dashboardColors.bg },
+  sectionTitle: { color: dashboardColors.text },
+  titleText: { color: dashboardColors.title },
 });
 
 const formatHadisSource = (value = '') => {
@@ -83,10 +123,17 @@ const formatHadisSource = (value = '') => {
   return value.replace(/\bHadith\b/g, 'Hadis');
 };
 
-const buildWebAppDailySlides = ({ dailyAyah, dailyHadith, dailyMessage, dailyReminders, loadingDaily }) => {
+const buildWebAppDailySlides = ({
+  colors: dashboardColors = webDashboardDarkColors,
+  dailyAyah,
+  dailyHadith,
+  dailyMessage,
+  dailyReminders,
+  loadingDaily,
+}) => {
   const ayahSlide = {
     Icon: Book,
-    accentColor: webDashboardColors.primary,
+    accentColor: dashboardColors.primary,
     arabic: dailyAyah?.arabic,
     key: 'ayah',
     source: dailyAyah?.ref,
@@ -97,7 +144,7 @@ const buildWebAppDailySlides = ({ dailyAyah, dailyHadith, dailyMessage, dailyRem
   };
   const hadithSlide = {
     Icon: BookOpenCheck,
-    accentColor: webDashboardColors.accent,
+    accentColor: dashboardColors.accent,
     arabic: dailyHadith?.arabic,
     key: 'hadith',
     source: dailyHadith?.book ? formatHadisSource(dailyHadith.book) : '',
@@ -124,11 +171,11 @@ export function getHomeDashboardRenderer(layoutMode) {
   return layoutMode === homeDashboardLayouts.webApp ? WebAppHomeDashboard : PaperHomeDashboard;
 }
 
-export function HomeDashboardContent({ isWebAppLayout, ...props }) {
+export function HomeDashboardContent({ isDarkTheme = false, isWebAppLayout, ...props }) {
   const Renderer = getHomeDashboardRenderer(
     isWebAppLayout ? homeDashboardLayouts.webApp : homeDashboardLayouts.paper,
   );
-  return <Renderer {...props} />;
+  return <Renderer isDarkTheme={isDarkTheme} {...props} />;
 }
 
 export function PaperHomeDashboard(props) {
@@ -142,11 +189,12 @@ export function PaperHomeDashboard(props) {
 }
 
 export function WebAppHomeDashboard(props) {
+  const dashboardColors = getWebDashboardColors(props.isDarkTheme);
   return (
     <DashboardContent
       {...props}
       layout={homeDashboardLayouts.webApp}
-      header={<WebAppHomeGreeting displayName={props.displayName} gregorianDate={props.gregorianDate} />}
+      header={<WebAppHomeGreeting colors={dashboardColors} displayName={props.displayName} gregorianDate={props.gregorianDate} />}
     />
   );
 }
@@ -191,11 +239,11 @@ function PaperHomeHeader({ displayName, initials, locationLabel, navigation, onO
   );
 }
 
-function WebAppHomeGreeting({ displayName, gregorianDate }) {
+function WebAppHomeGreeting({ colors: dashboardColors = webDashboardDarkColors, displayName, gregorianDate }) {
   return (
     <View style={styles.webAppGreeting} testID="home-web-app-greeting">
-      <Text style={styles.webAppGreetingTitle}>{`Assalamu'alaikum, ${displayName}`}</Text>
-      <Text style={styles.webAppGreetingDate}>{gregorianDate}</Text>
+      <Text style={[styles.webAppGreetingTitle, { color: dashboardColors.title }]}>{`Assalamu'alaikum, ${displayName}`}</Text>
+      <Text style={[styles.webAppGreetingDate, { color: dashboardColors.muted }]}>{gregorianDate}</Text>
     </View>
   );
 }
@@ -211,6 +259,7 @@ function DashboardContent({
   hasPrayerSchedule,
   header,
   hijriDate,
+  isDarkTheme,
   layout,
   loadingDaily,
   loadHomeData,
@@ -226,11 +275,13 @@ function DashboardContent({
   refreshing,
 }) {
   const isWebApp = layout === homeDashboardLayouts.webApp;
-  const primary = isWebApp ? webDashboardColors.primary : colors.primary;
-  const accent = isWebApp ? webDashboardColors.accent : colors.accent;
-  const muted = isWebApp ? webDashboardColors.muted : colors.muted;
+  const dashboardColors = isWebApp ? getWebDashboardColors(isDarkTheme) : null;
+  const webStyles = isWebApp ? createWebDashboardStyles(dashboardColors) : {};
+  const primary = isWebApp ? dashboardColors.primary : colors.primary;
+  const accent = isWebApp ? dashboardColors.accent : colors.accent;
+  const muted = isWebApp ? dashboardColors.muted : colors.muted;
   const menuGrid = (
-    <View style={[styles.menuGrid, isWebApp && styles.webAppMenuGrid]} testID="home-menu-grid">
+    <View style={[styles.menuGrid, isWebApp && styles.webAppMenuGrid, webStyles.menuGrid]} testID="home-menu-grid">
       {menuItems.map(({ Icon, featureKey, internalView, key, label, params }) => (
         <Pressable
           android_ripple={{ color: 'rgba(91, 110, 91, 0.14)', borderless: false }}
@@ -244,10 +295,10 @@ function DashboardContent({
           }}
           style={styles.menuItem}
         >
-          <View style={[styles.menuIcon, isWebApp && styles.webAppIconTile]}>
+          <View style={[styles.menuIcon, isWebApp && styles.webAppIconTile, webStyles.iconTile]}>
             <Icon color={primary} size={18} strokeWidth={2.1} />
           </View>
-          <Text style={[styles.menuLabel, isWebApp && styles.webAppMenuLabel]}>{label}</Text>
+          <Text style={[styles.menuLabel, isWebApp && styles.webAppMenuLabel, webStyles.menuLabel]}>{label}</Text>
         </Pressable>
       ))}
     </View>
@@ -255,7 +306,7 @@ function DashboardContent({
 
   return (
     <ScrollView
-      contentContainerStyle={[styles.screen, isWebApp && styles.webAppScreen]}
+      contentContainerStyle={[styles.screen, isWebApp && styles.webAppScreen, webStyles.screen]}
       onMomentumScrollBegin={handleScrollActivity}
       refreshControl={
         <RefreshControl
@@ -269,45 +320,45 @@ function DashboardContent({
       onScrollBeginDrag={handleScrollActivity}
       scrollEventThrottle={250}
       showsVerticalScrollIndicator={false}
-      style={[styles.scroll, isWebApp && styles.webAppScroll]}
+      style={[styles.scroll, isWebApp && styles.webAppScroll, webStyles.scroll]}
       testID="home-scroll"
     >
       {header}
 
-      <View style={[styles.prayerCard, isWebApp && styles.webAppPrayerCard]} testID="home-prayer-card">
+      <View style={[styles.prayerCard, isWebApp && styles.webAppPrayerCard, webStyles.prayerCard]} testID="home-prayer-card">
         <View style={styles.prayerHeader}>
-          <View style={[styles.prayerStatusPill, isWebApp && styles.webAppPill]}>
+          <View style={[styles.prayerStatusPill, isWebApp && styles.webAppPill, webStyles.pill]}>
             <Clock3 color={primary} size={13} strokeWidth={2.4} />
-            <Text style={[styles.prayerStatusText, isWebApp && styles.webAppPrimaryText]}>
+            <Text style={[styles.prayerStatusText, isWebApp && styles.webAppPrimaryText, webStyles.primaryText]}>
               {prayerStatusLabel}
             </Text>
           </View>
           <View style={styles.prayerDateStack}>
-            <Text style={[styles.gregorianDate, isWebApp && styles.webAppTitleText]}>{gregorianDate}</Text>
+            <Text style={[styles.gregorianDate, isWebApp && styles.webAppTitleText, webStyles.titleText]}>{gregorianDate}</Text>
             <View style={styles.hijriRow}>
               <Moon color={accent} size={13} strokeWidth={2.3} />
-              <Text style={[styles.hijriDate, isWebApp && styles.webAppAccentText]}>{hijriDate}</Text>
+              <Text style={[styles.hijriDate, isWebApp && styles.webAppAccentText, webStyles.accentText]}>{hijriDate}</Text>
             </View>
           </View>
         </View>
 
         <View style={styles.prayerHero}>
-          <Text style={[styles.prayerKicker, isWebApp && styles.webAppPrimaryText]}>
+          <Text style={[styles.prayerKicker, isWebApp && styles.webAppPrimaryText, webStyles.primaryText]}>
             {`Menuju ${prayerKeyLabels[nextPrayer.key] || 'Sholat'}`}
           </Text>
-          <Text style={[styles.prayerTime, isWebApp && styles.webAppTitleText]}>{nextPrayer.time}</Text>
-          <Text style={[styles.prayerSummary, isWebApp && styles.webAppMutedText]}>
+          <Text style={[styles.prayerTime, isWebApp && styles.webAppTitleText, webStyles.titleText]}>{nextPrayer.time}</Text>
+          <Text style={[styles.prayerSummary, isWebApp && styles.webAppMutedText, webStyles.mutedText]}>
             {prayerMessage || prayerSummary}
           </Text>
-          <View style={[styles.countdown, isWebApp && styles.webAppPill]}>
+          <View style={[styles.countdown, isWebApp && styles.webAppPill, webStyles.pill]}>
             <Clock3 color={primary} size={13} strokeWidth={2.4} />
-            <Text style={[styles.countdownText, isWebApp && styles.webAppPrimaryText]}>
+            <Text style={[styles.countdownText, isWebApp && styles.webAppPrimaryText, webStyles.primaryText]}>
               {hasPrayerSchedule ? nextPrayer.countdown : 'Belum aktif'}
             </Text>
           </View>
         </View>
 
-        <View style={[styles.prayerTimeline, isWebApp && styles.webAppDivider]} />
+        <View style={[styles.prayerTimeline, isWebApp && styles.webAppDivider, webStyles.divider]} />
         <View style={styles.prayerScheduleRow}>
           {prayerScheduleItems.map(({ Icon, key, label }) => {
             const isNext = key === nextPrayer.key && hasPrayerSchedule;
@@ -317,7 +368,9 @@ function DashboardContent({
                   style={[
                     styles.prayerScheduleLabel,
                     isWebApp && styles.webAppMutedText,
+                    webStyles.mutedText,
                     isNext ? (isWebApp ? styles.webAppAccentText : styles.prayerScheduleActive) : null,
+                    isNext ? webStyles.accentText : null,
                   ]}
                 >
                   {label}
@@ -327,7 +380,9 @@ function DashboardContent({
                   style={[
                     styles.prayerScheduleTime,
                     isWebApp && styles.webAppTitleText,
+                    webStyles.titleText,
                     isNext ? (isWebApp ? styles.webAppAccentText : styles.prayerScheduleActive) : null,
+                    isNext ? webStyles.accentText : null,
                   ]}
                 >
                   {prayerTimes?.[key] ?? '--:--'}
@@ -346,6 +401,7 @@ function DashboardContent({
           dailyHadith={dailyHadith}
           dailyReminders={dailyReminders}
           dailyMessage={dailyMessage}
+          dashboardColors={dashboardColors}
           loadingDaily={loadingDaily}
           onOpenTab={onOpenTab}
         />
@@ -396,6 +452,7 @@ function DashboardContent({
           items={contextualShortcuts}
           onOpenTab={onOpenTab}
           primary={primary}
+          webStyles={webStyles}
         />
       ) : null}
 
@@ -409,6 +466,7 @@ function DashboardContent({
           onOpenTab={onOpenTab}
           primary={primary}
           title="Disematkan"
+          webStyles={webStyles}
         />
       ) : null}
 
@@ -422,36 +480,52 @@ function DashboardContent({
           onOpenTab={onOpenTab}
           primary={primary}
           title="Terakhir Dibuka"
+          webStyles={webStyles}
         />
       ) : null}
 
       {isWebApp ? (
         <View style={styles.webAppQuickAccessBlock}>
-          <Text style={styles.webAppSectionTitle}>Akses Cepat</Text>
+          <Text style={[styles.webAppSectionTitle, webStyles.sectionTitle]}>Akses Cepat</Text>
           {menuGrid}
         </View>
       ) : null}
 
       <ContentCard
         Icon={Smile}
-        iconStyle={[styles.journalIcon, isWebApp && styles.webAppIconTile]}
+        iconStyle={[styles.journalIcon, isWebApp && styles.webAppIconTile, webStyles.iconTile]}
         onPress={() => onOpenTab('belajar', { featureKey: 'muhasabah' })}
-        style={[styles.journalCard, isWebApp && styles.webAppCard]}
+        style={[styles.journalCard, isWebApp && styles.webAppCard, webStyles.card]}
         subtitle="Bagaimana imanmu hari ini?"
-        subtitleStyle={[styles.journalDesc, isWebApp && styles.webAppMutedText]}
+        subtitleStyle={[styles.journalDesc, isWebApp && styles.webAppMutedText, webStyles.mutedText]}
         title="Jurnal Muhasabah"
-        titleStyle={[styles.journalTitle, isWebApp && styles.webAppTitleText]}
+        titleStyle={[styles.journalTitle, isWebApp && styles.webAppTitleText, webStyles.titleText]}
         trailing={<ChevronRightIcon color={muted} size={18} strokeWidth={2.4} />}
       />
     </ScrollView>
   );
 }
 
-function WebAppDailyReminderCard({ dailyAyah, dailyHadith, dailyMessage, dailyReminders, loadingDaily, onOpenTab }) {
+function WebAppDailyReminderCard({
+  dashboardColors = webDashboardDarkColors,
+  dailyAyah,
+  dailyHadith,
+  dailyMessage,
+  dailyReminders,
+  loadingDaily,
+  onOpenTab,
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const slides = useMemo(
-    () => buildWebAppDailySlides({ dailyAyah, dailyHadith, dailyMessage, dailyReminders, loadingDaily }),
-    [dailyAyah, dailyHadith, dailyMessage, dailyReminders, loadingDaily],
+    () => buildWebAppDailySlides({
+      colors: dashboardColors,
+      dailyAyah,
+      dailyHadith,
+      dailyMessage,
+      dailyReminders,
+      loadingDaily,
+    }),
+    [dashboardColors, dailyAyah, dailyHadith, dailyMessage, dailyReminders, loadingDaily],
   );
   const active = slides[activeIndex % slides.length];
   const Icon = active.Icon;
@@ -474,7 +548,10 @@ function WebAppDailyReminderCard({ dailyAyah, dailyHadith, dailyMessage, dailyRe
     <Pressable
       android_ripple={{ color: 'rgba(16, 185, 129, 0.12)', borderless: false }}
       onPress={openActive}
-      style={styles.webAppReminderCard}
+      style={[
+        styles.webAppReminderCard,
+        { backgroundColor: dashboardColors.reminderCard ?? dashboardColors.primarySoft, borderColor: dashboardColors.borderSoft },
+      ]}
       testID="home-daily-card"
     >
       <View style={styles.webAppReminderHeader}>
@@ -488,7 +565,7 @@ function WebAppDailyReminderCard({ dailyAyah, dailyHadith, dailyMessage, dailyRe
             accessibilityRole="button"
             android_ripple={{ color: 'rgba(16, 185, 129, 0.14)', borderless: true }}
             onPress={goPrev}
-            style={styles.webAppReminderButton}
+            style={[styles.webAppReminderButton, { backgroundColor: dashboardColors.card, borderColor: dashboardColors.border }]}
             testID="home-daily-prev"
           >
             <ChevronLeft color={active.accentColor} size={18} strokeWidth={2.2} />
@@ -498,7 +575,7 @@ function WebAppDailyReminderCard({ dailyAyah, dailyHadith, dailyMessage, dailyRe
             accessibilityRole="button"
             android_ripple={{ color: 'rgba(16, 185, 129, 0.14)', borderless: true }}
             onPress={goNext}
-            style={styles.webAppReminderButton}
+            style={[styles.webAppReminderButton, { backgroundColor: dashboardColors.card, borderColor: dashboardColors.border }]}
             testID="home-daily-next"
           >
             <ChevronRightIcon color={active.accentColor} size={18} strokeWidth={2.2} />
@@ -507,18 +584,18 @@ function WebAppDailyReminderCard({ dailyAyah, dailyHadith, dailyMessage, dailyRe
       </View>
 
       {active.arabic ? (
-        <Text numberOfLines={3} style={styles.webAppReminderArabic}>
+        <Text numberOfLines={3} style={[styles.webAppReminderArabic, { color: dashboardColors.title }]}>
           {active.arabic}
         </Text>
       ) : null}
-      <Text numberOfLines={4} style={styles.webAppReminderText}>
+      <Text numberOfLines={4} style={[styles.webAppReminderText, { color: dashboardColors.text }]}>
         {`"${active.text}"`}
       </Text>
       <View style={styles.webAppReminderFooter}>
         <Text numberOfLines={1} style={[styles.webAppReminderSource, { color: active.accentColor }]}>
           {active.source || 'Pengingat harian'}
         </Text>
-        <Text style={styles.webAppReminderLink}>Selengkapnya →</Text>
+        <Text style={[styles.webAppReminderLink, { color: dashboardColors.primary }]}>Selengkapnya →</Text>
       </View>
       <View style={styles.webAppReminderDots}>
         {slides.map((slide, index) => (
@@ -529,6 +606,7 @@ function WebAppDailyReminderCard({ dailyAyah, dailyHadith, dailyMessage, dailyRe
             onPress={() => setActiveIndex(index)}
             style={[
               styles.webAppReminderDot,
+              { backgroundColor: dashboardColors.muted },
               index === activeIndex && [styles.webAppReminderDotActive, { backgroundColor: active.accentColor }],
             ]}
             testID={`home-daily-dot-${slide.key}`}
@@ -539,23 +617,23 @@ function WebAppDailyReminderCard({ dailyAyah, dailyHadith, dailyMessage, dailyRe
   );
 }
 
-function ContextShortcutsCard({ isWebApp, items, onOpenTab, primary }) {
+function ContextShortcutsCard({ isWebApp, items, onOpenTab, primary, webStyles = {} }) {
   return (
-    <View style={[styles.contextCard, isWebApp && styles.webAppCard]}>
-      <Text style={[styles.contextLabel, isWebApp && styles.webAppMutedText]}>SARAN SEKARANG</Text>
+    <View style={[styles.contextCard, isWebApp && styles.webAppCard, webStyles.card]}>
+      <Text style={[styles.contextLabel, isWebApp && styles.webAppMutedText, webStyles.mutedText]}>SARAN SEKARANG</Text>
       <View style={styles.contextRow}>
         {items.map(({ Icon, featureKey, label, params, sub, tab }) => (
           <Pressable
             android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
             key={label}
             onPress={() => onOpenTab(tab, params ?? (featureKey ? { featureKey } : null))}
-            style={[styles.contextItem, isWebApp && styles.webAppActionTile]}
+            style={[styles.contextItem, isWebApp && styles.webAppActionTile, webStyles.actionTile]}
           >
-            <View style={[styles.contextIcon, isWebApp && styles.webAppIconTile]}>
+            <View style={[styles.contextIcon, isWebApp && styles.webAppIconTile, webStyles.iconTile]}>
               <Icon color={primary} size={16} strokeWidth={2.2} />
             </View>
-            <Text style={[styles.contextItemLabel, isWebApp && styles.webAppTitleText]}>{label}</Text>
-            <Text style={[styles.contextItemSub, isWebApp && styles.webAppMutedText]}>{sub}</Text>
+            <Text style={[styles.contextItemLabel, isWebApp && styles.webAppTitleText, webStyles.titleText]}>{label}</Text>
+            <Text style={[styles.contextItemSub, isWebApp && styles.webAppMutedText, webStyles.mutedText]}>{sub}</Text>
           </Pressable>
         ))}
       </View>
@@ -563,27 +641,27 @@ function ContextShortcutsCard({ isWebApp, items, onOpenTab, primary }) {
   );
 }
 
-function FeatureListCard({ Icon, features, isWebApp, meta, muted, onOpenTab, primary, title }) {
+function FeatureListCard({ Icon, features, isWebApp, meta, muted, onOpenTab, primary, title, webStyles = {} }) {
   return (
-    <View style={[styles.recentCard, isWebApp && styles.webAppCard]}>
+    <View style={[styles.recentCard, isWebApp && styles.webAppCard, webStyles.card]}>
       <View style={styles.recentHeader}>
         <View>
-          <Text style={[styles.recentTitle, isWebApp && styles.webAppTitleText]}>{title}</Text>
-          <Text style={[styles.recentMeta, isWebApp && styles.webAppMutedText]}>{meta}</Text>
+          <Text style={[styles.recentTitle, isWebApp && styles.webAppTitleText, webStyles.titleText]}>{title}</Text>
+          <Text style={[styles.recentMeta, isWebApp && styles.webAppMutedText, webStyles.mutedText]}>{meta}</Text>
         </View>
         <Icon color={primary} size={18} strokeWidth={2.2} />
       </View>
       {features.map((feature) => (
         <ContentCard
           Icon={Icon}
-          iconStyle={[styles.recentIcon, isWebApp && styles.webAppIconTile]}
+          iconStyle={[styles.recentIcon, isWebApp && styles.webAppIconTile, webStyles.iconTile]}
           key={feature.key}
           onPress={() => onOpenTab('belajar', { featureKey: feature.key })}
-          style={[styles.recentRow, isWebApp && styles.webAppRow]}
+          style={[styles.recentRow, isWebApp && styles.webAppRow, webStyles.row]}
           subtitle={feature.subtitle || feature.group || 'Belajar'}
-          subtitleStyle={[styles.recentRowSubtitle, isWebApp && styles.webAppMutedText]}
+          subtitleStyle={[styles.recentRowSubtitle, isWebApp && styles.webAppMutedText, webStyles.mutedText]}
           title={feature.title}
-          titleStyle={[styles.recentRowTitle, isWebApp && styles.webAppTitleText]}
+          titleStyle={[styles.recentRowTitle, isWebApp && styles.webAppTitleText, webStyles.titleText]}
           trailing={<ChevronRightIcon color={muted} size={18} strokeWidth={2.4} />}
         />
       ))}
@@ -597,7 +675,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   webAppScroll: {
-    backgroundColor: webDashboardColors.bg,
+    backgroundColor: webDashboardDarkColors.bg,
   },
   screen: {
     backgroundColor: colors.bg,
@@ -607,7 +685,7 @@ const styles = StyleSheet.create({
     paddingTop: spacing.xl,
   },
   webAppScreen: {
-    backgroundColor: webDashboardColors.bg,
+    backgroundColor: webDashboardDarkColors.bg,
     paddingBottom: spacing.lg,
     paddingTop: spacing.lg,
   },
@@ -615,13 +693,13 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   webAppGreetingTitle: {
-    color: webDashboardColors.title,
+    color: webDashboardDarkColors.title,
     fontSize: 22,
     fontWeight: '900',
     letterSpacing: 0,
   },
   webAppGreetingDate: {
-    color: webDashboardColors.muted,
+    color: webDashboardDarkColors.muted,
     fontSize: 13,
     fontWeight: '600',
     letterSpacing: 0,
@@ -737,37 +815,37 @@ const styles = StyleSheet.create({
     ...shadows.paper,
   },
   webAppPrayerCard: {
-    backgroundColor: webDashboardColors.card,
-    borderColor: webDashboardColors.borderSoft,
+    backgroundColor: webDashboardDarkColors.card,
+    borderColor: webDashboardDarkColors.borderSoft,
     borderRadius: 24,
   },
   webAppCard: {
-    backgroundColor: webDashboardColors.card,
-    borderColor: webDashboardColors.border,
+    backgroundColor: webDashboardDarkColors.card,
+    borderColor: webDashboardDarkColors.border,
     borderRadius: radius.md,
   },
   webAppPill: {
-    backgroundColor: webDashboardColors.primarySoft,
+    backgroundColor: webDashboardDarkColors.primarySoft,
     borderColor: '#065f46',
   },
   webAppDivider: {
-    backgroundColor: webDashboardColors.border,
+    backgroundColor: webDashboardDarkColors.border,
   },
   webAppTitleText: {
-    color: webDashboardColors.title,
+    color: webDashboardDarkColors.title,
     fontFamily: webDashboardFontFamily,
   },
   webAppText: {
-    color: webDashboardColors.text,
+    color: webDashboardDarkColors.text,
   },
   webAppMutedText: {
-    color: webDashboardColors.muted,
+    color: webDashboardDarkColors.muted,
   },
   webAppPrimaryText: {
-    color: webDashboardColors.primary,
+    color: webDashboardDarkColors.primary,
   },
   webAppAccentText: {
-    color: webDashboardColors.accent,
+    color: webDashboardDarkColors.accent,
   },
   prayerKicker: {
     color: colors.primary,
@@ -858,8 +936,8 @@ const styles = StyleSheet.create({
     ...shadows.paper,
   },
   webAppMenuGrid: {
-    backgroundColor: webDashboardColors.card,
-    borderColor: webDashboardColors.border,
+    backgroundColor: webDashboardDarkColors.card,
+    borderColor: webDashboardDarkColors.border,
     borderRadius: radius.md,
     marginTop: 0,
   },
@@ -867,22 +945,22 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   webAppSectionTitle: {
-    color: webDashboardColors.text,
+    color: webDashboardDarkColors.text,
     fontSize: 14,
     fontWeight: '900',
     marginBottom: spacing.sm,
   },
   webAppIconTile: {
-    backgroundColor: webDashboardColors.iconBg,
-    borderColor: webDashboardColors.border,
+    backgroundColor: webDashboardDarkColors.iconBg,
+    borderColor: webDashboardDarkColors.border,
   },
   webAppActionTile: {
-    backgroundColor: webDashboardColors.cardDeep,
-    borderColor: webDashboardColors.border,
+    backgroundColor: webDashboardDarkColors.cardDeep,
+    borderColor: webDashboardDarkColors.border,
   },
   webAppRow: {
-    backgroundColor: webDashboardColors.cardDeep,
-    borderColor: webDashboardColors.border,
+    backgroundColor: webDashboardDarkColors.cardDeep,
+    borderColor: webDashboardDarkColors.border,
   },
   menuItem: {
     alignItems: 'center',
@@ -908,7 +986,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   webAppMenuLabel: {
-    color: webDashboardColors.text,
+    color: webDashboardDarkColors.text,
   },
   contextCard: {
     backgroundColor: colors.surface,
@@ -1065,7 +1143,7 @@ const styles = StyleSheet.create({
   },
   webAppReminderCard: {
     backgroundColor: '#052e2b',
-    borderColor: webDashboardColors.borderSoft,
+    borderColor: webDashboardDarkColors.borderSoft,
     borderRadius: 16,
     borderWidth: 1,
     marginBottom: spacing.lg,
@@ -1098,8 +1176,8 @@ const styles = StyleSheet.create({
   },
   webAppReminderButton: {
     alignItems: 'center',
-    backgroundColor: webDashboardColors.card,
-    borderColor: webDashboardColors.border,
+    backgroundColor: webDashboardDarkColors.card,
+    borderColor: webDashboardDarkColors.border,
     borderRadius: 999,
     borderWidth: 1,
     height: 32,
@@ -1108,7 +1186,7 @@ const styles = StyleSheet.create({
   },
   webAppReminderArabic: {
     ...arabicTypography.small,
-    color: webDashboardColors.title,
+    color: webDashboardDarkColors.title,
     fontFamily: webDashboardFontFamily,
     fontSize: 24,
     lineHeight: 40,
@@ -1117,7 +1195,7 @@ const styles = StyleSheet.create({
     writingDirection: 'rtl',
   },
   webAppReminderText: {
-    color: webDashboardColors.text,
+    color: webDashboardDarkColors.text,
     fontSize: 14,
     lineHeight: 20,
     marginBottom: spacing.sm,
@@ -1134,7 +1212,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   webAppReminderLink: {
-    color: webDashboardColors.primary,
+    color: webDashboardDarkColors.primary,
     fontSize: 12,
     fontWeight: '800',
   },

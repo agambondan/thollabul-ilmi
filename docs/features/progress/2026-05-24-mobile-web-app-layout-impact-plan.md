@@ -2997,3 +2997,41 @@ Results:
 - `git diff --check` passed.
 - Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
   2,000-line gate.
+
+## Web App Home Theme Parity
+
+Status: completed for the native `web_app` home dashboard light/dark palette
+pass.
+
+Implemented:
+
+- `HomeScreen` now forwards `isDarkTheme` from the layout/theme provider into
+  `HomeDashboardContent`.
+- `HomeDashboardContent` keeps the existing dark dashboard palette when dark
+  mode is active, but switches the `web_app` home surface, prayer card, quick
+  access grid, daily carousel, rows, icon tiles, and text colors to a light
+  dashboard palette when the app theme resolves to light.
+- Added regression coverage for both light and dark `web_app` home palettes so
+  toggling from dark to light cannot leave the home/dashboard background black.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/HomeScreen.js
+node --check apps/mobile/src/screens/home/HomeDashboardContent.js
+cd apps/mobile
+npm test -- homeScreen.test.js mobileAppShell.test.js globalSearchScreen.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+```
+
+Results:
+
+- `node --check` passed for the touched Home files.
+- Targeted Home/shell/search tests passed: 3 suites, 59 tests.
+- Full mobile Jest passed: 48 suites, 707 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed.

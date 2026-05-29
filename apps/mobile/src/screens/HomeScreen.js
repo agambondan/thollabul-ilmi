@@ -309,7 +309,7 @@ const resolvePrayerState = (prayers, now = new Date()) => {
 export function HomeScreen({ isActive, navigation, onOpenTab }) {
   const { user } = useSession();
   const { notifyTabActivity } = useTabActivity();
-  const { isWebAppLayout } = useLayoutModePreference();
+  const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
   const mountedRef = useRef(true);
   const prayerRetryTimerRef = useRef(null);
   const locationRetryTimerRef = useRef(null);
@@ -828,6 +828,7 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
       hasPrayerSchedule={hasPrayerSchedule}
       hijriDate={hijriDate}
       initials={initials}
+      isDarkTheme={isDarkTheme}
       isWebAppLayout={isWebAppLayout}
       loadingDaily={loadingDaily}
       loadHomeData={loadHomeData}

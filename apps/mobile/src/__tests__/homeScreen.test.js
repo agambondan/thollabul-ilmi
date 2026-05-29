@@ -186,7 +186,7 @@ beforeEach(() => {
     signOut: jest.fn(),
     user: null,
   });
-  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+  useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: false });
 
   Location.requestForegroundPermissionsAsync.mockResolvedValue({ status: 'denied' });
   Location.getLastKnownPositionAsync.mockResolvedValue(null);
@@ -215,7 +215,7 @@ describe('HomeScreen', () => {
   });
 
   test('renders web app greeting instead of duplicate profile header when web app layout is active', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
 
     const { getByTestId, queryByTestId } = await renderHomeScreen();
 
@@ -225,8 +225,30 @@ describe('HomeScreen', () => {
     expect(queryByTestId('home-classic-header')).toBeNull();
   });
 
+  test('uses dashboard light web palette for web app home cards', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
+
+    const { getByTestId } = await renderHomeScreen();
+
+    await waitFor(() => {
+      expect(getByTestId('home-web-app-greeting')).toBeTruthy();
+    });
+    expect(getByTestId('home-scroll').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff' })]),
+    );
+    expect(getByTestId('home-prayer-card').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#a7f3d0' })]),
+    );
+    expect(getByTestId('home-menu-grid').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#e5e7eb' })]),
+    );
+    expect(getByTestId('home-daily-card').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ecfdf5', borderColor: '#a7f3d0' })]),
+    );
+  });
+
   test('uses dashboard dark web palette for web app home cards', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: true, isWebAppLayout: true });
 
     const { getByTestId } = await renderHomeScreen();
 
@@ -243,7 +265,7 @@ describe('HomeScreen', () => {
       expect.arrayContaining([expect.objectContaining({ backgroundColor: '#0f172a', borderColor: '#1e293b' })]),
     );
     expect(getByTestId('home-daily-card').props.style).toEqual(
-      expect.objectContaining({ backgroundColor: '#052e2b', borderColor: '#064e3b' }),
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#022c22', borderColor: '#064e3b' })]),
     );
   });
 
