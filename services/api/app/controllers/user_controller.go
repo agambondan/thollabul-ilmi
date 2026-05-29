@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"errors"
+	"strconv"
 	"time"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
@@ -15,6 +17,7 @@ type UserController interface {
 	Login(ctx *fiber.Ctx) error
 	Refresh(ctx *fiber.Ctx) error
 	Sessions(ctx *fiber.Ctx) error
+	DeleteSession(ctx *fiber.Ctx) error
 	Logout(ctx *fiber.Ctx) error
 	ForgotPassword(ctx *fiber.Ctx) error
 	ResetPassword(ctx *fiber.Ctx) error
@@ -363,6 +366,47 @@ func (c *userController) Sessions(ctx *fiber.Ctx) error {
 		return lib.ErrorInternal(ctx)
 	}
 	return lib.OK(ctx, sessions)
+}
+
+// DeleteSession revokes one active refresh-token session for the current user.
+// @Summary Revoke current user session by ID
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param id path int true "Session ID"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Failure 401 {object} lib.Response
+// @Failure 404 {object} lib.Response
+// @Router /auth/sessions/{id} [delete]
+func (c *userController) DeleteSession(ctx *fiber.Ctx) error {
+	claims, err := lib.ExtractToken(ctx)
+	if err != nil {
+		return lib.ErrorUnauthorized(ctx)
+	}
+	userID, ok := claims["user_id"].(string)
+	if !ok {
+		return lib.ErrorUnauthorized(ctx)
+	}
+	sessionID, err := strconv.ParseUint(ctx.Params("id"), 10, 0)
+	if err != nil || sessionID == 0 {
+		return lib.ErrorBadRequest(ctx, "invalid session id")
+	}
+	currentRefreshToken := ctx.Get("X-Refresh-Token")
+	if currentRefreshToken == "" {
+		currentRefreshToken = ctx.Cookies("refresh_token")
+	}
+	if err := c.user.RevokeSession(userID, uint(sessionID), currentRefreshToken); err != nil {
+		if errors.Is(err, service.ErrCannotRevokeCurrentSession) {
+			return lib.ErrorBadRequest(ctx, err.Error())
+		}
+		if errors.Is(err, service.ErrSessionNotFound) {
+			return lib.ErrorNotFound(ctx, err.Error())
+		}
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx)
 }
 
 // Logout User

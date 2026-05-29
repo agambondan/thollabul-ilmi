@@ -125,6 +125,7 @@ export const userApi = {
             body: JSON.stringify(data),
         }),
     sessions: () => authFetch('/api/v1/auth/sessions'),
+    revokeSession: (id) => authFetch(`/api/v1/auth/sessions/${id}`, { method: 'DELETE' }),
     changePassword: (oldPassword, newPassword) =>
         authFetch('/api/v1/auth/password', {
             method: 'PUT',

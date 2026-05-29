@@ -15,11 +15,17 @@ import (
 	"github.com/spf13/viper"
 )
 
+var (
+	ErrSessionNotFound            = errors.New("session not found")
+	ErrCannotRevokeCurrentSession = errors.New("cannot revoke current session")
+)
+
 type UserService interface {
 	Register(*model.RegisterRequest) (*model.User, error)
 	Login(*model.LoginRequest) (*model.LoginResponse, error)
 	RefreshAccessToken(refreshToken string) (*model.LoginResponse, error)
 	FindSessions(userID, currentRefreshToken string) ([]model.AuthSession, error)
+	RevokeSession(userID string, sessionID uint, currentRefreshToken string) error
 	Logout(refreshToken string) error
 	ForgotPassword(email string) error
 	ResetPassword(token, newPassword string) error
@@ -132,6 +138,25 @@ func (s *userService) FindSessions(userID, currentRefreshToken string) ([]model.
 		})
 	}
 	return sessions, nil
+}
+
+func (s *userService) RevokeSession(userID string, sessionID uint, currentRefreshToken string) error {
+	tokens, err := s.user.FindRefreshTokensByUserID(userID)
+	if err != nil {
+		return err
+	}
+
+	for _, token := range tokens {
+		if token.ID != sessionID {
+			continue
+		}
+		if currentRefreshToken != "" && token.Token == currentRefreshToken {
+			return ErrCannotRevokeCurrentSession
+		}
+		return s.user.DeleteRefreshToken(token.Token)
+	}
+
+	return ErrSessionNotFound
 }
 
 func (s *userService) Logout(refreshToken string) error {

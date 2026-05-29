@@ -35,6 +35,8 @@ const ProfileDashboardPage = () => {
     const [editMsg, setEditMsg] = useState({ type: '', text: '' });
     const [sessions, setSessions] = useState([]);
     const [sessionsLoading, setSessionsLoading] = useState(false);
+    const [sessionActionId, setSessionActionId] = useState(null);
+    const [sessionMsg, setSessionMsg] = useState({ type: '', text: '' });
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [deleteMsg, setDeleteMsg] = useState({ type: '', text: '' });
 
@@ -121,6 +123,22 @@ const ProfileDashboardPage = () => {
             setDeleteMsg({ type: 'error', text: 'Akun belum bisa dihapus. Coba lagi nanti.' });
         } finally {
             setDeleteLoading(false);
+        }
+    };
+
+    const handleRevokeSession = async (sessionItem) => {
+        if (!sessionItem?.id || sessionItem.current || sessionActionId) return;
+        setSessionActionId(sessionItem.id);
+        setSessionMsg({ type: '', text: '' });
+        try {
+            const res = await userApi.revokeSession(sessionItem.id);
+            if (!res.ok) throw new Error();
+            setSessions((items) => items.filter((item) => item.id !== sessionItem.id));
+            setSessionMsg({ type: 'success', text: 'Sesi login lain berhasil dikeluarkan.' });
+        } catch {
+            setSessionMsg({ type: 'error', text: 'Sesi login belum bisa dikeluarkan.' });
+        } finally {
+            setSessionActionId(null);
         }
     };
 
@@ -299,20 +317,47 @@ const ProfileDashboardPage = () => {
                             {sessions.slice(0, 3).map((sessionItem) => (
                                 <div
                                     key={sessionItem.id}
-                                    className='rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900/40'
+                                    className='flex items-center justify-between gap-3 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900/40'
                                 >
-                                    <p className='font-semibold text-gray-800 dark:text-gray-100'>
-                                        {sessionItem.current ? 'Perangkat ini' : 'Sesi login'}
-                                    </p>
-                                    <p className='mt-0.5 text-gray-500 dark:text-gray-400'>
-                                        Aktif sejak {new Date(sessionItem.created_at).toLocaleDateString('id-ID')}
-                                    </p>
+                                    <div className='min-w-0'>
+                                        <p className='font-semibold text-gray-800 dark:text-gray-100'>
+                                            {sessionItem.current ? 'Perangkat ini' : 'Sesi login'}
+                                        </p>
+                                        <p className='mt-0.5 text-gray-500 dark:text-gray-400'>
+                                            Aktif sejak {new Date(sessionItem.created_at).toLocaleDateString('id-ID')}
+                                        </p>
+                                    </div>
+                                    {sessionItem.current ? (
+                                        <span className='rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'>
+                                            Aktif
+                                        </span>
+                                    ) : (
+                                        <button
+                                            className='shrink-0 rounded-full border border-red-200 bg-red-50 px-3 py-1 text-[10px] font-bold text-red-600 hover:bg-red-100 disabled:opacity-60 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300'
+                                            disabled={sessionActionId === sessionItem.id}
+                                            onClick={() => handleRevokeSession(sessionItem)}
+                                            type='button'
+                                        >
+                                            {sessionActionId === sessionItem.id ? 'Keluar...' : 'Keluar'}
+                                        </button>
+                                    )}
                                 </div>
                             ))}
                         </div>
                     ) : !sessionsLoading ? (
                         <p className='mt-3 text-xs text-gray-500 dark:text-gray-400'>
                             Riwayat sesi aktif belum tersedia.
+                        </p>
+                    ) : null}
+                    {sessionMsg.text ? (
+                        <p
+                            className={`mt-3 text-xs font-semibold ${
+                                sessionMsg.type === 'error'
+                                    ? 'text-red-600 dark:text-red-300'
+                                    : 'text-emerald-700 dark:text-emerald-300'
+                            }`}
+                        >
+                            {sessionMsg.text}
                         </p>
                     ) : null}
                 </div>

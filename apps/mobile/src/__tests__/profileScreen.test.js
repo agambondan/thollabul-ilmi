@@ -16,6 +16,7 @@ jest.mock('../api/personal', () => ({
 
 jest.mock('../api/auth', () => ({
   getAuthSessions: jest.fn(),
+  revokeAuthSession: jest.fn(),
   updatePassword: jest.fn(),
   updateProfile: jest.fn(),
 }));
@@ -108,6 +109,7 @@ beforeEach(() => {
   authApi.updatePassword.mockResolvedValue({});
   authApi.updateProfile.mockResolvedValue({ id: '1', email: 'test@test.com', name: 'Test User', preferred_lang: 'en' });
   authApi.getAuthSessions.mockResolvedValue([]);
+  authApi.revokeAuthSession.mockResolvedValue({});
 });
 
 describe('ProfileScreen', () => {
@@ -307,6 +309,33 @@ describe('ProfileScreen', () => {
       newPassword: 'new-pass-123',
     }));
     expect(await findByText('Sandi berhasil diperbarui.')).toBeTruthy();
+  });
+
+  test('security sub-screen can revoke another active session', async () => {
+    useSession.mockReturnValue({
+      ...loggedInSession,
+      session: { ...loggedInSession.session, refreshToken: 'current-refresh' },
+    });
+    authApi.getAuthSessions
+      .mockResolvedValueOnce([
+        { id: 1, current: true, created_at: '2026-05-29T01:00:00Z' },
+        { id: 2, current: false, created_at: '2026-05-29T02:00:00Z' },
+      ])
+      .mockResolvedValueOnce([
+        { id: 1, current: true, created_at: '2026-05-29T01:00:00Z' },
+      ]);
+
+    const { getByLabelText, getByText, findByText } = render(<ProfileScreen isActive />);
+    await waitFor(() => expect(getByText('Test User')).toBeTruthy());
+
+    fireEvent.press(getByLabelText('Buka pengaturan profil'));
+    fireEvent.press(getByText('Keamanan'));
+    await waitFor(() => expect(authApi.getAuthSessions).toHaveBeenCalledWith('current-refresh'));
+
+    fireEvent.press(getByLabelText('Keluar dari sesi login 2'));
+
+    await waitFor(() => expect(authApi.revokeAuthSession).toHaveBeenCalledWith(2, 'current-refresh'));
+    expect(await findByText('Sesi login lain berhasil dikeluarkan.')).toBeTruthy();
   });
 
   test('security sub-screen confirms account deletion before deleting', async () => {

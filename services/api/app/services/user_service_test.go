@@ -76,6 +76,43 @@ func TestUserServiceDeleteSelfRevokesTokensAndSoftDeletesUser(t *testing.T) {
 	}
 }
 
+func TestUserServiceRevokeSessionDeletesOnlyRequestedNonCurrentSession(t *testing.T) {
+	db := newUserServiceTestDB(t)
+	svc := NewUserService(repository.NewUserRepository(db, paginate.New()))
+	userID := uuid.New().String()
+	otherUserID := uuid.New().String()
+	now := time.Now()
+
+	currentID := seedRefreshToken(t, db, userID, "current-token", now.Add(-3*time.Hour), now.Add(24*time.Hour))
+	otherID := seedRefreshToken(t, db, userID, "other-token", now.Add(-time.Hour), now.Add(24*time.Hour))
+	otherUserTokenID := seedRefreshToken(t, db, otherUserID, "other-user-token", now.Add(-time.Minute), now.Add(24*time.Hour))
+
+	if err := svc.RevokeSession(userID, currentID, "current-token"); err == nil {
+		t.Fatal("expected current session revoke to be rejected")
+	}
+	if err := svc.RevokeSession(userID, otherUserTokenID, "current-token"); err == nil {
+		t.Fatal("expected other user session revoke to be rejected")
+	}
+	if err := svc.RevokeSession(userID, otherID, "current-token"); err != nil {
+		t.Fatalf("RevokeSession: %v", err)
+	}
+
+	var tokens []model.RefreshToken
+	if err := db.Order("token asc").Find(&tokens).Error; err != nil {
+		t.Fatalf("find refresh tokens: %v", err)
+	}
+	got := map[string]bool{}
+	for _, token := range tokens {
+		got[token.Token] = true
+	}
+	if got["other-token"] {
+		t.Fatal("expected requested session token to be deleted")
+	}
+	if !got["current-token"] || !got["other-user-token"] {
+		t.Fatalf("expected current and other-user tokens to remain, got %#v", got)
+	}
+}
+
 func newUserServiceTestDB(t *testing.T) *gorm.DB {
 	t.Helper()
 
@@ -89,15 +126,17 @@ func newUserServiceTestDB(t *testing.T) *gorm.DB {
 	return db
 }
 
-func seedRefreshToken(t *testing.T, db *gorm.DB, userID, token string, createdAt, expiresAt time.Time) {
+func seedRefreshToken(t *testing.T, db *gorm.DB, userID, token string, createdAt, expiresAt time.Time) uint {
 	t.Helper()
 
-	if err := db.Create(&model.RefreshToken{
+	refreshToken := &model.RefreshToken{
 		UserID:    userID,
 		Token:     token,
 		CreatedAt: createdAt,
 		ExpiresAt: expiresAt,
-	}).Error; err != nil {
+	}
+	if err := db.Create(refreshToken).Error; err != nil {
 		t.Fatalf("seed refresh token %q: %v", token, err)
 	}
+	return refreshToken.ID
 }

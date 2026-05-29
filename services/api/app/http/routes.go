@@ -317,6 +317,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Put("/auth/me", jwt, newUserController.UpdateProfile)
 	master.Delete("/auth/me", jwt, newUserController.DeleteMe)
 	master.Get("/auth/sessions", jwt, newUserController.Sessions)
+	master.Delete("/auth/sessions/:id", jwt, newUserController.DeleteSession)
 	master.Put("/auth/password", jwt, newUserController.UpdatePassword)
 	master.Get("/users", admin, newUserController.FindAll)
 	master.Get("/users/:id", jwt, newUserController.FindById)

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 	"time"
 
@@ -96,6 +97,64 @@ func TestUserControllerDeleteMeRevokesTokensAndClearsCookies(t *testing.T) {
 	}
 }
 
+func TestUserControllerDeleteSessionRevokesOnlyRequestedSession(t *testing.T) {
+	app, db, userID := newUserControllerTestApp(t)
+	now := time.Now()
+	seedUserControllerRefreshToken(t, db, userID.String(), "current-refresh", now.Add(-2*time.Hour), now.Add(24*time.Hour))
+	otherID := seedUserControllerRefreshToken(t, db, userID.String(), "other-refresh", now.Add(-time.Hour), now.Add(24*time.Hour))
+
+	req := newAuthRequest(t, fiber.MethodDelete, "/auth/sessions/"+strconv.FormatUint(uint64(otherID), 10), userID)
+	req.Header.Set("X-Refresh-Token", "current-refresh")
+	res, err := app.Test(req)
+	if err != nil {
+		t.Fatalf("request delete session: %v", err)
+	}
+	defer res.Body.Close()
+	if res.StatusCode != fiber.StatusOK {
+		t.Fatalf("expected 200, got %d", res.StatusCode)
+	}
+
+	var tokens []model.RefreshToken
+	if err := db.Order("token asc").Find(&tokens).Error; err != nil {
+		t.Fatalf("find refresh tokens: %v", err)
+	}
+	got := map[string]bool{}
+	for _, token := range tokens {
+		got[token.Token] = true
+	}
+	if got["other-refresh"] {
+		t.Fatal("expected requested refresh token to be revoked")
+	}
+	if !got["current-refresh"] {
+		t.Fatalf("expected current refresh token to remain, got %#v", got)
+	}
+}
+
+func TestUserControllerDeleteSessionRejectsCurrentSession(t *testing.T) {
+	app, db, userID := newUserControllerTestApp(t)
+	now := time.Now()
+	currentID := seedUserControllerRefreshToken(t, db, userID.String(), "current-refresh", now.Add(-2*time.Hour), now.Add(24*time.Hour))
+
+	req := newAuthRequest(t, fiber.MethodDelete, "/auth/sessions/"+strconv.FormatUint(uint64(currentID), 10), userID)
+	req.Header.Set("X-Refresh-Token", "current-refresh")
+	res, err := app.Test(req)
+	if err != nil {
+		t.Fatalf("request delete current session: %v", err)
+	}
+	defer res.Body.Close()
+	if res.StatusCode != fiber.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", res.StatusCode)
+	}
+
+	var tokens int64
+	if err := db.Model(&model.RefreshToken{}).Where("token = ?", "current-refresh").Count(&tokens).Error; err != nil {
+		t.Fatalf("count current token: %v", err)
+	}
+	if tokens != 1 {
+		t.Fatalf("expected current token to remain, got %d", tokens)
+	}
+}
+
 func newUserControllerTestApp(t *testing.T) (*fiber.App, *gorm.DB, uuid.UUID) {
 	t.Helper()
 
@@ -125,6 +184,7 @@ func newUserControllerTestApp(t *testing.T) (*fiber.App, *gorm.DB, uuid.UUID) {
 	})
 	app := fiber.New()
 	app.Get("/auth/sessions", controller.Sessions)
+	app.Delete("/auth/sessions/:id", controller.DeleteSession)
 	app.Delete("/auth/me", controller.DeleteMe)
 	return app, db, userID
 }
@@ -147,15 +207,17 @@ func newAuthRequest(t *testing.T, method, path string, userID uuid.UUID) *http.R
 	return req
 }
 
-func seedUserControllerRefreshToken(t *testing.T, db *gorm.DB, userID, token string, createdAt, expiresAt time.Time) {
+func seedUserControllerRefreshToken(t *testing.T, db *gorm.DB, userID, token string, createdAt, expiresAt time.Time) uint {
 	t.Helper()
 
-	if err := db.Create(&model.RefreshToken{
+	refreshToken := &model.RefreshToken{
 		UserID:    userID,
 		Token:     token,
 		CreatedAt: createdAt,
 		ExpiresAt: expiresAt,
-	}).Error; err != nil {
+	}
+	if err := db.Create(refreshToken).Error; err != nil {
 		t.Fatalf("seed refresh token %q: %v", token, err)
 	}
+	return refreshToken.ID
 }

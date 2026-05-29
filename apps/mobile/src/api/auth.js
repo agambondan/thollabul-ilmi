@@ -39,6 +39,14 @@ export const getAuthSessions = async (refreshToken = '') => {
   return Array.isArray(payload?.data) ? payload.data : Array.isArray(payload) ? payload : [];
 };
 
+export const revokeAuthSession = async (sessionId, refreshToken = '') => deleteJson(
+  `/api/v1/auth/sessions/${sessionId}`,
+  {
+    auth: true,
+    headers: refreshToken ? { 'X-Refresh-Token': refreshToken } : undefined,
+  },
+);
+
 export const updateProfile = async ({ avatar, name, preferredLang } = {}) => (
   putJson('/api/v1/auth/me', {
     ...(avatar !== undefined ? { avatar } : {}),

@@ -9,6 +9,7 @@ const { deleteJson, postJson, putJson, requestJson } = require('../api/client');
 const {
   deleteAccount,
   getAuthSessions,
+  revokeAuthSession,
   login,
   register,
   forgotPassword,
@@ -114,6 +115,14 @@ describe('auth api', () => {
       headers: { 'X-Refresh-Token': 'refresh-token' },
     });
     expect(result).toEqual([{ id: 1, current: true }]);
+  });
+
+  test('revokeAuthSession sends refresh token header', async () => {
+    await revokeAuthSession(7, 'refresh-token');
+    expect(deleteJson).toHaveBeenCalledWith('/api/v1/auth/sessions/7', {
+      auth: true,
+      headers: { 'X-Refresh-Token': 'refresh-token' },
+    });
   });
 
   test('updateProfile calls putJson with preferred language', async () => {

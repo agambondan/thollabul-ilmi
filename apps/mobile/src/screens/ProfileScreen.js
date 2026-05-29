@@ -25,7 +25,7 @@ import {
     TextInput,
     View,
 } from 'react-native';
-import { getAuthSessions, updatePassword, updateProfile } from '../api/auth';
+import { getAuthSessions, revokeAuthSession, updatePassword, updateProfile } from '../api/auth';
 import {
     getAchievements,
     getHafalanSummary,
@@ -406,23 +406,25 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
     const [error, setError] = useState('');
     const [sessions, setSessions] = useState([]);
     const [sessionsLoading, setSessionsLoading] = useState(false);
+    const [revokingSessionId, setRevokingSessionId] = useState(null);
+
+    const loadSessions = async (shouldApply = () => true) => {
+        if (!user) return;
+        setSessionsLoading(true);
+        try {
+            const items = await getAuthSessions(session?.refreshToken ?? '');
+            if (shouldApply()) setSessions(items);
+        } catch {
+            if (shouldApply()) setSessions([]);
+        } finally {
+            if (shouldApply()) setSessionsLoading(false);
+        }
+    };
 
     useEffect(() => {
         let mounted = true;
-        const loadSessions = async () => {
-            if (!user) return;
-            setSessionsLoading(true);
-            try {
-                const items = await getAuthSessions(session?.refreshToken ?? '');
-                if (mounted) setSessions(items);
-            } catch {
-                if (mounted) setSessions([]);
-            } finally {
-                if (mounted) setSessionsLoading(false);
-            }
-        };
 
-        loadSessions();
+        loadSessions(() => mounted);
         return () => {
             mounted = false;
         };
@@ -479,6 +481,23 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
         }
     };
 
+    const revokeSession = async (item) => {
+        if (!item?.id || item.current || revokingSessionId) return;
+
+        setMessage('');
+        setError('');
+        setRevokingSessionId(item.id);
+        try {
+            await revokeAuthSession(item.id, session?.refreshToken ?? '');
+            await loadSessions();
+            setMessage('Sesi login lain berhasil dikeluarkan.');
+        } catch (err) {
+            setError(err?.message ?? 'Sesi login belum bisa dikeluarkan.');
+        } finally {
+            setRevokingSessionId(null);
+        }
+    };
+
     if (!user) {
         return (
             <Card>
@@ -510,12 +529,33 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
                     <View style={styles.sessionList}>
                         {sessions.slice(0, 3).map((item) => (
                             <View key={item.id} style={styles.sessionListRow}>
-                                <Text style={styles.sessionListTitle}>
-                                    {item.current ? 'Perangkat ini' : 'Sesi login'}
-                                </Text>
-                                <Text style={styles.sessionListMeta}>
-                                    Aktif sejak {formatSessionDate(item.created_at)}
-                                </Text>
+                                <View style={styles.sessionListInfo}>
+                                    <Text style={styles.sessionListTitle}>
+                                        {item.current ? 'Perangkat ini' : 'Sesi login'}
+                                    </Text>
+                                    <Text style={styles.sessionListMeta}>
+                                        Aktif sejak {formatSessionDate(item.created_at)}
+                                    </Text>
+                                </View>
+                                {item.current ? (
+                                    <Text style={styles.sessionCurrentPill}>Aktif</Text>
+                                ) : (
+                                    <Pressable
+                                        accessibilityLabel={`Keluar dari sesi login ${item.id}`}
+                                        accessibilityRole="button"
+                                        accessibilityState={{ disabled: revokingSessionId === item.id }}
+                                        disabled={revokingSessionId === item.id}
+                                        onPress={() => revokeSession(item)}
+                                        style={[
+                                            styles.sessionRevokeButton,
+                                            revokingSessionId === item.id && styles.formButtonDisabled,
+                                        ]}
+                                    >
+                                        <Text style={styles.sessionRevokeText}>
+                                            {revokingSessionId === item.id ? '...' : 'Keluar'}
+                                        </Text>
+                                    </Pressable>
+                                )}
                             </View>
                         ))}
                     </View>
