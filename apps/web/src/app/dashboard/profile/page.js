@@ -22,7 +22,7 @@ const inputCls =
     'w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500';
 
 const ProfileDashboardPage = () => {
-    const { user, isAuthenticated, refetchUser } = useAuth();
+    const { user, isAuthenticated, logout, refetchUser } = useAuth();
     const { t } = useLocale();
     const { isWide } = useLayoutMode();
     const [streak, setStreak] = useState(0);
@@ -33,6 +33,10 @@ const ProfileDashboardPage = () => {
     const [editName, setEditName] = useState('');
     const [editLoading, setEditLoading] = useState(false);
     const [editMsg, setEditMsg] = useState({ type: '', text: '' });
+    const [sessions, setSessions] = useState([]);
+    const [sessionsLoading, setSessionsLoading] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+    const [deleteMsg, setDeleteMsg] = useState({ type: '', text: '' });
 
     useEffect(() => {
         const localMuhasabah = readLocalArray('tholabul_muhasabah').map(normalizeMuhasabah);
@@ -75,6 +79,17 @@ const ProfileDashboardPage = () => {
         if (user?.name) setEditName(user.name);
     }, [user]);
 
+    useEffect(() => {
+        if (!isAuthenticated) return;
+        setSessionsLoading(true);
+        userApi
+            .sessions()
+            .then((r) => r.json())
+            .then((data) => setSessions(Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : []))
+            .catch(() => setSessions([]))
+            .finally(() => setSessionsLoading(false));
+    }, [isAuthenticated]);
+
     const handleEditProfile = async (e) => {
         e.preventDefault();
         if (!user?.id || !editName.trim()) return;
@@ -90,6 +105,22 @@ const ProfileDashboardPage = () => {
             setEditMsg({ type: 'error', text: t('profile.update_error') });
         } finally {
             setEditLoading(false);
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        setDeleteMsg({ type: '', text: '' });
+        const confirmed = window.confirm('Hapus akun ini? Aksi ini akan mengakhiri sesi kamu dan tidak dapat dibatalkan dari aplikasi.');
+        if (!confirmed) return;
+        setDeleteLoading(true);
+        try {
+            const res = await userApi.deleteMe();
+            if (!res.ok) throw new Error();
+            await logout();
+        } catch {
+            setDeleteMsg({ type: 'error', text: 'Akun belum bisa dihapus. Coba lagi nanti.' });
+        } finally {
+            setDeleteLoading(false);
         }
     };
 
@@ -244,6 +275,69 @@ const ProfileDashboardPage = () => {
                         {t('profile.hafal_label')}
                     </p>
                 </Link>
+            </div>
+
+            <div className='mt-5 grid gap-3 md:grid-cols-2'>
+                <div className='rounded-xl border border-gray-100 bg-white p-4 dark:border-slate-700 dark:bg-slate-800'>
+                    <div className='flex items-center justify-between gap-3'>
+                        <div>
+                            <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                Sesi Aktif
+                            </p>
+                            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                                Sesi login yang masih aktif di akun ini.
+                            </p>
+                        </div>
+                        {sessionsLoading ? (
+                            <span className='text-xs font-semibold text-emerald-700 dark:text-emerald-300'>
+                                Memuat...
+                            </span>
+                        ) : null}
+                    </div>
+                    {sessions.length ? (
+                        <div className='mt-4 space-y-2'>
+                            {sessions.slice(0, 3).map((sessionItem) => (
+                                <div
+                                    key={sessionItem.id}
+                                    className='rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900/40'
+                                >
+                                    <p className='font-semibold text-gray-800 dark:text-gray-100'>
+                                        {sessionItem.current ? 'Perangkat ini' : 'Sesi login'}
+                                    </p>
+                                    <p className='mt-0.5 text-gray-500 dark:text-gray-400'>
+                                        Aktif sejak {new Date(sessionItem.created_at).toLocaleDateString('id-ID')}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    ) : !sessionsLoading ? (
+                        <p className='mt-3 text-xs text-gray-500 dark:text-gray-400'>
+                            Riwayat sesi aktif belum tersedia.
+                        </p>
+                    ) : null}
+                </div>
+
+                <div className='rounded-xl border border-red-100 bg-red-50 p-4 dark:border-red-900/50 dark:bg-red-950/20'>
+                    <p className='text-sm font-semibold text-red-700 dark:text-red-300'>
+                        Hapus Akun
+                    </p>
+                    <p className='mt-1 text-xs text-red-600/80 dark:text-red-200/80'>
+                        Menghapus akun akan mengakhiri sesi aktif dan menonaktifkan akses personal.
+                    </p>
+                    {deleteMsg.text ? (
+                        <p className='mt-3 text-xs font-semibold text-red-600 dark:text-red-300'>
+                            {deleteMsg.text}
+                        </p>
+                    ) : null}
+                    <button
+                        type='button'
+                        disabled={deleteLoading}
+                        onClick={handleDeleteAccount}
+                        className='mt-4 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-100 disabled:opacity-60 dark:border-red-900/60 dark:bg-slate-900 dark:text-red-300 dark:hover:bg-red-950/40'
+                    >
+                        {deleteLoading ? t('common.saving') : 'Hapus Akun'}
+                    </button>
+                </div>
             </div>
         </div>
     );
