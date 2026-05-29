@@ -3103,6 +3103,45 @@ Results:
 - Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above
   2,000 lines.
 
+## Web App Khatam Theme Parity
+
+Status: completed for the native `web_app` Khatam light/dark palette pass.
+
+Implemented:
+
+- `KhatamScreen` now reads `isDarkTheme` in addition to `isWebAppLayout`.
+- The `web_app` Khatam route keeps the existing light dashboard palette when
+  light mode is active, and switches the route surface, guest/empty cards,
+  tracker header, target card, target stats, juz grid card, and status message
+  to a dark dashboard palette when the app theme is dark.
+- Added regression coverage for both light and dark `web_app` Khatam palettes.
+- Classic Khatam progress loading, target persistence, and continue-reading
+  behavior remain unchanged.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/KhatamScreen.js
+cd apps/mobile
+npm test -- khatam.test.js mobileAppShell.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check -- apps/mobile/src/screens/KhatamScreen.js apps/mobile/src/__tests__/khatam.test.js docs/WEB_MOBILE_SYNC.md docs/features/progress/2026-05-24-mobile-web-app-layout-impact-plan.md
+find apps/mobile/src -name '*.js' -print0 | xargs -0 wc -l | sort -nr | head -10
+```
+
+Results:
+
+- `node --check` passed for `KhatamScreen.js`.
+- Targeted Khatam/shell tests passed: 2 suites, 28 tests.
+- Full mobile Jest passed: 48 suites, 719 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed for touched files.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above
+  2,000 lines.
+
 ## Web App Profile Theme Parity
 
 Status: completed for the native `web_app` Profile main screen light/dark

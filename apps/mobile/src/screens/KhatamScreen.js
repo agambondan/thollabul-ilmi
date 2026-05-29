@@ -26,6 +26,44 @@ const WEB_APP_KHATAM_TEXT = '#0f172a';
 const WEB_APP_KHATAM_MUTED = '#64748b';
 const WEB_APP_KHATAM_ACCENT = '#059669';
 const WEB_APP_KHATAM_AMBER = '#f59e0b';
+const WEB_APP_KHATAM_THEMES = {
+  light: {
+    accent: WEB_APP_KHATAM_ACCENT,
+    accentSoft: '#ecfdf5',
+    amber: WEB_APP_KHATAM_AMBER,
+    amberSoft: '#fffbeb',
+    bg: WEB_APP_KHATAM_BG,
+    blue: '#2563eb',
+    blueSoft: '#eff6ff',
+    border: WEB_APP_KHATAM_BORDER,
+    cell: '#f1f5f9',
+    iconBg: '#d1fae5',
+    messageBg: '#fff7ed',
+    messageBorder: '#fed7aa',
+    messageText: '#c2410c',
+    muted: WEB_APP_KHATAM_MUTED,
+    surface: WEB_APP_KHATAM_SURFACE,
+    text: WEB_APP_KHATAM_TEXT,
+  },
+  dark: {
+    accent: '#34d399',
+    accentSoft: '#063b31',
+    amber: '#fbbf24',
+    amberSoft: '#3f2f0b',
+    bg: '#020617',
+    blue: '#60a5fa',
+    blueSoft: '#0f274a',
+    border: '#334155',
+    cell: '#1e293b',
+    iconBg: '#064e3b',
+    messageBg: '#431407',
+    messageBorder: '#9a3412',
+    messageText: '#fdba74',
+    muted: '#94a3b8',
+    surface: '#111827',
+    text: '#f8fafc',
+  },
+};
 
 const normalizeProgress = (payload) => {
   const data = payload?.data?.progress ?? payload?.progress ?? payload?.data ?? payload;
@@ -48,7 +86,8 @@ const formatLastRead = (value) => {
 
 export function KhatamScreen({ isActive, navigation, onOpenTab }) {
   const { user } = useSession();
-  const { isWebAppLayout } = useLayoutModePreference();
+  const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+  const webAppTheme = isDarkTheme ? WEB_APP_KHATAM_THEMES.dark : WEB_APP_KHATAM_THEMES.light;
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(null);
@@ -138,7 +177,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
   if (isWebAppLayout) {
     return (
       <Screen
-        contentStyle={styles.webAppSurface}
+        contentStyle={[styles.webAppSurface, { backgroundColor: webAppTheme.bg }]}
         title="Khatam"
         subtitle="Pantau progres khatam Al-Quran dan target harian."
         refreshing={loading}
@@ -147,30 +186,49 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
           <IconActionButton Icon={RefreshCw} label="Muat ulang Khatam" onPress={load} disabled={loading} />
         }
       >
-        <View testID="khatam-web-app-surface" />
+        <View style={{ backgroundColor: webAppTheme.bg }} testID="khatam-web-app-surface" />
         {!user ? (
-          <View style={styles.webAppGuestCard}>
-            <View style={styles.webAppQuranIcon}>
-              <BookOpenCheck color={WEB_APP_KHATAM_ACCENT} size={34} strokeWidth={2.2} />
+          <View
+            style={[styles.webAppGuestCard, { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border }]}
+            testID="khatam-web-app-guest-card"
+          >
+            <View style={[styles.webAppQuranIcon, { backgroundColor: webAppTheme.iconBg }]}>
+              <BookOpenCheck color={webAppTheme.accent} size={34} strokeWidth={2.2} />
             </View>
-            <Text style={styles.webAppTitle}>Khatam Tracker</Text>
-            <Text style={styles.webAppSubtitle}>Login untuk melihat progress khatam Quran-mu.</Text>
+            <Text style={[styles.webAppTitle, { color: webAppTheme.text }]}>Khatam Tracker</Text>
+            <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>Login untuk melihat progress khatam Quran-mu.</Text>
             <Pressable onPress={() => onOpenTab?.('profile')} style={styles.webAppPrimaryButton}>
               <Text style={styles.webAppPrimaryButtonText}>Masuk dari Profil</Text>
             </Pressable>
           </View>
         ) : null}
 
-        {user && loading && !progress ? <ActivityIndicator color={WEB_APP_KHATAM_ACCENT} /> : null}
-        {user && error ? <Text style={styles.webAppMessage}>{error}</Text> : null}
+        {user && loading && !progress ? <ActivityIndicator color={webAppTheme.accent} /> : null}
+        {user && error ? (
+          <Text
+            style={[
+              styles.webAppMessage,
+              {
+                backgroundColor: webAppTheme.messageBg,
+                borderColor: webAppTheme.messageBorder,
+                color: webAppTheme.messageText,
+              },
+            ]}
+          >
+            {error}
+          </Text>
+        ) : null}
 
         {user && !loading && !error && !progress ? (
-          <View style={styles.webAppGuestCard}>
-            <View style={styles.webAppQuranIcon}>
-              <BookOpenCheck color={WEB_APP_KHATAM_ACCENT} size={34} strokeWidth={2.2} />
+          <View
+            style={[styles.webAppGuestCard, { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border }]}
+            testID="khatam-web-app-empty-card"
+          >
+            <View style={[styles.webAppQuranIcon, { backgroundColor: webAppTheme.iconBg }]}>
+              <BookOpenCheck color={webAppTheme.accent} size={34} strokeWidth={2.2} />
             </View>
-            <Text style={styles.webAppTitle}>Belum ada progress Quran</Text>
-            <Text style={styles.webAppSubtitle}>Buka Quran lalu simpan progres ayat terakhir untuk mulai melacak Khatam.</Text>
+            <Text style={[styles.webAppTitle, { color: webAppTheme.text }]}>Belum ada progress Quran</Text>
+            <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>Buka Quran lalu simpan progres ayat terakhir untuk mulai melacak Khatam.</Text>
             <Pressable onPress={() => navigation?.closeAndOpen?.('ibadah', 'quran')} style={styles.webAppPrimaryButton}>
               <Text style={styles.webAppPrimaryButtonText}>Buka Quran</Text>
             </Pressable>
@@ -180,11 +238,11 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
         {progress && stats ? (
           <>
             <View style={styles.webAppHeader}>
-              <View style={styles.webAppQuranIcon}>
-                <BookOpenCheck color={WEB_APP_KHATAM_ACCENT} size={30} strokeWidth={2.2} />
+              <View style={[styles.webAppQuranIcon, { backgroundColor: webAppTheme.iconBg }]}>
+                <BookOpenCheck color={webAppTheme.accent} size={30} strokeWidth={2.2} />
               </View>
-              <Text style={styles.webAppTitle}>Khatam Tracker</Text>
-              <Text style={styles.webAppSubtitle}>Pantau progress khatam Al-Quran kamu</Text>
+              <Text style={[styles.webAppTitle, { color: webAppTheme.text }]}>Khatam Tracker</Text>
+              <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>Pantau progress khatam Al-Quran kamu</Text>
             </View>
 
             <View style={styles.webAppHeroCard}>
@@ -210,9 +268,12 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
               </Text>
             </View>
 
-            <View style={styles.webAppTargetCard}>
-              <Text style={styles.webAppSectionTitle}>Target Khatam</Text>
-              <Text style={styles.webAppSectionHint}>Pilih durasi agar target ayat harian otomatis menyesuaikan.</Text>
+            <View
+              style={[styles.webAppTargetCard, { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border }]}
+              testID="khatam-web-app-target-card"
+            >
+              <Text style={[styles.webAppSectionTitle, { color: webAppTheme.text }]}>Target Khatam</Text>
+              <Text style={[styles.webAppSectionHint, { color: webAppTheme.muted }]}>Pilih durasi agar target ayat harian otomatis menyesuaikan.</Text>
               <View style={styles.webAppTargetChips}>
                 {KHATAM_TARGET_OPTIONS.map((option) => {
                   const selected = option.days === targetDays;
@@ -220,9 +281,17 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                     <Pressable
                       key={option.days}
                       onPress={() => selectTargetDays(option.days)}
-                      style={[styles.webAppTargetChip, selected ? styles.webAppTargetChipActive : null]}
+                      style={[
+                        styles.webAppTargetChip,
+                        { backgroundColor: webAppTheme.accentSoft },
+                        selected ? styles.webAppTargetChipActive : null,
+                      ]}
                     >
-                      <Text style={[styles.webAppTargetChipText, selected ? styles.webAppTargetChipTextActive : null]}>
+                      <Text style={[
+                        styles.webAppTargetChipText,
+                        { color: webAppTheme.accent },
+                        selected ? styles.webAppTargetChipTextActive : null,
+                      ]}>
                         {option.label}
                       </Text>
                     </Pressable>
@@ -230,23 +299,26 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                 })}
               </View>
               <View style={styles.webAppTargetGrid}>
-                <View style={[styles.webAppTargetStat, styles.webAppTargetStatGreen]}>
-                  <Text style={styles.webAppTargetValue}>{stats.target.daysLeft}</Text>
-                  <Text style={styles.webAppTargetLabel}>Hari tersisa</Text>
+                <View style={[styles.webAppTargetStat, styles.webAppTargetStatGreen, { backgroundColor: webAppTheme.accentSoft }]}>
+                  <Text style={[styles.webAppTargetValue, { color: webAppTheme.accent }]}>{stats.target.daysLeft}</Text>
+                  <Text style={[styles.webAppTargetLabel, { color: webAppTheme.muted }]}>Hari tersisa</Text>
                 </View>
-                <View style={[styles.webAppTargetStat, styles.webAppTargetStatAmber]}>
-                  <Text style={[styles.webAppTargetValue, styles.webAppTargetValueAmber]}>{stats.target.ayahsPerDay}</Text>
-                  <Text style={styles.webAppTargetLabel}>Ayat/hari</Text>
+                <View style={[styles.webAppTargetStat, styles.webAppTargetStatAmber, { backgroundColor: webAppTheme.amberSoft }]}>
+                  <Text style={[styles.webAppTargetValue, styles.webAppTargetValueAmber, { color: webAppTheme.amber }]}>{stats.target.ayahsPerDay}</Text>
+                  <Text style={[styles.webAppTargetLabel, { color: webAppTheme.muted }]}>Ayat/hari</Text>
                 </View>
-                <View style={[styles.webAppTargetStat, styles.webAppTargetStatBlue]}>
-                  <Text style={[styles.webAppTargetValue, styles.webAppTargetValueBlue]}>{Math.ceil(stats.target.ayahsPerDay / 15)}</Text>
-                  <Text style={styles.webAppTargetLabel}>Menit/hari</Text>
+                <View style={[styles.webAppTargetStat, styles.webAppTargetStatBlue, { backgroundColor: webAppTheme.blueSoft }]}>
+                  <Text style={[styles.webAppTargetValue, styles.webAppTargetValueBlue, { color: webAppTheme.blue }]}>{Math.ceil(stats.target.ayahsPerDay / 15)}</Text>
+                  <Text style={[styles.webAppTargetLabel, { color: webAppTheme.muted }]}>Menit/hari</Text>
                 </View>
               </View>
             </View>
 
-            <View style={styles.webAppJuzCard}>
-              <Text style={styles.webAppSectionTitle}>Progress per Juz</Text>
+            <View
+              style={[styles.webAppJuzCard, { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border }]}
+              testID="khatam-web-app-juz-card"
+            >
+              <Text style={[styles.webAppSectionTitle, { color: webAppTheme.text }]}>Progress per Juz</Text>
               <View style={styles.webAppJuzGrid}>
                 {stats.juz.map((item) => {
                   const partial = item.pct > 0 && item.pct < 100;
@@ -255,6 +327,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                       key={item.juz}
                       style={[
                         styles.webAppJuzCell,
+                        { backgroundColor: webAppTheme.cell },
                         item.pct >= 100 ? styles.webAppJuzCellDone : null,
                         partial ? styles.webAppJuzCellPartial : null,
                         item.isCurrent ? styles.webAppJuzCellCurrent : null,
@@ -262,6 +335,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                     >
                       <Text style={[
                         styles.webAppJuzText,
+                        { color: webAppTheme.muted },
                         item.pct >= 100 ? styles.webAppJuzTextDone : null,
                         partial ? styles.webAppJuzTextPartial : null,
                       ]}>
@@ -273,10 +347,10 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                 })}
               </View>
               <View style={styles.webAppLegendGrid}>
-                <Text style={styles.webAppLegendText}>Selesai</Text>
-                <Text style={styles.webAppLegendText}>Sebagian</Text>
-                <Text style={styles.webAppLegendText}>Belum dibaca</Text>
-                <Text style={styles.webAppLegendText}>Saat ini</Text>
+                <Text style={[styles.webAppLegendText, { color: webAppTheme.muted }]}>Selesai</Text>
+                <Text style={[styles.webAppLegendText, { color: webAppTheme.muted }]}>Sebagian</Text>
+                <Text style={[styles.webAppLegendText, { color: webAppTheme.muted }]}>Belum dibaca</Text>
+                <Text style={[styles.webAppLegendText, { color: webAppTheme.muted }]}>Saat ini</Text>
               </View>
               <Pressable onPress={continueReading} style={styles.webAppPrimaryButton}>
                 <Text style={styles.webAppPrimaryButtonText}>Lanjutkan baca</Text>

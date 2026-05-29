@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 
 jest.mock('lucide-react-native', () => ({
   ArrowLeft: 'ArrowLeft',
@@ -88,7 +89,7 @@ const navigation = {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+  useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: false });
   readPreference.mockResolvedValue(30);
   writePreference.mockResolvedValue(60);
 });
@@ -110,7 +111,7 @@ describe('KhatamScreen', () => {
 
   test('uses web app Khatam surface when web app layout is active', async () => {
     useSession.mockReturnValue({ user: null });
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
 
     const { getByTestId, queryByTestId } = render(
       <KhatamScreen isActive navigation={navigation} onOpenTab={jest.fn()} />,
@@ -122,9 +123,49 @@ describe('KhatamScreen', () => {
     expect(queryByTestId('khatam-classic-surface')).toBeNull();
   });
 
+  test('uses light web app Khatam palette when theme is light', async () => {
+    useSession.mockReturnValue({ user: null });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
+
+    const { getByTestId } = render(
+      <KhatamScreen isActive navigation={navigation} onOpenTab={jest.fn()} />,
+    );
+
+    await waitFor(() => {
+      expect(getByTestId('khatam-web-app-guest-card')).toBeTruthy();
+    });
+
+    expect(StyleSheet.flatten(getByTestId('khatam-web-app-surface').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#f8fafc' }),
+    );
+    expect(StyleSheet.flatten(getByTestId('khatam-web-app-guest-card').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#e5e7eb' }),
+    );
+  });
+
+  test('uses dark web app Khatam palette when theme is dark', async () => {
+    useSession.mockReturnValue({ user: null });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: true, isWebAppLayout: true });
+
+    const { getByTestId } = render(
+      <KhatamScreen isActive navigation={navigation} onOpenTab={jest.fn()} />,
+    );
+
+    await waitFor(() => {
+      expect(getByTestId('khatam-web-app-guest-card')).toBeTruthy();
+    });
+
+    expect(StyleSheet.flatten(getByTestId('khatam-web-app-surface').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#020617' }),
+    );
+    expect(StyleSheet.flatten(getByTestId('khatam-web-app-guest-card').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#111827', borderColor: '#334155' }),
+    );
+  });
+
   test('uses dashboard Khatam route surface in web app layout', async () => {
     useSession.mockReturnValue({ user: { id: '1' } });
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     getQuranProgress.mockResolvedValue({
       data: {
         ayah_number: 75,
@@ -151,7 +192,7 @@ describe('KhatamScreen', () => {
 
   test('persists web app Khatam target duration', async () => {
     useSession.mockReturnValue({ user: { id: '1' } });
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     getQuranProgress.mockResolvedValue({
       data: {
         ayah_number: 75,
