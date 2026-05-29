@@ -22,7 +22,7 @@ func TestCorsAllowsDefaultDockerFrontendOrigin(t *testing.T) {
 	req := httptest.NewRequest(fiber.MethodOptions, "/api/v1/surah", nil)
 	req.Header.Set(fiber.HeaderOrigin, "http://localhost:23000")
 	req.Header.Set(fiber.HeaderAccessControlRequestMethod, fiber.MethodGet)
-	req.Header.Set(fiber.HeaderAccessControlRequestHeaders, "Authorization,Content-Type")
+	req.Header.Set(fiber.HeaderAccessControlRequestHeaders, "Authorization,Content-Type,X-Refresh-Token")
 
 	resp, err := app.Test(req)
 	if err != nil {
@@ -46,7 +46,7 @@ func TestCorsAllowsDefaultDockerFrontendOrigin(t *testing.T) {
 	}
 
 	allowHeaders := resp.Header.Get(fiber.HeaderAccessControlAllowHeaders)
-	for _, header := range []string{"Authorization", "Content-Type"} {
+	for _, header := range []string{"Authorization", "Content-Type", "X-Refresh-Token"} {
 		if !strings.Contains(allowHeaders, header) {
 			t.Fatalf("expected allow headers %q to contain %q", allowHeaders, header)
 		}

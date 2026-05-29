@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/spf13/viper"
 )
 
@@ -20,7 +20,11 @@ func VerifyToken(c *fiber.Ctx) (*jwt.Token, error) {
 	if string(reqToken) == "" {
 		bearerToken := c.Get("Authorization")
 		if bearerToken != "" {
-			reqToken = []byte(strings.Split(bearerToken, " ")[1])
+			tokens := strings.Fields(bearerToken)
+			if len(tokens) != 2 || !strings.EqualFold(tokens[0], "Bearer") {
+				return nil, errors.New("token is empty")
+			}
+			reqToken = []byte(tokens[1])
 		}
 	}
 	return extractToken(string(reqToken))
@@ -35,8 +39,8 @@ func VerifyTokenCookies(c *fiber.Ctx) (*jwt.Token, error) {
 // VerifyTokenHeaders is to verify token by header
 func VerifyTokenHeaders(c *fiber.Ctx) (*jwt.Token, error) {
 	bearerToken := c.Get("Authorization")
-	tokens := strings.Split(bearerToken, " ")
-	if len(tokens) == 2 {
+	tokens := strings.Fields(bearerToken)
+	if len(tokens) == 2 && strings.EqualFold(tokens[0], "Bearer") {
 		return extractToken(tokens[1])
 	}
 	return nil, errors.New("token is empty")

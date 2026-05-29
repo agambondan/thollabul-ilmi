@@ -36,7 +36,7 @@ func Cors() fiber.Handler {
 	}
 	allowHeaders := strings.TrimSpace(viper.GetString("ALLOW_HEADERS"))
 	if allowHeaders == "" {
-		allowHeaders = "Origin,Content-Type,Accept,Authorization"
+		allowHeaders = "Origin,Content-Type,Accept,Authorization,X-Refresh-Token"
 	}
 	return cors.New(cors.Config{
 		AllowMethods:     allowMethods,
