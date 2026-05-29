@@ -84,7 +84,7 @@ func (r *forumRepo) UpdateQuestion(q *model.ForumQuestion) error {
 }
 
 func (r *forumRepo) DeleteQuestion(id, userID uuid.UUID) error {
-	return r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.ForumQuestion{}).Error
+	return deleteResultError(r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.ForumQuestion{}))
 }
 
 func (r *forumRepo) CreateAnswer(a *model.ForumAnswer) error {
@@ -123,7 +123,7 @@ func (r *forumRepo) AcceptAnswer(answerID, questionID, userID uuid.UUID) error {
 }
 
 func (r *forumRepo) DeleteAnswer(id, userID uuid.UUID) error {
-	return r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.ForumAnswer{}).Error
+	return deleteResultError(r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.ForumAnswer{}))
 }
 
 func (r *forumRepo) FindVote(userID, targetID uuid.UUID, targetType string) (*model.ForumVote, error) {

@@ -66,7 +66,7 @@ func (r *feedRepository) Delete(id string, userID *uuid.UUID) error {
 	if userID != nil {
 		q = q.Where("user_id = ?", *userID)
 	}
-	return q.Delete(&model.FeedPost{}).Error
+	return deleteResultError(q.Delete(&model.FeedPost{}))
 }
 
 func (r *feedRepository) IncrementLikes(id string) error {

@@ -49,5 +49,5 @@ func (r *goalRepository) Update(id int, userID uuid.UUID, g *model.StudyGoal) (*
 }
 
 func (r *goalRepository) Delete(id int, userID uuid.UUID) error {
-	return r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.StudyGoal{}).Error
+	return deleteResultError(r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.StudyGoal{}))
 }

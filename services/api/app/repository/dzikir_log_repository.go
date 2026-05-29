@@ -44,5 +44,5 @@ func (r *dzikirLogRepo) FindByUserIDDateAndDzikirID(userID uuid.UUID, date strin
 }
 
 func (r *dzikirLogRepo) DeleteByID(id, userID uuid.UUID) error {
-	return r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.DzikirLog{}).Error
+	return deleteResultError(r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.DzikirLog{}))
 }

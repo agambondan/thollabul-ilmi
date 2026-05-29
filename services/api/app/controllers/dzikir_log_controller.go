@@ -80,6 +80,7 @@ func (c *dzikirLogController) GetToday(ctx *fiber.Ctx) error {
 // @Success 200 {object} lib.Response
 // @Failure 400 {object} lib.Response
 // @Failure 401 {object} lib.Response
+// @Failure 404 {object} lib.Response
 // @Router /dzikir/log/{id} [delete]
 func (c *dzikirLogController) Delete(ctx *fiber.Ctx) error {
 	userID, err := extractUserID(ctx)
@@ -91,7 +92,7 @@ func (c *dzikirLogController) Delete(ctx *fiber.Ctx) error {
 		return lib.ErrorBadRequest(ctx, err)
 	}
 	if err := c.svc.Delete(logID, userID); err != nil {
-		return lib.ErrorInternal(ctx)
+		return lib.ErrorNotFound(ctx)
 	}
 	return lib.OK(ctx, fiber.Map{"deleted": true})
 }

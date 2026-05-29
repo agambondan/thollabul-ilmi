@@ -75,12 +75,5 @@ func (r *tilawahRepository) Summary(userID uuid.UUID) (*model.TilawahSummary, er
 }
 
 func (r *tilawahRepository) DeleteByID(id int, userID uuid.UUID) error {
-	result := r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.TilawahLog{})
-	if result.Error != nil {
-		return result.Error
-	}
-	if result.RowsAffected == 0 {
-		return gorm.ErrRecordNotFound
-	}
-	return nil
+	return deleteResultError(r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.TilawahLog{}))
 }

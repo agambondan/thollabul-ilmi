@@ -109,7 +109,7 @@ func (c *noteController) Update(ctx *fiber.Ctx) error {
 // @Success 200 {object} lib.Response
 // @Failure 400 {object} lib.Response
 // @Failure 401 {object} lib.Response
-// @Failure 500 {object} lib.Response
+// @Failure 404 {object} lib.Response
 // @Router /notes/{id} [delete]
 func (c *noteController) Delete(ctx *fiber.Ctx) error {
 	userID, err := extractUserID(ctx)
@@ -121,7 +121,7 @@ func (c *noteController) Delete(ctx *fiber.Ctx) error {
 		return lib.ErrorBadRequest(ctx, "id tidak valid")
 	}
 	if err := c.svc.Delete(id, userID); err != nil {
-		return lib.ErrorInternal(ctx)
+		return lib.ErrorNotFound(ctx)
 	}
 	return lib.OK(ctx, nil)
 }

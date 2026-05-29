@@ -99,5 +99,5 @@ func (r *bookmarkRepo) UpdateMeta(id, userID uuid.UUID, color, label *string) (*
 }
 
 func (r *bookmarkRepo) DeleteByID(id, userID uuid.UUID) error {
-	return r.db.Unscoped().Where("id = ? AND user_id = ?", id, userID).Delete(&model.Bookmark{}).Error
+	return deleteResultError(r.db.Unscoped().Where("id = ? AND user_id = ?", id, userID).Delete(&model.Bookmark{}))
 }

@@ -48,5 +48,5 @@ func (r *commentRepository) Delete(id int, userID *uuid.UUID) error {
 	if userID != nil {
 		q = q.Where("user_id = ?", *userID)
 	}
-	return q.Delete(&model.Comment{}).Error
+	return deleteResultError(q.Delete(&model.Comment{}))
 }

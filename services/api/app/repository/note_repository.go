@@ -46,5 +46,5 @@ func (r *noteRepository) Update(id int, n *model.Note) (*model.Note, error) {
 }
 
 func (r *noteRepository) Delete(id int, userID uuid.UUID) error {
-	return r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.Note{}).Error
+	return deleteResultError(r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.Note{}))
 }

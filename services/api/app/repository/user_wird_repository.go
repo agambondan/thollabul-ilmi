@@ -51,5 +51,5 @@ func (r *userWirdRepo) Update(w *model.UserWird) (*model.UserWird, error) {
 }
 
 func (r *userWirdRepo) DeleteByID(id, userID uuid.UUID) error {
-	return r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.UserWird{}).Error
+	return deleteResultError(r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.UserWird{}))
 }

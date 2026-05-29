@@ -44,5 +44,5 @@ func (r *kalkulasiZakatRepo) FindByID(id, userID uuid.UUID) (*model.KalkulasiZak
 }
 
 func (r *kalkulasiZakatRepo) Delete(id, userID uuid.UUID) error {
-	return r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.KalkulasiZakat{}).Error
+	return deleteResultError(r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.KalkulasiZakat{}))
 }

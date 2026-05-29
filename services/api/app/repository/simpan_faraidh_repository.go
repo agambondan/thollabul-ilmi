@@ -44,5 +44,5 @@ func (r *simpanFaraidhRepo) FindByID(id, userID uuid.UUID) (*model.SimpanFaraidh
 }
 
 func (r *simpanFaraidhRepo) Delete(id, userID uuid.UUID) error {
-	return r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.SimpanFaraidh{}).Error
+	return deleteResultError(r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&model.SimpanFaraidh{}))
 }
