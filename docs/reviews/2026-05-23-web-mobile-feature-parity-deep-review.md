@@ -11,7 +11,9 @@ Yang masih ada bukan missing feature besar, melainkan gap kedalaman dan beberapa
 
 Update follow-up 2026-05-23: mobile Profile settings sudah dikerjakan untuk current-device session, ganti sandi, bahasa konten, preferensi tema lokal, dan preferensi layout mode. Catatan follow-up ada di `docs/features/progress/2026-05-23-web-mobile-parity-gap-followup.md`.
 
-- Mobile Profile tidak lagi menampilkan stub kosong untuk tampilan/keamanan, tetapi app-wide dark theme penuh, riwayat login multi-device, dan delete-account self-service masih tracked sebagai work lanjutan.
+Update follow-up 2026-05-29: riwayat login multi-device dan delete-account self-service sudah tersedia di backend, web `/profile`, web `/dashboard/profile`, dan mobile Profile. Gap mobile Profile yang masih tracked adalah app-wide dark theme render penuh.
+
+- Mobile Profile tidak lagi menampilkan stub kosong untuk tampilan/keamanan; app-wide dark theme penuh masih tracked sebagai work lanjutan.
 - Web punya utility/admin/dev surface yang tidak punya padanan mobile, dan ini tampak intentional.
 - Mobile punya offline pack/native reminder behavior yang tidak punya padanan web langsung.
 - Achievements/stats masih tidak setara secara kedalaman UI: web punya dashboard khusus, mobile lebih ringan lewat profile/feature surface.

@@ -155,6 +155,29 @@ func TestUserControllerDeleteSessionRejectsCurrentSession(t *testing.T) {
 	}
 }
 
+func TestUserControllerDeleteSessionRequiresCurrentRefreshToken(t *testing.T) {
+	app, db, userID := newUserControllerTestApp(t)
+	now := time.Now()
+	otherID := seedUserControllerRefreshToken(t, db, userID.String(), "other-refresh", now.Add(-time.Hour), now.Add(24*time.Hour))
+
+	res, err := app.Test(newAuthRequest(t, fiber.MethodDelete, "/auth/sessions/"+strconv.FormatUint(uint64(otherID), 10), userID))
+	if err != nil {
+		t.Fatalf("request delete session without refresh token: %v", err)
+	}
+	defer res.Body.Close()
+	if res.StatusCode != fiber.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", res.StatusCode)
+	}
+
+	var tokens int64
+	if err := db.Model(&model.RefreshToken{}).Where("token = ?", "other-refresh").Count(&tokens).Error; err != nil {
+		t.Fatalf("count other token: %v", err)
+	}
+	if tokens != 1 {
+		t.Fatalf("expected session token to remain, got %d", tokens)
+	}
+}
+
 func newUserControllerTestApp(t *testing.T) (*fiber.App, *gorm.DB, uuid.UUID) {
 	t.Helper()
 

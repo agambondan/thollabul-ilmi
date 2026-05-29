@@ -397,6 +397,9 @@ func (c *userController) DeleteSession(ctx *fiber.Ctx) error {
 	if currentRefreshToken == "" {
 		currentRefreshToken = ctx.Cookies("refresh_token")
 	}
+	if currentRefreshToken == "" {
+		return lib.ErrorBadRequest(ctx, "current refresh token required")
+	}
 	if err := c.user.RevokeSession(userID, uint(sessionID), currentRefreshToken); err != nil {
 		if errors.Is(err, service.ErrCannotRevokeCurrentSession) {
 			return lib.ErrorBadRequest(ctx, err.Error())
