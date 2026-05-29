@@ -5,11 +5,6 @@ import { radius, spacing } from '../../theme';
 import { getExploreItemKey } from '../ExploreScreen.helpers';
 
 export const WEB_APP_TOOL_ROUTE_CONFIGS = {
-  faraidh: {
-    eyebrow: 'KALKULATOR',
-    subtitle: 'Planner pembagian waris dengan riwayat kalkulasi.',
-    title: 'Faraidh',
-  },
 };
 
 export const WEB_APP_TOOL_ROUTE_KEYS = new Set(Object.keys(WEB_APP_TOOL_ROUTE_CONFIGS));

@@ -80,6 +80,25 @@ const baseContext = (activeFeature, overrides = {}) => ({
   dictionaryQuery: '',
   editingUserWirdId: '',
   error: '',
+  faraidh: {
+    bequest: '',
+    debts: '',
+    estate: '',
+    heirs: {
+      anakL: 0,
+      anakP: 0,
+      ayah: 0,
+      ibu: 0,
+      istri: 0,
+      kakek: 0,
+      nenek: 0,
+      saudaraL: 0,
+      saudaraP: 0,
+      suami: 0,
+    },
+  },
+  faraidhCatatan: '',
+  faraidhHistory: [],
   featureSearch: '',
   fillUserWirdForm: jest.fn(),
   focusDictionaryInput: jest.fn(),
@@ -130,6 +149,7 @@ const baseContext = (activeFeature, overrides = {}) => ({
   scoreQuiz: jest.fn(() => 0),
   selectedSurahNumber: null,
   session: null,
+  savingFaraidh: false,
   savingUserWird: false,
   setActiveNoteRef: jest.fn(),
   setAnswers: jest.fn(),
@@ -139,6 +159,9 @@ const baseContext = (activeFeature, overrides = {}) => ({
   setBlogCategory: jest.fn(),
   setBlogSearch: jest.fn(),
   setDictionaryQuery: jest.fn(),
+  setFaraidh: jest.fn(),
+  setFaraidhCatatan: jest.fn(),
+  setFaraidhHistory: jest.fn(),
   setFeatureSearch: jest.fn(),
   setForumAnswerDraft: jest.fn(),
   setForumAnswers: jest.fn(),
@@ -163,7 +186,9 @@ const baseContext = (activeFeature, overrides = {}) => ({
   setLeaderboardTab: jest.fn(),
   setLibraryProgressFilter: jest.fn(),
   setNotesSearch: jest.fn(),
+  setSavingFaraidh: jest.fn(),
   setSelectedItem: jest.fn(),
+  setShowFaraidhHistory: jest.fn(),
   setSurahSearch: jest.fn(),
   setTasbih: jest.fn(),
   setUserWirdForm: jest.fn(),
@@ -191,7 +216,9 @@ const baseContext = (activeFeature, overrides = {}) => ({
   setZakatTradeStock: jest.fn(),
   sholatLog: {},
   showError: jest.fn(),
+  showFaraidhHistory: false,
   showInfo: jest.fn(),
+  showSuccess: jest.fn(),
   submitUserWird: jest.fn(),
   surahSearch: '',
   surahs: [],
@@ -664,6 +691,72 @@ describe('Explore web app reference list routes', () => {
 
     fireEvent.press(getByTestId('web-app-zakat-history-back'));
     expect(setZakatTab).toHaveBeenCalledWith(0);
+  });
+
+  test('renders Faraidh route as dedicated dashboard calculator and updates heirs', () => {
+    const setFaraidh = jest.fn();
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'faraidh', title: 'Faraidh', type: 'faraidh' },
+      {
+        faraidh: {
+          bequest: '',
+          debts: '',
+          estate: '120000000',
+          heirs: {
+            anakL: 1,
+            anakP: 1,
+            ayah: 0,
+            ibu: 0,
+            istri: 0,
+            kakek: 0,
+            nenek: 0,
+            saudaraL: 0,
+            saudaraP: 0,
+            suami: 0,
+          },
+        },
+        renderFeatureContent: () => <Text>Tool content</Text>,
+        setFaraidh,
+      },
+    ));
+    const { getByTestId, getByText, queryByText } = render(route);
+
+    expect(getByTestId('explore-web-app-faraidh-surface')).toBeTruthy();
+    expect(queryByText('Tool content')).toBeNull();
+    expect(getByText('Kalkulator Waris')).toBeTruthy();
+    expect(getByText('Harta dan Pengurang')).toBeTruthy();
+    expect(getByText('Ahli Waris')).toBeTruthy();
+    expect(getByText('Rp 80.000.000')).toBeTruthy();
+    expect(getByText('Rp 40.000.000')).toBeTruthy();
+
+    fireEvent.press(getByTestId('web-app-faraidh-heir-anakL-plus'));
+    expect(setFaraidh).toHaveBeenCalledWith(expect.any(Function));
+  });
+
+  test('renders Faraidh history route through dedicated dashboard history surface', () => {
+    const setShowFaraidhHistory = jest.fn();
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'faraidh', title: 'Faraidh', type: 'faraidh' },
+      {
+        faraidhHistory: [{
+          id: 'local-faraidh-1',
+          is_local: true,
+          result_summary: 'Anak Laki-laki: 67%, Anak Perempuan: 33%',
+          wealth: 120000000,
+        }],
+        setShowFaraidhHistory,
+        showFaraidhHistory: true,
+      },
+    ));
+    const { getByTestId, getByText } = render(route);
+
+    expect(getByTestId('explore-web-app-faraidh-surface')).toBeTruthy();
+    expect(getByTestId('explore-web-app-faraidh-history-surface')).toBeTruthy();
+    expect(getByText('Riwayat Faraidh')).toBeTruthy();
+    expect(getByText('Rp 120.000.000')).toBeTruthy();
+
+    fireEvent.press(getByTestId('web-app-faraidh-history-back'));
+    expect(setShowFaraidhHistory).toHaveBeenCalledWith(false);
   });
 
   test('renders Asmaul Flashcard route as dashboard card surface', () => {

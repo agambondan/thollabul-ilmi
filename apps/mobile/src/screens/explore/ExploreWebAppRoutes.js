@@ -72,6 +72,7 @@ import { WebAppAsmaulFlashcardRoute, WebAppAsmaulWiridRoute } from './WebAppAsma
 import { WebAppBlogRoute } from './WebAppBlogRoute';
 import { WebAppDoaRoute } from './WebAppDoaRoute';
 import { WebAppFeedRoute } from './WebAppFeedRoute';
+import { WebAppFaraidhRoute } from './WebAppFaraidhRoute';
 import { WebAppFiqhRoute } from './WebAppFiqhRoute';
 import { WebAppForumRoute } from './WebAppForumRoute';
 import { WebAppHijriRoute } from './WebAppHijriRoute';
@@ -1670,6 +1671,10 @@ export function renderExploreWebAppRoute(context) {
         zakatTradeStock={zakatTradeStock}
       />
     );
+  }
+
+  if (activeFeature?.key === 'faraidh' || activeFeature?.type === 'faraidh') {
+    return <WebAppFaraidhRoute context={context} />;
   }
 
   if (WEB_APP_TOOL_ROUTE_CONFIGS[activeFeature?.type]) {
