@@ -53,8 +53,36 @@ const getTokohContribution = (tokoh) =>
   tokoh?.translation?.en ??
   '';
 
+const WEB_APP_TOKOH_THEMES = {
+  light: {
+    accent: '#4f46e5',
+    accentSoft: '#e0e7ff',
+    bg: '#f8fafc',
+    border: '#e5e7eb',
+    chipText: '#64748b',
+    modalHighlight: '#eef2ff',
+    muted: '#64748b',
+    note: '#94a3b8',
+    surface: '#ffffff',
+    text: '#111827',
+  },
+  dark: {
+    accent: '#818cf8',
+    accentSoft: '#312e81',
+    bg: '#020617',
+    border: '#334155',
+    chipText: '#cbd5e1',
+    modalHighlight: '#1e1b4b',
+    muted: '#94a3b8',
+    note: '#64748b',
+    surface: '#111827',
+    text: '#f8fafc',
+  },
+};
+
 export function TokohTarikhContent() {
-  const { isWebAppLayout } = useLayoutModePreference();
+  const { isDarkTheme = false, isWebAppLayout } = useLayoutModePreference();
+  const webAppTheme = isDarkTheme ? WEB_APP_TOKOH_THEMES.dark : WEB_APP_TOKOH_THEMES.light;
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -85,9 +113,18 @@ export function TokohTarikhContent() {
     <TextInput
       onChangeText={setSearch}
       placeholder="Cari tokoh..."
-      placeholderTextColor={isWebAppLayout ? '#94a3b8' : colors.muted}
+      placeholderTextColor={isWebAppLayout ? webAppTheme.muted : colors.muted}
       returnKeyType="search"
-      style={[styles.searchInput, isWebAppLayout && styles.webAppSearchInput]}
+      style={[
+        styles.searchInput,
+        isWebAppLayout && styles.webAppSearchInput,
+        isWebAppLayout && {
+          backgroundColor: webAppTheme.surface,
+          borderColor: webAppTheme.border,
+          color: webAppTheme.text,
+        },
+      ]}
+      testID={isWebAppLayout ? 'tokoh-web-app-search' : undefined}
       value={search}
     />
   );
@@ -101,11 +138,17 @@ export function TokohTarikhContent() {
           style={[
             styles.chip,
             isWebAppLayout && styles.webAppChip,
+            isWebAppLayout && { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
             era === f.value && styles.chipActive,
             isWebAppLayout && era === f.value && styles.webAppChipActive,
+            isWebAppLayout && era === f.value && { backgroundColor: webAppTheme.accent, borderColor: webAppTheme.accent },
           ]}
         >
-          <Text style={[styles.chipText, era === f.value && styles.chipTextActive]}>
+          <Text style={[
+            styles.chipText,
+            isWebAppLayout && { color: webAppTheme.chipText },
+            era === f.value && styles.chipTextActive,
+          ]}>
             {f.label}
           </Text>
         </Pressable>
@@ -114,15 +157,22 @@ export function TokohTarikhContent() {
   );
 
   const renderLoading = () => (
-    <View style={[styles.loadingContainer, isWebAppLayout && styles.webAppLoadingContainer]}>
-      <ActivityIndicator size="large" color={isWebAppLayout ? '#4f46e5' : colors.primary} />
-      {isWebAppLayout ? <Text style={styles.webAppLoadingText}>Memuat tokoh...</Text> : null}
+    <View style={[
+      styles.loadingContainer,
+      isWebAppLayout && styles.webAppLoadingContainer,
+      isWebAppLayout && { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
+    ]}>
+      <ActivityIndicator size="large" color={isWebAppLayout ? webAppTheme.accent : colors.primary} />
+      {isWebAppLayout ? <Text style={[styles.webAppLoadingText, { color: webAppTheme.muted }]}>Memuat tokoh...</Text> : null}
     </View>
   );
 
   const renderEmpty = () => (
-    <View style={isWebAppLayout ? styles.webAppEmpty : null}>
-      <Text style={[styles.empty, isWebAppLayout && styles.webAppEmptyText]}>
+    <View style={[
+      isWebAppLayout ? styles.webAppEmpty : null,
+      isWebAppLayout && { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
+    ]}>
+      <Text style={[styles.empty, isWebAppLayout && styles.webAppEmptyText, isWebAppLayout && { color: webAppTheme.note }]}>
         {isWebAppLayout ? 'Belum ada data tokoh.' : 'Tidak ditemukan'}
       </Text>
     </View>
@@ -132,8 +182,12 @@ export function TokohTarikhContent() {
     const title = getTokohTitle(tokoh);
     const meta = getTokohMeta(tokoh);
     const years = getTokohYears(tokoh);
-    const cardStyle = isWebAppLayout ? styles.webAppCard : styles.card;
-    const avatarStyle = isWebAppLayout ? styles.webAppCardAvatar : styles.cardAvatar;
+    const cardStyle = isWebAppLayout
+      ? [styles.webAppCard, { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border }]
+      : styles.card;
+    const avatarStyle = isWebAppLayout
+      ? [styles.webAppCardAvatar, { backgroundColor: webAppTheme.accentSoft }]
+      : styles.cardAvatar;
 
     return (
       <Pressable
@@ -141,23 +195,32 @@ export function TokohTarikhContent() {
         android_ripple={{ color: 'rgba(79, 70, 229, 0.12)', borderless: false }}
         onPress={() => setSelected(tokoh)}
         style={cardStyle}
+        testID={isWebAppLayout ? 'tokoh-web-app-card' : undefined}
       >
         <View style={avatarStyle}>
           {tokoh.image_url ? (
             <Image source={{ uri: tokoh.image_url }} style={styles.avatarImage} />
           ) : (
-            <Text style={[styles.avatarFallback, isWebAppLayout && styles.webAppAvatarFallback]}>
+            <Text style={[
+              styles.avatarFallback,
+              isWebAppLayout && styles.webAppAvatarFallback,
+              isWebAppLayout && { backgroundColor: webAppTheme.accentSoft, color: webAppTheme.accent },
+            ]}>
               {getTokohInitial(tokoh)}
             </Text>
           )}
         </View>
         <View style={styles.cardBody}>
-          <Text style={[styles.cardName, isWebAppLayout && styles.webAppCardName]} numberOfLines={1}>
+          <Text style={[styles.cardName, isWebAppLayout && styles.webAppCardName, isWebAppLayout && { color: webAppTheme.text }]} numberOfLines={1}>
             {title}
           </Text>
           <View style={styles.cardMetaRow}>
-            {meta ? <Text style={[styles.cardEra, isWebAppLayout && styles.webAppCardEra]}>{meta}</Text> : null}
-            {years ? <Text style={[styles.cardTahun, isWebAppLayout && styles.webAppCardTahun]}>{years}</Text> : null}
+            {meta ? <Text style={[
+              styles.cardEra,
+              isWebAppLayout && styles.webAppCardEra,
+              isWebAppLayout && { backgroundColor: webAppTheme.accentSoft, color: webAppTheme.accent },
+            ]}>{meta}</Text> : null}
+            {years ? <Text style={[styles.cardTahun, isWebAppLayout && styles.webAppCardTahun, isWebAppLayout && { color: webAppTheme.muted }]}>{years}</Text> : null}
           </View>
         </View>
       </Pressable>
@@ -172,7 +235,7 @@ export function TokohTarikhContent() {
         renderEmpty()
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={[styles.resultCount, isWebAppLayout && styles.webAppResultCount]}>
+          <Text style={[styles.resultCount, isWebAppLayout && styles.webAppResultCount, isWebAppLayout && { color: webAppTheme.muted }]}>
             {items.length} tokoh
           </Text>
           <View style={isWebAppLayout ? styles.webAppCardGrid : null}>
@@ -198,31 +261,40 @@ export function TokohTarikhContent() {
         onRequestClose={() => setSelected(null)}
       >
         <Pressable style={styles.modalOverlay} onPress={() => setSelected(null)}>
-          <Pressable style={styles.modalContent} onPress={() => {}}>
+          <Pressable
+            style={[
+              styles.modalContent,
+              isWebAppLayout && { backgroundColor: webAppTheme.surface },
+            ]}
+            onPress={() => {}}
+          >
             {selected && (
               <ScrollView showsVerticalScrollIndicator={false}>
                 <Pressable style={styles.modalClose} onPress={() => setSelected(null)}>
-                  <Text style={styles.modalCloseText}>Tutup</Text>
+                  <Text style={[styles.modalCloseText, isWebAppLayout && { color: webAppTheme.accent }]}>Tutup</Text>
                 </Pressable>
 
                 <View style={styles.modalAvatarWrap}>
                   {selected.image_url ? (
                     <Image source={{ uri: selected.image_url }} style={styles.modalAvatar} />
                   ) : (
-                    <View style={styles.modalAvatarFallback}>
-                      <Text style={styles.modalAvatarFallbackText}>
+                    <View style={[styles.modalAvatarFallback, isWebAppLayout && { backgroundColor: webAppTheme.accentSoft }]}>
+                      <Text style={[styles.modalAvatarFallbackText, isWebAppLayout && { color: webAppTheme.accent }]}>
                         {getTokohInitial(selected)}
                       </Text>
                     </View>
                   )}
                 </View>
 
-                <Text style={styles.modalName}>
+                <Text style={[styles.modalName, isWebAppLayout && { color: webAppTheme.text }]}>
                   {title}
                 </Text>
 
                 <View style={styles.modalBadgeRow}>
-                  {meta ? <Text style={styles.modalBadge}>{meta}</Text> : null}
+                  {meta ? <Text style={[
+                    styles.modalBadge,
+                    isWebAppLayout && { backgroundColor: webAppTheme.accentSoft, color: webAppTheme.accent },
+                  ]}>{meta}</Text> : null}
                   {selected.kategori && selected.kategori !== meta ? (
                     <Text style={[styles.modalBadge, styles.modalBadgeKategori]}>
                       {selected.kategori}
@@ -230,19 +302,23 @@ export function TokohTarikhContent() {
                   ) : null}
                 </View>
 
-                {years ? <Text style={styles.modalTahun}>{years}</Text> : null}
+                {years ? <Text style={[styles.modalTahun, isWebAppLayout && { color: webAppTheme.muted }]}>{years}</Text> : null}
 
                 {bio ? (
                   <View style={styles.modalSection}>
-                    <Text style={styles.modalSectionTitle}>Biografi</Text>
-                    <Text style={styles.modalBody}>{bio}</Text>
+                    <Text style={[styles.modalSectionTitle, isWebAppLayout && { color: webAppTheme.text }]}>Biografi</Text>
+                    <Text style={[styles.modalBody, isWebAppLayout && { color: webAppTheme.muted }]}>{bio}</Text>
                   </View>
                 ) : null}
 
                 {contribution ? (
-                  <View style={[styles.modalSection, styles.modalSectionHighlight]}>
-                    <Text style={styles.modalSectionTitle}>Kontribusi</Text>
-                    <Text style={styles.modalBody}>{contribution}</Text>
+                  <View style={[
+                    styles.modalSection,
+                    styles.modalSectionHighlight,
+                    isWebAppLayout && { backgroundColor: webAppTheme.modalHighlight },
+                  ]}>
+                    <Text style={[styles.modalSectionTitle, isWebAppLayout && { color: webAppTheme.accent }]}>Kontribusi</Text>
+                    <Text style={[styles.modalBody, isWebAppLayout && { color: webAppTheme.muted }]}>{contribution}</Text>
                   </View>
                 ) : null}
               </ScrollView>
@@ -255,13 +331,13 @@ export function TokohTarikhContent() {
 
   if (isWebAppLayout) {
     return (
-      <View style={styles.webAppRoot} testID="tokoh-web-app-surface">
+      <View style={[styles.webAppRoot, { backgroundColor: webAppTheme.bg }]} testID="tokoh-web-app-surface">
         <View style={styles.webAppHeader}>
-          <View style={styles.webAppIcon}>
-            <Text style={styles.webAppIconText}>T</Text>
+          <View style={[styles.webAppIcon, { backgroundColor: webAppTheme.accentSoft }]}>
+            <Text style={[styles.webAppIconText, { color: webAppTheme.accent }]}>T</Text>
           </View>
-          <Text style={styles.webAppTitle}>Tokoh Tarikh</Text>
-          <Text style={styles.webAppSubtitle}>Biografi ulama, ilmuwan, dan tokoh Islam</Text>
+          <Text style={[styles.webAppTitle, { color: webAppTheme.text }]}>Tokoh Tarikh</Text>
+          <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>Biografi ulama, ilmuwan, dan tokoh Islam</Text>
         </View>
         <View style={styles.webAppControls}>
           {renderSearch()}

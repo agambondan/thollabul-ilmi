@@ -8,6 +8,7 @@ jest.mock('../hooks/useLayoutModePreference', () => ({
 
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { TokohTarikhContent } from '../screens/TokohTarikhContent';
 
 const client = require('../api/client');
@@ -55,7 +56,7 @@ describe('TokohTarikhContent', () => {
   });
 
   test('uses dashboard-aligned web app tokoh surface', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     const { getAllByText, getByPlaceholderText, getByTestId, getByText } = render(<TokohTarikhContent />);
 
     await waitFor(() => {
@@ -68,6 +69,35 @@ describe('TokohTarikhContent', () => {
     expect(getByPlaceholderText('Cari tokoh...')).toBeTruthy();
     expect(getAllByText('Ulama Klasik').length).toBeGreaterThanOrEqual(1);
     expect(getByText('150 H - 204 H')).toBeTruthy();
+    expect(StyleSheet.flatten(getByTestId('tokoh-web-app-surface').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#f8fafc' }),
+    );
+    expect(StyleSheet.flatten(getByTestId('tokoh-web-app-search').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#ffffff', color: '#111827' }),
+    );
+    expect(StyleSheet.flatten(getAllByText("Imam Syafi'i")[0].props.style)).toEqual(
+      expect.objectContaining({ color: '#111827' }),
+    );
+  });
+
+  test('uses dark dashboard palette for web app tokoh surface', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: true, isWebAppLayout: true });
+    const { getAllByTestId, getAllByText, getByTestId } = render(<TokohTarikhContent />);
+
+    await waitFor(() => {
+      expect(getByTestId('tokoh-web-app-surface')).toBeTruthy();
+      expect(getAllByText("Imam Syafi'i").length).toBeGreaterThan(0);
+    });
+
+    expect(StyleSheet.flatten(getByTestId('tokoh-web-app-surface').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#020617' }),
+    );
+    expect(StyleSheet.flatten(getByTestId('tokoh-web-app-search').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#111827', color: '#f8fafc' }),
+    );
+    expect(StyleSheet.flatten(getAllByTestId('tokoh-web-app-card')[0].props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#111827', borderColor: '#334155' }),
+    );
   });
 
   test('web app filters and modal detail reuse endpoint and biography fields', async () => {
