@@ -801,12 +801,12 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     if (!title) {
       setError('Judul wirid wajib diisi.');
       showInfo('Judul wirid wajib diisi.');
-      return;
+      return false;
     }
     if (!session?.token) {
       setError('Buka Profil untuk masuk dan menyimpan wirid.');
       showInfo('Buka Profil untuk masuk dan menyimpan wirid.');
-      return;
+      return false;
     }
 
     const payload = {
@@ -835,10 +835,12 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         showSuccess('Wirid disimpan.');
       }
       resetUserWirdForm();
+      return true;
     } catch (err) {
       const nextMessage = err?.message ?? 'Wirid belum bisa disimpan.';
       setError(nextMessage);
       showError(nextMessage);
+      return false;
     } finally {
       setSavingUserWird(false);
     }
@@ -1167,8 +1169,10 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       clearFeature,
       dictionaryInputRef,
       dictionaryQuery,
+      editingUserWirdId,
       error,
       featureSearch,
+      fillUserWirdForm,
       focusDictionaryInput,
       forumAnswerDraft,
       forumAnswers,
@@ -1207,6 +1211,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       onOpenKajianUrl: (url) => {
         Linking.openURL(url).catch(() => setError('Tautan kajian belum bisa dibuka.'));
       },
+      onOpenTab,
       openItemDetail,
       pagination,
       pinnedFeatureKeys,
@@ -1253,14 +1258,20 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       setSelectedItem,
       setSurahSearch,
       setTasbih,
+      setUserWirdForm,
       sholatLog,
       showError,
       showInfo,
+      submitUserWird,
       surahSearch,
       surahs,
       tasbih,
       togglePrayer,
+      userWirdForm,
       visibleItems,
+      removeUserWird,
+      resetUserWirdForm,
+      savingUserWird,
     });
 
     if (webAppRoute) return webAppRoute;

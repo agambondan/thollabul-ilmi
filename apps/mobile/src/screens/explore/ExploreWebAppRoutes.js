@@ -88,6 +88,7 @@ import { WebAppSirohRoute } from './WebAppSirohRoute';
 import { WebAppTafsirRoute } from './WebAppTafsirRoute';
 import { WebAppTasbihRoute } from './WebAppTasbihRoute';
 import { WEB_APP_TOOL_ROUTE_CONFIGS, WebAppToolRoute } from './WebAppToolRoute';
+import { WebAppUserWirdRoute } from './WebAppUserWirdRoute';
 import { HistoricalMapContent } from '../HistoricalMapScreen';
 import { TokohTarikhContent } from '../TokohTarikhContent';
 
@@ -106,8 +107,10 @@ export function renderExploreWebAppRoute(context) {
     clearFeature,
     dictionaryInputRef,
     dictionaryQuery,
+    editingUserWirdId,
     error,
     featureSearch,
+    fillUserWirdForm,
     focusDictionaryInput,
     forumAnswerDraft,
     forumAnswers,
@@ -144,6 +147,7 @@ export function renderExploreWebAppRoute(context) {
     notesSearch,
     onToggleAmalan,
     onOpenKajianUrl,
+    onOpenTab,
     openItemDetail,
     pagination,
     pinnedFeatureKeys,
@@ -190,14 +194,20 @@ export function renderExploreWebAppRoute(context) {
     setSelectedItem,
     setSurahSearch,
     setTasbih,
+    setUserWirdForm,
     sholatLog,
     showError,
     showInfo,
+    submitUserWird,
     surahSearch,
     surahs,
     tasbih,
     togglePrayer,
+    userWirdForm,
     visibleItems,
+    removeUserWird,
+    resetUserWirdForm,
+    savingUserWird,
   } = context;
 
   const renderWebAppBookmarkCard = (item, index) => {
@@ -1536,6 +1546,27 @@ export function renderExploreWebAppRoute(context) {
         <View testID="explore-web-app-tokoh-surface" />
         <TokohTarikhContent />
       </>
+    );
+  }
+
+  if (activeFeature?.key === 'user-wird') {
+    return (
+      <WebAppUserWirdRoute
+        editingUserWirdId={editingUserWirdId}
+        error={error}
+        fillUserWirdForm={fillUserWirdForm}
+        items={items}
+        loading={loading}
+        onOpenProfile={() => onOpenTab?.('profile')}
+        removeUserWird={removeUserWird}
+        resetUserWirdForm={resetUserWirdForm}
+        savingUserWird={savingUserWird}
+        session={session}
+        setUserWirdForm={setUserWirdForm}
+        submitUserWird={submitUserWird}
+        userWirdForm={userWirdForm}
+        visibleItems={visibleItems}
+      />
     );
   }
 

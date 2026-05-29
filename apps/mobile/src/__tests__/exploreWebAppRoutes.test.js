@@ -78,8 +78,10 @@ const baseContext = (activeFeature, overrides = {}) => ({
   blogSearch: '',
   clearFeature: jest.fn(),
   dictionaryQuery: '',
+  editingUserWirdId: '',
   error: '',
   featureSearch: '',
+  fillUserWirdForm: jest.fn(),
   focusDictionaryInput: jest.fn(),
   forumAnswerDraft: '',
   forumAnswers: [],
@@ -113,11 +115,13 @@ const baseContext = (activeFeature, overrides = {}) => ({
   loading: false,
   notesSearch: '',
   onOpenKajianUrl: jest.fn(),
+  onOpenTab: jest.fn(),
   loadMoreFeature: jest.fn(),
   openItemDetail: jest.fn(),
   pagination: { hasMore: false, loadingMore: false },
   pinnedFeatureKeys: {},
   recentFeatureKeys: {},
+  removeUserWird: jest.fn(),
   renderFeatureContent: () => <Text>Tool content</Text>,
   renderItem: jest.fn(),
   renderItemActionSheet: () => null,
@@ -125,6 +129,7 @@ const baseContext = (activeFeature, overrides = {}) => ({
   scoreQuiz: jest.fn(() => 0),
   selectedSurahNumber: null,
   session: null,
+  savingUserWird: false,
   setActiveNoteRef: jest.fn(),
   setAnswers: jest.fn(),
   setAsmaulCounts: jest.fn(),
@@ -160,14 +165,27 @@ const baseContext = (activeFeature, overrides = {}) => ({
   setSelectedItem: jest.fn(),
   setSurahSearch: jest.fn(),
   setTasbih: jest.fn(),
+  setUserWirdForm: jest.fn(),
   sholatLog: {},
   showError: jest.fn(),
   showInfo: jest.fn(),
+  submitUserWird: jest.fn(),
   surahSearch: '',
   surahs: [],
   tasbih: { count: 7, target: 33 },
   togglePrayer: jest.fn(),
+  userWirdForm: {
+    arabic: '',
+    count: '1',
+    note: '',
+    occasion: '',
+    source: '',
+    title: '',
+    translation: '',
+    transliteration: '',
+  },
   visibleItems: [],
+  resetUserWirdForm: jest.fn(),
   ...overrides,
 });
 
@@ -480,6 +498,82 @@ describe('Explore web app reference list routes', () => {
     expect(queryByText('Tool content')).toBeNull();
     expect(getByText('Tokoh Tarikh')).toBeTruthy();
     expect(getByText('Biografi ulama, ilmuwan, dan tokoh Islam')).toBeTruthy();
+  });
+
+  test('renders User Wird route as dashboard login prompt when signed out', () => {
+    const onOpenTab = jest.fn();
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'user-wird', title: 'Wirid Saya', type: 'user-wird' },
+      {
+        onOpenTab,
+        renderFeatureContent: () => <Text>Tool content</Text>,
+      },
+    ));
+    const { getAllByText, getByTestId, getByText, queryByText } = render(route);
+
+    expect(getByTestId('explore-web-app-user-wird-surface')).toBeTruthy();
+    expect(queryByText('Tool content')).toBeNull();
+    expect(getAllByText('Wirid Pribadi').length).toBeGreaterThan(0);
+    expect(getByText('Login untuk membuat dan menyimpan wirid pribadi dari dashboard.')).toBeTruthy();
+
+    fireEvent.press(getByText('Masuk'));
+    expect(onOpenTab).toHaveBeenCalledWith('profile');
+  });
+
+  test('renders User Wird route as dashboard list and opens edit actions', () => {
+    const fillUserWirdForm = jest.fn();
+    const removeUserWird = jest.fn();
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'user-wird', title: 'Wirid Saya', type: 'user-wird' },
+      {
+        fillUserWirdForm,
+        items: [
+          {
+            arabic: 'سُبْحَانَ اللَّهِ',
+            id: 'wird-1',
+            title: 'Wirid Pagi',
+            raw: {
+              arabic: 'سُبْحَانَ اللَّهِ',
+              count: 33,
+              id: 'wird-1',
+              occasion: 'pagi',
+              source: 'Hisnul Muslim',
+              title: 'Wirid Pagi',
+              translation: 'Maha suci Allah',
+              transliteration: 'Subhanallah',
+            },
+          },
+        ],
+        removeUserWird,
+        renderFeatureContent: () => <Text>Tool content</Text>,
+        session: { token: 'abc' },
+        userWirdForm: {
+          arabic: 'سُبْحَانَ اللَّهِ',
+          count: '33',
+          note: '',
+          occasion: 'pagi',
+          source: 'Hisnul Muslim',
+          title: 'Wirid Pagi',
+          translation: 'Maha suci Allah',
+          transliteration: 'Subhanallah',
+        },
+      },
+    ));
+    const { getByTestId, getByText, queryByText } = render(route);
+
+    expect(getByTestId('explore-web-app-user-wird-surface')).toBeTruthy();
+    expect(queryByText('Tool content')).toBeNull();
+    expect(getByText('Kumpulan wirid yang kamu buat sendiri')).toBeTruthy();
+    expect(getByText('33x')).toBeTruthy();
+    expect(getByText('Wirid Pagi')).toBeTruthy();
+    expect(getByText('Subhanallah')).toBeTruthy();
+
+    fireEvent.press(getByTestId('web-app-user-wird-edit'));
+    expect(fillUserWirdForm).toHaveBeenCalledWith(expect.objectContaining({ title: 'Wirid Pagi' }));
+    expect(getByText('Buat Wirid Baru')).toBeTruthy();
+
+    fireEvent.press(getByTestId('web-app-user-wird-delete'));
+    expect(removeUserWird).toHaveBeenCalledWith(expect.objectContaining({ id: 'wird-1' }));
   });
 
   test('renders Asmaul Flashcard route as dashboard card surface', () => {

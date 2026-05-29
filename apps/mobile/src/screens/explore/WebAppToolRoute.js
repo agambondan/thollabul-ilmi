@@ -5,11 +5,6 @@ import { radius, spacing } from '../../theme';
 import { getExploreItemKey } from '../ExploreScreen.helpers';
 
 export const WEB_APP_TOOL_ROUTE_CONFIGS = {
-  'user-wird': {
-    eyebrow: 'PERSONAL',
-    subtitle: 'Susun dan kelola wirid pribadi dari permukaan dashboard.',
-    title: 'Wirid Saya',
-  },
   zakat: {
     eyebrow: 'KALKULATOR',
     subtitle: 'Hitung zakat maal, fitrah, profesi, dagang, tani, dan emas.',
