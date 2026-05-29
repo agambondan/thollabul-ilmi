@@ -3035,3 +3035,30 @@ Results:
 - Feature parity checker passed: 50 manifest features, 14 utility routes, 43
   mobile feature keys, 154 web app routes scanned.
 - `git diff --check` passed.
+
+## Web App Ibadah Theme Parity
+
+Status: completed for the native `web_app` Ibadah hub light/dark palette pass.
+
+Implemented:
+
+- `IbadahScreen` now reads `isDarkTheme` in addition to `isWebAppLayout`.
+- The `web_app` Ibadah hub keeps the existing dark dashboard palette when dark
+  mode is active, and switches root, hero, section labels, tiles, icon
+  surfaces, and text colors to a light dashboard palette when the app theme is
+  light.
+- Added regression coverage for both light and dark `web_app` Ibadah palettes.
+- Classic Ibadah hub and sub-view routing remain unchanged.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/IbadahScreen.js
+cd apps/mobile
+npm test -- ibadahScreen.test.js mobileAppShell.test.js --runInBand
+```
+
+Results:
+
+- `node --check` passed for `IbadahScreen.js`.
+- Targeted Ibadah/shell tests passed: 2 suites, 37 tests.

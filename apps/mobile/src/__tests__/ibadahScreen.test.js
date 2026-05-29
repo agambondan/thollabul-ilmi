@@ -93,7 +93,7 @@ const defaultNavigation = {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+  useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: false });
 });
 
 describe('IbadahScreen', () => {
@@ -107,7 +107,7 @@ describe('IbadahScreen', () => {
   });
 
   test('uses web app Ibadah hub surface when web app layout is active', () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     const { getByText, getByTestId, queryByTestId } = render(
       <IbadahScreen isActive navigation={defaultNavigation} onOpenTab={jest.fn()} />,
     );
@@ -120,6 +120,46 @@ describe('IbadahScreen', () => {
     expect(getByText('ALAT')).toBeTruthy();
     expect(getByText('Jadwal Sholat')).toBeTruthy();
     expect(getByText('Qibla')).toBeTruthy();
+  });
+
+  test('uses light web app Ibadah palette when light theme is active', () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
+    const { getByTestId, getByText } = render(
+      <IbadahScreen isActive navigation={defaultNavigation} onOpenTab={jest.fn()} />,
+    );
+
+    expect(getByTestId('ibadah-web-app-scroll').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff' })]),
+    );
+    expect(getByTestId('ibadah-web-app-hero').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#e5e7eb' })]),
+    );
+    expect(getByTestId('ibadah-web-app-tile-prayer').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#ecfdf5', borderColor: '#a7f3d0' })]),
+    );
+    expect(getByText('Ibadah').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ color: '#111827' })]),
+    );
+  });
+
+  test('uses dark web app Ibadah palette when dark theme is active', () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: true, isWebAppLayout: true });
+    const { getByTestId, getByText } = render(
+      <IbadahScreen isActive navigation={defaultNavigation} onOpenTab={jest.fn()} />,
+    );
+
+    expect(getByTestId('ibadah-web-app-scroll').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#020617' })]),
+    );
+    expect(getByTestId('ibadah-web-app-hero').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#111827', borderColor: '#243044' })]),
+    );
+    expect(getByTestId('ibadah-web-app-tile-prayer').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ backgroundColor: '#064e3b', borderColor: 'rgba(52, 211, 153, 0.45)' })]),
+    );
+    expect(getByText('Ibadah').props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({ color: '#f8fafc' })]),
+    );
   });
 
   test('renders all section headers', () => {

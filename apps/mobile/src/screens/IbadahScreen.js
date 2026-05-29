@@ -164,9 +164,40 @@ const WEB_APP_IBADAH_TILE_ACTIVE = '#064e3b';
 const WEB_APP_IBADAH_BORDER = '#243044';
 const WEB_APP_IBADAH_ACCENT = '#34d399';
 const WEB_APP_IBADAH_MUTED = '#94a3b8';
+const WEB_APP_IBADAH_LIGHT = {
+  accent: '#047857',
+  bg: '#ffffff',
+  border: '#e5e7eb',
+  iconSoft: 'rgba(4, 120, 87, 0.10)',
+  muted: '#64748b',
+  primaryTile: '#ecfdf5',
+  primaryTileBorder: '#a7f3d0',
+  surface: '#ffffff',
+  text: '#475569',
+  tile: '#f8fafc',
+  title: '#111827',
+};
+const WEB_APP_IBADAH_DARK = {
+  accent: WEB_APP_IBADAH_ACCENT,
+  bg: WEB_APP_IBADAH_BG,
+  border: WEB_APP_IBADAH_BORDER,
+  iconSoft: 'rgba(52, 211, 153, 0.10)',
+  muted: WEB_APP_IBADAH_MUTED,
+  primaryTile: WEB_APP_IBADAH_TILE_ACTIVE,
+  primaryTileBorder: 'rgba(52, 211, 153, 0.45)',
+  surface: WEB_APP_IBADAH_SURFACE,
+  text: '#cbd5e1',
+  tile: WEB_APP_IBADAH_TILE,
+  title: '#f8fafc',
+};
+
+const getIbadahWebAppTheme = (isDarkTheme) => (
+  isDarkTheme ? WEB_APP_IBADAH_DARK : WEB_APP_IBADAH_LIGHT
+);
 
 function IbadahHub({ navigation, onOpenTab }) {
-  const { isWebAppLayout } = useLayoutModePreference();
+  const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+  const webTheme = getIbadahWebAppTheme(isDarkTheme);
 
   const openRow = (row) => {
     if (row.view) {
@@ -187,15 +218,19 @@ function IbadahHub({ navigation, onOpenTab }) {
   if (isWebAppLayout) {
     return (
       <ScrollView
-        contentContainerStyle={styles.webAppContent}
+        contentContainerStyle={[styles.webAppContent, { backgroundColor: webTheme.bg }]}
         showsVerticalScrollIndicator={false}
-        style={styles.webAppRoot}
+        style={[styles.webAppRoot, { backgroundColor: webTheme.bg }]}
+        testID="ibadah-web-app-scroll"
       >
         <View testID="ibadah-web-app-hub" />
-        <View style={styles.webAppHero}>
-          <Text style={styles.webAppEyebrow}>IBADAH & TRACKER</Text>
-          <Text style={styles.webAppTitle}>Ibadah</Text>
-          <Text style={styles.webAppSubtitle}>
+        <View
+          style={[styles.webAppHero, { backgroundColor: webTheme.surface, borderColor: webTheme.border }]}
+          testID="ibadah-web-app-hero"
+        >
+          <Text style={[styles.webAppEyebrow, { color: webTheme.accent }]}>IBADAH & TRACKER</Text>
+          <Text style={[styles.webAppTitle, { color: webTheme.title }]}>Ibadah</Text>
+          <Text style={[styles.webAppSubtitle, { color: webTheme.muted }]}>
             Sholat, qibla, dzikir, bacaan, dan alat ibadah dalam satu hub ringkas.
           </Text>
         </View>
@@ -203,8 +238,8 @@ function IbadahHub({ navigation, onOpenTab }) {
         {sections.map((section) => (
           <View key={section.key} style={styles.webAppSection}>
             <View style={styles.webAppSectionHeader}>
-              <Text style={styles.webAppSectionTitle}>{section.title.toUpperCase()}</Text>
-              <Text style={styles.webAppSectionMeta}>{section.meta}</Text>
+              <Text style={[styles.webAppSectionTitle, { color: webTheme.accent }]}>{section.title.toUpperCase()}</Text>
+              <Text style={[styles.webAppSectionMeta, { color: webTheme.muted }]}>{section.meta}</Text>
             </View>
             <View style={styles.webAppGrid}>
               {section.rows.map((row) => {
@@ -216,13 +251,25 @@ function IbadahHub({ navigation, onOpenTab }) {
                     android_ripple={{ color: '#1f2937', borderless: false }}
                     key={row.key ?? row.featureKey ?? row.title}
                     onPress={() => openRow(row)}
-                    style={[styles.webAppTile, primary && styles.webAppTilePrimary]}
+                    style={[
+                      styles.webAppTile,
+                      {
+                        backgroundColor: primary ? webTheme.primaryTile : webTheme.tile,
+                        borderColor: primary ? webTheme.primaryTileBorder : webTheme.border,
+                      },
+                    ]}
+                    testID={`ibadah-web-app-tile-${row.key ?? row.featureKey ?? row.title}`}
                   >
-                    <View style={[styles.webAppIconWrap, primary && styles.webAppIconWrapPrimary]}>
-                      <Icon color={primary ? '#ffffff' : WEB_APP_IBADAH_ACCENT} size={18} strokeWidth={2.2} />
+                    <View
+                      style={[
+                        styles.webAppIconWrap,
+                        { backgroundColor: primary ? webTheme.accent : webTheme.iconSoft },
+                      ]}
+                    >
+                      <Icon color={primary ? '#ffffff' : webTheme.accent} size={18} strokeWidth={2.2} />
                     </View>
-                    <Text numberOfLines={1} style={styles.webAppTileTitle}>{row.title}</Text>
-                    <Text numberOfLines={2} style={styles.webAppTileSubtitle}>{row.subtitle}</Text>
+                    <Text numberOfLines={1} style={[styles.webAppTileTitle, { color: webTheme.title }]}>{row.title}</Text>
+                    <Text numberOfLines={2} style={[styles.webAppTileSubtitle, { color: webTheme.text }]}>{row.subtitle}</Text>
                   </Pressable>
                 );
               })}
