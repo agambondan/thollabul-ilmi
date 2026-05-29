@@ -20,11 +20,6 @@ export const WEB_APP_TOOL_ROUTE_CONFIGS = {
     subtitle: 'Latihan hafalan Asmaul Husna dalam kartu interaktif.',
     title: 'Flashcard Asmaul Husna',
   },
-  quiz: {
-    eyebrow: 'EVALUASI',
-    subtitle: 'Latihan soal Islam dengan pilihan jawaban.',
-    title: 'Quiz Islami',
-  },
   zakat: {
     eyebrow: 'KALKULATOR',
     subtitle: 'Hitung zakat maal, fitrah, profesi, dagang, tani, dan emas.',

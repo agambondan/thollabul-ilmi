@@ -2618,6 +2618,51 @@ Results:
 - Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
   2,000-line gate.
 
+## Web App Quiz Route Dashboard Parity
+
+Status: completed for the native `web_app` Quiz route visual and interaction
+parity pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic Quiz answer-grid/list flow unchanged for the
+  paper layout.
+- In `web_app` mode, Quiz now renders through `WebAppQuizRoute`, a dedicated
+  dashboard quiz surface modeled after `/dashboard/quiz`: question progress,
+  score badge, category chip, white question card, answer option states,
+  explanation panel, result summary, and retry action.
+- Removed Quiz from the generic local tool-route config so the native
+  `web_app` route cannot regress to the old generic shell plus classic content.
+- Added route coverage to ensure the quiz surface renders independently from
+  `renderFeatureContent` and still calls the shared answer state updater.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/explore/WebAppQuizRoute.js
+node --check apps/mobile/src/screens/explore/ExploreWebAppRoutes.js
+node --check apps/mobile/src/screens/ExploreScreen.js
+cd apps/mobile
+npm test -- exploreWebAppRoutes.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+find apps/mobile/src -name '*.js' -print0 | xargs -0 wc -l | sort -nr | head -8
+```
+
+Results:
+
+- `node --check` passed for the touched route/screen files.
+- Targeted route test passed: 1 suite, 9 tests.
+- Full mobile Jest passed: 48 suites, 695 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned, 64 dashboard page routes
+  scanned.
+- `git diff --check` passed.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
+  2,000-line gate.
+
 ## Web App Shell Theme Toggle Fix
 
 Status: completed for native `web_app` shell light/dark chrome parity.

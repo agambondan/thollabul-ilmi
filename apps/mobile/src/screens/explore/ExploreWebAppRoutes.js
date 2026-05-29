@@ -80,6 +80,7 @@ import { WebAppKamusRoute } from './WebAppKamusRoute';
 import { WebAppLibraryRoute } from './WebAppLibraryRoute';
 import { WebAppLeaderboardRoute } from './WebAppLeaderboardRoute';
 import { WebAppPerawiRoute } from './WebAppPerawiRoute';
+import { WebAppQuizRoute } from './WebAppQuizRoute';
 import { WEB_APP_REFERENCE_ROUTE_CONFIGS, WebAppReferenceListRoute } from './WebAppReferenceListRoute';
 import { WebAppSirohRoute } from './WebAppSirohRoute';
 import { WebAppTafsirRoute } from './WebAppTafsirRoute';
@@ -89,6 +90,7 @@ import { WEB_APP_TOOL_ROUTE_CONFIGS, WebAppToolRoute } from './WebAppToolRoute';
 export function renderExploreWebAppRoute(context) {
   const {
     activeFeature,
+    answers,
     blogCategory,
     blogCategoryOptions,
     blogSearch,
@@ -141,9 +143,11 @@ export function renderExploreWebAppRoute(context) {
     renderFeatureContent,
     renderItem,
     runDictionarySearch,
+    scoreQuiz,
     selectedSurahNumber,
     session,
     setActiveNoteRef,
+    setAnswers,
     setBlogCategory,
     setBlogSearch,
     setDictionaryQuery,
@@ -1449,6 +1453,21 @@ export function renderExploreWebAppRoute(context) {
       <WebAppTasbihRoute
         setTasbih={setTasbih}
         tasbih={tasbih}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'quiz' ) {
+    return (
+      <WebAppQuizRoute
+        activeFeature={activeFeature}
+        answers={answers}
+        error={error}
+        items={visibleItems}
+        loading={loading}
+        onRestart={loadFeature}
+        scoreQuiz={scoreQuiz}
+        setAnswers={setAnswers}
       />
     );
   }

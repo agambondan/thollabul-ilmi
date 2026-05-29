@@ -1155,6 +1155,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
   if (isWebAppLayout) {
     const webAppRoute = renderExploreWebAppRoute({
       activeFeature,
+      answers,
       blogCategory,
       blogCategoryOptions,
       blogSearch,
@@ -1209,9 +1210,11 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       renderFeatureContent,
       renderItem,
       runDictionarySearch,
+      scoreQuiz,
       selectedSurahNumber,
       session,
       setActiveNoteRef,
+      setAnswers,
       setBlogCategory,
       setBlogSearch,
       setDictionaryQuery,

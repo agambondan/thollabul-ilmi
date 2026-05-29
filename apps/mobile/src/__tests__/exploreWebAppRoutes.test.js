@@ -24,6 +24,7 @@ import { WEB_APP_TOOL_ROUTE_CONFIGS } from '../screens/explore/WebAppToolRoute';
 
 const baseContext = (activeFeature, overrides = {}) => ({
   activeFeature,
+  answers: {},
   blogCategory: 'all',
   blogCategoryOptions: [],
   blogSearch: '',
@@ -73,9 +74,11 @@ const baseContext = (activeFeature, overrides = {}) => ({
   renderItem: jest.fn(),
   renderItemActionSheet: () => null,
   runDictionarySearch: jest.fn(),
+  scoreQuiz: jest.fn(() => 0),
   selectedSurahNumber: null,
   session: null,
   setActiveNoteRef: jest.fn(),
+  setAnswers: jest.fn(),
   setBlogCategory: jest.fn(),
   setBlogSearch: jest.fn(),
   setDictionaryQuery: jest.fn(),
@@ -325,5 +328,52 @@ describe('Explore web app reference list routes', () => {
 
     fireEvent.press(getByTestId('web-app-tasbih-counter'));
     expect(setTasbih).toHaveBeenCalledWith(expect.any(Function));
+  });
+
+  test('renders Quiz route as dashboard question surface', () => {
+    const setAnswers = jest.fn();
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'quiz', title: 'Quiz Islami', type: 'quiz' },
+      {
+        items: [
+          {
+            id: 'quiz-1',
+            title: 'Apa rukun Islam pertama?',
+            raw: {
+              category: 'aqidah',
+              correct_answer: 'Syahadat',
+              explanation: 'Syahadat adalah pintu masuk Islam.',
+              options: ['Syahadat', 'Shalat', 'Zakat', 'Puasa'],
+              question: 'Apa rukun Islam pertama?',
+            },
+          },
+        ],
+        scoreQuiz: jest.fn(() => 0),
+        setAnswers,
+        visibleItems: [
+          {
+            id: 'quiz-1',
+            title: 'Apa rukun Islam pertama?',
+            raw: {
+              category: 'aqidah',
+              correct_answer: 'Syahadat',
+              explanation: 'Syahadat adalah pintu masuk Islam.',
+              options: ['Syahadat', 'Shalat', 'Zakat', 'Puasa'],
+              question: 'Apa rukun Islam pertama?',
+            },
+          },
+        ],
+      },
+    ));
+    const { getAllByTestId, getByTestId, getByText, queryByText } = render(route);
+
+    expect(getByTestId('explore-web-app-quiz-surface')).toBeTruthy();
+    expect(queryByText('Tool content')).toBeNull();
+    expect(getByText('Quiz Islami')).toBeTruthy();
+    expect(getByText('Pertanyaan 1 / 1')).toBeTruthy();
+    expect(getByText('Apa rukun Islam pertama?')).toBeTruthy();
+
+    fireEvent.press(getAllByTestId('web-app-quiz-option')[0]);
+    expect(setAnswers).toHaveBeenCalledWith(expect.any(Function));
   });
 });
