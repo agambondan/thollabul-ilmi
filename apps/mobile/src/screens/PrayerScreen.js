@@ -73,6 +73,10 @@ const WEB_APP_PRAYER_MUTED = '#64748b';
 const WEB_APP_PRAYER_TEXT = '#0f172a';
 const WEB_APP_PRAYER_ACCENT = '#059669';
 const WEB_APP_PRAYER_ACCENT_SOFT = '#ecfdf5';
+const WEB_APP_PRAYER_THEMES = {
+  light: { accent: WEB_APP_PRAYER_ACCENT, accentSoft: WEB_APP_PRAYER_ACCENT_SOFT, bg: WEB_APP_PRAYER_BG, border: WEB_APP_PRAYER_BORDER, input: '#f8fafc', line: '#f1f5f9', messageBg: '#fff7ed', messageBorder: '#fed7aa', messageText: '#c2410c', muted: WEB_APP_PRAYER_MUTED, surface: WEB_APP_PRAYER_SURFACE, text: WEB_APP_PRAYER_TEXT, title: '#065f46' },
+  dark: { accent: '#34d399', accentSoft: '#064e3b', bg: '#020617', border: '#334155', input: '#0f172a', line: '#1e293b', messageBg: '#431407', messageBorder: '#9a3412', messageText: '#fdba74', muted: '#94a3b8', surface: '#111827', text: '#f8fafc', title: '#d1fae5' },
+};
 
 const today = () => {
   const date = new Date();
@@ -98,7 +102,10 @@ const formatMinutes = (value) => {
 
 export function PrayerScreen({ isActive, navigation }) {
   const { showError, showInfo, showSuccess } = useFeedback();
-  const { isWebAppLayout } = useLayoutModePreference();
+  const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+  const webTheme = isDarkTheme ? WEB_APP_PRAYER_THEMES.dark : WEB_APP_PRAYER_THEMES.light;
+  const webSurfaceStyle = { backgroundColor: webTheme.bg };
+  const webCardStyle = { backgroundColor: webTheme.surface, borderColor: webTheme.border };
   const [coords, setCoords] = useState(null);
   const [prayers, setPrayers] = useState(null);
   const [message, setMessage] = useState('');
@@ -620,15 +627,15 @@ export function PrayerScreen({ isActive, navigation }) {
   })();
 
   const renderManualLocationCard = (webApp = false) => (
-    <Card style={webApp ? styles.webAppCard : null}>
+    <Card style={webApp ? [styles.webAppCard, webCardStyle] : null}>
       <CardTitle
         meta="Koordinat GPS"
-        metaStyle={webApp ? styles.webAppCardMeta : null}
-        titleStyle={webApp ? styles.webAppCardTitle : null}
+        metaStyle={webApp ? [styles.webAppCardMeta, { color: webTheme.accent }] : null}
+        titleStyle={webApp ? [styles.webAppCardTitle, { color: webTheme.text }] : null}
       >
         Lokasi Manual
       </CardTitle>
-      <Text style={webApp ? styles.webAppMutedText : styles.statsText}>
+      <Text style={webApp ? [styles.webAppMutedText, { color: webTheme.muted }] : styles.statsText}>
         Aktifkan GPS atau masukkan koordinat lokasimu untuk memuat jadwal sholat.
       </Text>
       <View style={[styles.manualLocRow, webApp ? styles.webAppManualLocRow : null]}>
@@ -636,25 +643,25 @@ export function PrayerScreen({ isActive, navigation }) {
           keyboardType="decimal-pad"
           onChangeText={setManualLatInput}
           placeholder="-6.2088 (Lintang)"
-          placeholderTextColor={webApp ? WEB_APP_PRAYER_MUTED : colors.muted}
+          placeholderTextColor={webApp ? webTheme.muted : colors.muted}
           returnKeyType="next"
-          style={[styles.manualLocInput, webApp ? styles.webAppManualLocInput : null]}
+          style={[styles.manualLocInput, webApp ? styles.webAppManualLocInput : null, webApp ? { backgroundColor: webTheme.input, borderColor: webTheme.border, color: webTheme.text } : null]}
           value={manualLatInput}
         />
         <TextInput
           keyboardType="decimal-pad"
           onChangeText={setManualLngInput}
           placeholder="106.8456 (Bujur)"
-          placeholderTextColor={webApp ? WEB_APP_PRAYER_MUTED : colors.muted}
+          placeholderTextColor={webApp ? webTheme.muted : colors.muted}
           returnKeyType="done"
-          style={[styles.manualLocInput, webApp ? styles.webAppManualLocInput : null]}
+          style={[styles.manualLocInput, webApp ? styles.webAppManualLocInput : null, webApp ? { backgroundColor: webTheme.input, borderColor: webTheme.border, color: webTheme.text } : null]}
           value={manualLngInput}
         />
       </View>
       <Pressable
         disabled={!manualLatInput || !manualLngInput}
         onPress={applyManualLocation}
-        style={[styles.button, webApp ? styles.webAppPrimaryButton : null, !manualLatInput || !manualLngInput ? styles.disabled : null]}
+        style={[styles.button, webApp ? styles.webAppPrimaryButton : null, webApp ? { backgroundColor: webTheme.accent } : null, !manualLatInput || !manualLngInput ? styles.disabled : null]}
       >
         <Text style={styles.buttonText}>Terapkan Lokasi</Text>
       </Pressable>
@@ -665,93 +672,93 @@ export function PrayerScreen({ isActive, navigation }) {
     if (isWebAppLayout) {
       return (
         <Screen
-          contentStyle={styles.webAppSurface}
+          contentStyle={[styles.webAppSurface, webSurfaceStyle]}
           title="Pengaturan Sholat"
           subtitle="Metode, koreksi waktu, pengingat, dan jadwal offline."
           refreshing={loading}
           onRefresh={refreshAll}
           actions={<IconActionButton Icon={ArrowLeft} label="Kembali ke jadwal sholat" onPress={() => setView('main')} />}
         >
-          <View testID="prayer-web-app-settings" />
-          {message ? <Text style={styles.webAppMessage}>{message}</Text> : null}
+          <View style={webSurfaceStyle} testID="prayer-web-app-settings" />
+          {message ? <Text style={[styles.webAppMessage, { backgroundColor: webTheme.messageBg, borderColor: webTheme.messageBorder, color: webTheme.messageText }]}>{message}</Text> : null}
 
-          <View style={styles.webAppSettingsHero}>
-            <Text style={styles.webAppEyebrow}>JADWAL SHOLAT</Text>
-            <Text style={styles.webAppHeroTitle}>Pengaturan</Text>
-            <Text style={styles.webAppHeroMeta}>{methodLabel} · {madhabLabel}</Text>
+          <View style={[styles.webAppSettingsHero, webCardStyle]} testID="prayer-web-app-settings-hero">
+            <Text style={[styles.webAppEyebrow, { color: webTheme.accent }]}>JADWAL SHOLAT</Text>
+            <Text style={[styles.webAppHeroTitle, { color: webTheme.text }]}>Pengaturan</Text>
+            <Text style={[styles.webAppHeroMeta, { color: webTheme.muted }]}>{methodLabel} · {madhabLabel}</Text>
           </View>
 
-          <Card style={styles.webAppCard}>
+          <Card style={[styles.webAppCard, webCardStyle]}>
             <CardTitle
               meta="Metode"
-              metaStyle={styles.webAppCardMeta}
-              titleStyle={styles.webAppCardTitle}
+              metaStyle={[styles.webAppCardMeta, { color: webTheme.accent }]}
+              titleStyle={[styles.webAppCardTitle, { color: webTheme.text }]}
             >
               Metode Jadwal
             </CardTitle>
-            <Text style={styles.webAppSettingsLabel}>Metode Perhitungan</Text>
+            <Text style={[styles.webAppSettingsLabel, { color: webTheme.muted }]}>Metode Perhitungan</Text>
             <View style={styles.methodGrid}>
               {methods.map(([key, label]) => (
                 <Pressable
                   key={key}
                   onPress={() => selectMethod(key)}
-                  style={[styles.methodButton, styles.webAppChoiceButton, method === key ? styles.webAppChoiceButtonActive : null]}
+                  style={[styles.methodButton, styles.webAppChoiceButton, { backgroundColor: webTheme.input, borderColor: webTheme.border }, method === key ? styles.webAppChoiceButtonActive : null]}
                 >
-                  <Text style={[styles.methodText, styles.webAppChoiceText, method === key ? styles.webAppChoiceTextActive : null]}>{label}</Text>
+                  <Text style={[styles.methodText, styles.webAppChoiceText, { color: webTheme.text }, method === key ? styles.webAppChoiceTextActive : null]}>{label}</Text>
                 </Pressable>
               ))}
             </View>
 
-            <Text style={styles.webAppSettingsLabel}>Mazhab Ashar</Text>
+            <Text style={[styles.webAppSettingsLabel, { color: webTheme.muted }]}>Mazhab Ashar</Text>
             <View style={styles.methodGrid}>
               {madhabs.map(([key, label]) => (
                 <Pressable
                   key={key}
                   onPress={() => selectMadhab(key)}
-                  style={[styles.methodButton, styles.webAppChoiceButton, madhab === key ? styles.webAppChoiceButtonActive : null]}
+                  style={[styles.methodButton, styles.webAppChoiceButton, { backgroundColor: webTheme.input, borderColor: webTheme.border }, madhab === key ? styles.webAppChoiceButtonActive : null]}
                 >
-                  <Text style={[styles.methodText, styles.webAppChoiceText, madhab === key ? styles.webAppChoiceTextActive : null]}>{label}</Text>
+                  <Text style={[styles.methodText, styles.webAppChoiceText, { color: webTheme.text }, madhab === key ? styles.webAppChoiceTextActive : null]}>{label}</Text>
                 </Pressable>
               ))}
             </View>
           </Card>
 
-          <Card style={styles.webAppCard}>
+          <Card style={[styles.webAppCard, webCardStyle]}>
             <CardTitle
               meta="Menit"
-              metaStyle={styles.webAppCardMeta}
-              titleStyle={styles.webAppCardTitle}
+              metaStyle={[styles.webAppCardMeta, { color: webTheme.accent }]}
+              titleStyle={[styles.webAppCardTitle, { color: webTheme.text }]}
             >
               Koreksi Manual
             </CardTitle>
-            <Text style={styles.webAppMutedText}>Sesuaikan jadwal jika masjid setempat memakai koreksi waktu tertentu.</Text>
+            <Text style={[styles.webAppMutedText, { color: webTheme.muted }]}>Sesuaikan jadwal jika masjid setempat memakai koreksi waktu tertentu.</Text>
             {scheduleRows.map(([key, label]) => (
-              <View key={key} style={styles.webAppCorrectionRow}>
-                <Text style={styles.webAppPrayerLabel}>{label}</Text>
+              <View key={key} style={[styles.webAppCorrectionRow, { borderBottomColor: webTheme.line }]}>
+                <Text style={[styles.webAppPrayerLabel, { color: webTheme.text }]}>{label}</Text>
                 <View style={styles.correctionButtons}>
-                  <Pressable onPress={() => adjustPrayer(key, -1)} style={[styles.correctionButton, styles.webAppCorrectionButton]}>
-                    <Text style={styles.webAppCorrectionText}>-1</Text>
+                  <Pressable onPress={() => adjustPrayer(key, -1)} style={[styles.correctionButton, styles.webAppCorrectionButton, { backgroundColor: webTheme.input, borderColor: webTheme.border }]}>
+                    <Text style={[styles.webAppCorrectionText, { color: webTheme.text }]}>-1</Text>
                   </Pressable>
-                  <Text style={styles.webAppCorrectionValue}>
+                  <Text style={[styles.webAppCorrectionValue, { color: webTheme.accent }]}>
                     {(adjustments[key] ?? 0) > 0 ? '+' : ''}
                     {adjustments[key] ?? 0}
                   </Text>
-                  <Pressable onPress={() => adjustPrayer(key, 1)} style={[styles.correctionButton, styles.webAppCorrectionButton]}>
-                    <Text style={styles.webAppCorrectionText}>+1</Text>
+                  <Pressable onPress={() => adjustPrayer(key, 1)} style={[styles.correctionButton, styles.webAppCorrectionButton, { backgroundColor: webTheme.input, borderColor: webTheme.border }]}>
+                    <Text style={[styles.webAppCorrectionText, { color: webTheme.text }]}>+1</Text>
                   </Pressable>
                 </View>
               </View>
             ))}
-            <Pressable onPress={resetAdjustments} style={styles.webAppSecondaryButton}>
-              <Text style={styles.webAppSecondaryButtonText}>Reset koreksi</Text>
+            <Pressable onPress={resetAdjustments} style={[styles.webAppSecondaryButton, { borderColor: webTheme.border }]}>
+              <Text style={[styles.webAppSecondaryButtonText, { color: webTheme.text }]}>Reset koreksi</Text>
             </Pressable>
           </Card>
 
-          <Card style={styles.webAppCard}>
+          <Card style={[styles.webAppCard, webCardStyle]}>
             <CardTitle
               meta={notificationsSupported() ? `${notificationIds.length} aktif` : 'Aplikasi mobile'}
-              metaStyle={styles.webAppCardMeta}
-              titleStyle={styles.webAppCardTitle}
+              metaStyle={[styles.webAppCardMeta, { color: webTheme.accent }]}
+              titleStyle={[styles.webAppCardTitle, { color: webTheme.text }]}
             >
               Pengingat Adzan
             </CardTitle>
@@ -1046,7 +1053,7 @@ export function PrayerScreen({ isActive, navigation }) {
   if (isWebAppLayout) {
     return (
       <Screen
-        contentStyle={styles.webAppSurface}
+        contentStyle={[styles.webAppSurface, webSurfaceStyle]}
         title="Jadwal Sholat"
         subtitle="Waktu sholat, hitung mundur, lokasi, dan pengingat."
         refreshing={loading}
@@ -1058,30 +1065,30 @@ export function PrayerScreen({ isActive, navigation }) {
           </>
         }
       >
-        <View testID="prayer-web-app-main" />
-        {message ? <Text style={styles.webAppMessage}>{message}</Text> : null}
+        <View style={webSurfaceStyle} testID="prayer-web-app-main" />
+        {message ? <Text style={[styles.webAppMessage, { backgroundColor: webTheme.messageBg, borderColor: webTheme.messageBorder, color: webTheme.messageText }]}>{message}</Text> : null}
 
         <View style={styles.webAppHero}>
-          <View style={styles.webAppHeroIcon}>
-            <Text style={styles.webAppHeroIconText}>وقت</Text>
+          <View style={[styles.webAppHeroIcon, { backgroundColor: webTheme.accentSoft }]}>
+            <Text style={[styles.webAppHeroIconText, { color: webTheme.accent }]}>وقت</Text>
           </View>
-          <Text style={styles.webAppHeroTitle}>Jadwal Sholat</Text>
-          <Text style={styles.webAppHeroDate}>{todayLabel}</Text>
-          <Text style={styles.webAppHeroMeta}>{locationLabel} · {methodLabel}</Text>
+          <Text style={[styles.webAppHeroTitle, { color: webTheme.text }]}>Jadwal Sholat</Text>
+          <Text style={[styles.webAppHeroDate, { color: webTheme.muted }]}>{todayLabel}</Text>
+          <Text style={[styles.webAppHeroMeta, { color: webTheme.muted }]}>{locationLabel} · {methodLabel}</Text>
         </View>
 
         {!coords && !loading ? renderManualLocationCard(true) : null}
 
         <View style={styles.webAppClockPanel}>
-          <Text style={styles.webAppClockTime}>{currentTimeLabel}</Text>
+          <Text style={[styles.webAppClockTime, { color: webTheme.title }]}>{currentTimeLabel}</Text>
           {prayers && countdown !== null ? (
             <View style={styles.webAppCountdownRow}>
-              <Text style={styles.webAppCountdownLabel}>
+              <Text style={[styles.webAppCountdownLabel, { color: webTheme.muted }]}>
                 {countdown === 0
                   ? `Waktu ${scheduleRows.find(([key]) => key === nextPrayerKey)?.[1] ?? 'Sholat'} telah tiba`
                   : `Menuju ${scheduleRows.find(([key]) => key === nextPrayerKey)?.[1] ?? 'sholat'}`}
               </Text>
-              <Text style={styles.webAppCountdownTime}>
+              <Text style={[styles.webAppCountdownTime, { color: webTheme.accent }]}>
                 {countdown === 0 ? 'Waktunya sholat' : formatCountdown(countdown)}
               </Text>
               {adzanPlaying ? (
@@ -1092,17 +1099,17 @@ export function PrayerScreen({ isActive, navigation }) {
               ) : null}
             </View>
           ) : (
-            <Text style={styles.webAppMutedText}>Jadwal dimuat sesuai lokasi dan metode yang dipilih.</Text>
+            <Text style={[styles.webAppMutedText, { color: webTheme.muted }]}>Jadwal dimuat sesuai lokasi dan metode yang dipilih.</Text>
           )}
         </View>
 
-        <View style={styles.webAppScheduleCard}>
-          <View style={styles.webAppScheduleHeader}>
-            <Text style={styles.webAppScheduleTitle}>Hari ini</Text>
-            <Text style={styles.webAppScheduleMeta}>{methodLabel} · {madhabLabel}</Text>
+        <View style={[styles.webAppScheduleCard, webCardStyle]} testID="prayer-web-app-schedule-card">
+          <View style={[styles.webAppScheduleHeader, { borderBottomColor: webTheme.line }]}>
+            <Text style={[styles.webAppScheduleTitle, { color: webTheme.text }]}>Hari ini</Text>
+            <Text style={[styles.webAppScheduleMeta, { color: webTheme.muted }]}>{methodLabel} · {madhabLabel}</Text>
           </View>
           {loading && !prayers ? (
-            <ActivityIndicator color={WEB_APP_PRAYER_ACCENT} />
+            <ActivityIndicator color={webTheme.accent} />
           ) : (
             scheduleRows.map(([key, label], index) => {
               const adjustment = adjustments[key] ?? 0;
@@ -1114,6 +1121,7 @@ export function PrayerScreen({ isActive, navigation }) {
                   key={key}
                   style={[
                     styles.webAppPrayerRow,
+                    { borderBottomColor: webTheme.line },
                     index === scheduleRows.length - 1 ? styles.webAppPrayerRowLast : null,
                     isNext || isCurrent ? styles.webAppPrayerRowActive : null,
                     isInfo ? styles.webAppPrayerRowInfo : null,
@@ -1124,21 +1132,21 @@ export function PrayerScreen({ isActive, navigation }) {
                       {isNext ? (
                         <Text style={styles.webAppNextBadge}>BERIKUTNYA</Text>
                       ) : null}
-                      <Text style={[styles.webAppPrayerLabel, isNext || isCurrent ? styles.webAppPrayerLabelActive : null]}>
+                      <Text style={[styles.webAppPrayerLabel, { color: webTheme.text }, isNext || isCurrent ? styles.webAppPrayerLabelActive : null]}>
                         {label}
                       </Text>
                     </View>
-                    <Text style={[styles.webAppPrayerArabic, isNext || isCurrent ? styles.webAppPrayerArabicActive : null]}>
+                    <Text style={[styles.webAppPrayerArabic, { color: webTheme.muted }, isNext || isCurrent ? styles.webAppPrayerArabicActive : null]}>
                       {prayerArabicLabels[key]}
                     </Text>
-                    {adjustment ? <Text style={styles.webAppPrayerBase}>Dasar {prayers?.[key] ?? '--:--'}</Text> : null}
+                    {adjustment ? <Text style={[styles.webAppPrayerBase, { color: webTheme.muted }]}>Dasar {prayers?.[key] ?? '--:--'}</Text> : null}
                   </View>
                   <View style={styles.webAppPrayerTimeBlock}>
-                    <Text style={[styles.webAppPrayerTime, isNext || isCurrent ? styles.webAppPrayerTimeActive : null]}>
+                    <Text style={[styles.webAppPrayerTime, { color: webTheme.accent }, isNext || isCurrent ? styles.webAppPrayerTimeActive : null]}>
                       {adjustedPrayerTime(key)}
                     </Text>
                     {adjustment ? (
-                      <Text style={[styles.webAppPrayerAdjustment, isNext || isCurrent ? styles.webAppPrayerAdjustmentActive : null]}>
+                      <Text style={[styles.webAppPrayerAdjustment, { color: webTheme.muted }, isNext || isCurrent ? styles.webAppPrayerAdjustmentActive : null]}>
                         {adjustment > 0 ? '+' : ''}
                         {adjustment} min
                       </Text>
@@ -1150,7 +1158,7 @@ export function PrayerScreen({ isActive, navigation }) {
           )}
         </View>
 
-        <Text style={styles.webAppSourceNote}>
+        <Text style={[styles.webAppSourceNote, { color: webTheme.muted }]}>
           Metode: {methodLabel} · Madhab: {madhabLabel}
         </Text>
       </Screen>

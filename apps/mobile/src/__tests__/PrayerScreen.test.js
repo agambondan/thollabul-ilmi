@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { flushAsyncWork } from '../test-utils/async';
 
 jest.mock('expo-audio', () => ({
@@ -153,7 +154,7 @@ describe('PrayerScreen', () => {
       showInfo: jest.fn(),
       showSuccess: jest.fn(),
     });
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: false });
   });
 
   test('renders screen title', async () => {
@@ -167,15 +168,47 @@ describe('PrayerScreen', () => {
   });
 
   test('uses web app prayer main surface when web app layout is active', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     const { getByTestId, queryByTestId } = await renderPrayerScreen();
 
     expect(getByTestId('prayer-web-app-main')).toBeTruthy();
     expect(queryByTestId('prayer-classic-main')).toBeNull();
   });
 
+  test('uses light web app prayer palette when theme is light', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
+    getPrayerTimes.mockResolvedValue(mockPrayerTimes);
+    getPrayerOfflineOverview.mockResolvedValue({ supported: false, days: 0 });
+
+    const { getByTestId } = await renderPrayerScreen();
+
+    await waitFor(() => expect(getByTestId('prayer-web-app-schedule-card')).toBeTruthy());
+    expect(StyleSheet.flatten(getByTestId('prayer-web-app-main').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#f8fafc' }),
+    );
+    expect(StyleSheet.flatten(getByTestId('prayer-web-app-schedule-card').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#e5e7eb' }),
+    );
+  });
+
+  test('uses dark web app prayer palette when theme is dark', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: true, isWebAppLayout: true });
+    getPrayerTimes.mockResolvedValue(mockPrayerTimes);
+    getPrayerOfflineOverview.mockResolvedValue({ supported: false, days: 0 });
+
+    const { getByTestId } = await renderPrayerScreen();
+
+    await waitFor(() => expect(getByTestId('prayer-web-app-schedule-card')).toBeTruthy());
+    expect(StyleSheet.flatten(getByTestId('prayer-web-app-main').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#020617' }),
+    );
+    expect(StyleSheet.flatten(getByTestId('prayer-web-app-schedule-card').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#111827', borderColor: '#334155' }),
+    );
+  });
+
   test('web app layout renders dashboard-style prayer schedule', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     getPrayerTimes.mockResolvedValue(mockPrayerTimes);
     getPrayerOfflineOverview.mockResolvedValue({
       supported: false,
@@ -194,7 +227,7 @@ describe('PrayerScreen', () => {
   });
 
   test('web app layout renders dashboard-style settings view', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     getPrayerTimes.mockResolvedValue(mockPrayerTimes);
     getPrayerOfflineOverview.mockResolvedValue({
       supported: false,
