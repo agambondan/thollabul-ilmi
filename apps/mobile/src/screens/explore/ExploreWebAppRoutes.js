@@ -83,6 +83,7 @@ import { WebAppPerawiRoute } from './WebAppPerawiRoute';
 import { WEB_APP_REFERENCE_ROUTE_CONFIGS, WebAppReferenceListRoute } from './WebAppReferenceListRoute';
 import { WebAppSirohRoute } from './WebAppSirohRoute';
 import { WebAppTafsirRoute } from './WebAppTafsirRoute';
+import { WebAppTasbihRoute } from './WebAppTasbihRoute';
 import { WEB_APP_TOOL_ROUTE_CONFIGS, WebAppToolRoute } from './WebAppToolRoute';
 
 export function renderExploreWebAppRoute(context) {
@@ -172,10 +173,12 @@ export function renderExploreWebAppRoute(context) {
     setNotesSearch,
     setSelectedItem,
     setSurahSearch,
+    setTasbih,
     showError,
     showInfo,
     surahSearch,
     surahs,
+    tasbih,
     visibleItems,
   } = context;
 
@@ -1437,6 +1440,15 @@ export function renderExploreWebAppRoute(context) {
         error={error}
         items={visibleItems}
         loading={loading}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'tasbih' ) {
+    return (
+      <WebAppTasbihRoute
+        setTasbih={setTasbih}
+        tasbih={tasbih}
       />
     );
   }

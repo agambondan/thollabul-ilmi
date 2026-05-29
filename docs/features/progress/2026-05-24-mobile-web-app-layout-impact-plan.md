@@ -2572,6 +2572,52 @@ Results:
 - Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
   2,000-line gate.
 
+## Web App Tasbih Route Dashboard Parity
+
+Status: completed for the native `web_app` Tasbih route visual and interaction
+parity pass.
+
+Implemented:
+
+- `ExploreScreen` keeps the classic Tasbih card/counter flow unchanged for the
+  paper layout.
+- In `web_app` mode, Tasbih now renders through `WebAppTasbihRoute`, a
+  dedicated dashboard counter surface modeled after `/dashboard/tasbih`: Arabic
+  title block, active dzikir card, large round counter, target progress bar,
+  reset/reset-all/vibration controls, stat tiles, target chips, and preset
+  dzikir cards.
+- Removed Tasbih from the generic local tool-route config so the native
+  `web_app` route cannot regress to the old generic shell plus classic content.
+- Added route coverage to ensure the counter surface renders independently from
+  `renderFeatureContent` and still calls the shared Tasbih state updater.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/explore/WebAppTasbihRoute.js
+node --check apps/mobile/src/screens/explore/ExploreWebAppRoutes.js
+node --check apps/mobile/src/screens/ExploreScreen.js
+cd apps/mobile
+npm test -- exploreWebAppRoutes.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+find apps/mobile/src -name '*.js' -print0 | xargs -0 wc -l | sort -nr | head -8
+```
+
+Results:
+
+- `node --check` passed for the touched route/screen files.
+- Targeted route test passed: 1 suite, 8 tests.
+- Full mobile Jest passed: 48 suites, 694 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned, 64 dashboard page routes
+  scanned.
+- `git diff --check` passed.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
+  2,000-line gate.
+
 ## Web App Shell Theme Toggle Fix
 
 Status: completed for native `web_app` shell light/dark chrome parity.

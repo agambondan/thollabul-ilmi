@@ -1241,10 +1241,12 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       setNotesSearch,
       setSelectedItem,
       setSurahSearch,
+      setTasbih,
       showError,
       showInfo,
       surahSearch,
       surahs,
+      tasbih,
       visibleItems,
     });
 

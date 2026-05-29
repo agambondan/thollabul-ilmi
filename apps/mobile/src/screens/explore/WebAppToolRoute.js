@@ -25,11 +25,6 @@ export const WEB_APP_TOOL_ROUTE_CONFIGS = {
     subtitle: 'Latihan soal Islam dengan pilihan jawaban.',
     title: 'Quiz Islami',
   },
-  tasbih: {
-    eyebrow: 'ALAT',
-    subtitle: 'Counter dzikir dengan target bacaan.',
-    title: 'Tasbih',
-  },
   zakat: {
     eyebrow: 'KALKULATOR',
     subtitle: 'Hitung zakat maal, fitrah, profesi, dagang, tani, dan emas.',

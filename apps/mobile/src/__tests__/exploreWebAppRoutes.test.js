@@ -105,10 +105,12 @@ const baseContext = (activeFeature, overrides = {}) => ({
   setNotesSearch: jest.fn(),
   setSelectedItem: jest.fn(),
   setSurahSearch: jest.fn(),
+  setTasbih: jest.fn(),
   showError: jest.fn(),
   showInfo: jest.fn(),
   surahSearch: '',
   surahs: [],
+  tasbih: { count: 7, target: 33 },
   visibleItems: [],
   ...overrides,
 });
@@ -300,5 +302,28 @@ describe('Explore web app reference list routes', () => {
     expect(getByText('Puasa Sunnah')).toBeTruthy();
     expect(getByText('Konversi Tanggal')).toBeTruthy();
     expect(getByText('Idul Adha')).toBeTruthy();
+  });
+
+  test('renders Tasbih route as dashboard counter surface', () => {
+    const setTasbih = jest.fn();
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'tasbih', title: 'Tasbih', type: 'tasbih' },
+      {
+        renderFeatureContent: () => <Text>Tool content</Text>,
+        setTasbih,
+        tasbih: { count: 32, target: 33 },
+      },
+    ));
+    const { getAllByText, getByTestId, getByText, queryByText } = render(route);
+
+    expect(getByTestId('explore-web-app-tasbih-surface')).toBeTruthy();
+    expect(queryByText('Tool content')).toBeNull();
+    expect(getByText('Tasbih Digital')).toBeTruthy();
+    expect(getAllByText('سُبْحَانَ اللَّهِ').length).toBeGreaterThan(0);
+    expect(getByText('/ 33')).toBeTruthy();
+    expect(getByText('Pilihan Dzikir')).toBeTruthy();
+
+    fireEvent.press(getByTestId('web-app-tasbih-counter'));
+    expect(setTasbih).toHaveBeenCalledWith(expect.any(Function));
   });
 });
