@@ -10,16 +10,6 @@ export const WEB_APP_TOOL_ROUTE_CONFIGS = {
     subtitle: 'Susun dan kelola wirid pribadi dari permukaan dashboard.',
     title: 'Wirid Saya',
   },
-  'asmaul-wirid': {
-    eyebrow: 'WIRID',
-    subtitle: 'Dzikir 99 nama Allah dengan counter per nama.',
-    title: 'Wirid Asmaul Husna',
-  },
-  'asmaul-flashcard': {
-    eyebrow: 'LATIHAN',
-    subtitle: 'Latihan hafalan Asmaul Husna dalam kartu interaktif.',
-    title: 'Flashcard Asmaul Husna',
-  },
   zakat: {
     eyebrow: 'KALKULATOR',
     subtitle: 'Hitung zakat maal, fitrah, profesi, dagang, tani, dan emas.',

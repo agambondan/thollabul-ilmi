@@ -25,6 +25,26 @@ import { WEB_APP_TOOL_ROUTE_CONFIGS } from '../screens/explore/WebAppToolRoute';
 const baseContext = (activeFeature, overrides = {}) => ({
   activeFeature,
   answers: {},
+  asmaulCounts: {},
+  asmaulFlashcardRevealed: false,
+  asmaulIndex: 0,
+  asmaulLoading: false,
+  asmaulNames: [
+    {
+      id: 1,
+      number: 1,
+      arabic: 'الرَّحْمَنُ',
+      transliteration: 'Ar-Rahman',
+      meaning: 'Maha Pengasih',
+    },
+    {
+      id: 2,
+      number: 2,
+      arabic: 'الرَّحِيمُ',
+      transliteration: 'Ar-Rahim',
+      meaning: 'Maha Penyayang',
+    },
+  ],
   blogCategory: 'all',
   blogCategoryOptions: [],
   blogSearch: '',
@@ -79,6 +99,9 @@ const baseContext = (activeFeature, overrides = {}) => ({
   session: null,
   setActiveNoteRef: jest.fn(),
   setAnswers: jest.fn(),
+  setAsmaulCounts: jest.fn(),
+  setAsmaulFlashcardRevealed: jest.fn(),
+  setAsmaulIndex: jest.fn(),
   setBlogCategory: jest.fn(),
   setBlogSearch: jest.fn(),
   setDictionaryQuery: jest.fn(),
@@ -401,5 +424,53 @@ describe('Explore web app reference list routes', () => {
 
     fireEvent.press(getAllByTestId('web-app-sholat-prayer-row')[0]);
     expect(togglePrayer).toHaveBeenCalledWith('subuh');
+  });
+
+  test('renders Asmaul Flashcard route as dashboard card surface', () => {
+    const setAsmaulFlashcardRevealed = jest.fn();
+    const setAsmaulIndex = jest.fn();
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'asmaul-flashcard', title: 'Flashcard Asmaul Husna', type: 'asmaul-flashcard' },
+      {
+        renderFeatureContent: () => <Text>Tool content</Text>,
+        setAsmaulFlashcardRevealed,
+        setAsmaulIndex,
+      },
+    ));
+    const { getByTestId, getByText, queryByText } = render(route);
+
+    expect(getByTestId('explore-web-app-asmaul-flashcard-surface')).toBeTruthy();
+    expect(queryByText('Tool content')).toBeNull();
+    expect(getByText('Flashcard Asmaul Husna')).toBeTruthy();
+    expect(getByText('Uji hafalan 99 nama Allah')).toBeTruthy();
+    expect(getByText('الرَّحْمَنُ')).toBeTruthy();
+    expect(getByText('Ingat-ingat artinya...')).toBeTruthy();
+
+    fireEvent.press(getByTestId('web-app-asmaul-flashcard-card'));
+    expect(setAsmaulFlashcardRevealed).toHaveBeenCalledWith(expect.any(Function));
+  });
+
+  test('renders Asmaul Wirid route as dashboard counter surface', () => {
+    const setAsmaulCounts = jest.fn();
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'asmaul-wirid', title: 'Wirid Asmaul Husna', type: 'asmaul-wirid' },
+      {
+        asmaulCounts: { 1: 32 },
+        renderFeatureContent: () => <Text>Tool content</Text>,
+        setAsmaulCounts,
+      },
+    ));
+    const { getAllByText, getByTestId, getByText, queryByText } = render(route);
+
+    expect(getByTestId('explore-web-app-asmaul-wirid-surface')).toBeTruthy();
+    expect(queryByText('Tool content')).toBeNull();
+    expect(getByText('وِرْدُ الْأَسْمَاءِ')).toBeTruthy();
+    expect(getByText('Wirid Asmaul Husna')).toBeTruthy();
+    expect(getByText('الرَّحْمَنُ')).toBeTruthy();
+    expect(getAllByText('32').length).toBeGreaterThan(0);
+    expect(getByText('/ 99')).toBeTruthy();
+
+    fireEvent.press(getByTestId('web-app-asmaul-wirid-counter'));
+    expect(setAsmaulCounts).toHaveBeenCalledWith(expect.any(Function));
   });
 });

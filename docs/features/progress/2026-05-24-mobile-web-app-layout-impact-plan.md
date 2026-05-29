@@ -2708,6 +2708,60 @@ Results:
 - Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
   2,000-line gate.
 
+## Web App Asmaul Tools Route Dashboard Parity
+
+Status: completed for the native `web_app` Asmaul Flashcard and Wirid route
+visual parity pass.
+
+Implemented:
+
+- `web_app` Asmaul Flashcard now renders through `WebAppAsmaulFlashcardRoute`,
+  a dedicated dashboard card surface modeled after
+  `/dashboard/asmaul-husna/flashcard`: centered title/subtitle, progress
+  toolbar, shuffle/reset actions, tappable reveal card, and prev/next controls.
+- `web_app` Asmaul Wirid now renders through `WebAppAsmaulWiridRoute`, modeled
+  after `/dashboard/asmaul-husna/wirid`: Arabic header, per-name navigation,
+  99-count circular counter, progress bar, reset/vibration controls, and stats
+  tiles.
+- Removed `asmaul-flashcard` and `asmaul-wirid` from the generic local-tool
+  wrapper so these routes cannot regress to the generic card shell while the
+  classic/paper renderer remains unchanged.
+- Added route coverage for both Asmaul dashboard surfaces and their primary tap
+  interactions.
+
+Scope guardrail:
+
+- This slice changes only native mobile Explore routing for layout
+  `web_app`. It does not change classic Asmaul rendering, Asmaul API loading,
+  storage keys, or dashboard web pages.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/explore/WebAppAsmaulRoutes.js
+node --check apps/mobile/src/screens/explore/ExploreWebAppRoutes.js
+cd apps/mobile
+npm test -- exploreWebAppRoutes.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check
+find apps/mobile/src -name '*.js' -print0 | xargs -0 wc -l | sort -nr | head -8
+```
+
+Results:
+
+- `node --check` passed for `WebAppAsmaulRoutes.js` and
+  `ExploreWebAppRoutes.js`.
+- Targeted route test passed: 1 suite, 12 tests.
+- Full mobile Jest passed: 48 suites, 703 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned, 64 dashboard page routes
+  scanned.
+- `git diff --check` passed.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above the
+  2,000-line gate.
+
 ## Web App Shell Theme Toggle Fix
 
 Status: completed for native `web_app` shell light/dark chrome parity.

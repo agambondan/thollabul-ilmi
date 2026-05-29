@@ -68,6 +68,7 @@ import {
 } from '../ExploreScreen.helpers';
 import { FeatureCatalog } from './FeatureCatalog';
 import { WebAppAmalanRoute } from './WebAppAmalanRoute';
+import { WebAppAsmaulFlashcardRoute, WebAppAsmaulWiridRoute } from './WebAppAsmaulRoutes';
 import { WebAppBlogRoute } from './WebAppBlogRoute';
 import { WebAppDoaRoute } from './WebAppDoaRoute';
 import { WebAppFeedRoute } from './WebAppFeedRoute';
@@ -92,6 +93,11 @@ export function renderExploreWebAppRoute(context) {
   const {
     activeFeature,
     answers,
+    asmaulCounts,
+    asmaulFlashcardRevealed,
+    asmaulIndex,
+    asmaulLoading,
+    asmaulNames,
     blogCategory,
     blogCategoryOptions,
     blogSearch,
@@ -149,6 +155,9 @@ export function renderExploreWebAppRoute(context) {
     session,
     setActiveNoteRef,
     setAnswers,
+    setAsmaulCounts,
+    setAsmaulFlashcardRevealed,
+    setAsmaulIndex,
     setBlogCategory,
     setBlogSearch,
     setDictionaryQuery,
@@ -1480,6 +1489,32 @@ export function renderExploreWebAppRoute(context) {
       <WebAppSholatTrackerRoute
         sholatLog={sholatLog}
         togglePrayer={togglePrayer}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'asmaul-flashcard' ) {
+    return (
+      <WebAppAsmaulFlashcardRoute
+        asmaulFlashcardRevealed={asmaulFlashcardRevealed}
+        asmaulIndex={asmaulIndex}
+        asmaulLoading={asmaulLoading}
+        asmaulNames={asmaulNames}
+        setAsmaulFlashcardRevealed={setAsmaulFlashcardRevealed}
+        setAsmaulIndex={setAsmaulIndex}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'asmaul-wirid' ) {
+    return (
+      <WebAppAsmaulWiridRoute
+        asmaulCounts={asmaulCounts}
+        asmaulIndex={asmaulIndex}
+        asmaulLoading={asmaulLoading}
+        asmaulNames={asmaulNames}
+        setAsmaulCounts={setAsmaulCounts}
+        setAsmaulIndex={setAsmaulIndex}
       />
     );
   }
