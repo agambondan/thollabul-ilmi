@@ -70,6 +70,7 @@ jest.mock('../hooks/useLayoutModePreference', () => ({
 
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { ProfileScreen } from '../screens/ProfileScreen';
 
 const { useSession } = require('../context/SessionContext');
@@ -98,7 +99,7 @@ const loggedInSession = {
 beforeEach(() => {
   jest.clearAllMocks();
   useSession.mockReturnValue(defaultSession);
-  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+  useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: false });
   personalApi.getAchievements.mockResolvedValue([]);
   personalApi.getMyAchievements.mockResolvedValue([]);
   personalApi.getMyPoints.mockResolvedValue(null);
@@ -123,7 +124,7 @@ describe('ProfileScreen', () => {
   });
 
   test('uses web app Profile surface when web app layout is active', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     const { getAllByText, getByText, getByTestId, queryByTestId } = render(<ProfileScreen isActive />);
 
     await waitFor(() => {
@@ -135,6 +136,34 @@ describe('ProfileScreen', () => {
     expect(getByText('PENCAPAIAN')).toBeTruthy();
     expect(getByText('AKSI AKUN')).toBeTruthy();
     expect(queryByTestId('screen-title')).toBeNull();
+  });
+
+  test('uses light web app Profile palette when theme is light', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
+    const { getByTestId, getByText } = render(<ProfileScreen isActive />);
+
+    await waitFor(() => expect(getByText('AKUN')).toBeTruthy());
+
+    expect(StyleSheet.flatten(getByTestId('profile-web-app-scroll').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#ffffff' }),
+    );
+    expect(StyleSheet.flatten(getByTestId('profile-web-app-hero').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#ffffff', borderColor: '#e5e7eb' }),
+    );
+  });
+
+  test('keeps dark web app Profile palette when theme is dark', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: true, isWebAppLayout: true });
+    const { getByTestId, getByText } = render(<ProfileScreen isActive />);
+
+    await waitFor(() => expect(getByText('AKUN')).toBeTruthy());
+
+    expect(StyleSheet.flatten(getByTestId('profile-web-app-scroll').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#020617' }),
+    );
+    expect(StyleSheet.flatten(getByTestId('profile-web-app-hero').props.style)).toEqual(
+      expect.objectContaining({ backgroundColor: '#111827', borderColor: '#243044' }),
+    );
   });
 
   test('renders user info when logged in', async () => {
@@ -431,7 +460,7 @@ describe('ProfileScreen', () => {
   });
 
   test('uses dashboard Achievements route surface in web app layout', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     useSession.mockReturnValue(loggedInSession);
     personalApi.getMyPoints.mockResolvedValue({ total_points: 120 });
     personalApi.getAchievements.mockResolvedValue([

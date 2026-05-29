@@ -7,6 +7,40 @@ export const WEB_APP_PROFILE_TILE = '#1e293b';
 export const WEB_APP_PROFILE_BORDER = '#243044';
 export const WEB_APP_PROFILE_ACCENT = '#34d399';
 export const WEB_APP_PROFILE_MUTED = '#94a3b8';
+export const WEB_APP_PROFILE_THEMES = {
+    dark: {
+        accent: WEB_APP_PROFILE_ACCENT,
+        actionDangerBg: '#2a1720',
+        actionDangerBorder: '#7f1d1d',
+        actionDangerIcon: '#fca5a5',
+        actionDangerLabel: '#fecaca',
+        bg: WEB_APP_PROFILE_BG,
+        border: WEB_APP_PROFILE_BORDER,
+        iconBg: 'rgba(52, 211, 153, 0.10)',
+        muted: WEB_APP_PROFILE_MUTED,
+        ripple: '#1f2937',
+        surface: WEB_APP_PROFILE_SURFACE,
+        text: '#cbd5e1',
+        tile: WEB_APP_PROFILE_TILE,
+        title: '#f8fafc',
+    },
+    light: {
+        accent: '#047857',
+        actionDangerBg: '#fff1f2',
+        actionDangerBorder: '#fecdd3',
+        actionDangerIcon: '#dc2626',
+        actionDangerLabel: '#b91c1c',
+        bg: '#ffffff',
+        border: '#e5e7eb',
+        iconBg: '#ecfdf5',
+        muted: '#64748b',
+        ripple: '#d1fae5',
+        surface: '#ffffff',
+        text: '#475569',
+        tile: '#f8fafc',
+        title: '#111827',
+    },
+};
 
 export const styles = StyleSheet.create({
     flex: {

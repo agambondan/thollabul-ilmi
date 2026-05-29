@@ -3102,3 +3102,44 @@ Results:
 - `git diff --check` passed for touched files.
 - Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above
   2,000 lines.
+
+## Web App Profile Theme Parity
+
+Status: completed for the native `web_app` Profile main screen light/dark
+palette pass.
+
+Implemented:
+
+- `ProfileScreen` now reads `isDarkTheme` in addition to `isWebAppLayout`.
+- The `web_app` Profile main screen keeps the existing dark dashboard palette
+  when dark mode is active, and switches the page background, account hero,
+  stats tiles, progress tiles, achievement preview tiles, account action tiles,
+  and section text to a light dashboard palette when the app theme is light.
+- Added regression coverage for both light and dark `web_app` Profile palettes.
+- Classic Profile and settings/sub-screen flows remain unchanged.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/ProfileScreen.js
+node --check apps/mobile/src/screens/ProfileScreen.styles.js
+cd apps/mobile
+npm test -- profileScreen.test.js mobileAppShell.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check -- apps/mobile/src/screens/ProfileScreen.js apps/mobile/src/screens/ProfileScreen.styles.js apps/mobile/src/__tests__/profileScreen.test.js docs/WEB_MOBILE_SYNC.md docs/features/progress/2026-05-24-mobile-web-app-layout-impact-plan.md
+find apps/mobile/src -name '*.js' -print0 | xargs -0 wc -l | sort -nr | head -10
+```
+
+Results:
+
+- `node --check` passed for `ProfileScreen.js` and
+  `ProfileScreen.styles.js`.
+- Targeted Profile/shell tests passed: 2 suites, 42 tests.
+- Full mobile Jest passed: 48 suites, 715 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed for touched files.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above
+  2,000 lines.

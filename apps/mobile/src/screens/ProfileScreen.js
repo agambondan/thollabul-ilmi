@@ -45,7 +45,7 @@ import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 import { defaultLayoutMode, useLayoutMode } from '../layout/LayoutModeProvider';
 import { preferenceKeys, readPreference, writePreference } from '../storage/preferences';
 import { colors } from '../theme';
-import { styles, WEB_APP_PROFILE_ACCENT } from './ProfileScreen.styles';
+import { styles, WEB_APP_PROFILE_THEMES } from './ProfileScreen.styles';
 
 const DEFAULT_BADGES = [
     { code: 'tilawah_first', description: 'Mulai perjalanan tilawah.', icon: '📖', label: 'Tilawah Perdana', unlocked: false },
@@ -876,7 +876,8 @@ function AchievementsDetail({ achievements, isWebAppLayout, loading, message, on
 
 export function ProfileScreen({ isActive, navigation, onOpenTab }) {
     const { deleteAccount, loading: sessionLoading, session, signOut, updateCurrentUser, user } = useSession();
-    const { isWebAppLayout } = useLayoutModePreference();
+    const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const webAppProfileTheme = isDarkTheme ? WEB_APP_PROFILE_THEMES.dark : WEB_APP_PROFILE_THEMES.light;
     const [stack, setStack] = useState([]);
     const [stats, setStats] = useState(null);
     const [achievements, setAchievements] = useState(DEFAULT_BADGES);
@@ -1110,21 +1111,28 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
 
         return (
             <ScrollView
-                contentContainerStyle={styles.webAppProfileContent}
+                contentContainerStyle={[styles.webAppProfileContent, { backgroundColor: webAppProfileTheme.bg }]}
                 showsVerticalScrollIndicator={false}
-                style={styles.webAppProfileRoot}
+                style={[styles.webAppProfileRoot, { backgroundColor: webAppProfileTheme.bg }]}
+                testID="profile-web-app-scroll"
             >
                 <View testID="profile-web-app-surface" />
-                <View style={styles.webAppProfileHero}>
+                <View
+                    style={[
+                        styles.webAppProfileHero,
+                        { backgroundColor: webAppProfileTheme.surface, borderColor: webAppProfileTheme.border },
+                    ]}
+                    testID="profile-web-app-hero"
+                >
                     <View style={styles.webAppAvatar}>
                         <Text style={styles.webAppAvatarText}>{initials || 'TI'}</Text>
                     </View>
-                    <Text style={styles.webAppEyebrow}>AKUN</Text>
-                    <Text style={styles.webAppProfileName}>{user?.name || 'Thullabul Ilmi'}</Text>
-                    <Text style={styles.webAppProfileEmail}>{user?.email || 'Belum masuk ke akun'}</Text>
+                    <Text style={[styles.webAppEyebrow, { color: webAppProfileTheme.accent }]}>AKUN</Text>
+                    <Text style={[styles.webAppProfileName, { color: webAppProfileTheme.title }]}>{user?.name || 'Thullabul Ilmi'}</Text>
+                    <Text style={[styles.webAppProfileEmail, { color: webAppProfileTheme.muted }]}>{user?.email || 'Belum masuk ke akun'}</Text>
                     <Pressable
                         accessibilityLabel="Buka pengaturan profil"
-                        android_ripple={{ color: '#1f2937', borderless: false }}
+                        android_ripple={{ color: webAppProfileTheme.ripple, borderless: false }}
                         onPress={() => push('settings')}
                         style={styles.webAppSettingsButton}
                     >
@@ -1135,40 +1143,40 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
 
                 {stats ? (
                     <View style={styles.webAppStatsGrid}>
-                        <View style={styles.webAppStatTile}>
-                            <Text style={styles.webAppStatValue}>{stats.points.toLocaleString('id-ID')}</Text>
-                            <Text style={styles.webAppStatLabel}>Total Poin</Text>
+                        <View style={[styles.webAppStatTile, { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border }]}>
+                            <Text style={[styles.webAppStatValue, { color: webAppProfileTheme.accent }]}>{stats.points.toLocaleString('id-ID')}</Text>
+                            <Text style={[styles.webAppStatLabel, { color: webAppProfileTheme.text }]}>Total Poin</Text>
                         </View>
-                        <View style={styles.webAppStatTile}>
-                            <Text style={styles.webAppStatValue}>{stats.streak}</Text>
-                            <Text style={styles.webAppStatLabel}>Hari Streak</Text>
+                        <View style={[styles.webAppStatTile, { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border }]}>
+                            <Text style={[styles.webAppStatValue, { color: webAppProfileTheme.accent }]}>{stats.streak}</Text>
+                            <Text style={[styles.webAppStatLabel, { color: webAppProfileTheme.text }]}>Hari Streak</Text>
                         </View>
                     </View>
                 ) : null}
 
                 {stats && (stats.hafalanCount !== null || stats.sholatWeekly !== null || stats.tilawahPages !== null) ? (
                     <View style={styles.webAppSection}>
-                        <Text style={styles.webAppSectionTitle}>RINGKASAN PROGRESS</Text>
+                        <Text style={[styles.webAppSectionTitle, { color: webAppProfileTheme.accent }]}>RINGKASAN PROGRESS</Text>
                         <View style={styles.webAppProgressGrid}>
                             {stats.hafalanCount !== null ? (
-                                <Pressable onPress={() => onOpenTab('quran', { tab: 'hafalan' })} style={styles.webAppProgressTile}>
-                                    <BookOpen color={WEB_APP_PROFILE_ACCENT} size={19} strokeWidth={2.2} />
-                                    <Text style={styles.webAppProgressValue}>{stats.hafalanCount}</Text>
-                                    <Text style={styles.webAppProgressLabel}>Surah Hafalan</Text>
+                                <Pressable onPress={() => onOpenTab('quran', { tab: 'hafalan' })} style={[styles.webAppProgressTile, { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border }]}>
+                                    <BookOpen color={webAppProfileTheme.accent} size={19} strokeWidth={2.2} />
+                                    <Text style={[styles.webAppProgressValue, { color: webAppProfileTheme.title }]}>{stats.hafalanCount}</Text>
+                                    <Text style={[styles.webAppProgressLabel, { color: webAppProfileTheme.text }]}>Surah Hafalan</Text>
                                 </Pressable>
                             ) : null}
                             {stats.sholatWeekly !== null ? (
-                                <Pressable onPress={() => onOpenTab('ibadah')} style={styles.webAppProgressTile}>
-                                    <Target color={WEB_APP_PROFILE_ACCENT} size={19} strokeWidth={2.2} />
-                                    <Text style={styles.webAppProgressValue}>{stats.sholatWeekly}%</Text>
-                                    <Text style={styles.webAppProgressLabel}>Sholat Minggu Ini</Text>
+                                <Pressable onPress={() => onOpenTab('ibadah')} style={[styles.webAppProgressTile, { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border }]}>
+                                    <Target color={webAppProfileTheme.accent} size={19} strokeWidth={2.2} />
+                                    <Text style={[styles.webAppProgressValue, { color: webAppProfileTheme.title }]}>{stats.sholatWeekly}%</Text>
+                                    <Text style={[styles.webAppProgressLabel, { color: webAppProfileTheme.text }]}>Sholat Minggu Ini</Text>
                                 </Pressable>
                             ) : null}
                             {stats.tilawahPages !== null ? (
-                                <Pressable onPress={() => onOpenTab('quran')} style={styles.webAppProgressTile}>
-                                    <Trophy color={WEB_APP_PROFILE_ACCENT} size={19} strokeWidth={2.2} />
-                                    <Text style={styles.webAppProgressValue}>{stats.tilawahPages}</Text>
-                                    <Text style={styles.webAppProgressLabel}>Halaman Tilawah</Text>
+                                <Pressable onPress={() => onOpenTab('quran')} style={[styles.webAppProgressTile, { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border }]}>
+                                    <Trophy color={webAppProfileTheme.accent} size={19} strokeWidth={2.2} />
+                                    <Text style={[styles.webAppProgressValue, { color: webAppProfileTheme.title }]}>{stats.tilawahPages}</Text>
+                                    <Text style={[styles.webAppProgressLabel, { color: webAppProfileTheme.text }]}>Halaman Tilawah</Text>
                                 </Pressable>
                             ) : null}
                         </View>
@@ -1177,28 +1185,32 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
 
                 <View style={styles.webAppSection}>
                     <View style={styles.webAppSectionHeader}>
-                        <Text style={styles.webAppSectionTitle}>PENCAPAIAN</Text>
-                        {achievementsLoading ? <ActivityIndicator color={WEB_APP_PROFILE_ACCENT} size="small" /> : null}
+                        <Text style={[styles.webAppSectionTitle, { color: webAppProfileTheme.accent }]}>PENCAPAIAN</Text>
+                        {achievementsLoading ? <ActivityIndicator color={webAppProfileTheme.accent} size="small" /> : null}
                         <Pressable
                             accessibilityLabel="Lihat semua pencapaian"
                             onPress={() => push('achievements')}
-                            style={styles.webAppSectionLink}
+                            style={[styles.webAppSectionLink, { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border }]}
                         >
-                            <Text style={styles.webAppSectionLinkText}>Lihat semua</Text>
-                            <ChevronRight color={WEB_APP_PROFILE_ACCENT} size={14} strokeWidth={2.4} />
+                            <Text style={[styles.webAppSectionLinkText, { color: webAppProfileTheme.accent }]}>Lihat semua</Text>
+                            <ChevronRight color={webAppProfileTheme.accent} size={14} strokeWidth={2.4} />
                         </Pressable>
                     </View>
-                    {achievementsMessage ? <Text style={styles.webAppSectionHint}>{achievementsMessage}</Text> : null}
+                    {achievementsMessage ? <Text style={[styles.webAppSectionHint, { color: webAppProfileTheme.muted }]}>{achievementsMessage}</Text> : null}
                     <View style={styles.webAppBadgeGrid}>
                         {achievements.slice(0, 6).map((badge) => (
                             <Pressable
-                                android_ripple={{ color: '#1f2937', borderless: false }}
+                                android_ripple={{ color: webAppProfileTheme.ripple, borderless: false }}
                                 key={badge.code ?? badge.label}
                                 onPress={() => push('achievements')}
-                                style={[styles.webAppBadge, !badge.unlocked && styles.webAppBadgeLocked]}
+                                style={[
+                                    styles.webAppBadge,
+                                    { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border },
+                                    !badge.unlocked && styles.webAppBadgeLocked,
+                                ]}
                             >
-                                <Text style={styles.webAppBadgeIcon}>{badge.unlocked ? badge.icon : '•'}</Text>
-                                <Text numberOfLines={2} style={[styles.webAppBadgeLabel, !badge.unlocked && styles.webAppBadgeLabelLocked]}>
+                                <Text style={[styles.webAppBadgeIcon, { color: webAppProfileTheme.title }]}>{badge.unlocked ? badge.icon : '•'}</Text>
+                                <Text numberOfLines={2} style={[styles.webAppBadgeLabel, { color: webAppProfileTheme.title }, !badge.unlocked && { color: webAppProfileTheme.muted }]}>
                                     {badge.label}
                                 </Text>
                             </Pressable>
@@ -1207,24 +1219,27 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                 </View>
 
                 <View style={styles.webAppSection}>
-                    <Text style={styles.webAppSectionTitle}>AKSI AKUN</Text>
+                    <Text style={[styles.webAppSectionTitle, { color: webAppProfileTheme.accent }]}>AKSI AKUN</Text>
                     <View style={styles.webAppActionGrid}>
                         {accountActions.map((item) => {
                             const Icon = item.Icon;
+                            const actionTileStyle = item.danger
+                                ? { backgroundColor: webAppProfileTheme.actionDangerBg, borderColor: webAppProfileTheme.actionDangerBorder }
+                                : { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border };
                             return (
                                 <Pressable
-                                    android_ripple={{ color: '#1f2937', borderless: false }}
+                                    android_ripple={{ color: webAppProfileTheme.ripple, borderless: false }}
                                     key={item.key}
                                     onPress={item.onPress}
-                                    style={[styles.webAppActionTile, item.danger && styles.webAppActionTileDanger]}
+                                    style={[styles.webAppActionTile, item.danger && styles.webAppActionTileDanger, actionTileStyle]}
                                 >
-                                    <View style={[styles.webAppActionIcon, item.danger && styles.webAppActionIconDanger]}>
-                                        <Icon color={item.danger ? '#fca5a5' : WEB_APP_PROFILE_ACCENT} size={18} strokeWidth={2.2} />
+                                    <View style={[styles.webAppActionIcon, item.danger && styles.webAppActionIconDanger, { backgroundColor: item.danger ? 'rgba(248, 113, 113, 0.12)' : webAppProfileTheme.iconBg }]}>
+                                        <Icon color={item.danger ? webAppProfileTheme.actionDangerIcon : webAppProfileTheme.accent} size={18} strokeWidth={2.2} />
                                     </View>
-                                    <Text style={[styles.webAppActionLabel, item.danger && styles.webAppActionLabelDanger]}>
+                                    <Text style={[styles.webAppActionLabel, item.danger && styles.webAppActionLabelDanger, { color: item.danger ? webAppProfileTheme.actionDangerLabel : webAppProfileTheme.title }]}>
                                         {item.label}
                                     </Text>
-                                    {item.meta ? <Text style={styles.webAppActionMeta}>{item.meta}</Text> : null}
+                                    {item.meta ? <Text style={[styles.webAppActionMeta, { color: webAppProfileTheme.text }]}>{item.meta}</Text> : null}
                                 </Pressable>
                             );
                         })}
