@@ -30,11 +30,6 @@ export const WEB_APP_TOOL_ROUTE_CONFIGS = {
     subtitle: 'Planner pembagian waris dengan riwayat kalkulasi.',
     title: 'Faraidh',
   },
-  'sholat-tracker': {
-    eyebrow: 'PERSONAL',
-    subtitle: 'Catat sholat hari ini dalam ringkasan dashboard.',
-    title: 'Sholat Tracker',
-  },
   'historical-map': {
     eyebrow: 'PETA',
     subtitle: 'Lokasi bersejarah Islam dengan filter dan mode peta.',

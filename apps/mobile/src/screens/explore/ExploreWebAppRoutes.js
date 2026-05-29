@@ -82,6 +82,7 @@ import { WebAppLeaderboardRoute } from './WebAppLeaderboardRoute';
 import { WebAppPerawiRoute } from './WebAppPerawiRoute';
 import { WebAppQuizRoute } from './WebAppQuizRoute';
 import { WEB_APP_REFERENCE_ROUTE_CONFIGS, WebAppReferenceListRoute } from './WebAppReferenceListRoute';
+import { WebAppSholatTrackerRoute } from './WebAppSholatTrackerRoute';
 import { WebAppSirohRoute } from './WebAppSirohRoute';
 import { WebAppTafsirRoute } from './WebAppTafsirRoute';
 import { WebAppTasbihRoute } from './WebAppTasbihRoute';
@@ -178,11 +179,13 @@ export function renderExploreWebAppRoute(context) {
     setSelectedItem,
     setSurahSearch,
     setTasbih,
+    sholatLog,
     showError,
     showInfo,
     surahSearch,
     surahs,
     tasbih,
+    togglePrayer,
     visibleItems,
   } = context;
 
@@ -1468,6 +1471,15 @@ export function renderExploreWebAppRoute(context) {
         onRestart={loadFeature}
         scoreQuiz={scoreQuiz}
         setAnswers={setAnswers}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'sholat-tracker' ) {
+    return (
+      <WebAppSholatTrackerRoute
+        sholatLog={sholatLog}
+        togglePrayer={togglePrayer}
       />
     );
   }

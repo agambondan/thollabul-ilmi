@@ -109,11 +109,13 @@ const baseContext = (activeFeature, overrides = {}) => ({
   setSelectedItem: jest.fn(),
   setSurahSearch: jest.fn(),
   setTasbih: jest.fn(),
+  sholatLog: {},
   showError: jest.fn(),
   showInfo: jest.fn(),
   surahSearch: '',
   surahs: [],
   tasbih: { count: 7, target: 33 },
+  togglePrayer: jest.fn(),
   visibleItems: [],
   ...overrides,
 });
@@ -375,5 +377,29 @@ describe('Explore web app reference list routes', () => {
 
     fireEvent.press(getAllByTestId('web-app-quiz-option')[0]);
     expect(setAnswers).toHaveBeenCalledWith(expect.any(Function));
+  });
+
+  test('renders Sholat Tracker route as dashboard tracker surface', () => {
+    const togglePrayer = jest.fn();
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'sholat-tracker', title: 'Sholat Tracker', type: 'sholat-tracker' },
+      {
+        renderFeatureContent: () => <Text>Tool content</Text>,
+        sholatLog: { subuh: true, dzuhur: true, maghrib: true },
+        togglePrayer,
+      },
+    ));
+    const { getAllByTestId, getAllByText, getByTestId, getByText, queryByText } = render(route);
+
+    expect(getByTestId('explore-web-app-sholat-tracker-surface')).toBeTruthy();
+    expect(queryByText('Tool content')).toBeNull();
+    expect(getByText('Sholat Tracker')).toBeTruthy();
+    expect(getAllByText('3/5').length).toBeGreaterThan(0);
+    expect(getByText('60% sholat tercatat')).toBeTruthy();
+    expect(getByText('7 Hari Terakhir')).toBeTruthy();
+    expect(getAllByTestId('web-app-sholat-prayer-row')).toHaveLength(5);
+
+    fireEvent.press(getAllByTestId('web-app-sholat-prayer-row')[0]);
+    expect(togglePrayer).toHaveBeenCalledWith('subuh');
   });
 });

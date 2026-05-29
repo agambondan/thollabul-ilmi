@@ -1245,11 +1245,13 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       setSelectedItem,
       setSurahSearch,
       setTasbih,
+      sholatLog,
       showError,
       showInfo,
       surahSearch,
       surahs,
       tasbih,
+      togglePrayer,
       visibleItems,
     });
 
