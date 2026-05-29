@@ -1,9 +1,9 @@
 jest.mock('lucide-react-native', () => {
   const icons = {};
   const names = [
-    'ArrowLeft', 'BookOpen', 'Bookmark', 'BookmarkCheck', 'CheckCircle2', 'ChevronDown',
+    'ArrowLeft', 'BookOpen', 'Bookmark', 'BookmarkCheck', 'Calculator', 'CheckCircle2', 'ChevronDown',
     'Circle', 'ExternalLink', 'FileText', 'Flag', 'Globe', 'Heart', 'HelpCircle',
-    'ListChecks', 'MessageCircle', 'Pencil', 'Plus', 'Scale', 'Star',
+    'History', 'ListChecks', 'MessageCircle', 'Pencil', 'Plus', 'Save', 'Scale', 'Star',
     'Search', 'StickyNote', 'ThumbsDown', 'ThumbsUp', 'Trash2', 'Trophy', 'UserCircle', 'Users', 'Video',
   ];
   names.forEach((n) => { icons[n] = n; });

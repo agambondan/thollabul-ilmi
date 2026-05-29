@@ -112,6 +112,7 @@ const baseContext = (activeFeature, overrides = {}) => ({
   libraryProgressMap: {},
   likingFeedId: null,
   loadFeature: jest.fn(),
+  loadZakatHistory: jest.fn(),
   loading: false,
   notesSearch: '',
   onOpenKajianUrl: jest.fn(),
@@ -166,6 +167,28 @@ const baseContext = (activeFeature, overrides = {}) => ({
   setSurahSearch: jest.fn(),
   setTasbih: jest.fn(),
   setUserWirdForm: jest.fn(),
+  setZakat: jest.fn(),
+  setZakatFamilyCount: jest.fn(),
+  setZakatGoldGrams: jest.fn(),
+  setZakatGoldHaul: jest.fn(),
+  setZakatGoldPrice: jest.fn(),
+  setZakatHarvestIrrigated: jest.fn(),
+  setZakatHarvestWeight: jest.fn(),
+  setZakatHaul: jest.fn(),
+  setZakatHistory: jest.fn(),
+  setZakatMonthlyIncome: jest.fn(),
+  setZakatRiceKgPrice: jest.fn(),
+  setZakatRicePrice: jest.fn(),
+  setZakatSavedMsg: jest.fn(),
+  setZakatSaving: jest.fn(),
+  setZakatSilverGrams: jest.fn(),
+  setZakatSilverPrice: jest.fn(),
+  setZakatTab: jest.fn(),
+  setZakatTradeCapital: jest.fn(),
+  setZakatTradeDebt: jest.fn(),
+  setZakatTradeHaul: jest.fn(),
+  setZakatTradeReceivable: jest.fn(),
+  setZakatTradeStock: jest.fn(),
   sholatLog: {},
   showError: jest.fn(),
   showInfo: jest.fn(),
@@ -186,6 +209,29 @@ const baseContext = (activeFeature, overrides = {}) => ({
   },
   visibleItems: [],
   resetUserWirdForm: jest.fn(),
+  zakat: { assets: '', debts: '', nisab: '85000000' },
+  zakatFamilyCount: 1,
+  zakatGoldGrams: '',
+  zakatGoldHaul: true,
+  zakatGoldPrice: '1050000',
+  zakatHarvestIrrigated: false,
+  zakatHarvestWeight: '',
+  zakatHaul: true,
+  zakatHistory: [],
+  zakatMonthlyIncome: '',
+  zakatRiceKgPrice: '16000',
+  zakatRicePrice: '16000',
+  zakatSavedMsg: '',
+  zakatSaving: false,
+  zakatSilverGrams: '',
+  zakatSilverPrice: '14000',
+  zakatTab: 0,
+  zakatTimerRef: { current: null },
+  zakatTradeCapital: '',
+  zakatTradeDebt: '',
+  zakatTradeHaul: true,
+  zakatTradeReceivable: '',
+  zakatTradeStock: '',
   ...overrides,
 });
 
@@ -574,6 +620,50 @@ describe('Explore web app reference list routes', () => {
 
     fireEvent.press(getByTestId('web-app-user-wird-delete'));
     expect(removeUserWird).toHaveBeenCalledWith(expect.objectContaining({ id: 'wird-1' }));
+  });
+
+  test('renders Zakat route as dedicated dashboard calculator and opens history', () => {
+    const setZakatTab = jest.fn();
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'zakat', title: 'Kalkulator Zakat', type: 'zakat' },
+      {
+        renderFeatureContent: () => <Text>Tool content</Text>,
+        setZakatTab,
+        zakat: { assets: '100000000', debts: '10000000', nisab: '85000000' },
+        zakatGoldPrice: '1050000',
+      },
+    ));
+    const { getByTestId, getByText, queryByText } = render(route);
+
+    expect(getByTestId('explore-web-app-zakat-surface')).toBeTruthy();
+    expect(queryByText('Tool content')).toBeNull();
+    expect(getByText('Kalkulator Zakat')).toBeTruthy();
+    expect(getByText('Zakat Maal')).toBeTruthy();
+    expect(getByText('Rp 2.250.000')).toBeTruthy();
+
+    fireEvent.press(getByTestId('web-app-zakat-history-link'));
+    expect(setZakatTab).toHaveBeenCalledWith(6);
+  });
+
+  test('renders Zakat history route through dedicated dashboard history surface', () => {
+    const setZakatTab = jest.fn();
+    const route = renderExploreWebAppRoute(baseContext(
+      { key: 'zakat', title: 'Kalkulator Zakat', type: 'zakat' },
+      {
+        setZakatTab,
+        zakatHistory: [{ id: 'zakat-1', jenis: 'maal', jumlah_zakat: 2500000, nama_jenis: 'Zakat Maal' }],
+        zakatTab: 6,
+      },
+    ));
+    const { getAllByText, getByTestId, getByText } = render(route);
+
+    expect(getByTestId('explore-web-app-zakat-surface')).toBeTruthy();
+    expect(getByTestId('explore-web-app-zakat-history-surface')).toBeTruthy();
+    expect(getByText('Riwayat Zakat')).toBeTruthy();
+    expect(getAllByText('Rp 2.500.000').length).toBeGreaterThan(0);
+
+    fireEvent.press(getByTestId('web-app-zakat-history-back'));
+    expect(setZakatTab).toHaveBeenCalledWith(0);
   });
 
   test('renders Asmaul Flashcard route as dashboard card surface', () => {

@@ -5,11 +5,6 @@ import { radius, spacing } from '../../theme';
 import { getExploreItemKey } from '../ExploreScreen.helpers';
 
 export const WEB_APP_TOOL_ROUTE_CONFIGS = {
-  zakat: {
-    eyebrow: 'KALKULATOR',
-    subtitle: 'Hitung zakat maal, fitrah, profesi, dagang, tani, dan emas.',
-    title: 'Kalkulator Zakat',
-  },
   faraidh: {
     eyebrow: 'KALKULATOR',
     subtitle: 'Planner pembagian waris dengan riwayat kalkulasi.',

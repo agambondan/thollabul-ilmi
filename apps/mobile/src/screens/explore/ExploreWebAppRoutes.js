@@ -89,6 +89,7 @@ import { WebAppTafsirRoute } from './WebAppTafsirRoute';
 import { WebAppTasbihRoute } from './WebAppTasbihRoute';
 import { WEB_APP_TOOL_ROUTE_CONFIGS, WebAppToolRoute } from './WebAppToolRoute';
 import { WebAppUserWirdRoute } from './WebAppUserWirdRoute';
+import { WebAppZakatRoute } from './WebAppZakatRoute';
 import { HistoricalMapContent } from '../HistoricalMapScreen';
 import { TokohTarikhContent } from '../TokohTarikhContent';
 
@@ -143,6 +144,7 @@ export function renderExploreWebAppRoute(context) {
     loadFeature,
     loadSurahContent,
     loadMoreFeature,
+    loadZakatHistory,
     loading,
     notesSearch,
     onToggleAmalan,
@@ -195,6 +197,28 @@ export function renderExploreWebAppRoute(context) {
     setSurahSearch,
     setTasbih,
     setUserWirdForm,
+    setZakat,
+    setZakatFamilyCount,
+    setZakatGoldGrams,
+    setZakatGoldHaul,
+    setZakatGoldPrice,
+    setZakatHarvestIrrigated,
+    setZakatHarvestWeight,
+    setZakatHaul,
+    setZakatHistory,
+    setZakatMonthlyIncome,
+    setZakatRiceKgPrice,
+    setZakatRicePrice,
+    setZakatSavedMsg,
+    setZakatSaving,
+    setZakatSilverGrams,
+    setZakatSilverPrice,
+    setZakatTab,
+    setZakatTradeCapital,
+    setZakatTradeDebt,
+    setZakatTradeHaul,
+    setZakatTradeReceivable,
+    setZakatTradeStock,
     sholatLog,
     showError,
     showInfo,
@@ -208,6 +232,29 @@ export function renderExploreWebAppRoute(context) {
     removeUserWird,
     resetUserWirdForm,
     savingUserWird,
+    zakat,
+    zakatFamilyCount,
+    zakatGoldGrams,
+    zakatGoldHaul,
+    zakatGoldPrice,
+    zakatHarvestIrrigated,
+    zakatHarvestWeight,
+    zakatHaul,
+    zakatHistory,
+    zakatMonthlyIncome,
+    zakatRiceKgPrice,
+    zakatRicePrice,
+    zakatSavedMsg,
+    zakatSaving,
+    zakatSilverGrams,
+    zakatSilverPrice,
+    zakatTab,
+    zakatTimerRef,
+    zakatTradeCapital,
+    zakatTradeDebt,
+    zakatTradeHaul,
+    zakatTradeReceivable,
+    zakatTradeStock,
   } = context;
 
   const renderWebAppBookmarkCard = (item, index) => {
@@ -1566,6 +1613,61 @@ export function renderExploreWebAppRoute(context) {
         submitUserWird={submitUserWird}
         userWirdForm={userWirdForm}
         visibleItems={visibleItems}
+      />
+    );
+  }
+
+  if (activeFeature?.key === 'zakat' || activeFeature?.type === 'zakat') {
+    return (
+      <WebAppZakatRoute
+        loadZakatHistory={loadZakatHistory}
+        session={session}
+        setZakat={setZakat}
+        setZakatFamilyCount={setZakatFamilyCount}
+        setZakatGoldGrams={setZakatGoldGrams}
+        setZakatGoldHaul={setZakatGoldHaul}
+        setZakatGoldPrice={setZakatGoldPrice}
+        setZakatHarvestIrrigated={setZakatHarvestIrrigated}
+        setZakatHarvestWeight={setZakatHarvestWeight}
+        setZakatHaul={setZakatHaul}
+        setZakatHistory={setZakatHistory}
+        setZakatMonthlyIncome={setZakatMonthlyIncome}
+        setZakatRiceKgPrice={setZakatRiceKgPrice}
+        setZakatRicePrice={setZakatRicePrice}
+        setZakatSavedMsg={setZakatSavedMsg}
+        setZakatSaving={setZakatSaving}
+        setZakatSilverGrams={setZakatSilverGrams}
+        setZakatSilverPrice={setZakatSilverPrice}
+        setZakatTab={setZakatTab}
+        setZakatTradeCapital={setZakatTradeCapital}
+        setZakatTradeDebt={setZakatTradeDebt}
+        setZakatTradeHaul={setZakatTradeHaul}
+        setZakatTradeReceivable={setZakatTradeReceivable}
+        setZakatTradeStock={setZakatTradeStock}
+        showError={showError}
+        zakat={zakat}
+        zakatFamilyCount={zakatFamilyCount}
+        zakatGoldGrams={zakatGoldGrams}
+        zakatGoldHaul={zakatGoldHaul}
+        zakatGoldPrice={zakatGoldPrice}
+        zakatHarvestIrrigated={zakatHarvestIrrigated}
+        zakatHarvestWeight={zakatHarvestWeight}
+        zakatHaul={zakatHaul}
+        zakatHistory={zakatHistory}
+        zakatMonthlyIncome={zakatMonthlyIncome}
+        zakatRiceKgPrice={zakatRiceKgPrice}
+        zakatRicePrice={zakatRicePrice}
+        zakatSavedMsg={zakatSavedMsg}
+        zakatSaving={zakatSaving}
+        zakatSilverGrams={zakatSilverGrams}
+        zakatSilverPrice={zakatSilverPrice}
+        zakatTab={zakatTab}
+        zakatTimerRef={zakatTimerRef}
+        zakatTradeCapital={zakatTradeCapital}
+        zakatTradeDebt={zakatTradeDebt}
+        zakatTradeHaul={zakatTradeHaul}
+        zakatTradeReceivable={zakatTradeReceivable}
+        zakatTradeStock={zakatTradeStock}
       />
     );
   }
