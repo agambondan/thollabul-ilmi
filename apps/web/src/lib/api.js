@@ -815,6 +815,7 @@ export const notificationInboxApi = {
     list: () => authFetch('/api/v1/notifications/inbox'),
     markRead: (id) => authFetch(`/api/v1/notifications/inbox/${id}/read`, { method: 'PUT' }),
     markAllRead: () => authFetch('/api/v1/notifications/inbox/read-all', { method: 'PUT' }),
+    delete: (id) => authFetch(`/api/v1/notifications/inbox/${id}`, { method: 'DELETE' }),
 };
 
 export const dzikirLogApi = {

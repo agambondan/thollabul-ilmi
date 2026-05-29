@@ -73,6 +73,10 @@ func (f *fakeNotificationInboxRepo) MarkAllRead(userID uuid.UUID) error {
 	return nil
 }
 
+func (f *fakeNotificationInboxRepo) Delete(id uuid.UUID, userID uuid.UUID) error {
+	return nil
+}
+
 func (f *fakeNotificationInboxRepo) Create(n model.UserNotification) (model.UserNotification, error) {
 	f.created = append(f.created, n)
 	return n, nil

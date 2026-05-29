@@ -11,6 +11,7 @@ type NotificationInboxService interface {
 	UnreadCount(userID uuid.UUID) (int64, error)
 	MarkRead(id uuid.UUID, userID uuid.UUID) error
 	MarkAllRead(userID uuid.UUID) error
+	Delete(id uuid.UUID, userID uuid.UUID) error
 }
 
 type notificationInboxService struct {
@@ -35,4 +36,8 @@ func (s *notificationInboxService) MarkRead(id uuid.UUID, userID uuid.UUID) erro
 
 func (s *notificationInboxService) MarkAllRead(userID uuid.UUID) error {
 	return s.repo.MarkAllRead(userID)
+}
+
+func (s *notificationInboxService) Delete(id uuid.UUID, userID uuid.UUID) error {
+	return s.repo.Delete(id, userID)
 }

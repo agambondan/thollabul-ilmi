@@ -117,6 +117,7 @@ type NotificationInboxRepository interface {
 	UnreadCount(userID uuid.UUID) (int64, error)
 	MarkRead(id uuid.UUID, userID uuid.UUID) error
 	MarkAllRead(userID uuid.UUID) error
+	Delete(id uuid.UUID, userID uuid.UUID) error
 	Create(n model.UserNotification) (model.UserNotification, error)
 }
 
@@ -152,6 +153,12 @@ func (r *notificationInboxRepository) MarkAllRead(userID uuid.UUID) error {
 	return r.db.Model(&model.UserNotification{}).
 		Where("user_id = ? AND is_read = false", userID).
 		Update("is_read", true).Error
+}
+
+func (r *notificationInboxRepository) Delete(id uuid.UUID, userID uuid.UUID) error {
+	return deleteResultError(r.db.
+		Where("id = ? AND user_id = ?", id, userID).
+		Delete(&model.UserNotification{}))
 }
 
 func (r *notificationInboxRepository) Create(n model.UserNotification) (model.UserNotification, error) {

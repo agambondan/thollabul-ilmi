@@ -13,7 +13,7 @@ import {
 } from '@/lib/pushSubscription';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
-import { BsBell, BsBellFill, BsCheckAll, BsPhone, BsLaptop, BsClock, BsChevronDown, BsChevronUp } from 'react-icons/bs';
+import { BsBell, BsBellFill, BsCheckAll, BsPhone, BsLaptop, BsClock, BsChevronDown, BsChevronUp, BsTrash } from 'react-icons/bs';
 
 const todayStr = () => {
     const d = new Date();
@@ -359,6 +359,20 @@ const NotificationsPage = () => {
         }
     };
 
+    const deleteNotif = async (notif) => {
+        if (notif.local || !isAuthenticated) {
+            setNotifs((prev) => prev.filter((n) => n.id !== notif.id));
+            return;
+        }
+
+        try {
+            const res = await notificationInboxApi.delete(notif.id);
+            if (res.ok || res.status === 404) {
+                setNotifs((prev) => prev.filter((n) => n.id !== notif.id));
+            }
+        } catch {}
+    };
+
     const unreadCount = notifs.filter((n) => !n.is_read).length;
 
     return (
@@ -627,6 +641,14 @@ const NotificationsPage = () => {
                                                 {t('notif.mark_read')}
                                             </button>
                                         )}
+                                        <button
+                                            type='button'
+                                            onClick={() => deleteNotif(notif)}
+                                            className='inline-flex items-center gap-1.5 rounded-lg border border-rose-100 px-3 py-1.5 text-xs font-semibold text-rose-600 transition-colors hover:bg-rose-50 dark:border-rose-900/40 dark:text-rose-300 dark:hover:bg-rose-950/30'
+                                        >
+                                            <BsTrash />
+                                            Hapus
+                                        </button>
                                     </div>
                                 </div>
                                 {!notif.is_read && (

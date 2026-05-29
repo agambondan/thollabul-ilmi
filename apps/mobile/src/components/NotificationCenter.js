@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { BellRing, Flame } from 'lucide-react-native';
+import { BellRing, Flame, Trash2 } from 'lucide-react-native';
 import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
+  deleteNotificationInboxItem,
   getNotificationInbox,
   getNotificationSettings,
   getPushTokenStatus,
@@ -123,6 +124,7 @@ export function NotificationCenter({ variant = 'classic' }) {
   const [message, setMessage] = useState('');
   const [saving, setSaving] = useState(false);
   const [pendingSync, setPendingSync] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
   const pushAvailability = getPushNotificationAvailability();
   const [pushState, setPushState] = useState({
     activeCount: 0,
@@ -467,6 +469,36 @@ export function NotificationCenter({ variant = 'classic' }) {
     }
   };
 
+  const deleteInboxItem = async (item) => {
+    if (!item?.id || deletingId) return;
+
+    const wasUnread = !item.is_read;
+    setDeletingId(item.id);
+    setInbox((current) => current.filter((currentItem) => currentItem.id !== item.id));
+    if (wasUnread) {
+      setUnreadCount((current) => Math.max(0, current - 1));
+    }
+    try {
+      await deleteNotificationInboxItem(item.id);
+      setMessage('Notifikasi dihapus.');
+      showSuccess('Notifikasi dihapus.');
+    } catch (error) {
+      if (error?.status === 404) {
+        setMessage('Notifikasi sudah tidak tersedia.');
+        return;
+      }
+      setInbox((current) => (current.some((currentItem) => currentItem.id === item.id) ? current : [item, ...current]));
+      if (wasUnread) {
+        setUnreadCount((current) => current + 1);
+      }
+      const nextMessage = error?.message ?? 'Notifikasi belum bisa dihapus.';
+      setMessage(nextMessage);
+      showError(nextMessage);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   useEffect(() => {
     load();
   }, [load]);
@@ -767,10 +799,8 @@ export function NotificationCenter({ variant = 'classic' }) {
           const InboxIcon = presentation.Icon;
 
           return (
-            <Pressable
-              android_ripple={{ color: 'rgba(91, 110, 91, 0.08)', borderless: false }}
+            <View
               key={item.id}
-              onPress={() => markRead(item.id)}
               style={[styles.inboxItem, isWebApp ? styles.webAppInboxItem : null, !item.is_read ? styles.unreadItem : null]}
             >
               <View style={styles.inboxRow}>
@@ -787,9 +817,35 @@ export function NotificationCenter({ variant = 'classic' }) {
                   />
                   {presentation.body ? <Text style={[styles.body, isWebApp ? styles.webAppTextMuted : null]}>{presentation.body}</Text> : null}
                   <Text style={[styles.settingMeta, isWebApp ? styles.webAppTextMuted : null]}>{[presentation.label, item.ref_id].filter(Boolean).join(' · ')}</Text>
+                  <View style={styles.inboxActions}>
+                    {!item.is_read ? (
+                      <Pressable
+                        android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
+                        onPress={() => markRead(item.id)}
+                        style={[styles.inboxActionButton, isWebApp ? styles.webAppSecondaryButton : null]}
+                      >
+                        <Text style={[styles.inboxActionText, isWebApp ? styles.webAppSecondaryText : null]}>Tandai terbaca</Text>
+                      </Pressable>
+                    ) : null}
+                    <Pressable
+                      android_ripple={{ color: 'rgba(190, 18, 60, 0.12)', borderless: false }}
+                      disabled={deletingId === item.id}
+                      onPress={() => deleteInboxItem(item)}
+                      style={[styles.inboxActionButton, styles.inboxDeleteButton, deletingId === item.id ? styles.disabled : null]}
+                    >
+                      {deletingId === item.id ? (
+                        <ActivityIndicator color="#be123c" size="small" />
+                      ) : (
+                        <>
+                          <Trash2 color="#be123c" size={14} strokeWidth={2.3} />
+                          <Text style={styles.inboxDeleteText}>Hapus</Text>
+                        </>
+                      )}
+                    </Pressable>
+                  </View>
                 </View>
               </View>
-            </Pressable>
+            </View>
           );
         })}
         {inbox.length ? (
@@ -851,6 +907,38 @@ const styles = StyleSheet.create({
   },
   inboxCopy: {
     flex: 1,
+  },
+  inboxActionButton: {
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderColor: colors.faint,
+    borderRadius: radius.sm,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 5,
+    justifyContent: 'center',
+    minHeight: 30,
+    paddingHorizontal: spacing.sm,
+  },
+  inboxActionText: {
+    color: colors.primary,
+    fontSize: 11,
+    fontWeight: '900',
+  },
+  inboxActions: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+    marginTop: spacing.sm,
+  },
+  inboxDeleteButton: {
+    borderColor: 'rgba(190, 18, 60, 0.18)',
+  },
+  inboxDeleteText: {
+    color: '#be123c',
+    fontSize: 11,
+    fontWeight: '900',
   },
   inboxIcon: {
     alignItems: 'center',

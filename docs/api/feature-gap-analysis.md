@@ -308,7 +308,7 @@ Dokumen ini **belum berarti semua gap sudah selesai**. Hasil cek ulang terhadap 
 ### Kurang
 | Fitur | Status | Effort | Catatan |
 |---|---|---|---|
-| **Inbox notifikasi** (BE-backed) | ✅ BE+Mobile (Mei 2026) | — | Model `UserNotification`, endpoint list/mark-read/mark-all-read, dan mobile Explore Notification Center sudah ada. Delete endpoint belum ada. |
+| **Inbox notifikasi** (BE-backed) | ✅ BE+Web+Mobile (Mei 2026) | — | Model `UserNotification`, endpoint list/mark-read/mark-all-read/delete, dashboard web, dan mobile Explore/Profile Notification Center sudah ada. Delete pakai ownership check dan return 404 jika item tidak ada atau milik user lain. |
 | `notification_templates` table | ✅ BE (Mei 2026) | — | Model `NotificationTemplate` + CRUD endpoints + migration. |
 | Push notification — Web Push (VAPID) | ✅ BE+FE+SW (Mei 2026) | L | Library `webpush-go` ✅. Service worker subscribe + handle ✅. Notification settings UI ✅. VAPID keys sudah aktif di `.env`. Backend `DispatchDueReminders` + `sendWebPush` sudah berfungsi. |
 | Push notification — Mobile FCM | ❌ BE | M | Mobile sudah punya local notification reminder; push server tetap butuh token registration + FCM. |

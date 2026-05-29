@@ -32,6 +32,7 @@ const {
   getNotificationInbox,
   markNotificationRead,
   markAllNotificationsRead,
+  deleteNotificationInboxItem,
   getAchievements,
   getMyAchievements,
   getMyPoints,
@@ -338,6 +339,15 @@ describe('personal api', () => {
       expect(putJson).toHaveBeenCalledWith(
         '/api/v1/notifications/inbox/read-all',
         {},
+        { auth: true },
+      );
+    });
+
+    test('deleteNotificationInboxItem calls deleteJson', async () => {
+      deleteJson.mockResolvedValueOnce({});
+      await deleteNotificationInboxItem('notif-1');
+      expect(deleteJson).toHaveBeenCalledWith(
+        '/api/v1/notifications/inbox/notif-1',
         { auth: true },
       );
     });

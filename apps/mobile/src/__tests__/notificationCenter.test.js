@@ -7,6 +7,7 @@ jest.mock('../context/FeedbackContext', () => ({
 }));
 
 jest.mock('../api/personal', () => ({
+  deleteNotificationInboxItem: jest.fn(),
   getNotificationSettings: jest.fn(),
   getNotificationInbox: jest.fn(),
   getPushTokenStatus: jest.fn(),
@@ -50,9 +51,11 @@ import { flushAsyncWork } from '../test-utils/async';
 const { useSession } = require('../context/SessionContext');
 const { useFeedback } = require('../context/FeedbackContext');
 const {
+  deleteNotificationInboxItem,
   getNotificationSettings,
   getNotificationInbox,
   getPushTokenStatus,
+  markNotificationRead,
 } = require('../api/personal');
 const { getPushNotificationAvailability } = require('../utils/pushNotifications');
 const { getSmartReminderSchedule, smartNotificationsSupported } = require('../utils/smartNotifications');
@@ -113,6 +116,58 @@ describe('NotificationCenter', () => {
     fireEvent.press(await findByText(/Kotak Masuk/));
     expect(await findByText('Notif 1')).toBeTruthy();
     expect(await findByText('Body 1')).toBeTruthy();
+  });
+
+  test('marks inbox item read from explicit action', async () => {
+    getNotificationInbox.mockResolvedValue({
+      items: [{ id: '1', title: 'Notif 1', body: 'Body 1', type: 'daily_quran', is_read: false }],
+      unreadCount: 1,
+    });
+    markNotificationRead.mockResolvedValue({});
+    const { findByText } = await renderNotificationCenter();
+    fireEvent.press(await findByText(/Kotak Masuk/));
+
+    fireEvent.press(await findByText('Tandai terbaca'));
+
+    await waitFor(() => {
+      expect(markNotificationRead).toHaveBeenCalledWith('1');
+    });
+  });
+
+  test('deletes inbox item', async () => {
+    getNotificationInbox.mockResolvedValue({
+      items: [{ id: '1', title: 'Notif 1', body: 'Body 1', type: 'daily_quran', is_read: false }],
+      unreadCount: 1,
+    });
+    deleteNotificationInboxItem.mockResolvedValue({});
+    const { findByText, queryByText } = await renderNotificationCenter();
+    fireEvent.press(await findByText(/Kotak Masuk/));
+
+    fireEvent.press(await findByText('Hapus'));
+
+    await waitFor(() => {
+      expect(deleteNotificationInboxItem).toHaveBeenCalledWith('1');
+      expect(queryByText('Notif 1')).toBeNull();
+    });
+  });
+
+  test('treats missing inbox item delete as already unavailable', async () => {
+    getNotificationInbox.mockResolvedValue({
+      items: [{ id: '1', title: 'Notif 1', body: 'Body 1', type: 'daily_quran', is_read: false }],
+      unreadCount: 1,
+    });
+    const notFound = new Error('not found');
+    notFound.status = 404;
+    deleteNotificationInboxItem.mockRejectedValueOnce(notFound);
+    const { findByText, queryByText } = await renderNotificationCenter();
+    fireEvent.press(await findByText(/Kotak Masuk/));
+
+    fireEvent.press(await findByText('Hapus'));
+
+    await waitFor(() => {
+      expect(deleteNotificationInboxItem).toHaveBeenCalledWith('1');
+      expect(queryByText('Notif 1')).toBeNull();
+    });
   });
 
   test('renders streak risk inbox item with fallback copy', async () => {

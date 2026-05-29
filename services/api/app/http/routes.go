@@ -335,6 +335,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/notifications/inbox", jwt, newNotificationInboxController.List)
 	master.Put("/notifications/inbox/read-all", jwt, newNotificationInboxController.MarkAllRead)
 	master.Put("/notifications/inbox/:id/read", jwt, newNotificationInboxController.MarkRead)
+	master.Delete("/notifications/inbox/:id", jwt, newNotificationInboxController.Delete)
 
 	// Share to Feed
 	master.Get("/feed", newFeedController.FindAll)

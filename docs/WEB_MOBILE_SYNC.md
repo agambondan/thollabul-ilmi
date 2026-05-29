@@ -3,7 +3,7 @@
 > Tujuan: menjaga parity fitur web (public + dashboard) dan mobile agar agent
 > berikutnya tidak menganggap baseline lama sebagai status current.
 
-Last verified: 2026-05-27
+Last verified: 2026-05-29
 
 ## Source Of Truth
 
@@ -183,6 +183,7 @@ These route patterns are part of the current journey contract:
 | Dashboard reminder carousel | `/dashboard` | `/dashboard` | Dashboard rotates Quran daily, Hadith daily, and dynamic reminder content from `GET /api/v1/reminders`. Native mobile `web_app` now mirrors the carousel-style presentation and loads the same active reminders endpoint, so ulama names, sources, active status, and ordering stay synced with web admin reminders. |
 | Personal Tilawah logs | `/tilawah` | `/dashboard/tilawah` | Web and mobile consume the same `/api/v1/tilawah` CRUD + summary contract. Delete is ownership-scoped: removing a missing log or another user's log returns 404 instead of a false success, so personal history cannot silently drift between web and mobile. |
 | Personal delete actions | Personal routes | Dashboard personal routes | Ownership-scoped personal deletes return 404 when the row is missing or belongs to another user across notes, goals, muhasabah, dzikir logs, user wirid, bookmarks, saved zakat/faraidh, feed posts, comments, forum questions, and forum answers. Web and mobile should treat 404 as already unavailable rather than a successful delete. |
+| Notification inbox delete | `/dashboard/notifications` | Profile/Explore Notification Center | `DELETE /notifications/inbox/:id` is available on backend with user ownership check. Web dashboard and mobile Notification Center both expose a delete action and remove the item from local UI after a successful request. |
 | Admin analytics | `/admin` | admin-only | Web now records page-view events through `POST /api/v1/analytics/page-view` and renders admin visitor metrics plus traffic insights from `GET /api/v1/analytics/admin/summary`. Authenticated events keep both `visitor_id` and `user_id`; unique visitor aggregation counts `user_id` first and falls back to `visitor_id` for guests. The admin dashboard also derives review queue, content health, content status charts, active user ranking, top pages per source, recent activity rows for tracing user/guest journeys, a 7/14/30/90-day analytics window selector, and previous-period trend deltas for visitor/view cards. Mobile does not mirror admin analytics because this is an admin web surface, not a public/mobile feature. |
 
 Closed historical gaps:
