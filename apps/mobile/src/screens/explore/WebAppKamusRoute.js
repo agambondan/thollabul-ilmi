@@ -1,6 +1,7 @@
 import { Search } from 'lucide-react-native';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 
 const toStr = (value) => {
@@ -61,6 +62,7 @@ export function WebAppKamusRoute({
   onSearch,
   onUpdateQuery,
 }) {
+  const { t } = useMobileLocale();
   const query = dictionaryQuery.trim();
 
   return (
@@ -72,8 +74,8 @@ export function WebAppKamusRoute({
     >
       <View testID="explore-web-app-kamus-surface" />
       <View style={styles.header}>
-        <Text style={styles.title}>Kamus Arab</Text>
-        <Text style={styles.subtitle}>Cari kata Arab atau Indonesia</Text>
+        <Text style={styles.title}>{t('explore.kamus.title')}</Text>
+        <Text style={styles.subtitle}>{t('explore.kamus.subtitle')}</Text>
       </View>
 
       <View style={styles.searchWrap}>
@@ -85,7 +87,7 @@ export function WebAppKamusRoute({
             autoFocus={focusDictionaryInput}
             onChangeText={onUpdateQuery}
             onSubmitEditing={onSearch}
-            placeholder="Cari kata Arab atau Indonesia"
+            placeholder={t('explore.kamus.searchPlaceholder')}
             placeholderTextColor="#9ca3af"
             returnKeyType="search"
             style={styles.input}
@@ -94,7 +96,7 @@ export function WebAppKamusRoute({
           />
         </View>
         <Pressable onPress={onSearch} style={styles.searchButton} testID="web-app-kamus-submit">
-          <Text style={styles.searchButtonText}>Cari</Text>
+          <Text style={styles.searchButtonText}>{t('explore.kamus.searchAction')}</Text>
         </Pressable>
       </View>
 
@@ -102,31 +104,31 @@ export function WebAppKamusRoute({
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color="#059669" size="small" />
-          <Text style={styles.stateText}>Mencari kosakata...</Text>
+          <Text style={styles.stateText}>{t('explore.kamus.loading')}</Text>
         </View>
       ) : null}
 
       {!loading && query.length < 2 ? (
         <View style={styles.empty}>
           <Search color="#cbd5e1" size={40} strokeWidth={1.7} />
-          <Text style={styles.emptyTitle}>Ketik minimal 2 karakter.</Text>
-          <Text style={styles.emptyText}>Hasil kamus akan ditampilkan seperti tabel dashboard.</Text>
+          <Text style={styles.emptyTitle}>{t('explore.kamus.minCharsTitle')}</Text>
+          <Text style={styles.emptyText}>{t('explore.kamus.minCharsText')}</Text>
         </View>
       ) : null}
 
       {!loading && query.length >= 2 && !items.length ? (
         <View style={styles.empty}>
-          <Text style={styles.emptyTitle}>Tidak ada hasil.</Text>
-          <Text style={styles.emptyText}>{`Tidak ada kosakata yang cocok dengan "${query}".`}</Text>
+          <Text style={styles.emptyTitle}>{t('explore.kamus.noResultTitle')}</Text>
+          <Text style={styles.emptyText}>{t('explore.kamus.noResultText', { query })}</Text>
         </View>
       ) : null}
 
       {!loading && items.length ? (
         <View style={styles.results}>
           <View style={styles.tableHeader}>
-            <Text style={[styles.headerCell, styles.arabicHeader]}>Arab</Text>
-            <Text style={styles.headerCell}>Latin</Text>
-            <Text style={styles.headerCell}>Makna</Text>
+            <Text style={[styles.headerCell, styles.arabicHeader]}>{t('explore.kamus.columnArabic')}</Text>
+            <Text style={styles.headerCell}>{t('explore.kamus.columnLatin')}</Text>
+            <Text style={styles.headerCell}>{t('explore.kamus.columnMeaning')}</Text>
           </View>
           {items.map((item, index) => (
             <KamusResultCard item={item} key={`${item?.id ?? getLatin(item) ?? 'kamus'}-${index}`} />
