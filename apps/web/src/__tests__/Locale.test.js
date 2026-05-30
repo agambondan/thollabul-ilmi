@@ -54,13 +54,13 @@ describe('LocaleProvider', () => {
     expect(screen.getByTestId('welcome').textContent).toBe('Selamat datang Budi');
   });
 
-  test('returns key for missing translation', () => {
+  test('returns undefined for missing translation without fallback', () => {
     render(
       <LocaleProvider>
         <TestConsumer />
       </LocaleProvider>
     );
-    expect(screen.getByTestId('missing').textContent).toBe('missing.key');
+    expect(screen.getByTestId('missing').textContent).toBe('');
   });
 
   test('changes language via setLang', async () => {

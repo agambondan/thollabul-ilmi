@@ -21,6 +21,8 @@ import {
 } from 'lucide-react-native';
 import { Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ContentCard } from '../../components/ContentCard';
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
+import { defaultMobileLanguage, translateMobile } from '../../i18n/translations';
 import { arabicTypography } from '../../styles/arabicTypography';
 import { colors, radius, shadows, spacing } from '../../theme';
 
@@ -47,14 +49,14 @@ export const prayerScheduleItems = [
 ];
 
 const menuItems = [
-  { Icon: Compass, key: 'ibadah', label: 'Kiblat', params: { view: 'qibla' } },
-  { Icon: BookOpenCheck, key: 'quran', label: 'Hafalan' },
-  { Icon: Smile, featureKey: 'muhasabah', key: 'belajar', label: 'Jurnal' },
-  { Icon: HelpCircle, featureKey: 'quiz', key: 'belajar', label: 'Kuis' },
-  { Icon: Video, featureKey: 'kajian', key: 'belajar', label: 'Kajian' },
-  { Icon: FileText, featureKey: 'tafsir', key: 'belajar', label: 'Tafsir' },
-  { Icon: Book, key: 'hadith', label: 'Hadis' },
-  { Icon: Grid, internalView: 'feature-directory', key: 'belajar', label: 'Lainnya' },
+  { Icon: Compass, key: 'ibadah', labelKey: 'home.menu.qibla', params: { view: 'qibla' } },
+  { Icon: BookOpenCheck, key: 'quran', labelKey: 'home.menu.memory' },
+  { Icon: Smile, featureKey: 'muhasabah', key: 'belajar', labelKey: 'home.menu.journal' },
+  { Icon: HelpCircle, featureKey: 'quiz', key: 'belajar', labelKey: 'home.menu.quiz' },
+  { Icon: Video, featureKey: 'kajian', key: 'belajar', labelKey: 'home.menu.kajian' },
+  { Icon: FileText, featureKey: 'tafsir', key: 'belajar', labelKey: 'home.menu.tafsir' },
+  { Icon: Book, key: 'hadith', labelKey: 'home.menu.hadith' },
+  { Icon: Grid, internalView: 'feature-directory', key: 'belajar', labelKey: 'home.menu.more' },
 ];
 
 const webDashboardDarkColors = {
@@ -123,6 +125,8 @@ const formatHadisSource = (value = '') => {
   return value.replace(/\bHadith\b/g, 'Hadis');
 };
 
+const defaultT = (key, values) => translateMobile(defaultMobileLanguage, key, values);
+
 const buildWebAppDailySlides = ({
   colors: dashboardColors = webDashboardDarkColors,
   dailyAyah,
@@ -130,6 +134,7 @@ const buildWebAppDailySlides = ({
   dailyMessage,
   dailyReminders,
   loadingDaily,
+  t = defaultT,
 }) => {
   const ayahSlide = {
     Icon: Book,
@@ -138,9 +143,9 @@ const buildWebAppDailySlides = ({
     key: 'ayah',
     source: dailyAyah?.ref,
     text: loadingDaily
-      ? 'Memuat ayat harian...'
-      : dailyAyah?.translation || dailyMessage || 'Ayat harian belum tersedia.',
-    title: 'Ayat Hari Ini',
+      ? t('home.daily.ayah.loading')
+      : dailyAyah?.translation || dailyMessage || t('home.daily.ayah.empty'),
+    title: t('home.daily.ayah.title'),
   };
   const hadithSlide = {
     Icon: BookOpenCheck,
@@ -149,9 +154,9 @@ const buildWebAppDailySlides = ({
     key: 'hadith',
     source: dailyHadith?.book ? formatHadisSource(dailyHadith.book) : '',
     text: loadingDaily
-      ? 'Memuat hadis harian...'
-      : dailyHadith?.translation || 'Hadis harian belum tersedia dari server.',
-    title: 'Hadis Hari Ini',
+      ? t('home.daily.hadith.loading')
+      : dailyHadith?.translation || t('home.daily.hadith.empty'),
+    title: t('home.daily.hadith.title'),
   };
 
   const reminderSlides = (dailyReminders ?? []).map((reminder, index) => ({
@@ -159,9 +164,9 @@ const buildWebAppDailySlides = ({
     accentColor: '#38bdf8',
     arabic: null,
     key: `reminder-${reminder.id ?? index}`,
-    source: reminder.source || 'Pengingat harian',
+    source: reminder.source || t('home.daily.reminder.source'),
     text: reminder.text,
-    title: reminder.title || 'Pengingat Harian',
+    title: reminder.title || t('home.daily.reminder.title'),
   })).filter((slide) => slide.text);
 
   return [ayahSlide, hadithSlide, ...reminderSlides];
@@ -172,10 +177,11 @@ export function getHomeDashboardRenderer(layoutMode) {
 }
 
 export function HomeDashboardContent({ isDarkTheme = false, isWebAppLayout, ...props }) {
+  const { t } = useMobileLocale();
   const Renderer = getHomeDashboardRenderer(
     isWebAppLayout ? homeDashboardLayouts.webApp : homeDashboardLayouts.paper,
   );
-  return <Renderer isDarkTheme={isDarkTheme} {...props} />;
+  return <Renderer isDarkTheme={isDarkTheme} t={t} {...props} />;
 }
 
 export function PaperHomeDashboard(props) {
@@ -273,6 +279,7 @@ function DashboardContent({
   prayerTimes,
   recentFeatures,
   refreshing,
+  t = defaultT,
 }) {
   const isWebApp = layout === homeDashboardLayouts.webApp;
   const dashboardColors = isWebApp ? getWebDashboardColors(isDarkTheme) : null;
@@ -282,10 +289,10 @@ function DashboardContent({
   const muted = isWebApp ? dashboardColors.muted : colors.muted;
   const menuGrid = (
     <View style={[styles.menuGrid, isWebApp && styles.webAppMenuGrid, webStyles.menuGrid]} testID="home-menu-grid">
-      {menuItems.map(({ Icon, featureKey, internalView, key, label, params }) => (
+      {menuItems.map(({ Icon, featureKey, internalView, key, labelKey, params }) => (
         <Pressable
           android_ripple={{ color: 'rgba(91, 110, 91, 0.14)', borderless: false }}
-          key={label}
+          key={labelKey}
           onPress={() => {
             if (internalView && navigation?.open) {
               navigation.open('home', internalView);
@@ -298,7 +305,7 @@ function DashboardContent({
           <View style={[styles.menuIcon, isWebApp && styles.webAppIconTile, webStyles.iconTile]}>
             <Icon color={primary} size={18} strokeWidth={2.1} />
           </View>
-          <Text style={[styles.menuLabel, isWebApp && styles.webAppMenuLabel, webStyles.menuLabel]}>{label}</Text>
+          <Text style={[styles.menuLabel, isWebApp && styles.webAppMenuLabel, webStyles.menuLabel]}>{t(labelKey)}</Text>
         </Pressable>
       ))}
     </View>
@@ -344,7 +351,7 @@ function DashboardContent({
 
         <View style={styles.prayerHero}>
           <Text style={[styles.prayerKicker, isWebApp && styles.webAppPrimaryText, webStyles.primaryText]}>
-            {`Menuju ${prayerKeyLabels[nextPrayer.key] || 'Sholat'}`}
+            {t('home.prayer.towards', { prayer: prayerKeyLabels[nextPrayer.key] || 'Sholat' })}
           </Text>
           <Text style={[styles.prayerTime, isWebApp && styles.webAppTitleText, webStyles.titleText]}>{nextPrayer.time}</Text>
           <Text style={[styles.prayerSummary, isWebApp && styles.webAppMutedText, webStyles.mutedText]}>
@@ -353,7 +360,7 @@ function DashboardContent({
           <View style={[styles.countdown, isWebApp && styles.webAppPill, webStyles.pill]}>
             <Clock3 color={primary} size={13} strokeWidth={2.4} />
             <Text style={[styles.countdownText, isWebApp && styles.webAppPrimaryText, webStyles.primaryText]}>
-              {hasPrayerSchedule ? nextPrayer.countdown : 'Belum aktif'}
+              {hasPrayerSchedule ? nextPrayer.countdown : t('home.prayer.inactive')}
             </Text>
           </View>
         </View>
@@ -404,6 +411,7 @@ function DashboardContent({
           dashboardColors={dashboardColors}
           loadingDaily={loadingDaily}
           onOpenTab={onOpenTab}
+          t={t}
         />
       ) : (
         <View style={styles.dailyCard} testID="home-daily-card">
@@ -418,10 +426,10 @@ function DashboardContent({
           >
             <View style={styles.dailyAccent} />
             <View style={styles.dailyBody}>
-              <Text style={styles.dailyLabel}>Ayat Hari Ini</Text>
+              <Text style={styles.dailyLabel}>{t('home.daily.ayah.title')}</Text>
               {dailyAyah?.arabic ? <Text style={styles.dailyArabic}>{dailyAyah.arabic}</Text> : null}
               <Text style={styles.dailyText}>
-                {loadingDaily ? 'Memuat ayat harian...' : dailyAyah?.translation || dailyMessage || 'Ayat harian belum tersedia.'}
+                {loadingDaily ? t('home.daily.ayah.loading') : dailyAyah?.translation || dailyMessage || t('home.daily.ayah.empty')}
               </Text>
               {dailyAyah?.ref ? <Text style={styles.dailySource}>{dailyAyah.ref}</Text> : null}
             </View>
@@ -433,12 +441,12 @@ function DashboardContent({
           >
             <View style={styles.dailyAccent} />
             <View style={styles.dailyBody}>
-              <Text style={styles.dailyLabel}>Hadis Hari Ini</Text>
+              <Text style={styles.dailyLabel}>{t('home.daily.hadith.title')}</Text>
               {dailyHadith?.arabic ? <Text style={styles.dailyArabic}>{dailyHadith.arabic}</Text> : null}
               <Text style={styles.dailyText}>
                 {loadingDaily
-                  ? 'Memuat hadis harian...'
-                  : dailyHadith?.translation || 'Hadis harian belum tersedia dari server.'}
+                  ? t('home.daily.hadith.loading')
+                  : dailyHadith?.translation || t('home.daily.hadith.empty')}
               </Text>
               {dailyHadith?.book ? <Text style={styles.dailySource}>{formatHadisSource(dailyHadith.book)}</Text> : null}
             </View>
@@ -452,6 +460,7 @@ function DashboardContent({
           items={contextualShortcuts}
           onOpenTab={onOpenTab}
           primary={primary}
+          t={t}
           webStyles={webStyles}
         />
       ) : null}
@@ -461,11 +470,12 @@ function DashboardContent({
           Icon={Star}
           features={pinnedFeatures}
           isWebApp={isWebApp}
-          meta="Shortcut fitur pilihanmu"
+          meta={t('home.pinned.meta')}
           muted={muted}
           onOpenTab={onOpenTab}
           primary={primary}
-          title="Disematkan"
+          t={t}
+          title={t('home.pinned.title')}
           webStyles={webStyles}
         />
       ) : null}
@@ -475,18 +485,19 @@ function DashboardContent({
           Icon={Clock3}
           features={recentFeatures}
           isWebApp={isWebApp}
-          meta="Lanjutkan fitur yang baru kamu pakai"
+          meta={t('home.recent.meta')}
           muted={muted}
           onOpenTab={onOpenTab}
           primary={primary}
-          title="Terakhir Dibuka"
+          t={t}
+          title={t('home.recent.title')}
           webStyles={webStyles}
         />
       ) : null}
 
       {isWebApp ? (
         <View style={styles.webAppQuickAccessBlock}>
-          <Text style={[styles.webAppSectionTitle, webStyles.sectionTitle]}>Akses Cepat</Text>
+          <Text style={[styles.webAppSectionTitle, webStyles.sectionTitle]}>{t('home.quickAccess.title')}</Text>
           {menuGrid}
         </View>
       ) : null}
@@ -496,9 +507,9 @@ function DashboardContent({
         iconStyle={[styles.journalIcon, isWebApp && styles.webAppIconTile, webStyles.iconTile]}
         onPress={() => onOpenTab('belajar', { featureKey: 'muhasabah' })}
         style={[styles.journalCard, isWebApp && styles.webAppCard, webStyles.card]}
-        subtitle="Bagaimana imanmu hari ini?"
+        subtitle={t('home.journal.subtitle')}
         subtitleStyle={[styles.journalDesc, isWebApp && styles.webAppMutedText, webStyles.mutedText]}
-        title="Jurnal Muhasabah"
+        title={t('home.journal.title')}
         titleStyle={[styles.journalTitle, isWebApp && styles.webAppTitleText, webStyles.titleText]}
         trailing={<ChevronRightIcon color={muted} size={18} strokeWidth={2.4} />}
       />
@@ -514,6 +525,7 @@ function WebAppDailyReminderCard({
   dailyReminders,
   loadingDaily,
   onOpenTab,
+  t = defaultT,
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const slides = useMemo(
@@ -524,8 +536,9 @@ function WebAppDailyReminderCard({
       dailyMessage,
       dailyReminders,
       loadingDaily,
+      t,
     }),
-    [dashboardColors, dailyAyah, dailyHadith, dailyMessage, dailyReminders, loadingDaily],
+    [dashboardColors, dailyAyah, dailyHadith, dailyMessage, dailyReminders, loadingDaily, t],
   );
   const active = slides[activeIndex % slides.length];
   const Icon = active.Icon;
@@ -561,7 +574,7 @@ function WebAppDailyReminderCard({
         </View>
         <View style={styles.webAppReminderControls}>
           <Pressable
-            accessibilityLabel="Sebelumnya"
+            accessibilityLabel={t('home.daily.previous')}
             accessibilityRole="button"
             android_ripple={{ color: 'rgba(16, 185, 129, 0.14)', borderless: true }}
             onPress={goPrev}
@@ -571,7 +584,7 @@ function WebAppDailyReminderCard({
             <ChevronLeft color={active.accentColor} size={18} strokeWidth={2.2} />
           </Pressable>
           <Pressable
-            accessibilityLabel="Berikutnya"
+            accessibilityLabel={t('home.daily.next')}
             accessibilityRole="button"
             android_ripple={{ color: 'rgba(16, 185, 129, 0.14)', borderless: true }}
             onPress={goNext}
@@ -593,9 +606,9 @@ function WebAppDailyReminderCard({
       </Text>
       <View style={styles.webAppReminderFooter}>
         <Text numberOfLines={1} style={[styles.webAppReminderSource, { color: active.accentColor }]}>
-          {active.source || 'Pengingat harian'}
+          {active.source || t('home.daily.reminder.source')}
         </Text>
-        <Text style={[styles.webAppReminderLink, { color: dashboardColors.primary }]}>Selengkapnya →</Text>
+        <Text style={[styles.webAppReminderLink, { color: dashboardColors.primary }]}>{t('home.daily.more')}</Text>
       </View>
       <View style={styles.webAppReminderDots}>
         {slides.map((slide, index) => (
@@ -617,10 +630,10 @@ function WebAppDailyReminderCard({
   );
 }
 
-function ContextShortcutsCard({ isWebApp, items, onOpenTab, primary, webStyles = {} }) {
+function ContextShortcutsCard({ isWebApp, items, onOpenTab, primary, t = defaultT, webStyles = {} }) {
   return (
     <View style={[styles.contextCard, isWebApp && styles.webAppCard, webStyles.card]}>
-      <Text style={[styles.contextLabel, isWebApp && styles.webAppMutedText, webStyles.mutedText]}>SARAN SEKARANG</Text>
+      <Text style={[styles.contextLabel, isWebApp && styles.webAppMutedText, webStyles.mutedText]}>{t('home.suggestions.title')}</Text>
       <View style={styles.contextRow}>
         {items.map(({ Icon, featureKey, label, params, sub, tab }) => (
           <Pressable
@@ -641,7 +654,7 @@ function ContextShortcutsCard({ isWebApp, items, onOpenTab, primary, webStyles =
   );
 }
 
-function FeatureListCard({ Icon, features, isWebApp, meta, muted, onOpenTab, primary, title, webStyles = {} }) {
+function FeatureListCard({ Icon, features, isWebApp, meta, muted, onOpenTab, primary, t = defaultT, title, webStyles = {} }) {
   return (
     <View style={[styles.recentCard, isWebApp && styles.webAppCard, webStyles.card]}>
       <View style={styles.recentHeader}>
@@ -658,7 +671,7 @@ function FeatureListCard({ Icon, features, isWebApp, meta, muted, onOpenTab, pri
           key={feature.key}
           onPress={() => onOpenTab('belajar', { featureKey: feature.key })}
           style={[styles.recentRow, isWebApp && styles.webAppRow, webStyles.row]}
-          subtitle={feature.subtitle || feature.group || 'Belajar'}
+          subtitle={feature.subtitle || feature.group || t('home.feature.fallbackSubtitle')}
           subtitleStyle={[styles.recentRowSubtitle, isWebApp && styles.webAppMutedText, webStyles.mutedText]}
           title={feature.title}
           titleStyle={[styles.recentRowTitle, isWebApp && styles.webAppTitleText, webStyles.titleText]}

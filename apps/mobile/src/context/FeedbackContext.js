@@ -1,6 +1,7 @@
 import { CheckCircle2, Info, X, XCircle } from 'lucide-react-native';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { colors, radius, shadows, spacing } from '../theme';
 import { hapticError, hapticSuccess, hapticWarning } from '../utils/haptics';
 
@@ -15,23 +16,24 @@ const variants = {
     Icon: XCircle,
     borderColor: colors.danger,
     color: colors.danger,
-    title: 'Gagal',
+    titleKey: 'feedback.error',
   },
   info: {
     Icon: Info,
     borderColor: colors.accent,
     color: colors.accent,
-    title: 'Info',
+    titleKey: 'feedback.info',
   },
   success: {
     Icon: CheckCircle2,
     borderColor: colors.primary,
     color: colors.primary,
-    title: 'Berhasil',
+    titleKey: 'feedback.success',
   },
 };
 
 export function FeedbackProvider({ children }) {
+  const { t } = useMobileLocale();
   const [toast, setToast] = useState(null);
 
   const show = useCallback((type, message, options = {}) => {
@@ -74,7 +76,7 @@ export function FeedbackProvider({ children }) {
         <View pointerEvents="box-none" style={styles.toastLayer}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Tutup notifikasi"
+            accessibilityLabel={t('feedback.close')}
             android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
             onPress={() => setToast(null)}
             style={[styles.toast, { borderColor: variant.borderColor }]}
@@ -83,7 +85,7 @@ export function FeedbackProvider({ children }) {
               <ToastIcon color={variant.color} size={20} strokeWidth={2.4} />
             </View>
             <View style={styles.copy}>
-              <Text style={styles.title}>{toast.title ?? variant.title}</Text>
+              <Text style={styles.title}>{toast.title ?? t(variant.titleKey)}</Text>
               <Text style={styles.message}>{toast.message}</Text>
             </View>
             <X color={colors.muted} size={16} strokeWidth={2.4} />

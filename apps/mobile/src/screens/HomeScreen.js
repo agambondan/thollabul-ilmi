@@ -37,6 +37,7 @@ import {
 } from './home/HomeDashboardContent';
 import { featureGroups } from '../data/mobileFeatures';
 import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { readPinnedFeatures, readRecentFeatures } from '../storage/recentFeatures';
 import { preferenceKeys, readPreference, writePreference } from '../storage/preferences';
 import { colors, radius, spacing } from '../theme';
@@ -309,6 +310,7 @@ const resolvePrayerState = (prayers, now = new Date()) => {
 export function HomeScreen({ isActive, navigation, onOpenTab }) {
   const { user } = useSession();
   const { notifyTabActivity } = useTabActivity();
+  const { t } = useMobileLocale();
   const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
   const mountedRef = useRef(true);
   const prayerRetryTimerRef = useRef(null);
@@ -338,9 +340,9 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
     const items = [];
 
     if (hour >= 4 && hour < 12) {
-      items.push({ Icon: Sun, featureKey: 'dzikir', label: 'Dzikir Pagi', sub: 'Pagi hari', tab: 'belajar' });
+      items.push({ Icon: Sun, featureKey: 'dzikir', label: t('home.shortcut.dhikrMorning.label'), sub: t('home.shortcut.dhikrMorning.sub'), tab: 'belajar' });
     } else if (hour >= 15 && hour < 20) {
-      items.push({ Icon: Sunset, featureKey: 'dzikir', label: 'Dzikir Petang', sub: "Ba'da Ashar", tab: 'belajar' });
+      items.push({ Icon: Sunset, featureKey: 'dzikir', label: t('home.shortcut.dhikrEvening.label'), sub: t('home.shortcut.dhikrEvening.sub'), tab: 'belajar' });
     }
 
     const locationActive =
@@ -348,22 +350,22 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
       locationLabel !== 'Memuat lokasi' &&
       locationLabel !== 'LOKASI BELUM TERSEDIA';
     if (locationActive) {
-      items.push({ Icon: Compass, label: 'Kiblat', params: { view: 'qibla' }, sub: locationLabel, tab: 'ibadah' });
+      items.push({ Icon: Compass, label: t('home.shortcut.qibla.label'), params: { view: 'qibla' }, sub: locationLabel, tab: 'ibadah' });
     }
 
     if (recentFeatures.some((f) => f.key === 'quran')) {
-      items.push({ Icon: FileText, featureKey: 'tafsir', label: 'Tafsir', sub: 'Setelah tilawah', tab: 'belajar' });
+      items.push({ Icon: FileText, featureKey: 'tafsir', label: t('home.shortcut.tafsir.label'), sub: t('home.shortcut.tafsir.sub'), tab: 'belajar' });
     }
 
     return items.slice(0, 3);
-  }, [locationLabel, recentFeatures]);
+  }, [locationLabel, recentFeatures, t]);
   const directoryGroups = useMemo(() => {
     const primaryRows = [
-      { Icon: Search, key: 'global-search', subtitle: 'Cari lintas Quran, Hadis, Doa, Kajian', title: 'Global Search', type: 'internal', view: 'global-search' },
-      { Icon: BookOpen, key: 'quran', subtitle: 'Baca surah, hafalan, dan murojaah', title: "Al-Qur'an", type: 'tab', tab: 'quran' },
-      { Icon: Book, key: 'hadith', subtitle: 'Baca hadis beserta sanad dan perawi', title: 'Hadis', type: 'tab', tab: 'hadith' },
-      { Icon: Compass, key: 'qibla', subtitle: 'Arah kiblat, tracker, dan jadwal ibadah', title: 'Ibadah', type: 'tab', tab: 'ibadah', params: { view: 'qibla' } },
-      { Icon: Bell, key: 'notifications', subtitle: 'Inbox, reminder, dan pengingat ibadah', title: 'Notifikasi', type: 'feature', featureKey: 'notifications' },
+      { Icon: Search, key: 'global-search', subtitle: t('home.directory.globalSearch.subtitle'), title: t('home.directory.globalSearch.title'), type: 'internal', view: 'global-search' },
+      { Icon: BookOpen, key: 'quran', subtitle: t('home.directory.quran.subtitle'), title: t('home.directory.quran.title'), type: 'tab', tab: 'quran' },
+      { Icon: Book, key: 'hadith', subtitle: t('home.directory.hadith.subtitle'), title: t('home.directory.hadith.title'), type: 'tab', tab: 'hadith' },
+      { Icon: Compass, key: 'qibla', subtitle: t('home.directory.prayer.subtitle'), title: t('home.directory.prayer.title'), type: 'tab', tab: 'ibadah', params: { view: 'qibla' } },
+      { Icon: Bell, key: 'notifications', subtitle: t('home.directory.notifications.subtitle'), title: t('home.directory.notifications.title'), type: 'feature', featureKey: 'notifications' },
     ];
 
     const groupedFeatures = featureGroups.map((group) => ({
@@ -380,12 +382,12 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
     }));
 
     return [
-      { key: 'utama', label: 'Utama', rows: primaryRows },
+      { key: 'utama', label: t('home.directory.group.main'), rows: primaryRows },
       ...groupedFeatures,
     ];
-  }, []);
+  }, [t]);
 
-  const displayName = user?.name || 'Tamu';
+  const displayName = user?.name || t('home.guest');
   const hasPrayerSchedule = nextPrayer.time !== '--:--' && nextPrayer.countdown !== '--:--:--';
   const gregorianDate = useMemo(() => formatGregorianHomeDate(dateSnapshot), [dateSnapshot]);
   const prayerSummary = useMemo(
@@ -399,14 +401,14 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
   const prayerStatusLabel = useMemo(() => {
     if (hasResolvedLocation) return locationLabel;
     if (prayerSyncState === 'retrying') {
-      return `Mencoba ulang ${prayerRetryAttempt}/${prayerRetryDelays.length}`;
+      return t('home.status.retrying', { attempt: prayerRetryAttempt, total: prayerRetryDelays.length });
     }
-    if (prayerSyncState === 'loading') return 'Sinkron jadwal';
-    if (prayerSyncState === 'blocked') return 'Butuh lokasi';
-    if (prayerSyncState === 'failed') return 'Tarik untuk ulang';
-    if (prayerSyncState === 'waiting') return 'Menunggu lokasi';
-    return 'Sinkron otomatis';
-  }, [hasResolvedLocation, locationLabel, prayerRetryAttempt, prayerSyncState]);
+    if (prayerSyncState === 'loading') return t('home.status.loading');
+    if (prayerSyncState === 'blocked') return t('home.status.blocked');
+    if (prayerSyncState === 'failed') return t('home.status.failed');
+    if (prayerSyncState === 'waiting') return t('home.status.waiting');
+    return t('home.status.autoSync');
+  }, [hasResolvedLocation, locationLabel, prayerRetryAttempt, prayerSyncState, t]);
   const initials = displayName
     .split(/\s+/)
     .filter(Boolean)
@@ -788,8 +790,8 @@ export function HomeScreen({ isActive, navigation, onOpenTab }) {
       >
         <DetailHeader
           onBack={() => navigation?.close?.('home')}
-          subtitle="Pilih fitur berdasarkan kategori"
-          title="Semua Fitur"
+          subtitle={t('home.directory.header.subtitle')}
+          title={t('home.directory.header.title')}
         />
         {directoryGroups.map((group) => (
           <View key={group.key} style={styles.directoryGroup}>

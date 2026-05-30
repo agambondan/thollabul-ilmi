@@ -6,7 +6,7 @@ import { translations } from '@/lib/i18n';
 const LocaleContext = createContext({
     lang: 'ID',
     setLang: () => {},
-    t: (k, vars) => k,
+    t: (k, fallbackOrVars) => (typeof fallbackOrVars === 'string' ? fallbackOrVars : undefined),
 });
 
 export function LocaleProvider({ children }) {
@@ -24,8 +24,10 @@ export function LocaleProvider({ children }) {
     }, []);
 
     const t = useCallback(
-        (key, vars) => {
-            const text = translations[lang]?.[key] ?? translations['ID'][key] ?? key;
+        (key, fallbackOrVars, maybeVars) => {
+            const hasFallback = typeof fallbackOrVars === 'string';
+            const vars = hasFallback ? maybeVars : fallbackOrVars;
+            const text = translations[lang]?.[key] ?? translations['ID'][key] ?? (hasFallback ? fallbackOrVars : undefined);
             if (!vars || typeof text !== 'string') return text;
 
             return Object.entries(vars).reduce(

@@ -75,8 +75,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
     return (
-        <html lang='id'>
+        <html lang='id' suppressHydrationWarning>
             <body>
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: "(function(){try{var lang=(localStorage.getItem('lang')||'ID').toUpperCase()==='EN'?'en':'id';document.documentElement.lang=lang;}catch(e){}})();",
+                    }}
+                />
                 <script
                     type='application/ld+json'
                     dangerouslySetInnerHTML={{
