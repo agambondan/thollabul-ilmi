@@ -142,6 +142,7 @@ export function createQuranScreenRenderers(context) {
         toggleAudioRepeat,
         toggleAyahBookmark,
         triggerAdjacentSurah,
+        t,
         updateArabicFont,
         updateAudioRangeField,
         updateDisplayMode,
@@ -626,6 +627,7 @@ export function createQuranScreenRenderers(context) {
         startRangeAudio,
         stopRangeAudio,
         toggleAudioRepeat,
+        t,
         updateAudioRangeField,
     });
 

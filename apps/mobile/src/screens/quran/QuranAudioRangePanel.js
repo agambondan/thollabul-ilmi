@@ -27,10 +27,13 @@ export function renderQuranAudioRangePanel({
     startRangeAudio,
     stopRangeAudio,
     toggleAudioRepeat,
+    t,
     updateAudioRangeField,
 }) {
     if (!selectedSurah || selectedSurah.type !== 'surah') return null;
+    const translate = typeof t === 'function' ? t : (key) => key;
     const activeQari = audioQariOptions.find((item) => item.qari_slug === audioState.qariSlug);
+    const qariLabel = activeQari?.qari_name || translate('quran.audioRange.selectQari');
     const isPlaying = audioRange.playing || audioRange.loading;
     const canSkipBackward = audioQueueInfo.length > 0 && (audioRange.repeat || audioQueueInfo.index > 0);
     const canSkipForward = audioQueueInfo.length > 0 && (audioRange.repeat || audioQueueInfo.index < audioQueueInfo.length - 1);
@@ -59,21 +62,21 @@ export function renderQuranAudioRangePanel({
                     testID="audio-range-expand"
                 >
                     <Text numberOfLines={1} style={styles.audioMiniTitle}>
-                        {audioRange.currentLabel || selectedSurah.name || 'Audio Surat'}
+                        {audioRange.currentLabel || selectedSurah.name || translate('quran.audioRange.title')}
                     </Text>
                     <Text numberOfLines={1} style={styles.audioMiniMeta}>
-                        {audioRange.loading ? 'Memuat audio...' : `${activeQari?.qari_name || 'Pilih qari'} · ${audioRange.speed}x`}
+                        {audioRange.loading ? translate('quran.audioRange.loading') : `${qariLabel} · ${audioRange.speed}x`}
                     </Text>
                 </Pressable>
                 <Pressable
-                    accessibilityLabel="Tampilkan player audio"
+                    accessibilityLabel={translate('quran.audioRange.expandLabel')}
                     onPress={() => setAudioRangeCollapsed(false)}
                     style={styles.audioMiniIconButton}
                 >
                     <ChevronUp color={colors.muted} size={18} strokeWidth={2.4} />
                 </Pressable>
                 <Pressable
-                    accessibilityLabel="Tutup player audio"
+                    accessibilityLabel={translate('quran.audioRange.closeLabel')}
                     onPress={stopRangeAudio}
                     style={styles.audioMiniIconButton}
                 >
@@ -89,15 +92,15 @@ export function renderQuranAudioRangePanel({
                 <View style={styles.audioPanelTitleRow}>
                     <Volume2 color={colors.primaryDark} size={18} strokeWidth={2.2} />
                     <View style={styles.audioPanelTitleCopy}>
-                        <Text style={styles.audioPanelTitle}>Audio Surat</Text>
+                        <Text style={styles.audioPanelTitle}>{translate('quran.audioRange.title')}</Text>
                         <Text numberOfLines={1} style={styles.audioPanelMeta}>
-                            {activeQari?.qari_name || 'Pilih qari'} · {audioRange.speed}x
+                            {qariLabel} · {audioRange.speed}x
                         </Text>
                     </View>
                 </View>
                 <View style={styles.audioPanelHeaderActions}>
                     <Pressable
-                        accessibilityLabel="Minimize audio player"
+                        accessibilityLabel={translate('quran.audioRange.minimizeLabel')}
                         onPress={() => setAudioRangeCollapsed(true)}
                         style={styles.audioPanelIconButton}
                         testID="audio-range-minimize"
@@ -120,7 +123,11 @@ export function renderQuranAudioRangePanel({
                             <Volume2 color={colors.onPrimary} size={15} strokeWidth={2.4} />
                         )}
                         <Text style={styles.audioPrimaryButtonText}>
-                            {audioRange.loading ? 'Memuat' : isPlaying ? 'Stop' : 'Putar range'}
+                            {audioRange.loading
+                                ? translate('quran.audioRange.loadingShort')
+                                : isPlaying
+                                    ? translate('quran.audioRange.stop')
+                                    : translate('quran.audioRange.playRange')}
                         </Text>
                     </Pressable>
                 </View>
@@ -128,7 +135,7 @@ export function renderQuranAudioRangePanel({
 
             <View style={styles.audioInputGrid}>
                 <View style={styles.audioInputGroup}>
-                    <Text style={styles.audioInputLabel}>Dari surat</Text>
+                    <Text style={styles.audioInputLabel}>{translate('quran.audioRange.startSurah')}</Text>
                     <TextInput
                         keyboardType="number-pad"
                         onChangeText={(value) => updateAudioRangeField('startSurah', value)}
@@ -140,7 +147,7 @@ export function renderQuranAudioRangePanel({
                     />
                 </View>
                 <View style={styles.audioInputGroup}>
-                    <Text style={styles.audioInputLabel}>Sampai surat</Text>
+                    <Text style={styles.audioInputLabel}>{translate('quran.audioRange.endSurah')}</Text>
                     <TextInput
                         keyboardType="number-pad"
                         onChangeText={(value) => updateAudioRangeField('endSurah', value)}
@@ -152,7 +159,7 @@ export function renderQuranAudioRangePanel({
                     />
                 </View>
                 <View style={styles.audioInputGroup}>
-                    <Text style={styles.audioInputLabel}>Sampai ayat</Text>
+                    <Text style={styles.audioInputLabel}>{translate('quran.audioRange.endAyah')}</Text>
                     <TextInput
                         keyboardType="number-pad"
                         onChangeText={(value) => updateAudioRangeField('endAyah', value)}
@@ -167,7 +174,7 @@ export function renderQuranAudioRangePanel({
 
             <View style={styles.audioTransportRow}>
                 <Pressable
-                    accessibilityLabel="Audio ayat sebelumnya"
+                    accessibilityLabel={translate('quran.audioRange.previousAyah')}
                     disabled={!canSkipBackward || audioRange.loading}
                     onPress={() => skipRangeAudio(-1)}
                     style={[
@@ -181,10 +188,10 @@ export function renderQuranAudioRangePanel({
                 <Text style={styles.audioQueueText}>
                     {audioQueueInfo.length > 0
                         ? `${audioQueueInfo.index + 1}/${audioQueueInfo.length}`
-                        : 'Belum ada antrean'}
+                        : translate('quran.audioRange.emptyQueue')}
                 </Text>
                 <Pressable
-                    accessibilityLabel="Audio ayat berikutnya"
+                    accessibilityLabel={translate('quran.audioRange.nextAyah')}
                     disabled={!canSkipForward || audioRange.loading}
                     onPress={() => skipRangeAudio(1)}
                     style={[
@@ -197,7 +204,7 @@ export function renderQuranAudioRangePanel({
                 </Pressable>
             </View>
 
-            <Text style={styles.audioSectionLabel}>Qari</Text>
+            <Text style={styles.audioSectionLabel}>{translate('quran.audioRange.qari')}</Text>
             <View style={styles.audioChipRow}>
                 {audioQariOptions.map((qari) => {
                     const isActive = audioState.qariSlug === qari.qari_slug;
@@ -225,7 +232,7 @@ export function renderQuranAudioRangePanel({
 
             <View style={styles.audioControlRow}>
                 <View style={styles.audioControlGroup}>
-                    <Text style={styles.audioSectionLabel}>Speed</Text>
+                    <Text style={styles.audioSectionLabel}>{translate('quran.audioRange.speed')}</Text>
                     <View style={styles.audioChipRow}>
                         {AUDIO_SPEED_OPTIONS.map((speed) => {
                             const isActive = audioRange.speed === speed;
@@ -265,7 +272,7 @@ export function renderQuranAudioRangePanel({
                             audioRange.repeat ? styles.audioRepeatTextActive : null,
                         ]}
                     >
-                        Repeat {audioRange.repeat ? 'On' : 'Off'}
+                        {translate(audioRange.repeat ? 'quran.audioRange.repeatOn' : 'quran.audioRange.repeatOff')}
                     </Text>
                 </Pressable>
             </View>
