@@ -73,11 +73,16 @@ const LAYOUT_OPTIONS = [
 
 const getResponseUser = (payload) => payload?.data ?? payload;
 
-const formatSessionDate = (value) => {
-    if (!value) return 'sekarang';
+const mobileDateLocales = {
+    en: 'en-US',
+    idn: 'id-ID',
+};
+
+const formatSessionDate = (value, fallback, language) => {
+    if (!value) return fallback;
     const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return 'sekarang';
-    return date.toLocaleDateString('id-ID', {
+    if (Number.isNaN(date.getTime())) return fallback;
+    return date.toLocaleDateString(mobileDateLocales[language] ?? mobileDateLocales.idn, {
         day: '2-digit',
         month: 'short',
         year: 'numeric',
@@ -101,7 +106,7 @@ const normalizeAchievement = (item = {}, options = {}) => {
     };
 };
 
-const getAchievementProgress = (achievement, stats) => {
+const getAchievementProgress = (achievement, stats, t) => {
     const threshold = Number(achievement.threshold) || 0;
     if (!threshold) return null;
 
@@ -109,7 +114,7 @@ const getAchievementProgress = (achievement, stats) => {
         const current = Number(stats?.streak ?? 0);
         return {
             current,
-            label: `${Math.min(current, threshold)}/${threshold} hari`,
+            label: t('profile.achievements.progress.days', { current: Math.min(current, threshold), threshold }),
             pct: Math.min(100, Math.round((current / threshold) * 100)),
         };
     }
@@ -118,20 +123,21 @@ const getAchievementProgress = (achievement, stats) => {
         const current = Number(stats?.hafalanCount ?? 0);
         return {
             current,
-            label: `${Math.min(current, threshold)}/${threshold} surah`,
+            label: t('profile.achievements.progress.surah', { current: Math.min(current, threshold), threshold }),
             pct: Math.min(100, Math.round((current / threshold) * 100)),
         };
     }
 
     return {
         current: null,
-        label: `Target ${threshold}`,
+        label: t('profile.achievements.progress.target', { threshold }),
         pct: achievement.unlocked ? 100 : 0,
     };
 };
 
 function SubScreen({ title, onBack, children }) {
     const { isWebAppLayout } = useLayoutModePreference();
+    const { t } = useMobileLocale();
 
     return (
         <KeyboardAvoidingView
@@ -140,7 +146,7 @@ function SubScreen({ title, onBack, children }) {
         >
             <View style={styles.subHeader}>
                 <Pressable
-                    accessibilityLabel="Kembali"
+                    accessibilityLabel={t('common.back')}
                     android_ripple={{ color: colors.faint, borderless: true }}
                     hitSlop={12}
                     onPress={onBack}
@@ -185,35 +191,36 @@ function MenuRow({ Icon, label, meta, danger, onPress }) {
 }
 
 function SettingsList({ onNavigate }) {
+    const { t } = useMobileLocale();
     const items = [
         {
             Icon: User,
-            label: 'Akun',
-            meta: 'Login, sandi, dan data akun',
+            label: t('profile.settings.account.label'),
+            meta: t('profile.settings.account.meta'),
             screen: 'settings-account',
         },
         {
             Icon: Bell,
-            label: 'Notifikasi',
-            meta: 'Pengingat sholat dan harian',
+            label: t('profile.settings.notifications.label'),
+            meta: t('profile.settings.notifications.meta'),
             screen: 'settings-notifications',
         },
         {
             Icon: HardDrive,
-            label: 'Penyimpanan',
-            meta: 'Paket offline perangkat',
+            label: t('profile.settings.storage.label'),
+            meta: t('profile.settings.storage.meta'),
             screen: 'settings-storage',
         },
         {
             Icon: Palette,
-            label: 'Tampilan',
-            meta: 'Tema dan bahasa',
+            label: t('profile.settings.appearance.label'),
+            meta: t('profile.settings.appearance.meta'),
             screen: 'settings-appearance',
         },
         {
             Icon: ShieldCheck,
-            label: 'Keamanan',
-            meta: 'Sesi aktif dan keamanan akun',
+            label: t('profile.settings.security.label'),
+            meta: t('profile.settings.security.meta'),
             screen: 'settings-security',
         },
     ];
@@ -398,6 +405,7 @@ function AppearanceSettings({ onUserUpdated, user }) {
 
 function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
     const { session } = useSession();
+    const { language, t } = useMobileLocale();
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -437,7 +445,7 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
         setError('');
         if (!deleteConfirm) {
             setDeleteConfirm(true);
-            setMessage('Tekan sekali lagi untuk menghapus akun dan keluar dari perangkat ini.');
+            setMessage(t('profile.security.delete.confirmMessage'));
             return;
         }
 
@@ -445,7 +453,7 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
         try {
             await onDeleteAccount();
         } catch (err) {
-            setError(err?.message ?? 'Akun belum bisa dihapus.');
+            setError(err?.message ?? t('profile.security.delete.error'));
             setDeleteConfirm(false);
         } finally {
             setDeleting(false);
@@ -457,15 +465,15 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
         setError('');
 
         if (!oldPassword || !newPassword) {
-            setError('Isi sandi saat ini dan sandi baru.');
+            setError(t('profile.security.password.required'));
             return;
         }
         if (newPassword.length < 8) {
-            setError('Sandi baru minimal 8 karakter.');
+            setError(t('profile.security.password.minLength'));
             return;
         }
         if (newPassword !== confirmPassword) {
-            setError('Konfirmasi sandi baru belum sama.');
+            setError(t('profile.security.password.confirmMismatch'));
             return;
         }
 
@@ -475,9 +483,9 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
             setOldPassword('');
             setNewPassword('');
             setConfirmPassword('');
-            setMessage('Sandi berhasil diperbarui.');
+            setMessage(t('profile.security.password.saved'));
         } catch (err) {
-            setError(err?.message ?? 'Sandi belum bisa diperbarui.');
+            setError(err?.message ?? t('profile.security.password.error'));
         } finally {
             setSaving(false);
         }
@@ -492,9 +500,9 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
         try {
             await revokeAuthSession(item.id, session?.refreshToken ?? '');
             await loadSessions();
-            setMessage('Sesi login lain berhasil dikeluarkan.');
+            setMessage(t('profile.security.session.revoked'));
         } catch (err) {
-            setError(err?.message ?? 'Sesi login belum bisa dikeluarkan.');
+            setError(err?.message ?? t('profile.security.session.revokeError'));
         } finally {
             setRevokingSessionId(null);
         }
@@ -503,9 +511,9 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
     if (!user) {
         return (
             <Card>
-                <Text style={styles.appearanceLabel}>Keamanan Akun</Text>
+                <Text style={styles.appearanceLabel}>{t('profile.security.guest.title')}</Text>
                 <Text style={styles.appearanceMeta}>
-                    Masuk dulu untuk mengelola sesi perangkat dan sandi akun.
+                    {t('profile.security.guest.description')}
                 </Text>
             </Card>
         );
@@ -514,15 +522,15 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
     return (
         <>
             <Card>
-                <Text style={styles.appearanceLabel}>Sesi Aktif</Text>
+                <Text style={styles.appearanceLabel}>{t('profile.security.sessions.title')}</Text>
                 <View style={styles.sessionDeviceCard}>
                     <View style={styles.sessionDeviceIcon}>
                         <ShieldCheck color={colors.primary} size={20} strokeWidth={2.4} />
                     </View>
                     <View style={styles.sessionDeviceBody}>
-                        <Text style={styles.sessionDeviceTitle}>Perangkat ini</Text>
+                        <Text style={styles.sessionDeviceTitle}>{t('profile.security.session.currentDevice')}</Text>
                         <Text style={styles.sessionDeviceMeta}>
-                            {user.email || 'Sesi mobile aktif dengan token perangkat ini.'}
+                            {user.email || t('profile.security.session.currentMeta')}
                         </Text>
                     </View>
                 </View>
@@ -533,17 +541,19 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
                             <View key={item.id} style={styles.sessionListRow}>
                                 <View style={styles.sessionListInfo}>
                                     <Text style={styles.sessionListTitle}>
-                                        {item.current ? 'Perangkat ini' : 'Sesi login'}
+                                        {item.current ? t('profile.security.session.currentDevice') : t('profile.security.session.loginSession')}
                                     </Text>
                                     <Text style={styles.sessionListMeta}>
-                                        Aktif sejak {formatSessionDate(item.created_at)}
+                                        {t('profile.security.session.activeSince', {
+                                            date: formatSessionDate(item.created_at, t('profile.security.session.now'), language),
+                                        })}
                                     </Text>
                                 </View>
                                 {item.current ? (
-                                    <Text style={styles.sessionCurrentPill}>Aktif</Text>
+                                    <Text style={styles.sessionCurrentPill}>{t('profile.security.session.active')}</Text>
                                 ) : (
                                     <Pressable
-                                        accessibilityLabel={`Keluar dari sesi login ${item.id}`}
+                                        accessibilityLabel={t('profile.security.session.revokeAccessibility', { id: item.id })}
                                         accessibilityRole="button"
                                         accessibilityState={{ disabled: revokingSessionId === item.id }}
                                         disabled={revokingSessionId === item.id}
@@ -554,7 +564,7 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
                                         ]}
                                     >
                                         <Text style={styles.sessionRevokeText}>
-                                            {revokingSessionId === item.id ? '...' : 'Keluar'}
+                                            {revokingSessionId === item.id ? '...' : t('profile.security.session.revoke')}
                                         </Text>
                                     </Pressable>
                                 )}
@@ -568,36 +578,36 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
                     style={[styles.formButton, styles.formButtonDanger]}
                 >
                     <LogOut color={colors.danger} size={16} strokeWidth={2.4} />
-                    <Text style={styles.formButtonDangerText}>Keluar dari perangkat ini</Text>
+                    <Text style={styles.formButtonDangerText}>{t('profile.security.signOutDevice')}</Text>
                 </Pressable>
             </Card>
 
             <Card>
-                <Text style={styles.appearanceLabel}>Ganti Sandi</Text>
-                <Text style={styles.appearanceMeta}>Perbarui sandi langsung melalui endpoint akun mobile.</Text>
+                <Text style={styles.appearanceLabel}>{t('profile.security.password.title')}</Text>
+                <Text style={styles.appearanceMeta}>{t('profile.security.password.description')}</Text>
                 <View style={styles.formBlock}>
                     <TextInput
-                        accessibilityLabel="Sandi saat ini"
+                        accessibilityLabel={t('profile.security.password.current')}
                         onChangeText={setOldPassword}
-                        placeholder="Sandi saat ini"
+                        placeholder={t('profile.security.password.current')}
                         placeholderTextColor={colors.muted}
                         secureTextEntry
                         style={styles.formInput}
                         value={oldPassword}
                     />
                     <TextInput
-                        accessibilityLabel="Sandi baru"
+                        accessibilityLabel={t('profile.security.password.new')}
                         onChangeText={setNewPassword}
-                        placeholder="Sandi baru minimal 8 karakter"
+                        placeholder={t('profile.security.password.newPlaceholder')}
                         placeholderTextColor={colors.muted}
                         secureTextEntry
                         style={styles.formInput}
                         value={newPassword}
                     />
                     <TextInput
-                        accessibilityLabel="Konfirmasi sandi baru"
+                        accessibilityLabel={t('profile.security.password.confirm')}
                         onChangeText={setConfirmPassword}
-                        placeholder="Konfirmasi sandi baru"
+                        placeholder={t('profile.security.password.confirm')}
                         placeholderTextColor={colors.muted}
                         secureTextEntry
                         style={styles.formInput}
@@ -614,7 +624,7 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
                         {saving ? (
                             <ActivityIndicator color={colors.onPrimary} />
                         ) : (
-                            <Text style={styles.formButtonText}>Simpan Sandi Baru</Text>
+                            <Text style={styles.formButtonText}>{t('profile.security.password.save')}</Text>
                         )}
                     </Pressable>
                 </View>
@@ -623,9 +633,9 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
             </Card>
 
             <Card>
-                <Text style={styles.appearanceLabel}>Hapus Akun</Text>
+                <Text style={styles.appearanceLabel}>{t('profile.security.delete.title')}</Text>
                 <Text style={styles.appearanceMeta}>
-                    Akun, token login, dan akses personal akan dinonaktifkan dari perangkat ini.
+                    {t('profile.security.delete.description')}
                 </Text>
                 <Pressable
                     accessibilityRole="button"
@@ -639,7 +649,7 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
                         <ActivityIndicator color={colors.danger} size="small" />
                     ) : (
                         <Text style={styles.formButtonDangerText}>
-                            {deleteConfirm ? 'Konfirmasi Hapus Akun' : 'Hapus Akun'}
+                            {deleteConfirm ? t('profile.security.delete.confirm') : t('profile.security.delete.action')}
                         </Text>
                     )}
                 </Pressable>
@@ -649,7 +659,12 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
 }
 
 function AchievementsDetail({ achievements, isWebAppLayout, loading, message, onBack, points, stats, user }) {
+    const { t } = useMobileLocale();
     const earnedCount = achievements.filter((item) => item.unlocked).length;
+    const earnedSummary = t('profile.achievements.earnedSummary', {
+        count: earnedCount,
+        total: achievements.length,
+    });
 
     if (isWebAppLayout) {
         return (
@@ -663,27 +678,27 @@ function AchievementsDetail({ achievements, isWebAppLayout, loading, message, on
                     <View style={styles.webAppAchievementsIcon}>
                         <Trophy color="#d97706" size={30} strokeWidth={2.3} />
                     </View>
-                    <Text style={styles.webAppAchievementsTitle}>Pencapaian</Text>
+                    <Text style={styles.webAppAchievementsTitle}>{t('profile.achievements.title')}</Text>
                     <Text style={styles.webAppAchievementsSubtitle}>
-                        Kumpulkan badge dengan menyelesaikan aktivitas
+                        {t('profile.achievements.subtitle')}
                     </Text>
                 </View>
 
                 {user ? (
                     <View style={styles.webAppAchievementsHero}>
-                        <Text style={styles.webAppAchievementsHeroLabel}>Total Poin</Text>
+                        <Text style={styles.webAppAchievementsHeroLabel}>{t('profile.stats.totalPoints')}</Text>
                         <Text style={styles.webAppAchievementsHeroValue}>
                             {(points ?? 0).toLocaleString('id-ID')}
                         </Text>
                         <Text style={styles.webAppAchievementsHeroMeta}>
-                            {earnedCount}/{achievements.length} badge diperoleh
+                            {earnedSummary}
                         </Text>
                     </View>
                 ) : (
                     <View style={styles.webAppAchievementsNotice}>
                         <Text style={styles.webAppAchievementsNoticeIcon}>🏅</Text>
                         <Text style={styles.webAppAchievementsNoticeText}>
-                            Login untuk melihat pencapaian kamu.
+                            {t('profile.achievements.loginPrompt')}
                         </Text>
                     </View>
                 )}
@@ -738,7 +753,7 @@ function AchievementsDetail({ achievements, isWebAppLayout, loading, message, on
                                             achievement.unlocked && styles.webAppAchievementsStatusTextEarned,
                                         ]}
                                     >
-                                        {achievement.unlocked ? 'Diperoleh' : 'Terkunci'}
+                                        {achievement.unlocked ? t('profile.achievements.earned') : t('profile.achievements.locked')}
                                     </Text>
                                 </View>
                             </View>
@@ -750,7 +765,7 @@ function AchievementsDetail({ achievements, isWebAppLayout, loading, message, on
                     <View style={styles.webAppAchievementsEmpty}>
                         <Trophy color="#cbd5e1" size={34} strokeWidth={2.2} />
                         <Text style={styles.webAppAchievementsEmptyText}>
-                            Belum ada pencapaian yang tersedia.
+                            {t('profile.achievements.empty')}
                         </Text>
                     </View>
                 ) : null}
@@ -759,7 +774,7 @@ function AchievementsDetail({ achievements, isWebAppLayout, loading, message, on
     }
 
     return (
-        <SubScreen title="Pencapaian" onBack={onBack}>
+        <SubScreen title={t('profile.achievements.title')} onBack={onBack}>
             <Card style={styles.achievementHero}>
                 <View style={styles.achievementHeroIcon}>
                     <Trophy color={colors.accent} size={28} strokeWidth={2.4} />
@@ -768,9 +783,9 @@ function AchievementsDetail({ achievements, isWebAppLayout, loading, message, on
                     <Text style={styles.achievementHeroValue}>
                         {user ? (points ?? 0).toLocaleString('id-ID') : '—'}
                     </Text>
-                    <Text style={styles.achievementHeroLabel}>Total Poin</Text>
+                    <Text style={styles.achievementHeroLabel}>{t('profile.stats.totalPoints')}</Text>
                     <Text style={styles.achievementHeroMeta}>
-                        {earnedCount}/{achievements.length} badge diperoleh
+                        {earnedSummary}
                     </Text>
                 </View>
             </Card>
@@ -778,9 +793,9 @@ function AchievementsDetail({ achievements, isWebAppLayout, loading, message, on
             {!user ? (
                 <Card style={styles.emptyAchievementCard}>
                     <Text style={styles.emptyAchievementIcon}>🏅</Text>
-                    <Text style={styles.emptyAchievementTitle}>Masuk untuk melihat pencapaian kamu.</Text>
+                    <Text style={styles.emptyAchievementTitle}>{t('profile.achievements.loginPrompt')}</Text>
                     <Text style={styles.emptyAchievementText}>
-                        Badge yang terkunci tetap ditampilkan agar target belajarnya jelas.
+                        {t('profile.achievements.loginDescription')}
                     </Text>
                 </Card>
             ) : null}
@@ -790,7 +805,7 @@ function AchievementsDetail({ achievements, isWebAppLayout, loading, message, on
 
             <View style={styles.achievementList}>
                 {achievements.map((achievement) => {
-                    const progress = getAchievementProgress(achievement, stats);
+                    const progress = getAchievementProgress(achievement, stats, t);
                     return (
                         <Card
                             key={achievement.code ?? achievement.label}
@@ -830,7 +845,7 @@ function AchievementsDetail({ achievements, isWebAppLayout, loading, message, on
                                                     achievement.unlocked && styles.achievementStateTextUnlocked,
                                                 ]}
                                             >
-                                                {achievement.unlocked ? 'Diperoleh' : 'Terkunci'}
+                                                {achievement.unlocked ? t('profile.achievements.earned') : t('profile.achievements.locked')}
                                             </Text>
                                         </View>
                                     </View>
@@ -845,7 +860,7 @@ function AchievementsDetail({ achievements, isWebAppLayout, loading, message, on
                             {progress ? (
                                 <View style={styles.achievementProgressBlock}>
                                     <View style={styles.achievementProgressHeader}>
-                                        <Text style={styles.achievementProgressLabel}>Progress</Text>
+                                        <Text style={styles.achievementProgressLabel}>{t('profile.achievements.progress.label')}</Text>
                                         <Text style={styles.achievementProgressValue}>{progress.label}</Text>
                                     </View>
                                     <View style={styles.achievementProgressTrack}>
@@ -862,10 +877,10 @@ function AchievementsDetail({ achievements, isWebAppLayout, loading, message, on
                             <View style={styles.achievementRewardRow}>
                                 <Sparkles color={colors.accent} size={14} strokeWidth={2.4} />
                                 <Text style={styles.achievementRewardText}>
-                                    Reward {achievement.rewardPoints} poin
+                                    {t('profile.achievements.reward', { points: achievement.rewardPoints })}
                                 </Text>
                                 {achievement.earnedAt ? (
-                                    <Text style={styles.achievementEarnedDate}>Sudah diperoleh</Text>
+                                    <Text style={styles.achievementEarnedDate}>{t('profile.achievements.alreadyEarned')}</Text>
                                 ) : null}
                             </View>
                         </Card>
@@ -879,6 +894,7 @@ function AchievementsDetail({ achievements, isWebAppLayout, loading, message, on
 export function ProfileScreen({ isActive, navigation, onOpenTab }) {
     const { deleteAccount, loading: sessionLoading, session, signOut, updateCurrentUser, user } = useSession();
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const { t } = useMobileLocale();
     const webAppProfileTheme = isDarkTheme ? WEB_APP_PROFILE_THEMES.dark : WEB_APP_PROFILE_THEMES.light;
     const [stack, setStack] = useState([]);
     const [stats, setStats] = useState(null);
@@ -1008,9 +1024,9 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
 
             setAchievements(merged.length ? merged : DEFAULT_BADGES);
             if (allAchievementsRes.status !== 'fulfilled') {
-                setAchievementsMessage('Daftar pencapaian belum bisa dimuat.');
+                setAchievementsMessage(t('profile.achievements.loadError'));
             } else if (!session?.token) {
-                setAchievementsMessage('Masuk untuk melihat badge yang sudah kamu raih.');
+                setAchievementsMessage(t('profile.achievements.guestMessage'));
             }
             setAchievementsLoading(false);
         };
@@ -1020,11 +1036,11 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
         return () => {
             mounted = false;
         };
-    }, [session?.token]);
+    }, [session?.token, t]);
 
     if (currentScreen === 'settings') {
         return (
-            <SubScreen title="Pengaturan" onBack={pop}>
+            <SubScreen title={t('profile.settings.title')} onBack={pop}>
                 <SettingsList onNavigate={push} />
             </SubScreen>
         );
@@ -1047,7 +1063,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
 
     if (currentScreen === 'settings-account') {
         return (
-            <SubScreen title="Akun" onBack={pop}>
+            <SubScreen title={t('profile.settings.account.label')} onBack={pop}>
                 <SessionCard />
                 {user ? (
                     <Pressable
@@ -1058,7 +1074,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                     >
                         <LogOut color={colors.danger} size={16} strokeWidth={2.4} />
                         <Text style={styles.signOutText}>
-                            {sessionLoading ? 'Keluar...' : 'Keluar dari Akun'}
+                            {sessionLoading ? t('account.logoutLoading') : t('profile.account.signOut')}
                         </Text>
                     </Pressable>
                 ) : null}
@@ -1068,7 +1084,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
 
     if (currentScreen === 'settings-notifications') {
         return (
-            <SubScreen title="Notifikasi" onBack={pop}>
+            <SubScreen title={t('profile.settings.notifications.label')} onBack={pop}>
                 <NotificationCenter />
             </SubScreen>
         );
@@ -1076,7 +1092,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
 
     if (currentScreen === 'settings-storage') {
         return (
-            <SubScreen title="Penyimpanan" onBack={pop}>
+            <SubScreen title={t('profile.settings.storage.label')} onBack={pop}>
                 <OfflinePackCard />
             </SubScreen>
         );
@@ -1084,7 +1100,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
 
     if (currentScreen === 'settings-appearance') {
         return (
-            <SubScreen title="Tampilan" onBack={pop}>
+            <SubScreen title={t('profile.settings.appearance.label')} onBack={pop}>
                 <AppearanceSettings onUserUpdated={updateCurrentUser} user={user} />
             </SubScreen>
         );
@@ -1092,7 +1108,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
 
     if (currentScreen === 'settings-security') {
         return (
-            <SubScreen title="Keamanan" onBack={pop}>
+            <SubScreen title={t('profile.settings.security.label')} onBack={pop}>
                 <SecuritySettings onDeleteAccount={deleteAccount} onSignOut={signOut} user={user} />
             </SubScreen>
         );
@@ -1101,14 +1117,14 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
     if (isWebAppLayout) {
         const accountActions = user
             ? [
-                { Icon: Trophy, key: 'leaderboard', label: 'Leaderboard', meta: 'Peringkat streak komunitas', onPress: () => onOpenTab('belajar', { featureKey: 'leaderboard' }) },
-                { Icon: Target, key: 'goals', label: 'Target Belajar', meta: 'Target pembelajaran personal', onPress: () => onOpenTab('belajar', { featureKey: 'goals' }) },
-                { Icon: Settings, key: 'settings', label: 'Pengaturan', meta: 'Akun, tampilan, keamanan', onPress: () => push('settings') },
-                { Icon: LogOut, danger: true, key: 'logout', label: 'Keluar', meta: 'Akhiri sesi perangkat ini', onPress: signOut },
+                { Icon: Trophy, key: 'leaderboard', label: 'Leaderboard', meta: t('profile.actions.leaderboard.meta'), onPress: () => onOpenTab('belajar', { featureKey: 'leaderboard' }) },
+                { Icon: Target, key: 'goals', label: t('profile.actions.goals.label'), meta: t('profile.actions.goals.meta'), onPress: () => onOpenTab('belajar', { featureKey: 'goals' }) },
+                { Icon: Settings, key: 'settings', label: t('profile.settings.title'), meta: t('profile.actions.settings.meta'), onPress: () => push('settings') },
+                { Icon: LogOut, danger: true, key: 'logout', label: t('account.logout'), meta: t('profile.actions.logout.meta'), onPress: signOut },
             ]
             : [
-                { Icon: User, key: 'login', label: 'Masuk / Daftar', meta: 'Login untuk fitur personal', onPress: () => push('settings-account') },
-                { Icon: Settings, key: 'settings', label: 'Pengaturan', meta: 'Tampilan dan penyimpanan lokal', onPress: () => push('settings') },
+                { Icon: User, key: 'login', label: t('profile.actions.login.label'), meta: t('profile.actions.login.meta'), onPress: () => push('settings-account') },
+                { Icon: Settings, key: 'settings', label: t('profile.settings.title'), meta: t('profile.actions.localSettings.meta'), onPress: () => push('settings') },
             ];
 
         return (
@@ -1129,17 +1145,17 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                     <View style={styles.webAppAvatar}>
                         <Text style={styles.webAppAvatarText}>{initials || 'TI'}</Text>
                     </View>
-                    <Text style={[styles.webAppEyebrow, { color: webAppProfileTheme.accent }]}>AKUN</Text>
+                    <Text style={[styles.webAppEyebrow, { color: webAppProfileTheme.accent }]}>{t('profile.eyebrow')}</Text>
                     <Text style={[styles.webAppProfileName, { color: webAppProfileTheme.title }]}>{user?.name || 'Thullabul Ilmi'}</Text>
-                    <Text style={[styles.webAppProfileEmail, { color: webAppProfileTheme.muted }]}>{user?.email || 'Belum masuk ke akun'}</Text>
+                    <Text style={[styles.webAppProfileEmail, { color: webAppProfileTheme.muted }]}>{user?.email || t('profile.guestEmail')}</Text>
                     <Pressable
-                        accessibilityLabel="Buka pengaturan profil"
+                        accessibilityLabel={t('profile.settings.open')}
                         android_ripple={{ color: webAppProfileTheme.ripple, borderless: false }}
                         onPress={() => push('settings')}
                         style={styles.webAppSettingsButton}
                     >
                         <Settings color="#ffffff" size={16} strokeWidth={2.2} />
-                        <Text style={styles.webAppSettingsText}>Pengaturan</Text>
+                        <Text style={styles.webAppSettingsText}>{t('profile.settings.title')}</Text>
                     </Pressable>
                 </View>
 
@@ -1147,38 +1163,38 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                     <View style={styles.webAppStatsGrid}>
                         <View style={[styles.webAppStatTile, { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border }]}>
                             <Text style={[styles.webAppStatValue, { color: webAppProfileTheme.accent }]}>{stats.points.toLocaleString('id-ID')}</Text>
-                            <Text style={[styles.webAppStatLabel, { color: webAppProfileTheme.text }]}>Total Poin</Text>
+                            <Text style={[styles.webAppStatLabel, { color: webAppProfileTheme.text }]}>{t('profile.stats.totalPoints')}</Text>
                         </View>
                         <View style={[styles.webAppStatTile, { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border }]}>
                             <Text style={[styles.webAppStatValue, { color: webAppProfileTheme.accent }]}>{stats.streak}</Text>
-                            <Text style={[styles.webAppStatLabel, { color: webAppProfileTheme.text }]}>Hari Streak</Text>
+                            <Text style={[styles.webAppStatLabel, { color: webAppProfileTheme.text }]}>{t('profile.stats.streakDays')}</Text>
                         </View>
                     </View>
                 ) : null}
 
                 {stats && (stats.hafalanCount !== null || stats.sholatWeekly !== null || stats.tilawahPages !== null) ? (
                     <View style={styles.webAppSection}>
-                        <Text style={[styles.webAppSectionTitle, { color: webAppProfileTheme.accent }]}>RINGKASAN PROGRESS</Text>
+                        <Text style={[styles.webAppSectionTitle, { color: webAppProfileTheme.accent }]}>{t('profile.progress.title')}</Text>
                         <View style={styles.webAppProgressGrid}>
                             {stats.hafalanCount !== null ? (
                                 <Pressable onPress={() => onOpenTab('quran', { tab: 'hafalan' })} style={[styles.webAppProgressTile, { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border }]}>
                                     <BookOpen color={webAppProfileTheme.accent} size={19} strokeWidth={2.2} />
                                     <Text style={[styles.webAppProgressValue, { color: webAppProfileTheme.title }]}>{stats.hafalanCount}</Text>
-                                    <Text style={[styles.webAppProgressLabel, { color: webAppProfileTheme.text }]}>Surah Hafalan</Text>
+                                    <Text style={[styles.webAppProgressLabel, { color: webAppProfileTheme.text }]}>{t('profile.progress.hafalan')}</Text>
                                 </Pressable>
                             ) : null}
                             {stats.sholatWeekly !== null ? (
                                 <Pressable onPress={() => onOpenTab('ibadah')} style={[styles.webAppProgressTile, { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border }]}>
                                     <Target color={webAppProfileTheme.accent} size={19} strokeWidth={2.2} />
                                     <Text style={[styles.webAppProgressValue, { color: webAppProfileTheme.title }]}>{stats.sholatWeekly}%</Text>
-                                    <Text style={[styles.webAppProgressLabel, { color: webAppProfileTheme.text }]}>Sholat Minggu Ini</Text>
+                                    <Text style={[styles.webAppProgressLabel, { color: webAppProfileTheme.text }]}>{t('profile.progress.prayerWeek')}</Text>
                                 </Pressable>
                             ) : null}
                             {stats.tilawahPages !== null ? (
                                 <Pressable onPress={() => onOpenTab('quran')} style={[styles.webAppProgressTile, { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border }]}>
                                     <Trophy color={webAppProfileTheme.accent} size={19} strokeWidth={2.2} />
                                     <Text style={[styles.webAppProgressValue, { color: webAppProfileTheme.title }]}>{stats.tilawahPages}</Text>
-                                    <Text style={[styles.webAppProgressLabel, { color: webAppProfileTheme.text }]}>Halaman Tilawah</Text>
+                                    <Text style={[styles.webAppProgressLabel, { color: webAppProfileTheme.text }]}>{t('profile.progress.tilawahPages')}</Text>
                                 </Pressable>
                             ) : null}
                         </View>
@@ -1187,14 +1203,14 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
 
                 <View style={styles.webAppSection}>
                     <View style={styles.webAppSectionHeader}>
-                        <Text style={[styles.webAppSectionTitle, { color: webAppProfileTheme.accent }]}>PENCAPAIAN</Text>
+                        <Text style={[styles.webAppSectionTitle, { color: webAppProfileTheme.accent }]}>{t('profile.achievements.sectionTitle')}</Text>
                         {achievementsLoading ? <ActivityIndicator color={webAppProfileTheme.accent} size="small" /> : null}
                         <Pressable
-                            accessibilityLabel="Lihat semua pencapaian"
+                            accessibilityLabel={t('profile.achievements.seeAllAccessibility')}
                             onPress={() => push('achievements')}
                             style={[styles.webAppSectionLink, { backgroundColor: webAppProfileTheme.tile, borderColor: webAppProfileTheme.border }]}
                         >
-                            <Text style={[styles.webAppSectionLinkText, { color: webAppProfileTheme.accent }]}>Lihat semua</Text>
+                            <Text style={[styles.webAppSectionLinkText, { color: webAppProfileTheme.accent }]}>{t('profile.achievements.seeAll')}</Text>
                             <ChevronRight color={webAppProfileTheme.accent} size={14} strokeWidth={2.4} />
                         </Pressable>
                     </View>
@@ -1221,7 +1237,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                 </View>
 
                 <View style={styles.webAppSection}>
-                    <Text style={[styles.webAppSectionTitle, { color: webAppProfileTheme.accent }]}>AKSI AKUN</Text>
+                    <Text style={[styles.webAppSectionTitle, { color: webAppProfileTheme.accent }]}>{t('profile.actions.title')}</Text>
                     <View style={styles.webAppActionGrid}>
                         {accountActions.map((item) => {
                             const Icon = item.Icon;
@@ -1254,8 +1270,8 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
     return (
         <Screen
             contentStyle={isWebAppLayout ? styles.webAppSurface : null}
-            subtitle="Kelola akun, progress belajar, dan preferensi pribadimu."
-            title="Profil"
+            subtitle={t('profile.subtitle')}
+            title={t('profile.title')}
         >
             <View testID={isWebAppLayout ? 'profile-web-app-surface' : 'profile-classic-surface'} />
             <Card style={styles.profileCard}>
@@ -1265,11 +1281,11 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                 <View style={styles.profileBody}>
                     <Text style={styles.name}>{user?.name || 'Thullabul Ilmi'}</Text>
                     <Text style={styles.email}>
-                        {user?.email || 'Belum masuk ke akun'}
+                        {user?.email || t('profile.guestEmail')}
                     </Text>
                 </View>
                 <Pressable
-                    accessibilityLabel="Buka pengaturan profil"
+                    accessibilityLabel={t('profile.settings.open')}
                     android_ripple={{ color: colors.faint, borderless: true }}
                     hitSlop={12}
                     onPress={() => push('settings')}
@@ -1285,18 +1301,18 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                         <Text style={styles.statValue}>
                             {stats.points.toLocaleString('id-ID')}
                         </Text>
-                        <Text style={styles.statLabel}>Total Poin</Text>
+                        <Text style={styles.statLabel}>{t('profile.stats.totalPoints')}</Text>
                     </Card>
                     <Card style={styles.statCard}>
                         <Text style={styles.statValue}>{stats.streak}</Text>
-                        <Text style={styles.statLabel}>Hari Streak</Text>
+                        <Text style={styles.statLabel}>{t('profile.stats.streakDays')}</Text>
                     </Card>
                 </View>
             ) : null}
 
             {stats && (stats.hafalanCount !== null || stats.sholatWeekly !== null || stats.tilawahPages !== null) ? (
                 <View style={styles.progressSection}>
-                    <Text style={styles.sectionLabel}>RINGKASAN PROGRESS</Text>
+                    <Text style={styles.sectionLabel}>{t('profile.progress.title')}</Text>
                     <View style={styles.progressGrid}>
                         {stats.hafalanCount !== null ? (
                             <Pressable
@@ -1305,7 +1321,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                             >
                                 <BookOpen color={colors.primary} size={20} strokeWidth={2} />
                                 <Text style={styles.progressValue}>{stats.hafalanCount}</Text>
-                                <Text style={styles.progressLabel}>Surah Hafalan</Text>
+                                <Text style={styles.progressLabel}>{t('profile.progress.hafalan')}</Text>
                             </Pressable>
                         ) : null}
                         {stats.sholatWeekly !== null ? (
@@ -1315,7 +1331,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                             >
                                 <Target color={colors.primary} size={20} strokeWidth={2} />
                                 <Text style={styles.progressValue}>{stats.sholatWeekly}%</Text>
-                                <Text style={styles.progressLabel}>Sholat Minggu Ini</Text>
+                                <Text style={styles.progressLabel}>{t('profile.progress.prayerWeek')}</Text>
                             </Pressable>
                         ) : null}
                         {stats.tilawahPages !== null ? (
@@ -1325,7 +1341,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                             >
                                 <Trophy color={colors.primary} size={20} strokeWidth={2} />
                                 <Text style={styles.progressValue}>{stats.tilawahPages}</Text>
-                                <Text style={styles.progressLabel}>Halaman Tilawah</Text>
+                                <Text style={styles.progressLabel}>{t('profile.progress.tilawahPages')}</Text>
                             </Pressable>
                         ) : null}
                     </View>
@@ -1334,16 +1350,16 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
 
             <View style={styles.badgeSection}>
                 <View style={styles.sectionHeaderRow}>
-                    <Text style={styles.sectionLabel}>PENCAPAIAN</Text>
+                    <Text style={styles.sectionLabel}>{t('profile.achievements.sectionTitle')}</Text>
                     <View style={styles.sectionHeaderActions}>
                         {achievementsLoading ? <ActivityIndicator color={colors.primary} size="small" /> : null}
                         <Pressable
-                            accessibilityLabel="Lihat semua pencapaian"
+                            accessibilityLabel={t('profile.achievements.seeAllAccessibility')}
                             android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
                             onPress={() => push('achievements')}
                             style={styles.sectionLink}
                         >
-                            <Text style={styles.sectionLinkText}>Lihat semua</Text>
+                            <Text style={styles.sectionLinkText}>{t('profile.achievements.seeAll')}</Text>
                             <ChevronRight color={colors.primary} size={14} strokeWidth={2.5} />
                         </Pressable>
                     </View>
@@ -1387,27 +1403,27 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                 <MenuRow
                     Icon={Trophy}
                     label="Leaderboard"
-                    meta="Peringkat streak komunitas"
+                    meta={t('profile.actions.leaderboard.meta')}
                     onPress={() => onOpenTab('belajar', { featureKey: 'leaderboard' })}
                 />
                 <MenuRow
                     Icon={Target}
-                    label="Target Belajar"
-                    meta="Target pembelajaran personal"
+                    label={t('profile.actions.goals.label')}
+                    meta={t('profile.actions.goals.meta')}
                     onPress={() => onOpenTab('belajar', { featureKey: 'goals' })}
                 />
                 {user ? (
                     <MenuRow
                         Icon={LogOut}
                         danger
-                        label="Keluar"
+                        label={t('account.logout')}
                         onPress={signOut}
                     />
                 ) : (
                     <MenuRow
                         Icon={User}
-                        label="Masuk / Daftar"
-                        meta="Login untuk fitur personal"
+                        label={t('profile.actions.login.label')}
+                        meta={t('profile.actions.login.meta')}
                         onPress={() => push('settings-account')}
                     />
                 )}
