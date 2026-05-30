@@ -2,6 +2,7 @@ import { BookOpen, Pencil, PlusCircle, Trash2, X } from 'lucide-react-native';
 import { useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { digitsOnly, emptyUserWirdForm, getExploreItemKey } from '../ExploreScreen.helpers';
 import { radius, spacing } from '../../theme';
 
@@ -30,22 +31,22 @@ function Field({ field, label, multiline = false, placeholder, setUserWirdForm, 
   );
 }
 
-function LoginPrompt({ onOpenProfile }) {
+function LoginPrompt({ onOpenProfile, t }) {
   return (
     <View style={styles.loginCard}>
       <View style={styles.loginIcon}>
         <BookOpen color="#047857" size={30} strokeWidth={2.2} />
       </View>
-      <Text style={styles.loginTitle}>Wirid Pribadi</Text>
-      <Text style={styles.loginText}>Login untuk membuat dan menyimpan wirid pribadi dari dashboard.</Text>
+      <Text style={styles.loginTitle}>{t('explore.userWird.title')}</Text>
+      <Text style={styles.loginText}>{t('explore.userWird.loginText')}</Text>
       <Pressable onPress={onOpenProfile} style={styles.primaryButton}>
-        <Text style={styles.primaryButtonText}>Masuk</Text>
+        <Text style={styles.primaryButtonText}>{t('explore.userWird.login')}</Text>
       </Pressable>
     </View>
   );
 }
 
-function WirdCard({ item, onEdit, onRemove }) {
+function WirdCard({ item, onEdit, onRemove, t }) {
   const count = getCount(item);
   const occasion = getOccasion(item);
   const source = getSource(item);
@@ -67,10 +68,10 @@ function WirdCard({ item, onEdit, onRemove }) {
           {occasion ? <Text style={styles.wirdMeta}>{occasion}</Text> : null}
         </View>
         <View style={styles.cardActions}>
-          <Pressable accessibilityLabel="Edit wirid" onPress={() => onEdit(item)} style={styles.iconButton} testID="web-app-user-wird-edit">
+          <Pressable accessibilityLabel={t('explore.userWird.editAccessibility')} onPress={() => onEdit(item)} style={styles.iconButton} testID="web-app-user-wird-edit">
             <Pencil color="#047857" size={16} strokeWidth={2.2} />
           </Pressable>
-          <Pressable accessibilityLabel="Hapus wirid" onPress={() => onRemove(item)} style={styles.iconButton} testID="web-app-user-wird-delete">
+          <Pressable accessibilityLabel={t('explore.userWird.deleteAccessibility')} onPress={() => onRemove(item)} style={styles.iconButton} testID="web-app-user-wird-delete">
             <Trash2 color="#dc2626" size={16} strokeWidth={2.2} />
           </Pressable>
         </View>
@@ -100,6 +101,7 @@ export function WebAppUserWirdRoute({
   userWirdForm = emptyUserWirdForm,
   visibleItems = [],
 }) {
+  const { t } = useMobileLocale();
   const [formVisible, setFormVisible] = useState(false);
   const listItems = visibleItems?.length ? visibleItems : items;
   const hasSession = Boolean(session?.token);
@@ -129,36 +131,36 @@ export function WebAppUserWirdRoute({
       <View testID="explore-web-app-user-wird-surface" />
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>Wirid Pribadi</Text>
-          <Text style={styles.subtitle}>Kumpulan wirid yang kamu buat sendiri</Text>
+          <Text style={styles.title}>{t('explore.userWird.title')}</Text>
+          <Text style={styles.subtitle}>{t('explore.userWird.subtitle')}</Text>
         </View>
         {hasSession ? (
           <Pressable onPress={openCreate} style={styles.addButton} testID="web-app-user-wird-add">
             <PlusCircle color="#ffffff" size={16} strokeWidth={2.3} />
-            <Text style={styles.addButtonText}>Tambah</Text>
+            <Text style={styles.addButtonText}>{t('explore.userWird.add')}</Text>
           </Pressable>
         ) : null}
       </View>
 
       {!hasSession ? (
-        <LoginPrompt onOpenProfile={onOpenProfile} />
+        <LoginPrompt onOpenProfile={onOpenProfile} t={t} />
       ) : (
         <>
           <View style={styles.summaryGrid}>
             <View style={styles.summaryTile}>
               <Text style={styles.summaryValue}>{listItems.length}</Text>
-              <Text style={styles.summaryLabel}>Wirid</Text>
+              <Text style={styles.summaryLabel}>{t('explore.userWird.wiridCount')}</Text>
             </View>
             <View style={styles.summaryTile}>
               <Text style={styles.summaryValue}>{listItems.reduce((sum, item) => sum + getCount(item), 0)}</Text>
-              <Text style={styles.summaryLabel}>Target Baca</Text>
+              <Text style={styles.summaryLabel}>{t('explore.userWird.readTarget')}</Text>
             </View>
           </View>
 
           {loading ? (
             <View style={styles.stateCard}>
               <ActivityIndicator color="#047857" />
-              <Text style={styles.stateText}>Memuat wirid...</Text>
+              <Text style={styles.stateText}>{t('explore.userWird.loading')}</Text>
             </View>
           ) : null}
 
@@ -167,9 +169,9 @@ export function WebAppUserWirdRoute({
           {!loading && listItems.length === 0 ? (
             <View style={styles.emptyCard}>
               <BookOpen color="#94a3b8" size={30} strokeWidth={2.1} />
-              <Text style={styles.emptyTitle}>Belum ada wirid pribadi.</Text>
+              <Text style={styles.emptyTitle}>{t('explore.userWird.emptyTitle')}</Text>
               <Pressable onPress={openCreate} style={styles.linkButton}>
-                <Text style={styles.linkButtonText}>Buat wirid pertama</Text>
+                <Text style={styles.linkButtonText}>{t('explore.userWird.createFirst')}</Text>
               </Pressable>
             </View>
           ) : (
@@ -180,6 +182,7 @@ export function WebAppUserWirdRoute({
                   key={`${getExploreItemKey(item)}-${index}`}
                   onEdit={openEdit}
                   onRemove={removeUserWird}
+                  t={t}
                 />
               ))}
             </View>
@@ -191,19 +194,19 @@ export function WebAppUserWirdRoute({
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>{editingUserWirdId ? 'Edit Wirid' : 'Buat Wirid Baru'}</Text>
-              <Pressable accessibilityLabel="Tutup form wirid" onPress={closeForm} style={styles.modalClose}>
+              <Text style={styles.modalTitle}>{editingUserWirdId ? t('explore.userWird.editTitle') : t('explore.userWird.createTitle')}</Text>
+              <Pressable accessibilityLabel={t('explore.userWird.closeFormAccessibility')} onPress={closeForm} style={styles.modalClose}>
                 <X color="#64748b" size={18} strokeWidth={2.2} />
               </Pressable>
             </View>
             <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-              <Field field="title" label="Judul" placeholder="Sholawat Ibrahimiyah" setUserWirdForm={setUserWirdForm} value={userWirdForm.title} />
-              <Field field="arabic" label="Teks Arab" multiline placeholder="اكتب الذكر هنا" setUserWirdForm={setUserWirdForm} value={userWirdForm.arabic} />
-              <Field field="transliteration" label="Transliterasi (Latin)" placeholder="Tuliskan transliterasi" setUserWirdForm={setUserWirdForm} value={userWirdForm.transliteration} />
-              <Field field="translation" label="Terjemahan" multiline placeholder="Makna bacaan" setUserWirdForm={setUserWirdForm} value={userWirdForm.translation} />
+              <Field field="title" label={t('explore.userWird.field.title')} placeholder={t('explore.userWird.placeholder.title')} setUserWirdForm={setUserWirdForm} value={userWirdForm.title} />
+              <Field field="arabic" label={t('explore.userWird.field.arabic')} multiline placeholder={t('explore.userWird.placeholder.arabic')} setUserWirdForm={setUserWirdForm} value={userWirdForm.arabic} />
+              <Field field="transliteration" label={t('explore.userWird.field.transliteration')} placeholder={t('explore.userWird.placeholder.transliteration')} setUserWirdForm={setUserWirdForm} value={userWirdForm.transliteration} />
+              <Field field="translation" label={t('explore.userWird.field.translation')} multiline placeholder={t('explore.userWird.placeholder.translation')} setUserWirdForm={setUserWirdForm} value={userWirdForm.translation} />
               <View style={styles.fieldRow}>
                 <View style={styles.fieldHalf}>
-                  <Text style={styles.fieldLabel}>Hitungan</Text>
+                  <Text style={styles.fieldLabel}>{t('explore.userWird.field.count')}</Text>
                   <TextInput
                     keyboardType="numeric"
                     onChangeText={(value) => setUserWirdForm((current) => ({ ...current, count: digitsOnly(value) }))}
@@ -214,18 +217,18 @@ export function WebAppUserWirdRoute({
                   />
                 </View>
                 <View style={styles.fieldHalf}>
-                  <Field field="occasion" label="Waktu" placeholder="pagi, jumat..." setUserWirdForm={setUserWirdForm} value={userWirdForm.occasion} />
+                  <Field field="occasion" label={t('explore.userWird.field.occasion')} placeholder={t('explore.userWird.placeholder.occasion')} setUserWirdForm={setUserWirdForm} value={userWirdForm.occasion} />
                 </View>
               </View>
-              <Field field="source" label="Sumber" placeholder="HR. Bukhari, kitab, dll." setUserWirdForm={setUserWirdForm} value={userWirdForm.source} />
-              <Field field="note" label="Catatan Pribadi" multiline placeholder="Catatan pribadi" setUserWirdForm={setUserWirdForm} value={userWirdForm.note} />
+              <Field field="source" label={t('explore.userWird.field.source')} placeholder={t('explore.userWird.placeholder.source')} setUserWirdForm={setUserWirdForm} value={userWirdForm.source} />
+              <Field field="note" label={t('explore.userWird.field.note')} multiline placeholder={t('explore.userWird.placeholder.note')} setUserWirdForm={setUserWirdForm} value={userWirdForm.note} />
             </ScrollView>
             <View style={styles.modalActions}>
               <Pressable onPress={closeForm} style={styles.cancelButton}>
-                <Text style={styles.cancelButtonText}>Batal</Text>
+                <Text style={styles.cancelButtonText}>{t('explore.userWird.cancel')}</Text>
               </Pressable>
               <Pressable disabled={savingUserWird || !userWirdForm.title?.trim()} onPress={handleSubmit} style={[styles.saveButton, (savingUserWird || !userWirdForm.title?.trim()) && styles.disabledButton]} testID="web-app-user-wird-save">
-                <Text style={styles.saveButtonText}>{savingUserWird ? 'Menyimpan...' : 'Simpan'}</Text>
+                <Text style={styles.saveButtonText}>{savingUserWird ? t('explore.userWird.saving') : t('explore.userWird.save')}</Text>
               </Pressable>
             </View>
           </View>

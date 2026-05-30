@@ -2,6 +2,7 @@ import { BookOpen, Calculator, History, Save } from 'lucide-react-native';
 import { Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 
 import { deleteKalkulasiZakat, saveKalkulasiZakat } from '../../api/personal';
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { deleteCalculatorHistory, mergeCalculatorHistory, saveCalculatorHistory } from '../../storage/calculatorHistory';
 import { radius, spacing } from '../../theme';
 import { digitsOnly, formatCurrency, formatNumericInput, parseNumericInput } from '../ExploreScreen.helpers';
@@ -12,13 +13,13 @@ const NISAB_SILVER_GRAM = 595;
 const NISAB_HARVEST_KG = 653;
 
 const ZAKAT_TABS = [
-  { key: 'maal', label: 'Maal' },
-  { key: 'fitrah', label: 'Fitrah' },
-  { key: 'profesi', label: 'Profesi' },
-  { key: 'dagang', label: 'Dagang' },
-  { key: 'tani', label: 'Tani' },
-  { key: 'emas', label: 'Emas' },
-  { key: 'riwayat', label: 'Riwayat' },
+  { key: 'maal', labelKey: 'explore.zakat.tab.maal', testID: 'pill-Maal' },
+  { key: 'fitrah', labelKey: 'explore.zakat.tab.fitrah', testID: 'pill-Fitrah' },
+  { key: 'profesi', labelKey: 'explore.zakat.tab.profesi', testID: 'pill-Profesi' },
+  { key: 'dagang', labelKey: 'explore.zakat.tab.dagang', testID: 'pill-Dagang' },
+  { key: 'tani', labelKey: 'explore.zakat.tab.tani', testID: 'pill-Tani' },
+  { key: 'emas', labelKey: 'explore.zakat.tab.emas', testID: 'pill-Emas' },
+  { key: 'riwayat', labelKey: 'explore.zakat.tab.riwayat', testID: 'pill-Riwayat' },
 ];
 
 function Field({ hint, label, onChangeText, placeholder = '0', value }) {
@@ -96,11 +97,11 @@ function ResultCard({ amount, color = 'emerald', label, note }) {
   );
 }
 
-function SaveButton({ disabled, onPress, saving }) {
+function SaveButton({ disabled, onPress, saving, t }) {
   return (
     <Pressable disabled={disabled} onPress={onPress} style={[styles.saveButton, disabled && styles.disabledButton]} testID="web-app-zakat-save">
       <Save color="#047857" size={15} strokeWidth={2.3} />
-      <Text style={styles.saveButtonText}>{saving ? 'Menyimpan...' : 'Simpan'}</Text>
+      <Text style={styles.saveButtonText}>{saving ? t('explore.zakat.saving') : t('explore.zakat.save')}</Text>
     </Pressable>
   );
 }
@@ -155,6 +156,7 @@ export function WebAppZakatRoute({
   zakatTradeReceivable = '',
   zakatTradeStock = '',
 }) {
+  const { t } = useMobileLocale();
   const goldPrice = parseNumericInput(zakatGoldPrice) || 1050000;
   const nisab = NISAB_GRAM * goldPrice;
   const nisabMonthly = nisab / 12;
@@ -205,15 +207,15 @@ export function WebAppZakatRoute({
     try {
       if (session?.token) {
         await saveKalkulasiZakat(payload);
-        setZakatSavedMsg('Tersimpan ke akun.');
+        setZakatSavedMsg(t('explore.zakat.savedAccount'));
         loadZakatHistory();
       } else {
         const created = await saveCalculatorHistory('zakat', payload);
         setZakatHistory((current) => mergeCalculatorHistory(current, [created]));
-        setZakatSavedMsg('Tersimpan di perangkat.');
+        setZakatSavedMsg(t('explore.zakat.savedDevice'));
       }
     } catch {
-      setZakatSavedMsg('Gagal menyimpan');
+      setZakatSavedMsg(t('explore.zakat.saveError'));
     } finally {
       setZakatSaving(false);
       if (zakatTimerRef.current) clearTimeout(zakatTimerRef.current);
@@ -230,7 +232,7 @@ export function WebAppZakatRoute({
       }
       loadZakatHistory();
     } catch {
-      showError('Riwayat zakat gagal dihapus.');
+      showError(t('explore.zakat.deleteError'));
     }
   };
 
@@ -256,8 +258,8 @@ export function WebAppZakatRoute({
         <View style={styles.heroIcon}>
           <Calculator color="#047857" size={28} strokeWidth={2.2} />
         </View>
-        <Text style={styles.title}>Kalkulator Zakat</Text>
-        <Text style={styles.subtitle}>Hitung zakat maal, fitrah, profesi, dagang, tani, dan emas.</Text>
+        <Text style={styles.title}>{t('explore.zakat.title')}</Text>
+        <Text style={styles.subtitle}>{t('explore.zakat.subtitle')}</Text>
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tabScroller}>
@@ -267,9 +269,9 @@ export function WebAppZakatRoute({
               key={tab.key}
               onPress={() => setZakatTab(index)}
               style={[styles.tab, zakatTab === index && styles.tabActive]}
-              testID={`pill-${tab.label}`}
+              testID={tab.testID}
             >
-              <Text style={[styles.tabText, zakatTab === index && styles.tabTextActive]}>{tab.label}</Text>
+              <Text style={[styles.tabText, zakatTab === index && styles.tabTextActive]}>{t(tab.labelKey)}</Text>
             </Pressable>
           ))}
         </View>
@@ -278,83 +280,83 @@ export function WebAppZakatRoute({
       <View style={styles.card}>
         {zakatTab === 0 ? (
           <>
-            <InfoBox text="Zakat 2,5% dari harta bersih yang sudah mencapai nisab dan haul." />
-            <Field hint={`Nisab: ${formatCurrency(nisab)}`} label="Harga emas/gram" onChangeText={setZakatGoldPrice} value={zakatGoldPrice} />
-            <Field label="Total harta" onChangeText={(value) => setZakat((current) => ({ ...current, assets: value }))} value={zakat.assets} />
-            <Field label="Utang jatuh tempo" onChangeText={(value) => setZakat((current) => ({ ...current, debts: value }))} value={zakat.debts} />
-            <ToggleRow label="Sudah haul (1 tahun)" onValueChange={setZakatHaul} value={zakatHaul} />
-            {assets > 0 && assets < nisab ? <Text style={styles.warning}>Harta belum mencapai nisab ({formatCurrency(nisab)}).</Text> : null}
-            {assets >= nisab && !zakatHaul ? <Text style={styles.warning}>Belum wajib zakat karena belum haul.</Text> : null}
-            <ResultCard amount={zakatMaal} label="Zakat Maal" />
-            {zakatMaal > 0 ? <SaveButton disabled={zakatSaving} onPress={() => handleSave('maal', 'Zakat Maal', zakatMaal, net, nisab, 2.5, zakatHaul)} saving={zakatSaving} /> : null}
+            <InfoBox text={t('explore.zakat.info.maal')} />
+            <Field hint={t('explore.zakat.nisabHint', { amount: formatCurrency(nisab) })} label={t('explore.zakat.field.goldPrice')} onChangeText={setZakatGoldPrice} value={zakatGoldPrice} />
+            <Field label={t('explore.zakat.field.assets')} onChangeText={(value) => setZakat((current) => ({ ...current, assets: value }))} value={zakat.assets} />
+            <Field label={t('explore.zakat.field.dueDebt')} onChangeText={(value) => setZakat((current) => ({ ...current, debts: value }))} value={zakat.debts} />
+            <ToggleRow label={t('explore.zakat.field.haul')} onValueChange={setZakatHaul} value={zakatHaul} />
+            {assets > 0 && assets < nisab ? <Text style={styles.warning}>{t('explore.zakat.warning.assetsBelowNisab', { amount: formatCurrency(nisab) })}</Text> : null}
+            {assets >= nisab && !zakatHaul ? <Text style={styles.warning}>{t('explore.zakat.warning.noHaul')}</Text> : null}
+            <ResultCard amount={zakatMaal} label={t('explore.zakat.result.maal')} />
+            {zakatMaal > 0 ? <SaveButton disabled={zakatSaving} onPress={() => handleSave('maal', 'Zakat Maal', zakatMaal, net, nisab, 2.5, zakatHaul)} saving={zakatSaving} t={t} /> : null}
           </>
         ) : null}
 
         {zakatTab === 1 ? (
           <>
-            <InfoBox color="amber" text="Zakat fitrah 1 sha' atau sekitar 2,5 kg makanan pokok per jiwa." />
-            <Field label="Harga beras/kg" onChangeText={setZakatRicePrice} value={zakatRicePrice} />
+            <InfoBox color="amber" text={t('explore.zakat.info.fitrah')} />
+            <Field label={t('explore.zakat.field.ricePrice')} onChangeText={setZakatRicePrice} value={zakatRicePrice} />
             <View style={styles.counterRow}>
               <Pressable onPress={() => setZakatFamilyCount(Math.max(1, zakatFamilyCount - 1))} style={styles.counterButton}><Text style={styles.counterText}>-</Text></Pressable>
               <View style={styles.counterCenter}>
                 <Text style={styles.counterValue}>{zakatFamilyCount}</Text>
-                <Text style={styles.counterLabel}>Jiwa</Text>
+                <Text style={styles.counterLabel}>{t('explore.zakat.personUnit')}</Text>
               </View>
               <Pressable onPress={() => setZakatFamilyCount(zakatFamilyCount + 1)} style={styles.counterButton}><Text style={styles.counterText}>+</Text></Pressable>
             </View>
-            <ResultCard amount={zakatFitrah} color="amber" label="Zakat Fitrah" note={`${zakatFamilyCount} jiwa x 2,5 kg x ${formatCurrency(ricePrice)}/kg`} />
-            {zakatFitrah > 0 ? <SaveButton disabled={zakatSaving} onPress={() => handleSave('fitrah', 'Zakat Fitrah', zakatFitrah, 0, 0, 0, true, `${zakatFamilyCount} orang x Rp${ricePrice}/kg`)} saving={zakatSaving} /> : null}
+            <ResultCard amount={zakatFitrah} color="amber" label={t('explore.zakat.result.fitrah')} note={t('explore.zakat.note.fitrah', { count: zakatFamilyCount, price: formatCurrency(ricePrice) })} />
+            {zakatFitrah > 0 ? <SaveButton disabled={zakatSaving} onPress={() => handleSave('fitrah', 'Zakat Fitrah', zakatFitrah, 0, 0, 0, true, `${zakatFamilyCount} orang x Rp${ricePrice}/kg`)} saving={zakatSaving} t={t} /> : null}
           </>
         ) : null}
 
         {zakatTab === 2 ? (
           <>
-            <InfoBox color="blue" text="Zakat profesi 2,5% dari penghasilan bulanan jika mencapai nisab per bulan." />
-            <Field hint={`Nisab bulanan: ${formatCurrency(nisabMonthly)}`} label="Harga emas/gram" onChangeText={setZakatGoldPrice} value={zakatGoldPrice} />
-            <Field label="Penghasilan per bulan" onChangeText={setZakatMonthlyIncome} value={zakatMonthlyIncome} />
-            {income > 0 && income < nisabMonthly ? <Text style={styles.warning}>Penghasilan belum mencapai nisab bulanan.</Text> : null}
-            <ResultCard amount={zakatProfesi} color="blue" label="Zakat Profesi" />
-            {zakatProfesi > 0 ? <SaveButton disabled={zakatSaving} onPress={() => handleSave('profesi', 'Zakat Profesi', zakatProfesi, income, nisabMonthly)} saving={zakatSaving} /> : null}
+            <InfoBox color="blue" text={t('explore.zakat.info.profesi')} />
+            <Field hint={t('explore.zakat.monthlyNisabHint', { amount: formatCurrency(nisabMonthly) })} label={t('explore.zakat.field.goldPrice')} onChangeText={setZakatGoldPrice} value={zakatGoldPrice} />
+            <Field label={t('explore.zakat.field.monthlyIncome')} onChangeText={setZakatMonthlyIncome} value={zakatMonthlyIncome} />
+            {income > 0 && income < nisabMonthly ? <Text style={styles.warning}>{t('explore.zakat.warning.incomeBelowNisab')}</Text> : null}
+            <ResultCard amount={zakatProfesi} color="blue" label={t('explore.zakat.result.profesi')} />
+            {zakatProfesi > 0 ? <SaveButton disabled={zakatSaving} onPress={() => handleSave('profesi', 'Zakat Profesi', zakatProfesi, income, nisabMonthly)} saving={zakatSaving} t={t} /> : null}
           </>
         ) : null}
 
         {zakatTab === 3 ? (
           <>
-            <InfoBox text="Zakat perdagangan 2,5% dari modal, stok, dan piutang setelah dikurangi utang jika mencapai nisab." />
-            <Field hint={`Nisab: ${formatCurrency(nisab)}`} label="Harga emas/gram" onChangeText={setZakatGoldPrice} value={zakatGoldPrice} />
-            <Field label="Modal usaha" onChangeText={setZakatTradeCapital} value={zakatTradeCapital} />
-            <Field label="Nilai stok barang" onChangeText={setZakatTradeStock} value={zakatTradeStock} />
-            <Field label="Piutang bisa ditagih" onChangeText={setZakatTradeReceivable} value={zakatTradeReceivable} />
-            <Field label="Utang usaha" onChangeText={setZakatTradeDebt} value={zakatTradeDebt} />
-            <ToggleRow label="Sudah haul (1 tahun)" onValueChange={setZakatTradeHaul} value={zakatTradeHaul} />
-            {tradeNet > 0 ? <Text style={styles.metaText}>Aset bersih: {formatCurrency(tradeNet)}</Text> : null}
-            <ResultCard amount={zakatTrade} label="Zakat Perdagangan" />
-            {zakatTrade > 0 ? <SaveButton disabled={zakatSaving} onPress={() => handleSave('perdagangan', 'Zakat Perdagangan', zakatTrade, tradeNet, nisab, 2.5, zakatTradeHaul)} saving={zakatSaving} /> : null}
+            <InfoBox text={t('explore.zakat.info.dagang')} />
+            <Field hint={t('explore.zakat.nisabHint', { amount: formatCurrency(nisab) })} label={t('explore.zakat.field.goldPrice')} onChangeText={setZakatGoldPrice} value={zakatGoldPrice} />
+            <Field label={t('explore.zakat.field.tradeCapital')} onChangeText={setZakatTradeCapital} value={zakatTradeCapital} />
+            <Field label={t('explore.zakat.field.tradeStock')} onChangeText={setZakatTradeStock} value={zakatTradeStock} />
+            <Field label={t('explore.zakat.field.tradeReceivable')} onChangeText={setZakatTradeReceivable} value={zakatTradeReceivable} />
+            <Field label={t('explore.zakat.field.tradeDebt')} onChangeText={setZakatTradeDebt} value={zakatTradeDebt} />
+            <ToggleRow label={t('explore.zakat.field.haul')} onValueChange={setZakatTradeHaul} value={zakatTradeHaul} />
+            {tradeNet > 0 ? <Text style={styles.metaText}>{t('explore.zakat.netAssets', { amount: formatCurrency(tradeNet) })}</Text> : null}
+            <ResultCard amount={zakatTrade} label={t('explore.zakat.result.dagang')} />
+            {zakatTrade > 0 ? <SaveButton disabled={zakatSaving} onPress={() => handleSave('perdagangan', 'Zakat Perdagangan', zakatTrade, tradeNet, nisab, 2.5, zakatTradeHaul)} saving={zakatSaving} t={t} /> : null}
           </>
         ) : null}
 
         {zakatTab === 4 ? (
           <>
-            <InfoBox text={`Nisab 5 wasq (${NISAB_HARVEST_KG} kg). Irigasi 5%, tadah hujan 10%.`} />
-            <NumberField label="Hasil panen (kg)" onChangeText={setZakatHarvestWeight} value={zakatHarvestWeight} />
-            <Field label="Harga gabah/kg" onChangeText={setZakatRiceKgPrice} value={zakatRiceKgPrice} />
-            <ToggleRow label="Pakai irigasi (tarif 5%)" onValueChange={setZakatHarvestIrrigated} value={zakatHarvestIrrigated} />
-            {harvest > 0 && harvest < NISAB_HARVEST_KG ? <Text style={styles.warning}>Panen kurang dari nisab ({NISAB_HARVEST_KG} kg), belum wajib zakat.</Text> : null}
-            <ResultCard amount={zakatAgriculture} label="Zakat Pertanian" note={harvest >= NISAB_HARVEST_KG ? `${harvestRate * 100}% x ${harvest} kg x ${formatCurrency(riceKgPrice)}/kg` : ''} />
-            {zakatAgriculture > 0 ? <SaveButton disabled={zakatSaving} onPress={() => handleSave('pertanian', 'Zakat Pertanian', zakatAgriculture, 0, 0, harvestRate * 100, true, `${harvest} kg, irigasi: ${zakatHarvestIrrigated ? '5%' : '10%'}`)} saving={zakatSaving} /> : null}
+            <InfoBox text={t('explore.zakat.info.tani', { kg: NISAB_HARVEST_KG })} />
+            <NumberField label={t('explore.zakat.field.harvestWeight')} onChangeText={setZakatHarvestWeight} value={zakatHarvestWeight} />
+            <Field label={t('explore.zakat.field.riceKgPrice')} onChangeText={setZakatRiceKgPrice} value={zakatRiceKgPrice} />
+            <ToggleRow label={t('explore.zakat.field.irrigated')} onValueChange={setZakatHarvestIrrigated} value={zakatHarvestIrrigated} />
+            {harvest > 0 && harvest < NISAB_HARVEST_KG ? <Text style={styles.warning}>{t('explore.zakat.warning.harvestBelowNisab', { kg: NISAB_HARVEST_KG })}</Text> : null}
+            <ResultCard amount={zakatAgriculture} label={t('explore.zakat.result.tani')} note={harvest >= NISAB_HARVEST_KG ? t('explore.zakat.note.tani', { rate: harvestRate * 100, weight: harvest, price: formatCurrency(riceKgPrice) }) : ''} />
+            {zakatAgriculture > 0 ? <SaveButton disabled={zakatSaving} onPress={() => handleSave('pertanian', 'Zakat Pertanian', zakatAgriculture, 0, 0, harvestRate * 100, true, `${harvest} kg, irigasi: ${zakatHarvestIrrigated ? '5%' : '10%'}`)} saving={zakatSaving} t={t} /> : null}
           </>
         ) : null}
 
         {zakatTab === 5 ? (
           <>
-            <InfoBox color="amber" text="Nisab emas 85g, perak 595g. Wajib setelah 1 haul dengan tarif 2,5%." />
-            <Field hint={`Nisab emas: ${formatCurrency(goldNisabValue)}`} label="Harga emas/gram" onChangeText={setZakatGoldPrice} value={zakatGoldPrice} />
-            <NumberField label="Berat emas (gram)" onChangeText={setZakatGoldGrams} value={zakatGoldGrams} />
-            <Field hint={`Nisab perak: ${formatCurrency(silverNisabValue)}`} label="Harga perak/gram" onChangeText={setZakatSilverPrice} value={zakatSilverPrice} />
-            <NumberField label="Berat perak (gram)" onChangeText={setZakatSilverGrams} value={zakatSilverGrams} />
-            <ToggleRow label="Sudah haul (1 tahun)" onValueChange={setZakatGoldHaul} value={zakatGoldHaul} />
-            <ResultCard amount={zakatGold} color="amber" label="Zakat Emas & Perak" note={zakatGold > 0 ? `2,5% x ${formatCurrency(goldValue + silverValue)}` : ''} />
-            {zakatGold > 0 ? <SaveButton disabled={zakatSaving} onPress={() => handleSave('emas_perak', 'Zakat Emas & Perak', zakatGold, goldValue + silverValue, goldNisabValue, 2.5, zakatGoldHaul, `${goldG}g emas, ${silverG}g perak`)} saving={zakatSaving} /> : null}
+            <InfoBox color="amber" text={t('explore.zakat.info.emas')} />
+            <Field hint={t('explore.zakat.goldNisabHint', { amount: formatCurrency(goldNisabValue) })} label={t('explore.zakat.field.goldPrice')} onChangeText={setZakatGoldPrice} value={zakatGoldPrice} />
+            <NumberField label={t('explore.zakat.field.goldWeight')} onChangeText={setZakatGoldGrams} value={zakatGoldGrams} />
+            <Field hint={t('explore.zakat.silverNisabHint', { amount: formatCurrency(silverNisabValue) })} label={t('explore.zakat.field.silverPrice')} onChangeText={setZakatSilverPrice} value={zakatSilverPrice} />
+            <NumberField label={t('explore.zakat.field.silverWeight')} onChangeText={setZakatSilverGrams} value={zakatSilverGrams} />
+            <ToggleRow label={t('explore.zakat.field.haul')} onValueChange={setZakatGoldHaul} value={zakatGoldHaul} />
+            <ResultCard amount={zakatGold} color="amber" label={t('explore.zakat.result.emas')} note={zakatGold > 0 ? t('explore.zakat.note.emas', { amount: formatCurrency(goldValue + silverValue) }) : ''} />
+            {zakatGold > 0 ? <SaveButton disabled={zakatSaving} onPress={() => handleSave('emas_perak', 'Zakat Emas & Perak', zakatGold, goldValue + silverValue, goldNisabValue, 2.5, zakatGoldHaul, `${goldG}g emas, ${silverG}g perak`)} saving={zakatSaving} t={t} /> : null}
           </>
         ) : null}
       </View>
@@ -362,9 +364,9 @@ export function WebAppZakatRoute({
       {zakatSavedMsg ? <Text style={styles.savedText}>{zakatSavedMsg}</Text> : null}
       <Pressable onPress={() => setZakatTab(6)} style={styles.historyLink} testID="web-app-zakat-history-link">
         <History color="#047857" size={15} strokeWidth={2.3} />
-        <Text style={styles.historyText}>Lihat Riwayat Zakat</Text>
+        <Text style={styles.historyText}>{t('explore.zakat.viewHistory')}</Text>
       </Pressable>
-      <Text style={styles.disclaimer}>Kalkulator ini adalah alat bantu estimasi. Konsultasikan detail kasus khusus kepada ustadz atau lembaga zakat terpercaya.</Text>
+      <Text style={styles.disclaimer}>{t('explore.zakat.disclaimer')}</Text>
     </ScrollView>
   );
 }
