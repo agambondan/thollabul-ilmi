@@ -1,3 +1,5 @@
+import { exploreRouteTranslations } from './exploreRouteTranslations';
+
 export const mobileLanguages = {
   en: 'en',
   EN: 'en',
@@ -14,6 +16,7 @@ export const defaultMobileLanguage = mobileLanguages.idn;
 
 const dictionaries = {
   idn: {
+    ...exploreRouteTranslations.idn,
     'account.bookmarks': 'Bookmark',
     'account.closeMenu': 'Tutup menu akun',
     'account.dark': 'Gelap',
@@ -168,15 +171,6 @@ const dictionaries = {
     'explore.fiqh.loading': 'Memuat materi fiqh...',
     'explore.fiqh.searchPlaceholder': 'Cari materi...',
     'explore.fiqh.title': 'Fiqh Ringkas',
-    'explore.imsakiyah.dayColumn': 'No',
-    'explore.imsakiyah.defaultLocation': 'Jakarta (WIB)',
-    'explore.imsakiyah.emptyText': 'Coba muat ulang setelah beberapa saat.',
-    'explore.imsakiyah.emptyTitle': 'Jadwal imsakiyah belum tersedia.',
-    'explore.imsakiyah.error': 'Gagal memuat data. Periksa koneksi internet.',
-    'explore.imsakiyah.loading': 'Memuat imsakiyah...',
-    'explore.imsakiyah.scheduleColumn': 'Jadwal',
-    'explore.imsakiyah.subtitle': 'Jadwal imsak & sholat bulanan · {location}',
-    'explore.imsakiyah.title': 'Imsakiyah',
     'explore.amalan.emptyText': 'Coba muat ulang setelah beberapa saat.',
     'explore.amalan.emptyTitle': 'Checklist amalan belum tersedia.',
     'explore.amalan.fallbackLabel': 'Amalan {number}',
@@ -303,8 +297,6 @@ const dictionaries = {
     'explore.tafsir.surahNotFound': 'Surah tidak ditemukan.',
     'explore.tafsir.surahNumber': 'Surah {number}',
     'explore.tafsir.title': 'Tafsir',
-    'explore.tool.loading': 'Memuat...',
-    'explore.tool.titleFallback': 'Fitur',
     'explore.kajianLinkError': 'Tautan kajian belum bisa dibuka.',
     'explore.kamus.columnArabic': 'Arab',
     'explore.kamus.columnLatin': 'Latin',
@@ -1004,6 +996,7 @@ const dictionaries = {
     'theme.system.meta': 'Gunakan preferensi perangkat sebagai default.',
   },
   en: {
+    ...exploreRouteTranslations.en,
     'account.bookmarks': 'Bookmarks',
     'account.closeMenu': 'Close account menu',
     'account.dark': 'Dark',
@@ -1158,15 +1151,6 @@ const dictionaries = {
     'explore.fiqh.loading': 'Loading fiqh lessons...',
     'explore.fiqh.searchPlaceholder': 'Search lessons...',
     'explore.fiqh.title': 'Fiqh Guide',
-    'explore.imsakiyah.dayColumn': 'No',
-    'explore.imsakiyah.defaultLocation': 'Jakarta (WIB)',
-    'explore.imsakiyah.emptyText': 'Try refreshing again in a moment.',
-    'explore.imsakiyah.emptyTitle': 'Imsakiyah schedule is not available yet.',
-    'explore.imsakiyah.error': 'Data could not be loaded. Check your internet connection.',
-    'explore.imsakiyah.loading': 'Loading imsakiyah...',
-    'explore.imsakiyah.scheduleColumn': 'Schedule',
-    'explore.imsakiyah.subtitle': 'Monthly imsak and prayer schedule · {location}',
-    'explore.imsakiyah.title': 'Imsakiyah',
     'explore.amalan.emptyText': 'Try refreshing again in a moment.',
     'explore.amalan.emptyTitle': 'Practice checklist is not available yet.',
     'explore.amalan.fallbackLabel': 'Practice {number}',
@@ -1293,8 +1277,6 @@ const dictionaries = {
     'explore.tafsir.surahNotFound': 'Surah not found.',
     'explore.tafsir.surahNumber': 'Surah {number}',
     'explore.tafsir.title': 'Tafsir',
-    'explore.tool.loading': 'Loading...',
-    'explore.tool.titleFallback': 'Feature',
     'explore.kajianLinkError': 'Lecture link could not be opened.',
     'explore.kamus.columnArabic': 'Arabic',
     'explore.kamus.columnLatin': 'Latin',

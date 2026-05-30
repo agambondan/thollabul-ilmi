@@ -1,0 +1,28 @@
+export const exploreRouteTranslations = {
+  idn: {
+    'explore.imsakiyah.dayColumn': 'No',
+    'explore.imsakiyah.defaultLocation': 'Jakarta (WIB)',
+    'explore.imsakiyah.emptyText': 'Coba muat ulang setelah beberapa saat.',
+    'explore.imsakiyah.emptyTitle': 'Jadwal imsakiyah belum tersedia.',
+    'explore.imsakiyah.error': 'Gagal memuat data. Periksa koneksi internet.',
+    'explore.imsakiyah.loading': 'Memuat imsakiyah...',
+    'explore.imsakiyah.scheduleColumn': 'Jadwal',
+    'explore.imsakiyah.subtitle': 'Jadwal imsak & sholat bulanan · {location}',
+    'explore.imsakiyah.title': 'Imsakiyah',
+    'explore.tool.loading': 'Memuat...',
+    'explore.tool.titleFallback': 'Fitur',
+  },
+  en: {
+    'explore.imsakiyah.dayColumn': 'No',
+    'explore.imsakiyah.defaultLocation': 'Jakarta (WIB)',
+    'explore.imsakiyah.emptyText': 'Try refreshing again in a moment.',
+    'explore.imsakiyah.emptyTitle': 'Imsakiyah schedule is not available yet.',
+    'explore.imsakiyah.error': 'Data could not be loaded. Check your internet connection.',
+    'explore.imsakiyah.loading': 'Loading imsakiyah...',
+    'explore.imsakiyah.scheduleColumn': 'Schedule',
+    'explore.imsakiyah.subtitle': 'Monthly imsak and prayer schedule · {location}',
+    'explore.imsakiyah.title': 'Imsakiyah',
+    'explore.tool.loading': 'Loading...',
+    'explore.tool.titleFallback': 'Feature',
+  },
+};
