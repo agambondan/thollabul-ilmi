@@ -1,6 +1,7 @@
 import { CheckCircle2, Circle, Mosque } from 'lucide-react-native';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 import { PRAYER_ITEMS } from '../ExploreScreen.helpers';
 
@@ -10,9 +11,9 @@ const dateOffsetIso = (offset) => {
   date.setDate(date.getDate() + offset);
   return date.toISOString().slice(0, 10);
 };
-const formatShortDate = (iso) => {
+const formatShortDate = (iso, language) => {
   const date = new Date(`${iso}T00:00:00`);
-  return date.toLocaleDateString('id-ID', {
+  return date.toLocaleDateString(language === 'en' ? 'en-US' : 'id-ID', {
     day: 'numeric',
     month: 'short',
     weekday: 'short',
@@ -73,10 +74,10 @@ function PrayerRow({ done, item, onPress }) {
   );
 }
 
-function LastSevenRow({ row, today }) {
+function LastSevenRow({ language, row, today }) {
   return (
     <View style={[styles.weekRow, row.date === today && styles.weekRowToday]}>
-      <Text style={styles.weekDate}>{formatShortDate(row.date)}</Text>
+      <Text style={styles.weekDate}>{formatShortDate(row.date, language)}</Text>
       <Text style={[
         styles.weekCount,
         row.count === 5 ? styles.weekCountFull : row.count >= 3 ? styles.weekCountMedium : null,
@@ -91,6 +92,7 @@ export function WebAppSholatTrackerRoute({
   sholatLog = {},
   togglePrayer = () => {},
 }) {
+  const { language, t } = useMobileLocale();
   const doneCount = PRAYER_ITEMS.filter((item) => sholatLog[item.key]).length;
   const pct = Math.round((doneCount / PRAYER_ITEMS.length) * 100);
   const today = todayIso();
@@ -107,20 +109,20 @@ export function WebAppSholatTrackerRoute({
           <Mosque color="#047857" size={24} strokeWidth={2.2} />
         </View>
         <View style={styles.headerText}>
-          <Text style={styles.title}>Sholat Tracker</Text>
-          <Text style={styles.subtitle}>Catat sholat hari ini dalam ringkasan dashboard.</Text>
+          <Text style={styles.title}>{t('explore.sholatTracker.title')}</Text>
+          <Text style={styles.subtitle}>{t('explore.sholatTracker.subtitle')}</Text>
         </View>
       </View>
 
       <View style={styles.progressCard}>
         <View style={styles.progressTop}>
-          <Text style={styles.progressTitle}>Hari Ini</Text>
+          <Text style={styles.progressTitle}>{t('explore.sholatTracker.today')}</Text>
           <Text style={styles.progressCount}>{doneCount}/5</Text>
         </View>
         <View style={styles.progressTrack}>
           <View style={[styles.progressFill, { width: `${pct}%` }]} />
         </View>
-        <Text style={styles.progressText}>{pct}% sholat tercatat</Text>
+        <Text style={styles.progressText}>{t('explore.sholatTracker.recordedPercent', { percent: pct })}</Text>
       </View>
 
       <View style={styles.prayerList}>
@@ -136,19 +138,19 @@ export function WebAppSholatTrackerRoute({
 
       <View style={styles.weekCard}>
         <View style={styles.cardHeader}>
-          <Text style={styles.cardTitle}>7 Hari Terakhir</Text>
+          <Text style={styles.cardTitle}>{t('explore.sholatTracker.lastSevenDays')}</Text>
         </View>
         <View style={styles.weekTable}>
           {lastSeven.map((row) => (
-            <LastSevenRow key={row.date} row={row} today={today} />
+            <LastSevenRow key={row.date} language={language} row={row} today={today} />
           ))}
         </View>
       </View>
 
       <View style={styles.monthCard}>
         <View style={styles.monthHeader}>
-          <Text style={styles.cardTitle}>Bulan Ini</Text>
-          <Text style={styles.perfectText}>{perfectDays} hari sempurna</Text>
+          <Text style={styles.cardTitle}>{t('explore.sholatTracker.thisMonth')}</Text>
+          <Text style={styles.perfectText}>{t('explore.sholatTracker.perfectDays', { count: perfectDays })}</Text>
         </View>
         <View style={styles.monthGrid}>
           {monthDays.map((entry) => (
