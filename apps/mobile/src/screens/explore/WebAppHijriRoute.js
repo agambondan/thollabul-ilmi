@@ -1,6 +1,7 @@
 import { CalendarDays } from 'lucide-react-native';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 
 const HIJRI_MONTHS = [
@@ -23,12 +24,12 @@ const PUASA_SUNNAH = [
   {
     days: [13, 14, 15],
     id: 'ayyamul_bidh',
-    label: 'Ayyamul Bidh',
+    labelKey: 'explore.hijri.fast.ayyamulBidh',
     type: 'monthly',
   },
   {
     id: 'arafah',
-    label: 'Puasa Arafah (9 Dzulhijjah)',
+    labelKey: 'explore.hijri.fast.arafah',
     month: 12,
     day: 9,
     type: 'fixed',
@@ -36,40 +37,40 @@ const PUASA_SUNNAH = [
   {
     days: [1, 2, 3, 4, 5, 6, 7, 8, 9],
     id: 'dzulhijjah_1_9',
-    label: '1-9 Dzulhijjah',
+    labelKey: 'explore.hijri.fast.dzulhijjahFirstNine',
     month: 12,
     type: 'range',
   },
   {
     days: [9, 10],
     id: 'tasua_asyura',
-    label: "Tasu'a & Asyura",
+    labelKey: 'explore.hijri.fast.tasuaAsyura',
     month: 1,
     type: 'range',
   },
   {
     id: 'muharram',
-    label: 'Perbanyak puasa Muharram',
+    labelKey: 'explore.hijri.fast.muharram',
     month: 1,
     type: 'month',
   },
   {
     id: 'syaban',
-    label: 'Perbanyak puasa Syaban',
+    labelKey: 'explore.hijri.fast.syaban',
     month: 8,
     type: 'month',
   },
 ];
 
 const getRaw = (item) => item?.raw ?? {};
-const getTitle = (item, index) =>
+const getTitle = (item, index, t) =>
   getRaw(item).translation?.title_idn ??
   getRaw(item).translation?.title_en ??
   getRaw(item).translation?.idn ??
   getRaw(item).translation?.en ??
   getRaw(item).name ??
   item?.title ??
-  `Peristiwa ${index + 1}`;
+  t('explore.hijri.eventFallback', { number: index + 1 });
 const getBody = (item) =>
   getRaw(item).translation?.description_idn ??
   getRaw(item).translation?.description_en ??
@@ -92,18 +93,18 @@ const getHijriMonth = (raw) => {
   ));
   return monthIndex > 0 ? monthIndex : 0;
 };
-const formatTodayHijri = (item) => {
+const formatTodayHijri = (item, t) => {
   const raw = getRaw(item);
   if (raw.date_str) return raw.date_str;
   if (raw.day && raw.month_name && raw.year) return `${raw.day} ${raw.month_name} ${raw.year} H`;
-  return item?.body ?? 'Tanggal Hijriah belum tersedia';
+  return item?.body ?? t('explore.hijri.todayUnavailable');
 };
-const formatTodayArabic = (item) => {
+const formatTodayArabic = (item, t) => {
   const raw = getRaw(item);
   if (raw.day && raw.month_name && raw.year) {
     return `${raw.day} ${raw.month_name} ${raw.year} هـ`;
   }
-  return formatTodayHijri(item);
+  return formatTodayHijri(item, t);
 };
 const formatGregorian = (raw) => {
   if (raw.gregorian_year && raw.gregorian_month && raw.gregorian_day) {
@@ -149,7 +150,7 @@ const getUpcomingFasts = (raw) => {
   }).sort((a, b) => a.days - b.days).slice(0, 3);
 };
 
-function EventCard({ index, item }) {
+function EventCard({ index, item, t }) {
   const meta = getEventMeta(item);
   return (
     <View style={styles.eventCard} testID="web-app-hijri-event-card">
@@ -158,7 +159,7 @@ function EventCard({ index, item }) {
       </View>
       <View style={styles.eventMain}>
         {meta ? <Text style={styles.eventMeta}>{meta}</Text> : null}
-        <Text style={styles.eventTitle}>{getTitle(item, index)}</Text>
+        <Text style={styles.eventTitle}>{getTitle(item, index, t)}</Text>
         {getBody(item) ? <Text numberOfLines={3} style={styles.eventBody}>{getBody(item)}</Text> : null}
       </View>
     </View>
@@ -170,6 +171,7 @@ export function WebAppHijriRoute({
   items = [],
   loading,
 }) {
+  const { t } = useMobileLocale();
   const today = getToday(items);
   const todayRaw = getRaw(today);
   const events = getEvents(items, today);
@@ -182,14 +184,14 @@ export function WebAppHijriRoute({
     <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} style={styles.root}>
       <View testID="explore-web-app-hijri-surface" />
       <View style={styles.header}>
-        <Text style={styles.title}>Kalender Hijriah</Text>
+        <Text style={styles.title}>{t('explore.hijri.title')}</Text>
       </View>
 
       {today ? (
         <View style={styles.todayCard}>
-          <Text style={styles.todayLabel}>Hari Ini</Text>
-          <Text style={styles.todayArabic}>{formatTodayArabic(today)}</Text>
-          <Text style={styles.todayText}>{formatTodayHijri(today)}</Text>
+          <Text style={styles.todayLabel}>{t('explore.hijri.today')}</Text>
+          <Text style={styles.todayArabic}>{formatTodayArabic(today, t)}</Text>
+          <Text style={styles.todayText}>{formatTodayHijri(today, t)}</Text>
         </View>
       ) : null}
 
@@ -200,13 +202,13 @@ export function WebAppHijriRoute({
               <CalendarDays color="#fde68a" size={22} strokeWidth={2.2} />
             </View>
             <View style={styles.countdownText}>
-              <Text style={styles.countdownEyebrow}>{isRamadan ? 'Bulan Ramadan' : 'Menuju Ramadan'}</Text>
+              <Text style={styles.countdownEyebrow}>{isRamadan ? t('explore.hijri.ramadanMonth') : t('explore.hijri.toRamadan')}</Text>
               <Text style={styles.countdownTitle}>
                 {isRamadan ? todayRaw.day : ramadanDays}
-                <Text style={styles.countdownUnit}>{isRamadan ? ' / 30 hari' : ' hari lagi'}</Text>
+                <Text style={styles.countdownUnit}>{isRamadan ? t('explore.hijri.ramadanDayUnit') : t('explore.hijri.daysLeftUnit')}</Text>
               </Text>
               <Text style={styles.countdownBody}>
-                {formatTodayHijri(today)}
+                {formatTodayHijri(today, t)}
               </Text>
             </View>
           </View>
@@ -214,28 +216,28 @@ export function WebAppHijriRoute({
           <View style={styles.fastingCard}>
             <View style={styles.fastingHeader}>
               <CalendarDays color="#059669" size={18} strokeWidth={2.2} />
-              <Text style={styles.fastingTitle}>Puasa Sunnah</Text>
+              <Text style={styles.fastingTitle}>{t('explore.hijri.fastingTitle')}</Text>
             </View>
             <View style={styles.fastingToday}>
-              <Text style={styles.fastingTodayLabel}>Hari Ini</Text>
+              <Text style={styles.fastingTodayLabel}>{t('explore.hijri.today')}</Text>
               {todayFasts.length ? (
                 todayFasts.map((item) => (
-                  <Text key={item.id} style={styles.fastingTodayText}>{item.label}</Text>
+                  <Text key={item.id} style={styles.fastingTodayText}>{t(item.labelKey)}</Text>
                 ))
               ) : (
-                <Text style={styles.fastingEmptyText}>Tidak ada puasa sunnah khusus hari ini.</Text>
+                <Text style={styles.fastingEmptyText}>{t('explore.hijri.noSpecialFastToday')}</Text>
               )}
             </View>
             {upcomingFasts.length ? (
               <View style={styles.upcomingList}>
-                <Text style={styles.upcomingTitle}>Akan Datang</Text>
+                <Text style={styles.upcomingTitle}>{t('explore.hijri.upcoming')}</Text>
                 {upcomingFasts.map((item) => (
                   <View key={item.id} style={styles.upcomingRow}>
                     <View style={styles.upcomingDayBadge}>
                       <Text style={styles.upcomingDayText}>{item.days}</Text>
                     </View>
                     <View style={styles.upcomingTextWrap}>
-                      <Text style={styles.upcomingLabel}>{item.label}</Text>
+                      <Text style={styles.upcomingLabel}>{t(item.labelKey)}</Text>
                       <Text style={styles.upcomingDate}>{item.date} H</Text>
                     </View>
                   </View>
@@ -244,7 +246,7 @@ export function WebAppHijriRoute({
             ) : null}
             <View style={styles.fastingNote}>
               <Text style={styles.fastingNoteText}>
-                Estimasi naive 30 hari/bulan Hijri. Akurasi tergantung penampakan hilal dan jadwal lokal.
+                {t('explore.hijri.fastingNote')}
               </Text>
             </View>
           </View>
@@ -252,15 +254,15 @@ export function WebAppHijriRoute({
       ) : null}
 
       <View style={styles.converterCard}>
-        <Text style={styles.converterTitle}>Konversi Tanggal</Text>
+        <Text style={styles.converterTitle}>{t('explore.hijri.converterTitle')}</Text>
         <View style={styles.converterRow}>
           <Text style={styles.converterInput}>{formatGregorian(todayRaw)}</Text>
-          <Text style={styles.converterButton}>Konversi</Text>
+          <Text style={styles.converterButton}>{t('explore.hijri.convert')}</Text>
         </View>
         {today ? (
           <View style={styles.converterResult}>
-            <Text style={styles.converterResultArabic}>{formatTodayArabic(today)}</Text>
-            <Text style={styles.converterResultText}>{formatTodayHijri(today)}</Text>
+            <Text style={styles.converterResultArabic}>{formatTodayArabic(today, t)}</Text>
+            <Text style={styles.converterResultText}>{formatTodayHijri(today, t)}</Text>
           </View>
         ) : null}
       </View>
@@ -268,17 +270,17 @@ export function WebAppHijriRoute({
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color="#059669" size="small" />
-          <Text style={styles.stateText}>Memuat kalender Hijri...</Text>
+          <Text style={styles.stateText}>{t('explore.hijri.loading')}</Text>
         </View>
       ) : null}
 
-      {error ? <Text style={styles.error}>Kalender Hijriah belum bisa dimuat.</Text> : null}
+      {error ? <Text style={styles.error}>{t('explore.hijri.loadError')}</Text> : null}
 
       {!loading && !error && events.length ? (
         <View style={styles.events}>
-          <Text style={styles.sectionTitle}>Peristiwa Hijriah</Text>
+          <Text style={styles.sectionTitle}>{t('explore.hijri.eventsTitle')}</Text>
           {events.slice(0, 8).map((item, index) => (
-            <EventCard index={index} item={item} key={`${item?.id ?? getTitle(item, index)}-${index}`} />
+            <EventCard index={index} item={item} key={`${item?.id ?? getTitle(item, index, t)}-${index}`} t={t} />
           ))}
         </View>
       ) : null}
@@ -286,8 +288,8 @@ export function WebAppHijriRoute({
       {!loading && !error && !items.length ? (
         <View style={styles.empty}>
           <CalendarDays color="#9ca3af" size={32} strokeWidth={1.8} />
-          <Text style={styles.emptyTitle}>Kalender Hijriah belum tersedia.</Text>
-          <Text style={styles.emptyText}>Coba muat ulang setelah beberapa saat.</Text>
+          <Text style={styles.emptyTitle}>{t('explore.hijri.emptyTitle')}</Text>
+          <Text style={styles.emptyText}>{t('explore.hijri.emptyText')}</Text>
         </View>
       ) : null}
     </ScrollView>

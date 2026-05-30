@@ -1,5 +1,7 @@
 import { Trophy } from 'lucide-react-native';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 
 function LeaderboardRow({
@@ -12,6 +14,7 @@ function LeaderboardRow({
   index,
   item,
   tab,
+  t,
 }) {
   const rank = getRank(item, index);
   const score = getScore(item);
@@ -35,7 +38,7 @@ function LeaderboardRow({
           {getName(item, index)}
         </Text>
         <Text style={styles.meta}>
-          {rank <= 3 ? 'Top performer' : 'Peserta leaderboard'}
+          {rank <= 3 ? t('explore.leaderboard.topPerformer') : t('explore.leaderboard.participant')}
         </Text>
       </View>
       <Text style={[styles.score, rank === 1 && styles.scoreTop]}>
@@ -59,6 +62,7 @@ export function WebAppLeaderboardRoute({
   onSelectTab,
   tabs,
 }) {
+  const { t } = useMobileLocale();
   const activeMeta = tabs.find((tab) => tab.key === activeTab) ?? tabs[0];
 
   return (
@@ -69,9 +73,9 @@ export function WebAppLeaderboardRoute({
       style={styles.root}
     >
       <View testID="explore-web-app-leaderboard-surface" />
-      <View style={styles.header}>
+        <View style={styles.header}>
         <Trophy color="#f59e0b" fill="#f59e0b" size={20} strokeWidth={2.2} />
-        <Text style={styles.title}>Leaderboard</Text>
+        <Text style={styles.title}>{t('explore.leaderboard.title')}</Text>
       </View>
 
       <View style={styles.tabs}>
@@ -101,7 +105,7 @@ export function WebAppLeaderboardRoute({
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color="#047857" size="small" />
-          <Text style={styles.stateText}>Memuat leaderboard...</Text>
+          <Text style={styles.stateText}>{t('explore.leaderboard.loading')}</Text>
         </View>
       ) : null}
       {!loading && !error && hasItems ? (
@@ -120,25 +124,26 @@ export function WebAppLeaderboardRoute({
                   item={item}
                   key={`${getItemKey(item)}-${activeTab}-${index}`}
                   tab={activeTab}
+                  t={t}
                 />
               ))}
             </View>
           ) : (
-            <LeaderboardEmpty />
+            <LeaderboardEmpty t={t} />
           )}
         </>
       ) : null}
-      {!loading && !error && !hasItems ? <LeaderboardEmpty /> : null}
+      {!loading && !error && !hasItems ? <LeaderboardEmpty t={t} /> : null}
     </ScrollView>
   );
 }
 
-function LeaderboardEmpty() {
+function LeaderboardEmpty({ t }) {
   return (
     <View style={styles.empty}>
       <Trophy color="#e5e7eb" fill="#e5e7eb" size={38} strokeWidth={1.6} />
       <Text style={styles.emptyText}>
-        Data leaderboard belum tersedia.
+        {t('explore.leaderboard.empty')}
       </Text>
     </View>
   );

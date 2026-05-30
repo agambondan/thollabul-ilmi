@@ -2,6 +2,7 @@ import { CheckCircle2, Hand, RefreshCcw, RotateCcw } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 import { hapticTap } from '../../utils/haptics';
 
@@ -77,7 +78,7 @@ function TargetChip({ active, label, onPress }) {
   );
 }
 
-function PresetCard({ active, onPress, preset }) {
+function PresetCard({ active, onPress, preset, t }) {
   return (
     <Pressable
       onPress={onPress}
@@ -86,7 +87,7 @@ function PresetCard({ active, onPress, preset }) {
     >
       <Text style={styles.presetArabic}>{preset.arabic}</Text>
       <Text style={styles.presetLatin}>{preset.latin}</Text>
-      <Text style={styles.presetTarget}>Target: {preset.target}x</Text>
+      <Text style={styles.presetTarget}>{t('explore.tasbih.presetTarget', { target: preset.target })}</Text>
     </Pressable>
   );
 }
@@ -95,6 +96,7 @@ export function WebAppTasbihRoute({
   setTasbih = () => {},
   tasbih = { count: 0, target: 33 },
 }) {
+  const { t } = useMobileLocale();
   const [activeIndex, setActiveIndex] = useState(0);
   const [totalToday, setTotalToday] = useState(tasbih.count ?? 0);
   const [vibrate, setVibrate] = useState(true);
@@ -141,8 +143,8 @@ export function WebAppTasbihRoute({
       <View testID="explore-web-app-tasbih-surface" />
       <View style={styles.header}>
         <Text style={styles.headerArabic}>تَسْبِيحٌ</Text>
-        <Text style={styles.title}>Tasbih Digital</Text>
-        <Text style={styles.subtitle}>Hitung dzikir dengan target dan riwayat harian</Text>
+        <Text style={styles.title}>{t('explore.tasbih.title')}</Text>
+        <Text style={styles.subtitle}>{t('explore.tasbih.subtitle')}</Text>
       </View>
 
       <View style={styles.counterCard}>
@@ -151,13 +153,14 @@ export function WebAppTasbihRoute({
 
         <View style={styles.counterWrap}>
           <Pressable
+            accessibilityLabel={t('explore.tasbih.counterAccessibility', { count, target: target || t('explore.tasbih.unlimited') })}
             accessibilityRole="button"
             onPress={handleTap}
             style={[styles.counterButton, reachedTarget && styles.counterButtonDone]}
             testID="web-app-tasbih-counter"
           >
             <Text style={styles.counterNumber}>{count}</Text>
-            <Text style={styles.counterTarget}>{target > 0 ? `/ ${target}` : 'Tap untuk hitung'}</Text>
+            <Text style={styles.counterTarget}>{target > 0 ? `/ ${target}` : t('explore.tasbih.tapToCount')}</Text>
             {reachedTarget ? (
               <View style={styles.doneBadge}>
                 <CheckCircle2 color="#064e3b" size={20} strokeWidth={2.4} />
@@ -178,30 +181,30 @@ export function WebAppTasbihRoute({
         <View style={styles.actionRow}>
           <Pressable onPress={reset} style={styles.neutralButton}>
             <RotateCcw color="#374151" size={15} strokeWidth={2.2} />
-            <Text style={styles.neutralButtonText}>Reset</Text>
+            <Text style={styles.neutralButtonText}>{t('explore.tasbih.reset')}</Text>
           </Pressable>
           <Pressable onPress={resetAll} style={styles.dangerButton}>
             <RefreshCcw color="#dc2626" size={15} strokeWidth={2.2} />
-            <Text style={styles.dangerButtonText}>Reset Semua</Text>
+            <Text style={styles.dangerButtonText}>{t('explore.tasbih.resetAll')}</Text>
           </Pressable>
           <Pressable onPress={() => setVibrate((current) => !current)} style={[styles.vibrateButton, vibrate && styles.vibrateButtonActive]}>
             <Hand color={vibrate ? '#047857' : '#64748b'} size={15} strokeWidth={2.2} />
             <Text style={[styles.vibrateButtonText, vibrate && styles.vibrateButtonTextActive]}>
-              Getar: {vibrate ? 'On' : 'Off'}
+              {t('explore.tasbih.vibrateStatus', { state: vibrate ? t('explore.tasbih.on') : t('explore.tasbih.off') })}
             </Text>
           </Pressable>
         </View>
       </View>
 
       <View style={styles.statsGrid}>
-        <StatTile color="#047857" label="Hitungan" value={count} />
-        <StatTile color="#d97706" label="Target" value={target || '∞'} />
-        <StatTile color="#2563eb" label="Total Hari Ini" value={totalToday} />
+        <StatTile color="#047857" label={t('explore.tasbih.countLabel')} value={count} />
+        <StatTile color="#d97706" label={t('explore.tasbih.targetLabel')} value={target || '∞'} />
+        <StatTile color="#2563eb" label={t('explore.tasbih.todayTotalLabel')} value={totalToday} />
       </View>
 
       <View style={styles.targetCard}>
         <View style={styles.targetHeader}>
-          <Text style={styles.targetTitle}>Atur Target</Text>
+          <Text style={styles.targetTitle}>{t('explore.tasbih.targetTitle')}</Text>
           <TextInput
             keyboardType="number-pad"
             onChangeText={setTarget}
@@ -218,12 +221,12 @@ export function WebAppTasbihRoute({
               onPress={() => setTarget(preset)}
             />
           ))}
-          <TargetChip active={target === 0} label="Tanpa Batas" onPress={() => setTarget(0)} />
+          <TargetChip active={target === 0} label={t('explore.tasbih.noLimit')} onPress={() => setTarget(0)} />
         </View>
       </View>
 
       <View style={styles.presetsSection}>
-        <Text style={styles.presetsTitle}>Pilihan Dzikir</Text>
+        <Text style={styles.presetsTitle}>{t('explore.tasbih.presetsTitle')}</Text>
         <View style={styles.presetsGrid}>
           {PRESETS.map((preset, index) => (
             <PresetCard
@@ -231,6 +234,7 @@ export function WebAppTasbihRoute({
               key={preset.key}
               onPress={() => choosePreset(index)}
               preset={preset}
+              t={t}
             />
           ))}
         </View>
