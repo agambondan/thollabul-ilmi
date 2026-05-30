@@ -230,6 +230,8 @@ export function renderExploreWebAppRoute(context) {
     togglePrayer,
     userWirdForm,
     visibleItems,
+    webAppExploreTheme,
+    webAppExploreThemeStyles = {},
     removeUserWird,
     resetUserWirdForm,
     savingUserWird,
@@ -1389,25 +1391,25 @@ export function renderExploreWebAppRoute(context) {
   if (!activeFeature) {
     return (
       <ScrollView
-        contentContainerStyle={styles.webAppCatalogContent}
+        contentContainerStyle={[styles.webAppCatalogContent, webAppExploreThemeStyles.content]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-        style={styles.webAppCatalogRoot}
+        style={[styles.webAppCatalogRoot, webAppExploreThemeStyles.root]}
+        testID="explore-web-app-surface"
       >
-        <View testID="explore-web-app-surface" />
-        <View style={styles.webAppCatalogHero}>
-          <Text style={styles.webAppCatalogEyebrow}>KONTEN ISLAM</Text>
-          <Text style={styles.webAppCatalogTitle}>Belajar</Text>
-          <Text style={styles.webAppCatalogSubtitle}>
+        <View style={[styles.webAppCatalogHero, webAppExploreThemeStyles.hero]}>
+          <Text style={[styles.webAppCatalogEyebrow, webAppExploreThemeStyles.eyebrow]}>KONTEN ISLAM</Text>
+          <Text style={[styles.webAppCatalogTitle, webAppExploreThemeStyles.title]}>Belajar</Text>
+          <Text style={[styles.webAppCatalogSubtitle, webAppExploreThemeStyles.subtitle]}>
             Kajian, referensi Islam, dan fitur personal dalam katalog dashboard.
           </Text>
         </View>
-        <View style={styles.webAppCatalogSearch}>
+        <View style={[styles.webAppCatalogSearch, webAppExploreThemeStyles.search]}>
           <TextInput
             onChangeText={setFeatureSearch}
             placeholder="Cari kajian, tafsir, kamus, perawi, quiz..."
-            placeholderTextColor={WEB_APP_EXPLORE_MUTED}
-            style={styles.webAppCatalogInput}
+            placeholderTextColor={webAppExploreTheme?.muted ?? WEB_APP_EXPLORE_MUTED}
+            style={[styles.webAppCatalogInput, webAppExploreThemeStyles.input]}
             testID="search-input"
             value={featureSearch}
           />
@@ -1418,6 +1420,8 @@ export function renderExploreWebAppRoute(context) {
           onTogglePinnedFeature={handleTogglePinnedFeature}
           pinnedFeatureKeys={pinnedFeatureKeys}
           recentFeatureKeys={recentFeatureKeys}
+          webAppTheme={webAppExploreTheme}
+          webAppThemeStyles={webAppExploreThemeStyles}
           variant="webApp"
         />
         {renderItemActionSheet()}

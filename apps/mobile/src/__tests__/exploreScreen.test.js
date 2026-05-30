@@ -322,7 +322,7 @@ beforeEach(() => {
   useFeedback.mockReturnValue({
     showError: jest.fn(), showInfo: jest.fn(), showSuccess: jest.fn(),
   });
-  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+  useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: false });
   readPinnedFeatures.mockResolvedValue([]);
   readRecentFeatures.mockResolvedValue([]);
   rememberFeatureOpen.mockResolvedValue([]);
@@ -339,7 +339,7 @@ describe('ExploreScreen', () => {
   });
 
   test('uses web app Explore surface when web app layout is active', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     exploreApi.getQuizQuestions.mockResolvedValueOnce([
       { id: 'q1', title: 'Quiz 1', raw: { question: 'Apa?', option_a: 'A', option_b: 'B', option_c: 'C', option_d: 'D', correct_answer: 'A' } },
     ]);

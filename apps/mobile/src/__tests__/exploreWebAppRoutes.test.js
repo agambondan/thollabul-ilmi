@@ -43,10 +43,11 @@ jest.mock('../screens/TokohTarikhContent', () => {
 
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
-import { Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
 import { allFeatures } from '../data/mobileFeatures';
 import { renderExploreWebAppRoute } from '../screens/explore/ExploreWebAppRoutes';
+import { WEB_APP_EXPLORE_THEMES, createExploreWebAppThemeStyles } from '../screens/explore/ExploreWebAppTheme';
 import { WEB_APP_REFERENCE_ROUTE_CONFIGS } from '../screens/explore/WebAppReferenceListRoute';
 import { WEB_APP_TOOL_ROUTE_CONFIGS } from '../screens/explore/WebAppToolRoute';
 
@@ -269,6 +270,29 @@ const getExpectedSurfaceTestID = (feature) => {
 };
 
 describe('Explore web app reference list routes', () => {
+  test('uses light and dark theme palettes for the web app Belajar catalog', () => {
+    const lightTheme = WEB_APP_EXPLORE_THEMES.light;
+    const lightRoute = renderExploreWebAppRoute(baseContext(null, {
+      webAppExploreTheme: lightTheme,
+      webAppExploreThemeStyles: createExploreWebAppThemeStyles(lightTheme),
+    }));
+    const lightView = render(lightRoute);
+
+    expect(StyleSheet.flatten(lightView.getByTestId('explore-web-app-surface').props.style).backgroundColor).toBe('#ffffff');
+    expect(StyleSheet.flatten(lightView.getByText('Belajar').props.style).color).toBe('#111827');
+    lightView.unmount();
+
+    const darkTheme = WEB_APP_EXPLORE_THEMES.dark;
+    const darkRoute = renderExploreWebAppRoute(baseContext(null, {
+      webAppExploreTheme: darkTheme,
+      webAppExploreThemeStyles: createExploreWebAppThemeStyles(darkTheme),
+    }));
+    const darkView = render(darkRoute);
+
+    expect(StyleSheet.flatten(darkView.getByTestId('explore-web-app-surface').props.style).backgroundColor).toBe('#020617');
+    expect(StyleSheet.flatten(darkView.getByText('Belajar').props.style).color).toBe('#f8fafc');
+  });
+
   test('renders every mobile Explore feature through a web app route surface', () => {
     for (const feature of allFeatures) {
       const route = renderExploreWebAppRoute(baseContext(feature));

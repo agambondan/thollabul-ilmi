@@ -3148,6 +3148,56 @@ Results:
 - Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above
   2,000 lines.
 
+## Web App Belajar Hub Theme Parity
+
+Status: completed for the native `web_app` Explore/Belajar hub light/dark
+palette pass.
+
+Implemented:
+
+- `ExploreScreen` now reads `isDarkTheme` in addition to `isWebAppLayout` for
+  the Belajar hub route.
+- Added a small `ExploreWebAppTheme` helper so `ExploreWebAppRoutes.js` stays
+  under the 2,000-line gate while the hub can share a consistent light/dark
+  palette.
+- The `web_app` Belajar hub switches route background, hero, search input,
+  section labels, feature tiles, icon surfaces, pin controls, badges, and empty
+  search state with the app theme.
+- Added direct regression coverage for both light and dark `web_app` Belajar
+  catalog palettes.
+- Existing Explore sub-route renderers and classic Explore behavior remain
+  unchanged.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/ExploreScreen.js
+node --check apps/mobile/src/screens/explore/ExploreWebAppRoutes.js
+node --check apps/mobile/src/screens/explore/FeatureCatalog.js
+node --check apps/mobile/src/screens/explore/ExploreWebAppTheme.js
+cd apps/mobile
+npm test -- exploreScreen.test.js exploreWebAppRoutes.test.js mobileAppShell.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check -- apps/mobile/src/screens/ExploreScreen.js apps/mobile/src/screens/explore/ExploreWebAppRoutes.js apps/mobile/src/screens/explore/FeatureCatalog.js apps/mobile/src/screens/explore/ExploreWebAppTheme.js apps/mobile/src/__tests__/exploreScreen.test.js apps/mobile/src/__tests__/exploreWebAppRoutes.test.js docs/WEB_MOBILE_SYNC.md docs/features/progress/2026-05-24-mobile-web-app-layout-impact-plan.md
+find apps/mobile/src -name '*.js' -print0 | xargs -0 wc -l | sort -nr | head -10
+```
+
+Results:
+
+- `node --check` passed for `ExploreScreen.js`,
+  `ExploreWebAppRoutes.js`, `FeatureCatalog.js`, and
+  `ExploreWebAppTheme.js`.
+- Targeted Explore tests passed: 2 suites, 64 tests.
+- Full mobile Jest passed: 48 suites, 730 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned, and 64 dashboard page routes
+  scanned.
+- `git diff --check` passed.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above
+  2,000 lines.
+
 ## Web App Prayer Theme Parity
 
 Status: completed for the native `web_app` Prayer/Jadwal Sholat light/dark

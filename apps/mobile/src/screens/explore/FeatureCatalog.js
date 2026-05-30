@@ -100,6 +100,8 @@ function FeatureCatalogBase({
   pinnedFeatureKeys,
   recentFeatureKeys,
   variant = 'classic',
+  webAppTheme,
+  webAppThemeStyles = {},
 }) {
   const visibleSections = useMemo(() => getVisibleCatalogSections(featureSearch), [featureSearch]);
   const handleFeaturePress = useCallback(
@@ -120,9 +122,9 @@ function FeatureCatalogBase({
   if (!visibleSections.length) {
     if (variant === 'webApp') {
       return (
-        <View style={styles.webAppEmpty}>
-          <Text style={styles.webAppEmptyTitle}>Tidak ada hasil</Text>
-          <Text style={styles.webAppEmptyText}>Coba kata lain seperti tafsir, kamus, siroh, atau quiz.</Text>
+        <View style={[styles.webAppEmpty, webAppThemeStyles.empty]}>
+          <Text style={[styles.webAppEmptyTitle, webAppThemeStyles.emptyTitle]}>Tidak ada hasil</Text>
+          <Text style={[styles.webAppEmptyText, webAppThemeStyles.emptyText]}>Coba kata lain seperti tafsir, kamus, siroh, atau quiz.</Text>
         </View>
       );
     }
@@ -139,8 +141,8 @@ function FeatureCatalogBase({
     return visibleSections.map((section) => (
       <View key={section.key} style={styles.webAppSection}>
         <View style={styles.webAppSectionHeader}>
-          <Text style={styles.webAppSectionTitle}>{section.title.toUpperCase()}</Text>
-          {section.meta ? <Text style={styles.webAppSectionMeta}>{section.meta}</Text> : null}
+          <Text style={[styles.webAppSectionTitle, webAppThemeStyles.sectionTitle]}>{section.title.toUpperCase()}</Text>
+          {section.meta ? <Text style={[styles.webAppSectionMeta, webAppThemeStyles.sectionMeta]}>{section.meta}</Text> : null}
         </View>
         <View style={styles.webAppGrid}>
           {section.rows.map((row) => {
@@ -157,6 +159,8 @@ function FeatureCatalogBase({
                 pinned={pinned}
                 subtitle={row.feature.subtitle}
                 title={row.feature.title}
+                webAppTheme={webAppTheme}
+                webAppThemeStyles={webAppThemeStyles}
               />
             );
           })}
@@ -208,6 +212,8 @@ const FeatureRow = memo(function FeatureRow({
   pinned,
   subtitle,
   title,
+  webAppTheme,
+  webAppThemeStyles = {},
 }) {
   const badges = useMemo(() => (badgeLabels ? badgeLabels.split('|') : []), [badgeLabels]);
   const handlePress = useCallback(() => onFeaturePress(featureKey), [featureKey, onFeaturePress]);
@@ -253,6 +259,8 @@ const WebAppFeatureTile = memo(function WebAppFeatureTile({
   pinned,
   subtitle,
   title,
+  webAppTheme,
+  webAppThemeStyles = {},
 }) {
   const badges = useMemo(() => (badgeLabels ? badgeLabels.split('|') : []), [badgeLabels]);
   const handlePress = useCallback(() => onFeaturePress(featureKey), [featureKey, onFeaturePress]);
@@ -263,36 +271,41 @@ const WebAppFeatureTile = memo(function WebAppFeatureTile({
 
   return (
     <Pressable
-      android_ripple={{ color: '#1f2937', borderless: false }}
+      android_ripple={{ color: webAppTheme?.ripple ?? '#1f2937', borderless: false }}
       onPress={handlePress}
-      style={styles.webAppTile}
+      style={[styles.webAppTile, webAppThemeStyles.tile]}
     >
       <View style={styles.webAppTileTop}>
-        <View style={styles.webAppIconWrap}>
-          <Icon color="#34d399" size={18} strokeWidth={2.2} />
+        <View style={[styles.webAppIconWrap, webAppThemeStyles.iconWrap]}>
+          <Icon color={webAppTheme?.accent ?? '#34d399'} size={18} strokeWidth={2.2} />
         </View>
         <Pressable
           accessibilityLabel={pinned ? `Lepas ${title} dari Beranda` : `Sematkan ${title} ke Beranda`}
           accessibilityRole="button"
           accessibilityState={{ selected: pinned }}
-          android_ripple={{ color: '#1f2937', borderless: true }}
+          android_ripple={{ color: webAppTheme?.ripple ?? '#1f2937', borderless: true }}
           onPress={handleTogglePinned}
-          style={[styles.webAppPinButton, pinned && styles.webAppPinButtonActive]}
+          style={[
+            styles.webAppPinButton,
+            webAppThemeStyles.pinButton,
+            pinned && styles.webAppPinButtonActive,
+            pinned && webAppThemeStyles.pinButtonActive,
+          ]}
         >
           <Star
-            color={pinned ? '#ffffff' : '#34d399'}
+            color={pinned ? '#ffffff' : webAppTheme?.accent ?? '#34d399'}
             fill={pinned ? '#ffffff' : 'transparent'}
             size={14}
             strokeWidth={2.2}
           />
         </Pressable>
       </View>
-      <Text numberOfLines={1} style={styles.webAppTileTitle}>{title}</Text>
-      {subtitle ? <Text numberOfLines={2} style={styles.webAppTileSubtitle}>{subtitle}</Text> : null}
+      <Text numberOfLines={1} style={[styles.webAppTileTitle, webAppThemeStyles.tileTitle]}>{title}</Text>
+      {subtitle ? <Text numberOfLines={2} style={[styles.webAppTileSubtitle, webAppThemeStyles.tileSubtitle]}>{subtitle}</Text> : null}
       {badges.length ? (
         <View style={styles.webAppBadges}>
           {badges.map((badge) => (
-            <Text key={`${featureKey}-${badge}`} numberOfLines={1} style={styles.webAppBadge}>{badge}</Text>
+            <Text key={`${featureKey}-${badge}`} numberOfLines={1} style={[styles.webAppBadge, webAppThemeStyles.badge]}>{badge}</Text>
           ))}
         </View>
       ) : null}

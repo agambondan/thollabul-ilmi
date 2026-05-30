@@ -33,6 +33,7 @@ import { useSession } from '../context/SessionContext';
 import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
 import { FeatureCatalog, findFeatureByKey, isPaginatedFeature, LOCAL_TOOL_TYPES } from './explore/FeatureCatalog';
 import { renderExploreWebAppRoute } from './explore/ExploreWebAppRoutes';
+import { WEB_APP_EXPLORE_THEMES, createExploreWebAppThemeStyles } from './explore/ExploreWebAppTheme';
 import { createExploreClassicRenderers } from './explore/ExploreClassicRenderers';
 import {
   deleteCalculatorHistory,
@@ -181,7 +182,12 @@ import {
 export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab }) {
   const { session } = useSession();
   const { showError, showInfo, showSuccess } = useFeedback();
-  const { isWebAppLayout } = useLayoutModePreference();
+  const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+  const webAppExploreTheme = isDarkTheme ? WEB_APP_EXPLORE_THEMES.dark : WEB_APP_EXPLORE_THEMES.light;
+  const webAppExploreThemeStyles = useMemo(
+    () => createExploreWebAppThemeStyles(webAppExploreTheme),
+    [webAppExploreTheme],
+  );
   const handledDeepLinkId = useRef(null);
   const dictionaryInputRef = useRef(null);
   const zakatTimerRef = useRef(null);
@@ -1295,6 +1301,8 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       togglePrayer,
       userWirdForm,
       visibleItems,
+      webAppExploreTheme,
+      webAppExploreThemeStyles,
       removeUserWird,
       resetUserWirdForm,
       savingUserWird,
