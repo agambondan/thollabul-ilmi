@@ -2,6 +2,7 @@ import { ArrowLeft, History, Plus, Save, Scale, Trash2 } from 'lucide-react-nati
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { deleteFaraidh, getFaraidhHistory, saveFaraidh } from '../../api/personal';
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { calculateFaraidh, HEIR_LABELS } from '../../lib/faraidh';
 import { deleteCalculatorHistory, mergeCalculatorHistory, readCalculatorHistory, saveCalculatorHistory } from '../../storage/calculatorHistory';
 import { radius, spacing } from '../../theme';
@@ -20,15 +21,15 @@ const HEIR_FIELDS = [
   { key: 'saudaraP', label: 'Sdr Pr', max: 20 },
 ];
 
-const formatDate = (item = {}) => {
+const formatDate = (item = {}, language, t) => {
   const value = item.created_at ?? item.createdAt ?? item.date;
-  if (!value) return 'Tanggal belum tersedia';
+  if (!value) return t('explore.faraidh.dateUnavailable');
   const parsed = new Date(`${value}`.includes('T') ? value : `${value}T00:00:00`);
-  if (Number.isNaN(parsed.getTime())) return 'Tanggal belum tersedia';
-  return parsed.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+  if (Number.isNaN(parsed.getTime())) return t('explore.faraidh.dateUnavailable');
+  return parsed.toLocaleDateString(language === 'en' ? 'en-US' : 'id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 };
 
-const getHeirLabel = (row) => HEIR_LABELS[row.key]?.idn ?? row.key;
+const getHeirLabel = (row, language = 'idn') => HEIR_LABELS[row.key]?.[language] ?? HEIR_LABELS[row.key]?.idn ?? row.key;
 const getHeirCount = (heirs = {}) => Object.values(heirs).reduce((sum, value) => sum + Number(value || 0), 0);
 
 function CurrencyField({ hint, label, onChangeText, value }) {
@@ -52,10 +53,10 @@ function CurrencyField({ hint, label, onChangeText, value }) {
   );
 }
 
-function HeirStepper({ count, field, onChange }) {
+function HeirStepper({ count, field, onChange, t }) {
   return (
     <View style={styles.heirCard}>
-      <Text style={styles.heirLabel}>{field.label}</Text>
+      <Text style={styles.heirLabel}>{t(`explore.faraidh.heir.${field.key}`)}</Text>
       <Text style={styles.heirCount}>{count}</Text>
       <View style={styles.heirActions}>
         <Pressable
@@ -79,11 +80,11 @@ function HeirStepper({ count, field, onChange }) {
   );
 }
 
-function ResultRows({ calculation, distributable }) {
+function ResultRows({ calculation, distributable, language, t }) {
   if (!calculation?.rows?.length) {
     return (
       <View style={styles.emptyResult}>
-        <Text style={styles.emptyTitle}>Masukkan ahli waris untuk melihat hasil.</Text>
+        <Text style={styles.emptyTitle}>{t('explore.faraidh.emptyResult')}</Text>
       </View>
     );
   }
@@ -94,20 +95,20 @@ function ResultRows({ calculation, distributable }) {
         <View key={`${row.key}-${row.count}`} style={styles.resultRow}>
           <View style={styles.resultMain}>
             <Text style={styles.resultName}>
-              {getHeirLabel(row)}{row.count > 1 ? ` (${row.count} org)` : ''}
+              {getHeirLabel(row, language)}{row.count > 1 ? ` (${t('explore.faraidh.peopleCount', { count: row.count })})` : ''}
             </Text>
-            {row.isAshabah ? <Text style={styles.ashabahBadge}>Ashabah</Text> : null}
+            {row.isAshabah ? <Text style={styles.ashabahBadge}>{t('explore.faraidh.ashabah')}</Text> : null}
           </View>
           <View style={styles.resultMeta}>
             <Text style={styles.resultShare}>
-              {row.fraction ? `${row.fraction.num}/${row.fraction.den}` : 'Sisa'} · {(row.share * 100).toFixed(2)}%
+              {row.fraction ? `${row.fraction.num}/${row.fraction.den}` : t('explore.faraidh.remainder')} · {(row.share * 100).toFixed(2)}%
             </Text>
             <Text style={styles.resultAmount}>{formatCurrency(row.amount)}</Text>
           </View>
         </View>
       ))}
       <View style={styles.totalRow}>
-        <Text style={styles.totalLabel}>Total dibagikan</Text>
+        <Text style={styles.totalLabel}>{t('explore.faraidh.totalDistributed')}</Text>
         <Text style={styles.totalValue}>{formatCurrency(distributable * calculation.totalShare)}</Text>
       </View>
     </View>
@@ -122,17 +123,17 @@ function Notice({ children, tone = 'amber' }) {
   );
 }
 
-function HistoryCard({ item, onDelete }) {
+function HistoryCard({ item, language, onDelete, t }) {
   const wealth = Number(item.wealth ?? 0);
   return (
     <View style={styles.historyCard} testID="web-app-faraidh-history-card">
       <View style={styles.historyHeader}>
         <View>
           <Text style={styles.historyAmount}>{formatCurrency(wealth)}</Text>
-          <Text style={styles.historyDate}>{formatDate(item)}</Text>
+          <Text style={styles.historyDate}>{formatDate(item, language, t)}</Text>
         </View>
         <Pressable
-          accessibilityLabel="Hapus riwayat faraidh"
+          accessibilityLabel={t('explore.faraidh.deleteHistoryAccessibility')}
           onPress={() => onDelete(item.id)}
           style={styles.historyDelete}
           testID="web-app-faraidh-history-delete"
@@ -141,12 +142,13 @@ function HistoryCard({ item, onDelete }) {
         </Pressable>
       </View>
       {item.result_summary ? <Text style={styles.historySummary}>{item.result_summary}</Text> : null}
-      <Text style={styles.historySource}>{item.is_local ? 'Perangkat ini' : 'Akun tersinkron'}</Text>
+      <Text style={styles.historySource}>{item.is_local ? t('explore.faraidh.localSource') : t('explore.faraidh.accountSource')}</Text>
     </View>
   );
 }
 
 export function WebAppFaraidhRoute({ context }) {
+  const { language, t } = useMobileLocale();
   const {
     faraidh = { bequest: '', debts: '', estate: '', heirs: {} },
     faraidhCatatan = '',
@@ -192,7 +194,7 @@ export function WebAppFaraidhRoute({ context }) {
       funeral: 0,
       heirs_json: JSON.stringify(faraidh.heirs),
       result_summary: hasRows
-        ? calculation.rows.map((row) => `${getHeirLabel(row)}: ${Math.round(row.share * 100)}%`).join(', ')
+        ? calculation.rows.map((row) => `${getHeirLabel(row, language)}: ${Math.round(row.share * 100)}%`).join(', ')
         : '',
       wealth,
       will: bequest,
@@ -200,14 +202,14 @@ export function WebAppFaraidhRoute({ context }) {
     try {
       if (session?.token) {
         await saveFaraidh(payload);
-        showSuccess('Kalkulasi faraidh tersimpan ke akun.');
+        showSuccess(t('explore.faraidh.savedAccount'));
       } else {
         await saveCalculatorHistory('faraidh', payload);
-        showSuccess('Kalkulasi faraidh tersimpan di perangkat.');
+        showSuccess(t('explore.faraidh.savedLocal'));
       }
       setFaraidhCatatan('');
     } catch (err) {
-      showError(err?.message ?? 'Gagal menyimpan.');
+      showError(err?.message ?? t('explore.faraidh.saveError'));
     } finally {
       setSavingFaraidh(false);
     }
@@ -220,7 +222,7 @@ export function WebAppFaraidhRoute({ context }) {
       setFaraidhHistory(mergeCalculatorHistory(remoteItems, localItems));
       setShowFaraidhHistory(true);
     } catch {
-      showError('Riwayat belum bisa dimuat.');
+      showError(t('explore.faraidh.historyLoadError'));
     }
   };
 
@@ -232,9 +234,9 @@ export function WebAppFaraidhRoute({ context }) {
         await deleteFaraidh(id);
       }
       setFaraidhHistory((current) => current.filter((item) => item.id !== id));
-      showSuccess('Item riwayat dihapus.');
+      showSuccess(t('explore.faraidh.historyDeleted'));
     } catch {
-      showError('Gagal menghapus.');
+      showError(t('explore.faraidh.deleteError'));
     }
   };
 
@@ -245,26 +247,26 @@ export function WebAppFaraidhRoute({ context }) {
         <View testID="explore-web-app-faraidh-history-surface" />
         <Pressable onPress={() => setShowFaraidhHistory(false)} style={styles.backButton} testID="web-app-faraidh-history-back">
           <ArrowLeft color="#047857" size={15} strokeWidth={2.4} />
-          <Text style={styles.backText}>Kembali ke Kalkulator</Text>
+          <Text style={styles.backText}>{t('explore.faraidh.backToCalculator')}</Text>
         </Pressable>
         <View style={styles.hero}>
           <View style={styles.heroIcon}>
             <History color="#047857" size={26} strokeWidth={2.2} />
           </View>
-          <Text style={styles.title}>Riwayat Faraidh</Text>
-          <Text style={styles.subtitle}>Kalkulasi waris yang tersimpan</Text>
+          <Text style={styles.title}>{t('explore.faraidh.historyTitle')}</Text>
+          <Text style={styles.subtitle}>{t('explore.faraidh.historySubtitle')}</Text>
         </View>
         {!session?.token ? (
-          <Notice tone="blue">Masuk untuk sinkronisasi akun. Riwayat lokal tetap tersimpan di perangkat ini.</Notice>
+          <Notice tone="blue">{t('explore.faraidh.historyLoginNotice')}</Notice>
         ) : null}
         {faraidhHistory.length === 0 ? (
           <View style={styles.emptyResult}>
-            <Text style={styles.emptyTitle}>Belum ada kalkulasi yang tersimpan.</Text>
+            <Text style={styles.emptyTitle}>{t('explore.faraidh.historyEmpty')}</Text>
           </View>
         ) : (
           <View style={styles.historyList}>
             {faraidhHistory.map((item) => (
-              <HistoryCard item={item} key={item.id} onDelete={handleDelete} />
+              <HistoryCard item={item} key={item.id} language={language} onDelete={handleDelete} t={t} />
             ))}
           </View>
         )}
@@ -280,23 +282,23 @@ export function WebAppFaraidhRoute({ context }) {
         <View style={styles.heroIcon}>
           <Scale color="#047857" size={28} strokeWidth={2.2} />
         </View>
-        <Text style={styles.title}>Kalkulator Waris</Text>
-        <Text style={styles.subtitle}>Perhitungan pembagian harta warisan sesuai Ashabul Furudh.</Text>
+        <Text style={styles.title}>{t('explore.faraidh.title')}</Text>
+        <Text style={styles.subtitle}>{t('explore.faraidh.subtitle')}</Text>
       </View>
 
-      <Notice>Kalkulator ini menangani kasus dasar. Kasus kompleks tetap perlu dikonfirmasi ke ahli faraidh.</Notice>
+      <Notice>{t('explore.faraidh.scopeNotice')}</Notice>
 
       <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Harta dan Pengurang</Text>
-        <CurrencyField label="Harta warisan" onChangeText={(value) => setFaraidh((current) => ({ ...current, estate: value }))} value={faraidh.estate} />
-        <CurrencyField label="Utang dan biaya" onChangeText={(value) => setFaraidh((current) => ({ ...current, debts: value }))} value={faraidh.debts} />
-        <CurrencyField hint={`Maksimal wasiat: ${formatCurrency(maxBequest)}`} label="Wasiat" onChangeText={(value) => setFaraidh((current) => ({ ...current, bequest: value }))} value={faraidh.bequest} />
+        <Text style={styles.sectionTitle}>{t('explore.faraidh.assetsSection')}</Text>
+        <CurrencyField label={t('explore.faraidh.estateLabel')} onChangeText={(value) => setFaraidh((current) => ({ ...current, estate: value }))} value={faraidh.estate} />
+        <CurrencyField label={t('explore.faraidh.debtsLabel')} onChangeText={(value) => setFaraidh((current) => ({ ...current, debts: value }))} value={faraidh.debts} />
+        <CurrencyField hint={t('explore.faraidh.maxBequest', { amount: formatCurrency(maxBequest) })} label={t('explore.faraidh.bequestLabel')} onChangeText={(value) => setFaraidh((current) => ({ ...current, bequest: value }))} value={faraidh.bequest} />
       </View>
 
       <View style={styles.card}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Ahli Waris</Text>
-          <Text style={styles.sectionMeta}>{heirCount} ahli waris</Text>
+          <Text style={styles.sectionTitle}>{t('explore.faraidh.heirsSection')}</Text>
+          <Text style={styles.sectionMeta}>{t('explore.faraidh.heirCount', { count: heirCount })}</Text>
         </View>
         <View style={styles.heirGrid}>
           {HEIR_FIELDS.map((field) => (
@@ -305,6 +307,7 @@ export function WebAppFaraidhRoute({ context }) {
               field={field}
               key={field.key}
               onChange={setHeir}
+              t={t}
             />
           ))}
         </View>
@@ -312,19 +315,19 @@ export function WebAppFaraidhRoute({ context }) {
 
       <View style={styles.card}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Hasil Perhitungan</Text>
+          <Text style={styles.sectionTitle}>{t('explore.faraidh.resultSection')}</Text>
           <Text style={styles.sectionMeta}>{formatCurrency(distributable)}</Text>
         </View>
-        {bequestCapped ? <Notice>Wasiat melebihi batas, dihitung maksimal {formatCurrency(maxBequest)}.</Notice> : null}
-        {calculation?.applied?.musytarakah ? <Notice tone="blue">Musytarakah diterapkan pada kombinasi ahli waris ini.</Notice> : null}
-        {calculation?.applied?.aul ? <Notice tone="blue">Aul diterapkan agar total bagian tidak melebihi tirkah.</Notice> : null}
-        {calculation?.applied?.radd ? <Notice tone="blue">Radd diterapkan untuk mengembalikan sisa harta ke ahli waris.</Notice> : null}
-        <ResultRows calculation={calculation} distributable={distributable} />
+        {bequestCapped ? <Notice>{t('explore.faraidh.bequestCapped', { amount: formatCurrency(maxBequest) })}</Notice> : null}
+        {calculation?.applied?.musytarakah ? <Notice tone="blue">{t('explore.faraidh.musytarakahNotice')}</Notice> : null}
+        {calculation?.applied?.aul ? <Notice tone="blue">{t('explore.faraidh.aulNotice')}</Notice> : null}
+        {calculation?.applied?.radd ? <Notice tone="blue">{t('explore.faraidh.raddNotice')}</Notice> : null}
+        <ResultRows calculation={calculation} distributable={distributable} language={language} t={t} />
 
         <TextInput
           multiline
           onChangeText={setFaraidhCatatan}
-          placeholder="Catatan perhitungan"
+          placeholder={t('explore.faraidh.notePlaceholder')}
           placeholderTextColor="#94a3b8"
           style={styles.noteInput}
           value={faraidhCatatan}
@@ -338,11 +341,11 @@ export function WebAppFaraidhRoute({ context }) {
             testID="web-app-faraidh-save"
           >
             <Save color="#ffffff" size={15} strokeWidth={2.4} />
-            <Text style={styles.primaryButtonText}>{savingFaraidh ? 'Menyimpan...' : 'Simpan'}</Text>
+            <Text style={styles.primaryButtonText}>{savingFaraidh ? t('explore.faraidh.saving') : t('explore.faraidh.save')}</Text>
           </Pressable>
           <Pressable onPress={handleLoadHistory} style={styles.secondaryButton} testID="web-app-faraidh-history-link">
             <History color="#047857" size={15} strokeWidth={2.4} />
-            <Text style={styles.secondaryButtonText}>Riwayat</Text>
+            <Text style={styles.secondaryButtonText}>{t('explore.faraidh.history')}</Text>
           </Pressable>
         </View>
       </View>

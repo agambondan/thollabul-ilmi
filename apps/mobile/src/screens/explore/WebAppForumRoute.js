@@ -2,6 +2,7 @@ import { MessageCircle, Plus, Search, ThumbsDown, ThumbsUp } from 'lucide-react-
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { acceptForumAnswer, createForumAnswer, createForumQuestion, getForumQuestion, getForumQuestions, voteForum } from '../../api/forum';
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 
 const formatCount = (value) => Number(value ?? 0).toLocaleString('id-ID');
@@ -15,14 +16,14 @@ function ForumStat({ label, value }) {
   );
 }
 
-function QuestionCard({ item, onOpen }) {
+function QuestionCard({ item, onOpen, t }) {
   return (
     <Pressable onPress={() => onOpen(item)} style={styles.questionCard} testID="web-app-forum-question-card">
       <View style={styles.questionTop}>
         <Text numberOfLines={2} style={styles.questionTitle}>
-          {item.title || 'Pertanyaan forum'}
+          {item.title || t('explore.forum.questionFallback')}
         </Text>
-        {item.isAnswered ? <Text style={styles.answeredBadge}>Terjawab</Text> : null}
+        {item.isAnswered ? <Text style={styles.answeredBadge}>{t('explore.forum.answered')}</Text> : null}
       </View>
       {item.body ? (
         <Text numberOfLines={2} style={styles.questionBody}>
@@ -39,9 +40,9 @@ function QuestionCard({ item, onOpen }) {
         </View>
       ) : null}
       <View style={styles.metaRow}>
-        <Text numberOfLines={1} style={styles.metaText}>{item.user?.name || 'Pengguna'}</Text>
-        <Text style={styles.metaText}>{formatCount(item.answerCount)} jawaban</Text>
-        <Text style={styles.metaText}>{formatCount(item.voteCount)} suara</Text>
+        <Text numberOfLines={1} style={styles.metaText}>{item.user?.name || t('explore.forum.userFallback')}</Text>
+        <Text style={styles.metaText}>{t('explore.forum.answerCount', { count: formatCount(item.answerCount) })}</Text>
+        <Text style={styles.metaText}>{t('explore.forum.voteCount', { count: formatCount(item.voteCount) })}</Text>
       </View>
     </Pressable>
   );
@@ -86,6 +87,8 @@ export function WebAppForumRoute({
   showError,
   showInfo,
 }) {
+  const { t } = useMobileLocale();
+
   const runSearch = async () => {
     setForumLoading(true);
     setForumError('');
@@ -96,7 +99,7 @@ export function WebAppForumRoute({
       setForumPage(0);
       setForumHasMore(result.hasMore);
     } catch (err) {
-      setForumError(err?.message ?? 'Pencarian forum gagal.');
+      setForumError(err?.message ?? t('explore.forum.searchError'));
     } finally {
       setForumLoading(false);
     }
@@ -112,7 +115,7 @@ export function WebAppForumRoute({
       setForumSlug(question.slug);
       setForumView('detail');
     } catch (err) {
-      setForumError(err?.message ?? 'Detail forum belum bisa dimuat.');
+      setForumError(err?.message ?? t('explore.forum.detailLoadError'));
     } finally {
       setForumLoading(false);
     }
@@ -128,7 +131,7 @@ export function WebAppForumRoute({
       setForumPage(nextPage);
       setForumHasMore(result.hasMore);
     } catch {
-      showError('Pertanyaan berikutnya belum bisa dimuat.');
+      showError(t('explore.forum.loadMoreError'));
     } finally {
       setForumLoading(false);
     }
@@ -136,7 +139,7 @@ export function WebAppForumRoute({
 
   const submitQuestion = async () => {
     if (!session?.token) {
-      showInfo('Buka Profil untuk masuk dan bertanya.');
+      showInfo(t('explore.forum.askLoginRequired'));
       return;
     }
     setForumSaving(true);
@@ -162,7 +165,7 @@ export function WebAppForumRoute({
       setForumSlug(slug);
       setForumView('detail');
     } catch (err) {
-      setForumError(err?.message ?? 'Gagal mengirim pertanyaan.');
+      setForumError(err?.message ?? t('explore.forum.questionSaveError'));
     } finally {
       setForumSaving(false);
       setForumLoading(false);
@@ -171,7 +174,7 @@ export function WebAppForumRoute({
 
   const voteQuestion = async (value) => {
     if (!session?.token) {
-      showInfo('Buka Profil untuk memberi suara.');
+      showInfo(t('explore.forum.voteLoginRequired'));
       return;
     }
     setForumVotingId(`${forumDetail.id}-${value}`);
@@ -179,7 +182,7 @@ export function WebAppForumRoute({
       await voteForum({ targetType: 'question', targetId: forumDetail.id, value });
       setForumDetail((current) => current ? { ...current, voteCount: current.voteCount + value } : current);
     } catch {
-      showError('Gagal memberi suara.');
+      showError(t('explore.forum.voteError'));
     } finally {
       setForumVotingId('');
     }
@@ -187,7 +190,7 @@ export function WebAppForumRoute({
 
   const voteAnswer = async (answer, value) => {
     if (!session?.token) {
-      showInfo('Buka Profil untuk memberi suara.');
+      showInfo(t('explore.forum.voteLoginRequired'));
       return;
     }
     setForumVotingId(`${answer.id}-${value}`);
@@ -197,7 +200,7 @@ export function WebAppForumRoute({
         item.id === answer.id ? { ...item, voteCount: item.voteCount + value } : item
       )));
     } catch {
-      showError('Gagal memberi suara.');
+      showError(t('explore.forum.voteError'));
     } finally {
       setForumVotingId('');
     }
@@ -211,7 +214,7 @@ export function WebAppForumRoute({
       setForumDetail(updated.question);
       setForumAnswers(updated.answers);
     } catch {
-      showError('Jawaban belum bisa diterima.');
+      showError(t('explore.forum.acceptError'));
     } finally {
       setForumVotingId('');
     }
@@ -226,7 +229,7 @@ export function WebAppForumRoute({
       setForumDetail(updated.question);
       setForumAnswers(updated.answers);
     } catch {
-      showError('Gagal mengirim jawaban.');
+      showError(t('explore.forum.answerSaveError'));
     } finally {
       setForumSaving(false);
     }
@@ -240,7 +243,7 @@ export function WebAppForumRoute({
           <TextInput
             onChangeText={setForumSearch}
             onSubmitEditing={runSearch}
-            placeholder="Cari pertanyaan..."
+            placeholder={t('explore.forum.searchPlaceholder')}
             placeholderTextColor="#94a3b8"
             returnKeyType="search"
             style={styles.input}
@@ -260,26 +263,26 @@ export function WebAppForumRoute({
           testID="web-app-forum-ask"
         >
           <Plus color="#ffffff" size={15} strokeWidth={2.4} />
-          <Text style={styles.askButtonText}>Tanya</Text>
+          <Text style={styles.askButtonText}>{t('explore.forum.askShort')}</Text>
         </Pressable>
       </View>
       {forumQuestions.length ? (
         <View style={styles.list}>
           {forumQuestions.map((item) => (
-            <QuestionCard item={item} key={item.id || item.slug} onOpen={openQuestion} />
+            <QuestionCard item={item} key={item.id || item.slug} onOpen={openQuestion} t={t} />
           ))}
         </View>
       ) : null}
       {!forumLoading && !forumQuestions.length ? (
         <View style={styles.empty}>
           <MessageCircle color="#94a3b8" size={34} strokeWidth={1.8} />
-          <Text style={styles.emptyTitle}>Belum ada pertanyaan.</Text>
-          <Text style={styles.emptyText}>Ajukan pertanyaan pertama untuk memulai diskusi.</Text>
+          <Text style={styles.emptyTitle}>{t('explore.forum.emptyTitle')}</Text>
+          <Text style={styles.emptyText}>{t('explore.forum.emptyText')}</Text>
         </View>
       ) : null}
       {forumHasMore ? (
         <Pressable disabled={forumLoading} onPress={loadMore} style={styles.loadMore}>
-          <Text style={styles.loadMoreText}>{forumLoading ? 'Memuat...' : 'Muat lebih banyak'}</Text>
+          <Text style={styles.loadMoreText}>{forumLoading ? t('explore.forum.loadingShort') : t('explore.forum.loadMore')}</Text>
         </Pressable>
       ) : null}
     </>
@@ -288,12 +291,12 @@ export function WebAppForumRoute({
   const renderAsk = () => (
     <View style={styles.panel}>
       <Pressable onPress={() => { setForumView('list'); setForumError(''); }} style={styles.routeLink}>
-        <Text style={styles.routeLinkText}>Forum Tanya Jawab</Text>
+        <Text style={styles.routeLinkText}>{t('explore.forum.title')}</Text>
       </Pressable>
-      <Text style={styles.panelTitle}>Ajukan Pertanyaan</Text>
+      <Text style={styles.panelTitle}>{t('explore.forum.askTitle')}</Text>
       <TextInput
         onChangeText={setForumAskTitle}
-        placeholder="Judul pertanyaan (min 10 karakter)"
+        placeholder={t('explore.forum.askTitlePlaceholder')}
         placeholderTextColor="#94a3b8"
         style={styles.formInput}
         value={forumAskTitle}
@@ -301,7 +304,7 @@ export function WebAppForumRoute({
       <TextInput
         multiline
         onChangeText={setForumAskBody}
-        placeholder="Isi pertanyaan (min 20 karakter)"
+        placeholder={t('explore.forum.askBodyPlaceholder')}
         placeholderTextColor="#94a3b8"
         style={[styles.formInput, styles.textArea]}
         textAlignVertical="top"
@@ -310,7 +313,7 @@ export function WebAppForumRoute({
       <TextInput
         autoCapitalize="none"
         onChangeText={setForumAskTags}
-        placeholder="Tag (pisahkan dengan koma, opsional)"
+        placeholder={t('explore.forum.askTagsPlaceholder')}
         placeholderTextColor="#94a3b8"
         style={styles.formInput}
         value={forumAskTags}
@@ -323,7 +326,9 @@ export function WebAppForumRoute({
           (forumSaving || forumAskTitle.length < 10 || forumAskBody.length < 20) && styles.disabledButton,
         ]}
       >
-        <Text style={styles.submitButtonText}>{forumSaving ? 'Mengirim...' : 'Kirim Pertanyaan'}</Text>
+        <Text style={styles.submitButtonText}>
+          {forumSaving ? t('explore.forum.sending') : t('explore.forum.sendQuestion')}
+        </Text>
       </Pressable>
     </View>
   );
@@ -331,37 +336,37 @@ export function WebAppForumRoute({
   const renderDetail = () => (
     <View style={styles.panel}>
       <Pressable onPress={() => { setForumView('list'); setForumDetail(null); setForumAnswers([]); }} style={styles.routeLink}>
-        <Text style={styles.routeLinkText}>Forum Tanya Jawab</Text>
+        <Text style={styles.routeLinkText}>{t('explore.forum.title')}</Text>
       </Pressable>
       {!forumDetail ? (
-        <Text style={styles.emptyText}>Pertanyaan tidak ditemukan.</Text>
+        <Text style={styles.emptyText}>{t('explore.forum.questionNotFound')}</Text>
       ) : (
         <>
-          <Text style={styles.panelTitle}>{forumDetail.title || 'Detail pertanyaan'}</Text>
+          <Text style={styles.panelTitle}>{forumDetail.title || t('explore.forum.detailTitleFallback')}</Text>
           {forumDetail.body ? <Text style={styles.detailBody}>{forumDetail.body}</Text> : null}
           <View style={styles.metaRow}>
-            <Text style={styles.metaText}>{forumDetail.user?.name || 'Pengguna'}</Text>
-            <Text style={styles.metaText}>{formatCount(forumDetail.answerCount)} jawaban</Text>
-            <Text style={styles.metaText}>{formatCount(forumDetail.voteCount)} suara</Text>
+            <Text style={styles.metaText}>{forumDetail.user?.name || t('explore.forum.userFallback')}</Text>
+            <Text style={styles.metaText}>{t('explore.forum.answerCount', { count: formatCount(forumDetail.answerCount) })}</Text>
+            <Text style={styles.metaText}>{t('explore.forum.voteCount', { count: formatCount(forumDetail.voteCount) })}</Text>
           </View>
           <View style={styles.voteRow}>
             <Pressable disabled={forumVotingId === `${forumDetail.id}-1`} onPress={() => voteQuestion(1)} style={styles.voteButton}>
               <ThumbsUp color="#2563eb" size={15} strokeWidth={2.2} />
-              <Text style={styles.voteButtonText}>Pertanyaan</Text>
+              <Text style={styles.voteButtonText}>{t('explore.forum.questionVote')}</Text>
             </Pressable>
             <Pressable disabled={forumVotingId === `${forumDetail.id}--1`} onPress={() => voteQuestion(-1)} style={styles.voteButton}>
               <ThumbsDown color="#64748b" size={15} strokeWidth={2.2} />
-              <Text style={styles.voteButtonText}>Pertanyaan</Text>
+              <Text style={styles.voteButtonText}>{t('explore.forum.questionVote')}</Text>
             </Pressable>
           </View>
-          <Text style={styles.sectionTitle}>Jawaban</Text>
+          <Text style={styles.sectionTitle}>{t('explore.forum.answersTitle')}</Text>
           {forumAnswers.length ? forumAnswers.map((answer) => (
             <View key={answer.id} style={styles.answerCard}>
               <Text style={styles.detailBody}>{answer.body}</Text>
               <View style={styles.answerMeta}>
-                <Text style={styles.metaText}>{answer.user?.name || 'Pengguna'}</Text>
-                <Text style={styles.metaText}>{formatCount(answer.voteCount)} suara</Text>
-                {answer.isAccepted ? <Text style={styles.acceptedText}>Diterima</Text> : null}
+                <Text style={styles.metaText}>{answer.user?.name || t('explore.forum.userFallback')}</Text>
+                <Text style={styles.metaText}>{t('explore.forum.voteCount', { count: formatCount(answer.voteCount) })}</Text>
+                {answer.isAccepted ? <Text style={styles.acceptedText}>{t('explore.forum.accepted')}</Text> : null}
               </View>
               <View style={styles.voteRow}>
                 {[1, -1].map((value) => (
@@ -371,25 +376,25 @@ export function WebAppForumRoute({
                     onPress={() => voteAnswer(answer, value)}
                     style={styles.smallVoteButton}
                   >
-                    <Text style={styles.voteButtonText}>{value > 0 ? 'Naik' : 'Turun'}</Text>
+                    <Text style={styles.voteButtonText}>{value > 0 ? t('explore.forum.upvote') : t('explore.forum.downvote')}</Text>
                   </Pressable>
                 ))}
                 {session?.token && !answer.isAccepted ? (
                   <Pressable disabled={forumVotingId === `accept-${answer.id}`} onPress={() => acceptAnswer(answer)} style={styles.smallVoteButton}>
-                    <Text style={styles.voteButtonText}>Terima</Text>
+                    <Text style={styles.voteButtonText}>{t('explore.forum.acceptAction')}</Text>
                   </Pressable>
                 ) : null}
               </View>
             </View>
           )) : (
-            <Text style={styles.emptyText}>Belum ada jawaban.</Text>
+            <Text style={styles.emptyText}>{t('explore.forum.noAnswers')}</Text>
           )}
           {session?.token ? (
             <>
               <TextInput
                 multiline
                 onChangeText={setForumAnswerDraft}
-                placeholder="Tulis jawaban..."
+                placeholder={t('explore.forum.answerPlaceholder')}
                 placeholderTextColor="#94a3b8"
                 style={[styles.formInput, styles.answerInput]}
                 textAlignVertical="top"
@@ -400,11 +405,13 @@ export function WebAppForumRoute({
                 onPress={submitAnswer}
                 style={[styles.submitButton, (forumSaving || forumAnswerDraft.trim().length < 10) && styles.disabledButton]}
               >
-                <Text style={styles.submitButtonText}>{forumSaving ? 'Mengirim...' : 'Kirim Jawaban'}</Text>
+                <Text style={styles.submitButtonText}>
+                  {forumSaving ? t('explore.forum.sending') : t('explore.forum.sendAnswer')}
+                </Text>
               </Pressable>
             </>
           ) : (
-            <Text style={styles.emptyText}>Buka Profil untuk masuk dan menjawab pertanyaan.</Text>
+            <Text style={styles.emptyText}>{t('explore.forum.answerLoginRequired')}</Text>
           )}
         </>
       )}
@@ -423,15 +430,15 @@ export function WebAppForumRoute({
         <View style={styles.iconWrap}>
           <MessageCircle color="#2563eb" size={30} strokeWidth={2} />
         </View>
-        <Text style={styles.title}>Forum Tanya Jawab</Text>
-        <Text style={styles.subtitle}>Diskusi seputar Islam</Text>
+        <Text style={styles.title}>{t('explore.forum.title')}</Text>
+        <Text style={styles.subtitle}>{t('explore.forum.subtitle')}</Text>
       </View>
       <View style={styles.summaryRow}>
-        <ForumStat label="pertanyaan" value={forumTotal} />
-        <ForumStat label="halaman" value={forumPage + 1} />
+        <ForumStat label={t('explore.forum.statQuestions')} value={forumTotal} />
+        <ForumStat label={t('explore.forum.statPage')} value={forumPage + 1} />
       </View>
       {forumError ? <Text style={styles.error}>{forumError}</Text> : null}
-      {forumLoading ? <Text style={styles.loadingText}>Memuat forum...</Text> : null}
+      {forumLoading ? <Text style={styles.loadingText}>{t('explore.forum.loading')}</Text> : null}
       {forumView === 'ask' ? renderAsk() : forumView === 'detail' ? renderDetail() : renderList()}
     </ScrollView>
   );
