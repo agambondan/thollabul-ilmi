@@ -9,6 +9,7 @@ import {
   getOfflineOverview,
 } from '../storage/offlineContent';
 import { useFeedback } from '../context/FeedbackContext';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { colors, radius, spacing } from '../theme';
 import { Card, CardTitle } from './Card';
 
@@ -44,8 +45,8 @@ const estimatePackSize = ({ includeQuran, selectedBooks }) => {
 
 const formatNumber = (value) => Number(value ?? 0).toLocaleString('en-US');
 
-const formatDate = (value) => {
-  if (!value) return 'Belum diunduh';
+const formatDate = (value, t) => {
+  if (!value) return t('offlinePack.status.notDownloaded');
 
   try {
     return new Intl.DateTimeFormat('en', {
@@ -55,15 +56,15 @@ const formatDate = (value) => {
       month: 'short',
     }).format(new Date(value));
   } catch {
-    return 'Sudah diunduh';
+    return t('offlinePack.status.downloaded');
   }
 };
 
-const statsFor = (overview) => [
-  { key: 'surahs', label: 'Surah', value: overview.quranSurahs },
-  { key: 'ayahs', label: 'Ayat', value: overview.quranAyahs },
-  { key: 'hadiths', label: 'Hadis', value: overview.hadiths },
-  { key: 'books', label: 'Kitab', value: overview.hadithBooks?.length ?? 0 },
+const statsFor = (overview, t) => [
+  { key: 'surahs', label: t('offlinePack.stats.surahs'), value: overview.quranSurahs },
+  { key: 'ayahs', label: t('offlinePack.stats.ayahs'), value: overview.quranAyahs },
+  { key: 'hadiths', label: t('offlinePack.stats.hadiths'), value: overview.hadiths },
+  { key: 'books', label: t('offlinePack.stats.books'), value: overview.hadithBooks?.length ?? 0 },
 ];
 
 const selectionFromBooks = (books = []) =>
@@ -77,12 +78,13 @@ const QURAN_TOTAL_SURAHS = 114;
 
 export function OfflinePackCard() {
   const { showError, showSuccess } = useFeedback();
+  const { t } = useMobileLocale();
   const [overview, setOverview] = useState(null);
   const [books, setBooks] = useState([]);
   const [booksLoading, setBooksLoading] = useState(false);
   const [busy, setBusy] = useState(false);
   const [includeQuran, setIncludeQuran] = useState(true);
-  const [message, setMessage] = useState('Pilih data yang ingin disimpan di perangkat.');
+  const [message, setMessage] = useState(t('offlinePack.message.initial'));
   const [progress, setProgress] = useState(0);
   const [selectedBookSlugs, setSelectedBookSlugs] = useState({});
   const [localBookCounts, setLocalBookCounts] = useState({});
@@ -95,14 +97,14 @@ export function OfflinePackCard() {
     setOverview(data);
     setLocalBookCounts(perBookCounts);
     if (!data.supported) {
-      setMessage(data.error ?? 'Mode offline belum tersedia di perangkat ini.');
+      setMessage(data.error ?? t('offlinePack.error.unsupported'));
       return;
     }
 
     if (data.savedAt) {
       setIncludeQuran(Boolean(data.includeQuran));
       setSelectedBookSlugs(selectionFromBooks(data.hadithBooks));
-      setMessage(`Terakhir diunduh ${formatDate(data.savedAt)}.`);
+      setMessage(t('offlinePack.message.lastDownloaded', { date: formatDate(data.savedAt, t) }));
     }
 
     setBooksLoading(true);
@@ -111,11 +113,11 @@ export function OfflinePackCard() {
       setBooks(items);
     } catch (error) {
       setBooks(Array.isArray(data.hadithBooks) ? data.hadithBooks : []);
-      setMessage(error?.message ?? 'Daftar kitab hadis belum bisa dimuat.');
+      setMessage(error?.message ?? t('offlinePack.error.booksLoad'));
     } finally {
       setBooksLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     load();
@@ -127,7 +129,7 @@ export function OfflinePackCard() {
   );
   const isSupported = overview?.supported ?? true;
   const hasSelection = includeQuran || selectedBooks.length > 0;
-  const stats = statsFor(overview ?? {});
+  const stats = statsFor(overview ?? {}, t);
 
   const quranComplete =
     (overview?.quranSurahs ?? 0) >= QURAN_TOTAL_SURAHS &&
@@ -209,19 +211,23 @@ export function OfflinePackCard() {
       if (checkUpdates) {
         const nextMessage =
           data.deltaCount > 0
-            ? `${formatNumber(data.deltaCount)} hadis diperbarui dari backend.`
-            : 'Sudah versi terbaru. Tidak ada update dari backend.';
+            ? t('offlinePack.update.synced', { count: formatNumber(data.deltaCount) })
+            : t('offlinePack.update.latest');
         setMessage(nextMessage);
         showSuccess(nextMessage);
       } else {
         const nextMessage =
-          `Paket offline siap: ${formatNumber(data.quranAyahs)} ayat, ${formatNumber(data.hadiths)} hadis, ${data.hadithBooks.length} kitab.`;
+          t('offlinePack.download.ready', {
+            ayahs: formatNumber(data.quranAyahs),
+            hadiths: formatNumber(data.hadiths),
+            books: data.hadithBooks.length,
+          });
         setMessage(nextMessage);
         showSuccess(nextMessage);
       }
       setProgress(100);
     } catch (error) {
-      const nextMessage = error?.message ?? 'Paket offline belum bisa diunduh.';
+      const nextMessage = error?.message ?? t('offlinePack.error.download');
       setMessage(nextMessage);
       showError(nextMessage);
     } finally {
@@ -234,11 +240,11 @@ export function OfflinePackCard() {
     try {
       const data = await clearOfflinePack();
       setOverview(data);
-      setMessage('Paket offline dihapus.');
+      setMessage(t('offlinePack.cleared'));
       setProgress(0);
-      showSuccess('Paket offline dihapus.');
+      showSuccess(t('offlinePack.cleared'));
     } catch (error) {
-      const nextMessage = error?.message ?? 'Paket offline belum bisa dihapus.';
+      const nextMessage = error?.message ?? t('offlinePack.error.clear');
       setMessage(nextMessage);
       showError(nextMessage);
     } finally {
@@ -248,28 +254,39 @@ export function OfflinePackCard() {
 
   const confirmDownload = () => {
     if (!hasSelection) {
-      setMessage('Pilih Al-Quran atau minimal satu kitab hadis dulu.');
+      setMessage(t('offlinePack.message.selectionRequired'));
       return;
     }
 
     const summaryLines = [
-      `Al-Quran: ${quranNeedsDownload ? '114 surah baru' : quranComplete ? 'sudah lengkap' : 'tidak diunduh'}`,
-      `Hadis: ${booksToFetch.length} kitab${pendingHadithCount > 0 ? ` (~${formatNumber(pendingHadithCount)} hadis baru)` : ''}`,
-      `Perkiraan ukuran: ${sizeLabel}`,
+      t('offlinePack.alert.quranLine', {
+        status: quranNeedsDownload
+          ? t('offlinePack.status.newSurahs')
+          : quranComplete
+            ? t('offlinePack.status.complete')
+            : t('offlinePack.status.skipped'),
+      }),
+      t('offlinePack.alert.hadithLine', {
+        books: booksToFetch.length,
+        count: pendingHadithCount > 0
+          ? t('offlinePack.alert.newHadiths', { count: formatNumber(pendingHadithCount) })
+          : '',
+      }),
+      t('offlinePack.alert.sizeLine', { size: sizeLabel }),
     ];
     Alert.alert(
-      'Unduh update offline?',
-      `${summaryLines.join('\n')}\n\nData yang sudah ada tetap dipertahankan, hanya yang belum diunduh yang akan diambil.`,
+      t('offlinePack.alert.downloadTitle'),
+      `${summaryLines.join('\n')}\n\n${t('offlinePack.alert.downloadBody')}`,
       [
-        { text: 'Batal', style: 'cancel' },
-        { text: 'Unduh', onPress: () => download() },
+        { text: t('common.cancel'), style: 'cancel' },
+        { text: t('offlinePack.action.download'), onPress: () => download() },
       ],
     );
   };
 
   const checkUpdates = () => {
     if (!hasSelection) {
-      setMessage('Pilih kitab dulu untuk mengecek update.');
+      setMessage(t('offlinePack.message.updateSelectionRequired'));
       return;
     }
     download({ checkUpdates: true });
@@ -277,20 +294,20 @@ export function OfflinePackCard() {
 
   const confirmClear = () => {
     Alert.alert(
-      'Hapus paket offline?',
-      'Data Al-Quran dan hadis offline akan dihapus dari perangkat.',
+      t('offlinePack.alert.clearTitle'),
+      t('offlinePack.alert.clearBody'),
       [
-        { text: 'Batal', style: 'cancel' },
-        { text: 'Hapus', onPress: clear, style: 'destructive' },
+        { text: t('common.cancel'), style: 'cancel' },
+        { text: t('offlinePack.action.clear'), onPress: clear, style: 'destructive' },
       ],
     );
   };
 
   return (
     <Card>
-      <CardTitle meta="Penyimpanan perangkat">Paket Offline</CardTitle>
+      <CardTitle meta={t('offlinePack.cardMeta')}>{t('offlinePack.title')}</CardTitle>
       <Text style={styles.muted}>
-        Simpan data dari backend sesuai kebutuhan: Al-Quran penuh atau kitab hadis tertentu.
+        {t('offlinePack.description')}
       </Text>
 
       <View style={styles.selectorSection}>
@@ -308,9 +325,12 @@ export function OfflinePackCard() {
             <BookOpen color={includeQuran ? colors.onPrimary : colors.primary} size={18} strokeWidth={2.5} />
           </View>
           <View style={styles.packageText}>
-            <Text style={styles.packageTitle}>Al-Quran lengkap</Text>
+            <Text style={styles.packageTitle}>{t('offlinePack.quran.title')}</Text>
             <Text style={styles.packageMeta}>
-              {QURAN_ESTIMATE.surahs} surah · {formatNumber(QURAN_ESTIMATE.ayahs)} ayat
+              {t('offlinePack.quran.meta', {
+                surahs: QURAN_ESTIMATE.surahs,
+                ayahs: formatNumber(QURAN_ESTIMATE.ayahs),
+              })}
             </Text>
           </View>
           <CheckCircle2
@@ -322,17 +342,21 @@ export function OfflinePackCard() {
 
         <View style={styles.sectionHeader}>
           <View>
-            <Text style={styles.sectionTitle}>Kitab Hadis</Text>
+            <Text style={styles.sectionTitle}>{t('offlinePack.hadith.title')}</Text>
             <Text style={styles.sectionMeta}>
-              {selectedBooks.length} dipilih dari {books.length} kitab
+              {t('offlinePack.hadith.selectionMeta', { selected: selectedBooks.length, total: books.length })}
             </Text>
           </View>
           <View style={styles.selectionActions}>
             <Pressable disabled={busy || !books.length} onPress={selectAllBooks} style={styles.linkButton}>
-              <Text style={[styles.linkText, (busy || !books.length) && styles.disabledText]}>Semua</Text>
+              <Text style={[styles.linkText, (busy || !books.length) && styles.disabledText]}>
+                {t('offlinePack.action.selectAll')}
+              </Text>
             </Pressable>
             <Pressable disabled={busy} onPress={clearBookSelection} style={styles.linkButton}>
-              <Text style={[styles.linkText, busy && styles.disabledText]}>Kosongkan</Text>
+              <Text style={[styles.linkText, busy && styles.disabledText]}>
+                {t('offlinePack.action.clearSelection')}
+              </Text>
             </Pressable>
           </View>
         </View>
@@ -340,7 +364,7 @@ export function OfflinePackCard() {
         {booksLoading ? (
           <View style={styles.loadingRow}>
             <ActivityIndicator color={colors.primary} size="small" />
-            <Text style={styles.meta}>Memuat daftar kitab hadis...</Text>
+            <Text style={styles.meta}>{t('offlinePack.loadingBooks')}</Text>
           </View>
         ) : books.length ? (
           <View style={styles.bookGrid}>
@@ -363,18 +387,24 @@ export function OfflinePackCard() {
                     {book.name}
                   </Text>
                   {status.kind === 'complete' ? (
-                    <Text style={[styles.bookChipBadge, styles.bookChipBadgeComplete]}>Lengkap</Text>
+                    <Text style={[styles.bookChipBadge, styles.bookChipBadgeComplete]}>
+                      {t('offlinePack.status.complete')}
+                    </Text>
                   ) : status.kind === 'update' ? (
-                    <Text style={[styles.bookChipBadge, styles.bookChipBadgeUpdate]}>+{status.delta} baru</Text>
+                    <Text style={[styles.bookChipBadge, styles.bookChipBadgeUpdate]}>
+                      {t('offlinePack.status.newItems', { count: status.delta })}
+                    </Text>
                   ) : status.kind === 'partial' ? (
-                    <Text style={[styles.bookChipBadge, styles.bookChipBadgeUpdate]}>{status.local} tersimpan</Text>
+                    <Text style={[styles.bookChipBadge, styles.bookChipBadgeUpdate]}>
+                      {t('offlinePack.status.savedItems', { count: status.local })}
+                    </Text>
                   ) : null}
                 </Pressable>
               );
             })}
           </View>
         ) : (
-          <Text style={styles.meta}>Daftar kitab hadis belum tersedia dari backend.</Text>
+          <Text style={styles.meta}>{t('offlinePack.emptyBooks')}</Text>
         )}
       </View>
 
@@ -382,7 +412,7 @@ export function OfflinePackCard() {
         <View style={styles.estimateTitleRow}>
           <Database color={colors.primary} size={16} strokeWidth={2.4} />
           <Text style={styles.estimateTitle}>
-            {everythingComplete ? 'Sudah lengkap, tidak ada update' : 'Yang akan diunduh'}
+            {everythingComplete ? t('offlinePack.estimate.completeTitle') : t('offlinePack.estimate.pendingTitle')}
           </Text>
           {!everythingComplete ? (
             <Text style={[styles.estimateSize, isLargeDownload && styles.estimateSizeWarn]}>
@@ -392,12 +422,18 @@ export function OfflinePackCard() {
         </View>
         <Text style={styles.estimateText}>
           {everythingComplete
-            ? 'Pilihan ini sudah komplit. Tap "Cek update" untuk tarik perubahan terbaru dari backend.'
-            : `${quranNeedsDownload ? 'Quran · ' : ''}${booksToFetch.length} kitab${pendingHadithCount > 0 ? ` · ~${formatNumber(pendingHadithCount)} hadis baru` : ''}`}
+            ? t('offlinePack.estimate.completeDescription')
+            : t('offlinePack.estimate.pendingDescription', {
+              quran: quranNeedsDownload ? t('offlinePack.estimate.quranPrefix') : '',
+              books: booksToFetch.length,
+              count: pendingHadithCount > 0
+                ? t('offlinePack.estimate.newHadiths', { count: formatNumber(pendingHadithCount) })
+                : '',
+            })}
         </Text>
         {!everythingComplete && isLargeDownload ? (
           <Text style={styles.estimateWarn}>
-            Ukuran besar. Pastikan jaringan stabil dan ruang penyimpanan cukup.
+            {t('offlinePack.estimate.largeWarn')}
           </Text>
         ) : null}
       </View>
@@ -433,7 +469,11 @@ export function OfflinePackCard() {
             <View style={styles.buttonContent}>
               <BookOpen color="#ffffff" size={16} strokeWidth={2.5} />
               <Text style={styles.primaryButtonText}>
-                {everythingComplete ? 'Cek update' : pendingHadithCount > 0 || quranNeedsDownload ? 'Unduh update' : 'Unduh pilihan'}
+                {everythingComplete
+                  ? t('offlinePack.action.checkUpdate')
+                  : pendingHadithCount > 0 || quranNeedsDownload
+                    ? t('offlinePack.action.downloadUpdate')
+                    : t('offlinePack.action.downloadSelection')}
               </Text>
             </View>
           )}
@@ -445,7 +485,7 @@ export function OfflinePackCard() {
         >
           <View style={styles.buttonContent}>
             <Trash2 color={colors.primary} size={16} strokeWidth={2.5} />
-            <Text style={styles.buttonText}>Hapus paket</Text>
+            <Text style={styles.buttonText}>{t('offlinePack.action.clearPack')}</Text>
           </View>
         </Pressable>
       </View>
