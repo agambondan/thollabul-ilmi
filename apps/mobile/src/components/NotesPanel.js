@@ -3,12 +3,14 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 
 import { createNote, deleteNote, getNotes, updateNote } from '../api/personal';
 import { useFeedback } from '../context/FeedbackContext';
 import { useSession } from '../context/SessionContext';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { colors, radius, spacing } from '../theme';
 import { CardTitle } from './Card';
 
 export function NotesPanel({ refType, refId }) {
   const { user } = useSession();
   const { showError, showSuccess } = useFeedback();
+  const { t } = useMobileLocale();
   const [content, setContent] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [items, setItems] = useState([]);
@@ -49,17 +51,17 @@ export function NotesPanel({ refType, refId }) {
       if (editingId) {
         const updated = await updateNote({ id: editingId, content: nextContent });
         setItems((current) => current.map((item) => (item.id === editingId ? updated : item)));
-        setMessage('Catatan diperbarui.');
-        showSuccess('Catatan diperbarui.');
+        setMessage(t('notes.updated'));
+        showSuccess(t('notes.updated'));
       } else {
         const created = await createNote({ refType, refId, content: nextContent });
         setItems((current) => [created, ...current]);
-        setMessage('Catatan disimpan.');
-        showSuccess('Catatan disimpan.');
+        setMessage(t('notes.saved'));
+        showSuccess(t('notes.saved'));
       }
       resetForm();
     } catch (err) {
-      const nextMessage = err?.message ?? 'Catatan belum bisa disimpan.';
+      const nextMessage = err?.message ?? t('notes.saveError');
       setMessage(nextMessage);
       showError(nextMessage);
     } finally {
@@ -81,10 +83,10 @@ export function NotesPanel({ refType, refId }) {
       await deleteNote(id);
       setItems((current) => current.filter((item) => item.id !== id));
       if (editingId === id) resetForm();
-      setMessage('Catatan dihapus.');
-      showSuccess('Catatan dihapus.');
+      setMessage(t('notes.deleted'));
+      showSuccess(t('notes.deleted'));
     } catch (err) {
-      const nextMessage = err?.message ?? 'Catatan belum bisa dihapus.';
+      const nextMessage = err?.message ?? t('notes.deleteError');
       setMessage(nextMessage);
       showError(nextMessage);
     } finally {
@@ -99,19 +101,19 @@ export function NotesPanel({ refType, refId }) {
   if (!user) {
     return (
       <View style={styles.panel}>
-        <CardTitle meta="Masuk akun">Catatan</CardTitle>
-        <Text style={styles.muted}>Masuk dari tab Profil untuk menulis catatan personal.</Text>
+        <CardTitle meta={t('notes.loginMeta')}>{t('notes.title')}</CardTitle>
+        <Text style={styles.muted}>{t('notes.loginPrompt')}</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.panel}>
-      <CardTitle meta={`${items.length} item`}>Catatan</CardTitle>
+      <CardTitle meta={t('notes.itemCount', { count: items.length })}>{t('notes.title')}</CardTitle>
       <TextInput
         multiline
         onChangeText={setContent}
-        placeholder="Tulis catatan personal..."
+        placeholder={t('notes.placeholder')}
         placeholderTextColor={colors.muted}
         style={styles.input}
         value={content}
@@ -119,11 +121,11 @@ export function NotesPanel({ refType, refId }) {
       <View style={styles.actions}>
         {editingId ? (
           <Pressable onPress={resetForm} style={styles.secondaryButton}>
-            <Text style={styles.secondaryText}>Batal</Text>
+            <Text style={styles.secondaryText}>{t('notes.cancel')}</Text>
           </Pressable>
         ) : null}
         <Pressable disabled={loading || !content.trim()} onPress={submit} style={styles.primaryButton}>
-          {loading ? <ActivityIndicator color="#ffffff" /> : <Text style={styles.primaryText}>{editingId ? 'Perbarui' : 'Simpan catatan'}</Text>}
+          {loading ? <ActivityIndicator color="#ffffff" /> : <Text style={styles.primaryText}>{editingId ? t('notes.updateAction') : t('notes.saveAction')}</Text>}
         </Pressable>
       </View>
       {message ? <Text style={styles.message}>{message}</Text> : null}
@@ -133,10 +135,10 @@ export function NotesPanel({ refType, refId }) {
           <Text style={styles.noteText}>{item.content}</Text>
           <View style={styles.noteActions}>
             <Pressable onPress={() => startEdit(item)} style={styles.noteButton}>
-              <Text style={styles.noteButtonText}>Ubah</Text>
+              <Text style={styles.noteButtonText}>{t('notes.editAction')}</Text>
             </Pressable>
             <Pressable onPress={() => remove(item.id)} style={styles.noteButton}>
-              <Text style={styles.deleteText}>Hapus</Text>
+              <Text style={styles.deleteText}>{t('notes.deleteAction')}</Text>
             </Pressable>
           </View>
         </View>
@@ -144,7 +146,7 @@ export function NotesPanel({ refType, refId }) {
       {items.length > PREVIEW_COUNT ? (
         <Pressable onPress={() => setShowAll((prev) => !prev)} style={styles.showAllButton}>
           <Text style={styles.showAllText}>
-            {showAll ? 'Sembunyikan' : `Lihat semua (${items.length})`}
+            {showAll ? t('notes.hideAll') : t('notes.showAll', { count: items.length })}
           </Text>
         </Pressable>
       ) : null}
