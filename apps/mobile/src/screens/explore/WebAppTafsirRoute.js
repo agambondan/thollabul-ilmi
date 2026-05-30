@@ -1,6 +1,7 @@
 import { BookOpen, FileText, Search } from 'lucide-react-native';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 import { normalizeSearchText } from '../ExploreScreen.helpers';
 
@@ -17,20 +18,22 @@ const filterSurahs = (surahs, query) => {
 const getAsbabunAyahNumber = (item) =>
   item?.raw?.ayah_number ?? item?.raw?.ayah_start ?? item?.raw?.ayah_refs?.[0]?.ayah_number ?? item?.raw?.ayah_id;
 
-const getAsbabunAyahLabel = (item) => {
+const getAsbabunAyahLabel = (item, t) => {
   if (item?.raw?.display_ref) return item.raw.display_ref;
   if (item?.meta) return item.meta;
   if (item?.title) return item.title;
   const start = getAsbabunAyahNumber(item);
   const end = item?.raw?.ayah_end ?? item?.raw?.ayah_refs?.[item?.raw?.ayah_refs?.length - 1]?.ayah_number;
-  if (!start) return 'Ayat';
-  return end && Number(end) !== Number(start) ? `Ayat ${start}-${end}` : `Ayat ${start}`;
+  if (!start) return t('explore.tafsir.ayahFallback');
+  return end && Number(end) !== Number(start)
+    ? t('explore.tafsir.ayahRange', { end, start })
+    : t('explore.tafsir.ayahNumber', { number: start });
 };
 
 const getAsbabunSource = (item) => item?.raw?.source ?? item?.source ?? '';
 const getAsbabunContent = (item) => item?.body ?? item?.raw?.content ?? item?.raw?.description ?? item?.raw?.text ?? '';
 
-function SurahCard({ active, onPress, surah, testID }) {
+function SurahCard({ active, onPress, surah, t, testID }) {
   return (
     <Pressable
       onPress={onPress}
@@ -42,17 +45,17 @@ function SurahCard({ active, onPress, surah, testID }) {
       </View>
       <View style={styles.surahBody}>
         <Text numberOfLines={1} style={styles.surahName}>{surah.name}</Text>
-        <Text numberOfLines={1} style={styles.surahMeaning}>{surah.meaning || `${surah.ayahs} ayat`}</Text>
+        <Text numberOfLines={1} style={styles.surahMeaning}>{surah.meaning || t('explore.tafsir.ayahCount', { count: surah.ayahs })}</Text>
       </View>
     </Pressable>
   );
 }
 
-function TafsirResultCard({ item, onOpen, testID }) {
+function TafsirResultCard({ item, onOpen, t, testID }) {
   return (
     <Pressable onPress={() => onOpen(item)} style={styles.resultCard} testID={testID}>
       <View style={styles.resultHeader}>
-        <Text style={styles.resultTitle}>{item.title || 'Ayat'}</Text>
+        <Text style={styles.resultTitle}>{item.title || t('explore.tafsir.ayahFallback')}</Text>
         {item.meta ? <Text numberOfLines={1} style={styles.resultMeta}>{item.meta}</Text> : null}
       </View>
       {item.arabic ? (
@@ -63,7 +66,7 @@ function TafsirResultCard({ item, onOpen, testID }) {
       ) : null}
       {item.tafsir ? (
         <View style={styles.tafsirPanel}>
-          <Text style={styles.tafsirSource}>Tafsir Kemenag</Text>
+          <Text style={styles.tafsirSource}>{t('explore.tafsir.kemenagSource')}</Text>
           <Text numberOfLines={3} style={styles.tafsirText}>{item.tafsir}</Text>
         </View>
       ) : null}
@@ -71,7 +74,7 @@ function TafsirResultCard({ item, onOpen, testID }) {
   );
 }
 
-function AsbabunResultCard({ item, onOpen, testID }) {
+function AsbabunResultCard({ item, onOpen, t, testID }) {
   const content = getAsbabunContent(item);
   const source = getAsbabunSource(item);
 
@@ -79,7 +82,7 @@ function AsbabunResultCard({ item, onOpen, testID }) {
     <Pressable onPress={() => onOpen(item)} style={styles.resultCard} testID={testID}>
       <View style={styles.asbabunMetaRow}>
         <Text numberOfLines={1} style={styles.asbabunAyahPill}>
-          {getAsbabunAyahLabel(item)}
+          {getAsbabunAyahLabel(item, t)}
         </Text>
         {source ? (
           <Text numberOfLines={1} style={styles.asbabunSource}>
@@ -90,7 +93,7 @@ function AsbabunResultCard({ item, onOpen, testID }) {
       {content ? (
         <Text style={styles.asbabunContent}>{content}</Text>
       ) : (
-        <Text style={styles.emptyText}>Ringkasan asbabun nuzul belum tersedia.</Text>
+        <Text style={styles.emptyText}>{t('explore.tafsir.asbabunSummaryEmpty')}</Text>
       )}
     </Pressable>
   );
@@ -109,6 +112,7 @@ export function WebAppTafsirRoute({
   surahs,
   variant = 'tafsir',
 }) {
+  const { t } = useMobileLocale();
   const isAsbabun = variant === 'asbabun';
   const filteredSurahs = filterSurahs(surahs, surahSearch);
   const selectedNumber = Number(selectedSurahNumber);
@@ -120,15 +124,15 @@ export function WebAppTafsirRoute({
   const searchTestID = isAsbabun ? 'web-app-asbabun-search' : 'web-app-tafsir-search';
   const surahCardTestID = isAsbabun ? 'web-app-asbabun-surah-card' : 'web-app-tafsir-surah-card';
   const resultCardTestID = isAsbabun ? 'web-app-asbabun-result-card' : 'web-app-tafsir-result-card';
-  const title = isAsbabun ? 'Asbabun Nuzul' : 'Tafsir';
+  const title = isAsbabun ? t('explore.tafsir.asbabunTitle') : t('explore.tafsir.title');
   const subtitle = isAsbabun
-    ? 'Cari latar belakang turunnya ayat berdasarkan nomor surah.'
-    : 'Pilih surah untuk membaca penjelasan ayat.';
-  const loadingText = isAsbabun ? 'Memuat asbabun nuzul...' : 'Memuat tafsir...';
-  const placeholder = isAsbabun ? 'Masukkan nomor surah (1-114)' : 'Cari nama atau nomor surah';
+    ? t('explore.tafsir.asbabunSubtitle')
+    : t('explore.tafsir.subtitle');
+  const loadingText = isAsbabun ? t('explore.tafsir.asbabunLoading') : t('explore.tafsir.loading');
+  const placeholder = isAsbabun ? t('explore.tafsir.asbabunPlaceholder') : t('explore.tafsir.searchPlaceholder');
   const emptyResultText = isAsbabun
-    ? 'Data asbabun nuzul untuk surah ini belum tersedia. Coba pilih contoh lain.'
-    : 'Tafsir untuk surah ini belum tersedia. Coba pilih surah lain.';
+    ? t('explore.tafsir.asbabunEmpty')
+    : t('explore.tafsir.empty');
   const showInitialAsbabunState = isAsbabun && !selectedSurahNumber && !loading && !error;
 
   const handleSubmitAsbabun = () => {
@@ -159,8 +163,8 @@ export function WebAppTafsirRoute({
       {!isAsbabun ? (
         <View style={styles.notice}>
           <Text style={styles.noticeText}>
-            <Text style={styles.noticeStrong}>Catatan: </Text>
-            Data tafsir mengikuti ketersediaan backend dan bisa bertambah bertahap.
+            <Text style={styles.noticeStrong}>{t('explore.tafsir.noticePrefix')} </Text>
+            {t('explore.tafsir.noticeText')}
           </Text>
         </View>
       ) : null}
@@ -186,14 +190,14 @@ export function WebAppTafsirRoute({
             style={[styles.asbabunSubmit, (!canSubmitAsbabun || loading) && styles.asbabunSubmitDisabled]}
             testID="web-app-asbabun-submit"
           >
-            <Text style={styles.asbabunSubmitText}>{loading ? '...' : 'Cari'}</Text>
+            <Text style={styles.asbabunSubmitText}>{loading ? '...' : t('explore.tafsir.searchAction')}</Text>
           </Pressable>
         ) : null}
       </View>
 
       {isAsbabun ? (
         <View style={styles.quickSection}>
-          <Text style={styles.quickLabel}>Contoh cepat</Text>
+          <Text style={styles.quickLabel}>{t('explore.tafsir.quickExamples')}</Text>
           <View style={styles.quickList}>
             {ASBABUN_QUICK_SURAHS.map((number) => (
               <Pressable
@@ -206,7 +210,7 @@ export function WebAppTafsirRoute({
                 testID="web-app-asbabun-quick-surah"
               >
                 <Text style={[styles.quickPillText, selectedNumber === number && styles.quickPillTextActive]}>
-                  Surah {number}
+                  {t('explore.tafsir.surahNumber', { number })}
                 </Text>
               </Pressable>
             ))}
@@ -225,7 +229,7 @@ export function WebAppTafsirRoute({
       {!isAsbabun && !loading && !filteredSurahs.length ? (
         <View style={styles.empty}>
           <BookOpen color="#cbd5e1" size={38} strokeWidth={1.7} />
-          <Text style={styles.emptyText}>Surah tidak ditemukan.</Text>
+          <Text style={styles.emptyText}>{t('explore.tafsir.surahNotFound')}</Text>
         </View>
       ) : null}
 
@@ -237,6 +241,7 @@ export function WebAppTafsirRoute({
               key={surah.number}
               onPress={() => onSelectSurah(surah.number)}
               surah={surah}
+              t={t}
               testID={surahCardTestID}
             />
           ))}
@@ -245,17 +250,19 @@ export function WebAppTafsirRoute({
 
       {showInitialAsbabunState ? (
         <View style={styles.asbabunInitialState}>
-          <Text style={styles.emptyText}>Masukkan nomor surah atau pilih contoh cepat.</Text>
-          <Text style={styles.asbabunSourceHint}>Sumber data mengikuti koleksi asbabun nuzul backend.</Text>
+          <Text style={styles.emptyText}>{t('explore.tafsir.asbabunInitial')}</Text>
+          <Text style={styles.asbabunSourceHint}>{t('explore.tafsir.asbabunSourceHint')}</Text>
         </View>
       ) : null}
 
       {selectedSurahNumber && !loading ? (
         <View style={styles.resultsHeader}>
           <Text style={styles.resultsTitle}>
-            {selectedSurah ? selectedSurah.name : `Surah ${selectedSurahNumber}`}
+            {selectedSurah ? selectedSurah.name : t('explore.tafsir.surahNumber', { number: selectedSurahNumber })}
           </Text>
-          <Text style={styles.resultsCount}>{items.length} {isAsbabun ? 'riwayat' : 'ayat'}</Text>
+          <Text style={styles.resultsCount}>
+            {isAsbabun ? t('explore.tafsir.historyCount', { count: items.length }) : t('explore.tafsir.ayahCount', { count: items.length })}
+          </Text>
         </View>
       ) : null}
 
@@ -271,6 +278,7 @@ export function WebAppTafsirRoute({
                 item={item}
                 key={`${item?.id ?? 'asbabun'}-${index}`}
                 onOpen={onOpenItem}
+                t={t}
                 testID={resultCardTestID}
               />
             ) : (
@@ -278,6 +286,7 @@ export function WebAppTafsirRoute({
                 item={item}
                 key={`${item?.id ?? 'tafsir'}-${index}`}
                 onOpen={onOpenItem}
+                t={t}
                 testID={resultCardTestID}
               />
             )
