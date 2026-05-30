@@ -31,6 +31,7 @@ import { Screen } from '../components/Screen';
 import { useFeedback } from '../context/FeedbackContext';
 import { useSession } from '../context/SessionContext';
 import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { FeatureCatalog, findFeatureByKey, isPaginatedFeature, LOCAL_TOOL_TYPES } from './explore/FeatureCatalog';
 import { renderExploreWebAppRoute } from './explore/ExploreWebAppRoutes';
 import { WEB_APP_EXPLORE_THEMES, createExploreWebAppThemeStyles } from './explore/ExploreWebAppTheme';
@@ -183,6 +184,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
   const { session } = useSession();
   const { showError, showInfo, showSuccess } = useFeedback();
   const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+  const { t } = useMobileLocale();
   const webAppExploreTheme = isDarkTheme ? WEB_APP_EXPLORE_THEMES.dark : WEB_APP_EXPLORE_THEMES.light;
   const webAppExploreThemeStyles = useMemo(
     () => createExploreWebAppThemeStyles(webAppExploreTheme),
@@ -332,12 +334,12 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
           return acc;
         }, {}),
       );
-      showSuccess(result.pinned ? `${feature.title} disematkan.` : `${feature.title} dilepas dari shortcut.`);
+      showSuccess(t(result.pinned ? 'explore.shortcutPinned' : 'explore.shortcutUnpinned', { title: feature.title }));
     } catch {
-      setError('Shortcut belum bisa diperbarui.');
-      showError('Shortcut belum bisa diperbarui.');
+      setError(t('explore.shortcutSaveError'));
+      showError(t('explore.shortcutSaveError'));
     }
-  }, [showError, showSuccess]);
+  }, [showError, showSuccess, t]);
 
   const loadFeature = useCallback(
     async (feature, options = {}) => {
@@ -385,7 +387,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
           try {
             setSurahs(await getSurahs());
           } catch (err) {
-            setError(err?.message ?? 'Daftar surah belum bisa dimuat.');
+            setError(err?.message ?? t('explore.surahListError'));
           } finally {
             setLoading(false);
           }
@@ -393,7 +395,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
         if (feature.type === 'sholat-tracker') {
           if (!session?.token) {
-            setError('Buka Profil untuk masuk dan melacak sholat.');
+            setError(t('explore.loginPrayerTracker'));
             return;
           }
           setLoading(true);
@@ -449,7 +451,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
             setForumPage(0);
             setForumHasMore(result.hasMore);
           } catch (err) {
-            setForumError(err?.message ?? 'Forum belum bisa dimuat.');
+            setForumError(err?.message ?? t('explore.forumLoadError'));
           } finally {
             setForumLoading(false);
           }
@@ -460,7 +462,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
       if (['protected-list', 'bookmarks', 'notes', 'user-wird'].includes(feature.type) && !session?.token) {
         if (feature.type === 'user-wird') return;
-        setError('Buka Profil untuk masuk dan membuka fitur personal ini.');
+        setError(t('explore.loginFeature'));
         return;
       }
 
@@ -535,7 +537,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         setLoading(false);
       }
     },
-    [isWebAppLayout, session?.token],
+    [isWebAppLayout, session?.token, t],
   );
 
   const loadMoreFeature = useCallback(async () => {
@@ -570,12 +572,12 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         loadingMore: false,
       });
     } catch (err) {
-      setError(err?.message ?? 'Data lanjutan belum bisa dimuat.');
+      setError(err?.message ?? t('explore.loadMoreError'));
       setPagination((current) => ({ ...current, loadingMore: false }));
     } finally {
       loadingMoreRef.current = false;
     }
-  }, [activeFeature, items, loading, pagination.hasMore, pagination.loadingMore, pagination.page]);
+  }, [activeFeature, items, loading, pagination.hasMore, pagination.loadingMore, pagination.page, t]);
 
   const loadZakatHistory = useCallback(async () => {
     try {
@@ -618,9 +620,9 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       }
     } catch {
       setItems(previousItems);
-      showError('Amalan gagal diperbarui.');
+      showError(t('explore.amalanUpdateError'));
     }
-  }, [items, showError]);
+  }, [items, showError, t]);
 
   const loadBookmarks = useCallback(async () => {
     if (!session?.token) {
@@ -643,8 +645,8 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   const toggleBookmark = async (item) => {
     if (!activeFeature || !session?.token) {
-      setError('Buka Profil untuk masuk dan menyimpan bookmark.');
-      showInfo('Buka Profil untuk masuk dan menyimpan bookmark.');
+      setError(t('explore.loginBookmark'));
+      showInfo(t('explore.loginBookmark'));
       return;
     }
 
@@ -662,14 +664,14 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
           delete next[key];
           return next;
         });
-        showSuccess('Bookmark dihapus.');
+        showSuccess(t('explore.bookmarkRemoved'));
       } else {
         const created = await addBookmark(ref);
         setBookmarks((current) => ({ ...current, [key]: created?.data ?? created }));
-        showSuccess('Item disimpan ke bookmark.');
+        showSuccess(t('explore.bookmarkSaved'));
       }
     } catch (err) {
-      const nextMessage = err?.message ?? 'Bookmark belum bisa diperbarui.';
+      const nextMessage = err?.message ?? t('explore.bookmarkSaveError');
       setError(nextMessage);
       showError(nextMessage);
     } finally {
@@ -679,8 +681,8 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   const handleLikeFeedItem = async (item) => {
     if (!session?.token) {
-      setError('Buka Profil untuk masuk dan menyukai post komunitas.');
-      showInfo('Buka Profil untuk masuk dan menyukai post komunitas.');
+      setError(t('explore.loginLikeFeed'));
+      showInfo(t('explore.loginLikeFeed'));
       return;
     }
 
@@ -693,9 +695,9 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       if (selectedItem?.id === item.id) {
         setSelectedItem(updated);
       }
-      showSuccess('Post komunitas diperbarui.');
+      showSuccess(t('explore.feedUpdated'));
     } catch (err) {
-      const nextMessage = err?.message ?? 'Post belum bisa disukai.';
+      const nextMessage = err?.message ?? t('explore.feedLikeError');
       setError(nextMessage);
       showError(nextMessage);
     } finally {
@@ -705,7 +707,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   const handleHideFeedItem = async (item) => {
     if (!session?.token) {
-      showInfo('Buka Profil untuk masuk.');
+      showInfo(t('explore.feedLoginRequired'));
       return;
     }
 
@@ -716,9 +718,9 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       if (selectedItem?.id === item.id) {
         setSelectedItem(null);
       }
-      showSuccess('Post disembunyikan.');
+      showSuccess(t('explore.feedHidden'));
     } catch (err) {
-      const nextMessage = err?.message ?? 'Post belum bisa disembunyikan.';
+      const nextMessage = err?.message ?? t('explore.feedHideError');
       setError(nextMessage);
       showError(nextMessage);
     }
@@ -726,16 +728,16 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
 
   const handleReportFeedItem = async (item) => {
     if (!session?.token) {
-      showInfo('Buka Profil untuk masuk.');
+      showInfo(t('explore.feedLoginRequired'));
       return;
     }
 
     setError('');
     try {
       await reportFeedPost(item.raw?.id ?? item.id);
-      showSuccess('Post dilaporkan ke moderator.');
+      showSuccess(t('explore.feedReported'));
     } catch (err) {
-      const nextMessage = err?.message ?? 'Post belum bisa dilaporkan.';
+      const nextMessage = err?.message ?? t('explore.feedReportError');
       setError(nextMessage);
       showError(nextMessage);
     }
@@ -759,8 +761,8 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     const content = commentDraft.trim();
     if (!selectedItem || !content) return;
     if (!session?.token) {
-      setError('Buka Profil untuk masuk dan menulis komentar.');
-      showInfo('Buka Profil untuk masuk dan menulis komentar.');
+      setError(t('explore.commentLoginRequired'));
+      showInfo(t('explore.commentLoginRequired'));
       return;
     }
 
@@ -772,9 +774,9 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       const created = await createComment({ content, refId: ref.refId, refType: ref.refType });
       setFeedComments((current) => [...current, created]);
       setCommentDraft('');
-      showSuccess('Komentar terkirim.');
+      showSuccess(t('explore.commentSaved'));
     } catch (err) {
-      const nextMessage = err?.message ?? 'Komentar belum bisa dikirim.';
+      const nextMessage = err?.message ?? t('explore.commentSaveError');
       setError(nextMessage);
       showError(nextMessage);
     } finally {
@@ -805,13 +807,13 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
   const submitUserWird = async () => {
     const title = userWirdForm.title.trim();
     if (!title) {
-      setError('Judul wirid wajib diisi.');
-      showInfo('Judul wirid wajib diisi.');
+      setError(t('explore.wirdTitleRequired'));
+      showInfo(t('explore.wirdTitleRequired'));
       return false;
     }
     if (!session?.token) {
-      setError('Buka Profil untuk masuk dan menyimpan wirid.');
-      showInfo('Buka Profil untuk masuk dan menyimpan wirid.');
+      setError(t('explore.loginWirdSave'));
+      showInfo(t('explore.loginWirdSave'));
       return false;
     }
 
@@ -834,16 +836,16 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         const updated = await updateUserWird(editingUserWirdId, payload);
         const normalized = normalizeUserWirdItem(updated?.data ?? updated);
         setItems((current) => current.map((item) => (item.id === normalized.id ? normalized : item)));
-        showSuccess('Wirid diperbarui.');
+        showSuccess(t('explore.wirdUpdated'));
       } else {
         const created = await createUserWird(payload);
         setItems((current) => [normalizeUserWirdItem(created?.data ?? created), ...current]);
-        showSuccess('Wirid disimpan.');
+        showSuccess(t('explore.wirdSaved'));
       }
       resetUserWirdForm();
       return true;
     } catch (err) {
-      const nextMessage = err?.message ?? 'Wirid belum bisa disimpan.';
+      const nextMessage = err?.message ?? t('explore.wirdSaveError');
       setError(nextMessage);
       showError(nextMessage);
       return false;
@@ -856,8 +858,8 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     const id = item?.raw?.id ?? item?.id;
     if (!id) return;
     if (!session?.token) {
-      setError('Buka Profil untuk masuk dan menghapus wirid.');
-      showInfo('Buka Profil untuk masuk dan menghapus wirid.');
+      setError(t('explore.loginWirdDelete'));
+      showInfo(t('explore.loginWirdDelete'));
       return;
     }
 
@@ -866,9 +868,9 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       await deleteUserWird(id);
       setItems((current) => current.filter((entry) => entry.id !== item.id));
       if (editingUserWirdId === id) resetUserWirdForm();
-      showSuccess('Wirid dihapus.');
+      showSuccess(t('explore.wirdDeleted'));
     } catch (err) {
-      const nextMessage = err?.message ?? 'Wirid belum bisa dihapus.';
+      const nextMessage = err?.message ?? t('explore.wirdDeleteError');
       setError(nextMessage);
       showError(nextMessage);
     }
@@ -882,7 +884,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         try {
           await Linking.openURL(sourceUrl);
         } catch (err) {
-          setError(err?.message ?? 'Sumber asli belum bisa dibuka.');
+          setError(err?.message ?? t('explore.sourceOpenError'));
         }
         return;
       }
@@ -899,11 +901,11 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
           const ayah = await getAyahById(refId);
           onOpenTab('quran', { surahNumber: ayah?.surahNumber ?? 1 });
         } catch (err) {
-          setError(err?.message ?? 'Sumber asli belum bisa dibuka.');
+          setError(err?.message ?? t('explore.sourceOpenError'));
         }
       }
     },
-    [onOpenTab],
+    [onOpenTab, t],
   );
 
   const runDictionarySearch = useCallback(async () => {
@@ -912,11 +914,11 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
     try {
       setItems(await searchDictionary(dictionaryQuery));
     } catch (err) {
-      setError(err?.message ?? 'Pencarian kamus belum berhasil.');
+      setError(err?.message ?? t('explore.dictionarySearchError'));
     } finally {
       setLoading(false);
     }
-  }, [dictionaryQuery]);
+  }, [dictionaryQuery, t]);
 
   const loadSurahContent = async (surahNumber) => {
     if (!activeFeature?.contentType || !surahNumber) return;
@@ -947,7 +949,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       });
     } catch (err) {
       setItems([]);
-      setError(err?.message ?? 'Konten surah belum bisa dimuat.');
+      setError(err?.message ?? t('explore.surahLoadError'));
     } finally {
       setLoading(false);
     }
@@ -964,13 +966,13 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
         prayer: prayerKey,
         status: nowDone ? 'munfarid' : 'missed',
       });
-      showSuccess(`${prayerKey} ${nowDone ? 'ditandai selesai' : 'ditandai belum selesai'}.`);
+      showSuccess(t(nowDone ? 'explore.prayerMarkedDone' : 'explore.prayerMarkedMissed', { prayer: prayerKey }));
     } catch {
       setSholatLog((current) => ({ ...current, [prayerKey]: !nowDone }));
-      showError('Log sholat belum bisa disimpan.');
+      showError(t('explore.prayerLogError'));
     }
   },
-    [sholatLog, showError, showSuccess],
+    [sholatLog, showError, showSuccess, t],
   );
 
   useEffect(() => {
@@ -1149,7 +1151,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       {pagination.loadingMore ? (
         <View style={styles.loadMoreFooter}>
           <ActivityIndicator color={colors.primary} size="small" />
-          <Text style={styles.loadMoreText}>Memuat data berikutnya...</Text>
+          <Text style={styles.loadMoreText}>{t('explore.loadingMore')}</Text>
         </View>
       ) : null}
       {renderItemActionSheet()}
@@ -1219,7 +1221,7 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       notesSearch,
       onToggleAmalan: handleToggleAmalan,
       onOpenKajianUrl: (url) => {
-        Linking.openURL(url).catch(() => setError('Tautan kajian belum bisa dibuka.'));
+        Linking.openURL(url).catch(() => setError(t('explore.kajianLinkError')));
       },
       onOpenTab,
       openItemDetail,
@@ -1398,21 +1400,21 @@ export function ExploreScreen({ deepLinkTarget, isActive, navigation, onOpenTab 
       {!loading && activeFeature && !error && !items.length && !LOCAL_TOOL_TYPES.includes(activeFeature.type) && !(activeFeature.type === 'user-wird' && !session?.token) ? (
         <Text style={styles.empty}>
           {activeFeature.type === 'bookmarks'
-            ? 'Belum ada bookmark tersimpan. Buka suatu hadis atau ayat lalu simpan.'
+            ? t('explore.empty.bookmarks')
             : activeFeature.type === 'notes'
-              ? 'Belum ada catatan. Buka detail konten untuk menambahkan catatan.'
+              ? t('explore.empty.notes')
               : activeFeature.type === 'feed'
-                ? 'Belum ada post komunitas.'
+                ? t('explore.empty.feed')
                 : activeFeature.type === 'user-wird'
-                  ? 'Belum ada wirid pribadi. Tambahkan bacaan pertamamu dari form di atas.'
-                  : 'Belum ada data untuk fitur ini.'}
+                  ? t('explore.empty.userWird')
+                  : t('explore.empty.default')}
         </Text>
       ) : null}
       {!loading && activeFeature?.key === 'library' && libraryProgressFilter && items.length > 0 && visibleItems.length === 0 ? (
-        <Text style={styles.empty}>Belum ada buku dengan status {getLibraryProgressLabel(libraryProgressFilter)}.</Text>
+        <Text style={styles.empty}>{t('explore.empty.libraryFilter', { status: getLibraryProgressLabel(libraryProgressFilter) })}</Text>
       ) : null}
       {!loading && activeFeature?.type === 'surah-content' && selectedSurahNumber && !error && !items.length ? (
-        <Text style={styles.empty}>Tafsir untuk surah ini belum tersedia. Coba pilih surah lain.</Text>
+        <Text style={styles.empty}>{t('explore.empty.surahContent')}</Text>
       ) : null}
       {!activeFeature ? renderItemActionSheet() : null}
     </Screen>
