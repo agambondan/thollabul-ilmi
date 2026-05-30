@@ -1,15 +1,16 @@
 import { CheckCircle2, Circle } from 'lucide-react-native';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 
 const getRaw = (item) => item?.raw ?? {};
-const pickLabel = (item, index) =>
+const pickLabel = (item, index, t) =>
   getRaw(item).name_id ??
   getRaw(item).name ??
   getRaw(item).title ??
   item?.title ??
-  `Amalan ${index + 1}`;
+  t('explore.amalan.fallbackLabel', { number: index + 1 });
 const isDone = (item) => Boolean(getRaw(item).is_checked ?? getRaw(item).done ?? getRaw(item).checked ?? item?.done);
 
 export function WebAppAmalanRoute({
@@ -18,6 +19,7 @@ export function WebAppAmalanRoute({
   loading,
   onToggleItem,
 }) {
+  const { t } = useMobileLocale();
   const doneCount = items.filter(isDone).length;
   const total = items.length;
   const percent = total > 0 ? Math.round((doneCount / total) * 100) : 0;
@@ -26,13 +28,13 @@ export function WebAppAmalanRoute({
     <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} style={styles.root}>
       <View testID="explore-web-app-amalan-surface" />
       <View style={styles.header}>
-        <Text style={styles.title}>Amalan Harian</Text>
-        <Text style={styles.subtitle}>Checklist ibadah harian dari dashboard personal.</Text>
+        <Text style={styles.title}>{t('explore.amalan.title')}</Text>
+        <Text style={styles.subtitle}>{t('explore.amalan.subtitle')}</Text>
       </View>
 
       <View style={styles.progressCard}>
         <View style={styles.progressTop}>
-          <Text style={styles.progressLabel}>Progress</Text>
+          <Text style={styles.progressLabel}>{t('explore.amalan.progress')}</Text>
           <Text style={styles.progressCount}>{doneCount}/{total}</Text>
         </View>
         <View style={styles.progressTrack}>
@@ -44,16 +46,16 @@ export function WebAppAmalanRoute({
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color="#059669" size="small" />
-          <Text style={styles.stateText}>Memuat amalan harian...</Text>
+          <Text style={styles.stateText}>{t('explore.amalan.loading')}</Text>
         </View>
       ) : null}
 
-      {error ? <Text style={styles.error}>Data amalan belum bisa dimuat. Coba refresh halaman.</Text> : null}
+      {error ? <Text style={styles.error}>{t('explore.amalan.loadError')}</Text> : null}
 
       {!loading && !error && total === 0 ? (
         <View style={styles.empty}>
-          <Text style={styles.emptyTitle}>Checklist amalan belum tersedia.</Text>
-          <Text style={styles.emptyText}>Coba muat ulang setelah beberapa saat.</Text>
+          <Text style={styles.emptyTitle}>{t('explore.amalan.emptyTitle')}</Text>
+          <Text style={styles.emptyText}>{t('explore.amalan.emptyText')}</Text>
         </View>
       ) : null}
 
@@ -73,7 +75,7 @@ export function WebAppAmalanRoute({
                 ) : (
                   <Circle color="#cbd5e1" size={22} strokeWidth={2.1} />
                 )}
-                <Text style={[styles.rowText, done && styles.rowTextDone]}>{pickLabel(item, index)}</Text>
+                <Text style={[styles.rowText, done && styles.rowTextDone]}>{pickLabel(item, index, t)}</Text>
               </Pressable>
             );
           })}
