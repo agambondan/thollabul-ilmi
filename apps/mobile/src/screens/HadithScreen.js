@@ -26,6 +26,7 @@ import { Screen } from '../components/Screen';
 import { useFeedback } from '../context/FeedbackContext';
 import { useSession } from '../context/SessionContext';
 import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { getOfflineItems, getOfflineOverview } from '../storage/offlineContent';
 import { arabicTypography } from '../styles/arabicTypography';
 import { colors, radius, spacing } from '../theme';
@@ -198,6 +199,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
   const { user } = useSession();
   const { showError, showInfo, showSuccess } = useFeedback();
   const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+  const { t } = useMobileLocale();
   const webAppTheme = isDarkTheme ? WEB_APP_HADITH_THEMES.dark : WEB_APP_HADITH_THEMES.light;
   const handledDeepLinkId = useRef(null);
   const loadingMoreRef = useRef(false);
@@ -387,7 +389,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
       await loadBookmarks();
       await loadNoteCounts();
     } catch (err) {
-      setMessage(err?.message ?? 'Detail hadis belum bisa dimuat.');
+      setMessage(err?.message ?? t('hadith.detailLoadError'));
       setSanad([]);
       setTakhrij([]);
       setHadithAyahs([]);
@@ -399,7 +401,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
 
   const toggleBookmark = async (hadith) => {
     if (!user || !hadith.id) {
-      showInfo('Masuk dari Profil untuk menyimpan bookmark.');
+      showInfo(t('hadith.bookmark.loginRequired'));
       return;
     }
 
@@ -413,18 +415,18 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
         const next = { ...bookmarks };
         delete next[hadith.id];
         setBookmarks(next);
-        setMessage('Bookmark dihapus.');
-        showSuccess('Bookmark dihapus.');
+        setMessage(t('hadith.bookmark.removed'));
+        showSuccess(t('hadith.bookmark.removed'));
         await loadBookmarks();
       } else {
         const bookmark = await addBookmark({ refType: 'hadith', refId: hadith.id });
         setBookmarks({ ...bookmarks, [hadith.id]: bookmark });
-        setMessage('Hadis disimpan ke bookmark.');
-        showSuccess('Hadis disimpan ke bookmark.');
+        setMessage(t('hadith.bookmark.saved'));
+        showSuccess(t('hadith.bookmark.saved'));
         await loadBookmarks();
       }
     } catch (err) {
-      const nextMessage = err?.message ?? 'Bookmark belum bisa diperbarui.';
+      const nextMessage = err?.message ?? t('hadith.bookmark.saveError');
       setMessage(nextMessage);
       showError(nextMessage);
     } finally {
@@ -450,13 +452,13 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
       setSelectedPerawi({ ...perawi, ...(detail ?? {}) });
       setPerawiPanel({ guru, jarhTadil, loading: false, murid });
     } catch (err) {
-      setMessage(err?.message ?? 'Detail perawi belum bisa dimuat.');
+      setMessage(err?.message ?? t('hadith.perawiLoadError'));
       setPerawiPanel({ guru: [], jarhTadil: [], loading: false, murid: [] });
     }
   };
 
   const renderPerawiList = (items, listKey) => {
-    if (!items.length) return <Text style={styles.emptyText}>Perawi terkait belum tersedia.</Text>;
+    if (!items.length) return <Text style={styles.emptyText}>{t('hadith.perawiRelatedEmpty')}</Text>;
 
     const expanded = !!expandedPerawiList[listKey];
     const visible = expanded ? items : items.slice(0, 6);
@@ -954,7 +956,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
               {detailLoading && relatedHadiths.length === 0 ? (
                 <ActivityIndicator color={colors.primary} />
               ) : relatedHadiths.length === 0 ? (
-                <Text style={styles.emptyText}>Belum ada hadis terkait untuk tema ini.</Text>
+                <Text style={styles.emptyText}>{t('hadith.relatedEmpty')}</Text>
               ) : (
                 relatedHadiths.map((item) => renderCompactHadithCard(item, 'related'))
               )}
@@ -968,7 +970,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             {detailLoading && sanad.length === 0 ? (
               <ActivityIndicator color={colors.primary} />
             ) : sanad.length === 0 ? (
-              <Text style={styles.emptyText}>Jalur sanad untuk hadis ini belum tersedia.</Text>
+              <Text style={styles.emptyText}>{t('hadith.sanadEmpty')}</Text>
             ) : (
               sanad.map((path, index) => (
                 <View key={`${path.id}-${index}`} style={styles.detailBlock}>
@@ -1208,7 +1210,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
     >
       <View testID={isWebAppLayout ? 'hadith-web-app-list' : 'hadith-classic-list'} />
       {message ? <Text style={styles.message}>{message}</Text> : null}
-      {!user ? <Text style={styles.notice}>Buka Profil untuk masuk dan menyimpan bookmark hadis.</Text> : null}
+      {!user ? <Text style={styles.notice}>{t('hadith.bookmark.notice')}</Text> : null}
 
       {books.length > 0 ? (
         <ScrollView
