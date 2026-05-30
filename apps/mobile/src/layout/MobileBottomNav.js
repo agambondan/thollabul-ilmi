@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BarChart3, BookOpen, LibraryBig, Menu, Search } from 'lucide-react-native';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../theme';
 import { hapticSelection } from '../utils/haptics';
 
@@ -18,15 +19,16 @@ const nav = {
 };
 
 export const webDashboardBottomItems = [
-  { Icon: BarChart3, key: 'home', label: 'Dashboard' },
-  { Icon: BookOpen, key: 'quran', label: 'Al-Quran' },
-  { Icon: LibraryBig, key: 'hadith', label: 'Hadith' },
-  { Icon: Search, key: 'search', label: 'Cari' },
-  { Icon: Menu, key: 'menu', label: 'Menu' },
+  { Icon: BarChart3, key: 'home', label: 'Dashboard', labelKey: 'nav.dashboard' },
+  { Icon: BookOpen, key: 'quran', label: 'Al-Quran', labelKey: 'nav.quran' },
+  { Icon: LibraryBig, key: 'hadith', label: 'Hadith', labelKey: 'nav.hadith' },
+  { Icon: Search, key: 'search', label: 'Cari', labelKey: 'nav.search' },
+  { Icon: Menu, key: 'menu', label: 'Menu', labelKey: 'nav.menu' },
 ];
 
 export function MobileBottomNav({ active, isDarkTheme = false, onChange, onOpenMenu, onOpenSearch }) {
   const insets = useSafeAreaInsets();
+  const { t } = useMobileLocale();
   const activeColor = isDarkTheme ? nav.darkActive : nav.active;
   const inactiveColor = isDarkTheme ? nav.darkInactive : nav.inactive;
 
@@ -43,10 +45,11 @@ export function MobileBottomNav({ active, isDarkTheme = false, onChange, onOpenM
         const selected = active === tab.key;
         const Icon = tab.Icon;
         const isAction = tab.key === 'menu' || tab.key === 'search';
+        const label = t(tab.labelKey);
 
         return (
           <Pressable
-            accessibilityLabel={tab.label}
+            accessibilityLabel={label}
             accessibilityRole={isAction ? 'button' : 'tab'}
             accessibilityState={tab.key === 'menu' ? undefined : { selected }}
             android_ripple={{ color: isDarkTheme ? nav.darkActiveBg : nav.activeBg, borderless: false }}
@@ -79,7 +82,7 @@ export function MobileBottomNav({ active, isDarkTheme = false, onChange, onOpenM
               ]}
               numberOfLines={1}
             >
-              {tab.label}
+              {label}
             </Text>
           </Pressable>
         );

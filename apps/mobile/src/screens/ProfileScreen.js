@@ -42,8 +42,9 @@ import { Screen } from '../components/Screen';
 import { SessionCard } from '../components/SessionCard';
 import { useSession } from '../context/SessionContext';
 import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { defaultLayoutMode, useLayoutMode } from '../layout/LayoutModeProvider';
-import { preferenceKeys, readPreference, writePreference } from '../storage/preferences';
+import { preferenceKeys, readPreference } from '../storage/preferences';
 import { colors } from '../theme';
 import { styles, WEB_APP_PROFILE_THEMES } from './ProfileScreen.styles';
 
@@ -55,19 +56,19 @@ const DEFAULT_BADGES = [
 ];
 
 const THEME_OPTIONS = [
-    { key: 'system', label: 'Ikuti Sistem', meta: 'Gunakan preferensi perangkat sebagai default.' },
-    { key: 'light', label: 'Terang', meta: 'Palet terang klasik Thullabul Ilmi.' },
-    { key: 'dark', label: 'Gelap', meta: 'Disimpan sebagai preferensi perangkat untuk mode layout berikutnya.' },
+    { key: 'system', labelKey: 'theme.system.label', metaKey: 'theme.system.meta' },
+    { key: 'light', labelKey: 'theme.light.label', metaKey: 'theme.light.meta' },
+    { key: 'dark', labelKey: 'theme.dark.label', metaKey: 'theme.dark.meta' },
 ];
 
 const LANGUAGE_OPTIONS = [
-    { key: 'idn', label: 'Indonesia', meta: 'Konten dan API memakai preferensi Indonesia.' },
-    { key: 'en', label: 'English', meta: 'Konten yang sudah punya terjemahan EN akan diprioritaskan.' },
+    { key: 'idn', labelKey: 'language.indonesia.label', metaKey: 'language.indonesia.meta' },
+    { key: 'en', labelKey: 'language.english.label', metaKey: 'language.english.meta' },
 ];
 
 const LAYOUT_OPTIONS = [
-    { key: 'classic', label: 'Classic', meta: 'Baseline native app saat ini.' },
-    { key: 'web_app', label: 'Web App', meta: 'Preferensi mode dashboard mobile web untuk rollout bertahap.' },
+    { key: 'classic', labelKey: 'layout.classic.label', metaKey: 'layout.classic.meta' },
+    { key: 'web_app', labelKey: 'layout.webApp.label', metaKey: 'layout.webApp.meta' },
 ];
 
 const getResponseUser = (payload) => payload?.data ?? payload;
@@ -256,6 +257,7 @@ function AppearanceSettings({ onUserUpdated, user }) {
         setLayoutMode: setAppLayoutMode,
         setThemePreference: setAppThemePreference,
     } = useLayoutMode();
+    const { setLanguage: setAppLanguage, t } = useMobileLocale();
     const [theme, setTheme] = useState('system');
     const [language, setLanguage] = useState(user?.preferred_lang ?? 'idn');
     const [layoutMode, setLayoutMode] = useState(defaultLayoutMode);
@@ -290,9 +292,9 @@ function AppearanceSettings({ onUserUpdated, user }) {
         try {
             const storedTheme = await setAppThemePreference(nextTheme);
             setTheme(storedTheme);
-            setMessage('Preferensi tema tersimpan di perangkat ini.');
+            setMessage(t('theme.saved'));
         } catch (err) {
-            setMessage(err?.message ?? 'Preferensi tema belum bisa disimpan.');
+            setMessage(err?.message ?? t('theme.saveError'));
         } finally {
             setSaving('');
         }
@@ -304,9 +306,9 @@ function AppearanceSettings({ onUserUpdated, user }) {
         try {
             const storedMode = await setAppLayoutMode(nextMode);
             setLayoutMode(storedMode);
-            setMessage('Mode layout tersimpan di perangkat ini.');
+            setMessage(t('layout.saved'));
         } catch (err) {
-            setMessage(err?.message ?? 'Mode layout belum bisa disimpan.');
+            setMessage(err?.message ?? t('layout.saveError'));
         } finally {
             setSaving('');
         }
@@ -316,17 +318,17 @@ function AppearanceSettings({ onUserUpdated, user }) {
         setSaving('language');
         setMessage('');
         try {
-            await writePreference(preferenceKeys.appLanguage, nextLanguage);
-            setLanguage(nextLanguage);
+            const storedLanguage = await setAppLanguage(nextLanguage);
+            setLanguage(storedLanguage);
             if (user) {
-                const updatedUser = getResponseUser(await updateProfile({ preferredLang: nextLanguage }));
+                const updatedUser = getResponseUser(await updateProfile({ preferredLang: storedLanguage }));
                 await onUserUpdated?.(updatedUser);
-                setMessage('Bahasa konten tersimpan ke akun dan perangkat ini.');
+                setMessage(t('language.savedAccount'));
             } else {
-                setMessage('Bahasa konten tersimpan di perangkat ini.');
+                setMessage(t('language.savedDevice'));
             }
         } catch (err) {
-            setMessage(err?.message ?? 'Bahasa konten belum bisa disimpan.');
+            setMessage(err?.message ?? t('language.saveError'));
         } finally {
             setSaving('');
         }
@@ -335,17 +337,17 @@ function AppearanceSettings({ onUserUpdated, user }) {
     return (
         <>
             <Card>
-                <Text style={styles.appearanceLabel}>Tema</Text>
+                <Text style={styles.appearanceLabel}>{t('profile.appearance.theme.label')}</Text>
                 <Text style={styles.appearanceMeta}>
-                    Pilihan ini disimpan sebagai preferensi perangkat dan dipakai oleh mode layout yang mendukung tema.
+                    {t('profile.appearance.theme.meta')}
                 </Text>
                 <View style={styles.choiceGroup}>
                     {THEME_OPTIONS.map((item) => (
                         <ChoiceRow
                             active={theme === item.key}
                             key={item.key}
-                            label={item.label}
-                            meta={item.meta}
+                            label={t(item.labelKey)}
+                            meta={t(item.metaKey)}
                             onPress={() => saveTheme(item.key)}
                         />
                     ))}
@@ -353,17 +355,17 @@ function AppearanceSettings({ onUserUpdated, user }) {
             </Card>
 
             <Card>
-                <Text style={styles.appearanceLabel}>Bahasa Konten</Text>
+                <Text style={styles.appearanceLabel}>{t('profile.appearance.language.label')}</Text>
                 <Text style={styles.appearanceMeta}>
-                    Akun yang login akan menyimpan bahasa ke backend sebagai `preferred_lang`.
+                    {t('profile.appearance.language.meta')}
                 </Text>
                 <View style={styles.choiceGroup}>
                     {LANGUAGE_OPTIONS.map((item) => (
                         <ChoiceRow
                             active={language === item.key}
                             key={item.key}
-                            label={item.label}
-                            meta={item.meta}
+                            label={t(item.labelKey)}
+                            meta={t(item.metaKey)}
                             onPress={() => saveLanguage(item.key)}
                         />
                     ))}
@@ -371,17 +373,17 @@ function AppearanceSettings({ onUserUpdated, user }) {
             </Card>
 
             <Card>
-                <Text style={styles.appearanceLabel}>Mode Layout</Text>
+                <Text style={styles.appearanceLabel}>{t('layout.mode.label')}</Text>
                 <Text style={styles.appearanceMeta}>
-                    Mode ini mengikuti dokumen layout mobile: classic sebagai baseline dan web app sebagai opt-in.
+                    {t('layout.mode.meta')}
                 </Text>
                 <View style={styles.choiceGroup}>
                     {LAYOUT_OPTIONS.map((item) => (
                         <ChoiceRow
                             active={layoutMode === item.key}
                             key={item.key}
-                            label={item.label}
-                            meta={item.meta}
+                            label={t(item.labelKey)}
+                            meta={t(item.metaKey)}
                             onPress={() => saveLayoutMode(item.key)}
                         />
                     ))}

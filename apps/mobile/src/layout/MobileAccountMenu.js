@@ -10,6 +10,7 @@ import {
 } from 'lucide-react-native';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../theme';
 import { hapticSelection } from '../utils/haptics';
 
@@ -30,11 +31,11 @@ const menu = {
 };
 
 const accountItems = [
-  { Icon: UserRound, key: 'profile', label: 'Profil' },
-  { Icon: BookMarked, key: 'bookmarks', label: 'Bookmark' },
-  { Icon: FileText, key: 'notes', label: 'Catatan' },
-  { Icon: BarChart3, key: 'stats', label: 'Statistik' },
-  { Icon: Bell, key: 'notifications', label: 'Notifikasi' },
+  { Icon: UserRound, key: 'profile', labelKey: 'account.profile' },
+  { Icon: BookMarked, key: 'bookmarks', labelKey: 'account.bookmarks' },
+  { Icon: FileText, key: 'notes', labelKey: 'account.notes' },
+  { Icon: BarChart3, key: 'stats', labelKey: 'account.stats' },
+  { Icon: Bell, key: 'notifications', labelKey: 'account.notifications' },
 ];
 
 const HEADER_HEIGHT = 56;
@@ -46,6 +47,7 @@ export function MobileAccountMenu({
   isDarkTheme = false,
   loading = false,
   onClose,
+  onSelectLanguage,
   onSelectItem,
   onSelectProfile,
   onSignOut,
@@ -54,9 +56,10 @@ export function MobileAccountMenu({
   visible,
 }) {
   const insets = useSafeAreaInsets();
-  const normalizedAccountLabel = accountLabel?.trim() || 'Tamu';
+  const { language, setLanguage, t } = useMobileLocale();
+  const normalizedAccountLabel = accountLabel?.trim() || t('account.userGuest');
   const accountInitial = normalizedAccountLabel.slice(0, 1).toUpperCase();
-  const subtitle = accountEmail?.trim() || 'Belum masuk';
+  const subtitle = accountEmail?.trim() || t('account.emailGuest');
 
   const handleAccountItem = (item) => {
     hapticSelection();
@@ -80,11 +83,18 @@ export function MobileAccountMenu({
     onToggleTheme?.();
   };
 
+  const handleSelectLanguage = async (nextLanguage) => {
+    if (nextLanguage === language) return;
+    hapticSelection();
+    const storedLanguage = await setLanguage(nextLanguage);
+    onSelectLanguage?.(storedLanguage);
+  };
+
   return (
     <Modal animationType="fade" onRequestClose={onClose} transparent visible={visible}>
       <View style={styles.root} pointerEvents="box-none" testID="mobile-account-menu">
         <Pressable
-          accessibilityLabel="Tutup menu akun"
+          accessibilityLabel={t('account.closeMenu')}
           accessibilityRole="button"
           onPress={onClose}
           style={[styles.backdrop, !isDarkTheme && styles.backdropLight]}
@@ -111,7 +121,7 @@ export function MobileAccountMenu({
               </Text>
             </View>
             <Pressable
-              accessibilityLabel="Tutup menu akun"
+              accessibilityLabel={t('account.closeMenu')}
               accessibilityRole="button"
               android_ripple={{ color: isDarkTheme ? '#334155' : '#e5e7eb', borderless: true }}
               onPress={onClose}
@@ -135,7 +145,7 @@ export function MobileAccountMenu({
                   testID={`mobile-account-menu-item-${item.key}`}
                 >
                   <Icon color={isDarkTheme ? menu.muted : menu.lightMuted} size={17} strokeWidth={1.9} />
-                  <Text style={[styles.rowLabel, !isDarkTheme && styles.rowLabelLight]}>{item.label}</Text>
+                  <Text style={[styles.rowLabel, !isDarkTheme && styles.rowLabelLight]}>{t(item.labelKey)}</Text>
                 </Pressable>
               );
             })}
@@ -143,7 +153,7 @@ export function MobileAccountMenu({
 
           <View style={[styles.preferences, !isDarkTheme && styles.preferencesLight]}>
             <Pressable
-              accessibilityLabel="Toggle tema gelap"
+              accessibilityLabel={t('account.themeToggle')}
               accessibilityRole="switch"
               accessibilityState={{ checked: isDarkTheme }}
               android_ripple={{ color: isDarkTheme ? '#334155' : '#e5e7eb', borderless: false }}
@@ -152,9 +162,9 @@ export function MobileAccountMenu({
               testID="mobile-account-menu-theme-toggle"
             >
               <View>
-                <Text style={[styles.prefLabel, !isDarkTheme && styles.prefLabelLight]}>Gelap</Text>
+                <Text style={[styles.prefLabel, !isDarkTheme && styles.prefLabelLight]}>{t('account.dark')}</Text>
                 <Text style={[styles.prefMeta, !isDarkTheme && styles.prefMetaLight]}>
-                  {themePreference === 'system' ? 'Mengikuti sistem' : isDarkTheme ? 'Tema gelap aktif' : 'Tema terang aktif'}
+                  {themePreference === 'system' ? t('account.theme.system') : isDarkTheme ? t('account.theme.darkActive') : t('account.theme.lightActive')}
                 </Text>
               </View>
               <View style={[styles.switchTrack, !isDarkTheme && styles.switchTrackOff]}>
@@ -165,22 +175,33 @@ export function MobileAccountMenu({
             </Pressable>
             <View style={styles.langRow}>
               <Pressable
+                accessibilityLabel={t('account.language.indonesia')}
                 accessibilityRole="button"
-                style={[styles.langPill, !isDarkTheme && styles.langPillLight, styles.langPillActive]}
+                accessibilityState={{ selected: language === 'idn' }}
+                onPress={() => handleSelectLanguage('idn')}
+                style={[styles.langPill, !isDarkTheme && styles.langPillLight, language === 'idn' && styles.langPillActive]}
+                testID="mobile-account-menu-language-idn"
               >
                 <Text style={styles.flag}>🇮🇩</Text>
-                <Text style={[styles.langText, styles.langTextActive]}>Indonesia</Text>
+                <Text style={[styles.langText, language === 'idn' ? styles.langTextActive : !isDarkTheme && styles.langTextLight]}>{t('account.language.indonesia')}</Text>
               </Pressable>
-              <Pressable accessibilityRole="button" style={[styles.langPill, !isDarkTheme && styles.langPillLight]}>
+              <Pressable
+                accessibilityLabel={t('account.language.english')}
+                accessibilityRole="button"
+                accessibilityState={{ selected: language === 'en' }}
+                onPress={() => handleSelectLanguage('en')}
+                style={[styles.langPill, !isDarkTheme && styles.langPillLight, language === 'en' && styles.langPillActive]}
+                testID="mobile-account-menu-language-en"
+              >
                 <Text style={styles.flag}>🇬🇧</Text>
-                <Text style={[styles.langText, !isDarkTheme && styles.langTextLight]}>English</Text>
+                <Text style={[styles.langText, language === 'en' ? styles.langTextActive : !isDarkTheme && styles.langTextLight]}>{t('account.language.english')}</Text>
               </Pressable>
             </View>
           </View>
 
           {canSignOut ? (
             <Pressable
-              accessibilityLabel="Keluar"
+              accessibilityLabel={t('account.logout')}
               accessibilityRole="button"
               android_ripple={{ color: isDarkTheme ? '#334155' : '#fee2e2', borderless: false }}
               disabled={loading}
@@ -189,7 +210,7 @@ export function MobileAccountMenu({
               testID="mobile-account-menu-sign-out"
             >
               <LogOut color={menu.danger} size={17} strokeWidth={2} />
-              <Text style={styles.signOutLabel}>{loading ? 'Keluar...' : 'Keluar'}</Text>
+              <Text style={styles.signOutLabel}>{loading ? t('account.logoutLoading') : t('account.logout')}</Text>
             </Pressable>
           ) : null}
         </View>

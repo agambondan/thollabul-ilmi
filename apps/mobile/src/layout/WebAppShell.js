@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, StatusBar, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { updateProfile } from '../api/auth';
 import { useSession } from '../context/SessionContext';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { colors } from '../theme';
 import { useLayoutMode } from './LayoutModeProvider';
 import { MobileAccountMenu } from './MobileAccountMenu';
@@ -9,17 +11,18 @@ import { MobileBottomNav } from './MobileBottomNav';
 import { MobileMenuSheet } from './MobileMenuSheet';
 import { MobileTopHeader } from './MobileTopHeader';
 
-export function getWebAppAccountLabel(user) {
+export function getWebAppAccountLabel(user, guestLabel = 'Tamu') {
   const candidate = user?.name || user?.email;
-  return candidate?.trim() || 'Tamu';
+  return candidate?.trim() || guestLabel;
 }
 
 export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfile, onTabChange }) {
-  const { loading, session, signOut, user } = useSession();
+  const { loading, session, signOut, updateCurrentUser, user } = useSession();
+  const { t } = useMobileLocale();
   const { isDarkTheme, setThemePreference, themePreference } = useLayoutMode();
   const [accountMenuVisible, setAccountMenuVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
-  const accountLabel = getWebAppAccountLabel(user);
+  const accountLabel = getWebAppAccountLabel(user, t('account.userGuest'));
   const canSignOut = Boolean(session?.token || user);
 
   useEffect(() => {
@@ -50,6 +53,18 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
       onTabChange?.('belajar', { featureKey: item.key });
     },
     [onTabChange],
+  );
+  const handleLanguageSelect = useCallback(
+    async (nextLanguage) => {
+      if (!user) return;
+      try {
+        const updatedUser = await updateProfile({ preferredLang: nextLanguage });
+        await updateCurrentUser?.(updatedUser?.data ?? updatedUser);
+      } catch {
+        // The local device preference has already been saved; account sync can retry from Profile.
+      }
+    },
+    [updateCurrentUser, user],
   );
 
   return (
@@ -94,6 +109,7 @@ export function WebAppShell({ activeTab, children, keyboardVisible, onOpenProfil
         isDarkTheme={isDarkTheme}
         loading={loading}
         onClose={closeAccountMenu}
+        onSelectLanguage={handleLanguageSelect}
         onSelectItem={handleAccountMenuSelect}
         onSelectProfile={onOpenProfile}
         onSignOut={signOut}

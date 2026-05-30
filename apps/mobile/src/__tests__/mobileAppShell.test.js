@@ -3,6 +3,7 @@ import React from 'react';
 import { StatusBar, Text } from 'react-native';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import { TabActivityProvider } from '../context/TabActivityContext';
+import { MobileLocaleProvider } from '../i18n/MobileLocaleProvider';
 import { LayoutModeProvider } from '../layout/LayoutModeProvider';
 import { MobileAppShell } from '../layout/MobileAppShell';
 import { getWebAppAccountLabel } from '../layout/WebAppShell';
@@ -41,6 +42,28 @@ function renderShell(props = {}) {
           <Text>Shell content</Text>
         </MobileAppShell>
       </LayoutModeProvider>
+    </TabActivityProvider>,
+  );
+}
+
+function renderShellWithLocale(props = {}) {
+  const onOpenProfile = props.onOpenProfile ?? jest.fn();
+  const onTabChange = props.onTabChange ?? jest.fn();
+
+  return render(
+    <TabActivityProvider>
+      <MobileLocaleProvider>
+        <LayoutModeProvider>
+          <MobileAppShell
+            activeTab={props.activeTab ?? 'home'}
+            keyboardVisible={props.keyboardVisible ?? false}
+            onOpenProfile={onOpenProfile}
+            onTabChange={onTabChange}
+          >
+            <Text>Shell content</Text>
+          </MobileAppShell>
+        </LayoutModeProvider>
+      </MobileLocaleProvider>
     </TabActivityProvider>,
   );
 }
@@ -354,6 +377,32 @@ describe('MobileAppShell', () => {
 
     await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
     expect(queryByTestId('mobile-bottom-nav')).toBeNull();
+  });
+
+  test('localizes web app shell chrome from stored mobile language', async () => {
+    AsyncStorage.getItem.mockImplementation(async (key) => {
+      if (key === 'tholabul:pref:app-layout-mode') return '"web_app"';
+      if (key === 'tholabul:pref:app-language') return '"en"';
+      return null;
+    });
+
+    const { getByLabelText, getByTestId, getByText, queryByText } = renderShellWithLocale({ activeTab: 'search' });
+
+    await waitFor(() => expect(getByTestId('web-app-shell')).toBeTruthy());
+    await waitFor(() => expect(getByLabelText('Search')).toBeTruthy());
+    expect(queryByText('Cari')).toBeNull();
+
+    fireEvent.press(getByTestId('mobile-top-header-profile'));
+    expect(getByText('Guest')).toBeTruthy();
+    expect(getByText('Not signed in')).toBeTruthy();
+    expect(getByText('Dark')).toBeTruthy();
+    expect(getByTestId('mobile-account-menu-language-en').props.accessibilityState).toEqual({ selected: true });
+
+    fireEvent.press(getByTestId('mobile-account-menu-language-idn'));
+    await waitFor(() => {
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith('tholabul:pref:app-language', '"idn"');
+      expect(getByLabelText('Cari')).toBeTruthy();
+    });
   });
 });
 

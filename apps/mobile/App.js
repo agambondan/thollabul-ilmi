@@ -10,6 +10,7 @@ import { FeedbackProvider } from './src/context/FeedbackContext';
 import { SessionProvider } from './src/context/SessionContext';
 import { TabActivityProvider } from './src/context/TabActivityContext';
 import { quranFontAssets } from './src/constants/quranFonts';
+import { MobileLocaleProvider } from './src/i18n/MobileLocaleProvider';
 import { LayoutModeProvider } from './src/layout/LayoutModeProvider';
 import { MobileAppShell } from './src/layout/MobileAppShell';
 import { ExploreScreen } from './src/screens/ExploreScreen';
@@ -211,16 +212,17 @@ export default function App() {
     <GestureHandlerRootView style={styles.gestureRoot}>
       <SafeAreaProvider>
         <SessionProvider>
-          <FeedbackProvider>
-            <LayoutModeProvider>
-              <TabActivityProvider>
-                <AnalyticsTracker activeTab={activeTab} internalRoutes={internalRoutes} />
-                <MobileAppShell
-                  activeTab={shellActiveTab}
-                  keyboardVisible={keyboardVisible}
-                  onOpenProfile={() => openTab('profile')}
-                  onTabChange={openTab}
-                >
+          <MobileLocaleProvider>
+            <FeedbackProvider>
+              <LayoutModeProvider>
+                <TabActivityProvider>
+                  <AnalyticsTracker activeTab={activeTab} internalRoutes={internalRoutes} />
+                  <MobileAppShell
+                    activeTab={shellActiveTab}
+                    keyboardVisible={keyboardVisible}
+                    onOpenProfile={() => openTab('profile')}
+                    onTabChange={openTab}
+                  >
                     {(['home', 'quran', 'hadith', 'ibadah', 'belajar', 'profile']).map((tab) => {
                       const isActive = activeTab === tab;
                       const hasInternalView = !!internalRoutes[tab];
@@ -240,12 +242,13 @@ export default function App() {
                         </View>
                       );
                     })}
-                </MobileAppShell>
-              </TabActivityProvider>
-            </LayoutModeProvider>
-        </FeedbackProvider>
-      </SessionProvider>
-    </SafeAreaProvider>
+                  </MobileAppShell>
+                </TabActivityProvider>
+              </LayoutModeProvider>
+            </FeedbackProvider>
+          </MobileLocaleProvider>
+        </SessionProvider>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }

@@ -1,5 +1,6 @@
 import { ChevronDown } from 'lucide-react-native';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../theme';
 
 const header = {
@@ -20,6 +21,7 @@ export function MobileTopHeader({
   isDarkTheme = false,
   onOpenAccountMenu,
 }) {
+  const { t } = useMobileLocale();
   const normalizedAccountLabel = accountLabel?.trim() || 'T';
 
   return (
@@ -35,7 +37,7 @@ export function MobileTopHeader({
 
       <View style={styles.actions}>
         <Pressable
-          accessibilityLabel="Buka menu akun"
+          accessibilityLabel={t('account.menuLabel')}
           accessibilityRole="button"
           android_ripple={{ color: 'rgba(17, 24, 39, 0.08)', borderless: true }}
           onPress={onOpenAccountMenu}
