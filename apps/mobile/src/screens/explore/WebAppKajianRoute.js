@@ -1,5 +1,6 @@
 import { BookOpen, ExternalLink } from 'lucide-react-native';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 
 const ACCENT = '#34d399';
@@ -90,6 +91,8 @@ export function WebAppKajianRoute({
   onSelectCategory,
   summary,
 }) {
+  const { t } = useMobileLocale();
+
   return (
     <ScrollView
       contentContainerStyle={styles.content}
@@ -99,22 +102,20 @@ export function WebAppKajianRoute({
     >
       <View testID="explore-web-app-kajian-surface" />
       <View style={styles.header}>
-        <Text style={styles.title}>Kajian Islam</Text>
-        <Text style={styles.subtitle}>
-          Rekaman kajian dari ustadz-ustadz ahlus sunnah
-        </Text>
+        <Text style={styles.title}>{t('explore.kajian.title')}</Text>
+        <Text style={styles.subtitle}>{t('explore.kajian.subtitle')}</Text>
       </View>
 
       <View style={styles.stats}>
-        <KajianStat formatValue={formatStat} label="TOTAL KAJIAN" value={summary.total} />
-        <KajianStat formatValue={formatStat} label="VIDEO" value={summary.videoCount} />
-        <KajianStat formatValue={formatStat} label="KATEGORI" value={summary.categoryCount} />
+        <KajianStat formatValue={formatStat} label={t('explore.kajian.totalStat')} value={summary.total} />
+        <KajianStat formatValue={formatStat} label={t('explore.kajian.videoStat')} value={summary.videoCount} />
+        <KajianStat formatValue={formatStat} label={t('explore.kajian.categoryStat')} value={summary.categoryCount} />
       </View>
 
       <View style={styles.search}>
         <TextInput
           onChangeText={onSearch}
-          placeholder="Cari kajian atau ustadz..."
+          placeholder={t('explore.kajian.searchPlaceholder')}
           placeholderTextColor="#9ca3af"
           style={styles.input}
           testID="web-app-kajian-search"
@@ -128,9 +129,9 @@ export function WebAppKajianRoute({
           style={[styles.category, !kajianCategory && styles.categoryActive]}
           testID="web-app-kajian-category-all"
         >
-          <Text style={[styles.categoryText, !kajianCategory && styles.categoryTextActive]}>
-            Semua
-          </Text>
+            <Text style={[styles.categoryText, !kajianCategory && styles.categoryTextActive]}>
+              {t('explore.common.all')}
+            </Text>
         </Pressable>
         {categories.map((category) => (
           <Pressable
@@ -150,7 +151,7 @@ export function WebAppKajianRoute({
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color={ACCENT} size="small" />
-          <Text style={styles.stateText}>Memuat kajian...</Text>
+          <Text style={styles.stateText}>{t('explore.kajian.loading')}</Text>
         </View>
       ) : null}
       {!loading && !error && filteredItems.length ? (
@@ -177,10 +178,8 @@ export function WebAppKajianRoute({
       {!loading && !error && !filteredItems.length ? (
         <View style={styles.empty}>
           <BookOpen color="#9ca3af" size={32} strokeWidth={1.8} />
-          <Text style={styles.emptyTitle}>Kajian tidak ditemukan.</Text>
-          <Text style={styles.emptyText}>
-            Ubah kata kunci atau pilih kategori lain.
-          </Text>
+          <Text style={styles.emptyTitle}>{t('explore.kajian.emptyTitle')}</Text>
+          <Text style={styles.emptyText}>{t('explore.common.changeSearchOrFilter')}</Text>
         </View>
       ) : null}
     </ScrollView>

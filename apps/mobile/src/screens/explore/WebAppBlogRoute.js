@@ -1,4 +1,5 @@
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 
 function BlogCard({
@@ -72,6 +73,8 @@ export function WebAppBlogRoute({
   onSelectCategory,
   onSearch,
 }) {
+  const { t } = useMobileLocale();
+
   return (
     <ScrollView
       contentContainerStyle={styles.content}
@@ -81,16 +84,14 @@ export function WebAppBlogRoute({
     >
       <View testID="explore-web-app-blog-surface" />
       <View style={styles.header}>
-        <Text style={styles.heading}>Artikel Islam</Text>
-        <Text style={styles.subtitle}>
-          Tazkiyah, fiqh praktis, aqidah, dan ilmu Islam lainnya
-        </Text>
+        <Text style={styles.heading}>{t('explore.blog.title')}</Text>
+        <Text style={styles.subtitle}>{t('explore.blog.subtitle')}</Text>
       </View>
 
       <View style={styles.search}>
         <TextInput
           onChangeText={onSearch}
-          placeholder="Cari artikel, penulis, atau kategori..."
+          placeholder={t('explore.blog.searchPlaceholder')}
           placeholderTextColor="#9ca3af"
           style={styles.input}
           testID="web-app-blog-search"
@@ -106,7 +107,7 @@ export function WebAppBlogRoute({
             testID="web-app-blog-category-all"
           >
             <Text style={[styles.categoryPillText, !blogCategory && styles.categoryPillTextActive]}>
-              Semua
+              {t('explore.common.all')}
             </Text>
           </Pressable>
           {categories.map((category) => (
@@ -136,7 +137,7 @@ export function WebAppBlogRoute({
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color="#047857" size="small" />
-          <Text style={styles.stateText}>Memuat artikel...</Text>
+          <Text style={styles.stateText}>{t('explore.blog.loading')}</Text>
         </View>
       ) : null}
       {!loading && !error && filteredItems.length ? (
@@ -161,10 +162,10 @@ export function WebAppBlogRoute({
         <View style={styles.empty}>
           <Text style={styles.emptyArabic}>كِتَابَةً</Text>
           <Text style={styles.emptyTitle}>
-            {hasItems ? 'Tidak ada artikel yang cocok' : 'Belum ada artikel yang dipublikasikan'}
+            {hasItems ? t('explore.blog.emptyFilteredTitle') : t('explore.blog.emptyTitle')}
           </Text>
           <Text style={styles.emptyText}>
-            {hasItems ? 'Ubah kata kunci atau reset filter kategori.' : 'Artikel sedang disiapkan oleh tim penulis.'}
+            {hasItems ? t('explore.blog.emptyFilteredText') : t('explore.blog.emptyText')}
           </Text>
         </View>
       ) : null}
