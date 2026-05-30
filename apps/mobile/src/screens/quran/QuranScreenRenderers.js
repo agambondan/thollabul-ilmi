@@ -31,8 +31,6 @@ import {
     DISPLAY_MODES,
     ARABIC_FONTS,
     QURAN_TABS,
-    WEB_APP_QURAN_MUTED,
-    WEB_APP_QURAN_ACCENT,
     MIN_ARABIC_FONT_SIZE,
     MAX_ARABIC_FONT_SIZE,
     BISMILLAH,
@@ -48,6 +46,7 @@ import {
     TAJWEED_GROUPS,
 } from '../QuranScreen.helpers';
 import { styles } from '../QuranScreen.styles';
+import { WEB_APP_QURAN_THEMES } from '../QuranScreen.webAppTheme';
 import { renderQuranAudioRangePanel } from './QuranAudioRangePanel';
 
 export function createQuranScreenRenderers(context) {
@@ -151,6 +150,8 @@ export function createQuranScreenRenderers(context) {
         updateTranslationFontSize,
         translationFontSize,
         user,
+        webAppQuranTheme = WEB_APP_QURAN_THEMES.dark,
+        webAppQuranThemeStyles = {},
     } = context;
 
     const getArabicTypography = (extraSize = 0, lineHeightRatio = 1.75) => {
@@ -669,24 +670,25 @@ export function createQuranScreenRenderers(context) {
                     styles.readerHeader,
                     isSeriousMode ? styles.readerHeaderSerious : null,
                     isWebAppLayout ? styles.webAppReaderHeader : null,
+                    isWebAppLayout ? webAppQuranThemeStyles.readerHeader : null,
                 ]}
             >
                 <View style={styles.readerHeaderTop}>
                     <View style={styles.readerHeaderCopy}>
                         {isWebAppLayout ? (
-                            <Text style={styles.webAppReaderEyebrow}>Surah {selectedSurah.number ?? '-'}</Text>
+                            <Text style={[styles.webAppReaderEyebrow, webAppQuranThemeStyles.readerEyebrow]}>Surah {selectedSurah.number ?? '-'}</Text>
                         ) : null}
-                        <Text style={[styles.readerTitle, isWebAppLayout ? styles.webAppReaderTitle : null]}>
+                        <Text style={[styles.readerTitle, isWebAppLayout ? styles.webAppReaderTitle : null, isWebAppLayout ? webAppQuranThemeStyles.readerTitle : null]}>
                             {selectedSurah.name}
                         </Text>
-                        <Text style={[styles.readerSubtitle, isWebAppLayout ? styles.webAppReaderSubtitle : null]}>
+                        <Text style={[styles.readerSubtitle, isWebAppLayout ? styles.webAppReaderSubtitle : null, isWebAppLayout ? webAppQuranThemeStyles.readerSubtitle : null]}>
                             {readerSubtitle}
                         </Text>
                         {isWebAppLayout && arabicSurahName ? (
-                            <Text style={styles.webAppReaderArabicTitle}>{arabicSurahName}</Text>
+                            <Text style={[styles.webAppReaderArabicTitle, webAppQuranThemeStyles.readerArabicTitle]}>{arabicSurahName}</Text>
                         ) : null}
                         {showReaderBismillah ? (
-                            <Text style={styles.webAppReaderBismillah}>{BISMILLAH}</Text>
+                            <Text style={[styles.webAppReaderBismillah, webAppQuranThemeStyles.readerBismillah]}>{BISMILLAH}</Text>
                         ) : null}
                     </View>
                     <View style={styles.readerHeaderActions}>
@@ -717,13 +719,14 @@ export function createQuranScreenRenderers(context) {
                         style={[
                             styles.surahPagerButton,
                             isWebAppLayout ? styles.webAppSurahPagerButton : null,
+                            isWebAppLayout ? webAppQuranThemeStyles.surahPagerButton : null,
                             !hasPreviousSurah || readerLoading ? styles.disabled : null,
                         ]}
                     >
-                        <ArrowLeft color={isWebAppLayout ? WEB_APP_QURAN_ACCENT : colors.primaryDark} size={16} strokeWidth={2.2} />
+                        <ArrowLeft color={isWebAppLayout ? webAppQuranTheme.accent : colors.primaryDark} size={16} strokeWidth={2.2} />
                         <Text
                             numberOfLines={2}
-                            style={[styles.surahPagerButtonText, isWebAppLayout ? styles.webAppSurahPagerButtonText : null]}
+                            style={[styles.surahPagerButtonText, isWebAppLayout ? styles.webAppSurahPagerButtonText : null, isWebAppLayout ? webAppQuranThemeStyles.surahPagerButtonText : null]}
                         >
                             {previousSurah ? `${previousSurah.number}. ${previousSurah.name}` : '—'}
                         </Text>
@@ -738,16 +741,17 @@ export function createQuranScreenRenderers(context) {
                         style={[
                             styles.surahPagerButton,
                             isWebAppLayout ? styles.webAppSurahPagerButton : null,
+                            isWebAppLayout ? webAppQuranThemeStyles.surahPagerButton : null,
                             !hasNextSurah || readerLoading ? styles.disabled : null,
                         ]}
                     >
                         <Text
                             numberOfLines={2}
-                            style={[styles.surahPagerButtonText, isWebAppLayout ? styles.webAppSurahPagerButtonText : null]}
+                            style={[styles.surahPagerButtonText, isWebAppLayout ? styles.webAppSurahPagerButtonText : null, isWebAppLayout ? webAppQuranThemeStyles.surahPagerButtonText : null]}
                         >
                             {nextSurah ? `${nextSurah.number}. ${nextSurah.name}` : '—'}
                         </Text>
-                        <ArrowRight color={isWebAppLayout ? WEB_APP_QURAN_ACCENT : colors.primaryDark} size={16} strokeWidth={2.2} />
+                        <ArrowRight color={isWebAppLayout ? webAppQuranTheme.accent : colors.primaryDark} size={16} strokeWidth={2.2} />
                     </Pressable>
                 </View>
             ) : null}
@@ -1194,7 +1198,7 @@ export function createQuranScreenRenderers(context) {
                             onPress={closeAyahDetail}
                         />
                     )}
-                    contentStyle={isWebAppLayout ? styles.webAppQuranDetailSurface : null}
+                    contentStyle={isWebAppLayout ? [styles.webAppQuranDetailSurface, webAppQuranThemeStyles.detailSurface] : null}
                     subtitle={`${selectedSurah?.name ?? "Al-Qur'an"} · Ayat ${selectedDetailAyah.number}`}
                     title="Detail Ayat"
                 >
@@ -1451,28 +1455,28 @@ export function createQuranScreenRenderers(context) {
         const isProgressSurah = progressSurahNumber === Number(surah.number);
         if (isWebAppLayout) {
             return (
-                <Pressable onPress={() => openSurah(surah)} style={styles.webAppSurahRow}>
+                <Pressable onPress={() => openSurah(surah)} style={[styles.webAppSurahRow, webAppQuranThemeStyles.surahRow]}>
                     <View style={styles.webAppSurahLeft}>
-                        <View style={styles.webAppSurahNumberBadge}>
-                            <Text style={styles.webAppSurahNumberText}>{surah.number}</Text>
+                        <View style={[styles.webAppSurahNumberBadge, webAppQuranThemeStyles.surahNumberBadge]}>
+                            <Text style={[styles.webAppSurahNumberText, webAppQuranThemeStyles.surahNumberText]}>{surah.number}</Text>
                         </View>
                         <View style={styles.webAppSurahInfo}>
                             <View style={styles.surahNameRow}>
-                                <Text style={styles.webAppSurahName}>{surah.name}</Text>
+                                <Text style={[styles.webAppSurahName, webAppQuranThemeStyles.surahName]}>{surah.name}</Text>
                                 {isProgressSurah ? (
                                     <CheckCircle2
-                                        color={WEB_APP_QURAN_ACCENT}
+                                        color={webAppQuranTheme.accent}
                                         size={13}
                                         strokeWidth={2.2}
                                     />
                                 ) : null}
                             </View>
-                            <Text style={styles.webAppSurahMeta}>
+                            <Text style={[styles.webAppSurahMeta, webAppQuranThemeStyles.surahMeta]}>
                                 · {surah.meaning} · {surah.ayahs} ayat
                             </Text>
                         </View>
                     </View>
-                    <Text style={styles.webAppSurahArabic}>
+                    <Text style={[styles.webAppSurahArabic, webAppQuranThemeStyles.surahArabic]}>
                         {getCompactArabicSurahName(surah.arabic)}
                     </Text>
                 </Pressable>
@@ -1510,36 +1514,36 @@ export function createQuranScreenRenderers(context) {
 
     const renderWebAppQuranListHeader = () => (
         <View style={styles.webAppQuranHeader}>
-            <Text style={styles.webAppQuranArabicTitle}>القُرآنُ الكَرِيم</Text>
-            <Text style={styles.webAppQuranTitle}>Al-Quran</Text>
-            <Text style={styles.webAppQuranSubtitle}>
+            <Text style={[styles.webAppQuranArabicTitle, webAppQuranThemeStyles.quranArabicTitle]}>القُرآنُ الكَرِيم</Text>
+            <Text style={[styles.webAppQuranTitle, webAppQuranThemeStyles.quranTitle]}>Al-Quran</Text>
+            <Text style={[styles.webAppQuranSubtitle, webAppQuranThemeStyles.quranSubtitle]}>
                 114 Surah · Lengkap dengan Tajweed berwarna, transliterasi, dan terjemahan
             </Text>
-            <View style={styles.webAppQuranSearch}>
-                <Search color={WEB_APP_QURAN_MUTED} size={16} strokeWidth={2.1} />
+            <View style={[styles.webAppQuranSearch, webAppQuranThemeStyles.quranSearch]}>
+                <Search color={webAppQuranTheme.muted} size={16} strokeWidth={2.1} />
                 <TextInput
                     onChangeText={setSurahQuery}
                     placeholder="Cari surah..."
-                    placeholderTextColor={WEB_APP_QURAN_MUTED}
-                    style={styles.webAppQuranSearchInput}
+                    placeholderTextColor={webAppQuranTheme.muted}
+                    style={[styles.webAppQuranSearchInput, webAppQuranThemeStyles.quranSearchInput]}
                     value={surahQuery}
                 />
             </View>
             <Pressable
                 onPress={() => openPage(pageInput)}
-                style={styles.webAppMushafCta}
+                style={[styles.webAppMushafCta, webAppQuranThemeStyles.mushafCta]}
                 testID="quran-web-app-mushaf-cta"
             >
                 <View style={styles.webAppMushafCtaIcon}>
-                    <BookOpen color={WEB_APP_QURAN_ACCENT} size={22} strokeWidth={2.4} />
+                    <BookOpen color={webAppQuranTheme.accent} size={22} strokeWidth={2.4} />
                 </View>
                 <View style={styles.webAppMushafCtaCopy}>
-                    <Text style={styles.webAppMushafCtaTitle}>Navigasi Mushaf</Text>
-                    <Text style={styles.webAppMushafCtaSubtitle}>
+                    <Text style={[styles.webAppMushafCtaTitle, webAppQuranThemeStyles.mushafCtaText]}>Navigasi Mushaf</Text>
+                    <Text style={[styles.webAppMushafCtaSubtitle, webAppQuranThemeStyles.mushafCtaText]}>
                         Buka ayat berdasarkan halaman mushaf atau hizb.
                     </Text>
                 </View>
-                <ArrowRight color={WEB_APP_QURAN_ACCENT} size={16} strokeWidth={2.4} />
+                <ArrowRight color={webAppQuranTheme.accent} size={16} strokeWidth={2.4} />
             </Pressable>
         </View>
     );

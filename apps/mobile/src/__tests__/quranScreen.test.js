@@ -209,6 +209,7 @@ jest.mock('../components/NotesPanel', () => ({
 }));
 
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { QuranScreen } from '../screens/QuranScreen';
 import { flushAsyncWork } from '../test-utils/async';
@@ -252,7 +253,7 @@ beforeEach(() => {
     showError: jest.fn(), showInfo: jest.fn(), showSuccess: jest.fn(),
   });
   useTabActivity.mockReturnValue({ notifyTabActivity: jest.fn() });
-  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+  useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: false });
   client.getSurahs.mockResolvedValue([mockSurah(1), mockSurah(2)]);
   client.getAyahsForSurahPage.mockResolvedValue({
     items: [mockAyah(1, 1), mockAyah(2, 1), mockAyah(3, 1)],
@@ -293,7 +294,7 @@ describe('QuranScreen', () => {
   });
 
   it('uses web app Quran list surface when web app layout is active', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     const { getByPlaceholderText, getByTestId, getByText, queryByTestId, queryByText } =
       await renderQuranScreen();
 
@@ -308,10 +309,24 @@ describe('QuranScreen', () => {
     expect(queryByText('Hafalan')).toBeNull();
     expect(queryByText('Murojaah')).toBeNull();
     expect(queryByTestId('quran-classic-list')).toBeNull();
+    expect(StyleSheet.flatten(getByTestId('quran-web-app-list').props.style).backgroundColor).toBe('#ffffff');
+    expect(StyleSheet.flatten(getByText('Al-Quran').props.style).color).toBe('#111827');
+  });
+
+  it('uses dark web app Quran palette when dark theme is active', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: true, isWebAppLayout: true });
+    const { getByTestId, getByText } = await renderQuranScreen();
+
+    await waitFor(() => {
+      expect(getByTestId('quran-web-app-list')).toBeTruthy();
+      expect(getByText('Al-Quran')).toBeTruthy();
+    });
+    expect(StyleSheet.flatten(getByTestId('quran-web-app-list').props.style).backgroundColor).toBe('#020617');
+    expect(StyleSheet.flatten(getByText('Al-Quran').props.style).color).toBe('#f8fafc');
   });
 
   it('opens mushaf navigation from the web app Quran CTA', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     client.getAyahsForPage.mockResolvedValue([mockAyah(1, 1)]);
 
     const { getByTestId } = await renderQuranScreen();
@@ -325,7 +340,7 @@ describe('QuranScreen', () => {
   });
 
   it('uses web app Quran reader surface without changing ayah loading', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     const { getByTestId, getByText } = await renderQuranScreen();
 
     await waitFor(() => {
@@ -343,7 +358,7 @@ describe('QuranScreen', () => {
   });
 
   it('uses web app Quran detail surface without changing ayah detail flow', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     const { getAllByText, getByTestId, getByText, queryByTestId } = await renderQuranScreen();
 
     fireEvent.press(await waitFor(() => getByText('Surah 1')));

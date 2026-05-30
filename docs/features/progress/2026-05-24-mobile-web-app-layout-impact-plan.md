@@ -3103,6 +3103,51 @@ Results:
 - Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above
   2,000 lines.
 
+## Web App Quran Theme Parity
+
+Status: completed for the native `web_app` Quran light/dark palette pass.
+
+Implemented:
+
+- `QuranScreen` now reads `isDarkTheme` in addition to `isWebAppLayout`.
+- Added a dedicated Quran web-app theme helper so the large Quran renderer files
+  stay under the 2,000-line gate while list, reader, mushaf reader, and detail
+  surfaces can share the same light/dark palette.
+- The `web_app` Quran route switches the list background, dashboard header,
+  search input, mushaf CTA, surah rows, reader surfaces, reader header, pager
+  controls, detail surface, and refresh accents with the app theme.
+- Added regression coverage for both light and dark `web_app` Quran list
+  palettes.
+- Classic Quran list, reader, detail, audio, preference, bookmark, note, and
+  mushaf flows remain unchanged.
+
+Verification:
+
+```bash
+node --check apps/mobile/src/screens/QuranScreen.js
+node --check apps/mobile/src/screens/quran/QuranScreenRenderers.js
+node --check apps/mobile/src/screens/QuranScreen.webAppTheme.js
+cd apps/mobile
+npm test -- quranScreen.test.js mobileAppShell.test.js --runInBand
+npm test -- --runInBand
+cd ../..
+node scripts/check-feature-parity.js
+git diff --check -- apps/mobile/src/screens/QuranScreen.js apps/mobile/src/screens/quran/QuranScreenRenderers.js apps/mobile/src/screens/QuranScreen.webAppTheme.js apps/mobile/src/__tests__/quranScreen.test.js docs/WEB_MOBILE_SYNC.md docs/features/progress/2026-05-24-mobile-web-app-layout-impact-plan.md
+find apps/mobile/src -name '*.js' -print0 | xargs -0 wc -l | sort -nr | head -10
+```
+
+Results:
+
+- `node --check` passed for `QuranScreen.js`,
+  `QuranScreenRenderers.js`, and `QuranScreen.webAppTheme.js`.
+- Targeted Quran/shell tests passed: 2 suites, 41 tests.
+- Full mobile Jest passed: 48 suites, 729 tests.
+- Feature parity checker passed: 50 manifest features, 14 utility routes, 43
+  mobile feature keys, 154 web app routes scanned.
+- `git diff --check` passed for touched files.
+- Line-count gate stayed clean: no `apps/mobile/src/**/*.js` file is above
+  2,000 lines.
+
 ## Web App Prayer Theme Parity
 
 Status: completed for the native `web_app` Prayer/Jadwal Sholat light/dark
