@@ -11,151 +11,164 @@ import {
   ScrollText,
   Sparkles,
 } from 'lucide-react-native';
+import { useMemo } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Card } from '../components/Card';
 import { CompactRow, SectionHeader } from '../components/Paper';
 import { Screen } from '../components/Screen';
 import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../theme';
 import { KhatamScreen } from './KhatamScreen';
 import { PrayerScreen } from './PrayerScreen';
 import { QiblaScreen } from './QiblaScreen';
 
-const sections = [
+const sectionDefinitions = [
   {
     key: 'harian',
-    meta: 'Sholat dan rutinitas',
-    title: 'Harian',
+    metaKey: 'ibadah.section.daily.meta',
+    titleKey: 'ibadah.section.daily.title',
     rows: [
       {
         Icon: Clock3,
         key: 'prayer',
-        subtitle: 'Jadwal, pengingat, dan pengaturan waktu',
-        title: 'Jadwal Sholat',
+        subtitleKey: 'ibadah.row.prayer.subtitle',
+        titleKey: 'ibadah.row.prayer.title',
         view: 'prayer',
       },
       {
         Icon: HandHeart,
         featureKey: 'doa',
-        subtitle: 'Doa harian per kategori',
-        title: 'Doa',
+        subtitleKey: 'ibadah.row.doa.subtitle',
+        titleKey: 'ibadah.row.doa.title',
       },
       {
         Icon: Sparkles,
         featureKey: 'dzikir',
-        subtitle: 'Dzikir pagi, petang, dan setelah sholat',
-        title: 'Dzikir',
+        subtitleKey: 'ibadah.row.dzikir.subtitle',
+        titleKey: 'ibadah.row.dzikir.title',
       },
     ],
   },
   {
     key: 'arah-waktu',
-    meta: 'Arah dan kalender',
-    title: 'Arah & Waktu',
+    metaKey: 'ibadah.section.direction.meta',
+    titleKey: 'ibadah.section.direction.title',
     rows: [
       {
         Icon: Compass,
-        subtitle: 'Kompas kiblat dan lokasi manual',
-        title: 'Qibla',
+        subtitleKey: 'ibadah.row.qibla.subtitle',
+        titleKey: 'ibadah.row.qibla.title',
         view: 'qibla',
       },
       {
         Icon: CalendarDays,
         featureKey: 'hijri',
-        subtitle: 'Tanggal Hijriah dan peristiwa',
-        title: 'Kalender Hijriah',
+        subtitleKey: 'ibadah.row.hijri.subtitle',
+        titleKey: 'ibadah.row.hijri.title',
       },
       {
         Icon: Clock3,
         featureKey: 'imsakiyah',
-        subtitle: 'Jadwal imsak dan Ramadan',
-        title: 'Imsakiyah',
+        subtitleKey: 'ibadah.row.imsakiyah.subtitle',
+        titleKey: 'ibadah.row.imsakiyah.title',
       },
     ],
   },
   {
     key: 'bacaan',
-    meta: 'Wirid dan bacaan',
-    title: 'Dzikir & Bacaan',
+    metaKey: 'ibadah.section.reading.meta',
+    titleKey: 'ibadah.section.reading.title',
     rows: [
       {
         Icon: ScrollText,
         featureKey: 'wirid',
-        subtitle: 'Bacaan wirid rutin',
-        title: 'Wirid',
+        subtitleKey: 'ibadah.row.wirid.subtitle',
+        titleKey: 'ibadah.row.wirid.title',
       },
       {
         Icon: ListChecks,
         featureKey: 'user-wird',
-        subtitle: 'Susun bacaan wirid pribadi',
-        title: 'Wirid Saya',
+        subtitleKey: 'ibadah.row.userWird.subtitle',
+        titleKey: 'ibadah.row.userWird.title',
       },
       {
         Icon: BookOpenCheck,
         featureKey: 'tahlil',
-        subtitle: 'Tahlil dan Yasin digital',
-        title: 'Tahlil',
+        subtitleKey: 'ibadah.row.tahlil.subtitle',
+        titleKey: 'ibadah.row.tahlil.title',
       },
       {
         Icon: Sparkles,
         featureKey: 'asmaul-husna',
-        subtitle: '99 nama Allah untuk dzikir dan refleksi',
-        title: 'Asmaul Husna',
+        subtitleKey: 'ibadah.row.asmaulHusna.subtitle',
+        titleKey: 'ibadah.row.asmaulHusna.title',
       },
     ],
   },
   {
     key: 'alat',
-    meta: 'Kalkulator dan tools',
-    title: 'Alat',
+    metaKey: 'ibadah.section.tools.meta',
+    titleKey: 'ibadah.section.tools.title',
     rows: [
       {
         Icon: ListChecks,
         featureKey: 'tasbih',
-        subtitle: 'Penghitung dzikir dengan target',
-        title: 'Tasbih',
+        subtitleKey: 'ibadah.row.tasbih.subtitle',
+        titleKey: 'ibadah.row.tasbih.title',
       },
       {
         Icon: Calculator,
         featureKey: 'zakat',
-        subtitle: 'Hitung zakat maal',
-        title: 'Zakat',
+        subtitleKey: 'ibadah.row.zakat.subtitle',
+        titleKey: 'ibadah.row.zakat.title',
       },
       {
         Icon: Calculator,
         featureKey: 'faraidh',
-        subtitle: 'Pembagian waris keluarga',
-        title: 'Faraidh',
+        subtitleKey: 'ibadah.row.faraidh.subtitle',
+        titleKey: 'ibadah.row.faraidh.title',
       },
     ],
   },
   {
     key: 'rencana',
-    meta: 'Ibadah terencana',
-    title: 'Rencana',
+    metaKey: 'ibadah.section.plan.meta',
+    titleKey: 'ibadah.section.plan.title',
     rows: [
       {
         Icon: CheckSquare,
         featureKey: 'sholat-tracker',
-        subtitle: 'Catat status sholat harian',
-        title: 'Log Sholat',
+        subtitleKey: 'ibadah.row.sholatTracker.subtitle',
+        titleKey: 'ibadah.row.sholatTracker.title',
       },
       {
         Icon: Map,
         featureKey: 'manasik',
-        subtitle: 'Panduan haji dan umrah',
-        title: 'Manasik',
+        subtitleKey: 'ibadah.row.manasik.subtitle',
+        titleKey: 'ibadah.row.manasik.title',
       },
       {
         Icon: BookOpenCheck,
         key: 'khatam',
-        subtitle: 'Tracker khatam Quran',
-        title: 'Khatam',
+        subtitleKey: 'ibadah.row.khatam.subtitle',
+        titleKey: 'ibadah.row.khatam.title',
         view: 'khatam',
       },
     ],
   },
 ];
+
+const buildSections = (t) => sectionDefinitions.map((section) => ({
+  ...section,
+  meta: t(section.metaKey),
+  rows: section.rows.map((row) => ({
+    ...row,
+    subtitle: t(row.subtitleKey),
+    title: t(row.titleKey),
+  })),
+  title: t(section.titleKey),
+}));
 
 const WEB_APP_IBADAH_BG = '#020617';
 const WEB_APP_IBADAH_SURFACE = '#111827';
@@ -197,6 +210,8 @@ const getIbadahWebAppTheme = (isDarkTheme) => (
 
 function IbadahHub({ navigation, onOpenTab }) {
   const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+  const { t } = useMobileLocale();
+  const sections = useMemo(() => buildSections(t), [t]);
   const webTheme = getIbadahWebAppTheme(isDarkTheme);
 
   const openRow = (row) => {
@@ -228,10 +243,10 @@ function IbadahHub({ navigation, onOpenTab }) {
           style={[styles.webAppHero, { backgroundColor: webTheme.surface, borderColor: webTheme.border }]}
           testID="ibadah-web-app-hero"
         >
-          <Text style={[styles.webAppEyebrow, { color: webTheme.accent }]}>IBADAH & TRACKER</Text>
-          <Text style={[styles.webAppTitle, { color: webTheme.title }]}>Ibadah</Text>
+          <Text style={[styles.webAppEyebrow, { color: webTheme.accent }]}>{t('ibadah.eyebrow')}</Text>
+          <Text style={[styles.webAppTitle, { color: webTheme.title }]}>{t('ibadah.title')}</Text>
           <Text style={[styles.webAppSubtitle, { color: webTheme.muted }]}>
-            Sholat, qibla, dzikir, bacaan, dan alat ibadah dalam satu hub ringkas.
+            {t('ibadah.subtitle')}
           </Text>
         </View>
 
@@ -249,7 +264,7 @@ function IbadahHub({ navigation, onOpenTab }) {
                 return (
                   <Pressable
                     android_ripple={{ color: '#1f2937', borderless: false }}
-                    key={row.key ?? row.featureKey ?? row.title}
+                    key={row.key ?? row.featureKey ?? row.view ?? row.title}
                     onPress={() => openRow(row)}
                     style={[
                       styles.webAppTile,
@@ -258,7 +273,7 @@ function IbadahHub({ navigation, onOpenTab }) {
                         borderColor: primary ? webTheme.primaryTileBorder : webTheme.border,
                       },
                     ]}
-                    testID={`ibadah-web-app-tile-${row.key ?? row.featureKey ?? row.title}`}
+                    testID={`ibadah-web-app-tile-${row.key ?? row.featureKey ?? row.view ?? row.title}`}
                   >
                     <View
                       style={[
@@ -283,8 +298,8 @@ function IbadahHub({ navigation, onOpenTab }) {
   return (
     <Screen
       contentStyle={isWebAppLayout ? styles.webAppSurface : null}
-      subtitle="Sholat, qibla, dzikir, bacaan, dan alat ibadah dalam satu hub ringkas."
-      title="Ibadah"
+      subtitle={t('ibadah.subtitle')}
+      title={t('ibadah.title')}
     >
       <View testID={isWebAppLayout ? 'ibadah-web-app-hub' : 'ibadah-classic-hub'} />
       {sections.map((section) => (
@@ -294,8 +309,8 @@ function IbadahHub({ navigation, onOpenTab }) {
             {section.rows.map((row) => (
               <CompactRow
                 Icon={row.Icon}
-                key={row.key ?? row.featureKey ?? row.title}
-                meta={row.view ? 'Ibadah' : row.tab === 'quran' ? 'Quran' : 'Belajar'}
+                key={row.key ?? row.featureKey ?? row.view ?? row.title}
+                meta={row.view ? t('ibadah.meta.ibadah') : row.tab === 'quran' ? t('ibadah.meta.quran') : t('ibadah.meta.learn')}
                 onPress={() => openRow(row)}
                 subtitle={row.subtitle}
                 title={row.title}

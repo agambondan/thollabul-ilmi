@@ -9,6 +9,7 @@ import { IconActionButton } from '../components/Paper';
 import { Screen } from '../components/Screen';
 import { useFeedback } from '../context/FeedbackContext';
 import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import {
   buildPrayerOfflinePack,
   clearPrayerOfflinePack,
@@ -103,6 +104,7 @@ const formatMinutes = (value) => {
 export function PrayerScreen({ isActive, navigation }) {
   const { showError, showInfo, showSuccess } = useFeedback();
   const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+  const { t } = useMobileLocale();
   const webTheme = isDarkTheme ? WEB_APP_PRAYER_THEMES.dark : WEB_APP_PRAYER_THEMES.light;
   const webSurfaceStyle = { backgroundColor: webTheme.bg };
   const webCardStyle = { backgroundColor: webTheme.surface, borderColor: webTheme.border };
@@ -161,12 +163,12 @@ export function PrayerScreen({ isActive, navigation }) {
       });
       setPrayerOffline(overview);
       if (!overview.supported) {
-        setOfflineMessage(overview.error ?? 'Fitur jadwal offline tersedia di aplikasi mobile.');
+        setOfflineMessage(overview.error ?? t('prayer.offline.mobileOnly'));
       } else if (overview.savedAt) {
-        setOfflineMessage(`${overview.days} hari tersimpan untuk lokasi dan metode ini.`);
+        setOfflineMessage(t('prayer.offline.savedOverview', { days: overview.days }));
       }
     },
-    [madhab, method],
+    [madhab, method, t],
   );
 
   const load = useCallback(async () => {
@@ -186,14 +188,14 @@ export function PrayerScreen({ isActive, navigation }) {
       } else {
         setCoords(null);
         setPrayers(null);
-        setMessage('Aktifkan lokasi untuk memuat jadwal sholat sesuai tempatmu.');
+        setMessage(t('prayer.location.permissionRequired'));
         setLoading(false);
         return;
       }
     } catch {
       setCoords(null);
       setPrayers(null);
-      setMessage('Lokasi belum terbaca. Aktifkan GPS lalu muat ulang jadwal sholat.');
+      setMessage(t('prayer.location.unavailable'));
       setLoading(false);
       return;
     }
@@ -204,18 +206,18 @@ export function PrayerScreen({ isActive, navigation }) {
       await loadPrayerOfflineStatus(currentCoords);
     } catch (error) {
       setPrayers(null);
-      setMessage(error?.message ?? 'Jadwal sholat belum tersedia.');
+      setMessage(error?.message ?? t('prayer.scheduleUnavailable'));
     } finally {
       setLoading(false);
     }
-  }, [loadPrayerOfflineStatus, madhab, method]);
+  }, [loadPrayerOfflineStatus, madhab, method, t]);
 
   const applyManualLocation = useCallback(async () => {
     const lat = parseFloat(manualLatInput.replace(',', '.'));
     const lng = parseFloat(manualLngInput.replace(',', '.'));
 
     if (!isFinite(lat) || !isFinite(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
-      setMessage('Masukkan koordinat yang valid. Contoh: -6.2088, 106.8456');
+      setMessage(t('prayer.location.invalidManual'));
       return;
     }
 
@@ -234,7 +236,7 @@ export function PrayerScreen({ isActive, navigation }) {
     } finally {
       setLoading(false);
     }
-  }, [loadPrayerOfflineStatus, madhab, manualLatInput, manualLngInput, method]);
+  }, [loadPrayerOfflineStatus, madhab, manualLatInput, manualLngInput, method, t]);
 
   const refreshAll = useCallback(async () => {
     await load();
@@ -409,17 +411,17 @@ export function PrayerScreen({ isActive, navigation }) {
       await cancelPrayerReminders(previous);
       setNotificationIds([]);
       await writePreference(preferenceKeys.prayerReminderIds, []);
-      if (!silent) setMessage('Pengingat sholat dinonaktifkan.');
+      if (!silent) setMessage(t('prayer.reminder.disabled'));
       return;
     }
 
     if (!notificationsSupported()) {
-      if (!silent) setMessage('Pengingat lokal tersedia di aplikasi mobile.');
+      if (!silent) setMessage(t('prayer.reminder.mobileOnly'));
       return;
     }
 
     if (!prayers) {
-      if (!silent) setMessage('Muat jadwal sholat sebelum mengatur pengingat.');
+      if (!silent) setMessage(t('prayer.reminder.scheduleRequired'));
       return;
     }
 
@@ -432,18 +434,18 @@ export function PrayerScreen({ isActive, navigation }) {
     });
 
     if (result.status !== 'scheduled') {
-      if (!silent) setMessage('Izin notifikasi belum aktif.');
+      if (!silent) setMessage(t('prayer.reminder.permissionRequired'));
       return;
     }
 
     setNotificationIds(result.scheduled);
     await writePreference(preferenceKeys.prayerReminderIds, result.scheduled);
-    if (!silent) setMessage(`${result.scheduled.length} pengingat sholat dijadwalkan.`);
+    if (!silent) setMessage(t('prayer.reminder.scheduled', { count: result.scheduled.length }));
   };
 
   const toggleReminder = async () => {
     if (!reminderEnabled && !notificationsSupported()) {
-      setMessage('Pengingat lokal tersedia di aplikasi mobile.');
+      setMessage(t('prayer.reminder.mobileOnly'));
       return;
     }
 
@@ -465,7 +467,7 @@ export function PrayerScreen({ isActive, navigation }) {
     const next = !adzanAudioEnabled;
     setAdzanAudioEnabled(next);
     await writePreference(preferenceKeys.prayerAdzanAudioEnabled, next);
-    setMessage(next ? 'Audio adzan aktif saat aplikasi terbuka.' : 'Audio adzan dinonaktifkan.');
+    setMessage(t(next ? 'prayer.adzan.enabled' : 'prayer.adzan.disabled'));
   };
 
   const toggleReminderPrayer = async (key) => {
@@ -482,8 +484,8 @@ export function PrayerScreen({ isActive, navigation }) {
 
   const downloadPrayerPack = async () => {
     if (!coords) {
-      setOfflineMessage('Muat lokasi sebelum menyimpan jadwal sholat.');
-      showInfo('Muat lokasi sebelum menyimpan jadwal sholat.');
+      setOfflineMessage(t('prayer.offline.locationRequired'));
+      showInfo(t('prayer.offline.locationRequired'));
       return;
     }
 
@@ -501,11 +503,11 @@ export function PrayerScreen({ isActive, navigation }) {
         },
       });
       setPrayerOffline(overview);
-      setOfflineMessage(`${overview.days} hari jadwal sholat tersimpan.`);
+      setOfflineMessage(t('prayer.offline.saved', { days: overview.days }));
       setOfflineProgress(100);
-      showSuccess(`${overview.days} hari jadwal sholat tersimpan.`);
+      showSuccess(t('prayer.offline.saved', { days: overview.days }));
     } catch (error) {
-      const nextMessage = error?.message ?? 'Jadwal sholat belum bisa disimpan.';
+      const nextMessage = error?.message ?? t('prayer.offline.saveError');
       setOfflineMessage(nextMessage);
       showError(nextMessage);
     } finally {
@@ -520,11 +522,11 @@ export function PrayerScreen({ isActive, navigation }) {
     try {
       const overview = await clearPrayerOfflinePack({ ...coords, method, madhab });
       setPrayerOffline(overview);
-      setOfflineMessage('Jadwal sholat offline dihapus.');
+      setOfflineMessage(t('prayer.offline.cleared'));
       setOfflineProgress(0);
-      showSuccess('Jadwal sholat offline dihapus.');
+      showSuccess(t('prayer.offline.cleared'));
     } catch (error) {
-      const nextMessage = error?.message ?? 'Jadwal sholat offline belum bisa dihapus.';
+      const nextMessage = error?.message ?? t('prayer.offline.clearError');
       setOfflineMessage(nextMessage);
       showError(nextMessage);
     } finally {
@@ -538,13 +540,13 @@ export function PrayerScreen({ isActive, navigation }) {
     try {
       const offlinePrayers = await getOfflinePrayerForDate({ ...coords, method, madhab, date: today() });
       if (!offlinePrayers) {
-        setOfflineMessage('Jadwal offline hari ini belum tersimpan.');
+        setOfflineMessage(t('prayer.offline.todayMissing'));
         return;
       }
       setPrayers(offlinePrayers);
-      setOfflineMessage('Jadwal hari ini dimuat dari data offline.');
+      setOfflineMessage(t('prayer.offline.todayLoaded'));
     } catch (error) {
-      setOfflineMessage(error?.message ?? 'Jadwal offline belum bisa dimuat.');
+      setOfflineMessage(error?.message ?? t('prayer.offline.loadError'));
     }
   };
 
