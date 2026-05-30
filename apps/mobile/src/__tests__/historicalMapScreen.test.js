@@ -7,6 +7,7 @@ jest.mock('../hooks/useLayoutModePreference', () => ({
 }));
 
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import { HistoricalMapContent } from '../screens/HistoricalMapScreen';
 
@@ -37,7 +38,7 @@ const locations = [
 beforeEach(() => {
   jest.clearAllMocks();
   client.requestJson.mockResolvedValue({ items: locations });
-  useLayoutModePreference.mockReturnValue({ isWebAppLayout: false });
+  useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: false });
 });
 
 describe('HistoricalMapContent', () => {
@@ -54,7 +55,7 @@ describe('HistoricalMapContent', () => {
   });
 
   test('uses dashboard-aligned web app peta controls', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     const { getByPlaceholderText, getByTestId, getByText } = render(<HistoricalMapContent />);
 
     await waitFor(() => {
@@ -69,8 +70,52 @@ describe('HistoricalMapContent', () => {
     expect(getByPlaceholderText('Cari lokasi...')).toBeTruthy();
   });
 
+  test('uses the light web app Peta palette when light theme is active', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
+    const { getByTestId } = render(<HistoricalMapContent />);
+
+    await waitFor(() => {
+      expect(getByTestId('historical-map-native')).toBeTruthy();
+    });
+
+    expect(StyleSheet.flatten(getByTestId('historical-map-web-app-surface').props.style)).toMatchObject({
+      backgroundColor: '#f8fafc',
+    });
+    expect(StyleSheet.flatten(getByTestId('historical-map-web-app-search').props.style)).toMatchObject({
+      backgroundColor: '#ffffff',
+      borderColor: '#d1d5db',
+      color: '#111827',
+    });
+    expect(StyleSheet.flatten(getByTestId('historical-map-native').props.style)).toMatchObject({
+      backgroundColor: '#ffffff',
+      borderColor: '#e5e7eb',
+    });
+  });
+
+  test('uses the dark web app Peta palette when dark theme is active', async () => {
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: true, isWebAppLayout: true });
+    const { getByTestId } = render(<HistoricalMapContent />);
+
+    await waitFor(() => {
+      expect(getByTestId('historical-map-native')).toBeTruthy();
+    });
+
+    expect(StyleSheet.flatten(getByTestId('historical-map-web-app-surface').props.style)).toMatchObject({
+      backgroundColor: '#020617',
+    });
+    expect(StyleSheet.flatten(getByTestId('historical-map-web-app-search').props.style)).toMatchObject({
+      backgroundColor: '#111827',
+      borderColor: '#334155',
+      color: '#e5e7eb',
+    });
+    expect(StyleSheet.flatten(getByTestId('historical-map-native').props.style)).toMatchObject({
+      backgroundColor: '#111827',
+      borderColor: '#243044',
+    });
+  });
+
   test('web app search and list mode reuse the locations endpoint and filtered list', async () => {
-    useLayoutModePreference.mockReturnValue({ isWebAppLayout: true });
+    useLayoutModePreference.mockReturnValue({ isDarkTheme: false, isWebAppLayout: true });
     const { getByPlaceholderText, getByText, queryByText } = render(<HistoricalMapContent />);
 
     await waitFor(() => {

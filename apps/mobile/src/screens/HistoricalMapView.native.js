@@ -4,15 +4,20 @@ import { radius } from '../theme';
 
 const hasValidCoordinate = (loc) => Number.isFinite(Number(loc?.latitude)) && Number.isFinite(Number(loc?.longitude));
 
-export function HistoricalMapView({ locations = [], isWebAppLayout = false }) {
+export function HistoricalMapView({ locations = [], isWebAppLayout = false, webAppTheme = null }) {
   const visibleLocations = locations.filter(hasValidCoordinate);
 
   return (
     <View
-      style={[styles.mapContainer, isWebAppLayout && styles.webAppMapContainer]}
+      style={[
+        styles.mapContainer,
+        isWebAppLayout && styles.webAppMapContainer,
+        isWebAppLayout && webAppTheme && { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
+      ]}
       testID="historical-map-native"
     >
       <MapView
+        customMapStyle={isWebAppLayout && webAppTheme?.mapStyle ? webAppTheme.mapStyle : undefined}
         initialRegion={{
           latitude: 28,
           longitude: 35,

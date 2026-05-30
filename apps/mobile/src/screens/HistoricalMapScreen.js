@@ -36,8 +36,49 @@ const ERAS = [
 const getLocationName = (loc) => String(loc?.name ?? loc?.title ?? 'Lokasi');
 const getLocationDescription = (loc) => String(loc?.description ?? loc?.summary ?? '');
 
+const WEB_APP_HISTORICAL_MAP_THEMES = {
+  light: {
+    accent: '#10b981',
+    accentSoft: '#d1fae5',
+    accentText: '#059669',
+    bg: '#f8fafc',
+    border: '#e5e7eb',
+    inputBorder: '#d1d5db',
+    infoSoft: '#dbeafe',
+    infoText: '#1e40af',
+    muted: '#64748b',
+    surface: '#ffffff',
+    text: '#111827',
+    tile: '#ffffff',
+    title: '#111827',
+  },
+  dark: {
+    accent: '#34d399',
+    accentSoft: '#064e3b',
+    accentText: '#a7f3d0',
+    bg: '#020617',
+    border: '#243044',
+    inputBorder: '#334155',
+    infoSoft: '#1e3a8a',
+    infoText: '#bfdbfe',
+    mapStyle: [
+      { elementType: 'geometry', stylers: [{ color: '#1f2937' }] },
+      { elementType: 'labels.text.fill', stylers: [{ color: '#d1d5db' }] },
+      { elementType: 'labels.text.stroke', stylers: [{ color: '#111827' }] },
+      { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#334155' }] },
+      { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0f172a' }] },
+    ],
+    muted: '#94a3b8',
+    surface: '#111827',
+    text: '#e5e7eb',
+    tile: '#1e293b',
+    title: '#f8fafc',
+  },
+};
+
 export function HistoricalMapContent() {
-  const { isWebAppLayout } = useLayoutModePreference();
+  const { isDarkTheme = false, isWebAppLayout } = useLayoutModePreference();
+  const webAppTheme = isDarkTheme ? WEB_APP_HISTORICAL_MAP_THEMES.dark : WEB_APP_HISTORICAL_MAP_THEMES.light;
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -84,15 +125,19 @@ export function HistoricalMapContent() {
         style={[
           styles.toggleBtn,
           isWebAppLayout && styles.webAppToggleBtn,
+          isWebAppLayout && { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
           viewMode === 'map' && styles.toggleBtnActive,
           isWebAppLayout && viewMode === 'map' && styles.webAppToggleBtnActive,
+          isWebAppLayout && viewMode === 'map' && { backgroundColor: webAppTheme.accent, borderColor: webAppTheme.accent },
         ]}
       >
         <Text
           style={[
             styles.toggleBtnText,
             isWebAppLayout && styles.webAppToggleBtnText,
+            isWebAppLayout && { color: webAppTheme.muted },
             viewMode === 'map' && styles.toggleBtnTextActive,
+            isWebAppLayout && viewMode === 'map' && { color: '#ffffff' },
           ]}
         >
           Peta
@@ -103,15 +148,19 @@ export function HistoricalMapContent() {
         style={[
           styles.toggleBtn,
           isWebAppLayout && styles.webAppToggleBtn,
+          isWebAppLayout && { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
           viewMode === 'list' && styles.toggleBtnActive,
           isWebAppLayout && viewMode === 'list' && styles.webAppToggleBtnActive,
+          isWebAppLayout && viewMode === 'list' && { backgroundColor: webAppTheme.accent, borderColor: webAppTheme.accent },
         ]}
       >
         <Text
           style={[
             styles.toggleBtnText,
             isWebAppLayout && styles.webAppToggleBtnText,
+            isWebAppLayout && { color: webAppTheme.muted },
             viewMode === 'list' && styles.toggleBtnTextActive,
+            isWebAppLayout && viewMode === 'list' && { color: '#ffffff' },
           ]}
         >
           Jelajahi
@@ -134,11 +183,13 @@ export function HistoricalMapContent() {
             style={[
               styles.chip,
               isWebAppLayout && styles.webAppChip,
+              isWebAppLayout && { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
               category === item.value && styles.chipActive,
               isWebAppLayout && category === item.value && styles.webAppChipActive,
+              isWebAppLayout && category === item.value && { backgroundColor: webAppTheme.accent, borderColor: webAppTheme.accent },
             ]}
           >
-            <Text style={[styles.chipText, category === item.value && styles.chipTextActive]}>
+            <Text style={[styles.chipText, isWebAppLayout && { color: webAppTheme.muted }, category === item.value && styles.chipTextActive]}>
               {item.label}
             </Text>
           </Pressable>
@@ -157,11 +208,13 @@ export function HistoricalMapContent() {
               styles.chip,
               styles.chipEra,
               isWebAppLayout && styles.webAppChip,
+              isWebAppLayout && { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
               era === item.value && styles.chipEraActive,
               isWebAppLayout && era === item.value && styles.webAppChipActive,
+              isWebAppLayout && era === item.value && { backgroundColor: webAppTheme.accent, borderColor: webAppTheme.accent },
             ]}
           >
-            <Text style={[styles.chipText, era === item.value && styles.chipTextActive]}>
+            <Text style={[styles.chipText, isWebAppLayout && { color: webAppTheme.muted }, era === item.value && styles.chipTextActive]}>
               {item.label}
             </Text>
           </Pressable>
@@ -174,9 +227,18 @@ export function HistoricalMapContent() {
     <TextInput
       onChangeText={setSearch}
       placeholder="Cari lokasi..."
-      placeholderTextColor={isWebAppLayout ? '#94a3b8' : colors.muted}
+      placeholderTextColor={isWebAppLayout ? webAppTheme.muted : colors.muted}
       returnKeyType="search"
-      style={[styles.searchInput, isWebAppLayout && styles.webAppSearchInput]}
+      style={[
+        styles.searchInput,
+        isWebAppLayout && styles.webAppSearchInput,
+        isWebAppLayout && {
+          backgroundColor: webAppTheme.surface,
+          borderColor: webAppTheme.inputBorder,
+          color: webAppTheme.text,
+        },
+      ]}
+      testID={isWebAppLayout ? 'historical-map-web-app-search' : undefined}
       value={search}
     />
   );
@@ -184,7 +246,7 @@ export function HistoricalMapContent() {
   const renderList = () => (
     <View>
       {!isWebAppLayout ? renderSearch() : null}
-      <Text style={[styles.resultCount, isWebAppLayout && styles.webAppResultCount]}>
+      <Text style={[styles.resultCount, isWebAppLayout && styles.webAppResultCount, isWebAppLayout && { color: webAppTheme.muted }]}>
         {filtered.length} lokasi ditemukan
       </Text>
       {filtered.map((loc) => (
@@ -192,21 +254,25 @@ export function HistoricalMapContent() {
           key={loc.id || getLocationName(loc)}
           android_ripple={{ color: 'rgba(16, 185, 129, 0.12)', borderless: false }}
           onPress={() => setViewMode('map')}
-          style={[styles.locationRow, isWebAppLayout && styles.webAppLocationRow]}
+          style={[
+            styles.locationRow,
+            isWebAppLayout && styles.webAppLocationRow,
+            isWebAppLayout && { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
+          ]}
         >
           <View style={styles.locationCopy}>
-            <Text style={[styles.locationName, isWebAppLayout && styles.webAppLocationName]}>
+            <Text style={[styles.locationName, isWebAppLayout && styles.webAppLocationName, isWebAppLayout && { color: webAppTheme.text }]}>
               {getLocationName(loc)}
             </Text>
             <Text
-              style={[styles.locationDesc, isWebAppLayout && styles.webAppLocationDesc]}
+              style={[styles.locationDesc, isWebAppLayout && styles.webAppLocationDesc, isWebAppLayout && { color: webAppTheme.muted }]}
               numberOfLines={2}
             >
               {getLocationDescription(loc)}
             </Text>
             <View style={styles.rowTags}>
-              {loc.category ? <Text style={styles.rowTag}>{loc.category}</Text> : null}
-              {loc.era ? <Text style={[styles.rowTag, styles.rowTagEra]}>{loc.era}</Text> : null}
+              {loc.category ? <Text style={[styles.rowTag, isWebAppLayout && { backgroundColor: webAppTheme.accentSoft, color: webAppTheme.accentText }]}>{loc.category}</Text> : null}
+              {loc.era ? <Text style={[styles.rowTag, styles.rowTagEra, isWebAppLayout && { backgroundColor: webAppTheme.infoSoft, color: webAppTheme.infoText }]}>{loc.era}</Text> : null}
             </View>
           </View>
         </Pressable>
@@ -217,12 +283,18 @@ export function HistoricalMapContent() {
   const renderBody = () => (
     <>
       {loading ? (
-        <View style={[styles.loadingContainer, isWebAppLayout && styles.webAppLoadingContainer]}>
-          <ActivityIndicator size="large" color={isWebAppLayout ? '#10b981' : colors.primary} />
-          {isWebAppLayout ? <Text style={styles.webAppLoadingText}>Memuat lokasi...</Text> : null}
+        <View
+          style={[
+            styles.loadingContainer,
+            isWebAppLayout && styles.webAppLoadingContainer,
+            isWebAppLayout && { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
+          ]}
+        >
+          <ActivityIndicator size="large" color={isWebAppLayout ? webAppTheme.accent : colors.primary} />
+          {isWebAppLayout ? <Text style={[styles.webAppLoadingText, { color: webAppTheme.muted }]}>Memuat lokasi...</Text> : null}
         </View>
       ) : viewMode === 'map' ? (
-        <HistoricalMapView locations={locations} isWebAppLayout={isWebAppLayout} />
+        <HistoricalMapView locations={locations} isWebAppLayout={isWebAppLayout} webAppTheme={webAppTheme} />
       ) : (
         renderList()
       )}
@@ -231,18 +303,18 @@ export function HistoricalMapContent() {
 
   if (isWebAppLayout) {
     return (
-      <View style={styles.webAppRoot} testID="historical-map-web-app-surface">
+      <View style={[styles.webAppRoot, { backgroundColor: webAppTheme.bg }]} testID="historical-map-web-app-surface">
         <View style={styles.webAppHeader}>
-          <View style={styles.webAppIcon}>
-            <Text style={styles.webAppIconText}>م</Text>
+          <View style={[styles.webAppIcon, { backgroundColor: webAppTheme.accentSoft }]}>
+            <Text style={[styles.webAppIconText, { color: webAppTheme.accentText }]}>م</Text>
           </View>
-          <Text style={styles.webAppTitle}>Peta Islam Interaktif</Text>
-          <Text style={styles.webAppSubtitle}>Lokasi bersejarah dalam peradaban Islam</Text>
+          <Text style={[styles.webAppTitle, { color: webAppTheme.title }]}>Peta Islam Interaktif</Text>
+          <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>Lokasi bersejarah dalam peradaban Islam</Text>
         </View>
         <View style={styles.webAppControls}>
           {renderSearch()}
           <View style={styles.webAppMetaRow}>
-            <Text style={styles.webAppMetaText}>
+            <Text style={[styles.webAppMetaText, { color: webAppTheme.muted }]}>
               {loading ? 'Memuat...' : `${locations.length} lokasi`}
             </Text>
             {renderViewToggle()}

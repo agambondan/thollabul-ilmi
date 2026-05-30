@@ -1,31 +1,50 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { colors, radius, spacing } from '../theme';
 
-export function HistoricalMapView({ locations = [], isWebAppLayout = false }) {
+export function HistoricalMapView({ locations = [], isWebAppLayout = false, webAppTheme = null }) {
   return (
     <View
-      style={[styles.container, isWebAppLayout && styles.webAppContainer]}
+      style={[
+        styles.container,
+        isWebAppLayout && styles.webAppContainer,
+        isWebAppLayout && webAppTheme && { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
+      ]}
       testID="historical-map-web-fallback"
     >
-      <Text style={[styles.title, isWebAppLayout && styles.webAppTitle]}>
+      <Text style={[styles.title, isWebAppLayout && styles.webAppTitle, isWebAppLayout && webAppTheme && { color: webAppTheme.title }]}>
         Peta tersedia di aplikasi native
       </Text>
-      <Text style={[styles.subtitle, isWebAppLayout && styles.webAppSubtitle]}>
+      <Text style={[styles.subtitle, isWebAppLayout && styles.webAppSubtitle, isWebAppLayout && webAppTheme && { color: webAppTheme.muted }]}>
         Expo web menampilkan daftar lokasi agar fitur tarikh tetap bisa dibuka dari browser.
       </Text>
       <ScrollView contentContainerStyle={styles.list} nestedScrollEnabled showsVerticalScrollIndicator={false}>
         {locations.slice(0, 8).map((loc) => (
-          <View key={loc.id || loc.name} style={[styles.locationCard, isWebAppLayout && styles.webAppLocationCard]}>
-            <Text style={[styles.locationName, isWebAppLayout && styles.webAppLocationName]}>
+          <View
+            key={loc.id || loc.name}
+            style={[
+              styles.locationCard,
+              isWebAppLayout && styles.webAppLocationCard,
+              isWebAppLayout && webAppTheme && { backgroundColor: webAppTheme.tile, borderColor: webAppTheme.border },
+            ]}
+          >
+            <Text style={[styles.locationName, isWebAppLayout && styles.webAppLocationName, isWebAppLayout && webAppTheme && { color: webAppTheme.text }]}>
               {loc.name}
             </Text>
-            <Text numberOfLines={2} style={[styles.locationDesc, isWebAppLayout && styles.webAppLocationDesc]}>
+            <Text numberOfLines={2} style={[styles.locationDesc, isWebAppLayout && styles.webAppLocationDesc, isWebAppLayout && webAppTheme && { color: webAppTheme.muted }]}>
               {loc.description}
             </Text>
             {(loc.category || loc.era) && (
               <View style={styles.tags}>
-                {loc.category ? <Text style={styles.tag}>{loc.category}</Text> : null}
-                {loc.era ? <Text style={[styles.tag, styles.tagEra]}>{loc.era}</Text> : null}
+                {loc.category ? (
+                  <Text style={[styles.tag, isWebAppLayout && webAppTheme && { backgroundColor: webAppTheme.accentSoft, color: webAppTheme.accentText }]}>
+                    {loc.category}
+                  </Text>
+                ) : null}
+                {loc.era ? (
+                  <Text style={[styles.tag, styles.tagEra, isWebAppLayout && webAppTheme && { backgroundColor: webAppTheme.infoSoft, color: webAppTheme.infoText }]}>
+                    {loc.era}
+                  </Text>
+                ) : null}
               </View>
             )}
           </View>
