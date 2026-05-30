@@ -7,6 +7,7 @@ import { EmptyState, IconActionButton } from '../components/Paper';
 import { Screen } from '../components/Screen';
 import { useSession } from '../context/SessionContext';
 import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { preferenceKeys, readPreference, writePreference } from '../storage/preferences';
 import { colors, radius, spacing } from '../theme';
 import { ayahIndex, dailyTarget, juzProgress, progressPct, TOTAL_AYAH } from '../utils/khatam';
@@ -77,16 +78,26 @@ const normalizeProgress = (payload) => {
   };
 };
 
-const formatLastRead = (value) => {
-  if (!value) return 'Belum tersedia';
+const mobileDateLocales = {
+  en: 'en-US',
+  idn: 'id-ID',
+};
+
+const formatLastRead = (value, fallback, language) => {
+  if (!value) return fallback;
   const parsed = new Date(value);
-  if (Number.isNaN(parsed.getTime())) return 'Belum tersedia';
-  return parsed.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+  if (Number.isNaN(parsed.getTime())) return fallback;
+  return parsed.toLocaleDateString(mobileDateLocales[language] ?? mobileDateLocales.idn, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
 };
 
 export function KhatamScreen({ isActive, navigation, onOpenTab }) {
   const { user } = useSession();
   const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+  const { language, t } = useMobileLocale();
   const webAppTheme = isDarkTheme ? WEB_APP_KHATAM_THEMES.dark : WEB_APP_KHATAM_THEMES.light;
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -129,11 +140,11 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
       setProgress(normalizeProgress(payload));
     } catch (err) {
       setProgress(null);
-      setError(err?.message ?? 'Progress khatam belum bisa dimuat.');
+      setError(err?.message ?? t('khatam.loadError'));
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [t, user]);
 
   useEffect(() => {
     load();
@@ -174,16 +185,18 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
     onOpenTab?.('quran', params);
   };
 
+  const lastRead = formatLastRead(progress?.lastReadAt, t('khatam.lastReadUnavailable'), language);
+
   if (isWebAppLayout) {
     return (
       <Screen
         contentStyle={[styles.webAppSurface, { backgroundColor: webAppTheme.bg }]}
-        title="Khatam"
-        subtitle="Pantau progres khatam Al-Quran dan target harian."
+        title={t('khatam.title')}
+        subtitle={t('khatam.subtitle.webApp')}
         refreshing={loading}
         onRefresh={load}
         actions={
-          <IconActionButton Icon={RefreshCw} label="Muat ulang Khatam" onPress={load} disabled={loading} />
+          <IconActionButton Icon={RefreshCw} label={t('khatam.action.refresh')} onPress={load} disabled={loading} />
         }
       >
         <View style={{ backgroundColor: webAppTheme.bg }} testID="khatam-web-app-surface" />
@@ -195,10 +208,10 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
             <View style={[styles.webAppQuranIcon, { backgroundColor: webAppTheme.iconBg }]}>
               <BookOpenCheck color={webAppTheme.accent} size={34} strokeWidth={2.2} />
             </View>
-            <Text style={[styles.webAppTitle, { color: webAppTheme.text }]}>Khatam Tracker</Text>
-            <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>Login untuk melihat progress khatam Quran-mu.</Text>
+            <Text style={[styles.webAppTitle, { color: webAppTheme.text }]}>{t('khatam.trackerTitle')}</Text>
+            <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>{t('khatam.guest.webApp')}</Text>
             <Pressable onPress={() => onOpenTab?.('profile')} style={styles.webAppPrimaryButton}>
-              <Text style={styles.webAppPrimaryButtonText}>Masuk dari Profil</Text>
+              <Text style={styles.webAppPrimaryButtonText}>{t('khatam.action.loginProfile')}</Text>
             </Pressable>
           </View>
         ) : null}
@@ -227,10 +240,10 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
             <View style={[styles.webAppQuranIcon, { backgroundColor: webAppTheme.iconBg }]}>
               <BookOpenCheck color={webAppTheme.accent} size={34} strokeWidth={2.2} />
             </View>
-            <Text style={[styles.webAppTitle, { color: webAppTheme.text }]}>Belum ada progress Quran</Text>
-            <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>Buka Quran lalu simpan progres ayat terakhir untuk mulai melacak Khatam.</Text>
+            <Text style={[styles.webAppTitle, { color: webAppTheme.text }]}>{t('khatam.empty.title')}</Text>
+            <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>{t('khatam.empty.description')}</Text>
             <Pressable onPress={() => navigation?.closeAndOpen?.('ibadah', 'quran')} style={styles.webAppPrimaryButton}>
-              <Text style={styles.webAppPrimaryButtonText}>Buka Quran</Text>
+              <Text style={styles.webAppPrimaryButtonText}>{t('khatam.action.openQuran')}</Text>
             </Pressable>
           </View>
         ) : null}
@@ -241,18 +254,18 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
               <View style={[styles.webAppQuranIcon, { backgroundColor: webAppTheme.iconBg }]}>
                 <BookOpenCheck color={webAppTheme.accent} size={30} strokeWidth={2.2} />
               </View>
-              <Text style={[styles.webAppTitle, { color: webAppTheme.text }]}>Khatam Tracker</Text>
-              <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>Pantau progress khatam Al-Quran kamu</Text>
+              <Text style={[styles.webAppTitle, { color: webAppTheme.text }]}>{t('khatam.trackerTitle')}</Text>
+              <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>{t('khatam.progressSubtitle')}</Text>
             </View>
 
             <View style={styles.webAppHeroCard}>
               <View style={styles.webAppHeroTop}>
                 <View>
-                  <Text style={styles.webAppHeroLabel}>PROGRESS SAAT INI</Text>
+                  <Text style={styles.webAppHeroLabel}>{t('khatam.hero.current')}</Text>
                   <Text style={styles.webAppHeroValue}>{stats.pct.toFixed(1)}%</Text>
                 </View>
                 <View style={styles.webAppHeroRight}>
-                  <Text style={styles.webAppHeroLabel}>TERAKHIR DIBACA</Text>
+                  <Text style={styles.webAppHeroLabel}>{t('khatam.hero.lastRead')}</Text>
                   <Text style={styles.webAppHeroSurah}>QS. {progress.surahNumber}:{progress.ayahNumber}</Text>
                 </View>
               </View>
@@ -260,11 +273,11 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                 <View style={[styles.webAppHeroFill, { width: `${Math.min(100, stats.pct)}%` }]} />
               </View>
               <View style={styles.webAppHeroFoot}>
-                <Text style={styles.webAppHeroFootText}>{stats.currentIdx} / {TOTAL_AYAH} ayat</Text>
-                <Text style={styles.webAppHeroFootText}>{stats.target.ayahsLeft} tersisa</Text>
+                <Text style={styles.webAppHeroFootText}>{t('khatam.hero.ayahProgress', { current: stats.currentIdx, total: TOTAL_AYAH })}</Text>
+                <Text style={styles.webAppHeroFootText}>{t('khatam.hero.remaining', { count: stats.target.ayahsLeft })}</Text>
               </View>
               <Text style={styles.webAppLastRead}>
-                Terakhir diperbarui: {formatLastRead(progress.lastReadAt)}
+                {t('khatam.lastUpdated', { date: lastRead })}
               </Text>
             </View>
 
@@ -272,8 +285,8 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
               style={[styles.webAppTargetCard, { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border }]}
               testID="khatam-web-app-target-card"
             >
-              <Text style={[styles.webAppSectionTitle, { color: webAppTheme.text }]}>Target Khatam</Text>
-              <Text style={[styles.webAppSectionHint, { color: webAppTheme.muted }]}>Pilih durasi agar target ayat harian otomatis menyesuaikan.</Text>
+              <Text style={[styles.webAppSectionTitle, { color: webAppTheme.text }]}>{t('khatam.target.title')}</Text>
+              <Text style={[styles.webAppSectionHint, { color: webAppTheme.muted }]}>{t('khatam.target.hint')}</Text>
               <View style={styles.webAppTargetChips}>
                 {KHATAM_TARGET_OPTIONS.map((option) => {
                   const selected = option.days === targetDays;
@@ -301,15 +314,15 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
               <View style={styles.webAppTargetGrid}>
                 <View style={[styles.webAppTargetStat, styles.webAppTargetStatGreen, { backgroundColor: webAppTheme.accentSoft }]}>
                   <Text style={[styles.webAppTargetValue, { color: webAppTheme.accent }]}>{stats.target.daysLeft}</Text>
-                  <Text style={[styles.webAppTargetLabel, { color: webAppTheme.muted }]}>Hari tersisa</Text>
+                  <Text style={[styles.webAppTargetLabel, { color: webAppTheme.muted }]}>{t('khatam.target.daysLeft')}</Text>
                 </View>
                 <View style={[styles.webAppTargetStat, styles.webAppTargetStatAmber, { backgroundColor: webAppTheme.amberSoft }]}>
                   <Text style={[styles.webAppTargetValue, styles.webAppTargetValueAmber, { color: webAppTheme.amber }]}>{stats.target.ayahsPerDay}</Text>
-                  <Text style={[styles.webAppTargetLabel, { color: webAppTheme.muted }]}>Ayat/hari</Text>
+                  <Text style={[styles.webAppTargetLabel, { color: webAppTheme.muted }]}>{t('khatam.target.ayahsPerDay')}</Text>
                 </View>
                 <View style={[styles.webAppTargetStat, styles.webAppTargetStatBlue, { backgroundColor: webAppTheme.blueSoft }]}>
                   <Text style={[styles.webAppTargetValue, styles.webAppTargetValueBlue, { color: webAppTheme.blue }]}>{Math.ceil(stats.target.ayahsPerDay / 15)}</Text>
-                  <Text style={[styles.webAppTargetLabel, { color: webAppTheme.muted }]}>Menit/hari</Text>
+                  <Text style={[styles.webAppTargetLabel, { color: webAppTheme.muted }]}>{t('khatam.target.minutesPerDay')}</Text>
                 </View>
               </View>
             </View>
@@ -318,7 +331,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
               style={[styles.webAppJuzCard, { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border }]}
               testID="khatam-web-app-juz-card"
             >
-              <Text style={[styles.webAppSectionTitle, { color: webAppTheme.text }]}>Progress per Juz</Text>
+              <Text style={[styles.webAppSectionTitle, { color: webAppTheme.text }]}>{t('khatam.juz.title')}</Text>
               <View style={styles.webAppJuzGrid}>
                 {stats.juz.map((item) => {
                   const partial = item.pct > 0 && item.pct < 100;
@@ -347,13 +360,13 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                 })}
               </View>
               <View style={styles.webAppLegendGrid}>
-                <Text style={[styles.webAppLegendText, { color: webAppTheme.muted }]}>Selesai</Text>
-                <Text style={[styles.webAppLegendText, { color: webAppTheme.muted }]}>Sebagian</Text>
-                <Text style={[styles.webAppLegendText, { color: webAppTheme.muted }]}>Belum dibaca</Text>
-                <Text style={[styles.webAppLegendText, { color: webAppTheme.muted }]}>Saat ini</Text>
+                <Text style={[styles.webAppLegendText, { color: webAppTheme.muted }]}>{t('khatam.juz.done')}</Text>
+                <Text style={[styles.webAppLegendText, { color: webAppTheme.muted }]}>{t('khatam.juz.partial')}</Text>
+                <Text style={[styles.webAppLegendText, { color: webAppTheme.muted }]}>{t('khatam.juz.unread')}</Text>
+                <Text style={[styles.webAppLegendText, { color: webAppTheme.muted }]}>{t('khatam.juz.current')}</Text>
               </View>
               <Pressable onPress={continueReading} style={styles.webAppPrimaryButton}>
-                <Text style={styles.webAppPrimaryButtonText}>Lanjutkan baca</Text>
+                <Text style={styles.webAppPrimaryButtonText}>{t('khatam.action.continueReading')}</Text>
               </Pressable>
             </View>
           </>
@@ -365,14 +378,14 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
   return (
     <Screen
       contentStyle={isWebAppLayout ? styles.webAppSurface : null}
-      title="Khatam"
-      subtitle="Pantau progress khatam Quran dari posisi baca terakhir."
+      title={t('khatam.title')}
+      subtitle={t('khatam.subtitle.classic')}
       refreshing={loading}
       onRefresh={load}
       actions={
         <>
-          <IconActionButton Icon={ArrowLeft} label="Kembali ke Ibadah" onPress={() => navigation?.close?.('ibadah')} />
-          <IconActionButton Icon={RefreshCw} label="Muat ulang Khatam" onPress={load} disabled={loading} />
+          <IconActionButton Icon={ArrowLeft} label={t('khatam.action.backIbadah')} onPress={() => navigation?.close?.('ibadah')} />
+          <IconActionButton Icon={RefreshCw} label={t('khatam.action.refresh')} onPress={load} disabled={loading} />
         </>
       }
     >
@@ -380,8 +393,8 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
       {!user ? (
         <EmptyState
           Icon={BookOpenCheck}
-          title="Masuk untuk melacak Khatam"
-          description="Progress Khatam mengikuti progres baca Quran yang tersimpan di akunmu."
+          title={t('khatam.guest.title')}
+          description={t('khatam.guest.description')}
         />
       ) : null}
 
@@ -391,11 +404,11 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
       {user && !loading && !error && !progress ? (
         <EmptyState
           Icon={BookOpenCheck}
-          title="Belum ada progress Quran"
-          description="Buka Quran lalu simpan progres ayat terakhir untuk mulai melacak Khatam."
+          title={t('khatam.empty.title')}
+          description={t('khatam.empty.description')}
           action={
             <Pressable onPress={() => navigation?.closeAndOpen?.('ibadah', 'quran')} style={styles.primaryButton}>
-              <Text style={styles.primaryButtonText}>Buka Quran</Text>
+              <Text style={styles.primaryButtonText}>{t('khatam.action.openQuran')}</Text>
             </Pressable>
           }
         />
@@ -404,44 +417,44 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
       {progress && stats ? (
         <>
           <Card style={styles.heroCard}>
-            <CardTitle meta={`${Math.round(stats.pct)}%`}>Progress saat ini</CardTitle>
+            <CardTitle meta={`${Math.round(stats.pct)}%`}>{t('khatam.progress.current')}</CardTitle>
             <View style={styles.progressTrack}>
               <View style={[styles.progressFill, { width: `${Math.min(100, stats.pct)}%` }]} />
             </View>
             <View style={styles.heroStats}>
               <View style={styles.statBlock}>
                 <Text style={styles.statValue}>{stats.currentIdx}</Text>
-                <Text style={styles.statLabel}>dari {TOTAL_AYAH} ayat</Text>
+                <Text style={styles.statLabel}>{t('khatam.progress.ofAyahs', { total: TOTAL_AYAH })}</Text>
               </View>
               <View style={styles.statBlock}>
                 <Text style={styles.statValue}>{stats.target.ayahsLeft}</Text>
-                <Text style={styles.statLabel}>ayat tersisa</Text>
+                <Text style={styles.statLabel}>{t('khatam.progress.ayahsLeft')}</Text>
               </View>
             </View>
             <Text style={styles.lastRead}>
-              Terakhir dibaca: QS. {progress.surahNumber}:{progress.ayahNumber} · {formatLastRead(progress.lastReadAt)}
+              {t('khatam.lastRead', { date: lastRead, surah: progress.surahNumber, ayah: progress.ayahNumber })}
             </Text>
             <Pressable onPress={continueReading} style={styles.primaryButton}>
-              <Text style={styles.primaryButtonText}>Lanjutkan baca</Text>
+              <Text style={styles.primaryButtonText}>{t('khatam.action.continueReading')}</Text>
             </Pressable>
           </Card>
 
           <Card>
-            <CardTitle meta="30 hari">Target Khatam</CardTitle>
+            <CardTitle meta={t('khatam.target.defaultMeta')}>{t('khatam.target.title')}</CardTitle>
             <View style={styles.targetGrid}>
               <View style={styles.targetBox}>
                 <Text style={styles.targetValue}>{stats.target.ayahsPerDay}</Text>
-                <Text style={styles.targetLabel}>ayat per hari</Text>
+                <Text style={styles.targetLabel}>{t('khatam.target.ayahsPerDayFull')}</Text>
               </View>
               <View style={styles.targetBox}>
                 <Text style={styles.targetValue}>{Math.ceil(stats.target.ayahsPerDay / 20)}</Text>
-                <Text style={styles.targetLabel}>halaman per hari</Text>
+                <Text style={styles.targetLabel}>{t('khatam.target.pagesPerDay')}</Text>
               </View>
             </View>
           </Card>
 
           <Card>
-            <CardTitle meta="30 juz">Progress per Juz</CardTitle>
+            <CardTitle meta={t('khatam.juz.meta')}>{t('khatam.juz.title')}</CardTitle>
             <View style={styles.juzGrid}>
               {stats.juz.map((item) => (
                 <View
