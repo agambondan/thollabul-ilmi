@@ -2,6 +2,7 @@ import { BookOpen, ChevronDown, Search } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 import { normalizeSearchText } from '../ExploreScreen.helpers';
 
@@ -19,108 +20,114 @@ const titleCase = (value) =>
       .replace(/\b\w/g, (char) => char.toUpperCase())
     : '';
 
-const formatYear = (raw) => {
-  if (raw.year_hijri) return `${raw.year_hijri} H`;
+const formatYear = (raw, t) => {
+  if (raw.year_hijri) return `${raw.year_hijri} ${t('explore.reference.yearHijri')}`;
   if (raw.year_miladi == null) return '';
-  return Number(raw.year_miladi) < 0 ? `${Math.abs(Number(raw.year_miladi))} SM` : `${raw.year_miladi} M`;
+  return Number(raw.year_miladi) < 0
+    ? `${Math.abs(Number(raw.year_miladi))} ${t('explore.reference.yearBeforeCommon')}`
+    : `${raw.year_miladi} ${t('explore.reference.yearCommon')}`;
 };
 
 export const WEB_APP_REFERENCE_ROUTE_CONFIGS = {
   dzikir: {
     arabicHeading: 'الذِّكْر',
     categories: ['pagi', 'petang', 'setelah_sholat', 'tidur', 'safar', 'dzikir_umum'],
-    emptyText: 'Dzikir belum tersedia.',
-    loadingText: 'Memuat dzikir...',
-    searchPlaceholder: 'Cari dzikir, sumber, atau kategori...',
-    subtitle: 'Dzikir pagi, petang, dan bacaan pilihan dari dashboard.',
-    title: 'Dzikir',
-    unit: 'dzikir',
+    emptyTextKey: 'explore.reference.dzikir.empty',
+    loadingTextKey: 'explore.reference.dzikir.loading',
+    searchPlaceholderKey: 'explore.reference.dzikir.searchPlaceholder',
+    subtitleKey: 'explore.reference.dzikir.subtitle',
+    titleKey: 'explore.reference.dzikir.title',
+    unitKey: 'explore.reference.dzikir.unit',
   },
   wirid: {
     arabicHeading: 'الوِرْد',
     categories: ['pagi', 'petang', 'setelah_sholat', 'tidur', 'umum'],
-    emptyText: 'Wirid belum tersedia.',
-    loadingText: 'Memuat wirid...',
-    searchPlaceholder: 'Cari wirid, waktu, atau sumber...',
-    subtitle: 'Bacaan wirid rutin dalam tampilan dashboard.',
-    title: 'Wirid',
-    unit: 'wirid',
+    emptyTextKey: 'explore.reference.wirid.empty',
+    loadingTextKey: 'explore.reference.wirid.loading',
+    searchPlaceholderKey: 'explore.reference.wirid.searchPlaceholder',
+    subtitleKey: 'explore.reference.wirid.subtitle',
+    titleKey: 'explore.reference.wirid.title',
+    unitKey: 'explore.reference.wirid.unit',
   },
   tahlil: {
     arabicHeading: 'التَّهْلِيل',
     categories: ['tahlil', 'yasin', 'doa', 'umum'],
-    emptyText: 'Bacaan tahlil belum tersedia.',
-    loadingText: 'Memuat tahlil...',
-    searchPlaceholder: 'Cari bacaan tahlil atau yasin...',
-    subtitle: 'Referensi tahlil dan yasin untuk dibaca bertahap.',
-    title: 'Tahlil',
-    unit: 'bacaan',
+    emptyTextKey: 'explore.reference.tahlil.empty',
+    loadingTextKey: 'explore.reference.tahlil.loading',
+    searchPlaceholderKey: 'explore.reference.tahlil.searchPlaceholder',
+    subtitleKey: 'explore.reference.tahlil.subtitle',
+    titleKey: 'explore.reference.tahlil.title',
+    unitKey: 'explore.reference.tahlil.unit',
   },
   'asmaul-husna': {
     arabicHeading: 'أَسْمَاءُ اللهِ الحُسْنَى',
-    emptyText: 'Data Asmaul Husna belum tersedia.',
+    emptyTextKey: 'explore.reference.asmaulHusna.empty',
     leading: 'number',
-    loadingText: 'Memuat Asmaul Husna...',
-    searchPlaceholder: 'Cari nama Allah, arti, atau transliterasi...',
-    subtitle: '99 nama Allah dengan arti dan transliterasi.',
-    title: 'Asmaul Husna',
-    unit: 'nama',
+    loadingTextKey: 'explore.reference.asmaulHusna.loading',
+    searchPlaceholderKey: 'explore.reference.asmaulHusna.searchPlaceholder',
+    subtitleKey: 'explore.reference.asmaulHusna.subtitle',
+    titleKey: 'explore.reference.asmaulHusna.title',
+    unitKey: 'explore.reference.asmaulHusna.unit',
   },
   'panduan-sholat': {
     categories: ['wudhu', 'sholat', 'sunnah', 'dzikir', 'umum'],
-    emptyText: 'Panduan sholat belum tersedia.',
-    loadingText: 'Memuat panduan sholat...',
-    searchPlaceholder: 'Cari tata cara, bacaan, atau dalil...',
-    subtitle: 'Tata cara sholat dan bacaan praktis.',
-    title: 'Panduan Sholat',
-    unit: 'panduan',
+    emptyTextKey: 'explore.reference.panduanSholat.empty',
+    loadingTextKey: 'explore.reference.panduanSholat.loading',
+    searchPlaceholderKey: 'explore.reference.panduanSholat.searchPlaceholder',
+    subtitleKey: 'explore.reference.panduanSholat.subtitle',
+    titleKey: 'explore.reference.panduanSholat.title',
+    unitKey: 'explore.reference.panduanSholat.unit',
   },
   sejarah: {
     categories: ['khulafa', 'dinasti', 'peristiwa', 'perang', 'ulama', 'nabi', 'modern', 'umum'],
-    emptyText: 'Referensi sejarah belum tersedia.',
+    emptyTextKey: 'explore.reference.sejarah.empty',
     leading: 'year',
-    loadingText: 'Memuat sejarah...',
-    searchPlaceholder: 'Cari peristiwa, tokoh, atau tahun...',
-    subtitle: 'Timeline sejarah Islam dari dashboard.',
-    title: 'Sejarah Islam',
-    unit: 'peristiwa',
+    loadingTextKey: 'explore.reference.sejarah.loading',
+    searchPlaceholderKey: 'explore.reference.sejarah.searchPlaceholder',
+    subtitleKey: 'explore.reference.sejarah.subtitle',
+    titleKey: 'explore.reference.sejarah.title',
+    unitKey: 'explore.reference.sejarah.unit',
   },
   manasik: {
     categories: ['haji', 'umrah'],
-    emptyText: 'Panduan manasik belum tersedia.',
+    emptyTextKey: 'explore.reference.manasik.empty',
     leading: 'step',
-    loadingText: 'Memuat manasik...',
-    searchPlaceholder: 'Cari langkah haji atau umrah...',
-    subtitle: 'Panduan haji dan umrah dalam urutan langkah.',
-    title: 'Manasik',
-    unit: 'langkah',
+    loadingTextKey: 'explore.reference.manasik.loading',
+    searchPlaceholderKey: 'explore.reference.manasik.searchPlaceholder',
+    subtitleKey: 'explore.reference.manasik.subtitle',
+    titleKey: 'explore.reference.manasik.title',
+    unitKey: 'explore.reference.manasik.unit',
   },
   'jarh-tadil': {
     categories: ['tadil', 'jarh'],
-    emptyText: "Data Jarh wa Ta'dil belum tersedia.",
-    loadingText: "Memuat Jarh wa Ta'dil...",
-    searchPlaceholder: 'Cari perawi, penilai, atau tingkat...',
-    subtitle: 'Penilaian ulama atas perawi hadis.',
-    title: "Jarh wa Ta'dil",
-    unit: 'penilaian',
+    emptyTextKey: 'explore.reference.jarhTadil.empty',
+    loadingTextKey: 'explore.reference.jarhTadil.loading',
+    searchPlaceholderKey: 'explore.reference.jarhTadil.searchPlaceholder',
+    subtitleKey: 'explore.reference.jarhTadil.subtitle',
+    titleKey: 'explore.reference.jarhTadil.title',
+    unitKey: 'explore.reference.jarhTadil.unit',
   },
 };
 
 export const WEB_APP_REFERENCE_LIST_ROUTE_KEYS = new Set(Object.keys(WEB_APP_REFERENCE_ROUTE_CONFIGS));
 
-const getConfig = (feature, providedConfig, routeKey) => ({
-  emptyText: `${feature?.title ?? 'Data'} belum tersedia.`,
-  loadingText: 'Memuat data...',
-  searchPlaceholder: 'Cari materi...',
-  subtitle: feature?.subtitle ?? '',
-  title: feature?.title ?? 'Referensi',
-  unit: 'item',
-  ...(WEB_APP_REFERENCE_ROUTE_CONFIGS[feature?.key ?? routeKey] ?? {}),
-  ...(providedConfig ?? {}),
+const translateRouteConfig = (config, t, feature) => ({
+  ...config,
+  emptyText: config.emptyText ?? (config.emptyTextKey ? t(config.emptyTextKey) : t('explore.reference.fallbackEmpty', { title: feature?.title ?? t('explore.reference.fallbackData') })),
+  loadingText: config.loadingText ?? (config.loadingTextKey ? t(config.loadingTextKey) : t('explore.reference.fallbackLoading')),
+  searchPlaceholder: config.searchPlaceholder ?? (config.searchPlaceholderKey ? t(config.searchPlaceholderKey) : t('explore.reference.fallbackSearchPlaceholder')),
+  subtitle: config.subtitle ?? (config.subtitleKey ? t(config.subtitleKey) : feature?.subtitle ?? ''),
+  title: config.title ?? (config.titleKey ? t(config.titleKey) : feature?.title ?? t('explore.reference.fallbackTitle')),
+  unit: config.unit ?? (config.unitKey ? t(config.unitKey) : t('explore.reference.fallbackUnit')),
 });
 
+const getConfig = (feature, providedConfig, routeKey, t) => translateRouteConfig({
+  ...(WEB_APP_REFERENCE_ROUTE_CONFIGS[feature?.key ?? routeKey] ?? {}),
+  ...(providedConfig ?? {}),
+}, t, feature);
+
 const getItemId = (item, index) => getRaw(item).id ?? getRaw(item)._id ?? getRaw(item).slug ?? item?.id ?? `reference-${index}`;
-const getItemTitle = (item, index) =>
+const getItemTitle = (item, index, t) =>
   pickText(
     getRaw(item).title_idn,
     getRaw(item).title_id,
@@ -129,7 +136,7 @@ const getItemTitle = (item, index) =>
     getRaw(item).name,
     getRaw(item).latin,
     item?.title,
-    `Item ${index + 1}`,
+    t('explore.reference.itemFallback', { number: index + 1 }),
   );
 const getItemBody = (item) =>
   pickText(
@@ -170,14 +177,14 @@ const getItemMeta = (item) =>
     getRaw(item).source,
     getRaw(item).sumber,
   );
-const getItemSearchText = (item, index, leading) => {
+const getItemSearchText = (item, index, leading, t) => {
   const raw = getRaw(item);
   return [
-    getItemTitle(item, index),
+    getItemTitle(item, index, t),
     getItemBody(item),
     getItemArabic(item),
     getItemMeta(item),
-    getLeadingLabel(item, index, leading),
+    getLeadingLabel(item, index, leading, t),
     raw.translation?.latin_idn,
     raw.translation?.latin_en,
     raw.translation?.text_idn,
@@ -193,10 +200,10 @@ const getFilterCategory = (item) =>
     .toLowerCase()
     .replace(/\s+/g, '_')
     .trim();
-const getLeadingLabel = (item, index, leading) => {
+const getLeadingLabel = (item, index, leading, t) => {
   const raw = getRaw(item);
   if (leading === 'step') return raw.step ? `${raw.step}` : `${index + 1}`;
-  if (leading === 'year') return formatYear(raw) || `${index + 1}`;
+  if (leading === 'year') return formatYear(raw, t) || `${index + 1}`;
   if (leading === 'number') return raw.number ? `${raw.number}` : `${index + 1}`;
   return '';
 };
@@ -209,8 +216,8 @@ function CategoryPill({ active, label, onPress, testID }) {
   );
 }
 
-function ReferenceCard({ config, index, item, onOpen }) {
-  const leading = getLeadingLabel(item, index, config.leading);
+function ReferenceCard({ config, index, item, onOpen, t }) {
+  const leading = getLeadingLabel(item, index, config.leading, t);
   const meta = getItemMeta(item);
   const body = getItemBody(item);
   const arabic = getItemArabic(item);
@@ -226,7 +233,7 @@ function ReferenceCard({ config, index, item, onOpen }) {
         <View style={styles.cardMain}>
           {meta ? <Text style={styles.metaBadge}>{titleCase(meta)}</Text> : null}
           <Text numberOfLines={2} style={styles.cardTitle}>
-            {getItemTitle(item, index)}
+            {getItemTitle(item, index, t)}
           </Text>
           {arabic ? (
             <Text numberOfLines={2} style={styles.arabicText}>
@@ -256,9 +263,10 @@ export function WebAppReferenceListRoute({
   pagination,
   routeKey,
 }) {
+  const { t } = useMobileLocale();
   const [category, setCategory] = useState('');
   const [search, setSearch] = useState('');
-  const config = getConfig(feature, providedConfig, routeKey);
+  const config = getConfig(feature, providedConfig, routeKey, t);
   const key = routeKey ?? feature?.key ?? 'reference';
   const categories = useMemo(() => {
     const seen = new Set();
@@ -276,10 +284,10 @@ export function WebAppReferenceListRoute({
       const itemCategory = getFilterCategory(item);
       return (
         (!category || itemCategory === category) &&
-        (!query || normalizeSearchText(getItemSearchText(item, index, config.leading)).includes(query))
+        (!query || normalizeSearchText(getItemSearchText(item, index, config.leading, t)).includes(query))
       );
     });
-  }, [category, config.leading, items, search]);
+  }, [category, config.leading, items, search, t]);
 
   return (
     <ScrollView
@@ -310,12 +318,12 @@ export function WebAppReferenceListRoute({
       <View style={styles.summaryRow}>
         <Text style={styles.summaryText}>
           {search || category
-            ? `Menampilkan ${filteredItems.length} dari ${items.length} ${config.unit}`
-            : `${items.length} ${config.unit} tersedia`}
+            ? t('explore.reference.filteredCount', { filtered: filteredItems.length, total: items.length, unit: config.unit })
+            : t('explore.reference.availableCount', { count: items.length, unit: config.unit })}
         </Text>
         {search ? (
           <Pressable onPress={() => setSearch('')} testID={`web-app-${key}-reset-search`}>
-            <Text style={styles.resetText}>Reset</Text>
+            <Text style={styles.resetText}>{t('explore.reference.reset')}</Text>
           </Pressable>
         ) : null}
       </View>
@@ -324,7 +332,7 @@ export function WebAppReferenceListRoute({
         <View style={styles.categoryWrap}>
           <CategoryPill
             active={!category}
-            label="Semua"
+            label={t('explore.reference.all')}
             onPress={() => setCategory('')}
             testID={`web-app-${key}-category`}
           />
@@ -340,7 +348,7 @@ export function WebAppReferenceListRoute({
         </View>
       ) : null}
 
-      {error ? <Text style={styles.error}>Data belum bisa dimuat. Coba refresh halaman.</Text> : null}
+      {error ? <Text style={styles.error}>{t('explore.reference.error')}</Text> : null}
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color="#059669" size="small" />
@@ -357,6 +365,7 @@ export function WebAppReferenceListRoute({
               item={item}
               key={`${getItemId(item, index)}-${index}`}
               onOpen={onOpenItem}
+              t={t}
             />
           ))}
         </View>
@@ -365,9 +374,9 @@ export function WebAppReferenceListRoute({
       {!loading && !error && !filteredItems.length ? (
         <View style={styles.empty}>
           <BookOpen color="#9ca3af" size={32} strokeWidth={1.8} />
-          <Text style={styles.emptyTitle}>{items.length ? 'Data tidak ditemukan.' : config.emptyText}</Text>
+          <Text style={styles.emptyTitle}>{items.length ? t('explore.reference.emptyFilteredTitle') : config.emptyText}</Text>
           <Text style={styles.emptyText}>
-            {items.length ? 'Ubah pencarian atau filter kategori.' : 'Coba muat ulang beberapa saat lagi.'}
+            {items.length ? t('explore.reference.emptyFilteredText') : t('explore.reference.emptyText')}
           </Text>
         </View>
       ) : null}
@@ -380,7 +389,7 @@ export function WebAppReferenceListRoute({
             style={[styles.loadMoreButton, pagination.loadingMore && styles.loadMoreButtonDisabled]}
             testID={`web-app-${key}-load-more`}
           >
-            <Text style={styles.loadMoreText}>{pagination.loadingMore ? 'Memuat...' : 'Muat lebih banyak'}</Text>
+            <Text style={styles.loadMoreText}>{pagination.loadingMore ? t('explore.reference.loadingShort') : t('explore.reference.loadMore')}</Text>
           </Pressable>
         </View>
       ) : null}
