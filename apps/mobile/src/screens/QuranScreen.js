@@ -65,6 +65,7 @@ import { useFeedback } from '../context/FeedbackContext';
 import { useSession } from '../context/SessionContext';
 import { useTabActivity } from '../context/TabActivityContext';
 import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { useQuranReaderPreferences } from '../hooks/useQuranReaderPreferences';
 import { preferenceKeys, readPreference, writePreference } from '../storage/preferences';
 import { colors } from '../theme';
@@ -124,6 +125,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     const { showError, showInfo, showSuccess } = useFeedback();
     const { notifyTabActivity } = useTabActivity();
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const { t } = useMobileLocale();
     const webAppQuranTheme = isDarkTheme ? WEB_APP_QURAN_THEMES.dark : WEB_APP_QURAN_THEMES.light;
     const webAppQuranThemeStyles = useMemo(
         () => createQuranWebAppThemeStyles(webAppQuranTheme),
@@ -458,7 +460,12 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             try {
                 await updateHafalanStatus(surah.number, nextStatus);
                 await loadHafalan();
-                showSuccess(`${surah.name} ditandai ${nextStatus === 'memorized' ? 'hafal' : nextStatus === 'in_progress' ? 'sedang dihafal' : 'belum dihafal'}.`);
+                const statusLabel = nextStatus === 'memorized'
+                    ? t('quran.hafalan.status.memorized')
+                    : nextStatus === 'in_progress'
+                        ? t('quran.hafalan.status.inProgress')
+                        : t('quran.hafalan.status.notStarted');
+                showSuccess(t('quran.hafalan.statusSaved', { status: statusLabel, surah: surah.name }));
             } catch {
                 setHafalanList((prev) =>
                     prev.map((item) =>
@@ -467,16 +474,16 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                             : item,
                     ),
                 );
-                showError('Status hafalan belum bisa disimpan.');
+                showError(t('quran.hafalan.statusSaveError'));
             }
         },
-        [hafalanList, loadHafalan, showError, showSuccess],
+        [hafalanList, loadHafalan, showError, showSuccess, t],
     );
 
     const submitMurojaah = useCallback(async () => {
         if (!murojaahForm.surahId) {
-            setMurojaahMessage('Pilih surah terlebih dahulu.');
-            showInfo('Pilih surah terlebih dahulu.');
+            setMurojaahMessage(t('quran.murojaah.selectSurah'));
+            showInfo(t('quran.murojaah.selectSurah'));
             return;
         }
         setSavingMurojaah(true);
@@ -490,18 +497,18 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                 durationSeconds: 0,
                 note: murojaahForm.note,
             });
-            setMurojaahMessage('Sesi murojaah berhasil disimpan.');
-            showSuccess('Sesi murojaah berhasil disimpan.');
+            setMurojaahMessage(t('quran.murojaah.saved'));
+            showSuccess(t('quran.murojaah.saved'));
             setMurojaahForm((prev) => ({ ...prev, surahId: null, note: '' }));
             await loadMurojaah();
         } catch (err) {
-            const nextMessage = err?.message ?? 'Murojaah belum bisa disimpan.';
+            const nextMessage = err?.message ?? t('quran.murojaah.saveError');
             setMurojaahMessage(nextMessage);
             showError(nextMessage);
         } finally {
             setSavingMurojaah(false);
         }
-    }, [loadMurojaah, murojaahForm, showError, showInfo, showSuccess]);
+    }, [loadMurojaah, murojaahForm, showError, showInfo, showSuccess, t]);
 
     const refreshAll = useCallback(async () => {
         await load();
@@ -959,8 +966,8 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         }
         const surahNumber = selectedSurah.number ?? ayah.surahNumber;
         if (!surahNumber) {
-            setMessage("Buka bacaan surah untuk menyimpan progres Al-Qur'an.");
-            showInfo("Buka bacaan surah untuk menyimpan progres Al-Qur'an.");
+            setMessage(t('quran.progress.openSurahRequired'));
+            showInfo(t('quran.progress.openSurahRequired'));
             return;
         }
         setSavingAyah(`progress:${ayah.id}`);
@@ -972,10 +979,10 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                 ayahId: ayah.id,
             });
             setProgress(next);
-            setMessage(`Progres disimpan di ayat ${ayah.number}.`);
-            showSuccess(`Progres disimpan di ayat ${ayah.number}.`);
+            setMessage(t('quran.progress.saved', { ayah: ayah.number }));
+            showSuccess(t('quran.progress.saved', { ayah: ayah.number }));
         } catch (err) {
-            const nextMessage = err?.message ?? 'Progres ayat belum bisa disimpan.';
+            const nextMessage = err?.message ?? t('quran.progress.saveError');
             setMessage(nextMessage);
             showError(nextMessage);
         } finally {
@@ -985,7 +992,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
 
     const toggleAyahBookmark = async (ayah) => {
         if (!user || !ayah.id) {
-            showInfo('Masuk dari Profil untuk menyimpan bookmark.');
+            showInfo(t('quran.bookmark.loginRequired'));
             return;
         }
         setSavingAyah(`bookmark:${ayah.id}`);
@@ -997,16 +1004,16 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                 const next = { ...bookmarks };
                 delete next[ayah.id];
                 setBookmarks(next);
-                setMessage(`Bookmark ayat ${ayah.number} dihapus.`);
-                showSuccess(`Bookmark ayat ${ayah.number} dihapus.`);
+                setMessage(t('quran.bookmark.removed', { ayah: ayah.number }));
+                showSuccess(t('quran.bookmark.removed', { ayah: ayah.number }));
             } else {
                 const bookmark = await addBookmark({ refType: 'ayah', refId: ayah.id });
                 setBookmarks({ ...bookmarks, [ayah.id]: bookmark });
-                setMessage(`Ayat ${ayah.number} disimpan ke bookmark.`);
-                showSuccess(`Ayat ${ayah.number} disimpan ke bookmark.`);
+                setMessage(t('quran.bookmark.saved', { ayah: ayah.number }));
+                showSuccess(t('quran.bookmark.saved', { ayah: ayah.number }));
             }
         } catch (err) {
-            const nextMessage = err?.message ?? 'Bookmark ayat belum bisa diperbarui.';
+            const nextMessage = err?.message ?? t('quran.bookmark.saveError');
             setMessage(nextMessage);
             showError(nextMessage);
         } finally {
@@ -1156,11 +1163,11 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         const endAyah = Math.min(toPositiveInt(audioRange.endAyah) ?? maxEndAyah, maxEndAyah);
 
         if (startSurah > endSurah) {
-            setMessage('Range audio belum valid: surat awal tidak boleh melewati surat akhir.');
+            setMessage(t('quran.audioRange.invalidOrder'));
             return;
         }
         if (!surahs.some((item) => Number(item.number) === startSurah) || !endSurahMeta) {
-            setMessage('Range audio belum valid: nomor surat tidak ditemukan.');
+            setMessage(t('quran.audioRange.invalidSurah'));
             return;
         }
 
@@ -1184,7 +1191,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         try {
             const queue = await fetchAudioRangeQueue({ endAyah, endSurah, startSurah });
             if (!queue.length) {
-                setMessage('Ayat untuk range audio belum tersedia.');
+                setMessage(t('quran.audioRange.empty'));
                 setAudioRange((current) => ({ ...current, loading: false, playing: false }));
                 return;
             }
@@ -1194,7 +1201,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             playRangeQueueItem(0, sessionId);
         } catch (err) {
             setAudioRange((current) => ({ ...current, loading: false, playing: false }));
-            setMessage(err?.message ?? 'Range audio belum bisa dimuat.');
+            setMessage(err?.message ?? t('quran.audioRange.loadError'));
         }
     };
 
