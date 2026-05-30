@@ -2,18 +2,19 @@ import { Users } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 import { normalizeSearchText } from '../ExploreScreen.helpers';
 
 const TABAQAH_LABELS = {
-  nabi: 'Nabi',
-  sahabat: 'Sahabat',
-  tabiin: "Tabi'in",
-  tabiut_tabiin: "Tabi'ut Tabi'in",
-  atbaut_tabiin: "Atba'ut Tabi'in",
-  tabaqah_5: 'Tabaqah ke-5',
-  tabaqah_6: 'Tabaqah ke-6',
-  tabaqah_7: 'Tabaqah ke-7',
+  nabi: 'explore.perawi.tabaqah.nabi',
+  sahabat: 'explore.perawi.tabaqah.sahabat',
+  tabiin: 'explore.perawi.tabaqah.tabiin',
+  tabiut_tabiin: 'explore.perawi.tabaqah.tabiutTabiin',
+  atbaut_tabiin: 'explore.perawi.tabaqah.atbautTabiin',
+  tabaqah_5: 'explore.perawi.tabaqah.fifth',
+  tabaqah_6: 'explore.perawi.tabaqah.sixth',
+  tabaqah_7: 'explore.perawi.tabaqah.seventh',
 };
 
 const STATUS_ACCENTS = {
@@ -34,15 +35,15 @@ const getRaw = (item) => item?.raw ?? {};
 const pickText = (...values) => values.find((value) => typeof value === 'string' && value.trim())?.trim() ?? '';
 const getPerawiId = (item) => getRaw(item).id ?? item?.id ?? getPerawiLatin(item);
 const getPerawiArabic = (item) => pickText(getRaw(item).nama_arab, item?.arabic);
-const getPerawiLatin = (item) =>
-  pickText(getRaw(item).nama_latin, getRaw(item).nama_lengkap, item?.title, 'Perawi hadis');
+const getPerawiLatin = (item, fallback = 'Perawi hadis') =>
+  pickText(getRaw(item).nama_latin, getRaw(item).nama_lengkap, item?.title, fallback);
 const getTabaqah = (item) => pickText(getRaw(item).tabaqah);
 const getDeathYear = (item) => getRaw(item).tahun_wafat ?? getRaw(item).wafat_hijri;
 const getStatus = (item) => pickText(getRaw(item).status);
 
-const getTabaqahLabel = (value) => {
+const getTabaqahLabel = (value, t) => {
   if (!value) return '';
-  return TABAQAH_LABELS[value] ?? value.replace(/_/g, ' ');
+  return TABAQAH_LABELS[value] ? t(TABAQAH_LABELS[value]) : value.replace(/_/g, ' ');
 };
 
 const getStatusLabel = (value) => {
@@ -75,9 +76,9 @@ function StatusBadge({ status }) {
   );
 }
 
-function PerawiCard({ item, onOpen }) {
+function PerawiCard({ item, onOpen, t }) {
   const arabic = getPerawiArabic(item);
-  const latin = getPerawiLatin(item);
+  const latin = getPerawiLatin(item, t('explore.perawi.fallbackTitle'));
   const tabaqah = getTabaqah(item);
   const deathYear = getDeathYear(item);
   const status = getStatus(item);
@@ -91,7 +92,7 @@ function PerawiCard({ item, onOpen }) {
         {arabic ? <Text numberOfLines={1} style={styles.arabic}>{arabic}</Text> : null}
         <Text numberOfLines={1} style={styles.latin}>{latin}</Text>
         <View style={styles.metaRow}>
-          {tabaqah ? <Text style={styles.meta}>{getTabaqahLabel(tabaqah)}</Text> : null}
+          {tabaqah ? <Text style={styles.meta}>{getTabaqahLabel(tabaqah, t)}</Text> : null}
           {deathYear ? <Text style={styles.meta}>· {deathYear} H</Text> : null}
         </View>
         <StatusBadge status={status} />
@@ -108,6 +109,7 @@ export function WebAppPerawiRoute({
   onOpenItem,
   pagination,
 }) {
+  const { t } = useMobileLocale();
   const [search, setSearch] = useState('');
   const [tabaqah, setTabaqah] = useState('');
   const tabaqahOptions = useMemo(() => uniqueTabaqah(items), [items]);
@@ -117,9 +119,9 @@ export function WebAppPerawiRoute({
       const raw = getRaw(item);
       const text = [
         getPerawiArabic(item),
-        getPerawiLatin(item),
+        getPerawiLatin(item, t('explore.perawi.fallbackTitle')),
         raw.nama_lengkap,
-        getTabaqahLabel(getTabaqah(item)),
+        getTabaqahLabel(getTabaqah(item), t),
         getStatusLabel(getStatus(item)),
         item?.body,
       ].join(' ');
@@ -128,7 +130,7 @@ export function WebAppPerawiRoute({
         (!tabaqah || getTabaqah(item) === tabaqah)
       );
     });
-  }, [items, search, tabaqah]);
+  }, [items, search, tabaqah, t]);
 
   return (
     <ScrollView
@@ -139,14 +141,14 @@ export function WebAppPerawiRoute({
     >
       <View testID="explore-web-app-perawi-surface" />
       <View style={styles.header}>
-        <Text style={styles.title}>Perawi Hadis</Text>
-        {items.length ? <Text style={styles.count}>{items.length} perawi</Text> : null}
+        <Text style={styles.title}>{t('explore.perawi.title')}</Text>
+        {items.length ? <Text style={styles.count}>{t('explore.perawi.count', { count: items.length })}</Text> : null}
       </View>
 
       <View style={styles.search}>
         <TextInput
           onChangeText={setSearch}
-          placeholder="Cari nama perawi..."
+          placeholder={t('explore.perawi.searchPlaceholder')}
           placeholderTextColor="#9ca3af"
           style={styles.input}
           testID="web-app-perawi-search"
@@ -157,7 +159,7 @@ export function WebAppPerawiRoute({
       <View style={styles.tabaqahRow}>
         <TabaqahPill
           active={!tabaqah}
-          label="Semua"
+          label={t('explore.common.all')}
           onPress={() => setTabaqah('')}
           testID="web-app-perawi-tabaqah-all"
         />
@@ -165,18 +167,18 @@ export function WebAppPerawiRoute({
           <TabaqahPill
             active={tabaqah === item}
             key={item}
-            label={getTabaqahLabel(item)}
+            label={getTabaqahLabel(item, t)}
             onPress={() => setTabaqah(tabaqah === item ? '' : item)}
             testID={`web-app-perawi-tabaqah-${item}`}
           />
         ))}
       </View>
 
-      {error ? <Text style={styles.error}>Data perawi belum bisa dimuat. Coba refresh halaman.</Text> : null}
+      {error ? <Text style={styles.error}>{t('explore.common.refreshError', { subject: t('explore.perawi.fallbackTitle') })}</Text> : null}
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color="#0f766e" size="small" />
-          <Text style={styles.stateText}>Memuat perawi...</Text>
+          <Text style={styles.stateText}>{t('explore.perawi.loading')}</Text>
         </View>
       ) : null}
 
@@ -187,6 +189,7 @@ export function WebAppPerawiRoute({
               item={item}
               key={`${getPerawiId(item)}-${index}`}
               onOpen={onOpenItem}
+              t={t}
             />
           ))}
         </View>
@@ -195,9 +198,13 @@ export function WebAppPerawiRoute({
       {!loading && !error && !filteredItems.length ? (
         <View style={styles.empty}>
           <Users color="#9ca3af" size={32} strokeWidth={1.8} />
-          <Text style={styles.emptyTitle}>{items.length ? 'Perawi tidak ditemukan.' : 'Data perawi belum tersedia.'}</Text>
+          <Text style={styles.emptyTitle}>
+            {items.length
+              ? t('explore.common.notFound', { subject: t('explore.perawi.fallbackTitle') })
+              : t('explore.common.notAvailable', { subject: t('explore.perawi.fallbackTitle') })}
+          </Text>
           <Text style={styles.emptyText}>
-            {items.length ? 'Ubah pencarian atau pilih tabaqah lain.' : 'Coba muat ulang beberapa saat lagi.'}
+            {items.length ? t('explore.common.changeSearchOrFilter') : t('explore.common.retryLater')}
           </Text>
         </View>
       ) : null}
@@ -211,7 +218,7 @@ export function WebAppPerawiRoute({
             testID="web-app-perawi-load-more"
           >
             <Text style={styles.loadMoreText}>
-              {pagination.loadingMore ? 'Memuat...' : 'Muat Lebih'}
+              {pagination.loadingMore ? t('explore.common.loadingShort') : t('explore.common.loadMore')}
             </Text>
           </Pressable>
         </View>

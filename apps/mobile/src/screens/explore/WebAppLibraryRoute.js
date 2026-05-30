@@ -2,6 +2,7 @@ import { BookOpen, ExternalLink } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 import {
   LIBRARY_PROGRESS_STATUSES,
@@ -19,9 +20,9 @@ const getBookId = (item) => {
   return raw.id ?? item?.id ?? raw.slug ?? item?.title;
 };
 
-const getBookTitle = (item, index) => {
+const getBookTitle = (item, index, fallback) => {
   const raw = getBookRaw(item);
-  return pickText(raw.title, raw.name, item?.title, `Buku ${index + 1}`);
+  return pickText(raw.title, raw.name, item?.title, fallback ?? `Buku ${index + 1}`);
 };
 
 const getBookDescription = (item) => {
@@ -55,7 +56,7 @@ function FilterPill({ active, label, onPress, testID }) {
   );
 }
 
-function ProgressSummary({ items, progressMap }) {
+function ProgressSummary({ items, progressMap, t }) {
   const progressItems = Object.values(progressMap);
   const trackedBooks = progressItems
     .map((progress) => {
@@ -69,12 +70,12 @@ function ProgressSummary({ items, progressMap }) {
     <View style={styles.progressPanel}>
       <View style={styles.progressHeader}>
         <View style={styles.progressTitleBlock}>
-          <Text style={styles.progressTitle}>Progress Saya</Text>
+          <Text style={styles.progressTitle}>{t('explore.library.progressTitle')}</Text>
           <Text style={styles.progressSubtitle}>
-            Lanjutkan resource yang sedang dipelajari dari dashboard.
+            {t('explore.library.progressSubtitle')}
           </Text>
         </View>
-        <Text style={styles.progressCount}>{progressItems.length} resource</Text>
+        <Text style={styles.progressCount}>{t('explore.library.progressCount', { count: progressItems.length })}</Text>
       </View>
 
       {trackedBooks.length ? (
@@ -84,11 +85,11 @@ function ProgressSummary({ items, progressMap }) {
               <View style={styles.progressCardTop}>
                 <Text style={styles.progressBadge}>{getLibraryProgressLabel(progress?.status)}</Text>
                 {progress?.current_page ? (
-                  <Text style={styles.progressPage}>Hal. {progress.current_page}</Text>
+                  <Text style={styles.progressPage}>{t('explore.library.pageLabel', { page: progress.current_page })}</Text>
                 ) : null}
               </View>
               <Text numberOfLines={2} style={styles.progressBookTitle}>
-                {book ? getBookTitle(book, 0) : progress?.book?.title ?? progress?.Book?.title ?? 'Resource tersimpan'}
+                {book ? getBookTitle(book, 0, t('explore.library.bookFallback', { number: 1 })) : progress?.book?.title ?? progress?.Book?.title ?? t('explore.library.savedResourceFallback')}
               </Text>
               {progress?.note ? (
                 <Text numberOfLines={2} style={styles.progressNote}>{progress.note}</Text>
@@ -98,14 +99,14 @@ function ProgressSummary({ items, progressMap }) {
         </View>
       ) : (
         <Text style={styles.progressEmpty}>
-          Belum ada progress. Buka detail buku lalu simpan status belajar.
+          {t('explore.library.progressEmpty')}
         </Text>
       )}
     </View>
   );
 }
 
-function LibraryCard({ index, item, onOpen, progress }) {
+function LibraryCard({ index, item, onOpen, progress, t }) {
   const meta = getBookMeta(item);
   const description = getBookDescription(item);
 
@@ -121,11 +122,11 @@ function LibraryCard({ index, item, onOpen, progress }) {
       {progress ? (
         <View style={styles.progressInline}>
           <Text style={styles.inlineBadge}>{getLibraryProgressLabel(progress.status)}</Text>
-          {progress.current_page ? <Text style={styles.inlinePage}>Hal. {progress.current_page}</Text> : null}
+          {progress.current_page ? <Text style={styles.inlinePage}>{t('explore.library.pageLabel', { page: progress.current_page })}</Text> : null}
         </View>
       ) : null}
 
-      <Text numberOfLines={2} style={styles.cardTitle}>{getBookTitle(item, index)}</Text>
+      <Text numberOfLines={2} style={styles.cardTitle}>{getBookTitle(item, index, t('explore.library.bookFallback', { number: index + 1 }))}</Text>
       {description ? <Text numberOfLines={3} style={styles.cardDescription}>{description}</Text> : null}
 
       <View style={styles.metaRow}>
@@ -150,6 +151,7 @@ export function WebAppLibraryRoute({
   pagination,
   session,
 }) {
+  const { t } = useMobileLocale();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [level, setLevel] = useState('');
@@ -164,7 +166,7 @@ export function WebAppLibraryRoute({
       const bookId = getBookId(item);
       const progress = bookId ? libraryProgressMap[String(bookId)] : null;
       const text = [
-        getBookTitle(item, 0),
+        getBookTitle(item, 0, t('explore.library.bookFallback', { number: 1 })),
         getBookDescription(item),
         meta.author,
         meta.category,
@@ -179,7 +181,7 @@ export function WebAppLibraryRoute({
         (!libraryProgressFilter || progress?.status === libraryProgressFilter)
       );
     });
-  }, [category, items, level, libraryProgressFilter, libraryProgressMap, search]);
+  }, [category, items, level, libraryProgressFilter, libraryProgressMap, search, t]);
 
   return (
     <ScrollView
@@ -190,19 +192,19 @@ export function WebAppLibraryRoute({
     >
       <View testID="explore-web-app-library-surface" />
       <View style={styles.header}>
-        <Text style={styles.eyebrow}>Belajar</Text>
-        <Text style={styles.title}>Perpustakaan Ilmu</Text>
+        <Text style={styles.eyebrow}>{t('explore.library.eyebrow')}</Text>
+        <Text style={styles.title}>{t('explore.library.title')}</Text>
         <Text style={styles.subtitle}>
-          Katalog kitab dan bahan belajar yang bisa dibaca dari sumber resmi, disimpan, dan diberi catatan belajar.
+          {t('explore.library.subtitle')}
         </Text>
       </View>
 
-      {isAuthenticated ? <ProgressSummary items={items} progressMap={libraryProgressMap} /> : null}
+      {isAuthenticated ? <ProgressSummary items={items} progressMap={libraryProgressMap} t={t} /> : null}
 
       <View style={styles.search}>
         <TextInput
           onChangeText={setSearch}
-          placeholder="Cari judul, penulis, atau topik"
+          placeholder={t('explore.library.searchPlaceholder')}
           placeholderTextColor="#9ca3af"
           style={styles.input}
           testID="web-app-library-search"
@@ -213,7 +215,7 @@ export function WebAppLibraryRoute({
       <View style={styles.filterGroup}>
         <FilterPill
           active={!category}
-          label="Semua kategori"
+          label={t('explore.library.allCategories')}
           onPress={() => setCategory('')}
           testID="web-app-library-category-all"
         />
@@ -232,7 +234,7 @@ export function WebAppLibraryRoute({
         <View style={styles.filterGroup}>
           <FilterPill
             active={!level}
-            label="Semua level"
+            label={t('explore.library.allLevels')}
             onPress={() => setLevel('')}
             testID="web-app-library-level-all"
           />
@@ -252,7 +254,7 @@ export function WebAppLibraryRoute({
         <View style={styles.filterGroup}>
           <FilterPill
             active={!libraryProgressFilter}
-            label="Semua progress"
+            label={t('explore.library.allProgress')}
             onPress={() => onSelectProgressFilter('')}
             testID="web-app-library-progress-all"
           />
@@ -268,11 +270,11 @@ export function WebAppLibraryRoute({
         </View>
       ) : null}
 
-      {error ? <Text style={styles.error}>Perpustakaan belum bisa dimuat. Coba refresh halaman.</Text> : null}
+      {error ? <Text style={styles.error}>{t('explore.common.refreshError', { subject: t('explore.library.title') })}</Text> : null}
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color={ACCENT} size="small" />
-          <Text style={styles.stateText}>Memuat perpustakaan...</Text>
+          <Text style={styles.stateText}>{t('explore.library.loading')}</Text>
         </View>
       ) : null}
 
@@ -288,6 +290,7 @@ export function WebAppLibraryRoute({
                 key={`${bookId}-${index}`}
                 onOpen={onOpenItem}
                 progress={isAuthenticated ? progress : null}
+                t={t}
               />
             );
           })}
@@ -298,10 +301,12 @@ export function WebAppLibraryRoute({
         <View style={styles.empty}>
           <BookOpen color="#9ca3af" size={32} strokeWidth={1.8} />
           <Text style={styles.emptyTitle}>
-            {items.length ? 'Belum ada buku yang cocok.' : 'Perpustakaan belum tersedia.'}
+            {items.length
+              ? t('explore.common.notFound', { subject: t('explore.library.title') })
+              : t('explore.common.notAvailable', { subject: t('explore.library.title') })}
           </Text>
           <Text style={styles.emptyText}>
-            {items.length ? 'Ubah pencarian atau filter kategori.' : 'Katalog kitab sedang disiapkan.'}
+            {items.length ? t('explore.common.changeSearchOrFilter') : t('explore.common.retryLater')}
           </Text>
         </View>
       ) : null}
@@ -315,7 +320,7 @@ export function WebAppLibraryRoute({
             testID="web-app-library-load-more"
           >
             <Text style={styles.loadMoreText}>
-              {pagination.loadingMore ? 'Memuat...' : 'Muat lebih banyak'}
+              {pagination.loadingMore ? t('explore.common.loadingShort') : t('explore.common.loadMore')}
             </Text>
           </Pressable>
         </View>

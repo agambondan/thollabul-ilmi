@@ -2,6 +2,7 @@ import { BookOpen, ChevronDown, Search } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 import { normalizeSearchText } from '../ExploreScreen.helpers';
 
@@ -14,14 +15,14 @@ const toStr = (value) => {
 };
 
 const getSirohId = (item, index = 0) => getRaw(item).id ?? getRaw(item)._id ?? getRaw(item).slug ?? item?.id ?? `siroh-${index}`;
-const getSirohTitle = (item, index = 0) =>
+const getSirohTitle = (item, index = 0, fallback) =>
   pickText(
     getRaw(item).title_idn,
     getRaw(item).title_id,
     getRaw(item).title,
     getRaw(item).name,
     item?.title,
-    `Kisah ${index + 1}`,
+    fallback ?? `Kisah ${index + 1}`,
   );
 const getSirohExcerpt = (item) =>
   pickText(
@@ -34,7 +35,7 @@ const getSirohExcerpt = (item) =>
   );
 const getSirohCategory = (item) => toStr(getRaw(item).category ?? getRaw(item).type ?? item?.meta);
 
-function SirohCard({ index, item, onOpen }) {
+function SirohCard({ index, item, onOpen, t }) {
   const category = getSirohCategory(item);
   const excerpt = getSirohExcerpt(item);
 
@@ -47,7 +48,7 @@ function SirohCard({ index, item, onOpen }) {
         <View style={styles.cardBody}>
           {category ? <Text style={styles.categoryBadge}>{category}</Text> : null}
           <Text numberOfLines={1} style={styles.cardTitle}>
-            {getSirohTitle(item, index)}
+            {getSirohTitle(item, index, t('explore.siroh.fallbackTitle', { number: index + 1 }))}
           </Text>
           {excerpt ? (
             <Text numberOfLines={2} style={styles.cardExcerpt}>
@@ -69,6 +70,7 @@ export function WebAppSirohRoute({
   onOpenItem,
   pagination,
 }) {
+  const { t } = useMobileLocale();
   const [search, setSearch] = useState('');
   const filteredItems = useMemo(() => {
     const query = normalizeSearchText(search);
@@ -76,13 +78,13 @@ export function WebAppSirohRoute({
 
     return items.filter((item, index) =>
       normalizeSearchText([
-        getSirohTitle(item, index),
+        getSirohTitle(item, index, t('explore.siroh.fallbackTitle', { number: index + 1 })),
         getSirohExcerpt(item),
         getSirohCategory(item),
         getRaw(item).slug,
       ].join(' ')).includes(query),
     );
-  }, [items, search]);
+  }, [items, search, t]);
 
   return (
     <ScrollView
@@ -93,15 +95,15 @@ export function WebAppSirohRoute({
     >
       <View testID="explore-web-app-siroh-surface" />
       <View style={styles.header}>
-        <Text style={styles.title}>Siroh Nabawiyah</Text>
-        <Text style={styles.subtitle}>Kisah perjalanan hidup Rasulullah Muhammad ﷺ</Text>
+        <Text style={styles.title}>{t('explore.siroh.title')}</Text>
+        <Text style={styles.subtitle}>{t('explore.siroh.subtitle')}</Text>
       </View>
 
       <View style={styles.search}>
         <Search color="#9ca3af" size={16} strokeWidth={2} />
         <TextInput
           onChangeText={setSearch}
-          placeholder="Cari judul bab atau kata kunci..."
+          placeholder={t('explore.siroh.searchPlaceholder')}
           placeholderTextColor="#9ca3af"
           style={styles.input}
           testID="web-app-siroh-search"
@@ -109,11 +111,11 @@ export function WebAppSirohRoute({
         />
       </View>
 
-      {error ? <Text style={styles.error}>Data siroh belum bisa dimuat. Coba refresh halaman.</Text> : null}
+      {error ? <Text style={styles.error}>{t('explore.common.refreshError', { subject: t('explore.siroh.title') })}</Text> : null}
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color="#2563eb" size="small" />
-          <Text style={styles.stateText}>Memuat siroh...</Text>
+          <Text style={styles.stateText}>{t('explore.siroh.loading')}</Text>
         </View>
       ) : null}
 
@@ -125,6 +127,7 @@ export function WebAppSirohRoute({
               item={item}
               key={`${getSirohId(item, index)}-${index}`}
               onOpen={onOpenItem}
+              t={t}
             />
           ))}
         </View>
@@ -133,9 +136,13 @@ export function WebAppSirohRoute({
       {!loading && !error && !filteredItems.length ? (
         <View style={styles.empty}>
           <BookOpen color="#9ca3af" size={32} strokeWidth={1.8} />
-          <Text style={styles.emptyTitle}>{items.length ? 'Kisah tidak ditemukan.' : 'Data siroh belum tersedia.'}</Text>
+          <Text style={styles.emptyTitle}>
+            {items.length
+              ? t('explore.common.notFound', { subject: t('explore.siroh.title') })
+              : t('explore.common.notAvailable', { subject: t('explore.siroh.title') })}
+          </Text>
           <Text style={styles.emptyText}>
-            {items.length ? 'Ubah kata kunci pencarian.' : 'Coba muat ulang beberapa saat lagi.'}
+            {items.length ? t('explore.common.changeSearchOrFilter') : t('explore.common.retryLater')}
           </Text>
         </View>
       ) : null}
@@ -148,7 +155,7 @@ export function WebAppSirohRoute({
             style={[styles.loadMoreButton, pagination.loadingMore && styles.loadMoreButtonDisabled]}
             testID="web-app-siroh-load-more"
           >
-            <Text style={styles.loadMoreText}>{pagination.loadingMore ? 'Memuat...' : 'Muat lebih banyak'}</Text>
+            <Text style={styles.loadMoreText}>{pagination.loadingMore ? t('explore.common.loadingShort') : t('explore.common.loadMore')}</Text>
           </Pressable>
         </View>
       ) : null}

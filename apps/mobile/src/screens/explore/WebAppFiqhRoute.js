@@ -2,6 +2,7 @@ import { ChevronDown, Search, Scale } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 import { normalizeSearchText } from '../ExploreScreen.helpers';
 
@@ -23,14 +24,14 @@ const titleCase = (value) =>
 const getRaw = (item) => item?.raw ?? {};
 const pickText = (...values) => values.find((value) => typeof value === 'string' && value.trim())?.trim() ?? '';
 const getFiqhId = (item) => getRaw(item).id ?? getRaw(item)._id ?? item?.id ?? getFiqhTitle(item);
-const getFiqhTitle = (item) =>
+const getFiqhTitle = (item, fallback = 'Materi fiqh') =>
   pickText(
     getRaw(item).title_idn,
     getRaw(item).title_id,
     getRaw(item).title,
     getRaw(item).name,
     item?.title,
-    'Materi fiqh',
+    fallback,
   );
 const getFiqhContent = (item) =>
   pickText(
@@ -74,7 +75,7 @@ function CategoryPill({ active, label, onPress, testID }) {
   );
 }
 
-function FiqhCard({ index, item, onOpen }) {
+function FiqhCard({ item, onOpen, t }) {
   const category = getFiqhDisplayCategory(item);
 
   return (
@@ -86,7 +87,7 @@ function FiqhCard({ index, item, onOpen }) {
           <View style={styles.categoryDash} />
         )}
         <Text numberOfLines={1} style={styles.cardTitle}>
-          {getFiqhTitle(item, index)}
+          {getFiqhTitle(item, t('explore.fiqh.fallbackTitle'))}
         </Text>
       </View>
       <ChevronDown color="#9ca3af" size={22} strokeWidth={2.1} />
@@ -102,6 +103,7 @@ export function WebAppFiqhRoute({
   onOpenItem,
   pagination,
 }) {
+  const { t } = useMobileLocale();
   const [category, setCategory] = useState('');
   const [search, setSearch] = useState('');
   const categories = useMemo(() => getCategories(items), [items]);
@@ -110,7 +112,7 @@ export function WebAppFiqhRoute({
     return items.filter((item) => {
       const itemCategory = getFiqhFilterCategory(item);
       const text = [
-        getFiqhTitle(item),
+        getFiqhTitle(item, t('explore.fiqh.fallbackTitle')),
         getFiqhContent(item),
         getFiqhDalil(item),
         getFiqhSource(item),
@@ -122,7 +124,7 @@ export function WebAppFiqhRoute({
         (!query || normalizeSearchText(text).includes(query))
       );
     });
-  }, [category, items, search]);
+  }, [category, items, search, t]);
 
   return (
     <ScrollView
@@ -133,8 +135,8 @@ export function WebAppFiqhRoute({
     >
       <View testID="explore-web-app-fiqh-surface" />
       <View style={styles.header}>
-        <Text style={styles.title}>Fiqh Ringkas</Text>
-        <Text style={styles.count}>{items.length} materi fiqh</Text>
+        <Text style={styles.title}>{t('explore.fiqh.title')}</Text>
+        <Text style={styles.count}>{t('explore.fiqh.count', { count: items.length })}</Text>
       </View>
 
       <View style={styles.filterWrap}>
@@ -142,7 +144,7 @@ export function WebAppFiqhRoute({
           <Search color="#9ca3af" size={16} strokeWidth={2} />
           <TextInput
             onChangeText={setSearch}
-            placeholder="Cari materi..."
+            placeholder={t('explore.fiqh.searchPlaceholder')}
             placeholderTextColor="#9ca3af"
             style={styles.input}
             testID="web-app-fiqh-search"
@@ -151,7 +153,7 @@ export function WebAppFiqhRoute({
         </View>
         <CategoryPill
           active={!category}
-          label="Semua"
+          label={t('explore.common.all')}
           onPress={() => setCategory('')}
           testID="web-app-fiqh-category-all"
         />
@@ -166,11 +168,11 @@ export function WebAppFiqhRoute({
         ))}
       </View>
 
-      {error ? <Text style={styles.error}>Materi fiqh belum bisa dimuat. Coba refresh halaman.</Text> : null}
+      {error ? <Text style={styles.error}>{t('explore.common.refreshError', { subject: t('explore.fiqh.fallbackTitle') })}</Text> : null}
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color="#4d7c0f" size="small" />
-          <Text style={styles.stateText}>Memuat materi fiqh...</Text>
+          <Text style={styles.stateText}>{t('explore.fiqh.loading')}</Text>
         </View>
       ) : null}
 
@@ -182,6 +184,7 @@ export function WebAppFiqhRoute({
               item={item}
               key={`${getFiqhId(item)}-${index}`}
               onOpen={onOpenItem}
+              t={t}
             />
           ))}
         </View>
@@ -191,10 +194,12 @@ export function WebAppFiqhRoute({
         <View style={styles.empty}>
           <Scale color="#9ca3af" size={32} strokeWidth={1.8} />
           <Text style={styles.emptyTitle}>
-            {items.length ? 'Materi fiqh tidak ditemukan.' : 'Materi fiqh belum tersedia.'}
+            {items.length
+              ? t('explore.common.notFound', { subject: t('explore.fiqh.fallbackTitle') })
+              : t('explore.common.notAvailable', { subject: t('explore.fiqh.fallbackTitle') })}
           </Text>
           <Text style={styles.emptyText}>
-            {items.length ? 'Ubah pencarian atau pilih kategori lain.' : 'Coba muat ulang beberapa saat lagi.'}
+            {items.length ? t('explore.common.changeSearchOrFilter') : t('explore.common.retryLater')}
           </Text>
         </View>
       ) : null}
@@ -208,7 +213,7 @@ export function WebAppFiqhRoute({
             testID="web-app-fiqh-load-more"
           >
             <Text style={styles.loadMoreText}>
-              {pagination.loadingMore ? 'Memuat...' : 'Muat lebih banyak'}
+              {pagination.loadingMore ? t('explore.common.loadingShort') : t('explore.common.loadMore')}
             </Text>
           </Pressable>
         </View>
