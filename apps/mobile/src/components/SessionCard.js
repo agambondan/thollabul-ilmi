@@ -3,6 +3,7 @@ import { Eye, EyeOff } from 'lucide-react-native';
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useFeedback } from '../context/FeedbackContext';
 import { useSession } from '../context/SessionContext';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 import { forgotPassword, register } from '../api/auth';
 import { colors, radius, spacing } from '../theme';
 import { Card, CardTitle } from './Card';
@@ -13,6 +14,7 @@ const DEV_DEFAULT_PASSWORD = __DEV__ ? 'Admin@123' : '';
 export function SessionCard() {
   const { error, loading, signIn, signOut, user } = useSession();
   const { showError, showInfo, showSuccess } = useFeedback();
+  const { t } = useMobileLocale();
   const [name, setName] = useState('');
   const [email, setEmail] = useState(DEV_DEFAULT_EMAIL);
   const [password, setPassword] = useState(DEV_DEFAULT_PASSWORD);
@@ -26,22 +28,22 @@ export function SessionCard() {
     try {
       await signIn({ email: email.trim(), password: password.trim() });
       setPassword('');
-      setMessage('Akun berhasil masuk di perangkat ini.');
-      showSuccess('Akun berhasil masuk di perangkat ini.');
+      setMessage(t('session.signIn.success'));
+      showSuccess(t('session.signIn.success'));
     } catch (err) {
       setMessage('');
-      showError(err?.message ?? error ?? 'Belum bisa masuk akun.');
+      showError(err?.message ?? error ?? t('session.signIn.error'));
     }
   };
 
   if (user) {
     return (
       <Card>
-        <CardTitle meta="Akun aktif">Sudah Masuk</CardTitle>
-        <Text style={styles.name}>{user.name || user.email || 'Pengguna Thullaabul Ilmi'}</Text>
-        <Text style={styles.muted}>{user.email || 'Fitur personal sudah aktif di perangkat ini.'}</Text>
+        <CardTitle meta={t('session.active.meta')}>{t('session.active.title')}</CardTitle>
+        <Text style={styles.name}>{user.name || user.email || t('session.active.fallbackName')}</Text>
+        <Text style={styles.muted}>{user.email || t('session.active.fallbackMeta')}</Text>
         <Pressable
-          accessibilityLabel="Keluar dari akun"
+          accessibilityLabel={t('session.signOut.accessibility')}
           accessibilityRole="button"
           accessibilityState={{ disabled: loading }}
           android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
@@ -50,7 +52,7 @@ export function SessionCard() {
           style={[styles.button, styles.secondaryButton]}
         >
           <Text style={[styles.buttonText, styles.secondaryButtonText]}>
-            {loading ? 'Keluar...' : 'Keluar'}
+            {loading ? t('session.signOut.loading') : t('session.signOut.label')}
           </Text>
         </Pressable>
       </Card>
@@ -60,8 +62,8 @@ export function SessionCard() {
   const submitRegister = async () => {
     if (!name.trim() || !email.trim() || !password) return;
     if (password.length < 8) {
-      setMessage('Kata sandi minimal 8 karakter.');
-      showInfo('Kata sandi minimal 8 karakter.');
+      setMessage(t('session.password.minLength'));
+      showInfo(t('session.password.minLength'));
       return;
     }
     setBusy(true);
@@ -69,10 +71,10 @@ export function SessionCard() {
     try {
       await register({ email: email.trim(), name: name.trim(), password });
       setMode('signin');
-      setMessage('Akun berhasil dibuat. Silakan masuk.');
-      showSuccess('Akun berhasil dibuat. Silakan masuk.');
+      setMessage(t('session.register.success'));
+      showSuccess(t('session.register.success'));
     } catch (err) {
-      const nextMessage = err?.message ?? 'Tidak bisa membuat akun saat ini.';
+      const nextMessage = err?.message ?? t('session.register.error');
       setMessage(nextMessage);
       showError(nextMessage);
     } finally {
@@ -90,15 +92,15 @@ export function SessionCard() {
       setMessage(
         typeof responseMessage === 'string'
           ? responseMessage
-          : 'Jika email terdaftar, tautan reset sandi sudah dikirim.',
+          : t('session.forgot.success'),
       );
       showSuccess(
         typeof responseMessage === 'string'
           ? responseMessage
-          : 'Jika email terdaftar, tautan reset sandi sudah dikirim.',
+          : t('session.forgot.success'),
       );
     } catch (err) {
-      const nextMessage = err?.message ?? 'Tidak bisa memproses lupa sandi saat ini.';
+      const nextMessage = err?.message ?? t('session.forgot.error');
       setMessage(nextMessage);
       showError(nextMessage);
     } finally {
@@ -118,28 +120,30 @@ export function SessionCard() {
 
   return (
     <Card>
-      <CardTitle meta="Akun">{isSignIn ? 'Masuk' : isRegister ? 'Daftar Akun' : 'Lupa Sandi'}</CardTitle>
-      <Text style={styles.muted}>Masuk untuk sinkronisasi bookmark, progress, catatan, dan pengingat.</Text>
+      <CardTitle meta={t('session.card.meta')}>
+        {isSignIn ? t('session.signIn.title') : isRegister ? t('session.register.title') : t('session.forgot.title')}
+      </CardTitle>
+      <Text style={styles.muted}>{t('session.card.description')}</Text>
       <View style={styles.form}>
         {isRegister ? (
           <TextInput
-            accessibilityLabel="Nama"
+            accessibilityLabel={t('session.name.label')}
             autoCapitalize="words"
             autoCorrect={false}
             onChangeText={setName}
-            placeholder="Nama"
+            placeholder={t('session.name.placeholder')}
             placeholderTextColor={colors.muted}
             style={styles.input}
             value={name}
           />
         ) : null}
         <TextInput
-          accessibilityLabel="Email"
+          accessibilityLabel={t('session.email.label')}
           autoCapitalize="none"
           autoCorrect={false}
           keyboardType="email-address"
           onChangeText={setEmail}
-          placeholder="Email"
+          placeholder={t('session.email.placeholder')}
           placeholderTextColor={colors.muted}
           style={styles.input}
           value={email}
@@ -147,16 +151,16 @@ export function SessionCard() {
         {!isForgot ? (
           <View style={styles.passwordField}>
             <TextInput
-              accessibilityLabel="Kata sandi"
+              accessibilityLabel={t('session.password.label')}
               onChangeText={setPassword}
-              placeholder={isRegister ? 'Kata sandi (min. 8 karakter)' : 'Kata sandi'}
+              placeholder={isRegister ? t('session.password.registerPlaceholder') : t('session.password.placeholder')}
               placeholderTextColor={colors.muted}
               secureTextEntry={!showPassword}
               style={styles.passwordInput}
               value={password}
             />
             <Pressable
-              accessibilityLabel={showPassword ? 'Sembunyikan kata sandi' : 'Lihat kata sandi'}
+              accessibilityLabel={showPassword ? t('session.password.hide') : t('session.password.show')}
               accessibilityRole="button"
               accessibilityState={{ selected: showPassword }}
               android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: true }}
@@ -173,7 +177,13 @@ export function SessionCard() {
         ) : null}
 
         <Pressable
-          accessibilityLabel={isSignIn ? 'Masuk ke akun' : isRegister ? 'Buat akun baru' : 'Kirim tautan reset sandi'}
+          accessibilityLabel={
+            isSignIn
+              ? t('session.signIn.accessibility')
+              : isRegister
+                ? t('session.register.accessibility')
+                : t('session.forgot.accessibility')
+          }
           accessibilityRole="button"
           accessibilityState={{ disabled: isSubmitDisabled }}
           android_ripple={{ color: 'rgba(255, 255, 255, 0.14)', borderless: false }}
@@ -185,41 +195,41 @@ export function SessionCard() {
             <ActivityIndicator color="#ffffff" />
           ) : (
             <Text style={styles.buttonText}>
-              {isSignIn ? 'Masuk' : isRegister ? 'Buat Akun' : 'Kirim Tautan Reset'}
+              {isSignIn ? t('session.signIn.label') : isRegister ? t('session.register.label') : t('session.forgot.label')}
             </Text>
           )}
         </Pressable>
       </View>
       <View style={styles.modeRow}>
         <Pressable
-          accessibilityLabel="Tampilkan form masuk"
+          accessibilityLabel={t('session.mode.signIn')}
           accessibilityRole="button"
           accessibilityState={{ selected: isSignIn }}
           android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
           onPress={() => setMode('signin')}
           style={[styles.modeLink, isSignIn ? styles.modeLinkActive : null]}
         >
-          <Text style={[styles.modeLinkText, isSignIn ? styles.modeLinkTextActive : null]}>Masuk</Text>
+          <Text style={[styles.modeLinkText, isSignIn ? styles.modeLinkTextActive : null]}>{t('session.signIn.label')}</Text>
         </Pressable>
         <Pressable
-          accessibilityLabel="Tampilkan form daftar"
+          accessibilityLabel={t('session.mode.register')}
           accessibilityRole="button"
           accessibilityState={{ selected: isRegister }}
           android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
           onPress={() => setMode('register')}
           style={[styles.modeLink, isRegister ? styles.modeLinkActive : null]}
         >
-          <Text style={[styles.modeLinkText, isRegister ? styles.modeLinkTextActive : null]}>Daftar</Text>
+          <Text style={[styles.modeLinkText, isRegister ? styles.modeLinkTextActive : null]}>{t('session.register.tab')}</Text>
         </Pressable>
         <Pressable
-          accessibilityLabel="Tampilkan form lupa sandi"
+          accessibilityLabel={t('session.mode.forgot')}
           accessibilityRole="button"
           accessibilityState={{ selected: isForgot }}
           android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
           onPress={() => setMode('forgot')}
           style={[styles.modeLink, isForgot ? styles.modeLinkActive : null]}
         >
-          <Text style={[styles.modeLinkText, isForgot ? styles.modeLinkTextActive : null]}>Lupa Sandi</Text>
+          <Text style={[styles.modeLinkText, isForgot ? styles.modeLinkTextActive : null]}>{t('session.forgot.title')}</Text>
         </Pressable>
       </View>
       {error ? <Text style={styles.error}>{error}</Text> : null}
