@@ -1,14 +1,15 @@
 import { MessageCircle, EyeOff, Flag } from 'lucide-react-native';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 
-const getFeedReference = (item = {}) => {
+const getFeedReference = (item = {}, t) => {
   const raw = item?.raw ?? {};
   const refType = raw.ref_type ?? '';
   if (!['ayah', 'hadith'].includes(refType)) return null;
   return {
     id: raw.ref_id ?? '',
-    label: refType === 'ayah' ? 'Ayat Quran' : 'Hadis',
+    label: refType === 'ayah' ? t('explore.feed.refAyah') : t('explore.feed.refHadith'),
   };
 };
 
@@ -21,12 +22,13 @@ function FeedCard({
   onLike,
   onOpenComments,
   onReport,
+  t,
 }) {
   const raw = item?.raw ?? {};
-  const author = item.title || raw.author?.name || raw.author?.username || raw.author?.email || 'Pengguna';
+  const author = item.title || raw.author?.name || raw.author?.username || raw.author?.email || t('explore.feed.userFallback');
   const createdAt = formatDate(raw.created_at ?? raw.createdAt);
   const likes = Number(raw.likes ?? raw.like_count ?? 0);
-  const feedRef = getFeedReference(item);
+  const feedRef = getFeedReference(item, t);
   const isLiking = likingFeedId === item.id;
 
   return (
@@ -49,26 +51,26 @@ function FeedCard({
       ) : null}
       <View style={styles.actions}>
         <Pressable
-          accessibilityLabel="Sukai post komunitas"
+          accessibilityLabel={t('explore.feed.likeAccessibility')}
           android_ripple={{ color: '#fee2e2', borderless: false }}
           disabled={isLiking}
           onPress={() => onLike(item)}
           style={styles.action}
         >
-          <Text style={styles.actionText}>{isLiking ? 'Menyukai...' : `♡ ${likes}`}</Text>
+          <Text style={styles.actionText}>{isLiking ? t('explore.feed.liking') : `♡ ${likes}`}</Text>
         </Pressable>
         <Pressable
-          accessibilityLabel="Buka komentar post komunitas"
+          accessibilityLabel={t('explore.feed.commentAccessibility')}
           android_ripple={{ color: '#dbeafe', borderless: false }}
           onPress={() => onOpenComments(item)}
           style={styles.action}
         >
-          <Text style={styles.actionText}>Komentar</Text>
+          <Text style={styles.actionText}>{t('explore.feed.comments')}</Text>
         </Pressable>
         {isLoggedIn ? (
           <>
             <Pressable
-              accessibilityLabel="Sembunyikan post komunitas"
+              accessibilityLabel={t('explore.feed.hideAccessibility')}
               android_ripple={{ color: '#fef3c7', borderless: false }}
               onPress={() => onHide(item)}
               style={styles.iconAction}
@@ -76,7 +78,7 @@ function FeedCard({
               <EyeOff color="#6b7280" size={15} strokeWidth={2.3} />
             </Pressable>
             <Pressable
-              accessibilityLabel="Laporkan post komunitas"
+              accessibilityLabel={t('explore.feed.reportAccessibility')}
               android_ripple={{ color: '#fee2e2', borderless: false }}
               onPress={() => onReport(item)}
               style={styles.iconAction}
@@ -104,6 +106,8 @@ export function WebAppFeedRoute({
   onReportFeedItem,
   pagination,
 }) {
+  const { t } = useMobileLocale();
+
   return (
     <ScrollView
       contentContainerStyle={styles.content}
@@ -122,13 +126,13 @@ export function WebAppFeedRoute({
         <View style={styles.headerIcon}>
           <MessageCircle color="#059669" size={30} strokeWidth={2.3} />
         </View>
-        <Text style={styles.title}>Feed Komunitas</Text>
-        <Text style={styles.subtitle}>Bagikan dan temukan konten dari pengguna lain</Text>
+        <Text style={styles.title}>{t('explore.feed.title')}</Text>
+        <Text style={styles.subtitle}>{t('explore.feed.subtitle')}</Text>
       </View>
 
       <View style={styles.createBox}>
         <Text style={styles.createText}>
-          {isLoggedIn ? '+ Buat Postingan' : 'Login untuk membuat postingan.'}
+          {isLoggedIn ? t('explore.feed.createPost') : t('explore.feed.loginToCreate')}
         </Text>
       </View>
 
@@ -137,14 +141,14 @@ export function WebAppFeedRoute({
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color="#059669" />
-          <Text style={styles.stateText}>Memuat feed...</Text>
+          <Text style={styles.stateText}>{t('explore.feed.loading')}</Text>
         </View>
       ) : null}
 
       {!loading && !items.length ? (
         <View style={styles.empty}>
           <MessageCircle color="#d1d5db" size={34} strokeWidth={2.2} />
-          <Text style={styles.emptyText}>Belum ada postingan. Jadilah yang pertama!</Text>
+          <Text style={styles.emptyText}>{t('explore.feed.empty')}</Text>
         </View>
       ) : null}
 
@@ -161,6 +165,7 @@ export function WebAppFeedRoute({
               onLike={onLikeFeedItem}
               onOpenComments={onOpenComments}
               onReport={onReportFeedItem}
+              t={t}
             />
           ))}
         </View>
