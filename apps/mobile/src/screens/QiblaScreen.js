@@ -22,6 +22,7 @@ import { Card, CardTitle } from "../components/Card";
 import { ActionPill, EmptyState, IconActionButton } from "../components/Paper";
 import { Screen } from "../components/Screen";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
+import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { colors, radius, spacing } from "../theme";
 import {
     compassSupported,
@@ -126,6 +127,7 @@ function StatusChip({ Icon, label, tone = "neutral" }) {
 
 export function QiblaScreen({ onBack, onOpenTab }) {
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
+    const { t } = useMobileLocale();
     const webAppTheme = isDarkTheme ? WEB_APP_QIBLA_THEMES.dark : WEB_APP_QIBLA_THEMES.light;
     const { width } = useWindowDimensions();
     const [coords, setCoords] = useState(null);
@@ -177,11 +179,16 @@ export function QiblaScreen({ onBack, onOpenTab }) {
     const guidanceText =
         heading === null
             ? hasCompass
-                ? "Gerakkan HP membentuk angka 8 untuk mengaktifkan kompas."
-                : "Kompas perangkat tidak tersedia. Arah memakai bearing utara sebenarnya."
+                ? t("qibla.guidance.calibrate")
+                : t("qibla.guidance.noCompass")
             : aligned
-              ? "Marker Ka'bah sudah sejajar dengan panah HP."
-              : `Putar HP ${correctionDegrees} deg ke ${signed > 0 ? "kanan" : "kiri"} sampai marker Ka'bah sejajar dengan panah.`;
+              ? t("qibla.guidance.aligned")
+              : typeof correctionDegrees === "number"
+                ? t("qibla.guidance.rotate", {
+                      degrees: correctionDegrees,
+                      direction: t(signed > 0 ? "qibla.direction.right" : "qibla.direction.left"),
+                  })
+                : t("qibla.guidance.waitingDirection");
 
     const compassSize = Math.min(Math.max(width - 88, 276), 336);
     const markerSize = Math.round(compassSize * 0.15);
@@ -190,43 +197,19 @@ export function QiblaScreen({ onBack, onOpenTab }) {
 
     const locationLabel = coords
         ? locationMode === "manual"
-            ? "Lokasi manual"
-            : "Lokasi aktif"
-        : "Lokasi belum aktif";
+            ? t("qibla.location.manualActive")
+            : t("qibla.location.active")
+        : t("qibla.location.inactive");
     const accuracyLabel =
         locationAccuracy === null || locationMode === "manual"
-            ? "Akurasi tidak diketahui"
-            : `Akurasi ${Math.round(locationAccuracy)} m`;
+            ? t("qibla.accuracy.unknown")
+            : t("qibla.accuracy.meters", { meters: Math.round(locationAccuracy) });
     const compassLabel =
-        heading === null ? "Kalibrasi kompas" : `HP ${formatDegrees(heading)}`;
-    const screenTitle = isWebAppLayout ? "Kiblat" : "Qibla";
+        heading === null ? t("qibla.compass.calibrate") : t("qibla.compass.heading", { heading: formatDegrees(heading) });
+    const screenTitle = isWebAppLayout ? t("qibla.title.webApp") : t("qibla.title.classic");
     const screenSubtitle = isWebAppLayout
-        ? "Temukan arah Ka'bah dari lokasi kamu."
-        : "Arahkan perangkatmu untuk menemukan arah kiblat.";
-    const screenActions = isWebAppLayout ? (
-        <IconActionButton
-            Icon={RefreshCw}
-            label='Muat ulang arah kiblat'
-            onPress={load}
-            disabled={loading}
-        />
-    ) : (
-        <>
-            {onBack || onOpenTab ? (
-                <IconActionButton
-                    Icon={ArrowLeft}
-                    label={onBack ? "Kembali ke Ibadah" : "Kembali ke Beranda"}
-                    onPress={onBack ?? (() => onOpenTab("home"))}
-                />
-            ) : null}
-            <IconActionButton
-                Icon={RefreshCw}
-                label='Muat ulang arah kiblat'
-                onPress={load}
-                disabled={loading}
-            />
-        </>
-    );
+        ? t("qibla.subtitle.webApp")
+        : t("qibla.subtitle.classic");
 
     const smoothHeading = useCallback((nextHeading) => {
         const previous = headingDegrees.current;
@@ -254,7 +237,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
             lng > 180
         ) {
             setMessage(
-                "Masukkan koordinat yang valid. Contoh: -6.2088, 106.8456",
+                t("qibla.location.invalidManual"),
             );
             return;
         }
@@ -264,8 +247,8 @@ export function QiblaScreen({ onBack, onOpenTab }) {
         setDirection(calculateQiblaDirection(lat, lng));
         setDistance(calculateKaabaDistance(lat, lng));
         setLocationMode("manual");
-        setMessage("Lokasi manual dipakai untuk menghitung arah kiblat.");
-    }, [manualLatInput, manualLngInput]);
+        setMessage(t("qibla.location.manualApplied"));
+    }, [manualLatInput, manualLngInput, t]);
 
     const load = useCallback(async () => {
         setLoading(true);
@@ -279,7 +262,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                 setDistance(null);
                 setLocationAccuracy(null);
                 setMessage(
-                    "Aktifkan lokasi untuk menghitung arah kiblat dari posisimu.",
+                    t("qibla.location.permissionRequired"),
                 );
                 return;
             }
@@ -299,12 +282,37 @@ export function QiblaScreen({ onBack, onOpenTab }) {
             setDistance(null);
             setLocationAccuracy(null);
             setMessage(
-                "Lokasi belum terbaca. Aktifkan GPS lalu muat ulang arah kiblat.",
+                t("qibla.location.unavailable"),
             );
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [t]);
+
+    const screenActions = isWebAppLayout ? (
+        <IconActionButton
+            Icon={RefreshCw}
+            label={t("qibla.action.refresh")}
+            onPress={load}
+            disabled={loading}
+        />
+    ) : (
+        <>
+            {onBack || onOpenTab ? (
+                <IconActionButton
+                    Icon={ArrowLeft}
+                    label={onBack ? t("qibla.action.backIbadah") : t("qibla.action.backHome")}
+                    onPress={onBack ?? (() => onOpenTab("home"))}
+                />
+            ) : null}
+            <IconActionButton
+                Icon={RefreshCw}
+                label={t("qibla.action.refresh")}
+                onPress={load}
+                disabled={loading}
+            />
+        </>
+    );
 
     useEffect(() => {
         load();
@@ -378,8 +386,8 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                     <View style={[styles.webAppIconBox, { backgroundColor: webAppTheme.iconBg }]}>
                         <KaabaIcon aligned={aligned} />
                     </View>
-                    <Text style={[styles.webAppTitle, { color: webAppTheme.title }]}>Arah Kiblat</Text>
-                    <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>Temukan arah Ka'bah dari lokasi kamu</Text>
+                    <Text style={[styles.webAppTitle, { color: webAppTheme.title }]}>{t("qibla.heading")}</Text>
+                    <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>{t("qibla.headerSubtitle")}</Text>
                 </View>
             ) : null}
             {message ? <Text style={[
@@ -411,21 +419,20 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                     ] : null}
                 >
                     <CardTitle
-                        meta='Koordinat GPS'
+                        meta={t("qibla.manual.meta")}
                         metaStyle={isWebAppLayout ? [styles.webAppCardMeta, { color: webAppTheme.accent }] : null}
                         titleStyle={isWebAppLayout ? [styles.webAppCardTitle, { color: webAppTheme.title }] : null}
                     >
-                        Lokasi Manual
+                        {t("qibla.manual.title")}
                     </CardTitle>
                     <Text style={[styles.muted, isWebAppLayout ? styles.webAppMuted : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>
-                        Aktifkan GPS atau masukkan koordinat untuk menghitung
-                        arah kiblat.
+                        {t("qibla.manual.description")}
                     </Text>
                     <View style={styles.manualLocRow}>
                         <TextInput
                             keyboardType='decimal-pad'
                             onChangeText={setManualLatInput}
-                            placeholder='-6.2088 (Lintang)'
+                            placeholder={t("qibla.manual.latPlaceholder")}
                             placeholderTextColor={isWebAppLayout ? webAppTheme.muted : colors.muted}
                             returnKeyType='next'
                             style={[styles.manualLocInput, isWebAppLayout ? styles.webAppManualInput : null, isWebAppLayout ? { backgroundColor: webAppTheme.inputBg, borderColor: webAppTheme.inputBorder, color: webAppTheme.text } : null]}
@@ -434,7 +441,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                         <TextInput
                             keyboardType='decimal-pad'
                             onChangeText={setManualLngInput}
-                            placeholder='106.8456 (Bujur)'
+                            placeholder={t("qibla.manual.lngPlaceholder")}
                             placeholderTextColor={isWebAppLayout ? webAppTheme.muted : colors.muted}
                             returnKeyType='done'
                             style={[styles.manualLocInput, isWebAppLayout ? styles.webAppManualInput : null, isWebAppLayout ? { backgroundColor: webAppTheme.inputBg, borderColor: webAppTheme.inputBorder, color: webAppTheme.text } : null]}
@@ -454,7 +461,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                         ]}
                     >
                         <Text style={styles.buttonText}>
-                            Hitung Arah Kiblat
+                            {t("qibla.manual.submit")}
                         </Text>
                     </Pressable>
                 </Card>
@@ -469,37 +476,37 @@ export function QiblaScreen({ onBack, onOpenTab }) {
             >
                 <CardTitle
                     meta={
-                        heading === null ? "Bearing utara" : "Kompas aktif"
+                        heading === null ? t("qibla.compass.northBearing") : t("qibla.compass.active")
                     }
                     metaStyle={isWebAppLayout ? [styles.webAppCardMeta, { color: webAppTheme.accent }] : null}
                     titleStyle={isWebAppLayout ? [styles.webAppCardTitle, { color: webAppTheme.title }] : null}
                 >
-                    Arah Kiblat
+                    {t("qibla.heading")}
                 </CardTitle>
                 {loading ? (
                     <View style={isWebAppLayout ? styles.webAppLoading : null}>
                         <ActivityIndicator color={isWebAppLayout ? webAppTheme.accent : colors.primary} />
-                        {isWebAppLayout ? <Text style={[styles.webAppLoadingText, { color: webAppTheme.muted }]}>Mendeteksi lokasi...</Text> : null}
+                        {isWebAppLayout ? <Text style={[styles.webAppLoadingText, { color: webAppTheme.muted }]}>{t("qibla.loadingLocation")}</Text> : null}
                     </View>
                 ) : !hasDirection ? (
                     <EmptyState
                         Icon={MapPinOff}
-                        title='Arah kiblat belum tersedia'
-                        description='Izinkan akses lokasi, coba muat ulang, atau masukkan koordinat manual.'
+                        title={t("qibla.empty.title")}
+                        description={t("qibla.empty.description")}
                         action={
                             <View style={styles.emptyActions}>
                                 <ActionPill
                                     Icon={RefreshCw}
-                                    label='Coba lagi'
+                                    label={t("qibla.action.retry")}
                                     onPress={load}
                                     disabled={loading}
                                 />
                                 <ActionPill
                                     Icon={MapPin}
-                                    label='Lokasi manual'
+                                    label={t("qibla.action.manualLocation")}
                                     onPress={() =>
                                         setMessage(
-                                            "Masukkan koordinat di kartu Lokasi Manual.",
+                                            t("qibla.manual.prompt"),
                                         )
                                     }
                                 />
@@ -751,7 +758,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                                 {formatDegrees(direction ?? 0)}
                             </Text>
                             <Text style={[styles.directionLabel, isWebAppLayout ? styles.webAppDirectionLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>
-                                {aligned ? "sejajar kiblat" : "bearing kiblat"}
+                                {aligned ? t("qibla.direction.aligned") : t("qibla.direction.bearing")}
                             </Text>
                         </View>
                         <Text style={[styles.muted, isWebAppLayout ? styles.webAppMuted : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>{guidanceText}</Text>
@@ -762,7 +769,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
             <View style={styles.metrics}>
                 <View style={[styles.metric, isWebAppLayout ? styles.webAppMetric : null, isWebAppLayout ? { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border } : null]}>
                     <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>
-                        {isWebAppLayout ? "Jarak ke Ka'bah" : "Jarak"}
+                        {isWebAppLayout ? t("qibla.metrics.distanceKaaba") : t("qibla.metrics.distance")}
                     </Text>
                     <Text style={[styles.metricValue, isWebAppLayout ? styles.webAppMetricValue : null, isWebAppLayout ? { color: webAppTheme.accent } : null]}>
                         {distance?.toLocaleString("en-US") ?? "-"}
@@ -771,31 +778,31 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                 </View>
                 <View style={[styles.metric, isWebAppLayout ? styles.webAppMetric : null, isWebAppLayout ? { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border } : null]}>
                     <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>
-                        {isWebAppLayout ? "Sudut Kiblat" : "Qibla"}
+                        {isWebAppLayout ? t("qibla.metrics.angle") : t("qibla.title.classic")}
                     </Text>
                     <Text style={[styles.metricValueSmall, isWebAppLayout ? styles.webAppMetricValueSmall : null, isWebAppLayout ? { color: webAppTheme.accent } : null]}>
                         {hasDirection ? formatDegrees(direction) : "-"}
                     </Text>
-                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>utara sebenarnya</Text>
+                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>{t("qibla.metrics.trueNorth")}</Text>
                 </View>
             </View>
 
             <View style={styles.metrics}>
                 <View style={[styles.metric, isWebAppLayout ? styles.webAppMetric : null, isWebAppLayout ? { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border } : null]}>
-                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>Kompas</Text>
+                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>{t("qibla.metrics.compass")}</Text>
                     <Text style={[styles.metricValueSmall, isWebAppLayout ? styles.webAppMetricValueSmall : null, isWebAppLayout ? { color: webAppTheme.accent } : null]}>
                         {heading === null
                             ? hasCompass
-                                ? "Kalibrasi"
-                                : "Tidak tersedia"
+                                ? t("qibla.compass.calibrationShort")
+                                : t("qibla.compass.unavailable")
                             : formatDegrees(heading)}
                     </Text>
                 </View>
                 <View style={[styles.metric, isWebAppLayout ? styles.webAppMetric : null, isWebAppLayout ? { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border } : null]}>
-                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>Lokasi</Text>
+                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>{t("qibla.metrics.location")}</Text>
                     <Text style={[styles.metricValueSmall, isWebAppLayout ? styles.webAppMetricValueSmall : null, isWebAppLayout ? { color: webAppTheme.accent } : null]}>
                         {coords
-                            ? `${locationMode === "manual" ? "Manual " : ""}${coords.lat.toFixed(3)}, ${coords.lng.toFixed(3)}`
+                            ? `${locationMode === "manual" ? t("qibla.location.manualPrefix") : ""}${coords.lat.toFixed(3)}, ${coords.lng.toFixed(3)}`
                             : "-"}
                     </Text>
                 </View>
@@ -805,17 +812,17 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                 <View style={[styles.webAppLocationCard, { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border }]} testID="qibla-web-app-location-card">
                     <View style={styles.webAppLocationTitleRow}>
                         <MapPin color={webAppTheme.accent} size={16} strokeWidth={2.2} />
-                        <Text style={[styles.webAppLocationTitle, { color: webAppTheme.muted }]}>Lokasi Kamu</Text>
+                        <Text style={[styles.webAppLocationTitle, { color: webAppTheme.muted }]}>{t("qibla.location.yours")}</Text>
                     </View>
                     <Text style={[styles.webAppLocationText, { color: webAppTheme.text }]}>
-                        {coords.lat.toFixed(4)} derajat lintang, {coords.lng.toFixed(4)} derajat bujur
+                        {t("qibla.location.coordinates", { lat: coords.lat.toFixed(4), lng: coords.lng.toFixed(4) })}
                     </Text>
                 </View>
             ) : null}
 
             {isWebAppLayout ? (
                 <Text style={[styles.webAppGpsNote, { color: webAppTheme.note }]}>
-                    Arah dihitung menggunakan koordinat GPS. Untuk akurasi tertinggi, pastikan GPS aktif.
+                    {t("qibla.gpsNote")}
                 </Text>
             ) : null}
         </Screen>
