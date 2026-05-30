@@ -2,13 +2,14 @@ import { Brain, CheckCircle2, RotateCcw, XCircle } from 'lucide-react-native';
 import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 import { quizOptions } from '../ExploreScreen.helpers';
 
 const getRaw = (item) => item?.raw ?? {};
 const pickText = (...values) => values.find((value) => typeof value === 'string' && value.trim())?.trim() ?? '';
 const getItemId = (item, index) => item?.id ?? getRaw(item).id ?? `quiz-${index}`;
-const getQuestionText = (item, index) =>
+const getQuestionText = (item, index, t) =>
   pickText(
     getRaw(item).translation?.question_idn,
     getRaw(item).translation?.question_en,
@@ -17,7 +18,7 @@ const getQuestionText = (item, index) =>
     getRaw(item).text,
     getRaw(item).title,
     item?.title,
-    `Pertanyaan ${index + 1}`,
+    t('explore.quiz.questionFallback', { number: index + 1 }),
   );
 const getExplanation = (item) =>
   pickText(
@@ -111,7 +112,7 @@ function OptionButton({ disabled, index, item, onPress, option, selected }) {
   );
 }
 
-function ResultRow({ answer, index, item }) {
+function ResultRow({ answer, index, item, t }) {
   const correct = getSelectedCorrect(item, answer);
   return (
     <View style={[styles.resultRow, correct ? styles.resultRowCorrect : styles.resultRowWrong]}>
@@ -121,7 +122,7 @@ function ResultRow({ answer, index, item }) {
         <XCircle color="#dc2626" size={17} strokeWidth={2.2} />
       )}
       <Text numberOfLines={1} style={[styles.resultRowText, correct ? styles.resultRowTextCorrect : styles.resultRowTextWrong]}>
-        {getQuestionText(item, index)}
+        {getQuestionText(item, index, t)}
       </Text>
     </View>
   );
@@ -137,6 +138,7 @@ export function WebAppQuizRoute({
   scoreQuiz,
   setAnswers = () => {},
 }) {
+  const { t } = useMobileLocale();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [done, setDone] = useState(false);
   const total = items.length;
@@ -182,7 +184,7 @@ export function WebAppQuizRoute({
       {loading ? (
         <View style={styles.stateCard}>
           <ActivityIndicator color="#047857" size="small" />
-          <Text style={styles.stateText}>Memuat quiz...</Text>
+          <Text style={styles.stateText}>{t('explore.quiz.loading')}</Text>
         </View>
       ) : null}
 
@@ -191,10 +193,10 @@ export function WebAppQuizRoute({
           <View style={styles.emptyIcon}>
             <Brain color="#7c3aed" size={34} strokeWidth={2.2} />
           </View>
-          <Text style={styles.emptyTitle}>Quiz Islami</Text>
-          <Text style={styles.emptyText}>{error || 'Soal quiz belum tersedia.'}</Text>
+          <Text style={styles.emptyTitle}>{t('explore.quiz.title')}</Text>
+          <Text style={styles.emptyText}>{error || t('explore.quiz.emptyText')}</Text>
           <Pressable onPress={restart} style={styles.primaryButton}>
-            <Text style={styles.primaryButtonText}>Coba Lagi</Text>
+            <Text style={styles.primaryButtonText}>{t('explore.quiz.retry')}</Text>
           </Pressable>
         </View>
       ) : null}
@@ -202,13 +204,13 @@ export function WebAppQuizRoute({
       {!loading && total && !done ? (
         <>
           <View style={styles.header}>
-            <Text style={styles.title}>Quiz Islami</Text>
-            <Text style={styles.subtitle}>Latihan soal Islam dengan sesi acak dari dashboard.</Text>
+            <Text style={styles.title}>{t('explore.quiz.title')}</Text>
+            <Text style={styles.subtitle}>{t('explore.quiz.subtitle')}</Text>
           </View>
 
           <View style={styles.progressHeader}>
-            <Text style={styles.progressLabel}>Pertanyaan {currentIndex + 1} / {total}</Text>
-            <Text style={styles.progressScore}>{score} benar</Text>
+            <Text style={styles.progressLabel}>{t('explore.quiz.progressLabel', { current: currentIndex + 1, total })}</Text>
+            <Text style={styles.progressScore}>{t('explore.quiz.scoreCorrect', { score })}</Text>
           </View>
           <View style={styles.progressTrack}>
             <View style={[styles.progressFill, { width: `${progressPct}%` }]} />
@@ -219,7 +221,7 @@ export function WebAppQuizRoute({
           ) : null}
 
           <View style={styles.questionCard}>
-            <Text style={styles.questionText}>{getQuestionText(currentItem, currentIndex)}</Text>
+            <Text style={styles.questionText}>{getQuestionText(currentItem, currentIndex, t)}</Text>
           </View>
 
           <View style={styles.options}>
@@ -245,7 +247,7 @@ export function WebAppQuizRoute({
                 styles.explanationTitle,
                 getSelectedCorrect(currentItem, selected) ? styles.explanationTitleCorrect : styles.explanationTitleWrong,
               ]}>
-                {getSelectedCorrect(currentItem, selected) ? 'Jawaban benar' : 'Jawaban belum tepat'}
+                {getSelectedCorrect(currentItem, selected) ? t('explore.quiz.answerCorrect') : t('explore.quiz.answerWrong')}
               </Text>
               {getExplanation(currentItem) ? (
                 <Text style={styles.explanationText}>{getExplanation(currentItem)}</Text>
@@ -255,7 +257,7 @@ export function WebAppQuizRoute({
 
           {selected ? (
             <Pressable onPress={goNext} style={styles.primaryButton}>
-              <Text style={styles.primaryButtonText}>{currentIndex + 1 >= total ? 'Lihat Hasil' : 'Lanjut'}</Text>
+              <Text style={styles.primaryButtonText}>{currentIndex + 1 >= total ? t('explore.quiz.viewResult') : t('explore.quiz.next')}</Text>
             </Pressable>
           ) : null}
         </>
@@ -266,20 +268,20 @@ export function WebAppQuizRoute({
           <View style={styles.resultIcon}>
             <Brain color="#047857" size={36} strokeWidth={2.2} />
           </View>
-          <Text style={styles.resultTitle}>Quiz Selesai</Text>
+          <Text style={styles.resultTitle}>{t('explore.quiz.finished')}</Text>
           <Text style={styles.resultScore}>{score}<Text style={styles.resultTotal}>/{total}</Text></Text>
           <View style={styles.resultTrack}>
             <View style={[styles.resultFill, { width: `${total ? Math.round((score / total) * 100) : 0}%` }]} />
           </View>
-          <Text style={styles.resultText}>{total ? Math.round((score / total) * 100) : 0}% jawaban benar</Text>
+          <Text style={styles.resultText}>{t('explore.quiz.percentCorrect', { percent: total ? Math.round((score / total) * 100) : 0 })}</Text>
           <View style={styles.resultRows}>
             {items.map((item, index) => (
-              <ResultRow answer={answers[getItemId(item, index)]} index={index} item={item} key={getItemId(item, index)} />
+              <ResultRow answer={answers[getItemId(item, index)]} index={index} item={item} key={getItemId(item, index)} t={t} />
             ))}
           </View>
           <Pressable onPress={restart} style={styles.primaryButton}>
             <RotateCcw color="#ffffff" size={16} strokeWidth={2.2} />
-            <Text style={styles.primaryButtonText}>Ulangi Quiz</Text>
+            <Text style={styles.primaryButtonText}>{t('explore.quiz.restart')}</Text>
           </Pressable>
         </View>
       ) : null}

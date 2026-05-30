@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight, Hand, RefreshCcw, RotateCcw, Shuffle } from 
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { setAsmaulWiridCount } from '../../storage/asmaulWirid';
 import { radius, spacing } from '../../theme';
 import { hapticMedium, hapticTap } from '../../utils/haptics';
@@ -50,11 +51,11 @@ function StatTile({ color, label, value }) {
   );
 }
 
-function EmptyState({ loading }) {
+function EmptyState({ loading, t }) {
   return (
     <View style={styles.emptyCard}>
       {loading ? <ActivityIndicator color="#047857" /> : null}
-      <Text style={styles.emptyText}>{loading ? 'Memuat Asmaul Husna...' : 'Data Asmaul Husna belum tersedia.'}</Text>
+      <Text style={styles.emptyText}>{loading ? t('explore.asmaul.loading') : t('explore.asmaul.empty')}</Text>
     </View>
   );
 }
@@ -67,6 +68,7 @@ export function WebAppAsmaulFlashcardRoute({
   setAsmaulFlashcardRevealed = () => {},
   setAsmaulIndex = () => {},
 }) {
+  const { t } = useMobileLocale();
   const [shuffled, setShuffled] = useState(false);
   const [order, setOrder] = useState([]);
   const names = asmaulNames;
@@ -104,10 +106,10 @@ export function WebAppAsmaulFlashcardRoute({
   return (
     <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} style={styles.root}>
       <View testID="explore-web-app-asmaul-flashcard-surface" />
-      <Header title="Flashcard Asmaul Husna" subtitle="Uji hafalan 99 nama Allah" />
+      <Header title={t('explore.asmaul.flashcard.title')} subtitle={t('explore.asmaul.flashcard.subtitle')} />
 
       {asmaulLoading || !currentName ? (
-        <EmptyState loading={asmaulLoading} />
+        <EmptyState loading={asmaulLoading} t={t} />
       ) : (
         <>
           <View style={styles.toolbar}>
@@ -115,26 +117,26 @@ export function WebAppAsmaulFlashcardRoute({
             <View style={styles.toolbarActions}>
               <Pressable onPress={shuffle} style={[styles.smallAction, shuffled && styles.smallActionActive]}>
                 <Shuffle color={shuffled ? '#b45309' : '#475569'} size={14} strokeWidth={2.3} />
-                <Text style={[styles.smallActionText, shuffled && styles.smallActionTextActive]}>Acak</Text>
+                <Text style={[styles.smallActionText, shuffled && styles.smallActionTextActive]}>{t('explore.asmaul.shuffle')}</Text>
               </Pressable>
               {shuffled ? (
                 <Pressable onPress={resetOrder} style={styles.smallAction}>
                   <RotateCcw color="#475569" size={14} strokeWidth={2.3} />
-                  <Text style={styles.smallActionText}>Urutan Asli</Text>
+                  <Text style={styles.smallActionText}>{t('explore.asmaul.originalOrder')}</Text>
                 </Pressable>
               ) : null}
             </View>
           </View>
 
           <Pressable
-            accessibilityLabel="Balik kartu Asmaul Husna"
+            accessibilityLabel={t('explore.asmaul.flipAccessibility')}
             accessibilityRole="button"
             onPress={toggleReveal}
             style={styles.flashcard}
             testID="web-app-asmaul-flashcard-card"
           >
             <Text style={styles.badgeText}>#{getNumber(currentName, currentIndex)}</Text>
-            <Text style={styles.cardHint}>{asmaulFlashcardRevealed ? 'Tap untuk sembunyikan' : 'Tap untuk lihat arti'}</Text>
+            <Text style={styles.cardHint}>{asmaulFlashcardRevealed ? t('explore.asmaul.hideHint') : t('explore.asmaul.showHint')}</Text>
             <Text style={styles.flashArabic}>{getArabic(currentName)}</Text>
             {asmaulFlashcardRevealed ? (
               <>
@@ -142,16 +144,16 @@ export function WebAppAsmaulFlashcardRoute({
                 <Text style={styles.flashMeaning}>{getMeaning(currentName)}</Text>
               </>
             ) : (
-              <Text style={styles.guessHint}>Ingat-ingat artinya...</Text>
+              <Text style={styles.guessHint}>{t('explore.asmaul.guessHint')}</Text>
             )}
           </Pressable>
 
           <View style={styles.navRow}>
-            <IconButton disabled={safeIndex === 0} Icon={ChevronLeft} label="Sebelumnya" onPress={() => move(-1)} />
+            <IconButton disabled={safeIndex === 0} Icon={ChevronLeft} label={t('explore.asmaul.previous')} onPress={() => move(-1)} />
             <Pressable onPress={toggleReveal} style={styles.primaryAction}>
-              <Text style={styles.primaryActionText}>{asmaulFlashcardRevealed ? 'Sembunyikan' : 'Tampilkan'}</Text>
+              <Text style={styles.primaryActionText}>{asmaulFlashcardRevealed ? t('explore.asmaul.hide') : t('explore.asmaul.show')}</Text>
             </Pressable>
-            <IconButton disabled={safeIndex >= sequence.length - 1} Icon={ChevronRight} label="Selanjutnya" onPress={() => move(1)} variant="primary" />
+            <IconButton disabled={safeIndex >= sequence.length - 1} Icon={ChevronRight} label={t('explore.asmaul.next')} onPress={() => move(1)} variant="primary" />
           </View>
         </>
       )}
@@ -167,6 +169,7 @@ export function WebAppAsmaulWiridRoute({
   setAsmaulCounts = () => {},
   setAsmaulIndex = () => {},
 }) {
+  const { t } = useMobileLocale();
   const [vibrate, setVibrate] = useState(true);
   const names = asmaulNames;
   const safeIndex = clampIndex(asmaulIndex, names.length);
@@ -199,18 +202,18 @@ export function WebAppAsmaulWiridRoute({
   return (
     <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} style={styles.root}>
       <View testID="explore-web-app-asmaul-wirid-surface" />
-      <Header arabic="وِرْدُ الْأَسْمَاءِ" title="Wirid Asmaul Husna" subtitle="Hitung wirid dengan 99 nama Allah" />
+      <Header arabic="وِرْدُ الْأَسْمَاءِ" title={t('explore.asmaul.wirid.title')} subtitle={t('explore.asmaul.wirid.subtitle')} />
 
       {asmaulLoading || !currentName ? (
-        <EmptyState loading={asmaulLoading} />
+        <EmptyState loading={asmaulLoading} t={t} />
       ) : (
         <>
           <View style={styles.counterCard}>
             <View style={styles.cardTopRow}>
               <Text style={styles.indexBadge}>#{getNumber(currentName, safeIndex)} / {names.length}</Text>
               <View style={styles.indexActions}>
-                <IconButton disabled={safeIndex === 0} Icon={ChevronLeft} label="Nama sebelumnya" onPress={() => move(-1)} />
-                <IconButton disabled={safeIndex >= names.length - 1} Icon={ChevronRight} label="Nama berikutnya" onPress={() => move(1)} />
+                <IconButton disabled={safeIndex === 0} Icon={ChevronLeft} label={t('explore.asmaul.previousName')} onPress={() => move(-1)} />
+                <IconButton disabled={safeIndex >= names.length - 1} Icon={ChevronRight} label={t('explore.asmaul.nextName')} onPress={() => move(1)} />
               </View>
             </View>
 
@@ -220,6 +223,7 @@ export function WebAppAsmaulWiridRoute({
 
             <View style={styles.counterWrap}>
               <Pressable
+                accessibilityLabel={t('explore.asmaul.counterAccessibility', { count, target: WIRID_TARGET })}
                 accessibilityRole="button"
                 onPress={() => updateCount(count + 1)}
                 style={[styles.counterButton, reachedTarget && styles.counterButtonDone]}
@@ -240,7 +244,7 @@ export function WebAppAsmaulWiridRoute({
             <View style={styles.actionRow}>
               <Pressable onPress={() => updateCount(0)} style={styles.neutralButton}>
                 <RotateCcw color="#374151" size={15} strokeWidth={2.2} />
-                <Text style={styles.neutralButtonText}>Reset</Text>
+                <Text style={styles.neutralButtonText}>{t('explore.asmaul.reset')}</Text>
               </Pressable>
               <Pressable
                 onPress={() => {
@@ -250,19 +254,21 @@ export function WebAppAsmaulWiridRoute({
                 style={styles.dangerButton}
               >
                 <RefreshCcw color="#dc2626" size={15} strokeWidth={2.2} />
-                <Text style={styles.dangerButtonText}>Reset Semua</Text>
+                <Text style={styles.dangerButtonText}>{t('explore.asmaul.resetAll')}</Text>
               </Pressable>
               <Pressable onPress={() => setVibrate((current) => !current)} style={[styles.vibrateButton, vibrate && styles.vibrateButtonActive]}>
                 <Hand color={vibrate ? '#047857' : '#64748b'} size={15} strokeWidth={2.2} />
-                <Text style={[styles.vibrateButtonText, vibrate && styles.vibrateButtonTextActive]}>Getar: {vibrate ? 'On' : 'Off'}</Text>
+                <Text style={[styles.vibrateButtonText, vibrate && styles.vibrateButtonTextActive]}>
+                  {t('explore.asmaul.vibrateStatus', { state: vibrate ? t('explore.asmaul.on') : t('explore.asmaul.off') })}
+                </Text>
               </Pressable>
             </View>
           </View>
 
           <View style={styles.statsGrid}>
-            <StatTile color="#047857" label="Hitungan" value={count} />
-            <StatTile color="#d97706" label="Target" value={WIRID_TARGET} />
-            <StatTile color="#2563eb" label="Total Hari Ini" value={totalToday} />
+            <StatTile color="#047857" label={t('explore.asmaul.countLabel')} value={count} />
+            <StatTile color="#d97706" label={t('explore.asmaul.targetLabel')} value={WIRID_TARGET} />
+            <StatTile color="#2563eb" label={t('explore.asmaul.todayTotalLabel')} value={totalToday} />
           </View>
         </>
       )}

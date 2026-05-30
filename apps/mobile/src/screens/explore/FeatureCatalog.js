@@ -4,6 +4,7 @@ import { BookOpen, Bookmark, Globe, HelpCircle, ListChecks, MessageCircle, Scale
 import { Card, CardTitle } from '../../components/Card';
 import { CompactRow, SectionHeader } from '../../components/Paper';
 import { allFeatures, belajarFeatureGroups } from '../../data/mobileFeatures';
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { colors, radius, spacing } from '../../theme';
 
 export const LOCAL_TOOL_TYPES = [
@@ -70,13 +71,20 @@ export const findFeatureByKey = (featureKey) => allFeatures.find((feature) => fe
 export const isPaginatedFeature = (feature) =>
   feature?.type === 'feed' || (Boolean(feature?.endpoint) && ['list', 'protected-list'].includes(feature.type));
 
-export const getFeatureBadges = (feature, recentFeatureKeys = {}) => {
+const defaultBadgeTranslations = {
+  'explore.catalog.badge.account': 'Akun',
+  'explore.catalog.badge.local': 'Lokal',
+  'explore.catalog.badge.recent': 'Terakhir',
+};
+const fallbackTranslate = (key) => defaultBadgeTranslations[key] ?? key;
+
+export const getFeatureBadges = (feature, recentFeatureKeys = {}, t = fallbackTranslate) => {
   const badges = [];
 
-  if (recentFeatureKeys[feature?.key]) badges.push('Terakhir');
+  if (recentFeatureKeys[feature?.key]) badges.push(t('explore.catalog.badge.recent'));
   if (Array.isArray(feature?.badges)) badges.push(...feature.badges);
-  if (['protected-list', 'bookmarks', 'notes'].includes(feature?.type)) badges.push('Akun');
-  if (LOCAL_TOOL_TYPES.includes(feature?.type)) badges.push('Lokal');
+  if (['protected-list', 'bookmarks', 'notes'].includes(feature?.type)) badges.push(t('explore.catalog.badge.account'));
+  if (LOCAL_TOOL_TYPES.includes(feature?.type)) badges.push(t('explore.catalog.badge.local'));
 
   return [...new Set(badges)].slice(0, 3);
 };
@@ -103,6 +111,7 @@ function FeatureCatalogBase({
   webAppTheme,
   webAppThemeStyles = {},
 }) {
+  const { t } = useMobileLocale();
   const visibleSections = useMemo(() => getVisibleCatalogSections(featureSearch), [featureSearch]);
   const handleFeaturePress = useCallback(
     (featureKey) => {
@@ -123,16 +132,16 @@ function FeatureCatalogBase({
     if (variant === 'webApp') {
       return (
         <View style={[styles.webAppEmpty, webAppThemeStyles.empty]}>
-          <Text style={[styles.webAppEmptyTitle, webAppThemeStyles.emptyTitle]}>Tidak ada hasil</Text>
-          <Text style={[styles.webAppEmptyText, webAppThemeStyles.emptyText]}>Coba kata lain seperti tafsir, kamus, siroh, atau quiz.</Text>
+          <Text style={[styles.webAppEmptyTitle, webAppThemeStyles.emptyTitle]}>{t('explore.catalog.emptyTitle')}</Text>
+          <Text style={[styles.webAppEmptyText, webAppThemeStyles.emptyText]}>{t('explore.catalog.emptyText')}</Text>
         </View>
       );
     }
 
     return (
       <Card>
-        <CardTitle meta="Kosong">Tidak ada hasil</CardTitle>
-        <Text style={styles.body}>Coba kata lain seperti tafsir, kamus, siroh, atau quiz.</Text>
+        <CardTitle meta={t('explore.catalog.emptyMeta')}>{t('explore.catalog.emptyTitle')}</CardTitle>
+        <Text style={styles.body}>{t('explore.catalog.emptyText')}</Text>
       </Card>
     );
   }
@@ -147,7 +156,7 @@ function FeatureCatalogBase({
         <View style={styles.webAppGrid}>
           {section.rows.map((row) => {
             const pinned = Boolean(pinnedFeatureKeys[row.feature.key]);
-            const badgeLabels = getFeatureBadges(row.feature, recentFeatureKeys).join('|');
+            const badgeLabels = getFeatureBadges(row.feature, recentFeatureKeys, t).join('|');
             return (
               <WebAppFeatureTile
                 badgeLabels={badgeLabels}
@@ -156,6 +165,10 @@ function FeatureCatalogBase({
                 key={row.feature.key}
                 onFeaturePress={handleFeaturePress}
                 onTogglePinnedFeature={handleTogglePinnedFeature}
+                pinAccessibilityLabel={t(
+                  pinned ? 'explore.catalog.unpinAccessibility' : 'explore.catalog.pinAccessibility',
+                  { title: row.feature.title },
+                )}
                 pinned={pinned}
                 subtitle={row.feature.subtitle}
                 title={row.feature.title}
@@ -173,7 +186,7 @@ function FeatureCatalogBase({
     <Section key={section.key} section={section}>
       {section.rows.map((row) => {
         const pinned = Boolean(pinnedFeatureKeys[row.feature.key]);
-        const badgeLabels = getFeatureBadges(row.feature, recentFeatureKeys).join('|');
+        const badgeLabels = getFeatureBadges(row.feature, recentFeatureKeys, t).join('|');
         return (
           <FeatureRow
             badgeLabels={badgeLabels}
@@ -182,6 +195,10 @@ function FeatureCatalogBase({
             key={row.feature.key}
             onFeaturePress={handleFeaturePress}
             onTogglePinnedFeature={handleTogglePinnedFeature}
+            pinAccessibilityLabel={t(
+              pinned ? 'explore.catalog.unpinAccessibility' : 'explore.catalog.pinAccessibility',
+              { title: row.feature.title },
+            )}
             pinned={pinned}
             subtitle={row.feature.subtitle}
             title={row.feature.title}
@@ -209,6 +226,7 @@ const FeatureRow = memo(function FeatureRow({
   featureKey,
   onFeaturePress,
   onTogglePinnedFeature,
+  pinAccessibilityLabel,
   pinned,
   subtitle,
   title,
@@ -229,7 +247,7 @@ const FeatureRow = memo(function FeatureRow({
       onPress={handlePress}
       right={(
         <Pressable
-          accessibilityLabel={pinned ? `Lepas ${title} dari Beranda` : `Sematkan ${title} ke Beranda`}
+          accessibilityLabel={pinAccessibilityLabel}
           accessibilityRole="button"
           accessibilityState={{ selected: pinned }}
           android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: true }}
@@ -256,6 +274,7 @@ const WebAppFeatureTile = memo(function WebAppFeatureTile({
   featureKey,
   onFeaturePress,
   onTogglePinnedFeature,
+  pinAccessibilityLabel,
   pinned,
   subtitle,
   title,
@@ -280,7 +299,7 @@ const WebAppFeatureTile = memo(function WebAppFeatureTile({
           <Icon color={webAppTheme?.accent ?? '#34d399'} size={18} strokeWidth={2.2} />
         </View>
         <Pressable
-          accessibilityLabel={pinned ? `Lepas ${title} dari Beranda` : `Sematkan ${title} ke Beranda`}
+          accessibilityLabel={pinAccessibilityLabel}
           accessibilityRole="button"
           accessibilityState={{ selected: pinned }}
           android_ripple={{ color: webAppTheme?.ripple ?? '#1f2937', borderless: true }}
