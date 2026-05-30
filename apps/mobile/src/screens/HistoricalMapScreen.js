@@ -12,28 +12,29 @@ import { colors, radius, spacing } from '../theme';
 import { requestJson } from '../api/client';
 import { HistoricalMapView } from './HistoricalMapView';
 import { useLayoutModePreference } from '../hooks/useLayoutModePreference';
+import { useMobileLocale } from '../i18n/MobileLocaleProvider';
 
 const CATEGORIES = [
-  { value: '', label: 'Semua' },
-  { value: 'kota', label: 'Kota' },
-  { value: 'masjid', label: 'Masjid' },
-  { value: 'situs', label: 'Situs' },
-  { value: 'universitas', label: 'Universitas' },
+  { value: '', labelKey: 'historicalMap.category.all' },
+  { value: 'kota', labelKey: 'historicalMap.category.city' },
+  { value: 'masjid', labelKey: 'historicalMap.category.mosque' },
+  { value: 'situs', labelKey: 'historicalMap.category.site' },
+  { value: 'universitas', labelKey: 'historicalMap.category.university' },
 ];
 
 const ERAS = [
-  { value: '', label: 'Semua Masa' },
-  { value: 'pra-islam', label: 'Pra-Islam' },
-  { value: 'khulafa', label: 'Khulafa & Sahabat' },
-  { value: 'umayyah', label: 'Umayyah' },
-  { value: 'abbasiyah', label: 'Abbasiyah' },
-  { value: 'fatimiyah', label: 'Fatimiyah' },
-  { value: 'andallus', label: 'Andalusia' },
-  { value: 'utsmaniyah', label: 'Utsmaniyah' },
-  { value: 'klasik', label: 'Klasik' },
+  { value: '', labelKey: 'historicalMap.era.all' },
+  { value: 'pra-islam', labelKey: 'historicalMap.era.preIslam' },
+  { value: 'khulafa', labelKey: 'historicalMap.era.khulafa' },
+  { value: 'umayyah', labelKey: 'historicalMap.era.umayyah' },
+  { value: 'abbasiyah', labelKey: 'historicalMap.era.abbasiyah' },
+  { value: 'fatimiyah', labelKey: 'historicalMap.era.fatimiyah' },
+  { value: 'andallus', labelKey: 'historicalMap.era.andalusia' },
+  { value: 'utsmaniyah', labelKey: 'historicalMap.era.ottoman' },
+  { value: 'klasik', labelKey: 'historicalMap.era.classic' },
 ];
 
-const getLocationName = (loc) => String(loc?.name ?? loc?.title ?? 'Lokasi');
+const getLocationName = (loc, fallback = 'Lokasi') => String(loc?.name ?? loc?.title ?? fallback);
 const getLocationDescription = (loc) => String(loc?.description ?? loc?.summary ?? '');
 
 const WEB_APP_HISTORICAL_MAP_THEMES = {
@@ -78,6 +79,7 @@ const WEB_APP_HISTORICAL_MAP_THEMES = {
 
 export function HistoricalMapContent() {
   const { isDarkTheme = false, isWebAppLayout } = useLayoutModePreference();
+  const { t } = useMobileLocale();
   const webAppTheme = isDarkTheme ? WEB_APP_HISTORICAL_MAP_THEMES.dark : WEB_APP_HISTORICAL_MAP_THEMES.light;
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -85,6 +87,9 @@ export function HistoricalMapContent() {
   const [viewMode, setViewMode] = useState('map');
   const [category, setCategory] = useState('');
   const [era, setEra] = useState('');
+  const locationFallback = t('historicalMap.locationFallback');
+  const categories = CATEGORIES.map((item) => ({ ...item, label: t(item.labelKey) }));
+  const eras = ERAS.map((item) => ({ ...item, label: t(item.labelKey) }));
 
   const fetchLocations = useCallback(async () => {
     setLoading(true);
@@ -113,7 +118,7 @@ export function HistoricalMapContent() {
   const filtered = search.trim()
     ? locations.filter(
         (loc) =>
-          getLocationName(loc).toLowerCase().includes(search.toLowerCase()) ||
+          getLocationName(loc, locationFallback).toLowerCase().includes(search.toLowerCase()) ||
           getLocationDescription(loc).toLowerCase().includes(search.toLowerCase()),
       )
     : locations;
@@ -140,7 +145,7 @@ export function HistoricalMapContent() {
             isWebAppLayout && viewMode === 'map' && { color: '#ffffff' },
           ]}
         >
-          Peta
+          {t('historicalMap.view.map')}
         </Text>
       </Pressable>
       <Pressable
@@ -163,7 +168,7 @@ export function HistoricalMapContent() {
             isWebAppLayout && viewMode === 'list' && { color: '#ffffff' },
           ]}
         >
-          Jelajahi
+          {t('historicalMap.view.list')}
         </Text>
       </Pressable>
     </View>
@@ -176,7 +181,7 @@ export function HistoricalMapContent() {
         showsHorizontalScrollIndicator={false}
         style={styles.filterRow}
       >
-        {CATEGORIES.map((item) => (
+        {categories.map((item) => (
           <Pressable
             key={item.value}
             onPress={() => setCategory(item.value === category ? '' : item.value)}
@@ -200,7 +205,7 @@ export function HistoricalMapContent() {
         showsHorizontalScrollIndicator={false}
         style={styles.filterRow}
       >
-        {ERAS.map((item) => (
+        {eras.map((item) => (
           <Pressable
             key={item.value}
             onPress={() => setEra(item.value === era ? '' : item.value)}
@@ -226,7 +231,7 @@ export function HistoricalMapContent() {
   const renderSearch = () => (
     <TextInput
       onChangeText={setSearch}
-      placeholder="Cari lokasi..."
+      placeholder={t('historicalMap.searchPlaceholder')}
       placeholderTextColor={isWebAppLayout ? webAppTheme.muted : colors.muted}
       returnKeyType="search"
       style={[
@@ -247,11 +252,11 @@ export function HistoricalMapContent() {
     <View>
       {!isWebAppLayout ? renderSearch() : null}
       <Text style={[styles.resultCount, isWebAppLayout && styles.webAppResultCount, isWebAppLayout && { color: webAppTheme.muted }]}>
-        {filtered.length} lokasi ditemukan
+        {t('historicalMap.resultCount', { count: filtered.length })}
       </Text>
       {filtered.map((loc) => (
         <Pressable
-          key={loc.id || getLocationName(loc)}
+          key={loc.id || getLocationName(loc, locationFallback)}
           android_ripple={{ color: 'rgba(16, 185, 129, 0.12)', borderless: false }}
           onPress={() => setViewMode('map')}
           style={[
@@ -262,7 +267,7 @@ export function HistoricalMapContent() {
         >
           <View style={styles.locationCopy}>
             <Text style={[styles.locationName, isWebAppLayout && styles.webAppLocationName, isWebAppLayout && { color: webAppTheme.text }]}>
-              {getLocationName(loc)}
+              {getLocationName(loc, locationFallback)}
             </Text>
             <Text
               style={[styles.locationDesc, isWebAppLayout && styles.webAppLocationDesc, isWebAppLayout && { color: webAppTheme.muted }]}
@@ -291,7 +296,7 @@ export function HistoricalMapContent() {
           ]}
         >
           <ActivityIndicator size="large" color={isWebAppLayout ? webAppTheme.accent : colors.primary} />
-          {isWebAppLayout ? <Text style={[styles.webAppLoadingText, { color: webAppTheme.muted }]}>Memuat lokasi...</Text> : null}
+          {isWebAppLayout ? <Text style={[styles.webAppLoadingText, { color: webAppTheme.muted }]}>{t('historicalMap.loadingLocations')}</Text> : null}
         </View>
       ) : viewMode === 'map' ? (
         <HistoricalMapView locations={locations} isWebAppLayout={isWebAppLayout} webAppTheme={webAppTheme} />
@@ -308,14 +313,14 @@ export function HistoricalMapContent() {
           <View style={[styles.webAppIcon, { backgroundColor: webAppTheme.accentSoft }]}>
             <Text style={[styles.webAppIconText, { color: webAppTheme.accentText }]}>م</Text>
           </View>
-          <Text style={[styles.webAppTitle, { color: webAppTheme.title }]}>Peta Islam Interaktif</Text>
-          <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>Lokasi bersejarah dalam peradaban Islam</Text>
+          <Text style={[styles.webAppTitle, { color: webAppTheme.title }]}>{t('historicalMap.title')}</Text>
+          <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>{t('historicalMap.subtitle')}</Text>
         </View>
         <View style={styles.webAppControls}>
           {renderSearch()}
           <View style={styles.webAppMetaRow}>
             <Text style={[styles.webAppMetaText, { color: webAppTheme.muted }]}>
-              {loading ? 'Memuat...' : `${locations.length} lokasi`}
+              {loading ? t('historicalMap.loadingShort') : t('historicalMap.locationsCount', { count: locations.length })}
             </Text>
             {renderViewToggle()}
           </View>
