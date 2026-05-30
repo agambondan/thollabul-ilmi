@@ -1,21 +1,17 @@
 import { CalendarDays } from 'lucide-react-native';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 
-const MONTHS = [
-  'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-  'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
-];
-
 const PRAYERS = [
-  { key: 'imsak', fallbackKey: 'Imsak', label: 'Imsak' },
-  { key: 'fajr', fallbackKey: 'Fajr', label: 'Subuh' },
-  { key: 'sunrise', fallbackKey: 'Sunrise', label: 'Syuruq' },
-  { key: 'dhuhr', fallbackKey: 'Dhuhr', label: 'Dzuhur' },
-  { key: 'asr', fallbackKey: 'Asr', label: 'Ashar' },
-  { key: 'maghrib', fallbackKey: 'Maghrib', label: 'Maghrib' },
-  { key: 'isha', fallbackKey: 'Isha', label: 'Isya' },
+  { key: 'imsak', fallbackKey: 'Imsak' },
+  { key: 'fajr', fallbackKey: 'Fajr' },
+  { key: 'sunrise', fallbackKey: 'Sunrise' },
+  { key: 'dhuhr', fallbackKey: 'Dhuhr' },
+  { key: 'asr', fallbackKey: 'Asr' },
+  { key: 'maghrib', fallbackKey: 'Maghrib' },
+  { key: 'isha', fallbackKey: 'Isha' },
 ];
 
 const getRaw = (item) => item?.raw ?? item ?? {};
@@ -35,24 +31,25 @@ const getDayLabel = (row, index) => {
 };
 const getLocationLabel = (items) => {
   const row = getRaw(items[0]);
-  return row.city ?? row.location ?? row.place ?? 'Jakarta (WIB)';
+  return row.city ?? row.location ?? row.place ?? '';
 };
-const inferMonthLabel = (items) => {
+const formatMonthYear = (date, language) =>
+  date.toLocaleDateString(language === 'en' ? 'en-US' : 'id-ID', { month: 'long', year: 'numeric' });
+const inferMonthLabel = (items, language) => {
   const firstDate = getDateValue(getRaw(items[0]));
   if (!firstDate) {
-    const now = new Date();
-    return `${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+    return formatMonthYear(new Date(), language);
   }
   const parsed = new Date(`${firstDate}T00:00:00`);
   if (Number.isNaN(parsed.getTime())) return firstDate.slice(0, 7);
-  return `${MONTHS[parsed.getMonth()]} ${parsed.getFullYear()}`;
+  return formatMonthYear(parsed, language);
 };
 const todayKey = () => {
   const date = new Date();
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
 
-function ImsakiyahRow({ index, item }) {
+function ImsakiyahRow({ index, item, t }) {
   const row = getRaw(item);
   const isToday = getDateValue(row) === todayKey();
 
@@ -66,7 +63,7 @@ function ImsakiyahRow({ index, item }) {
         <View style={styles.timesRow}>
           {PRAYERS.map((prayer) => (
             <View key={prayer.key} style={styles.timeCell}>
-              <Text style={[styles.timeLabel, prayer.key === 'imsak' && styles.imsakLabel]}>{prayer.label}</Text>
+              <Text style={[styles.timeLabel, prayer.key === 'imsak' && styles.imsakLabel]}>{t(`prayer.name.${prayer.key}`)}</Text>
               <Text style={[styles.timeValue, prayer.key === 'imsak' && styles.imsakValue]}>{getPrayerValue(row, prayer)}</Text>
             </View>
           ))}
@@ -81,19 +78,22 @@ export function WebAppImsakiyahRoute({
   items = [],
   loading,
 }) {
+  const { language, t } = useMobileLocale();
+  const location = getLocationLabel(items) || t('explore.imsakiyah.defaultLocation');
+
   return (
     <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} style={styles.root}>
       <View testID="explore-web-app-imsakiyah-surface" />
       <View style={styles.header}>
-        <Text style={styles.title}>Imsakiyah</Text>
-        <Text style={styles.subtitle}>{`Jadwal imsak & sholat bulanan · ${getLocationLabel(items)}`}</Text>
+        <Text style={styles.title}>{t('explore.imsakiyah.title')}</Text>
+        <Text style={styles.subtitle}>{t('explore.imsakiyah.subtitle', { location })}</Text>
       </View>
 
       <View style={styles.monthBar}>
         <View style={styles.monthButton}>
           <Text style={styles.monthButtonText}>←</Text>
         </View>
-        <Text style={styles.monthText}>{inferMonthLabel(items)}</Text>
+        <Text style={styles.monthText}>{inferMonthLabel(items, language)}</Text>
         <View style={styles.monthButton}>
           <Text style={styles.monthButtonText}>→</Text>
         </View>
@@ -102,20 +102,20 @@ export function WebAppImsakiyahRoute({
       {loading ? (
         <View style={styles.state}>
           <ActivityIndicator color="#059669" size="small" />
-          <Text style={styles.stateText}>Memuat imsakiyah...</Text>
+          <Text style={styles.stateText}>{t('explore.imsakiyah.loading')}</Text>
         </View>
       ) : null}
 
-      {error ? <Text style={styles.error}>Gagal memuat data. Periksa koneksi internet.</Text> : null}
+      {error ? <Text style={styles.error}>{t('explore.imsakiyah.error')}</Text> : null}
 
       {!loading && !error && items.length ? (
         <View style={styles.table}>
           <View style={styles.tableHeader}>
-            <Text style={styles.tableHeaderDay}>No</Text>
-            <Text style={styles.tableHeaderText}>Jadwal</Text>
+            <Text style={styles.tableHeaderDay}>{t('explore.imsakiyah.dayColumn')}</Text>
+            <Text style={styles.tableHeaderText}>{t('explore.imsakiyah.scheduleColumn')}</Text>
           </View>
           {items.map((item, index) => (
-            <ImsakiyahRow index={index} item={item} key={`${getDateValue(getRaw(item)) || index}-${index}`} />
+            <ImsakiyahRow index={index} item={item} key={`${getDateValue(getRaw(item)) || index}-${index}`} t={t} />
           ))}
         </View>
       ) : null}
@@ -123,8 +123,8 @@ export function WebAppImsakiyahRoute({
       {!loading && !error && !items.length ? (
         <View style={styles.empty}>
           <CalendarDays color="#9ca3af" size={32} strokeWidth={1.8} />
-          <Text style={styles.emptyTitle}>Jadwal imsakiyah belum tersedia.</Text>
-          <Text style={styles.emptyText}>Coba muat ulang setelah beberapa saat.</Text>
+          <Text style={styles.emptyTitle}>{t('explore.imsakiyah.emptyTitle')}</Text>
+          <Text style={styles.emptyText}>{t('explore.imsakiyah.emptyText')}</Text>
         </View>
       ) : null}
     </ScrollView>
