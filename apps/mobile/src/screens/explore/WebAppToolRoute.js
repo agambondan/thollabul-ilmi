@@ -1,6 +1,7 @@
 import { BookOpen } from 'lucide-react-native';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { useMobileLocale } from '../../i18n/MobileLocaleProvider';
 import { radius, spacing } from '../../theme';
 import { getExploreItemKey } from '../ExploreScreen.helpers';
 
@@ -19,9 +20,10 @@ export function WebAppToolRoute({
   routeKey,
   visibleItems,
 }) {
+  const { t } = useMobileLocale();
   const config = {
     subtitle: activeFeature?.subtitle ?? '',
-    title: activeFeature?.title ?? 'Fitur',
+    title: activeFeature?.title ?? t('explore.tool.titleFallback'),
     ...(WEB_APP_TOOL_ROUTE_CONFIGS[routeKey] ?? {}),
   };
   const listItems = visibleItems?.length ? visibleItems : items;
@@ -43,7 +45,7 @@ export function WebAppToolRoute({
 
       <View style={styles.panel}>
         {renderFeatureContent?.()}
-        {loading ? <Text style={styles.stateText}>Memuat...</Text> : null}
+        {loading ? <Text style={styles.stateText}>{t('explore.tool.loading')}</Text> : null}
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {renderItem && listItems?.length ? (
           <View style={styles.list}>
