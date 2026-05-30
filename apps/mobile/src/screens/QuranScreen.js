@@ -830,13 +830,13 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
 
             const nextSurah = surahs[currentIndex + delta];
             if (!nextSurah) {
-                showInfo(delta > 0 ? 'Sudah di surah terakhir.' : 'Sudah di surah pertama.');
+                showInfo(delta > 0 ? t('quran.navigation.lastSurah') : t('quran.navigation.firstSurah'));
                 return;
             }
 
             openSurah(nextSurah);
         },
-        [openSurah, readerLoading, selectedSurah, showInfo, surahs],
+        [openSurah, readerLoading, selectedSurah, showInfo, surahs, t],
     );
 
     const triggerAdjacentSurah = useCallback(
@@ -858,13 +858,13 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             const nextPage = currentPage + delta;
 
             if (nextPage < MUSHAF_FIRST_PAGE || nextPage > MUSHAF_LAST_PAGE) {
-                showInfo(delta > 0 ? 'Sudah di halaman terakhir.' : 'Sudah di halaman pertama.');
+                showInfo(delta > 0 ? t('quran.navigation.lastPage') : t('quran.navigation.firstPage'));
                 return;
             }
 
             loadMushafPage(nextPage);
         },
-        [mushafPageLoading, mushafPageNumber, readerLoading, selectedSurah, showInfo],
+        [mushafPageLoading, mushafPageNumber, readerLoading, selectedSurah, showInfo, t],
     );
 
     const triggerAdjacentMushafPage = useCallback(
@@ -935,7 +935,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
 
     const markStarted = async (surah) => {
         if (!user) {
-            showInfo("Masuk dari Profil untuk menyimpan progres Al-Qur'an.");
+            showInfo(t('quran.progress.loginRequired'));
             return;
         }
         setSavingSurah(surah.number);
@@ -948,10 +948,10 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                 ayahId: firstAyah?.id ?? surah.number,
             });
             setProgress(next);
-            setMessage(`Progres disimpan untuk ${surah.name}.`);
-            showSuccess(`Progres disimpan untuk ${surah.name}.`);
+            setMessage(t('quran.progress.started', { surah: surah.name }));
+            showSuccess(t('quran.progress.started', { surah: surah.name }));
         } catch (err) {
-            const nextMessage = err?.message ?? "Progres Al-Qur'an belum bisa disimpan.";
+            const nextMessage = err?.message ?? t('quran.progress.startError');
             setMessage(nextMessage);
             showError(nextMessage);
         } finally {
@@ -961,7 +961,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
 
     const markAyahProgress = async (ayah) => {
         if (!user || !selectedSurah) {
-            showInfo("Masuk dari Profil untuk menyimpan progres Al-Qur'an.");
+            showInfo(t('quran.progress.loginRequired'));
             return;
         }
         const surahNumber = selectedSurah.number ?? ayah.surahNumber;
@@ -1618,6 +1618,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         toggleAudioRepeat,
         toggleAyahBookmark,
         triggerAdjacentSurah,
+        t,
         updateArabicFont,
         updateAudioRangeField,
         updateDisplayMode,
