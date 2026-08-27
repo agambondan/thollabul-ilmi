@@ -3,12 +3,14 @@
 // Import tafsir dari JSON hasil scraping ke PostgreSQL.
 //
 // Sumber:
-//   ./data/tafsir/ind-jalaladdinalmah/{1..114}.json  → KemenagTranslation
-//   ./data/tafsir/ind-muhammadquraish/{1..114}.json  → IbnuKatsirTranslation
+//
+//	./data/tafsir/ind-jalaladdinalmah/{1..114}.json  → KemenagTranslation
+//	./data/tafsir/ind-muhammadquraish/{1..114}.json  → IbnuKatsirTranslation
 //
 // Usage:
-//   go run scripts/import_tafsir.go
-//   go run scripts/import_tafsir.go -data ./data/tafsir
+//
+//	go run scripts/import_tafsir.go
+//	go run scripts/import_tafsir.go -data ./data/tafsir
 package main
 
 import (
@@ -71,7 +73,7 @@ func main() {
 	imp.buildAyahIndex()
 
 	jalalaynDir := filepath.Join(*dataDir, "ind-jalaladdinalmah")
-	quraishDir  := filepath.Join(*dataDir, "ind-muhammadquraish")
+	quraishDir := filepath.Join(*dataDir, "ind-muhammadquraish")
 
 	log.Println("Mulai import tafsir...")
 	start := time.Now()
@@ -154,7 +156,7 @@ func (imp *TafsirImporter) importSurah(surahNum int, jalalayn, quraish []VerseRo
 	}
 
 	inserted := 0
-	updated  := 0
+	updated := 0
 
 	for verse := 1; verse <= maxVerse; verse++ {
 		key := fmt.Sprintf("%d:%d", surahNum, verse)
@@ -163,8 +165,8 @@ func (imp *TafsirImporter) importSurah(surahNum int, jalalayn, quraish []VerseRo
 			continue
 		}
 
-		jalText  := jalMap[verse]
-		qurText  := quraishMap[verse]
+		jalText := jalMap[verse]
+		qurText := quraishMap[verse]
 
 		if jalText == "" && qurText == "" {
 			continue

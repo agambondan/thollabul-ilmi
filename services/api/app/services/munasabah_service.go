@@ -11,7 +11,9 @@ type MunasabahService interface {
 	Delete(int) error
 }
 
-type munasabahService struct{ repo repository.MunasabahRepository }
+type munasabahService struct {
+	repo repository.MunasabahRepository
+}
 
 func NewMunasabahService(repo repository.MunasabahRepository) MunasabahService {
 	return &munasabahService{repo}

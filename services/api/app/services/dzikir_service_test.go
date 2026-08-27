@@ -27,7 +27,7 @@ func (f *fakeDzikirRepo) FindByCategory(category model.DzikirCategory, limit, of
 func (f *fakeDzikirRepo) FindByOccasion(occasion string, limit, offset int) ([]model.Dzikir, error) {
 	return f.dzikirs, f.err
 }
-func (f *fakeDzikirRepo) Create(d *model.Dzikir) (*model.Dzikir, error) { return d, nil }
+func (f *fakeDzikirRepo) Create(d *model.Dzikir) (*model.Dzikir, error)         { return d, nil }
 func (f *fakeDzikirRepo) Update(id int, d *model.Dzikir) (*model.Dzikir, error) { return d, nil }
 func (f *fakeDzikirRepo) Delete(id int) error                                   { return nil }
 

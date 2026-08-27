@@ -3,9 +3,9 @@ package model
 type LocationCategory string
 
 const (
-	LocationCity     LocationCategory = "kota"
-	LocationMosque   LocationCategory = "masjid"
-	LocationSite     LocationCategory = "situs"
+	LocationCity       LocationCategory = "kota"
+	LocationMosque     LocationCategory = "masjid"
+	LocationSite       LocationCategory = "situs"
 	LocationUniversity LocationCategory = "universitas"
 )
 

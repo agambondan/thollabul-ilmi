@@ -58,7 +58,11 @@ func (s *apiKeyService) Validate(key string) (*model.APIKey, error) {
 		return nil, err
 	}
 	go func() {
-		defer func() { if r := recover(); r != nil { slog.Error("panic in api_key_service", "recover", r) } }()
+		defer func() {
+			if r := recover(); r != nil {
+				slog.Error("panic in api_key_service", "recover", r)
+			}
+		}()
 		_ = s.repo.IncrementUsage(key)
 	}()
 	return k, nil

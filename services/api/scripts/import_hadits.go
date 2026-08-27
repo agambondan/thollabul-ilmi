@@ -4,8 +4,9 @@
 // Format JSON bisa dari scrape_all.go (fawazahmed0+gadingnst) ATAU scrape_hadits.py (hadits.in).
 //
 // Usage:
-//   go run scripts/import_hadits.go
-//   go run scripts/import_hadits.go -data ./data -imam bukhari
+//
+//	go run scripts/import_hadits.go
+//	go run scripts/import_hadits.go -data ./data -imam bukhari
 package main
 
 import (
@@ -30,8 +31,8 @@ import (
 //   - scrape_all.go  : SectionNo, SectionEn, Ar, Idn, En
 //   - scrape_hadits.py: Kitab, Bab, Terjemah
 type HadithRow struct {
-	Number    int    `json:"number"`
-	Imam      string `json:"imam"`
+	Number int    `json:"number"`
+	Imam   string `json:"imam"`
 	// Dari scrape_all.go (fawazahmed0 + gadingnst)
 	SectionNo int    `json:"section_no"`
 	SectionEn string `json:"section_en"`
@@ -80,7 +81,7 @@ func (r *HadithRow) translationIdn() string {
 }
 
 func main() {
-	dataDir  := flag.String("data", "./data", "Folder berisi file hadits_*.json")
+	dataDir := flag.String("data", "./data", "Folder berisi file hadits_*.json")
 	imamFlag := flag.String("imam", "", "Import hanya satu imam (opsional)")
 	flag.Parse()
 
@@ -154,8 +155,8 @@ func (imp *Importer) importFile(path string) error {
 	imam := rows[0].Imam
 	log.Printf("[%s] Mulai import %d hadits...", imam, len(rows))
 
-	imp.bookCache    = make(map[string]int)
-	imp.themeCache   = make(map[string]int)
+	imp.bookCache = make(map[string]int)
+	imp.themeCache = make(map[string]int)
 	imp.chapterCache = make(map[string]int)
 
 	start := time.Now()

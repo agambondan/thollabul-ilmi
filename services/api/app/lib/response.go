@@ -121,11 +121,12 @@ func Send(c *fiber.Ctx, status int, responses ...interface{}) error {
 }
 
 // ErrorBadRequest send http 400 bad request
-//   message can contains string or error or nothing
-//   example:
-//   lib.ErrorBadRequest(c, "bad request")
-//   lib.ErrorBadRequest(c, errors.New("bad request"))
-//   lib.ErrorBadRequest(c) // default response message is Bad Request
+//
+//	message can contains string or error or nothing
+//	example:
+//	lib.ErrorBadRequest(c, "bad request")
+//	lib.ErrorBadRequest(c, errors.New("bad request"))
+//	lib.ErrorBadRequest(c) // default response message is Bad Request
 func ErrorBadRequest(c *fiber.Ctx, message ...interface{}) error {
 	if len(message) == 0 {
 		message = append(message, "Bad request")
@@ -170,11 +171,12 @@ func ErrorInternal(c *fiber.Ctx, message ...string) error {
 }
 
 // ErrorConflict send http 409 conflict
-//   message can contains string or error or nothing
-//   example:
-//   lib.ErrorConflict(c, "Conflict")
-//   lib.ErrorConflict(c, errors.New("Conflict"))
-//   lib.ErrorConflict(c) // default response message is Conflict
+//
+//	message can contains string or error or nothing
+//	example:
+//	lib.ErrorConflict(c, "Conflict")
+//	lib.ErrorConflict(c, errors.New("Conflict"))
+//	lib.ErrorConflict(c) // default response message is Conflict
 func ErrorConflict(c *fiber.Ctx, message ...interface{}) error {
 	if len(message) == 0 {
 		message = append(message, "Conflict")

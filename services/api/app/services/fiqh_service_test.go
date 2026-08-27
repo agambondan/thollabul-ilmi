@@ -8,21 +8,21 @@ import (
 )
 
 type fakeFiqhRepo struct {
-	categories  []model.FiqhCategory
-	category    *model.FiqhCategory
-	items       []model.FiqhItem
-	item        *model.FiqhItem
-	err         error
-	itemErr     error
-	createCat   *model.FiqhCategory
-	createCatErr error
-	createItem  *model.FiqhItem
+	categories    []model.FiqhCategory
+	category      *model.FiqhCategory
+	items         []model.FiqhItem
+	item          *model.FiqhItem
+	err           error
+	itemErr       error
+	createCat     *model.FiqhCategory
+	createCatErr  error
+	createItem    *model.FiqhItem
 	createItemErr error
-	updateCat   *model.FiqhCategory
-	updateCatErr error
-	updateItem  *model.FiqhItem
+	updateCat     *model.FiqhCategory
+	updateCatErr  error
+	updateItem    *model.FiqhItem
 	updateItemErr error
-	deleteErr   error
+	deleteErr     error
 	deleteItemErr error
 }
 

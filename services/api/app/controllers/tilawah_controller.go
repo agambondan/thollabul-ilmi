@@ -115,4 +115,3 @@ func (c *tilawahController) Delete(ctx *fiber.Ctx) error {
 	}
 	return lib.OK(ctx)
 }
-

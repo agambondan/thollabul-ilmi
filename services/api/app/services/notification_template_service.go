@@ -12,7 +12,9 @@ type NotificationTemplateService interface {
 	Delete(int) error
 }
 
-type notificationTemplateService struct{ repo repository.NotificationTemplateRepository }
+type notificationTemplateService struct {
+	repo repository.NotificationTemplateRepository
+}
 
 func NewNotificationTemplateService(repo repository.NotificationTemplateRepository) NotificationTemplateService {
 	return &notificationTemplateService{repo}

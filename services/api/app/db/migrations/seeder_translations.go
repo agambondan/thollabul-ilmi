@@ -5,10 +5,10 @@ package migrations
 // upsert layer pairs these with the Indonesian text from the seed entry to
 // build a Translation row that backs the bilingual API response.
 type LocalizedText struct {
-	Title       string // English title
-	Latin       string // English transliteration override (optional, defaults to Indonesian latin)
-	Meaning     string // English meaning / description
-	Fadhilah    string // English fadhilah (dzikir-only, optional)
+	Title    string // English title
+	Latin    string // English transliteration override (optional, defaults to Indonesian latin)
+	Meaning  string // English meaning / description
+	Fadhilah string // English fadhilah (dzikir-only, optional)
 }
 
 // doaEnglishByKey returns English translations keyed by "category|title".

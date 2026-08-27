@@ -107,8 +107,8 @@ func seedMufrodat(db *gorm.DB, entries []AyahWordEntry, ayahIdx map[string]int, 
 
 func main() {
 	fromFlag := flag.Int("from", 1, "Mulai dari surah (inklusif)")
-	toFlag   := flag.Int("to", 114, "Sampai surah (inklusif)")
-	inFlag   := flag.String("in", "data/mufrodat.json", "Path file input")
+	toFlag := flag.Int("to", 114, "Sampai surah (inklusif)")
+	inFlag := flag.String("in", "data/mufrodat.json", "Path file input")
 	flag.Parse()
 
 	for _, f := range []string{".env.local", ".env"} {

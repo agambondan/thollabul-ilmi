@@ -5,9 +5,10 @@
 // - gadingnst/hadith-api (GitHub raw): Ahmad + Darimi → Arabic + Indonesia
 //
 // Usage:
-//   go run scripts/scrape_all.go
-//   go run scripts/scrape_all.go -imam bukhari
-//   go run scripts/scrape_all.go -workers 20
+//
+//	go run scripts/scrape_all.go
+//	go run scripts/scrape_all.go -imam bukhari
+//	go run scripts/scrape_all.go -workers 20
 package main
 
 import (
@@ -27,11 +28,11 @@ import (
 type HadithRow struct {
 	Number    int    `json:"number"`
 	Imam      string `json:"imam"`
-	SectionNo int    `json:"section_no"`  // chapter number dari fawazahmed0 reference.book
-	SectionEn string `json:"section_en"`  // chapter name dalam bahasa Inggris
-	Ar        string `json:"ar"`          // teks Arab → Translation.Ar
-	Idn       string `json:"idn"`         // terjemah Indonesia → Translation.Idn
-	En        string `json:"en"`          // terjemah Inggris → Translation.En
+	SectionNo int    `json:"section_no"` // chapter number dari fawazahmed0 reference.book
+	SectionEn string `json:"section_en"` // chapter name dalam bahasa Inggris
+	Ar        string `json:"ar"`         // teks Arab → Translation.Ar
+	Idn       string `json:"idn"`        // terjemah Indonesia → Translation.Idn
+	En        string `json:"en"`         // terjemah Inggris → Translation.En
 }
 
 // Mapping slug kita → nama di fawazahmed0 CDN
@@ -52,14 +53,14 @@ var gadingnstBooks = map[string]string{
 }
 
 const (
-	fawazBase    = "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions"
+	fawazBase     = "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions"
 	gadingnstBase = "https://raw.githubusercontent.com/gadingnst/hadith-api/master/books"
 )
 
 func main() {
 	imamFlag := flag.String("imam", "", "Scrape hanya satu imam")
-	workers  := flag.Int("workers", 6, "Jumlah goroutine paralel per edisi")
-	outDir   := flag.String("out", "./data", "Folder output")
+	workers := flag.Int("workers", 6, "Jumlah goroutine paralel per edisi")
+	outDir := flag.String("out", "./data", "Folder output")
 	flag.Parse()
 
 	if err := os.MkdirAll(*outDir, 0755); err != nil {
@@ -115,8 +116,8 @@ func scrapeFawaz(client *http.Client, imam, outDir string) {
 	}
 	type fawazFile struct {
 		Metadata struct {
-			Section        map[string]string      `json:"section"`         // per-hadith endpoint
-			Sections       map[string]string      `json:"sections"`        // bulk file (sering kosong)
+			Section        map[string]string        `json:"section"`         // per-hadith endpoint
+			Sections       map[string]string        `json:"sections"`        // bulk file (sering kosong)
 			SectionDetails map[string]sectionDetail `json:"section_details"` // bulk file
 		} `json:"metadata"`
 		Hadiths []fawazHadith `json:"hadiths"`
@@ -166,7 +167,10 @@ func scrapeFawaz(client *http.Client, imam, outDir string) {
 	}
 
 	// Kumpulkan section_details untuk tahu hadith pertama tiap section
-	type secRange struct{ no int; firstHadith int }
+	type secRange struct {
+		no          int
+		firstHadith int
+	}
 	var secRanges []secRange
 	for _, lang := range []string{"ind", "eng", "ara"} {
 		if ed, ok := editions[lang]; ok && len(ed.Metadata.SectionDetails) > 0 {
@@ -184,7 +188,10 @@ func scrapeFawaz(client *http.Client, imam, outDir string) {
 	// Fetch section names via per-hadith endpoint (paralel)
 	sectionNames := make(map[int]string)
 	if len(secRanges) > 0 {
-		type secResult struct{ no int; name string }
+		type secResult struct {
+			no   int
+			name string
+		}
 		sch := make(chan secResult, len(secRanges))
 		for _, sr := range secRanges {
 			go func(s secRange) {
@@ -213,7 +220,11 @@ func scrapeFawaz(client *http.Client, imam, outDir string) {
 	}
 
 	// Build index: hadithKey → text per language
-	type texts struct{ ar, idn, en string; number int; secNo int }
+	type texts struct {
+		ar, idn, en string
+		number      int
+		secNo       int
+	}
 	textMap := make(map[string]*texts)
 
 	for _, lang := range []string{"ara", "ind", "eng"} {

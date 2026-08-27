@@ -25,10 +25,10 @@ type HafalanProgress struct {
 }
 
 type HafalanSummary struct {
-	Total       int `json:"total"`
-	NotStarted  int `json:"not_started"`
-	InProgress  int `json:"in_progress"`
-	Memorized   int `json:"memorized"`
+	Total      int `json:"total"`
+	NotStarted int `json:"not_started"`
+	InProgress int `json:"in_progress"`
+	Memorized  int `json:"memorized"`
 }
 
 type UpdateHafalanRequest struct {

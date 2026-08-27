@@ -39,10 +39,10 @@ import (
 // ── Quran.com API v4 response types ─────────────────────────────────────────
 
 type QCWord struct {
-	ID           int    `json:"id"`
-	Position     int    `json:"position"`
-	TextUthmani  string `json:"text_uthmani"`
-	CharTypeName string `json:"char_type_name"` // "word" | "end"
+	ID              int         `json:"id"`
+	Position        int         `json:"position"`
+	TextUthmani     string      `json:"text_uthmani"`
+	CharTypeName    string      `json:"char_type_name"` // "word" | "end"
 	Transliteration *QCTranslit `json:"transliteration"`
 	Translation     *QCTranslit `json:"translation"`
 }
@@ -63,19 +63,19 @@ type QCVersesResponse struct {
 }
 
 type QCPagination struct {
-	PerPage     int  `json:"per_page"`
-	CurrentPage int  `json:"current_page"`
-	NextPage    *int `json:"next_page"`
-	TotalPages  int  `json:"total_pages"`
-	TotalRecords int `json:"total_records"`
+	PerPage      int  `json:"per_page"`
+	CurrentPage  int  `json:"current_page"`
+	NextPage     *int `json:"next_page"`
+	TotalPages   int  `json:"total_pages"`
+	TotalRecords int  `json:"total_records"`
 }
 
 // ── Importer ─────────────────────────────────────────────────────────────────
 
 type Importer struct {
-	db      *gorm.DB
-	client  *http.Client
-	delay   time.Duration
+	db     *gorm.DB
+	client *http.Client
+	delay  time.Duration
 	// ayahCache: surah_number:ayah_number → ayah.id
 	ayahCache map[string]int
 }
@@ -181,7 +181,7 @@ func (imp *Importer) importSurah(surahNumber int) (int, error) {
 					Indonesian:      indonesian,
 				}
 				result := imp.db.Clauses(clause.OnConflict{
-					Columns:   []clause.Column{{Name: "ayah_id"}, {Name: "word_index"}},
+					Columns: []clause.Column{{Name: "ayah_id"}, {Name: "word_index"}},
 					DoUpdates: clause.AssignmentColumns([]string{
 						"arabic", "transliteration", "indonesian",
 					}),
@@ -207,8 +207,8 @@ func (imp *Importer) importSurah(surahNumber int) (int, error) {
 
 func main() {
 	surahFlag := flag.Int("surah", 0, "Import satu surah saja (1-114). 0 = semua")
-	fromFlag  := flag.Int("from", 1, "Mulai dari surah (inklusif)")
-	toFlag    := flag.Int("to", 114, "Sampai surah (inklusif)")
+	fromFlag := flag.Int("from", 1, "Mulai dari surah (inklusif)")
+	toFlag := flag.Int("to", 114, "Sampai surah (inklusif)")
 	delayFlag := flag.Int("delay", 600, "Delay ms antar request ke quran.com")
 	flag.Parse()
 
@@ -243,9 +243,9 @@ func main() {
 	}
 
 	imp := &Importer{
-		db:    db,
+		db:     db,
 		client: &http.Client{Timeout: 30 * time.Second},
-		delay: time.Duration(*delayFlag) * time.Millisecond,
+		delay:  time.Duration(*delayFlag) * time.Millisecond,
 	}
 	imp.buildAyahIndex()
 
@@ -253,8 +253,12 @@ func main() {
 	if *surahFlag > 0 {
 		from, to = *surahFlag, *surahFlag
 	}
-	if from < 1 { from = 1 }
-	if to > 114 { to = 114 }
+	if from < 1 {
+		from = 1
+	}
+	if to > 114 {
+		to = 114
+	}
 
 	log.Printf("Import mufrodat surah %d–%d (delay %dms)...\n", from, to, *delayFlag)
 	start := time.Now()

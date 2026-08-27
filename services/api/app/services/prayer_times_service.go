@@ -22,8 +22,8 @@ type prayerTimesService struct{}
 func NewPrayerTimesService() PrayerTimesService { return &prayerTimesService{} }
 
 type calcMethod struct {
-	FajrAngle  float64
-	IshaAngle  float64
+	FajrAngle   float64
+	IshaAngle   float64
 	IshaMinutes float64 // >0 means fixed minutes after Maghrib instead of angle
 }
 
@@ -113,7 +113,7 @@ func (s *prayerTimesService) calculate(lat, lng float64, date time.Time, method,
 	jd := julianDay(date.Year(), int(date.Month()), date.Day())
 	decl, eqT := sunPosition(jd)
 
-	transit := 12 + (-lng/15) - eqT/60
+	transit := 12 + (-lng / 15) - eqT/60
 
 	sunrise := transit - hourAngle(lat, decl, 0.833)
 	sunset := transit + hourAngle(lat, decl, 0.833)

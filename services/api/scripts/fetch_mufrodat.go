@@ -24,7 +24,7 @@ import (
 // ── Quran.com API types ───────────────────────────────────────────────────────
 
 type qcVersesResp struct {
-	Verses     []qcVerse    `json:"verses"`
+	Verses     []qcVerse     `json:"verses"`
 	Pagination *qcPagination `json:"pagination"`
 }
 
@@ -34,9 +34,9 @@ type qcVerse struct {
 }
 
 type qcWord struct {
-	Position     int        `json:"position"`
-	TextUthmani  string     `json:"text_uthmani"`
-	CharTypeName string     `json:"char_type_name"`
+	Position        int     `json:"position"`
+	TextUthmani     string  `json:"text_uthmani"`
+	CharTypeName    string  `json:"char_type_name"`
 	Transliteration *qcText `json:"transliteration"`
 	Translation     *qcText `json:"translation"`
 }
@@ -52,7 +52,7 @@ type qcPagination struct {
 // ── Output JSON types ─────────────────────────────────────────────────────────
 
 type MufrodatFile struct {
-	GeneratedAt string         `json:"generated_at"`
+	GeneratedAt string          `json:"generated_at"`
 	Entries     []AyahWordEntry `json:"entries"`
 }
 
@@ -148,10 +148,10 @@ func fetchSurah(surahNum int, delay time.Duration) []AyahWordEntry {
 // ── main ──────────────────────────────────────────────────────────────────────
 
 func main() {
-	fromFlag  := flag.Int("from", 1, "Mulai dari surah")
-	toFlag    := flag.Int("to", 114, "Sampai surah")
+	fromFlag := flag.Int("from", 1, "Mulai dari surah")
+	toFlag := flag.Int("to", 114, "Sampai surah")
 	delayFlag := flag.Int("delay", 600, "Delay ms antar request")
-	outFlag   := flag.String("out", "data/mufrodat.json", "Output file path")
+	outFlag := flag.String("out", "data/mufrodat.json", "Output file path")
 	flag.Parse()
 
 	delay := time.Duration(*delayFlag) * time.Millisecond

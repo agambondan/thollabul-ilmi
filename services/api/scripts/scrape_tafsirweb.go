@@ -7,11 +7,13 @@
 // (Jalankan scripts/gen_tafsirweb_urls.py terlebih dahulu untuk generate file ini)
 //
 // Output: ./data/tafsirweb/{surah_number}/{ayat}.json
-//   tiap file: {"surah": N, "ayat": N, "text": "...tafsir ibnu katsir..."}
+//
+//	tiap file: {"surah": N, "ayat": N, "text": "...tafsir ibnu katsir..."}
 //
 // Usage:
-//   go run scripts/scrape_tafsirweb.go
-//   go run scripts/scrape_tafsirweb.go -workers 4 -out ./data/tafsirweb
+//
+//	go run scripts/scrape_tafsirweb.go
+//	go run scripts/scrape_tafsirweb.go -workers 4 -out ./data/tafsirweb
 package main
 
 import (
@@ -30,10 +32,10 @@ import (
 )
 
 type URLEntry struct {
-	Surah  string `json:"surah"`
-	Ayat   int    `json:"ayat"`
-	ID     int    `json:"id"`
-	URL    string `json:"url"`
+	Surah string `json:"surah"`
+	Ayat  int    `json:"ayat"`
+	ID    int    `json:"id"`
+	URL   string `json:"url"`
 }
 
 type AyatResult struct {
@@ -43,8 +45,8 @@ type AyatResult struct {
 }
 
 var (
-	htmlTagRe   = regexp.MustCompile(`<[^>]+>`)
-	entityRe    = regexp.MustCompile(`&#\d+;`)
+	htmlTagRe    = regexp.MustCompile(`<[^>]+>`)
+	entityRe     = regexp.MustCompile(`&#\d+;`)
 	multiSpaceRe = regexp.MustCompile(`\s{2,}`)
 )
 
@@ -103,7 +105,7 @@ func extractIbnuKatsir(html string) string {
 func main() {
 	urlFile := flag.String("urls", "./data/tafsirweb_urls.json", "File URL list dari gen_tafsirweb_urls.py")
 	mappingFile := flag.String("mapping", "./data/tafsirweb_mapping.json", "File slug→surah mapping")
-	outDir  := flag.String("out", "./data/tafsirweb", "Folder output")
+	outDir := flag.String("out", "./data/tafsirweb", "Folder output")
 	workers := flag.Int("workers", 4, "Goroutine paralel (jangan terlalu tinggi, bisa kena rate limit)")
 	flag.Parse()
 

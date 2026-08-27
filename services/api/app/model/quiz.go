@@ -9,10 +9,10 @@ import (
 type QuizType string
 
 const (
-	QuizTypeHafalan  QuizType = "hafalan"
-	QuizTypeFiqh     QuizType = "fiqh"
-	QuizTypeSirah    QuizType = "sirah"
-	QuizTypeHadith   QuizType = "hadith"
+	QuizTypeHafalan     QuizType = "hafalan"
+	QuizTypeFiqh        QuizType = "fiqh"
+	QuizTypeSirah       QuizType = "sirah"
+	QuizTypeHadith      QuizType = "hadith"
 	QuizTypeAsmaUlHusna QuizType = "asmaul_husna"
 )
 
@@ -31,10 +31,10 @@ type Quiz struct {
 
 type UserQuizResult struct {
 	BaseID
-	UserID      uuid.UUID `json:"user_id" gorm:"type:uuid;not null;index"`
-	QuizID      int       `json:"quiz_id" gorm:"not null;index"`
-	IsCorrect   bool      `json:"is_correct"`
-	AnsweredAt  time.Time `json:"answered_at"`
+	UserID     uuid.UUID `json:"user_id" gorm:"type:uuid;not null;index"`
+	QuizID     int       `json:"quiz_id" gorm:"not null;index"`
+	IsCorrect  bool      `json:"is_correct"`
+	AnsweredAt time.Time `json:"answered_at"`
 }
 
 type QuizSessionRequest struct {
@@ -47,8 +47,8 @@ type SubmitQuizRequest struct {
 }
 
 type QuizAnswer struct {
-	QuizID    int    `json:"quiz_id"`
-	Answer    string `json:"answer"`
+	QuizID int    `json:"quiz_id"`
+	Answer string `json:"answer"`
 }
 
 type QuizStats struct {

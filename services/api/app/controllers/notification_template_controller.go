@@ -15,7 +15,9 @@ type NotificationTemplateController interface {
 	Delete(ctx *fiber.Ctx) error
 }
 
-type notificationTemplateController struct{ svc service.NotificationTemplateService }
+type notificationTemplateController struct {
+	svc service.NotificationTemplateService
+}
 
 func NewNotificationTemplateController(services *service.Services) NotificationTemplateController {
 	return &notificationTemplateController{services.NotificationTemplate}

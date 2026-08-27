@@ -32,13 +32,13 @@ type Hadith struct {
 	Media           []HadithAsset `json:"media,omitempty"`
 
 	// Grading & authentication
-	Grade       *HadithGrade `json:"grade,omitempty" gorm:"type:varchar(30);index"`
-	ShahihBy    *string      `json:"shahih_by,omitempty" gorm:"type:text"`
-	DhaifBy     *string      `json:"dhaif_by,omitempty" gorm:"type:text"`
-	GradeNotes  *string      `json:"grade_notes,omitempty" gorm:"type:text"`
+	Grade      *HadithGrade `json:"grade,omitempty" gorm:"type:varchar(30);index"`
+	ShahihBy   *string      `json:"shahih_by,omitempty" gorm:"type:text"`
+	DhaifBy    *string      `json:"dhaif_by,omitempty" gorm:"type:text"`
+	GradeNotes *string      `json:"grade_notes,omitempty" gorm:"type:text"`
 
 	// Sanad (chain of narrators)
-	Sanad       *string      `json:"sanad,omitempty" gorm:"type:text"`
+	Sanad *string `json:"sanad,omitempty" gorm:"type:text"`
 }
 
 type HadithAsset struct {

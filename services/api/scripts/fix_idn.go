@@ -4,12 +4,14 @@
 // menggunakan sumber gadingnst/hadith-api yang nomornya konsisten dengan Arab/Inggris.
 //
 // Masalah yang diselesaikan:
-//   fawazahmed0 edisi Indonesia (ind) memakai penomoran berbeda dari edisi Arab/Inggris,
-//   sehingga beberapa hadits punya teks idn yang tidak sesuai dengan ar/en-nya.
+//
+//	fawazahmed0 edisi Indonesia (ind) memakai penomoran berbeda dari edisi Arab/Inggris,
+//	sehingga beberapa hadits punya teks idn yang tidak sesuai dengan ar/en-nya.
 //
 // Usage:
-//   go run scripts/fix_idn.go
-//   go run scripts/fix_idn.go -imam bukhari
+//
+//	go run scripts/fix_idn.go
+//	go run scripts/fix_idn.go -imam bukhari
 package main
 
 import (
@@ -21,8 +23,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/lib"
+	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

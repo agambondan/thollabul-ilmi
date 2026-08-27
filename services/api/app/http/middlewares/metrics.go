@@ -34,6 +34,7 @@ var (
 		Buckets: []float64{.001, .005, .01, .025, .05, .1, .25, .5, 1},
 	})
 )
+
 func MetricsMiddleware() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		start := time.Now()
@@ -71,4 +72,3 @@ func MetricsHandler() fiber.Handler {
 func ObserveDBQuery(duration time.Duration) {
 	dbQueryDuration.Observe(duration.Seconds())
 }
-

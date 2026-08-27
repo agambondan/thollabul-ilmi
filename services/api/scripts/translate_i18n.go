@@ -21,8 +21,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/lib"
+	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -44,7 +44,7 @@ type myMemoryResponse struct {
 		TranslatedText string  `json:"translatedText"`
 		Match          float64 `json:"match"`
 	} `json:"responseData"`
-	ResponseStatus int    `json:"responseStatus"`
+	ResponseStatus  int    `json:"responseStatus"`
 	ResponseDetails string `json:"responseDetails"`
 }
 

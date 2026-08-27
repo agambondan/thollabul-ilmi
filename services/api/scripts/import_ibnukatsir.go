@@ -4,8 +4,9 @@
 // Update field Translation.En pada IbnuKatsirTranslation yang sudah ada.
 //
 // Usage:
-//   go run scripts/import_ibnukatsir.go
-//   go run scripts/import_ibnukatsir.go -data ./data/ibnukatsir
+//
+//	go run scripts/import_ibnukatsir.go
+//	go run scripts/import_ibnukatsir.go -data ./data/ibnukatsir
 package main
 
 import (
@@ -19,8 +20,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/lib"
+	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

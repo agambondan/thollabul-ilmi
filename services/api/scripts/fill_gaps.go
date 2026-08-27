@@ -3,22 +3,23 @@
 // fill_gaps.go — mengisi celah data di file hadits_*.json
 //
 // Sumber pengisian:
-//   1. gadingnst/hadith-api (GitHub raw) → mengisi field `idn` yang kosong
-//      untuk 7 kitab fawazahmed0: bukhari, muslim, abudaud, tirmidzi,
-//      nasai, ibnumajah, malik
-//   2. sunnah.com (HTML scraping) → mengisi `en` dan `section_no`/`section_en`
-//      untuk Ahmad (hanya hadits nomor 1–1438 yang tersedia terjemahan Inggris)
+//  1. gadingnst/hadith-api (GitHub raw) → mengisi field `idn` yang kosong
+//     untuk 7 kitab fawazahmed0: bukhari, muslim, abudaud, tirmidzi,
+//     nasai, ibnumajah, malik
+//  2. sunnah.com (HTML scraping) → mengisi `en` dan `section_no`/`section_en`
+//     untuk Ahmad (hanya hadits nomor 1–1438 yang tersedia terjemahan Inggris)
 //
 // Note:
 //   - Darimi English: sunnah.com menyatakan "has not been translated into English yet"
 //     → tidak ada sumber gratis yang valid, field en tetap kosong
 //   - Ahmad/Darimi section_en: Darimi tidak tersedia dalam bahasa Inggris di sunnah.com
-//   3. sunnah.com (per-hadith lookup) → mengisi section_no/section_en untuk hadits
-//      di fawazahmed0 books yang section_no=0 (Reference.Book=0 di sumber asli)
+//     3. sunnah.com (per-hadith lookup) → mengisi section_no/section_en untuk hadits
+//     di fawazahmed0 books yang section_no=0 (Reference.Book=0 di sumber asli)
 //
 // Usage:
-//   go run scripts/fill_gaps.go
-//   go run scripts/fill_gaps.go -data ./data -workers 10
+//
+//	go run scripts/fill_gaps.go
+//	go run scripts/fill_gaps.go -data ./data -workers 10
 package main
 
 import (
@@ -83,15 +84,15 @@ const (
 var ahmadBooks = []int{1, 2, 3, 4, 5, 6, 7}
 
 func main() {
-	dataDir  := flag.String("data", "./data", "Folder berisi file hadits_*.json")
-	workers  := flag.Int("workers", 5, "Jumlah goroutine paralel")
+	dataDir := flag.String("data", "./data", "Folder berisi file hadits_*.json")
+	workers := flag.Int("workers", 5, "Jumlah goroutine paralel")
 	skipPhase := flag.String("skip", "", "Lewati phase tertentu, e.g. '12' untuk skip phase 1 dan 2")
 	flag.Parse()
 
 	client := &http.Client{Timeout: 30 * time.Second}
 
 	skip := *skipPhase
-	sem  := make(chan struct{}, *workers)
+	sem := make(chan struct{}, *workers)
 
 	// ── Phase 1: Isi idn gaps dari gadingnst ────────────────────────────────
 	if !strings.Contains(skip, "1") {
@@ -274,15 +275,15 @@ func fillAhmadFromSunnah(client *http.Client, path string) error {
 
 // Regex precompiled
 var (
-	reMusnадNum  = regexp.MustCompile(`Musnad Ahmad (\d+)`)
-	reEnFull     = regexp.MustCompile(`class="english_hadith_full">(.*?)</div>\s*</div>`)
-	reEnHtc      = regexp.MustCompile(`id=htc(\d+)>(.*?)(?:id=htc\d+|</div>\s*</div>\s*</div>\s*</div>)`)
-	reBookEnName = regexp.MustCompile(`(?s)class="book_page_english_name"[^>]*>(.*?)</div>`)
-	reStripTags  = regexp.MustCompile(`<[^>]+>`)
+	reMusnадNum   = regexp.MustCompile(`Musnad Ahmad (\d+)`)
+	reEnFull      = regexp.MustCompile(`class="english_hadith_full">(.*?)</div>\s*</div>`)
+	reEnHtc       = regexp.MustCompile(`id=htc(\d+)>(.*?)(?:id=htc\d+|</div>\s*</div>\s*</div>\s*</div>)`)
+	reBookEnName  = regexp.MustCompile(`(?s)class="book_page_english_name"[^>]*>(.*?)</div>`)
+	reStripTags   = regexp.MustCompile(`<[^>]+>`)
 	reEnContainer = regexp.MustCompile(`id=t(\d+)>.*?class="english_hadith_full">(.*?)</div>\s*</div>`)
-	reHtcBlock   = regexp.MustCompile(`(?s)class="hadithTextContainers"[^>]*id=htc(\d+)>(.*?)(?:class="hadithTextContainers"|$)`)
-	reRefNum     = regexp.MustCompile(`reference_sticky">\s*Musnad Ahmad\s+(\d+)`)
-	reHtcID      = regexp.MustCompile(`id=htc(\d+)`)
+	reHtcBlock    = regexp.MustCompile(`(?s)class="hadithTextContainers"[^>]*id=htc(\d+)>(.*?)(?:class="hadithTextContainers"|$)`)
+	reRefNum      = regexp.MustCompile(`reference_sticky">\s*Musnad Ahmad\s+(\d+)`)
+	reHtcID       = regexp.MustCompile(`id=htc(\d+)`)
 )
 
 func scrapeAhmadBook(client *http.Client, url string, bookNo int) (map[int]hadithInfo, error) {
@@ -406,11 +407,11 @@ func fillSectionFromSunnah(client *http.Client, imam, dataDir string, concurrenc
 		sectionEn string
 	}
 
-	reColl  := regexp.MustCompile(`(?s)class="book_page_english_name"[^>]*>(.*?)</div>`)
+	reColl := regexp.MustCompile(`(?s)class="book_page_english_name"[^>]*>(.*?)</div>`)
 	reBookN := regexp.MustCompile(`href="/` + collection + `/(\d+)"`)
 
 	sem2 := make(chan struct{}, concurrency)
-	out  := make(chan result, len(targets))
+	out := make(chan result, len(targets))
 
 	for _, idx := range targets {
 		sem2 <- struct{}{}

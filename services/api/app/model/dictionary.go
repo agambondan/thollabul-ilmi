@@ -3,12 +3,12 @@ package model
 type TermCategory string
 
 const (
-	TermCategoryFiqh       TermCategory = "fiqh"
-	TermCategoryAqidah     TermCategory = "aqidah"
-	TermCategoryTasawuf    TermCategory = "tasawuf"
+	TermCategoryFiqh        TermCategory = "fiqh"
+	TermCategoryAqidah      TermCategory = "aqidah"
+	TermCategoryTasawuf     TermCategory = "tasawuf"
 	TermCategoryUlumulQuran TermCategory = "ulumul_quran"
-	TermCategoryHadith     TermCategory = "hadith"
-	TermCategoryLainnya    TermCategory = "lainnya"
+	TermCategoryHadith      TermCategory = "hadith"
+	TermCategoryLainnya     TermCategory = "lainnya"
 )
 
 type IslamicTerm struct {

@@ -77,12 +77,12 @@ type WordItem struct {
 // ── DB row types ──────────────────────────────────────────────────────────────
 
 type surahRow struct {
-	SurahNumber    int
-	NameAr         string
-	NameEn         string
+	SurahNumber     int
+	NameAr          string
+	NameEn          string
 	NameTranslation string
-	Slug           string
-	RevelationType string
+	Slug            string
+	RevelationType  string
 }
 
 type ayahRow struct {
@@ -260,10 +260,10 @@ func writeJSON(path string, v interface{}) error {
 // ── main ──────────────────────────────────────────────────────────────────────
 
 func main() {
-	dumpQuranFlag    := flag.Bool("quran", false, "Dump quran_base saja")
+	dumpQuranFlag := flag.Bool("quran", false, "Dump quran_base saja")
 	dumpMufrodatFlag := flag.Bool("mufrodat", false, "Dump mufrodat saja")
-	outQuranFlag     := flag.String("out-quran", "data/quran_base.json", "Output quran_base")
-	outMufrodatFlag  := flag.String("out-mufrodat", "data/mufrodat.json", "Output mufrodat")
+	outQuranFlag := flag.String("out-quran", "data/quran_base.json", "Output quran_base")
+	outMufrodatFlag := flag.String("out-mufrodat", "data/mufrodat.json", "Output mufrodat")
 	flag.Parse()
 
 	// Default: dump semua

@@ -5,8 +5,9 @@
 //   - ind-muhammadquraish : Tafsir Quraish Shihab (Indonesia) → ibnu_katsir slot
 //
 // Usage:
-//   go run scripts/scrape_tafsir.go
-//   go run scripts/scrape_tafsir.go -workers 10 -out ./data/tafsir
+//
+//	go run scripts/scrape_tafsir.go
+//	go run scripts/scrape_tafsir.go -workers 10 -out ./data/tafsir
 package main
 
 import (
@@ -27,8 +28,8 @@ const (
 )
 
 var editions = []string{
-	"ind-jalaladdinalmah",  // Jalalayn Indonesian
-	"ind-muhammadquraish",  // Quraish Shihab
+	"ind-jalaladdinalmah", // Jalalayn Indonesian
+	"ind-muhammadquraish", // Quraish Shihab
 }
 
 type VerseRow struct {
@@ -43,7 +44,7 @@ type SurahFile struct {
 
 func main() {
 	workers := flag.Int("workers", 8, "Jumlah goroutine paralel")
-	outDir  := flag.String("out", "./data/tafsir", "Folder output")
+	outDir := flag.String("out", "./data/tafsir", "Folder output")
 	flag.Parse()
 
 	client := &http.Client{Timeout: 30 * time.Second}

@@ -68,6 +68,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 
 	newServices := service.NewServices(repo)
 	newUserController := controllers.NewUserController(newServices)
+	newGoogleAuthController := controllers.NewGoogleAuthController(newServices.User)
 	newAyahController := controllers.NewAyahController(newServices)
 	newSurahController := controllers.NewSurahController(newServices)
 	newJuzController := controllers.NewJuzController(newServices)
@@ -214,6 +215,10 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Post("/auth/logout", newUserController.Logout)
 	master.Post("/auth/forgot-password", authLimiter, newUserController.ForgotPassword)
 	master.Post("/auth/reset-password", authLimiter, newUserController.ResetPassword)
+
+	// Google OAuth
+	master.Get("/auth/google", authLimiter, newGoogleAuthController.Login)
+	master.Get("/auth/google/callback", authLimiter, newGoogleAuthController.Callback)
 
 	// Middleware vars — declared early so they can be used on Quran write routes
 	jwt := middlewares.JWTAuth()

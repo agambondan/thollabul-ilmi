@@ -370,12 +370,12 @@ func (d *dumper) dumpAchievements() {
 // ── Quiz ──────────────────────────────────────────────────────────────────────
 
 type quizRow struct {
-	Type         string `json:"type"`
-	Difficulty   string `json:"difficulty"`
-	QuestionText string `json:"question_text"`
+	Type          string `json:"type"`
+	Difficulty    string `json:"difficulty"`
+	QuestionText  string `json:"question_text"`
 	CorrectAnswer string `json:"correct_answer"`
-	Options      string `json:"options"`
-	Explanation  string `json:"explanation"`
+	Options       string `json:"options"`
+	Explanation   string `json:"explanation"`
 }
 
 func (d *dumper) dumpQuizQuestions() {
@@ -574,4 +574,3 @@ func (d *dumper) dumpPerawiGuru() {
 	`).Scan(&rows)
 	d.save("perawi_guru.json", rows)
 }
-

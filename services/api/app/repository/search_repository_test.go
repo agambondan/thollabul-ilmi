@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func intPtr(i int) *int { return &i }
+func intPtr(i int) *int       { return &i }
 func strPtr(s string) *string { return &s }
 
 func newSearchTestDB(t *testing.T) *gorm.DB {

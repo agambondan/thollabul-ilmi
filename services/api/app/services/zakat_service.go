@@ -9,29 +9,29 @@ import (
 )
 
 type ZakatMaalRequest struct {
-	TotalWealth    float64 `json:"total_wealth" validate:"min=0"`
+	TotalWealth      float64 `json:"total_wealth" validate:"min=0"`
 	GoldPricePerGram float64 `json:"gold_price_per_gram" validate:"min=0"`
 }
 
 type ZakatFitrahRequest struct {
-	PersonCount    int     `json:"person_count" validate:"required,min=1"`
+	PersonCount      int     `json:"person_count" validate:"required,min=1"`
 	StaplePricePerKg float64 `json:"staple_price_per_kg" validate:"min=0"`
 }
 
 type ZakatMaalResult struct {
-	TotalWealth    float64 `json:"total_wealth"`
-	Nishab         float64 `json:"nishab"`
-	IsObligated    bool    `json:"is_obligated"`
-	ZakatAmount    float64 `json:"zakat_amount"`
-	Rate           float64 `json:"rate"`
-	NishabGrams    float64 `json:"nishab_grams"`
-	GoldPriceUsed  float64 `json:"gold_price_used"`
+	TotalWealth   float64 `json:"total_wealth"`
+	Nishab        float64 `json:"nishab"`
+	IsObligated   bool    `json:"is_obligated"`
+	ZakatAmount   float64 `json:"zakat_amount"`
+	Rate          float64 `json:"rate"`
+	NishabGrams   float64 `json:"nishab_grams"`
+	GoldPriceUsed float64 `json:"gold_price_used"`
 }
 
 type ZakatFitrahResult struct {
-	PersonCount    int     `json:"person_count"`
-	PerPersonRice  float64 `json:"per_person_rice_kg"`
-	TotalRice      float64 `json:"total_rice_kg"`
+	PersonCount     int     `json:"person_count"`
+	PerPersonRice   float64 `json:"per_person_rice_kg"`
+	TotalRice       float64 `json:"total_rice_kg"`
 	MoneyEquivalent float64 `json:"money_equivalent"`
 }
 

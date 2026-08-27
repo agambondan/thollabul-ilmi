@@ -4,8 +4,9 @@
 // Update/replace field Translation.Idn pada IbnuKatsirTranslation.
 //
 // Usage:
-//   go run scripts/import_tafsirweb.go
-//   go run scripts/import_tafsirweb.go -data ./data/tafsirweb
+//
+//	go run scripts/import_tafsirweb.go
+//	go run scripts/import_tafsirweb.go -data ./data/tafsirweb
 package main
 
 import (
@@ -17,8 +18,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/lib"
+	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

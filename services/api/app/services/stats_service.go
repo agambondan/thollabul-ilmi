@@ -18,12 +18,12 @@ type StatsResponse struct {
 }
 
 type MonthlyRecap struct {
-	Year          int     `json:"year"`
-	Month         int     `json:"month"`
-	ActiveDays    int     `json:"active_days"`
-	TilawahPages  int     `json:"tilawah_pages"`
-	TilawahJuz    float64 `json:"tilawah_juz"`
-	TilawahLogs   int     `json:"tilawah_logs"`
+	Year         int     `json:"year"`
+	Month        int     `json:"month"`
+	ActiveDays   int     `json:"active_days"`
+	TilawahPages int     `json:"tilawah_pages"`
+	TilawahJuz   float64 `json:"tilawah_juz"`
+	TilawahLogs  int     `json:"tilawah_logs"`
 }
 
 type YearlyRecap struct {

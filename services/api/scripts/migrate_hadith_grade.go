@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/lib"
+	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -100,8 +100,8 @@ func main() {
 		res := db.Model(&model.Hadith{}).
 			Where("book_id = ? AND grade IS NULL AND deleted_at IS NULL", bookID).
 			Updates(map[string]interface{}{
-				"grade":      grade,
-				"shahih_by":  shahihBy,
+				"grade":       grade,
+				"shahih_by":   shahihBy,
 				"grade_notes": notes,
 			})
 		if res.Error != nil {

@@ -4,11 +4,13 @@
 // Source: quran.com / qurancdn.com API, tafsir ID 169 (Ibn Kathir Abridged)
 //
 // Output: ./data/ibnukatsir/{surah}.json
-//   tiap file: array of {"verse_key":"1:1","text":"...stripped HTML..."}
+//
+//	tiap file: array of {"verse_key":"1:1","text":"...stripped HTML..."}
 //
 // Usage:
-//   go run scripts/scrape_ibnukatsir.go
-//   go run scripts/scrape_ibnukatsir.go -workers 6 -out ./data/ibnukatsir
+//
+//	go run scripts/scrape_ibnukatsir.go
+//	go run scripts/scrape_ibnukatsir.go -workers 6 -out ./data/ibnukatsir
 package main
 
 import (
@@ -62,7 +64,7 @@ func stripHTML(s string) string {
 
 func main() {
 	workers := flag.Int("workers", 6, "Jumlah goroutine paralel")
-	outDir  := flag.String("out", "./data/ibnukatsir", "Folder output")
+	outDir := flag.String("out", "./data/ibnukatsir", "Folder output")
 	flag.Parse()
 
 	if err := os.MkdirAll(*outDir, 0755); err != nil {

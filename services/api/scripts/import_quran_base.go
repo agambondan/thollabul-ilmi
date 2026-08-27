@@ -4,9 +4,10 @@
 // Jalankan SEBELUM import_mufrodat.go jika DB masih kosong.
 //
 // Sumber:
-//   https://api.alquran.cloud/v1/quran/quran-uthmani      → Arab (uthmani)
-//   https://api.alquran.cloud/v1/quran/id.indonesian       → Terjemahan Indonesia
-//   https://api.alquran.cloud/v1/quran/en.transliteration  → Transliterasi Latin
+//
+//	https://api.alquran.cloud/v1/quran/quran-uthmani      → Arab (uthmani)
+//	https://api.alquran.cloud/v1/quran/id.indonesian       → Terjemahan Indonesia
+//	https://api.alquran.cloud/v1/quran/en.transliteration  → Transliterasi Latin
 //
 // Usage:
 //
@@ -102,9 +103,9 @@ type QuranImporter struct {
 
 func (imp *QuranImporter) run(from, to int, arabicSurahs, latinSurahs, idnSurahs []AQSurah) {
 	// Build maps: surah_number → ayah_number → text
-	arabicMap  := buildTextMap(arabicSurahs)
-	latinMap   := buildTextMap(latinSurahs)
-	idnMap     := buildTextMap(idnSurahs)
+	arabicMap := buildTextMap(arabicSurahs)
+	latinMap := buildTextMap(latinSurahs)
+	idnMap := buildTextMap(idnSurahs)
 	surahInfos := buildSurahMap(arabicSurahs)
 
 	for surahNum := from; surahNum <= to; surahNum++ {
@@ -158,14 +159,14 @@ func (imp *QuranImporter) run(from, to int, arabicSurahs, latinSurahs, idnSurahs
 		ayahCount := 0
 		for ayahNum := 1; ayahNum <= numAyahs; ayahNum++ {
 			arabic := arabicMap[surahNum][ayahNum]
-			latin  := latinMap[surahNum][ayahNum]
-			idn    := idnMap[surahNum][ayahNum]
+			latin := latinMap[surahNum][ayahNum]
+			idn := idnMap[surahNum][ayahNum]
 
 			// Upsert ayah Translation
 			var tr model.Translation
-			tr.Ar      = lib.Strptr(arabic)
+			tr.Ar = lib.Strptr(arabic)
 			tr.LatinEn = lib.Strptr(latin)
-			tr.Idn     = lib.Strptr(idn)
+			tr.Idn = lib.Strptr(idn)
 
 			trResult := imp.db.Clauses(clause.OnConflict{
 				Columns:   []clause.Column{{Name: "id"}},
@@ -184,13 +185,13 @@ func (imp *QuranImporter) run(from, to int, arabicSurahs, latinSurahs, idnSurahs
 				TranslationID: tr.ID,
 			}
 			if aqAyah != nil {
-				ayah.JuzNumber    = lib.Intptr(aqAyah.Juz)
-				ayah.Manzil      = lib.Intptr(aqAyah.Manzil)
-				ayah.Page        = lib.Intptr(aqAyah.Page)
-				ayah.Ruku        = lib.Intptr(aqAyah.Ruku)
+				ayah.JuzNumber = lib.Intptr(aqAyah.Juz)
+				ayah.Manzil = lib.Intptr(aqAyah.Manzil)
+				ayah.Page = lib.Intptr(aqAyah.Page)
+				ayah.Ruku = lib.Intptr(aqAyah.Ruku)
 				ayah.HizbQuarter = lib.Intptr(aqAyah.HizbQuarter)
 				sajda := aqAyah.IsSajda()
-				ayah.Sajda       = &sajda
+				ayah.Sajda = &sajda
 			}
 
 			// Upsert ayah by (surah_id, number)
@@ -262,7 +263,7 @@ func getAQAyah(surahs []AQSurah, surahNum, ayahNum int) *AQAyah {
 
 func main() {
 	fromFlag := flag.Int("from", 1, "Mulai dari surah (inklusif)")
-	toFlag   := flag.Int("to", 114, "Sampai surah (inklusif)")
+	toFlag := flag.Int("to", 114, "Sampai surah (inklusif)")
 	flag.Parse()
 
 	for _, f := range []string{".env.local", ".env"} {
@@ -315,8 +316,8 @@ func main() {
 		}
 	}
 	arabicSurahs := results[0].surahs
-	idnSurahs    := results[1].surahs
-	latinSurahs  := results[2].surahs
+	idnSurahs := results[1].surahs
+	latinSurahs := results[2].surahs
 
 	imp := &QuranImporter{db: db}
 	start := time.Now()

@@ -128,6 +128,16 @@ export const AuthProvider = ({ children }) => {
         return data;
     };
 
+    const setSession = (newToken) => {
+        if (!newToken) return;
+        const actualToken = typeof newToken === 'string' ? newToken : (newToken.token || newToken.access_token);
+        if (actualToken) {
+            localStorage.setItem('auth_token', actualToken);
+            setToken(actualToken);
+            fetchMe(actualToken);
+        }
+    };
+
     const refetchUser = () => {
         const tok =
             typeof window !== 'undefined'
@@ -159,6 +169,7 @@ export const AuthProvider = ({ children }) => {
                 register,
                 logout,
                 refetchUser,
+                setSession,
                 doRefresh,
             }}
         >

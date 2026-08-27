@@ -8,19 +8,19 @@ import (
 )
 
 type fakeSearchRepo struct {
-	ayahs   []model.Ayah
-	ayahTot int64
-	hadiths []model.Hadith
+	ayahs     []model.Ayah
+	ayahTot   int64
+	hadiths   []model.Hadith
 	hadithTot int64
-	dicts   []model.IslamicTerm
-	dictTot int64
-	doas    []model.Doa
-	doaTot  int64
-	kajians []model.Kajian
+	dicts     []model.IslamicTerm
+	dictTot   int64
+	doas      []model.Doa
+	doaTot    int64
+	kajians   []model.Kajian
 	kajianTot int64
-	perawis []model.Perawi
+	perawis   []model.Perawi
 	perawiTot int64
-	err     error
+	err       error
 }
 
 func (f *fakeSearchRepo) SearchAyah(query string, limit, offset int) ([]model.Ayah, int64, error) {
@@ -66,17 +66,17 @@ func TestSearchServiceSingleTypeReturnsTotal(t *testing.T) {
 
 func TestSearchServiceAllTypeSumsAllTotals(t *testing.T) {
 	repo := &fakeSearchRepo{
-		ayahs:   make([]model.Ayah, 3),
-		ayahTot: 50,
+		ayahs:     make([]model.Ayah, 3),
+		ayahTot:   50,
 		hadiths:   make([]model.Hadith, 3),
 		hadithTot: 72,
-		dicts:   make([]model.IslamicTerm, 2),
-		dictTot: 10,
-		doas:    make([]model.Doa, 2),
-		doaTot:  8,
-		kajians: make([]model.Kajian, 2),
+		dicts:     make([]model.IslamicTerm, 2),
+		dictTot:   10,
+		doas:      make([]model.Doa, 2),
+		doaTot:    8,
+		kajians:   make([]model.Kajian, 2),
 		kajianTot: 5,
-		perawis: make([]model.Perawi, 2),
+		perawis:   make([]model.Perawi, 2),
 		perawiTot: 3,
 	}
 	svc := NewSearchService(repo)
@@ -99,17 +99,17 @@ func TestSearchServiceAllTypeSumsAllTotals(t *testing.T) {
 
 func TestSearchServiceAllTypeEachCategoryGetsLimitDivided(t *testing.T) {
 	repo := &fakeSearchRepo{
-		ayahs:   make([]model.Ayah, 3),
-		ayahTot: 50,
+		ayahs:     make([]model.Ayah, 3),
+		ayahTot:   50,
 		hadiths:   make([]model.Hadith, 3),
 		hadithTot: 72,
-		dicts:   make([]model.IslamicTerm, 3),
-		dictTot: 10,
-		doas:    make([]model.Doa, 3),
-		doaTot:  8,
-		kajians: make([]model.Kajian, 3),
+		dicts:     make([]model.IslamicTerm, 3),
+		dictTot:   10,
+		doas:      make([]model.Doa, 3),
+		doaTot:    8,
+		kajians:   make([]model.Kajian, 3),
 		kajianTot: 5,
-		perawis: make([]model.Perawi, 3),
+		perawis:   make([]model.Perawi, 3),
 		perawiTot: 3,
 	}
 	svc := NewSearchService(repo)
@@ -175,17 +175,17 @@ func TestSearchServiceLimitsBounds(t *testing.T) {
 
 func TestSearchServiceUnknownTypeDefaultsToAll(t *testing.T) {
 	repo := &fakeSearchRepo{
-		ayahs:   make([]model.Ayah, 2),
-		ayahTot: 10,
+		ayahs:     make([]model.Ayah, 2),
+		ayahTot:   10,
 		hadiths:   make([]model.Hadith, 2),
 		hadithTot: 10,
-		dicts:   make([]model.IslamicTerm, 2),
-		dictTot: 10,
-		doas:    make([]model.Doa, 2),
-		doaTot:  10,
-		kajians: make([]model.Kajian, 2),
+		dicts:     make([]model.IslamicTerm, 2),
+		dictTot:   10,
+		doas:      make([]model.Doa, 2),
+		doaTot:    10,
+		kajians:   make([]model.Kajian, 2),
 		kajianTot: 10,
-		perawis: make([]model.Perawi, 2),
+		perawis:   make([]model.Perawi, 2),
 		perawiTot: 10,
 	}
 	svc := NewSearchService(repo)

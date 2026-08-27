@@ -10,13 +10,13 @@ import (
 )
 
 type fakeSurahRepo struct {
-	surah            *model.Surah
-	count            int64
-	findByNumberErr  error
+	surah           *model.Surah
+	count           int64
+	findByNumberErr error
 }
 
-func (f *fakeSurahRepo) Save(s *model.Surah) (*model.Surah, error)        { return s, nil }
-func (f *fakeSurahRepo) FindAll(ctx *fiber.Ctx) *paginate.Page            { return &paginate.Page{} }
+func (f *fakeSurahRepo) Save(s *model.Surah) (*model.Surah, error) { return s, nil }
+func (f *fakeSurahRepo) FindAll(ctx *fiber.Ctx) *paginate.Page     { return &paginate.Page{} }
 func (f *fakeSurahRepo) FindById(ctx *fiber.Ctx, id *int) (*model.Surah, error) {
 	return f.surah, nil
 }

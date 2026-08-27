@@ -52,22 +52,22 @@ type BlogPost struct {
 }
 
 type CreateBlogPostRequest struct {
-	Title      string  `json:"title" validate:"required,max=512"`
-	Excerpt    string  `json:"excerpt" validate:"max=1000"`
-	Content    string  `json:"content" validate:"required,max=50000"`
-	CoverImage *string `json:"cover_image"`
-	CategoryID *int    `json:"category_id"`
-	Tags       []int   `json:"tags"`
+	Title      string     `json:"title" validate:"required,max=512"`
+	Excerpt    string     `json:"excerpt" validate:"max=1000"`
+	Content    string     `json:"content" validate:"required,max=50000"`
+	CoverImage *string    `json:"cover_image"`
+	CategoryID *int       `json:"category_id"`
+	Tags       []int      `json:"tags"`
 	Status     BlogStatus `json:"status"`
 }
 
 type UpdateBlogPostRequest struct {
-	Title      *string    `json:"title"`
-	Excerpt    *string    `json:"excerpt"`
-	Content    *string    `json:"content"`
-	CoverImage *string    `json:"cover_image"`
-	CategoryID *int       `json:"category_id"`
-	Tags       []int      `json:"tags"`
+	Title      *string     `json:"title"`
+	Excerpt    *string     `json:"excerpt"`
+	Content    *string     `json:"content"`
+	CoverImage *string     `json:"cover_image"`
+	CategoryID *int        `json:"category_id"`
+	Tags       []int       `json:"tags"`
 	Status     *BlogStatus `json:"status"`
 }
 

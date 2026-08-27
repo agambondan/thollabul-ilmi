@@ -23,6 +23,7 @@ var (
 type UserService interface {
 	Register(*model.RegisterRequest) (*model.User, error)
 	Login(*model.LoginRequest) (*model.LoginResponse, error)
+	FindOrCreateOAuthUser(email, name, picture, provider, providerID string) (*model.LoginResponse, error)
 	RefreshAccessToken(refreshToken string) (*model.LoginResponse, error)
 	FindSessions(userID, currentRefreshToken string) ([]model.AuthSession, error)
 	RevokeSession(userID string, sessionID uint, currentRefreshToken string) error
@@ -265,4 +266,46 @@ func createToken(userID, email, role, preferredLang string) (string, error) {
 		secret = "tholabul-ilmi-secret"
 	}
 	return token.SignedString([]byte(secret))
+}
+
+func (s *userService) FindOrCreateOAuthUser(email, name, picture, provider, providerID string) (*model.LoginResponse, error) {
+	user, err := s.user.FindByEmail(email)
+	if err != nil {
+		id := uuid.New()
+		hashed := lib.PasswordEncrypt(uuid.New().String())
+		user = &model.User{
+			BaseUUID: model.BaseUUID{ID: id},
+			Name:     lib.Strptr(name),
+			Email:    lib.Strptr(email),
+			Password: lib.Strptr(hashed),
+			Avatar:   lib.Strptr(picture),
+			Role:     model.RoleUser,
+		}
+		saved, saveErr := s.user.Save(user)
+		if saveErr != nil {
+			return nil, saveErr
+		}
+		user = saved
+	}
+
+	lang := ""
+	if user.PreferredLang != nil {
+		lang = *user.PreferredLang
+	}
+	token, err := createToken(user.ID.String(), *user.Email, string(user.Role), lang)
+	if err != nil {
+		return nil, err
+	}
+
+	refreshToken := uuid.New().String()
+	if err := s.user.SaveRefreshToken(user.ID.String(), refreshToken, time.Now().Add(7*24*time.Hour)); err != nil {
+		return nil, err
+	}
+
+	user.Password = nil
+	return &model.LoginResponse{
+		Token:        token,
+		RefreshToken: refreshToken,
+		User:         user,
+	}, nil
 }

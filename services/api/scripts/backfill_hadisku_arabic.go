@@ -10,10 +10,11 @@
 //   - It does not update Indonesian translation or grading.
 //
 // Usage:
-//   go run scripts/backfill_hadisku_arabic.go
-//   go run scripts/backfill_hadisku_arabic.go -book ahmad -apply-files
-//   go run scripts/backfill_hadisku_arabic.go -book ahmad -apply-db
-//   go run scripts/backfill_hadisku_arabic.go -book ahmad -apply-files -apply-db
+//
+//	go run scripts/backfill_hadisku_arabic.go
+//	go run scripts/backfill_hadisku_arabic.go -book ahmad -apply-files
+//	go run scripts/backfill_hadisku_arabic.go -book ahmad -apply-db
+//	go run scripts/backfill_hadisku_arabic.go -book ahmad -apply-files -apply-db
 package main
 
 import (

@@ -3,10 +3,10 @@ package model
 type HistoryCategory string
 
 const (
-	HistoryCategoryNabi     HistoryCategory = "nabi"
-	HistoryCategoryKhulafa  HistoryCategory = "khulafa"
-	HistoryCategoryDinasti  HistoryCategory = "dinasti"
-	HistoryCategoryUlama    HistoryCategory = "ulama"
+	HistoryCategoryNabi      HistoryCategory = "nabi"
+	HistoryCategoryKhulafa   HistoryCategory = "khulafa"
+	HistoryCategoryDinasti   HistoryCategory = "dinasti"
+	HistoryCategoryUlama     HistoryCategory = "ulama"
 	HistoryCategoryPeristiwa HistoryCategory = "peristiwa"
 )
 
