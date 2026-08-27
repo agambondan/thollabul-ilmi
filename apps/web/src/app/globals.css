@@ -201,7 +201,7 @@ tajweed.idgh_mus:hover {
 
 @font-face {
     font-family: 'NooreHidayah';
-    src: url('//cdn.alquran.cloud/public/fonts/noorehidayat.ttf');
+    src: url('/fonts/noorehidayat.ttf');
 }
 
 .font-nh {
@@ -240,7 +240,7 @@ tajweed.idgh_mus:hover {
 
 @font-face {
     font-family: 'Scheherazade';
-    src: url("//cdn.alquran.cloud/public/fonts/Scheherazade-webfont.ttf");
+    src: url("/fonts/Scheherazade-webfont.ttf");
 }
 
 .font-scheherazade {
@@ -258,7 +258,7 @@ tajweed.idgh_mus:hover {
 
 @font-face {
     font-family: 'Kitab';
-    src: url("//cdn.alquran.cloud/public/fonts/Kitab-Regular.ttf");
+    src: url("/fonts/Kitab-Regular.ttf");
 }
 
 .font-kitab {

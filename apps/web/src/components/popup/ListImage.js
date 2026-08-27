@@ -47,7 +47,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
 
         const fontKitab = new FontFace(
             'Kitab',
-            'url("//cdn.alquran.cloud/public/fonts/Kitab-Regular.ttf")'
+            'url("/fonts/Kitab-Regular.ttf")'
         );
 
         fontKitab.load().then((loadedFace) => {
