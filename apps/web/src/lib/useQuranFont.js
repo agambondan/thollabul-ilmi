@@ -21,7 +21,7 @@ export const QURAN_FONTS = [
     { id: 'naskh', label: 'Naskh', cls: 'font-scheherazade' },
 ];
 
-const DEFAULT_FONT = QURAN_FONTS[1]; // LPMQ Kemenag jadi default untuk tampilan lokal Indo
+const DEFAULT_FONT = QURAN_FONTS[1];
 
 export const useQuranFont = () => {
     const [fontId, setFontId] = useState(DEFAULT_FONT.id);

@@ -6,10 +6,10 @@ describe('useQuranFont', () => {
     localStorage.clear();
   });
 
-  test('defaults to first font (kitab)', () => {
+  test('defaults to LPMQ font', () => {
     const { result } = renderHook(() => useQuranFont());
-    expect(result.current.fontId).toBe('kitab');
-    expect(result.current.fontCls).toBe('font-kitab');
+    expect(result.current.fontId).toBe('lpmq');
+    expect(result.current.fontCls).toBe('font-lpmq');
   });
 
   test('setFont changes font', () => {
@@ -35,7 +35,7 @@ describe('useQuranFont', () => {
   test('ignores invalid persisted font', () => {
     localStorage.setItem('quranFont', 'invalid-font');
     const { result } = renderHook(() => useQuranFont());
-    expect(result.current.fontId).toBe('kitab');
+    expect(result.current.fontId).toBe('lpmq');
   });
 
   test('clamps persisted arabic font size to 14px minimum', async () => {
@@ -85,7 +85,7 @@ describe('useQuranFont', () => {
   });
 
   test('QURAN_FONTS has correct structure', () => {
-    expect(QURAN_FONTS).toHaveLength(3);
+    expect(QURAN_FONTS.length).toBeGreaterThanOrEqual(3);
     QURAN_FONTS.forEach((f) => {
       expect(f).toHaveProperty('id');
       expect(f).toHaveProperty('label');

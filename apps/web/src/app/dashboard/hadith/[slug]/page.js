@@ -9,6 +9,7 @@ import { listMasjidImage } from '@/lib/const';
 import { CopyImageToClipboard, CopyToClipboard } from '@/lib/copy';
 import { getLocalizedTranslation } from '@/lib/translation';
 import { useActionPosition } from '@/lib/useActionPosition';
+import { useQuranFont } from '@/lib/useQuranFont';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState, use } from 'react';
 import {
@@ -159,6 +160,7 @@ const chapterName = (c, lang) =>
 
 function HadithCard({ h, idx, lang, t, slug, basePath }) {
     const { isHidden: actionsHidden, isMenu: actionsMenu } = useActionPosition();
+    const { fontCls, arabicFontSize, translationFontSize } = useQuranFont();
     const [showSanad, setShowSanad] = useState(false);
     const [showTakhrij, setShowTakhrij] = useState(false);
     const [clipboardPopUp, setClipboardPopUp] = useState(false);
@@ -399,12 +401,15 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
             {arabicText && (
                 <p
                     dir='rtl'
-                    className='font-arabic text-xl text-gray-800 dark:text-gray-100 leading-loose text-right mb-4'>
+                    className={`${fontCls} text-gray-800 dark:text-gray-100 leading-loose text-right mb-4`}
+                    style={{ fontSize: `${arabicFontSize}px` }}>
                     {arabicText}
                 </p>
             )}
             {hadithText && (
-                <p className='text-sm text-gray-600 dark:text-gray-400 leading-relaxed'>
+                <p
+                    className='text-gray-600 dark:text-gray-400 leading-relaxed'
+                    style={{ fontSize: `${translationFontSize}px` }}>
                     {hadithText}
                 </p>
             )}

@@ -210,7 +210,7 @@ const SettingButton = () => {
                     {/* Arabic font size */}
                     <div className='mb-3'>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
-                            {label('settings.arabic_size', 'Ukuran Arab')}
+                            {label('settings.arabic_size', 'Ukuran Arab (Quran/Hadis)')}
                         </p>
                         <div className='flex items-center gap-2'>
                             <button

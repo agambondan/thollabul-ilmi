@@ -8,6 +8,7 @@ import { listMasjidImage } from '@/lib/const';
 import { CopyImageToClipboard, CopyToClipboard } from '@/lib/copy';
 import { getLocalizedTranslation } from '@/lib/translation';
 import { useActionPosition } from '@/lib/useActionPosition';
+import { useQuranFont } from '@/lib/useQuranFont';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -132,6 +133,7 @@ function TakhrijPanel({ hadithId }) {
 const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadith' }) => {
     const { t, lang } = useLocale();
     const { isHidden: actionsHidden, isMenu: actionsMenu } = useActionPosition();
+    const { fontCls, arabicFontSize, translationFontSize } = useQuranFont();
     const cardRef = useRef();
     const audioRef = useRef(null);
     const [isCopied, SetIsCopied] = useState(false);
@@ -277,7 +279,7 @@ const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadit
             <ul
                 id={`${params.slug}-${hadith.number}`}
                 className={classNames({
-                    'flex flex-row justify-between font-kitab p-4 border-b border-emerald-100 dark:border-slate-700': true,
+                    'flex flex-row justify-between p-4 border-b border-emerald-100 dark:border-slate-700': true,
                     'bg-parchment-50 dark:bg-slate-800': hadith.number % 2 === 1,
                     'bg-white dark:bg-slate-900': hadith.number % 2 === 0,
                     'text-emerald-900 dark:text-white': true,
@@ -459,14 +461,16 @@ const HadithPage = ({ params, hadith, book, newLimit, isLast, basePath = '/hadit
                     </li>
                 </ul>
                 )}
-                <ul
-                    className='flex flex-col w-full justify-center'
-                    style={{ direction: 'rtl' }}
-                >
-                    <li className='text-[200%] leading-[2.25]'>{hadith.translation.ar}</li>
+                <ul className='flex flex-col w-full justify-center' style={{ direction: 'rtl' }}>
                     <li
-                        className='text-left p-2 text-base'
-                        style={{ direction: 'ltr' }}
+                        className={`${fontCls} leading-[2.25]`}
+                        style={{ fontSize: `${arabicFontSize}px` }}
+                    >
+                        {hadith.translation.ar}
+                    </li>
+                    <li
+                        className='text-left p-2'
+                        style={{ direction: 'ltr', fontSize: `${translationFontSize}px` }}
                     >
                         {hadithTranslation}
                     </li>
