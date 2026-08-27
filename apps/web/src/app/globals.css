@@ -274,6 +274,18 @@ tajweed.idgh_mus:hover {
     font-family: 'Kitab Bold';
 }
 
+@font-face {
+    font-family: 'LPMQ IsepMisbah';
+    src: url("/fonts/LPMQ-Isep-Misbah.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+.font-lpmq {
+    font-family: 'LPMQ IsepMisbah', serif;
+}
+
 .font-amiri {
     font-family: 'Amiri', serif;
 }

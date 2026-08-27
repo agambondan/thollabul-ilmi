@@ -15,12 +15,13 @@ const MAX_TRANSLATION_FONT_SIZE = 28;
 const TRANSLATION_FONT_SIZE_STEP = 2;
 
 export const QURAN_FONTS = [
-    { id: 'kitab', label: 'Uthmani', cls: 'font-kitab' },
+    { id: 'kitab', label: 'Uthmani (King Fahd)', cls: 'font-kitab' },
+    { id: 'lpmq', label: 'Kemenag (LPMQ)', cls: 'font-lpmq' },
     { id: 'indopak', label: 'Indopak', cls: 'font-nh' },
     { id: 'naskh', label: 'Naskh', cls: 'font-scheherazade' },
 ];
 
-const DEFAULT_FONT = QURAN_FONTS[0];
+const DEFAULT_FONT = QURAN_FONTS[1]; // LPMQ Kemenag jadi default untuk tampilan lokal Indo
 
 export const useQuranFont = () => {
     const [fontId, setFontId] = useState(DEFAULT_FONT.id);
