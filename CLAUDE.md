@@ -125,3 +125,12 @@ Urutan tier: Bookmark → Search → Reading Progress → Hafalan → Streak →
 - Module Go: `github.com/agambondan/islamic-explorer` (nama lama, jangan ubah tanpa koordinasi)
 - Makefile masih punya target lama (`weddinggo`, `cp-server`) — abaikan, tidak relevan
 - Data content Islam (ayat, hadith) di-seed via `scripts/` atau tool import di root `services/api/`
+
+## Deploy tooling in `ops/deploy-workspace/`
+
+That directory is a **mirrored backup**, not configuration for this repo. Deploys
+run from `~/works/me` on the laptop (`make help`), and `~/works/me` is not a git
+repo, so every repo carries an identical copy of its `deploy.sh` + `Makefile` as
+the only versioned record. The `Makefile` there lists targets for *every*
+project — that is expected, it mirrors the workspace file. Read
+`ops/deploy-workspace/README.md` before touching it.

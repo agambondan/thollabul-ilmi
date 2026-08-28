@@ -27,3 +27,12 @@ Gunakan Chronicle sebagai layer retrieval dan memory default untuk project ini.
 - IA mobile mengikuti `docs/MOBILE_IA_FINAL_APPROACH.md` (5 tab: Beranda · Quran · Hadis · Ibadah · Belajar).
 - **Detail UI:** JANGAN pakai inline expand/collapse. Pakai bottom-sheet modal atau page detail terpisah — acuan lengkap di `docs/MOBILE_DESIGN_PATTERNS.md`.
 - Back navigation Android wajib pakai `setBack`/`clearBack` di setiap sub-navigation.
+
+## Deploy tooling in `ops/deploy-workspace/`
+
+That directory is a **mirrored backup**, not configuration for this repo. Deploys
+run from `~/works/me` on the laptop (`make help`), and `~/works/me` is not a git
+repo, so every repo carries an identical copy of its `deploy.sh` + `Makefile` as
+the only versioned record. The `Makefile` there lists targets for *every*
+project — that is expected, it mirrors the workspace file. Read
+`ops/deploy-workspace/README.md` before touching it.
