@@ -59,9 +59,11 @@ const ProfileContent = () => {
         user,
         isAuthenticated,
         isLoading: authLoading,
+        logout,
         refetchUser,
     } = useRequireAuth();
     const [quranProgress, setQuranProgress] = useState(null);
+    const [hafalanSummary, setHafalanSummary] = useState(null);
     const [hadithProgress, setHadithProgress] = useState(null);
     const [langOpen, setLangOpen] = useState(false);
     const [selectedLang, setSelectedLang] = useState("idn");
@@ -154,9 +156,11 @@ const ProfileContent = () => {
         Promise.allSettled([
             progressApi.getQuran().then((r) => r.json()),
             progressApi.getHadith().then((r) => r.json()),
-        ]).then(([q, h]) => {
+            hafalanApi.summary().then((r) => r.json()),
+        ]).then(([q, h, haf]) => {
             if (q.status === "fulfilled") setQuranProgress(q.value);
             if (h.status === "fulfilled") setHadithProgress(h.value);
+            if (haf.status === "fulfilled") setHafalanSummary(haf.value);
         });
     }, [isAuthenticated, authLoading]);
 
