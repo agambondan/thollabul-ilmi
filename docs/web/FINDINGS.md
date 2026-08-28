@@ -18,11 +18,11 @@ Analisis lengkap tiap item ada di [UI_MATURITY_AUDIT_2026-08-28.md](UI_MATURITY_
 
 | Status | Jumlah |
 |---|---|
-| ✅ Selesai | 30 |
+| ✅ Selesai | 34 |
 | 📋 Terbuka | 8 |
 | ⏸️ Menunggu | 4 |
-| ❌ Dicabut | 7 |
-| **Total** | **49** |
+| ❌ Dicabut | 9 |
+| **Total** | **55** |
 
 Catatan: 7 dari 45 temuan ternyata **bukan bug** — semuanya berasal dari cara
 audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
@@ -112,3 +112,14 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 | G4 | Helper test lain (`bookmark`, `library_book`, `audio`, `delete_result`) masih tanpa `SingularTable` | api | ✅ Selesai | Semua helper test kini seragam dengan konfigurasi aplikasi |
 | G5 | ESLint rusak — `@typescript-eslint` gagal load | tooling | 📋 Terbuka | Pre-existing; verifikasi terpaksa lewat build |
 | G6 | Docker lokal `No space left on device` padahal host 64G kosong | env | 📋 Terbuka | Bukan dari repo; menghambat verifikasi |
+
+## H. Infrastruktur VPS
+
+| ID | Temuan | Area | Status | Catatan |
+|---|---|---|---|---|
+| H1 | Stack `affiliate-radar` (10 container) masih jalan dan memakan disk | ops | ✅ Selesai | `compose down` — container & image dihapus, **6 volume termasuk `postgres_data` sengaja dipertahankan** |
+| H2 | Versi Postgres/Redis terlihat beragam di `docker images` | ops | ❌ Dicabut | Ketiga project sudah sama (`pgvector:pg17` + `redis:8-alpine`). Yang terlihat itu image sisa, bukan drift konfigurasi |
+| H3 | Image sisa tak terpakai: `pgvector:pg16`, `postgres:16/18-alpine`, `redis:7-alpine`, `vault`, `caddy`, `tei` | ops | ✅ Selesai | Dihapus setelah dipastikan 0 container memakainya |
+| H4 | Image web membawa libvips glibc yang tak mungkin jalan di runtime musl | infra | ✅ Selesai | thollabul 385→358MB, eduplay 369→344MB |
+| H5 | Disk VPS 58% terpakai | ops | ✅ Selesai | Turun ke 46% (22G → 18G) |
+| H6 | `wedding-fe` tidak punya `@img` sama sekali (Next 14) | infra | ❌ Dicabut | Perubahan di-revert karena no-op |
