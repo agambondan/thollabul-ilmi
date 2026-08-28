@@ -78,6 +78,9 @@ type Repositories struct {
 	JarhTadil            JarhTadilRepository
 	Sanad                SanadRepository
 	Takhrij              TakhrijRepository
+	Settings             SettingsRepository
+	Chat                 ChatRepository
+	Lesson               LessonRepository
 	db                   *gorm.DB
 	pg                   *paginate.Pagination
 	redis                *redis.Client
@@ -161,6 +164,9 @@ func NewRepositories(db *gorm.DB, client *redis.Client) (*Repositories, error) {
 		JarhTadil:            NewJarhTadilRepository(db),
 		Sanad:                NewSanadRepository(db),
 		Takhrij:              NewTakhrijRepository(db),
+		Settings:             NewSettingsRepository(db),
+		Chat:                 NewChatRepository(db),
+		Lesson:               NewLessonRepository(db),
 		db:                   db,
 		pg:                   pg,
 		redis:                client,
@@ -275,6 +281,7 @@ func (s *Repositories) Seeder() error {
 	migrations.SeedStaticFromFiles(s.db)
 	migrations.SeedAudioFromCDN(s.db)
 	migrations.SeedLocationsFromFile(s.db)
+	migrations.SeedLessons(s.db)
 	if err := migrations.BackfillTranslations(s.db); err != nil {
 		return err
 	}

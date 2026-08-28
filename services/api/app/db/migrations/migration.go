@@ -92,4 +92,9 @@ var ModelMigrations []interface{} = []interface{}{
 	model.NotificationTemplate{},
 	model.TokohTarikh{},
 	model.Location{},
+	model.UserSettings{},
+	model.ChatMessage{},
+	model.LessonModule{},
+	model.LessonStep{},
+	model.UserLessonProgress{},
 }

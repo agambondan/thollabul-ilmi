@@ -15,9 +15,9 @@ export default function ChatBox() {
     const scrollRef = useRef(null);
 
     useEffect(() => {
-        setMessages(getChatMessages());
+        getChatMessages().then(setMessages);
         const unsub = subscribeChat((newMsg) => {
-            setMessages((prev) => [...prev, newMsg]);
+            setMessages((prev) => prev.some((m) => m.id === newMsg.id) ? prev : [...prev, newMsg]);
         });
         return unsub;
     }, []);
@@ -28,12 +28,15 @@ export default function ChatBox() {
         }
     }, [messages]);
 
-    const handleSend = (e) => {
+    const handleSend = async (e) => {
         e.preventDefault();
         if (!input.trim() || !isAuthenticated) return;
-        const msg = postChatMessage({ text: input, author: user?.name, authorId: user?.id });
-        setMessages((prev) => [...prev, msg]);
+        const currentText = input;
         setInput('');
+        const msg = await postChatMessage({ text: currentText, author: user?.name, authorId: user?.id });
+        if (msg) {
+            setMessages((prev) => prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]);
+        }
     };
 
     return (

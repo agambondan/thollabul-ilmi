@@ -74,6 +74,9 @@ type Services struct {
 	Takhrij              TakhrijService
 	Sync                 SyncService
 	Dashboard            DashboardService
+	Settings             SettingsService
+	Chat                 ChatService
+	Lesson               LessonService
 }
 
 func NewServices(repo *repository.Repositories) *Services {
@@ -161,6 +164,9 @@ func NewServices(repo *repository.Repositories) *Services {
 		JarhTadil:            NewJarhTadilServiceWithCache(repo.JarhTadil, cache),
 		Sanad:                NewSanadService(repo.Sanad),
 		Takhrij:              NewTakhrijService(repo.Takhrij),
+		Settings:             NewSettingsService(repo.Settings),
+		Chat:                 NewChatService(repo.Chat),
+		Lesson:               NewLessonService(repo.Lesson),
 		Sync:                 NewSyncService(db, cache, doaSvc, dzikirSvc, asmaulHusnaSvc),
 	}
 	svc.Dashboard = NewDashboardService(db, svc.Ayah, svc.Hadith, svc.Streak, svc.Sholat, svc.NotificationInbox, svc.Tilawah)

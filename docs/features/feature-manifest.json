@@ -675,6 +675,41 @@
             "searchable": false,
             "status": "active",
             "aliases": ["achievement-badge"]
+        },
+        {
+            "key": "belajar",
+            "title": "Pusat Belajar",
+            "publicWebRoute": "/belajar",
+            "dashboardWebRoute": "/dashboard/belajar",
+            "mobileRoute": "tab:belajar",
+            "authRequired": false,
+            "ctaLabel": "Mulai Belajar",
+            "searchable": true,
+            "status": "active",
+            "aliases": ["lessons"]
+        },
+        {
+            "key": "komunitas",
+            "title": "Komunitas",
+            "publicWebRoute": "/komunitas",
+            "dashboardWebRoute": "/dashboard/komunitas",
+            "mobileRoute": "feature:forum",
+            "authRequired": false,
+            "ctaLabel": "Buka Komunitas",
+            "searchable": true,
+            "status": "active",
+            "aliases": ["community", "chat", "komunitas"]
+        },
+        {
+            "key": "settings",
+            "title": "Pengaturan",
+            "publicWebRoute": null,
+            "dashboardWebRoute": "/dashboard/settings",
+            "mobileRoute": "profile:settings",
+            "authRequired": true,
+            "ctaLabel": "Buka Pengaturan",
+            "searchable": false,
+            "status": "active"
         }
     ]
 }

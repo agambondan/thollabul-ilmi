@@ -2,6 +2,8 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
+import { authFetch } from './api';
+
 const SETTINGS_KEY = 'tholabul_app_settings';
 
 const DEFAULT_SETTINGS = {
@@ -55,8 +57,20 @@ export const SettingsProvider = ({ children }) => {
     };
 
     const syncWithBackend = async () => {
-        // Ponytail: Backend sync interface. Add actual endpoint when ready.
-        return new Promise((resolve) => setTimeout(resolve, 600));
+        try {
+            const res = await authFetch('/api/v1/settings', {
+                method: 'PUT',
+                body: JSON.stringify({ settings: JSON.stringify(settings) }),
+            });
+            if (res.ok) {
+                // sync success
+                const data = await res.json();
+                return data;
+            }
+        } catch (e) {
+            console.error('Settings sync failed', e);
+            throw e;
+        }
     };
 
     return (

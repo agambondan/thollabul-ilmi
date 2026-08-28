@@ -132,6 +132,9 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	newAPIKeyController := controllers.NewAPIKeyController(newServices)
 	newHijriController := controllers.NewHijriController(newServices)
 	newAsbabunNuzulController := controllers.NewAsbabunNuzulController(newServices)
+	newSettingsController := controllers.NewSettingsController(newServices)
+	newChatController := controllers.NewChatController(newServices)
+	newLessonController := controllers.NewLessonController(newServices)
 
 	app.Use(middlewares.MetricsMiddleware())
 	app.Get("/health", func(c *fiber.Ctx) error {
@@ -623,6 +626,16 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Put("/notes/:id", jwt, newNoteController.Update)
 	master.Delete("/notes/:id", jwt, newNoteController.Delete)
 
+	// #47b User Settings (protected, sync)
+	master.Get("/settings", jwt, newSettingsController.Get)
+	master.Put("/settings", jwt, newSettingsController.Upsert)
+
+	// #47c Lessons (public read, protected progress)
+	master.Get("/lessons", newLessonController.List)
+	master.Get("/lessons/progress", jwt, newLessonController.MyProgress)
+	master.Put("/lessons/progress", jwt, newLessonController.SaveProgress)
+	master.Get("/lessons/:slug", newLessonController.Get)
+
 	// #48 Kamus Istilah Islam (public read, admin write)
 	master.Get("/dictionary", newDictionaryController.FindAll)
 	master.Get("/dictionary/category/:category", newDictionaryController.FindByCategory)
@@ -734,6 +747,11 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Put("/forum/questions/:id/answers/:answerId/accept", jwt, newForumController.AcceptAnswer)
 	master.Delete("/forum/answers/:id", jwt, newForumController.DeleteAnswer)
 	master.Post("/forum/votes", jwt, newForumController.Vote)
+
+	// Komunitas chat (public read/stream, protected write)
+	master.Get("/komunitas/chat", newChatController.List)
+	master.Get("/komunitas/chat/stream", newChatController.Stream)
+	master.Post("/komunitas/chat", jwt, newChatController.Post)
 
 	// Munasabah (public read, editor/admin write)
 	master.Get("/munasabah/ayah/:ayahId", newMunasabahController.FindByAyahID)
