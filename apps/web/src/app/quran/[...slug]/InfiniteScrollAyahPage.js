@@ -4,6 +4,7 @@
 import AyahPage from '@/app/quran/[...slug]/AyahPage';
 import AutoScrollButton from '@/components/popup/AutoScrollButton';
 import ScrollableComponent from '@/components/popup/ScrollableButton';
+import MushafContinuousView from '@/components/quran/MushafContinuousView';
 import { SkeletonReader } from '@/components/skeleton/Skeleton';
 import SurahAudioPlayer from '@/components/SurahAudioPlayer';
 import { useLocale } from '@/context/Locale';
@@ -41,9 +42,12 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 	const [pageRequest, setPageRequest] = useState(null);
 	const [isInitialLoading, setIsInitialLoading] = useState(true);
 	const [isFetchingMore, setIsFetchingMore] = useState(false);
+	const [isFetchingMushaf, setIsFetchingMushaf] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
 	const [error, setError] = useState('');
 	const [hafalanMode, setHafalanMode] = useState('off');
+	const [readerMode, setReaderMode] = useState('ayah');
+	const [showMushafTranslation, setShowMushafTranslation] = useState(true);
 	const [selectedQari, setSelectedQari] = useState('');
 	const [openActionMenuAyahId, setOpenActionMenuAyahId] = useState(null);
 	const loadMoreSentinelRef = useRef(null);
@@ -51,7 +55,8 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 	const retryAfterRef = useRef(0);
 
 	const rawSlug = params.slug;
-	const slug = decodeURIComponent(Array.isArray(rawSlug) ? (rawSlug[1] ?? '') : (rawSlug ?? ''));
+	const slugPart = Array.isArray(rawSlug) ? (rawSlug[0] === 'surah' ? rawSlug[1] : rawSlug[0]) : rawSlug;
+	const slug = decodeURIComponent(slugPart ?? '');
 
 	const loadMoreAyah = useCallback(() => {
 		if (isInitialLoading || isFetchingMore || !hasMore) return;
@@ -89,6 +94,26 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 		},
 		[slug],
 	);
+
+	const openMushafMode = useCallback(async () => {
+		setReaderMode('mushaf');
+		const totalAyahs = surah?.number_of_ayahs ?? ayahs.length;
+		if (!surah || ayahs.length >= totalAyahs) return;
+
+		setIsFetchingMushaf(true);
+		try {
+			const data = await fetchSurah(0, totalAyahs);
+			const nextAyahs = normalizeAyahs(data);
+			if (!nextAyahs.length) return;
+			setSurah(data ?? surah);
+			setAyahs(nextAyahs);
+			setHasMore(nextAyahs.length < totalAyahs);
+		} catch {
+			setError(t('quran.error_desc'));
+		} finally {
+			setIsFetchingMushaf(false);
+		}
+	}, [ayahs.length, fetchSurah, surah, t]);
 
 	useEffect(() => {
 		let isActive = true;
@@ -310,6 +335,40 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 					))}
 				</div>
 
+				<div className='flex flex-wrap items-center gap-2 px-4 py-2 text-xs border-b border-gray-100 dark:border-slate-800 bg-gray-50/70 dark:bg-slate-800/40'>
+					<span className='text-emerald-700 dark:text-emerald-400 font-medium'>
+						{t('mushaf.view')}:
+					</span>
+					{[
+						{ value: 'ayah', label: t('mushaf.list') },
+						{ value: 'mushaf', label: t('mushaf.continuous') },
+					].map((m) => (
+						<button
+							key={m.value}
+							type='button'
+							onClick={() => (m.value === 'mushaf' ? openMushafMode() : setReaderMode(m.value))}
+							disabled={m.value === 'mushaf' && isFetchingMushaf}
+							aria-pressed={readerMode === m.value}
+							className={`px-2.5 py-1 rounded-full font-medium transition-colors ${
+								readerMode === m.value
+									? 'bg-emerald-500 text-white'
+									: 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:bg-emerald-100 dark:hover:bg-slate-700'
+							}`}
+						>
+							{m.label}
+						</button>
+					))}
+					{readerMode === 'mushaf' && (
+						<button
+							type='button'
+							onClick={() => setShowMushafTranslation((v) => !v)}
+							className='px-2.5 py-1 rounded-full font-medium bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
+						>
+							{showMushafTranslation ? t('mushaf.translation_off') : t('mushaf.translation_on')}
+						</button>
+					)}
+				</div>
+
 				<div className='flex justify-between items-center px-4 py-3 text-sm border-b border-gray-100 dark:border-slate-800 bg-gray-50/70 dark:bg-slate-800/40'>
 				<div
 					className={classNames({
@@ -343,28 +402,43 @@ const InfiniteScrollAyahPage = ({ params, searchParams, basePath = '/quran/surah
 				</div>
 				</div>
 
-				<ul
-					key={`${surahTitle}-${surah?.number ?? ''}`}
-					id={`${surahTitle}-${surah?.number ?? ''}`}
-				>
-					{ayahs.map((ayah) => {
-						const actionMenuKey = ayah.id ?? `${surah?.number ?? 'surah'}:${ayah.number}`;
-						return (
-							<AyahPage
-								surah={surah}
-								key={ayah.number}
-								ayah={ayah}
-								newLimit={loadMoreAyah}
-								isLast={false}
-								hafalanMode={hafalanMode}
-								selectedQari={selectedQari}
-								onQariChange={setSelectedQari}
-								isActionMenuOpen={openActionMenuAyahId === actionMenuKey}
-								onActionMenuToggle={(isOpen) => setOpenActionMenuAyahId(isOpen ? actionMenuKey : null)}
+				{readerMode === 'mushaf' ? (
+					<div className='p-4 bg-gray-50 dark:bg-slate-950'>
+						{isFetchingMushaf ? (
+							<SkeletonReader />
+						) : (
+							<MushafContinuousView
+								ayahs={ayahs.map((ayah) => ({ ...ayah, surah }))}
+								lang={lang}
+								showTranslation={showMushafTranslation}
+								readerBasePath={basePath}
 							/>
-						);
-					})}
-				</ul>
+						)}
+					</div>
+				) : (
+					<ul
+						key={`${surahTitle}-${surah?.number ?? ''}`}
+						id={`${surahTitle}-${surah?.number ?? ''}`}
+					>
+						{ayahs.map((ayah) => {
+							const actionMenuKey = ayah.id ?? `${surah?.number ?? 'surah'}:${ayah.number}`;
+							return (
+								<AyahPage
+									surah={surah}
+									key={ayah.number}
+									ayah={ayah}
+									newLimit={loadMoreAyah}
+									isLast={false}
+									hafalanMode={hafalanMode}
+									selectedQari={selectedQari}
+									onQariChange={setSelectedQari}
+									isActionMenuOpen={openActionMenuAyahId === actionMenuKey}
+									onActionMenuToggle={(isOpen) => setOpenActionMenuAyahId(isOpen ? actionMenuKey : null)}
+								/>
+							);
+						})}
+					</ul>
+				)}
 				<div ref={loadMoreSentinelRef} className='h-px' aria-hidden='true' />
 			</div>
 
