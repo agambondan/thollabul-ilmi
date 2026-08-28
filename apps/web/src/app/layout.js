@@ -31,7 +31,6 @@ export const metadata = {
     metadataBase: new URL(SITE_URL),
     applicationName: SITE_NAME,
     title: { default: SITE_NAME, template: `%s — ${SITE_NAME}` },
-    alternates: { canonical: "/" },
     robots: {
         index: true,
         follow: true,
@@ -69,7 +68,6 @@ export const metadata = {
             "Islamic knowledge portal with Quran, Hadith, prayers, dhikr, Asmaul Husna, sirah, memorization tracking, recitation tracking, daily deeds, Hijri calendar, and 30+ more features.",
         type: "website",
         siteName: SITE_NAME,
-        url: SITE_URL,
         locale: "id_ID",
         alternateLocale: ["en_US"],
         images: [OG_IMAGE],

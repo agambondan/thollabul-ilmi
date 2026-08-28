@@ -1,4 +1,8 @@
+import { openGraphFor } from "@/lib/site";
+
 export const metadata = {
+    alternates: { canonical: "/kiblat" },
+    openGraph: openGraphFor("/kiblat"),
     title: "Qibla Direction",
     description:
         "Find the Qibla direction toward the Ka'bah from your location using GPS and your device compass, including distance to Makkah.",

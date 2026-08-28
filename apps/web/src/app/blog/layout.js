@@ -1,4 +1,8 @@
+import { openGraphFor } from "@/lib/site";
+
 export const metadata = {
+    alternates: { canonical: "/blog" },
+    openGraph: openGraphFor("/blog"),
     title: "Islamic Blog",
     description:
         "Islamic articles on tazkiyah, practical fiqh, sirah, and religious learning from Thullaabul Ilmi writers.",

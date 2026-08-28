@@ -1,10 +1,13 @@
+import { openGraphFor } from "@/lib/site";
 import Footer from "@/components/Footer";
 import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import DevPageClient from "./DevPageClient";
 
 export const metadata = {
-    title: "Developer API — Thullaabul 'Ilmi",
+    alternates: { canonical: "/dev" },
+    openGraph: openGraphFor("/dev"),
+    title: "Developer API",
     description: "Public API documentation for Thullaabul Ilmi developers.",
 };
 

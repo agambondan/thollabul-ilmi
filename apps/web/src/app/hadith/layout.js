@@ -1,5 +1,9 @@
+import { openGraphFor } from "@/lib/site";
+
 export const metadata = {
-    title: "Hadith — Thullaabul 'Ilmi",
+    alternates: { canonical: "/hadith" },
+    openGraph: openGraphFor("/hadith"),
+    title: "Hadith",
     description:
         "Explore authentic hadith collections from 9 major books, including Bukhari, Muslim, Abu Dawud, and more.",
 };

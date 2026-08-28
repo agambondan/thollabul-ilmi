@@ -1,5 +1,9 @@
+import { openGraphFor } from "@/lib/site";
+
 export const metadata = {
-    title: "Al-Quran — Thullaabul 'Ilmi",
+    alternates: { canonical: "/quran" },
+    openGraph: openGraphFor("/quran"),
+    title: "Al-Quran",
     description:
         "Read the complete 30 juz of the Quran with color-coded Tajweed to support recitation learning.",
 };

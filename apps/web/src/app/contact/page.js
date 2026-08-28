@@ -1,10 +1,13 @@
+import { openGraphFor } from "@/lib/site";
 import Footer from "@/components/Footer";
 import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import ContactPageClient from "./ContactPageClient";
 
 export const metadata = {
-    title: "Contact — Thullaabul 'Ilmi",
+    alternates: { canonical: "/contact" },
+    openGraph: openGraphFor("/contact"),
+    title: "Contact",
     description:
         "Contact the Thullaabul 'Ilmi team for feedback, bug reports, and collaboration.",
 };
