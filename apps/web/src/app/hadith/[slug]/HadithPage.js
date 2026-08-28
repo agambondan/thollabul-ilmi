@@ -19,6 +19,7 @@ import {
     BsThreeDotsVertical,
 } from "react-icons/bs";
 import { IoIosLink, IoMdCopy, IoMdImages } from "react-icons/io";
+import PanelCloseButton from "@/components/PanelCloseButton";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -605,17 +606,25 @@ const HadithPage = ({
             </div>
             {showSanad && (
                 <div className='px-4 pb-3'>
-                    <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2'>
-                        {t("hadith.sanad")}
-                    </p>
+                    <div className='flex items-start justify-between gap-3 mb-2'>
+                        <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest'>
+                            {t("hadith.sanad")}
+                        </p>
+                        <PanelCloseButton onClose={() => setShowSanad(false)} />
+                    </div>
                     <SanadPanel hadithId={hadith.id} />
                 </div>
             )}
             {showTakhrij && (
                 <div className='px-4 pb-3'>
-                    <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2'>
-                        {t("hadith.takhrij")}
-                    </p>
+                    <div className='flex items-start justify-between gap-3 mb-2'>
+                        <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest'>
+                            {t("hadith.takhrij")}
+                        </p>
+                        <PanelCloseButton
+                            onClose={() => setShowTakhrij(false)}
+                        />
+                    </div>
                     <TakhrijPanel hadithId={hadith.id} />
                 </div>
             )}

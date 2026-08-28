@@ -19,6 +19,7 @@ import {
     BsThreeDotsVertical,
 } from "react-icons/bs";
 import { IoIosLink, IoMdCopy, IoMdImages } from "react-icons/io";
+import PanelCloseButton from "@/components/PanelCloseButton";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -571,11 +572,21 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
 
                     {showSanad && (
                         <div className='mt-3 p-3 bg-teal-50 dark:bg-teal-900/10 rounded-xl'>
+                            <div className='flex justify-end'>
+                                <PanelCloseButton
+                                    onClose={() => setShowSanad(false)}
+                                />
+                            </div>
                             <SanadPanel hadithId={h.id} t={t} />
                         </div>
                     )}
                     {showTakhrij && (
                         <div className='mt-3 p-3 bg-blue-50 dark:bg-blue-900/10 rounded-xl'>
+                            <div className='flex justify-end'>
+                                <PanelCloseButton
+                                    onClose={() => setShowTakhrij(false)}
+                                />
+                            </div>
                             <TakhrijPanel hadithId={h.id} t={t} />
                         </div>
                     )}

@@ -24,6 +24,7 @@ import {
     BsTranslate,
 } from "react-icons/bs";
 import { IoIosLink, IoMdCopy, IoMdImages } from "react-icons/io";
+import PanelCloseButton from "@/components/PanelCloseButton";
 
 const AyahPage = ({
     surah,
@@ -660,9 +661,15 @@ const AyahPage = ({
 
             {tafsirOpen && (
                 <div className='bg-amber-50 dark:bg-amber-900/10 border-b border-amber-100 dark:border-amber-900/30 px-4 py-4'>
-                    <p className='text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wide mb-3'>
-                        {t("ayah.tafsir_label")} {surah.number}:{ayah.number}
-                    </p>
+                    <div className='flex items-start justify-between gap-3 mb-3'>
+                        <p className='text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wide'>
+                            {t("ayah.tafsir_label")} {surah.number}:
+                            {ayah.number}
+                        </p>
+                        <PanelCloseButton
+                            onClose={() => setTafsirOpen(false)}
+                        />
+                    </div>
                     {tafsirLoading && (
                         <p className='text-sm text-gray-400'>
                             {t("ayah.loading_tafsir")}
@@ -694,9 +701,15 @@ const AyahPage = ({
 
             {mufrodatOpen && (
                 <div className='bg-sky-50 dark:bg-sky-900/10 border-b border-sky-100 dark:border-sky-900/30 px-4 py-4'>
-                    <p className='text-xs font-semibold text-sky-700 dark:text-sky-400 uppercase tracking-wide mb-3'>
-                        {t("ayah.mufrodat_label")} {surah.number}:{ayah.number}
-                    </p>
+                    <div className='flex items-start justify-between gap-3 mb-3'>
+                        <p className='text-xs font-semibold text-sky-700 dark:text-sky-400 uppercase tracking-wide'>
+                            {t("ayah.mufrodat_label")} {surah.number}:
+                            {ayah.number}
+                        </p>
+                        <PanelCloseButton
+                            onClose={() => setMufrodatOpen(false)}
+                        />
+                    </div>
                     {mufrodatLoading && (
                         <p className='text-sm text-gray-400'>
                             {t("ayah.loading_mufrodat")}
@@ -747,10 +760,15 @@ const AyahPage = ({
 
             {munasabahOpen && (
                 <div className='bg-purple-50 dark:bg-purple-900/10 border-b border-purple-100 dark:border-purple-900/30 px-4 py-4'>
-                    <p className='text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wide mb-3'>
-                        {t("munasabah.title") ?? "Ayat Terkait"} {surah.number}:
-                        {ayah.number}
-                    </p>
+                    <div className='flex items-start justify-between gap-3 mb-3'>
+                        <p className='text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wide'>
+                            {t("munasabah.title") ?? "Ayat Terkait"}{" "}
+                            {surah.number}:{ayah.number}
+                        </p>
+                        <PanelCloseButton
+                            onClose={() => setMunasabahOpen(false)}
+                        />
+                    </div>
                     {munasabahLoading && (
                         <p className='text-sm text-gray-400'>
                             {t("ayah.loading_tafsir") ?? "Memuat..."}
