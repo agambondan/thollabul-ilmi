@@ -31,7 +31,7 @@ import {
     BsStar,
     BsSunFill,
 } from "react-icons/bs";
-import { MdClose, MdLogout } from "react-icons/md";
+import { MdClose, MdLogout, MdPersonOutline } from "react-icons/md";
 
 const NAV_GROUPS = [
     {
@@ -161,6 +161,10 @@ const AdminLayout = ({ children }) => {
     // 401 (throttling, 5xx, timeout) — the session is still valid, we just do
     // not know the role yet. Treating that as "not an admin" would bounce the
     // user to the landing page over a transient hiccup.
+    // Only meaningful once loading has finished: `token` is restored from
+    // localStorage synchronously while /auth/me is still in flight, so this
+    // is briefly true on every fresh load. Render the spinner first, or the
+    // error screen flashes up during a perfectly normal startup.
     const profileUnavailable = isAuthenticated && !user;
 
     useEffect(() => {
@@ -243,6 +247,10 @@ const AdminLayout = ({ children }) => {
               .toUpperCase()
         : "?";
 
+    if (isLoading) {
+        return <Spinner3 />;
+    }
+
     if (profileUnavailable) {
         return (
             <div className='min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center bg-gray-50 dark:bg-gray-950'>
@@ -263,7 +271,7 @@ const AdminLayout = ({ children }) => {
         );
     }
 
-    if (isLoading || !isAuthenticated || user?.role !== "admin") {
+    if (!isAuthenticated || user?.role !== "admin") {
         return <Spinner3 />;
     }
 
@@ -560,6 +568,20 @@ const AdminLayout = ({ children }) => {
                                                 : "English"}
                                         </button>
                                     ))}
+                                </div>
+
+                                {/* Account — password changes live on the
+                                    shared /profile page; the panel had no way
+                                    to reach it. */}
+                                <div className='py-1 border-b border-gray-100 dark:border-slate-700'>
+                                    <Link
+                                        href='/profile'
+                                        onClick={() => setAccountOpen(false)}
+                                        className='flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                                    >
+                                        <MdPersonOutline className='text-base' />
+                                        {t("nav.profile")}
+                                    </Link>
                                 </div>
 
                                 {/* Logout */}
