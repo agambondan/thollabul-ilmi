@@ -22,7 +22,7 @@ Analisis lengkap tiap item ada di [UI_MATURITY_AUDIT_2026-08-28.md](UI_MATURITY_
 | 📋 Terbuka | 3 |
 | ⏸️ Menunggu | 3 |
 | ❌ Dicabut | 9 |
-| **Total** | **56** |
+| **Total** | **57** |
 
 Catatan: 7 dari 45 temuan ternyata **bukan bug** — semuanya berasal dari cara
 audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
