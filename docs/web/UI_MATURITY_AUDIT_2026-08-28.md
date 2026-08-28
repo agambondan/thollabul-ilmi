@@ -729,3 +729,88 @@ Namun saat dicek, `next build` **gagal parse** di 5 file
 setengah jalan. Karena itu commit di sesi ini **hanya memasukkan berkas milik
 sendiri**; refactor DataPanel sengaja dibiarkan tidak ter-commit sampai
 build-nya hijau.
+
+---
+---
+
+# Addendum 5 — `/dashboard/fiqh`
+
+## Ralat: materi fiqh TIDAK kosong
+
+Laporan utama menyebut "`/fiqh` — 8 kategori tampil, semuanya 0 topik, konten
+belum di-seed". **Salah.** Ada **27 materi** di 8 kategori:
+
+```
+thaharah 6 · sholat 5 · puasa 4 · zakat 3 · haji-umrah 3 · muamalah 2 · nikah 2 · jenazah 2
+```
+
+"0 topik" di `/fiqh` publik adalah bug tampilan terpisah: `app/fiqh/page.js:235`
+membaca `cat.items?.length`, sedangkan `items` baru diisi **setelah** kategori
+diklik. Jadi saat pertama load semua kategori tampak kosong padahal berisi.
+(Belum diperbaiki — dicatat sebagai known issue.)
+
+## Duduk perkaranya
+
+API menyediakan tiga pintu:
+
+| Endpoint | Isi | Akses (sebelum) |
+|---|---|---|
+| `GET /fiqh` | 8 kategori saja, tanpa materi | publik |
+| `GET /fiqh/{slug}` | 1 kategori + seluruh materinya (content, dalil, source) | publik |
+| `GET /fiqh/items` | flat list semua materi | 🔒 EditorOrAdmin |
+
+`/fiqh` publik memakai pola **accordion** — ambil kategori dulu, materi dimuat
+saat kategori diklik. Cocok dengan pintu yang ada, jadi jalan.
+
+`/dashboard/fiqh` didesain sebagai **flat list dengan search + filter**, jadi
+butuh seluruh materi sekaligus. Tapi ia memanggil `GET /fiqh?page=0&size=100`
+yang mengembalikan kategori, lalu merender objek kategori sebagai materi:
+
+```
+judul    = "Thaharah"   ← nama kategori
+kategori = "Thaharah"   ← nama kategori juga
+isi      = (kosong)     ← kategori tidak punya field content
+```
+
+Itulah baris "Thaharah Thaharah" dan header "0 materi fiqh".
+
+## Keputusan
+
+Gembok di `/fiqh/items` **tidak melindungi apa pun**: baris yang sama sudah bisa
+diambil publik satu kategori demi satu lewat `/fiqh/{slug}`, dan payload-nya
+tidak memuat draft, status publish, atau catatan internal — hanya
+`title/slug/content/source/dalil`, yang semuanya sudah dikembalikan endpoint
+kategori publik. Jadi endpoint di-publik-kan.
+
+```go
+// routes.go
+- master.Get("/fiqh/items", middlewares.EditorOrAdminMiddleware(), newFiqhController.FindAllItems)
++ master.Get("/fiqh/items", newFiqhController.FindAllItems)
+```
+
+Chip kategori juga sebelumnya hardcoded dan sudah melenceng dari data — memuat
+`umum` yang tidak ada di API, dan tidak punya `nikah` maupun `jenazah`. Sekarang
+diturunkan dari item yang benar-benar ada, sekaligus membuat perlakuan khusus
+`haji`/`haji-umrah` di normalizer tidak diperlukan lagi.
+
+## Verifikasi
+
+Postgres ter-seed lewat jalur migrasi aplikasi, API lokal, halaman dibuka nyata:
+
+```
+header          27 materi fiqh              (sebelumnya "0 materi fiqh")
+chip kategori   Semua · Haji-Umrah · Jenazah · Muamalah · Nikah · Puasa · Sholat · Thaharah · Zakat
+daftar materi   27 baris, judul asli        (sebelumnya 8 nama kategori dobel)
+filter "nikah"  2 materi                    (kategori yang dulu tidak punya chip)
+cari "wudhu"    8 hasil lintas kategori
+pageerror       tidak ada
+```
+
+`go build`/`go test` lolos, `next build` lolos (142 halaman).
+
+## Sisa
+
+- `/fiqh` publik masih menampilkan "0 topik" sebelum kategori dibuka
+- Duplikasi 9 route publik/dashboard
+- AutoMigrate saat deploy
+- **Ganti password admin produksi** (mendesak — sudah ada di histori git)
