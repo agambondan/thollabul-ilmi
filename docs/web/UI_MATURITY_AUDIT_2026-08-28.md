@@ -530,102 +530,114 @@ Nol overflow horizontal, nol `pageerror`. `next build` lolos untuk seluruh 159 r
 
 ---
 ---
-
 # Addendum 3 — Akar Masalah 500 & Perbaikan Backend
 
-**Metode:** Postgres bersih di Docker + `AutoMigrate(ModelMigrations...)`, lalu memanggil
-fungsi repository asli. Ini memisahkan **bug kode** dari **drift skema produksi**: kalau
-gagal di skema yang persis cocok dengan model, itu bug kode.
+## Koreksi penting atas draf awal addendum ini
 
-## Temuan inti: GORM mem-plural-kan, raw SQL tidak
+Draf pertama addendum ini **salah** dan sudah diganti seluruhnya. Kesalahannya:
+saya menguji dengan `gorm.Open` polos, tanpa NamingStrategy milik aplikasi, lalu
+menyimpulkan tabelnya plural. Padahal aplikasi memakai:
 
-Tidak ada **satu pun** `TableName()` override di seluruh `app/model/`. Jadi semua tabel
-memakai nama plural hasil GORM, sementara banyak raw SQL menulis bentuk singular:
-
-| Ditulis di kode | Nama tabel sebenarnya |
-|---|---|
-| `hafalan_progress` | `hafalan_progresses` |
-| `user_activity` | `user_activities` |
-| `page_view` | `page_views` |
-| `islamic_term` | `islamic_terms` |
-| `asbabun_nuzul` | `asbabun_nuzuls` |
-| `reading_progress` | `reading_progresses` |
-| `hadith` | `hadiths` |
-| `translation` | `translations` |
-| `doa` / `kajian` / `perawi` | `doas` / `kajians` / `perawis` |
-
-## Temuan kedua: `users.id` bertipe `text`, bukan `uuid`
-
-`BaseUUID.ID` hanya diberi tag `gorm:"primarykey"` tanpa `type:uuid`
-(`app/model/base.go:22`), jadi GORM membuat kolom **text**. Padahal kolom FK seperti
-`user_activities.user_id` dan `hafalan_progresses.user_id` eksplisit `type:uuid`.
-
-Akibatnya setiap `JOIN users u ON u.id = x.user_id` gagal:
-`operator does not exist: text = uuid`.
-
-Diverifikasi di skema bersih:
-
+```go
+// app/db/postgresql.go:28-31 (dan app/db/db_sqlite.go:29)
+NamingStrategy: schema.NamingStrategy{
+    TablePrefix:   viper.GetString("DB_TABLE_PREFIX"),
+    SingularTable: true,
+},
 ```
-users.id                   -> text
-user_activities.user_id    -> uuid
-hafalan_progresses.user_id -> uuid
-```
+
+Jadi **nama tabel sebenarnya singular**: `user`, `dzikir`, `hadith`, `doa`,
+`kajian`, `perawi`, `translation`, `islamic_term`, `page_view`, `user_activity`,
+`hafalan_progress`, `fiqh_category`, `fiqh_item`.
+
+Konsekuensinya arah bug-nya **kebalikan** dari draf awal: yang keliru adalah raw
+SQL yang menulis bentuk **plural**. Dan ke-22 statement `CREATE INDEX` di
+`repository.go` sebenarnya **sudah benar sejak awal** — perubahan yang sempat
+saya buat ke sana keliru dan sudah di-revert.
+
+## Metode verifikasi (yang benar)
+
+Postgres di Docker, di-migrate lewat jalur aplikasi sendiri (`go run . -migrate`),
+lalu API dijalankan dan endpoint-nya dipukul via HTTP. Untuk isolasi query dipakai
+probe GORM yang memakai `SingularTable: true` persis seperti aplikasi.
 
 ## Diagnosa per endpoint
 
-| Endpoint | Penyebab | Jenis |
+| Endpoint | Penyebab | Perbaikan |
 |---|---|---|
-| `/leaderboard/hafalan` | `FROM hafalan_progress` + `u.id = hp.user_id` | Bug kode |
-| `/leaderboard/streak` | `u.id = ms.user_id` (text = uuid) | Bug kode |
-| `/forum/questions` | `Preload("User")` pada field bertag `gorm:"-"` | Bug kode |
-| `/wirid/occasion/*` | ✅ jalan di skema bersih | **Drift skema produksi** |
+| `/leaderboard/hafalan` | `JOIN users` (tabel `user`) + `users.id` text vs `user_id` uuid | `JOIN "user" u ON u.id = hp.user_id::text` |
+| `/leaderboard/streak` | `FROM user_activities` (tabel `user_activity`) + join yang sama | `FROM user_activity`, `JOIN "user" … ::text` |
+| `/wirid/occasion/*` | `dzikirs.occasion` (tabel `dzikir`) | `dzikir.occasion` / `dzikir.id` |
+| `/forum/questions` | `Preload("User")` pada field bertag `gorm:"-"` | Hidrasi author lewat query terpisah |
+| `/fiqh/{slug}/{id}` | `fiqh_categories`/`fiqh_items` | `fiqh_category`/`fiqh_item` |
+| `/admin` page-view analytics | `JOIN users` ×2 | `JOIN "user" … ::text` |
 
-`/forum/questions/:slug` dan `FindAnswersByQuestion` kena bug yang sama
-(`Preload("User")`, `Preload("Answers")`, `Preload("Answers.User")` — ketiga field
-bertag `gorm:"-"`).
+Catatan: `"user"` adalah reserved word di Postgres, jadi wajib di-quote.
 
-## Bonus: 22 index tidak pernah terbentuk
+### Dua hal yang menyamarkan bug ini
 
-`app/repository/repository.go:createCompositeIndexes()` menjalankan 22 statement
-`CREATE INDEX` — **semuanya** menargetkan nama tabel singular yang tidak ada, dan
-error-nya dibuang (`s.db.Exec(sql)` tanpa cek return).
+1. **`fiqhController.FindItemByCategoryAndID` memetakan semua error jadi 404**,
+   jadi `relation does not exist` tampil sebagai "Not found" yang tampak wajar.
+2. **Test repository membuka GORM tanpa NamingStrategy aplikasi**, sehingga
+   menguji skema plural yang tidak pernah ada di produksi — test hijau, produksi
+   500. Helper dzikir/fiqh kini disamakan dengan konfigurasi aplikasi, dan justru
+   perubahan itu yang membongkar bug `fiqh_category`.
 
-Artinya aplikasi ini selama ini berjalan **tanpa satu pun** index komposit maupun
-pg_trgm yang diniatkan — termasuk index trigram untuk pencarian ILIKE di
-kamus, doa, kajian, perawi, dan translation.
+### `users.id` bertipe text
 
-## Perbaikan yang diterapkan
+`BaseUUID.ID` hanya diberi tag `gorm:"primarykey"` tanpa `type:uuid`
+(`app/model/base.go:22`), jadi kolomnya **text**, sementara kolom FK seperti
+`hafalan_progress.user_id` eksplisit `uuid`. Karena itu setiap join ke `user`
+butuh cast `::text`. Ini temuan yang tetap berlaku dari draf awal.
 
-| File | Perubahan |
-|---|---|
-| `app/repository/leaderboard_repository.go` | `hafalan_progress` → `hafalan_progresses` (2×); `u.id = hp.user_id::text`; `u.id = ms.user_id::text` |
-| `app/repository/forum_repository.go` | Hapus 4 `Preload` yang rusak; tambah `usersByID` / `attachQuestionUsers` / `attachAnswerUsers` yang meng-hidrasi author lewat query terpisah (dengan konversi uuid→text) |
-| `app/repository/page_view_repository.go` | `page_view` → `page_views` (4×) |
-| `app/repository/asbabun_nuzul_repository.go` | `asbabun_nuzul.id` → `asbabun_nuzuls.id` (3×) |
-| `app/repository/user_activity_repository.go` | `user_activity.count` → `user_activities.count` di ekspresi ON CONFLICT |
-| `app/repository/repository.go` | 22 nama tabel di statement index dibetulkan |
+## Otorisasi hapus chat
 
-## Hasil verifikasi
+`chatController.Delete` hanya memastikan pemanggil login — **setiap user
+terautentikasi bisa menghapus pesan siapa pun**, padahal UI-nya
+(`ChatBox.js`, `isAdmin || isMe`) berniat "admin atau pesan sendiri".
+Kepemilikan sekarang didorong ke dalam query (`ownerID` nil = admin), dan baris
+yang tidak cocok mengembalikan 403.
 
-Memanggil fungsi repository asli terhadap skema bersih:
+## Hasil verifikasi end-to-end
+
+API lokal + Postgres ter-seed lewat jalur migrasi aplikasi:
 
 ```
-leaderboard/hafalan          ✅    forum/questions        ✅
-leaderboard/streak           ✅    forum answers          ✅
-leaderboard/me (hafalan)     ✅    wirid/occasion         ✅
-leaderboard/me (streak)      ✅    asbabun-nuzul list     ✅
-user_activity upsert         ✅
+leaderboard/hafalan   200      wirid/occasion/jumat   200
+leaderboard/streak    200      wirid/occasion/harian  200
+forum/questions       200      dzikir                 200
+komunitas/chat        200      lessons                200
 ```
 
-Statement index: **22/22 berhasil** (sebelumnya 22/22 gagal diam-diam).
-`go build ./...` lolos; `go test ./app/repository/... ./app/services/... ./app/http/...` lolos.
+Chat (dua user + admin):
 
-## Yang masih perlu tindakan ops
+```
+bob hapus pesan alice          403 ✅
+anonim hapus                   401 ✅
+alice hapus pesan sendiri      200 ✅
+admin hapus pesan alice        200 ✅
+```
 
-1. **Drift skema produksi** — kolom `dzikirs.occasion` belum ada di DB produksi.
-   Untuk Postgres, AutoMigrate **tidak** jalan saat aplikasi start (`app/db/postgresql.go`
-   tidak memanggilnya); hanya lewat `scripts/db_setup.go` manual. Jalankan migrasi ke prod.
-2. **Setelah deploy**, index baru akan terbentuk pada startup berikutnya. Untuk tabel besar
-   pertimbangkan `CREATE INDEX CONCURRENTLY` supaya tidak mengunci tabel saat startup.
-3. Pertimbangkan menambah `type:uuid` pada `BaseUUID.ID` agar `users.id` konsisten dengan
-   kolom FK — perubahan skema yang lebih besar, perlu direncanakan tersendiri.
+Lessons admin CRUD: create non-admin 403 ✅, create admin 200 ✅, get 200 ✅,
+update 200 ✅, delete 200 ✅. SSE `/komunitas/chat/stream` 200 ✅.
+
+`go build ./...` lolos, `go test ./app/...` lolos, `gofmt` bersih,
+`next build` lolos (142 halaman), mobile jest 734 test lolos.
+
+## Yang masih perlu tindakan
+
+1. **AutoMigrate tidak jalan saat aplikasi start untuk Postgres**
+   (`app/db/postgresql.go` tidak memanggilnya) — hanya lewat `-migrate` /
+   `scripts/db_setup.go`. Skema produksi bisa drift diam-diam. Pertimbangkan
+   menjalankan migrasi sebagai bagian dari deploy.
+2. **`admin@tholabul-ilmi.com` / `Admin@123`** aktif di produksi dan sempat
+   ter-commit di `scripts/capture-all-routes-vps.mjs`. Sudah dipindah ke env var,
+   tapi **password-nya tetap harus diganti** karena sudah ada di histori git.
+3. **`GET /api/v1/blog/posts` membocorkan email admin** lewat objek `author`.
+   Serialize `{id, name}` saja.
+4. Helper test lain (`bookmark`, `library_book`, `audio`, `delete_result`) masih
+   membuka GORM tanpa `SingularTable`. Belum menimbulkan masalah karena tidak
+   memakai nama tabel eksplisit, tapi sebaiknya diseragamkan.
+5. Sisa dari laporan utama yang belum dikerjakan: `/dashboard/quiz` tanpa opsi
+   jawaban, kontrak `/dashboard/fiqh`, toast lokasi di semua route, tombol forum
+   biru, duplikasi 9 route, performa halaman panjang.
