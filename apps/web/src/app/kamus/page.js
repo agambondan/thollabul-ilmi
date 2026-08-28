@@ -6,208 +6,36 @@ import { NavbarTailwindCss } from "@/components/Navbar";
 import { useLocale } from "@/context/Locale";
 import { kamusApi } from "@/lib/api";
 import { getLocalizedField } from "@/lib/translation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsBook, BsSearch } from "react-icons/bs";
-
-const COMMON_WORDS = [
-    {
-        arabic: "الله",
-        latin: "Allah",
-        meaning: "Allah (nama Tuhan yang disembah)",
-        root: "أله",
-    },
-    {
-        arabic: "رَبّ",
-        latin: "Rabb",
-        meaning: "Tuhan, Pemilik, Pengatur",
-        root: "ربب",
-    },
-    {
-        arabic: "رَحْمَة",
-        latin: "Rahmah",
-        meaning: "Kasih sayang, Rahmat",
-        root: "رحم",
-    },
-    {
-        arabic: "عِلْم",
-        latin: "'Ilm",
-        meaning: "Ilmu, Pengetahuan",
-        root: "علم",
-    },
-    { arabic: "كِتَاب", latin: "Kitab", meaning: "Kitab, Buku", root: "كتب" },
-    {
-        arabic: "قُرْآن",
-        latin: "Quran",
-        meaning: "Bacaan, Al-Quran",
-        root: "قرأ",
-    },
-    {
-        arabic: "إِيمَان",
-        latin: "Iman",
-        meaning: "Keimanan, Kepercayaan",
-        root: "أمن",
-    },
-    {
-        arabic: "إِسْلَام",
-        latin: "Islam",
-        meaning: "Ketundukan, Agama Islam",
-        root: "سلم",
-    },
-    { arabic: "صَلَاة", latin: "Shalah", meaning: "Sholat, Doa", root: "صلو" },
-    {
-        arabic: "زَكَاة",
-        latin: "Zakah",
-        meaning: "Zakat, Kesucian",
-        root: "زكو",
-    },
-    { arabic: "صِيَام", latin: "Shiyam", meaning: "Puasa", root: "صوم" },
-    {
-        arabic: "حَجّ",
-        latin: "Hajj",
-        meaning: "Haji, Ziarah ke Mekkah",
-        root: "حجج",
-    },
-    {
-        arabic: "تَقْوَى",
-        latin: "Taqwa",
-        meaning: "Ketakwaan, Menjaga diri dari larangan Allah",
-        root: "وقي",
-    },
-    {
-        arabic: "صَبْر",
-        latin: "Shabr",
-        meaning: "Sabar, Ketabahan",
-        root: "صبر",
-    },
-    {
-        arabic: "شُكْر",
-        latin: "Shukr",
-        meaning: "Syukur, Terima kasih",
-        root: "شكر",
-    },
-    {
-        arabic: "تَوْبَة",
-        latin: "Tawbah",
-        meaning: "Taubat, Kembali kepada Allah",
-        root: "توب",
-    },
-    {
-        arabic: "دُعَاء",
-        latin: "Du'a",
-        meaning: "Doa, Permohonan",
-        root: "دعو",
-    },
-    {
-        arabic: "ذِكْر",
-        latin: "Dzikr",
-        meaning: "Dzikir, Mengingat Allah",
-        root: "ذكر",
-    },
-    {
-        arabic: "مَسْجِد",
-        latin: "Masjid",
-        meaning: "Masjid, Tempat sujud",
-        root: "سجد",
-    },
-    {
-        arabic: "حَلَال",
-        latin: "Halal",
-        meaning: "Halal, Dibolehkan",
-        root: "حلل",
-    },
-    {
-        arabic: "حَرَام",
-        latin: "Haram",
-        meaning: "Haram, Dilarang",
-        root: "حرم",
-    },
-    {
-        arabic: "سُنَّة",
-        latin: "Sunnah",
-        meaning: "Sunnah, Kebiasaan Nabi",
-        root: "سنن",
-    },
-    { arabic: "فَرْض", latin: "Fardh", meaning: "Fardhu, Wajib", root: "فرض" },
-    {
-        arabic: "نَفْس",
-        latin: "Nafs",
-        meaning: "Jiwa, Diri, Nafsu",
-        root: "نفس",
-    },
-    { arabic: "قَلْب", latin: "Qalb", meaning: "Hati, Jantung", root: "قلب" },
-    {
-        arabic: "عَقْل",
-        latin: "'Aql",
-        meaning: "Akal, Pikiran, Rasio",
-        root: "عقل",
-    },
-    {
-        arabic: "أَخ",
-        latin: "Akh",
-        meaning: "Saudara (laki-laki)",
-        root: "أخو",
-    },
-    {
-        arabic: "أُخْت",
-        latin: "Ukht",
-        meaning: "Saudara (perempuan)",
-        root: "أخت",
-    },
-    {
-        arabic: "أُمَّة",
-        latin: "Ummah",
-        meaning: "Umat, Komunitas Islam",
-        root: "أمم",
-    },
-    {
-        arabic: "أَمَانَة",
-        latin: "Amanah",
-        meaning: "Amanah, Kepercayaan",
-        root: "أمن",
-    },
-    {
-        arabic: "حِكْمَة",
-        latin: "Hikmah",
-        meaning: "Hikmah, Kebijaksanaan",
-        root: "حكم",
-    },
-    { arabic: "رِزْق", latin: "Rizq", meaning: "Rezeki, Karunia", root: "رزق" },
-    { arabic: "جَنَّة", latin: "Jannah", meaning: "Surga", root: "جنن" },
-    { arabic: "نَار", latin: "Nar", meaning: "Neraka, Api", root: "نور" },
-    { arabic: "مَلَك", latin: "Malak", meaning: "Malaikat", root: "ملك" },
-    {
-        arabic: "نَبِيّ",
-        latin: "Nabi",
-        meaning: "Nabi, Pembawa berita",
-        root: "نبو",
-    },
-    { arabic: "رَسُول", latin: "Rasul", meaning: "Rasul, Utusan", root: "رسل" },
-    {
-        arabic: "مُسْلِم",
-        latin: "Muslim",
-        meaning: "Muslim, Orang yang berserah diri",
-        root: "سلم",
-    },
-    {
-        arabic: "مُؤْمِن",
-        latin: "Mu'min",
-        meaning: "Mukmin, Orang beriman",
-        root: "أمن",
-    },
-    {
-        arabic: "بِسْم",
-        latin: "Bism",
-        meaning: "Dengan nama (basmalah)",
-        root: "سمو",
-    },
-];
 
 export default function KamusPage() {
     const { t, lang } = useLocale();
     const [query, setQuery] = useState("");
     const [results, setResults] = useState(null);
+    const [words, setWords] = useState([]);
     const [loading, setLoading] = useState(false);
     const [selected, setSelected] = useState(null);
+
+    // The browse list used to be a hardcoded array in this file; it now lives in
+    // the dictionary table so it can be edited from the admin panel.
+    useEffect(() => {
+        let cancelled = false;
+        kamusApi
+            .list()
+            .then((r) => r.json())
+            .then((data) => {
+                if (cancelled) return;
+                const items = data?.items ?? data ?? [];
+                setWords(Array.isArray(items) ? items : []);
+            })
+            .catch(() => {
+                if (!cancelled) setWords([]);
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     const wordMeaning = (word) => {
         if (lang === "EN") {
@@ -245,14 +73,14 @@ export default function KamusPage() {
                 setResults(data?.items ?? data ?? []);
             })
             .catch(() => {
-                // Fallback: search local dictionary
+                // Fallback: filter what we already have client-side.
                 const lower = q.toLowerCase();
-                const local = COMMON_WORDS.filter(
+                const local = words.filter(
                     (w) =>
-                        w.arabic.includes(q) ||
-                        w.latin.toLowerCase().includes(lower) ||
+                        wordTerm(w).includes(q) ||
+                        wordLatin(w).toLowerCase().includes(lower) ||
                         wordMeaning(w).toLowerCase().includes(lower) ||
-                        w.root.includes(q),
+                        wordRoot(w).includes(q),
                 );
                 setResults(local);
             })
@@ -260,14 +88,14 @@ export default function KamusPage() {
     };
 
     const filtered = query
-        ? COMMON_WORDS.filter(
+        ? words.filter(
               (w) =>
-                  w.arabic.includes(query) ||
-                  w.latin.toLowerCase().includes(query.toLowerCase()) ||
+                  wordTerm(w).includes(query) ||
+                  wordLatin(w).toLowerCase().includes(query.toLowerCase()) ||
                   wordMeaning(w).toLowerCase().includes(query.toLowerCase()) ||
-                  w.root.includes(query),
+                  wordRoot(w).includes(query),
           )
-        : COMMON_WORDS;
+        : words;
 
     const displayResults = results ?? filtered;
 

@@ -705,11 +705,6 @@ func seedManasikStepsFromFile(db *gorm.DB) {
 // ── Islamic Term ──────────────────────────────────────────────────────────────
 
 func seedIslamicTermsFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.IslamicTerm{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Term       string `json:"term"`
 		Category   string `json:"category"`
@@ -717,11 +712,25 @@ func seedIslamicTermsFromFile(db *gorm.DB) {
 		Example    string `json:"example"`
 		Source     string `json:"source"`
 		Origin     string `json:"origin"`
+		Arabic     string `json:"arabic"`
+		Latin      string `json:"latin"`
+		Root       string `json:"root"`
 	}
 	var rows []row
 	if !readStaticJSON("islamic_term.json", &rows) {
 		return
 	}
+
+	// A plain "already has rows" guard would freeze existing deployments at
+	// whatever they were first seeded with, so entries added to the file later
+	// would never land. Re-run only while the database is missing some of them;
+	// once it has caught up this is a no-op and admin edits survive.
+	var count int64
+	db.Model(&model.IslamicTerm{}).Count(&count)
+	if count >= int64(len(rows)) {
+		return
+	}
+
 	log.Printf("[seeder] seedIslamicTermsFromFile: %d entri", len(rows))
 	for _, r := range rows {
 		item := model.IslamicTerm{
@@ -731,10 +740,13 @@ func seedIslamicTermsFromFile(db *gorm.DB) {
 			Example:    r.Example,
 			Source:     r.Source,
 			Origin:     r.Origin,
+			Arabic:     r.Arabic,
+			Latin:      r.Latin,
+			Root:       r.Root,
 		}
 		db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "term"}},
-			DoUpdates: clause.AssignmentColumns([]string{"category", "definition", "example", "source", "origin"}),
+			DoUpdates: clause.AssignmentColumns([]string{"category", "definition", "example", "source", "origin", "arabic", "latin", "root"}),
 		}).Create(&item)
 	}
 }

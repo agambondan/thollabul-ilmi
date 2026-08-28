@@ -4,6 +4,10 @@
 build/
 data/
 !data/locations.json
+# The *FromFile seeders need these at runtime; the rest of data/ is bulk import
+# material and stays out of the build context.
+!data/static
+!data/static/**
 .firecrawl/
 .playwright-mcp/
 .claude/

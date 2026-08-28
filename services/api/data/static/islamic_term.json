@@ -1,226 +1,728 @@
 [
-    {
-        "term": "Aqidah",
-        "category": "aqidah",
-        "definition": "Keyakinan atau kepercayaan yang tertanam kuat dalam hati, berkaitan dengan hal-hal yang wajib diimani: Allah, malaikat, kitab, rasul, hari akhir, dan qadha-qadar.",
-        "example": "Aqidah Ahlus Sunnah wal Jamaah menjadi landasan pemikiran Islam mayoritas.",
-        "source": "Al-Aqidah Ath-Thahawiyyah",
-        "origin": "Bahasa Arab: عقيدة (aqada = mengikat/menguatkan)"
-    },
-    {
-        "term": "Bid'ah",
-        "category": "aqidah",
-        "definition": "Mengada-adakan hal baru dalam agama yang tidak ada dasarnya dari Al-Quran dan Sunnah. Para ulama berbeda pendapat: sebagian menganggap semua bid'ah sesat, sebagian membaginya menjadi bid'ah hasanah (baik) dan bid'ah dhalalah (sesat).",
-        "example": "Nabi ﷺ bersabda: 'Setiap bid'ah adalah sesat' (HR. Muslim).",
-        "source": "HR. Muslim No. 867",
-        "origin": "Bahasa Arab: بدع (bada'a = menciptakan sesuatu yang baru)"
-    },
-    {
-        "term": "Shirk",
-        "category": "aqidah",
-        "definition": "Menyekutukan Allah dengan sesuatu yang lain dalam ibadah, ketaatan, atau sifat. Shirk akbar (besar) membatalkan keislaman, shirk ashghar (kecil) seperti riya' tidak membatalkan keislaman tapi tetap dosa besar.",
-        "example": "Berdoa kepada selain Allah adalah shirk akbar.",
-        "source": "QS. An-Nisa: 48",
-        "origin": "Bahasa Arab: شرك (syarika = bersekutu)"
-    },
-    {
-        "term": "Tauhid",
-        "category": "aqidah",
-        "definition": "Mengesakan Allah dalam tiga aspek: Rububiyyah (Allah satu-satunya Pencipta dan Pengatur), Uluhiyyah (Allah satu-satunya yang berhak disembah), dan Asma' wa Shifat (Allah memiliki nama dan sifat yang unik).",
-        "example": "Kalimat 'Laa ilaaha illallah' adalah inti dari Tauhid Uluhiyyah.",
-        "source": "Kitab At-Tauhid, Muhammad bin Abdul Wahhab",
-        "origin": "Bahasa Arab: وحّد (wahhada = mengesakan)"
-    },
-    {
-        "term": "Tawassul",
-        "category": "aqidah",
-        "definition": "Bertawassul (menjadikan perantara) dalam berdoa. Tawassul yang disepakati boleh: dengan nama/sifat Allah, dengan amal sholih sendiri, dengan doa orang sholih yang masih hidup. Tawassul yang diperselisihkan: dengan kedudukan orang sholih yang sudah wafat.",
-        "example": "Tawassul dengan amal sholih dilakukan para sahabat di Gua Tsur (HR. Bukhari No. 2272).",
-        "source": "At-Tawassul, Ibnu Taimiyah",
-        "origin": "Bahasa Arab: وسّل (wassala = menjadikan perantara)"
-    },
-    {
-        "term": "Fiqh",
-        "category": "fiqh",
-        "definition": "Ilmu tentang hukum-hukum syariat Islam yang bersifat praktis ('amaliyyah) yang diambil dari dalil-dalil terperinci (Al-Quran, Hadith, Ijma', Qiyas).",
-        "example": "Fiqh mengatur masalah sholat, puasa, zakat, nikah, muamalah, dan pidana.",
-        "source": "Al-Iqna', Al-Hajjawi",
-        "origin": "Bahasa Arab: فقه (faqiha = memahami)"
-    },
-    {
-        "term": "Halal",
-        "category": "fiqh",
-        "definition": "Sesuatu yang diperbolehkan oleh syariat Islam untuk dilakukan, dikonsumsi, atau digunakan.",
-        "example": "Daging sapi yang disembelih dengan cara syar'i adalah halal.",
-        "source": "QS. Al-Baqarah: 168",
-        "origin": "Bahasa Arab: حلّ (halla = dilepaskan/dibolehkan)"
-    },
-    {
-        "term": "Haram",
-        "category": "fiqh",
-        "definition": "Sesuatu yang dilarang secara mutlak oleh syariat Islam. Melakukannya mendapat dosa, meninggalkannya mendapat pahala.",
-        "example": "Riba, zina, membunuh tanpa hak, dan minum khamr adalah haram.",
-        "source": "QS. Al-Baqarah: 275",
-        "origin": "Bahasa Arab: حرم (haruma = dilarang/diharamkan)"
-    },
-    {
-        "term": "Ijma'",
-        "category": "fiqh",
-        "definition": "Kesepakatan para mujtahid (ulama yang memenuhi syarat ijtihad) dari kalangan umat Islam setelah wafatnya Nabi ﷺ atas suatu hukum syariat. Ijma' adalah sumber hukum Islam ketiga setelah Al-Quran dan Hadith.",
-        "example": "Ijma' ulama tentang wajibnya sholat 5 waktu adalah dalil yang kuat.",
-        "source": "Al-Ihkam fi Ushul Al-Ahkam, Al-Amidi",
-        "origin": "Bahasa Arab: أجمع (ajma'a = bersepakat)"
-    },
-    {
-        "term": "Ijtihad",
-        "category": "fiqh",
-        "definition": "Pengerahan segenap kemampuan seorang mujtahid untuk mengistinbath (menyimpulkan) hukum syariat dari dalil-dalil terperinci. Syarat mujtahid: hafal Al-Quran, menguasai hadith, menguasai bahasa Arab, ilmu ushul fiqh, dll.",
-        "example": "Penetapan awal Ramadan melalui hisab atau ru'yat adalah hasil ijtihad ulama.",
-        "source": "Al-Mustashfa, Al-Ghazali",
-        "origin": "Bahasa Arab: جهد (jahada = bersungguh-sungguh)"
-    },
-    {
-        "term": "Makruh",
-        "category": "fiqh",
-        "definition": "Sesuatu yang lebih baik ditinggalkan tapi tidak berdosa jika dilakukan. Lawannya adalah mustahab/sunnah.",
-        "example": "Makan dengan tangan kiri, berwudhu sambil berbicara sia-sia adalah makruh.",
-        "source": "Raudhah Ath-Thalibin, An-Nawawi",
-        "origin": "Bahasa Arab: كره (kariha = tidak menyukai)"
-    },
-    {
-        "term": "Mubah",
-        "category": "fiqh",
-        "definition": "Sesuatu yang boleh dilakukan atau ditinggalkan tanpa pahala atau dosa.",
-        "example": "Makan nasi, tidur siang, berjalan-jalan adalah mubah.",
-        "source": "Al-Asybah wan Nadhair, As-Suyuthi",
-        "origin": "Bahasa Arab: أباح (abaaha = membolehkan)"
-    },
-    {
-        "term": "Qiyas",
-        "category": "fiqh",
-        "definition": "Menyamakan hukum suatu perkara yang tidak ada nashnya (belum ada dalil eksplisit) dengan hukum perkara yang sudah ada nashnya karena memiliki 'illat (alasan hukum) yang sama.",
-        "example": "Haramnya khamr (minuman memabukkan) diqiyaskan kepada semua minuman yang memabukkan karena 'illat-nya sama: memabukkan.",
-        "source": "Ar-Risalah, Imam Syafi'i",
-        "origin": "Bahasa Arab: قاس (qaasa = mengukur/menyamakan)"
-    },
-    {
-        "term": "Sunnah / Mustahab",
-        "category": "fiqh",
-        "definition": "Amalan yang dianjurkan oleh syariat; mendapat pahala jika dilakukan, tidak berdosa jika ditinggalkan. Dalam terminologi hadith, sunnah merujuk pada semua perkataan, perbuatan, dan ketetapan Nabi ﷺ.",
-        "example": "Sholat rawatib, membaca basmalah sebelum makan, dan bersiwak adalah sunnah.",
-        "source": "Al-Majmu', An-Nawawi",
-        "origin": "Bahasa Arab: سنّ (sanna = menjalankan kebiasaan)"
-    },
-    {
-        "term": "Wajib / Fardhu",
-        "category": "fiqh",
-        "definition": "Amalan yang diwajibkan oleh syariat; mendapat pahala jika dilakukan, berdosa jika ditinggalkan. Fardhu dibagi: fardhu ain (kewajiban setiap individu) dan fardhu kifayah (kewajiban kolektif, gugur jika sudah ada yang melakukan).",
-        "example": "Sholat 5 waktu adalah fardhu ain. Sholat jenazah adalah fardhu kifayah.",
-        "source": "Al-Ghayah wat Taqrib, Abu Syuja'",
-        "origin": "Bahasa Arab: وجب (wajaba = menjadi wajib)"
-    },
-    {
-        "term": "Ahad",
-        "category": "hadith",
-        "definition": "Hadith yang tidak mencapai derajat mutawatir — diriwayatkan oleh satu atau beberapa orang. Dibagi menjadi masyhur (3+ perawi), aziz (2 perawi), dan gharib (1 perawi). Hadith ahad yang shahih tetap wajib diamalkan.",
-        "example": "Sebagian besar hadith dalam kitab Bukhari dan Muslim adalah hadith ahad shahih.",
-        "source": "Nukhbah Al-Fikr, Ibnu Hajar Al-Asqalani",
-        "origin": "Bahasa Arab: أحد (ahad = satu/seorang)"
-    },
-    {
-        "term": "Dha'if",
-        "category": "hadith",
-        "definition": "Hadith yang tidak memenuhi syarat shahih atau hasan karena ada kelemahan pada sanad atau matan. Hadith dha'if tidak boleh dijadikan dalil hukum, namun sebagian ulama membolehkannya untuk fadhail amal (keutamaan amalan) dengan syarat ketat.",
-        "example": "Hadith 'Cintai tanah airmu bagian dari iman' adalah hadith yang sangat dha'if.",
-        "source": "Taqrib At-Tahdzib, Ibnu Hajar",
-        "origin": "Bahasa Arab: ضعف (dha'ufa = lemah)"
-    },
-    {
-        "term": "Isnad / Sanad",
-        "category": "hadith",
-        "definition": "Rantai perawi yang menghubungkan teks hadith (matan) kepada Nabi ﷺ. Ilmu isnad adalah keistimewaan Islam yang tidak dimiliki agama lain.",
-        "example": "Contoh sanad: 'Dari Al-Bukhari, dari Yahya bin Bukair, dari Al-Laits, dari 'Uqail, dari Ibnu Syihab, dari Salim, dari Abdullah bin Umar...'",
-        "source": "Al-Kifayah fi Ilm Ar-Riwayah, Al-Khatib Al-Baghdadi",
-        "origin": "Bahasa Arab: سند (sanada = bersandar)"
-    },
-    {
-        "term": "Mutawatir",
-        "category": "hadith",
-        "definition": "Hadith yang diriwayatkan oleh sejumlah besar perawi yang mustahil bersepakat untuk berbohong, dari awal sanad hingga akhir. Mutawatir memberikan keyakinan mutlak (qath'i).",
-        "example": "Hadith tentang jumlah rakaat sholat 5 waktu adalah mutawatir.",
-        "source": "Nukhbah Al-Fikr, Ibnu Hajar Al-Asqalani",
-        "origin": "Bahasa Arab: توتّر (tawatara = datang berurutan/bertubi-tubi)"
-    },
-    {
-        "term": "Shahih",
-        "category": "hadith",
-        "definition": "Hadith yang memenuhi 5 syarat: sanadnya bersambung, semua perawi adil (muslim, berakal, tidak fasiq), semua perawi dhabit (kuat hafalannya), tidak ada syadz (bertentangan dengan yang lebih kuat), tidak ada 'illat (cacat tersembunyi).",
-        "example": "Shahih Bukhari dan Shahih Muslim adalah koleksi hadith paling shahih.",
-        "source": "Muqaddimah Ibnu Ash-Shalah",
-        "origin": "Bahasa Arab: صحّ (shahha = sehat/benar)"
-    },
-    {
-        "term": "Taubat",
-        "category": "tasawuf",
-        "definition": "Kembali kepada Allah dari dosa dengan tiga syarat: menyesali dosa yang telah dilakukan, meninggalkan dosa tersebut saat ini, dan bertekad tidak mengulangi. Jika dosa berkaitan dengan hak manusia, harus mengembalikan hak tersebut.",
-        "example": "Taubat nasuha adalah taubat yang sungguh-sungguh dan tidak berulang (QS. At-Tahrim: 8).",
-        "source": "QS. At-Tahrim: 8; HR. Tirmidzi No. 3539",
-        "origin": "Bahasa Arab: تاب (taaba = kembali)"
-    },
-    {
-        "term": "Tawakkal",
-        "category": "tasawuf",
-        "definition": "Menyerahkan segala urusan kepada Allah setelah berusaha secara maksimal. Bukan berarti pasif tanpa usaha — Nabi ﷺ memerintahkan untuk 'mengikat unta dulu baru bertawakkal'.",
-        "example": "Tawakkal yang benar: berobat dulu, baru pasrahkan hasilnya kepada Allah.",
-        "source": "HR. Tirmidzi No. 2517",
-        "origin": "Bahasa Arab: وكّل (wakkala = mewakilkan/menyerahkan)"
-    },
-    {
-        "term": "Tazkiyatun Nafs",
-        "category": "tasawuf",
-        "definition": "Penyucian jiwa dari akhlak tercela (riya, hasad, sombong, dll) dan menghiasi diri dengan akhlak terpuji (ikhlas, sabar, syukur, dll). Merupakan tujuan akhir dari ibadah.",
-        "example": "Puasa mengajarkan tazkiyatun nafs karena memaksa jiwa menahan nafsu.",
-        "source": "QS. Asy-Syams: 9; Ihya Ulumuddin, Al-Ghazali",
-        "origin": "Bahasa Arab: زكّى (zakka = menyucikan)"
-    },
-    {
-        "term": "Wara'",
-        "category": "tasawuf",
-        "definition": "Berhati-hati dalam menghindari hal-hal yang meragukan (syubhat) karena khawatir jatuh ke yang haram. Tingkatan di atas zuhud.",
-        "example": "Imam Ahmad menolak minum air dari sumber yang tidak jelas kehalalannya saat melewati suatu kota.",
-        "source": "Ihya Ulumuddin, Al-Ghazali",
-        "origin": "Bahasa Arab: ورع (wari'a = berhati-hati)"
-    },
-    {
-        "term": "Zuhud",
-        "category": "tasawuf",
-        "definition": "Tidak mencintai dunia secara berlebihan; meninggalkan hal-hal yang tidak bermanfaat untuk akhirat. Bukan berarti miskin atau tidak bekerja — para sahabat kaya seperti Utsman dan Abdurrahman bin Auf adalah ahli zuhud.",
-        "example": "Nabi ﷺ bersabda: 'Zuhud di dunia bukan berarti mengharamkan yang halal atau membuang harta, tapi (zuhud adalah) bahwa yang ada di tangan Allah lebih engkau percaya daripada yang ada di tanganmu.' (HR. Tirmidzi)",
-        "source": "HR. Tirmidzi No. 2340",
-        "origin": "Bahasa Arab: زهد (zahida = membenci/tidak menginginkan)"
-    },
-    {
-        "term": "Asbabun Nuzul",
-        "category": "ulumul_quran",
-        "definition": "Sebab-sebab turunnya ayat Al-Quran. Mengetahui asbabun nuzul membantu memahami konteks dan maksud ayat dengan tepat.",
-        "example": "Asbabun nuzul QS. Al-Lahab (111) adalah peristiwa ketika Abu Lahab menolak seruan Nabi ﷺ di bukit Shafa.",
-        "source": "Asbabun Nuzul, Al-Wahidi; Lubab An-Nuqul, As-Suyuthi",
-        "origin": "Bahasa Arab: نزل (nazala = turun)"
-    },
-    {
-        "term": "Muhkam",
-        "category": "ulumul_quran",
-        "definition": "Ayat Al-Quran yang jelas maknanya dan tidak mengandung kemungkinan makna lain. Lawannya adalah mutasyabih (samar).",
-        "example": "Ayat-ayat tentang hukum ibadah umumnya muhkam. QS. Ali Imran: 7 menyebutkan bahwa ayat muhkam adalah 'ummul kitab' (induk kitab).",
-        "source": "Al-Burhan fi Ulum Al-Quran, Az-Zarkasyi",
-        "origin": "Bahasa Arab: أحكم (ahkama = menguatkan/memperjelas)"
-    },
-    {
-        "term": "Nasikh-Mansukh",
-        "category": "ulumul_quran",
-        "definition": "Nasikh: hukum yang menghapus hukum sebelumnya. Mansukh: hukum yang dihapus. Penghapusan hukum ini terjadi dalam Al-Quran maupun Sunnah, tapi hanya berlaku antar ayat/hadith yang sezaman dengan masa Nabi ﷺ.",
-        "example": "Perintah puasa Asyura dimansukh (dihapus kewajibannya) oleh kewajiban puasa Ramadan.",
-        "source": "Al-Ittiqan fi Ulum Al-Quran, As-Suyuthi",
-        "origin": "Bahasa Arab: نسخ (nasakha = menghapus/menyalin)"
-    }
+  {
+    "term": "Aqidah",
+    "category": "aqidah",
+    "definition": "Keyakinan atau kepercayaan yang tertanam kuat dalam hati, berkaitan dengan hal-hal yang wajib diimani: Allah, malaikat, kitab, rasul, hari akhir, dan qadha-qadar.",
+    "example": "Aqidah Ahlus Sunnah wal Jamaah menjadi landasan pemikiran Islam mayoritas.",
+    "source": "Al-Aqidah Ath-Thahawiyyah",
+    "origin": "Bahasa Arab: عقيدة (aqada = mengikat/menguatkan)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Bid'ah",
+    "category": "aqidah",
+    "definition": "Mengada-adakan hal baru dalam agama yang tidak ada dasarnya dari Al-Quran dan Sunnah. Para ulama berbeda pendapat: sebagian menganggap semua bid'ah sesat, sebagian membaginya menjadi bid'ah hasanah (baik) dan bid'ah dhalalah (sesat).",
+    "example": "Nabi ﷺ bersabda: 'Setiap bid'ah adalah sesat' (HR. Muslim).",
+    "source": "HR. Muslim No. 867",
+    "origin": "Bahasa Arab: بدع (bada'a = menciptakan sesuatu yang baru)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Shirk",
+    "category": "aqidah",
+    "definition": "Menyekutukan Allah dengan sesuatu yang lain dalam ibadah, ketaatan, atau sifat. Shirk akbar (besar) membatalkan keislaman, shirk ashghar (kecil) seperti riya' tidak membatalkan keislaman tapi tetap dosa besar.",
+    "example": "Berdoa kepada selain Allah adalah shirk akbar.",
+    "source": "QS. An-Nisa: 48",
+    "origin": "Bahasa Arab: شرك (syarika = bersekutu)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Tauhid",
+    "category": "aqidah",
+    "definition": "Mengesakan Allah dalam tiga aspek: Rububiyyah (Allah satu-satunya Pencipta dan Pengatur), Uluhiyyah (Allah satu-satunya yang berhak disembah), dan Asma' wa Shifat (Allah memiliki nama dan sifat yang unik).",
+    "example": "Kalimat 'Laa ilaaha illallah' adalah inti dari Tauhid Uluhiyyah.",
+    "source": "Kitab At-Tauhid, Muhammad bin Abdul Wahhab",
+    "origin": "Bahasa Arab: وحّد (wahhada = mengesakan)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Tawassul",
+    "category": "aqidah",
+    "definition": "Bertawassul (menjadikan perantara) dalam berdoa. Tawassul yang disepakati boleh: dengan nama/sifat Allah, dengan amal sholih sendiri, dengan doa orang sholih yang masih hidup. Tawassul yang diperselisihkan: dengan kedudukan orang sholih yang sudah wafat.",
+    "example": "Tawassul dengan amal sholih dilakukan para sahabat di Gua Tsur (HR. Bukhari No. 2272).",
+    "source": "At-Tawassul, Ibnu Taimiyah",
+    "origin": "Bahasa Arab: وسّل (wassala = menjadikan perantara)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Fiqh",
+    "category": "fiqh",
+    "definition": "Ilmu tentang hukum-hukum syariat Islam yang bersifat praktis ('amaliyyah) yang diambil dari dalil-dalil terperinci (Al-Quran, Hadith, Ijma', Qiyas).",
+    "example": "Fiqh mengatur masalah sholat, puasa, zakat, nikah, muamalah, dan pidana.",
+    "source": "Al-Iqna', Al-Hajjawi",
+    "origin": "Bahasa Arab: فقه (faqiha = memahami)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Halal",
+    "category": "fiqh",
+    "definition": "Sesuatu yang diperbolehkan oleh syariat Islam untuk dilakukan, dikonsumsi, atau digunakan.",
+    "example": "Daging sapi yang disembelih dengan cara syar'i adalah halal.",
+    "source": "QS. Al-Baqarah: 168",
+    "origin": "Bahasa Arab: حلّ (halla = dilepaskan/dibolehkan)",
+    "arabic": "حَلَال",
+    "latin": "Halal",
+    "root": "حلل"
+  },
+  {
+    "term": "Haram",
+    "category": "fiqh",
+    "definition": "Sesuatu yang dilarang secara mutlak oleh syariat Islam. Melakukannya mendapat dosa, meninggalkannya mendapat pahala.",
+    "example": "Riba, zina, membunuh tanpa hak, dan minum khamr adalah haram.",
+    "source": "QS. Al-Baqarah: 275",
+    "origin": "Bahasa Arab: حرم (haruma = dilarang/diharamkan)",
+    "arabic": "حَرَام",
+    "latin": "Haram",
+    "root": "حرم"
+  },
+  {
+    "term": "Ijma'",
+    "category": "fiqh",
+    "definition": "Kesepakatan para mujtahid (ulama yang memenuhi syarat ijtihad) dari kalangan umat Islam setelah wafatnya Nabi ﷺ atas suatu hukum syariat. Ijma' adalah sumber hukum Islam ketiga setelah Al-Quran dan Hadith.",
+    "example": "Ijma' ulama tentang wajibnya sholat 5 waktu adalah dalil yang kuat.",
+    "source": "Al-Ihkam fi Ushul Al-Ahkam, Al-Amidi",
+    "origin": "Bahasa Arab: أجمع (ajma'a = bersepakat)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Ijtihad",
+    "category": "fiqh",
+    "definition": "Pengerahan segenap kemampuan seorang mujtahid untuk mengistinbath (menyimpulkan) hukum syariat dari dalil-dalil terperinci. Syarat mujtahid: hafal Al-Quran, menguasai hadith, menguasai bahasa Arab, ilmu ushul fiqh, dll.",
+    "example": "Penetapan awal Ramadan melalui hisab atau ru'yat adalah hasil ijtihad ulama.",
+    "source": "Al-Mustashfa, Al-Ghazali",
+    "origin": "Bahasa Arab: جهد (jahada = bersungguh-sungguh)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Makruh",
+    "category": "fiqh",
+    "definition": "Sesuatu yang lebih baik ditinggalkan tapi tidak berdosa jika dilakukan. Lawannya adalah mustahab/sunnah.",
+    "example": "Makan dengan tangan kiri, berwudhu sambil berbicara sia-sia adalah makruh.",
+    "source": "Raudhah Ath-Thalibin, An-Nawawi",
+    "origin": "Bahasa Arab: كره (kariha = tidak menyukai)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Mubah",
+    "category": "fiqh",
+    "definition": "Sesuatu yang boleh dilakukan atau ditinggalkan tanpa pahala atau dosa.",
+    "example": "Makan nasi, tidur siang, berjalan-jalan adalah mubah.",
+    "source": "Al-Asybah wan Nadhair, As-Suyuthi",
+    "origin": "Bahasa Arab: أباح (abaaha = membolehkan)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Qiyas",
+    "category": "fiqh",
+    "definition": "Menyamakan hukum suatu perkara yang tidak ada nashnya (belum ada dalil eksplisit) dengan hukum perkara yang sudah ada nashnya karena memiliki 'illat (alasan hukum) yang sama.",
+    "example": "Haramnya khamr (minuman memabukkan) diqiyaskan kepada semua minuman yang memabukkan karena 'illat-nya sama: memabukkan.",
+    "source": "Ar-Risalah, Imam Syafi'i",
+    "origin": "Bahasa Arab: قاس (qaasa = mengukur/menyamakan)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Sunnah / Mustahab",
+    "category": "fiqh",
+    "definition": "Amalan yang dianjurkan oleh syariat; mendapat pahala jika dilakukan, tidak berdosa jika ditinggalkan. Dalam terminologi hadith, sunnah merujuk pada semua perkataan, perbuatan, dan ketetapan Nabi ﷺ.",
+    "example": "Sholat rawatib, membaca basmalah sebelum makan, dan bersiwak adalah sunnah.",
+    "source": "Al-Majmu', An-Nawawi",
+    "origin": "Bahasa Arab: سنّ (sanna = menjalankan kebiasaan)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Wajib / Fardhu",
+    "category": "fiqh",
+    "definition": "Amalan yang diwajibkan oleh syariat; mendapat pahala jika dilakukan, berdosa jika ditinggalkan. Fardhu dibagi: fardhu ain (kewajiban setiap individu) dan fardhu kifayah (kewajiban kolektif, gugur jika sudah ada yang melakukan).",
+    "example": "Sholat 5 waktu adalah fardhu ain. Sholat jenazah adalah fardhu kifayah.",
+    "source": "Al-Ghayah wat Taqrib, Abu Syuja'",
+    "origin": "Bahasa Arab: وجب (wajaba = menjadi wajib)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Ahad",
+    "category": "hadith",
+    "definition": "Hadith yang tidak mencapai derajat mutawatir — diriwayatkan oleh satu atau beberapa orang. Dibagi menjadi masyhur (3+ perawi), aziz (2 perawi), dan gharib (1 perawi). Hadith ahad yang shahih tetap wajib diamalkan.",
+    "example": "Sebagian besar hadith dalam kitab Bukhari dan Muslim adalah hadith ahad shahih.",
+    "source": "Nukhbah Al-Fikr, Ibnu Hajar Al-Asqalani",
+    "origin": "Bahasa Arab: أحد (ahad = satu/seorang)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Dha'if",
+    "category": "hadith",
+    "definition": "Hadith yang tidak memenuhi syarat shahih atau hasan karena ada kelemahan pada sanad atau matan. Hadith dha'if tidak boleh dijadikan dalil hukum, namun sebagian ulama membolehkannya untuk fadhail amal (keutamaan amalan) dengan syarat ketat.",
+    "example": "Hadith 'Cintai tanah airmu bagian dari iman' adalah hadith yang sangat dha'if.",
+    "source": "Taqrib At-Tahdzib, Ibnu Hajar",
+    "origin": "Bahasa Arab: ضعف (dha'ufa = lemah)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Isnad / Sanad",
+    "category": "hadith",
+    "definition": "Rantai perawi yang menghubungkan teks hadith (matan) kepada Nabi ﷺ. Ilmu isnad adalah keistimewaan Islam yang tidak dimiliki agama lain.",
+    "example": "Contoh sanad: 'Dari Al-Bukhari, dari Yahya bin Bukair, dari Al-Laits, dari 'Uqail, dari Ibnu Syihab, dari Salim, dari Abdullah bin Umar...'",
+    "source": "Al-Kifayah fi Ilm Ar-Riwayah, Al-Khatib Al-Baghdadi",
+    "origin": "Bahasa Arab: سند (sanada = bersandar)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Mutawatir",
+    "category": "hadith",
+    "definition": "Hadith yang diriwayatkan oleh sejumlah besar perawi yang mustahil bersepakat untuk berbohong, dari awal sanad hingga akhir. Mutawatir memberikan keyakinan mutlak (qath'i).",
+    "example": "Hadith tentang jumlah rakaat sholat 5 waktu adalah mutawatir.",
+    "source": "Nukhbah Al-Fikr, Ibnu Hajar Al-Asqalani",
+    "origin": "Bahasa Arab: توتّر (tawatara = datang berurutan/bertubi-tubi)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Shahih",
+    "category": "hadith",
+    "definition": "Hadith yang memenuhi 5 syarat: sanadnya bersambung, semua perawi adil (muslim, berakal, tidak fasiq), semua perawi dhabit (kuat hafalannya), tidak ada syadz (bertentangan dengan yang lebih kuat), tidak ada 'illat (cacat tersembunyi).",
+    "example": "Shahih Bukhari dan Shahih Muslim adalah koleksi hadith paling shahih.",
+    "source": "Muqaddimah Ibnu Ash-Shalah",
+    "origin": "Bahasa Arab: صحّ (shahha = sehat/benar)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Taubat",
+    "category": "tasawuf",
+    "definition": "Kembali kepada Allah dari dosa dengan tiga syarat: menyesali dosa yang telah dilakukan, meninggalkan dosa tersebut saat ini, dan bertekad tidak mengulangi. Jika dosa berkaitan dengan hak manusia, harus mengembalikan hak tersebut.",
+    "example": "Taubat nasuha adalah taubat yang sungguh-sungguh dan tidak berulang (QS. At-Tahrim: 8).",
+    "source": "QS. At-Tahrim: 8; HR. Tirmidzi No. 3539",
+    "origin": "Bahasa Arab: تاب (taaba = kembali)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Tawakkal",
+    "category": "tasawuf",
+    "definition": "Menyerahkan segala urusan kepada Allah setelah berusaha secara maksimal. Bukan berarti pasif tanpa usaha — Nabi ﷺ memerintahkan untuk 'mengikat unta dulu baru bertawakkal'.",
+    "example": "Tawakkal yang benar: berobat dulu, baru pasrahkan hasilnya kepada Allah.",
+    "source": "HR. Tirmidzi No. 2517",
+    "origin": "Bahasa Arab: وكّل (wakkala = mewakilkan/menyerahkan)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Tazkiyatun Nafs",
+    "category": "tasawuf",
+    "definition": "Penyucian jiwa dari akhlak tercela (riya, hasad, sombong, dll) dan menghiasi diri dengan akhlak terpuji (ikhlas, sabar, syukur, dll). Merupakan tujuan akhir dari ibadah.",
+    "example": "Puasa mengajarkan tazkiyatun nafs karena memaksa jiwa menahan nafsu.",
+    "source": "QS. Asy-Syams: 9; Ihya Ulumuddin, Al-Ghazali",
+    "origin": "Bahasa Arab: زكّى (zakka = menyucikan)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Wara'",
+    "category": "tasawuf",
+    "definition": "Berhati-hati dalam menghindari hal-hal yang meragukan (syubhat) karena khawatir jatuh ke yang haram. Tingkatan di atas zuhud.",
+    "example": "Imam Ahmad menolak minum air dari sumber yang tidak jelas kehalalannya saat melewati suatu kota.",
+    "source": "Ihya Ulumuddin, Al-Ghazali",
+    "origin": "Bahasa Arab: ورع (wari'a = berhati-hati)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Zuhud",
+    "category": "tasawuf",
+    "definition": "Tidak mencintai dunia secara berlebihan; meninggalkan hal-hal yang tidak bermanfaat untuk akhirat. Bukan berarti miskin atau tidak bekerja — para sahabat kaya seperti Utsman dan Abdurrahman bin Auf adalah ahli zuhud.",
+    "example": "Nabi ﷺ bersabda: 'Zuhud di dunia bukan berarti mengharamkan yang halal atau membuang harta, tapi (zuhud adalah) bahwa yang ada di tangan Allah lebih engkau percaya daripada yang ada di tanganmu.' (HR. Tirmidzi)",
+    "source": "HR. Tirmidzi No. 2340",
+    "origin": "Bahasa Arab: زهد (zahida = membenci/tidak menginginkan)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Asbabun Nuzul",
+    "category": "ulumul_quran",
+    "definition": "Sebab-sebab turunnya ayat Al-Quran. Mengetahui asbabun nuzul membantu memahami konteks dan maksud ayat dengan tepat.",
+    "example": "Asbabun nuzul QS. Al-Lahab (111) adalah peristiwa ketika Abu Lahab menolak seruan Nabi ﷺ di bukit Shafa.",
+    "source": "Asbabun Nuzul, Al-Wahidi; Lubab An-Nuqul, As-Suyuthi",
+    "origin": "Bahasa Arab: نزل (nazala = turun)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Muhkam",
+    "category": "ulumul_quran",
+    "definition": "Ayat Al-Quran yang jelas maknanya dan tidak mengandung kemungkinan makna lain. Lawannya adalah mutasyabih (samar).",
+    "example": "Ayat-ayat tentang hukum ibadah umumnya muhkam. QS. Ali Imran: 7 menyebutkan bahwa ayat muhkam adalah 'ummul kitab' (induk kitab).",
+    "source": "Al-Burhan fi Ulum Al-Quran, Az-Zarkasyi",
+    "origin": "Bahasa Arab: أحكم (ahkama = menguatkan/memperjelas)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Nasikh-Mansukh",
+    "category": "ulumul_quran",
+    "definition": "Nasikh: hukum yang menghapus hukum sebelumnya. Mansukh: hukum yang dihapus. Penghapusan hukum ini terjadi dalam Al-Quran maupun Sunnah, tapi hanya berlaku antar ayat/hadith yang sezaman dengan masa Nabi ﷺ.",
+    "example": "Perintah puasa Asyura dimansukh (dihapus kewajibannya) oleh kewajiban puasa Ramadan.",
+    "source": "Al-Ittiqan fi Ulum Al-Quran, As-Suyuthi",
+    "origin": "Bahasa Arab: نسخ (nasakha = menghapus/menyalin)",
+    "arabic": "",
+    "latin": "",
+    "root": ""
+  },
+  {
+    "term": "Allah",
+    "category": "kosakata",
+    "definition": "Allah (nama Tuhan yang disembah)",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "الله",
+    "latin": "Allah",
+    "root": "أله"
+  },
+  {
+    "term": "Rabb",
+    "category": "kosakata",
+    "definition": "Tuhan, Pemilik, Pengatur",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "رَبّ",
+    "latin": "Rabb",
+    "root": "ربب"
+  },
+  {
+    "term": "Rahmah",
+    "category": "kosakata",
+    "definition": "Kasih sayang, Rahmat",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "رَحْمَة",
+    "latin": "Rahmah",
+    "root": "رحم"
+  },
+  {
+    "term": "'Ilm",
+    "category": "kosakata",
+    "definition": "Ilmu, Pengetahuan",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "عِلْم",
+    "latin": "'Ilm",
+    "root": "علم"
+  },
+  {
+    "term": "Kitab",
+    "category": "kosakata",
+    "definition": "Kitab, Buku",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "كِتَاب",
+    "latin": "Kitab",
+    "root": "كتب"
+  },
+  {
+    "term": "Quran",
+    "category": "kosakata",
+    "definition": "Bacaan, Al-Quran",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "قُرْآن",
+    "latin": "Quran",
+    "root": "قرأ"
+  },
+  {
+    "term": "Iman",
+    "category": "kosakata",
+    "definition": "Keimanan, Kepercayaan",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "إِيمَان",
+    "latin": "Iman",
+    "root": "أمن"
+  },
+  {
+    "term": "Islam",
+    "category": "kosakata",
+    "definition": "Ketundukan, Agama Islam",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "إِسْلَام",
+    "latin": "Islam",
+    "root": "سلم"
+  },
+  {
+    "term": "Shalah",
+    "category": "kosakata",
+    "definition": "Sholat, Doa",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "صَلَاة",
+    "latin": "Shalah",
+    "root": "صلو"
+  },
+  {
+    "term": "Zakah",
+    "category": "kosakata",
+    "definition": "Zakat, Kesucian",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "زَكَاة",
+    "latin": "Zakah",
+    "root": "زكو"
+  },
+  {
+    "term": "Shiyam",
+    "category": "kosakata",
+    "definition": "Puasa",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "صِيَام",
+    "latin": "Shiyam",
+    "root": "صوم"
+  },
+  {
+    "term": "Hajj",
+    "category": "kosakata",
+    "definition": "Haji, Ziarah ke Mekkah",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "حَجّ",
+    "latin": "Hajj",
+    "root": "حجج"
+  },
+  {
+    "term": "Taqwa",
+    "category": "kosakata",
+    "definition": "Ketakwaan, Menjaga diri dari larangan Allah",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "تَقْوَى",
+    "latin": "Taqwa",
+    "root": "وقي"
+  },
+  {
+    "term": "Shabr",
+    "category": "kosakata",
+    "definition": "Sabar, Ketabahan",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "صَبْر",
+    "latin": "Shabr",
+    "root": "صبر"
+  },
+  {
+    "term": "Shukr",
+    "category": "kosakata",
+    "definition": "Syukur, Terima kasih",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "شُكْر",
+    "latin": "Shukr",
+    "root": "شكر"
+  },
+  {
+    "term": "Tawbah",
+    "category": "kosakata",
+    "definition": "Taubat, Kembali kepada Allah",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "تَوْبَة",
+    "latin": "Tawbah",
+    "root": "توب"
+  },
+  {
+    "term": "Du'a",
+    "category": "kosakata",
+    "definition": "Doa, Permohonan",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "دُعَاء",
+    "latin": "Du'a",
+    "root": "دعو"
+  },
+  {
+    "term": "Dzikr",
+    "category": "kosakata",
+    "definition": "Dzikir, Mengingat Allah",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "ذِكْر",
+    "latin": "Dzikr",
+    "root": "ذكر"
+  },
+  {
+    "term": "Masjid",
+    "category": "kosakata",
+    "definition": "Masjid, Tempat sujud",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "مَسْجِد",
+    "latin": "Masjid",
+    "root": "سجد"
+  },
+  {
+    "term": "Sunnah",
+    "category": "kosakata",
+    "definition": "Sunnah, Kebiasaan Nabi",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "سُنَّة",
+    "latin": "Sunnah",
+    "root": "سنن"
+  },
+  {
+    "term": "Fardh",
+    "category": "kosakata",
+    "definition": "Fardhu, Wajib",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "فَرْض",
+    "latin": "Fardh",
+    "root": "فرض"
+  },
+  {
+    "term": "Nafs",
+    "category": "kosakata",
+    "definition": "Jiwa, Diri, Nafsu",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "نَفْس",
+    "latin": "Nafs",
+    "root": "نفس"
+  },
+  {
+    "term": "Qalb",
+    "category": "kosakata",
+    "definition": "Hati, Jantung",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "قَلْب",
+    "latin": "Qalb",
+    "root": "قلب"
+  },
+  {
+    "term": "'Aql",
+    "category": "kosakata",
+    "definition": "Akal, Pikiran, Rasio",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "عَقْل",
+    "latin": "'Aql",
+    "root": "عقل"
+  },
+  {
+    "term": "Akh",
+    "category": "kosakata",
+    "definition": "Saudara (laki-laki)",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "أَخ",
+    "latin": "Akh",
+    "root": "أخو"
+  },
+  {
+    "term": "Ukht",
+    "category": "kosakata",
+    "definition": "Saudara (perempuan)",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "أُخْت",
+    "latin": "Ukht",
+    "root": "أخت"
+  },
+  {
+    "term": "Ummah",
+    "category": "kosakata",
+    "definition": "Umat, Komunitas Islam",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "أُمَّة",
+    "latin": "Ummah",
+    "root": "أمم"
+  },
+  {
+    "term": "Amanah",
+    "category": "kosakata",
+    "definition": "Amanah, Kepercayaan",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "أَمَانَة",
+    "latin": "Amanah",
+    "root": "أمن"
+  },
+  {
+    "term": "Hikmah",
+    "category": "kosakata",
+    "definition": "Hikmah, Kebijaksanaan",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "حِكْمَة",
+    "latin": "Hikmah",
+    "root": "حكم"
+  },
+  {
+    "term": "Rizq",
+    "category": "kosakata",
+    "definition": "Rezeki, Karunia",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "رِزْق",
+    "latin": "Rizq",
+    "root": "رزق"
+  },
+  {
+    "term": "Jannah",
+    "category": "kosakata",
+    "definition": "Surga",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "جَنَّة",
+    "latin": "Jannah",
+    "root": "جنن"
+  },
+  {
+    "term": "Nar",
+    "category": "kosakata",
+    "definition": "Neraka, Api",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "نَار",
+    "latin": "Nar",
+    "root": "نور"
+  },
+  {
+    "term": "Malak",
+    "category": "kosakata",
+    "definition": "Malaikat",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "مَلَك",
+    "latin": "Malak",
+    "root": "ملك"
+  },
+  {
+    "term": "Nabi",
+    "category": "kosakata",
+    "definition": "Nabi, Pembawa berita",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "نَبِيّ",
+    "latin": "Nabi",
+    "root": "نبو"
+  },
+  {
+    "term": "Rasul",
+    "category": "kosakata",
+    "definition": "Rasul, Utusan",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "رَسُول",
+    "latin": "Rasul",
+    "root": "رسل"
+  },
+  {
+    "term": "Muslim",
+    "category": "kosakata",
+    "definition": "Muslim, Orang yang berserah diri",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "مُسْلِم",
+    "latin": "Muslim",
+    "root": "سلم"
+  },
+  {
+    "term": "Mu'min",
+    "category": "kosakata",
+    "definition": "Mukmin, Orang beriman",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "مُؤْمِن",
+    "latin": "Mu'min",
+    "root": "أمن"
+  },
+  {
+    "term": "Bism",
+    "category": "kosakata",
+    "definition": "Dengan nama (basmalah)",
+    "example": "",
+    "source": "",
+    "origin": "Bahasa Arab",
+    "arabic": "بِسْم",
+    "latin": "Bism",
+    "root": "سمو"
+  }
 ]

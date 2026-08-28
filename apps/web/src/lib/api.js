@@ -526,6 +526,7 @@ export const notesApi = {
 };
 
 export const kamusApi = {
+    list: () => fetch(`${API_URL}/api/v1/dictionary`),
     search: (q) =>
         fetch(`${API_URL}/api/v1/dictionary?q=${encodeURIComponent(q)}`),
     detail: (term) =>
