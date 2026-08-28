@@ -278,6 +278,9 @@ func (s *Repositories) Seeder() error {
 	migrations.SeedTafsirFromFiles(s.db)
 	migrations.SeedMufrodatFromFile(s.db)
 	migrations.SeedHadithFromFiles(s.db)
+	if err := migrations.BackfillHadithSectionTranslations(s.db); err != nil {
+		return err
+	}
 	migrations.SeedStaticFromFiles(s.db)
 	migrations.SeedAudioFromCDN(s.db)
 	migrations.SeedLocationsFromFile(s.db)

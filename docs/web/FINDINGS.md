@@ -18,7 +18,7 @@ Analisis lengkap tiap item ada di [UI_MATURITY_AUDIT_2026-08-28.md](UI_MATURITY_
 
 | Status | Jumlah |
 |---|---|
-| ✅ Selesai | 41 |
+| ✅ Selesai | 42 |
 | 📋 Terbuka | 3 |
 | ⏸️ Menunggu | 3 |
 | ❌ Dicabut | 9 |
@@ -110,7 +110,8 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 | G2 | Test repository membuka GORM tanpa naming strategy aplikasi — menguji skema yang tak pernah ada | api | ✅ Selesai | Helper dzikir/fiqh disamakan; ini yang membongkar A7 |
 | G3 | AutoMigrate tidak jalan saat aplikasi start untuk Postgres — skema prod bisa drift diam-diam | ops | ⏸️ Menunggu | Jadikan bagian dari deploy? |
 | G4 | Helper test lain (`bookmark`, `library_book`, `audio`, `delete_result`) masih tanpa `SingularTable` | api | ✅ Selesai | Semua helper test kini seragam dengan konfigurasi aplikasi |
-| G5 | ESLint rusak — `@typescript-eslint` gagal load | tooling | 📋 Terbuka | Pre-existing; verifikasi terpaksa lewat build |
+| G5 | ESLint rusak — `@typescript-eslint` gagal load | tooling | ✅ Selesai | `typescript@7.0.2` masuk lewat `--legacy-peer-deps` padahal peer-nya `<6.1.0`; dipin ke `^5.9.3` |
+| G8 | 155 masalah lint pre-existing (140 error) baru terlihat setelah G5 beres | web | 📋 Terbuka | Mayoritas `react-hooks/set-state-in-effect`; perlu garapan tersendiri |
 | G6 | Docker lokal `No space left on device` padahal host 64G kosong | env | 📋 Terbuka | Docker Desktop jalan di VM berdisk terbatas; build cache sempat 42GB |
 | G7 | Proxy `/api/v1/[...path]` mengirim `duplex: "half"` untuk semua non-GET → undici `expected non-null body source` | web | ✅ Selesai | Mematikan **semua POST/PUT/DELETE di dev**. Produksi lolos, tapi jalur yang sama rapuh untuk request tanpa body |
 

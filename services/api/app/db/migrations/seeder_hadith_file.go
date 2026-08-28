@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
@@ -28,7 +29,10 @@ func SeedHadithFromFiles(db *gorm.DB) {
 		return
 	}
 
-	imp := &hadithImporter{db: db}
+	imp := &hadithImporter{
+		db:                  db,
+		sectionTranslations: loadHadithSectionTranslations(),
+	}
 	for _, f := range files {
 		if err := imp.importFile(f); err != nil {
 			log.Printf("[seeder] SeedHadithFromFiles ERROR %s: %v", f, err)
@@ -39,10 +43,11 @@ func SeedHadithFromFiles(db *gorm.DB) {
 // ── hadithImporter ────────────────────────────────────────────────────────────
 
 type hadithImporter struct {
-	db           *gorm.DB
-	bookCache    map[string]int
-	themeCache   map[string]int
-	chapterCache map[string]int
+	db                  *gorm.DB
+	bookCache           map[string]int
+	themeCache          map[string]int
+	chapterCache        map[string]int
+	sectionTranslations map[string]string
 }
 
 type hadithRow struct {
@@ -175,8 +180,12 @@ func (imp *hadithImporter) findOrCreateTheme(key, name string, bookID int) (int,
 	}
 
 	tr := &model.Translation{
-		En:  lib.Strptr(name),
-		Idn: lib.Strptr(name),
+		En: lib.Strptr(name),
+	}
+	if idn, ok := imp.sectionTranslations[strings.TrimSpace(name)]; ok && idn != "" {
+		tr.Idn = lib.Strptr(idn)
+	} else {
+		tr.Idn = lib.Strptr(name)
 	}
 	if err := imp.db.Create(tr).Error; err != nil {
 		return 0, err
@@ -206,8 +215,12 @@ func (imp *hadithImporter) findOrCreateChapter(key, name string, themeID int) (i
 		return *existing.ID, nil
 	}
 	tr := &model.Translation{
-		En:  lib.Strptr(name),
-		Idn: lib.Strptr(name),
+		En: lib.Strptr(name),
+	}
+	if idn, ok := imp.sectionTranslations[strings.TrimSpace(name)]; ok && idn != "" {
+		tr.Idn = lib.Strptr(idn)
+	} else {
+		tr.Idn = lib.Strptr(name)
 	}
 	if err := imp.db.Create(tr).Error; err != nil {
 		return 0, err

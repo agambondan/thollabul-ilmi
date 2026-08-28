@@ -16,6 +16,7 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /app/build/main /app/main
 COPY data/locations.json /app/data/locations.json
+COPY data/hadith_section_translations_id.json /app/data/hadith_section_translations_id.json
 # The *FromFile seeders read from data/static at runtime. Without this the whole
 # file-based content pipeline silently no-ops in the container ("tidak ditemukan
 # — skip") and only the Go-hardcoded seeders ever run.
