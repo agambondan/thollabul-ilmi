@@ -18,10 +18,10 @@ Analisis lengkap tiap item ada di [UI_MATURITY_AUDIT_2026-08-28.md](UI_MATURITY_
 
 | Status | Jumlah |
 |---|---|
-| ✅ Selesai | 42 |
+| ✅ Selesai | 44 |
 | 📋 Terbuka | 3 |
-| ⏸️ Menunggu | 3 |
-| ❌ Dicabut | 9 |
+| ⏸️ Menunggu | 0 |
+| ❌ Dicabut | 10 |
 | **Total** | **57** |
 
 Catatan: 7 dari 45 temuan ternyata **bukan bug** — semuanya berasal dari cara
@@ -64,7 +64,7 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 | C3 | `data/static` tidak masuk image Docker + runtime tanpa `WORKDIR` → **23 seeder file diam-diam mati** | infra | ✅ Selesai | Termasuk membuat `data/locations.json` tak terbaca |
 | C4 | Chip kategori fiqh hardcoded dan melenceng (`umum` tidak ada; `nikah`/`jenazah` hilang) | web | ✅ Selesai | Diturunkan dari data |
 | C5 | `/fiqh` publik menampilkan "0 topik" untuk semua kategori sebelum dibuka | web | ✅ Selesai | Materi di-preload; ikut memperbaiki C8 |
-| C6 | Seeder istilah duplikat — 28 entri hardcoded di `seeder_tier3.go` sama persis dengan JSON | api | ⏸️ Menunggu | JSON sudah superset; hapus yang Go? |
+| C6 | Seeder istilah duplikat — 28 entri hardcoded di `seeder_tier3.go` sama persis dengan JSON | api | ✅ Selesai | `seedIslamicTerms` dihapus; JSON (66 entri) jadi satu-satunya sumber |
 | C7 | Materi fiqh "belum di-seed / 0 topik" | api | ❌ Dicabut | Ada 27 materi; yang salah tampilannya (C5) |
 | C8 | Search di `/fiqh` publik tidak menemukan apa pun di kategori yang belum dibuka | web | ✅ Selesai | Bug laten, ketahuan saat memperbaiki C5 |
 | C9 | `/fiqh/items` tidak menyertakan `translation` → `/dashboard/fiqh` kehilangan localization EN | api | ✅ Selesai | Regresi dari perbaikan B2; mapper controller yang membuangnya |
@@ -82,7 +82,7 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 | D7 | Route detail blank tanpa pesan: `/hadith/theme/[slug]`, `/siroh/[id]`, `/dashboard/siroh/[slug]` | web | ✅ Selesai | Siroh: 404 tetap parse JSON jadi `.catch` tak pernah jalan. Hadith theme: tidak ada empty state |
 | D8 | Copy error menyesatkan — 4xx/429 dilaporkan sebagai "server tidak dapat dijangkau" | web | ✅ Selesai | 8 string di 2 bahasa; berhenti menyuruh pengunjung menyalakan backend |
 | D9 | 404 di `/dashboard/hadith/[slug]/[number]` menggantikan seluruh shell dashboard | web | ✅ Selesai | Tambah `app/dashboard/not-found.js`. **Verifikasi visual tertunda** — password admin berubah di tengah sesi |
-| D10 | 9 pasang route publik/dashboard byte-identik | web | ⏸️ Menunggu | Konsolidasi = perubahan navigasi, butuh keputusan |
+| D10 | 9 pasang route publik/dashboard byte-identik | web | ❌ Dicabut | Kesembilan route publik **sudah** stub `redirect()` ke versi dashboard — screenshot identik justru bukti redirect bekerja, bukan duplikasi kode |
 
 ## E. Performa
 
@@ -108,7 +108,7 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 |---|---|---|---|---|
 | G1 | Crawler screenshot memotret 600 ms setelah `domcontentloaded` → banyak false positive | tooling | ✅ Selesai | Jadi `networkidle`; sumber A9/B5/B6/B7/D4 |
 | G2 | Test repository membuka GORM tanpa naming strategy aplikasi — menguji skema yang tak pernah ada | api | ✅ Selesai | Helper dzikir/fiqh disamakan; ini yang membongkar A7 |
-| G3 | AutoMigrate tidak jalan saat aplikasi start untuk Postgres — skema prod bisa drift diam-diam | ops | ⏸️ Menunggu | Jadikan bagian dari deploy? |
+| G3 | AutoMigrate tidak jalan saat aplikasi start untuk Postgres — skema prod bisa drift diam-diam | ops | ✅ Selesai | `DEPLOY_MIGRATE_CMD` di `deploy.sh`, jalan sebelum restart; gagal migrasi = rollout batal |
 | G4 | Helper test lain (`bookmark`, `library_book`, `audio`, `delete_result`) masih tanpa `SingularTable` | api | ✅ Selesai | Semua helper test kini seragam dengan konfigurasi aplikasi |
 | G5 | ESLint rusak — `@typescript-eslint` gagal load | tooling | ✅ Selesai | `typescript@7.0.2` masuk lewat `--legacy-peer-deps` padahal peer-nya `<6.1.0`; dipin ke `^5.9.3` |
 | G8 | 155 masalah lint pre-existing (140 error) baru terlihat setelah G5 beres | web | 📋 Terbuka | Mayoritas `react-hooks/set-state-in-effect`; perlu garapan tersendiri |
