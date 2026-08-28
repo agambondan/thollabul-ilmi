@@ -72,7 +72,7 @@ const ByBook = ({ basePath = "/hadith" }) => {
                                     {label}
                                 </h5>
                                 <p className='text-sm text-gray-500 dark:text-gray-400 mb-2'>
-                                    {book.count} Hadith
+                                    {book.count} {t("hadith.unit")}
                                 </p>
                             </div>
                             <Link

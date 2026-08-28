@@ -240,25 +240,13 @@ const ByChapter = ({ basePath = "/hadith" }) => {
                                             </div>
                                             {hadithCount != null && (
                                                 <span className='shrink-0 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 text-xs font-semibold px-2.5 py-1'>
-                                                    {hadithCount} hadith
+                                                    {hadithCount} {t("hadith.unit")}
                                                 </span>
                                             )}
                                         </div>
 
-                                        {getLocalizedTranslation(
-                                            chapter?.translation,
-                                            lang,
-                                        ) && (
-                                            <p className='mt-2 text-sm text-gray-500 dark:text-gray-400 line-clamp-2'>
-                                                {getLocalizedTranslation(
-                                                    chapter.translation,
-                                                    lang,
-                                                )}
-                                            </p>
-                                        )}
-
                                         <p className='mt-3 text-xs font-medium text-emerald-600 dark:text-emerald-400'>
-                                            Buka hadith pada bab ini →
+                                            {t("hadith.open_reader")} →
                                         </p>
                                     </button>
                                 );

@@ -15,7 +15,7 @@ const ByTheme = ({ themeBasePath = "/hadith/theme" }) => {
 
     const getThemeLabel = (theme) =>
         getLocalizedTranslation(theme?.translation, lang) ||
-        `Theme ${theme?.id}`;
+        `${t("hadith.tab_theme")} ${theme?.id}`;
 
     const fetchThemes = async () => {
         const res = await fetch(
@@ -89,11 +89,11 @@ const ByTheme = ({ themeBasePath = "/hadith/theme" }) => {
                                     {themeLabel}
                                 </h5>
                                 <p className='text-sm text-gray-500 dark:text-gray-400 mb-2'>
-                                    {theme.total_hadith ?? 0} Hadith
+                                    {theme.total_hadith ?? 0} {t("hadith.unit")}
                                 </p>
                             </div>
                             <p className='text-xs text-gray-400'>
-                                Perawi: {themeBooksLabel}
+                                {lang === "ID" ? "Perawi:" : "Narrator:"} {themeBooksLabel}
                             </p>
                         </div>
                     </Link>

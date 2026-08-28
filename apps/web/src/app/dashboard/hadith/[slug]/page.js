@@ -409,13 +409,19 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                                 : "Audio belum tersedia"}
                                                     </button>
                                                 )}
+                                                {/* Ikon di KIRI lalu label, sama seperti item lain di menu ini.
+                                                    Sebelumnya barisnya memakai justify-between dengan label dulu,
+                                                    jadi ikonnya terdorong ke tepi kanan sendirian.
+                                                    BookmarkButton membawa p-2 dan text-lg sendiri, jadi keduanya
+                                                    dinetralkan agar sebaris rapi dengan ikon saudaranya. */}
                                                 {h.id && (
-                                                    <div className='flex items-center justify-between gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-gray-700 dark:text-gray-300'>
-                                                        <span>Bookmark</span>
+                                                    <div className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-gray-700 dark:text-gray-300'>
                                                         <BookmarkButton
                                                             refType='hadith'
                                                             refId={h.id}
+                                                            className="!p-0 !text-base relative before:absolute before:-inset-2 before:content-['']"
                                                         />
+                                                        <span>Bookmark</span>
                                                     </div>
                                                 )}
                                                 <button

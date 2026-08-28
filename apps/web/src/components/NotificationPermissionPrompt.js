@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { BsBell, BsBellFill, BsX } from "react-icons/bs";
 import { notificationApi } from "@/lib/api";
 import {
@@ -28,6 +29,8 @@ const isPromptDismissed = () => {
 };
 
 export default function NotificationPermissionPrompt() {
+    const pathname = usePathname() || "";
+    const isDashboard = pathname.startsWith("/dashboard");
     const { isAuthenticated, isLoading } = useAuth();
     const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -142,7 +145,11 @@ export default function NotificationPermissionPrompt() {
     if (!visible) return null;
 
     return (
-        <div className='fixed inset-x-3 bottom-20 z-[70] mx-auto max-w-md rounded-2xl border border-emerald-100 bg-white p-4 shadow-2xl shadow-slate-900/15 dark:border-emerald-900/40 dark:bg-slate-900 sm:bottom-5'>
+        <div
+            className={`fixed inset-x-3 z-[70] mx-auto max-w-md rounded-2xl border border-emerald-100 bg-white p-4 shadow-2xl shadow-slate-900/15 dark:border-emerald-900/40 dark:bg-slate-900 ${
+                isDashboard ? "bottom-24 sm:bottom-28" : "bottom-20 sm:bottom-5"
+            }`}
+        >
             <button
                 type='button'
                 onClick={handleDismiss}

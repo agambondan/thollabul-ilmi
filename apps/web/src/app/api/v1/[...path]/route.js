@@ -45,16 +45,27 @@ const buildResponseHeaders = (upstreamHeaders) => {
     return headers;
 };
 
-const proxy = async (request, context) => {
-    const targetUrl = await buildTargetUrl(request, context.params);
-    const hasBody = request.method !== "GET" && request.method !== "HEAD";
-    const upstream = await fetch(targetUrl, {
+// Forwarding request.body as a stream (with `duplex: "half"`) makes undici
+// throw "expected non-null body source" under the dev server, and would do the
+// same for any bodyless POST/DELETE such as /auth/logout. Buffering is
+// predictable across runtimes; request sizes here are already capped by
+// BODY_LIMIT_BYTES upstream, so holding one in memory is bounded.
+const buildUpstreamInit = async (request) => {
+    const init = {
         method: request.method,
         headers: buildForwardHeaders(request),
-        body: hasBody ? request.body : undefined,
-        duplex: hasBody ? "half" : undefined,
         cache: "no-store",
-    });
+    };
+    if (request.method === "GET" || request.method === "HEAD") return init;
+
+    const buffered = await request.arrayBuffer();
+    if (buffered.byteLength > 0) init.body = buffered;
+    return init;
+};
+
+const proxy = async (request, context) => {
+    const targetUrl = await buildTargetUrl(request, context.params);
+    const upstream = await fetch(targetUrl, await buildUpstreamInit(request));
 
     return new Response(upstream.body, {
         status: upstream.status,

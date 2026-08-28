@@ -429,6 +429,8 @@ const DashboardLayout = ({ children }) => {
         },
         {
             labelKey: "link.belajar",
+            // The bottom-nav cell is ~78px; the full label truncates there.
+            shortLabelKey: "link.belajar_short",
             href: "/dashboard/belajar",
             icon: <MdOutlinePlayLesson />,
         },
@@ -848,7 +850,7 @@ const DashboardLayout = ({ children }) => {
                                         {link.icon}
                                     </span>
                                     <span className='max-w-full px-1 truncate'>
-                                        {t(link.labelKey)}
+                                        {t(link.shortLabelKey ?? link.labelKey)}
                                     </span>
                                 </Link>
                             );

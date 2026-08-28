@@ -18,11 +18,11 @@ Analisis lengkap tiap item ada di [UI_MATURITY_AUDIT_2026-08-28.md](UI_MATURITY_
 
 | Status | Jumlah |
 |---|---|
-| ✅ Selesai | 34 |
-| 📋 Terbuka | 8 |
-| ⏸️ Menunggu | 4 |
+| ✅ Selesai | 38 |
+| 📋 Terbuka | 6 |
+| ⏸️ Menunggu | 3 |
 | ❌ Dicabut | 9 |
-| **Total** | **55** |
+| **Total** | **56** |
 
 Catatan: 7 dari 45 temuan ternyata **bukan bug** — semuanya berasal dari cara
 audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
@@ -77,11 +77,11 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 | D2 | 16 tabel admin tanpa kontainer scroll horizontal | web | ✅ Selesai | Kemudian diabstraksi jadi `DataPanel` oleh refactor lain |
 | D3 | Tombol & aksen biru di forum/feed padahal aplikasi serba emerald | web | ✅ Selesai | Biru di `dashboard/hadith/[slug]` sengaja dibiarkan (aksen informasi) |
 | D4 | Toast "Aktifkan lokasi & notifikasi" muncul di semua route, tak pernah hilang | web | ❌ Dicabut | Dismiss berfungsi, TTL 24 jam; crawler tak pernah klik |
-| D5 | Tab strip `/dashboard/panduan-sholat` terpotong di mobile | web | 📋 Terbuka | Tanpa indikator scroll |
-| D6 | Label bottom nav terpotong ("Pusat Bela…") | web | 📋 Terbuka | — |
+| D5 | Tab strip `/dashboard/panduan-sholat` terpotong di mobile | web | 📋 Terbuka | Sudah `overflow-x-auto` + `no-scrollbar` — jadi **bisa** di-scroll, yang kurang hanya indikator visual |
+| D6 | Label bottom nav terpotong ("Pusat Bela…") | web | ✅ Selesai | Label pendek khusus bottom nav (`link.belajar_short`); grid 5 kolom ternyata sudah benar |
 | D7 | Route detail blank tanpa pesan: `/hadith/theme/[slug]`, `/siroh/[id]`, `/dashboard/siroh/[slug]` | web | ✅ Selesai | Siroh: 404 tetap parse JSON jadi `.catch` tak pernah jalan. Hadith theme: tidak ada empty state |
 | D8 | Copy error menyesatkan — 4xx/429 dilaporkan sebagai "server tidak dapat dijangkau" | web | 📋 Terbuka | — |
-| D9 | 404 di `/dashboard/hadith/[slug]/[number]` menggantikan seluruh shell dashboard | web | 📋 Terbuka | Inkonsisten dengan 404 lain |
+| D9 | 404 di `/dashboard/hadith/[slug]/[number]` menggantikan seluruh shell dashboard | web | ✅ Selesai | Tambah `app/dashboard/not-found.js`. **Verifikasi visual tertunda** — password admin berubah di tengah sesi |
 | D10 | 9 pasang route publik/dashboard byte-identik | web | ⏸️ Menunggu | Konsolidasi = perubahan navigasi, butuh keputusan |
 
 ## E. Performa
@@ -97,7 +97,7 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 | ID | Temuan | Area | Status | Catatan |
 |---|---|---|---|---|
 | F1 | Kredensial admin produksi ter-commit di `capture-all-routes-vps.mjs` | infra | ✅ Selesai | Dipindah ke env var |
-| F2 | Password admin produksi `Admin@123` masih aktif & ada di histori git | ops | ⏸️ Menunggu | Ditunda atas permintaan; **tetap mendesak** |
+| F2 | Password admin produksi `Admin@123` masih aktif & ada di histori git | ops | ✅ Selesai | Diganti di luar sesi ini — login lama kini 401 di prod maupun API langsung |
 | F3 | `GET /api/v1/blog/posts` membocorkan email admin lewat objek `author` | api | ✅ Selesai | Hook `AfterFind` di `BlogPost` + `ToPublic()`; ada test |
 | F4 | `/forum/questions` ikut membocorkan email lewat author yang saya hidrasi (A6) | api | ✅ Selesai | Regresi dari perbaikan sendiri, ketahuan saat menggarap F3 |
 | F5 | `User.ToPublic()` dead code yang justru menyertakan email | api | ✅ Selesai | Dijadikan sanitizer resmi |
@@ -111,7 +111,8 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 | G3 | AutoMigrate tidak jalan saat aplikasi start untuk Postgres — skema prod bisa drift diam-diam | ops | ⏸️ Menunggu | Jadikan bagian dari deploy? |
 | G4 | Helper test lain (`bookmark`, `library_book`, `audio`, `delete_result`) masih tanpa `SingularTable` | api | ✅ Selesai | Semua helper test kini seragam dengan konfigurasi aplikasi |
 | G5 | ESLint rusak — `@typescript-eslint` gagal load | tooling | 📋 Terbuka | Pre-existing; verifikasi terpaksa lewat build |
-| G6 | Docker lokal `No space left on device` padahal host 64G kosong | env | 📋 Terbuka | Bukan dari repo; menghambat verifikasi |
+| G6 | Docker lokal `No space left on device` padahal host 64G kosong | env | 📋 Terbuka | Docker Desktop jalan di VM berdisk terbatas; build cache sempat 42GB |
+| G7 | Proxy `/api/v1/[...path]` mengirim `duplex: "half"` untuk semua non-GET → undici `expected non-null body source` | web | ✅ Selesai | Mematikan **semua POST/PUT/DELETE di dev**. Produksi lolos, tapi jalur yang sama rapuh untuk request tanpa body |
 
 ## H. Infrastruktur VPS
 

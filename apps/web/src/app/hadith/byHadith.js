@@ -26,6 +26,7 @@ const ByHadith = ({ basePath = "/hadith" }) => {
     const [isError, setIsError] = useState(false);
 
     const isSearching = query.trim().length > 0;
+    const canJump = /^\d+$/.test(query.trim());
 
     const currentBook = useMemo(
         () => bookList.find((book) => book.slug === selectedBookSlug),
@@ -76,7 +77,7 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                 `${process.env.NEXT_PUBLIC_API_URL}/api/v1/hadiths/book/${bookSlug}?page=${pageNum}&size=${PAGE_SIZE}`,
             );
             const data = await res.json();
-            const items = normalizeItems(data);
+            const items = normalizeItems(data).slice().sort((a, b) => (a.number ?? 0) - (b.number ?? 0));
 
             setTotal(data?.total ?? items.length);
             setHadiths((prev) => (append ? [...prev, ...items] : items));
@@ -119,7 +120,7 @@ const ByHadith = ({ basePath = "/hadith" }) => {
 
     const jumpToHadith = () => {
         const number = query.trim();
-        if (!number || !selectedBookSlug) return;
+        if (!/^\d+$/.test(number) || !selectedBookSlug) return;
         window.location.href = `${basePath}/${selectedBookSlug}#${encodeURIComponent(`${selectedBookSlug}-${number}`)}`;
     };
 
@@ -175,7 +176,8 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                         <button
                             type='button'
                             onClick={jumpToHadith}
-                            className='inline-flex items-center justify-center px-4 py-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-sm font-medium hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors'
+                            disabled={!canJump}
+                            className='inline-flex items-center justify-center px-4 py-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-sm font-medium hover:bg-emerald-50 dark:hover:bg-emerald-900/20 disabled:opacity-40 disabled:pointer-events-none transition-colors'
                         >
                             {t("hadith.jump")}
                         </button>
@@ -202,7 +204,7 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                             {t("common.showing")} {hadiths.length}{" "}
                             {t("common.of")} {total} {t("hadith.unit")}
                         </p>
-                        {isSearching && <p>Pencarian: &quot;{query}&quot;</p>}
+                        {isSearching && <p>{t("common.search")}: &quot;{query}&quot;</p>}
                         {!isSearching && <p>{t("hadith.search_hint")}</p>}
                     </div>
 
@@ -235,7 +237,7 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                                                 {getLocalizedTranslation(
                                                     currentBook?.translation,
                                                     lang,
-                                                ) || "Hadith"}{" "}
+                                                ) || t("hadith.title")}{" "}
                                                 · No. {hadith.number}
                                             </p>
                                             <GradeBadge grade={hadith.grade} />
