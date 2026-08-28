@@ -1,6 +1,7 @@
 "use client";
 
 import ChangePasswordCard from "@/components/account/ChangePasswordCard";
+import EditProfileCard from "@/components/account/EditProfileCard";
 import { SkeletonProfile } from "@/components/skeleton/Skeleton";
 import { useLocale } from "@/context/Locale";
 import { hafalanApi, muhasabahApi, streakApi, userApi, progressApi } from "@/lib/api";
@@ -25,7 +26,6 @@ import {
     BsChevronDown,
     BsChevronUp,
     BsJournalCheck,
-    BsPencil,
     BsStickyFill,
     BsTranslate,
 } from "react-icons/bs";
@@ -74,10 +74,6 @@ const ProfileContent = () => {
     const [muhasabahCount, setMuhasabahCount] = useState(0);
     const [hafalCount, setHafalCount] = useState(0);
     const [syncError, setSyncError] = useState("");
-    const [editOpen, setEditOpen] = useState(false);
-    const [editName, setEditName] = useState("");
-    const [editLoading, setEditLoading] = useState(false);
-    const [editMsg, setEditMsg] = useState({ type: "", text: "" });
     const [sessions, setSessions] = useState([]);
     const [sessionsLoading, setSessionsLoading] = useState(false);
     const [sessionActionId, setSessionActionId] = useState(null);
@@ -128,10 +124,6 @@ const ProfileContent = () => {
     }, [isAuthenticated]);
 
     useEffect(() => {
-        if (user?.name) setEditName(user.name);
-    }, [user]);
-
-    useEffect(() => {
         if (!isAuthenticated) return;
         setSessionsLoading(true);
         userApi
@@ -165,29 +157,8 @@ const ProfileContent = () => {
     }, [isAuthenticated, authLoading]);
 
     useEffect(() => {
-        if (user?.name) setEditName(user.name);
         if (user?.preferred_lang) setSelectedLang(user.preferred_lang);
     }, [user]);
-
-    const handleEditProfile = async (e) => {
-        e.preventDefault();
-        if (!editName.trim()) return;
-        setEditLoading(true);
-        setEditMsg({ type: "", text: "" });
-        try {
-            const res = await userApi.updateMe(user.id, {
-                name: editName.trim(),
-            });
-            if (!res.ok) throw new Error();
-            refetchUser();
-            setEditMsg({ type: "success", text: t("profile.update_success") });
-            setEditOpen(false);
-        } catch {
-            setEditMsg({ type: "error", text: t("profile.update_error") });
-        } finally {
-            setEditLoading(false);
-        }
-    };
 
     const handleChangeLang = async (lang) => {
         setLangLoading(true);
@@ -295,79 +266,6 @@ const ProfileContent = () => {
                     >
                         {user.role}
                     </span>
-                )}
-                <button
-                    type='button'
-                    onClick={() => {
-                        setEditOpen((current) => !current);
-                        setEditMsg({ type: "", text: "" });
-                    }}
-                    className='mt-4 inline-flex items-center gap-2 text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400'
-                >
-                    <BsPencil />
-                    {t("profile.edit_profile")}
-                    {editOpen ? <BsChevronUp /> : <BsChevronDown />}
-                </button>
-                {editOpen && (
-                    <form
-                        onSubmit={handleEditProfile}
-                        className='mt-4 w-full space-y-3 rounded-xl border border-emerald-100 bg-emerald-50/60 p-4 text-left dark:border-emerald-900/50 dark:bg-emerald-950/20'
-                    >
-                        {editMsg.text && (
-                            <p
-                                className={`text-xs font-semibold ${
-                                    editMsg.type === "error"
-                                        ? "text-red-600 dark:text-red-400"
-                                        : "text-emerald-700 dark:text-emerald-300"
-                                }`}
-                            >
-                                {editMsg.text}
-                            </p>
-                        )}
-                        <div>
-                            <label className='mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400'>
-                                {t("auth.name")}
-                            </label>
-                            <input
-                                value={editName}
-                                onChange={(e) => setEditName(e.target.value)}
-                                required
-                                className={inputCls}
-                            />
-                        </div>
-                        <div>
-                            <label className='mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400'>
-                                Email
-                            </label>
-                            <input
-                                value={user?.email ?? ""}
-                                disabled
-                                className={`${inputCls} cursor-not-allowed opacity-60`}
-                            />
-                        </div>
-                        <div className='flex justify-end gap-2'>
-                            <button
-                                type='button'
-                                onClick={() => {
-                                    setEditOpen(false);
-                                    setEditName(user?.name ?? "");
-                                    setEditMsg({ type: "", text: "" });
-                                }}
-                                className='rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-white dark:border-slate-700 dark:text-gray-300 dark:hover:bg-slate-800'
-                            >
-                                {t("common.cancel")}
-                            </button>
-                            <button
-                                type='submit'
-                                disabled={editLoading}
-                                className='rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-600 disabled:opacity-60'
-                            >
-                                {editLoading
-                                    ? t("common.saving")
-                                    : t("common.save")}
-                            </button>
-                        </div>
-                    </form>
                 )}
             </div>
 
@@ -613,6 +511,12 @@ const ProfileContent = () => {
                     </span>
                 </Link>
             </div>
+
+            <EditProfileCard
+                user={user}
+                refetchUser={refetchUser}
+                className='mb-3'
+            />
 
             {/* Preferensi bahasa */}
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 mb-3 overflow-hidden'>

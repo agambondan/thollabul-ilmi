@@ -23,6 +23,7 @@ jest.mock("@/lib/api", () => ({
     streakApi: { get: () => ok({ current: 5 }) },
     userApi: {
         sessions: () => ok([]),
+        updateMe: () => ok({}),
         updateProfile: () => ok({}),
         changePassword: () => ok({}),
         deleteMe: () => ok({}),
@@ -64,6 +65,9 @@ describe("ProfileContent", () => {
         // One representative element per section, so a section that throws or
         // silently disappears fails the test.
         expect(screen.getByText("profile.change_password")).toBeInTheDocument();
+        // Edit profile is a collapsible card like the two beside it, not a
+        // text link buried in the avatar block.
+        expect(screen.getByText("profile.edit_profile")).toBeInTheDocument();
         expect(screen.getByText("profile.hafal_label")).toBeInTheDocument();
 
         // The quick links are the section that referenced the undeclared
