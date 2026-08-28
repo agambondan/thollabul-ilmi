@@ -31,6 +31,7 @@ export const LOCAL_TOOL_TYPES = [
     "forum",
     "historical-map",
     "tokoh",
+    "komunitas",
 ];
 
 const featureIcons = {
@@ -45,7 +46,9 @@ const featureIcons = {
     "jarh-tadil": Scale,
     kajian: Video,
     kamus: Star,
+    komunitas: Users,
     leaderboard: Users,
+    lessons: BookOpen,
     manasik: BookOpen,
     notes: StickyNote,
     "panduan-sholat": BookOpen,

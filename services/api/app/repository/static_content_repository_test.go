@@ -7,6 +7,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 )
 
 func TestDzikirRepositoryCreateUpdateAndQueries(t *testing.T) {
@@ -185,8 +186,11 @@ func TestFiqhRepositoryItemCRUDKeepsDalilSeparate(t *testing.T) {
 
 func newStaticContentRepositoryTestDB(t *testing.T) *gorm.DB {
 	t.Helper()
+	// Mirror the app's naming strategy (app/db/postgresql.go, app/db/db_sqlite.go)
+	// so queries that qualify columns by table name are exercised realistically.
 	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Silent),
+		NamingStrategy: schema.NamingStrategy{SingularTable: true},
+		Logger:         logger.Default.LogMode(logger.Silent),
 	})
 	if err != nil {
 		t.Fatalf("open sqlite: %v", err)

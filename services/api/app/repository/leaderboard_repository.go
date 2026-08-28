@@ -29,7 +29,7 @@ func (r *leaderboardRepository) TopStreak(limit int) ([]model.LeaderboardEntry, 
 			FROM (
 				SELECT user_id, activity_date,
 					activity_date::date - ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY activity_date)::int AS grp
-				FROM (SELECT DISTINCT user_id, activity_date FROM user_activities WHERE deleted_at IS NULL) t
+				FROM (SELECT DISTINCT user_id, activity_date FROM user_activity WHERE deleted_at IS NULL) t
 			) g
 			GROUP BY user_id, grp
 		),
@@ -39,7 +39,7 @@ func (r *leaderboardRepository) TopStreak(limit int) ([]model.LeaderboardEntry, 
 		SELECT ROW_NUMBER() OVER (ORDER BY ms.score DESC) AS rank,
 			ms.user_id::text, u.name, u.avatar, ms.score
 		FROM max_streaks ms
-		JOIN users u ON u.id = ms.user_id
+		JOIN "user" u ON u.id = ms.user_id::text
 		WHERE u.deleted_at IS NULL
 		ORDER BY ms.score DESC
 		LIMIT ?`, limit).Scan(&rows).Error
@@ -52,7 +52,7 @@ func (r *leaderboardRepository) TopHafalan(limit int) ([]model.LeaderboardEntry,
 		SELECT ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS rank,
 			hp.user_id::text, u.name, u.avatar, COUNT(*) AS score
 		FROM hafalan_progress hp
-		JOIN users u ON u.id = hp.user_id
+		JOIN "user" u ON u.id = hp.user_id::text
 		WHERE hp.status = 'memorized' AND hp.deleted_at IS NULL AND u.deleted_at IS NULL
 		GROUP BY hp.user_id, u.name, u.avatar
 		ORDER BY score DESC
@@ -68,7 +68,7 @@ func (r *leaderboardRepository) MyStreakRank(userID uuid.UUID) (*model.Leaderboa
 			FROM (
 				SELECT user_id, activity_date,
 					activity_date::date - ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY activity_date)::int AS grp
-				FROM (SELECT DISTINCT user_id, activity_date FROM user_activities WHERE deleted_at IS NULL) t
+				FROM (SELECT DISTINCT user_id, activity_date FROM user_activity WHERE deleted_at IS NULL) t
 			) g
 			GROUP BY user_id, grp
 		),

@@ -151,76 +151,78 @@ const AdminDhikrPage = () => {
                 <p className='text-sm text-gray-500'>{t("common.loading")}</p>
             ) : (
                 <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 overflow-hidden'>
-                    <table className='w-full text-sm'>
-                        <thead className='bg-gray-50 dark:bg-slate-700'>
-                            <tr>
-                                <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300'>
-                                    {t("admin.field.title")}
-                                </th>
-                                <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300 w-32'>
-                                    {t("admin.field.category")}
-                                </th>
-                                <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300 w-20 hidden md:table-cell'>
-                                    {t("admin.field.repetition")}
-                                </th>
-                                <th className='px-4 py-3 w-20'></th>
-                            </tr>
-                        </thead>
-                        <tbody className='divide-y divide-gray-100 dark:divide-slate-700'>
-                            {filtered.map((item) => (
-                                <tr
-                                    key={item.id ?? item._id}
-                                    className='hover:bg-gray-50 dark:hover:bg-slate-700'
-                                >
-                                    <td className='px-4 py-3 text-gray-900 dark:text-white font-medium'>
-                                        {getLocalizedField(item, "title", lang)}
-                                    </td>
-                                    <td className='px-4 py-3'>
-                                        <span className='px-2 py-0.5 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 rounded text-xs'>
-                                            {item.category}
-                                        </span>
-                                    </td>
-                                    <td className='px-4 py-3 text-gray-500 dark:text-gray-400 hidden md:table-cell'>
-                                        {item.count ? `${item.count}x` : "-"}
-                                    </td>
-                                    <td className='px-4 py-3'>
-                                        <div className='flex items-center gap-2 justify-end'>
-                                            <button
-                                                onClick={() => openEdit(item)}
-                                                aria-label={t("common.edit")}
-                                                title={t("common.edit")}
-                                                className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
-                                            >
-                                                <BsPencil />
-                                            </button>
-                                            <button
-                                                onClick={() =>
-                                                    setDeleteId(
-                                                        item.id ?? item._id,
-                                                    )
-                                                }
-                                                aria-label={t("common.delete")}
-                                                title={t("common.delete")}
-                                                className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
-                                            >
-                                                <BsTrash />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                            {filtered.length === 0 && (
+                    <div className='overflow-x-auto'>
+                        <table className='w-full text-sm min-w-[640px]'>
+                            <thead className='bg-gray-50 dark:bg-slate-700'>
                                 <tr>
-                                    <td
-                                        colSpan={4}
-                                        className='px-4 py-8 text-center text-gray-400'
-                                    >
-                                        {t("admin.crud.no_data")}
-                                    </td>
+                                    <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300'>
+                                        {t("admin.field.title")}
+                                    </th>
+                                    <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300 w-32'>
+                                        {t("admin.field.category")}
+                                    </th>
+                                    <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300 w-20 hidden md:table-cell'>
+                                        {t("admin.field.repetition")}
+                                    </th>
+                                    <th className='px-4 py-3 w-20'></th>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className='divide-y divide-gray-100 dark:divide-slate-700'>
+                                {filtered.map((item) => (
+                                    <tr
+                                        key={item.id ?? item._id}
+                                        className='hover:bg-gray-50 dark:hover:bg-slate-700'
+                                    >
+                                        <td className='px-4 py-3 text-gray-900 dark:text-white font-medium'>
+                                            {getLocalizedField(item, "title", lang)}
+                                        </td>
+                                        <td className='px-4 py-3'>
+                                            <span className='px-2 py-0.5 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 rounded text-xs'>
+                                                {item.category}
+                                            </span>
+                                        </td>
+                                        <td className='px-4 py-3 text-gray-500 dark:text-gray-400 hidden md:table-cell'>
+                                            {item.count ? `${item.count}x` : "-"}
+                                        </td>
+                                        <td className='px-4 py-3'>
+                                            <div className='flex items-center gap-2 justify-end'>
+                                                <button
+                                                    onClick={() => openEdit(item)}
+                                                    aria-label={t("common.edit")}
+                                                    title={t("common.edit")}
+                                                    className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
+                                                >
+                                                    <BsPencil />
+                                                </button>
+                                                <button
+                                                    onClick={() =>
+                                                        setDeleteId(
+                                                            item.id ?? item._id,
+                                                        )
+                                                    }
+                                                    aria-label={t("common.delete")}
+                                                    title={t("common.delete")}
+                                                    className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
+                                                >
+                                                    <BsTrash />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {filtered.length === 0 && (
+                                    <tr>
+                                        <td
+                                            colSpan={4}
+                                            className='px-4 py-8 text-center text-gray-400'
+                                        >
+                                            {t("admin.crud.no_data")}
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             )}
 

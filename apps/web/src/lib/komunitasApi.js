@@ -73,6 +73,17 @@ export const postChatMessage = async (message) => {
     }
 };
 
+export const deleteChatMessage = async (id) => {
+    try {
+        const res = await authFetch(`/api/v1/komunitas/chat/${id}`, { method: 'DELETE' });
+        return res.ok;
+    } catch {
+        const msgs = readLocalMessages().filter((m) => m.id !== id);
+        writeLocalMessages(msgs);
+        return true;
+    }
+};
+
 export const subscribeChat = (onMessage) => {
     if (typeof window === 'undefined') return () => {};
     const cleanups = [];

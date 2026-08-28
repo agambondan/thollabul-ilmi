@@ -78,7 +78,10 @@ export function KhatamContent({ basePath = "/quran" }) {
         } catch {}
     };
 
-    if (loading) {
+    // `progress` stays null until the authenticated fetch resolves. Auth
+    // bootstraps asynchronously, so there is a window where loading is already
+    // false but progress has not been filled in yet — keep spinning there.
+    if (loading || (isAuthenticated && !progress)) {
         return (
             <div className='flex items-center justify-center py-20'>
                 <div className='w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin' />

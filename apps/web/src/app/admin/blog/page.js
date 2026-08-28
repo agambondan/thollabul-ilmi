@@ -185,113 +185,115 @@ const AdminBlogPage = () => {
                         {t("admin.blog.empty_articles")}
                     </div>
                 ) : (
-                    <table className='w-full text-sm'>
-                        <thead className='bg-gray-50 dark:bg-slate-900 text-left'>
-                            <tr>
-                                <th className='px-5 py-3 font-semibold text-gray-600 dark:text-gray-300'>
-                                    {t("admin.field.title")}
-                                </th>
-                                <th className='px-5 py-3 font-semibold text-gray-600 dark:text-gray-300 hidden md:table-cell'>
-                                    {t("admin.field.category")}
-                                </th>
-                                <th className='px-5 py-3 font-semibold text-gray-600 dark:text-gray-300'>
-                                    {t("common.status")}
-                                </th>
-                                <th className='px-5 py-3 font-semibold text-gray-600 dark:text-gray-300 hidden sm:table-cell'>
-                                    {t("common.date")}
-                                </th>
-                                <th className='px-5 py-3'></th>
-                            </tr>
-                        </thead>
-                        <tbody className='divide-y divide-gray-100 dark:divide-slate-700'>
-                            {posts.map((post) => {
-                                const badge =
-                                    STATUS_LABELS[post.status] ??
-                                    STATUS_LABELS.draft;
-                                const title = getLocalizedField(
-                                    post,
-                                    "title",
-                                    lang,
-                                );
-                                return (
-                                    <tr
-                                        key={post.id}
-                                        className='hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors'
-                                    >
-                                        <td className='px-5 py-3'>
-                                            <p className='font-medium text-gray-900 dark:text-white line-clamp-1'>
-                                                {title}
-                                            </p>
-                                            {getLocalizedField(
-                                                post,
-                                                "excerpt",
-                                                lang,
-                                            ) && (
-                                                <p className='text-xs text-gray-400 line-clamp-1 mt-0.5'>
-                                                    {getLocalizedField(
-                                                        post,
-                                                        "excerpt",
-                                                        lang,
-                                                    )}
+                    <div className='overflow-x-auto'>
+                        <table className='w-full text-sm min-w-[640px]'>
+                            <thead className='bg-gray-50 dark:bg-slate-900 text-left'>
+                                <tr>
+                                    <th className='px-5 py-3 font-semibold text-gray-600 dark:text-gray-300'>
+                                        {t("admin.field.title")}
+                                    </th>
+                                    <th className='px-5 py-3 font-semibold text-gray-600 dark:text-gray-300 hidden md:table-cell'>
+                                        {t("admin.field.category")}
+                                    </th>
+                                    <th className='px-5 py-3 font-semibold text-gray-600 dark:text-gray-300'>
+                                        {t("common.status")}
+                                    </th>
+                                    <th className='px-5 py-3 font-semibold text-gray-600 dark:text-gray-300 hidden sm:table-cell'>
+                                        {t("common.date")}
+                                    </th>
+                                    <th className='px-5 py-3'></th>
+                                </tr>
+                            </thead>
+                            <tbody className='divide-y divide-gray-100 dark:divide-slate-700'>
+                                {posts.map((post) => {
+                                    const badge =
+                                        STATUS_LABELS[post.status] ??
+                                        STATUS_LABELS.draft;
+                                    const title = getLocalizedField(
+                                        post,
+                                        "title",
+                                        lang,
+                                    );
+                                    return (
+                                        <tr
+                                            key={post.id}
+                                            className='hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors'
+                                        >
+                                            <td className='px-5 py-3'>
+                                                <p className='font-medium text-gray-900 dark:text-white line-clamp-1'>
+                                                    {title}
                                                 </p>
-                                            )}
-                                        </td>
-                                        <td className='px-5 py-3 text-gray-500 dark:text-gray-400 hidden md:table-cell'>
-                                            {post.category?.name ?? "—"}
-                                        </td>
-                                        <td className='px-5 py-3'>
-                                            <span
-                                                className={`px-2 py-0.5 rounded-full text-xs font-medium ${badge.cls}`}
-                                            >
-                                                {t(badge.labelKey)}
-                                            </span>
-                                        </td>
-                                        <td className='px-5 py-3 text-gray-400 text-xs hidden sm:table-cell'>
-                                            {post.published_at
-                                                ? new Date(
-                                                      post.published_at,
-                                                  ).toLocaleDateString(
-                                                      lang === "EN"
-                                                          ? "en-US"
-                                                          : "id-ID",
-                                                  )
-                                                : new Date(
-                                                      post.created_at,
-                                                  ).toLocaleDateString(
-                                                      lang === "EN"
-                                                          ? "en-US"
-                                                          : "id-ID",
-                                                  )}
-                                        </td>
-                                        <td className='px-5 py-3'>
-                                            <div className='flex items-center gap-1 justify-end'>
-                                                <Link
-                                                    href={`/admin/blog/${post.id}/edit`}
-                                                    aria-label={`${t("common.edit")} ${title}`}
-                                                    title={`${t("common.edit")} ${title}`}
-                                                    className='p-2 rounded-lg text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
+                                                {getLocalizedField(
+                                                    post,
+                                                    "excerpt",
+                                                    lang,
+                                                ) && (
+                                                    <p className='text-xs text-gray-400 line-clamp-1 mt-0.5'>
+                                                        {getLocalizedField(
+                                                            post,
+                                                            "excerpt",
+                                                            lang,
+                                                        )}
+                                                    </p>
+                                                )}
+                                            </td>
+                                            <td className='px-5 py-3 text-gray-500 dark:text-gray-400 hidden md:table-cell'>
+                                                {post.category?.name ?? "—"}
+                                            </td>
+                                            <td className='px-5 py-3'>
+                                                <span
+                                                    className={`px-2 py-0.5 rounded-full text-xs font-medium ${badge.cls}`}
                                                 >
-                                                    <BsPencil />
-                                                </Link>
-                                                <button
-                                                    onClick={() =>
-                                                        handleDeletePost(
-                                                            post.id,
-                                                        )
-                                                    }
-                                                    aria-label={`${t("common.delete")} ${title}`}
-                                                    title={`${t("common.delete")} ${title}`}
-                                                    className='p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
-                                                >
-                                                    <BsTrash />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
+                                                    {t(badge.labelKey)}
+                                                </span>
+                                            </td>
+                                            <td className='px-5 py-3 text-gray-400 text-xs hidden sm:table-cell'>
+                                                {post.published_at
+                                                    ? new Date(
+                                                          post.published_at,
+                                                      ).toLocaleDateString(
+                                                          lang === "EN"
+                                                              ? "en-US"
+                                                              : "id-ID",
+                                                      )
+                                                    : new Date(
+                                                          post.created_at,
+                                                      ).toLocaleDateString(
+                                                          lang === "EN"
+                                                              ? "en-US"
+                                                              : "id-ID",
+                                                      )}
+                                            </td>
+                                            <td className='px-5 py-3'>
+                                                <div className='flex items-center gap-1 justify-end'>
+                                                    <Link
+                                                        href={`/admin/blog/${post.id}/edit`}
+                                                        aria-label={`${t("common.edit")} ${title}`}
+                                                        title={`${t("common.edit")} ${title}`}
+                                                        className='p-2 rounded-lg text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
+                                                    >
+                                                        <BsPencil />
+                                                    </Link>
+                                                    <button
+                                                        onClick={() =>
+                                                            handleDeletePost(
+                                                                post.id,
+                                                            )
+                                                        }
+                                                        aria-label={`${t("common.delete")} ${title}`}
+                                                        title={`${t("common.delete")} ${title}`}
+                                                        className='p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
+                                                    >
+                                                        <BsTrash />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </div>
 

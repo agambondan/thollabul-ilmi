@@ -3,8 +3,8 @@
 import { useLocale } from '@/context/Locale';
 import { useAuth } from '@/context/Auth';
 import { useEffect, useState, useRef } from 'react';
-import { getChatMessages, postChatMessage, subscribeChat } from '@/lib/komunitasApi';
-import { BsSendFill } from 'react-icons/bs';
+import { getChatMessages, postChatMessage, deleteChatMessage, subscribeChat } from '@/lib/komunitasApi';
+import { BsSendFill, BsTrash } from 'react-icons/bs';
 import Link from 'next/link';
 
 export default function ChatBox() {
@@ -13,6 +13,8 @@ export default function ChatBox() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const scrollRef = useRef(null);
+
+    const isAdmin = user?.role === 'admin';
 
     useEffect(() => {
         getChatMessages().then(setMessages);
@@ -39,11 +41,22 @@ export default function ChatBox() {
         }
     };
 
+    const handleDelete = async (id) => {
+        if (!confirm('Hapus pesan ini?')) return;
+        const ok = await deleteChatMessage(id);
+        if (ok) {
+            setMessages((prev) => prev.filter((m) => m.id !== id));
+        }
+    };
+
     return (
         <div className='flex flex-col h-96 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl overflow-hidden'>
-            <div className='p-3 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700 font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2'>
-                <span className='w-2 h-2 rounded-full bg-emerald-500 animate-pulse'></span>
-                {t('komunitas.chat')}
+            <div className='p-3 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700 font-bold text-sm text-gray-900 dark:text-white flex items-center justify-between'>
+                <div className='flex items-center gap-2'>
+                    <span className='w-2 h-2 rounded-full bg-emerald-500 animate-pulse'></span>
+                    {t('komunitas.chat')}
+                </div>
+                {isAdmin && <span className='text-[10px] text-amber-500 font-bold'>Mode Moderasi Admin</span>}
             </div>
             
             <div ref={scrollRef} className='flex-1 overflow-y-auto p-4 space-y-3'>
@@ -53,8 +66,19 @@ export default function ChatBox() {
                     messages.map((m) => {
                         const isMe = m.authorId === user?.id && !!user?.id;
                         return (
-                            <div key={m.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
-                                <span className='text-[10px] text-gray-400 mb-0.5 px-1'>{m.author}</span>
+                            <div key={m.id} className={`flex flex-col group ${isMe ? 'items-end' : 'items-start'}`}>
+                                <div className='flex items-center gap-1.5 mb-0.5 px-1'>
+                                    <span className='text-[10px] text-gray-400'>{m.author}</span>
+                                    {(isAdmin || isMe) && (
+                                        <button
+                                            onClick={() => handleDelete(m.id)}
+                                            className='opacity-0 group-hover:opacity-100 text-rose-500 text-[10px] hover:underline'
+                                            title='Hapus pesan'
+                                        >
+                                            <BsTrash />
+                                        </button>
+                                    )}
+                                </div>
                                 <div className={`px-3 py-2 rounded-xl text-sm max-w-[85%] break-words ${isMe ? 'bg-emerald-600 text-white rounded-tr-none' : 'bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 border border-gray-100 dark:border-slate-700 rounded-tl-none shadow-sm'}`}>
                                     {m.text}
                                 </div>

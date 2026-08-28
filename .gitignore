@@ -75,3 +75,7 @@ services/api/db_setup
 output/
 test-results/
 playwright-report/
+
+# audit/debug artifacts (local only)
+screenshots/
+logs/

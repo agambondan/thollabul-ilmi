@@ -619,6 +619,10 @@ export const translations = {
         "zakat.silver_grams": "Berat perak yang dimiliki (gram)",
         "zakat.gold_result": "Zakat Emas & Perak",
         "admin.panel": "Panel Admin",
+        "admin.profile_error": "Gagal memuat profil admin",
+        "admin.profile_error_desc":
+            "Sesi kamu masih aktif, tapi data profil belum bisa diambil dari server. Coba muat ulang.",
+        "common.retry": "Coba Lagi",
         "admin.back_to_app": "Kembali ke Aplikasi",
         "admin.dashboard.subtitle": "Kelola konten Thullaabul 'Ilmi",
         "admin.metrics.title": "Ringkasan Operasional",
@@ -2630,6 +2634,10 @@ export const translations = {
         "zakat.silver_grams": "Silver owned (grams)",
         "zakat.gold_result": "Gold & Silver Zakat",
         "admin.panel": "Admin Panel",
+        "admin.profile_error": "Could not load admin profile",
+        "admin.profile_error_desc":
+            "Your session is still valid, but the profile could not be fetched from the server. Try reloading.",
+        "common.retry": "Try Again",
         "admin.back_to_app": "Back to App",
         "admin.dashboard.subtitle": "Manage Thullaabul 'Ilmi content",
         "admin.metrics.title": "Operational Summary",

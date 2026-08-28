@@ -21,6 +21,7 @@ import {
     BsGrid,
     BsHeart,
     BsJournalText,
+    BsList,
     BsListCheck,
     BsMap,
     BsMoon,
@@ -31,7 +32,7 @@ import {
     BsStar,
     BsSunFill,
 } from "react-icons/bs";
-import { MdLogout } from "react-icons/md";
+import { MdClose, MdLogout } from "react-icons/md";
 
 const NAV_GROUPS = [
     {
@@ -71,6 +72,11 @@ const NAV_GROUPS = [
                 href: "/admin/reminders",
                 label: "Reminder Carousel",
                 icon: <BsStar />,
+            },
+            {
+                href: "/admin/lessons",
+                label: "Modul Belajar",
+                icon: <BsListCheck />,
             },
             {
                 href: "/admin/fiqh",
@@ -141,22 +147,30 @@ const LANGS = ["ID", "EN"];
 const SIDEBAR_STORAGE_KEY = "tholabul_admin_sidebar_collapsed";
 
 const AdminLayout = ({ children }) => {
-    const { user, isAuthenticated, isLoading, logout } = useAuth();
+    const { user, isAuthenticated, isLoading, logout, refetchUser } = useAuth();
     const { t, lang, setLang } = useLocale();
     const { isWide } = useLayoutMode();
     const router = useRouter();
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [mobileNavOpen, setMobileNavOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
     const [accountOpen, setAccountOpen] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
     const accountRef = useRef(null);
 
+    // A token without a profile means /auth/me failed with something other than
+    // 401 (throttling, 5xx, timeout) — the session is still valid, we just do
+    // not know the role yet. Treating that as "not an admin" would bounce the
+    // user to the landing page over a transient hiccup.
+    const profileUnavailable = isAuthenticated && !user;
+
     useEffect(() => {
-        if (isLoading) return;
+        if (isLoading || profileUnavailable) return;
         if (!isAuthenticated || user?.role !== "admin") {
             router.push("/");
         }
-    }, [isLoading, isAuthenticated, user, router]);
+    }, [isLoading, profileUnavailable, isAuthenticated, user, router]);
 
     useEffect(() => {
         const handler = (e) => {
@@ -175,6 +189,20 @@ const AdminLayout = ({ children }) => {
             setIsCollapsed(false);
         }
     }, []);
+
+    useEffect(() => {
+        const mq = window.matchMedia("(max-width: 767px)");
+        const sync = () => setIsMobile(mq.matches);
+        sync();
+        mq.addEventListener("change", sync);
+        return () => mq.removeEventListener("change", sync);
+    }, []);
+
+    // The drawer is an overlay on mobile — leaving it open across a navigation
+    // would hide the page the user just picked.
+    useEffect(() => {
+        setMobileNavOpen(false);
+    }, [pathname]);
 
     useEffect(() => {
         const sync = () => {
@@ -217,12 +245,35 @@ const AdminLayout = ({ children }) => {
               .toUpperCase()
         : "?";
 
+    if (profileUnavailable) {
+        return (
+            <div className='min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center bg-gray-50 dark:bg-gray-950'>
+                <p className='text-base font-semibold text-gray-900 dark:text-white'>
+                    {t("admin.profile_error")}
+                </p>
+                <p className='max-w-sm text-sm text-gray-500 dark:text-gray-400'>
+                    {t("admin.profile_error_desc")}
+                </p>
+                <button
+                    type='button'
+                    onClick={refetchUser}
+                    className='px-5 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600 text-white text-sm font-medium transition-colors'
+                >
+                    {t("common.retry")}
+                </button>
+            </div>
+        );
+    }
+
     if (isLoading || !isAuthenticated || user?.role !== "admin") {
         return <Spinner3 />;
     }
 
-    const sidebarWidth = isCollapsed ? "w-16" : "w-60";
-    const mainOffset = isCollapsed ? "ml-16" : "ml-60";
+    // Collapsing only applies to the docked desktop sidebar; on mobile the same
+    // element is an off-canvas drawer and always shows full labels.
+    const collapsed = isCollapsed && !isMobile;
+    const sidebarWidth = isCollapsed ? "w-72 md:w-16" : "w-72 md:w-60";
+    const mainOffset = isCollapsed ? "md:ml-16" : "md:ml-60";
     const sidebarToggleLabel = isCollapsed
         ? t("sidebar.expand")
         : t("sidebar.collapse");
@@ -230,19 +281,29 @@ const AdminLayout = ({ children }) => {
     return (
         <div className='min-h-screen flex bg-gray-50 dark:bg-gray-950'>
             <AdminMutationToast />
+            {mobileNavOpen && (
+                <button
+                    type='button'
+                    aria-label={t("nav.close_menu")}
+                    onClick={() => setMobileNavOpen(false)}
+                    className='md:hidden fixed inset-0 z-40 bg-slate-950/50'
+                />
+            )}
             <aside
-                className={`${sidebarWidth} shrink-0 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col fixed inset-y-0 left-0 z-40 transition-[width] duration-200`}
+                className={`${sidebarWidth} max-w-[85vw] shrink-0 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col fixed inset-y-0 left-0 z-50 md:z-40 transform transition-transform duration-200 md:transform-none md:transition-[width] ${
+                    mobileNavOpen ? "translate-x-0" : "-translate-x-full"
+                } md:translate-x-0`}
             >
                 <div
-                    className={`border-b border-gray-100 dark:border-slate-800 ${
-                        isCollapsed ? "p-3" : "p-4"
+                    className={`border-b border-gray-100 dark:border-slate-800 flex items-center justify-between gap-2 ${
+                        collapsed ? "p-3" : "p-4"
                     }`}
                 >
                     <Link
                         href='/admin'
                         title={t("admin.panel")}
-                        className={`flex items-center group ${
-                            isCollapsed ? "justify-center" : "gap-2.5"
+                        className={`flex items-center group min-w-0 ${
+                            collapsed ? "justify-center" : "gap-2.5"
                         }`}
                     >
                         <div className='w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center shrink-0'>
@@ -250,7 +311,7 @@ const AdminLayout = ({ children }) => {
                                 ط
                             </span>
                         </div>
-                        {!isCollapsed && (
+                        {!collapsed && (
                             <div className='min-w-0'>
                                 <p className='text-sm font-bold text-gray-900 dark:text-white leading-none truncate'>
                                     {t("admin.panel")}
@@ -261,10 +322,18 @@ const AdminLayout = ({ children }) => {
                             </div>
                         )}
                     </Link>
+                    <button
+                        type='button'
+                        aria-label={t("nav.close_menu")}
+                        onClick={() => setMobileNavOpen(false)}
+                        className='md:hidden h-9 w-9 shrink-0 inline-flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800'
+                    >
+                        <MdClose />
+                    </button>
                 </div>
 
                 <div className='px-4 py-3 border-b border-gray-100 dark:border-slate-800'>
-                    {isCollapsed ? (
+                    {collapsed ? (
                         <div
                             title={user?.name ?? "Admin"}
                             className='mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
@@ -288,7 +357,7 @@ const AdminLayout = ({ children }) => {
                         href='/admin'
                         title={t("admin.nav.dashboard")}
                         className={`flex items-center py-2 rounded-lg text-sm font-medium transition-colors ${
-                            isCollapsed ? "justify-center px-0" : "gap-2.5 px-3"
+                            collapsed ? "justify-center px-0" : "gap-2.5 px-3"
                         } ${
                             pathname === "/admin"
                                 ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400"
@@ -296,7 +365,7 @@ const AdminLayout = ({ children }) => {
                         }`}
                     >
                         <BsGrid className='shrink-0' />
-                        {!isCollapsed && (
+                        {!collapsed && (
                             <span>{t("admin.nav.dashboard")}</span>
                         )}
                     </Link>
@@ -305,7 +374,7 @@ const AdminLayout = ({ children }) => {
                 <nav className='flex-1 overflow-y-auto px-3 py-2 space-y-4'>
                     {NAV_GROUPS.map((group) => (
                         <div key={group.titleKey}>
-                            {isCollapsed ? (
+                            {collapsed ? (
                                 <div className='mx-3 mb-1 h-px bg-gray-100 dark:bg-slate-800' />
                             ) : (
                                 <p className='px-3 text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1'>
@@ -329,7 +398,7 @@ const AdminLayout = ({ children }) => {
                                                     t(link.labelKey)
                                                 }
                                                 className={`flex items-center py-1.5 rounded-lg text-sm transition-colors ${
-                                                    isCollapsed
+                                                    collapsed
                                                         ? "justify-center px-0"
                                                         : "gap-2.5 px-3"
                                                 } ${
@@ -341,7 +410,7 @@ const AdminLayout = ({ children }) => {
                                                 <span className='shrink-0 text-base'>
                                                     {link.icon}
                                                 </span>
-                                                {!isCollapsed && (
+                                                {!collapsed && (
                                                     <span className='truncate'>
                                                         {link.label ??
                                                             t(link.labelKey)}
@@ -360,16 +429,34 @@ const AdminLayout = ({ children }) => {
             <main
                 className={`${mainOffset} flex-1 min-h-screen overflow-auto transition-[margin] duration-200`}
             >
-                <header className='sticky top-0 z-30 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between px-6 h-14'>
-                    <button
-                        type='button'
-                        onClick={toggleSidebar}
-                        aria-label={sidebarToggleLabel}
-                        title={sidebarToggleLabel}
-                        className='inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors'
-                    >
-                        {isCollapsed ? <BsChevronRight /> : <BsChevronLeft />}
-                    </button>
+                <header className='sticky top-0 z-30 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between px-3 md:px-6 h-14'>
+                    <div className='flex items-center gap-2 min-w-0'>
+                        <button
+                            type='button'
+                            onClick={() => setMobileNavOpen(true)}
+                            aria-label={t("nav.menu")}
+                            aria-expanded={mobileNavOpen}
+                            className='md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors'
+                        >
+                            <BsList className='text-lg' />
+                        </button>
+                        <button
+                            type='button'
+                            onClick={toggleSidebar}
+                            aria-label={sidebarToggleLabel}
+                            title={sidebarToggleLabel}
+                            className='hidden md:inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors'
+                        >
+                            {isCollapsed ? (
+                                <BsChevronRight />
+                            ) : (
+                                <BsChevronLeft />
+                            )}
+                        </button>
+                        <span className='md:hidden text-sm font-bold text-gray-900 dark:text-white truncate'>
+                            {t("admin.panel")}
+                        </span>
+                    </div>
 
                     {/* Account dropdown */}
                     <div className='relative' ref={accountRef}>

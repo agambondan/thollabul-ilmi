@@ -130,10 +130,17 @@ export const featureGroups = [
             },
             {
                 key: "community-feed",
-                title: "Komunitas",
+                title: "Feed Komunitas",
                 subtitle: "Refleksi ayat dan hadis",
                 badges: ["Baru"],
                 type: "feed",
+            },
+            {
+                key: "komunitas",
+                title: "Komunitas",
+                subtitle: "Diskusi & obrolan realtime",
+                badges: ["Baru"],
+                type: "komunitas",
             },
             {
                 key: "kajian",
@@ -141,6 +148,14 @@ export const featureGroups = [
                 subtitle: "Sesi belajar Islam",
                 type: "list",
                 endpoint: "/api/v1/kajian?page=0&size=20",
+            },
+            {
+                key: "lessons",
+                title: "Modul & Kelas",
+                subtitle: "Belajar interaktif terstruktur",
+                badges: ["Baru"],
+                type: "list",
+                endpoint: "/api/v1/lessons",
             },
             {
                 key: "library",
@@ -328,10 +343,16 @@ const pickFeatures = (keys) =>
 
 export const belajarFeatureGroups = [
     {
+        key: "kelas-modul",
+        label: "Modul & Kelas",
+        meta: "Belajar terstruktur",
+        features: pickFeatures(["lessons"]),
+    },
+    {
         key: "kajian-artikel",
         label: "Kajian & Artikel",
         meta: "Belajar rutin",
-        features: pickFeatures(["community-feed", "kajian", "blog"]),
+        features: pickFeatures(["community-feed", "komunitas", "kajian", "blog"]),
     },
     {
         key: "siroh-sejarah",

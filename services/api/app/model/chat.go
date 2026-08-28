@@ -11,6 +11,6 @@ type ChatMessage struct {
 }
 
 type CreateChatMessageRequest struct {
-	Text   string     `json:"text" validate:"required"`
-	Author string     `json:"author"`
+	Text   string `json:"text" validate:"required"`
+	Author string `json:"author"`
 }

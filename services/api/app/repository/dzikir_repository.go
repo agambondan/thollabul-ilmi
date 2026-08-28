@@ -61,7 +61,7 @@ func (r *dzikirRepository) FindByOccasion(occasion string, limit, offset int) ([
 		offset = 0
 	}
 	var list []model.Dzikir
-	err := r.db.Joins("Translation").Where("dzikirs.occasion = ?", occasion).Order("dzikirs.id").Limit(limit).Offset(offset).Find(&list).Error
+	err := r.db.Joins("Translation").Where("dzikir.occasion = ?", occasion).Order("dzikir.id").Limit(limit).Offset(offset).Find(&list).Error
 	return list, err
 }
 

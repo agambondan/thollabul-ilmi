@@ -635,6 +635,9 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/lessons/progress", jwt, newLessonController.MyProgress)
 	master.Put("/lessons/progress", jwt, newLessonController.SaveProgress)
 	master.Get("/lessons/:slug", newLessonController.Get)
+	master.Post("/lessons", admin, newLessonController.Create)
+	master.Put("/lessons/:id", admin, newLessonController.Update)
+	master.Delete("/lessons/:id", admin, newLessonController.Delete)
 
 	// #48 Kamus Istilah Islam (public read, admin write)
 	master.Get("/dictionary", newDictionaryController.FindAll)
@@ -752,6 +755,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/komunitas/chat", newChatController.List)
 	master.Get("/komunitas/chat/stream", newChatController.Stream)
 	master.Post("/komunitas/chat", jwt, newChatController.Post)
+	master.Delete("/komunitas/chat/:id", jwt, newChatController.Delete)
 
 	// Munasabah (public read, editor/admin write)
 	master.Get("/munasabah/ayah/:ayahId", newMunasabahController.FindByAyahID)

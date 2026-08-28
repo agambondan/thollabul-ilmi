@@ -62,6 +62,7 @@ const ignoredMobileKeys = new Set([
     "ilmu",
     "alat",
     "personal",
+    "kelas-modul",
     "kajian-artikel",
     "siroh-sejarah",
     "fiqh-panduan",

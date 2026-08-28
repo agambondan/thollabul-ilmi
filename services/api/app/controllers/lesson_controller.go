@@ -12,6 +12,9 @@ type LessonController interface {
 	Get(ctx *fiber.Ctx) error
 	MyProgress(ctx *fiber.Ctx) error
 	SaveProgress(ctx *fiber.Ctx) error
+	Create(ctx *fiber.Ctx) error
+	Update(ctx *fiber.Ctx) error
+	Delete(ctx *fiber.Ctx) error
 }
 
 type lessonController struct {
@@ -91,4 +94,58 @@ func (c *lessonController) SaveProgress(ctx *fiber.Ctx) error {
 		return lib.ErrorInternal(ctx)
 	}
 	return lib.OK(ctx, p)
+}
+
+// @Summary Create lesson module
+// @Tags Belajar, Admin
+// @Accept json
+// @Produce json
+// @Param body body model.LessonModule true "Module payload"
+// @Success 200 {object} lib.Response
+// @Router /lessons [post]
+func (c *lessonController) Create(ctx *fiber.Ctx) error {
+	req := new(model.LessonModule)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	m, err := c.svc.CreateModule(req)
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, m)
+}
+
+// @Summary Update lesson module
+// @Tags Belajar, Admin
+// @Accept json
+// @Produce json
+// @Param id path int true "Module ID"
+// @Param body body model.LessonModule true "Module payload"
+// @Success 200 {object} lib.Response
+// @Router /lessons/{id} [put]
+func (c *lessonController) Update(ctx *fiber.Ctx) error {
+	id, _ := ctx.ParamsInt("id")
+	req := new(model.LessonModule)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	m, err := c.svc.UpdateModule(id, req)
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, m)
+}
+
+// @Summary Delete lesson module
+// @Tags Belajar, Admin
+// @Produce json
+// @Param id path int true "Module ID"
+// @Success 200 {object} lib.Response
+// @Router /lessons/{id} [delete]
+func (c *lessonController) Delete(ctx *fiber.Ctx) error {
+	id, _ := ctx.ParamsInt("id")
+	if err := c.svc.DeleteModule(id); err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, fiber.Map{"ok": true})
 }

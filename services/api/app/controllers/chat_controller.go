@@ -3,6 +3,7 @@ package controllers
 import (
 	"bufio"
 	"encoding/json"
+	"errors"
 	"strconv"
 	"time"
 
@@ -11,12 +12,14 @@ import (
 	service "github.com/agambondan/islamic-explorer/app/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type ChatController interface {
 	List(ctx *fiber.Ctx) error
 	Post(ctx *fiber.Ctx) error
 	Stream(ctx *fiber.Ctx) error
+	Delete(ctx *fiber.Ctx) error
 }
 
 type chatController struct {
@@ -82,6 +85,42 @@ func (c *chatController) Post(ctx *fiber.Ctx) error {
 		return lib.ErrorInternal(ctx)
 	}
 	return lib.OK(ctx, msg)
+}
+
+// @Summary Delete a chat message (admin only or own message)
+// @Tags Komunitas
+// @Param id path string true "Chat message ID"
+// @Success 200 {object} lib.Response
+// @Failure 401 {object} lib.Response
+// @Failure 403 {object} lib.Response
+// @Router /komunitas/chat/{id} [delete]
+func (c *chatController) Delete(ctx *fiber.Ctx) error {
+	claims, err := lib.ExtractToken(ctx)
+	if err != nil {
+		return lib.ErrorUnauthorized(ctx)
+	}
+	role, _ := claims["role"].(string)
+	id := ctx.Params("id")
+
+	// Admins moderate any message; everyone else may only delete their own, so
+	// the owner id is pushed into the query rather than trusted from the client.
+	var ownerID *uuid.UUID
+	if role != string(model.RoleAdmin) {
+		rawID, _ := claims["user_id"].(string)
+		parsed, parseErr := uuid.Parse(rawID)
+		if parseErr != nil {
+			return lib.ErrorUnauthorized(ctx)
+		}
+		ownerID = &parsed
+	}
+
+	if err := c.svc.Delete(id, ownerID); err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return lib.ErrorForbidden(ctx)
+		}
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, fiber.Map{"ok": true})
 }
 
 // @Summary SSE stream of new chat messages

@@ -107,7 +107,7 @@ func (r *pageViewRepo) ActiveUsers(since time.Time, limit int) ([]model.PageView
 			ORDER BY total_views DESC
 			LIMIT ?
 		) pv_stats
-		JOIN users u ON u.id = pv_stats.user_id
+		JOIN "user" u ON u.id = pv_stats.user_id::text
 		LEFT JOIN LATERAL (
 			SELECT path, source
 			FROM page_view
@@ -173,7 +173,7 @@ func (r *pageViewRepo) RecentActivity(since time.Time, limit int) ([]model.PageV
 			COALESCE(pv.user_agent, '') AS user_agent,
 			TO_CHAR(pv.created_at, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS seen_at
 		FROM page_view pv
-		LEFT JOIN users u ON u.id = pv.user_id
+		LEFT JOIN "user" u ON u.id = pv.user_id::text
 		WHERE pv.created_at >= ?
 		ORDER BY pv.created_at DESC
 		LIMIT ?

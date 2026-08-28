@@ -75,8 +75,8 @@ func (r *fiqhRepository) FindItemByCategoryAndID(slug string, id int) (*model.Fi
 	var item model.FiqhItem
 	err := r.db.
 		Preload("Translation").
-		Joins("JOIN fiqh_categories ON fiqh_categories.id = fiqh_items.category_id").
-		Where("fiqh_categories.slug = ? AND fiqh_items.id = ?", slug, id).
+		Joins("JOIN fiqh_category ON fiqh_category.id = fiqh_item.category_id").
+		Where("fiqh_category.slug = ? AND fiqh_item.id = ?", slug, id).
 		First(&item).Error
 	return &item, err
 }

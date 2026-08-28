@@ -151,6 +151,7 @@ const dictionaries = {
             "Belum ada bookmark tersimpan. Buka suatu hadis atau ayat lalu simpan.",
         "explore.empty.default": "Belum ada data untuk fitur ini.",
         "explore.empty.feed": "Belum ada post komunitas.",
+        "explore.empty.lessons": "Belum ada modul pelajaran.",
         "explore.empty.libraryFilter": "Belum ada buku dengan status {status}.",
         "explore.empty.notes":
             "Belum ada catatan. Buka detail konten untuk menambahkan catatan.",
@@ -1279,6 +1280,7 @@ const dictionaries = {
             "No saved bookmarks yet. Open a hadith or verse and save it.",
         "explore.empty.default": "No data for this feature yet.",
         "explore.empty.feed": "No community posts yet.",
+        "explore.empty.lessons": "No lesson modules yet.",
         "explore.empty.libraryFilter": "No books with {status} status.",
         "explore.empty.notes":
             "No notes yet. Open content details to add a note.",

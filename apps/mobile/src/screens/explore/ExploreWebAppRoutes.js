@@ -98,6 +98,8 @@ import { WebAppHijriRoute } from "./WebAppHijriRoute";
 import { WebAppImsakiyahRoute } from "./WebAppImsakiyahRoute";
 import { WebAppKajianRoute } from "./WebAppKajianRoute";
 import { WebAppKamusRoute } from "./WebAppKamusRoute";
+import { WebAppKomunitasRoute } from "./WebAppKomunitasRoute";
+import { WebAppLessonsRoute } from "./WebAppLessonsRoute";
 import { WebAppLibraryRoute } from "./WebAppLibraryRoute";
 import { WebAppLeaderboardRoute } from "./WebAppLeaderboardRoute";
 import { WebAppPerawiRoute } from "./WebAppPerawiRoute";
@@ -157,6 +159,7 @@ export function renderExploreWebAppRoute(context) {
         handleLikeFeedItem,
         handleReportFeedItem,
         handleTogglePinnedFeature,
+        isDarkTheme,
         items,
         kajianCategory,
         kajianSearch,
@@ -2557,6 +2560,28 @@ export function renderExploreWebAppRoute(context) {
                 }}
                 onReportFeedItem={handleReportFeedItem}
                 pagination={pagination}
+            />
+        );
+    }
+
+    if (activeFeature?.key === "lessons" || activeFeature?.type === "lessons") {
+        return (
+            <WebAppLessonsRoute
+                feature={activeFeature}
+                isDarkTheme={isDarkTheme}
+                items={visibleItems}
+                styles={styles}
+            />
+        );
+    }
+
+    if (activeFeature?.key === "komunitas" || activeFeature?.type === "komunitas") {
+        return (
+            <WebAppKomunitasRoute
+                feature={activeFeature}
+                isDarkTheme={isDarkTheme}
+                session={session}
+                styles={styles}
             />
         );
     }

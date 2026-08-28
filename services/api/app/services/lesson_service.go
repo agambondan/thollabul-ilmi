@@ -11,6 +11,9 @@ type LessonService interface {
 	ModuleBySlug(slug string) (*model.LessonModule, error)
 	GetProgress(userID uuid.UUID) ([]model.UserLessonProgress, error)
 	SaveProgress(userID uuid.UUID, req *model.SaveLessonProgressRequest) (*model.UserLessonProgress, error)
+	CreateModule(*model.LessonModule) (*model.LessonModule, error)
+	UpdateModule(id int, m *model.LessonModule) (*model.LessonModule, error)
+	DeleteModule(id int) error
 }
 
 type lessonService struct {
@@ -42,4 +45,16 @@ func (s *lessonService) SaveProgress(userID uuid.UUID, req *model.SaveLessonProg
 		Done:     req.Done,
 	}
 	return s.repo.UpsertProgress(p)
+}
+
+func (s *lessonService) CreateModule(m *model.LessonModule) (*model.LessonModule, error) {
+	return s.repo.CreateModule(m)
+}
+
+func (s *lessonService) UpdateModule(id int, m *model.LessonModule) (*model.LessonModule, error) {
+	return s.repo.UpdateModule(id, m)
+}
+
+func (s *lessonService) DeleteModule(id int) error {
+	return s.repo.DeleteModule(id)
 }

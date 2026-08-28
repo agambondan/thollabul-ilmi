@@ -430,11 +430,6 @@ const DashboardLayout = ({ children }) => {
             icon: <ImBook />,
         },
         {
-            labelKey: "link.deeds",
-            href: "/dashboard/amalan",
-            icon: <MdFormatListBulleted />,
-        },
-        {
             labelKey: "link.belajar",
             href: "/dashboard/belajar",
             icon: <MdOutlinePlayLesson />,

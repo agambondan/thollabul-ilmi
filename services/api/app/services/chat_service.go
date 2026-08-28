@@ -13,6 +13,7 @@ type ChatService interface {
 	Post(userID *uuid.UUID, author, text string) (*model.ChatMessage, error)
 	Latest(limit int) ([]model.ChatMessage, error)
 	Subscribe() (chan model.ChatMessage, func())
+	Delete(id string, ownerID *uuid.UUID) error
 }
 
 type chatService struct {
@@ -70,4 +71,10 @@ func (s *chatService) Subscribe() (chan model.ChatMessage, func()) {
 		s.mu.Unlock()
 	}
 	return ch, unsub
+}
+
+// Delete removes a chat message. ownerID nil means the caller is an admin and
+// may remove any message; otherwise the delete is scoped to that author.
+func (s *chatService) Delete(id string, ownerID *uuid.UUID) error {
+	return s.repo.Delete(id, ownerID)
 }

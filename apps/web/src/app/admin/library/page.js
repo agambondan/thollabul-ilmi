@@ -240,130 +240,132 @@ const AdminLibraryPage = () => {
                 <p className='text-sm text-gray-500'>{t("common.loading")}</p>
             ) : (
                 <div className='overflow-hidden rounded-xl border border-gray-100 bg-white dark:border-slate-700 dark:bg-slate-800'>
-                    <table className='w-full text-sm'>
-                        <thead className='bg-gray-50 dark:bg-slate-700'>
-                            <tr>
-                                <th className='px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300'>
-                                    {t("admin.field.title")}
-                                </th>
-                                <th className='hidden px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300 md:table-cell'>
-                                    {t("admin.library.author")}
-                                </th>
-                                <th className='hidden px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300 lg:table-cell'>
-                                    {t("admin.field.category")}
-                                </th>
-                                <th className='px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300'>
-                                    {t("admin.library.format")}
-                                </th>
-                                <th className='hidden px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300 lg:table-cell'>
-                                    {t("admin.library.license_status")}
-                                </th>
-                                <th className='hidden px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300 md:table-cell'>
-                                    {t("admin.library.status")}
-                                </th>
-                                <th className='w-24 px-4 py-3'></th>
-                            </tr>
-                        </thead>
-                        <tbody className='divide-y divide-gray-100 dark:divide-slate-700'>
-                            {filtered.map((item) => (
-                                <tr
-                                    className='hover:bg-gray-50 dark:hover:bg-slate-700'
-                                    key={item.id ?? item.slug}
-                                >
-                                    <td className='max-w-xs truncate px-4 py-3 font-medium text-gray-900 dark:text-white'>
-                                        {item.title}
-                                        <p className='text-xs font-normal text-gray-400'>
-                                            {item.slug}
-                                        </p>
-                                    </td>
-                                    <td className='hidden px-4 py-3 text-gray-500 dark:text-gray-400 md:table-cell'>
-                                        {item.author || "-"}
-                                    </td>
-                                    <td className='hidden px-4 py-3 text-gray-500 dark:text-gray-400 lg:table-cell'>
-                                        {item.category || "-"}
-                                    </td>
-                                    <td className='px-4 py-3'>
-                                        <span className='rounded bg-emerald-100 px-2 py-0.5 text-xs uppercase text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
-                                            {item.format || "link"}
-                                        </span>
-                                    </td>
-                                    <td className='hidden px-4 py-3 lg:table-cell'>
-                                        <span
-                                            className={`rounded px-2 py-0.5 text-xs ${
-                                                item.license_status ===
-                                                "verified"
-                                                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
-                                                    : item.license_status ===
-                                                        "restricted"
-                                                      ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
-                                                      : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
-                                            }`}
-                                        >
-                                            {item.license_status ||
-                                                "unverified"}
-                                        </span>
-                                        {item.is_source_verified ? (
-                                            <p className='mt-1 text-[11px] text-emerald-600 dark:text-emerald-300'>
-                                                {t(
-                                                    "admin.library.source_verified",
-                                                )}
-                                            </p>
-                                        ) : null}
-                                    </td>
-                                    <td className='hidden px-4 py-3 text-gray-500 dark:text-gray-400 md:table-cell'>
-                                        {item.status || "published"}
-                                    </td>
-                                    <td className='px-4 py-3'>
-                                        <div className='flex items-center justify-end gap-1.5'>
-                                            {item.source_url && (
-                                                <a
-                                                    className='rounded p-1.5 text-gray-400 hover:text-gray-600'
-                                                    href={item.source_url}
-                                                    rel='noreferrer'
-                                                    target='_blank'
-                                                    title={t(
-                                                        "admin.library.source_url",
-                                                    )}
-                                                >
-                                                    <BsBoxArrowUpRight />
-                                                </a>
-                                            )}
-                                            <button
-                                                aria-label={t("common.edit")}
-                                                className='rounded p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
-                                                onClick={() => openEdit(item)}
-                                                title={t("common.edit")}
-                                            >
-                                                <BsPencil />
-                                            </button>
-                                            <button
-                                                aria-label={t("common.delete")}
-                                                className='rounded p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
-                                                onClick={() =>
-                                                    setDeleteId(
-                                                        item.id ?? item._id,
-                                                    )
-                                                }
-                                                title={t("common.delete")}
-                                            >
-                                                <BsTrash />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                            {filtered.length === 0 && (
+                    <div className='overflow-x-auto'>
+                        <table className='w-full text-sm min-w-[640px]'>
+                            <thead className='bg-gray-50 dark:bg-slate-700'>
                                 <tr>
-                                    <td
-                                        className='px-4 py-8 text-center text-gray-400'
-                                        colSpan={7}
-                                    >
-                                        {t("admin.crud.no_data")}
-                                    </td>
+                                    <th className='px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300'>
+                                        {t("admin.field.title")}
+                                    </th>
+                                    <th className='hidden px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300 md:table-cell'>
+                                        {t("admin.library.author")}
+                                    </th>
+                                    <th className='hidden px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300 lg:table-cell'>
+                                        {t("admin.field.category")}
+                                    </th>
+                                    <th className='px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300'>
+                                        {t("admin.library.format")}
+                                    </th>
+                                    <th className='hidden px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300 lg:table-cell'>
+                                        {t("admin.library.license_status")}
+                                    </th>
+                                    <th className='hidden px-4 py-3 text-left font-medium text-gray-600 dark:text-gray-300 md:table-cell'>
+                                        {t("admin.library.status")}
+                                    </th>
+                                    <th className='w-24 px-4 py-3'></th>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody className='divide-y divide-gray-100 dark:divide-slate-700'>
+                                {filtered.map((item) => (
+                                    <tr
+                                        className='hover:bg-gray-50 dark:hover:bg-slate-700'
+                                        key={item.id ?? item.slug}
+                                    >
+                                        <td className='max-w-xs truncate px-4 py-3 font-medium text-gray-900 dark:text-white'>
+                                            {item.title}
+                                            <p className='text-xs font-normal text-gray-400'>
+                                                {item.slug}
+                                            </p>
+                                        </td>
+                                        <td className='hidden px-4 py-3 text-gray-500 dark:text-gray-400 md:table-cell'>
+                                            {item.author || "-"}
+                                        </td>
+                                        <td className='hidden px-4 py-3 text-gray-500 dark:text-gray-400 lg:table-cell'>
+                                            {item.category || "-"}
+                                        </td>
+                                        <td className='px-4 py-3'>
+                                            <span className='rounded bg-emerald-100 px-2 py-0.5 text-xs uppercase text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
+                                                {item.format || "link"}
+                                            </span>
+                                        </td>
+                                        <td className='hidden px-4 py-3 lg:table-cell'>
+                                            <span
+                                                className={`rounded px-2 py-0.5 text-xs ${
+                                                    item.license_status ===
+                                                    "verified"
+                                                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                                                        : item.license_status ===
+                                                            "restricted"
+                                                          ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+                                                          : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
+                                                }`}
+                                            >
+                                                {item.license_status ||
+                                                    "unverified"}
+                                            </span>
+                                            {item.is_source_verified ? (
+                                                <p className='mt-1 text-[11px] text-emerald-600 dark:text-emerald-300'>
+                                                    {t(
+                                                        "admin.library.source_verified",
+                                                    )}
+                                                </p>
+                                            ) : null}
+                                        </td>
+                                        <td className='hidden px-4 py-3 text-gray-500 dark:text-gray-400 md:table-cell'>
+                                            {item.status || "published"}
+                                        </td>
+                                        <td className='px-4 py-3'>
+                                            <div className='flex items-center justify-end gap-1.5'>
+                                                {item.source_url && (
+                                                    <a
+                                                        className='rounded p-1.5 text-gray-400 hover:text-gray-600'
+                                                        href={item.source_url}
+                                                        rel='noreferrer'
+                                                        target='_blank'
+                                                        title={t(
+                                                            "admin.library.source_url",
+                                                        )}
+                                                    >
+                                                        <BsBoxArrowUpRight />
+                                                    </a>
+                                                )}
+                                                <button
+                                                    aria-label={t("common.edit")}
+                                                    className='rounded p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                                                    onClick={() => openEdit(item)}
+                                                    title={t("common.edit")}
+                                                >
+                                                    <BsPencil />
+                                                </button>
+                                                <button
+                                                    aria-label={t("common.delete")}
+                                                    className='rounded p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
+                                                    onClick={() =>
+                                                        setDeleteId(
+                                                            item.id ?? item._id,
+                                                        )
+                                                    }
+                                                    title={t("common.delete")}
+                                                >
+                                                    <BsTrash />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {filtered.length === 0 && (
+                                    <tr>
+                                        <td
+                                            className='px-4 py-8 text-center text-gray-400'
+                                            colSpan={7}
+                                        >
+                                            {t("admin.crud.no_data")}
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             )}
 

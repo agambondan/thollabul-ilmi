@@ -11,6 +11,10 @@ func SeedLessons(db *gorm.DB) {
 		{Slug: "wudhu", Title: "Tata Cara Wudhu", Description: "Belajar wudhu secara bertahap dari niat hingga kaki.", Icon: "wudhu", Order: 1},
 		{Slug: "sholat", Title: "Tata Cara Sholat", Description: "Panduan ringkas gerakan dan bacaan pokok sholat.", Icon: "sholat", Order: 2},
 		{Slug: "adzan-iqomah", Title: "Mengenal Adzan & Iqomah", Description: "Makna, lafaz, dan adab adzan serta iqomah.", Icon: "adzan", Order: 3},
+		{Slug: "puasa", Title: "Fikih Puasa Ramadan", Description: "Rukun, syarat, pembatal, dan sunnah puasa.", Icon: "puasa", Order: 4},
+		{Slug: "zakat", Title: "Zakat Fitrah & Mal", Description: "Nisab, haul, dan cara menghitung zakat.", Icon: "zakat", Order: 5},
+		{Slug: "tajwid", Title: "Tajwid Dasar", Description: "Hukum nun mati, mim mati, dan mad.", Icon: "tajwid", Order: 6},
+		{Slug: "rukun-iman", Title: "Rukun Iman", Description: "Enam pilar keimanan seorang muslim.", Icon: "iman", Order: 7},
 	}
 	for i := range modules {
 		db.Clauses(clause.OnConflict{Columns: []clause.Column{{Name: "slug"}}, DoNothing: true}).Create(&modules[i])
@@ -40,6 +44,22 @@ func SeedLessons(db *gorm.DB) {
 		{ModuleID: bySlug["adzan-iqomah"], StepOrder: 2, Title: "Syarat Muadzin", Body: "Muadzin adalah muslim, berakal, memahami lafaz dan adab adzan."},
 		{ModuleID: bySlug["adzan-iqomah"], StepOrder: 3, Title: "Lafaz Adzan", Body: "Adzan dimulai dengan takbir, dua syahadat, hayya alas sholah, hayya alal falah, dan penutup."},
 		{ModuleID: bySlug["adzan-iqomah"], StepOrder: 4, Title: "Iqomah", Body: "Iqomah mirip adzan, dibaca lebih ringkas sebagai tanda sholat segera dimulai."},
+		{ModuleID: bySlug["puasa"], StepOrder: 1, Title: "Pengertian Puasa", Body: "Menahan diri dari makan, minum, dan pembatal lainnya dari terbit fajar hingga terbenam matahari."},
+		{ModuleID: bySlug["puasa"], StepOrder: 2, Title: "Rukun Puasa", Body: "Hanya ada dua: Niat (sebelum fajar untuk puasa wajib) dan menahan diri dari pembatal."},
+		{ModuleID: bySlug["puasa"], StepOrder: 3, Title: "Pembatal Puasa", Body: "Makan/minum disengaja, muntah disengaja, haid/nifas, dan hal-hal yang membatalkan lainnya."},
+		{ModuleID: bySlug["puasa"], StepOrder: 4, Title: "Sunnah Puasa", Body: "Menyegerakan berbuka, mengakhirkan sahur, dan memperbanyak doa serta sedekah."},
+		{ModuleID: bySlug["zakat"], StepOrder: 1, Title: "Zakat Fitrah", Body: "Wajib bagi setiap muslim sebelum sholat Idul Fitri, biasanya 2.5 kg makanan pokok."},
+		{ModuleID: bySlug["zakat"], StepOrder: 2, Title: "Zakat Mal (Harta)", Body: "Wajib dikeluarkan (2.5%) jika harta telah mencapai nisab (batas minimal) dan haul (satu tahun)."},
+		{ModuleID: bySlug["zakat"], StepOrder: 3, Title: "Golongan Penerima", Body: "Ada 8 asnaf (golongan) yang berhak menerima zakat, seperti fakir, miskin, amil, dan mualaf."},
+		{ModuleID: bySlug["tajwid"], StepOrder: 1, Title: "Hukum Nun Mati & Tanwin", Body: "Terbagi menjadi Idzhar (jelas), Idgham (dilebur), Iqlab (ditukar), dan Ikhfa (disamarkan)."},
+		{ModuleID: bySlug["tajwid"], StepOrder: 2, Title: "Hukum Mim Mati", Body: "Terbagi menjadi Ikhfa Syafawi, Idgham Mimi, dan Idzhar Syafawi."},
+		{ModuleID: bySlug["tajwid"], StepOrder: 3, Title: "Hukum Mad", Body: "Mad berarti panjang. Mad Thobi'i dibaca 2 harakat. Terdapat banyak cabang Mad Far'i."},
+		{ModuleID: bySlug["rukun-iman"], StepOrder: 1, Title: "Iman kepada Allah", Body: "Meyakini keesaan Allah dalam Rububiyah, Uluhiyah, serta Asma' wa Sifat-Nya."},
+		{ModuleID: bySlug["rukun-iman"], StepOrder: 2, Title: "Iman kepada Malaikat", Body: "Meyakini keberadaan malaikat sebagai makhluk gaib yang taat pada perintah Allah."},
+		{ModuleID: bySlug["rukun-iman"], StepOrder: 3, Title: "Iman kepada Kitab-Kitab", Body: "Meyakini kitab-kitab yang diturunkan, dengan Al-Quran sebagai penyempurna dan penutup."},
+		{ModuleID: bySlug["rukun-iman"], StepOrder: 4, Title: "Iman kepada Rasul", Body: "Meyakini para utusan Allah, diakhiri oleh Nabi Muhammad ﷺ."},
+		{ModuleID: bySlug["rukun-iman"], StepOrder: 5, Title: "Iman kepada Hari Kiamat", Body: "Meyakini adanya kebangkitan, hisab, surga, dan neraka."},
+		{ModuleID: bySlug["rukun-iman"], StepOrder: 6, Title: "Iman kepada Qada & Qadar", Body: "Meyakini bahwa segala sesuatu terjadi atas ketetapan dan takdir Allah, baik maupun buruk."},
 	}
 	for i := range steps {
 		if steps[i].ModuleID == 0 {

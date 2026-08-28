@@ -10,6 +10,8 @@ const supportedFeatureTypes = new Set([
     "hijri",
     "historical-map",
     "kamus",
+    "komunitas",
+    "lessons",
     "list",
     "notes",
     "notifications",
@@ -24,7 +26,8 @@ const supportedFeatureTypes = new Set([
 ]);
 
 const expectedBelajarFeatureKeysByGroup = {
-    "Kajian & Artikel": ["community-feed", "kajian", "blog"],
+    "Modul & Kelas": ["lessons"],
+    "Kajian & Artikel": ["community-feed", "komunitas", "kajian", "blog"],
     "Siroh & Sejarah": ["siroh", "sejarah", "manasik"],
     "Fiqh & Panduan": ["fiqh", "panduan-sholat", "user-wird"],
     Referensi: [
@@ -46,6 +49,8 @@ const localRendererTypes = new Set([
     "faraidh",
     "forum",
     "historical-map",
+    "komunitas",
+    "lessons",
     "notifications",
     "sholat-tracker",
     "surah-content",
@@ -154,6 +159,7 @@ describe("belajarFeatureGroups", () => {
         const labels = belajarFeatureGroups.map((g) => g.label);
         expect(labels).toEqual(
             expect.arrayContaining([
+                "Modul & Kelas",
                 "Kajian & Artikel",
                 "Siroh & Sejarah",
                 "Fiqh & Panduan",
