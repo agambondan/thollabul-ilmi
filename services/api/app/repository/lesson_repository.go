@@ -24,7 +24,7 @@ func (r *lessonRepository) FindAll() ([]model.LessonModule, error) {
 	var items []model.LessonModule
 	err := r.db.Preload("Steps", func(tx *gorm.DB) *gorm.DB {
 		return tx.Order("step_order ASC")
-	}).Order("`order` ASC, id ASC").Find(&items).Error
+	}).Order("\"order\" ASC, id ASC").Find(&items).Error
 	return items, err
 }
 
