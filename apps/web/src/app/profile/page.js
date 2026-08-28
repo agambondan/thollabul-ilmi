@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { SkeletonProfile } from "@/components/skeleton/Skeleton";
+import ChangePasswordCard from "@/components/account/ChangePasswordCard";
 import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { useRequireAuth } from "@/lib/useRequireAuth";
@@ -19,7 +20,6 @@ import {
     BsChevronUp,
     BsFire,
     BsJournalCheck,
-    BsLock,
     BsPencil,
     BsPerson,
     BsStickyFill,
@@ -61,12 +61,6 @@ const ProfilePage = () => {
     const [editLoading, setEditLoading] = useState(false);
     const [editMsg, setEditMsg] = useState({ type: "", text: "" });
 
-    const [pwdOpen, setPwdOpen] = useState(false);
-    const [oldPwd, setOldPwd] = useState("");
-    const [newPwd, setNewPwd] = useState("");
-    const [confirmPwd, setConfirmPwd] = useState("");
-    const [pwdLoading, setPwdLoading] = useState(false);
-    const [pwdMsg, setPwdMsg] = useState({ type: "", text: "" });
 
     const [langOpen, setLangOpen] = useState(false);
     const [selectedLang, setSelectedLang] = useState("idn");
@@ -136,41 +130,6 @@ const ProfilePage = () => {
             setEditMsg({ type: "error", text: t("profile.update_error") });
         } finally {
             setEditLoading(false);
-        }
-    };
-
-    const handleChangePassword = async (e) => {
-        e.preventDefault();
-        if (newPwd !== confirmPwd) {
-            setPwdMsg({ type: "error", text: t("profile.password_mismatch") });
-            return;
-        }
-        if (newPwd.length < 8) {
-            setPwdMsg({ type: "error", text: t("profile.password_min") });
-            return;
-        }
-        setPwdLoading(true);
-        setPwdMsg({ type: "", text: "" });
-        try {
-            const res = await userApi.changePassword(oldPwd, newPwd);
-            if (!res.ok) {
-                const data = await res.json().catch(() => ({}));
-                throw new Error(
-                    data.message || t("profile.old_password_wrong"),
-                );
-            }
-            setPwdMsg({ type: "success", text: t("profile.password_success") });
-            setOldPwd("");
-            setNewPwd("");
-            setConfirmPwd("");
-            setPwdOpen(false);
-        } catch (err) {
-            setPwdMsg({
-                type: "error",
-                text: err.message || t("profile.password_error"),
-            });
-        } finally {
-            setPwdLoading(false);
         }
     };
 
@@ -623,93 +582,7 @@ const ProfilePage = () => {
                         )}
                     </div>
 
-                    {/* Ganti password */}
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 mb-3 overflow-hidden'>
-                        <button
-                            onClick={() => {
-                                setPwdOpen((v) => !v);
-                                setPwdMsg({ type: "", text: "" });
-                            }}
-                            className='w-full flex items-center justify-between px-5 py-4 text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors'
-                        >
-                            <span className='flex items-center gap-2'>
-                                <BsLock className='text-emerald-600 dark:text-emerald-400' />
-                                {t("profile.change_password")}
-                            </span>
-                            {pwdOpen ? <BsChevronUp /> : <BsChevronDown />}
-                        </button>
-                        {pwdOpen && (
-                            <form
-                                onSubmit={handleChangePassword}
-                                className='px-5 pb-5 pt-1 border-t border-gray-100 dark:border-slate-700 space-y-4'
-                            >
-                                {pwdMsg.text && (
-                                    <p
-                                        className={`text-sm ${pwdMsg.type === "error" ? "text-red-500 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"}`}
-                                    >
-                                        {pwdMsg.text}
-                                    </p>
-                                )}
-                                <div>
-                                    <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                        {t("profile.old_password")}
-                                    </label>
-                                    <input
-                                        type='password'
-                                        value={oldPwd}
-                                        onChange={(e) =>
-                                            setOldPwd(e.target.value)
-                                        }
-                                        required
-                                        className={inputCls}
-                                        placeholder='••••••••'
-                                    />
-                                </div>
-                                <div>
-                                    <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                        {t("profile.new_password")}
-                                    </label>
-                                    <input
-                                        type='password'
-                                        value={newPwd}
-                                        onChange={(e) =>
-                                            setNewPwd(e.target.value)
-                                        }
-                                        required
-                                        minLength={8}
-                                        className={inputCls}
-                                        placeholder={t("auth.min_chars")}
-                                    />
-                                </div>
-                                <div>
-                                    <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                        {t("profile.confirm_new_password")}
-                                    </label>
-                                    <input
-                                        type='password'
-                                        value={confirmPwd}
-                                        onChange={(e) =>
-                                            setConfirmPwd(e.target.value)
-                                        }
-                                        required
-                                        className={inputCls}
-                                        placeholder={t(
-                                            "profile.repeat_new_password",
-                                        )}
-                                    />
-                                </div>
-                                <button
-                                    type='submit'
-                                    disabled={pwdLoading}
-                                    className='px-5 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-60 text-white rounded-lg text-sm font-medium transition-colors'
-                                >
-                                    {pwdLoading
-                                        ? t("common.saving")
-                                        : t("profile.change_password_btn")}
-                                </button>
-                            </form>
-                        )}
-                    </div>
+                    <ChangePasswordCard className='mb-3' />
 
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 mb-3 p-5'>
                         <div className='flex items-center justify-between gap-3'>

@@ -1,5 +1,6 @@
 "use client";
 
+import ChangePasswordCard from "@/components/account/ChangePasswordCard";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { hafalanApi, muhasabahApi, streakApi, userApi } from "@/lib/api";
@@ -326,6 +327,8 @@ const ProfileDashboardPage = () => {
                     </p>
                 </Link>
             </div>
+
+            <ChangePasswordCard className='mt-5' />
 
             <div className='mt-5 grid gap-3 md:grid-cols-2'>
                 <div className='rounded-xl border border-gray-100 bg-white p-4 dark:border-slate-700 dark:bg-slate-800'>
