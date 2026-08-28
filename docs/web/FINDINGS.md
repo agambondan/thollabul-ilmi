@@ -18,11 +18,11 @@ Analisis lengkap tiap item ada di [UI_MATURITY_AUDIT_2026-08-28.md](UI_MATURITY_
 
 | Status | Jumlah |
 |---|---|
-| ✅ Selesai | 44 |
+| ✅ Selesai | 45 |
 | 📋 Terbuka | 3 |
 | ⏸️ Menunggu | 0 |
 | ❌ Dicabut | 10 |
-| **Total** | **57** |
+| **Total** | **58** |
 
 Catatan: 7 dari 45 temuan ternyata **bukan bug** — semuanya berasal dari cara
 audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
@@ -62,6 +62,7 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 | C1 | `/kamus` — 40 kata Arab hardcoded di komponen halaman, terpisah dari kamus backend | web+api | ✅ Selesai | Dipindah ke `islamic_term`; +kolom `arabic/latin/root`, kategori `kosakata` |
 | C2 | Guard seeder `count > 0` membekukan DB terdeploy — entri baru di file tidak pernah masuk | api | ✅ Selesai | Jadi `count >= len(rows)`, idempoten |
 | C3 | `data/static` tidak masuk image Docker + runtime tanpa `WORKDIR` → **23 seeder file diam-diam mati** | infra | ✅ Selesai | Termasuk membuat `data/locations.json` tak terbaca |
+| C10 | Compose mem-bind `./data:/app/data:ro`, jadi seed di image **tertimpa** salinan host yang basi | ops | ✅ Selesai | Ketahuan saat deploy: kamus tetap 28 padahal image berisi 66. `DEPLOY_SYNC_PATHS` kini menyalin `data/static` sebelum migrasi |
 | C4 | Chip kategori fiqh hardcoded dan melenceng (`umum` tidak ada; `nikah`/`jenazah` hilang) | web | ✅ Selesai | Diturunkan dari data |
 | C5 | `/fiqh` publik menampilkan "0 topik" untuk semua kategori sebelum dibuka | web | ✅ Selesai | Materi di-preload; ikut memperbaiki C8 |
 | C6 | Seeder istilah duplikat — 28 entri hardcoded di `seeder_tier3.go` sama persis dengan JSON | api | ✅ Selesai | `seedIslamicTerms` dihapus; JSON (66 entri) jadi satu-satunya sumber |
