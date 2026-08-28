@@ -114,7 +114,6 @@ const Sidebar = ({ onClose }) => {
                     icon: <GiOpenBook />,
                 },
                 { labelKey: "link.wird", href: "/wirid", icon: <GiOpenBook /> },
-                { labelKey: "link.tahlil", href: "/tahlil", icon: <BsBook /> },
                 {
                     labelKey: "link.kajian",
                     href: "/kajian",

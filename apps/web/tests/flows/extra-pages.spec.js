@@ -6,7 +6,6 @@ test.beforeEach(async ({ page }) => {
 });
 
 const publicPages = [
-    "/tahlil",
     "/wirid-custom",
     "/wirid",
     "/khatam",

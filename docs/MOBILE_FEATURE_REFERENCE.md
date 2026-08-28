@@ -25,7 +25,7 @@ Artefak Expo berada di `apps/mobile`.
 | Belajar hub       | Katalog grouped: Kajian & Artikel, Siroh & Sejarah, Fiqh & Panduan, Referensi, Evaluasi, Personal Ringkas. Feature detail via **modal popup** (bukan inline). Search catalog. Pin/unpin fitur.                                        |
 | Beranda           | Dashboard: prayer card, shortcut grid, contextual shortcuts (dzikir waktu/qibla/tafsir), pinned, terakhir dibuka, muhasabah, bacaan harian.                                                                                           |
 | Profil            | Summary, stats (poin/streak/tilawah/hafalan/sholat), badges, settings stack (Akun/Notif/Penyimpanan/Tampilan/Keamanan).                                                                                                               |
-| Offline           | SQLite pack untuk Quran, Hadith, Doa/Dzikir/Wirid/Tahlil, bookmark snapshot, jadwal shalat 30 hari.                                                                                                                                   |
+| Offline           | SQLite pack untuk Quran, Hadith, Doa/Dzikir/Wirid, bookmark snapshot, jadwal shalat 30 hari.                                                                                                                                   |
 | Deep link         | Scheme `thullaabulilmi://` + hash `#/`. Alias: `prayer`→`ibadah`, `explore`→`belajar`, `qibla`→`ibadah/qibla`. Tambahan: `hadith/:id`, `quran/surah/:number`.                                                                         |
 | Notifikasi        | Notification Center di Profile > Notifikasi. Settings pengingat, inbox, mark read, registrasi Expo push token, dan backend dispatch push untuk reminder harian.                                                                       |
 | Discovery         | Pinned shortcuts (max 4), recently opened (max 3) di Beranda. Catalog search di Belajar. Contextual shortcuts berbasis waktu & aktivitas.                                                                                             |
@@ -67,19 +67,18 @@ Artefak Expo berada di `apps/mobile`.
 31. [Kamus Islami](#31-kamus-islami)
 32. [Quiz Islami](#32-quiz-islami)
 33. [Tasbih Digital](#33-tasbih-digital)
-34. [Tahlil & Yasin Digital](#34-tahlil--yasin-digital)
-35. [Wirid Kustom](#35-wirid-kustom)
-36. [Perawi & Ilmu Hadith](#36-perawi--ilmu-hadith)
-37. [Statistik & Laporan](#37-statistik--laporan)
-38. [Leaderboard](#38-leaderboard)
-39. [Pencapaian (Achievement)](#39-pencapaian-achievement)
-40. [Notifikasi Inbox](#40-notifikasi-inbox)
-41. [Pengaturan Notifikasi](#41-pengaturan-notifikasi)
-42. [Search Global](#42-search-global)
-43. [Feed / Social](#43-feed--social)
-44. [Komentar](#44-komentar)
-45. [Profil & Pengaturan Akun](#45-profil--pengaturan-akun)
-46. [Open API / Partner](#46-open-api--partner)
+34. [Wirid Kustom](#34-wirid-kustom)
+35. [Perawi & Ilmu Hadith](#35-perawi--ilmu-hadith)
+36. [Statistik & Laporan](#36-statistik--laporan)
+37. [Leaderboard](#37-leaderboard)
+38. [Pencapaian (Achievement)](#38-pencapaian-achievement)
+39. [Notifikasi Inbox](#39-notifikasi-inbox)
+40. [Pengaturan Notifikasi](#40-pengaturan-notifikasi)
+41. [Search Global](#41-search-global)
+42. [Feed / Social](#42-feed--social)
+43. [Komentar](#43-komentar)
+44. [Profil & Pengaturan Akun](#44-profil--pengaturan-akun)
+45. [Open API / Partner](#45-open-api--partner)
 
 ---
 
@@ -926,27 +925,7 @@ GET  /quiz/stats        → statistik quiz user (JWT)
 
 ---
 
-## 34. Tahlil & Yasin Digital
-
-**Deskripsi:** Bacaan tahlil, surat Yasin, dan doa arwah yang terstruktur, dapat dibaca dalam urutan.
-
-**Layar yang dibutuhkan:**
-
-- Daftar konten tahlil (Yasin, tahlil, doa, dll)
-- Mode baca satu per satu dengan tombol navigasi
-- Teks Arab besar + terjemahan
-- Scroll atau paging per halaman
-
-**API:**
-
-```
-GET /tahlil        → list konten tahlil
-GET /tahlil/:id    → detail satu konten
-```
-
----
-
-## 35. Wirid Kustom
+## 34. Wirid Kustom
 
 **Deskripsi:** User dapat membuat dan menyimpan koleksi wirid pribadi (bacaan Arab + target jumlah + keterangan).
 
@@ -970,7 +949,7 @@ GET    /wirid/occasion/:occasion  → wirid resmi per kesempatan
 
 ---
 
-## 36. Perawi & Ilmu Hadith
+## 35. Perawi & Ilmu Hadith
 
 **Deskripsi:** Database biografi perawi hadith lengkap dengan jarh wa ta'dil, tabaqah, relasi guru-murid, dan sanad.
 
@@ -1009,7 +988,7 @@ GET /hadiths/:id/takhrij    → takhrij hadith
 
 ---
 
-## 37. Statistik & Laporan
+## 36. Statistik & Laporan
 
 **Deskripsi:** Ringkasan aktivitas ibadah dan belajar user dalam berbagai periode.
 
@@ -1033,7 +1012,7 @@ GET /stats/yearly    → laporan tahunan (JWT)
 
 ---
 
-## 38. Leaderboard
+## 37. Leaderboard
 
 **Deskripsi:** Papan peringkat komunitas berdasarkan streak dan jumlah hafalan.
 
@@ -1054,7 +1033,7 @@ GET /leaderboard/me       → posisi user sendiri (JWT)
 
 ---
 
-## 39. Pencapaian (Achievement)
+## 38. Pencapaian (Achievement)
 
 **Deskripsi:** Badge/medali yang didapat user atas pencapaian tertentu (streak X hari, hafal Y surah, dll).
 
@@ -1076,7 +1055,7 @@ GET /achievements/points  → total poin user (JWT)
 
 ---
 
-## 40. Notifikasi Inbox
+## 39. Notifikasi Inbox
 
 **Deskripsi:** Kotak masuk notifikasi personal user (reminder ibadah, badge baru, informasi sistem).
 
@@ -1100,7 +1079,7 @@ PUT /notifications/inbox/read-all  → tandai semua dibaca (JWT)
 
 ---
 
-## 41. Pengaturan Notifikasi
+## 40. Pengaturan Notifikasi
 
 **Deskripsi:** Konfigurasi reminder harian untuk sholat, tilawah, muhasabah, dll.
 
@@ -1119,7 +1098,7 @@ PUT /notifications/settings    → simpan pengaturan (JWT)
 
 ---
 
-## 42. Search Global
+## 41. Search Global
 
 **Deskripsi:** Pencarian full-text lintas konten: ayah, hadith, doa, dzikir, artikel.
 
@@ -1139,7 +1118,7 @@ GET /search?q=&type=ayah|hadith|all&lang=id|ar|en
 
 ---
 
-## 43. Feed / Social
+## 42. Feed / Social
 
 **Deskripsi:** Timeline postingan singkat berbagi ayah, hadith, atau renungan dengan komunitas pengguna.
 
@@ -1163,7 +1142,7 @@ DELETE /feed/:id      → hapus milik sendiri (JWT)
 
 ---
 
-## 44. Komentar
+## 43. Komentar
 
 **Deskripsi:** Sistem komentar untuk konten (artikel blog, hadith, dll).
 
@@ -1184,7 +1163,7 @@ DELETE /comments/:id      → hapus (JWT)
 
 ---
 
-## 45. Profil & Pengaturan Akun
+## 44. Profil & Pengaturan Akun
 
 **Deskripsi:** Halaman profil user dengan ringkasan aktivitas dan pengaturan akun.
 
@@ -1212,7 +1191,7 @@ GET /achievements/points
 
 ---
 
-## 46. Open API / Partner
+## 45. Open API / Partner
 
 **Deskripsi:** API key untuk akses konten publik tanpa login (untuk integrasi pihak ketiga / aplikasi partner).
 
@@ -1244,7 +1223,7 @@ DELETE /developer/keys/:id      → revoke API key
 | Tracker (Sholat, Hafalan, Tilawah, Khatam)     | 2–3 layar masing-masing           |
 | Streak / Amalan / Muhasabah / Goals            | 2 layar masing-masing             |
 | Tools (Zakat, Faraidh, Kiblat, Kamus, Hijri)   | 1–2 layar masing-masing           |
-| Quiz / Tasbih / Tahlil                         | 2–3 layar masing-masing           |
+| Quiz / Tasbih                                  | 2–3 layar masing-masing           |
 | Bookmark / Notes / Progress                    | 1–2 layar masing-masing           |
 | Notifikasi / Stats / Leaderboard / Achievement | 1–2 layar masing-masing           |
 | Search / Feed / Profil                         | 2 layar masing-masing             |
@@ -1768,25 +1747,6 @@ Kitab yang tersedia: Shahih Bukhari, Shahih Muslim, Sunan Abu Daud, Sunan Tirmid
 | audio_url       | varchar(512)    |                 |
 | translation_id  | int FK nullable |                 |
 
-#### `tahlil_collections`
-
-| Kolom       | Tipe               | Keterangan                 |
-| ----------- | ------------------ | -------------------------- |
-| id          | int PK             |                            |
-| type        | varchar(50) UNIQUE | yasin / tahlil / doa_arwah |
-| title       | varchar(256)       |                            |
-| description | text               |                            |
-
-#### `tahlil_items`
-
-| Kolom          | Tipe            | Keterangan                           |
-| -------------- | --------------- | ------------------------------------ |
-| id             | int PK          |                                      |
-| collection_id  | int FK NOT NULL |                                      |
-| sort_order     | int             |                                      |
-| repeat         | int             | default: 1                           |
-| translation_id | int FK          | Label, Arab, transliterasi, terjemah |
-
 #### `manasik_steps`
 
 | Kolom          | Tipe        | Keterangan                            |
@@ -2105,7 +2065,7 @@ Kitab yang tersedia: Shahih Bukhari, Shahih Muslim, Sunan Abu Daud, Sunan Tirmid
 | Ilmu Hadith                      | 5 (perawi, perawi_guru, sanad, mata_sanad, jarh_tadil, takhrij)                                        |
 | Ibadah Tracker                   | 6 (sholat_log, sholat_guide, tilawah_log, hafalan_progress, murojaah_session, amalan_item, amalan_log) |
 | Personal                         | 4 (muhasabah, study_goal, user_activity, reading_progress)                                             |
-| Dzikir/Doa/Wird                  | 5 (doa, dzikir, dzikir_log, user_wird, tahlil_collection, tahlil_item)                                 |
+| Dzikir/Doa/Wird                  | 3 (doa, dzikir, dzikir_log, user_wird)                                                                 |
 | Asmaul Husna                     | 1                                                                                                      |
 | Manasik                          | 1                                                                                                      |
 | Kajian & Blog                    | 5 (kajian, blog_post, blog_category, blog_tag, blog_post_tags)                                         |

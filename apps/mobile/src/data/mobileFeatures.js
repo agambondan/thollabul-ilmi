@@ -39,13 +39,6 @@ export const featureGroups = [
                 type: "asmaul-wirid",
             },
             {
-                key: "tahlil",
-                title: "Tahlil",
-                subtitle: "Referensi tahlil dan yasin",
-                type: "list",
-                endpoint: "/api/v1/tahlil",
-            },
-            {
                 key: "amalan",
                 title: "Amalan Harian",
                 subtitle: "Checklist ibadah harian",

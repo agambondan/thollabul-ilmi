@@ -99,7 +99,6 @@ Revamp arsitektur navigasi mobile agar mengikuti keputusan final IA:
     - Doa
     - Dzikir
     - Wirid
-    - Tahlil
     - Tasbih
     - Zakat
     - Faraidh

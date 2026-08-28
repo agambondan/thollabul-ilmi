@@ -137,7 +137,6 @@ const featureDirectoryIcons = {
     siroh: Users,
     stats: Globe,
     tafsir: FileText,
-    tahlil: Book,
     tilawah: BookOpen,
     "sholat-tracker": Compass,
     tasbih: ListChecks,

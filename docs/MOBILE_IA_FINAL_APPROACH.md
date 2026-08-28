@@ -124,7 +124,7 @@ Section:
 - Harian: Jadwal sholat, log sholat, doa, dzikir pagi/petang, dzikir setelah sholat.
 - Alat: Qibla, tasbih, zakat, faraidh.
 - Rencana: Khatam, puasa sunnah/Ramadan, imsakiyah, manasik.
-- Bacaan: Wirid, tahlil, asmaul husna.
+- Bacaan: Wirid, asmaul husna.
 
 Prayer screen lama menjadi feature detail dalam Ibadah, bukan tab sendiri.
 
@@ -210,7 +210,7 @@ Tanpa discovery layer, hub akan berubah menjadi menu panjang dan masalah lama ke
 ### Phase 2 - Ibadah Hub
 
 - Refactor Prayer tab menjadi Ibadah.
-- Masukkan Qibla, Doa, Dzikir, Tasbih, Zakat, Faraidh, Khatam, Wirid/Tahlil.
+- Masukkan Qibla, Doa, Dzikir, Tasbih, Zakat, Faraidh, Khatam, Wirid.
 - Jadwal sholat tetap menjadi primary card di hub Ibadah.
 
 ### Phase 3 - Belajar Hub

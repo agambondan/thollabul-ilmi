@@ -295,7 +295,6 @@ describe("IbadahScreen", () => {
         );
         expect(getByText("Wirid")).toBeTruthy();
         expect(getByText("Wirid Saya")).toBeTruthy();
-        expect(getByText("Tahlil")).toBeTruthy();
         expect(getByText("Asmaul Husna")).toBeTruthy();
     });
 
@@ -386,7 +385,7 @@ describe("IbadahScreen", () => {
                 onOpenTab={jest.fn()}
             />,
         );
-        expect(getAllByTestId("compact-row").length).toBe(16);
+        expect(getAllByTestId("compact-row").length).toBe(15);
     });
 
     test("renders QiblaScreen sub-view when view is qibla", () => {

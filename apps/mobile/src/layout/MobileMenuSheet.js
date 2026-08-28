@@ -200,13 +200,6 @@ export const webAppMenuGroups = [
                 tab: "ibadah",
             },
             {
-                Icon: Book,
-                key: "tahlil",
-                label: "Tahlil & Yasin",
-                labelKey: "menu.tahlilYasin",
-                tab: "belajar",
-            },
-            {
                 Icon: MessageCircle,
                 key: "kajian",
                 label: "Kajian Islam",

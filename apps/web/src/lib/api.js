@@ -863,23 +863,6 @@ export const adminWiridApi = {
     delete: (id) => authFetch(`/api/v1/wirid/${id}`, { method: "DELETE" }),
 };
 
-export const adminTahlilApi = {
-    list: (page = 0, size = 100) =>
-        authFetch(`/api/v1/tahlil/items?page=${page}&size=${size}`),
-    create: (data) =>
-        authFetch("/api/v1/tahlil/items", {
-            method: "POST",
-            body: JSON.stringify(data),
-        }),
-    update: (id, data) =>
-        authFetch(`/api/v1/tahlil/items/${id}`, {
-            method: "PUT",
-            body: JSON.stringify(data),
-        }),
-    delete: (id) =>
-        authFetch(`/api/v1/tahlil/items/${id}`, { method: "DELETE" }),
-};
-
 export const adminManasikApi = {
     list: (page = 0, size = 100) =>
         authFetch(`/api/v1/manasik/items?page=${page}&size=${size}`),

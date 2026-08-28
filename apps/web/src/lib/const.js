@@ -107,12 +107,6 @@ export const linksMenuContent = [
         icon: <GiOpenBook />,
     },
     {
-        label: "Tahlil & Yasin",
-        labelKey: "link.tahlil",
-        href: "/tahlil",
-        icon: <BsBook />,
-    },
-    {
         label: "Siroh",
         labelKey: "link.sirah_short",
         href: "/siroh",
@@ -260,7 +254,6 @@ export const linksMenuContentGroups = [
             "/panduan-sholat",
             "/wirid",
             "/wirid-custom",
-            "/tahlil",
             "/asmaul-husna",
             "/asmaul-husna/flashcard",
             "/asmaul-husna/wirid",

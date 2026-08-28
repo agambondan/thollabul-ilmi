@@ -80,7 +80,7 @@ Fixed 4 critical bugs in the search state machine:
 
 - `lib/cache.go` — Redis wrapper with `Remember` pattern, Prometheus metrics wired
 - Per-key TTL: 15 static prefixes (surah, asmaul, doa, dll) = 300s, default = 60s
-- 14 services with `WithCache` constructors: Surah, Doa, Dzikir, Fiqh, Manasik, Tafsir, Siroh, Tahlil, Kajian, Perawi, AsmaulHusna, Books, Themes, Chapters
+- 13 services with `WithCache` constructors: Surah, Doa, Dzikir, Fiqh, Manasik, Tafsir, Siroh, Kajian, Perawi, AsmaulHusna, Books, Themes, Chapters
 - Cache invalidation on writes: 7 services bust cache on create/update/delete
 - Redis optional: graceful fallback, no panic on Redis down
 

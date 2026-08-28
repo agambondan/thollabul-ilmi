@@ -67,16 +67,6 @@ export const WEB_APP_REFERENCE_ROUTE_CONFIGS = {
         titleKey: "explore.reference.wirid.title",
         unitKey: "explore.reference.wirid.unit",
     },
-    tahlil: {
-        arabicHeading: "التَّهْلِيل",
-        categories: ["tahlil", "yasin", "doa", "umum"],
-        emptyTextKey: "explore.reference.tahlil.empty",
-        loadingTextKey: "explore.reference.tahlil.loading",
-        searchPlaceholderKey: "explore.reference.tahlil.searchPlaceholder",
-        subtitleKey: "explore.reference.tahlil.subtitle",
-        titleKey: "explore.reference.tahlil.title",
-        unitKey: "explore.reference.tahlil.unit",
-    },
     "asmaul-husna": {
         arabicHeading: "أَسْمَاءُ اللهِ الحُسْنَى",
         emptyTextKey: "explore.reference.asmaulHusna.empty",

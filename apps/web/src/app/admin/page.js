@@ -16,7 +16,6 @@ import {
     adminManasikApi,
     adminQuizApi,
     adminSejarahApi,
-    adminTahlilApi,
     adminUserApi,
     adminWiridApi,
 } from "@/lib/api";
@@ -225,7 +224,6 @@ const AdminDashboard = () => {
                 doa,
                 dzikir,
                 wirid,
-                tahlil,
                 manasik,
                 quiz,
                 kamus,
@@ -242,7 +240,6 @@ const AdminDashboard = () => {
                 safeJson(adminDoaApi.list(0, 100)),
                 safeJson(adminDzikirApi.list(0, 100)),
                 safeJson(adminWiridApi.list(0, 100)),
-                safeJson(adminTahlilApi.list(0, 100)),
                 safeJson(adminManasikApi.list(0, 100)),
                 safeJson(adminQuizApi.list(0, 100)),
                 safeJson(adminKamusApi.list(0, 100)),
@@ -283,7 +280,6 @@ const AdminDashboard = () => {
                 doa.count +
                 dzikir.count +
                 wirid.count +
-                tahlil.count +
                 manasik.count;
             const learningTotal =
                 quiz.count +
@@ -441,7 +437,6 @@ const AdminDashboard = () => {
                     doa,
                     dzikir,
                     wirid,
-                    tahlil,
                     manasik,
                     quiz,
                     kamus,

@@ -93,12 +93,6 @@ const sectionDefinitions = [
                 titleKey: "ibadah.row.userWird.title",
             },
             {
-                Icon: BookOpenCheck,
-                featureKey: "tahlil",
-                subtitleKey: "ibadah.row.tahlil.subtitle",
-                titleKey: "ibadah.row.tahlil.title",
-            },
-            {
                 Icon: Sparkles,
                 featureKey: "asmaul-husna",
                 subtitleKey: "ibadah.row.asmaulHusna.subtitle",

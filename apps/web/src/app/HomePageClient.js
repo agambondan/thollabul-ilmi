@@ -360,12 +360,6 @@ export default function Home() {
                     personal: true,
                 },
                 {
-                    icon: <BsBookHalf />,
-                    labelKey: "home.f.tahlil",
-                    descKey: "home.f.tahlil_d",
-                    href: "/tahlil",
-                },
-                {
                     icon: <MdOutlinePlayLesson />,
                     labelKey: "home.f.kajian",
                     descKey: "home.f.kajian_d",

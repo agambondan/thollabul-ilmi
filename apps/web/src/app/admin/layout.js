@@ -98,11 +98,6 @@ const NAV_GROUPS = [
                 icon: <BsHeart />,
             },
             {
-                href: "/admin/tahlil",
-                labelKey: "admin.nav.tahlil",
-                icon: <BsMoon />,
-            },
-            {
                 href: "/admin/asmaul-husna",
                 labelKey: "admin.nav.asmaul",
                 icon: <BsStar />,

@@ -34,7 +34,6 @@ const staticRoutes = [
     url("/kajian", 0.7, "weekly"),
     url("/panduan-sholat", 0.7, "weekly"),
     url("/wirid", 0.7, "weekly"),
-    url("/tahlil", 0.7, "weekly"),
     url("/zakat", 0.7, "weekly"),
     url("/contact", 0.5, "monthly"),
     url("/search", 0.5, "weekly"),

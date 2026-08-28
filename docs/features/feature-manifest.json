@@ -215,17 +215,6 @@
             "status": "active"
         },
         {
-            "key": "tahlil",
-            "title": "Tahlil",
-            "publicWebRoute": "/tahlil",
-            "dashboardWebRoute": "/dashboard/tahlil",
-            "mobileRoute": "feature:tahlil",
-            "authRequired": false,
-            "ctaLabel": "Buka Tahlil",
-            "searchable": true,
-            "status": "active"
-        },
-        {
             "key": "amalan",
             "title": "Amalan Harian",
             "publicWebRoute": "/amalan",

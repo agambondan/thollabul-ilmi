@@ -187,14 +187,6 @@ export const exploreRouteTranslations = {
             "Timeline sejarah Islam dari dashboard.",
         "explore.reference.sejarah.title": "Sejarah Islam",
         "explore.reference.sejarah.unit": "peristiwa",
-        "explore.reference.tahlil.empty": "Bacaan tahlil belum tersedia.",
-        "explore.reference.tahlil.loading": "Memuat tahlil...",
-        "explore.reference.tahlil.searchPlaceholder":
-            "Cari bacaan tahlil atau yasin...",
-        "explore.reference.tahlil.subtitle":
-            "Referensi tahlil dan yasin untuk dibaca bertahap.",
-        "explore.reference.tahlil.title": "Tahlil",
-        "explore.reference.tahlil.unit": "bacaan",
         "explore.reference.wirid.empty": "Wirid belum tersedia.",
         "explore.reference.wirid.loading": "Memuat wirid...",
         "explore.reference.wirid.searchPlaceholder":
@@ -537,15 +529,6 @@ export const exploreRouteTranslations = {
             "Islamic history timeline from the dashboard.",
         "explore.reference.sejarah.title": "Islamic History",
         "explore.reference.sejarah.unit": "events",
-        "explore.reference.tahlil.empty":
-            "Tahlil recitations are not available yet.",
-        "explore.reference.tahlil.loading": "Loading tahlil...",
-        "explore.reference.tahlil.searchPlaceholder":
-            "Search tahlil or yasin recitations...",
-        "explore.reference.tahlil.subtitle":
-            "Tahlil and yasin references for step-by-step reading.",
-        "explore.reference.tahlil.title": "Tahlil",
-        "explore.reference.tahlil.unit": "recitations",
         "explore.reference.wirid.empty": "Wirid is not available yet.",
         "explore.reference.wirid.loading": "Loading wirid...",
         "explore.reference.wirid.searchPlaceholder":

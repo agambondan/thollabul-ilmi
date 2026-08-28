@@ -36,7 +36,7 @@ Rekomendasi utama: pertahankan maksimal 5 tab utama dan turunkan fitur besar ke 
 | -------- | --------------------- | ------------------------------------------------------------------------------------------------------------- |
 | Beranda  | Dashboard kontekstual | Next prayer, daily ayah/hadith, shortcut favorit, lanjutkan terakhir, journal ringan                          |
 | Al-Quran | Quran hub             | Surah list, reader, tafsir, asbab, audio, hafalan, murojaah, preferensi baca                                  |
-| Ibadah   | Daily worship hub     | Jadwal sholat, qibla, doa, dzikir, wirid, tahlil, tasbih, zakat, faraidh, khatam, imsakiyah                   |
+| Ibadah   | Daily worship hub     | Jadwal sholat, qibla, doa, dzikir, wirid, tasbih, zakat, faraidh, khatam, imsakiyah                         |
 | Belajar  | Knowledge hub         | Hadith, kajian, siroh, sejarah, fiqh, manasik, asmaul husna, kamus, quiz, blog/artikel                        |
 | Profil   | Personal hub          | Akun, goals, stats, notes, bookmarks, achievements, leaderboard, offline, notification settings, app settings |
 
@@ -82,7 +82,7 @@ Group yang disarankan:
 
 - Sholat: Jadwal sholat, log sholat, panduan sholat, imsakiyah.
 - Arah dan waktu: Qibla, kalender Hijriah.
-- Dzikir dan bacaan: Doa, dzikir, wirid, tahlil, asmaul husna.
+- Dzikir dan bacaan: Doa, dzikir, wirid, asmaul husna.
 - Alat: Tasbih, zakat, faraidh.
 - Rencana: Khatam, puasa/Ramadan jika ada.
 

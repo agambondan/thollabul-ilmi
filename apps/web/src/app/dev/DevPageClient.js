@@ -483,16 +483,6 @@ const groupsByLang = {
                 },
                 {
                     method: "GET",
-                    path: "/api/v1/tahlil",
-                    desc: "Bacaan tahlil & yasin",
-                },
-                {
-                    method: "GET",
-                    path: "/api/v1/tahlil/:id",
-                    desc: "Detail bacaan tahlil",
-                },
-                {
-                    method: "GET",
                     path: "/api/v1/kajian",
                     desc: "Koleksi kajian (audio/video)",
                 },
@@ -1056,16 +1046,6 @@ const groupsByLang = {
                     method: "GET",
                     path: "/api/v1/fiqh/:slug/:id",
                     desc: "Fiqh item by category and ID",
-                },
-                {
-                    method: "GET",
-                    path: "/api/v1/tahlil",
-                    desc: "Tahlil & Yasin recitations",
-                },
-                {
-                    method: "GET",
-                    path: "/api/v1/tahlil/:id",
-                    desc: "Tahlil recitation details",
                 },
                 {
                     method: "GET",

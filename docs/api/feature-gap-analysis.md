@@ -141,7 +141,7 @@ Dokumen ini **belum berarti semua gap sudah selesai**. Hasil cek ulang terhadap 
 
 - ✅ `/dzikir`, `/dzikir/category/:category`, `/dzikir/:id`, `/wirid/occasion/:occasion`
 - ✅ `/doa`, `/doa/category/:category`, `/doa/:id`
-- ✅ Pages: `/dzikir`, `/doa`, `/wirid`, `/tahlil`
+- ✅ Pages: `/dzikir`, `/doa`, `/wirid`
 - ✅ **Tasbih Digital** — [/tasbih](../../apps/web/src/app/tasbih/page.js) dengan 8 preset, target setting, vibration, total harian (Mei 2026)
 - ✅ Kategori dzikir: `pagi`, `petang`, `setelah_sholat`, `tidur`, `safar`, `dzikir_umum` (di `model.Dzikir`)
 - ✅ Kategori doa lengkap: `pagi`, `petang`, `makan`, `tidur`, `bangun`, `kamar_mandi`, `masjid`, `safar`, `belajar`, `umum`
@@ -424,7 +424,7 @@ Referensi: [integrasi-eksternal-opensource.md](./integrasi-eksternal-opensource.
 | `@react-native-async-storage/async-storage`   | ✅ offline cache ringan | ✅               | Dipakai untuk cache Quran, Hadith, dan Prayer Times.                                                                                                         |
 | `expo-notifications`                          | ✅                      | ✅ Mobile local  | Dipakai untuk local adzan reminder; push token/FCM belum.                                                                                                    |
 | `expo-audio`                                  | ✅ audio playback       | ✅ Mobile Quran  | Dipakai untuk ayah audio mobile; fallback web smoke pakai HTML5 Audio. Hadith/native adzan audio custom belum.                                               |
-| `expo-sqlite` / MMKV                          | ✅ offline cache besar  | ✅ Mobile SQLite | `expo-sqlite` dipakai untuk offline pack Quran, Hadith, Doa/Dzikir/Wirid/Tahlil, bookmark snapshot, dan jadwal shalat 30 hari di mobile. MMKV belum dipakai. |
+| `expo-sqlite` / MMKV                          | ✅ offline cache besar  | ✅ Mobile SQLite | `expo-sqlite` dipakai untuk offline pack Quran, Hadith, Doa/Dzikir/Wirid, bookmark snapshot, dan jadwal shalat 30 hari di mobile. MMKV belum dipakai. |
 | `expo-sensors` / `react-native-qibla-compass` | ✅ compass              | ✅ Mobile        | `expo-sensors` dipakai untuk heading magnetometer di Qibla mobile.                                                                                           |
 
 ### 3.16.5 Font & Tipografi Arab
@@ -461,7 +461,7 @@ Status awal mobile per 2026-05-05:
 - ✅ API client mobile memakai `EXPO_PUBLIC_API_URL` dengan fallback data lokal agar development tetap jalan saat API mati.
 - ✅ Auth/session foundation sudah ada: login ke `/api/v1/auth/login`, simpan token via `expo-secure-store`, refresh/logout helper, dan `SessionProvider`.
 - ✅ Offline cache ringan sudah ada via AsyncStorage untuk Quran, Hadith, dan Prayer Times.
-- ✅ Offline pack SQLite mobile sudah ada untuk Quran, Hadith, Doa/Dzikir/Wirid/Tahlil, bookmark snapshot, dan jadwal shalat 30 hari. Home menampilkan kontrol core/daily/bookmarks; Prayer screen menampilkan kontrol download/clear/use today untuk jadwal lokasi aktif.
+- ✅ Offline pack SQLite mobile sudah ada untuk Quran, Hadith, Doa/Dzikir/Wirid, bookmark snapshot, dan jadwal shalat 30 hari. Home menampilkan kontrol core/daily/bookmarks; Prayer screen menampilkan kontrol download/clear/use today untuk jadwal lokasi aktif.
 - ✅ Protected personal action MVP sudah ada: Hadith bookmark add/remove dan Quran reading progress save memakai token session.
 - ✅ Prayer log mobile sudah ada: `/api/v1/sholat/today` dan `/api/v1/sholat/stats` dipakai untuk update status Subuh-Dzuhur-Ashar-Maghrib-Isya.
 - ✅ Quran reader detail mobile sudah ada: buka surah, load ayah dari `/api/v1/ayah/surah/number/:number`, buka page `/api/v1/ayah/page/:page`, buka hizb quarter `/api/v1/ayah/hizb/:hizb`, kontrol font A-/A+, save progress per ayah, dan bookmark ayah.
@@ -471,13 +471,13 @@ Status awal mobile per 2026-05-05:
 - ✅ Hadith detail mobile sudah ada: buka hadith, load detail `/api/v1/hadiths/:id`, sanad `/api/v1/hadiths/:id/sanad`, takhrij `/api/v1/hadiths/:id/takhrij`, related hadith, saved hadith, dan note count.
 - ✅ Hadith rijal panel mobile sudah ada: narrator di sanad bisa dibuka untuk melihat bio perawi, guru/murid, dan jarh-ta'dil via `/api/v1/perawi/:id/*`.
 - ✅ Notes UI mobile sudah ada: ayah reader dan hadith detail bisa list/create/update/delete catatan personal via `/api/v1/notes`.
-- ✅ Explore/Library mobile sudah ada untuk parity fitur web non-tab: Doa, Dzikir, Wirid, Tahlil, Amalan, Asmaul Husna, Tafsir, Asbabun Nuzul, Siroh, Sejarah, Fiqh, Manasik, Kajian, Blog, Kamus, Quiz, Hijri, Tasbih, Zakat, Faraidh, Bookmarks, Notes, Goals, Muhasabah, Hafalan, Tilawah, Stats, dan Leaderboard.
+- ✅ Explore/Library mobile sudah ada untuk parity fitur web non-tab: Doa, Dzikir, Wirid, Amalan, Asmaul Husna, Tafsir, Asbabun Nuzul, Siroh, Sejarah, Fiqh, Manasik, Kajian, Blog, Kamus, Quiz, Hijri, Tasbih, Zakat, Faraidh, Bookmarks, Notes, Goals, Muhasabah, Hafalan, Tilawah, Stats, dan Leaderboard.
 - ✅ Explore detail hardening sudah ada: item konten bisa dibuka detail, di-bookmark, dan diberi notes personal dengan `ref_type` sesuai modul.
 - ✅ Reader/settings preference mobile sudah ada: font size Quran, prayer method, madhhab Ashar, koreksi manual per waktu, dan adzan reminder lokal disimpan via AsyncStorage.
 - ⚠️ `npm audit fix` sudah dijalankan. Audit mobile masih menyisakan 4 moderate dari transitive Expo stack; fix paksa tetap perlu dicek manual karena bisa membawa perubahan breaking.
 - ✅ Deep link mobile sudah ada dengan scheme `thullaabulilmi://` untuk membuka Quran surah/page/hizb, Hadith, Prayer, Qibla, dan Explore feature key.
 - ✅ Notification Center mobile sudah ada di Explore Personal: reminder settings `daily_quran`/`daily_hadith`/`doa`, inbox, mark read, dan mark all read.
-- ⚠️ Offline SQLite sudah mencakup Quran/Hadith/Doa/Dzikir/Wirid/Tahlil/bookmark snapshot/jadwal shalat 30 hari. Gap berikutnya: native audio adzan custom, AR qibla overlay, Hadith native audio player, dan reader preferences yang lebih lengkap.
+- ⚠️ Offline SQLite sudah mencakup Quran/Hadith/Doa/Dzikir/Wirid/bookmark snapshot/jadwal shalat 30 hari. Gap berikutnya: native audio adzan custom, AR qibla overlay, Hadith native audio player, dan reader preferences yang lebih lengkap.
 
 Prioritas mobile berikutnya:
 
@@ -488,7 +488,7 @@ Prioritas mobile berikutnya:
 | 3      | Hadith detail lanjut       | Mobile    | Perawi deep link, jarh-tadil expansion, related hadith, saved hadith, dan bookmark/notes summary sudah ada; lanjutkan Hadith native audio player bila data media tersedia.                   |
 | 4      | Prayer settings native     | Mobile+BE | Method selector, madhhab Ashar, manual correction lokal, dan local notification reminder sudah ada; lanjutkan native adzan audio custom.                                                     |
 | 5      | Qibla compass native       | Mobile    | Sensor heading/compass sudah ada; AR overlay nanti setelah baseline stabil.                                                                                                                  |
-| 6      | Offline dataset besar      | Mobile    | SQLite Quran/Hadith, Doa/Dzikir/Wirid/Tahlil, bookmark snapshot, dan prayer cache 30 hari sudah ada; lanjutkan offline reader consume path yang lebih dalam bila diperlukan.                 |
+| 6      | Offline dataset besar      | Mobile    | SQLite Quran/Hadith, Doa/Dzikir/Wirid, bookmark snapshot, dan prayer cache 30 hari sudah ada; lanjutkan offline reader consume path yang lebih dalam bila diperlukan.                 |
 | 7      | Push notification          | Mobile+BE | Expo push registration + backend dispatch sudah ada; lanjutkan receipt worker/FCM native bila perlu keluar dari Expo push service.                                                           |
 
 Catatan implementasi:
@@ -700,7 +700,7 @@ Catatan: Semua table lain sudah dimigrasikan — `forum_questions/answers/votes`
 | `/faraidh`                                                                           | ✅            | ✅ (Mei 2026) | `FaraidhContent` shared                                                          | Mirror via content extraction.                                                                                                                                                  |
 | `/zakat`                                                                             | ✅            | ✅ (Mei 2026) | `ZakatContent` shared                                                            | Mirror via content extraction.                                                                                                                                                  |
 | `/kiblat`                                                                            | ✅            | ✅ (Mei 2026) | `KiblatContent` shared                                                           | Mirror via content extraction.                                                                                                                                                  |
-| `/doa`, `/dzikir`, `/wirid`, `/tahlil`                                               | ✅            | ✅            | `DoaContent`, `DzikirContent`, `WiridContent`, `TahlilContent` shared (Mei 2026) | Dashboard reuse public Content. Full parity.                                                                                                                                    |
+| `/doa`, `/dzikir`, `/wirid`                                                          | ✅            | ✅            | `DoaContent`, `DzikirContent`, `WiridContent` shared (Mei 2026)                  | Dashboard reuse public Content. Full parity.                                                                                                                                    |
 | `/asmaul-husna`                                                                      | ✅            | ✅            | `AsmaulHusnaContent` shared (Mei 2026)                                           | Dashboard reuse public Content. Full parity.                                                                                                                                    |
 | `/hijri`, `/jadwal-sholat`, `/imsakiyah`, `/sholat-tracker`                          | ✅            | ✅            | Implementasi terpisah                                                            | ⚠️ Perlu audit.                                                                                                                                                                 |
 | `/kajian`, `/sejarah`, `/siroh`, `/siroh/[slug]`                                     | ✅            | ✅            | Implementasi terpisah                                                            | ⚠️ Perlu audit.                                                                                                                                                                 |
@@ -721,7 +721,7 @@ Catatan: Semua table lain sudah dimigrasikan — `forum_questions/answers/votes`
 | Prioritas | Action                                                                                                                                            | Effort                 |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
 | ⭐ High   | Refactor hadith reader jadi shared component (sama seperti pola Quran reader)                                                                     | M                      |
-| ⭐ High   | Audit fitur per pasangan public vs dashboard untuk doa/dzikir/wirid/tahlil/asmaul-husna/dst — pastikan parity (kategori, search, dark mode, i18n) | L                      |
+| ⭐ High   | Audit fitur per pasangan public vs dashboard untuk doa/dzikir/wirid/asmaul-husna/dst — pastikan parity (kategori, search, dark mode, i18n) | L                      |
 | ⭐ Medium | Tambah dashboard mirror: `/asbabun-nuzul`, `/blog`, `/panduan-sholat`, `/search`                                                                  | S each                 |
 | ⭐ Medium | Konsolidasi pola: setiap modul yang punya public + dashboard pages **wajib** ekstrak `XxxContent` shared                                          | XL (refactor bertahap) |
 | ⭐ Low    | Tambah test untuk memastikan public ↔ dashboard parity tidak regress                                                                              | M                      |

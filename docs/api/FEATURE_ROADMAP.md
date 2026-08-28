@@ -667,26 +667,6 @@ FiqhItem { ID, CategoryID, Question, Answer, Source, Order }
 
 ---
 
-### 35. Tahlil & Yasin Digital
-
-Bacaan Yasin, Tahlil, dan Surat pilihan dalam format mushaf digital dengan navigasi per halaman.
-
-**Model:**
-
-```
-TahlilCollection { ID, Name, Description, Order }
-TahlilItem { ID, CollectionID, Arabic, Transliteration, Translation, Order }
-```
-
-**Endpoint:**
-
-- `GET /tahlil` — list koleksi
-- `GET /tahlil/:id` — detail bacaan per koleksi
-
-**Data:** Statis, seed sekali.
-
----
-
 ### 36. Koleksi Ceramah & Kajian
 
 Link ke ceramah/kajian Islam dari YouTube atau sumber eksternal. API Service hanya simpan metadata — tidak streaming sendiri.
@@ -963,7 +943,7 @@ Kalender Hijriah → Asbabun Nuzul → Sharing Card → User Roles
 
 [Tier 2 — Lanjutan]
 Zakat Calculator → Prayer Tracker → Panduan Sholat
-→ Muroja'ah → Fiqh Ringkas → Tahlil/Yasin
+→ Muroja'ah → Fiqh Ringkas
 → Koleksi Kajian → Muhasabah → Target Belajar
 → Rekap Bulanan → Bacaan Sunnah
 
