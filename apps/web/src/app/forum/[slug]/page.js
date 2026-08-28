@@ -106,7 +106,7 @@ export const ForumDetailContent = ({
                 </p>
                 <Link
                     href={basePath}
-                    className='text-blue-600 hover:underline text-sm mt-3 inline-block'
+                    className='text-emerald-700 hover:underline text-sm mt-3 inline-block'
                 >
                     ← {t("forum.back") ?? "Kembali ke forum"}
                 </Link>
@@ -127,7 +127,7 @@ export const ForumDetailContent = ({
             <div className='mb-6'>
                 <Link
                     href={basePath}
-                    className='inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 mb-4'
+                    className='inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-emerald-700 mb-4'
                 >
                     <BsChevronLeft /> {t("forum.back") ?? "Kembali ke forum"}
                 </Link>
@@ -148,7 +148,7 @@ export const ForumDetailContent = ({
                         <span>{formatDate(question.created_at)}</span>
                         <button
                             onClick={() => handleVote("question", question.id)}
-                            className='flex items-center gap-1 text-blue-500 hover:text-blue-700 font-medium'
+                            className='flex items-center gap-1 text-emerald-600 hover:text-emerald-800 font-medium'
                         >
                             <BsArrowUp /> {question.vote_count || 0}
                         </button>
@@ -158,7 +158,7 @@ export const ForumDetailContent = ({
                             {tags.map((tag) => (
                                 <span
                                     key={tag}
-                                    className='px-2 py-0.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full text-xs'
+                                    className='px-2 py-0.5 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-full text-xs'
                                 >
                                     {tag}
                                 </span>
@@ -198,7 +198,7 @@ export const ForumDetailContent = ({
                                 <span>{formatDate(a.created_at)}</span>
                                 <button
                                     onClick={() => handleVote("answer", a.id)}
-                                    className='flex items-center gap-1 text-blue-500 hover:text-blue-700 font-medium'
+                                    className='flex items-center gap-1 text-emerald-600 hover:text-emerald-800 font-medium'
                                 >
                                     <BsArrowUp /> {a.vote_count || 0}
                                 </button>
@@ -246,12 +246,12 @@ export const ForumDetailContent = ({
                             t("forum.answer_placeholder") ??
                             "Tulis jawaban kamu..."
                         }
-                        className='w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none mb-3'
+                        className='w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none mb-3'
                     />
                     <button
                         type='submit'
                         disabled={answering || answerBody.length < 10}
-                        className='flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors'
+                        className='flex items-center gap-2 px-5 py-2 bg-emerald-700 text-white rounded-xl text-sm font-medium hover:bg-emerald-600 disabled:opacity-50 transition-colors'
                     >
                         <BsPlusLg />
                         {answering
@@ -265,7 +265,7 @@ export const ForumDetailContent = ({
                 <div className='text-center py-4 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                     <Link
                         href={`/auth/login?next=${encodeURIComponent(loginNext)}`}
-                        className='text-sm text-blue-600 hover:underline'
+                        className='text-sm text-emerald-700 hover:underline'
                     >
                         {t("forum.login_to_answer") ?? "Login untuk menjawab"}
                     </Link>

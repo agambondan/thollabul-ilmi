@@ -13,6 +13,29 @@ const toStr = (v) => {
     return v.name ?? v.title ?? v.label ?? v.value ?? "";
 };
 
+// The API sends `options` as a JSON-encoded string and `correct_answer` as the
+// answer text rather than an index, so questions have to be normalized before
+// the UI can render or score them. Mirrors normalizeQuestion in app/quiz/page.js.
+const normalizeQuestion = (q) => {
+    let options = q?.options ?? [];
+    if (typeof options === "string") {
+        try {
+            options = JSON.parse(options);
+        } catch {
+            options = [];
+        }
+    }
+    if (!Array.isArray(options)) options = [];
+
+    const byText = options.indexOf(q?.correct_answer);
+    const answer =
+        byText >= 0
+            ? byText
+            : Number(q?.answer ?? q?.correct_answer_index ?? 0);
+
+    return { ...q, options, answer };
+};
+
 const QuizPage = () => {
     const { t, lang } = useLocale();
     const { isAuthenticated } = useAuth();
@@ -46,7 +69,7 @@ const QuizPage = () => {
             const items =
                 data?.data ?? data?.items ?? (Array.isArray(data) ? data : []);
             if (Array.isArray(items) && items.length > 0) {
-                setQuestions(items);
+                setQuestions(items.map(normalizeQuestion));
                 setLoading(false);
                 return;
             }
@@ -222,7 +245,7 @@ const QuizPage = () => {
     const q = questions[current];
     const total = questions.length;
     const answerIndex = Number(q.answer);
-    const options = Array.isArray(q.options) ? q.options : [];
+    const options = q.options;
 
     return (
         <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>

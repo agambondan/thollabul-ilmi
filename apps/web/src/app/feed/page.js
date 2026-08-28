@@ -88,8 +88,8 @@ function CommentSection({ postId, lang, t }) {
                 <div className='space-y-2 mb-3'>
                     {comments.map((c) => (
                         <div key={c.id} className='flex gap-2'>
-                            <div className='w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center shrink-0'>
-                                <span className='text-[10px] font-bold text-blue-600 dark:text-blue-400'>
+                            <div className='w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center shrink-0'>
+                                <span className='text-[10px] font-bold text-emerald-700 dark:text-emerald-400'>
                                     {(c.author ??
                                         c.username ??
                                         "U")[0].toUpperCase()}
@@ -116,12 +116,12 @@ function CommentSection({ postId, lang, t }) {
                         placeholder={
                             t("feed.comment_placeholder") ?? "Tulis komentar..."
                         }
-                        className='flex-1 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-blue-400'
+                        className='flex-1 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-emerald-400'
                     />
                     <button
                         onClick={submitComment}
                         disabled={!text.trim()}
-                        className='px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs disabled:opacity-40 hover:bg-blue-700'
+                        className='px-3 py-1.5 bg-emerald-700 text-white rounded-lg text-xs disabled:opacity-40 hover:bg-emerald-600'
                     >
                         <BsSend />
                     </button>
@@ -256,7 +256,7 @@ export function FeedContent({ basePath = "/feed" }) {
                 ) : (
                     <Link
                         href={`/auth/login?next=${basePath}`}
-                        className='block text-center py-3 px-4 bg-white dark:bg-slate-800 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl text-sm text-gray-400 hover:border-blue-300 hover:text-blue-600 transition-colors'
+                        className='block text-center py-3 px-4 bg-white dark:bg-slate-800 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl text-sm text-gray-400 hover:border-emerald-300 hover:text-emerald-700 transition-colors'
                     >
                         {t("feed.login_to_create") ??
                             "Login untuk membuat postingan."}
@@ -407,7 +407,7 @@ export function FeedContent({ basePath = "/feed" }) {
                                                     : post.id,
                                             )
                                         }
-                                        className='flex items-center gap-1 text-xs text-gray-500 hover:text-blue-500'
+                                        className='flex items-center gap-1 text-xs text-gray-500 hover:text-emerald-600'
                                     >
                                         <BsChatDots />{" "}
                                         {t("feed.comment") ?? "Komentar"}

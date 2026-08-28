@@ -58,8 +58,8 @@ export function ForumListContent({ basePath = "/forum" }) {
     return (
         <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
             <div className='text-center mb-8'>
-                <div className='inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/40 rounded-2xl mb-4'>
-                    <MdQuestionAnswer className='text-3xl text-blue-600 dark:text-blue-400' />
+                <div className='inline-flex items-center justify-center w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl mb-4'>
+                    <MdQuestionAnswer className='text-3xl text-emerald-700 dark:text-emerald-400' />
                 </div>
                 <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-1'>
                     {t("forum.title") ?? "Forum Diskusi"}
@@ -88,7 +88,7 @@ export function ForumListContent({ basePath = "/forum" }) {
                 </div>
                 <Link
                     href={`${basePath}/ask`}
-                    className='flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap'
+                    className='flex items-center gap-1.5 px-4 py-2 bg-emerald-700 text-white rounded-xl text-sm font-medium hover:bg-emerald-600 transition-colors whitespace-nowrap'
                 >
                     <BsPlusLg />
                     {t("forum.ask") ?? "Tanya"}
@@ -116,7 +116,7 @@ export function ForumListContent({ basePath = "/forum" }) {
                     </p>
                     <Link
                         href={`${basePath}/ask`}
-                        className='inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors'
+                        className='inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-700 text-white rounded-xl text-sm font-medium hover:bg-emerald-600 transition-colors'
                     >
                         <BsPlusLg />
                         {t("forum.ask_first") ?? "Ajukan pertanyaan pertama"}
@@ -128,7 +128,7 @@ export function ForumListContent({ basePath = "/forum" }) {
                         <Link
                             key={q.id}
                             href={`${basePath}/${q.slug}`}
-                            className='block bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 hover:border-blue-200 dark:hover:border-blue-800 transition-colors'
+                            className='block bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 hover:border-emerald-200 dark:hover:border-emerald-800 transition-colors'
                         >
                             <h3 className='text-base font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2'>
                                 {q.title}
