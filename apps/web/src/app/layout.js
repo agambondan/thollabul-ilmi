@@ -2,6 +2,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/Auth";
 import SettingButton from "@/components/popup/SettingButton";
 import { LocaleProvider } from "@/context/Locale";
+import { SettingsProvider } from "@/lib/useSettings";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
 import { Toaster } from "react-hot-toast";
 import InAppNotification from "@/components/InAppNotification";
@@ -89,29 +90,31 @@ export default function RootLayout({ children }) {
                     }}
                 />
                 <LocaleProvider>
-                    <AuthProvider>
-                        <AnalyticsTracker />
-                        {children}
-                        <SettingButton />
-                        <NotificationPermissionPrompt />
-                        <Toaster
-                            position='top-right'
-                            toastOptions={{
-                                duration: 5000,
-                                style: {
-                                    borderRadius: "12px",
-                                    background: "#fff",
-                                    color: "#1e293b",
-                                    boxShadow: "0 4px 24px rgba(0,0,0,0.1)",
-                                },
-                                dark: {
-                                    background: "#1e293b",
-                                    color: "#f1f5f9",
-                                },
-                            }}
-                        />
-                        <InAppNotification />
-                    </AuthProvider>
+                    <SettingsProvider>
+                        <AuthProvider>
+                            <AnalyticsTracker />
+                            {children}
+                            <SettingButton />
+                            <NotificationPermissionPrompt />
+                            <Toaster
+                                position='top-right'
+                                toastOptions={{
+                                    duration: 5000,
+                                    style: {
+                                        borderRadius: "12px",
+                                        background: "#fff",
+                                        color: "#1e293b",
+                                        boxShadow: "0 4px 24px rgba(0,0,0,0.1)",
+                                    },
+                                    dark: {
+                                        background: "#1e293b",
+                                        color: "#f1f5f9",
+                                    },
+                                }}
+                            />
+                            <InAppNotification />
+                        </AuthProvider>
+                    </SettingsProvider>
                 </LocaleProvider>
             </body>
         </html>

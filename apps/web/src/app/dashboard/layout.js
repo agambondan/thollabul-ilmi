@@ -21,6 +21,7 @@ import {
     BsChevronLeft,
     BsChevronRight,
     BsCurrencyDollar,
+    BsGear,
     BsGlobe,
     BsJournalCheck,
     BsJournalPlus,
@@ -245,9 +246,14 @@ const DashboardLayout = ({ children }) => {
                     icon: <BsJournalPlus />,
                 },
                 {
-                    labelKey: "link.tahlil",
-                    href: "/dashboard/tahlil",
-                    icon: <BsBook />,
+                    labelKey: "link.belajar",
+                    href: "/dashboard/belajar",
+                    icon: <MdOutlinePlayLesson />,
+                },
+                {
+                    labelKey: "link.komunitas",
+                    href: "/dashboard/komunitas",
+                    icon: <BsGlobe />,
                 },
                 {
                     labelKey: "link.kajian",
@@ -389,6 +395,11 @@ const DashboardLayout = ({ children }) => {
             href: "/dashboard/notifications",
             icon: <BsBell />,
         },
+        {
+            labelKey: "link.settings",
+            href: "/dashboard/settings",
+            icon: <BsGear />,
+        },
     ];
 
     useEffect(() => {
@@ -419,9 +430,14 @@ const DashboardLayout = ({ children }) => {
             icon: <ImBook />,
         },
         {
-            labelKey: "link.search",
-            href: "/dashboard/search",
-            icon: <BsSearch />,
+            labelKey: "link.deeds",
+            href: "/dashboard/amalan",
+            icon: <MdFormatListBulleted />,
+        },
+        {
+            labelKey: "link.belajar",
+            href: "/dashboard/belajar",
+            icon: <MdOutlinePlayLesson />,
         },
     ];
 

@@ -84,7 +84,6 @@ export const translations = {
         "link.doa": "Doa",
         "link.dhikr": "Dzikir",
         "link.wird": "Wirid Sunnah",
-        "link.tahlil": "Tahlil & Yasin",
         "link.asmaul_husna": "Asmaul Husna",
         "link.brief_fiqh": "Fiqh Ringkas",
         "link.asbabun_nuzul": "Asbabun Nuzul",
@@ -328,9 +327,6 @@ export const translations = {
         "home.f.wirid_custom": "Wirid Pribadi",
         "home.f.wirid_custom_d":
             "Buat dan simpan wirid personal di dashboard akun",
-        "home.f.tahlil": "Tahlil & Yasin",
-        "home.f.tahlil_d":
-            "Panduan bacaan tahlil digital lengkap dengan Arab, Latin, dan terjemahan",
         "home.f.kajian": "Kajian Islam",
         "home.f.kajian_d":
             "Koleksi link ceramah dan kajian dari ustadz terpercaya per kategori",
@@ -742,7 +738,7 @@ export const translations = {
             "Buku dengan sumber dan lisensi yang aman.",
         "admin.health.worship_coverage": "Cakupan ibadah",
         "admin.health.worship_coverage_desc":
-            "Total doa, dzikir, wirid, tahlil, dan manasik.",
+            "Total doa, dzikir, wirid, dan manasik.",
         "admin.health.learning_coverage": "Cakupan belajar",
         "admin.health.learning_coverage_desc":
             "Total quiz, kamus, fiqh, sejarah, kajian, dan asmaul.",
@@ -778,7 +774,6 @@ export const translations = {
         "admin.nav.history": "Sejarah Islam",
         "admin.nav.asbabun": "Asbabun Nuzul",
         "admin.nav.wird": "Wirid",
-        "admin.nav.tahlil": "Tahlil",
         "admin.nav.manasik": "Manasik",
         "admin.nav.fiqh": "Fiqh",
         "admin.nav.users": "Pengguna",
@@ -797,7 +792,6 @@ export const translations = {
         "admin.card.history_desc": "Kelola linimasa sejarah peradaban Islam.",
         "admin.card.asbabun_desc": "Kelola sebab turunnya ayat Al-Quran.",
         "admin.card.wird_desc": "Kelola wirid harian dan amalan rutin.",
-        "admin.card.tahlil_desc": "Kelola urutan bacaan tahlil.",
         "admin.card.manasik_desc": "Kelola panduan manasik haji dan umrah.",
         "admin.card.fiqh_desc": "Kelola materi fiqh ibadah harian.",
         "admin.card.users_desc": "Kelola akun pengguna dan peran akses.",
@@ -869,11 +863,6 @@ export const translations = {
         "admin.manasik.edit_step": "Edit Langkah",
         "admin.manasik.step": "Langkah",
         "admin.manasik.type": "Jenis",
-        "admin.tahlil.readings_unit": "bacaan",
-        "admin.tahlil.reading": "bacaan",
-        "admin.tahlil.add_reading": "Tambah Bacaan",
-        "admin.tahlil.edit_reading": "Edit Bacaan",
-        "admin.tahlil.arabic_excerpt": "Penggalan Arab",
         "admin.asmaul.names_unit": "nama",
         "admin.asmaul.name": "nama",
         "admin.asmaul.add_name": "Tambah Asmaul Husna",
@@ -1713,12 +1702,6 @@ export const translations = {
             "Pastikan server backend berjalan lalu refresh halaman.",
         "wirid.not_found": "Tidak ada wirid ditemukan.",
         "wirid.all": "Semua",
-        // Dashboard – Tahlil
-        "tahlil.title": "Tahlil & Yasin",
-        "tahlil.subtitle": "Panduan bacaan tahlilan lengkap",
-        "tahlil.note_text":
-            "Urutan bacaan tahlil dapat bervariasi sesuai tradisi daerah masing-masing. Panduan ini mengikuti tatacara umum yang lazim dipraktikkan. Untuk Surah Yasin lengkap, kunjungi halaman",
-        "tahlil.reading_suffix": "bacaan dalam urutan tahlil",
         // Dashboard – Manasik
         "manasik.title": "Manasik Haji & Umrah",
         "manasik.subtitle": "Panduan tata cara ibadah haji dan umrah",
@@ -1731,6 +1714,48 @@ export const translations = {
         "manasik.sunnah": "Sunnah",
         "manasik.general_note":
             "Panduan ini bersifat umum. Untuk ibadah yang sesungguhnya, ikuti bimbingan pembimbing haji/umrah dan bacaan kitab manasik yang sahih.",
+        'link.settings': 'Pengaturan',
+        'link.belajar': 'Pusat Belajar',
+        'link.komunitas': 'Komunitas',
+        // Settings
+        'settings.title': 'Pengaturan',
+        'settings.desc': 'Atur preferensi tampilan dan aplikasi',
+        'settings.theme': 'Tema',
+        'settings.theme_light': 'Terang',
+        'settings.theme_dark': 'Gelap',
+        'settings.theme_system': 'Sistem',
+        'settings.lang': 'Bahasa',
+        'settings.lang_id': 'Indonesia',
+        'settings.lang_en': 'Inggris',
+        'settings.quran_font': 'Font Quran',
+        'settings.hadith_font': 'Font Hadis',
+        'settings.reader_size': 'Ukuran Teks',
+        'settings.notif_adzan': 'Reminder Adzan',
+        'settings.notif_kajian': 'Info Kajian',
+        'settings.sync_title': 'Sinkronisasi Backend',
+        'settings.sync_desc': 'Simpan pengaturan di cloud (sementara lokal)',
+        'settings.save': 'Simpan Pengaturan',
+
+        // Belajar
+        'belajar.title': 'Pusat Belajar',
+        'belajar.desc': 'Eksplorasi ilmu, kelas step-by-step, dan referensi',
+        'belajar.recent': 'Lanjutkan Belajar',
+        'belajar.lessons': 'Modul & Kelas',
+        'belajar.references': 'Referensi & Alat',
+        'belajar.lessons_start': 'Mulai Kelas',
+        'belajar.lessons_continue': 'Lanjutkan',
+        'belajar.lessons_empty': 'Belum ada kelas aktif.',
+
+        // Komunitas
+        'komunitas.title': 'Komunitas',
+        'komunitas.desc': 'Diskusi, tanya jawab, dan obrolan realtime',
+        'komunitas.chat': 'Obrolan (Realtime)',
+        'komunitas.chat_empty': 'Belum ada obrolan.',
+        'komunitas.chat_send': 'Kirim',
+        'komunitas.chat_placeholder': 'Ketik pesan...',
+        'komunitas.highlight': 'Blog Pilihan',
+        'komunitas.hot_forum': 'Diskusi Hangat',
+
         // Tilawah Tracker page
         "tilawah.tracker_title": "Tilawah Tracker",
         "tilawah.tracker_subtitle":
@@ -2072,7 +2097,6 @@ export const translations = {
         "link.doa": "Supplication",
         "link.dhikr": "Dhikr",
         "link.wird": "Sunnah Wird",
-        "link.tahlil": "Tahlil & Yasin",
         "link.asmaul_husna": "Asmaul Husna",
         "link.brief_fiqh": "Brief Fiqh",
         "link.asbabun_nuzul": "Asbabun Nuzul",
@@ -2313,9 +2337,6 @@ export const translations = {
         "home.f.wirid_custom": "My Wirid",
         "home.f.wirid_custom_d":
             "Create and save personal wird in your account dashboard",
-        "home.f.tahlil": "Tahlil & Yasin",
-        "home.f.tahlil_d":
-            "Complete digital tahlil reading guide with Arabic, Latin, and translation",
         "home.f.kajian": "Islamic Study",
         "home.f.kajian_d":
             "Collection of lecture links from trusted scholars by category",
@@ -2728,7 +2749,7 @@ export const translations = {
             "Books with acceptable source and license status.",
         "admin.health.worship_coverage": "Worship coverage",
         "admin.health.worship_coverage_desc":
-            "Total prayers, dhikr, wird, tahlil, and manasik.",
+            "Total prayers, dhikr, wird, and manasik.",
         "admin.health.learning_coverage": "Learning coverage",
         "admin.health.learning_coverage_desc":
             "Total quiz, dictionary, fiqh, history, studies, and asmaul.",
@@ -2764,7 +2785,6 @@ export const translations = {
         "admin.nav.history": "Islamic History",
         "admin.nav.asbabun": "Asbabun Nuzul",
         "admin.nav.wird": "Wird",
-        "admin.nav.tahlil": "Tahlil",
         "admin.nav.manasik": "Manasik",
         "admin.nav.fiqh": "Fiqh",
         "admin.nav.users": "Users",
@@ -2787,7 +2807,6 @@ export const translations = {
             "Manage the Islamic civilization history timeline.",
         "admin.card.asbabun_desc": "Manage reasons behind Quranic revelation.",
         "admin.card.wird_desc": "Manage daily wird and routine deeds.",
-        "admin.card.tahlil_desc": "Manage the tahlil reading sequence.",
         "admin.card.manasik_desc": "Manage Hajj and Umrah manasik guides.",
         "admin.card.fiqh_desc": "Manage daily worship fiqh materials.",
         "admin.card.users_desc": "Manage user accounts and access roles.",
@@ -2858,11 +2877,6 @@ export const translations = {
         "admin.manasik.edit_step": "Edit Step",
         "admin.manasik.step": "Step",
         "admin.manasik.type": "Type",
-        "admin.tahlil.readings_unit": "readings",
-        "admin.tahlil.reading": "reading",
-        "admin.tahlil.add_reading": "Add Reading",
-        "admin.tahlil.edit_reading": "Edit Reading",
-        "admin.tahlil.arabic_excerpt": "Arabic Excerpt",
         "admin.asmaul.names_unit": "names",
         "admin.asmaul.name": "name",
         "admin.asmaul.add_name": "Add Asmaul Husna",
@@ -3699,12 +3713,6 @@ export const translations = {
             "Make sure the backend server is running, then refresh the page.",
         "wirid.not_found": "No wird found.",
         "wirid.all": "All",
-        // Dashboard – Tahlil
-        "tahlil.title": "Tahlil & Yasin",
-        "tahlil.subtitle": "Complete tahlil reading guide",
-        "tahlil.note_text":
-            "The order of tahlil recitations can vary by local tradition. This guide follows a common sequence. For the complete Surah Yasin, visit",
-        "tahlil.reading_suffix": "readings in tahlil order",
         // Dashboard – Manasik
         "manasik.title": "Hajj & Umrah Manasik",
         "manasik.subtitle": "Guide to Hajj and Umrah worship",
@@ -3968,5 +3976,47 @@ export const translations = {
         "feed.no_comments": "No comments yet.",
         "feed.comment_placeholder": "Write a comment...",
         "feed.post_comment": "Post",
+
+        // Settings
+        'settings.title': 'Settings',
+        'settings.desc': 'Manage application preferences and layout',
+        'settings.theme': 'Theme',
+        'settings.theme_light': 'Light',
+        'settings.theme_dark': 'Dark',
+        'settings.theme_system': 'System',
+        'settings.lang': 'Language',
+        'settings.lang_id': 'Indonesian',
+        'settings.lang_en': 'English',
+        'settings.quran_font': 'Quran Font',
+        'settings.hadith_font': 'Hadith Font',
+        'settings.reader_size': 'Reader Text Size',
+        'settings.notif_adzan': 'Adzan Reminder',
+        'settings.notif_kajian': 'Kajian Info',
+        'settings.sync_title': 'Cloud Sync',
+        'settings.sync_desc': 'Sync settings to backend',
+        'settings.save': 'Save Settings',
+
+        // Belajar
+        'belajar.title': 'Learning Hub',
+        'belajar.desc': 'Knowledge hub, step-by-step courses, and references',
+        'belajar.recent': 'Continue Learning',
+        'belajar.lessons': 'Modules & Classes',
+        'belajar.references': 'References & Tools',
+        'belajar.lessons_start': 'Start Class',
+        'belajar.lessons_continue': 'Continue',
+        'belajar.lessons_empty': 'No active classes yet.',
+
+        // Komunitas
+        'komunitas.title': 'Community',
+        'komunitas.desc': 'Discussions, Q&A, and realtime chat',
+        'komunitas.chat': 'Realtime Chat',
+        'komunitas.chat_empty': 'No messages yet.',
+        'komunitas.chat_send': 'Send',
+        'komunitas.chat_placeholder': 'Type a message...',
+        'komunitas.highlight': 'Featured Articles',
+        'komunitas.hot_forum': 'Hot Discussions',
+        'link.settings': 'Settings',
+        'link.belajar': 'Learning Hub',
+        'link.komunitas': 'Community',
     },
 };
