@@ -2,8 +2,6 @@ package model
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type UserRole string
@@ -90,11 +88,16 @@ type UpdateProfileRequest struct {
 	PreferredLang *string `json:"preferred_lang"`
 }
 
+// ToPublic returns the shape safe to embed in something other people read — a
+// byline, a forum post. The email is contact information and must not ride
+// along; Password is already dropped by its json tag.
 func (u *User) ToPublic() *User {
+	if u == nil {
+		return nil
+	}
 	return &User{
-		BaseUUID: BaseUUID{ID: uuid.UUID{}},
+		BaseUUID: u.BaseUUID,
 		Name:     u.Name,
-		Email:    u.Email,
 		Role:     u.Role,
 		Avatar:   u.Avatar,
 	}

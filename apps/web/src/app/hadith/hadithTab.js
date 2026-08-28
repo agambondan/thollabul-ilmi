@@ -1,13 +1,20 @@
 import classNames from "classnames";
+import { useLocale } from "@/context/Locale";
 
 const HadithTab = ({ tabs, onClickTab, activeTab, children }) => {
+    const { t } = useLocale();
+    
     return (
         <div className='w-full'>
             <ul
                 className='flex flex-wrap gap-2 justify-center px-4'
                 role='tablist'
             >
-                {tabs.map((tab) => (
+                {tabs.map((tab) => {
+                    const labelKey = `hadith.tab_${tab.label.toLowerCase()}`;
+                    const displayLabel = t(labelKey) || tab.label;
+                    
+                    return (
                     <li key={tab.href}>
                         <button
                             onClick={() => onClickTab(tab.href)}
@@ -18,15 +25,15 @@ const HadithTab = ({ tabs, onClickTab, activeTab, children }) => {
                                         activeTab === tab.href,
                                     "bg-parchment-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600":
                                         activeTab !== tab.href,
-                                },
+                                }
                             )}
                             role='tab'
                             aria-selected={activeTab === tab.href}
                         >
-                            {tab.label}
+                            {displayLabel}
                         </button>
                     </li>
-                ))}
+                )})}
                 {children}
             </ul>
         </div>

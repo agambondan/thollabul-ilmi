@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type BlogStatus string
@@ -49,6 +50,15 @@ type BlogPost struct {
 	Tags          []BlogTag     `json:"tags,omitempty" gorm:"many2many:blog_post_tags"`
 	TranslationID *int          `json:"translation_id,omitempty" gorm:"index"`
 	Translation   *Translation  `json:"translation,omitempty" gorm:"foreignKey:TranslationID;-:migration"`
+}
+
+// AfterFind strips the author's contact details. Every blog read path preloads
+// Author, so sanitising here rather than at each call site means a new query
+// cannot accidentally publish an email address. GORM runs the preload callback
+// before after_query, so Author is already populated by this point.
+func (p *BlogPost) AfterFind(tx *gorm.DB) error {
+	p.Author = p.Author.ToPublic()
+	return nil
 }
 
 type CreateBlogPostRequest struct {

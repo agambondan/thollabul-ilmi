@@ -61,7 +61,7 @@ func (r *forumRepo) usersByID(ids []uuid.UUID) (map[uuid.UUID]*model.User, error
 		return nil, err
 	}
 	for i := range users {
-		out[users[i].ID] = &users[i]
+		out[users[i].ID] = users[i].ToPublic()
 	}
 	return out, nil
 }

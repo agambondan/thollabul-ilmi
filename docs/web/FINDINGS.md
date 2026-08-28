@@ -18,11 +18,11 @@ Analisis lengkap tiap item ada di [UI_MATURITY_AUDIT_2026-08-28.md](UI_MATURITY_
 
 | Status | Jumlah |
 |---|---|
-| ✅ Selesai | 25 |
-| 📋 Terbuka | 11 |
+| ✅ Selesai | 28 |
+| 📋 Terbuka | 10 |
 | ⏸️ Menunggu | 4 |
 | ❌ Dicabut | 7 |
-| **Total** | **47** |
+| **Total** | **49** |
 
 Catatan: 7 dari 45 temuan ternyata **bukan bug** — semuanya berasal dari cara
 audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
@@ -98,7 +98,9 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 |---|---|---|---|---|
 | F1 | Kredensial admin produksi ter-commit di `capture-all-routes-vps.mjs` | infra | ✅ Selesai | Dipindah ke env var |
 | F2 | Password admin produksi `Admin@123` masih aktif & ada di histori git | ops | ⏸️ Menunggu | Ditunda atas permintaan; **tetap mendesak** |
-| F3 | `GET /api/v1/blog/posts` membocorkan email admin lewat objek `author` | api | 📋 Terbuka | Serialize `{id, name}` saja |
+| F3 | `GET /api/v1/blog/posts` membocorkan email admin lewat objek `author` | api | ✅ Selesai | Hook `AfterFind` di `BlogPost` + `ToPublic()`; ada test |
+| F4 | `/forum/questions` ikut membocorkan email lewat author yang saya hidrasi (A6) | api | ✅ Selesai | Regresi dari perbaikan sendiri, ketahuan saat menggarap F3 |
+| F5 | `User.ToPublic()` dead code yang justru menyertakan email | api | ✅ Selesai | Dijadikan sanitizer resmi |
 
 ## G. Perkakas & proses
 
