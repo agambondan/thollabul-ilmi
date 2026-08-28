@@ -38,7 +38,7 @@ func (s *lessonService) SaveProgress(userID uuid.UUID, req *model.SaveLessonProg
 		BaseUUID: model.BaseUUID{ID: uuid.New()},
 		UserID:   userID,
 		ModuleID: req.ModuleID,
-		Step:     req.Step,
+		StepNum:  req.Step,
 		Done:     req.Done,
 	}
 	return s.repo.UpsertProgress(p)
