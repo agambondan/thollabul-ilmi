@@ -92,7 +92,7 @@ describe('SurahAudioPlayer', () => {
     render(<SurahAudioPlayer surahNumber={1} surahName="Al-Fatihah" totalAyahs={7} />);
 
     fireEvent.click(screen.getByText('Dengar Surah'));
-    await screen.findByText('Abdul Rahman Al-Sudais');
+    await screen.findByLabelText('Pilih qari');
     await waitFor(() => {
       expect(screen.queryByText('Memuat...')).not.toBeInTheDocument();
     });
@@ -100,7 +100,8 @@ describe('SurahAudioPlayer', () => {
     fireEvent.change(await screen.findByLabelText('Sampai ayat'), {
       target: { value: '2' },
     });
-    fireEvent.click(screen.getByText('Abdul Rahman Al-Sudais'));
+    fireEvent.click(screen.getByLabelText('Pilih qari'));
+    fireEvent.click(await screen.findByText(/Abdul Rahman Al-Sudais/i));
     fireEvent.click(screen.getByText('1.25x'));
     fireEvent.click(screen.getByLabelText('Repeat'));
     await waitFor(() => {
@@ -123,7 +124,7 @@ describe('SurahAudioPlayer', () => {
     render(<SurahAudioPlayer surahNumber={1} surahName="Al-Fatihah" totalAyahs={7} />);
 
     fireEvent.click(screen.getByText('Dengar Surah'));
-    await screen.findByText('Abdul Rahman Al-Sudais');
+    await screen.findByLabelText('Pilih qari');
     fireEvent.change(await screen.findByLabelText('Sampai ayat'), {
       target: { value: '2' },
     });
@@ -159,7 +160,7 @@ describe('SurahAudioPlayer', () => {
     render(<SurahAudioPlayer surahNumber={1} surahName="Al-Fatihah" totalAyahs={7} />);
 
     fireEvent.click(screen.getByText('Dengar Surah'));
-    await screen.findByText('Abdul Rahman Al-Sudais');
+    await screen.findByLabelText('Pilih qari');
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /Putar range/i })).toBeEnabled();
     });
@@ -188,7 +189,7 @@ describe('SurahAudioPlayer', () => {
     render(<SurahAudioPlayer surahNumber={1} surahName="Al-Fatihah" totalAyahs={7} />);
 
     fireEvent.click(screen.getByText('Dengar Surah'));
-    await screen.findByText('Abdul Rahman Al-Sudais');
+    await screen.findByLabelText('Pilih qari');
     fireEvent.change(await screen.findByLabelText('Sampai surat'), {
       target: { value: '999' },
     });

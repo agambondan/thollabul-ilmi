@@ -22,6 +22,73 @@ const DEFAULT_QARI = 'mishary-rashid-alafasy';
 const MIN_SURAH_NUMBER = 1;
 const MAX_SURAH_NUMBER = 114;
 
+const QARI_CATALOG = {
+    'mishary-rashid-alafasy': {
+        name: 'Mishary Rashid Al-Afasy',
+        country: 'Kuwait',
+        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Mishary_bin_Rashid_Al-Afasy.jpg/220px-Mishary_bin_Rashid_Al-Afasy.jpg',
+    },
+    'abdurrahman-as-sudais': {
+        name: 'Abdurrahman As-Sudais',
+        country: 'Arab Saudi',
+        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Abdul_Rahman_Al-Sudais.jpg/220px-Abdul_Rahman_Al-Sudais.jpg',
+    },
+    'abdul-basit': {
+        name: 'Abdul Basit Abdul Samad',
+        country: 'Mesir',
+        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Abdul_Basit_Abdul_Samad.jpg/220px-Abdul_Basit_Abdul_Samad.jpg',
+    },
+    'saad-al-ghamidi': {
+        name: "Sa'ad Al-Ghamidi",
+        country: 'Arab Saudi',
+        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Saad_Al-Ghamidi.jpg/220px-Saad_Al-Ghamidi.jpg',
+    },
+    'yasser-al-dosari': {
+        name: 'Yasser Al-Dosari',
+        country: 'Arab Saudi',
+        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Yasser_Al-Dosari.jpg/220px-Yasser_Al-Dosari.jpg',
+    },
+    'maher-al-muaiqly': {
+        name: 'Maher Al-Muaiqly',
+        country: 'Arab Saudi',
+        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Maher_Al-Muaiqly.jpg/220px-Maher_Al-Muaiqly.jpg',
+    },
+    'hani-ar-rifai': {
+        name: 'Hani Ar-Rifai',
+        country: 'Arab Saudi',
+        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Hani_Ar-Rifai.jpg/220px-Hani_Ar-Rifai.jpg',
+    },
+    'salah-bukhatir': {
+        name: 'Salah Bukhatir',
+        country: 'Arab Saudi',
+        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Salah_Bukhatir.jpg/220px-Salah_Bukhatir.jpg',
+    },
+    'abdullah-al-juhany': {
+        name: 'Abdullah Al-Juhany',
+        country: 'Arab Saudi',
+        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Abdullah_Al-Juhany.jpg/220px-Abdullah_Al-Juhany.jpg',
+    },
+    'ali-al-hudhaify': {
+        name: 'Ali Abdurrahman Al-Hudhaify',
+        country: 'Yaman',
+        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Ali_Al-Hudhaify.jpg/220px-Ali_Al-Hudhaify.jpg',
+    },
+};
+
+const QARI_FALLBACK_AVATAR =
+    'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="%2310b981"/><text x="50%25" y="55%25" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" fill="white">Q</text></svg>';
+
+const getQariInfo = (slug) =>
+    QARI_CATALOG[slug] || { name: slug, country: '', photo: QARI_FALLBACK_AVATAR };
+
+const getQariInitials = (name) =>
+    name
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0]?.toUpperCase() ?? '')
+        .join('') || 'Q';
+
 const normalizeItems = (payload) => {
     if (Array.isArray(payload)) return payload;
     if (Array.isArray(payload?.items)) return payload.items;
@@ -84,6 +151,7 @@ export default function SurahAudioPlayer({
     });
     const [repeat, setRepeat] = useState(false);
     const [selectedQari, setSelectedQari] = useState(DEFAULT_QARI);
+    const [qariDropdownOpen, setQariDropdownOpen] = useState(false);
     const [speed, setSpeed] = useState(1);
     const label = (key, fallback) => {
         const value = t(key);
@@ -617,21 +685,82 @@ export default function SurahAudioPlayer({
                         <p className='mb-1 text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400'>
                             Qari
                         </p>
-                        <div className='flex flex-wrap gap-1 max-h-16 overflow-y-auto'>
-                            {audioList.map((item) => (
-                                <button
-                                    key={item.qari_slug}
-                                    type='button'
-                                    onClick={() => handleQariChange(item.qari_slug)}
-                                    className={`px-2 py-0.5 rounded-full text-[11px] font-medium transition-colors ${
-                                        selectedQari === item.qari_slug
-                                            ? 'bg-emerald-500 text-white'
-                                            : 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
-                                    }`}
-                                >
-                                    {item.qari_name}
-                                </button>
-                            ))}
+                        <div
+                            className='relative'
+                            onBlur={(event) => {
+                                if (!event.currentTarget.contains(event.relatedTarget)) setQariDropdownOpen(false);
+                            }}
+                        >
+                            <button
+                                type='button'
+                                onClick={() => setQariDropdownOpen((value) => !value)}
+                                aria-label='Pilih qari'
+                                aria-expanded={qariDropdownOpen}
+                                className='flex w-full items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 p-2 pr-8 text-left outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900'
+                            >
+                                <img
+                                    src={getQariInfo(selectedQari).photo}
+                                    alt={getQariInfo(selectedQari).name}
+                                    onError={(event) => {
+                                        event.currentTarget.src = QARI_FALLBACK_AVATAR;
+                                    }}
+                                    className='h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-emerald-200 dark:ring-slate-600'
+                                />
+                                <span className='min-w-0 flex-1'>
+                                    <span className='block truncate text-xs font-semibold text-gray-900 dark:text-white'>
+                                        {currentAudio?.qari_name ?? getQariInfo(selectedQari).name}
+                                    </span>
+                                    <span className='block truncate text-[10px] text-gray-500 dark:text-gray-400'>
+                                        {getQariInfo(selectedQari).country || 'Syaikh'}
+                                    </span>
+                                </span>
+                            </button>
+                            <BsChevronDown className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400' />
+                            {qariDropdownOpen && (
+                                <div className='absolute z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white p-1 shadow-xl dark:border-slate-700 dark:bg-slate-900'>
+                                    {audioList.map((item) => {
+                                        const info = getQariInfo(item.qari_slug);
+                                        return (
+                                            <button
+                                                key={item.qari_slug}
+                                                type='button'
+                                                onMouseDown={(event) => event.preventDefault()}
+                                                onClick={() => {
+                                                    handleQariChange(item.qari_slug);
+                                                    setQariDropdownOpen(false);
+                                                }}
+                                                className={`flex w-full items-center gap-2 rounded-lg p-2 text-left transition-colors ${
+                                                    selectedQari === item.qari_slug
+                                                        ? 'bg-emerald-50 dark:bg-emerald-900/30'
+                                                        : 'hover:bg-gray-50 dark:hover:bg-slate-800'
+                                                }`}
+                                            >
+                                                <img
+                                                    src={info.photo}
+                                                    alt={info.name}
+                                                    onError={(event) => {
+                                                        event.currentTarget.src = QARI_FALLBACK_AVATAR;
+                                                    }}
+                                                    className='h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-emerald-100 dark:ring-slate-700'
+                                                />
+                                                <span className='min-w-0 flex-1'>
+                                                    <span className='block truncate text-xs font-semibold text-gray-900 dark:text-white'>
+                                                        {item.qari_name}
+                                                    </span>
+                                                    <span className='block truncate text-[10px] text-gray-500 dark:text-gray-400'>
+                                                        {info.country || 'Syaikh'}
+                                                    </span>
+                                                </span>
+                                                {selectedQari === item.qari_slug && (
+                                                    <span className='text-[10px] font-bold text-emerald-600 dark:text-emerald-400'>
+                                                        Aktif
+                                                    </span>
+                                                )}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}
