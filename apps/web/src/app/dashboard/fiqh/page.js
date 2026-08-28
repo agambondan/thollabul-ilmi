@@ -5,27 +5,14 @@ import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import { BsChevronDown, BsChevronUp, BsSearch } from "react-icons/bs";
 
-const CATEGORIES = [
-    "thaharah",
-    "sholat",
-    "zakat",
-    "puasa",
-    "haji",
-    "muamalah",
-    "umum",
-];
-
 const toStr = (v) => {
     if (!v) return "";
     if (typeof v === "string") return v;
     return v.name ?? v.title ?? v.label ?? v.value ?? "";
 };
 
-const normalizeFiqhCategory = (value) => {
-    const normalized = toStr(value).toLowerCase().replace(/_/g, "-").trim();
-    if (normalized.startsWith("haji")) return "haji";
-    return normalized;
-};
+const normalizeFiqhCategory = (value) =>
+    toStr(value).toLowerCase().replace(/_/g, "-").trim();
 
 const getFiqhFilterCategory = (item) =>
     normalizeFiqhCategory(item?.category ?? item?.slug ?? item?.name);
@@ -41,7 +28,9 @@ export default function DashboardFiqhPage() {
 
     useEffect(() => {
         setLoading(true);
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/fiqh?page=0&size=100`)
+        // /api/v1/fiqh returns categories, not materials — this screen needs
+        // every item at once so search and the filter work across categories.
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/fiqh/items?size=500`)
             .then((r) => r.json())
             .then((d) => {
                 const arr = d?.items ?? d ?? [];
@@ -50,6 +39,12 @@ export default function DashboardFiqhPage() {
             .catch((e) => console.error(e))
             .finally(() => setLoading(false));
     }, []);
+
+    // Derived from the data rather than hardcoded: the old fixed list carried a
+    // "umum" category the API does not have and was missing nikah and jenazah.
+    const categories = [
+        ...new Set(items.map(getFiqhFilterCategory).filter(Boolean)),
+    ].sort();
 
     const filtered = items.filter(
         (i) =>
@@ -89,7 +84,7 @@ export default function DashboardFiqhPage() {
                         className='pl-8 pr-3 py-1.5 border border-gray-200 dark:border-slate-700 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white w-44'
                     />
                 </div>
-                {["", ...CATEGORIES].map((c) => (
+                {["", ...categories].map((c) => (
                     <button
                         key={c}
                         onClick={() => setCat(c)}

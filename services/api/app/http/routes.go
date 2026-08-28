@@ -541,7 +541,10 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Post("/fiqh/categories", middlewares.EditorOrAdminMiddleware(), newFiqhController.CreateCategory)
 	master.Put("/fiqh/categories/:id", middlewares.EditorOrAdminMiddleware(), newFiqhController.UpdateCategory)
 	master.Delete("/fiqh/categories/:id", middlewares.EditorOrAdminMiddleware(), newFiqhController.DeleteCategory)
-	master.Get("/fiqh/items", middlewares.EditorOrAdminMiddleware(), newFiqhController.FindAllItems)
+	// Public: the same rows are already reachable one category at a time via
+	// GET /fiqh/:slug, and the payload carries no draft or internal fields, so
+	// gating the flat list only blocked cross-category search.
+	master.Get("/fiqh/items", newFiqhController.FindAllItems)
 	master.Get("/fiqh/:slug/:id", newFiqhController.FindItemByCategoryAndID)
 	master.Get("/fiqh/item/:slug", newFiqhController.FindItemBySlug)
 	master.Get("/fiqh/:slug", newFiqhController.FindCategoryBySlug)

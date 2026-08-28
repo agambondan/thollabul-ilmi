@@ -84,8 +84,8 @@ func (c *fiqhController) FindAllCategories(ctx *fiber.Ctx) error {
 	return lib.OKPaginated(ctx, list, limit, offset, hasMore)
 }
 
-// FindItems get all fiqh items (admin)
-// @Summary Get all fiqh items (admin)
+// FindItems get all fiqh items as one flat list
+// @Summary Get all fiqh items
 // @Tags Ibadah, Fiqh
 // @Accept json
 // @Produce json
