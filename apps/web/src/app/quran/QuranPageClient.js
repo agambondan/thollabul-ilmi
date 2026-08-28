@@ -103,6 +103,7 @@ export default function QuranPageClient({
                         key={surat.number}
                         prefetch={false}
                         href={`${basePath}/${getLatinName(surat)}`}
+                        className='cv-list-item'
                     >
                         <CardHorizontal
                             surat={surat}

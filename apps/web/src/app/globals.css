@@ -353,3 +353,22 @@ tajweed.idgh_mus:hover {
         transparent
     );
 }
+
+/*
+ * Long index lists (the 114-surah grid). Cards stay in the DOM — find-in-page,
+ * anchor links and the client-side filter all keep working — but the browser
+ * skips layout and paint for the ones off screen. contain-intrinsic-size is the
+ * measured card height, so the scrollbar does not jump as they resolve.
+ */
+/*
+ * Only below `sm`, where the grid collapses to one column and the page runs
+ * ~11.000px. Measured on the three-column desktop layout it costs more than it
+ * saves — most cards sit near the viewport there, so the containment
+ * bookkeeping outweighs the skipped work.
+ */
+@media (max-width: 639px) {
+    .cv-list-item {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 72px;
+    }
+}

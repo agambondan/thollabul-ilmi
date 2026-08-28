@@ -18,8 +18,8 @@ Analisis lengkap tiap item ada di [UI_MATURITY_AUDIT_2026-08-28.md](UI_MATURITY_
 
 | Status | Jumlah |
 |---|---|
-| ✅ Selesai | 45 |
-| 📋 Terbuka | 3 |
+| ✅ Selesai | 46 |
+| 📋 Terbuka | 2 |
 | ⏸️ Menunggu | 0 |
 | ❌ Dicabut | 10 |
 | **Total** | **58** |
@@ -90,7 +90,7 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 | ID | Temuan | Area | Status | Catatan |
 |---|---|---|---|---|
 | E1 | `/admin/asbabun-nuzul` render 11.675px — 216 entri tanpa paginasi | web | ✅ Selesai | `PanelPagination` (25/halaman) → 1.632px; search tetap menjangkau seluruh data |
-| E2 | `/quran` & `/dashboard/quran` 114 surah tanpa virtualisasi | web | 📋 Terbuka | Mobile sampai 10.952px |
+| E2 | `/quran` & `/dashboard/quran` 114 surah tanpa virtualisasi | web | ✅ Selesai | `content-visibility` di bawah `sm` → objek layout 3.015→1.060 (65%). Desktop sengaja tidak kena: terukur tak menguntungkan di grid 3 kolom |
 | E3 | 22 statement `CREATE INDEX` dianggap gagal semua | api | ❌ Dicabut | Salah diagnosis saya; nama tabel sudah benar |
 
 ## F. Keamanan
