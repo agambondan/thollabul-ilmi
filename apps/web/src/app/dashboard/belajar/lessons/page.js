@@ -2,64 +2,81 @@
 
 import { useLocale } from '@/context/Locale';
 import { useLayoutMode } from '@/lib/useLayoutMode';
-import { useState } from 'react';
-import { BsCheckCircle, BsChevronLeft, BsChevronRight, BsPlayFill, BsLockFill, BsBook } from 'react-icons/bs';
+import { useState, useEffect } from 'react';
+import { BsCheckCircle, BsChevronLeft, BsChevronRight, BsPlayFill, BsBook } from 'react-icons/bs';
 import Link from 'next/link';
 import { pushRecentBelajar } from '@/lib/recent';
+import { authFetch } from '@/lib/api';
 
-const MODULES = [
-    {
-        id: 'wudhu',
-        title: 'Tata Cara Wudhu',
-        steps: [
-            { title: 'Niat', body: 'Niat di dalam hati ketika membasuh wajah, tidak harus diucapkan.' },
-            { title: 'Membasuh Wajah', body: 'Siramkan air ke seluruh wajah dari dahi sampai dagu dan dari telinga kanan ke telinga kiri.' },
-            { title: 'Membasuh Tangan', body: 'Mulai dari tangan kanan sampai siku, gosok sela-sela jari, lalu tangan kiri.' },
-            { title: 'Mengusap Kepala', body: 'Usap seluruh kepala dengan air dari depan ke belakang dan sebaliknya sekali saja.' },
-            { title: 'Membasuh Kaki', body: 'Siramkan air ke seluruh kaki kanan dan kiri sampai mata kaki, termasuk sela-sela.' },
-        ],
-    },
-    {
-        id: 'sholat',
-        title: 'Tata Cara Sholat',
-        steps: [
-            { title: 'Takbiratul Ihram', body: 'Berdiri tegak, angkat kedua tangan sejajar telinga, baca "Allahu Akbar".' },
-            { title: 'Membaca Al-Fatihah', body: 'Surat wajib dalam tiap rakaat. Setiap rakaat dibaca setelah takbir intiqal.' },
-            { title: 'Ruku', body: 'Bungkukkan badan, tangan di lutut, punggung rata. Baca "Subhana Rabbiyal Adzim" 3x.' },
-            { title: 'Sujud', body: 'Turunkan badan hingga dahi, kedua telapak tangan, kedua lutut, dan kedua kaki menyentuh lantai. Baca "Subhana Rabbiyal A\'la" 3x.' },
-            { title: 'Tasyahud & Salam', body: 'Duduk iftirash kemudian tahiyat akhir, diakhiri salam ke kanan dan ke kiri.' },
-        ],
-    },
-    {
-        id: 'adzans',
-        title: 'Mengenal Adzan & Iqomah',
-        steps: [
-            { title: 'Pengertian Adzan', body: 'Panggilan untuk menunaikan sholat fardhu, terdiri dari 7 kalimat (Subuh 5 kalimat).' },
-            { title: 'Syarat Muadzin', body: 'Muslim, baligh, berakal, memahami rukun adzan.' },
-            { title: 'Lafaz Adzan', body: 'Allahu Akbar (4x), Syahadat (2x), Hayya \'alas sholah (2x), Hayya \'alal falah (2x), dst.' },
-            { title: 'Iqomah', body: 'Serupa adzan, namun ditambah "Qod qomatish sholah" dan dibaca lebih cepat.' },
-        ],
-    },
-];
+const API_URL = typeof window !== 'undefined' ? process.env.NEXT_PUBLIC_API_URL || '' : '';
 
 export default function LessonsPage() {
     const { t } = useLocale();
     const { isWide } = useLayoutMode();
-    const [activeModuleId, setActiveModuleId] = useState(MODULES[0].id);
+    const [modules, setModules] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [activeModuleId, setActiveModuleId] = useState(null);
     const [activeStepIdx, setActiveStepIdx] = useState(0);
     const [completed, setCompleted] = useState({});
 
-    const activeModule = MODULES.find((m) => m.id === activeModuleId);
-    const step = activeModule.steps[activeStepIdx];
+    useEffect(() => {
+        const fetchModules = async () => {
+            try {
+                const res = await fetch(`${API_URL}/api/v1/lessons`);
+                if (res.ok) {
+                    const data = await res.json();
+                    const items = data?.data?.items || data?.items || [];
+                    setModules(items);
+                    if (items.length > 0) setActiveModuleId(items[0].slug);
+                }
+            } catch (e) {
+                console.error('Failed to load lessons', e);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchModules();
+    }, []);
 
-    const totalSteps = activeModule.steps.length;
-    const moduleProgress = Math.round(
-        ((Object.keys(completed).filter((k) => k.startsWith(activeModuleId)).length) / totalSteps) * 100
-    );
+    useEffect(() => {
+        const fetchProgress = async () => {
+            try {
+                const res = await authFetch('/api/v1/lessons/progress');
+                if (res.ok) {
+                    const data = await res.json();
+                    const items = data?.data?.items || data?.items || [];
+                    const comp = {};
+                    items.forEach(p => {
+                        const m = modules.find(mod => mod.id === p.module_id);
+                        if (m) comp[`${m.slug}_${p.step}`] = p.done;
+                    });
+                    setCompleted(comp);
+                }
+            } catch {}
+        };
+        if (modules.length > 0) fetchProgress();
+    }, [modules]);
 
-    const handleSelectModule = (id) => {
-        setActiveModuleId(id);
+    const activeModule = modules.find((m) => m.slug === activeModuleId);
+    const step = activeModule?.steps?.[activeStepIdx];
+    const totalSteps = activeModule?.steps?.length || 0;
+    
+    const moduleProgress = totalSteps > 0 ? Math.round(
+        ((Object.keys(completed).filter((k) => k.startsWith(activeModuleId) && completed[k]).length) / totalSteps) * 100
+    ) : 0;
+
+    const handleSelectModule = (slug) => {
+        setActiveModuleId(slug);
         setActiveStepIdx(0);
+    };
+
+    const saveProgress = async (stepNum, done) => {
+        try {
+            await authFetch('/api/v1/lessons/progress', {
+                method: 'PUT',
+                body: JSON.stringify({ module_id: activeModule.id, step: stepNum, done }),
+            });
+        } catch {}
     };
 
     const next = () => {
@@ -68,6 +85,7 @@ export default function LessonsPage() {
         } else {
             const key = `${activeModuleId}_${totalSteps}`;
             setCompleted({ ...completed, [key]: true });
+            saveProgress(totalSteps, true);
             pushRecentBelajar({ href: `/dashboard/belajar/lessons`, title: activeModule.title, meta: 'Selesai' });
         }
     };
@@ -75,6 +93,14 @@ export default function LessonsPage() {
     const prev = () => {
         if (activeStepIdx > 0) setActiveStepIdx(activeStepIdx - 1);
     };
+
+    if (loading) {
+        return <div className="p-8 text-center text-gray-500">Memuat modul pelajaran...</div>;
+    }
+
+    if (!activeModule || !step) {
+        return <div className="p-8 text-center text-gray-500">{t('belajar.lessons_empty')}</div>;
+    }
 
     const isStepDone = activeStepIdx < totalSteps - 1 
         ? completed[`${activeModuleId}_${activeStepIdx + 1}`]
@@ -90,28 +116,26 @@ export default function LessonsPage() {
             </h1>
 
             <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
-                {/* Module List */}
                 <div className='sm:col-span-1 space-y-2'>
-                    {MODULES.map((m) => (
+                    {modules.map((m) => (
                         <button
-                            key={m.id}
-                            onClick={() => handleSelectModule(m.id)}
+                            key={m.slug}
+                            onClick={() => handleSelectModule(m.slug)}
                             className={`w-full text-left p-3 rounded-xl border transition-colors ${
-                                activeModuleId === m.id
+                                activeModuleId === m.slug
                                     ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700'
                                     : 'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:border-emerald-200'
                             }`}
                         >
                             <p className='text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2'>
-                                {activeModuleId === m.id ? <BsPlayFill className='text-emerald-500' /> : <BsBook className='text-gray-400' />}
+                                {activeModuleId === m.slug ? <BsPlayFill className='text-emerald-500' /> : <BsBook className='text-gray-400' />}
                                 {m.title}
                             </p>
-                            <p className='text-xs text-gray-500 mt-1'>{m.steps.length} langkah</p>
+                            <p className='text-xs text-gray-500 mt-1'>{m.steps?.length || 0} langkah</p>
                         </button>
                     ))}
                 </div>
 
-                {/* Active Step */}
                 <div className='sm:col-span-2'>
                     <div className='mb-4 flex items-center justify-between'>
                         <span className='text-xs font-bold text-emerald-600 uppercase tracking-wider'>

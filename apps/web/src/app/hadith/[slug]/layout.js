@@ -1,7 +1,6 @@
+import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
 import { getBooks } from "@/lib/api";
 
-const SITE_URL =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://tholabul-ilmi.com";
 
 export async function generateStaticParams() {
     const books = await getBooks();
@@ -26,16 +25,18 @@ export async function generateMetadata(props) {
         description,
         alternates: { canonical: canonicalUrl },
         openGraph: {
+            type: "website",
+            siteName: SITE_NAME,
             title,
             description,
             url: canonicalUrl,
-            images: [{ url: "/og", width: 1200, height: 630 }],
+            images: [OG_IMAGE],
         },
         twitter: {
             card: "summary_large_image",
             title,
             description,
-            images: ["/og"],
+            images: [OG_IMAGE.url],
         },
     };
 }

@@ -1,3 +1,4 @@
+import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 import { AuthProvider } from "@/context/Auth";
 import SettingButton from "@/components/popup/SettingButton";
@@ -8,8 +9,6 @@ import { Toaster } from "react-hot-toast";
 import InAppNotification from "@/components/InAppNotification";
 import NotificationPermissionPrompt from "@/components/NotificationPermissionPrompt";
 
-const SITE_URL =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://tholabul-ilmi.com";
 
 const websiteJsonLd = {
     "@context": "https://schema.org",
@@ -29,10 +28,17 @@ const websiteJsonLd = {
 };
 
 export const metadata = {
-    metadataBase: new URL(
-        process.env.NEXT_PUBLIC_SITE_URL ?? "https://tholabul-ilmi.com",
-    ),
-    title: { default: "Thullaabul 'Ilmi", template: "%s — Thullaabul 'Ilmi" },
+    metadataBase: new URL(SITE_URL),
+    applicationName: SITE_NAME,
+    title: { default: SITE_NAME, template: `%s — ${SITE_NAME}` },
+    alternates: { canonical: "/" },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: { index: true, follow: true, "max-image-preview": "large" },
+    },
+    appleWebApp: { capable: true, title: SITE_NAME, statusBarStyle: "default" },
+    formatDetection: { telephone: false },
     description:
         "Thullaabul 'Ilmi is a complete Islamic knowledge portal with the 30 juz Quran, color-coded Tajweed, tafsir, vocabulary, recitation audio, 9 authentic Hadith books, daily prayers, dhikr, Asmaul Husna, sirah, memorization tracking, recitation tracking, daily deeds, Hijri calendar, leaderboard, Islamic blog, and 30+ more features.",
     keywords: [
@@ -58,19 +64,22 @@ export const metadata = {
         "learn quran",
     ],
     openGraph: {
-        title: "Thullaabul 'Ilmi",
+        title: SITE_NAME,
         description:
             "Islamic knowledge portal with Quran, Hadith, prayers, dhikr, Asmaul Husna, sirah, memorization tracking, recitation tracking, daily deeds, Hijri calendar, and 30+ more features.",
         type: "website",
-        locale: "en_US",
-        images: [{ url: "/og", width: 1200, height: 630 }],
+        siteName: SITE_NAME,
+        url: SITE_URL,
+        locale: "id_ID",
+        alternateLocale: ["en_US"],
+        images: [OG_IMAGE],
     },
     twitter: {
         card: "summary_large_image",
-        title: "Thullaabul 'Ilmi",
+        title: SITE_NAME,
         description:
             "Islamic knowledge portal with Quran, Hadith, prayers, dhikr, and 30+ more features.",
-        images: ["/og"],
+        images: [OG_IMAGE.url],
     },
 };
 

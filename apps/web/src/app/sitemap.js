@@ -1,5 +1,4 @@
-const SITE_URL =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://tholabul-ilmi.com";
+import { SITE_URL } from "@/lib/site";
 const API_URL =
     process.env.API_INTERNAL_URL ||
     process.env.API_PROXY_URL ||

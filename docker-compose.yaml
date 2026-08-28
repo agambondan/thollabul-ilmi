@@ -53,11 +53,14 @@ services:
         build:
             context: ./apps/web
             dockerfile: Dockerfile
+            args:
+                NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://thollabul.jangkauin.site}
         ports:
             - "23000:3000"
         environment:
             - NEXT_PUBLIC_API_URL=
             - API_INTERNAL_URL=http://tholabul-ilmi-api:9900
+            - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-https://thollabul.jangkauin.site}
         depends_on:
             - tholabul-ilmi-api
         networks:

@@ -1,10 +1,9 @@
+import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
 const API_URL =
     process.env.API_INTERNAL_URL ||
     process.env.API_PROXY_URL ||
     process.env.NEXT_PUBLIC_API_URL ||
     "http://localhost:29900";
-const SITE_URL =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://tholabul-ilmi.com";
 
 async function getBlogPost(slug) {
     try {
@@ -35,19 +34,18 @@ export async function generateMetadata(props) {
         description,
         alternates: { canonical: canonicalUrl },
         openGraph: {
+            type: "article",
+            siteName: SITE_NAME,
             title,
             description,
             url: canonicalUrl,
-            type: "article",
-            images: image
-                ? [{ url: image }]
-                : [{ url: "/og", width: 1200, height: 630 }],
+            images: image ? [{ url: image }, OG_IMAGE] : [OG_IMAGE],
         },
         twitter: {
             card: "summary_large_image",
             title,
             description,
-            images: image ? [image] : ["/og"],
+            images: image ? [image] : [OG_IMAGE.url],
         },
     };
 }

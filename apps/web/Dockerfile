@@ -10,6 +10,10 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ARG NEXT_PUBLIC_API_URL=
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+# Baked into the bundle: canonical origin used for metadataBase, og:url,
+# canonical links, robots.txt and sitemap.xml. Must match the public domain.
+ARG NEXT_PUBLIC_SITE_URL=https://thollabul.jangkauin.site
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 RUN npm run build && rm -rf node_modules
 
 FROM node:24-alpine AS runner

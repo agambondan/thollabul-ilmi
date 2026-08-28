@@ -1,3 +1,4 @@
+import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
 import HadithNumberContent, {
     fetchHadithByBookNumber,
     getHadithTitle,
@@ -8,8 +9,6 @@ import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { getLocalizedTranslation } from "@/lib/translation";
 
-const SITE_URL =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://tholabul-ilmi.com";
 
 export async function generateMetadata(props) {
     const params = await props.params;
@@ -38,16 +37,18 @@ export async function generateMetadata(props) {
         description,
         alternates: { canonical: canonicalUrl },
         openGraph: {
+            type: "website",
+            siteName: SITE_NAME,
             title,
             description,
             url: canonicalUrl,
-            images: [{ url: "/og", width: 1200, height: 630 }],
+            images: [OG_IMAGE],
         },
         twitter: {
             card: "summary_large_image",
             title,
             description,
-            images: ["/og"],
+            images: [OG_IMAGE.url],
         },
     };
 }
