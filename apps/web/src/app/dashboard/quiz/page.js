@@ -126,23 +126,23 @@ const QuizPage = () => {
     if (done) {
         const pct = Math.round((score / questions.length) * 100);
         return (
-            <div className={isWide ? 'px-4 py-6' : 'px-4 py-6 max-w-md mx-auto'}>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-6'>
+            <div className={isWide ? 'px-3 sm:px-4 py-6' : 'px-3 sm:px-4 py-6 max-w-md mx-auto'}>
+                <h1 className='text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6'>
                     {t('quiz.title')}
                 </h1>
-                <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-8 text-center mb-5'>
-                    <p className='text-5xl mb-4'>
+                <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 sm:p-8 text-center mb-5'>
+                    <p className='text-4xl sm:text-5xl mb-3 sm:mb-4'>
                         {pct >= 80 ? '🌟' : pct >= 50 ? '👍' : '💪'}
                     </p>
-                    <p className='text-2xl font-bold text-gray-900 dark:text-white mb-1'>
+                    <p className='text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1'>
                         {t('quiz.score')}: {score}/{questions.length}
                     </p>
-                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-6'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-5 sm:mb-6'>
                         {pct}% {t('quiz.correct_pct')}
                     </p>
                     <button
                         onClick={restart}
-                        className='px-6 py-2.5 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 transition-colors'
+                        className='w-full sm:w-auto px-6 py-2.5 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 transition-colors'
                     >
                         {t('quiz.try_again')}
                     </button>
@@ -157,7 +157,7 @@ const QuizPage = () => {
                             {history.slice(0, 8).map((h) => (
                                 <li
                                     key={h.id}
-                                    className='flex items-center justify-between text-sm'
+                                    className='flex flex-wrap items-center justify-between gap-2 text-sm'
                                 >
                                     <span className='text-xs text-gray-400 dark:text-gray-500'>
                                         {new Date(h.date + 'T00:00:00').toLocaleDateString(

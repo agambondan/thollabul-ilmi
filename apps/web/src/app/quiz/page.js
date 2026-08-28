@@ -130,17 +130,17 @@ export default function QuizPage() {
         return (
             <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
                 <NavbarTailwindCss />
-                <ContentWidth compact='max-w-lg' className='flex-1 px-4 pt-24 pb-8 text-center'>
-                    <div className='text-7xl mb-4'>{emoji}</div>
-                    <h2 className='text-3xl font-extrabold text-emerald-900 dark:text-emerald-100 mb-2'>
+                <ContentWidth compact='max-w-lg' className='flex-1 px-3 sm:px-4 pt-20 sm:pt-24 pb-8 text-center'>
+                    <div className='text-5xl sm:text-7xl mb-3 sm:mb-4'>{emoji}</div>
+                    <h2 className='text-2xl sm:text-3xl font-extrabold text-emerald-900 dark:text-emerald-100 mb-2'>
                         {t('quiz.finished')}
                     </h2>
-                    <p className='text-gray-500 dark:text-gray-400 mb-6'>{msg}</p>
+                    <p className='text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-5 sm:mb-6'>{msg}</p>
 
-                    <div className='bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-sm border border-gray-100 dark:border-slate-700 mb-6'>
-                        <p className='text-7xl font-extrabold text-emerald-700 dark:text-emerald-300 mb-1'>
-                            {score}
-                            <span className='text-3xl text-gray-400'>/{questions.length}</span>
+                    <div className='bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-sm border border-gray-100 dark:border-slate-700 mb-5 sm:mb-6'>
+                        <p className='inline-flex items-end justify-center gap-1 text-5xl sm:text-7xl font-extrabold text-emerald-700 dark:text-emerald-300 mb-2'>
+                            <span>{score}</span>
+                            <span className='text-xl sm:text-3xl text-gray-400 mb-1'>/{questions.length}</span>
                         </p>
                         <div className='w-full bg-gray-100 dark:bg-slate-700 rounded-full h-3 mb-3 overflow-hidden'>
                             <div
@@ -151,22 +151,22 @@ export default function QuizPage() {
                         <p className='text-gray-500 dark:text-gray-400 text-sm'>{pct}% {t('quiz.correct')}</p>
                     </div>
 
-                    <div className='space-y-2 text-left mb-8'>
+                    <div className='space-y-2 text-left mb-6 sm:mb-8 max-h-[45vh] overflow-y-auto pr-1'>
                         {answers.map((a, i) => (
                             <div
                                 key={i}
-                                className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm ${
+                                className={`flex items-start gap-3 px-3 sm:px-4 py-2.5 rounded-xl text-sm ${
                                     a.correct
                                         ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300'
                                         : 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300'
                                 }`}
                             >
                                 {a.correct ? (
-                                    <BsCheckCircleFill className='flex-shrink-0' />
+                                    <BsCheckCircleFill className='flex-shrink-0 mt-0.5' />
                                 ) : (
-                                    <BsXCircleFill className='flex-shrink-0' />
+                                    <BsXCircleFill className='flex-shrink-0 mt-0.5' />
                                 )}
-                                <span className='truncate'>
+                                <span className='min-w-0 whitespace-normal break-words leading-snug'>
                                     {getLocalizedField(questions[i].raw, 'question', lang, [
                                         'question_text',
                                         'text',
@@ -180,7 +180,7 @@ export default function QuizPage() {
                     <button
                         onClick={startQuiz}
                         disabled={isLoading}
-                        className='flex items-center gap-2 mx-auto bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white px-8 py-3 rounded-2xl font-bold transition-all'
+                        className='flex items-center justify-center gap-2 w-full sm:w-auto mx-auto bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white px-8 py-3 rounded-2xl font-bold transition-all'
                     >
                         <MdRefresh /> {isLoading ? t('common.loading') : t('quiz.retry')}
                     </button>
