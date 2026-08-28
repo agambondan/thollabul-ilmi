@@ -33,10 +33,7 @@ const SettingButton = () => {
     } = useQuranFont();
     const popupRef = useRef(null);
     const mobileControlsTimeoutRef = useRef(null);
-    const label = (key, fallback) => {
-        const value = t(key);
-        return value === key ? fallback : value;
-    };
+    const label = (key, fallback) => t(key) || fallback;
 
     useEffect(() => {
         const media = window.matchMedia('(max-width: 767px)');
