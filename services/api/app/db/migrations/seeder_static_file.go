@@ -28,8 +28,6 @@ func SeedStaticFromFiles(db *gorm.DB) {
 	seedSholatGuideFromFile(db)
 	seedFiqhCategoriesFromFile(db)
 	seedFiqhItemsFromFile(db)
-	seedTahlilCollectionsFromFile(db)
-	seedTahlilItemsFromFile(db)
 	seedSirohCategoriesFromFile(db)
 	seedSirohContentsFromFile(db)
 	seedBlogCategoriesFromFile(db)
@@ -323,84 +321,6 @@ func seedFiqhItemsFromFile(db *gorm.DB) {
 		db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "slug"}},
 			DoUpdates: clause.AssignmentColumns([]string{"title", "content", "source", "sort_order"}),
-		}).Create(&item)
-	}
-}
-
-// ── Tahlil Collection ─────────────────────────────────────────────────────────
-
-func seedTahlilCollectionsFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.TahlilCollection{}).Count(&count)
-	if count > 0 {
-		return
-	}
-	type row struct {
-		Type        string `json:"type"`
-		Title       string `json:"title"`
-		Description string `json:"description"`
-	}
-	var rows []row
-	if !readStaticJSON("tahlil_collection.json", &rows) {
-		return
-	}
-	log.Printf("[seeder] seedTahlilCollectionsFromFile: %d entri", len(rows))
-	for _, r := range rows {
-		item := model.TahlilCollection{Type: model.TahlilType(r.Type), Title: r.Title, Description: r.Description}
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "type"}},
-			DoUpdates: clause.AssignmentColumns([]string{"title", "description"}),
-		}).Create(&item)
-	}
-}
-
-// ── Tahlil Item ───────────────────────────────────────────────────────────────
-
-func seedTahlilItemsFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.TahlilItem{}).Count(&count)
-	if count > 0 {
-		return
-	}
-	type row struct {
-		CollectionType  string `json:"collection_type"`
-		SortOrder       int    `json:"sort_order"`
-		Label           string `json:"label"`
-		Arabic          string `json:"arabic"`
-		Transliteration string `json:"transliteration"`
-		TranslationText string `json:"translation_text"`
-		Repeat          int    `json:"repeat"`
-	}
-	var rows []row
-	if !readStaticJSON("tahlil_item.json", &rows) {
-		return
-	}
-	log.Printf("[seeder] seedTahlilItemsFromFile: %d entri", len(rows))
-	colCache := make(map[string]int)
-	for _, r := range rows {
-		colID, ok := colCache[r.CollectionType]
-		if !ok {
-			var col model.TahlilCollection
-			if err := db.Where("type = ?", r.CollectionType).First(&col).Error; err != nil {
-				log.Printf("[seeder] tahlil_item: collection '%s' tidak ditemukan — skip", r.CollectionType)
-				continue
-			}
-			colID = *col.ID
-			colCache[r.CollectionType] = colID
-		}
-		colIDPtr := colID
-		item := model.TahlilItem{
-			CollectionID:    &colIDPtr,
-			SortOrder:       r.SortOrder,
-			Label:           r.Label,
-			Arabic:          r.Arabic,
-			Transliteration: r.Transliteration,
-			TranslationText: r.TranslationText,
-			Repeat:          r.Repeat,
-		}
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "collection_id"}, {Name: "sort_order"}},
-			DoUpdates: clause.AssignmentColumns([]string{"label", "arabic", "transliteration", "translation", "repeat"}),
 		}).Create(&item)
 	}
 }

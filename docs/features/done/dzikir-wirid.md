@@ -33,34 +33,36 @@ Baca & amalkan dzikir pagi/petang dan wirid based on occasion, dengan dzikir log
 ### API Response Shape
 
 **`GET /dzikir`**
+
 ```json
 [
-  {
-    "id": 1,
-    "category": "pagi|petang|setelah_sholat|tidur|safar|dzikir_umum",
-    "occasion": "setelah subuh",
-    "count": 33,
-    "fadhilah_idn": "Keutamaannya...",
-    "fadhilah_en": "The virtue...",
-    "source": "HR. Bukhari",
-    "audio_url": "https://...",
-    "translation": {
-      "idn": "Maha Suci Allah",
-      "en": "Glory be to Allah",
-      "ar": "سبحان الله",
-      "title_idn": "Tasbih",
-      "title_en": "Tasbih",
-      "title_ar": "تسبيح"
+    {
+        "id": 1,
+        "category": "pagi|petang|setelah_sholat|tidur|safar|dzikir_umum",
+        "occasion": "setelah subuh",
+        "count": 33,
+        "fadhilah_idn": "Keutamaannya...",
+        "fadhilah_en": "The virtue...",
+        "source": "HR. Bukhari",
+        "audio_url": "https://...",
+        "translation": {
+            "idn": "Maha Suci Allah",
+            "en": "Glory be to Allah",
+            "ar": "سبحان الله",
+            "title_idn": "Tasbih",
+            "title_en": "Tasbih",
+            "title_ar": "تسبيح"
+        }
     }
-  }
 ]
 ```
 
 **`POST /dzikir/log`**
+
 ```json
 {
-  "dzikir_id": 1,
-  "log_date": "2026-05-13"
+    "dzikir_id": 1,
+    "log_date": "2026-05-13"
 }
 ```
 
@@ -77,7 +79,7 @@ Baca & amalkan dzikir pagi/petang dan wirid based on occasion, dengan dzikir log
 | `fadhilah_en` | string | Virtue description in English |
 | `source` | string | Hadith reference |
 | `audio_url` | string | Optional audio |
-| `translation_id` | *int | FK to Translation |
+| `translation_id` | \*int | FK to Translation |
 
 **`DzikirLog`** (`model/dzikir_log.go`)
 | Field | Type | Notes |

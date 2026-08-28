@@ -1,11 +1,12 @@
-import Footer from '@/components/Footer';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import Section from '@/components/Section';
-import ContactPageClient from './ContactPageClient';
+import Footer from "@/components/Footer";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import Section from "@/components/Section";
+import ContactPageClient from "./ContactPageClient";
 
 export const metadata = {
     title: "Contact — Thullaabul 'Ilmi",
-    description: "Contact the Thullaabul 'Ilmi team for feedback, bug reports, and collaboration.",
+    description:
+        "Contact the Thullaabul 'Ilmi team for feedback, bug reports, and collaboration.",
 };
 
 export default function ContactPage() {

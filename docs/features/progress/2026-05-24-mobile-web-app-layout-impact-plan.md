@@ -14,32 +14,32 @@ opt-in native layout mode, not as a rewrite of the current app.
 
 ## Baseline Findings
 
-| File | Current role | Impact note |
-| --- | --- | --- |
-| `apps/mobile/App.js` | Main shell, tab state, deep links, back handler, screen panes, analytics, and current `TabBar` render | Highest-risk file. First implementation must preserve `classic` output. |
-| `apps/mobile/src/storage/preferences.js` | Device preferences | `appLayoutMode` already exists. |
-| `apps/mobile/src/screens/ProfileScreen.js` | Appearance settings | Layout mode can already be saved, but it does not yet switch the app shell. |
-| `apps/mobile/src/components/TabBar.js` | Existing 5-tab bottom nav with auto-hide | Keep unchanged for `classic`; build separate `web_app` shell/nav if needed. |
-| `apps/mobile/src/navigation/appNavigation.js` | Pure navigation state helpers | Must remain layout-agnostic. |
-| `HomeScreen`, `QuranScreen`, `HadithScreen`, `IbadahScreen`, `ExploreScreen`, `ProfileScreen` | Feature-heavy screens | Reuse first; do not rewrite during shell foundation. |
+| File                                                                                          | Current role                                                                                          | Impact note                                                                 |
+| --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `apps/mobile/App.js`                                                                          | Main shell, tab state, deep links, back handler, screen panes, analytics, and current `TabBar` render | Highest-risk file. First implementation must preserve `classic` output.     |
+| `apps/mobile/src/storage/preferences.js`                                                      | Device preferences                                                                                    | `appLayoutMode` already exists.                                             |
+| `apps/mobile/src/screens/ProfileScreen.js`                                                    | Appearance settings                                                                                   | Layout mode can already be saved, but it does not yet switch the app shell. |
+| `apps/mobile/src/components/TabBar.js`                                                        | Existing 5-tab bottom nav with auto-hide                                                              | Keep unchanged for `classic`; build separate `web_app` shell/nav if needed. |
+| `apps/mobile/src/navigation/appNavigation.js`                                                 | Pure navigation state helpers                                                                         | Must remain layout-agnostic.                                                |
+| `HomeScreen`, `QuranScreen`, `HadithScreen`, `IbadahScreen`, `ExploreScreen`, `ProfileScreen` | Feature-heavy screens                                                                                 | Reuse first; do not rewrite during shell foundation.                        |
 
 ## Risk Register
 
-| Risk | Mitigation |
-| --- | --- |
-| Breaking all mobile navigation | Keep one navigation state model; layout mode only chooses shell presentation. |
-| Losing features in `web_app` | Use `docs/WEB_MOBILE_SYNC.md` and feature parity checker as acceptance gates. |
-| Quran regressions | Do not touch Quran business logic in shell foundation; test audio/actions/preferences before rollout. |
-| Auth/guest confusion | Public content must remain usable without login; personal actions use auth handoff or local-first storage. |
-| Permission drift | Reuse native location/notification flows; no hardcoded district names. |
-| Hard-to-revert UI | New installs default to `web_app`; explicit `classic` preferences and invalid-value fallback keep the old shell recoverable. |
+| Risk                           | Mitigation                                                                                                                   |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| Breaking all mobile navigation | Keep one navigation state model; layout mode only chooses shell presentation.                                                |
+| Losing features in `web_app`   | Use `docs/WEB_MOBILE_SYNC.md` and feature parity checker as acceptance gates.                                                |
+| Quran regressions              | Do not touch Quran business logic in shell foundation; test audio/actions/preferences before rollout.                        |
+| Auth/guest confusion           | Public content must remain usable without login; personal actions use auth handoff or local-first storage.                   |
+| Permission drift               | Reuse native location/notification flows; no hardcoded district names.                                                       |
+| Hard-to-revert UI              | New installs default to `web_app`; explicit `classic` preferences and invalid-value fallback keep the old shell recoverable. |
 
 ## Recommended First Implementation Slice
 
 1. Add `LayoutModeProvider` and `useLayoutModePreference`.
 2. Read `preferenceKeys.appLayoutMode` with normalization:
-   - valid: `classic`, `web_app`
-   - fallback: `classic`
+    - valid: `classic`, `web_app`
+    - fallback: `classic`
 3. Wrap `App.js` with provider without changing `classic` render.
 4. Add tests for provider/preference normalization.
 5. Add a lightweight shell selection boundary, still rendering current shell
@@ -107,12 +107,12 @@ Results:
 
 ## Later Slices
 
-| Slice | Scope |
-| --- | --- |
-| 2 | Add native `WebAppShell` skeleton with current screens inside it. Done as a non-visual delegate shell: `MobileAppShell` selects `ClassicAppShell` or `WebAppShell`, while `WebAppShell` still delegates to the classic shell render path. |
-| 3 | Apply `web_app` header/bottom nav to Home and Quran only. In progress: shell chrome is now active for all existing screen panes when `web_app` is selected, without changing screen internals. |
-| 4 | Validate Quran ayah action menu, audio range, qari, font size, notes, bookmark, and back behavior. |
-| 5 | Expand to Hadith, Ibadah, and Belajar after Home/Quran are stable. |
+| Slice | Scope                                                                                                                                                                                                                                     |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2     | Add native `WebAppShell` skeleton with current screens inside it. Done as a non-visual delegate shell: `MobileAppShell` selects `ClassicAppShell` or `WebAppShell`, while `WebAppShell` still delegates to the classic shell render path. |
+| 3     | Apply `web_app` header/bottom nav to Home and Quran only. In progress: shell chrome is now active for all existing screen panes when `web_app` is selected, without changing screen internals.                                            |
+| 4     | Validate Quran ayah action menu, audio range, qari, font size, notes, bookmark, and back behavior.                                                                                                                                        |
+| 5     | Expand to Hadith, Ibadah, and Belajar after Home/Quran are stable.                                                                                                                                                                        |
 
 ## Shell Skeleton Update
 

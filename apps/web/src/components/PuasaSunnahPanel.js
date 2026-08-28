@@ -1,22 +1,38 @@
-'use client';
+"use client";
 
-import { useLocale } from '@/context/Locale';
-import { hijriApi } from '@/lib/api';
-import { getPuasaSunnahForDate, PUASA_SUNNAH } from '@/lib/puasaSunnah';
-import { useEffect, useState } from 'react';
-import { BsCalendarCheck, BsInfoCircle } from 'react-icons/bs';
+import { useLocale } from "@/context/Locale";
+import { hijriApi } from "@/lib/api";
+import { getPuasaSunnahForDate, PUASA_SUNNAH } from "@/lib/puasaSunnah";
+import { useEffect, useState } from "react";
+import { BsCalendarCheck, BsInfoCircle } from "react-icons/bs";
 
-const dayNamesId = ['Ahad', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-const dayNamesEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const dayNamesId = [
+    "Ahad",
+    "Senin",
+    "Selasa",
+    "Rabu",
+    "Kamis",
+    "Jumat",
+    "Sabtu",
+];
+const dayNamesEn = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+];
 
 const formatDate = (date, lang) =>
-    new Intl.DateTimeFormat(lang === 'EN' ? 'en-US' : 'id-ID', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
+    new Intl.DateTimeFormat(lang === "EN" ? "en-US" : "id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
     }).format(date);
 
-const labelOf = (item, lang) => (lang === 'EN' ? item.label_en : item.label_id);
+const labelOf = (item, lang) => (lang === "EN" ? item.label_en : item.label_id);
 
 export default function PuasaSunnahPanel() {
     const { t, lang } = useLocale();
@@ -33,7 +49,7 @@ export default function PuasaSunnahPanel() {
                 setTodayHijri(h);
                 await buildUpcoming(h);
             })
-            .catch(e => console.error(e))
+            .catch((e) => console.error(e))
             .finally(() => setLoading(false));
     }, []);
 
@@ -43,8 +59,11 @@ export default function PuasaSunnahPanel() {
         for (let offset = 1; offset <= 30; offset++) {
             const d = new Date(today);
             d.setDate(today.getDate() + offset);
-            const estimatedHijriDay = (Number(currentHijri.day) + offset - 1) % 30 + 1;
-            const monthsAdvanced = Math.floor((Number(currentHijri.day) + offset - 1) / 30);
+            const estimatedHijriDay =
+                ((Number(currentHijri.day) + offset - 1) % 30) + 1;
+            const monthsAdvanced = Math.floor(
+                (Number(currentHijri.day) + offset - 1) / 30,
+            );
             const estimatedHijriMonth =
                 ((Number(currentHijri.month) - 1 + monthsAdvanced) % 12) + 1;
             const matches = getPuasaSunnahForDate(d, {
@@ -81,17 +100,18 @@ export default function PuasaSunnahPanel() {
             <div className='flex items-center gap-2 mb-3'>
                 <BsCalendarCheck className='text-emerald-600 dark:text-emerald-400 text-lg' />
                 <h2 className='text-base font-semibold text-gray-800 dark:text-white'>
-                    {t('puasa.title') ?? 'Puasa Sunnah'}
+                    {t("puasa.title") ?? "Puasa Sunnah"}
                 </h2>
             </div>
 
             <div className='mb-4 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/40'>
                 <p className='text-xs text-emerald-700 dark:text-emerald-400 font-medium mb-1'>
-                    {t('puasa.today') ?? 'Hari Ini'}
+                    {t("puasa.today") ?? "Hari Ini"}
                 </p>
                 {todayMatches.length === 0 ? (
                     <p className='text-sm text-gray-500 dark:text-gray-400'>
-                        {t('puasa.no_today') ?? 'Tidak ada puasa sunnah khusus hari ini.'}
+                        {t("puasa.no_today") ??
+                            "Tidak ada puasa sunnah khusus hari ini."}
                     </p>
                 ) : (
                     <ul className='space-y-1'>
@@ -100,7 +120,9 @@ export default function PuasaSunnahPanel() {
                                 key={m.id}
                                 className='text-sm text-gray-800 dark:text-gray-200'
                             >
-                                <span className='font-semibold'>{labelOf(m, lang)}</span>
+                                <span className='font-semibold'>
+                                    {labelOf(m, lang)}
+                                </span>
                                 {m.dalil && (
                                     <span className='block text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
                                         {m.dalil}
@@ -115,7 +137,7 @@ export default function PuasaSunnahPanel() {
             {upcoming.length > 0 && (
                 <div>
                     <p className='text-xs font-medium text-gray-500 dark:text-gray-400 mb-2'>
-                        {t('puasa.upcoming') ?? 'Akan Datang (30 hari)'}
+                        {t("puasa.upcoming") ?? "Akan Datang (30 hari)"}
                     </p>
                     <ul className='space-y-2'>
                         {upcoming.map((entry, idx) => (
@@ -125,7 +147,9 @@ export default function PuasaSunnahPanel() {
                             >
                                 <div className='w-12 text-center shrink-0'>
                                     <p className='text-xs text-gray-400 dark:text-gray-500'>
-                                        {(lang === 'EN' ? dayNamesEn : dayNamesId)[
+                                        {(lang === "EN"
+                                            ? dayNamesEn
+                                            : dayNamesId)[
                                             entry.date.getDay()
                                         ].slice(0, 3)}
                                     </p>
@@ -155,14 +179,15 @@ export default function PuasaSunnahPanel() {
             <div className='mt-3 p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 flex items-start gap-2'>
                 <BsInfoCircle className='text-amber-600 dark:text-amber-400 text-xs shrink-0 mt-0.5' />
                 <p className='text-xs text-amber-700 dark:text-amber-400'>
-                    {t('puasa.disclaimer') ??
-                        'Estimasi naive 30 hari/bulan Hijri. Akurasi tergantung penampakan hilal & jadwal lokal.'}
+                    {t("puasa.disclaimer") ??
+                        "Estimasi naive 30 hari/bulan Hijri. Akurasi tergantung penampakan hilal & jadwal lokal."}
                 </p>
             </div>
 
             <details className='mt-3'>
                 <summary className='text-xs text-gray-500 dark:text-gray-400 cursor-pointer hover:text-gray-700 dark:hover:text-gray-200'>
-                    {t('puasa.show_all') ?? `Lihat semua ${PUASA_SUNNAH.length} puasa sunnah`}
+                    {t("puasa.show_all") ??
+                        `Lihat semua ${PUASA_SUNNAH.length} puasa sunnah`}
                 </summary>
                 <ul className='mt-2 space-y-1.5 pl-3'>
                     {PUASA_SUNNAH.map((p) => (

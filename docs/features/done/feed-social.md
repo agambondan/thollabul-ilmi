@@ -37,22 +37,23 @@ menjadi sosial media penuh.
 ### API Response Shape
 
 **`GET /feed`**
+
 ```json
 [
-  {
-    "id": "uuid",
-    "user_id": "uuid",
-    "ref_type": "ayah",
-    "ref_id": 1,
-    "caption": "Ayat favorit hari ini...",
-    "likes": 5,
-    "author": {
-      "id": "uuid",
-      "name": "Ahmad",
-      "avatar": "https://...",
-      "role": "user"
+    {
+        "id": "uuid",
+        "user_id": "uuid",
+        "ref_type": "ayah",
+        "ref_id": 1,
+        "caption": "Ayat favorit hari ini...",
+        "likes": 5,
+        "author": {
+            "id": "uuid",
+            "name": "Ahmad",
+            "avatar": "https://...",
+            "role": "user"
+        }
     }
-  }
 ]
 ```
 
@@ -67,7 +68,7 @@ menjadi sosial media penuh.
 | `ref_id` | int | ID of the referenced content |
 | `caption` | string | User's reflection text |
 | `likes` | int | Like count (denormalized) |
-| `author` | *User | Populated on read |
+| `author` | \*User | Populated on read |
 
 ### Key Frontend Components
 

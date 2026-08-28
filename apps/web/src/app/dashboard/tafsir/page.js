@@ -1,4 +1,4 @@
-import { TafsirIndexContent } from '@/app/tafsir/page';
+import { TafsirIndexContent } from "@/app/tafsir/page";
 
 export default function DashboardTafsirPage() {
     return (

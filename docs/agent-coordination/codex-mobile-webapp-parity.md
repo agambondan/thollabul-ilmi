@@ -11,22 +11,22 @@ Started: 2026-05-26 16:20 WIB
   fallbacks with shared reference/list and local tool dashboard shells, then
   added a 100% route-surface gate across every mobile Explore feature key.
 - Files I may edit after route selection:
-  - `apps/mobile/**`
-  - relevant `apps/mobile` tests
-  - `apps/mobile/src/screens/explore/WebAppReferenceListRoute.js`
-  - `apps/mobile/src/screens/explore/WebAppToolRoute.js`
-  - reference/list/tool Explore-specific tests/docs
-  - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
-  - route-specific docs under `docs/**`
+    - `apps/mobile/**`
+    - relevant `apps/mobile` tests
+    - `apps/mobile/src/screens/explore/WebAppReferenceListRoute.js`
+    - `apps/mobile/src/screens/explore/WebAppToolRoute.js`
+    - reference/list/tool Explore-specific tests/docs
+    - route-specific `apps/web/**` files only if a confirmed web bug blocks parity
+    - route-specific docs under `docs/**`
 - Files I will avoid unless explicitly handed off:
-  - `apps/web/src/__tests__/MushafAyahList.test.js`
-  - `apps/web/src/app/dashboard/quran/page-mushaf/page.js`
-  - `apps/web/src/app/quran/page-mushaf/page.js`
-  - `apps/web/src/components/quran/MushafAyahList.js`
-  - `apps/web/tests/flows/quran-reader-regression.spec.js`
-  - `apps/web/tests/smoke.spec.js`
-  - `apps/web/tests/fixtures/mockApi.js`
-  - `apps/web/tests/flows/all-routes-ui-audit.spec.js`
+    - `apps/web/src/__tests__/MushafAyahList.test.js`
+    - `apps/web/src/app/dashboard/quran/page-mushaf/page.js`
+    - `apps/web/src/app/quran/page-mushaf/page.js`
+    - `apps/web/src/components/quran/MushafAyahList.js`
+    - `apps/web/tests/flows/quran-reader-regression.spec.js`
+    - `apps/web/tests/smoke.spec.js`
+    - `apps/web/tests/fixtures/mockApi.js`
+    - `apps/web/tests/flows/all-routes-ui-audit.spec.js`
 
 ## Current Notes
 
@@ -69,12 +69,12 @@ Started: 2026-05-26 16:20 WIB
   content follow-up, after the shell theme toggle fix and the Explore/Belajar
   100% route-surface gate.
 - Current gate for every new route:
-  - compare against authenticated `/dashboard/*` mobile web behavior/surface;
-  - preserve `classic` native layout;
-  - fix scoped web bugs discovered during parity comparison;
-  - run targeted mobile/web tests, full mobile Jest, feature parity checker,
-    Expo export when mobile UI changed, and `git diff --check`;
-  - do not edit unrelated dirty files owned by another agent.
+    - compare against authenticated `/dashboard/*` mobile web behavior/surface;
+    - preserve `classic` native layout;
+    - fix scoped web bugs discovered during parity comparison;
+    - run targeted mobile/web tests, full mobile Jest, feature parity checker,
+      Expo export when mobile UI changed, and `git diff --check`;
+    - do not edit unrelated dirty files owned by another agent.
 
 ## Latest Verification
 

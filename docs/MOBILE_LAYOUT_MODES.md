@@ -4,6 +4,7 @@
 > Scope: `apps/mobile`
 > Created: 2026-05-23
 > Source of truth terkait:
+>
 > - `docs/MOBILE_IA_FINAL_APPROACH.md`
 > - `docs/MOBILE_DESIGN_PATTERNS.md`
 > - `docs/MOBILE_APP_DEVELOPMENT_GUIDELINES.md`
@@ -21,10 +22,10 @@ pengaturan untuk user yang membutuhkan fallback native lama.
 
 Target awal:
 
-| Mode | Status | Tujuan |
-| --- | --- | --- |
-| `classic` | Supported fallback | Mempertahankan pengalaman mobile app lama untuk user yang memilihnya atau saat stored preference invalid. |
-| `web_app` | Default | Membawa rasa mobile web terbaru ke native app: top header, bottom nav, konten fokus, dan bottom-sheet menu. |
+| Mode      | Status             | Tujuan                                                                                                      |
+| --------- | ------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `classic` | Supported fallback | Mempertahankan pengalaman mobile app lama untuk user yang memilihnya atau saat stored preference invalid.   |
+| `web_app` | Default            | Membawa rasa mobile web terbaru ke native app: top header, bottom nav, konten fokus, dan bottom-sheet menu. |
 
 Mode tambahan boleh ditambahkan setelah dua mode awal stabil, tetapi harus
 tetap mengikuti IA final 5 tab.
@@ -55,11 +56,11 @@ diulang dari nol.
 
 Layout dan theme harus dipisah.
 
-| Konsep | Mengatur | Contoh |
-| --- | --- | --- |
-| Layout mode | Struktur navigasi dan komposisi screen | `classic`, `web_app` |
-| Theme | Warna, tone, surface, typography accent | `system`, `light`, `dark`, `emerald`, `high_contrast` |
-| Reader preference | Pengaturan spesifik konten Quran/Hadis | font Arab, ukuran teks, mode hafalan, terjemahan |
+| Konsep            | Mengatur                                | Contoh                                                |
+| ----------------- | --------------------------------------- | ----------------------------------------------------- |
+| Layout mode       | Struktur navigasi dan komposisi screen  | `classic`, `web_app`                                  |
+| Theme             | Warna, tone, surface, typography accent | `system`, `light`, `dark`, `emerald`, `high_contrast` |
+| Reader preference | Pengaturan spesifik konten Quran/Hadis  | font Arab, ukuran teks, mode hafalan, terjemahan      |
 
 Implikasi:
 
@@ -73,13 +74,13 @@ Implikasi:
 Pengaturan awal:
 
 - `Settings > Appearance > Layout`
-  - `Classic`
-  - `Web App`
+    - `Classic`
+    - `Web App`
 - `Settings > Appearance > Theme`
-  - `System`
-  - `Light`
-  - `Dark`
-  - opsi brand/aksesibilitas setelah fondasi stabil
+    - `System`
+    - `Light`
+    - `Dark`
+    - opsi brand/aksesibilitas setelah fondasi stabil
 
 Preferensi disimpan lokal dulu agar cepat dan offline-safe. Sinkronisasi ke
 akun bisa ditambahkan setelah model settings account-level stabil.
@@ -121,18 +122,18 @@ Shell visual tetap sama untuk guest dan authenticated user:
 
 Perbedaannya ada pada data yang ditampilkan.
 
-| Area | Guest / belum login | Authenticated / sudah login |
-| --- | --- | --- |
-| Greeting | `Assalamu'alaikum` atau nama lokal bila user pernah isi profil lokal | Nama akun dari backend |
-| Sholat hari ini | Bisa memakai status lokal device untuk sesi hari ini | Sinkron dengan akun dan histori backend |
-| Streak sholat | Local-only streak atau prompt ringan untuk login | Streak akun dari backend |
-| Target aktif | CTA "Buat target" atau target lokal | Target belajar akun |
-| Bookmark | Bookmark lokal bila tersedia, atau CTA login untuk sync | Bookmark akun dari backend |
-| Ayat hari ini | Public daily ayah dari API/cache | Sama, plus status sudah dibaca bila ada |
-| Hadis hari ini | Public daily hadith dari API/cache | Sama, plus status simpan/catatan personal |
-| Jadwal sholat | Lokasi device/manual, cache lokal | Lokasi/preference akun bila tersedia |
-| Lanjutkan terakhir | Local recent item | Recent item akun + local merge |
-| Notifikasi | Local reminders/device permission | Reminder akun + device notification |
+| Area               | Guest / belum login                                                  | Authenticated / sudah login               |
+| ------------------ | -------------------------------------------------------------------- | ----------------------------------------- |
+| Greeting           | `Assalamu'alaikum` atau nama lokal bila user pernah isi profil lokal | Nama akun dari backend                    |
+| Sholat hari ini    | Bisa memakai status lokal device untuk sesi hari ini                 | Sinkron dengan akun dan histori backend   |
+| Streak sholat      | Local-only streak atau prompt ringan untuk login                     | Streak akun dari backend                  |
+| Target aktif       | CTA "Buat target" atau target lokal                                  | Target belajar akun                       |
+| Bookmark           | Bookmark lokal bila tersedia, atau CTA login untuk sync              | Bookmark akun dari backend                |
+| Ayat hari ini      | Public daily ayah dari API/cache                                     | Sama, plus status sudah dibaca bila ada   |
+| Hadis hari ini     | Public daily hadith dari API/cache                                   | Sama, plus status simpan/catatan personal |
+| Jadwal sholat      | Lokasi device/manual, cache lokal                                    | Lokasi/preference akun bila tersedia      |
+| Lanjutkan terakhir | Local recent item                                                    | Recent item akun + local merge            |
+| Notifikasi         | Local reminders/device permission                                    | Reminder akun + device notification       |
 
 Rules:
 
@@ -152,10 +153,10 @@ Contoh susunan Beranda `web_app` untuk guest:
 1. Header: brand, "Masuk" account button, layout/settings entry.
 2. Greeting: `Assalamu'alaikum`.
 3. Quick stats:
-   - Sholat hari ini: local session status.
-   - Streak: local streak atau `0`.
-   - Target aktif: CTA `Buat target`.
-   - Bookmark: local bookmark count atau CTA `Login untuk sync`.
+    - Sholat hari ini: local session status.
+    - Streak: local streak atau `0`.
+    - Target aktif: CTA `Buat target`.
+    - Bookmark: local bookmark count atau CTA `Login untuk sync`.
 4. Ayat hari ini: public daily ayah.
 5. Hadis hari ini: public daily hadith.
 6. Sholat hari ini: jadwal dari lokasi/manual.
@@ -196,13 +197,13 @@ Rules:
 
 Contoh mapping:
 
-| Feature type | `classic` | `web_app` |
-| --- | --- | --- |
-| Primary tab | Bottom tab / existing screen | Bottom nav 5 tab |
-| Daily cockpit | Existing Beranda card stack | Compact dashboard cards |
-| Long-tail feature | Hub/grid/list existing | Menu sheet, hub, search, pinned/recent |
-| Personal feature | Profile/settings/account area | Account sheet/settings plus contextual CTA |
-| Auth-required action | Existing login handoff | Inline CTA, locked action, or account sheet |
+| Feature type         | `classic`                     | `web_app`                                   |
+| -------------------- | ----------------------------- | ------------------------------------------- |
+| Primary tab          | Bottom tab / existing screen  | Bottom nav 5 tab                            |
+| Daily cockpit        | Existing Beranda card stack   | Compact dashboard cards                     |
+| Long-tail feature    | Hub/grid/list existing        | Menu sheet, hub, search, pinned/recent      |
+| Personal feature     | Profile/settings/account area | Account sheet/settings plus contextual CTA  |
+| Auth-required action | Existing login handoff        | Inline CTA, locked action, or account sheet |
 
 ## Architecture Direction
 
@@ -274,17 +275,17 @@ Status kode saat ini:
 
 Area yang kemungkinan kena impact:
 
-| Area | Risiko | Guardrail |
-| --- | --- | --- |
-| `App.js` shell | Salah wiring bisa merusak semua tab, deep link, hardware back, dan analytics | Fase pertama hanya membaca preference dan memilih shell wrapper; navigation state tetap satu sumber. |
-| `TabBar` | Perubahan visual bisa mengubah behavior auto-hide dan tab accessibility | Jangan ubah `TabBar` existing untuk `classic`; buat komponen baru untuk `web_app` bila perlu. |
-| Quran reader | Layout baru bisa konflik dengan audio player, bottom action, font preference, dan back handler | Jangan ubah business logic Quran di fase shell; hanya bungkus/presentasikan. |
-| Home/prayer cockpit | Lokasi, jadwal, notification, dan cache bisa drift dari web contract | Reuse storage/API yang sudah ada; jangan hardcode lokasi atau jadwal. |
-| Profile settings | Layout preference mengubah shell dan surface, sementara theme tetap concern terpisah | Pertahankan provider/hook fallback invalid ke `classic`; jangan campur theme dengan layout. |
-| Deep links | `parseDeepLink` dan `openTabState` harus tetap mengarah ke tab/screen yang sama | Layout mode tidak boleh mengubah tab key atau internal route shape. |
-| Android back | `setBack`/`clearBack` dan `hardwareBackState` rawan regression | Tambah/pertahankan test navigation sebelum shell baru dianggap usable. |
-| Offline/cache | Mobile punya offline packs dan local-first storage | `web_app` tidak boleh memaksa online-only UX. |
-| Analytics | `AnalyticsTracker` bergantung pada `activeTab` dan `internalRoutes` | Shell baru tetap mengirim state yang sama, bukan route name baru yang memecah analytics. |
+| Area                | Risiko                                                                                         | Guardrail                                                                                            |
+| ------------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `App.js` shell      | Salah wiring bisa merusak semua tab, deep link, hardware back, dan analytics                   | Fase pertama hanya membaca preference dan memilih shell wrapper; navigation state tetap satu sumber. |
+| `TabBar`            | Perubahan visual bisa mengubah behavior auto-hide dan tab accessibility                        | Jangan ubah `TabBar` existing untuk `classic`; buat komponen baru untuk `web_app` bila perlu.        |
+| Quran reader        | Layout baru bisa konflik dengan audio player, bottom action, font preference, dan back handler | Jangan ubah business logic Quran di fase shell; hanya bungkus/presentasikan.                         |
+| Home/prayer cockpit | Lokasi, jadwal, notification, dan cache bisa drift dari web contract                           | Reuse storage/API yang sudah ada; jangan hardcode lokasi atau jadwal.                                |
+| Profile settings    | Layout preference mengubah shell dan surface, sementara theme tetap concern terpisah           | Pertahankan provider/hook fallback invalid ke `classic`; jangan campur theme dengan layout.          |
+| Deep links          | `parseDeepLink` dan `openTabState` harus tetap mengarah ke tab/screen yang sama                | Layout mode tidak boleh mengubah tab key atau internal route shape.                                  |
+| Android back        | `setBack`/`clearBack` dan `hardwareBackState` rawan regression                                 | Tambah/pertahankan test navigation sebelum shell baru dianggap usable.                               |
+| Offline/cache       | Mobile punya offline packs dan local-first storage                                             | `web_app` tidak boleh memaksa online-only UX.                                                        |
+| Analytics           | `AnalyticsTracker` bergantung pada `activeTab` dan `internalRoutes`                            | Shell baru tetap mengirim state yang sama, bukan route name baru yang memecah analytics.             |
 
 ## Implementation Guardrails
 
@@ -313,37 +314,37 @@ Jika `web_app` gagal render atau preference invalid, fallback harus kembali ke
 ## Rollout Plan
 
 0. Impact baseline:
-   - Pastikan `classic` test pass sebelum edit shell.
-   - Catat screenshot/behavior baseline untuk Home, Quran, Hadith, Ibadah,
-     Belajar, Profile settings, deep link Quran, dan Android back.
+    - Pastikan `classic` test pass sebelum edit shell.
+    - Catat screenshot/behavior baseline untuk Home, Quran, Hadith, Ibadah,
+      Belajar, Profile settings, deep link Quran, dan Android back.
 1. Foundation:
-   - Tambah `LayoutModeProvider`/hook pembaca `appLayoutMode`.
-   - Hubungkan provider di `App.js` tanpa mengubah render output saat mode
-     `classic`.
-   - Tambah test preference normalization: invalid value harus menjadi
-     `classic`.
+    - Tambah `LayoutModeProvider`/hook pembaca `appLayoutMode`.
+    - Hubungkan provider di `App.js` tanpa mengubah render output saat mode
+      `classic`.
+    - Tambah test preference normalization: invalid value harus menjadi
+      `classic`.
 2. Shell opt-in:
-   - Buat shell `web_app` yang masih memakai screen existing.
-   - Jangan ubah isi screen besar; hanya top header, bottom nav/menu shell.
-   - Pastikan setting Profile bisa switch `classic`/`web_app`.
-   - Status: completed for initial shell/menu/header wiring.
+    - Buat shell `web_app` yang masih memakai screen existing.
+    - Jangan ubah isi screen besar; hanya top header, bottom nav/menu shell.
+    - Pastikan setting Profile bisa switch `classic`/`web_app`.
+    - Status: completed for initial shell/menu/header wiring.
 3. Limited surface:
-   - Terapkan dulu ke Beranda dan Quran shell behavior.
-   - Quran tidak boleh kehilangan audio, ayah actions, reader preferences,
-     bookmark, notes, dan back behavior.
-   - Status: completed for Home and Quran first-pass surfaces, including the
-     Quran ayah detail surface.
+    - Terapkan dulu ke Beranda dan Quran shell behavior.
+    - Quran tidak boleh kehilangan audio, ayah actions, reader preferences,
+      bookmark, notes, dan back behavior.
+    - Status: completed for Home and Quran first-pass surfaces, including the
+      Quran ayah detail surface.
 4. Expand surface:
-   - Setelah Home/Quran stabil, lanjut Hadith, Ibadah, dan Belajar.
-   - Long-tail feature masuk menu sheet/search/hub, bukan dihapus.
-   - Status: completed for the current route rollout; Hadith, Ibadah hub,
-     Prayer, Qibla, Khatam, Explore/Belajar, Profile, Global Search, and
-     long-tail feature routes now have `web_app` surfaces or dashboard shells.
+    - Setelah Home/Quran stabil, lanjut Hadith, Ibadah, dan Belajar.
+    - Long-tail feature masuk menu sheet/search/hub, bukan dihapus.
+    - Status: completed for the current route rollout; Hadith, Ibadah hub,
+      Prayer, Qibla, Khatam, Explore/Belajar, Profile, Global Search, and
+      long-tail feature routes now have `web_app` surfaces or dashboard shells.
 5. Polish:
-   - Baru pertimbangkan theme visual tambahan, density tuning, dan animation.
-   - Theme tetap tidak boleh tercampur dengan layout mode.
-   - Status: verified for current parity coverage; future visual polish remains
-     incremental and must keep the layout/theme boundary.
+    - Baru pertimbangkan theme visual tambahan, density tuning, dan animation.
+    - Theme tetap tidak boleh tercampur dengan layout mode.
+    - Status: verified for current parity coverage; future visual polish remains
+      incremental and must keep the layout/theme boundary.
 
 ## QA Checklist
 
@@ -360,9 +361,9 @@ Untuk setiap screen yang mendapat mode `web_app`:
 
 Minimum verification per phase:
 
-| Phase | Required checks |
-| --- | --- |
-| Foundation | `apps/mobile/src/__tests__/preferences.test.js`, navigation tests, and profile settings test. |
-| Shell default | Existing `components.test.js` for `TabBar`, new shell/provider tests, and manual switch `web_app` -> `classic` -> `web_app`. |
-| Home/Quran | `homeScreen.test.js`, `quranScreen.test.js`, `useQuranReaderPreferences.test.js`, audio player tests, and Android back smoke. |
-| Full rollout | `node scripts/check-feature-parity.js`, full mobile Jest, deep link tests, notification/prayer tests, and real-device smoke for permission, audio, and bottom sheet. |
+| Phase         | Required checks                                                                                                                                                      |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Foundation    | `apps/mobile/src/__tests__/preferences.test.js`, navigation tests, and profile settings test.                                                                        |
+| Shell default | Existing `components.test.js` for `TabBar`, new shell/provider tests, and manual switch `web_app` -> `classic` -> `web_app`.                                         |
+| Home/Quran    | `homeScreen.test.js`, `quranScreen.test.js`, `useQuranReaderPreferences.test.js`, audio player tests, and Android back smoke.                                        |
+| Full rollout  | `node scripts/check-feature-parity.js`, full mobile Jest, deep link tests, notification/prayer tests, and real-device smoke for permission, audio, and bottom sheet. |

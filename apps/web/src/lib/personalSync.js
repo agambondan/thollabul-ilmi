@@ -2,7 +2,7 @@ export const todayISO = () => new Date().toISOString().slice(0, 10);
 
 export const parseApiJson = async (response) => {
     if (!response?.ok) {
-        let message = `Request failed: ${response?.status ?? 'unknown'}`;
+        let message = `Request failed: ${response?.status ?? "unknown"}`;
         try {
             const body = await response.clone().json();
             message = body?.message ?? body?.error ?? message;
@@ -24,7 +24,7 @@ export const unwrapData = (payload) => payload?.data ?? payload;
 
 export const readLocalArray = (key) => {
     try {
-        const parsed = JSON.parse(localStorage.getItem(key) ?? '[]');
+        const parsed = JSON.parse(localStorage.getItem(key) ?? "[]");
         return Array.isArray(parsed) ? parsed : [];
     } catch {
         return [];
@@ -33,8 +33,10 @@ export const readLocalArray = (key) => {
 
 export const readLocalObject = (key) => {
     try {
-        const parsed = JSON.parse(localStorage.getItem(key) ?? '{}');
-        return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+        const parsed = JSON.parse(localStorage.getItem(key) ?? "{}");
+        return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+            ? parsed
+            : {};
     } catch {
         return {};
     }
@@ -53,12 +55,12 @@ export const writeLocalObject = (key, value) => {
 };
 
 export const prayerKey = (label) => {
-    const value = String(label ?? '').toLowerCase();
-    if (value === 'shubuh') return 'subuh';
+    const value = String(label ?? "").toLowerCase();
+    if (value === "shubuh") return "subuh";
     return value;
 };
 
-export const PRAYER_KEYS = ['subuh', 'dzuhur', 'ashar', 'maghrib', 'isya'];
+export const PRAYER_KEYS = ["subuh", "dzuhur", "ashar", "maghrib", "isya"];
 
 export const normalizePrayerLog = (payload = {}) => {
     const data = unwrapData(payload) ?? {};
@@ -72,12 +74,12 @@ export const normalizePrayerLog = (payload = {}) => {
 
     return PRAYER_KEYS.reduce((acc, key) => {
         const value = fromArray?.[key];
-        if (typeof value === 'boolean') {
+        if (typeof value === "boolean") {
             acc[key] = value;
-        } else if (typeof value === 'string') {
-            acc[key] = value !== 'missed';
-        } else if (value && typeof value === 'object') {
-            acc[key] = value.status && value.status !== 'missed';
+        } else if (typeof value === "string") {
+            acc[key] = value !== "missed";
+        } else if (value && typeof value === "object") {
+            acc[key] = value.status && value.status !== "missed";
         }
         return acc;
     }, {});
@@ -120,58 +122,60 @@ export const calcLocalPrayerStreak = () => {
 };
 
 const categoryToType = {
-    Hadith: 'hadith',
-    Ibadah: 'custom',
-    Ilmu: 'custom',
-    Lainnya: 'custom',
-    Quran: 'tilawah',
+    Hadith: "hadith",
+    Ibadah: "custom",
+    Ilmu: "custom",
+    Lainnya: "custom",
+    Quran: "tilawah",
 };
 
 const typeToCategory = {
-    custom: 'Lainnya',
-    hadith: 'Hadith',
-    hafalan: 'Quran',
-    khatam: 'Quran',
-    tilawah: 'Quran',
+    custom: "Lainnya",
+    hadith: "Hadith",
+    hafalan: "Quran",
+    khatam: "Quran",
+    tilawah: "Quran",
 };
 
 const typeToUnit = {
-    custom: 'kali',
-    hadith: 'hadith',
-    hafalan: 'surah',
-    khatam: 'juz',
-    tilawah: 'halaman',
+    custom: "kali",
+    hadith: "hadith",
+    hafalan: "surah",
+    khatam: "juz",
+    tilawah: "halaman",
 };
 
 export const normalizeGoal = (goal) => {
     const data = unwrapData(goal) ?? {};
-    const type = data.type ?? categoryToType[data.category] ?? 'custom';
-    const rawDescription = data.description ?? '';
+    const type = data.type ?? categoryToType[data.category] ?? "custom";
+    const rawDescription = data.description ?? "";
     const unitFromDescription = rawDescription.match(/^Unit:\s*(.+)$/i)?.[1];
     return {
         id: String(data.id),
-        category: data.category ?? typeToCategory[type] ?? 'Lainnya',
+        category: data.category ?? typeToCategory[type] ?? "Lainnya",
         completed: Boolean(data.is_completed ?? data.completed),
-        current: Number(data.progress ?? data.current ?? data.current_value ?? 0),
-        deadline: data.end_date ?? data.deadline ?? '',
-        title: data.title ?? '',
+        current: Number(
+            data.progress ?? data.current ?? data.current_value ?? 0,
+        ),
+        deadline: data.end_date ?? data.deadline ?? "",
+        title: data.title ?? "",
         target: Number(data.target ?? data.target_value ?? 1),
         type,
-        unit: data.unit ?? unitFromDescription ?? typeToUnit[type] ?? 'kali',
+        unit: data.unit ?? unitFromDescription ?? typeToUnit[type] ?? "kali",
     };
 };
 
 export const goalCreatePayload = (goal) => ({
-    description: goal.unit ? `Unit: ${goal.unit}` : '',
+    description: goal.unit ? `Unit: ${goal.unit}` : "",
     end_date: goal.deadline || undefined,
     start_date: todayISO(),
     target: Number(goal.target ?? 1),
     title: goal.title,
-    type: categoryToType[goal.category] ?? goal.type ?? 'custom',
+    type: categoryToType[goal.category] ?? goal.type ?? "custom",
 });
 
 export const goalUpdatePayload = (goal) => ({
-    description: goal.unit ? `Unit: ${goal.unit}` : '',
+    description: goal.unit ? `Unit: ${goal.unit}` : "",
     end_date: goal.deadline || undefined,
     is_completed: goal.completed,
     progress: Number(goal.current ?? 0),
@@ -189,20 +193,20 @@ const moodToScore = {
 };
 
 const scoreToMood = {
-    1: 'berat',
-    2: 'berat',
-    3: 'biasa',
-    4: 'baik',
-    5: 'syukur',
+    1: "berat",
+    2: "berat",
+    3: "biasa",
+    4: "baik",
+    5: "syukur",
 };
 
 export const normalizeMuhasabah = (entry) => {
     const data = unwrapData(entry) ?? {};
     return {
         id: String(data.id),
-        content: data.content ?? data.notes ?? '',
+        content: data.content ?? data.notes ?? "",
         date: (data.date ?? data.created_at ?? todayISO()).slice(0, 10),
-        mood: data.mood ?? scoreToMood[data.mood_score] ?? 'biasa',
+        mood: data.mood ?? scoreToMood[data.mood_score] ?? "biasa",
     };
 };
 
@@ -219,46 +223,50 @@ export const muhasabahUpdatePayload = (entry) => ({
     mood_score: moodToScore[entry.mood] ?? 3,
 });
 
-export const PERSONAL_NOTE_REF_TYPE = 'personal';
+export const PERSONAL_NOTE_REF_TYPE = "personal";
 export const PERSONAL_NOTE_REF_ID = 0;
 
 export const encodePersonalNoteContent = (note) =>
     JSON.stringify({
-        content: note.content ?? '',
+        content: note.content ?? "",
         tags: note.tags ?? [],
-        title: note.title ?? '',
+        title: note.title ?? "",
     });
 
 export const normalizePersonalNote = (note) => {
     const data = unwrapData(note) ?? {};
     let parsed = null;
     try {
-        parsed = JSON.parse(data.content ?? '');
+        parsed = JSON.parse(data.content ?? "");
     } catch {}
 
     return {
         id: String(data.id),
-        content: parsed?.content ?? data.content ?? '',
+        content: parsed?.content ?? data.content ?? "",
         date: (data.created_at ?? data.date ?? todayISO()).slice(0, 10),
-        tags: Array.isArray(parsed?.tags) ? parsed.tags : Array.isArray(data.tags) ? data.tags : [],
-        title: parsed?.title ?? data.title ?? 'Catatan',
+        tags: Array.isArray(parsed?.tags)
+            ? parsed.tags
+            : Array.isArray(data.tags)
+              ? data.tags
+              : [],
+        title: parsed?.title ?? data.title ?? "Catatan",
     };
 };
 
 const statusMap = {
-    belum: 'not_started',
-    hafal: 'memorized',
-    in_progress: 'in_progress',
-    memorized: 'memorized',
-    not_started: 'not_started',
-    sedang: 'in_progress',
+    belum: "not_started",
+    hafal: "memorized",
+    in_progress: "in_progress",
+    memorized: "memorized",
+    not_started: "not_started",
+    sedang: "in_progress",
 };
 
 export const normalizeHafalan = (item = {}) => {
     const data = unwrapData(item) ?? {};
     return {
         ...data,
-        status: statusMap[data.status] ?? 'not_started',
+        status: statusMap[data.status] ?? "not_started",
         surah_id: data.surah_id ?? data.surah_number ?? data.surah?.number,
         surah_name:
             data.surah_name ??
@@ -266,13 +274,13 @@ export const normalizeHafalan = (item = {}) => {
             data.surah?.name_latin ??
             data.surah?.name ??
             data.name ??
-            '-',
+            "-",
         surah_number: data.surah_number ?? data.surah?.number ?? data.surah_id,
     };
 };
 
 export const isHafalanMemorized = (item) =>
-    normalizeHafalan(item).status === 'memorized';
+    normalizeHafalan(item).status === "memorized";
 
 export const normalizeTilawahEntry = (entry = {}) => {
     const data = unwrapData(entry) ?? {};

@@ -1,6 +1,10 @@
-const API_URL = process.env.API_INTERNAL_URL || process.env.API_PROXY_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:29900';
+const API_URL =
+    process.env.API_INTERNAL_URL ||
+    process.env.API_PROXY_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    "http://localhost:29900";
 const SITE_URL =
-    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tholabul-ilmi.com';
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://tholabul-ilmi.com";
 
 async function getBlogPost(slug) {
     try {
@@ -20,7 +24,9 @@ export async function generateMetadata(props) {
 
     const title = post?.title ?? `Blog — Thullaabul 'Ilmi`;
     const description =
-        post?.excerpt ?? post?.summary ?? `Read Islamic articles on Thullaabul 'Ilmi.`;
+        post?.excerpt ??
+        post?.summary ??
+        `Read Islamic articles on Thullaabul 'Ilmi.`;
     const image = post?.image ?? post?.cover_image ?? null;
     const canonicalUrl = `${SITE_URL}/blog/${params.slug}`;
 
@@ -32,16 +38,16 @@ export async function generateMetadata(props) {
             title,
             description,
             url: canonicalUrl,
-            type: 'article',
+            type: "article",
             images: image
                 ? [{ url: image }]
-                : [{ url: '/og', width: 1200, height: 630 }],
+                : [{ url: "/og", width: 1200, height: 630 }],
         },
         twitter: {
-            card: 'summary_large_image',
+            card: "summary_large_image",
             title,
             description,
-            images: image ? [image] : ['/og'],
+            images: image ? [image] : ["/og"],
         },
     };
 }
@@ -49,34 +55,32 @@ export async function generateMetadata(props) {
 export default async function BlogSlugLayout(props) {
     const params = await props.params;
 
-    const {
-        children
-    } = props;
+    const { children } = props;
 
     const post = await getBlogPost(params.slug);
 
     const jsonLd = post
         ? {
-              '@context': 'https://schema.org',
-              '@type': 'Article',
+              "@context": "https://schema.org",
+              "@type": "Article",
               headline: post.title,
-              description: post.excerpt ?? post.summary ?? '',
+              description: post.excerpt ?? post.summary ?? "",
               image: post.image ?? post.cover_image ?? `${SITE_URL}/og`,
               datePublished: post.created_at ?? post.published_at ?? undefined,
               dateModified: post.updated_at ?? post.created_at ?? undefined,
               author: {
-                  '@type': 'Person',
+                  "@type": "Person",
                   name: post.author?.name ?? "Thullaabul 'Ilmi",
               },
               publisher: {
-                  '@type': 'Organization',
+                  "@type": "Organization",
                   name: "Thullaabul 'Ilmi",
                   url: SITE_URL,
               },
               url: `${SITE_URL}/blog/${params.slug}`,
               mainEntityOfPage: {
-                  '@type': 'WebPage',
-                  '@id': `${SITE_URL}/blog/${params.slug}`,
+                  "@type": "WebPage",
+                  "@id": `${SITE_URL}/blog/${params.slug}`,
               },
           }
         : null;

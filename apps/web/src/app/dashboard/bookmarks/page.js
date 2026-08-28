@@ -1,66 +1,85 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/context/Auth';
-import { useLocale } from '@/context/Locale';
-import { bookmarkApi } from '@/lib/api';
-import { colorById, getBookmarkMeta, normalizeBookmarkRefType } from '@/lib/bookmarkLabels';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { BsBookmark, BsBookmarkFill, BsTrash } from 'react-icons/bs';
+import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
+import { bookmarkApi } from "@/lib/api";
+import {
+    colorById,
+    getBookmarkMeta,
+    normalizeBookmarkRefType,
+} from "@/lib/bookmarkLabels";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { BsBookmark, BsBookmarkFill, BsTrash } from "react-icons/bs";
 
 const REF_LABEL_KEY = {
-    ayah: 'bookmarks.type_quran',
-    quran: 'bookmarks.type_quran',
-    hadith: 'bookmarks.type_hadith',
-    doa: 'bookmarks.type_doa',
-    dzikir: 'bookmarks.type_dzikir',
-    asmaul_husna: 'bookmarks.type_asmaul',
-    article: 'bookmarks.type_article',
-    library_book: 'Perpustakaan',
+    ayah: "bookmarks.type_quran",
+    quran: "bookmarks.type_quran",
+    hadith: "bookmarks.type_hadith",
+    doa: "bookmarks.type_doa",
+    dzikir: "bookmarks.type_dzikir",
+    asmaul_husna: "bookmarks.type_asmaul",
+    article: "bookmarks.type_article",
+    library_book: "Perpustakaan",
 };
 
 const REF_ICON = {
-    ayah: '📖',
-    quran: '📖',
-    hadith: '📚',
-    doa: '🤲',
-    dzikir: '💎',
-    asmaul_husna: '⭐',
-    article: '📰',
-    library_book: '📚',
+    ayah: "📖",
+    quran: "📖",
+    hadith: "📚",
+    doa: "🤲",
+    dzikir: "💎",
+    asmaul_husna: "⭐",
+    article: "📰",
+    library_book: "📚",
 };
 
-const slugify = (value) => String(value ?? '').trim().toLowerCase();
+const slugify = (value) =>
+    String(value ?? "")
+        .trim()
+        .toLowerCase();
 
 const refHref = (bookmark) => {
     const refType = normalizeBookmarkRefType(bookmark.ref_type);
     const refId = bookmark.ref_id;
     const refSlug = bookmark.ref_slug;
 
-    if (refType === 'ayah') {
+    if (refType === "ayah") {
         const surahSlug =
             refSlug ||
             slugify(bookmark.ayah?.surah?.translation?.latin_en) ||
             slugify(bookmark.ayah?.surah_latin);
         const ayahNumber = bookmark.ayah?.number ?? refId;
-        return surahSlug ? `/dashboard/quran/${surahSlug}#${ayahNumber}` : '/dashboard/quran';
+        return surahSlug
+            ? `/dashboard/quran/${surahSlug}#${ayahNumber}`
+            : "/dashboard/quran";
     }
 
-    if (refType === 'hadith') {
-        const bookSlug = refSlug || bookmark.hadith?.book?.slug || bookmark.hadith?.book_slug;
+    if (refType === "hadith") {
+        const bookSlug =
+            refSlug ||
+            bookmark.hadith?.book?.slug ||
+            bookmark.hadith?.book_slug;
         const number = bookmark.hadith?.number ?? refId;
-        return bookSlug ? `/dashboard/hadith/${bookSlug}#${number}` : '/dashboard/hadith';
+        return bookSlug
+            ? `/dashboard/hadith/${bookSlug}#${number}`
+            : "/dashboard/hadith";
     }
 
-    if (refType === 'doa') return refId ? `/dashboard/doa#${refId}` : '/dashboard/doa';
-    if (refType === 'dzikir') return refId ? `/dashboard/dzikir#${refId}` : '/dashboard/dzikir';
-    if (refType === 'asmaul_husna') return refId ? `/dashboard/asmaul-husna#${refId}` : '/dashboard/asmaul-husna';
-    if (refType === 'article' && refSlug) return `/dashboard/blog/${refSlug}`;
-    if (refType === 'library_book') {
+    if (refType === "doa")
+        return refId ? `/dashboard/doa#${refId}` : "/dashboard/doa";
+    if (refType === "dzikir")
+        return refId ? `/dashboard/dzikir#${refId}` : "/dashboard/dzikir";
+    if (refType === "asmaul_husna")
+        return refId
+            ? `/dashboard/asmaul-husna#${refId}`
+            : "/dashboard/asmaul-husna";
+    if (refType === "article" && refSlug) return `/dashboard/blog/${refSlug}`;
+    if (refType === "library_book") {
         const slug = refSlug || bookmark.library_book?.slug;
-        return slug ? `/dashboard/library/${slug}` : '/dashboard/library';
+        return slug ? `/dashboard/library/${slug}` : "/dashboard/library";
     }
-    return '/dashboard';
+    return "/dashboard";
 };
 
 const BookmarksPage = () => {
@@ -83,34 +102,42 @@ const BookmarksPage = () => {
     }, [isAuthenticated]);
 
     const remove = async (id) => {
-        if (!confirm(t('bookmarks.delete_confirm'))) return;
+        if (!confirm(t("bookmarks.delete_confirm"))) return;
         try {
             const res = await bookmarkApi.remove(id);
-            if (!res.ok) throw new Error(t('admin.error.save'));
+            if (!res.ok) throw new Error(t("admin.error.save"));
             setBookmarks((prev) => prev.filter((b) => (b.id ?? b._id) !== id));
-            window.dispatchEvent(new CustomEvent('admin:success', { detail: { message: t('bookmarks.deleted') } }));
+            window.dispatchEvent(
+                new CustomEvent("admin:success", {
+                    detail: { message: t("bookmarks.deleted") },
+                }),
+            );
         } catch {
-            window.dispatchEvent(new CustomEvent('admin:mutation-error', { detail: { message: t('bookmarks.delete_error') } }));
+            window.dispatchEvent(
+                new CustomEvent("admin:mutation-error", {
+                    detail: { message: t("bookmarks.delete_error") },
+                }),
+            );
         }
     };
 
     const grouped = bookmarks.reduce((acc, b) => {
-        const type = normalizeBookmarkRefType(b.ref_type ?? 'other');
+        const type = normalizeBookmarkRefType(b.ref_type ?? "other");
         if (!acc[type]) acc[type] = [];
         acc[type].push(b);
         return acc;
     }, {});
 
     const typeLabel = (type) =>
-        t(REF_LABEL_KEY[type]) || type.replace(/_/g, ' ');
+        t(REF_LABEL_KEY[type]) || type.replace(/_/g, " ");
 
-    const typeIcon = (type) => REF_ICON[type] ?? '🔖';
+    const typeIcon = (type) => REF_ICON[type] ?? "🔖";
 
     return (
         <div className='px-4 py-6'>
             <div className='flex items-center justify-between mb-6'>
                 <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
-                    {t('bookmarks.title')}
+                    {t("bookmarks.title")}
                 </h1>
                 <span className='text-xs text-gray-400 dark:text-gray-500'>
                     {bookmarks.length} item
@@ -127,10 +154,10 @@ const BookmarksPage = () => {
                 <div className='text-center py-16'>
                     <BsBookmark className='mx-auto text-4xl text-gray-300 dark:text-slate-600 mb-3' />
                     <p className='text-gray-500 dark:text-gray-400 text-sm'>
-                        {t('bookmarks.empty')}
+                        {t("bookmarks.empty")}
                     </p>
                     <p className='text-xs text-gray-400 dark:text-gray-500 mt-1'>
-                        {t('bookmarks.hint')}
+                        {t("bookmarks.hint")}
                     </p>
                 </div>
             )}
@@ -140,7 +167,9 @@ const BookmarksPage = () => {
                     {Object.entries(grouped).map(([type, items]) => (
                         <div key={type}>
                             <div className='flex items-center gap-2 mb-3'>
-                                <span className='text-lg'>{typeIcon(type)}</span>
+                                <span className='text-lg'>
+                                    {typeIcon(type)}
+                                </span>
                                 <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
                                     {typeLabel(type)}
                                 </h2>
@@ -151,14 +180,22 @@ const BookmarksPage = () => {
                             <ul className='space-y-2'>
                                 {items.map((b) => {
                                     const id = b.id ?? b._id;
-                                    const normalizedType = normalizeBookmarkRefType(b.ref_type ?? 'other');
+                                    const normalizedType =
+                                        normalizeBookmarkRefType(
+                                            b.ref_type ?? "other",
+                                        );
                                     const href = refHref(b);
-                                    const localMeta = getBookmarkMeta(normalizedType, b.ref_id);
+                                    const localMeta = getBookmarkMeta(
+                                        normalizedType,
+                                        b.ref_id,
+                                    );
                                     const meta = {
                                         color: b.color || localMeta?.color,
                                         label: b.label || localMeta?.label,
                                     };
-                                    const colorTw = meta?.color ? colorById(meta.color).tw : 'bg-emerald-500';
+                                    const colorTw = meta?.color
+                                        ? colorById(meta.color).tw
+                                        : "bg-emerald-500";
                                     return (
                                         <li
                                             key={id}
@@ -166,7 +203,9 @@ const BookmarksPage = () => {
                                         >
                                             <div className='flex items-start justify-between gap-3'>
                                                 <div className='flex items-start gap-3 min-w-0'>
-                                                    <span className={`w-1 self-stretch rounded-full ${colorTw}`} />
+                                                    <span
+                                                        className={`w-1 self-stretch rounded-full ${colorTw}`}
+                                                    />
                                                     <BsBookmarkFill className='text-emerald-500 text-base mt-0.5 shrink-0' />
                                                     <div className='min-w-0'>
                                                         <Link
@@ -199,7 +238,9 @@ const BookmarksPage = () => {
                                                 </div>
                                                 <button
                                                     onClick={() => remove(id)}
-                                                    aria-label={t('bookmarks.delete')}
+                                                    aria-label={t(
+                                                        "bookmarks.delete",
+                                                    )}
                                                     className='text-gray-300 dark:text-slate-600 hover:text-red-500 dark:hover:text-red-400 transition-colors shrink-0 mt-0.5'
                                                 >
                                                     <BsTrash />

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { PerawiContent } from '@/app/dashboard/perawi/page';
-import Footer from '@/components/Footer';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import Section from '@/components/Section';
+import { PerawiContent } from "@/app/dashboard/perawi/page";
+import Footer from "@/components/Footer";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import Section from "@/components/Section";
 
 export default function PerawiPage() {
     return (

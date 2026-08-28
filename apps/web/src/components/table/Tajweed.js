@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { listTajweed } from '@/lib/const';
-import { useLocale } from '@/context/Locale';
-import { useLayoutMode } from '@/lib/useLayoutMode';
+import { listTajweed } from "@/lib/const";
+import { useLocale } from "@/context/Locale";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 
 export default function TajweedTable() {
     const { lang } = useLocale();
     const { isWide } = useLayoutMode();
 
     return (
-        <div className={isWide ? 'w-full' : 'w-full max-w-5xl'}>
+        <div className={isWide ? "w-full" : "w-full max-w-5xl"}>
             <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3'>
                 {listTajweed.map((tajweed) => (
                     <div
@@ -27,21 +27,25 @@ export default function TajweedTable() {
                             <p
                                 className='text-lg font-semibold mb-0.5 leading-relaxed'
                                 style={{
-                                    fontFamily: 'Amiri, serif',
+                                    fontFamily: "Amiri, serif",
                                     color: tajweed.Colour,
-                                    direction: 'rtl',
-                                    textAlign: 'right',
+                                    direction: "rtl",
+                                    textAlign: "right",
                                 }}
                             >
                                 {tajweed.Arabic}
                             </p>
                             {/* Transliterated name */}
                             <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1'>
-                                {lang === 'EN' ? tajweed.Description : (tajweed.TitleId ?? tajweed.Description)}
+                                {lang === "EN"
+                                    ? tajweed.Description
+                                    : (tajweed.TitleId ?? tajweed.Description)}
                             </p>
                             {/* Localized description */}
                             <p className='text-xs text-gray-500 dark:text-gray-400 leading-snug'>
-                                {lang === 'EN' ? tajweed.DescriptionEn : tajweed.DescriptionId}
+                                {lang === "EN"
+                                    ? tajweed.DescriptionEn
+                                    : tajweed.DescriptionId}
                             </p>
                         </div>
                     </div>

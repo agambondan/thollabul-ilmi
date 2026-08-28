@@ -16,16 +16,31 @@ import {
     SlidersHorizontal,
     StickyNote,
     Volume2,
-} from 'lucide-react-native';
-import { ActivityIndicator, FlatList, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+} from "lucide-react-native";
+import {
+    ActivityIndicator,
+    FlatList,
+    Pressable,
+    ScrollView,
+    Text,
+    TextInput,
+    View,
+} from "react-native";
 
-import { AppActionSheet, ActionSheetRow } from '../../components/AppActionSheet';
-import { AppModalSheet } from '../../components/AppModalSheet';
-import { Card, CardTitle } from '../../components/Card';
-import { NotesPanel } from '../../components/NotesPanel';
-import { ActionPill, EmptyState, IconActionButton } from '../../components/Paper';
-import { Screen } from '../../components/Screen';
-import { colors } from '../../theme';
+import {
+    AppActionSheet,
+    ActionSheetRow,
+} from "../../components/AppActionSheet";
+import { AppModalSheet } from "../../components/AppModalSheet";
+import { Card, CardTitle } from "../../components/Card";
+import { NotesPanel } from "../../components/NotesPanel";
+import {
+    ActionPill,
+    EmptyState,
+    IconActionButton,
+} from "../../components/Paper";
+import { Screen } from "../../components/Screen";
+import { colors } from "../../theme";
 import {
     MEMORIZATION_MODES,
     DISPLAY_MODES,
@@ -44,10 +59,10 @@ import {
     buildMushafLineGroups,
     getCompactArabicSurahName,
     TAJWEED_GROUPS,
-} from '../QuranScreen.helpers';
-import { styles } from '../QuranScreen.styles';
-import { WEB_APP_QURAN_THEMES } from '../QuranScreen.webAppTheme';
-import { renderQuranAudioRangePanel } from './QuranAudioRangePanel';
+} from "../QuranScreen.helpers";
+import { styles } from "../QuranScreen.styles";
+import { WEB_APP_QURAN_THEMES } from "../QuranScreen.webAppTheme";
+import { renderQuranAudioRangePanel } from "./QuranAudioRangePanel";
 
 export function createQuranScreenRenderers(context) {
     const {
@@ -163,14 +178,20 @@ export function createQuranScreenRenderers(context) {
         );
         return {
             fontSize: size,
-            fontWeight: '400',
+            fontWeight: "400",
             lineHeight: Math.round(size * lineHeightRatio),
             ...(font?.fontFamily ? { fontFamily: font.fontFamily } : {}),
         };
     };
 
-    const getTranslationTypography = (extraSize = 0, lineHeightRatio = 1.75) => {
-        const size = Math.max(12, Math.min(28 + extraSize, translationFontSize + extraSize));
+    const getTranslationTypography = (
+        extraSize = 0,
+        lineHeightRatio = 1.75,
+    ) => {
+        const size = Math.max(
+            12,
+            Math.min(28 + extraSize, translationFontSize + extraSize),
+        );
         return {
             fontSize: size,
             lineHeight: Math.round(size * lineHeightRatio),
@@ -188,13 +209,17 @@ export function createQuranScreenRenderers(context) {
                         onPress={() => selectQari(ayah.id, source.qari_slug)}
                         style={[
                             styles.qariButton,
-                            audioState.qariSlug === source.qari_slug ? styles.qariButtonActive : null,
+                            audioState.qariSlug === source.qari_slug
+                                ? styles.qariButtonActive
+                                : null,
                         ]}
                     >
                         <Text
                             style={[
                                 styles.qariText,
-                                audioState.qariSlug === source.qari_slug ? styles.qariTextActive : null,
+                                audioState.qariSlug === source.qari_slug
+                                    ? styles.qariTextActive
+                                    : null,
                             ]}
                         >
                             {source.qari_name}
@@ -205,8 +230,8 @@ export function createQuranScreenRenderers(context) {
         );
     };
 
-    const renderArabicSpans = (ayah, keyPrefix = 'arabic') => {
-        const source = ayah.arabicHtml || ayah.arabic || '';
+    const renderArabicSpans = (ayah, keyPrefix = "arabic") => {
+        const source = ayah.arabicHtml || ayah.arabic || "";
         const segments = /<tajweed/i.test(source)
             ? parseTajweedHtml(source)
             : [{ text: stripHtmlTags(source), className: null }];
@@ -224,24 +249,34 @@ export function createQuranScreenRenderers(context) {
         });
     };
 
-    const renderArabicContent = (ayah, arabicStyle, keyPrefix = 'arabic') => (
+    const renderArabicContent = (ayah, arabicStyle, keyPrefix = "arabic") => (
         <Text style={arabicStyle}>
             {renderArabicSpans(ayah, keyPrefix)}
-            <Text style={styles.inlineAyahMarker}>{`\u00A0${formatInlineAyahMarker(ayah.number)}\u00A0`}</Text>
+            <Text
+                style={styles.inlineAyahMarker}
+            >{`\u00A0${formatInlineAyahMarker(ayah.number)}\u00A0`}</Text>
         </Text>
     );
 
     const renderAyahText = (ayah) => {
         const isRevealed = Boolean(revealedAyahs[ayah.id]);
-        const hideArabic = !isRevealed && ['hide_arabic', 'hide_all'].includes(memorizationMode);
-        const isMushaf = displayMode === 'mushaf';
-        const isLine = displayMode === 'line';
-        const isFocus = displayMode === 'focus' || isMushaf;
+        const hideArabic =
+            !isRevealed &&
+            ["hide_arabic", "hide_all"].includes(memorizationMode);
+        const isMushaf = displayMode === "mushaf";
+        const isLine = displayMode === "line";
+        const isFocus = displayMode === "focus" || isMushaf;
         const hideTranslationForMemorization =
-            !isRevealed && ['hide_translation', 'hide_all'].includes(memorizationMode);
+            !isRevealed &&
+            ["hide_translation", "hide_all"].includes(memorizationMode);
         const hideTranslation = isFocus || hideTranslationForMemorization;
-        const hasHiddenContent = hideArabic || (!isFocus && hideTranslationForMemorization);
-        const arabicBaseStyle = isMushaf ? styles.mushafArabic : isLine ? styles.lineArabic : styles.ayahArabic;
+        const hasHiddenContent =
+            hideArabic || (!isFocus && hideTranslationForMemorization);
+        const arabicBaseStyle = isMushaf
+            ? styles.mushafArabic
+            : isLine
+              ? styles.lineArabic
+              : styles.ayahArabic;
         const arabicStyle = [
             arabicBaseStyle,
             getArabicTypography(isMushaf ? 2 : 0, isMushaf ? 1.85 : 1.75),
@@ -249,31 +284,53 @@ export function createQuranScreenRenderers(context) {
 
         return (
             <>
-                {(ayah.arabic || ayah.arabicHtml) && !hideArabic ? (
-                    renderArabicContent(ayah, arabicStyle, `reader-${displayMode}`)
-                ) : null}
+                {(ayah.arabic || ayah.arabicHtml) && !hideArabic
+                    ? renderArabicContent(
+                          ayah,
+                          arabicStyle,
+                          `reader-${displayMode}`,
+                      )
+                    : null}
                 {hideArabic ? (
                     <View style={styles.hiddenBlock}>
-                        <Text style={styles.hiddenTitle}>Arab disembunyikan untuk hafalan</Text>
+                        <Text style={styles.hiddenTitle}>
+                            Arab disembunyikan untuk hafalan
+                        </Text>
                     </View>
                 ) : null}
                 {ayah.latin && !hideTranslation ? (
                     <Text style={styles.ayahLatin}>{ayah.latin}</Text>
                 ) : null}
                 {ayah.translation && !hideTranslation ? (
-                    <Text style={[styles.ayahTranslation, getTranslationTypography()]}>{ayah.translation}</Text>
+                    <Text
+                        style={[
+                            styles.ayahTranslation,
+                            getTranslationTypography(),
+                        ]}
+                    >
+                        {ayah.translation}
+                    </Text>
                 ) : null}
                 {!isFocus && hideTranslationForMemorization ? (
                     <View style={styles.hiddenBlock}>
-                        <Text style={styles.hiddenTitle}>Terjemahan disembunyikan untuk latihan</Text>
+                        <Text style={styles.hiddenTitle}>
+                            Terjemahan disembunyikan untuk latihan
+                        </Text>
                     </View>
                 ) : null}
                 {hasHiddenContent && !isLine ? (
                     <Pressable
-                        onPress={() => setRevealedAyahs((current) => ({ ...current, [ayah.id]: true }))}
+                        onPress={() =>
+                            setRevealedAyahs((current) => ({
+                                ...current,
+                                [ayah.id]: true,
+                            }))
+                        }
                         style={styles.revealButton}
                     >
-                        <Text style={styles.revealButtonText}>Tampilkan Ayat</Text>
+                        <Text style={styles.revealButtonText}>
+                            Tampilkan Ayat
+                        </Text>
                     </Pressable>
                 ) : null}
             </>
@@ -294,53 +351,83 @@ export function createQuranScreenRenderers(context) {
         <View style={styles.inlineArabicRow}>
             <Pressable
                 accessibilityLabel={`Aksi ayat ${ayah.number}`}
-                accessibilityRole="button"
-                android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: true }}
+                accessibilityRole='button'
+                android_ripple={{
+                    color: "rgba(91, 110, 91, 0.12)",
+                    borderless: true,
+                }}
                 onPress={() => setAyahActionSheet({ visible: true, ayah })}
                 style={styles.inlineAyahMenuButton}
             >
-                <MoreVertical color={colors.primary} size={18} strokeWidth={2.4} />
+                <MoreVertical
+                    color={colors.primary}
+                    size={18}
+                    strokeWidth={2.4}
+                />
             </Pressable>
             <Pressable
                 accessibilityLabel={`Buka detail ayat ${ayah.number}`}
-                accessibilityRole="button"
-                android_ripple={{ color: 'rgba(91, 110, 91, 0.08)', borderless: false }}
+                accessibilityRole='button'
+                android_ripple={{
+                    color: "rgba(91, 110, 91, 0.08)",
+                    borderless: false,
+                }}
                 onPress={() => openAyahDetail(ayah)}
                 style={styles.inlineArabicText}
             >
                 {renderAyahText(ayah)}
-                {displayMode !== 'mushaf' ? (
-                    <Text style={styles.ayahReadMore}>Ketuk untuk membaca lengkap</Text>
+                {displayMode !== "mushaf" ? (
+                    <Text style={styles.ayahReadMore}>
+                        Ketuk untuk membaca lengkap
+                    </Text>
                 ) : null}
             </Pressable>
         </View>
     );
 
     const renderAyahHeader = (ayah) => {
-        const meta = ayah.surahName ? `${ayah.surahName} · Ayah ${ayah.number}` : `Ayah ${ayah.number}`;
+        const meta = ayah.surahName
+            ? `${ayah.surahName} · Ayah ${ayah.number}`
+            : `Ayah ${ayah.number}`;
         return (
             <View style={styles.ayahHeader}>
                 <View style={styles.ayahHeaderCopy}>
-                    <Text style={styles.ayahHeaderTitle}>{selectedSurah.name}</Text>
+                    <Text style={styles.ayahHeaderTitle}>
+                        {selectedSurah.name}
+                    </Text>
                     <Text style={styles.ayahHeaderMeta}>{meta}</Text>
                 </View>
                 <Pressable
                     accessibilityLabel={`Aksi ayat ${ayah.number}`}
-                    accessibilityRole="button"
-                    android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: true }}
+                    accessibilityRole='button'
+                    android_ripple={{
+                        color: "rgba(91, 110, 91, 0.12)",
+                        borderless: true,
+                    }}
                     onPress={() => setAyahActionSheet({ visible: true, ayah })}
                     style={styles.ayahMenuButton}
                 >
-                    <MoreVertical color={colors.primary} size={18} strokeWidth={2.4} />
+                    <MoreVertical
+                        color={colors.primary}
+                        size={18}
+                        strokeWidth={2.4}
+                    />
                 </Pressable>
             </View>
         );
     };
 
     const renderLineAyah = (ayah, isTargetAyah) => (
-        <View style={[styles.lineAyahRow, isTargetAyah ? styles.targetAyahCard : null]}>
+        <View
+            style={[
+                styles.lineAyahRow,
+                isTargetAyah ? styles.targetAyahCard : null,
+            ]}
+        >
             {renderInlineArabicRow(ayah)}
-            {audioState.activeAyahId === ayah.id ? renderAudioSources(ayah) : null}
+            {audioState.activeAyahId === ayah.id
+                ? renderAudioSources(ayah)
+                : null}
         </View>
     );
 
@@ -348,8 +435,10 @@ export function createQuranScreenRenderers(context) {
         if (!readerLoadingMore) return null;
         return (
             <View style={styles.readerLoadingMore}>
-                <ActivityIndicator color={colors.primary} size="small" />
-                <Text style={styles.readerLoadingMoreText}>Memuat ayat berikutnya...</Text>
+                <ActivityIndicator color={colors.primary} size='small' />
+                <Text style={styles.readerLoadingMoreText}>
+                    Memuat ayat berikutnya...
+                </Text>
             </View>
         );
     };
@@ -357,25 +446,37 @@ export function createQuranScreenRenderers(context) {
     const renderAyahCard = ({ item: ayah }) => {
         const isTargetAyah =
             (targetAyah?.id && Number(targetAyah.id) === Number(ayah.id)) ||
-            (targetAyah?.number && Number(targetAyah.number) === Number(ayah.number));
+            (targetAyah?.number &&
+                Number(targetAyah.number) === Number(ayah.number));
 
-        if (displayMode === 'line') return renderLineAyah(ayah, isTargetAyah);
-        if (displayMode === 'focus') {
+        if (displayMode === "line") return renderLineAyah(ayah, isTargetAyah);
+        if (displayMode === "focus") {
             return (
-                <View style={[styles.focusAyahRow, isTargetAyah ? styles.targetAyahCard : null]}>
+                <View
+                    style={[
+                        styles.focusAyahRow,
+                        isTargetAyah ? styles.targetAyahCard : null,
+                    ]}
+                >
                     {renderInlineArabicRow(ayah)}
-                    {audioState.activeAyahId === ayah.id ? renderAudioSources(ayah) : null}
+                    {audioState.activeAyahId === ayah.id
+                        ? renderAudioSources(ayah)
+                        : null}
                 </View>
             );
         }
 
         return (
-            <Card style={[
-                displayMode === 'focus' ? styles.focusAyahCard : null,
-                isTargetAyah ? styles.targetAyahCard : null,
-            ]}>
+            <Card
+                style={[
+                    displayMode === "focus" ? styles.focusAyahCard : null,
+                    isTargetAyah ? styles.targetAyahCard : null,
+                ]}
+            >
                 {renderInlineArabicRow(ayah)}
-                {audioState.activeAyahId === ayah.id ? renderAudioSources(ayah) : null}
+                {audioState.activeAyahId === ayah.id
+                    ? renderAudioSources(ayah)
+                    : null}
             </Card>
         );
     };
@@ -393,12 +494,18 @@ export function createQuranScreenRenderers(context) {
             );
         });
 
-    const renderMushafLineBlock = (group, mushafArabicStyle, showMushafArabic, showMushafTranslation) => {
+    const renderMushafLineBlock = (
+        group,
+        mushafArabicStyle,
+        showMushafArabic,
+        showMushafTranslation,
+    ) => {
         const key = group
-            .map((fragment) =>
-                `${fragment.ayah.surahNumber ?? selectedSurah.number}:${fragment.ayah.number}:${fragment.fragmentIndex}`,
+            .map(
+                (fragment) =>
+                    `${fragment.ayah.surahNumber ?? selectedSurah.number}:${fragment.ayah.number}:${fragment.fragmentIndex}`,
             )
-            .join('-');
+            .join("-");
         return (
             <View key={`mushaf-line-${key}`} style={styles.mushafAyahBlockLine}>
                 {showMushafArabic ? (
@@ -406,44 +513,85 @@ export function createQuranScreenRenderers(context) {
                         {group.map((fragment, fragmentIndex) => {
                             const ayah = fragment.ayah;
                             const isTargetAyah =
-                                (targetAyah?.id && Number(targetAyah.id) === Number(ayah.id)) ||
-                                (targetAyah?.number && Number(targetAyah.number) === Number(ayah.number));
+                                (targetAyah?.id &&
+                                    Number(targetAyah.id) ===
+                                        Number(ayah.id)) ||
+                                (targetAyah?.number &&
+                                    Number(targetAyah.number) ===
+                                        Number(ayah.number));
                             return (
                                 <Text
                                     key={`${ayah.id}-${ayah.surahNumber ?? selectedSurah.number}-${ayah.number}-${fragment.fragmentIndex}`}
-                                    onPress={() => setAyahActionSheet({ visible: true, ayah })}
-                                    style={isTargetAyah ? styles.mushafInlineTarget : null}
+                                    onPress={() =>
+                                        setAyahActionSheet({
+                                            visible: true,
+                                            ayah,
+                                        })
+                                    }
+                                    style={
+                                        isTargetAyah
+                                            ? styles.mushafInlineTarget
+                                            : null
+                                    }
                                 >
-                                    {renderMushafFragmentSpans(fragment, `mushaf-line-${ayah.id}-${fragment.fragmentIndex}`)}
+                                    {renderMushafFragmentSpans(
+                                        fragment,
+                                        `mushaf-line-${ayah.id}-${fragment.fragmentIndex}`,
+                                    )}
                                     {fragment.isAyahEnd ? (
-                                        <Text style={styles.mushafVerseMark}> ۝{toArabicDigits(ayah.number)} </Text>
+                                        <Text style={styles.mushafVerseMark}>
+                                            {" "}
+                                            ۝{toArabicDigits(ayah.number)}{" "}
+                                        </Text>
                                     ) : null}
                                 </Text>
                             );
                         })}
                     </Text>
                 ) : null}
-                {showMushafTranslation && group.some((fragment) => fragment.isAyahEnd && fragment.ayah.translation) ? (
-                    <Text style={[styles.mushafPageTranslation, getTranslationTypography(-5, 1.45)]}>
+                {showMushafTranslation &&
+                group.some(
+                    (fragment) =>
+                        fragment.isAyahEnd && fragment.ayah.translation,
+                ) ? (
+                    <Text
+                        style={[
+                            styles.mushafPageTranslation,
+                            getTranslationTypography(-5, 1.45),
+                        ]}
+                    >
                         {group
-                            .filter((fragment) => fragment.isAyahEnd && fragment.ayah.translation)
-                            .map((fragment) => `${toArabicDigits(fragment.ayah.number)}. ${fragment.ayah.translation}`)
-                            .join('  /  ')}
+                            .filter(
+                                (fragment) =>
+                                    fragment.isAyahEnd &&
+                                    fragment.ayah.translation,
+                            )
+                            .map(
+                                (fragment) =>
+                                    `${toArabicDigits(fragment.ayah.number)}. ${fragment.ayah.translation}`,
+                            )
+                            .join("  /  ")}
                     </Text>
                 ) : null}
             </View>
         );
     };
 
-    const renderMushafPerKataAyah = (ayah, words, showMushafArabic, showMushafTranslation) => {
+    const renderMushafPerKataAyah = (
+        ayah,
+        words,
+        showMushafArabic,
+        showMushafTranslation,
+    ) => {
         const ayahKey = `${ayah.surahNumber ?? selectedSurah.number}:${ayah.number}`;
         const isTargetAyah =
             (targetAyah?.id && Number(targetAyah.id) === Number(ayah.id)) ||
-            (targetAyah?.number && Number(targetAyah.number) === Number(ayah.number));
+            (targetAyah?.number &&
+                Number(targetAyah.number) === Number(ayah.number));
         return (
             <Pressable
                 key={`mushaf-perkata-${ayahKey}`}
-                accessibilityRole="button"
+                accessibilityRole='button'
                 accessibilityLabel={`Aksi ayat ${ayah.number}`}
                 onPress={() => setAyahActionSheet({ visible: true, ayah })}
                 style={[
@@ -458,15 +606,20 @@ export function createQuranScreenRenderers(context) {
                                 key={`${ayahKey}-w${word.wordIndex}`}
                                 style={styles.mushafWordCell}
                             >
-                                <Text style={[styles.mushafWordArabic, getArabicTypography(0, 1.4)]}>
+                                <Text
+                                    style={[
+                                        styles.mushafWordArabic,
+                                        getArabicTypography(0, 1.4),
+                                    ]}
+                                >
                                     {word.arabic}
                                 </Text>
                                 <Text style={styles.mushafWordLatin}>
-                                    {word.transliteration || ' '}
+                                    {word.transliteration || " "}
                                 </Text>
                                 {showMushafTranslation ? (
                                     <Text style={styles.mushafWordIndo}>
-                                        {word.indonesian || ' '}
+                                        {word.indonesian || " "}
                                     </Text>
                                 ) : null}
                             </View>
@@ -481,7 +634,12 @@ export function createQuranScreenRenderers(context) {
                     </View>
                 ) : null}
                 {showMushafTranslation && ayah.translation ? (
-                    <Text style={[styles.mushafPerKataFullTranslation, getTranslationTypography(-4, 1.45)]}>
+                    <Text
+                        style={[
+                            styles.mushafPerKataFullTranslation,
+                            getTranslationTypography(-4, 1.45),
+                        ]}
+                    >
                         {`(${ayah.number}) ${ayah.translation}`}
                     </Text>
                 ) : null}
@@ -494,13 +652,22 @@ export function createQuranScreenRenderers(context) {
             styles.mushafPageArabic,
             getArabicTypography(-3, 1.72),
         ];
-        const showMushafArabic = !['hide_arabic', 'hide_all'].includes(memorizationMode);
-        const showMushafTranslation = !['hide_translation', 'hide_all'].includes(memorizationMode);
+        const showMushafArabic = !["hide_arabic", "hide_all"].includes(
+            memorizationMode,
+        );
+        const showMushafTranslation = ![
+            "hide_translation",
+            "hide_all",
+        ].includes(memorizationMode);
         const currentPage = clampMushafPage(
             mushafPageNumber || selectedSurah.page || getFirstPageNumber(ayahs),
         );
-        const fallbackPageAyahs = ayahs.filter((ayah) => Number(ayah.pageNumber) === Number(currentPage));
-        const pageAyahs = mushafPageAyahs.length ? mushafPageAyahs : fallbackPageAyahs;
+        const fallbackPageAyahs = ayahs.filter(
+            (ayah) => Number(ayah.pageNumber) === Number(currentPage),
+        );
+        const pageAyahs = mushafPageAyahs.length
+            ? mushafPageAyahs
+            : fallbackPageAyahs;
 
         if (readerLoading || (mushafPageLoading && !pageAyahs.length)) {
             return (
@@ -513,21 +680,22 @@ export function createQuranScreenRenderers(context) {
         if (!pageAyahs.length) {
             return (
                 <EmptyState
-                    title="Ayat belum tersedia"
-                    description="Data ayat untuk pilihan ini belum tersedia dari server."
+                    title='Ayat belum tersedia'
+                    description='Data ayat untuk pilihan ini belum tersedia dari server.'
                 />
             );
         }
 
         const firstAyah = pageAyahs[0];
         const lastAyah = pageAyahs[pageAyahs.length - 1];
-        const rangeLabel = firstAyah && lastAyah
-            ? `${firstAyah.surahName || selectedSurah.name} ${firstAyah.number}-${lastAyah.number}`
-            : selectedSurah.meaning || "Al-Qur'an";
-        const juzLabel = firstAyah?.juzNumber ? `${firstAyah.juzNumber}` : '1';
+        const rangeLabel =
+            firstAyah && lastAyah
+                ? `${firstAyah.surahName || selectedSurah.name} ${firstAyah.number}-${lastAyah.number}`
+                : selectedSurah.meaning || "Al-Qur'an";
+        const juzLabel = firstAyah?.juzNumber ? `${firstAyah.juzNumber}` : "1";
         const surahLabel = firstAyah?.surahName || selectedSurah.name;
         const surahNumberLabel =
-            firstAyah?.surahNumber ?? selectedSurah.number ?? '';
+            firstAyah?.surahNumber ?? selectedSurah.number ?? "";
         const showStandaloneBismillah =
             Number(firstAyah?.number) === 1 &&
             Number(firstAyah?.surahNumber ?? selectedSurah.number) !== 1 &&
@@ -547,7 +715,10 @@ export function createQuranScreenRenderers(context) {
 
         return (
             <View style={styles.mushafPagesStack}>
-                <View key={`mushaf-page-${currentPage}`} style={styles.mushafPageShell}>
+                <View
+                    key={`mushaf-page-${currentPage}`}
+                    style={styles.mushafPageShell}
+                >
                     <View style={styles.mushafFrameOuter}>
                         <View style={styles.mushafFrame}>
                             <View style={styles.mushafFrameTop}>
@@ -568,7 +739,12 @@ export function createQuranScreenRenderers(context) {
                                 </View>
                             </View>
                             {showStandaloneBismillah ? (
-                                <Text style={[styles.mushafBismillah, getArabicTypography(8, 1.65)]}>
+                                <Text
+                                    style={[
+                                        styles.mushafBismillah,
+                                        getArabicTypography(8, 1.65),
+                                    ]}
+                                >
                                     {BISMILLAH}
                                 </Text>
                             ) : null}
@@ -585,25 +761,33 @@ export function createQuranScreenRenderers(context) {
                                 </View>
                             ) : (
                                 <View style={styles.mushafAyahBlockStack}>
-                                    {buildMushafLineGroups(pageAyahs).map((group) =>
-                                        renderMushafLineBlock(
-                                            group,
-                                            mushafArabicStyle,
-                                            showMushafArabic,
-                                            showMushafTranslation,
-                                        ),
+                                    {buildMushafLineGroups(pageAyahs).map(
+                                        (group) =>
+                                            renderMushafLineBlock(
+                                                group,
+                                                mushafArabicStyle,
+                                                showMushafArabic,
+                                                showMushafTranslation,
+                                            ),
                                     )}
                                 </View>
                             )}
                             {mushafPageLoading ? (
                                 <View style={styles.mushafInlineLoading}>
-                                    <ActivityIndicator color={colors.primary} size="small" />
+                                    <ActivityIndicator
+                                        color={colors.primary}
+                                        size='small'
+                                    />
                                 </View>
                             ) : null}
                             <View style={styles.mushafFrameBottom}>
-                                <Text style={styles.mushafRangeMeta}>{rangeLabel}</Text>
+                                <Text style={styles.mushafRangeMeta}>
+                                    {rangeLabel}
+                                </Text>
                                 <View style={styles.mushafFootPageBadge}>
-                                    <Text style={styles.mushafFootPageText}>{currentPage}</Text>
+                                    <Text style={styles.mushafFootPageText}>
+                                        {currentPage}
+                                    </Text>
                                 </View>
                             </View>
                         </View>
@@ -613,190 +797,316 @@ export function createQuranScreenRenderers(context) {
         );
     };
 
-    const renderAudioRangePanel = () => renderQuranAudioRangePanel({
-        audioQariOptions,
-        audioRange,
-        audioRangeCollapsed,
-        audioQueueInfo,
-        audioState,
-        selectAudioSpeed,
-        selectQari,
-        selectedSurah,
-        setAudioRangeCollapsed,
-        skipRangeAudio,
-        startRangeAudio,
-        stopRangeAudio,
-        toggleAudioRepeat,
-        t,
-        updateAudioRangeField,
-    });
+    const renderAudioRangePanel = () =>
+        renderQuranAudioRangePanel({
+            audioQariOptions,
+            audioRange,
+            audioRangeCollapsed,
+            audioQueueInfo,
+            audioState,
+            selectAudioSpeed,
+            selectQari,
+            selectedSurah,
+            setAudioRangeCollapsed,
+            skipRangeAudio,
+            startRangeAudio,
+            stopRangeAudio,
+            toggleAudioRepeat,
+            t,
+            updateAudioRangeField,
+        });
 
     const renderReaderHeader = () => {
-        const isSeriousMode = displayMode === 'focus' || displayMode === 'mushaf';
+        const isSeriousMode =
+            displayMode === "focus" || displayMode === "mushaf";
         const selectedSurahNumber = Number(selectedSurah?.number);
         const currentSurahIndex =
-            selectedSurah?.type === 'surah'
-                ? surahs.findIndex((item) => Number(item.number) === selectedSurahNumber)
+            selectedSurah?.type === "surah"
+                ? surahs.findIndex(
+                      (item) => Number(item.number) === selectedSurahNumber,
+                  )
                 : -1;
         const hasPreviousSurah = currentSurahIndex > 0;
-        const hasNextSurah = currentSurahIndex >= 0 && currentSurahIndex < surahs.length - 1;
-        const previousSurah = hasPreviousSurah ? surahs[currentSurahIndex - 1] : null;
+        const hasNextSurah =
+            currentSurahIndex >= 0 && currentSurahIndex < surahs.length - 1;
+        const previousSurah = hasPreviousSurah
+            ? surahs[currentSurahIndex - 1]
+            : null;
         const nextSurah = hasNextSurah ? surahs[currentSurahIndex + 1] : null;
         const previewAyah = targetAyah
-            ? ayahs.find((ayah) =>
-                  (targetAyah.id && Number(targetAyah.id) === Number(ayah.id)) ||
-                  (targetAyah.number && Number(targetAyah.number) === Number(ayah.number)),
+            ? ayahs.find(
+                  (ayah) =>
+                      (targetAyah.id &&
+                          Number(targetAyah.id) === Number(ayah.id)) ||
+                      (targetAyah.number &&
+                          Number(targetAyah.number) === Number(ayah.number)),
               )
             : null;
-        const readerSubtitle =
-            isSeriousMode
-                ? displayMode === 'mushaf'
-                    ? `Halaman ${mushafPageNumber} · mode mushaf`
-                    : selectedSurah.type === 'surah'
-                    ? `${selectedSurah.ayahs} ayah · mode baca fokus`
-                    : selectedSurah.meaning || 'Mode baca fokus'
-                : selectedSurah.type === 'surah'
-                  ? `${selectedSurah.meaning || "Bacaan Al-Qur'an"} · ${selectedSurah.ayahs} ayah`
-                  : selectedSurah.meaning || "Bacaan Al-Qur'an";
-        const arabicSurahName = getCompactArabicSurahName(selectedSurah.arabic) || selectedSurah.arabic || '';
+        const readerSubtitle = isSeriousMode
+            ? displayMode === "mushaf"
+                ? `Halaman ${mushafPageNumber} · mode mushaf`
+                : selectedSurah.type === "surah"
+                  ? `${selectedSurah.ayahs} ayah · mode baca fokus`
+                  : selectedSurah.meaning || "Mode baca fokus"
+            : selectedSurah.type === "surah"
+              ? `${selectedSurah.meaning || "Bacaan Al-Qur'an"} · ${selectedSurah.ayahs} ayah`
+              : selectedSurah.meaning || "Bacaan Al-Qur'an";
+        const arabicSurahName =
+            getCompactArabicSurahName(selectedSurah.arabic) ||
+            selectedSurah.arabic ||
+            "";
         const showReaderBismillah =
             isWebAppLayout &&
-            selectedSurah.type === 'surah' &&
+            selectedSurah.type === "surah" &&
             Number(selectedSurah.number) !== 1 &&
             Number(selectedSurah.number) !== 9;
 
         return (
-        <>
-            <View
-                style={[
-                    styles.readerHeader,
-                    isSeriousMode ? styles.readerHeaderSerious : null,
-                    isWebAppLayout ? styles.webAppReaderHeader : null,
-                    isWebAppLayout ? webAppQuranThemeStyles.readerHeader : null,
-                ]}
-            >
-                <View style={styles.readerHeaderTop}>
-                    <View style={styles.readerHeaderCopy}>
-                        {isWebAppLayout ? (
-                            <Text style={[styles.webAppReaderEyebrow, webAppQuranThemeStyles.readerEyebrow]}>Surah {selectedSurah.number ?? '-'}</Text>
-                        ) : null}
-                        <Text style={[styles.readerTitle, isWebAppLayout ? styles.webAppReaderTitle : null, isWebAppLayout ? webAppQuranThemeStyles.readerTitle : null]}>
-                            {selectedSurah.name}
-                        </Text>
-                        <Text style={[styles.readerSubtitle, isWebAppLayout ? styles.webAppReaderSubtitle : null, isWebAppLayout ? webAppQuranThemeStyles.readerSubtitle : null]}>
-                            {readerSubtitle}
-                        </Text>
-                        {isWebAppLayout && arabicSurahName ? (
-                            <Text style={[styles.webAppReaderArabicTitle, webAppQuranThemeStyles.readerArabicTitle]}>{arabicSurahName}</Text>
-                        ) : null}
-                        {showReaderBismillah ? (
-                            <Text style={[styles.webAppReaderBismillah, webAppQuranThemeStyles.readerBismillah]}>{BISMILLAH}</Text>
-                        ) : null}
-                    </View>
-                    <View style={styles.readerHeaderActions}>
-                        <IconActionButton
-                            Icon={ArrowLeft}
-                            label="Kembali ke daftar surah"
-                            onPress={closeReader}
-                        />
-                        <IconActionButton
-                            Icon={MoreVertical}
-                            label="Menu baca"
-                            onPress={() => setReaderMenuVisible(true)}
-                        />
+            <>
+                <View
+                    style={[
+                        styles.readerHeader,
+                        isSeriousMode ? styles.readerHeaderSerious : null,
+                        isWebAppLayout ? styles.webAppReaderHeader : null,
+                        isWebAppLayout
+                            ? webAppQuranThemeStyles.readerHeader
+                            : null,
+                    ]}
+                >
+                    <View style={styles.readerHeaderTop}>
+                        <View style={styles.readerHeaderCopy}>
+                            {isWebAppLayout ? (
+                                <Text
+                                    style={[
+                                        styles.webAppReaderEyebrow,
+                                        webAppQuranThemeStyles.readerEyebrow,
+                                    ]}
+                                >
+                                    Surah {selectedSurah.number ?? "-"}
+                                </Text>
+                            ) : null}
+                            <Text
+                                style={[
+                                    styles.readerTitle,
+                                    isWebAppLayout
+                                        ? styles.webAppReaderTitle
+                                        : null,
+                                    isWebAppLayout
+                                        ? webAppQuranThemeStyles.readerTitle
+                                        : null,
+                                ]}
+                            >
+                                {selectedSurah.name}
+                            </Text>
+                            <Text
+                                style={[
+                                    styles.readerSubtitle,
+                                    isWebAppLayout
+                                        ? styles.webAppReaderSubtitle
+                                        : null,
+                                    isWebAppLayout
+                                        ? webAppQuranThemeStyles.readerSubtitle
+                                        : null,
+                                ]}
+                            >
+                                {readerSubtitle}
+                            </Text>
+                            {isWebAppLayout && arabicSurahName ? (
+                                <Text
+                                    style={[
+                                        styles.webAppReaderArabicTitle,
+                                        webAppQuranThemeStyles.readerArabicTitle,
+                                    ]}
+                                >
+                                    {arabicSurahName}
+                                </Text>
+                            ) : null}
+                            {showReaderBismillah ? (
+                                <Text
+                                    style={[
+                                        styles.webAppReaderBismillah,
+                                        webAppQuranThemeStyles.readerBismillah,
+                                    ]}
+                                >
+                                    {BISMILLAH}
+                                </Text>
+                            ) : null}
+                        </View>
+                        <View style={styles.readerHeaderActions}>
+                            <IconActionButton
+                                Icon={ArrowLeft}
+                                label='Kembali ke daftar surah'
+                                onPress={closeReader}
+                            />
+                            <IconActionButton
+                                Icon={MoreVertical}
+                                label='Menu baca'
+                                onPress={() => setReaderMenuVisible(true)}
+                            />
+                        </View>
                     </View>
                 </View>
-            </View>
-            {selectedSurah.type === 'surah' && displayMode !== 'mushaf' ? (
-                <View style={[styles.surahPagerRow, isWebAppLayout ? styles.webAppSurahPagerRow : null]}>
-                    <Pressable
-                        accessibilityLabel={
-                            previousSurah
-                                ? `Buka ${previousSurah.name}`
-                                : 'Tidak ada surah sebelumnya'
-                        }
-                        android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
-                        disabled={!hasPreviousSurah || readerLoading}
-                        onPress={() => triggerAdjacentSurah(-1)}
+                {selectedSurah.type === "surah" && displayMode !== "mushaf" ? (
+                    <View
                         style={[
-                            styles.surahPagerButton,
-                            isWebAppLayout ? styles.webAppSurahPagerButton : null,
-                            isWebAppLayout ? webAppQuranThemeStyles.surahPagerButton : null,
-                            !hasPreviousSurah || readerLoading ? styles.disabled : null,
+                            styles.surahPagerRow,
+                            isWebAppLayout ? styles.webAppSurahPagerRow : null,
                         ]}
                     >
-                        <ArrowLeft color={isWebAppLayout ? webAppQuranTheme.accent : colors.primaryDark} size={16} strokeWidth={2.2} />
-                        <Text
-                            numberOfLines={2}
-                            style={[styles.surahPagerButtonText, isWebAppLayout ? styles.webAppSurahPagerButtonText : null, isWebAppLayout ? webAppQuranThemeStyles.surahPagerButtonText : null]}
-                        >
-                            {previousSurah ? `${previousSurah.number}. ${previousSurah.name}` : '—'}
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        accessibilityLabel={
-                            nextSurah ? `Buka ${nextSurah.name}` : 'Tidak ada surah selanjutnya'
-                        }
-                        android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
-                        disabled={!hasNextSurah || readerLoading}
-                        onPress={() => triggerAdjacentSurah(1)}
-                        style={[
-                            styles.surahPagerButton,
-                            isWebAppLayout ? styles.webAppSurahPagerButton : null,
-                            isWebAppLayout ? webAppQuranThemeStyles.surahPagerButton : null,
-                            !hasNextSurah || readerLoading ? styles.disabled : null,
-                        ]}
-                    >
-                        <Text
-                            numberOfLines={2}
-                            style={[styles.surahPagerButtonText, isWebAppLayout ? styles.webAppSurahPagerButtonText : null, isWebAppLayout ? webAppQuranThemeStyles.surahPagerButtonText : null]}
-                        >
-                            {nextSurah ? `${nextSurah.number}. ${nextSurah.name}` : '—'}
-                        </Text>
-                        <ArrowRight color={isWebAppLayout ? webAppQuranTheme.accent : colors.primaryDark} size={16} strokeWidth={2.2} />
-                    </Pressable>
-                </View>
-            ) : null}
-            {selectedSurah.type === 'surah' ? renderAudioRangePanel() : null}
-            {message ? <Text style={styles.message}>{message}</Text> : null}
-            {previewAyah && !isSeriousMode ? (
-                <View style={styles.targetPreview}>
-                    <Text style={styles.targetPreviewKicker}>Hasil pencarian</Text>
-                    <Text style={styles.targetPreviewTitle}>
-                        {selectedSurah.name} · Ayat {previewAyah.number}
-                    </Text>
-                    <Text style={styles.targetPreviewText}>
-                        Ayat sudah ditandai di daftar. Reader akan langsung mengarah ke posisi ayat
-                        setelah data siap.
-                    </Text>
-                    {displayMode === 'mushaf' ? null : (
                         <Pressable
-                            android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
-                            onPress={() => {
-                                if (targetAyahIndex < 0) return;
-                                readerListRef.current?.scrollToIndex?.({
-                                    animated: true,
-                                    index: targetAyahIndex,
-                                    viewPosition: 0.18,
-                                });
+                            accessibilityLabel={
+                                previousSurah
+                                    ? `Buka ${previousSurah.name}`
+                                    : "Tidak ada surah sebelumnya"
+                            }
+                            android_ripple={{
+                                color: "rgba(91, 110, 91, 0.12)",
+                                borderless: false,
                             }}
-                            style={styles.targetPreviewButton}
+                            disabled={!hasPreviousSurah || readerLoading}
+                            onPress={() => triggerAdjacentSurah(-1)}
+                            style={[
+                                styles.surahPagerButton,
+                                isWebAppLayout
+                                    ? styles.webAppSurahPagerButton
+                                    : null,
+                                isWebAppLayout
+                                    ? webAppQuranThemeStyles.surahPagerButton
+                                    : null,
+                                !hasPreviousSurah || readerLoading
+                                    ? styles.disabled
+                                    : null,
+                            ]}
                         >
-                            <Text style={styles.targetPreviewButtonText}>Lihat posisi dalam surah</Text>
+                            <ArrowLeft
+                                color={
+                                    isWebAppLayout
+                                        ? webAppQuranTheme.accent
+                                        : colors.primaryDark
+                                }
+                                size={16}
+                                strokeWidth={2.2}
+                            />
+                            <Text
+                                numberOfLines={2}
+                                style={[
+                                    styles.surahPagerButtonText,
+                                    isWebAppLayout
+                                        ? styles.webAppSurahPagerButtonText
+                                        : null,
+                                    isWebAppLayout
+                                        ? webAppQuranThemeStyles.surahPagerButtonText
+                                        : null,
+                                ]}
+                            >
+                                {previousSurah
+                                    ? `${previousSurah.number}. ${previousSurah.name}`
+                                    : "—"}
+                            </Text>
                         </Pressable>
-                    )}
-                </View>
-            ) : null}
-        </>
+                        <Pressable
+                            accessibilityLabel={
+                                nextSurah
+                                    ? `Buka ${nextSurah.name}`
+                                    : "Tidak ada surah selanjutnya"
+                            }
+                            android_ripple={{
+                                color: "rgba(91, 110, 91, 0.12)",
+                                borderless: false,
+                            }}
+                            disabled={!hasNextSurah || readerLoading}
+                            onPress={() => triggerAdjacentSurah(1)}
+                            style={[
+                                styles.surahPagerButton,
+                                isWebAppLayout
+                                    ? styles.webAppSurahPagerButton
+                                    : null,
+                                isWebAppLayout
+                                    ? webAppQuranThemeStyles.surahPagerButton
+                                    : null,
+                                !hasNextSurah || readerLoading
+                                    ? styles.disabled
+                                    : null,
+                            ]}
+                        >
+                            <Text
+                                numberOfLines={2}
+                                style={[
+                                    styles.surahPagerButtonText,
+                                    isWebAppLayout
+                                        ? styles.webAppSurahPagerButtonText
+                                        : null,
+                                    isWebAppLayout
+                                        ? webAppQuranThemeStyles.surahPagerButtonText
+                                        : null,
+                                ]}
+                            >
+                                {nextSurah
+                                    ? `${nextSurah.number}. ${nextSurah.name}`
+                                    : "—"}
+                            </Text>
+                            <ArrowRight
+                                color={
+                                    isWebAppLayout
+                                        ? webAppQuranTheme.accent
+                                        : colors.primaryDark
+                                }
+                                size={16}
+                                strokeWidth={2.2}
+                            />
+                        </Pressable>
+                    </View>
+                ) : null}
+                {selectedSurah.type === "surah"
+                    ? renderAudioRangePanel()
+                    : null}
+                {message ? <Text style={styles.message}>{message}</Text> : null}
+                {previewAyah && !isSeriousMode ? (
+                    <View style={styles.targetPreview}>
+                        <Text style={styles.targetPreviewKicker}>
+                            Hasil pencarian
+                        </Text>
+                        <Text style={styles.targetPreviewTitle}>
+                            {selectedSurah.name} · Ayat {previewAyah.number}
+                        </Text>
+                        <Text style={styles.targetPreviewText}>
+                            Ayat sudah ditandai di daftar. Reader akan langsung
+                            mengarah ke posisi ayat setelah data siap.
+                        </Text>
+                        {displayMode === "mushaf" ? null : (
+                            <Pressable
+                                android_ripple={{
+                                    color: "rgba(91, 110, 91, 0.12)",
+                                    borderless: false,
+                                }}
+                                onPress={() => {
+                                    if (targetAyahIndex < 0) return;
+                                    readerListRef.current?.scrollToIndex?.({
+                                        animated: true,
+                                        index: targetAyahIndex,
+                                        viewPosition: 0.18,
+                                    });
+                                }}
+                                style={styles.targetPreviewButton}
+                            >
+                                <Text style={styles.targetPreviewButtonText}>
+                                    Lihat posisi dalam surah
+                                </Text>
+                            </Pressable>
+                        )}
+                    </View>
+                ) : null}
+            </>
         );
     };
 
     const renderReaderMenuModal = () => {
-        const isSeriousMode = displayMode === 'focus' || displayMode === 'mushaf';
+        const isSeriousMode =
+            displayMode === "focus" || displayMode === "mushaf";
         return (
             <AppActionSheet
                 onClose={() => setReaderMenuVisible(false)}
-                title="Menu Baca"
+                title='Menu Baca'
                 visible={readerMenuVisible}
             >
                 <ActionSheetRow
@@ -805,18 +1115,18 @@ export function createQuranScreenRenderers(context) {
                         setReaderMenuVisible(false);
                         setSettingsVisible(true);
                     }}
-                    subtitle="Ubah mode baca, font, dan ukuran arab"
-                    title="Pengaturan tampilan"
+                    subtitle='Ubah mode baca, font, dan ukuran arab'
+                    title='Pengaturan tampilan'
                 />
                 {isSeriousMode ? (
                     <ActionSheetRow
                         Icon={BookOpen}
                         onPress={() => {
                             setReaderMenuVisible(false);
-                            updateDisplayMode('card');
+                            updateDisplayMode("card");
                         }}
-                        subtitle="Kembali ke tampilan card lengkap"
-                        title="Keluar mode fokus"
+                        subtitle='Kembali ke tampilan card lengkap'
+                        title='Keluar mode fokus'
                     />
                 ) : null}
                 <ActionSheetRow
@@ -825,8 +1135,8 @@ export function createQuranScreenRenderers(context) {
                         setReaderMenuVisible(false);
                         closeReader();
                     }}
-                    subtitle="Tutup reader dan kembali ke daftar"
-                    title="Kembali ke daftar surah"
+                    subtitle='Tutup reader dan kembali ke daftar'
+                    title='Kembali ke daftar surah'
                 />
             </AppActionSheet>
         );
@@ -834,9 +1144,9 @@ export function createQuranScreenRenderers(context) {
 
     const renderSettingsModal = () => (
         <AppModalSheet
-            maxHeight="65%"
+            maxHeight='65%'
             onClose={() => setSettingsVisible(false)}
-            title="Pengaturan Tampilan"
+            title='Pengaturan Tampilan'
             visible={settingsVisible}
         >
             <Text style={styles.settingLabel}>Ukuran Teks Arab</Text>
@@ -846,7 +1156,9 @@ export function createQuranScreenRenderers(context) {
                     onPress={() => updateFontSize(fontSize - 2)}
                     style={[
                         styles.fontSizeButton,
-                        fontSize <= MIN_ARABIC_FONT_SIZE ? styles.disabled : null,
+                        fontSize <= MIN_ARABIC_FONT_SIZE
+                            ? styles.disabled
+                            : null,
                     ]}
                 >
                     <Minus color={colors.ink} size={16} strokeWidth={2.4} />
@@ -857,7 +1169,9 @@ export function createQuranScreenRenderers(context) {
                     onPress={() => updateFontSize(fontSize + 2)}
                     style={[
                         styles.fontSizeButton,
-                        fontSize >= MAX_ARABIC_FONT_SIZE ? styles.disabled : null,
+                        fontSize >= MAX_ARABIC_FONT_SIZE
+                            ? styles.disabled
+                            : null,
                     ]}
                 >
                     <Plus color={colors.ink} size={16} strokeWidth={2.4} />
@@ -868,24 +1182,30 @@ export function createQuranScreenRenderers(context) {
             <View style={styles.fontSizeRow}>
                 <Pressable
                     disabled={translationFontSize <= 12}
-                    onPress={() => updateTranslationFontSize(translationFontSize - 2)}
+                    onPress={() =>
+                        updateTranslationFontSize(translationFontSize - 2)
+                    }
                     style={[
                         styles.fontSizeButton,
                         translationFontSize <= 12 ? styles.disabled : null,
                     ]}
-                    testID="translation-font-decrease"
+                    testID='translation-font-decrease'
                 >
                     <Text style={styles.fontSizeButtonText}>T-</Text>
                 </Pressable>
-                <Text style={styles.fontSizeValue}>{translationFontSize}px</Text>
+                <Text style={styles.fontSizeValue}>
+                    {translationFontSize}px
+                </Text>
                 <Pressable
                     disabled={translationFontSize >= 28}
-                    onPress={() => updateTranslationFontSize(translationFontSize + 2)}
+                    onPress={() =>
+                        updateTranslationFontSize(translationFontSize + 2)
+                    }
                     style={[
                         styles.fontSizeButton,
                         translationFontSize >= 28 ? styles.disabled : null,
                     ]}
-                    testID="translation-font-increase"
+                    testID='translation-font-increase'
                 >
                     <Text style={styles.fontSizeButtonText}>T+</Text>
                 </Pressable>
@@ -899,14 +1219,23 @@ export function createQuranScreenRenderers(context) {
                         onPress={() => updateArabicFont(font.key)}
                         style={[
                             styles.settingChip,
-                            arabicFont === font.key ? styles.settingChipActive : null,
+                            arabicFont === font.key
+                                ? styles.settingChipActive
+                                : null,
                         ]}
                     >
                         <Text
                             style={[
                                 styles.settingChipText,
-                                font.fontFamily ? { fontFamily: font.fontFamily, fontWeight: '400' } : null,
-                                arabicFont === font.key ? styles.settingChipTextActive : null,
+                                font.fontFamily
+                                    ? {
+                                          fontFamily: font.fontFamily,
+                                          fontWeight: "400",
+                                      }
+                                    : null,
+                                arabicFont === font.key
+                                    ? styles.settingChipTextActive
+                                    : null,
                             ]}
                         >
                             {font.label}
@@ -923,7 +1252,9 @@ export function createQuranScreenRenderers(context) {
                         onPress={() => updateDisplayMode(mode.key)}
                         style={[
                             styles.displayModeCard,
-                            displayMode === mode.key ? styles.displayModeCardActive : null,
+                            displayMode === mode.key
+                                ? styles.displayModeCardActive
+                                : null,
                         ]}
                     >
                         <View style={styles.displayModePreview}>
@@ -931,10 +1262,12 @@ export function createQuranScreenRenderers(context) {
                             <View
                                 style={[
                                     styles.displayModePreviewLine,
-                                    mode.key === 'mushaf' ? styles.displayModePreviewLineFull : null,
+                                    mode.key === "mushaf"
+                                        ? styles.displayModePreviewLineFull
+                                        : null,
                                 ]}
                             />
-                            {mode.key === 'card' || mode.key === 'line' ? (
+                            {mode.key === "card" || mode.key === "line" ? (
                                 <View style={styles.displayModePreviewSmall} />
                             ) : null}
                         </View>
@@ -942,19 +1275,26 @@ export function createQuranScreenRenderers(context) {
                             <Text
                                 style={[
                                     styles.displayModeLabel,
-                                    displayMode === mode.key ? styles.displayModeLabelActive : null,
+                                    displayMode === mode.key
+                                        ? styles.displayModeLabelActive
+                                        : null,
                                 ]}
                             >
                                 {mode.label}
                             </Text>
-                            <Text style={styles.displayModeTitle}>{mode.title}</Text>
-                            <Text style={styles.displayModeDescription}>{mode.description}</Text>
+                            <Text style={styles.displayModeTitle}>
+                                {mode.title}
+                            </Text>
+                            <Text style={styles.displayModeDescription}>
+                                {mode.description}
+                            </Text>
                         </View>
                     </Pressable>
                 ))}
             </View>
             <Text style={styles.settingHint}>
-                Mode Fokus menyembunyikan latin/terjemah. Mode Mushaf mengikuti pilihan Mode Hafalan.
+                Mode Fokus menyembunyikan latin/terjemah. Mode Mushaf mengikuti
+                pilihan Mode Hafalan.
             </Text>
 
             <Text style={styles.settingLabel}>Mode Hafalan</Text>
@@ -965,7 +1305,9 @@ export function createQuranScreenRenderers(context) {
                         onPress={() => updateMemorizationMode(mode.key)}
                         style={[
                             styles.settingChip,
-                            memorizationMode === mode.key ? styles.settingChipActive : null,
+                            memorizationMode === mode.key
+                                ? styles.settingChipActive
+                                : null,
                         ]}
                     >
                         <Text
@@ -990,7 +1332,9 @@ export function createQuranScreenRenderers(context) {
                 style={styles.tajweedButton}
             >
                 <Info color={colors.primary} size={16} strokeWidth={2.2} />
-                <Text style={styles.tajweedButtonText}>Panduan Warna Tajwid</Text>
+                <Text style={styles.tajweedButtonText}>
+                    Panduan Warna Tajwid
+                </Text>
             </Pressable>
         </AppModalSheet>
     );
@@ -999,24 +1343,28 @@ export function createQuranScreenRenderers(context) {
         const { visible, type, ayah } = referenceModal;
         const key = ayah ? `${type}:${ayah.id}` : null;
         const state = key ? referenceState[key] : null;
-        const title = type === 'tafsir' ? 'Tafsir' : 'Asbabun Nuzul';
+        const title = type === "tafsir" ? "Tafsir" : "Asbabun Nuzul";
 
         const items = state?.items ?? [];
-        const kemenag = items.find((i) => i.title === 'Kemenag');
-        const ibnuKatsir = items.find((i) => i.title === 'Ibnu Katsir');
+        const kemenag = items.find((i) => i.title === "Kemenag");
+        const ibnuKatsir = items.find((i) => i.title === "Ibnu Katsir");
         const hasBoth = !!kemenag && !!ibnuKatsir;
 
         const TAFSIR_MODES = [
-            { key: 'all', label: 'Semua' },
-            { key: 'side-by-side', label: 'Bandingkan' },
-            { key: 'kemenag', label: 'Kemenag' },
-            { key: 'mishbah', label: 'Al-Mishbah' },
+            { key: "all", label: "Semua" },
+            { key: "side-by-side", label: "Bandingkan" },
+            { key: "kemenag", label: "Kemenag" },
+            { key: "mishbah", label: "Al-Mishbah" },
         ];
 
         return (
             <AppModalSheet
-                onClose={() => setReferenceModal((m) => ({ ...m, visible: false }))}
-                subtitle={ayah ? `${selectedSurah?.name} · Ayat ${ayah.number}` : ''}
+                onClose={() =>
+                    setReferenceModal((m) => ({ ...m, visible: false }))
+                }
+                subtitle={
+                    ayah ? `${selectedSurah?.name} · Ayat ${ayah.number}` : ""
+                }
                 title={title}
                 visible={visible}
             >
@@ -1030,56 +1378,92 @@ export function createQuranScreenRenderers(context) {
                     <Text style={styles.referenceEmpty}>{state.error}</Text>
                 ) : null}
 
-                {!state?.loading && !state?.error && type === 'tafsir' && hasBoth && (
-                    <View style={styles.tafsirModeRow}>
-                        {TAFSIR_MODES.map((mode) => (
-                            <Pressable
-                                key={mode.key}
-                                onPress={() => setTafsirMode(mode.key)}
-                                style={[
-                                    styles.tafsirModePill,
-                                    tafsirMode === mode.key && styles.tafsirModePillActive,
-                                ]}
-                            >
-                                <Text
+                {!state?.loading &&
+                    !state?.error &&
+                    type === "tafsir" &&
+                    hasBoth && (
+                        <View style={styles.tafsirModeRow}>
+                            {TAFSIR_MODES.map((mode) => (
+                                <Pressable
+                                    key={mode.key}
+                                    onPress={() => setTafsirMode(mode.key)}
                                     style={[
-                                        styles.tafsirModePillText,
-                                        tafsirMode === mode.key && styles.tafsirModePillTextActive,
+                                        styles.tafsirModePill,
+                                        tafsirMode === mode.key &&
+                                            styles.tafsirModePillActive,
                                     ]}
                                 >
-                                    {mode.label}
-                                </Text>
-                            </Pressable>
-                        ))}
-                    </View>
-                )}
-
-                {!state?.loading && !state?.error && type === 'tafsir' && tafsirMode === 'side-by-side' && hasBoth ? (
-                    <View style={styles.sideBySideRow}>
-                        <View style={[styles.sideBySideCol, styles.sideBySideColPrimary]}>
-                            <Text style={styles.sideBySideColTitle}>Kemenag</Text>
-                            <Text style={styles.referenceBody}>{kemenag.body}</Text>
+                                    <Text
+                                        style={[
+                                            styles.tafsirModePillText,
+                                            tafsirMode === mode.key &&
+                                                styles.tafsirModePillTextActive,
+                                        ]}
+                                    >
+                                        {mode.label}
+                                    </Text>
+                                </Pressable>
+                            ))}
                         </View>
-                        <View style={[styles.sideBySideCol, styles.sideBySideColSecondary]}>
-                            <Text style={styles.sideBySideColTitle}>Al-Mishbah</Text>
-                            <Text style={styles.referenceBody}>{ibnuKatsir.body}</Text>
+                    )}
+
+                {!state?.loading &&
+                !state?.error &&
+                type === "tafsir" &&
+                tafsirMode === "side-by-side" &&
+                hasBoth ? (
+                    <View style={styles.sideBySideRow}>
+                        <View
+                            style={[
+                                styles.sideBySideCol,
+                                styles.sideBySideColPrimary,
+                            ]}
+                        >
+                            <Text style={styles.sideBySideColTitle}>
+                                Kemenag
+                            </Text>
+                            <Text style={styles.referenceBody}>
+                                {kemenag.body}
+                            </Text>
+                        </View>
+                        <View
+                            style={[
+                                styles.sideBySideCol,
+                                styles.sideBySideColSecondary,
+                            ]}
+                        >
+                            <Text style={styles.sideBySideColTitle}>
+                                Al-Mishbah
+                            </Text>
+                            <Text style={styles.referenceBody}>
+                                {ibnuKatsir.body}
+                            </Text>
                         </View>
                     </View>
                 ) : (
                     items
                         .filter((item) => {
-                            if (type !== 'tafsir' || tafsirMode === 'all') return true;
-                            if (tafsirMode === 'kemenag') return item.title === 'Kemenag';
-                            if (tafsirMode === 'mishbah') return item.title === 'Ibnu Katsir';
+                            if (type !== "tafsir" || tafsirMode === "all")
+                                return true;
+                            if (tafsirMode === "kemenag")
+                                return item.title === "Kemenag";
+                            if (tafsirMode === "mishbah")
+                                return item.title === "Ibnu Katsir";
                             return true;
                         })
                         .map((item) => (
                             <View key={item.id} style={styles.referenceItem}>
-                                <Text style={styles.referenceTitle}>{item.title}</Text>
+                                <Text style={styles.referenceTitle}>
+                                    {item.title}
+                                </Text>
                                 {item.meta ? (
-                                    <Text style={styles.referenceMeta}>{item.meta}</Text>
+                                    <Text style={styles.referenceMeta}>
+                                        {item.meta}
+                                    </Text>
                                 ) : null}
-                                <Text style={styles.referenceBody}>{item.body}</Text>
+                                <Text style={styles.referenceBody}>
+                                    {item.body}
+                                </Text>
                             </View>
                         ))
                 )}
@@ -1092,37 +1476,54 @@ export function createQuranScreenRenderers(context) {
 
         return (
             <AppModalSheet
-                onClose={() => setMunasabahModal((m) => ({ ...m, visible: false }))}
-                subtitle={ayah ? `${selectedSurah?.name} · Ayat ${ayah.number}` : ''}
-                title="Ayat Terkait"
+                onClose={() =>
+                    setMunasabahModal((m) => ({ ...m, visible: false }))
+                }
+                subtitle={
+                    ayah ? `${selectedSurah?.name} · Ayat ${ayah.number}` : ""
+                }
+                title='Ayat Terkait'
                 visible={visible}
             >
                 {loading ? (
-                    <ActivityIndicator color={colors.primary} style={styles.modalLoader} />
+                    <ActivityIndicator
+                        color={colors.primary}
+                        style={styles.modalLoader}
+                    />
                 ) : null}
                 {error && !loading ? (
                     <Text style={styles.referenceEmpty}>{error}</Text>
                 ) : null}
                 {items.map((item) => (
                     <Pressable
-                        accessibilityLabel="Buka ayat terkait"
-                        accessibilityRole="button"
-                        android_ripple={{ color: 'rgba(91, 110, 91, 0.08)', borderless: false }}
+                        accessibilityLabel='Buka ayat terkait'
+                        accessibilityRole='button'
+                        android_ripple={{
+                            color: "rgba(91, 110, 91, 0.08)",
+                            borderless: false,
+                        }}
                         key={item.id}
                         onPress={() => openRelatedAyah(item)}
                         style={styles.referenceItem}
                     >
                         {item.ayahFrom && item.ayahTo ? (
                             <Text style={styles.referenceTitle}>
-                                {item.ayahFrom.surahName} · Ayat {item.ayahFrom.number} → {item.ayahTo.surahName} · Ayat {item.ayahTo.number}
+                                {item.ayahFrom.surahName} · Ayat{" "}
+                                {item.ayahFrom.number} → {item.ayahTo.surahName}{" "}
+                                · Ayat {item.ayahTo.number}
                             </Text>
                         ) : item.ayahTo ? (
                             <Text style={styles.referenceTitle}>
-                                {item.ayahTo.surahName} · Ayat {item.ayahTo.number}
+                                {item.ayahTo.surahName} · Ayat{" "}
+                                {item.ayahTo.number}
                             </Text>
                         ) : null}
-                        <Text style={styles.referenceBody}>{item.description}</Text>
-                        <Text style={styles.referenceMeta}>Ketuk untuk membuka ayat.</Text>
+                        <Text style={styles.referenceBody}>
+                            {item.description}
+                        </Text>
+                        <Text style={styles.referenceMeta}>
+                            Ketuk untuk membuka ayat.
+                        </Text>
                     </Pressable>
                 ))}
             </AppModalSheet>
@@ -1134,22 +1535,32 @@ export function createQuranScreenRenderers(context) {
 
         return (
             <AppModalSheet
-                onClose={() => setHadithAyahModal((m) => ({ ...m, visible: false }))}
-                subtitle={ayah ? `${selectedSurah?.name} · Ayat ${ayah.number}` : ''}
-                title="Hadis Terkait"
+                onClose={() =>
+                    setHadithAyahModal((m) => ({ ...m, visible: false }))
+                }
+                subtitle={
+                    ayah ? `${selectedSurah?.name} · Ayat ${ayah.number}` : ""
+                }
+                title='Hadis Terkait'
                 visible={visible}
             >
                 {loading ? (
-                    <ActivityIndicator color={colors.primary} style={styles.modalLoader} />
+                    <ActivityIndicator
+                        color={colors.primary}
+                        style={styles.modalLoader}
+                    />
                 ) : null}
                 {error && !loading ? (
                     <Text style={styles.referenceEmpty}>{error}</Text>
                 ) : null}
                 {items.map((item) => (
                     <Pressable
-                        accessibilityLabel="Buka hadis terkait"
-                        accessibilityRole="button"
-                        android_ripple={{ color: 'rgba(91, 110, 91, 0.08)', borderless: false }}
+                        accessibilityLabel='Buka hadis terkait'
+                        accessibilityRole='button'
+                        android_ripple={{
+                            color: "rgba(91, 110, 91, 0.08)",
+                            borderless: false,
+                        }}
                         disabled={!item.hadith?.id}
                         key={item.id}
                         onPress={() => openRelatedHadith(item)}
@@ -1157,17 +1568,22 @@ export function createQuranScreenRenderers(context) {
                     >
                         {item.hadith ? (
                             <Text style={styles.referenceTitle}>
-                                {item.hadith.book || 'Hadis'} · {item.hadith.number || ''}
+                                {item.hadith.book || "Hadis"} ·{" "}
+                                {item.hadith.number || ""}
                             </Text>
                         ) : null}
                         <Text style={styles.referenceBody}>
-                            {item.hadith?.translation || item.catatan || ''}
+                            {item.hadith?.translation || item.catatan || ""}
                         </Text>
                         {item.catatan ? (
-                            <Text style={styles.referenceMeta}>{item.catatan}</Text>
+                            <Text style={styles.referenceMeta}>
+                                {item.catatan}
+                            </Text>
                         ) : null}
                         {item.hadith?.id ? (
-                            <Text style={styles.referenceMeta}>Ketuk untuk membuka detail hadis.</Text>
+                            <Text style={styles.referenceMeta}>
+                                Ketuk untuk membuka detail hadis.
+                            </Text>
                         ) : null}
                     </Pressable>
                 ))}
@@ -1178,8 +1594,10 @@ export function createQuranScreenRenderers(context) {
     const renderAyahDetailScreen = () => {
         if (!selectedDetailAyah) return null;
 
-        const isAudioLoading = audioState.loadingAyahId === selectedDetailAyah.id;
-        const isAudioPlaying = audioState.playingAyahId === selectedDetailAyah.id;
+        const isAudioLoading =
+            audioState.loadingAyahId === selectedDetailAyah.id;
+        const isAudioPlaying =
+            audioState.playingAyahId === selectedDetailAyah.id;
         const isBookmarked = Boolean(bookmarks[selectedDetailAyah.id]);
         const noteOpen = activeNoteAyah === selectedDetailAyah.id;
 
@@ -1193,40 +1611,67 @@ export function createQuranScreenRenderers(context) {
                 {renderMunasabahModal()}
                 {renderHadithAyahModal()}
                 <Screen
-                    actions={(
+                    actions={
                         <IconActionButton
                             Icon={ArrowLeft}
-                            label="Kembali"
+                            label='Kembali'
                             onPress={closeAyahDetail}
                         />
-                    )}
-                    contentStyle={isWebAppLayout ? [styles.webAppQuranDetailSurface, webAppQuranThemeStyles.detailSurface] : null}
+                    }
+                    contentStyle={
+                        isWebAppLayout
+                            ? [
+                                  styles.webAppQuranDetailSurface,
+                                  webAppQuranThemeStyles.detailSurface,
+                              ]
+                            : null
+                    }
                     subtitle={`${selectedSurah?.name ?? "Al-Qur'an"} · Ayat ${selectedDetailAyah.number}`}
-                    title="Detail Ayat"
+                    title='Detail Ayat'
                 >
-                    <View testID={isWebAppLayout ? 'quran-web-app-detail' : 'quran-classic-detail'} />
+                    <View
+                        testID={
+                            isWebAppLayout
+                                ? "quran-web-app-detail"
+                                : "quran-classic-detail"
+                        }
+                    />
                     <Card style={styles.quranDetailCard}>
                         <Text style={styles.quranDetailKicker}>
-                            {selectedSurah?.name ?? "Al-Qur'an"} · Ayat {selectedDetailAyah.number}
+                            {selectedSurah?.name ?? "Al-Qur'an"} · Ayat{" "}
+                            {selectedDetailAyah.number}
                         </Text>
-                        {(selectedDetailAyah.arabic || selectedDetailAyah.arabicHtml) ? (
-                            renderArabicContent(
-                                selectedDetailAyah,
-                                [styles.quranDetailArabic, getArabicTypography(2, 1.85)],
-                                'detail-ayah',
-                            )
-                        ) : null}
+                        {selectedDetailAyah.arabic ||
+                        selectedDetailAyah.arabicHtml
+                            ? renderArabicContent(
+                                  selectedDetailAyah,
+                                  [
+                                      styles.quranDetailArabic,
+                                      getArabicTypography(2, 1.85),
+                                  ],
+                                  "detail-ayah",
+                              )
+                            : null}
                         {selectedDetailAyah.latin ? (
-                            <Text style={styles.quranDetailLatin}>{selectedDetailAyah.latin}</Text>
+                            <Text style={styles.quranDetailLatin}>
+                                {selectedDetailAyah.latin}
+                            </Text>
                         ) : null}
                         {selectedDetailAyah.translation ? (
                             <View style={styles.quranDetailTranslationBox}>
-                                <Text style={[styles.quranDetailTranslation, getTranslationTypography(1, 1.7)]}>
+                                <Text
+                                    style={[
+                                        styles.quranDetailTranslation,
+                                        getTranslationTypography(1, 1.7),
+                                    ]}
+                                >
                                     {selectedDetailAyah.translation}
                                 </Text>
                             </View>
                         ) : null}
-                        {audioState.activeAyahId === selectedDetailAyah.id ? renderAudioSources(selectedDetailAyah) : null}
+                        {audioState.activeAyahId === selectedDetailAyah.id
+                            ? renderAudioSources(selectedDetailAyah)
+                            : null}
                     </Card>
 
                     <View style={styles.quranDetailActions}>
@@ -1234,43 +1679,74 @@ export function createQuranScreenRenderers(context) {
                             Icon={isAudioPlaying ? Pause : Volume2}
                             active={isAudioPlaying}
                             disabled={isAudioLoading}
-                            label={isAudioLoading ? 'Memuat audio' : isAudioPlaying ? 'Jeda audio' : 'Putar audio'}
+                            label={
+                                isAudioLoading
+                                    ? "Memuat audio"
+                                    : isAudioPlaying
+                                      ? "Jeda audio"
+                                      : "Putar audio"
+                            }
                             onPress={() => playAyahAudio(selectedDetailAyah)}
                         />
                         <ActionPill
                             Icon={BookOpen}
-                            label="Tafsir"
-                            onPress={() => openReferenceModal(selectedDetailAyah, 'tafsir')}
+                            label='Tafsir'
+                            onPress={() =>
+                                openReferenceModal(selectedDetailAyah, "tafsir")
+                            }
                         />
                         <ActionPill
                             Icon={BookOpen}
-                            label="Asbabun"
-                            onPress={() => openReferenceModal(selectedDetailAyah, 'asbab')}
+                            label='Asbabun'
+                            onPress={() =>
+                                openReferenceModal(selectedDetailAyah, "asbab")
+                            }
                         />
                         <ActionPill
                             Icon={Link}
-                            label="Ayat Terkait"
-                            onPress={() => openMunasabahModal(selectedDetailAyah)}
+                            label='Ayat Terkait'
+                            onPress={() =>
+                                openMunasabahModal(selectedDetailAyah)
+                            }
                         />
                         <ActionPill
                             Icon={BookOpen}
-                            label="Hadis Terkait"
-                            onPress={() => openHadithAyahModal(selectedDetailAyah)}
+                            label='Hadis Terkait'
+                            onPress={() =>
+                                openHadithAyahModal(selectedDetailAyah)
+                            }
                         />
                         {user ? (
                             <>
                                 <ActionPill
-                                    Icon={isBookmarked ? BookmarkCheck : Bookmark}
+                                    Icon={
+                                        isBookmarked ? BookmarkCheck : Bookmark
+                                    }
                                     active={isBookmarked}
-                                    disabled={savingAyah === `bookmark:${selectedDetailAyah.id}`}
-                                    label={isBookmarked ? 'Hapus bookmark' : 'Bookmark'}
-                                    onPress={() => toggleAyahBookmark(selectedDetailAyah)}
+                                    disabled={
+                                        savingAyah ===
+                                        `bookmark:${selectedDetailAyah.id}`
+                                    }
+                                    label={
+                                        isBookmarked
+                                            ? "Hapus bookmark"
+                                            : "Bookmark"
+                                    }
+                                    onPress={() =>
+                                        toggleAyahBookmark(selectedDetailAyah)
+                                    }
                                 />
                                 <ActionPill
                                     Icon={StickyNote}
                                     active={noteOpen}
-                                    label="Catatan"
-                                    onPress={() => setActiveNoteAyah(noteOpen ? null : selectedDetailAyah.id)}
+                                    label='Catatan'
+                                    onPress={() =>
+                                        setActiveNoteAyah(
+                                            noteOpen
+                                                ? null
+                                                : selectedDetailAyah.id,
+                                        )
+                                    }
                                 />
                             </>
                         ) : null}
@@ -1278,8 +1754,11 @@ export function createQuranScreenRenderers(context) {
 
                     {noteOpen ? (
                         <Card style={styles.quranDetailNoteCard}>
-                            <CardTitle meta="Pribadi">Catatan</CardTitle>
-                            <NotesPanel refType="ayah" refId={selectedDetailAyah.id} />
+                            <CardTitle meta='Pribadi'>Catatan</CardTitle>
+                            <NotesPanel
+                                refType='ayah'
+                                refId={selectedDetailAyah.id}
+                            />
                         </Card>
                     ) : null}
                 </Screen>
@@ -1297,16 +1776,18 @@ export function createQuranScreenRenderers(context) {
 
         return (
             <AppActionSheet
-                onClose={() => setAyahActionSheet({ visible: false, ayah: null })}
+                onClose={() =>
+                    setAyahActionSheet({ visible: false, ayah: null })
+                }
                 subtitle={`${selectedSurah?.name} · Ayat ${ayah.number}`}
-                title="Aksi Cepat"
+                title='Aksi Cepat'
                 visible={visible}
             >
                 <ActionSheetRow
                     Icon={BookOpen}
                     onPress={() => openAyahDetail(ayah)}
-                    subtitle="Baca ayat, terjemahan, tafsir, dan catatan lebih luas"
-                    title="Buka Detail"
+                    subtitle='Baca ayat, terjemahan, tafsir, dan catatan lebih luas'
+                    title='Buka Detail'
                 />
                 <ActionSheetRow
                     Icon={isAudioPlaying ? Pause : Volume2}
@@ -1316,26 +1797,32 @@ export function createQuranScreenRenderers(context) {
                         setAyahActionSheet({ visible: false, ayah: null });
                         playAyahAudio(ayah);
                     }}
-                    subtitle="Murottal ayat ini"
-                    title={isAudioLoading ? 'Memuat audio' : isAudioPlaying ? 'Jeda audio' : 'Putar audio'}
+                    subtitle='Murottal ayat ini'
+                    title={
+                        isAudioLoading
+                            ? "Memuat audio"
+                            : isAudioPlaying
+                              ? "Jeda audio"
+                              : "Putar audio"
+                    }
                 />
                 <ActionSheetRow
                     Icon={BookOpen}
                     onPress={() => {
                         setAyahActionSheet({ visible: false, ayah: null });
-                        openReferenceModal(ayah, 'tafsir');
+                        openReferenceModal(ayah, "tafsir");
                     }}
-                    subtitle="Buka penjelasan ayat"
-                    title="Tafsir"
+                    subtitle='Buka penjelasan ayat'
+                    title='Tafsir'
                 />
                 <ActionSheetRow
                     Icon={BookOpen}
                     onPress={() => {
                         setAyahActionSheet({ visible: false, ayah: null });
-                        openReferenceModal(ayah, 'asbab');
+                        openReferenceModal(ayah, "asbab");
                     }}
-                    subtitle="Riwayat sebab turun jika tersedia"
-                    title="Asbabun Nuzul"
+                    subtitle='Riwayat sebab turun jika tersedia'
+                    title='Asbabun Nuzul'
                 />
                 {user ? (
                     <>
@@ -1343,43 +1830,59 @@ export function createQuranScreenRenderers(context) {
                             Icon={Save}
                             disabled={savingAyah === `progress:${ayah.id}`}
                             onPress={() => {
-                                setAyahActionSheet({ visible: false, ayah: null });
+                                setAyahActionSheet({
+                                    visible: false,
+                                    ayah: null,
+                                });
                                 markAyahProgress(ayah);
                             }}
-                            subtitle="Jadikan ayat ini posisi terakhir baca"
-                            title={savingAyah === `progress:${ayah.id}` ? 'Menyimpan progres' : 'Simpan progres'}
+                            subtitle='Jadikan ayat ini posisi terakhir baca'
+                            title={
+                                savingAyah === `progress:${ayah.id}`
+                                    ? "Menyimpan progres"
+                                    : "Simpan progres"
+                            }
                         />
                         <ActionSheetRow
                             Icon={isBookmarked ? BookmarkCheck : Bookmark}
                             active={isBookmarked}
                             disabled={savingAyah === `bookmark:${ayah.id}`}
                             onPress={() => {
-                                setAyahActionSheet({ visible: false, ayah: null });
+                                setAyahActionSheet({
+                                    visible: false,
+                                    ayah: null,
+                                });
                                 toggleAyahBookmark(ayah);
                             }}
-                            subtitle="Simpan ayat ke koleksi pribadi"
+                            subtitle='Simpan ayat ke koleksi pribadi'
                             title={
                                 savingAyah === `bookmark:${ayah.id}`
-                                    ? 'Menyimpan bookmark'
+                                    ? "Menyimpan bookmark"
                                     : isBookmarked
-                                      ? 'Hapus bookmark'
-                                      : 'Bookmark'
+                                      ? "Hapus bookmark"
+                                      : "Bookmark"
                             }
                         />
                         <ActionSheetRow
                             Icon={StickyNote}
                             active={activeNoteAyah === ayah.id}
                             onPress={() => {
-                                setAyahActionSheet({ visible: false, ayah: null });
-                                setActiveNoteAyah(activeNoteAyah === ayah.id ? null : ayah.id);
+                                setAyahActionSheet({
+                                    visible: false,
+                                    ayah: null,
+                                });
+                                setActiveNoteAyah(
+                                    activeNoteAyah === ayah.id ? null : ayah.id,
+                                );
                             }}
-                            subtitle="Tulis catatan pribadi untuk ayat ini"
-                            title="Catatan"
+                            subtitle='Tulis catatan pribadi untuk ayat ini'
+                            title='Catatan'
                         />
                     </>
                 ) : (
                     <Text style={styles.actionSheetNotice}>
-                        Masuk dari Profil untuk menyimpan progres, bookmark, dan catatan.
+                        Masuk dari Profil untuk menyimpan progres, bookmark, dan
+                        catatan.
                     </Text>
                 )}
             </AppActionSheet>
@@ -1388,17 +1891,23 @@ export function createQuranScreenRenderers(context) {
 
     const renderAyahNotesModal = () => {
         const ayah = activeNoteAyah
-            ? [...ayahs, ...mushafPageAyahs].find((item) => item.id === activeNoteAyah)
+            ? [...ayahs, ...mushafPageAyahs].find(
+                  (item) => item.id === activeNoteAyah,
+              )
             : null;
         return (
             <AppModalSheet
                 onClose={() => setActiveNoteAyah(null)}
                 scroll={false}
-                subtitle={ayah ? `${selectedSurah?.name} · Ayat ${ayah.number}` : ''}
-                title="Catatan Ayat"
+                subtitle={
+                    ayah ? `${selectedSurah?.name} · Ayat ${ayah.number}` : ""
+                }
+                title='Catatan Ayat'
                 visible={Boolean(activeNoteAyah)}
             >
-                {activeNoteAyah ? <NotesPanel refType="ayah" refId={activeNoteAyah} /> : null}
+                {activeNoteAyah ? (
+                    <NotesPanel refType='ayah' refId={activeNoteAyah} />
+                ) : null}
             </AppModalSheet>
         );
     };
@@ -1406,12 +1915,12 @@ export function createQuranScreenRenderers(context) {
     const renderTajweedModal = () => (
         <AppModalSheet
             onClose={() => setTajweedVisible(false)}
-            title="Panduan Warna Tajwid"
+            title='Panduan Warna Tajwid'
             visible={tajweedVisible}
         >
             <Text style={styles.tajweedIntro}>
-                Setiap hukum tajwid ditandai dengan warna berbeda. Ketuk grup untuk melihat
-                sub-aturan dan contoh bacaannya.
+                Setiap hukum tajwid ditandai dengan warna berbeda. Ketuk grup
+                untuk melihat sub-aturan dan contoh bacaannya.
             </Text>
             {TAJWEED_GROUPS.map((group) => (
                 <View key={group.key} style={styles.tajweedGroup}>
@@ -1422,9 +1931,13 @@ export function createQuranScreenRenderers(context) {
                                 { backgroundColor: group.color },
                             ]}
                         />
-                        <Text style={styles.tajweedGroupTitle}>{group.title}</Text>
+                        <Text style={styles.tajweedGroupTitle}>
+                            {group.title}
+                        </Text>
                     </View>
-                    <Text style={styles.tajweedGroupDesc}>{group.description}</Text>
+                    <Text style={styles.tajweedGroupDesc}>
+                        {group.description}
+                    </Text>
                     {group.rules.map((rule) => (
                         <View key={rule.key} style={styles.tajweedRule}>
                             <View style={styles.tajweedRuleLeft}>
@@ -1435,7 +1948,9 @@ export function createQuranScreenRenderers(context) {
                                     ]}
                                 />
                                 <View style={styles.tajweedRuleInfo}>
-                                    <Text style={styles.tajweedRuleTitle}>{rule.title}</Text>
+                                    <Text style={styles.tajweedRuleTitle}>
+                                        {rule.title}
+                                    </Text>
                                     <Text style={styles.tajweedRuleDesc}>
                                         {rule.description}
                                     </Text>
@@ -1457,14 +1972,39 @@ export function createQuranScreenRenderers(context) {
         const isProgressSurah = progressSurahNumber === Number(surah.number);
         if (isWebAppLayout) {
             return (
-                <Pressable onPress={() => openSurah(surah)} style={[styles.webAppSurahRow, webAppQuranThemeStyles.surahRow]}>
+                <Pressable
+                    onPress={() => openSurah(surah)}
+                    style={[
+                        styles.webAppSurahRow,
+                        webAppQuranThemeStyles.surahRow,
+                    ]}
+                >
                     <View style={styles.webAppSurahLeft}>
-                        <View style={[styles.webAppSurahNumberBadge, webAppQuranThemeStyles.surahNumberBadge]}>
-                            <Text style={[styles.webAppSurahNumberText, webAppQuranThemeStyles.surahNumberText]}>{surah.number}</Text>
+                        <View
+                            style={[
+                                styles.webAppSurahNumberBadge,
+                                webAppQuranThemeStyles.surahNumberBadge,
+                            ]}
+                        >
+                            <Text
+                                style={[
+                                    styles.webAppSurahNumberText,
+                                    webAppQuranThemeStyles.surahNumberText,
+                                ]}
+                            >
+                                {surah.number}
+                            </Text>
                         </View>
                         <View style={styles.webAppSurahInfo}>
                             <View style={styles.surahNameRow}>
-                                <Text style={[styles.webAppSurahName, webAppQuranThemeStyles.surahName]}>{surah.name}</Text>
+                                <Text
+                                    style={[
+                                        styles.webAppSurahName,
+                                        webAppQuranThemeStyles.surahName,
+                                    ]}
+                                >
+                                    {surah.name}
+                                </Text>
                                 {isProgressSurah ? (
                                     <CheckCircle2
                                         color={webAppQuranTheme.accent}
@@ -1473,12 +2013,22 @@ export function createQuranScreenRenderers(context) {
                                     />
                                 ) : null}
                             </View>
-                            <Text style={[styles.webAppSurahMeta, webAppQuranThemeStyles.surahMeta]}>
+                            <Text
+                                style={[
+                                    styles.webAppSurahMeta,
+                                    webAppQuranThemeStyles.surahMeta,
+                                ]}
+                            >
                                 · {surah.meaning} · {surah.ayahs} ayat
                             </Text>
                         </View>
                     </View>
-                    <Text style={[styles.webAppSurahArabic, webAppQuranThemeStyles.surahArabic]}>
+                    <Text
+                        style={[
+                            styles.webAppSurahArabic,
+                            webAppQuranThemeStyles.surahArabic,
+                        ]}
+                    >
                         {getCompactArabicSurahName(surah.arabic)}
                     </Text>
                 </Pressable>
@@ -1490,7 +2040,9 @@ export function createQuranScreenRenderers(context) {
                 <View style={styles.surahLeft}>
                     <View style={styles.surahNumberWrap}>
                         <View style={styles.surahNumberDiamond}>
-                            <Text style={styles.surahNumberText}>{surah.number}</Text>
+                            <Text style={styles.surahNumberText}>
+                                {surah.number}
+                            </Text>
                         </View>
                     </View>
                     <View style={styles.surahInfo}>
@@ -1516,36 +2068,91 @@ export function createQuranScreenRenderers(context) {
 
     const renderWebAppQuranListHeader = () => (
         <View style={styles.webAppQuranHeader}>
-            <Text style={[styles.webAppQuranArabicTitle, webAppQuranThemeStyles.quranArabicTitle]}>القُرآنُ الكَرِيم</Text>
-            <Text style={[styles.webAppQuranTitle, webAppQuranThemeStyles.quranTitle]}>Al-Quran</Text>
-            <Text style={[styles.webAppQuranSubtitle, webAppQuranThemeStyles.quranSubtitle]}>
-                114 Surah · Lengkap dengan Tajweed berwarna, transliterasi, dan terjemahan
+            <Text
+                style={[
+                    styles.webAppQuranArabicTitle,
+                    webAppQuranThemeStyles.quranArabicTitle,
+                ]}
+            >
+                القُرآنُ الكَرِيم
             </Text>
-            <View style={[styles.webAppQuranSearch, webAppQuranThemeStyles.quranSearch]}>
-                <Search color={webAppQuranTheme.muted} size={16} strokeWidth={2.1} />
+            <Text
+                style={[
+                    styles.webAppQuranTitle,
+                    webAppQuranThemeStyles.quranTitle,
+                ]}
+            >
+                Al-Quran
+            </Text>
+            <Text
+                style={[
+                    styles.webAppQuranSubtitle,
+                    webAppQuranThemeStyles.quranSubtitle,
+                ]}
+            >
+                114 Surah · Lengkap dengan Tajweed berwarna, transliterasi, dan
+                terjemahan
+            </Text>
+            <View
+                style={[
+                    styles.webAppQuranSearch,
+                    webAppQuranThemeStyles.quranSearch,
+                ]}
+            >
+                <Search
+                    color={webAppQuranTheme.muted}
+                    size={16}
+                    strokeWidth={2.1}
+                />
                 <TextInput
                     onChangeText={setSurahQuery}
-                    placeholder="Cari surah..."
+                    placeholder='Cari surah...'
                     placeholderTextColor={webAppQuranTheme.muted}
-                    style={[styles.webAppQuranSearchInput, webAppQuranThemeStyles.quranSearchInput]}
+                    style={[
+                        styles.webAppQuranSearchInput,
+                        webAppQuranThemeStyles.quranSearchInput,
+                    ]}
                     value={surahQuery}
                 />
             </View>
             <Pressable
                 onPress={() => openPage(pageInput)}
-                style={[styles.webAppMushafCta, webAppQuranThemeStyles.mushafCta]}
-                testID="quran-web-app-mushaf-cta"
+                style={[
+                    styles.webAppMushafCta,
+                    webAppQuranThemeStyles.mushafCta,
+                ]}
+                testID='quran-web-app-mushaf-cta'
             >
                 <View style={styles.webAppMushafCtaIcon}>
-                    <BookOpen color={webAppQuranTheme.accent} size={22} strokeWidth={2.4} />
+                    <BookOpen
+                        color={webAppQuranTheme.accent}
+                        size={22}
+                        strokeWidth={2.4}
+                    />
                 </View>
                 <View style={styles.webAppMushafCtaCopy}>
-                    <Text style={[styles.webAppMushafCtaTitle, webAppQuranThemeStyles.mushafCtaText]}>Navigasi Mushaf</Text>
-                    <Text style={[styles.webAppMushafCtaSubtitle, webAppQuranThemeStyles.mushafCtaText]}>
+                    <Text
+                        style={[
+                            styles.webAppMushafCtaTitle,
+                            webAppQuranThemeStyles.mushafCtaText,
+                        ]}
+                    >
+                        Navigasi Mushaf
+                    </Text>
+                    <Text
+                        style={[
+                            styles.webAppMushafCtaSubtitle,
+                            webAppQuranThemeStyles.mushafCtaText,
+                        ]}
+                    >
                         Buka ayat berdasarkan halaman mushaf atau hizb.
                     </Text>
                 </View>
-                <ArrowRight color={webAppQuranTheme.accent} size={16} strokeWidth={2.4} />
+                <ArrowRight
+                    color={webAppQuranTheme.accent}
+                    size={16}
+                    strokeWidth={2.4}
+                />
             </Pressable>
         </View>
     );
@@ -1560,7 +2167,7 @@ export function createQuranScreenRenderers(context) {
                     <Search color={colors.muted} size={16} strokeWidth={2.1} />
                     <TextInput
                         onChangeText={setSurahQuery}
-                        placeholder="Cari..."
+                        placeholder='Cari...'
                         placeholderTextColor={colors.muted}
                         style={styles.quranSearchInput}
                         value={surahQuery}
@@ -1573,13 +2180,17 @@ export function createQuranScreenRenderers(context) {
                             onPress={() => setQuranTab(tab.key)}
                             style={[
                                 styles.quranTabButton,
-                                quranTab === tab.key ? styles.quranTabButtonActive : null,
+                                quranTab === tab.key
+                                    ? styles.quranTabButtonActive
+                                    : null,
                             ]}
                         >
                             <Text
                                 style={[
                                     styles.quranTabText,
-                                    quranTab === tab.key ? styles.quranTabTextActive : null,
+                                    quranTab === tab.key
+                                        ? styles.quranTabTextActive
+                                        : null,
                                 ]}
                             >
                                 {tab.label}
@@ -1595,52 +2206,64 @@ export function createQuranScreenRenderers(context) {
         <Card>
             <CardTitle>Navigasi</CardTitle>
             <View style={styles.navigatorTabs}>
-                {['page', 'hizb'].map((mode) => (
+                {["page", "hizb"].map((mode) => (
                     <Pressable
                         key={mode}
                         onPress={() => setNavigatorMode(mode)}
                         style={[
                             styles.navigatorTab,
-                            navigatorMode === mode ? styles.navigatorTabActive : null,
+                            navigatorMode === mode
+                                ? styles.navigatorTabActive
+                                : null,
                         ]}
                     >
                         <Text
                             style={[
                                 styles.navigatorTabText,
-                                navigatorMode === mode ? styles.navigatorTabTextActive : null,
+                                navigatorMode === mode
+                                    ? styles.navigatorTabTextActive
+                                    : null,
                             ]}
                         >
-                            {mode === 'page' ? 'Halaman' : 'Hizb'}
+                            {mode === "page" ? "Halaman" : "Hizb"}
                         </Text>
                     </Pressable>
                 ))}
             </View>
-            {navigatorMode === 'hizb' ? (
+            {navigatorMode === "hizb" ? (
                 <View style={styles.inputRow}>
                     <TextInput
-                        keyboardType="number-pad"
+                        keyboardType='number-pad'
                         onChangeText={setHizbInput}
-                        placeholder="1-240"
+                        placeholder='1-240'
                         placeholderTextColor={colors.muted}
                         style={styles.numberInput}
                         value={hizbInput}
                     />
-                    <Pressable onPress={() => openHizb()} style={styles.compactPrimaryButton}>
+                    <Pressable
+                        onPress={() => openHizb()}
+                        style={styles.compactPrimaryButton}
+                    >
                         <Text style={styles.primaryButtonText}>Buka Hizb</Text>
                     </Pressable>
                 </View>
             ) : (
                 <View style={styles.inputRow}>
                     <TextInput
-                        keyboardType="number-pad"
+                        keyboardType='number-pad'
                         onChangeText={setPageInput}
-                        placeholder="1-604"
+                        placeholder='1-604'
                         placeholderTextColor={colors.muted}
                         style={styles.numberInput}
                         value={pageInput}
                     />
-                    <Pressable onPress={() => openPage()} style={styles.compactPrimaryButton}>
-                        <Text style={styles.primaryButtonText}>Buka Halaman</Text>
+                    <Pressable
+                        onPress={() => openPage()}
+                        style={styles.compactPrimaryButton}
+                    >
+                        <Text style={styles.primaryButtonText}>
+                            Buka Halaman
+                        </Text>
                     </Pressable>
                 </View>
             )}
@@ -1648,32 +2271,41 @@ export function createQuranScreenRenderers(context) {
     );
 
     const renderQuranListFooter = () => {
-        if (quranTab === 'surah') {
+        if (quranTab === "surah") {
             if (isWebAppLayout) {
-                return message ? <Text style={styles.webAppMessage}>{message}</Text> : null;
+                return message ? (
+                    <Text style={styles.webAppMessage}>{message}</Text>
+                ) : null;
             }
 
             return (
                 <>
                     {renderNavigatorPanel()}
-                    {message ? <Text style={styles.message}>{message}</Text> : null}
+                    {message ? (
+                        <Text style={styles.message}>{message}</Text>
+                    ) : null}
                 </>
             );
         }
 
-        if (quranTab === 'hafalan') {
+        if (quranTab === "hafalan") {
             if (!user) {
                 return (
                     <Card>
                         <CardTitle>Hafalan</CardTitle>
                         <Text style={styles.modePanelText}>
-                            Buka Profil untuk masuk dan melacak progress hafalan.
+                            Buka Profil untuk masuk dan melacak progress
+                            hafalan.
                         </Text>
                     </Card>
                 );
             }
 
-            const statusLabel = { not_started: 'Belum', in_progress: 'Sedang', memorized: 'Hafal' };
+            const statusLabel = {
+                not_started: "Belum",
+                in_progress: "Sedang",
+                memorized: "Hafal",
+            };
             const statusStyle = {
                 not_started: null,
                 in_progress: styles.statusInProgress,
@@ -1690,13 +2322,17 @@ export function createQuranScreenRenderers(context) {
                                     <Text style={styles.hafalanStatValue}>
                                         {hafalanSummary.memorized ?? 0}
                                     </Text>
-                                    <Text style={styles.hafalanStatLabel}>Hafal</Text>
+                                    <Text style={styles.hafalanStatLabel}>
+                                        Hafal
+                                    </Text>
                                 </View>
                                 <View style={styles.hafalanStat}>
                                     <Text style={styles.hafalanStatValue}>
                                         {hafalanSummary.in_progress ?? 0}
                                     </Text>
-                                    <Text style={styles.hafalanStatLabel}>Sedang</Text>
+                                    <Text style={styles.hafalanStatLabel}>
+                                        Sedang
+                                    </Text>
                                 </View>
                                 <View style={styles.hafalanStat}>
                                     <Text style={styles.hafalanStatValue}>
@@ -1704,49 +2340,74 @@ export function createQuranScreenRenderers(context) {
                                             hafalanSummary.not_memorized ??
                                             0}
                                     </Text>
-                                    <Text style={styles.hafalanStatLabel}>Belum</Text>
+                                    <Text style={styles.hafalanStatLabel}>
+                                        Belum
+                                    </Text>
                                 </View>
                             </View>
                         ) : null}
                         <Text style={styles.modePanelText}>
-                            Ketuk status di bawah untuk mengubah: Belum → Sedang → Hafal.
+                            Ketuk status di bawah untuk mengubah: Belum → Sedang
+                            → Hafal.
                         </Text>
                         {hafalanLoading ? (
-                            <ActivityIndicator color={colors.primary} style={styles.loader} />
+                            <ActivityIndicator
+                                color={colors.primary}
+                                style={styles.loader}
+                            />
                         ) : null}
                         {!hafalanLoading && surahs.length === 0 ? (
-                            <Text style={styles.modePanelMeta}>Daftar surah belum dimuat.</Text>
+                            <Text style={styles.modePanelMeta}>
+                                Daftar surah belum dimuat.
+                            </Text>
                         ) : null}
                     </Card>
                     {surahs.map((surah) => {
                         const entry = hafalanList.find(
-                            (item) => Number(item.surah_id) === Number(surah.number),
+                            (item) =>
+                                Number(item.surah_id) === Number(surah.number),
                         );
-                        const status = entry?.status ?? 'not_started';
+                        const status = entry?.status ?? "not_started";
                         return (
                             <Pressable
-                                android_ripple={{ color: 'rgba(91, 110, 91, 0.12)', borderless: false }}
+                                android_ripple={{
+                                    color: "rgba(91, 110, 91, 0.12)",
+                                    borderless: false,
+                                }}
                                 key={`hafalan-${surah.number}`}
                                 onPress={() => cycleHafalanStatus(surah)}
                                 style={styles.hafalanRow}
                             >
                                 <View style={styles.surahNumberWrap}>
                                     <View style={styles.surahNumberDiamond}>
-                                        <Text style={styles.surahNumberText}>{surah.number}</Text>
+                                        <Text style={styles.surahNumberText}>
+                                            {surah.number}
+                                        </Text>
                                     </View>
                                 </View>
                                 <View style={styles.hafalanInfo}>
-                                    <Text style={styles.surahName}>{surah.name}</Text>
-                                    <Text style={styles.surahMeta}>{surah.ayahs} ayah</Text>
+                                    <Text style={styles.surahName}>
+                                        {surah.name}
+                                    </Text>
+                                    <Text style={styles.surahMeta}>
+                                        {surah.ayahs} ayah
+                                    </Text>
                                 </View>
-                                <View style={[styles.statusBadge, statusStyle[status]]}>
+                                <View
+                                    style={[
+                                        styles.statusBadge,
+                                        statusStyle[status],
+                                    ]}
+                                >
                                     <Text
                                         style={[
                                             styles.statusText,
-                                            statusStyle[status] ? styles.statusTextColored : null,
+                                            statusStyle[status]
+                                                ? styles.statusTextColored
+                                                : null,
                                         ]}
                                     >
-                                        {statusLabel[status] ?? 'Belum'}
+                                        {statusLabel[status] ?? "Belum"}
                                     </Text>
                                 </View>
                             </Pressable>
@@ -1771,7 +2432,7 @@ export function createQuranScreenRenderers(context) {
             const entry = hafalanList.find(
                 (item) => Number(item.surah_id) === Number(surah.number),
             );
-            return entry?.status === 'memorized';
+            return entry?.status === "memorized";
         });
 
         return (
@@ -1779,26 +2440,31 @@ export function createQuranScreenRenderers(context) {
                 <Card>
                     <CardTitle>Murojaah</CardTitle>
                     <Text style={styles.modePanelText}>
-                        Pilih surah yang sudah hafal, lalu catat sesi murojaah dengan skor dan
-                        catatan.
+                        Pilih surah yang sudah hafal, lalu catat sesi murojaah
+                        dengan skor dan catatan.
                     </Text>
                     {murojaahLoading ? (
-                        <ActivityIndicator color={colors.primary} style={styles.loader} />
+                        <ActivityIndicator
+                            color={colors.primary}
+                            style={styles.loader}
+                        />
                     ) : null}
                     {!murojaahLoading && memorizedSurahs.length === 0 ? (
                         <Text style={styles.modePanelMeta}>
-                            Belum ada surah yang ditandai Hafal. Tandai status di tab Hafalan
-                            terlebih dahulu.
+                            Belum ada surah yang ditandai Hafal. Tandai status
+                            di tab Hafalan terlebih dahulu.
                         </Text>
                     ) : null}
                     {memorizedSurahs.length > 0 ? (
                         <>
-                            <Text style={styles.modePanelMeta}>Pilih surah untuk dimurojaah:</Text>
+                            <Text style={styles.modePanelMeta}>
+                                Pilih surah untuk dimurojaah:
+                            </Text>
                             <View style={styles.murojaahSurahGrid}>
                                 {memorizedSurahs.map((surah) => (
                                     <Pressable
                                         android_ripple={{
-                                            color: 'rgba(91, 110, 91, 0.12)',
+                                            color: "rgba(91, 110, 91, 0.12)",
                                             borderless: false,
                                         }}
                                         key={`murojaah-pick-${surah.number}`}
@@ -1810,7 +2476,8 @@ export function createQuranScreenRenderers(context) {
                                         }
                                         style={[
                                             styles.murojaahChip,
-                                            murojaahForm.surahId === surah.number
+                                            murojaahForm.surahId ===
+                                            surah.number
                                                 ? styles.murojaahChipActive
                                                 : null,
                                         ]}
@@ -1818,7 +2485,8 @@ export function createQuranScreenRenderers(context) {
                                         <Text
                                             style={[
                                                 styles.murojaahChipText,
-                                                murojaahForm.surahId === surah.number
+                                                murojaahForm.surahId ===
+                                                surah.number
                                                     ? styles.murojaahChipTextActive
                                                     : null,
                                             ]}
@@ -1828,17 +2496,24 @@ export function createQuranScreenRenderers(context) {
                                     </Pressable>
                                 ))}
                             </View>
-                            <Text style={[styles.modePanelMeta, styles.labelGap]}>Skor (0–100):</Text>
+                            <Text
+                                style={[styles.modePanelMeta, styles.labelGap]}
+                            >
+                                Skor (0–100):
+                            </Text>
                             <View style={styles.scoreRow}>
                                 {[60, 70, 80, 90, 100].map((score) => (
                                     <Pressable
                                         android_ripple={{
-                                            color: 'rgba(91, 110, 91, 0.12)',
+                                            color: "rgba(91, 110, 91, 0.12)",
                                             borderless: false,
                                         }}
                                         key={`score-${score}`}
                                         onPress={() =>
-                                            setMurojaahForm((prev) => ({ ...prev, score }))
+                                            setMurojaahForm((prev) => ({
+                                                ...prev,
+                                                score,
+                                            }))
                                         }
                                         style={[
                                             styles.murojaahChip,
@@ -1860,25 +2535,32 @@ export function createQuranScreenRenderers(context) {
                                     </Pressable>
                                 ))}
                             </View>
-                            <Text style={[styles.modePanelMeta, styles.labelGap]}>
+                            <Text
+                                style={[styles.modePanelMeta, styles.labelGap]}
+                            >
                                 Catatan (opsional):
                             </Text>
                             <TextInput
                                 multiline
                                 onChangeText={(note) =>
-                                    setMurojaahForm((prev) => ({ ...prev, note }))
+                                    setMurojaahForm((prev) => ({
+                                        ...prev,
+                                        note,
+                                    }))
                                 }
-                                placeholder="Bagian yang perlu diperkuat, dll."
+                                placeholder='Bagian yang perlu diperkuat, dll.'
                                 placeholderTextColor={colors.muted}
                                 style={styles.murojaahNoteInput}
                                 value={murojaahForm.note}
                             />
                             <Pressable
                                 android_ripple={{
-                                    color: 'rgba(255, 255, 255, 0.12)',
+                                    color: "rgba(255, 255, 255, 0.12)",
                                     borderless: false,
                                 }}
-                                disabled={savingMurojaah || !murojaahForm.surahId}
+                                disabled={
+                                    savingMurojaah || !murojaahForm.surahId
+                                }
                                 onPress={submitMurojaah}
                                 style={[
                                     styles.modePanelAction,
@@ -1888,7 +2570,10 @@ export function createQuranScreenRenderers(context) {
                                 ]}
                             >
                                 {savingMurojaah ? (
-                                    <ActivityIndicator color={colors.onPrimary} size="small" />
+                                    <ActivityIndicator
+                                        color={colors.onPrimary}
+                                        size='small'
+                                    />
                                 ) : (
                                     <Text style={styles.modePanelActionText}>
                                         Simpan Sesi Murojaah

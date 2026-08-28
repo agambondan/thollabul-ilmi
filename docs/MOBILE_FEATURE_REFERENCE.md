@@ -13,22 +13,22 @@
 
 Artefak Expo berada di `apps/mobile`.
 
-| Area | Status mobile |
-|---|---|
-| **Navigasi inti** | **5 tab final:** Beranda (`home`), Quran (`quran`), Hadis (`hadith`), Ibadah (`ibadah`), Belajar (`belajar`). Profil bukan tab — diakses via avatar Beranda atau header Belajar. |
-| Auth personal | Session JWT via SecureStore native, fallback AsyncStorage untuk web smoke. |
-| Quran | Surah list, reader ayah, navigator page/hizb, hafalan, murojaah, progress, bookmark, notes. Tafsir/asbab/settings via **modal popup** (bukan inline). Font selector Indopak/Utsmani/Naskh. Display mode Normal/Clean. Tajweed legend. |
-| Hadis | List/detail, filter kitab horizontal, tab Teks/Sanad/Perawi/Takhrij/Catatan, jarh-ta'dil, related hadith, bookmark, notes. Deep link `hadith/:id` tetap. |
-| Ibadah hub | Hub dengan section Harian, Arah & Waktu, Dzikir & Bacaan, Alat, Rencana. Jadwal Sholat dan Qibla berjalan sebagai sub-view internal Ibadah. Fitur lain deep-link ke Belajar. |
-| Prayer | Lokasi native, method/madhhab, koreksi manual, log shalat, local adzan reminder, cache SQLite 30 hari. Sub-view Settings internal. |
-| Qibla | Arah/distance, compass heading native dengan fallback web. Rotating dial ring, marker Ka'bah, lokasi manual jika GPS ditolak. |
-| Belajar hub | Katalog grouped: Kajian & Artikel, Siroh & Sejarah, Fiqh & Panduan, Referensi, Evaluasi, Personal Ringkas. Feature detail via **modal popup** (bukan inline). Search catalog. Pin/unpin fitur. |
-| Beranda | Dashboard: prayer card, shortcut grid, contextual shortcuts (dzikir waktu/qibla/tafsir), pinned, terakhir dibuka, muhasabah, bacaan harian. |
-| Profil | Summary, stats (poin/streak/tilawah/hafalan/sholat), badges, settings stack (Akun/Notif/Penyimpanan/Tampilan/Keamanan). |
-| Offline | SQLite pack untuk Quran, Hadith, Doa/Dzikir/Wirid/Tahlil, bookmark snapshot, jadwal shalat 30 hari. |
-| Deep link | Scheme `thullaabulilmi://` + hash `#/`. Alias: `prayer`→`ibadah`, `explore`→`belajar`, `qibla`→`ibadah/qibla`. Tambahan: `hadith/:id`, `quran/surah/:number`. |
-| Notifikasi | Notification Center di Profile > Notifikasi. Settings pengingat, inbox, mark read, registrasi Expo push token, dan backend dispatch push untuk reminder harian. |
-| Discovery | Pinned shortcuts (max 4), recently opened (max 3) di Beranda. Catalog search di Belajar. Contextual shortcuts berbasis waktu & aktivitas. |
+| Area              | Status mobile                                                                                                                                                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Navigasi inti** | **5 tab final:** Beranda (`home`), Quran (`quran`), Hadis (`hadith`), Ibadah (`ibadah`), Belajar (`belajar`). Profil bukan tab — diakses via avatar Beranda atau header Belajar.                                                      |
+| Auth personal     | Session JWT via SecureStore native, fallback AsyncStorage untuk web smoke.                                                                                                                                                            |
+| Quran             | Surah list, reader ayah, navigator page/hizb, hafalan, murojaah, progress, bookmark, notes. Tafsir/asbab/settings via **modal popup** (bukan inline). Font selector Indopak/Utsmani/Naskh. Display mode Normal/Clean. Tajweed legend. |
+| Hadis             | List/detail, filter kitab horizontal, tab Teks/Sanad/Perawi/Takhrij/Catatan, jarh-ta'dil, related hadith, bookmark, notes. Deep link `hadith/:id` tetap.                                                                              |
+| Ibadah hub        | Hub dengan section Harian, Arah & Waktu, Dzikir & Bacaan, Alat, Rencana. Jadwal Sholat dan Qibla berjalan sebagai sub-view internal Ibadah. Fitur lain deep-link ke Belajar.                                                          |
+| Prayer            | Lokasi native, method/madhhab, koreksi manual, log shalat, local adzan reminder, cache SQLite 30 hari. Sub-view Settings internal.                                                                                                    |
+| Qibla             | Arah/distance, compass heading native dengan fallback web. Rotating dial ring, marker Ka'bah, lokasi manual jika GPS ditolak.                                                                                                         |
+| Belajar hub       | Katalog grouped: Kajian & Artikel, Siroh & Sejarah, Fiqh & Panduan, Referensi, Evaluasi, Personal Ringkas. Feature detail via **modal popup** (bukan inline). Search catalog. Pin/unpin fitur.                                        |
+| Beranda           | Dashboard: prayer card, shortcut grid, contextual shortcuts (dzikir waktu/qibla/tafsir), pinned, terakhir dibuka, muhasabah, bacaan harian.                                                                                           |
+| Profil            | Summary, stats (poin/streak/tilawah/hafalan/sholat), badges, settings stack (Akun/Notif/Penyimpanan/Tampilan/Keamanan).                                                                                                               |
+| Offline           | SQLite pack untuk Quran, Hadith, Doa/Dzikir/Wirid/Tahlil, bookmark snapshot, jadwal shalat 30 hari.                                                                                                                                   |
+| Deep link         | Scheme `thullaabulilmi://` + hash `#/`. Alias: `prayer`→`ibadah`, `explore`→`belajar`, `qibla`→`ibadah/qibla`. Tambahan: `hadith/:id`, `quran/surah/:number`.                                                                         |
+| Notifikasi        | Notification Center di Profile > Notifikasi. Settings pengingat, inbox, mark read, registrasi Expo push token, dan backend dispatch push untuk reminder harian.                                                                       |
+| Discovery         | Pinned shortcuts (max 4), recently opened (max 3) di Beranda. Catalog search di Belajar. Contextual shortcuts berbasis waktu & aktivitas.                                                                                             |
 
 ---
 
@@ -88,6 +88,7 @@ Artefak Expo berada di `apps/mobile`.
 **Deskripsi:** Registrasi, login, dan manajemen akun. Semua fitur personal membutuhkan login.
 
 **Layar yang dibutuhkan:**
+
 - Splash / onboarding
 - Registrasi (nama, email, password)
 - Login (email + password)
@@ -104,6 +105,7 @@ Artefak Expo berada di `apps/mobile`.
 | avatar | URL foto profil (opsional) |
 
 **API:**
+
 ```
 POST /auth/register
 POST /auth/login          → JWT token
@@ -123,6 +125,7 @@ PUT  /auth/password       → ganti password
 **Deskripsi:** Baca dan jelajahi Al-Quran. 114 surah, 6.236 ayah. Tersedia teks Arab, translasi Indonesia & Inggris.
 
 **Layar yang dibutuhkan:**
+
 - Daftar surah (nama, nomor, jumlah ayah, arti, jenis makiyah/madaniyah)
 - Detail surah → daftar ayah dengan teks Arab + terjemahan
 - Detail ayah → teks Arab, transliterasi, terjemahan ID/EN, asbabun nuzul, tafsir, mufrodat
@@ -146,6 +149,7 @@ PUT  /auth/password       → ganti password
 | hizb_quarter | Nomor hizb |
 
 **API:**
+
 ```
 GET /surah                    → list 114 surah
 GET /surah/:id
@@ -178,6 +182,7 @@ GET /progress/quran           → ambil posisi terakhir (JWT)
 **Deskripsi:** Koleksi multi-kitab hadith (Bukhari, Muslim, Abu Dawud, dll). Dapat dijelajahi per kitab, tema, bab, atau langsung ke hadith.
 
 **Layar yang dibutuhkan:**
+
 - Daftar kitab hadith
 - Daftar tema (lintas kitab)
 - Daftar bab per kitab / per tema
@@ -198,6 +203,7 @@ GET /progress/quran           → ambil posisi terakhir (JWT)
 | narrator | Perawi |
 
 **API:**
+
 ```
 GET /books                                → daftar kitab
 GET /books/:id
@@ -229,6 +235,7 @@ GET /progress                             → posisi Quran + Hadith sekaligus
 **Deskripsi:** Koleksi doa situasional, dzikir pagi/petang, wirid harian.
 
 **Layar yang dibutuhkan:**
+
 - Daftar doa (filter per kategori: pagi, petang, makan, tidur, safar, dll)
 - Detail doa (Arab, transliterasi, terjemahan, sumber)
 - Daftar dzikir per kategori / per kesempatan (`occasion`)
@@ -239,6 +246,7 @@ GET /progress                             → posisi Quran + Hadith sekaligus
 **Occasion dzikir:** pagi, petang, sesudah sholat, dll.
 
 **API:**
+
 ```
 GET /doa                        → semua doa
 GET /doa/category/:category
@@ -261,11 +269,13 @@ GET /wirid/occasion/:occasion   → wirid per kesempatan (pagi/petang/dll)
 **Deskripsi:** Penjelasan ayah Al-Quran dan sebab-sebab turunnya wahyu.
 
 **Layar yang dibutuhkan:**
+
 - Panel tafsir pada detail ayah (collapsed → expanded)
 - Panel asbabun nuzul pada detail ayah / surah
 - Halaman tafsir surah lengkap
 
 **API:**
+
 ```
 GET /tafsir/ayah/:id
 GET /tafsir/surah/:number
@@ -280,6 +290,7 @@ GET /asbabun-nuzul/surah/:number
 **Deskripsi:** 99 nama-nama Allah beserta arti, penjelasan, dan audio (jika ada).
 
 **Layar yang dibutuhkan:**
+
 - Grid / list 99 nama (nomor, Arab, transliterasi, arti singkat)
 - Detail nama (penjelasan panjang, ayah terkait, audio)
 - Mode flashcard (bolak-balik: tampilkan Arab → tebak artinya → ungkap)
@@ -297,6 +308,7 @@ GET /asbabun-nuzul/surah/:number
 | audio_url | URL audio (opsional) |
 
 **API:**
+
 ```
 GET /asmaul-husna            → 99 nama
 GET /asmaul-husna/:number    → detail per nomor
@@ -309,11 +321,13 @@ GET /asmaul-husna/:number    → detail per nomor
 **Deskripsi:** Kisah perjalanan hidup Nabi Muhammad SAW, terstruktur per kategori/periode.
 
 **Layar yang dibutuhkan:**
+
 - Daftar kategori siroh (Kelahiran, Masa Kecil, Kenabian, Hijrah, dll)
 - List konten per kategori
 - Detail konten (teks, sumber)
 
 **API:**
+
 ```
 GET /siroh/categories
 GET /siroh/categories/:slug   → detail kategori + konten
@@ -328,11 +342,13 @@ GET /siroh/contents/:slug
 **Deskripsi:** Timeline sejarah Islam dari masa Nabi hingga era modern.
 
 **Layar yang dibutuhkan:**
+
 - Timeline horizontal / vertikal (per era / abad)
 - Detail peristiwa (judul, tanggal Hijriah/Masehi, deskripsi, gambar opsional)
 - Filter per era atau topik
 
 **API:**
+
 ```
 GET /history           → semua peristiwa
 GET /history/:slug     → detail peristiwa
@@ -345,11 +361,13 @@ GET /history/:slug     → detail peristiwa
 **Deskripsi:** Penjelasan hukum fiqh dasar terstruktur per kategori (thaharah, sholat, zakat, puasa, dll).
 
 **Layar yang dibutuhkan:**
+
 - Daftar kategori fiqh
 - List item per kategori
 - Detail item (dalil, penjelasan)
 
 **API:**
+
 ```
 GET /fiqh                   → semua fiqh
 GET /fiqh/categories        → daftar kategori
@@ -365,11 +383,13 @@ GET /fiqh/item/:slug        → detail item
 **Deskripsi:** Panduan langkah demi langkah pelaksanaan ibadah haji dan umrah.
 
 **Layar yang dibutuhkan:**
+
 - Pilihan mode: Haji / Umrah
 - Step-by-step panduan (urutan, nama ritual, deskripsi, gambar opsional)
 - Navigasi prev / next antar langkah
 
 **API:**
+
 ```
 GET /manasik/:type          → type: haji | umrah
 GET /manasik/:type/:step    → detail satu langkah
@@ -382,6 +402,7 @@ GET /manasik/:type/:step    → detail satu langkah
 **Deskripsi:** Koleksi materi kajian dan ceramah Islam (judul, ustadz, kategori, durasi, sumber video/audio).
 
 **Layar yang dibutuhkan:**
+
 - Daftar kajian (filter kategori, ustadz, durasi)
 - Kartu kajian (thumbnail, judul, nama ustadz, durasi)
 - Detail kajian (deskripsi, embed/link video, tags)
@@ -397,6 +418,7 @@ GET /manasik/:type/:step    → detail satu langkah
 | description | Deskripsi konten |
 
 **API:**
+
 ```
 GET /kajian        → list kajian
 GET /kajian/:id    → detail kajian
@@ -409,6 +431,7 @@ GET /kajian/:id    → detail kajian
 **Deskripsi:** Artikel keislaman yang ditulis oleh tim editor / kontributor.
 
 **Layar yang dibutuhkan:**
+
 - Daftar artikel (thumbnail, judul, ringkasan, tanggal, kategori, tag)
 - Detail artikel (konten lengkap, penulis, tanggal, kategori)
 - Filter/browse per kategori dan tag
@@ -417,6 +440,7 @@ GET /kajian/:id    → detail kajian
 - Artikel populer
 
 **API:**
+
 ```
 GET /blog/posts                    → list artikel published
 GET /blog/posts/:slug              → detail artikel
@@ -437,11 +461,13 @@ GET /blog/tags/:slug/posts         → artikel per tag
 **Deskripsi:** Centang sholat yang sudah dikerjakan hari ini. Pantau 7 hari terakhir.
 
 **Layar yang dibutuhkan:**
+
 - 5 tombol sholat (Shubuh, Dzuhur, Ashar, Maghrib, Isya) dengan status centang
 - Bar chart / heatmap 7 hari terakhir
 - Statistik (rata-rata per minggu, % konsistensi)
 
 **API:**
+
 ```
 PUT /sholat/today      → update status sholat hari ini (JWT)
 GET /sholat/today      → status sholat hari ini
@@ -458,12 +484,14 @@ GET /sholat/stats      → statistik sholat
 **Deskripsi:** Pantau progress hafalan per surah. Status: belum / sedang / hafal.
 
 **Layar yang dibutuhkan:**
+
 - Tabel 114 surah dengan status hafalan
 - Filter: semua / hafal / sedang / belum
 - Summary stats (total hafal, sedang, belum)
 - Tap surah → ubah status
 
 **API:**
+
 ```
 PUT /hafalan/surah/:surahId   → update status (JWT)
 GET /hafalan                  → list 114 surah + status user (JWT)
@@ -475,12 +503,14 @@ GET /hafalan/summary          → total hafal, sedang, belum (JWT)
 **Deskripsi:** Mode latihan mengulang hafalan. System memilih surah dari daftar yang sudah hafal.
 
 **Layar yang dibutuhkan:**
+
 - Tampilkan surah yang perlu diulang (dari hafalan user)
 - Centang "sudah diulang hari ini" per surah
 - Riwayat murojaah
 - Statistik konsistensi murojaah
 
 **API:**
+
 ```
 GET /murojaah/session    → surah yang perlu diulang
 POST /murojaah/result    → simpan hasil murojaah (JWT)
@@ -495,6 +525,7 @@ GET /murojaah/stats
 **Deskripsi:** Catat sesi tilawah harian (surah, ayah dari-ke, jumlah halaman, catatan).
 
 **Layar yang dibutuhkan:**
+
 - Form input tilawah (surah, ayah mulai, ayah selesai, jumlah halaman, catatan)
 - List riwayat tilawah per tanggal
 - Ringkasan: sesi minggu ini vs bulan ini
@@ -510,6 +541,7 @@ GET /murojaah/stats
 | date | Tanggal sesi |
 
 **API:**
+
 ```
 POST /tilawah          → catat sesi (JWT)
 GET  /tilawah          → list sesi (JWT)
@@ -524,6 +556,7 @@ DELETE /tilawah/:id
 **Deskripsi:** Pantau progress khatam Al-Quran dari awal hingga selesai. Support target khatam dengan deadline.
 
 **Layar yang dibutuhkan:**
+
 - Setup target (tanggal mulai, tanggal target selesai)
 - Progress bar khatam (total ayah: 6.236)
 - Progress per juz (30 juz)
@@ -540,12 +573,14 @@ DELETE /tilawah/:id
 **Deskripsi:** Hitung berapa hari berturut-turut user aktif. Motivasi konsistensi ibadah dan belajar.
 
 **Layar yang dibutuhkan:**
+
 - Badge streak (contoh: "🔥 7 hari") di profil / dashboard
 - Kalender aktivitas (GitHub-style heatmap per bulan)
 - Streak terpanjang vs streak saat ini
 - Mini chart aktivitas 7 hari
 
 **API:**
+
 ```
 POST /activity           → catat aktivitas (dipanggil otomatis)
 GET  /streak             → streak saat ini + terpanjang (JWT)
@@ -559,11 +594,13 @@ GET  /streak/weekly      → aktivitas per hari dalam seminggu
 **Deskripsi:** Checklist amalan sunnah harian (puasa sunnah, sholat sunnah, dll). Reset setiap hari.
 
 **Layar yang dibutuhkan:**
+
 - List amalan hari ini (dengan checkbox)
 - Riwayat amalan (per tanggal)
 - Badge "hari ini sempurna" jika semua amalan dicentang
 
 **API:**
+
 ```
 GET /amalan              → list amalan hari ini + status
 GET /amalan/today        → hanya amalan hari ini
@@ -578,6 +615,7 @@ GET /amalan/history      → riwayat per tanggal
 **Deskripsi:** Jurnal refleksi diri harian. Catat mood, isi refleksi, dan evaluasi hari.
 
 **Layar yang dibutuhkan:**
+
 - Form tulis muhasabah (tanggal, mood picker: 😊😐😢🤲, teks refleksi)
 - List jurnal lalu (diurutkan terbaru)
 - Detail entry per tanggal
@@ -586,6 +624,7 @@ GET /amalan/history      → riwayat per tanggal
 **Mood options:** Baik 😊 / Biasa 😐 / Berat 😢 / Syukur 🤲
 
 **API:**
+
 ```
 POST   /muhasabah         → buat entry (JWT)
 GET    /muhasabah         → list semua entry (JWT)
@@ -601,12 +640,14 @@ DELETE /muhasabah/:id     → hapus (JWT)
 **Deskripsi:** Buat dan pantau target belajar Islam (menghafal surah tertentu, menyelesaikan buku hadith, dll).
 
 **Layar yang dibutuhkan:**
+
 - Daftar goals (aktif / selesai)
 - Form buat goal (judul, deskripsi, deadline)
 - Centang goal sebagai selesai
 - Progress bar per goal (jika ada target kuantitatif)
 
 **API:**
+
 ```
 POST   /goals         → buat goal (JWT)
 GET    /goals         → list goals (JWT)
@@ -621,6 +662,7 @@ DELETE /goals/:id
 **Deskripsi:** Simpan ayah, hadith, dan artikel favorit untuk dibaca nanti.
 
 **Layar yang dibutuhkan:**
+
 - Tombol bookmark 🔖 pada detail ayah, hadith, artikel
 - Halaman bookmark (filter per tipe: quran / hadith / article)
 - Tap bookmark → buka konten asli
@@ -629,6 +671,7 @@ DELETE /goals/:id
 **Tipe bookmark:** `ayah` | `hadith` | `article`
 
 **API:**
+
 ```
 POST   /bookmarks          → tambah bookmark (JWT)
 GET    /bookmarks          → list bookmark user (JWT)
@@ -643,12 +686,14 @@ DELETE /bookmarks/:id      → hapus (JWT)
 **Deskripsi:** Catatan pribadi user. Bisa dikaitkan ke konten (ayah, hadith) atau catatan bebas.
 
 **Layar yang dibutuhkan:**
+
 - Daftar catatan (judul, preview isi, tags, tanggal)
 - Form buat/edit catatan (judul, isi, tags)
 - Filter/search catatan
 - Aksi catatan cepat: tombol 📝 pada detail ayah/hadith
 
 **API:**
+
 ```
 GET    /notes           → list catatan user (JWT)
 POST   /notes           → buat catatan (JWT)
@@ -663,10 +708,12 @@ DELETE /notes/:id       → hapus (JWT)
 **Deskripsi:** Sinkronisasi posisi baca terakhir Quran dan Hadith lintas perangkat.
 
 **Layar yang dibutuhkan:**
+
 - "Lanjutkan membaca" card di dashboard (menampilkan surah+ayah atau kitab+hadith terakhir)
 - Otomatis update saat user membaca
 
 **API:**
+
 ```
 PUT /progress/quran          → simpan posisi (JWT)
 GET /progress/quran          → ambil posisi terakhir (JWT)
@@ -682,12 +729,14 @@ GET /progress                → semua progress sekaligus (JWT)
 **Deskripsi:** Waktu sholat 5 waktu berdasarkan lokasi GPS user. Countdown ke waktu sholat berikutnya.
 
 **Layar yang dibutuhkan:**
+
 - Kartu countdown sholat berikutnya (nama sholat, sisa waktu)
 - Tabel 5 waktu hari ini
 - Jadwal seminggu ke depan
 - Setting: izin lokasi, metode kalkulasi, mazhab
 
 **API:**
+
 ```
 GET /sholat-times          → jadwal hari ini (?lat=&lng=)
 GET /sholat-times/week     → jadwal seminggu
@@ -700,12 +749,14 @@ GET /sholat-times/week     → jadwal seminggu
 **Deskripsi:** Jadwal imsak, sahur, dan berbuka per hari selama Ramadan.
 
 **Layar yang dibutuhkan:**
+
 - Header bulan Ramadan aktif
 - Tabel per tanggal (Imsak, Subuh, Syuruq, Dzuhur, Ashar, Maghrib, Isya)
 - Highlight hari ini
 - Countdown ke buka puasa / imsak
 
 **API:**
+
 ```
 GET /imsakiyah    → jadwal imsakiyah (?lat=&lng=&year=&month=)
 ```
@@ -717,12 +768,14 @@ GET /imsakiyah    → jadwal imsakiyah (?lat=&lng=&year=&month=)
 **Deskripsi:** Step-by-step panduan tata cara sholat lengkap dengan bacaan (Arab, Latin, terjemahan).
 
 **Layar yang dibutuhkan:**
+
 - List langkah sholat (niat, takbiratul ihram, Al-Fatihah, ruku', i'tidal, sujud, dll)
 - Detail langkah (Arab + transliterasi + terjemahan + gambar posisi opsional)
 - Navigasi prev / next antar langkah
 - Mode baca step-by-step (seperti tutorial)
 
 **API:**
+
 ```
 GET /panduan-sholat         → semua langkah
 GET /panduan-sholat/:step   → detail satu langkah
@@ -735,12 +788,14 @@ GET /panduan-sholat/:step   → detail satu langkah
 **Deskripsi:** Konversi tanggal Masehi ↔ Hijriah. Daftar hari-hari penting Islam.
 
 **Layar yang dibutuhkan:**
+
 - Tampilkan tanggal Hijriah hari ini (Arab + Latin)
 - Form konversi (Masehi → Hijriah)
 - Kalender bulan Hijriah dengan highlight hari penting
 - List hari penting Islam (Maulid, Isra Miraj, 1 Muharram, Ramadan, dll)
 
 **API:**
+
 ```
 GET /hijri/today         → tanggal Hijriah hari ini
 GET /hijri/convert       → konversi (?date=YYYY-MM-DD)
@@ -755,6 +810,7 @@ GET /hijri/events/:month → hari penting per bulan Hijriah
 **Deskripsi:** Kompas digital untuk menemukan arah Ka'bah dari lokasi user.
 
 **Layar yang dibutuhkan:**
+
 - Kompas animasi yang berputar sesuai orientasi perangkat
 - Panah hijau menunjuk ke arah kiblat
 - Derajat arah kiblat (relatif ke Utara geografis)
@@ -762,6 +818,7 @@ GET /hijri/events/:month → hari penting per bulan Hijriah
 - Fallback jika kompas tidak tersedia (tampilkan derajat saja)
 
 **API:**
+
 ```
 GET /kiblat    → hitung sudut kiblat (?lat=&lng=)
 ```
@@ -773,12 +830,14 @@ GET /kiblat    → hitung sudut kiblat (?lat=&lng=)
 **Deskripsi:** Hitung zakat maal, zakat fitrah, dan zakat profesi sesuai nisab terkini.
 
 **Layar yang dibutuhkan:**
+
 - Tab: Zakat Maal / Zakat Fitrah / Zakat Profesi
 - Form input (total harta, hutang, dll)
 - Hasil kalkulasi (wajib/tidak, jumlah zakat)
 - Informasi nisab terkini (gram emas / harga)
 
 **API:**
+
 ```
 POST /zakat/maal     → hitung zakat maal
 POST /zakat/fitrah   → hitung zakat fitrah
@@ -792,6 +851,7 @@ GET  /zakat/nishab   → nilai nisab terkini
 **Deskripsi:** Kalkulator pembagian harta warisan sesuai hukum Islam (Ashabul Furudh + Ashabah). Termasuk aul dan radd.
 
 **Layar yang dibutuhkan:**
+
 - Input total harta, hutang, biaya pemakaman, wasiat
 - Input jumlah ahli waris per jenis (suami/istri, anak L/P, ayah, ibu, dll)
 - Tabel hasil pembagian (nama ahli waris, pecahan, persentase, nominal)
@@ -809,12 +869,14 @@ GET  /zakat/nishab   → nilai nisab terkini
 **Deskripsi:** Kamus istilah Islam (Arab-Indonesia) dengan penjelasan singkat.
 
 **Layar yang dibutuhkan:**
+
 - Search bar (ketik → hasil muncul otomatis)
 - Kartu hasil (kata, definisi, kategori)
 - Filter per kategori (fiqh, akidah, akhlak, dll)
 - Detail istilah (penjelasan panjang, dalil, contoh penggunaan)
 
 **API:**
+
 ```
 GET /dictionary                    → semua kamus
 GET /dictionary/category/:category → filter per kategori
@@ -828,6 +890,7 @@ GET /dictionary/:term              → detail istilah
 **Deskripsi:** Kuis pengetahuan Islam (pilihan ganda). 10 soal per sesi, soal diacak per sesi.
 
 **Layar yang dibutuhkan:**
+
 - Tampilan soal (teks pertanyaan + 4 pilihan A/B/C/D)
 - Progress bar soal (1/10, 2/10, dst)
 - Feedback langsung setelah menjawab (benar = hijau, salah = merah + tampilkan jawaban benar)
@@ -837,6 +900,7 @@ GET /dictionary/:term              → detail istilah
 - Tombol "Coba Lagi"
 
 **API:**
+
 ```
 GET  /quiz/session      → ambil 10 soal acak
 POST /quiz/submit       → kirim jawaban (JWT, opsional)
@@ -850,6 +914,7 @@ GET  /quiz/stats        → statistik quiz user (JWT)
 **Deskripsi:** Penghitung tasbih digital (subhanallah, alhamdulillah, allahuakbar, dll). Getar per ketukan.
 
 **Layar yang dibutuhkan:**
+
 - Tombol ketuk besar di tengah layar
 - Counter angka yang increment per tap
 - Nama dzikir yang sedang dihitung (bisa dipilih/custom)
@@ -866,12 +931,14 @@ GET  /quiz/stats        → statistik quiz user (JWT)
 **Deskripsi:** Bacaan tahlil, surat Yasin, dan doa arwah yang terstruktur, dapat dibaca dalam urutan.
 
 **Layar yang dibutuhkan:**
+
 - Daftar konten tahlil (Yasin, tahlil, doa, dll)
 - Mode baca satu per satu dengan tombol navigasi
 - Teks Arab besar + terjemahan
 - Scroll atau paging per halaman
 
 **API:**
+
 ```
 GET /tahlil        → list konten tahlil
 GET /tahlil/:id    → detail satu konten
@@ -884,6 +951,7 @@ GET /tahlil/:id    → detail satu konten
 **Deskripsi:** User dapat membuat dan menyimpan koleksi wirid pribadi (bacaan Arab + target jumlah + keterangan).
 
 **Layar yang dibutuhkan:**
+
 - Daftar wirid kustom user
 - Form tambah wirid (judul, teks Arab, transliterasi, terjemahan, sumber, jumlah bacaan, kesempatan, catatan)
 - Edit / hapus wirid
@@ -891,6 +959,7 @@ GET /tahlil/:id    → detail satu konten
 - Tautan ke wirid resmi (wirid `occasion`)
 
 **API:**
+
 ```
 POST   /user-wird         → buat wirid kustom (JWT)
 GET    /user-wird         → list wirid user (JWT)
@@ -906,6 +975,7 @@ GET    /wirid/occasion/:occasion  → wirid resmi per kesempatan
 **Deskripsi:** Database biografi perawi hadith lengkap dengan jarh wa ta'dil, tabaqah, relasi guru-murid, dan sanad.
 
 **Layar yang dibutuhkan:**
+
 - Daftar perawi (search, filter per tabaqah/generasi)
 - Detail perawi (nama, kunya, tahun lahir/wafat, tabaqah, kota, jarh-tadil)
 - Tab guru / murid perawi
@@ -923,6 +993,7 @@ GET    /wirid/occasion/:occasion  → wirid resmi per kesempatan
 | city | Kota asal |
 
 **API:**
+
 ```
 GET /perawi                 → list perawi
 GET /perawi/search          → cari perawi
@@ -943,6 +1014,7 @@ GET /hadiths/:id/takhrij    → takhrij hadith
 **Deskripsi:** Ringkasan aktivitas ibadah dan belajar user dalam berbagai periode.
 
 **Layar yang dibutuhkan:**
+
 - Dashboard stats (sholat hari ini, streak, hafalan, bookmark, goals, tilawah)
 - Bar chart sholat 7 hari terakhir
 - Ringkasan tilawah (minggu ini / bulan ini)
@@ -951,6 +1023,7 @@ GET /hadiths/:id/takhrij    → takhrij hadith
 - Pencapaian (badge) yang sudah diraih
 
 **API:**
+
 ```
 GET /stats           → ringkasan lengkap (JWT)
 GET /stats/weekly    → aktivitas per minggu (JWT)
@@ -965,12 +1038,14 @@ GET /stats/yearly    → laporan tahunan (JWT)
 **Deskripsi:** Papan peringkat komunitas berdasarkan streak dan jumlah hafalan.
 
 **Layar yang dibutuhkan:**
+
 - Tab: Streak / Hafalan
 - List peringkat (posisi, avatar, nama, skor)
 - Highlight posisi user sendiri
 - Medali 🥇🥈🥉 untuk top 3
 
 **API:**
+
 ```
 GET /leaderboard/streak   → peringkat streak
 GET /leaderboard/hafalan  → peringkat hafalan
@@ -984,6 +1059,7 @@ GET /leaderboard/me       → posisi user sendiri (JWT)
 **Deskripsi:** Badge/medali yang didapat user atas pencapaian tertentu (streak X hari, hafal Y surah, dll).
 
 **Layar yang dibutuhkan:**
+
 - Grid badge pencapaian (ikon + nama + deskripsi)
 - Badge dikunci abu-abu jika belum dicapai
 - Badge berwarna / glowing jika sudah dicapai
@@ -991,6 +1067,7 @@ GET /leaderboard/me       → posisi user sendiri (JWT)
 - Notifikasi badge baru
 
 **API:**
+
 ```
 GET /achievements         → semua achievement yang tersedia
 GET /achievements/mine    → achievement yang sudah diraih (JWT)
@@ -1004,6 +1081,7 @@ GET /achievements/points  → total poin user (JWT)
 **Deskripsi:** Kotak masuk notifikasi personal user (reminder ibadah, badge baru, informasi sistem).
 
 **Layar yang dibutuhkan:**
+
 - Ikon lonceng 🔔 dengan badge angka unread
 - List notifikasi (ikon tipe, judul, isi, waktu)
 - Tap notifikasi → tandai sudah dibaca + navigasi ke konten
@@ -1013,6 +1091,7 @@ GET /achievements/points  → total poin user (JWT)
 **Tipe notifikasi:** reminder sholat, reminder tilawah, badge baru, info sistem.
 
 **API:**
+
 ```
 GET /notifications/inbox           → list notifikasi user (JWT)
 PUT /notifications/inbox/:id/read  → tandai satu dibaca (JWT)
@@ -1026,11 +1105,13 @@ PUT /notifications/inbox/read-all  → tandai semua dibaca (JWT)
 **Deskripsi:** Konfigurasi reminder harian untuk sholat, tilawah, muhasabah, dll.
 
 **Layar yang dibutuhkan:**
+
 - Toggle per jenis reminder (sholat pagi, tilawah, muhasabah, dll)
 - Setting waktu reminder (jam berapa)
 - Push notification permission prompt
 
 **API:**
+
 ```
 GET /notifications/settings    → ambil pengaturan notifikasi user (JWT)
 PUT /notifications/settings    → simpan pengaturan (JWT)
@@ -1043,6 +1124,7 @@ PUT /notifications/settings    → simpan pengaturan (JWT)
 **Deskripsi:** Pencarian full-text lintas konten: ayah, hadith, doa, dzikir, artikel.
 
 **Layar yang dibutuhkan:**
+
 - Search bar di header (tab utama atau halaman khusus)
 - Hasil dikelompokkan per tipe (Ayah, Hadith, Artikel, dll)
 - Filter tipe: semua / quran / hadith
@@ -1050,6 +1132,7 @@ PUT /notifications/settings    → simpan pengaturan (JWT)
 - Tap hasil → buka konten asli
 
 **API:**
+
 ```
 GET /search?q=&type=ayah|hadith|all&lang=id|ar|en
 ```
@@ -1061,6 +1144,7 @@ GET /search?q=&type=ayah|hadith|all&lang=id|ar|en
 **Deskripsi:** Timeline postingan singkat berbagi ayah, hadith, atau renungan dengan komunitas pengguna.
 
 **Layar yang dibutuhkan:**
+
 - Feed scroll (kartu postingan: isi, penulis, waktu, like)
 - Tombol ❤️ like
 - Form buat postingan (teks, tag ayah/hadith opsional)
@@ -1068,6 +1152,7 @@ GET /search?q=&type=ayah|hadith|all&lang=id|ar|en
 - Hapus postingan sendiri
 
 **API:**
+
 ```
 GET    /feed          → timeline feed
 GET    /feed/:id      → detail postingan
@@ -1083,12 +1168,14 @@ DELETE /feed/:id      → hapus milik sendiri (JWT)
 **Deskripsi:** Sistem komentar untuk konten (artikel blog, hadith, dll).
 
 **Layar yang dibutuhkan:**
+
 - Bagian komentar di bawah konten (blog, hadith)
 - Form tulis komentar (user login)
 - List komentar (avatar, nama, isi, waktu)
 - Hapus komentar sendiri
 
 **API:**
+
 ```
 GET    /comments          → list komentar (?ref_type=&ref_id=)
 POST   /comments          → buat komentar (JWT)
@@ -1102,6 +1189,7 @@ DELETE /comments/:id      → hapus (JWT)
 **Deskripsi:** Halaman profil user dengan ringkasan aktivitas dan pengaturan akun.
 
 **Layar yang dibutuhkan:**
+
 - Foto profil, nama, email
 - Streak badge 🔥
 - Statistik singkat (hafalan, bookmark, total poin)
@@ -1112,6 +1200,7 @@ DELETE /comments/:id      → hapus (JWT)
 - Logout
 
 **API:**
+
 ```
 GET /auth/me            → data profil
 PUT /auth/me            → update nama, bahasa
@@ -1130,6 +1219,7 @@ GET /achievements/points
 > Fitur ini untuk developer / admin, bukan user biasa. Tidak perlu layar di mobile app.
 
 **API:**
+
 ```
 POST   /developer/register      → daftar sebagai developer
 GET    /developer/keys          → list API key
@@ -1141,24 +1231,24 @@ DELETE /developer/keys/:id      → revoke API key
 
 ## Ringkasan Layar per Kategori
 
-| Kategori | Jumlah Layar Utama |
-|---|---|
-| Auth & Akun | 6 layar |
-| Al-Quran | 6 layar |
-| Hadith | 5 layar |
-| Doa / Dzikir / Wirid | 4 layar |
-| Tafsir & Asbabun Nuzul | 2 layar |
-| Asmaul Husna | 3 layar (list, detail, flashcard) |
-| Siroh / Sejarah / Fiqh / Manasik | 3–4 layar masing-masing |
-| Kajian & Blog | 3 layar masing-masing |
-| Tracker (Sholat, Hafalan, Tilawah, Khatam) | 2–3 layar masing-masing |
-| Streak / Amalan / Muhasabah / Goals | 2 layar masing-masing |
-| Tools (Zakat, Faraidh, Kiblat, Kamus, Hijri) | 1–2 layar masing-masing |
-| Quiz / Tasbih / Tahlil | 2–3 layar masing-masing |
-| Bookmark / Notes / Progress | 1–2 layar masing-masing |
-| Notifikasi / Stats / Leaderboard / Achievement | 1–2 layar masing-masing |
-| Search / Feed / Profil | 2 layar masing-masing |
-| **Total estimasi** | **±90–110 layar** |
+| Kategori                                       | Jumlah Layar Utama                |
+| ---------------------------------------------- | --------------------------------- |
+| Auth & Akun                                    | 6 layar                           |
+| Al-Quran                                       | 6 layar                           |
+| Hadith                                         | 5 layar                           |
+| Doa / Dzikir / Wirid                           | 4 layar                           |
+| Tafsir & Asbabun Nuzul                         | 2 layar                           |
+| Asmaul Husna                                   | 3 layar (list, detail, flashcard) |
+| Siroh / Sejarah / Fiqh / Manasik               | 3–4 layar masing-masing           |
+| Kajian & Blog                                  | 3 layar masing-masing             |
+| Tracker (Sholat, Hafalan, Tilawah, Khatam)     | 2–3 layar masing-masing           |
+| Streak / Amalan / Muhasabah / Goals            | 2 layar masing-masing             |
+| Tools (Zakat, Faraidh, Kiblat, Kamus, Hijri)   | 1–2 layar masing-masing           |
+| Quiz / Tasbih / Tahlil                         | 2–3 layar masing-masing           |
+| Bookmark / Notes / Progress                    | 1–2 layar masing-masing           |
+| Notifikasi / Stats / Leaderboard / Achievement | 1–2 layar masing-masing           |
+| Search / Feed / Profil                         | 2 layar masing-masing             |
+| **Total estimasi**                             | **±90–110 layar**                 |
 
 ---
 
@@ -1191,747 +1281,813 @@ Seluruh tabel berikut didefinisikan sebagai GORM struct di `services/api/app/mod
 ### Shared / Cross-cutting
 
 #### `translations`
+
 Tabel terpusat untuk semua teks bilingual (Arab, Indonesia, Inggris). Hampir semua tabel konten FK ke sini.
 
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| description_idn | text | Deskripsi Bahasa Indonesia |
-| idn | text | Teks utama Indonesia |
-| latin_idn | text | Transliterasi Latin (ID) |
-| description_en | text | Deskripsi Bahasa Inggris |
-| en | text | Teks utama Inggris |
-| latin_en | text | Transliterasi Latin (EN) |
-| description_ar | text | Deskripsi Arab |
-| ar | text | Teks Arab utama |
-| ar_waqaf | text | Teks Arab dengan tanda waqaf |
-| ar_format | text | Teks Arab formatted |
-| ar_html | text | Teks Arab HTML |
+| Kolom           | Tipe   | Keterangan                   |
+| --------------- | ------ | ---------------------------- |
+| id              | int PK |                              |
+| description_idn | text   | Deskripsi Bahasa Indonesia   |
+| idn             | text   | Teks utama Indonesia         |
+| latin_idn       | text   | Transliterasi Latin (ID)     |
+| description_en  | text   | Deskripsi Bahasa Inggris     |
+| en              | text   | Teks utama Inggris           |
+| latin_en        | text   | Transliterasi Latin (EN)     |
+| description_ar  | text   | Deskripsi Arab               |
+| ar              | text   | Teks Arab utama              |
+| ar_waqaf        | text   | Teks Arab dengan tanda waqaf |
+| ar_format       | text   | Teks Arab formatted          |
+| ar_html         | text   | Teks Arab HTML               |
 
 #### `multimedias`
+
 File attachment (gambar, PDF, audio) yang di-relasikan ke konten apapun via asset join table.
 
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| title | varchar(256) | |
-| file_name | varchar(256) | |
-| file_size | float | |
-| original_file_name | varchar(256) | |
-| url | varchar(256) | URL publik file |
-| format | varchar(36) | pdf / jpg / mp3 |
-| translation_id | int FK | |
+| Kolom              | Tipe         | Keterangan      |
+| ------------------ | ------------ | --------------- |
+| id                 | int PK       |                 |
+| title              | varchar(256) |                 |
+| file_name          | varchar(256) |                 |
+| file_size          | float        |                 |
+| original_file_name | varchar(256) |                 |
+| url                | varchar(256) | URL publik file |
+| format             | varchar(36)  | pdf / jpg / mp3 |
+| translation_id     | int FK       |                 |
 
 ---
 
 ### Auth & Users
 
 #### `users`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | uuid PK | |
-| name | varchar(256) | NOT NULL |
-| email | varchar(256) | UNIQUE, NOT NULL |
-| password | varchar(256) | bcrypt, hidden dari JSON |
-| role | varchar(50) | admin / author / editor / user |
-| avatar | varchar(512) | URL foto profil |
-| preferred_lang | varchar(10) | default: 'idn' |
+
+| Kolom          | Tipe         | Keterangan                     |
+| -------------- | ------------ | ------------------------------ |
+| id             | uuid PK      |                                |
+| name           | varchar(256) | NOT NULL                       |
+| email          | varchar(256) | UNIQUE, NOT NULL               |
+| password       | varchar(256) | bcrypt, hidden dari JSON       |
+| role           | varchar(50)  | admin / author / editor / user |
+| avatar         | varchar(512) | URL foto profil                |
+| preferred_lang | varchar(10)  | default: 'idn'                 |
 
 #### `refresh_tokens`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| user_id | varchar(36) FK | |
-| token | varchar(64) UNIQUE | |
-| expires_at | timestamp | |
-| created_at | timestamp | |
+
+| Kolom      | Tipe               | Keterangan |
+| ---------- | ------------------ | ---------- |
+| id         | int PK             |            |
+| user_id    | varchar(36) FK     |            |
+| token      | varchar(64) UNIQUE |            |
+| expires_at | timestamp          |            |
+| created_at | timestamp          |            |
 
 #### `password_reset_tokens`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| user_id | varchar(36) FK | |
-| token | varchar(64) UNIQUE | |
-| expires_at | timestamp | |
-| used_at | timestamp nullable | |
-| created_at | timestamp | |
+
+| Kolom      | Tipe               | Keterangan |
+| ---------- | ------------------ | ---------- |
+| id         | int PK             |            |
+| user_id    | varchar(36) FK     |            |
+| token      | varchar(64) UNIQUE |            |
+| expires_at | timestamp          |            |
+| used_at    | timestamp nullable |            |
+| created_at | timestamp          |            |
 
 #### `api_keys`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| user_id | uuid FK | |
-| name | varchar(100) | |
-| key | varchar(64) UNIQUE | |
-| is_active | bool | default: true |
-| last_used_at | timestamp nullable | |
-| request_count | int | default: 0 |
+
+| Kolom         | Tipe               | Keterangan    |
+| ------------- | ------------------ | ------------- |
+| id            | int PK             |               |
+| user_id       | uuid FK            |               |
+| name          | varchar(100)       |               |
+| key           | varchar(64) UNIQUE |               |
+| is_active     | bool               | default: true |
+| last_used_at  | timestamp nullable |               |
+| request_count | int                | default: 0    |
 
 ---
 
 ### Al-Quran
 
 #### `surahs`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| slug | varchar(36) | |
-| identifier | varchar(256) | |
-| number | int UNIQUE | Nomor surah 1–114 |
-| number_of_ayahs | int | |
-| revelation_type | varchar | Makkiyah / Madaniyah |
-| default_language | varchar | default: 'Ar' |
-| translation_id | int FK | Nama & arti surah |
+
+| Kolom            | Tipe         | Keterangan           |
+| ---------------- | ------------ | -------------------- |
+| id               | int PK       |                      |
+| slug             | varchar(36)  |                      |
+| identifier       | varchar(256) |                      |
+| number           | int UNIQUE   | Nomor surah 1–114    |
+| number_of_ayahs  | int          |                      |
+| revelation_type  | varchar      | Makkiyah / Madaniyah |
+| default_language | varchar      | default: 'Ar'        |
+| translation_id   | int FK       | Nama & arti surah    |
 
 #### `ayahs`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| number | int | Nomor ayat dalam surah |
-| surah_id | int FK NOT NULL | |
-| translation_id | int FK NOT NULL | Teks Arab + terjemah |
-| juz_id | int FK | |
-| juz_number | int | |
-| page | int | Nomor halaman mushaf |
-| manzil | int | |
-| ruku | int | |
-| hizb_quarter | int | |
-| sajda | bool | |
+
+| Kolom          | Tipe            | Keterangan             |
+| -------------- | --------------- | ---------------------- |
+| id             | int PK          |                        |
+| number         | int             | Nomor ayat dalam surah |
+| surah_id       | int FK NOT NULL |                        |
+| translation_id | int FK NOT NULL | Teks Arab + terjemah   |
+| juz_id         | int FK          |                        |
+| juz_number     | int             |                        |
+| page           | int             | Nomor halaman mushaf   |
+| manzil         | int             |                        |
+| ruku           | int             |                        |
+| hizb_quarter   | int             |                        |
+| sajda          | bool            |                        |
 
 #### `juzs`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| number | int UNIQUE | 1–30 |
-| total_ayah | int | |
-| start_surah_id | int FK | |
-| end_surah_id | int FK | |
-| start_ayah_id | int FK | |
-| end_ayah_id | int FK | |
+
+| Kolom          | Tipe       | Keterangan |
+| -------------- | ---------- | ---------- |
+| id             | int PK     |            |
+| number         | int UNIQUE | 1–30       |
+| total_ayah     | int        |            |
+| start_surah_id | int FK     |            |
+| end_surah_id   | int FK     |            |
+| start_ayah_id  | int FK     |            |
+| end_ayah_id    | int FK     |            |
 
 #### `tafsirs`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| ayah_id | int FK UNIQUE | |
-| kemenag_translation_id | int FK | |
-| ibnu_katsir_translation_id | int FK | |
+
+| Kolom                      | Tipe          | Keterangan |
+| -------------------------- | ------------- | ---------- |
+| id                         | int PK        |            |
+| ayah_id                    | int FK UNIQUE |            |
+| kemenag_translation_id     | int FK        |            |
+| ibnu_katsir_translation_id | int FK        |            |
 
 #### `asbabun_nuzuls`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| ayah_id | int NOT NULL | |
-| content | text NOT NULL | |
-| source | varchar(512) | |
-| translation_id | int FK | |
+
+| Kolom          | Tipe          | Keterangan |
+| -------------- | ------------- | ---------- |
+| id             | int PK        |            |
+| ayah_id        | int NOT NULL  |            |
+| content        | text NOT NULL |            |
+| source         | varchar(512)  |            |
+| translation_id | int FK        |            |
 
 #### `mufrodats` (Kosakata per ayat)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| ayah_id | int FK NOT NULL | |
-| word_index | int NOT NULL | Urutan kata dalam ayat |
-| arabic | varchar(128) | |
-| transliteration | varchar(256) | |
-| indonesian | varchar(256) | |
-| root_word | varchar(128) | |
-| part_of_speech | varchar(64) | |
+
+| Kolom           | Tipe            | Keterangan             |
+| --------------- | --------------- | ---------------------- |
+| id              | int PK          |                        |
+| ayah_id         | int FK NOT NULL |                        |
+| word_index      | int NOT NULL    | Urutan kata dalam ayat |
+| arabic          | varchar(128)    |                        |
+| transliteration | varchar(256)    |                        |
+| indonesian      | varchar(256)    |                        |
+| root_word       | varchar(128)    |                        |
+| part_of_speech  | varchar(64)     |                        |
 
 #### `surah_audios`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| surah_id | int FK NOT NULL | |
-| qari_name | varchar(256) | |
-| qari_slug | varchar(100) UNIQUE per surah | |
-| audio_url | varchar(512) | |
+
+| Kolom     | Tipe                          | Keterangan |
+| --------- | ----------------------------- | ---------- |
+| id        | int PK                        |            |
+| surah_id  | int FK NOT NULL               |            |
+| qari_name | varchar(256)                  |            |
+| qari_slug | varchar(100) UNIQUE per surah |            |
+| audio_url | varchar(512)                  |            |
 
 #### `ayah_audios`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| ayah_id | int FK NOT NULL | |
-| qari_name | varchar(256) | |
-| qari_slug | varchar(100) UNIQUE per ayah | |
-| audio_url | varchar(512) | |
+
+| Kolom     | Tipe                         | Keterangan |
+| --------- | ---------------------------- | ---------- |
+| id        | int PK                       |            |
+| ayah_id   | int FK NOT NULL              |            |
+| qari_name | varchar(256)                 |            |
+| qari_slug | varchar(100) UNIQUE per ayah |            |
+| audio_url | varchar(512)                 |            |
 
 ---
 
 ### Hadith
 
 #### `books`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| slug | varchar(256) UNIQUE | bukhari, muslim, abudaud, dll |
-| default_language | varchar | |
-| translation_id | int FK | Nama kitab |
+
+| Kolom            | Tipe                | Keterangan                    |
+| ---------------- | ------------------- | ----------------------------- |
+| id               | int PK              |                               |
+| slug             | varchar(256) UNIQUE | bukhari, muslim, abudaud, dll |
+| default_language | varchar             |                               |
+| translation_id   | int FK              | Nama kitab                    |
 
 Kitab yang tersedia: Shahih Bukhari, Shahih Muslim, Sunan Abu Daud, Sunan Tirmidzi, Sunan Nasa'i, Sunan Ibnu Majah, Muwatha' Malik, Musnad Ahmad, Sunan Darimi.
 
 #### `themes` (Tema/Bab besar hadith)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| default_language | varchar | |
-| translation_id | int FK | |
+
+| Kolom            | Tipe    | Keterangan |
+| ---------------- | ------- | ---------- |
+| id               | int PK  |            |
+| default_language | varchar |            |
+| translation_id   | int FK  |            |
 
 #### `chapters` (Sub-bab dalam tema)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| theme_id | int FK | |
-| translation_id | int FK | |
+
+| Kolom          | Tipe   | Keterangan |
+| -------------- | ------ | ---------- |
+| id             | int PK |            |
+| theme_id       | int FK |            |
+| translation_id | int FK |            |
 
 #### `hadiths`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| number | int | Nomor hadith dalam kitab |
-| book_id | int FK | |
-| theme_id | int FK | |
-| chapter_id | int FK | |
-| translation_id | int FK | Matan Arab + terjemah |
-| grade | varchar(30) | shahih / hasan / dhaif / maudhu / dll |
-| shahih_by | text | Ulama yang menshahihkan |
-| dhaif_by | text | Ulama yang mendhaifkan |
-| grade_notes | text | |
-| sanad | text | Teks sanad mentah |
+
+| Kolom          | Tipe        | Keterangan                            |
+| -------------- | ----------- | ------------------------------------- |
+| id             | int PK      |                                       |
+| number         | int         | Nomor hadith dalam kitab              |
+| book_id        | int FK      |                                       |
+| theme_id       | int FK      |                                       |
+| chapter_id     | int FK      |                                       |
+| translation_id | int FK      | Matan Arab + terjemah                 |
+| grade          | varchar(30) | shahih / hasan / dhaif / maudhu / dll |
+| shahih_by      | text        | Ulama yang menshahihkan               |
+| dhaif_by       | text        | Ulama yang mendhaifkan                |
+| grade_notes    | text        |                                       |
+| sanad          | text        | Teks sanad mentah                     |
 
 #### `perawis` (Narrator/Rawi)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| nama_arab | varchar(255) | |
-| nama_latin | varchar(255) | |
-| nama_lengkap | text | |
-| kunyah | varchar(100) | Abu Fulan, dll |
-| laqab | varchar(100) | Gelar |
-| nisbah | varchar(100) | Nisba/asal daerah |
-| tahun_lahir | int | |
-| tahun_wafat | int | |
-| tahun_hijri | bool | default: true |
-| tempat_lahir | varchar(100) | |
-| tempat_wafat | varchar(100) | |
-| tabaqah | varchar(50) | sahabat / tabiin / tabiut_tabiin / dll |
-| status | varchar(30) | tsiqah / shaduq / dhaif / matruk / dll |
-| biografis | text | |
+
+| Kolom        | Tipe         | Keterangan                             |
+| ------------ | ------------ | -------------------------------------- |
+| id           | int PK       |                                        |
+| nama_arab    | varchar(255) |                                        |
+| nama_latin   | varchar(255) |                                        |
+| nama_lengkap | text         |                                        |
+| kunyah       | varchar(100) | Abu Fulan, dll                         |
+| laqab        | varchar(100) | Gelar                                  |
+| nisbah       | varchar(100) | Nisba/asal daerah                      |
+| tahun_lahir  | int          |                                        |
+| tahun_wafat  | int          |                                        |
+| tahun_hijri  | bool         | default: true                          |
+| tempat_lahir | varchar(100) |                                        |
+| tempat_wafat | varchar(100) |                                        |
+| tabaqah      | varchar(50)  | sahabat / tabiin / tabiut_tabiin / dll |
+| status       | varchar(30)  | tsiqah / shaduq / dhaif / matruk / dll |
+| biografis    | text         |                                        |
 
 #### `perawi_gurus` (Join table guru-murid)
-| Kolom | Tipe |
-|---|---|
-| guru_id | int FK PK |
+
+| Kolom    | Tipe      |
+| -------- | --------- |
+| guru_id  | int FK PK |
 | murid_id | int FK PK |
 
 #### `sanads` (Jalur sanad hadith)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| hadith_id | int FK NOT NULL | |
-| nomor_jalur | int | Urutan jalur sanad |
-| jenis | varchar(20) | musnad / mursal / munqathi / dll |
-| status_sanad | varchar(20) | muttashil / munqathi |
-| catatan | text | |
+
+| Kolom        | Tipe            | Keterangan                       |
+| ------------ | --------------- | -------------------------------- |
+| id           | int PK          |                                  |
+| hadith_id    | int FK NOT NULL |                                  |
+| nomor_jalur  | int             | Urutan jalur sanad               |
+| jenis        | varchar(20)     | musnad / mursal / munqathi / dll |
+| status_sanad | varchar(20)     | muttashil / munqathi             |
+| catatan      | text            |                                  |
 
 #### `mata_sanads` (Satu mata rantai dalam sanad)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| sanad_id | int FK NOT NULL | |
-| perawi_id | int FK NOT NULL | |
-| urutan | int NOT NULL | Posisi dalam rantai |
-| metode | varchar(30) | haddatsana / akhbarana / ananah / dll |
-| catatan | text | |
+
+| Kolom     | Tipe            | Keterangan                            |
+| --------- | --------------- | ------------------------------------- |
+| id        | int PK          |                                       |
+| sanad_id  | int FK NOT NULL |                                       |
+| perawi_id | int FK NOT NULL |                                       |
+| urutan    | int NOT NULL    | Posisi dalam rantai                   |
+| metode    | varchar(30)     | haddatsana / akhbarana / ananah / dll |
+| catatan   | text            |                                       |
 
 #### `jarh_tadils` (Penilaian ulama terhadap perawi)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| perawi_id | int FK NOT NULL | |
-| penilai_id | int FK NOT NULL | Perawi penilai |
-| jenis_nilai | varchar(10) | tadil / jarh |
-| tingkat | int (1–7) | Tingkatan ta'dil/jarh |
-| teks_nilai | varchar(255) | Teks penilaian |
-| sumber | varchar(255) | Nama kitab sumber |
-| halaman | varchar(50) | |
+
+| Kolom       | Tipe            | Keterangan            |
+| ----------- | --------------- | --------------------- |
+| id          | int PK          |                       |
+| perawi_id   | int FK NOT NULL |                       |
+| penilai_id  | int FK NOT NULL | Perawi penilai        |
+| jenis_nilai | varchar(10)     | tadil / jarh          |
+| tingkat     | int (1–7)       | Tingkatan ta'dil/jarh |
+| teks_nilai  | varchar(255)    | Teks penilaian        |
+| sumber      | varchar(255)    | Nama kitab sumber     |
+| halaman     | varchar(50)     |                       |
 
 #### `takhrijs` (Referensi silang hadith ke kitab lain)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| hadith_id | int FK NOT NULL | |
-| book_id | int FK | |
-| nomor_hadis_kitab | varchar(50) | |
-| halaman | varchar(50) | |
-| jilid | varchar(50) | |
-| catatan | text | |
+
+| Kolom             | Tipe            | Keterangan |
+| ----------------- | --------------- | ---------- |
+| id                | int PK          |            |
+| hadith_id         | int FK NOT NULL |            |
+| book_id           | int FK          |            |
+| nomor_hadis_kitab | varchar(50)     |            |
+| halaman           | varchar(50)     |            |
+| jilid             | varchar(50)     |            |
+| catatan           | text            |            |
 
 ---
 
 ### Ibadah & Tracker
 
 #### `sholat_logs`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| user_id | uuid FK | |
-| date | date | YYYY-MM-DD |
-| prayer | varchar(20) | subuh / dzuhur / ashar / maghrib / isya |
-| status | varchar(20) | berjamaah / munfarid / qadha / missed |
-| UNIQUE | (user_id, date, prayer) | |
+
+| Kolom   | Tipe                    | Keterangan                              |
+| ------- | ----------------------- | --------------------------------------- |
+| id      | int PK                  |                                         |
+| user_id | uuid FK                 |                                         |
+| date    | date                    | YYYY-MM-DD                              |
+| prayer  | varchar(20)             | subuh / dzuhur / ashar / maghrib / isya |
+| status  | varchar(20)             | berjamaah / munfarid / qadha / missed   |
+| UNIQUE  | (user_id, date, prayer) |                                         |
 
 #### `sholat_guides` (Tata cara sholat)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| step | int UNIQUE | Urutan gerakan |
-| source | varchar(512) | Dalil hadith |
-| translation_id | int FK | Title, Arab, transliterasi, terjemah, deskripsi |
+
+| Kolom          | Tipe         | Keterangan                                      |
+| -------------- | ------------ | ----------------------------------------------- |
+| id             | int PK       |                                                 |
+| step           | int UNIQUE   | Urutan gerakan                                  |
+| source         | varchar(512) | Dalil hadith                                    |
+| translation_id | int FK       | Title, Arab, transliterasi, terjemah, deskripsi |
 
 #### `tilawah_logs`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| user_id | uuid FK | |
-| date | date UNIQUE per user | |
-| pages_read | int | default: 0 |
-| juz_read | decimal(4,2) | default: 0 |
-| note | text | |
+
+| Kolom      | Tipe                 | Keterangan |
+| ---------- | -------------------- | ---------- |
+| id         | int PK               |            |
+| user_id    | uuid FK              |            |
+| date       | date UNIQUE per user |            |
+| pages_read | int                  | default: 0 |
+| juz_read   | decimal(4,2)         | default: 0 |
+| note       | text                 |            |
 
 #### `hafalan_progresses`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | uuid PK | |
-| user_id | uuid FK | |
-| surah_id | int FK | |
-| status | varchar(50) | not_started / in_progress / memorized |
-| started_at | timestamp nullable | |
-| completed_at | timestamp nullable | |
-| UNIQUE | (user_id, surah_id) | |
+
+| Kolom        | Tipe                | Keterangan                            |
+| ------------ | ------------------- | ------------------------------------- |
+| id           | uuid PK             |                                       |
+| user_id      | uuid FK             |                                       |
+| surah_id     | int FK              |                                       |
+| status       | varchar(50)         | not_started / in_progress / memorized |
+| started_at   | timestamp nullable  |                                       |
+| completed_at | timestamp nullable  |                                       |
+| UNIQUE       | (user_id, surah_id) |                                       |
 
 #### `murojaah_sessions`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| user_id | uuid FK | |
-| date | date | |
-| surah_id | int | |
-| from_ayah | int | |
-| to_ayah | int | |
-| score | int | 0–100 |
-| duration_seconds | int | |
-| note | text | |
+
+| Kolom            | Tipe    | Keterangan |
+| ---------------- | ------- | ---------- |
+| id               | int PK  |            |
+| user_id          | uuid FK |            |
+| date             | date    |            |
+| surah_id         | int     |            |
+| from_ayah        | int     |            |
+| to_ayah          | int     |            |
+| score            | int     | 0–100      |
+| duration_seconds | int     |            |
+| note             | text    |            |
 
 #### `amalan_items` (Master daftar amalan)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| name | varchar(256) | |
-| description | text | |
-| category | varchar(50) | sholat / puasa / dzikir / sedekah / lainnya |
-| is_active | bool | |
-| translation_id | int FK nullable | |
+
+| Kolom          | Tipe            | Keterangan                                  |
+| -------------- | --------------- | ------------------------------------------- |
+| id             | int PK          |                                             |
+| name           | varchar(256)    |                                             |
+| description    | text            |                                             |
+| category       | varchar(50)     | sholat / puasa / dzikir / sedekah / lainnya |
+| is_active      | bool            |                                             |
+| translation_id | int FK nullable |                                             |
 
 #### `amalan_logs`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| user_id | uuid FK | |
-| amalan_item_id | int FK | |
-| date | date | |
-| is_done | bool | |
-| UNIQUE | (user_id, amalan_item_id, date) | |
+
+| Kolom          | Tipe                            | Keterangan |
+| -------------- | ------------------------------- | ---------- |
+| id             | int PK                          |            |
+| user_id        | uuid FK                         |            |
+| amalan_item_id | int FK                          |            |
+| date           | date                            |            |
+| is_done        | bool                            |            |
+| UNIQUE         | (user_id, amalan_item_id, date) |            |
 
 #### `muhasabahs`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| user_id | uuid FK | |
-| date | date | |
-| content | text NOT NULL | |
-| mood_score | int (1–5) | default: 3 |
-| is_private | bool | default: true |
+
+| Kolom      | Tipe          | Keterangan    |
+| ---------- | ------------- | ------------- |
+| id         | int PK        |               |
+| user_id    | uuid FK       |               |
+| date       | date          |               |
+| content    | text NOT NULL |               |
+| mood_score | int (1–5)     | default: 3    |
+| is_private | bool          | default: true |
 
 #### `study_goals`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| user_id | uuid FK | |
-| type | varchar(50) | hafalan / khatam / tilawah / hadith / custom |
-| title | varchar(512) | |
-| description | text | |
-| target | int | |
-| progress | int | |
-| start_date | date | |
-| end_date | date | |
-| is_completed | bool | |
+
+| Kolom        | Tipe         | Keterangan                                   |
+| ------------ | ------------ | -------------------------------------------- |
+| id           | int PK       |                                              |
+| user_id      | uuid FK      |                                              |
+| type         | varchar(50)  | hafalan / khatam / tilawah / hadith / custom |
+| title        | varchar(512) |                                              |
+| description  | text         |                                              |
+| target       | int          |                                              |
+| progress     | int          |                                              |
+| start_date   | date         |                                              |
+| end_date     | date         |                                              |
+| is_completed | bool         |                                              |
 
 #### `user_activities` (Aktivitas harian untuk streak)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | uuid PK | |
-| user_id | uuid FK | |
-| activity_date | date | |
-| type | varchar(50) | quran / hadith / doa |
-| count | int | default: 1 |
-| UNIQUE | (user_id, activity_date, type) | |
+
+| Kolom         | Tipe                           | Keterangan           |
+| ------------- | ------------------------------ | -------------------- |
+| id            | uuid PK                        |                      |
+| user_id       | uuid FK                        |                      |
+| activity_date | date                           |                      |
+| type          | varchar(50)                    | quran / hadith / doa |
+| count         | int                            | default: 1           |
+| UNIQUE        | (user_id, activity_date, type) |                      |
 
 ---
 
 ### Konten Islam
 
 #### `dzikirs`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| category | varchar(50) | pagi / petang / setelah_sholat / tidur / safar / dzikir_umum |
-| occasion | varchar(100) | Situasi khusus |
-| count | int | Jumlah pengulangan, default: 1 |
-| fadhilah_idn | text | Keutamaan (Indonesia) |
-| fadhilah_en | text | Keutamaan (Inggris) |
-| source | varchar(256) | Referensi dalil |
-| audio_url | varchar(500) | |
-| translation_id | int FK | Title, Arab, transliterasi, terjemah |
+
+| Kolom          | Tipe         | Keterangan                                                   |
+| -------------- | ------------ | ------------------------------------------------------------ |
+| id             | int PK       |                                                              |
+| category       | varchar(50)  | pagi / petang / setelah_sholat / tidur / safar / dzikir_umum |
+| occasion       | varchar(100) | Situasi khusus                                               |
+| count          | int          | Jumlah pengulangan, default: 1                               |
+| fadhilah_idn   | text         | Keutamaan (Indonesia)                                        |
+| fadhilah_en    | text         | Keutamaan (Inggris)                                          |
+| source         | varchar(256) | Referensi dalil                                              |
+| audio_url      | varchar(500) |                                                              |
+| translation_id | int FK       | Title, Arab, transliterasi, terjemah                         |
 
 #### `dzikir_logs`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | uuid PK | |
-| user_id | uuid FK | |
-| dzikir_id | int FK | |
-| log_date | varchar(10) | YYYY-MM-DD |
-| category | varchar(50) | |
+
+| Kolom     | Tipe        | Keterangan |
+| --------- | ----------- | ---------- |
+| id        | uuid PK     |            |
+| user_id   | uuid FK     |            |
+| dzikir_id | int FK      |            |
+| log_date  | varchar(10) | YYYY-MM-DD |
+| category  | varchar(50) |            |
 
 #### `user_wirds` (Wirid personal user)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | uuid PK | |
-| user_id | uuid FK | |
-| title | varchar(256) NOT NULL | |
-| arabic | text | |
-| transliteration | text | |
-| translation | text | |
-| source | varchar(256) | |
-| count | int | default: 1 |
-| occasion | varchar(64) | |
-| note | text | |
+
+| Kolom           | Tipe                  | Keterangan |
+| --------------- | --------------------- | ---------- |
+| id              | uuid PK               |            |
+| user_id         | uuid FK               |            |
+| title           | varchar(256) NOT NULL |            |
+| arabic          | text                  |            |
+| transliteration | text                  |            |
+| translation     | text                  |            |
+| source          | varchar(256)          |            |
+| count           | int                   | default: 1 |
+| occasion        | varchar(64)           |            |
+| note            | text                  |            |
 
 #### `doas`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| category | varchar(100) | pagi / petang / makan / tidur / bangun / kamar_mandi / masjid / safar / belajar / umum |
-| source | varchar(256) | |
-| audio_url | varchar(500) | |
-| translation_id | int FK | Title, Arab, transliterasi, terjemah |
+
+| Kolom          | Tipe         | Keterangan                                                                             |
+| -------------- | ------------ | -------------------------------------------------------------------------------------- |
+| id             | int PK       |                                                                                        |
+| category       | varchar(100) | pagi / petang / makan / tidur / bangun / kamar_mandi / masjid / safar / belajar / umum |
+| source         | varchar(256) |                                                                                        |
+| audio_url      | varchar(500) |                                                                                        |
+| translation_id | int FK       | Title, Arab, transliterasi, terjemah                                                   |
 
 #### `asma_ul_husnas`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| number | int UNIQUE | 1–99 |
-| arabic | varchar(100) | |
-| transliteration | varchar(100) | |
-| indonesian | varchar(256) | |
-| english | varchar(256) | |
-| meaning | text | Deskripsi makna |
-| audio_url | varchar(512) | |
-| translation_id | int FK nullable | |
+
+| Kolom           | Tipe            | Keterangan      |
+| --------------- | --------------- | --------------- |
+| id              | int PK          |                 |
+| number          | int UNIQUE      | 1–99            |
+| arabic          | varchar(100)    |                 |
+| transliteration | varchar(100)    |                 |
+| indonesian      | varchar(256)    |                 |
+| english         | varchar(256)    |                 |
+| meaning         | text            | Deskripsi makna |
+| audio_url       | varchar(512)    |                 |
+| translation_id  | int FK nullable |                 |
 
 #### `tahlil_collections`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| type | varchar(50) UNIQUE | yasin / tahlil / doa_arwah |
-| title | varchar(256) | |
-| description | text | |
+
+| Kolom       | Tipe               | Keterangan                 |
+| ----------- | ------------------ | -------------------------- |
+| id          | int PK             |                            |
+| type        | varchar(50) UNIQUE | yasin / tahlil / doa_arwah |
+| title       | varchar(256)       |                            |
+| description | text               |                            |
 
 #### `tahlil_items`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| collection_id | int FK NOT NULL | |
-| sort_order | int | |
-| repeat | int | default: 1 |
-| translation_id | int FK | Label, Arab, transliterasi, terjemah |
+
+| Kolom          | Tipe            | Keterangan                           |
+| -------------- | --------------- | ------------------------------------ |
+| id             | int PK          |                                      |
+| collection_id  | int FK NOT NULL |                                      |
+| sort_order     | int             |                                      |
+| repeat         | int             | default: 1                           |
+| translation_id | int FK          | Label, Arab, transliterasi, terjemah |
 
 #### `manasik_steps`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| type | varchar(20) | haji / umrah |
-| step_order | int | |
-| is_wajib | bool | |
-| translation_id | int FK | Title, deskripsi, Arab, transliterasi |
+
+| Kolom          | Tipe        | Keterangan                            |
+| -------------- | ----------- | ------------------------------------- |
+| id             | int PK      |                                       |
+| type           | varchar(20) | haji / umrah                          |
+| step_order     | int         |                                       |
+| is_wajib       | bool        |                                       |
+| translation_id | int FK      | Title, deskripsi, Arab, transliterasi |
 
 #### `kajians`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| title | varchar(512) | |
-| description | text | |
-| speaker | varchar(256) | Nama ustadz/pemateri |
-| topic | varchar(256) | |
-| type | varchar(20) | video / audio / text |
-| url | varchar(1024) | Link konten |
-| duration_seconds | int | |
-| thumbnail_url | varchar(1024) | |
-| view_count | int | |
-| published_at | date | |
-| translation_id | int FK nullable | |
+
+| Kolom            | Tipe            | Keterangan           |
+| ---------------- | --------------- | -------------------- |
+| id               | int PK          |                      |
+| title            | varchar(512)    |                      |
+| description      | text            |                      |
+| speaker          | varchar(256)    | Nama ustadz/pemateri |
+| topic            | varchar(256)    |                      |
+| type             | varchar(20)     | video / audio / text |
+| url              | varchar(1024)   | Link konten          |
+| duration_seconds | int             |                      |
+| thumbnail_url    | varchar(1024)   |                      |
+| view_count       | int             |                      |
+| published_at     | date            |                      |
+| translation_id   | int FK nullable |                      |
 
 #### `blog_categories`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| slug | varchar(256) UNIQUE | |
-| translation_id | int FK | Nama, deskripsi |
+
+| Kolom          | Tipe                | Keterangan      |
+| -------------- | ------------------- | --------------- |
+| id             | int PK              |                 |
+| slug           | varchar(256) UNIQUE |                 |
+| translation_id | int FK              | Nama, deskripsi |
 
 #### `blog_tags`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| slug | varchar(100) UNIQUE | |
-| translation_id | int FK | Nama tag |
+
+| Kolom          | Tipe                | Keterangan |
+| -------------- | ------------------- | ---------- |
+| id             | int PK              |            |
+| slug           | varchar(100) UNIQUE |            |
+| translation_id | int FK              | Nama tag   |
 
 #### `blog_posts`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | uuid PK | |
-| author_id | uuid FK | |
-| category_id | int FK nullable | |
-| slug | varchar(512) UNIQUE | |
-| cover_image | varchar(512) nullable | |
-| status | varchar(50) | draft / published / archived |
-| published_at | timestamp nullable | |
-| view_count | int | |
-| translation_id | int FK | Title, excerpt, content (bilingual) |
+
+| Kolom          | Tipe                  | Keterangan                          |
+| -------------- | --------------------- | ----------------------------------- |
+| id             | uuid PK               |                                     |
+| author_id      | uuid FK               |                                     |
+| category_id    | int FK nullable       |                                     |
+| slug           | varchar(512) UNIQUE   |                                     |
+| cover_image    | varchar(512) nullable |                                     |
+| status         | varchar(50)           | draft / published / archived        |
+| published_at   | timestamp nullable    |                                     |
+| view_count     | int                   |                                     |
+| translation_id | int FK                | Title, excerpt, content (bilingual) |
 
 #### `blog_post_tags` (Many2many join)
-| Kolom | Tipe |
-|---|---|
+
+| Kolom        | Tipe    |
+| ------------ | ------- |
 | blog_post_id | uuid FK |
-| blog_tag_id | int FK |
+| blog_tag_id  | int FK  |
 
 #### `siroh_categories`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| title | varchar(256) | |
-| slug | varchar(256) UNIQUE | |
-| order | int | Urutan tampil |
-| translation_id | int FK nullable | |
+
+| Kolom          | Tipe                | Keterangan    |
+| -------------- | ------------------- | ------------- |
+| id             | int PK              |               |
+| title          | varchar(256)        |               |
+| slug           | varchar(256) UNIQUE |               |
+| order          | int                 | Urutan tampil |
+| translation_id | int FK nullable     |               |
 
 #### `siroh_contents`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| category_id | int FK NOT NULL | |
-| title | varchar(256) | |
-| slug | varchar(256) UNIQUE | |
-| content | text NOT NULL | |
-| order | int | |
-| translation_id | int FK nullable | |
+
+| Kolom          | Tipe                | Keterangan |
+| -------------- | ------------------- | ---------- |
+| id             | int PK              |            |
+| category_id    | int FK NOT NULL     |            |
+| title          | varchar(256)        |            |
+| slug           | varchar(256) UNIQUE |            |
+| content        | text NOT NULL       |            |
+| order          | int                 |            |
+| translation_id | int FK nullable     |            |
 
 #### `fiqh_categories`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| name | varchar(256) | |
-| slug | varchar(256) UNIQUE | |
-| description | text | |
-| translation_id | int FK nullable | |
+
+| Kolom          | Tipe                | Keterangan |
+| -------------- | ------------------- | ---------- |
+| id             | int PK              |            |
+| name           | varchar(256)        |            |
+| slug           | varchar(256) UNIQUE |            |
+| description    | text                |            |
+| translation_id | int FK nullable     |            |
 
 #### `fiqh_items`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| category_id | int FK NOT NULL | |
-| title | varchar(512) | |
-| slug | varchar(512) UNIQUE | |
-| content | text NOT NULL | |
-| source | varchar(256) | |
-| sort_order | int | |
-| translation_id | int FK nullable | |
+
+| Kolom          | Tipe                | Keterangan |
+| -------------- | ------------------- | ---------- |
+| id             | int PK              |            |
+| category_id    | int FK NOT NULL     |            |
+| title          | varchar(512)        |            |
+| slug           | varchar(512) UNIQUE |            |
+| content        | text NOT NULL       |            |
+| source         | varchar(256)        |            |
+| sort_order     | int                 |            |
+| translation_id | int FK nullable     |            |
 
 #### `history_events` (Sejarah Islam)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| year_hijri | int | |
-| year_miladi | int | |
-| slug | varchar(256) UNIQUE | |
-| category | varchar(50) | nabi / khulafa / dinasti / ulama / peristiwa |
-| is_significant | bool | |
-| translation_id | int FK | Title, deskripsi |
+
+| Kolom          | Tipe                | Keterangan                                   |
+| -------------- | ------------------- | -------------------------------------------- |
+| id             | int PK              |                                              |
+| year_hijri     | int                 |                                              |
+| year_miladi    | int                 |                                              |
+| slug           | varchar(256) UNIQUE |                                              |
+| category       | varchar(50)         | nabi / khulafa / dinasti / ulama / peristiwa |
+| is_significant | bool                |                                              |
+| translation_id | int FK              | Title, deskripsi                             |
 
 ---
 
 ### Gamifikasi
 
 #### `achievements`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| code | varchar(64) UNIQUE | Identifier achievement |
-| name | varchar(128) | Nama (Indonesia) |
-| name_en | varchar(128) | |
-| description | text | |
-| desc_en | text | |
-| icon | varchar(256) | Emoji atau URL gambar |
-| category | varchar(64) | |
-| threshold | int | Target numerik |
+
+| Kolom       | Tipe               | Keterangan             |
+| ----------- | ------------------ | ---------------------- |
+| id          | int PK             |                        |
+| code        | varchar(64) UNIQUE | Identifier achievement |
+| name        | varchar(128)       | Nama (Indonesia)       |
+| name_en     | varchar(128)       |                        |
+| description | text               |                        |
+| desc_en     | text               |                        |
+| icon        | varchar(256)       | Emoji atau URL gambar  |
+| category    | varchar(64)        |                        |
+| threshold   | int                | Target numerik         |
 
 #### `user_achievements`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | uuid PK | |
-| user_id | uuid FK | |
-| achievement_id | int FK | |
-| earned_at | timestamp | |
+
+| Kolom          | Tipe      | Keterangan |
+| -------------- | --------- | ---------- |
+| id             | uuid PK   |            |
+| user_id        | uuid FK   |            |
+| achievement_id | int FK    |            |
+| earned_at      | timestamp |            |
 
 #### `user_points`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | uuid PK | |
-| user_id | uuid FK UNIQUE | |
-| total_points | int | default: 0 |
+
+| Kolom        | Tipe           | Keterangan |
+| ------------ | -------------- | ---------- |
+| id           | uuid PK        |            |
+| user_id      | uuid FK UNIQUE |            |
+| total_points | int            | default: 0 |
 
 #### `quizzes`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| type | varchar(50) | hafalan / fiqh / sirah / hadith / asmaul_husna |
-| question_text | text NOT NULL | |
-| correct_answer | text NOT NULL | |
-| options | jsonb | Array pilihan jawaban |
-| explanation | text | Penjelasan jawaban |
-| difficulty | varchar(20) | easy / medium / hard |
-| ref_id | int nullable | FK ke konten terkait |
-| translation_id | int FK nullable | Versi bilingual soal |
+
+| Kolom          | Tipe            | Keterangan                                     |
+| -------------- | --------------- | ---------------------------------------------- |
+| id             | int PK          |                                                |
+| type           | varchar(50)     | hafalan / fiqh / sirah / hadith / asmaul_husna |
+| question_text  | text NOT NULL   |                                                |
+| correct_answer | text NOT NULL   |                                                |
+| options        | jsonb           | Array pilihan jawaban                          |
+| explanation    | text            | Penjelasan jawaban                             |
+| difficulty     | varchar(20)     | easy / medium / hard                           |
+| ref_id         | int nullable    | FK ke konten terkait                           |
+| translation_id | int FK nullable | Versi bilingual soal                           |
 
 #### `user_quiz_results`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| user_id | uuid FK | |
-| quiz_id | int FK | |
-| is_correct | bool | |
-| answered_at | timestamp | |
+
+| Kolom       | Tipe      | Keterangan |
+| ----------- | --------- | ---------- |
+| id          | int PK    |            |
+| user_id     | uuid FK   |            |
+| quiz_id     | int FK    |            |
+| is_correct  | bool      |            |
+| answered_at | timestamp |            |
 
 ---
 
 ### Sosial & Feed
 
 #### `feed_posts`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | uuid PK | |
-| user_id | uuid FK | |
-| ref_type | varchar(20) | ayah / hadith |
-| ref_id | int | ID ayat/hadith yang dibagikan |
-| caption | text | |
-| likes | int | default: 0 |
+
+| Kolom    | Tipe        | Keterangan                    |
+| -------- | ----------- | ----------------------------- |
+| id       | uuid PK     |                               |
+| user_id  | uuid FK     |                               |
+| ref_type | varchar(20) | ayah / hadith                 |
+| ref_id   | int         | ID ayat/hadith yang dibagikan |
+| caption  | text        |                               |
+| likes    | int         | default: 0                    |
 
 #### `comments`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| user_id | uuid FK | |
-| ref_type | varchar(20) | ayah / hadith |
-| ref_id | int | |
-| content | text NOT NULL | |
-| parent_id | int nullable FK | Untuk nested reply |
-| like_count | int | default: 0 |
+
+| Kolom      | Tipe            | Keterangan         |
+| ---------- | --------------- | ------------------ |
+| id         | int PK          |                    |
+| user_id    | uuid FK         |                    |
+| ref_type   | varchar(20)     | ayah / hadith      |
+| ref_id     | int             |                    |
+| content    | text NOT NULL   |                    |
+| parent_id  | int nullable FK | Untuk nested reply |
+| like_count | int             | default: 0         |
 
 ---
 
 ### Akun & Notifikasi
 
 #### `bookmarks`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | uuid PK | |
-| user_id | uuid FK | |
-| ref_type | varchar(50) | ayah / hadith / article |
-| ref_id | int | |
-| ref_slug | varchar(512) | |
-| color | varchar(20) | Warna label bookmark |
-| label | varchar(64) | Teks label |
-| UNIQUE | (user_id, ref_type, ref_id) | |
+
+| Kolom    | Tipe                        | Keterangan              |
+| -------- | --------------------------- | ----------------------- |
+| id       | uuid PK                     |                         |
+| user_id  | uuid FK                     |                         |
+| ref_type | varchar(50)                 | ayah / hadith / article |
+| ref_id   | int                         |                         |
+| ref_slug | varchar(512)                |                         |
+| color    | varchar(20)                 | Warna label bookmark    |
+| label    | varchar(64)                 | Teks label              |
+| UNIQUE   | (user_id, ref_type, ref_id) |                         |
 
 #### `notes`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| user_id | uuid FK | |
-| ref_type | varchar(20) | ayah / hadith |
-| ref_id | int | |
-| content | text NOT NULL | max 5000 karakter |
+
+| Kolom    | Tipe          | Keterangan        |
+| -------- | ------------- | ----------------- |
+| id       | int PK        |                   |
+| user_id  | uuid FK       |                   |
+| ref_type | varchar(20)   | ayah / hadith     |
+| ref_id   | int           |                   |
+| content  | text NOT NULL | max 5000 karakter |
 
 #### `reading_progresses`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | uuid PK | |
-| user_id | uuid FK | |
-| content_type | varchar(50) | quran / hadith |
-| surah_number | int nullable | |
-| ayah_number | int nullable | |
-| ayah_id | int nullable | |
-| book_slug | varchar(256) nullable | |
-| hadith_id | int nullable | |
-| last_read_at | timestamp | |
-| UNIQUE | (user_id, content_type) | Satu progress per tipe konten |
+
+| Kolom        | Tipe                    | Keterangan                    |
+| ------------ | ----------------------- | ----------------------------- |
+| id           | uuid PK                 |                               |
+| user_id      | uuid FK                 |                               |
+| content_type | varchar(50)             | quran / hadith                |
+| surah_number | int nullable            |                               |
+| ayah_number  | int nullable            |                               |
+| ayah_id      | int nullable            |                               |
+| book_slug    | varchar(256) nullable   |                               |
+| hadith_id    | int nullable            |                               |
+| last_read_at | timestamp               |                               |
+| UNIQUE       | (user_id, content_type) | Satu progress per tipe konten |
 
 #### `notification_settings`
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| user_id | uuid FK | |
-| type | varchar(50) | daily_quran / daily_hadith / doa |
-| time | varchar(5) | HH:MM |
-| is_active | bool | |
-| last_sent_at | timestamp nullable | |
-| UNIQUE | (user_id, type) | |
+
+| Kolom        | Tipe               | Keterangan                       |
+| ------------ | ------------------ | -------------------------------- |
+| id           | int PK             |                                  |
+| user_id      | uuid FK            |                                  |
+| type         | varchar(50)        | daily_quran / daily_hadith / doa |
+| time         | varchar(5)         | HH:MM                            |
+| is_active    | bool               |                                  |
+| last_sent_at | timestamp nullable |                                  |
+| UNIQUE       | (user_id, type)    |                                  |
 
 #### `user_notifications` (Inbox notifikasi)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | uuid PK | |
-| user_id | uuid FK | |
-| title | varchar(200) | |
-| body | text | |
-| type | varchar(50) | |
-| ref_id | varchar(100) | ID konten terkait |
-| is_read | bool | default: false |
+
+| Kolom   | Tipe         | Keterangan        |
+| ------- | ------------ | ----------------- |
+| id      | uuid PK      |                   |
+| user_id | uuid FK      |                   |
+| title   | varchar(200) |                   |
+| body    | text         |                   |
+| type    | varchar(50)  |                   |
+| ref_id  | varchar(100) | ID konten terkait |
+| is_read | bool         | default: false    |
 
 ---
 
 ### Tools
 
 #### `islamic_terms` (Kamus Istilah Arab-Islam)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| term | varchar(256) UNIQUE | Istilah/kata |
-| category | varchar(50) | fiqh / aqidah / tasawuf / ulumul_quran / hadith / lainnya |
-| definition | text NOT NULL | Definisi |
-| example | text | Contoh penggunaan |
-| source | varchar(256) | |
-| origin | varchar(100) | Asal bahasa/kata |
-| translation_id | int FK nullable | |
+
+| Kolom          | Tipe                | Keterangan                                                |
+| -------------- | ------------------- | --------------------------------------------------------- |
+| id             | int PK              |                                                           |
+| term           | varchar(256) UNIQUE | Istilah/kata                                              |
+| category       | varchar(50)         | fiqh / aqidah / tasawuf / ulumul_quran / hadith / lainnya |
+| definition     | text NOT NULL       | Definisi                                                  |
+| example        | text                | Contoh penggunaan                                         |
+| source         | varchar(256)        |                                                           |
+| origin         | varchar(100)        | Asal bahasa/kata                                          |
+| translation_id | int FK nullable     |                                                           |
 
 #### `islamic_events` (Kalender Hijri)
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| id | int PK | |
-| name | varchar(256) | Nama acara/peristiwa |
-| hijri_month | int NOT NULL | |
-| hijri_day | int NOT NULL | |
-| description | text | |
-| category | varchar(20) | puasa / eid / peristiwa |
-| UNIQUE | (hijri_month, hijri_day, name) | |
+
+| Kolom       | Tipe                           | Keterangan              |
+| ----------- | ------------------------------ | ----------------------- |
+| id          | int PK                         |                         |
+| name        | varchar(256)                   | Nama acara/peristiwa    |
+| hijri_month | int NOT NULL                   |                         |
+| hijri_day   | int NOT NULL                   |                         |
+| description | text                           |                         |
+| category    | varchar(20)                    | puasa / eid / peristiwa |
+| UNIQUE      | (hijri_month, hijri_day, name) |                         |
 
 > **Note:** Prayer times (`/jadwal-sholat`) dan Kiblat (`/kiblat`) dihitung secara real-time dan **tidak disimpan di database** — murni computed dari koordinat GPS pengguna.
 
@@ -1939,27 +2095,27 @@ Kitab yang tersedia: Shahih Bukhari, Shahih Muslim, Sunan Abu Daud, Sunan Tirmid
 
 ### Ringkasan Jumlah Tabel
 
-| Kategori | Jumlah Tabel |
-|---|---|
-| Shared (Translation, Multimedia) | 2 |
-| Auth & Users | 4 (user, refresh_token, password_reset_token, api_key) |
-| Al-Quran | 8 (surah, ayah, juz, tafsir, asbabun_nuzul, mufrodat, surah_audio, ayah_audio) |
-| Al-Quran Assets | 3 (surah_asset, ayah_asset, juz_asset) |
-| Hadith | 4 (hadith, book, theme, chapter) + asset join tables |
-| Ilmu Hadith | 5 (perawi, perawi_guru, sanad, mata_sanad, jarh_tadil, takhrij) |
-| Ibadah Tracker | 6 (sholat_log, sholat_guide, tilawah_log, hafalan_progress, murojaah_session, amalan_item, amalan_log) |
-| Personal | 4 (muhasabah, study_goal, user_activity, reading_progress) |
-| Dzikir/Doa/Wird | 5 (doa, dzikir, dzikir_log, user_wird, tahlil_collection, tahlil_item) |
-| Asmaul Husna | 1 |
-| Manasik | 1 |
-| Kajian & Blog | 5 (kajian, blog_post, blog_category, blog_tag, blog_post_tags) |
-| Siroh, Fiqh, Sejarah | 6 (siroh_category, siroh_content, fiqh_category, fiqh_item, history_event) |
-| Gamifikasi | 4 (achievement, user_achievement, user_points, quiz, user_quiz_result) |
-| Sosial | 2 (feed_post, comment) |
-| Akun/Notifikasi | 4 (bookmark, note, notification_setting, user_notification) |
-| Tools | 2 (islamic_term, islamic_event) |
-| **Total** | **±65+ tabel** |
+| Kategori                         | Jumlah Tabel                                                                                           |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Shared (Translation, Multimedia) | 2                                                                                                      |
+| Auth & Users                     | 4 (user, refresh_token, password_reset_token, api_key)                                                 |
+| Al-Quran                         | 8 (surah, ayah, juz, tafsir, asbabun_nuzul, mufrodat, surah_audio, ayah_audio)                         |
+| Al-Quran Assets                  | 3 (surah_asset, ayah_asset, juz_asset)                                                                 |
+| Hadith                           | 4 (hadith, book, theme, chapter) + asset join tables                                                   |
+| Ilmu Hadith                      | 5 (perawi, perawi_guru, sanad, mata_sanad, jarh_tadil, takhrij)                                        |
+| Ibadah Tracker                   | 6 (sholat_log, sholat_guide, tilawah_log, hafalan_progress, murojaah_session, amalan_item, amalan_log) |
+| Personal                         | 4 (muhasabah, study_goal, user_activity, reading_progress)                                             |
+| Dzikir/Doa/Wird                  | 5 (doa, dzikir, dzikir_log, user_wird, tahlil_collection, tahlil_item)                                 |
+| Asmaul Husna                     | 1                                                                                                      |
+| Manasik                          | 1                                                                                                      |
+| Kajian & Blog                    | 5 (kajian, blog_post, blog_category, blog_tag, blog_post_tags)                                         |
+| Siroh, Fiqh, Sejarah             | 6 (siroh_category, siroh_content, fiqh_category, fiqh_item, history_event)                             |
+| Gamifikasi                       | 4 (achievement, user_achievement, user_points, quiz, user_quiz_result)                                 |
+| Sosial                           | 2 (feed_post, comment)                                                                                 |
+| Akun/Notifikasi                  | 4 (bookmark, note, notification_setting, user_notification)                                            |
+| Tools                            | 2 (islamic_term, islamic_event)                                                                        |
+| **Total**                        | **±65+ tabel**                                                                                         |
 
 ---
 
-*Dokumen ini di-generate dari codebase thollabul-ilmi pada 2026-05-06.*
+_Dokumen ini di-generate dari codebase thollabul-ilmi pada 2026-05-06._

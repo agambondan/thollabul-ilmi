@@ -1,178 +1,214 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { deleteAccount as deleteAccountApi, getMe, login, logout, refreshSession } from '../api/auth';
-import { clearSession, readSession, saveSession } from '../storage/session';
+import {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
+import {
+    deleteAccount as deleteAccountApi,
+    getMe,
+    login,
+    logout,
+    refreshSession,
+} from "../api/auth";
+import { clearSession, readSession, saveSession } from "../storage/session";
 
 const SessionContext = createContext(null);
 
 const isSessionInvalidError = (error) => {
-  const status = Number(error?.status);
-  if (status === 401 || status === 403) return true;
+    const status = Number(error?.status);
+    if (status === 401 || status === 403) return true;
 
-  const message = `${error?.message ?? ''}`.toLowerCase();
-  return /\b(401|403)\b/.test(message) || /unauth|invalid|expired|berakhir/.test(message);
+    const message = `${error?.message ?? ""}`.toLowerCase();
+    return (
+        /\b(401|403)\b/.test(message) ||
+        /unauth|invalid|expired|berakhir/.test(message)
+    );
 };
 
 export function SessionProvider({ children }) {
-  const [session, setSession] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+    const [session, setSession] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-  const persist = useCallback(async (nextSession) => {
-    if (!nextSession?.token) {
-      await clearSession();
-      setSession(null);
-      return null;
-    }
-
-    await saveSession(nextSession);
-    setSession(nextSession);
-    return nextSession;
-  }, []);
-
-  const restore = useCallback(async () => {
-    setLoading(true);
-    setError('');
-
-    const stored = await readSession();
-    if (!stored?.token) {
-      setSession(null);
-      setLoading(false);
-      return null;
-    }
-
-    setSession(stored);
-    try {
-      const user = await getMe();
-      const next = { ...stored, user };
-      await persist(next);
-      return next;
-    } catch (err) {
-      if (!isSessionInvalidError(err)) {
-        setLoading(false);
-        return stored;
-      }
-
-      if (!stored.refreshToken) {
-        await persist(null);
-        setError('Sesi kamu sudah berakhir. Masuk lagi dari tab Profil.');
-        setLoading(false);
-        return null;
-      }
-
-      try {
-        const refreshed = await refreshSession(stored.refreshToken);
-        const next = {
-          ...stored,
-          ...refreshed,
-          refreshToken: refreshed.refreshToken || stored.refreshToken,
-          user: refreshed.user || stored.user,
-        };
-        await persist(next);
-        return next;
-      } catch (refreshErr) {
-        if (isSessionInvalidError(refreshErr)) {
-          await persist(null);
-          setError('Sesi kamu sudah berakhir. Masuk lagi dari tab Profil.');
-          return null;
+    const persist = useCallback(async (nextSession) => {
+        if (!nextSession?.token) {
+            await clearSession();
+            setSession(null);
+            return null;
         }
 
-        setLoading(false);
-        return stored;
-      } finally {
-        setLoading(false);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [persist]);
+        await saveSession(nextSession);
+        setSession(nextSession);
+        return nextSession;
+    }, []);
 
-  const signIn = useCallback(
-    async ({ email, password }) => {
-      setLoading(true);
-      setError('');
+    const restore = useCallback(async () => {
+        setLoading(true);
+        setError("");
 
-      try {
-        const next = await login({ email, password });
-        await persist(next);
-        return next;
-      } catch (err) {
-        setError(err?.message ?? 'Belum bisa masuk akun.');
-        throw err;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [persist],
-  );
+        const stored = await readSession();
+        if (!stored?.token) {
+            setSession(null);
+            setLoading(false);
+            return null;
+        }
 
-  const signOut = useCallback(async () => {
-    setLoading(true);
-    setError('');
+        setSession(stored);
+        try {
+            const user = await getMe();
+            const next = { ...stored, user };
+            await persist(next);
+            return next;
+        } catch (err) {
+            if (!isSessionInvalidError(err)) {
+                setLoading(false);
+                return stored;
+            }
 
-    try {
-      if (session?.refreshToken) {
-        await logout(session.refreshToken);
-      }
-    } catch {
-      // Local session cleanup should still happen when the network request fails.
-    } finally {
-      await persist(null);
-      setLoading(false);
-    }
-  }, [persist, session?.refreshToken]);
+            if (!stored.refreshToken) {
+                await persist(null);
+                setError(
+                    "Sesi kamu sudah berakhir. Masuk lagi dari tab Profil.",
+                );
+                setLoading(false);
+                return null;
+            }
 
-  const updateCurrentUser = useCallback(
-    async (nextUser) => {
-      if (!session?.token || !nextUser) return null;
-      const next = { ...session, user: { ...(session.user ?? {}), ...nextUser } };
-      await persist(next);
-      return next;
-    },
-    [persist, session],
-  );
+            try {
+                const refreshed = await refreshSession(stored.refreshToken);
+                const next = {
+                    ...stored,
+                    ...refreshed,
+                    refreshToken: refreshed.refreshToken || stored.refreshToken,
+                    user: refreshed.user || stored.user,
+                };
+                await persist(next);
+                return next;
+            } catch (refreshErr) {
+                if (isSessionInvalidError(refreshErr)) {
+                    await persist(null);
+                    setError(
+                        "Sesi kamu sudah berakhir. Masuk lagi dari tab Profil.",
+                    );
+                    return null;
+                }
 
-  const deleteAccount = useCallback(async () => {
-    setLoading(true);
-    setError('');
+                setLoading(false);
+                return stored;
+            } finally {
+                setLoading(false);
+            }
+        } finally {
+            setLoading(false);
+        }
+    }, [persist]);
 
-    try {
-      await deleteAccountApi();
-      await persist(null);
-    } catch (err) {
-      setError(err?.message ?? 'Akun belum bisa dihapus.');
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [persist]);
+    const signIn = useCallback(
+        async ({ email, password }) => {
+            setLoading(true);
+            setError("");
 
-  useEffect(() => {
-    restore();
-  }, [restore]);
+            try {
+                const next = await login({ email, password });
+                await persist(next);
+                return next;
+            } catch (err) {
+                setError(err?.message ?? "Belum bisa masuk akun.");
+                throw err;
+            } finally {
+                setLoading(false);
+            }
+        },
+        [persist],
+    );
 
-  const value = useMemo(
-    () => ({
-      error,
-      loading,
-      refresh: restore,
-      session,
-      deleteAccount,
-      signIn,
-      signOut,
-      updateCurrentUser,
-      user: session?.user ?? null,
-    }),
-    [deleteAccount, error, loading, restore, session, signIn, signOut, updateCurrentUser],
-  );
+    const signOut = useCallback(async () => {
+        setLoading(true);
+        setError("");
 
-  return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
+        try {
+            if (session?.refreshToken) {
+                await logout(session.refreshToken);
+            }
+        } catch {
+            // Local session cleanup should still happen when the network request fails.
+        } finally {
+            await persist(null);
+            setLoading(false);
+        }
+    }, [persist, session?.refreshToken]);
+
+    const updateCurrentUser = useCallback(
+        async (nextUser) => {
+            if (!session?.token || !nextUser) return null;
+            const next = {
+                ...session,
+                user: { ...(session.user ?? {}), ...nextUser },
+            };
+            await persist(next);
+            return next;
+        },
+        [persist, session],
+    );
+
+    const deleteAccount = useCallback(async () => {
+        setLoading(true);
+        setError("");
+
+        try {
+            await deleteAccountApi();
+            await persist(null);
+        } catch (err) {
+            setError(err?.message ?? "Akun belum bisa dihapus.");
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, [persist]);
+
+    useEffect(() => {
+        restore();
+    }, [restore]);
+
+    const value = useMemo(
+        () => ({
+            error,
+            loading,
+            refresh: restore,
+            session,
+            deleteAccount,
+            signIn,
+            signOut,
+            updateCurrentUser,
+            user: session?.user ?? null,
+        }),
+        [
+            deleteAccount,
+            error,
+            loading,
+            restore,
+            session,
+            signIn,
+            signOut,
+            updateCurrentUser,
+        ],
+    );
+
+    return (
+        <SessionContext.Provider value={value}>
+            {children}
+        </SessionContext.Provider>
+    );
 }
 
 export const useSession = () => {
-  const context = useContext(SessionContext);
-  if (!context) {
-    throw new Error('useSession must be used inside SessionProvider');
-  }
+    const context = useContext(SessionContext);
+    if (!context) {
+        throw new Error("useSession must be used inside SessionProvider");
+    }
 
-  return context;
+    return context;
 };

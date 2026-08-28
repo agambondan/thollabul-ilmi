@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { BlogContent } from '@/app/blog/page';
+import { BlogContent } from "@/app/blog/page";
 
 export default function DashboardBlogPage() {
     return (

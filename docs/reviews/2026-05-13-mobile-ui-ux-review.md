@@ -130,11 +130,11 @@ Rekomendasi:
 
 - lanjutkan ekstraksi shared component, tetapi tahap berikutnya adalah
   ekstraksi hook per domain:
-  - `useQuranReader`
-  - `useQuranPreferences`
-  - `useHadithReader`
-  - `useExploreFeatureDetail`
-  - `usePrayerTracker`
+    - `useQuranReader`
+    - `useQuranPreferences`
+    - `useHadithReader`
+    - `useExploreFeatureDetail`
+    - `usePrayerTracker`
 
 ### 6. Mobile Feature Catalog Memuat Endpoint Yang Butuh Konteks
 

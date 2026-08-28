@@ -32,22 +32,26 @@ Kumpulan kajian dan ceramah dalam format video, audio, dan teks yang terorganisi
 ### API Response Shape
 
 **`GET /kajian?topic=tauhid`**
+
 ```json
 [
-  {
-    "id": 1,
-    "title": "Tauhid dalam Kehidupan",
-    "description": "Kajian tentang penerapan tauhid...",
-    "speaker": "Ustadz Abdul Somad",
-    "topic": "tauhid",
-    "type": "video",
-    "url": "https://youtube.com/watch?v=...",
-    "duration_seconds": 3600,
-    "thumbnail_url": "https://...",
-    "view_count": 15000,
-    "published_at": "2026-01-15",
-    "translation": { "idn": "Tauhid dalam Kehidupan", "en": "Tawhid in Daily Life" }
-  }
+    {
+        "id": 1,
+        "title": "Tauhid dalam Kehidupan",
+        "description": "Kajian tentang penerapan tauhid...",
+        "speaker": "Ustadz Abdul Somad",
+        "topic": "tauhid",
+        "type": "video",
+        "url": "https://youtube.com/watch?v=...",
+        "duration_seconds": 3600,
+        "thumbnail_url": "https://...",
+        "view_count": 15000,
+        "published_at": "2026-01-15",
+        "translation": {
+            "idn": "Tauhid dalam Kehidupan",
+            "en": "Tawhid in Daily Life"
+        }
+    }
 ]
 ```
 
@@ -67,7 +71,7 @@ Kumpulan kajian dan ceramah dalam format video, audio, dan teks yang terorganisi
 | `thumbnail_url` | string | Thumbnail image URL |
 | `view_count` | int | View counter |
 | `published_at` | string | Publication date |
-| `translation_id` | *int | FK to Translation |
+| `translation_id` | \*int | FK to Translation |
 
 ### Key Frontend Components
 

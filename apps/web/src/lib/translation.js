@@ -1,50 +1,71 @@
-export const normalizeLang = (lang) => String(lang ?? 'ID').toUpperCase();
+export const normalizeLang = (lang) => String(lang ?? "ID").toUpperCase();
 
 const firstText = (value, keys) => {
     for (const key of keys) {
         const next = value?.[key];
-        if (typeof next === 'string' && next.trim()) return next;
+        if (typeof next === "string" && next.trim()) return next;
     }
-    return '';
+    return "";
 };
 
-export const getLocalizedText = (value, lang = 'ID') => {
-    if (!value) return '';
-    if (typeof value === 'string') return value;
+export const getLocalizedText = (value, lang = "ID") => {
+    if (!value) return "";
+    if (typeof value === "string") return value;
 
-    const isEnglish = normalizeLang(lang) === 'EN';
+    const isEnglish = normalizeLang(lang) === "EN";
     const primaryKeys = isEnglish
-        ? ['en', 'english', 'latin_en', 'name_en', 'title_en']
-        : ['idn', 'id', 'indonesian', 'translation', 'name_id', 'title_id'];
+        ? ["en", "english", "latin_en", "name_en", "title_en"]
+        : ["idn", "id", "indonesian", "translation", "name_id", "title_id"];
     const fallbackKeys = isEnglish
-        ? ['idn', 'id', 'indonesian', 'translation', 'latin_en', 'name', 'title', 'label', 'value']
-        : ['en', 'english', 'latin_en', 'name', 'title', 'label', 'value'];
+        ? [
+              "idn",
+              "id",
+              "indonesian",
+              "translation",
+              "latin_en",
+              "name",
+              "title",
+              "label",
+              "value",
+          ]
+        : ["en", "english", "latin_en", "name", "title", "label", "value"];
 
     return firstText(value, primaryKeys) || firstText(value, fallbackKeys);
 };
 
 export const getLocalizedTranslation = getLocalizedText;
 
-const localizedFieldKeys = (field, lang = 'ID') => {
-    const isEnglish = normalizeLang(lang) === 'EN';
-    const primarySuffixes = isEnglish ? ['en', 'english'] : ['idn', 'id', 'indonesian'];
-    const fallbackSuffixes = isEnglish ? ['idn', 'id', 'indonesian'] : ['en', 'english'];
+const localizedFieldKeys = (field, lang = "ID") => {
+    const isEnglish = normalizeLang(lang) === "EN";
+    const primarySuffixes = isEnglish
+        ? ["en", "english"]
+        : ["idn", "id", "indonesian"];
+    const fallbackSuffixes = isEnglish
+        ? ["idn", "id", "indonesian"]
+        : ["en", "english"];
 
     return [
         ...primarySuffixes.map((suffix) => `${field}_${suffix}`),
         ...primarySuffixes.map(
-            (suffix) => `${field}${suffix.charAt(0).toUpperCase()}${suffix.slice(1)}`,
+            (suffix) =>
+                `${field}${suffix.charAt(0).toUpperCase()}${suffix.slice(1)}`,
         ),
         field,
         ...fallbackSuffixes.map((suffix) => `${field}_${suffix}`),
         ...fallbackSuffixes.map(
-            (suffix) => `${field}${suffix.charAt(0).toUpperCase()}${suffix.slice(1)}`,
+            (suffix) =>
+                `${field}${suffix.charAt(0).toUpperCase()}${suffix.slice(1)}`,
         ),
     ];
 };
 
-export const getLocalizedField = (source, field, lang = 'ID', fallbackFields = []) => {
-    if (!source) return '';
+export const getLocalizedField = (
+    source,
+    field,
+    lang = "ID",
+    fallbackFields = [],
+) => {
+    if (!source) return "";
 
     for (const key of localizedFieldKeys(field, lang)) {
         const value = source?.[key];
@@ -52,9 +73,14 @@ export const getLocalizedField = (source, field, lang = 'ID', fallbackFields = [
         if (text) return text;
     }
 
-    for (const container of ['translation', 'translations', 'locale', 'locales']) {
+    for (const container of [
+        "translation",
+        "translations",
+        "locale",
+        "locales",
+    ]) {
         const nested = source?.[container];
-        if (!nested || typeof nested !== 'object') continue;
+        if (!nested || typeof nested !== "object") continue;
 
         for (const key of localizedFieldKeys(field, lang)) {
             const value = nested?.[key];
@@ -71,8 +97,8 @@ export const getLocalizedField = (source, field, lang = 'ID', fallbackFields = [
         if (text) return text;
     }
 
-    return '';
+    return "";
 };
 
-export const getLocalizedOption = (option, lang = 'ID') =>
-    getLocalizedText(option, lang) || getLocalizedField(option, 'text', lang);
+export const getLocalizedOption = (option, lang = "ID") =>
+    getLocalizedText(option, lang) || getLocalizedField(option, "text", lang);

@@ -1,122 +1,122 @@
 [
-  {
-    "step": 1,
-    "title": "Niat",
-    "arabic": "",
-    "transliteration": "",
-    "translation_text": "Niat di dalam hati saat memulai sholat",
-    "description": "Niat tempatnya di dalam hati saat takbiratul ihram. Tidak ada lafaz niat khusus yang diwajibkan dari Nabi ﷺ.",
-    "source": "HR. Bukhari No. 1; HR. Muslim No. 1907; Al-Mughni, Ibn Qudamah",
-    "notes": "Ulama salaf dan fuqaha mu'tabar menjelaskan niat sebagai amalan hati; pelafalan niat bukan bagian dari rukun sholat."
-  },
-  {
-    "step": 2,
-    "title": "Takbiratul Ihram",
-    "arabic": "اللَّهُ أَكْبَرُ",
-    "transliteration": "Allahu Akbar",
-    "translation_text": "Allah Maha Besar",
-    "description": "Mengangkat kedua tangan sejajar telinga atau bahu sambil mengucapkan takbir.",
-    "source": "HR. Bukhari No. 735; HR. Muslim No. 390; Shahih",
-    "notes": "Takbiratul ihram menjadi pembuka sholat dan mengharamkan hal-hal di luar sholat."
-  },
-  {
-    "step": 3,
-    "title": "Doa Iftitah",
-    "arabic": "اللَّهُمَّ بَاعِدْ بَيْنِي وَبَيْنَ خَطَايَايَ",
-    "transliteration": "Allahumma baa'id baynii wa bayna khathaayaaya",
-    "translation_text": "Ya Allah, jauhkanlah antara aku dan kesalahan-kesalahanku",
-    "description": "Dibaca setelah takbiratul ihram, sebelum membaca Al-Fatihah.",
-    "source": "HR. Bukhari No. 744; HR. Muslim No. 598; Shahih",
-    "notes": "Doa iftitah dibaca dengan suara pelan setelah takbiratul ihram."
-  },
-  {
-    "step": 4,
-    "title": "Membaca Al-Fatihah",
-    "arabic": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ. الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ...",
-    "transliteration": "Bismillahir rahmaanir rahiim. Alhamdu lillaahi rabbil 'aalamiin...",
-    "translation_text": "Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang. Segala puji bagi Allah Rabb semesta alam...",
-    "description": "Wajib dibaca di setiap rakaat. Diakhiri dengan amin.",
-    "source": "HR. Bukhari No. 756; HR. Muslim No. 394; Shahih",
-    "notes": "Al-Fatihah adalah rukun yang tidak boleh ditinggalkan."
-  },
-  {
-    "step": 5,
-    "title": "Membaca Surah/Ayat",
-    "arabic": "",
-    "transliteration": "",
-    "translation_text": "Membaca surah atau beberapa ayat Al-Quran setelah Al-Fatihah",
-    "description": "Dilakukan pada rakaat pertama dan kedua (sunnah).",
-    "source": "HR. Bukhari No. 776; HR. Muslim No. 452; Shahih",
-    "notes": "Pada sholat wajib, bacaan surah setelah Al-Fatihah disunnahkan pada dua rakaat pertama."
-  },
-  {
-    "step": 6,
-    "title": "Rukuk",
-    "arabic": "سُبْحَانَ رَبِّيَ الْعَظِيمِ",
-    "transliteration": "Subhaana rabbiyal 'azhiim",
-    "translation_text": "Maha Suci Tuhanku Yang Maha Agung",
-    "description": "Membungkuk hingga punggung lurus sejajar. Dibaca minimal 3 kali.",
-    "source": "HR. Muslim No. 772; HR. Abu Dawud No. 869; Shahih",
-    "notes": "Tasbih rukuk dibaca ketika posisi rukuk dengan thuma'ninah."
-  },
-  {
-    "step": 7,
-    "title": "I'tidal",
-    "arabic": "سَمِعَ اللَّهُ لِمَنْ حَمِدَهُ. رَبَّنَا وَلَكَ الْحَمْدُ",
-    "transliteration": "Sami'allaahu liman hamidah. Rabbanaa wa lakal hamd",
-    "translation_text": "Allah mendengar orang yang memuji-Nya. Rabb kami, hanya bagi-Mu segala puji.",
-    "description": "Berdiri tegak kembali setelah rukuk.",
-    "source": "HR. Bukhari No. 796; HR. Muslim No. 392; Shahih",
-    "notes": "Makmum cukup membaca 'Rabbana wa lakal hamd' setelah imam mengucapkan 'Sami'Allahu liman hamidah'."
-  },
-  {
-    "step": 8,
-    "title": "Sujud Pertama",
-    "arabic": "سُبْحَانَ رَبِّيَ الْأَعْلَى",
-    "transliteration": "Subhaana rabbiyal a'laa",
-    "translation_text": "Maha Suci Tuhanku Yang Maha Tinggi",
-    "description": "Sujud dengan 7 anggota badan menyentuh lantai. Dibaca minimal 3 kali.",
-    "source": "HR. Muslim No. 771; HR. Abu Dawud No. 875; Shahih",
-    "notes": "Tasbih sujud dibaca ketika sujud dengan tenang."
-  },
-  {
-    "step": 9,
-    "title": "Duduk di antara Dua Sujud",
-    "arabic": "رَبِّ اغْفِرْ لِي وَارْحَمْنِي",
-    "transliteration": "Rabbighfirlii warhamni",
-    "translation_text": "Ya Tuhanku, ampunilah aku dan rahmatilah aku",
-    "description": "Duduk iftirasy di antara dua sujud.",
-    "source": "HR. Abu Dawud No. 850; HR. Tirmidzi No. 284; HR. Ibnu Majah No. 898; Shahih",
-    "notes": "Doa di antara dua sujud bisa dibaca dengan beberapa lafaz yang sahih; ini salah satu yang masyhur."
-  },
-  {
-    "step": 10,
-    "title": "Sujud Kedua",
-    "arabic": "سُبْحَانَ رَبِّيَ الْأَعْلَى",
-    "transliteration": "Subhaana rabbiyal a'laa",
-    "translation_text": "Maha Suci Tuhanku Yang Maha Tinggi",
-    "description": "Sujud kedua sama seperti sujud pertama.",
-    "source": "HR. Muslim No. 771; Shahih",
-    "notes": "Gerakan dan bacaan sujud kedua sama seperti sujud pertama."
-  },
-  {
-    "step": 11,
-    "title": "Tasyahhud Akhir",
-    "arabic": "التَّحِيَّاتُ لِلَّهِ وَالصَّلَوَاتُ وَالطَّيِّبَاتُ...",
-    "transliteration": "At-tahiyyaatu lillaahi wash-shalawaatu wat-thayyibaat...",
-    "translation_text": "Segala penghormatan, sholat, dan kebaikan hanya bagi Allah...",
-    "description": "Dibaca pada rakaat terakhir dalam posisi duduk tawarruk.",
-    "source": "HR. Bukhari No. 831; HR. Muslim No. 402; Shahih",
-    "notes": "Tasyahhud diajarkan langsung oleh Nabi ﷺ kepada Ibn Mas'ud."
-  },
-  {
-    "step": 12,
-    "title": "Salam",
-    "arabic": "السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ",
-    "transliteration": "As-salaamu 'alaikum wa rahmatullaah",
-    "translation_text": "Semoga keselamatan dan rahmat Allah tercurah atas kalian",
-    "description": "Menoleh ke kanan lalu ke kiri untuk mengakhiri sholat.",
-    "source": "HR. Abu Dawud No. 975; HR. Ibnu Majah No. 275; Shahih",
-    "notes": "Salam adalah penutup sholat."
-  }
+    {
+        "step": 1,
+        "title": "Niat",
+        "arabic": "",
+        "transliteration": "",
+        "translation_text": "Niat di dalam hati saat memulai sholat",
+        "description": "Niat tempatnya di dalam hati saat takbiratul ihram. Tidak ada lafaz niat khusus yang diwajibkan dari Nabi ﷺ.",
+        "source": "HR. Bukhari No. 1; HR. Muslim No. 1907; Al-Mughni, Ibn Qudamah",
+        "notes": "Ulama salaf dan fuqaha mu'tabar menjelaskan niat sebagai amalan hati; pelafalan niat bukan bagian dari rukun sholat."
+    },
+    {
+        "step": 2,
+        "title": "Takbiratul Ihram",
+        "arabic": "اللَّهُ أَكْبَرُ",
+        "transliteration": "Allahu Akbar",
+        "translation_text": "Allah Maha Besar",
+        "description": "Mengangkat kedua tangan sejajar telinga atau bahu sambil mengucapkan takbir.",
+        "source": "HR. Bukhari No. 735; HR. Muslim No. 390; Shahih",
+        "notes": "Takbiratul ihram menjadi pembuka sholat dan mengharamkan hal-hal di luar sholat."
+    },
+    {
+        "step": 3,
+        "title": "Doa Iftitah",
+        "arabic": "اللَّهُمَّ بَاعِدْ بَيْنِي وَبَيْنَ خَطَايَايَ",
+        "transliteration": "Allahumma baa'id baynii wa bayna khathaayaaya",
+        "translation_text": "Ya Allah, jauhkanlah antara aku dan kesalahan-kesalahanku",
+        "description": "Dibaca setelah takbiratul ihram, sebelum membaca Al-Fatihah.",
+        "source": "HR. Bukhari No. 744; HR. Muslim No. 598; Shahih",
+        "notes": "Doa iftitah dibaca dengan suara pelan setelah takbiratul ihram."
+    },
+    {
+        "step": 4,
+        "title": "Membaca Al-Fatihah",
+        "arabic": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ. الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ...",
+        "transliteration": "Bismillahir rahmaanir rahiim. Alhamdu lillaahi rabbil 'aalamiin...",
+        "translation_text": "Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang. Segala puji bagi Allah Rabb semesta alam...",
+        "description": "Wajib dibaca di setiap rakaat. Diakhiri dengan amin.",
+        "source": "HR. Bukhari No. 756; HR. Muslim No. 394; Shahih",
+        "notes": "Al-Fatihah adalah rukun yang tidak boleh ditinggalkan."
+    },
+    {
+        "step": 5,
+        "title": "Membaca Surah/Ayat",
+        "arabic": "",
+        "transliteration": "",
+        "translation_text": "Membaca surah atau beberapa ayat Al-Quran setelah Al-Fatihah",
+        "description": "Dilakukan pada rakaat pertama dan kedua (sunnah).",
+        "source": "HR. Bukhari No. 776; HR. Muslim No. 452; Shahih",
+        "notes": "Pada sholat wajib, bacaan surah setelah Al-Fatihah disunnahkan pada dua rakaat pertama."
+    },
+    {
+        "step": 6,
+        "title": "Rukuk",
+        "arabic": "سُبْحَانَ رَبِّيَ الْعَظِيمِ",
+        "transliteration": "Subhaana rabbiyal 'azhiim",
+        "translation_text": "Maha Suci Tuhanku Yang Maha Agung",
+        "description": "Membungkuk hingga punggung lurus sejajar. Dibaca minimal 3 kali.",
+        "source": "HR. Muslim No. 772; HR. Abu Dawud No. 869; Shahih",
+        "notes": "Tasbih rukuk dibaca ketika posisi rukuk dengan thuma'ninah."
+    },
+    {
+        "step": 7,
+        "title": "I'tidal",
+        "arabic": "سَمِعَ اللَّهُ لِمَنْ حَمِدَهُ. رَبَّنَا وَلَكَ الْحَمْدُ",
+        "transliteration": "Sami'allaahu liman hamidah. Rabbanaa wa lakal hamd",
+        "translation_text": "Allah mendengar orang yang memuji-Nya. Rabb kami, hanya bagi-Mu segala puji.",
+        "description": "Berdiri tegak kembali setelah rukuk.",
+        "source": "HR. Bukhari No. 796; HR. Muslim No. 392; Shahih",
+        "notes": "Makmum cukup membaca 'Rabbana wa lakal hamd' setelah imam mengucapkan 'Sami'Allahu liman hamidah'."
+    },
+    {
+        "step": 8,
+        "title": "Sujud Pertama",
+        "arabic": "سُبْحَانَ رَبِّيَ الْأَعْلَى",
+        "transliteration": "Subhaana rabbiyal a'laa",
+        "translation_text": "Maha Suci Tuhanku Yang Maha Tinggi",
+        "description": "Sujud dengan 7 anggota badan menyentuh lantai. Dibaca minimal 3 kali.",
+        "source": "HR. Muslim No. 771; HR. Abu Dawud No. 875; Shahih",
+        "notes": "Tasbih sujud dibaca ketika sujud dengan tenang."
+    },
+    {
+        "step": 9,
+        "title": "Duduk di antara Dua Sujud",
+        "arabic": "رَبِّ اغْفِرْ لِي وَارْحَمْنِي",
+        "transliteration": "Rabbighfirlii warhamni",
+        "translation_text": "Ya Tuhanku, ampunilah aku dan rahmatilah aku",
+        "description": "Duduk iftirasy di antara dua sujud.",
+        "source": "HR. Abu Dawud No. 850; HR. Tirmidzi No. 284; HR. Ibnu Majah No. 898; Shahih",
+        "notes": "Doa di antara dua sujud bisa dibaca dengan beberapa lafaz yang sahih; ini salah satu yang masyhur."
+    },
+    {
+        "step": 10,
+        "title": "Sujud Kedua",
+        "arabic": "سُبْحَانَ رَبِّيَ الْأَعْلَى",
+        "transliteration": "Subhaana rabbiyal a'laa",
+        "translation_text": "Maha Suci Tuhanku Yang Maha Tinggi",
+        "description": "Sujud kedua sama seperti sujud pertama.",
+        "source": "HR. Muslim No. 771; Shahih",
+        "notes": "Gerakan dan bacaan sujud kedua sama seperti sujud pertama."
+    },
+    {
+        "step": 11,
+        "title": "Tasyahhud Akhir",
+        "arabic": "التَّحِيَّاتُ لِلَّهِ وَالصَّلَوَاتُ وَالطَّيِّبَاتُ...",
+        "transliteration": "At-tahiyyaatu lillaahi wash-shalawaatu wat-thayyibaat...",
+        "translation_text": "Segala penghormatan, sholat, dan kebaikan hanya bagi Allah...",
+        "description": "Dibaca pada rakaat terakhir dalam posisi duduk tawarruk.",
+        "source": "HR. Bukhari No. 831; HR. Muslim No. 402; Shahih",
+        "notes": "Tasyahhud diajarkan langsung oleh Nabi ﷺ kepada Ibn Mas'ud."
+    },
+    {
+        "step": 12,
+        "title": "Salam",
+        "arabic": "السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ",
+        "transliteration": "As-salaamu 'alaikum wa rahmatullaah",
+        "translation_text": "Semoga keselamatan dan rahmat Allah tercurah atas kalian",
+        "description": "Menoleh ke kanan lalu ke kiri untuk mengakhiri sholat.",
+        "source": "HR. Abu Dawud No. 975; HR. Ibnu Majah No. 275; Shahih",
+        "notes": "Salam adalah penutup sholat."
+    }
 ]

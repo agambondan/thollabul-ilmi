@@ -12,13 +12,13 @@ screen tidak punya chrome, card, modal, dan header yang beda-beda.
 ## Scope
 
 - Mobile:
-  - shared modal/bottom sheet
-  - shared content card
-  - shared action sheet
-  - shared detail header
-  - screen tetap boleh override style, field, icon, dan action sesuai konteks
+    - shared modal/bottom sheet
+    - shared content card
+    - shared action sheet
+    - shared detail header
+    - screen tetap boleh override style, field, icon, dan action sesuai konteks
 - Web/API:
-  - tidak termasuk scope kecuali perlu menyesuaikan contract data
+    - tidak termasuk scope kecuali perlu menyesuaikan contract data
 
 ## Current Baseline
 
@@ -26,11 +26,11 @@ screen tidak punya chrome, card, modal, dan header yang beda-beda.
 - Screen prioritas yang tersentuh: Quran, Hadis, Ibadah, Belajar/Explore,
   Home, Global Search.
 - Shared primitive terbaru:
-  - `AppModalSheet` untuk modal/bottom sheet.
-  - `AppActionSheet` untuk menu aksi.
-  - `ContentCard` untuk card/list row dengan metadata fleksibel.
-  - `DetailHeader` untuk header detail layar.
-  - `SectionHeader` untuk header section compact dengan meta/actions.
+    - `AppModalSheet` untuk modal/bottom sheet.
+    - `AppActionSheet` untuk menu aksi.
+    - `ContentCard` untuk card/list row dengan metadata fleksibel.
+    - `DetailHeader` untuk header detail layar.
+    - `SectionHeader` untuk header section compact dengan meta/actions.
 
 ## Task List
 
@@ -72,15 +72,15 @@ screen tidak punya chrome, card, modal, dan header yang beda-beda.
 - Device smoke masih wajib sebelum status dinaikkan ke `DONE`; `adb devices -l`
   belum menampilkan device pada verifikasi terakhir.
 - Device probe 2026-05-16:
-  - `adb devices -l` sudah mendeteksi device `985c2f0e`, tetapi statusnya
-    `no permissions`.
-  - `lsusb` mendeteksi `18d1:4ee7 Google Inc. Nexus/Pixel Device (charging +
-    debug)`.
-  - USB node `/dev/bus/usb/003/007` masih `root:root`, sehingga
-    `make mobile-status` gagal melakukan `adb reverse` dengan
-    `insufficient permissions`.
-  - Runtime device smoke belum bisa dinaikkan ke `DONE` sampai permission ADB
-    dibereskan dari host/replug/udev.
+    - `adb devices -l` sudah mendeteksi device `985c2f0e`, tetapi statusnya
+      `no permissions`.
+    - `lsusb` mendeteksi `18d1:4ee7 Google Inc. Nexus/Pixel Device (charging +
+debug)`.
+    - USB node `/dev/bus/usb/003/007` masih `root:root`, sehingga
+      `make mobile-status` gagal melakukan `adb reverse` dengan
+      `insufficient permissions`.
+    - Runtime device smoke belum bisa dinaikkan ke `DONE` sampai permission ADB
+      dibereskan dari host/replug/udev.
 
 ## Source of Truth
 

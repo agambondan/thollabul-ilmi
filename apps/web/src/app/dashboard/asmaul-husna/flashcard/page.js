@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { AsmaulHusnaFlashcardContent } from '@/app/asmaul-husna/flashcard/page';
+import { AsmaulHusnaFlashcardContent } from "@/app/asmaul-husna/flashcard/page";
 
 export default function DashboardAsmaulHusnaFlashcardPage() {
     return (

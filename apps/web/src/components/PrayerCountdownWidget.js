@@ -1,39 +1,39 @@
-'use client';
+"use client";
 
-import { useLocale } from '@/context/Locale';
-import { toLocalISODate } from '@/lib/date';
+import { useLocale } from "@/context/Locale";
+import { toLocalISODate } from "@/lib/date";
 import {
     DEFAULT_PRAYER_LOCATION,
     readStoredUserLocation,
     USER_LOCATION_EVENT,
-} from '@/lib/userLocation';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+} from "@/lib/userLocation";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import {
     MdAccessTime,
     MdCalendarToday,
     MdNightsStay,
     MdOutlineWbSunny,
     MdWbSunny,
-} from 'react-icons/md';
+} from "react-icons/md";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 const PRAYER_KEYS = [
-    { key: 'fajr', label: 'Subuh', icon: MdNightsStay },
-    { key: 'dhuhr', label: 'Dzuhur', icon: MdWbSunny },
-    { key: 'asr', label: 'Ashar', icon: MdOutlineWbSunny },
-    { key: 'maghrib', label: 'Maghrib', icon: MdOutlineWbSunny },
-    { key: 'isha', label: 'Isya', icon: MdNightsStay },
+    { key: "fajr", label: "Subuh", icon: MdNightsStay },
+    { key: "dhuhr", label: "Dzuhur", icon: MdWbSunny },
+    { key: "asr", label: "Ashar", icon: MdOutlineWbSunny },
+    { key: "maghrib", label: "Maghrib", icon: MdOutlineWbSunny },
+    { key: "isha", label: "Isya", icon: MdNightsStay },
 ];
 
 const DISPLAY_PRAYERS = [
-    { key: 'fajr', label: 'Subuh', icon: MdNightsStay },
-    { key: 'sunrise', label: 'Terbit', icon: MdOutlineWbSunny },
-    { key: 'dhuhr', label: 'Dzuhur', icon: MdWbSunny },
-    { key: 'asr', label: 'Ashar', icon: MdOutlineWbSunny },
-    { key: 'maghrib', label: 'Maghrib', icon: MdOutlineWbSunny },
-    { key: 'isha', label: 'Isya', icon: MdNightsStay },
+    { key: "fajr", label: "Subuh", icon: MdNightsStay },
+    { key: "sunrise", label: "Terbit", icon: MdOutlineWbSunny },
+    { key: "dhuhr", label: "Dzuhur", icon: MdWbSunny },
+    { key: "asr", label: "Ashar", icon: MdOutlineWbSunny },
+    { key: "maghrib", label: "Maghrib", icon: MdOutlineWbSunny },
+    { key: "isha", label: "Isya", icon: MdNightsStay },
 ];
 
 const parseMinutes = (str) => {
@@ -43,18 +43,18 @@ const parseMinutes = (str) => {
 };
 
 const formatTime = (value) => {
-    if (!value) return '--:--';
+    if (!value) return "--:--";
     const match = String(value).match(/(\d{1,2}):(\d{2})/);
     if (!match) return value;
-    return `${match[1].padStart(2, '0')}:${match[2]}`;
+    return `${match[1].padStart(2, "0")}:${match[2]}`;
 };
 
 const fmtCountdown = (secs) => {
-    if (secs < 0) return '00:00:00';
+    if (secs < 0) return "00:00:00";
     const h = Math.floor(secs / 3600);
     const m = Math.floor((secs % 3600) / 60);
     const s = secs % 60;
-    return [h, m, s].map((v) => String(v).padStart(2, '0')).join(':');
+    return [h, m, s].map((v) => String(v).padStart(2, "0")).join(":");
 };
 
 const fmtRemainingText = (secs, label) => {
@@ -67,20 +67,20 @@ const fmtRemainingText = (secs, label) => {
 
 const formatHijriDate = (date) => {
     try {
-        return new Intl.DateTimeFormat('id-ID-u-ca-islamic-civil', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
+        return new Intl.DateTimeFormat("id-ID-u-ca-islamic-civil", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric",
         })
             .format(date)
-            .replace(/\sAH$/i, ' H');
+            .replace(/\sAH$/i, " H");
     } catch {
-        return '';
+        return "";
     }
 };
 
-export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
+export default function PrayerCountdownWidget({ basePath = "/jadwal-sholat" }) {
     const { t } = useLocale();
     const [location, setLocation] = useState(null);
     const [prayers, setPrayers] = useState(null);
@@ -94,11 +94,18 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
             if (event.detail) setLocation(event.detail);
         };
         window.addEventListener(USER_LOCATION_EVENT, handleLocationUpdate);
-        return () => window.removeEventListener(USER_LOCATION_EVENT, handleLocationUpdate);
+        return () =>
+            window.removeEventListener(
+                USER_LOCATION_EVENT,
+                handleLocationUpdate,
+            );
     }, []);
 
     useEffect(() => {
-        if (!Number.isFinite(Number(location?.lat)) || !Number.isFinite(Number(location?.lng))) {
+        if (
+            !Number.isFinite(Number(location?.lat)) ||
+            !Number.isFinite(Number(location?.lng))
+        ) {
             return;
         }
         const today = toLocalISODate();
@@ -107,7 +114,7 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
         )
             .then((r) => r.json())
             .then((d) => setPrayers(d?.data?.prayers ?? d?.prayers ?? null))
-            .catch(e => console.error(e));
+            .catch((e) => console.error(e));
     }, [location?.lat, location?.lng]);
 
     useEffect(() => {
@@ -132,11 +139,12 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
     if (!nextPrayer) {
         // After Isha, next is Fajr tomorrow.
         nextPrayer = PRAYER_KEYS[0];
-        const fajrMins = parseMinutes(prayers['fajr']);
+        const fajrMins = parseMinutes(prayers["fajr"]);
         nextMins = fajrMins !== null ? fajrMins + 24 * 60 : null;
     }
 
-    const secsLeft = nextMins !== null ? (nextMins - nowMins) * 60 - now.getSeconds() : null;
+    const secsLeft =
+        nextMins !== null ? (nextMins - nowMins) * 60 - now.getSeconds() : null;
     const hijriDate = formatHijriDate(now);
 
     return (
@@ -168,12 +176,16 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
                     {formatTime(prayers[nextPrayer.key])}
                 </p>
                 <p className='mt-3 text-sm font-semibold text-slate-500 dark:text-slate-400'>
-                    {secsLeft !== null ? fmtRemainingText(secsLeft, nextPrayer.label) : ''}
+                    {secsLeft !== null
+                        ? fmtRemainingText(secsLeft, nextPrayer.label)
+                        : ""}
                 </p>
                 <div className='mt-4 inline-flex items-center gap-1.5 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-sm font-extrabold text-emerald-800 shadow-sm dark:border-emerald-900/40 dark:bg-emerald-900/20 dark:text-emerald-200'>
                     <MdAccessTime className='text-emerald-700 dark:text-emerald-300' />
                     <span className='tabular-nums'>
-                        {secsLeft !== null ? fmtCountdown(secsLeft) : '--:--:--'}
+                        {secsLeft !== null
+                            ? fmtCountdown(secsLeft)
+                            : "--:--:--"}
                     </span>
                 </div>
             </div>
@@ -189,8 +201,8 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
                                 key={prayer.key}
                                 className={`flex min-w-0 flex-col items-center gap-1 text-center ${
                                     isActive
-                                        ? 'text-emerald-700 dark:text-emerald-300'
-                                        : 'text-slate-600 dark:text-slate-400'
+                                        ? "text-emerald-700 dark:text-emerald-300"
+                                        : "text-slate-600 dark:text-slate-400"
                                 }`}
                             >
                                 <span className='text-[11px] font-extrabold leading-tight'>
@@ -199,22 +211,24 @@ export default function PrayerCountdownWidget({ basePath = '/jadwal-sholat' }) {
                                 <Icon
                                     className={`text-2xl ${
                                         isActive
-                                            ? 'text-emerald-700 dark:text-emerald-300'
-                                            : 'text-slate-400 dark:text-slate-500'
+                                            ? "text-emerald-700 dark:text-emerald-300"
+                                            : "text-slate-400 dark:text-slate-500"
                                     }`}
                                     aria-hidden='true'
                                 />
                                 <span className='text-[11px] font-extrabold tabular-nums leading-tight'>
-                                    {isActive ? 'Berikutnya' : formatTime(prayers[prayer.key])}
+                                    {isActive
+                                        ? "Berikutnya"
+                                        : formatTime(prayers[prayer.key])}
                                 </span>
                             </div>
                         );
                     })}
                 </div>
                 <p className='sr-only'>
-                    {t('prayer_schedule.next')}: {nextPrayer.label}{' '}
+                    {t("prayer_schedule.next")}: {nextPrayer.label}{" "}
                     {formatTime(prayers[nextPrayer.key])}
-                    {secsLeft !== null ? `, ${fmtCountdown(secsLeft)}` : ''}
+                    {secsLeft !== null ? `, ${fmtCountdown(secsLeft)}` : ""}
                 </p>
             </div>
         </Link>

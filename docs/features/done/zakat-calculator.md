@@ -30,48 +30,55 @@ Kalkulator zakat (maal, fitrah, nishab) dengan perhitungan otomatis berdasarkan 
 ### API Response Shape
 
 **`POST /zakat/maal`**
+
 ```json
 {
-  "total_wealth": 100000000,
-  "gold_price_per_gram": 1000000
+    "total_wealth": 100000000,
+    "gold_price_per_gram": 1000000
 }
 ```
+
 Response:
+
 ```json
 {
-  "total_wealth": 100000000,
-  "nishab": 85000000,
-  "is_obligated": true,
-  "zakat_amount": 2500000,
-  "rate": 2.5,
-  "nishab_grams": 85,
-  "gold_price_used": 1000000
+    "total_wealth": 100000000,
+    "nishab": 85000000,
+    "is_obligated": true,
+    "zakat_amount": 2500000,
+    "rate": 2.5,
+    "nishab_grams": 85,
+    "gold_price_used": 1000000
 }
 ```
 
 **`POST /zakat/fitrah`**
+
 ```json
 {
-  "person_count": 4,
-  "staple_price_per_kg": 12000
+    "person_count": 4,
+    "staple_price_per_kg": 12000
 }
 ```
+
 Response:
+
 ```json
 {
-  "person_count": 4,
-  "per_person_rice_kg": 2.5,
-  "total_rice_kg": 10.0,
-  "money_equivalent": 120000
+    "person_count": 4,
+    "per_person_rice_kg": 2.5,
+    "total_rice_kg": 10.0,
+    "money_equivalent": 120000
 }
 ```
 
 **`GET /zakat/nishab`**
+
 ```json
 {
-  "gold_grams": 85,
-  "silver_grams": 595,
-  "description": "Nishab zakat maal setara 85 gram emas atau 595 gram perak..."
+    "gold_grams": 85,
+    "silver_grams": 595,
+    "description": "Nishab zakat maal setara 85 gram emas atau 595 gram perak..."
 }
 ```
 

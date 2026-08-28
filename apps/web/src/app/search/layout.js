@@ -1,7 +1,7 @@
 export const metadata = {
-    title: 'Search',
+    title: "Search",
     description:
-        'Search Quran verses and hadiths by keywords in Indonesian, Arabic, or transliteration.',
+        "Search Quran verses and hadiths by keywords in Indonesian, Arabic, or transliteration.",
 };
 export default function SearchLayout({ children }) {
     return children;

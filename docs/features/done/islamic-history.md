@@ -32,21 +32,22 @@ Timeline sejarah Islam dengan tanggal Hijriah dan Masehi, memberikan konteks kro
 ### API Response Shape
 
 **`GET /history?category=nabi&year=570`**
+
 ```json
 [
-  {
-    "id": 1,
-    "year_hijri": -53,
-    "year_miladi": 570,
-    "slug": "tahun-gajah",
-    "category": "nabi",
-    "is_significant": true,
-    "translation": {
-      "idn": "Tahun Gajah - Kelahiran Nabi Muhammad",
-      "en": "Year of the Elephant - Birth of Prophet Muhammad",
-      "ar": "..."
+    {
+        "id": 1,
+        "year_hijri": -53,
+        "year_miladi": 570,
+        "slug": "tahun-gajah",
+        "category": "nabi",
+        "is_significant": true,
+        "translation": {
+            "idn": "Tahun Gajah - Kelahiran Nabi Muhammad",
+            "en": "Year of the Elephant - Birth of Prophet Muhammad",
+            "ar": "..."
+        }
     }
-  }
 ]
 ```
 
@@ -63,7 +64,7 @@ Timeline sejarah Islam dengan tanggal Hijriah dan Masehi, memberikan konteks kro
 | `description` | string | Full description (stored in Translation) |
 | `category` | HistoryCategory | nabi, khulafa, dinasti, ulama, peristiwa |
 | `is_significant` | bool | Major event marker |
-| `translation_id` | *int | FK to Translation |
+| `translation_id` | \*int | FK to Translation |
 
 ### Key Frontend Components
 

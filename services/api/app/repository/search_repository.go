@@ -103,8 +103,10 @@ func (r *searchRepo) SearchDoa(query string, limit, offset int) ([]model.Doa, in
 	var total int64
 
 	filter := `doa.title ILIKE ? OR doa.arabic ILIKE ? OR doa.translation ILIKE ? OR doa.source ILIKE ? OR doa.category::text ILIKE ? OR "Translation".idn ILIKE ? OR "Translation".en ILIKE ? OR "Translation".latin_idn ILIKE ? OR "Translation".latin_en ILIKE ? OR "Translation".ar ILIKE ?`
-	args := []interface{}{"%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%",
-		"%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%"}
+	args := []interface{}{
+		"%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%",
+		"%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%",
+	}
 
 	r.db.Model(&model.Doa{}).Joins("Translation").Where(filter, args...).Count(&total)
 
@@ -121,8 +123,10 @@ func (r *searchRepo) SearchKajian(query string, limit, offset int) ([]model.Kaji
 	var total int64
 
 	filter := `kajian.title ILIKE ? OR kajian.description ILIKE ? OR kajian.speaker ILIKE ? OR kajian.topic ILIKE ? OR kajian.type::text ILIKE ? OR "Translation".idn ILIKE ? OR "Translation".en ILIKE ? OR "Translation".description_idn ILIKE ? OR "Translation".description_en ILIKE ?`
-	args := []interface{}{"%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%",
-		"%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%"}
+	args := []interface{}{
+		"%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%",
+		"%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%",
+	}
 
 	r.db.Model(&model.Kajian{}).Joins("Translation").Where(filter, args...).Count(&total)
 

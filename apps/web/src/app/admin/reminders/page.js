@@ -1,31 +1,32 @@
-'use client';
+"use client";
 
-import { adminReminderApi } from '@/lib/api';
-import { useLocale } from '@/context/Locale';
-import { useEffect, useState } from 'react';
-import { BsPencil, BsPlusCircle, BsTrash, BsX } from 'react-icons/bs';
+import { adminReminderApi } from "@/lib/api";
+import { useLocale } from "@/context/Locale";
+import { useEffect, useState } from "react";
+import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 
 const TYPES = [
-    { value: 'ulama', label: 'Nasihat Ulama' },
-    { value: 'quote', label: 'Quote' },
-    { value: 'advice', label: 'Pengingat' },
+    { value: "ulama", label: "Nasihat Ulama" },
+    { value: "quote", label: "Quote" },
+    { value: "advice", label: "Pengingat" },
 ];
 
 const EMPTY_FORM = {
-    type: 'ulama',
-    title: '',
-    text: '',
-    author: '',
-    source: '',
-    lang: 'idn',
+    type: "ulama",
+    title: "",
+    text: "",
+    author: "",
+    source: "",
+    lang: "idn",
     is_active: true,
     display_order: 0,
 };
 
 const INPUT_CLASS =
-    'w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-700 dark:text-white';
+    "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-700 dark:text-white";
 
-const asItems = (payload) => payload?.items ?? payload?.data?.items ?? payload?.data ?? payload ?? [];
+const asItems = (payload) =>
+    payload?.items ?? payload?.data?.items ?? payload?.data ?? payload ?? [];
 
 const AdminRemindersPage = () => {
     const { t } = useLocale();
@@ -35,11 +36,13 @@ const AdminRemindersPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState("");
     const [deleteId, setDeleteId] = useState(null);
 
     const fb = (type, msg) =>
-        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+        window.dispatchEvent(
+            new CustomEvent(type, { detail: { message: msg } }),
+        );
 
     const load = async () => {
         setLoading(true);
@@ -68,12 +71,12 @@ const AdminRemindersPage = () => {
     const openEdit = (item) => {
         setEditId(item.id ?? item._id);
         setForm({
-            type: item.type ?? 'ulama',
-            title: item.title ?? '',
-            text: item.text ?? '',
-            author: item.author ?? '',
-            source: item.source ?? '',
-            lang: item.lang ?? 'idn',
+            type: item.type ?? "ulama",
+            title: item.title ?? "",
+            text: item.text ?? "",
+            author: item.author ?? "",
+            source: item.source ?? "",
+            lang: item.lang ?? "idn",
             is_active: item.is_active !== false,
             display_order: item.display_order ?? 0,
         });
@@ -90,12 +93,12 @@ const AdminRemindersPage = () => {
             const res = editId
                 ? await adminReminderApi.update(editId, payload)
                 : await adminReminderApi.create(payload);
-            if (!res.ok) throw new Error('Gagal menyimpan reminder.');
+            if (!res.ok) throw new Error("Gagal menyimpan reminder.");
             setShowModal(false);
             await load();
-            fb('admin:success', t('admin.crud.save_success'));
+            fb("admin:success", t("admin.crud.save_success"));
         } catch (err) {
-            fb('admin:mutation-error', err.message);
+            fb("admin:mutation-error", err.message);
         } finally {
             setSaving(false);
         }
@@ -105,12 +108,12 @@ const AdminRemindersPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminReminderApi.delete(deleteId);
-            if (!res.ok) throw new Error('Gagal menghapus reminder.');
+            if (!res.ok) throw new Error("Gagal menghapus reminder.");
             setDeleteId(null);
             await load();
-            fb('admin:success', t('admin.crud.delete_success'));
+            fb("admin:success", t("admin.crud.delete_success"));
         } catch (err) {
-            fb('admin:mutation-error', err.message);
+            fb("admin:mutation-error", err.message);
         }
     };
 
@@ -152,7 +155,7 @@ const AdminRemindersPage = () => {
             </div>
 
             {loading ? (
-                <p className='text-sm text-gray-500'>{t('common.loading')}</p>
+                <p className='text-sm text-gray-500'>{t("common.loading")}</p>
             ) : (
                 <div className='overflow-hidden rounded-xl border border-gray-100 bg-white dark:border-slate-700 dark:bg-slate-800'>
                     <table className='w-full text-sm'>
@@ -177,7 +180,10 @@ const AdminRemindersPage = () => {
                         </thead>
                         <tbody className='divide-y divide-gray-100 dark:divide-slate-700'>
                             {filtered.map((item) => (
-                                <tr key={item.id ?? item._id} className='hover:bg-gray-50 dark:hover:bg-slate-750'>
+                                <tr
+                                    key={item.id ?? item._id}
+                                    className='hover:bg-gray-50 dark:hover:bg-slate-750'
+                                >
                                     <td className='px-4 py-3'>
                                         <p className='font-medium text-gray-900 dark:text-white'>
                                             {item.title}
@@ -187,8 +193,10 @@ const AdminRemindersPage = () => {
                                         </p>
                                     </td>
                                     <td className='hidden px-4 py-3 text-gray-600 dark:text-gray-300 md:table-cell'>
-                                        <p>{item.author || '-'}</p>
-                                        <p className='text-xs text-gray-400'>{item.source || '-'}</p>
+                                        <p>{item.author || "-"}</p>
+                                        <p className='text-xs text-gray-400'>
+                                            {item.source || "-"}
+                                        </p>
                                     </td>
                                     <td className='px-4 py-3'>
                                         <span className='rounded bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
@@ -196,29 +204,36 @@ const AdminRemindersPage = () => {
                                         </span>
                                     </td>
                                     <td className='hidden px-4 py-3 lg:table-cell'>
-                                        <span className={`rounded px-2 py-0.5 text-xs ${
-                                            item.is_active
-                                                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
-                                                : 'bg-gray-100 text-gray-500 dark:bg-slate-700 dark:text-gray-400'
-                                        }`}
+                                        <span
+                                            className={`rounded px-2 py-0.5 text-xs ${
+                                                item.is_active
+                                                    ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                                                    : "bg-gray-100 text-gray-500 dark:bg-slate-700 dark:text-gray-400"
+                                            }`}
                                         >
-                                            {item.is_active ? 'Aktif' : 'Nonaktif'}
+                                            {item.is_active
+                                                ? "Aktif"
+                                                : "Nonaktif"}
                                         </span>
                                     </td>
                                     <td className='px-4 py-3'>
                                         <div className='flex justify-end gap-2'>
                                             <button
                                                 onClick={() => openEdit(item)}
-                                                aria-label={t('common.edit')}
-                                                title={t('common.edit')}
+                                                aria-label={t("common.edit")}
+                                                title={t("common.edit")}
                                                 className='rounded p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'
                                             >
                                                 <BsPencil />
                                             </button>
                                             <button
-                                                onClick={() => setDeleteId(item.id ?? item._id)}
-                                                aria-label={t('common.delete')}
-                                                title={t('common.delete')}
+                                                onClick={() =>
+                                                    setDeleteId(
+                                                        item.id ?? item._id,
+                                                    )
+                                                }
+                                                aria-label={t("common.delete")}
+                                                title={t("common.delete")}
                                                 className='rounded p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
                                             >
                                                 <BsTrash />
@@ -229,8 +244,11 @@ const AdminRemindersPage = () => {
                             ))}
                             {filtered.length === 0 && (
                                 <tr>
-                                    <td colSpan={5} className='px-4 py-8 text-center text-gray-400'>
-                                        {t('admin.crud.no_data')}
+                                    <td
+                                        colSpan={5}
+                                        className='px-4 py-8 text-center text-gray-400'
+                                    >
+                                        {t("admin.crud.no_data")}
                                     </td>
                                 </tr>
                             )}
@@ -244,7 +262,7 @@ const AdminRemindersPage = () => {
                     <div className='max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white dark:bg-slate-800'>
                         <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700'>
                             <h2 className='font-bold text-gray-900 dark:text-white'>
-                                {editId ? 'Edit Reminder' : 'Tambah Reminder'}
+                                {editId ? "Edit Reminder" : "Tambah Reminder"}
                             </h2>
                             <button
                                 onClick={() => setShowModal(false)}
@@ -260,18 +278,31 @@ const AdminRemindersPage = () => {
                                     <input
                                         type='text'
                                         value={form.title}
-                                        onChange={(e) => setForm({ ...form, title: e.target.value })}
+                                        onChange={(e) =>
+                                            setForm({
+                                                ...form,
+                                                title: e.target.value,
+                                            })
+                                        }
                                         className={INPUT_CLASS}
                                     />
                                 </Field>
                                 <Field label='Tipe'>
                                     <select
                                         value={form.type}
-                                        onChange={(e) => setForm({ ...form, type: e.target.value })}
+                                        onChange={(e) =>
+                                            setForm({
+                                                ...form,
+                                                type: e.target.value,
+                                            })
+                                        }
                                         className={INPUT_CLASS}
                                     >
                                         {TYPES.map((type) => (
-                                            <option key={type.value} value={type.value}>
+                                            <option
+                                                key={type.value}
+                                                value={type.value}
+                                            >
                                                 {type.label}
                                             </option>
                                         ))}
@@ -282,7 +313,12 @@ const AdminRemindersPage = () => {
                             <Field label='Isi pengingat'>
                                 <textarea
                                     value={form.text}
-                                    onChange={(e) => setForm({ ...form, text: e.target.value })}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            text: e.target.value,
+                                        })
+                                    }
                                     rows={5}
                                     className={INPUT_CLASS}
                                 />
@@ -293,7 +329,12 @@ const AdminRemindersPage = () => {
                                     <input
                                         type='text'
                                         value={form.author}
-                                        onChange={(e) => setForm({ ...form, author: e.target.value })}
+                                        onChange={(e) =>
+                                            setForm({
+                                                ...form,
+                                                author: e.target.value,
+                                            })
+                                        }
                                         className={INPUT_CLASS}
                                     />
                                 </Field>
@@ -301,7 +342,12 @@ const AdminRemindersPage = () => {
                                     <input
                                         type='text'
                                         value={form.source}
-                                        onChange={(e) => setForm({ ...form, source: e.target.value })}
+                                        onChange={(e) =>
+                                            setForm({
+                                                ...form,
+                                                source: e.target.value,
+                                            })
+                                        }
                                         placeholder="Al-Fawa'id, Riyadhus Shalihin, dll"
                                         className={INPUT_CLASS}
                                     />
@@ -312,7 +358,12 @@ const AdminRemindersPage = () => {
                                 <Field label='Bahasa'>
                                     <select
                                         value={form.lang}
-                                        onChange={(e) => setForm({ ...form, lang: e.target.value })}
+                                        onChange={(e) =>
+                                            setForm({
+                                                ...form,
+                                                lang: e.target.value,
+                                            })
+                                        }
                                         className={INPUT_CLASS}
                                     >
                                         <option value='idn'>Indonesia</option>
@@ -324,7 +375,12 @@ const AdminRemindersPage = () => {
                                     <input
                                         type='number'
                                         value={form.display_order}
-                                        onChange={(e) => setForm({ ...form, display_order: e.target.value })}
+                                        onChange={(e) =>
+                                            setForm({
+                                                ...form,
+                                                display_order: e.target.value,
+                                            })
+                                        }
                                         className={INPUT_CLASS}
                                     />
                                 </Field>
@@ -332,7 +388,12 @@ const AdminRemindersPage = () => {
                                     <input
                                         type='checkbox'
                                         checked={form.is_active}
-                                        onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
+                                        onChange={(e) =>
+                                            setForm({
+                                                ...form,
+                                                is_active: e.target.checked,
+                                            })
+                                        }
                                         className='h-4 w-4 rounded border-gray-300 text-emerald-600'
                                     />
                                     Aktif ditampilkan
@@ -345,14 +406,14 @@ const AdminRemindersPage = () => {
                                 onClick={() => setShowModal(false)}
                                 className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-700'
                             >
-                                {t('common.cancel')}
+                                {t("common.cancel")}
                             </button>
                             <button
                                 onClick={save}
                                 disabled={saving || !form.title || !form.text}
                                 className='flex-1 rounded-lg bg-emerald-700 py-2 text-sm font-medium text-white hover:bg-emerald-600 disabled:opacity-50'
                             >
-                                {saving ? t('common.saving') : t('common.save')}
+                                {saving ? t("common.saving") : t("common.save")}
                             </button>
                         </div>
                     </div>
@@ -373,13 +434,13 @@ const AdminRemindersPage = () => {
                                 onClick={() => setDeleteId(null)}
                                 className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 dark:border-slate-600 dark:text-gray-300'
                             >
-                                {t('common.cancel')}
+                                {t("common.cancel")}
                             </button>
                             <button
                                 onClick={confirmDelete}
                                 className='flex-1 rounded-lg bg-red-600 py-2 text-sm font-medium text-white hover:bg-red-500'
                             >
-                                {t('common.delete')}
+                                {t("common.delete")}
                             </button>
                         </div>
                     </div>

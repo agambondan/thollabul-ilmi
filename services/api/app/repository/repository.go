@@ -53,7 +53,6 @@ type Repositories struct {
 	Sholat               SholatRepository
 	Murojaah             MurojaahRepository
 	Fiqh                 FiqhRepository
-	Tahlil               TahlilRepository
 	Kajian               KajianRepository
 	Muhasabah            MuhasabahRepository
 	Goal                 GoalRepository
@@ -137,7 +136,6 @@ func NewRepositories(db *gorm.DB, client *redis.Client) (*Repositories, error) {
 		Sholat:               NewSholatRepository(db),
 		Murojaah:             NewMurojaahRepository(db),
 		Fiqh:                 NewFiqhRepository(db),
-		Tahlil:               NewTahlilRepository(db),
 		Kajian:               NewKajianRepository(db, pg),
 		Muhasabah:            NewMuhasabahRepository(db),
 		Goal:                 NewGoalRepository(db),
@@ -187,6 +185,7 @@ func (s *Repositories) Close() error {
 func (s *Repositories) Migrations() error {
 	migrations.DeduplicateSeedData(s.db)
 	migrations.PreMigrateAsbabunNuzul(s.db)
+	migrations.DropTahlilTables(s.db)
 	err := s.db.AutoMigrate(migrations.ModelMigrations...)
 	if err != nil {
 		return err

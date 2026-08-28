@@ -1,218 +1,218 @@
 [
-  {
-    "type": "asmaul_husna",
-    "difficulty": "easy",
-    "question_text": "Apa arti dari Asma Allah 'Ar-Rahman'?",
-    "correct_answer": "Yang Maha Pengasih (di dunia untuk semua makhluk)",
-    "options": "[\"Yang Maha Kuasa\", \"Yang Maha Pengasih (di dunia untuk semua makhluk)\", \"Yang Maha Mengetahui\", \"Yang Maha Bijaksana\"]",
-    "explanation": "Ar-Rahman (الرَّحْمَن) artinya Yang Maha Pengasih. Kasih sayang-Nya di dunia meliputi semua makhluk, Muslim maupun non-Muslim. Berbeda dengan Ar-Rahim yang kasihnya khusus untuk orang beriman di akhirat."
-  },
-  {
-    "type": "asmaul_husna",
-    "difficulty": "easy",
-    "question_text": "Apa arti dari Asma Allah 'Al-Quddus'?",
-    "correct_answer": "Yang Maha Suci dari segala kekurangan",
-    "options": "[\"Yang Maha Besar\", \"Yang Maha Suci dari segala kekurangan\", \"Yang Maha Perkasa\", \"Yang Maha Adil\"]",
-    "explanation": "Al-Quddus (الْقُدُّوس) artinya Yang Maha Suci — suci dari segala aib, kekurangan, sekutu, dan tandingan. Disebutkan dalam QS. Al-Hasyr: 23 dan QS. Al-Jumu'ah: 1."
-  },
-  {
-    "type": "asmaul_husna",
-    "difficulty": "medium",
-    "question_text": "Apa arti dari Asma Allah 'Al-Hafizh'?",
-    "correct_answer": "Yang Maha Memelihara dan Menjaga",
-    "options": "[\"Yang Maha Menghitung\", \"Yang Maha Memelihara dan Menjaga\", \"Yang Maha Mendengar\", \"Yang Maha Melihat\"]",
-    "explanation": "Al-Hafizh (الْحَفِيظ) artinya Yang Maha Memelihara dan Menjaga. Allah memelihara seluruh makhluk-Nya dan menjaga amal perbuatan manusia. Disebutkan dalam QS. Hud: 57 dan QS. Saba': 21."
-  },
-  {
-    "type": "asmaul_husna",
-    "difficulty": "medium",
-    "question_text": "Berapa jumlah Asmaul Husna yang disebutkan dalam hadith Nabi ﷺ?",
-    "correct_answer": "99 nama",
-    "options": "[\"33 nama\", \"66 nama\", \"99 nama\", \"100 nama\"]",
-    "explanation": "Nabi ﷺ bersabda: 'Sesungguhnya Allah memiliki 99 nama — seratus kurang satu — barangsiapa menghafalnya akan masuk surga.' (HR. Bukhari No. 2736, Muslim No. 2677)"
-  },
-  {
-    "type": "asmaul_husna",
-    "difficulty": "easy",
-    "question_text": "Apa arti dari Asma Allah 'As-Sami'?",
-    "correct_answer": "Yang Maha Mendengar",
-    "options": "[\"Yang Maha Melihat\", \"Yang Maha Mendengar\", \"Yang Maha Mengetahui\", \"Yang Maha Bijaksana\"]",
-    "explanation": "As-Sami' (السَّمِيع) artinya Yang Maha Mendengar. Allah mendengar segala sesuatu tanpa terbatas — doa yang paling pelan sekalipun sampai ke hadapan-Nya. Sering disandingkan dengan Al-Bashir (Yang Maha Melihat)."
-  },
-  {
-    "type": "fiqh",
-    "difficulty": "easy",
-    "question_text": "Apa hukum membaca Al-Fatihah dalam sholat fardhu?",
-    "correct_answer": "Wajib — rukun sholat yang tidak sah sholat tanpanya",
-    "options": "[\"Wajib — rukun sholat yang tidak sah sholat tanpanya\", \"Sunnah muakkad\", \"Boleh diganti surah lain\", \"Hanya wajib di rakaat pertama\"]",
-    "explanation": "Nabi ﷺ bersabda: 'Tidak sah sholat bagi yang tidak membaca Al-Fatihah.' (HR. Bukhari No. 756, Muslim No. 394)"
-  },
-  {
-    "type": "fiqh",
-    "difficulty": "easy",
-    "question_text": "Berapa jumlah rakaat sholat Dzuhur?",
-    "correct_answer": "4 rakaat",
-    "options": "[\"2 rakaat\", \"3 rakaat\", \"4 rakaat\", \"6 rakaat\"]",
-    "explanation": "Sholat Dzuhur terdiri dari 4 rakaat fardhu."
-  },
-  {
-    "type": "fiqh",
-    "difficulty": "medium",
-    "question_text": "Manakah yang TIDAK membatalkan wudhu?",
-    "correct_answer": "Menyentuh Al-Quran",
-    "options": "[\"Buang air kecil\", \"Buang air besar\", \"Menyentuh Al-Quran\", \"Tidur nyenyak\"]",
-    "explanation": "Menyentuh Al-Quran tidak membatalkan wudhu menurut pendapat mayoritas ulama. Yang membatalkan wudhu: buang air, tidur nyenyak, menyentuh kemaluan dengan tangan, dan hal-hal yang keluar dari dua jalan."
-  },
-  {
-    "type": "fiqh",
-    "difficulty": "medium",
-    "question_text": "Berapa nishab zakat maal dalam ukuran emas?",
-    "correct_answer": "85 gram emas",
-    "options": "[\"20 gram emas\", \"50 gram emas\", \"85 gram emas\", \"100 gram emas\"]",
-    "explanation": "Nishab zakat maal setara 85 gram emas (20 mitsqal) atau 595 gram perak. Jika kepemilikan mencapai nishab dan sudah haul (1 tahun), wajib zakat 2.5%."
-  },
-  {
-    "type": "fiqh",
-    "difficulty": "hard",
-    "question_text": "Apa yang dimaksud dengan 'tayammum'?",
-    "correct_answer": "Bersuci menggunakan debu/tanah yang suci sebagai pengganti air",
-    "options": "[\"Mandi wajib dengan air\", \"Bersuci menggunakan debu/tanah yang suci sebagai pengganti air\", \"Membersihkan najis dengan air\", \"Wudhu menggunakan air zamzam\"]",
-    "explanation": "Tayammum adalah pengganti wudhu dan mandi wajib ketika tidak ada air atau tidak mampu menggunakan air. Dalil: QS. Al-Maidah: 6."
-  },
-  {
-    "type": "fiqh",
-    "difficulty": "medium",
-    "question_text": "Berapa jumlah rakaat sholat Tarawih yang paling shahih dari sunnah Nabi ﷺ?",
-    "correct_answer": "11 rakaat (8 tarawih + 3 witir)",
-    "options": "[\"20 rakaat\", \"11 rakaat (8 tarawih + 3 witir)\", \"23 rakaat\", \"36 rakaat\"]",
-    "explanation": "Aisyah ra. meriwayatkan bahwa Nabi ﷺ tidak pernah sholat malam lebih dari 11 rakaat, baik di Ramadan maupun di luar Ramadan (HR. Bukhari No. 1147, Muslim No. 738)."
-  },
-  {
-    "type": "hadith",
-    "difficulty": "easy",
-    "question_text": "Berapa jumlah kitab hadith utama yang dikenal sebagai Kutub As-Sittah?",
-    "correct_answer": "6 kitab",
-    "options": "[\"4 kitab\", \"5 kitab\", \"6 kitab\", \"9 kitab\"]",
-    "explanation": "Kutub As-Sittah (Enam Kitab Hadith Utama): Shahih Bukhari, Shahih Muslim, Sunan Abu Dawud, Sunan Tirmidzi, Sunan An-Nasa'i, dan Sunan Ibnu Majah."
-  },
-  {
-    "type": "hadith",
-    "difficulty": "medium",
-    "question_text": "Siapakah sahabat yang meriwayatkan hadith paling banyak?",
-    "correct_answer": "Abu Hurairah ra. (5.374 hadith)",
-    "options": "[\"Aisyah ra.\", \"Abdullah bin Umar ra.\", \"Abu Hurairah ra. (5.374 hadith)\", \"Anas bin Malik ra.\"]",
-    "explanation": "Abu Hurairah ra. meriwayatkan sekitar 5.374 hadith — terbanyak di antara sahabat. Beliau selalu bersama Nabi ﷺ dan mendoakan diri agar diberi hafalan kuat."
-  },
-  {
-    "type": "hadith",
-    "difficulty": "medium",
-    "question_text": "Apa yang dimaksud dengan hadith Mutawatir?",
-    "correct_answer": "Hadith yang diriwayatkan oleh banyak perawi sehingga mustahil bersepakat dusta",
-    "options": "[\"Hadith dengan satu jalur sanad\", \"Hadith yang diriwayatkan oleh banyak perawi sehingga mustahil bersepakat dusta\", \"Hadith yang lemah (dhaif)\", \"Hadith yang hanya dari Abu Hurairah\"]",
-    "explanation": "Hadith Mutawatir diriwayatkan oleh sejumlah perawi yang secara adat mustahil bersepakat berdusta. Statusnya memberikan keyakinan penuh (qath'iy). Contoh: hadith tentang sholat 5 waktu."
-  },
-  {
-    "type": "hadith",
-    "difficulty": "hard",
-    "question_text": "Imam Bukhari lahir pada tahun berapa?",
-    "correct_answer": "194 H / 810 M",
-    "options": "[\"150 H / 767 M\", \"170 H / 786 M\", \"194 H / 810 M\", \"210 H / 825 M\"]",
-    "explanation": "Imam Muhammad bin Ismail Al-Bukhari lahir pada 13 Syawal 194 H (810 M) di Bukhara (Uzbekistan saat ini). Beliau mulai menghafal hadith sejak usia 11 tahun dan menulis Shahih Bukhari selama 16 tahun."
-  },
-  {
-    "type": "hadith",
-    "difficulty": "medium",
-    "question_text": "Apa perbedaan hadith Shahih dan Hadith Hasan?",
-    "correct_answer": "Hadith Hasan memiliki perawi yang adil namun hafalannya sedikit kurang dibanding Shahih",
-    "options": "[\"Tidak ada perbedaan, keduanya sama\", \"Hadith Hasan lebih kuat dari Shahih\", \"Hadith Hasan memiliki perawi yang adil namun hafalannya sedikit kurang dibanding Shahih\", \"Hadith Hasan adalah hadith palsu\"]",
-    "explanation": "Hadith Shahih: semua perawinya adil, hafalan kuat (dhabith), sanad bersambung, tidak ada syadz/illat. Hadith Hasan: seperti Shahih namun hafalan perawi lebih rendah. Keduanya bisa dijadikan hujjah."
-  },
-  {
-    "type": "hafalan",
-    "difficulty": "easy",
-    "question_text": "Surah apa yang disebut 'Umm Al-Quran' (Induk Al-Quran)?",
-    "correct_answer": "Al-Fatihah (Surah ke-1)",
-    "options": "[\"Al-Baqarah (Surah ke-2)\", \"Al-Fatihah (Surah ke-1)\", \"Al-Ikhlas (Surah ke-112)\", \"Yasin (Surah ke-36)\"]",
-    "explanation": "Al-Fatihah disebut 'Umm Al-Quran' karena merangkum inti ajaran Al-Quran: tauhid, pujian kepada Allah, ibadah, dan doa. Juga disebut As-Sab'ul Matsaani (7 ayat yang diulang-ulang)."
-  },
-  {
-    "type": "hafalan",
-    "difficulty": "medium",
-    "question_text": "Berapa jumlah total ayat dalam Al-Quran?",
-    "correct_answer": "6.236 ayat",
-    "options": "[\"5.000 ayat\", \"6.000 ayat\", \"6.236 ayat\", \"6.666 ayat\"]",
-    "explanation": "Jumlah ayat dalam Al-Quran yang disepakati ulama adalah 6.236 ayat (tanpa menghitung basmalah di awal tiap surah sebagai ayat, kecuali Al-Fatihah). Al-Quran terdiri dari 114 surah, 30 juz."
-  },
-  {
-    "type": "hafalan",
-    "difficulty": "easy",
-    "question_text": "Surah apa yang paling pendek dalam Al-Quran?",
-    "correct_answer": "Al-Kautsar (3 ayat)",
-    "options": "[\"Al-Ikhlas (4 ayat)\", \"Al-Kautsar (3 ayat)\", \"Al-Falaq (5 ayat)\", \"An-Nas (6 ayat)\"]",
-    "explanation": "Surah Al-Kautsar (QS. 108) adalah surah terpendek dengan hanya 3 ayat. Meski pendek, maknanya sangat agung — berisi kabar gembira tentang Al-Kautsar (sungai/nikmat berlimpah di surga)."
-  },
-  {
-    "type": "hafalan",
-    "difficulty": "medium",
-    "question_text": "Ayat apakah yang disebut 'Sayyid Al-Ayat' (penghulu segala ayat)?",
-    "correct_answer": "Ayat Kursi (QS. Al-Baqarah: 255)",
-    "options": "[\"QS. Al-Fatihah: 1\", \"Ayat Kursi (QS. Al-Baqarah: 255)\", \"QS. Al-Ikhlas: 1\", \"QS. Al-Hasyr: 22-24\"]",
-    "explanation": "Nabi ﷺ bersabda: 'Sayyid Al-Ayat adalah Ayat Kursi.' (HR. Al-Hakim; Shahih). Ayat Kursi menggambarkan keagungan Allah — Dia yang Maha Hidup dan terus mengurus makhluk-Nya."
-  },
-  {
-    "type": "hafalan",
-    "difficulty": "easy",
-    "question_text": "Surah manakah yang dianjurkan dibaca setiap malam Jumat?",
-    "correct_answer": "Al-Kahfi (Surah ke-18)",
-    "options": "[\"Yasin (Surah ke-36)\", \"Al-Kahfi (Surah ke-18)\", \"Al-Mulk (Surah ke-67)\", \"Al-Waqiah (Surah ke-56)\"]",
-    "explanation": "Nabi ﷺ bersabda: 'Barangsiapa membaca Surat Al-Kahfi pada hari Jumat, maka ia akan mendapat cahaya di antara dua Jumat.' (HR. Al-Hakim; Shahih Al-Albani, Shahihul Jami' No. 6470)"
-  },
-  {
-    "type": "sirah",
-    "difficulty": "easy",
-    "question_text": "Di kota mana Nabi Muhammad ﷺ dilahirkan?",
-    "correct_answer": "Makkah Al-Mukarramah",
-    "options": "[\"Madinah Al-Munawwarah\", \"Makkah Al-Mukarramah\", \"Thaif\", \"Yaman\"]",
-    "explanation": "Nabi Muhammad ﷺ lahir di Makkah pada 12 Rabi'ul Awwal, Tahun Gajah (570 M), bertepatan dengan peristiwa pasukan gajah Abrahah yang dihancurkan Allah."
-  },
-  {
-    "type": "sirah",
-    "difficulty": "easy",
-    "question_text": "Siapakah istri pertama Nabi Muhammad ﷺ?",
-    "correct_answer": "Khadijah binti Khuwailid",
-    "options": "[\"Aisyah binti Abu Bakar\", \"Khadijah binti Khuwailid\", \"Hafsah binti Umar\", \"Ummu Salamah\"]",
-    "explanation": "Khadijah binti Khuwailid adalah istri pertama dan paling dicintai Nabi ﷺ. Beliau menikah pada usia 25 tahun, Khadijah 40 tahun. Khadijah adalah wanita pertama yang masuk Islam."
-  },
-  {
-    "type": "sirah",
-    "difficulty": "medium",
-    "question_text": "Pada tahun berapa Nabi ﷺ hijrah dari Makkah ke Madinah?",
-    "correct_answer": "622 M (tahun 1 H)",
-    "options": "[\"610 M\", \"615 M\", \"622 M (tahun 1 H)\", \"630 M\"]",
-    "explanation": "Hijrah ke Madinah terjadi pada tahun 622 M dan menjadi awal kalender Hijriah (1 H). Peristiwa ini menandai pembentukan komunitas Muslim pertama di Madinah."
-  },
-  {
-    "type": "sirah",
-    "difficulty": "medium",
-    "question_text": "Berapa jumlah pasukan Muslim dalam Perang Badar (2 H)?",
-    "correct_answer": "313 orang",
-    "options": "[\"100 orang\", \"313 orang\", \"500 orang\", \"1000 orang\"]",
-    "explanation": "Pasukan Muslim berjumlah 313 orang menghadapi 1.000 pasukan Quraisy. Dengan pertolongan Allah, kaum muslimin menang gemilang. 70 musuh tewas termasuk Abu Jahal (HR. Bukhari No. 3992)."
-  },
-  {
-    "type": "sirah",
-    "difficulty": "hard",
-    "question_text": "Apa nama perjanjian damai antara Nabi ﷺ dan kaum Quraisy pada tahun 6 H?",
-    "correct_answer": "Perjanjian Hudaibiyyah",
-    "options": "[\"Perjanjian Madinah\", \"Perjanjian Hudaibiyyah\", \"Perjanjian Aqabah\", \"Perjanjian Tabuk\"]",
-    "explanation": "Perjanjian Hudaibiyyah (6 H) adalah perjanjian damai 10 tahun antara kaum muslimin dan Quraisy. Meski tampak merugikan, Allah menyebutnya 'kemenangan yang nyata' (QS. Al-Fath: 1)."
-  },
-  {
-    "type": "sirah",
-    "difficulty": "medium",
-    "question_text": "Siapakah sahabat yang mengusulkan penggalian parit dalam Perang Khandaq?",
-    "correct_answer": "Salman Al-Farisi ra.",
-    "options": "[\"Abu Bakar Ash-Shiddiq\", \"Umar bin Khattab\", \"Salman Al-Farisi ra.\", \"Ali bin Abi Thalib\"]",
-    "explanation": "Salman Al-Farisi ra., sahabat asal Persia, mengusulkan strategi menggali parit (khandaq) di utara Madinah — strategi yang tidak dikenal orang Arab. Ini menyelamatkan Madinah dari pengepungan 10.000 pasukan musuh."
-  }
+    {
+        "type": "asmaul_husna",
+        "difficulty": "easy",
+        "question_text": "Apa arti dari Asma Allah 'Ar-Rahman'?",
+        "correct_answer": "Yang Maha Pengasih (di dunia untuk semua makhluk)",
+        "options": "[\"Yang Maha Kuasa\", \"Yang Maha Pengasih (di dunia untuk semua makhluk)\", \"Yang Maha Mengetahui\", \"Yang Maha Bijaksana\"]",
+        "explanation": "Ar-Rahman (الرَّحْمَن) artinya Yang Maha Pengasih. Kasih sayang-Nya di dunia meliputi semua makhluk, Muslim maupun non-Muslim. Berbeda dengan Ar-Rahim yang kasihnya khusus untuk orang beriman di akhirat."
+    },
+    {
+        "type": "asmaul_husna",
+        "difficulty": "easy",
+        "question_text": "Apa arti dari Asma Allah 'Al-Quddus'?",
+        "correct_answer": "Yang Maha Suci dari segala kekurangan",
+        "options": "[\"Yang Maha Besar\", \"Yang Maha Suci dari segala kekurangan\", \"Yang Maha Perkasa\", \"Yang Maha Adil\"]",
+        "explanation": "Al-Quddus (الْقُدُّوس) artinya Yang Maha Suci — suci dari segala aib, kekurangan, sekutu, dan tandingan. Disebutkan dalam QS. Al-Hasyr: 23 dan QS. Al-Jumu'ah: 1."
+    },
+    {
+        "type": "asmaul_husna",
+        "difficulty": "medium",
+        "question_text": "Apa arti dari Asma Allah 'Al-Hafizh'?",
+        "correct_answer": "Yang Maha Memelihara dan Menjaga",
+        "options": "[\"Yang Maha Menghitung\", \"Yang Maha Memelihara dan Menjaga\", \"Yang Maha Mendengar\", \"Yang Maha Melihat\"]",
+        "explanation": "Al-Hafizh (الْحَفِيظ) artinya Yang Maha Memelihara dan Menjaga. Allah memelihara seluruh makhluk-Nya dan menjaga amal perbuatan manusia. Disebutkan dalam QS. Hud: 57 dan QS. Saba': 21."
+    },
+    {
+        "type": "asmaul_husna",
+        "difficulty": "medium",
+        "question_text": "Berapa jumlah Asmaul Husna yang disebutkan dalam hadith Nabi ﷺ?",
+        "correct_answer": "99 nama",
+        "options": "[\"33 nama\", \"66 nama\", \"99 nama\", \"100 nama\"]",
+        "explanation": "Nabi ﷺ bersabda: 'Sesungguhnya Allah memiliki 99 nama — seratus kurang satu — barangsiapa menghafalnya akan masuk surga.' (HR. Bukhari No. 2736, Muslim No. 2677)"
+    },
+    {
+        "type": "asmaul_husna",
+        "difficulty": "easy",
+        "question_text": "Apa arti dari Asma Allah 'As-Sami'?",
+        "correct_answer": "Yang Maha Mendengar",
+        "options": "[\"Yang Maha Melihat\", \"Yang Maha Mendengar\", \"Yang Maha Mengetahui\", \"Yang Maha Bijaksana\"]",
+        "explanation": "As-Sami' (السَّمِيع) artinya Yang Maha Mendengar. Allah mendengar segala sesuatu tanpa terbatas — doa yang paling pelan sekalipun sampai ke hadapan-Nya. Sering disandingkan dengan Al-Bashir (Yang Maha Melihat)."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "easy",
+        "question_text": "Apa hukum membaca Al-Fatihah dalam sholat fardhu?",
+        "correct_answer": "Wajib — rukun sholat yang tidak sah sholat tanpanya",
+        "options": "[\"Wajib — rukun sholat yang tidak sah sholat tanpanya\", \"Sunnah muakkad\", \"Boleh diganti surah lain\", \"Hanya wajib di rakaat pertama\"]",
+        "explanation": "Nabi ﷺ bersabda: 'Tidak sah sholat bagi yang tidak membaca Al-Fatihah.' (HR. Bukhari No. 756, Muslim No. 394)"
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "easy",
+        "question_text": "Berapa jumlah rakaat sholat Dzuhur?",
+        "correct_answer": "4 rakaat",
+        "options": "[\"2 rakaat\", \"3 rakaat\", \"4 rakaat\", \"6 rakaat\"]",
+        "explanation": "Sholat Dzuhur terdiri dari 4 rakaat fardhu."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Manakah yang TIDAK membatalkan wudhu?",
+        "correct_answer": "Menyentuh Al-Quran",
+        "options": "[\"Buang air kecil\", \"Buang air besar\", \"Menyentuh Al-Quran\", \"Tidur nyenyak\"]",
+        "explanation": "Menyentuh Al-Quran tidak membatalkan wudhu menurut pendapat mayoritas ulama. Yang membatalkan wudhu: buang air, tidur nyenyak, menyentuh kemaluan dengan tangan, dan hal-hal yang keluar dari dua jalan."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Berapa nishab zakat maal dalam ukuran emas?",
+        "correct_answer": "85 gram emas",
+        "options": "[\"20 gram emas\", \"50 gram emas\", \"85 gram emas\", \"100 gram emas\"]",
+        "explanation": "Nishab zakat maal setara 85 gram emas (20 mitsqal) atau 595 gram perak. Jika kepemilikan mencapai nishab dan sudah haul (1 tahun), wajib zakat 2.5%."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "hard",
+        "question_text": "Apa yang dimaksud dengan 'tayammum'?",
+        "correct_answer": "Bersuci menggunakan debu/tanah yang suci sebagai pengganti air",
+        "options": "[\"Mandi wajib dengan air\", \"Bersuci menggunakan debu/tanah yang suci sebagai pengganti air\", \"Membersihkan najis dengan air\", \"Wudhu menggunakan air zamzam\"]",
+        "explanation": "Tayammum adalah pengganti wudhu dan mandi wajib ketika tidak ada air atau tidak mampu menggunakan air. Dalil: QS. Al-Maidah: 6."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Berapa jumlah rakaat sholat Tarawih yang paling shahih dari sunnah Nabi ﷺ?",
+        "correct_answer": "11 rakaat (8 tarawih + 3 witir)",
+        "options": "[\"20 rakaat\", \"11 rakaat (8 tarawih + 3 witir)\", \"23 rakaat\", \"36 rakaat\"]",
+        "explanation": "Aisyah ra. meriwayatkan bahwa Nabi ﷺ tidak pernah sholat malam lebih dari 11 rakaat, baik di Ramadan maupun di luar Ramadan (HR. Bukhari No. 1147, Muslim No. 738)."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "easy",
+        "question_text": "Berapa jumlah kitab hadith utama yang dikenal sebagai Kutub As-Sittah?",
+        "correct_answer": "6 kitab",
+        "options": "[\"4 kitab\", \"5 kitab\", \"6 kitab\", \"9 kitab\"]",
+        "explanation": "Kutub As-Sittah (Enam Kitab Hadith Utama): Shahih Bukhari, Shahih Muslim, Sunan Abu Dawud, Sunan Tirmidzi, Sunan An-Nasa'i, dan Sunan Ibnu Majah."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Siapakah sahabat yang meriwayatkan hadith paling banyak?",
+        "correct_answer": "Abu Hurairah ra. (5.374 hadith)",
+        "options": "[\"Aisyah ra.\", \"Abdullah bin Umar ra.\", \"Abu Hurairah ra. (5.374 hadith)\", \"Anas bin Malik ra.\"]",
+        "explanation": "Abu Hurairah ra. meriwayatkan sekitar 5.374 hadith — terbanyak di antara sahabat. Beliau selalu bersama Nabi ﷺ dan mendoakan diri agar diberi hafalan kuat."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Apa yang dimaksud dengan hadith Mutawatir?",
+        "correct_answer": "Hadith yang diriwayatkan oleh banyak perawi sehingga mustahil bersepakat dusta",
+        "options": "[\"Hadith dengan satu jalur sanad\", \"Hadith yang diriwayatkan oleh banyak perawi sehingga mustahil bersepakat dusta\", \"Hadith yang lemah (dhaif)\", \"Hadith yang hanya dari Abu Hurairah\"]",
+        "explanation": "Hadith Mutawatir diriwayatkan oleh sejumlah perawi yang secara adat mustahil bersepakat berdusta. Statusnya memberikan keyakinan penuh (qath'iy). Contoh: hadith tentang sholat 5 waktu."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "hard",
+        "question_text": "Imam Bukhari lahir pada tahun berapa?",
+        "correct_answer": "194 H / 810 M",
+        "options": "[\"150 H / 767 M\", \"170 H / 786 M\", \"194 H / 810 M\", \"210 H / 825 M\"]",
+        "explanation": "Imam Muhammad bin Ismail Al-Bukhari lahir pada 13 Syawal 194 H (810 M) di Bukhara (Uzbekistan saat ini). Beliau mulai menghafal hadith sejak usia 11 tahun dan menulis Shahih Bukhari selama 16 tahun."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Apa perbedaan hadith Shahih dan Hadith Hasan?",
+        "correct_answer": "Hadith Hasan memiliki perawi yang adil namun hafalannya sedikit kurang dibanding Shahih",
+        "options": "[\"Tidak ada perbedaan, keduanya sama\", \"Hadith Hasan lebih kuat dari Shahih\", \"Hadith Hasan memiliki perawi yang adil namun hafalannya sedikit kurang dibanding Shahih\", \"Hadith Hasan adalah hadith palsu\"]",
+        "explanation": "Hadith Shahih: semua perawinya adil, hafalan kuat (dhabith), sanad bersambung, tidak ada syadz/illat. Hadith Hasan: seperti Shahih namun hafalan perawi lebih rendah. Keduanya bisa dijadikan hujjah."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "easy",
+        "question_text": "Surah apa yang disebut 'Umm Al-Quran' (Induk Al-Quran)?",
+        "correct_answer": "Al-Fatihah (Surah ke-1)",
+        "options": "[\"Al-Baqarah (Surah ke-2)\", \"Al-Fatihah (Surah ke-1)\", \"Al-Ikhlas (Surah ke-112)\", \"Yasin (Surah ke-36)\"]",
+        "explanation": "Al-Fatihah disebut 'Umm Al-Quran' karena merangkum inti ajaran Al-Quran: tauhid, pujian kepada Allah, ibadah, dan doa. Juga disebut As-Sab'ul Matsaani (7 ayat yang diulang-ulang)."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "medium",
+        "question_text": "Berapa jumlah total ayat dalam Al-Quran?",
+        "correct_answer": "6.236 ayat",
+        "options": "[\"5.000 ayat\", \"6.000 ayat\", \"6.236 ayat\", \"6.666 ayat\"]",
+        "explanation": "Jumlah ayat dalam Al-Quran yang disepakati ulama adalah 6.236 ayat (tanpa menghitung basmalah di awal tiap surah sebagai ayat, kecuali Al-Fatihah). Al-Quran terdiri dari 114 surah, 30 juz."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "easy",
+        "question_text": "Surah apa yang paling pendek dalam Al-Quran?",
+        "correct_answer": "Al-Kautsar (3 ayat)",
+        "options": "[\"Al-Ikhlas (4 ayat)\", \"Al-Kautsar (3 ayat)\", \"Al-Falaq (5 ayat)\", \"An-Nas (6 ayat)\"]",
+        "explanation": "Surah Al-Kautsar (QS. 108) adalah surah terpendek dengan hanya 3 ayat. Meski pendek, maknanya sangat agung — berisi kabar gembira tentang Al-Kautsar (sungai/nikmat berlimpah di surga)."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "medium",
+        "question_text": "Ayat apakah yang disebut 'Sayyid Al-Ayat' (penghulu segala ayat)?",
+        "correct_answer": "Ayat Kursi (QS. Al-Baqarah: 255)",
+        "options": "[\"QS. Al-Fatihah: 1\", \"Ayat Kursi (QS. Al-Baqarah: 255)\", \"QS. Al-Ikhlas: 1\", \"QS. Al-Hasyr: 22-24\"]",
+        "explanation": "Nabi ﷺ bersabda: 'Sayyid Al-Ayat adalah Ayat Kursi.' (HR. Al-Hakim; Shahih). Ayat Kursi menggambarkan keagungan Allah — Dia yang Maha Hidup dan terus mengurus makhluk-Nya."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "easy",
+        "question_text": "Surah manakah yang dianjurkan dibaca setiap malam Jumat?",
+        "correct_answer": "Al-Kahfi (Surah ke-18)",
+        "options": "[\"Yasin (Surah ke-36)\", \"Al-Kahfi (Surah ke-18)\", \"Al-Mulk (Surah ke-67)\", \"Al-Waqiah (Surah ke-56)\"]",
+        "explanation": "Nabi ﷺ bersabda: 'Barangsiapa membaca Surat Al-Kahfi pada hari Jumat, maka ia akan mendapat cahaya di antara dua Jumat.' (HR. Al-Hakim; Shahih Al-Albani, Shahihul Jami' No. 6470)"
+    },
+    {
+        "type": "sirah",
+        "difficulty": "easy",
+        "question_text": "Di kota mana Nabi Muhammad ﷺ dilahirkan?",
+        "correct_answer": "Makkah Al-Mukarramah",
+        "options": "[\"Madinah Al-Munawwarah\", \"Makkah Al-Mukarramah\", \"Thaif\", \"Yaman\"]",
+        "explanation": "Nabi Muhammad ﷺ lahir di Makkah pada 12 Rabi'ul Awwal, Tahun Gajah (570 M), bertepatan dengan peristiwa pasukan gajah Abrahah yang dihancurkan Allah."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "easy",
+        "question_text": "Siapakah istri pertama Nabi Muhammad ﷺ?",
+        "correct_answer": "Khadijah binti Khuwailid",
+        "options": "[\"Aisyah binti Abu Bakar\", \"Khadijah binti Khuwailid\", \"Hafsah binti Umar\", \"Ummu Salamah\"]",
+        "explanation": "Khadijah binti Khuwailid adalah istri pertama dan paling dicintai Nabi ﷺ. Beliau menikah pada usia 25 tahun, Khadijah 40 tahun. Khadijah adalah wanita pertama yang masuk Islam."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Pada tahun berapa Nabi ﷺ hijrah dari Makkah ke Madinah?",
+        "correct_answer": "622 M (tahun 1 H)",
+        "options": "[\"610 M\", \"615 M\", \"622 M (tahun 1 H)\", \"630 M\"]",
+        "explanation": "Hijrah ke Madinah terjadi pada tahun 622 M dan menjadi awal kalender Hijriah (1 H). Peristiwa ini menandai pembentukan komunitas Muslim pertama di Madinah."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Berapa jumlah pasukan Muslim dalam Perang Badar (2 H)?",
+        "correct_answer": "313 orang",
+        "options": "[\"100 orang\", \"313 orang\", \"500 orang\", \"1000 orang\"]",
+        "explanation": "Pasukan Muslim berjumlah 313 orang menghadapi 1.000 pasukan Quraisy. Dengan pertolongan Allah, kaum muslimin menang gemilang. 70 musuh tewas termasuk Abu Jahal (HR. Bukhari No. 3992)."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "hard",
+        "question_text": "Apa nama perjanjian damai antara Nabi ﷺ dan kaum Quraisy pada tahun 6 H?",
+        "correct_answer": "Perjanjian Hudaibiyyah",
+        "options": "[\"Perjanjian Madinah\", \"Perjanjian Hudaibiyyah\", \"Perjanjian Aqabah\", \"Perjanjian Tabuk\"]",
+        "explanation": "Perjanjian Hudaibiyyah (6 H) adalah perjanjian damai 10 tahun antara kaum muslimin dan Quraisy. Meski tampak merugikan, Allah menyebutnya 'kemenangan yang nyata' (QS. Al-Fath: 1)."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Siapakah sahabat yang mengusulkan penggalian parit dalam Perang Khandaq?",
+        "correct_answer": "Salman Al-Farisi ra.",
+        "options": "[\"Abu Bakar Ash-Shiddiq\", \"Umar bin Khattab\", \"Salman Al-Farisi ra.\", \"Ali bin Abi Thalib\"]",
+        "explanation": "Salman Al-Farisi ra., sahabat asal Persia, mengusulkan strategi menggali parit (khandaq) di utara Madinah — strategi yang tidak dikenal orang Arab. Ini menyelamatkan Madinah dari pengepungan 10.000 pasukan musuh."
+    }
 ]

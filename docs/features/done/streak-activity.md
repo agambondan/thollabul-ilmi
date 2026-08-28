@@ -30,24 +30,26 @@ Daily streak & aktivitas harian untuk motivasi konsistensi. Melacak hari-hari ak
 ### API Response Shape
 
 **`GET /streak`**
+
 ```json
 {
-  "current_streak": 7,
-  "longest_streak": 30,
-  "total_days": 120
+    "current_streak": 7,
+    "longest_streak": 30,
+    "total_days": 120
 }
 ```
 
 **`GET /activity?days=7`**
+
 ```json
 [
-  { "date": "2026-05-07", "count": 3 },
-  { "date": "2026-05-08", "count": 1 },
-  { "date": "2026-05-09", "count": 0 },
-  { "date": "2026-05-10", "count": 2 },
-  { "date": "2026-05-11", "count": 5 },
-  { "date": "2026-05-12", "count": 4 },
-  { "date": "2026-05-13", "count": 2 }
+    { "date": "2026-05-07", "count": 3 },
+    { "date": "2026-05-08", "count": 1 },
+    { "date": "2026-05-09", "count": 0 },
+    { "date": "2026-05-10", "count": 2 },
+    { "date": "2026-05-11", "count": 5 },
+    { "date": "2026-05-12", "count": 4 },
+    { "date": "2026-05-13", "count": 2 }
 ]
 ```
 

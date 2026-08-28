@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/context/Auth';
-import { useLocale } from '@/context/Locale';
-import { notesApi } from '@/lib/api';
+import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
+import { notesApi } from "@/lib/api";
 import {
     encodePersonalNoteContent,
     normalizePersonalNote,
@@ -13,22 +13,22 @@ import {
     readLocalArray,
     todayISO,
     writeLocalArray,
-} from '@/lib/personalSync';
-import { useEffect, useState } from 'react';
-import { BsPencilSquare, BsTrash, BsX } from 'react-icons/bs';
+} from "@/lib/personalSync";
+import { useEffect, useState } from "react";
+import { BsPencilSquare, BsTrash, BsX } from "react-icons/bs";
 
 const renderMarkdownInline = (text) => {
-    if (!text) return '';
+    if (!text) return "";
     let html = text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/^- (.+)$/gm, '<li>$1</li>')
-        .replace(/\n/g, '<br/>');
-    if (html.includes('<li>')) {
-        html = '<ul class="list-disc list-inside">' + html + '</ul>';
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*(.+?)\*/g, "<em>$1</em>")
+        .replace(/^- (.+)$/gm, "<li>$1</li>")
+        .replace(/\n/g, "<br/>");
+    if (html.includes("<li>")) {
+        html = '<ul class="list-disc list-inside">' + html + "</ul>";
     }
     return html;
 };
@@ -37,13 +37,15 @@ const NotesPage = () => {
     const { t, lang } = useLocale();
     const { isAuthenticated } = useAuth();
     const fb = (type, msg) =>
-        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+        window.dispatchEvent(
+            new CustomEvent(type, { detail: { message: msg } }),
+        );
     const [notes, setNotes] = useState([]);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [editNote, setEditNote] = useState(null);
-    const [form, setForm] = useState({ title: '', content: '', tags: '' });
-    const [syncError, setSyncError] = useState('');
+    const [form, setForm] = useState({ title: "", content: "", tags: "" });
+    const [syncError, setSyncError] = useState("");
 
     useEffect(() => {
         const load = async () => {
@@ -58,26 +60,30 @@ const NotesPage = () => {
                         ),
                     ).map(normalizePersonalNote);
                     setNotes(items);
-                    writeLocalArray('tholabul_notes', items);
-                    setSyncError('');
+                    writeLocalArray("tholabul_notes", items);
+                    setSyncError("");
                     return;
                 } catch {
-                    setSyncError('Belum tersinkron. Menampilkan salinan lokal.');
+                    setSyncError(
+                        "Belum tersinkron. Menampilkan salinan lokal.",
+                    );
                 }
             }
-            setNotes(readLocalArray('tholabul_notes').map(normalizePersonalNote));
+            setNotes(
+                readLocalArray("tholabul_notes").map(normalizePersonalNote),
+            );
         };
         load();
     }, [isAuthenticated]);
 
     const persist = (updated) => {
         setNotes(updated);
-        writeLocalArray('tholabul_notes', updated);
+        writeLocalArray("tholabul_notes", updated);
     };
 
     const openAdd = () => {
         setEditNote(null);
-        setForm({ title: '', content: '', tags: '' });
+        setForm({ title: "", content: "", tags: "" });
         setShowModal(true);
     };
 
@@ -86,7 +92,7 @@ const NotesPage = () => {
         setForm({
             title: note.title,
             content: note.content,
-            tags: (note.tags ?? []).join(', '),
+            tags: (note.tags ?? []).join(", "),
         });
         setShowModal(true);
     };
@@ -94,12 +100,16 @@ const NotesPage = () => {
     const save = async () => {
         if (!form.title.trim()) return;
         const tags = form.tags
-            .split(',')
+            .split(",")
             .map((tag) => tag.trim())
             .filter(Boolean);
         if (editNote) {
             const payload = { title: form.title, content: form.content, tags };
-            persist(notes.map((n) => (n.id === editNote.id ? { ...n, ...payload } : n)));
+            persist(
+                notes.map((n) =>
+                    n.id === editNote.id ? { ...n, ...payload } : n,
+                ),
+            );
             if (isAuthenticated) {
                 try {
                     const saved = normalizePersonalNote(
@@ -109,11 +119,15 @@ const NotesPage = () => {
                             }),
                         ),
                     );
-                    persist(notes.map((n) => (n.id === editNote.id ? saved : n)));
-                    setSyncError('');
-                    fb('admin:success', t('admin.crud.save_success'));
+                    persist(
+                        notes.map((n) => (n.id === editNote.id ? saved : n)),
+                    );
+                    setSyncError("");
+                    fb("admin:success", t("admin.crud.save_success"));
                 } catch {
-                    setSyncError('Catatan tersimpan lokal. Sinkron cloud belum berhasil.');
+                    setSyncError(
+                        "Catatan tersimpan lokal. Sinkron cloud belum berhasil.",
+                    );
                 }
             }
         } else {
@@ -137,10 +151,12 @@ const NotesPage = () => {
                         ),
                     );
                     persist([saved, ...notes]);
-                    setSyncError('');
-                    fb('admin:success', t('admin.crud.save_success'));
+                    setSyncError("");
+                    fb("admin:success", t("admin.crud.save_success"));
                 } catch {
-                    setSyncError('Catatan tersimpan lokal. Sinkron cloud belum berhasil.');
+                    setSyncError(
+                        "Catatan tersimpan lokal. Sinkron cloud belum berhasil.",
+                    );
                 }
             }
         }
@@ -148,15 +164,17 @@ const NotesPage = () => {
     };
 
     const remove = async (id) => {
-        if (!confirm(t('notes.delete_confirm'))) return;
+        if (!confirm(t("notes.delete_confirm"))) return;
         persist(notes.filter((n) => n.id !== id));
         if (isAuthenticated) {
             try {
                 await parseApiJson(await notesApi.delete(id));
-                setSyncError('');
-                fb('admin:success', t('admin.crud.delete_success'));
+                setSyncError("");
+                fb("admin:success", t("admin.crud.delete_success"));
             } catch {
-                setSyncError('Catatan dihapus lokal. Sinkron cloud belum berhasil.');
+                setSyncError(
+                    "Catatan dihapus lokal. Sinkron cloud belum berhasil.",
+                );
             }
         }
     };
@@ -164,21 +182,21 @@ const NotesPage = () => {
     const filtered = notes.filter(
         (n) =>
             n.title.toLowerCase().includes(search.toLowerCase()) ||
-            (n.content ?? '').toLowerCase().includes(search.toLowerCase()),
+            (n.content ?? "").toLowerCase().includes(search.toLowerCase()),
     );
 
     return (
         <div className='px-4 py-6'>
             <div className='flex items-center justify-between mb-4'>
                 <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
-                    {t('notes.title')}
+                    {t("notes.title")}
                 </h1>
                 <button
                     onClick={openAdd}
                     className='flex items-center gap-2 px-4 py-2 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 transition-colors'
                 >
                     <BsPencilSquare />
-                    {t('notes.add')}
+                    {t("notes.add")}
                 </button>
             </div>
             {syncError ? (
@@ -192,7 +210,7 @@ const NotesPage = () => {
                 type='text'
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder={t('notes.search_placeholder')}
+                placeholder={t("notes.search_placeholder")}
                 className='w-full px-4 py-2.5 mb-5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
             />
 
@@ -200,14 +218,14 @@ const NotesPage = () => {
                 <div className='text-center py-16'>
                     <p className='text-4xl mb-3'>📝</p>
                     <p className='text-gray-500 dark:text-gray-400 text-sm'>
-                        {search ? t('notes.empty_search') : t('notes.empty')}
+                        {search ? t("notes.empty_search") : t("notes.empty")}
                     </p>
                     {!search && (
                         <button
                             onClick={openAdd}
                             className='mt-4 text-emerald-600 dark:text-emerald-400 text-sm hover:underline'
                         >
-                            {t('notes.add_first')}
+                            {t("notes.add_first")}
                         </button>
                     )}
                 </div>
@@ -227,24 +245,34 @@ const NotesPage = () => {
                                     <p className='text-xs text-gray-400 dark:text-gray-500 mt-0.5'>
                                         {note.date
                                             ? new Date(
-                                                  note.date + 'T00:00:00',
+                                                  note.date + "T00:00:00",
                                               ).toLocaleDateString(
-                                                lang === 'EN' ? 'en-US' : 'id-ID',
-                                                {
-                                                  day: 'numeric',
-                                                  month: 'short',
-                                                  year: 'numeric',
-                                                },
+                                                  lang === "EN"
+                                                      ? "en-US"
+                                                      : "id-ID",
+                                                  {
+                                                      day: "numeric",
+                                                      month: "short",
+                                                      year: "numeric",
+                                                  },
                                               )
-                                            : ''}
+                                            : ""}
                                     </p>
                                     {note.content && (
                                         <div
                                             className='text-sm text-gray-600 dark:text-gray-400 mt-1 leading-relaxed'
                                             dangerouslySetInnerHTML={{
-                                                __html: note.content.length > 100
-                                                    ? renderMarkdownInline(note.content.slice(0, 100)) + '...'
-                                                    : renderMarkdownInline(note.content),
+                                                __html:
+                                                    note.content.length > 100
+                                                        ? renderMarkdownInline(
+                                                              note.content.slice(
+                                                                  0,
+                                                                  100,
+                                                              ),
+                                                          ) + "..."
+                                                        : renderMarkdownInline(
+                                                              note.content,
+                                                          ),
                                             }}
                                         />
                                     )}
@@ -266,7 +294,7 @@ const NotesPage = () => {
                                         e.stopPropagation();
                                         remove(note.id);
                                     }}
-                                    aria-label={t('notes.delete')}
+                                    aria-label={t("notes.delete")}
                                     className='text-gray-300 dark:text-slate-600 hover:text-red-500 transition-colors shrink-0'
                                 >
                                     <BsTrash />
@@ -281,12 +309,14 @@ const NotesPage = () => {
             {showModal && (
                 <div
                     className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'
-                    onClick={(e) => e.target === e.currentTarget && setShowModal(false)}
+                    onClick={(e) =>
+                        e.target === e.currentTarget && setShowModal(false)
+                    }
                 >
                     <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'>
                         <div className='flex items-center justify-between mb-4'>
                             <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
-                                {editNote ? t('notes.edit') : t('notes.add')}
+                                {editNote ? t("notes.edit") : t("notes.add")}
                             </h2>
                             <button
                                 onClick={() => setShowModal(false)}
@@ -299,41 +329,50 @@ const NotesPage = () => {
                         <div className='space-y-3'>
                             <div>
                                 <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                    {t('notes.label_title')}
+                                    {t("notes.label_title")}
                                 </label>
                                 <input
                                     type='text'
                                     value={form.title}
                                     onChange={(e) =>
-                                        setForm((f) => ({ ...f, title: e.target.value }))
+                                        setForm((f) => ({
+                                            ...f,
+                                            title: e.target.value,
+                                        }))
                                     }
-                                    placeholder={t('notes.title_placeholder')}
+                                    placeholder={t("notes.title_placeholder")}
                                     className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 />
                             </div>
                             <div>
                                 <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                    {t('notes.label_content')}
+                                    {t("notes.label_content")}
                                 </label>
                                 <textarea
                                     value={form.content}
                                     onChange={(e) =>
-                                        setForm((f) => ({ ...f, content: e.target.value }))
+                                        setForm((f) => ({
+                                            ...f,
+                                            content: e.target.value,
+                                        }))
                                     }
                                     rows={5}
-                                    placeholder={t('notes.content_placeholder')}
+                                    placeholder={t("notes.content_placeholder")}
                                     className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none'
                                 />
                             </div>
                             <div>
                                 <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                    {t('notes.label_tags')}
+                                    {t("notes.label_tags")}
                                 </label>
                                 <input
                                     type='text'
                                     value={form.tags}
                                     onChange={(e) =>
-                                        setForm((f) => ({ ...f, tags: e.target.value }))
+                                        setForm((f) => ({
+                                            ...f,
+                                            tags: e.target.value,
+                                        }))
                                     }
                                     placeholder='quran, tadabbur, fiqh'
                                     className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
@@ -346,14 +385,14 @@ const NotesPage = () => {
                                 onClick={() => setShowModal(false)}
                                 className='px-4 py-2 text-sm text-gray-600 dark:text-gray-400'
                             >
-                                {t('common.cancel')}
+                                {t("common.cancel")}
                             </button>
                             <button
                                 onClick={save}
                                 disabled={!form.title.trim()}
                                 className='px-4 py-2 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors'
                             >
-                                {t('common.save')}
+                                {t("common.save")}
                             </button>
                         </div>
                     </div>

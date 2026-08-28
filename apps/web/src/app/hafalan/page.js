@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+import { redirect } from "next/navigation";
 
 export default function HafalanPage() {
-    redirect('/dashboard/hafalan');
+    redirect("/dashboard/hafalan");
 }

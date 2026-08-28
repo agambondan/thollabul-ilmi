@@ -74,9 +74,9 @@ Status: `VERIFIED`
   selesai sebagai missing.
 - Pisahkan historical baseline dari status current.
 - Link ke:
-  - `docs/reviews/2026-05-17-web-mobile-performance-sync-deep-review.md`
-  - `docs/reviews/2026-05-17-followup-journey-cta-sync-review.md`
-  - `docs/features/progress/2026-05-17-sync-performance-task-breakdown.md`
+    - `docs/reviews/2026-05-17-web-mobile-performance-sync-deep-review.md`
+    - `docs/reviews/2026-05-17-followup-journey-cta-sync-review.md`
+    - `docs/features/progress/2026-05-17-sync-performance-task-breakdown.md`
 
 ### Verification
 
@@ -116,11 +116,11 @@ Status: `VERIFIED`
 ### Scope
 
 - Tambahkan `surfaces` atau `utilityRoutes` untuk route non-feature:
-  - `/`
-  - `/contact`
-  - `/profile`
-  - `/dashboard`
-  - `/dashboard/profile`
+    - `/`
+    - `/contact`
+    - `/profile`
+    - `/dashboard`
+    - `/dashboard/profile`
 - Dokumentasikan apakah route tersebut public, dashboard, admin, atau auth
   handoff.
 

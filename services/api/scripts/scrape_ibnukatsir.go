@@ -48,8 +48,10 @@ type cdnResponse struct {
 	} `json:"pagination"`
 }
 
-var htmlTagRe = regexp.MustCompile(`<[^>]+>`)
-var multiSpaceRe = regexp.MustCompile(`\s{2,}`)
+var (
+	htmlTagRe    = regexp.MustCompile(`<[^>]+>`)
+	multiSpaceRe = regexp.MustCompile(`\s{2,}`)
+)
 
 func stripHTML(s string) string {
 	s = htmlTagRe.ReplaceAllString(s, " ")
@@ -67,7 +69,7 @@ func main() {
 	outDir := flag.String("out", "./data/ibnukatsir", "Folder output")
 	flag.Parse()
 
-	if err := os.MkdirAll(*outDir, 0755); err != nil {
+	if err := os.MkdirAll(*outDir, 0o755); err != nil {
 		log.Fatalf("mkdir: %v", err)
 	}
 

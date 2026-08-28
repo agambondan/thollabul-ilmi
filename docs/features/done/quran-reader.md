@@ -31,43 +31,53 @@ Baca Quran dengan choice display mode, multi font, tajweed, audio murotal per ay
 ### API Response Shape
 
 **`GET /surah`**
+
 ```json
 [
-  {
-    "id": 1,
-    "slug": "al-fatihah",
-    "identifier": "Al-Fatihah",
-    "number": 1,
-    "number_of_ayahs": 7,
-    "revelation_type": "makkiyah",
-    "default_language": "Ar",
-    "translation": { "idn": "Pembukaan", "en": "The Opening", "ar": "الفاتحة" },
-    "next_surah": { "id": 2, "number": 2 },
-    "prev_surah": null,
-    "media": [{ "id": 1, "multimedia": { "url": "..." } }]
-  }
+    {
+        "id": 1,
+        "slug": "al-fatihah",
+        "identifier": "Al-Fatihah",
+        "number": 1,
+        "number_of_ayahs": 7,
+        "revelation_type": "makkiyah",
+        "default_language": "Ar",
+        "translation": {
+            "idn": "Pembukaan",
+            "en": "The Opening",
+            "ar": "الفاتحة"
+        },
+        "next_surah": { "id": 2, "number": 2 },
+        "prev_surah": null,
+        "media": [{ "id": 1, "multimedia": { "url": "..." } }]
+    }
 ]
 ```
 
 **`GET /ayah?bySurah=1`**
+
 ```json
 {
-  "surah": { "id": 1, "number": 1 },
-  "ayahs": [
-    {
-      "id": 1,
-      "number": 1,
-      "surah_id": 1,
-      "juz_number": 1,
-      "manzil": 1,
-      "page": 1,
-      "ruku": 1,
-      "hizb_quarter": 1,
-      "sajda": false,
-      "translation": { "ar": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ", "idn": "Dengan nama Allah...", "en": "In the name of Allah..." }
-    }
-  ],
-  "total": 7
+    "surah": { "id": 1, "number": 1 },
+    "ayahs": [
+        {
+            "id": 1,
+            "number": 1,
+            "surah_id": 1,
+            "juz_number": 1,
+            "manzil": 1,
+            "page": 1,
+            "ruku": 1,
+            "hizb_quarter": 1,
+            "sajda": false,
+            "translation": {
+                "ar": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+                "idn": "Dengan nama Allah...",
+                "en": "In the name of Allah..."
+            }
+        }
+    ],
+    "total": 7
 }
 ```
 

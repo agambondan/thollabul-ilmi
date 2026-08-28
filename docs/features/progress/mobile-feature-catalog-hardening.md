@@ -12,13 +12,13 @@ Beranda, Semua Fitur, Belajar, Global Search, dan deep link feature.
 ## Scope Slice Ini
 
 - Wording katalog dirapikan:
-  - `Doa harian dan pilihan`
-  - `Perawi Hadis`
-  - `Quran dan hadis tersimpan`
+    - `Doa harian dan pilihan`
+    - `Perawi Hadis`
+    - `Quran dan hadis tersimpan`
 - Directory Home menambahkan icon khusus untuk:
-  - Doa
-  - Dzikir
-  - Faraidh
+    - Doa
+    - Dzikir
+    - Faraidh
 - Sholat Tracker di Explore memakai key API `subuh`, bukan legacy `shubuh`.
 - Response `/api/v1/sholat/today` dinormalisasi dari object log server ke
   boolean state UI.

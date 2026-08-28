@@ -51,7 +51,7 @@ func main() {
 
 	for _, edition := range editions {
 		dir := filepath.Join(*outDir, edition)
-		if err := os.MkdirAll(dir, 0755); err != nil {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
 			log.Fatalf("mkdir %s: %v", dir, err)
 		}
 
@@ -119,7 +119,7 @@ func downloadSurah(client *http.Client, edition string, surah int, outDir string
 		return fmt.Errorf("chapter kosong")
 	}
 
-	if err := os.WriteFile(outPath, body, 0644); err != nil {
+	if err := os.WriteFile(outPath, body, 0o644); err != nil {
 		return err
 	}
 

@@ -22,8 +22,6 @@ func DataSeeds(db *gorm.DB) []interface{} {
 		seedSholatGuide(),
 		seedFiqhCategories(),
 		seedFiqhItems(),
-		seedTahlilCollections(),
-		seedTahlilItems(),
 		seedSirohCategories(),
 		seedBlogCategories(),
 		seedBlogTags(),
@@ -35,7 +33,6 @@ func DataSeeds(db *gorm.DB) []interface{} {
 // Called after DataSeeds so parent records already have IDs.
 func SeedRelated(db *gorm.DB) {
 	seedFiqhItemsRelated(db)
-	seedTahlilItemsRelated(db)
 	seedSirohContentsRelated(db)
 	seedMufrodatRelated(db)
 	SeedTier4(db)
@@ -220,18 +217,6 @@ func seedFiqhCategories() []model.FiqhCategory {
 
 func seedFiqhItems() []model.FiqhItem {
 	return []model.FiqhItem{}
-}
-
-func seedTahlilCollections() []model.TahlilCollection {
-	return []model.TahlilCollection{
-		{Type: model.TahlilTypeYasin, Title: "Surah Yasin", Description: "Surah ke-36 dalam Al-Quran, sering dibaca dalam majelis tahlil"},
-		{Type: model.TahlilTypeTahlil, Title: "Bacaan Tahlil Lengkap", Description: "Rangkaian bacaan tahlil: Al-Fatihah, Al-Ikhlas, Al-Falaq, An-Nas, Al-Baqarah 1-5, ayat kursi, tasbih, tahmid, tahlil, sholawat, dan doa"},
-		{Type: model.TahlilTypeDoaArwah, Title: "Doa Arwah", Description: "Doa untuk orang yang telah meninggal dunia"},
-	}
-}
-
-func seedTahlilItems() []model.TahlilItem {
-	return []model.TahlilItem{}
 }
 
 func seedDzikir() []model.Dzikir {

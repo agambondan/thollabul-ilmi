@@ -11,7 +11,9 @@ export function getFeedTotal(payload, page, size, itemCount) {
     const numericTotal = Number(explicitTotal);
     if (Number.isFinite(numericTotal)) return numericTotal;
     if (payload?.last === false || payload?.data?.last === false) {
-        return (Math.max(1, Number(page) || 1) - 1) * Number(size) + itemCount + 1;
+        return (
+            (Math.max(1, Number(page) || 1) - 1) * Number(size) + itemCount + 1
+        );
     }
     return itemCount;
 }

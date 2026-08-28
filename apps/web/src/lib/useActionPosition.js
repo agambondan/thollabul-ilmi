@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-const ACTION_POSITION_KEY = 'actionPosition';
-const DEFAULT_POSITION = 'side';
-const VALID_POSITIONS = ['side', 'menu', 'hidden'];
+const ACTION_POSITION_KEY = "actionPosition";
+const DEFAULT_POSITION = "side";
+const VALID_POSITIONS = ["side", "menu", "hidden"];
 
 export const useActionPosition = () => {
     const [position, setPositionState] = useState(DEFAULT_POSITION);
@@ -15,24 +15,34 @@ export const useActionPosition = () => {
             setPositionState(stored);
         }
         const handler = (e) => {
-            if (e.key === ACTION_POSITION_KEY && VALID_POSITIONS.includes(e.newValue)) {
+            if (
+                e.key === ACTION_POSITION_KEY &&
+                VALID_POSITIONS.includes(e.newValue)
+            ) {
                 setPositionState(e.newValue);
             }
         };
-        window.addEventListener('storage', handler);
-        return () => window.removeEventListener('storage', handler);
+        window.addEventListener("storage", handler);
+        return () => window.removeEventListener("storage", handler);
     }, []);
 
     const setPosition = (nextPosition) => {
-        const value = VALID_POSITIONS.includes(nextPosition) ? nextPosition : DEFAULT_POSITION;
+        const value = VALID_POSITIONS.includes(nextPosition)
+            ? nextPosition
+            : DEFAULT_POSITION;
         localStorage.setItem(ACTION_POSITION_KEY, value);
-        window.dispatchEvent(new StorageEvent('storage', { key: ACTION_POSITION_KEY, newValue: value }));
+        window.dispatchEvent(
+            new StorageEvent("storage", {
+                key: ACTION_POSITION_KEY,
+                newValue: value,
+            }),
+        );
         setPositionState(value);
     };
 
     return {
-        isMenu: position === 'menu',
-        isHidden: position === 'hidden',
+        isMenu: position === "menu",
+        isHidden: position === "hidden",
         position,
         setPosition,
     };

@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useQuranFont } from '@/lib/useQuranFont';
-import { useMemo } from 'react';
+import { useQuranFont } from "@/lib/useQuranFont";
+import { useMemo } from "react";
 
 const toArabicNumber = (n) => {
-    const digits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    const digits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
     return String(n)
-        .split('')
+        .split("")
         .map((d) => (/\d/.test(d) ? digits[Number(d)] : d))
-        .join('');
+        .join("");
 };
 
 const getSurahNumber = (ayah) =>
@@ -21,14 +21,16 @@ const getSurahName = (ayah) => {
         s?.translation?.latin_idn ||
         s?.slug ||
         s?.identifier ||
-        ''
+        ""
     );
 };
 
 const getSurahTranslation = (ayah, lang) => {
     const s = ayah?.surah ?? {};
-    const key = lang === 'EN' ? 'latin_en' : 'latin_idn';
-    return s?.translation?.[key] || s?.translation?.en || s?.translation?.idn || '';
+    const key = lang === "EN" ? "latin_en" : "latin_idn";
+    return (
+        s?.translation?.[key] || s?.translation?.en || s?.translation?.idn || ""
+    );
 };
 
 const getAyahArabic = (ayah) =>
@@ -36,21 +38,23 @@ const getAyahArabic = (ayah) =>
     ayah?.translation?.ar ||
     ayah?.ar_html ||
     ayah?.arabic ||
-    '';
+    "";
 
 const getAyahTranslation = (ayah, lang) => {
-    const key = lang === 'EN' ? 'en' : 'idn';
-    return ayah?.translation?.[key] || ayah?.translation?.idn || ayah?.translation?.en || '';
+    const key = lang === "EN" ? "en" : "idn";
+    return (
+        ayah?.translation?.[key] ||
+        ayah?.translation?.idn ||
+        ayah?.translation?.en ||
+        ""
+    );
 };
 
 const getAyahJuz = (ayah) => ayah?.juz || ayah?.juz_number || null;
 const getAyahPage = (ayah) => ayah?.page || ayah?.page_number || null;
 
 const getAyahSurahEnd = (ayah) =>
-    ayah?.surah_ending ||
-    ayah?.is_surah_ending ||
-    ayah?.surahEnd ||
-    false;
+    ayah?.surah_ending || ayah?.is_surah_ending || ayah?.surahEnd || false;
 
 const getAyahJuzEnd = (ayah) =>
     ayah?.juz_ending || ayah?.is_juz_ending || ayah?.juzEnd || false;
@@ -59,19 +63,19 @@ const getAyahHizbEnd = (ayah) =>
     ayah?.hizb_ending || ayah?.is_hizb_ending || ayah?.hizbEnd || false;
 
 const getAyahNumberInSurah = (ayah) => {
-    if (typeof ayah?.number_in_surah === 'number') return ayah.number_in_surah;
-    if (typeof ayah?.numberInSurah === 'number') return ayah.numberInSurah;
-    if (typeof ayah?.ayah_number === 'number') return ayah.ayah_number;
+    if (typeof ayah?.number_in_surah === "number") return ayah.number_in_surah;
+    if (typeof ayah?.numberInSurah === "number") return ayah.numberInSurah;
+    if (typeof ayah?.ayah_number === "number") return ayah.ayah_number;
     return null;
 };
 
-const stripTags = (html) => (html || '').replace(/<[^>]+>/g, '');
+const stripTags = (html) => (html || "").replace(/<[^>]+>/g, "");
 
 export default function MushafContinuousView({
     ayahs,
     lang,
     showTranslation = true,
-    readerBasePath = '/quran/surah',
+    readerBasePath = "/quran/surah",
 }) {
     const { fontCls, arabicFontSize, translationFontSize, setArabicFontSize } =
         useQuranFont();
@@ -105,7 +109,7 @@ export default function MushafContinuousView({
                         const num = getAyahNumberInSurah(a) ?? a?.number;
                         return `${stripTags(getAyahArabic(a))} ﴿${toArabicNumber(num)}﴾`;
                     })
-                    .join(' ');
+                    .join(" ");
                 return (
                     <article
                         key={group.surahNumber}
@@ -124,12 +128,12 @@ export default function MushafContinuousView({
                             <p
                                 className={`${fontCls} text-right text-emerald-900 dark:text-emerald-100`}
                                 style={{
-                                    direction: 'rtl',
+                                    direction: "rtl",
                                     fontSize: `${arabicFontSize}px`,
-                                    lineHeight: '2.3',
-                                    textAlign: 'justify',
-                                    textJustify: 'inter-word',
-                                    wordSpacing: '0.05em',
+                                    lineHeight: "2.3",
+                                    textAlign: "justify",
+                                    textJustify: "inter-word",
+                                    wordSpacing: "0.05em",
                                 }}
                             >
                                 {arabicText}
@@ -138,20 +142,25 @@ export default function MushafContinuousView({
                             {showTranslation && (
                                 <div className='mt-6 pt-5 border-t border-gray-100 dark:border-slate-700 space-y-3'>
                                     {group.ayahs.map((ayah) => {
-                                        const num = getAyahNumberInSurah(ayah) ?? ayah?.number;
-                                        const translation = getAyahTranslation(ayah, lang);
+                                        const num =
+                                            getAyahNumberInSurah(ayah) ??
+                                            ayah?.number;
+                                        const translation = getAyahTranslation(
+                                            ayah,
+                                            lang,
+                                        );
                                         return (
                                             <p
                                                 key={ayah.id ?? num}
                                                 className='text-gray-700 dark:text-gray-300'
                                                 style={{
                                                     fontSize: `${translationFontSize}px`,
-                                                    lineHeight: '1.75',
+                                                    lineHeight: "1.75",
                                                 }}
                                             >
                                                 <span className='inline-block min-w-[2rem] font-semibold text-emerald-700 dark:text-emerald-400'>
                                                     {num}.
-                                                </span>{' '}
+                                                </span>{" "}
                                                 {translation}
                                             </p>
                                         );

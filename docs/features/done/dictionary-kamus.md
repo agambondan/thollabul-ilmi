@@ -32,18 +32,19 @@ Kamus istilah Islami yang searchable per kategori, membantu pengguna memahami is
 ### API Response Shape
 
 **`GET /dictionary?category=fiqh`**
+
 ```json
 [
-  {
-    "id": 1,
-    "term": "Wudhu",
-    "category": "fiqh",
-    "definition": "Wudhu adalah bersuci dengan air...",
-    "example": "Rasulullah SAW bersabda: 'Tidak diterima sholat tanpa wudhu'",
-    "source": "Minhajul Muslim",
-    "origin": "Arab",
-    "translation": { "idn": "Wudhu", "en": "Ablution", "ar": "الوضوء" }
-  }
+    {
+        "id": 1,
+        "term": "Wudhu",
+        "category": "fiqh",
+        "definition": "Wudhu adalah bersuci dengan air...",
+        "example": "Rasulullah SAW bersabda: 'Tidak diterima sholat tanpa wudhu'",
+        "source": "Minhajul Muslim",
+        "origin": "Arab",
+        "translation": { "idn": "Wudhu", "en": "Ablution", "ar": "الوضوء" }
+    }
 ]
 ```
 
@@ -59,7 +60,7 @@ Kamus istilah Islami yang searchable per kategori, membantu pengguna memahami is
 | `example` | string | Usage example |
 | `source` | string | Reference source |
 | `origin` | string | Language of origin |
-| `translation_id` | *int | FK to Translation |
+| `translation_id` | \*int | FK to Translation |
 
 ### Key Frontend Components
 

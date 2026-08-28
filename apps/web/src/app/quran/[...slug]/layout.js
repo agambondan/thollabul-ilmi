@@ -1,6 +1,10 @@
-const API_URL = process.env.API_INTERNAL_URL || process.env.API_PROXY_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:29900';
+const API_URL =
+    process.env.API_INTERNAL_URL ||
+    process.env.API_PROXY_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    "http://localhost:29900";
 const SITE_URL =
-    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tholabul-ilmi.com';
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://tholabul-ilmi.com";
 
 async function getSurah(slug) {
     try {
@@ -18,24 +22,22 @@ async function getSurah(slug) {
 export async function generateMetadata(props) {
     const params = await props.params;
     const slugParts = params.slug ?? [];
-    const surahSlug = decodeURIComponent(slugParts[1] ?? slugParts[0] ?? '');
+    const surahSlug = decodeURIComponent(slugParts[1] ?? slugParts[0] ?? "");
     const surah = surahSlug ? await getSurah(surahSlug) : null;
 
     const name = surah?.translation?.latin_en ?? surahSlug;
-    const arabicName = surah?.name ?? '';
-    const surahNumber = surah?.number ?? '';
-    const meaning = surah?.translation?.idn ?? surah?.translation?.en ?? '';
+    const arabicName = surah?.name ?? "";
+    const surahNumber = surah?.number ?? "";
+    const meaning = surah?.translation?.idn ?? surah?.translation?.en ?? "";
 
     const title = surah
-        ? `Surah ${name}${arabicName ? ` (${arabicName})` : ''} — Al-Quran`
+        ? `Surah ${name}${arabicName ? ` (${arabicName})` : ""} — Al-Quran`
         : `Al-Quran — Thullaabul 'Ilmi`;
     const description = surah
-        ? `Read Surah ${name}${surahNumber ? ` (surah no. ${surahNumber})` : ''}${meaning ? `, meaning "${meaning}"` : ''}, with color-coded Tajweed, tafsir, translation, and recitation audio.`
+        ? `Read Surah ${name}${surahNumber ? ` (surah no. ${surahNumber})` : ""}${meaning ? `, meaning "${meaning}"` : ""}, with color-coded Tajweed, tafsir, translation, and recitation audio.`
         : `Read the complete 30 juz of the Quran with color-coded Tajweed, tafsir, translation, and recitation audio.`;
 
-    const urlPath = surahSlug
-        ? `/quran/surah/${surahSlug}`
-        : '/quran';
+    const urlPath = surahSlug ? `/quran/surah/${surahSlug}` : "/quran";
     const canonicalUrl = `${SITE_URL}${urlPath}`;
 
     return {
@@ -46,13 +48,13 @@ export async function generateMetadata(props) {
             title,
             description,
             url: canonicalUrl,
-            images: [{ url: '/og', width: 1200, height: 630 }],
+            images: [{ url: "/og", width: 1200, height: 630 }],
         },
         twitter: {
-            card: 'summary_large_image',
+            card: "summary_large_image",
             title,
             description,
-            images: ['/og'],
+            images: ["/og"],
         },
     };
 }

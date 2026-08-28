@@ -1,14 +1,11 @@
-const normalize = (str) =>
-    (str || '')
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, '');
+const normalize = (str) => (str || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 
 export async function getHadithsByThemeSlug(rawSlug) {
     const baseUrl =
         process.env.API_INTERNAL_URL ||
         process.env.API_PROXY_URL ||
         process.env.NEXT_PUBLIC_API_URL ||
-        'http://localhost:29900';
+        "http://localhost:29900";
 
     if (!rawSlug) return { hadiths: [], isError: false };
 

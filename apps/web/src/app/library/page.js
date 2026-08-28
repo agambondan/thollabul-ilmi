@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import Footer from '@/components/Footer';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import Section from '@/components/Section';
-import { SkeletonInline } from '@/components/skeleton/Skeleton';
-import { useAuth } from '@/context/Auth';
-import { libraryApi, libraryProgressApi } from '@/lib/api';
-import { useLayoutMode } from '@/lib/useLayoutMode';
-import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
-import { BsBook, BsBoxArrowUpRight, BsSearch } from 'react-icons/bs';
+import Footer from "@/components/Footer";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import Section from "@/components/Section";
+import { SkeletonInline } from "@/components/skeleton/Skeleton";
+import { useAuth } from "@/context/Auth";
+import { libraryApi, libraryProgressApi } from "@/lib/api";
+import { useLayoutMode } from "@/lib/useLayoutMode";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { BsBook, BsBoxArrowUpRight, BsSearch } from "react-icons/bs";
 
 const PAGE_SIZE = 24;
 
@@ -23,11 +23,13 @@ const normalizeItems = (data) => {
 
 const hasMorePages = (data, itemCount) => {
     const page = data?.data ?? data;
-    if (typeof page?.last === 'boolean') return !page.last;
-    if (typeof page?.has_more === 'boolean') return page.has_more;
-    if (typeof page?.hasMore === 'boolean') return page.hasMore;
+    if (typeof page?.last === "boolean") return !page.last;
+    if (typeof page?.has_more === "boolean") return page.has_more;
+    if (typeof page?.hasMore === "boolean") return page.hasMore;
     const currentPage = Number(page?.page ?? 0);
-    const totalPages = Number(page?.total_pages ?? page?.totalPages ?? page?.max_page ?? 0);
+    const totalPages = Number(
+        page?.total_pages ?? page?.totalPages ?? page?.max_page ?? 0,
+    );
     if (totalPages > 0) return currentPage + 1 < totalPages;
     return itemCount >= PAGE_SIZE;
 };
@@ -41,21 +43,23 @@ const normalizeProgressItems = (data) => {
 };
 
 const PROGRESS_LABELS = {
-    planned: 'Rencana',
-    reading: 'Dibaca',
-    paused: 'Dijeda',
-    completed: 'Selesai',
+    planned: "Rencana",
+    reading: "Dibaca",
+    paused: "Dijeda",
+    completed: "Selesai",
 };
 
 const PROGRESS_FILTERS = [
-    { value: 'planned', label: 'Rencana' },
-    { value: 'reading', label: 'Dibaca' },
-    { value: 'paused', label: 'Dijeda' },
-    { value: 'completed', label: 'Selesai' },
+    { value: "planned", label: "Rencana" },
+    { value: "reading", label: "Dibaca" },
+    { value: "paused", label: "Dijeda" },
+    { value: "completed", label: "Selesai" },
 ];
 
 const uniqueValues = (items, key) =>
-    Array.from(new Set(items.map((item) => item?.[key]).filter(Boolean))).sort();
+    Array.from(
+        new Set(items.map((item) => item?.[key]).filter(Boolean)),
+    ).sort();
 
 const BookMeta = ({ book }) => (
     <div className='flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400'>
@@ -66,7 +70,10 @@ const BookMeta = ({ book }) => (
     </div>
 );
 
-export const LibraryContent = ({ basePath = '/library', showProgressSummary = false }) => {
+export const LibraryContent = ({
+    basePath = "/library",
+    showProgressSummary = false,
+}) => {
     const { isWide } = useLayoutMode();
     const { isAuthenticated } = useAuth();
     const [books, setBooks] = useState([]);
@@ -75,10 +82,10 @@ export const LibraryContent = ({ basePath = '/library', showProgressSummary = fa
     const [hasMore, setHasMore] = useState(false);
     const [page, setPage] = useState(0);
     const [error, setError] = useState(false);
-    const [search, setSearch] = useState('');
-    const [category, setCategory] = useState('');
-    const [level, setLevel] = useState('');
-    const [progressStatus, setProgressStatus] = useState('');
+    const [search, setSearch] = useState("");
+    const [category, setCategory] = useState("");
+    const [level, setLevel] = useState("");
+    const [progressStatus, setProgressStatus] = useState("");
     const [progressItems, setProgressItems] = useState([]);
     const [progressLoading, setProgressLoading] = useState(false);
 
@@ -92,14 +99,16 @@ export const LibraryContent = ({ basePath = '/library', showProgressSummary = fa
         libraryApi
             .list({ page: pageNumber, size: PAGE_SIZE })
             .then((res) => {
-                if (!res.ok) throw new Error('failed');
+                if (!res.ok) throw new Error("failed");
                 return res.json();
             })
             .then((data) => {
                 const items = normalizeItems(data);
                 setBooks((current) => {
                     if (!append) return items;
-                    const seen = new Set(current.map((book) => String(book.id ?? book.slug)));
+                    const seen = new Set(
+                        current.map((book) => String(book.id ?? book.slug)),
+                    );
                     return [
                         ...current,
                         ...items.filter((book) => {
@@ -139,7 +148,7 @@ export const LibraryContent = ({ basePath = '/library', showProgressSummary = fa
         libraryProgressApi
             .list()
             .then((res) => {
-                if (!res.ok) throw new Error('failed');
+                if (!res.ok) throw new Error("failed");
                 return res.json();
             })
             .then((data) => {
@@ -157,12 +166,15 @@ export const LibraryContent = ({ basePath = '/library', showProgressSummary = fa
         };
     }, [isAuthenticated, showProgressSummary]);
 
-    const categories = useMemo(() => uniqueValues(books, 'category'), [books]);
-    const levels = useMemo(() => uniqueValues(books, 'level'), [books]);
+    const categories = useMemo(() => uniqueValues(books, "category"), [books]);
+    const levels = useMemo(() => uniqueValues(books, "level"), [books]);
     const progressByBookId = useMemo(() => {
         const next = {};
         progressItems.forEach((progress) => {
-            const bookId = progress?.library_book_id ?? progress?.book?.id ?? progress?.Book?.id;
+            const bookId =
+                progress?.library_book_id ??
+                progress?.book?.id ??
+                progress?.Book?.id;
             if (bookId) next[String(bookId)] = progress;
         });
         return next;
@@ -171,20 +183,37 @@ export const LibraryContent = ({ basePath = '/library', showProgressSummary = fa
         const query = search.trim().toLowerCase();
         return books.filter((book) => {
             const progress = progressByBookId[String(book.id)];
-            const text = [book.title, book.author, book.description, book.tags, book.category, book.level]
+            const text = [
+                book.title,
+                book.author,
+                book.description,
+                book.tags,
+                book.category,
+                book.level,
+            ]
                 .filter(Boolean)
-                .join(' ')
+                .join(" ")
                 .toLowerCase();
             const matchesSearch = !query || text.includes(query);
             const matchesCategory = !category || book.category === category;
             const matchesLevel = !level || book.level === level;
-            const matchesProgress = !progressStatus || progress?.status === progressStatus;
-            return matchesSearch && matchesCategory && matchesLevel && matchesProgress;
+            const matchesProgress =
+                !progressStatus || progress?.status === progressStatus;
+            return (
+                matchesSearch &&
+                matchesCategory &&
+                matchesLevel &&
+                matchesProgress
+            );
         });
     }, [books, category, level, progressByBookId, progressStatus, search]);
 
     return (
-        <div className={isWide ? 'w-full px-4' : 'container mx-auto max-w-5xl px-4'}>
+        <div
+            className={
+                isWide ? "w-full px-4" : "container mx-auto max-w-5xl px-4"
+            }
+        >
             <div className='mb-8'>
                 <p className='text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-300'>
                     Belajar
@@ -193,7 +222,8 @@ export const LibraryContent = ({ basePath = '/library', showProgressSummary = fa
                     Perpustakaan Ilmu
                 </h1>
                 <p className='mt-2 max-w-2xl text-sm leading-6 text-gray-600 dark:text-gray-300'>
-                    Katalog kitab dan bahan belajar yang bisa dibaca dari sumber resmi, disimpan, dan diberi catatan belajar.
+                    Katalog kitab dan bahan belajar yang bisa dibaca dari sumber
+                    resmi, disimpan, dan diberi catatan belajar.
                 </p>
             </div>
 
@@ -205,7 +235,8 @@ export const LibraryContent = ({ basePath = '/library', showProgressSummary = fa
                                 Progress Saya
                             </h2>
                             <p className='text-xs text-gray-500 dark:text-gray-400'>
-                                Lanjutkan resource yang sedang dipelajari dari dashboard.
+                                Lanjutkan resource yang sedang dipelajari dari
+                                dashboard.
                             </p>
                         </div>
                         <span className='rounded-full bg-white px-3 py-1 text-xs font-semibold text-emerald-800 dark:bg-slate-800 dark:text-emerald-200'>
@@ -223,11 +254,18 @@ export const LibraryContent = ({ basePath = '/library', showProgressSummary = fa
                                     <Link
                                         className='rounded-lg border border-emerald-100 bg-white p-3 text-sm transition hover:border-emerald-300 dark:border-slate-700 dark:bg-slate-950'
                                         href={`${basePath}/${book.slug}`}
-                                        key={progress.id ?? `${progress.library_book_id}-${progress.status}`}
+                                        key={
+                                            progress.id ??
+                                            `${progress.library_book_id}-${progress.status}`
+                                        }
                                     >
                                         <div className='mb-2 flex items-center justify-between gap-2'>
                                             <span className='rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200'>
-                                                {PROGRESS_LABELS[progress.status] ?? progress.status ?? 'Dibaca'}
+                                                {PROGRESS_LABELS[
+                                                    progress.status
+                                                ] ??
+                                                    progress.status ??
+                                                    "Dibaca"}
                                             </span>
                                             {progress.current_page ? (
                                                 <span className='text-[11px] text-gray-500 dark:text-gray-400'>
@@ -249,7 +287,8 @@ export const LibraryContent = ({ basePath = '/library', showProgressSummary = fa
                         </div>
                     ) : (
                         <p className='rounded-lg border border-dashed border-emerald-200 bg-white px-3 py-4 text-sm text-gray-500 dark:border-slate-700 dark:bg-slate-950 dark:text-gray-400'>
-                            Belum ada progress. Buka detail buku lalu simpan status belajar.
+                            Belum ada progress. Buka detail buku lalu simpan
+                            status belajar.
                         </p>
                     )}
                 </section>
@@ -258,8 +297,8 @@ export const LibraryContent = ({ basePath = '/library', showProgressSummary = fa
             <div
                 className={`mb-5 grid gap-3 ${
                     showProgressSummary && isAuthenticated
-                        ? 'md:grid-cols-[1fr_auto_auto_auto]'
-                        : 'md:grid-cols-[1fr_auto_auto]'
+                        ? "md:grid-cols-[1fr_auto_auto_auto]"
+                        : "md:grid-cols-[1fr_auto_auto]"
                 }`}
             >
                 <div className='flex items-center gap-2 rounded-xl border border-emerald-100 bg-white px-3 py-2 dark:border-slate-700 dark:bg-slate-900'>
@@ -298,7 +337,9 @@ export const LibraryContent = ({ basePath = '/library', showProgressSummary = fa
                 {showProgressSummary && isAuthenticated && (
                     <select
                         className='rounded-xl border border-emerald-100 bg-white px-3 py-2 text-sm text-gray-700 outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-gray-100'
-                        onChange={(event) => setProgressStatus(event.target.value)}
+                        onChange={(event) =>
+                            setProgressStatus(event.target.value)
+                        }
                         value={progressStatus}
                     >
                         <option value=''>Semua progress</option>
@@ -348,18 +389,22 @@ export const LibraryContent = ({ basePath = '/library', showProgressSummary = fa
                                     <BsBoxArrowUpRight className='mt-1 text-gray-300 transition group-hover:text-emerald-600 dark:text-slate-600 dark:group-hover:text-emerald-300' />
                                 )}
                             </div>
-                            {showProgressSummary && isAuthenticated && progress && (
-                                <div className='mb-3 flex flex-wrap items-center gap-2'>
-                                    <span className='rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200'>
-                                        {PROGRESS_LABELS[progress.status] ?? progress.status ?? 'Dibaca'}
-                                    </span>
-                                    {progress.current_page ? (
-                                        <span className='text-[11px] font-medium text-gray-500 dark:text-gray-400'>
-                                            Hal. {progress.current_page}
+                            {showProgressSummary &&
+                                isAuthenticated &&
+                                progress && (
+                                    <div className='mb-3 flex flex-wrap items-center gap-2'>
+                                        <span className='rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200'>
+                                            {PROGRESS_LABELS[progress.status] ??
+                                                progress.status ??
+                                                "Dibaca"}
                                         </span>
-                                    ) : null}
-                                </div>
-                            )}
+                                        {progress.current_page ? (
+                                            <span className='text-[11px] font-medium text-gray-500 dark:text-gray-400'>
+                                                Hal. {progress.current_page}
+                                            </span>
+                                        ) : null}
+                                    </div>
+                                )}
                             <h2 className='text-base font-bold leading-snug text-emerald-950 dark:text-white'>
                                 {book.title}
                             </h2>
@@ -382,7 +427,7 @@ export const LibraryContent = ({ basePath = '/library', showProgressSummary = fa
                         onClick={() => fetchBooks(page + 1, true)}
                         type='button'
                     >
-                        {loadingMore ? 'Memuat...' : 'Muat lebih banyak'}
+                        {loadingMore ? "Memuat..." : "Muat lebih banyak"}
                     </button>
                 </div>
             )}

@@ -30,26 +30,28 @@ Jurnal refleksi harian dengan mood picker. Pengguna dapat melakukan introspeksi 
 ### API Response Shape
 
 **`GET /muhasabah?date=2026-05-13`**
+
 ```json
 [
-  {
-    "id": 1,
-    "user_id": "uuid",
-    "date": "2026-05-13",
-    "content": "Hari ini saya belajar...",
-    "mood_score": 4,
-    "is_private": true
-  }
+    {
+        "id": 1,
+        "user_id": "uuid",
+        "date": "2026-05-13",
+        "content": "Hari ini saya belajar...",
+        "mood_score": 4,
+        "is_private": true
+    }
 ]
 ```
 
 **`POST /muhasabah`**
+
 ```json
 {
-  "date": "2026-05-13",
-  "content": "Hari ini saya belajar...",
-  "mood_score": 4,
-  "is_private": true
+    "date": "2026-05-13",
+    "content": "Hari ini saya belajar...",
+    "mood_score": 4,
+    "is_private": true
 }
 ```
 

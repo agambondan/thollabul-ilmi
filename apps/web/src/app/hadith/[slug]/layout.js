@@ -1,7 +1,7 @@
-import { getBooks } from '@/lib/api';
+import { getBooks } from "@/lib/api";
 
 const SITE_URL =
-    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tholabul-ilmi.com';
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://tholabul-ilmi.com";
 
 export async function generateStaticParams() {
     const books = await getBooks();
@@ -29,13 +29,13 @@ export async function generateMetadata(props) {
             title,
             description,
             url: canonicalUrl,
-            images: [{ url: '/og', width: 1200, height: 630 }],
+            images: [{ url: "/og", width: 1200, height: 630 }],
         },
         twitter: {
-            card: 'summary_large_image',
+            card: "summary_large_image",
             title,
             description,
-            images: ['/og'],
+            images: ["/og"],
         },
     };
 }

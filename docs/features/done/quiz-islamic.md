@@ -32,35 +32,37 @@ Quiz interaktif 10 soal MCQ random dari berbagai topik keislaman dengan score tr
 ### API Response Shape
 
 **`GET /quiz/session?type=hafalan&count=10`**
+
 ```json
 [
-  {
-    "id": 1,
-    "type": "hafalan",
-    "question_text": "Berapakah jumlah surah dalam Al-Quran?",
-    "options": "[\"110\", \"114\", \"120\", \"100\"]",
-    "difficulty": "medium",
-    "ref_id": 1
-  }
+    {
+        "id": 1,
+        "type": "hafalan",
+        "question_text": "Berapakah jumlah surah dalam Al-Quran?",
+        "options": "[\"110\", \"114\", \"120\", \"100\"]",
+        "difficulty": "medium",
+        "ref_id": 1
+    }
 ]
 ```
+
 Note: `correct_answer` is excluded from session endpoint (revealed at submit time).
 
 **`POST /quiz/submit`**
+
 ```json
 {
-  "results": [
-    { "quiz_id": 1, "answer": "114" }
-  ]
+    "results": [{ "quiz_id": 1, "answer": "114" }]
 }
 ```
 
 **`GET /quiz/stats`**
+
 ```json
 {
-  "total_answered": 50,
-  "total_correct": 40,
-  "accuracy_percent": 80.0
+    "total_answered": 50,
+    "total_correct": 40,
+    "accuracy_percent": 80.0
 }
 ```
 

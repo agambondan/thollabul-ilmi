@@ -1,67 +1,67 @@
 [
-  {
-    "name": "Sholat Tahajud",
-    "description": "Sholat sunnah malam minimal 2 rakaat",
-    "category": "sholat"
-  },
-  {
-    "name": "Sholat Dhuha",
-    "description": "Sholat sunnah pagi minimal 2 rakaat",
-    "category": "sholat"
-  },
-  {
-    "name": "Sholat Rawatib",
-    "description": "Sholat sunnah sebelum/sesudah sholat fardhu",
-    "category": "sholat"
-  },
-  {
-    "name": "Puasa Senin",
-    "description": "Puasa sunnah hari Senin",
-    "category": "puasa"
-  },
-  {
-    "name": "Puasa Kamis",
-    "description": "Puasa sunnah hari Kamis",
-    "category": "puasa"
-  },
-  {
-    "name": "Puasa Ayyamul Bidh",
-    "description": "Puasa tanggal 13, 14, 15 bulan Hijriah",
-    "category": "puasa"
-  },
-  {
-    "name": "Dzikir Pagi",
-    "description": "Baca dzikir pagi setelah subuh",
-    "category": "dzikir"
-  },
-  {
-    "name": "Dzikir Petang",
-    "description": "Baca dzikir petang setelah ashar",
-    "category": "dzikir"
-  },
-  {
-    "name": "Istighfar 100x",
-    "description": "Membaca istighfar minimal 100 kali",
-    "category": "dzikir"
-  },
-  {
-    "name": "Sholawat 100x",
-    "description": "Membaca sholawat minimal 100 kali",
-    "category": "dzikir"
-  },
-  {
-    "name": "Sedekah Harian",
-    "description": "Bersedekah setiap hari walau sedikit",
-    "category": "sedekah"
-  },
-  {
-    "name": "Tilawah Al-Quran",
-    "description": "Membaca Al-Quran minimal 1 halaman",
-    "category": "lainnya"
-  },
-  {
-    "name": "Baca Hadith",
-    "description": "Membaca minimal 1 hadith beserta maknanya",
-    "category": "lainnya"
-  }
+    {
+        "name": "Sholat Tahajud",
+        "description": "Sholat sunnah malam minimal 2 rakaat",
+        "category": "sholat"
+    },
+    {
+        "name": "Sholat Dhuha",
+        "description": "Sholat sunnah pagi minimal 2 rakaat",
+        "category": "sholat"
+    },
+    {
+        "name": "Sholat Rawatib",
+        "description": "Sholat sunnah sebelum/sesudah sholat fardhu",
+        "category": "sholat"
+    },
+    {
+        "name": "Puasa Senin",
+        "description": "Puasa sunnah hari Senin",
+        "category": "puasa"
+    },
+    {
+        "name": "Puasa Kamis",
+        "description": "Puasa sunnah hari Kamis",
+        "category": "puasa"
+    },
+    {
+        "name": "Puasa Ayyamul Bidh",
+        "description": "Puasa tanggal 13, 14, 15 bulan Hijriah",
+        "category": "puasa"
+    },
+    {
+        "name": "Dzikir Pagi",
+        "description": "Baca dzikir pagi setelah subuh",
+        "category": "dzikir"
+    },
+    {
+        "name": "Dzikir Petang",
+        "description": "Baca dzikir petang setelah ashar",
+        "category": "dzikir"
+    },
+    {
+        "name": "Istighfar 100x",
+        "description": "Membaca istighfar minimal 100 kali",
+        "category": "dzikir"
+    },
+    {
+        "name": "Sholawat 100x",
+        "description": "Membaca sholawat minimal 100 kali",
+        "category": "dzikir"
+    },
+    {
+        "name": "Sedekah Harian",
+        "description": "Bersedekah setiap hari walau sedikit",
+        "category": "sedekah"
+    },
+    {
+        "name": "Tilawah Al-Quran",
+        "description": "Membaca Al-Quran minimal 1 halaman",
+        "category": "lainnya"
+    },
+    {
+        "name": "Baca Hadith",
+        "description": "Membaca minimal 1 hadith beserta maknanya",
+        "category": "lainnya"
+    }
 ]

@@ -23,25 +23,32 @@ func (f *fakeAyahRepo) FindById(id *int) (*model.Ayah, error)      { return &mod
 func (f *fakeAyahRepo) FindManyByIds(ids []int) ([]model.Ayah, error) {
 	return []model.Ayah{}, nil
 }
+
 func (f *fakeAyahRepo) FindDaily(number int) (*model.Ayah, error) {
 	f.dailyInput = number
 	return &model.Ayah{Number: &number}, nil
 }
+
 func (f *fakeAyahRepo) FindAllKeyset(ctx *fiber.Ctx) (*lib.KeysetPage, error) {
 	return &lib.KeysetPage{}, nil
 }
+
 func (f *fakeAyahRepo) FindByNumber(ctx *fiber.Ctx, number *int) (*paginate.Page, error) {
 	return &paginate.Page{}, f.findByNumberErr
 }
+
 func (f *fakeAyahRepo) FindBySurahNumber(ctx *fiber.Ctx, number *int) (*paginate.Page, error) {
 	return &paginate.Page{}, f.findBySurahNumberErr
 }
+
 func (f *fakeAyahRepo) FindByPage(page int) ([]model.Ayah, error) {
 	return []model.Ayah{}, nil
 }
+
 func (f *fakeAyahRepo) FindByHizbQuarter(hizb int) ([]model.Ayah, error) {
 	return []model.Ayah{}, nil
 }
+
 func (f *fakeAyahRepo) UpdateById(id *int, ayah *model.Ayah) (*model.Ayah, error) {
 	return ayah, nil
 }

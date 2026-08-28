@@ -32,16 +32,16 @@ Tanggal: `2026-05-13`
 
 ```json
 [
-  {
-    "id": 1,
-    "number": 1,
-    "arabic": "الرَّحْمَٰنُ",
-    "transliteration": "Ar-Rahman",
-    "indonesian": "Yang Maha Pengasih",
-    "english": "The Most Gracious",
-    "meaning": "Allah yang memiliki kasih sayang yang luas...",
-    "audio_url": "https://..."
-  }
+    {
+        "id": 1,
+        "number": 1,
+        "arabic": "الرَّحْمَٰنُ",
+        "transliteration": "Ar-Rahman",
+        "indonesian": "Yang Maha Pengasih",
+        "english": "The Most Gracious",
+        "meaning": "Allah yang memiliki kasih sayang yang luas...",
+        "audio_url": "https://..."
+    }
 ]
 ```
 
@@ -58,7 +58,7 @@ Tanggal: `2026-05-13`
 | `english` | string | English translation |
 | `meaning` | string | Extended meaning/explanation |
 | `audio_url` | string | Audio recitation URL |
-| `translation_id` | *int | FK to Translation (uniform pattern) |
+| `translation_id` | \*int | FK to Translation (uniform pattern) |
 
 ### Key Frontend Components
 

@@ -13,33 +13,41 @@
 Cocok untuk detail singkat-menengah (1–2 layar konten).
 
 **Implementasi acuan:**
+
 - `apps/mobile/src/screens/QuranScreen.js` — popup Tafsir, Asbabun Nuzul, Settings, Tajweed legend
 - `apps/mobile/src/screens/ExploreScreen.js` — popup detail untuk Kajian, Blog, Siroh, Fiqh, Tafsir item, dll
 
 **Komponen wajib dalam modal:**
+
 ```jsx
-<Modal animationType="slide" onRequestClose={close} transparent visible={visible}>
-  <Pressable onPress={close} style={styles.modalOverlay} />
-  <View style={styles.modalSheet}>
-    <View style={styles.modalHandle} />
-    <View style={styles.modalHeader}>
-      <View style={styles.modalHeaderCopy}>
-        <Text style={styles.modalTitle}>{title}</Text>
-        <Text style={styles.modalMeta}>{meta}</Text>
-      </View>
-      <Pressable hitSlop={8} onPress={close} style={styles.modalClose}>
-        <X color={colors.muted} size={18} strokeWidth={2.2} />
-      </Pressable>
+<Modal
+    animationType='slide'
+    onRequestClose={close}
+    transparent
+    visible={visible}
+>
+    <Pressable onPress={close} style={styles.modalOverlay} />
+    <View style={styles.modalSheet}>
+        <View style={styles.modalHandle} />
+        <View style={styles.modalHeader}>
+            <View style={styles.modalHeaderCopy}>
+                <Text style={styles.modalTitle}>{title}</Text>
+                <Text style={styles.modalMeta}>{meta}</Text>
+            </View>
+            <Pressable hitSlop={8} onPress={close} style={styles.modalClose}>
+                <X color={colors.muted} size={18} strokeWidth={2.2} />
+            </Pressable>
+        </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
+            {/* content */}
+            <View style={styles.modalBottomPad} />
+        </ScrollView>
     </View>
-    <ScrollView showsVerticalScrollIndicator={false}>
-      {/* content */}
-      <View style={styles.modalBottomPad} />
-    </ScrollView>
-  </View>
 </Modal>
 ```
 
 **Style anchor (lihat ExploreScreen / QuranScreen):**
+
 - Overlay `rgba(0,0,0,0.38)`, full-flex tap-to-close
 - Sheet rounded-top 20px, `maxHeight: '80%'` atau `'65%'`, `bg = colors.bg`
 - Handle pill 40×4 di tengah-atas
@@ -50,24 +58,34 @@ Cocok untuk detail singkat-menengah (1–2 layar konten).
 Cocok untuk detail panjang dengan banyak section/tab (Quran reader, Hadith detail).
 
 **Implementasi acuan:**
+
 - `apps/mobile/src/screens/HadithScreen.js` — `if (selectedHadith) return <DetailView />`
 - `apps/mobile/src/screens/QuranScreen.js` — `if (selectedSurah) return <Reader />`
 
 **Pola:**
+
 ```jsx
 const [selectedItem, setSelectedItem] = useState(null);
 
 useEffect(() => {
-  if (!isActive) return;
-  if (selectedItem) {
-    navigation?.setBack(() => { setSelectedItem(null); return true; });
-  } else {
-    navigation?.clearBack?.();
-  }
+    if (!isActive) return;
+    if (selectedItem) {
+        navigation?.setBack(() => {
+            setSelectedItem(null);
+            return true;
+        });
+    } else {
+        navigation?.clearBack?.();
+    }
 }, [isActive, selectedItem, navigation]);
 
 if (selectedItem) {
-  return <DetailScreen item={selectedItem} onBack={() => setSelectedItem(null)} />;
+    return (
+        <DetailScreen
+            item={selectedItem}
+            onBack={() => setSelectedItem(null)}
+        />
+    );
 }
 ```
 

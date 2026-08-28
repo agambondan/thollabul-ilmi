@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { TasbihContent } from '@/app/tasbih/page';
+import { TasbihContent } from "@/app/tasbih/page";
 
 export default function DashboardTasbihPage() {
     return (

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { ZakatContent } from '@/app/zakat/page';
+import { ZakatContent } from "@/app/zakat/page";
 
 export default function DashboardZakatPage() {
     return (

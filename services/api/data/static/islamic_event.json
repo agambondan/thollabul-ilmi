@@ -1,149 +1,149 @@
 [
-  {
-    "name": "Puasa Senin-Kamis",
-    "hijri_month": 0,
-    "hijri_day": 0,
-    "category": "puasa",
-    "description": "Puasa sunnah setiap hari Senin dan Kamis. Nabi ﷺ bersabda: 'Amal-amal diangkat pada hari Senin dan Kamis, maka aku suka jika amalku diangkat saat aku sedang berpuasa.' (HR. Tirmidzi)"
-  },
-  {
-    "name": "Puasa Ayyamul Bidh (13-15)",
-    "hijri_month": 0,
-    "hijri_day": 13,
-    "category": "puasa",
-    "description": "Puasa 3 hari di pertengahan setiap bulan Hijriah (13, 14, 15). Setara dengan puasa sepanjang tahun karena satu kebaikan dilipatkan 10x (HR. An-Nasa'i)."
-  },
-  {
-    "name": "Tahun Baru Hijriah",
-    "hijri_month": 1,
-    "hijri_day": 1,
-    "category": "peristiwa",
-    "description": "Awal tahun baru dalam kalender Islam. Momentum muhasabah dan penyegaran niat."
-  },
-  {
-    "name": "Hari Asyura",
-    "hijri_month": 1,
-    "hijri_day": 10,
-    "category": "puasa",
-    "description": "Hari ke-10 Muharram. Puasa sunnah yang sangat dianjurkan. Nabi ﷺ bersabda: 'Puasa Asyura menghapus dosa setahun yang lalu.' (HR. Muslim)"
-  },
-  {
-    "name": "Maulid Nabi ﷺ",
-    "hijri_month": 3,
-    "hijri_day": 12,
-    "category": "peristiwa",
-    "description": "Peringatan kelahiran Nabi Muhammad ﷺ pada 12 Rabiul Awal tahun Gajah (± 571 M). Momentum meningkatkan sholawat dan kecintaan kepada beliau."
-  },
-  {
-    "name": "Isra Mi'raj",
-    "hijri_month": 7,
-    "hijri_day": 27,
-    "category": "peristiwa",
-    "description": "Perjalanan malam Nabi ﷺ dari Masjidil Haram ke Masjidil Aqsha (Isra), lalu naik ke Sidratul Muntaha (Mi'raj). Turunnya kewajiban sholat 5 waktu."
-  },
-  {
-    "name": "Nisfu Sya'ban",
-    "hijri_month": 8,
-    "hijri_day": 15,
-    "category": "peristiwa",
-    "description": "Malam pertengahan bulan Sya'ban. Dianjurkan memperbanyak ibadah dan istighfar."
-  },
-  {
-    "name": "Awal Ramadan",
-    "hijri_month": 9,
-    "hijri_day": 1,
-    "category": "puasa",
-    "description": "Awal bulan suci Ramadan. Bulan diturunkannya Al-Quran (QS. Al-Baqarah: 185). Puasa wajib bagi setiap Muslim yang mampu."
-  },
-  {
-    "name": "Nuzulul Quran",
-    "hijri_month": 9,
-    "hijri_day": 17,
-    "category": "peristiwa",
-    "description": "Peringatan turunnya Al-Quran pertama kali kepada Nabi Muhammad ﷺ di Gua Hira pada malam 17 Ramadan."
-  },
-  {
-    "name": "Lailatul Qadar (malam ke-21)",
-    "hijri_month": 9,
-    "hijri_day": 21,
-    "category": "peristiwa",
-    "description": "Salah satu malam ganjil 10 akhir Ramadan yang berpotensi Lailatul Qadar — malam lebih baik dari seribu bulan (QS. Al-Qadr)."
-  },
-  {
-    "name": "Lailatul Qadar (malam ke-23)",
-    "hijri_month": 9,
-    "hijri_day": 23,
-    "category": "peristiwa",
-    "description": "Salah satu malam ganjil 10 akhir Ramadan yang berpotensi Lailatul Qadar."
-  },
-  {
-    "name": "Lailatul Qadar (malam ke-25)",
-    "hijri_month": 9,
-    "hijri_day": 25,
-    "category": "peristiwa",
-    "description": "Salah satu malam ganjil 10 akhir Ramadan yang berpotensi Lailatul Qadar."
-  },
-  {
-    "name": "Lailatul Qadar (malam ke-27)",
-    "hijri_month": 9,
-    "hijri_day": 27,
-    "category": "peristiwa",
-    "description": "Malam ke-27 Ramadan — malam yang paling sering disebut ulama sebagai Lailatul Qadar berdasarkan hadith."
-  },
-  {
-    "name": "Lailatul Qadar (malam ke-29)",
-    "hijri_month": 9,
-    "hijri_day": 29,
-    "category": "peristiwa",
-    "description": "Salah satu malam ganjil 10 akhir Ramadan yang berpotensi Lailatul Qadar."
-  },
-  {
-    "name": "Idul Fitri",
-    "hijri_month": 10,
-    "hijri_day": 1,
-    "category": "eid",
-    "description": "Hari raya setelah sebulan penuh berpuasa Ramadan. Diawali sholat Id, zakat fitrah, dan silaturahmi."
-  },
-  {
-    "name": "Puasa Syawal 6 Hari",
-    "hijri_month": 10,
-    "hijri_day": 2,
-    "category": "puasa",
-    "description": "Puasa 6 hari di bulan Syawal setelah Idul Fitri. Nabi ﷺ bersabda: 'Barangsiapa berpuasa Ramadan kemudian diikuti 6 hari Syawal maka seakan ia berpuasa setahun penuh.' (HR. Muslim)"
-  },
-  {
-    "name": "Hari Arafah",
-    "hijri_month": 12,
-    "hijri_day": 9,
-    "category": "puasa",
-    "description": "Hari wukuf di Arafah bagi jamaah haji. Puasa Arafah sangat dianjurkan bagi yang tidak berhaji — menghapus dosa dua tahun (HR. Muslim)."
-  },
-  {
-    "name": "Idul Adha",
-    "hijri_month": 12,
-    "hijri_day": 10,
-    "category": "eid",
-    "description": "Hari raya kurban. Peringatan ketaatan Nabi Ibrahim dan Ismail. Sholat Id dan penyembelihan hewan kurban."
-  },
-  {
-    "name": "Hari Tasyrik (11 Dzulhijjah)",
-    "hijri_month": 12,
-    "hijri_day": 11,
-    "category": "peristiwa",
-    "description": "Bagian dari hari-hari tasyrik (11-13 Dzulhijjah). Hari makan, minum, dan dzikir kepada Allah (HR. Muslim). Jamaah haji mabit di Mina."
-  },
-  {
-    "name": "Hari Tasyrik (12 Dzulhijjah)",
-    "hijri_month": 12,
-    "hijri_day": 12,
-    "category": "peristiwa",
-    "description": "Hari tasyrik kedua. Bagi yang ingin nafar awal, bisa meninggalkan Mina sebelum Maghrib."
-  },
-  {
-    "name": "Hari Tasyrik (13 Dzulhijjah)",
-    "hijri_month": 12,
-    "hijri_day": 13,
-    "category": "peristiwa",
-    "description": "Hari tasyrik terakhir. Akhir dari rangkaian ibadah haji di Mina (nafar tsani)."
-  }
+    {
+        "name": "Puasa Senin-Kamis",
+        "hijri_month": 0,
+        "hijri_day": 0,
+        "category": "puasa",
+        "description": "Puasa sunnah setiap hari Senin dan Kamis. Nabi ﷺ bersabda: 'Amal-amal diangkat pada hari Senin dan Kamis, maka aku suka jika amalku diangkat saat aku sedang berpuasa.' (HR. Tirmidzi)"
+    },
+    {
+        "name": "Puasa Ayyamul Bidh (13-15)",
+        "hijri_month": 0,
+        "hijri_day": 13,
+        "category": "puasa",
+        "description": "Puasa 3 hari di pertengahan setiap bulan Hijriah (13, 14, 15). Setara dengan puasa sepanjang tahun karena satu kebaikan dilipatkan 10x (HR. An-Nasa'i)."
+    },
+    {
+        "name": "Tahun Baru Hijriah",
+        "hijri_month": 1,
+        "hijri_day": 1,
+        "category": "peristiwa",
+        "description": "Awal tahun baru dalam kalender Islam. Momentum muhasabah dan penyegaran niat."
+    },
+    {
+        "name": "Hari Asyura",
+        "hijri_month": 1,
+        "hijri_day": 10,
+        "category": "puasa",
+        "description": "Hari ke-10 Muharram. Puasa sunnah yang sangat dianjurkan. Nabi ﷺ bersabda: 'Puasa Asyura menghapus dosa setahun yang lalu.' (HR. Muslim)"
+    },
+    {
+        "name": "Maulid Nabi ﷺ",
+        "hijri_month": 3,
+        "hijri_day": 12,
+        "category": "peristiwa",
+        "description": "Peringatan kelahiran Nabi Muhammad ﷺ pada 12 Rabiul Awal tahun Gajah (± 571 M). Momentum meningkatkan sholawat dan kecintaan kepada beliau."
+    },
+    {
+        "name": "Isra Mi'raj",
+        "hijri_month": 7,
+        "hijri_day": 27,
+        "category": "peristiwa",
+        "description": "Perjalanan malam Nabi ﷺ dari Masjidil Haram ke Masjidil Aqsha (Isra), lalu naik ke Sidratul Muntaha (Mi'raj). Turunnya kewajiban sholat 5 waktu."
+    },
+    {
+        "name": "Nisfu Sya'ban",
+        "hijri_month": 8,
+        "hijri_day": 15,
+        "category": "peristiwa",
+        "description": "Malam pertengahan bulan Sya'ban. Dianjurkan memperbanyak ibadah dan istighfar."
+    },
+    {
+        "name": "Awal Ramadan",
+        "hijri_month": 9,
+        "hijri_day": 1,
+        "category": "puasa",
+        "description": "Awal bulan suci Ramadan. Bulan diturunkannya Al-Quran (QS. Al-Baqarah: 185). Puasa wajib bagi setiap Muslim yang mampu."
+    },
+    {
+        "name": "Nuzulul Quran",
+        "hijri_month": 9,
+        "hijri_day": 17,
+        "category": "peristiwa",
+        "description": "Peringatan turunnya Al-Quran pertama kali kepada Nabi Muhammad ﷺ di Gua Hira pada malam 17 Ramadan."
+    },
+    {
+        "name": "Lailatul Qadar (malam ke-21)",
+        "hijri_month": 9,
+        "hijri_day": 21,
+        "category": "peristiwa",
+        "description": "Salah satu malam ganjil 10 akhir Ramadan yang berpotensi Lailatul Qadar — malam lebih baik dari seribu bulan (QS. Al-Qadr)."
+    },
+    {
+        "name": "Lailatul Qadar (malam ke-23)",
+        "hijri_month": 9,
+        "hijri_day": 23,
+        "category": "peristiwa",
+        "description": "Salah satu malam ganjil 10 akhir Ramadan yang berpotensi Lailatul Qadar."
+    },
+    {
+        "name": "Lailatul Qadar (malam ke-25)",
+        "hijri_month": 9,
+        "hijri_day": 25,
+        "category": "peristiwa",
+        "description": "Salah satu malam ganjil 10 akhir Ramadan yang berpotensi Lailatul Qadar."
+    },
+    {
+        "name": "Lailatul Qadar (malam ke-27)",
+        "hijri_month": 9,
+        "hijri_day": 27,
+        "category": "peristiwa",
+        "description": "Malam ke-27 Ramadan — malam yang paling sering disebut ulama sebagai Lailatul Qadar berdasarkan hadith."
+    },
+    {
+        "name": "Lailatul Qadar (malam ke-29)",
+        "hijri_month": 9,
+        "hijri_day": 29,
+        "category": "peristiwa",
+        "description": "Salah satu malam ganjil 10 akhir Ramadan yang berpotensi Lailatul Qadar."
+    },
+    {
+        "name": "Idul Fitri",
+        "hijri_month": 10,
+        "hijri_day": 1,
+        "category": "eid",
+        "description": "Hari raya setelah sebulan penuh berpuasa Ramadan. Diawali sholat Id, zakat fitrah, dan silaturahmi."
+    },
+    {
+        "name": "Puasa Syawal 6 Hari",
+        "hijri_month": 10,
+        "hijri_day": 2,
+        "category": "puasa",
+        "description": "Puasa 6 hari di bulan Syawal setelah Idul Fitri. Nabi ﷺ bersabda: 'Barangsiapa berpuasa Ramadan kemudian diikuti 6 hari Syawal maka seakan ia berpuasa setahun penuh.' (HR. Muslim)"
+    },
+    {
+        "name": "Hari Arafah",
+        "hijri_month": 12,
+        "hijri_day": 9,
+        "category": "puasa",
+        "description": "Hari wukuf di Arafah bagi jamaah haji. Puasa Arafah sangat dianjurkan bagi yang tidak berhaji — menghapus dosa dua tahun (HR. Muslim)."
+    },
+    {
+        "name": "Idul Adha",
+        "hijri_month": 12,
+        "hijri_day": 10,
+        "category": "eid",
+        "description": "Hari raya kurban. Peringatan ketaatan Nabi Ibrahim dan Ismail. Sholat Id dan penyembelihan hewan kurban."
+    },
+    {
+        "name": "Hari Tasyrik (11 Dzulhijjah)",
+        "hijri_month": 12,
+        "hijri_day": 11,
+        "category": "peristiwa",
+        "description": "Bagian dari hari-hari tasyrik (11-13 Dzulhijjah). Hari makan, minum, dan dzikir kepada Allah (HR. Muslim). Jamaah haji mabit di Mina."
+    },
+    {
+        "name": "Hari Tasyrik (12 Dzulhijjah)",
+        "hijri_month": 12,
+        "hijri_day": 12,
+        "category": "peristiwa",
+        "description": "Hari tasyrik kedua. Bagi yang ingin nafar awal, bisa meninggalkan Mina sebelum Maghrib."
+    },
+    {
+        "name": "Hari Tasyrik (13 Dzulhijjah)",
+        "hijri_month": 12,
+        "hijri_day": 13,
+        "category": "peristiwa",
+        "description": "Hari tasyrik terakhir. Akhir dari rangkaian ibadah haji di Mina (nafar tsani)."
+    }
 ]

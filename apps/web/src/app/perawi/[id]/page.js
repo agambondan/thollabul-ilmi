@@ -1,10 +1,10 @@
-'use client';
+"use client";
 import { use } from "react";
 
-import { PerawiDetailContent } from '@/app/dashboard/perawi/[id]/page';
-import Footer from '@/components/Footer';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import Section from '@/components/Section';
+import { PerawiDetailContent } from "@/app/dashboard/perawi/[id]/page";
+import Footer from "@/components/Footer";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import Section from "@/components/Section";
 
 export default function PerawiDetailPage(props) {
     const params = use(props.params);

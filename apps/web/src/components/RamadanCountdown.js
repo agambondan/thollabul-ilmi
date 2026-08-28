@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useLocale } from '@/context/Locale';
-import { hijriApi } from '@/lib/api';
-import { daysUntilRamadan } from '@/lib/puasaSunnah';
-import { useEffect, useState } from 'react';
-import { BsMoonStarsFill } from 'react-icons/bs';
+import { useLocale } from "@/context/Locale";
+import { hijriApi } from "@/lib/api";
+import { daysUntilRamadan } from "@/lib/puasaSunnah";
+import { useEffect, useState } from "react";
+import { BsMoonStarsFill } from "react-icons/bs";
 
 export default function RamadanCountdown({ compact = false }) {
     const { t } = useLocale();
@@ -19,7 +19,7 @@ export default function RamadanCountdown({ compact = false }) {
                 const h = data?.hijri ?? data;
                 setHijri(h);
             })
-            .catch(e => console.error(e))
+            .catch((e) => console.error(e))
             .finally(() => setLoading(false));
     }, []);
 
@@ -33,7 +33,8 @@ export default function RamadanCountdown({ compact = false }) {
 
     const days = daysUntilRamadan(hijri);
     const isRamadan = Number(hijri.month) === 9;
-    const inRamadan = isRamadan && Number(hijri.day) >= 1 && Number(hijri.day) <= 30;
+    const inRamadan =
+        isRamadan && Number(hijri.day) >= 1 && Number(hijri.day) <= 30;
 
     if (compact) {
         return (
@@ -41,14 +42,14 @@ export default function RamadanCountdown({ compact = false }) {
                 <BsMoonStarsFill />
                 {inRamadan ? (
                     <span>
-                        {t('hijri.ramadan_today') ?? 'Ramadan hari ke'}{' '}
+                        {t("hijri.ramadan_today") ?? "Ramadan hari ke"}{" "}
                         <strong>{hijri.day}</strong>
                     </span>
                 ) : (
                     <span>
-                        {t('hijri.ramadan_in') ?? 'Ramadan'}{' '}
-                        <strong>{days}</strong>{' '}
-                        {t('hijri.days_left') ?? 'hari lagi'}
+                        {t("hijri.ramadan_in") ?? "Ramadan"}{" "}
+                        <strong>{days}</strong>{" "}
+                        {t("hijri.days_left") ?? "hari lagi"}
                     </span>
                 )}
             </div>
@@ -64,26 +65,30 @@ export default function RamadanCountdown({ compact = false }) {
                 <div>
                     <p className='text-xs uppercase tracking-wider text-emerald-100/90'>
                         {inRamadan
-                            ? t('hijri.ramadan_label') ?? 'Bulan Ramadan'
-                            : t('hijri.ramadan_countdown_label') ?? 'Menuju Ramadan'}
+                            ? (t("hijri.ramadan_label") ?? "Bulan Ramadan")
+                            : (t("hijri.ramadan_countdown_label") ??
+                              "Menuju Ramadan")}
                     </p>
                     <p className='text-sm font-medium text-white/90'>
-                        {hijri.day} {hijri.month_name ?? `Bulan ${hijri.month}`} {hijri.year} H
+                        {hijri.day} {hijri.month_name ?? `Bulan ${hijri.month}`}{" "}
+                        {hijri.year} H
                     </p>
                 </div>
             </div>
             <div className='flex items-baseline gap-2 mt-4'>
-                <span className='text-5xl font-bold'>{inRamadan ? hijri.day : days}</span>
+                <span className='text-5xl font-bold'>
+                    {inRamadan ? hijri.day : days}
+                </span>
                 <span className='text-sm text-emerald-100/90'>
                     {inRamadan
-                        ? `/ 30 ${t('hijri.day_unit') ?? 'hari'}`
-                        : t('hijri.days_left') ?? 'hari lagi'}
+                        ? `/ 30 ${t("hijri.day_unit") ?? "hari"}`
+                        : (t("hijri.days_left") ?? "hari lagi")}
                 </span>
             </div>
             {!inRamadan && (
                 <p className='text-xs text-emerald-100/70 mt-2'>
-                    {t('hijri.ramadan_note') ??
-                        'Estimasi naive 30 hari/bulan Hijri. Akurasi tergantung penampakan hilal.'}
+                    {t("hijri.ramadan_note") ??
+                        "Estimasi naive 30 hari/bulan Hijri. Akurasi tergantung penampakan hilal."}
                 </p>
             )}
         </div>

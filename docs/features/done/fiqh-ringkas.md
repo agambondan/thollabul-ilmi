@@ -32,28 +32,29 @@ Fiqh ringkas per kategori (thaharah, sholat, puasa, zakat, haji, muamalah) sebag
 ### API Response Shape
 
 **`GET /fiqh`**
+
 ```json
 [
-  {
-    "id": 1,
-    "name": "Thaharah",
-    "slug": "thaharah",
-    "description": "Hukum-hukum tentang bersuci",
-    "translation": { "idn": "Thaharah", "en": "Purification" },
-    "items": [
-      {
+    {
         "id": 1,
-        "category_id": 1,
-        "title": "Wudhu",
-        "slug": "wudhu",
-        "content": "Wudhu adalah bersuci dengan air...",
-        "source": "Minhajul Muslim",
-        "dalil": "QS. Al-Maidah: 6",
-        "sort_order": 1,
-        "translation": { "idn": "Wudhu", "en": "Ablution" }
-      }
-    ]
-  }
+        "name": "Thaharah",
+        "slug": "thaharah",
+        "description": "Hukum-hukum tentang bersuci",
+        "translation": { "idn": "Thaharah", "en": "Purification" },
+        "items": [
+            {
+                "id": 1,
+                "category_id": 1,
+                "title": "Wudhu",
+                "slug": "wudhu",
+                "content": "Wudhu adalah bersuci dengan air...",
+                "source": "Minhajul Muslim",
+                "dalil": "QS. Al-Maidah: 6",
+                "sort_order": 1,
+                "translation": { "idn": "Wudhu", "en": "Ablution" }
+            }
+        ]
+    }
 ]
 ```
 
@@ -67,7 +68,7 @@ Fiqh ringkas per kategori (thaharah, sholat, puasa, zakat, haji, muamalah) sebag
 | `slug` | string | URL-safe; unique |
 | `description` | string | Brief description |
 | `items` | []FiqhItem | Has-many fiqh items |
-| `translation_id` | *int | FK to Translation |
+| `translation_id` | \*int | FK to Translation |
 
 **`FiqhItem`** (`model/fiqh.go`)
 | Field | Type | Notes |

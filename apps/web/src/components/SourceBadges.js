@@ -1,25 +1,26 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 
 const SUNNAH_SLUG_MAP = {
-    bukhari: 'bukhari',
-    muslim: 'muslim',
-    abudawud: 'abudawud',
-    tirmidzi: 'tirmidzi',
-    ibnumajah: 'ibnmajah',
-    nasai: 'nasai',
-    ahmad: 'ahmad',
+    bukhari: "bukhari",
+    muslim: "muslim",
+    abudawud: "abudawud",
+    tirmidzi: "tirmidzi",
+    ibnumajah: "ibnmajah",
+    nasai: "nasai",
+    ahmad: "ahmad",
 };
 
-const normalizeBookKey = (value) => value.toLowerCase().replaceAll(' ', '');
+const normalizeBookKey = (value) => value.toLowerCase().replaceAll(" ", "");
 
-const quranSourceHref = (surah, ayah) => `/quran/surah/${encodeURIComponent(surah.trim())}#ayah-${ayah}`;
+const quranSourceHref = (surah, ayah) =>
+    `/quran/surah/${encodeURIComponent(surah.trim())}#ayah-${ayah}`;
 
 export function parseSource(source) {
     if (!source) return [];
     return source
-        .split(';')
+        .split(";")
         .map((s) => s.trim())
         .filter(Boolean)
         .map((part) => {
@@ -31,13 +32,21 @@ export function parseSource(source) {
                 const no = hrMatch[2];
                 const slug = SUNNAH_SLUG_MAP[key];
                 if (!slug) return { text: part, url: null };
-                return { external: true, text: part, url: `https://sunnah.com/${slug}:${no}` };
+                return {
+                    external: true,
+                    text: part,
+                    url: `https://sunnah.com/${slug}:${no}`,
+                };
             }
             const qsMatch = part.match(/QS\.\s*([^:]+):\s*(\d+)/i);
             if (qsMatch) {
                 const surah = qsMatch[1].trim();
                 const ayat = qsMatch[2];
-                return { external: false, text: part, url: quranSourceHref(surah, ayat) };
+                return {
+                    external: false,
+                    text: part,
+                    url: quranSourceHref(surah, ayat),
+                };
             }
             return { text: part, url: null };
         });
@@ -70,7 +79,10 @@ export default function SourceBadges({ source }) {
                         {ref.text}
                     </Link>
                 ) : (
-                    <span key={i} className='text-xs text-gray-400 dark:text-gray-500'>
+                    <span
+                        key={i}
+                        className='text-xs text-gray-400 dark:text-gray-500'
+                    >
                         {ref.text}
                     </span>
                 ),

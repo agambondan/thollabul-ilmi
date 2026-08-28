@@ -51,7 +51,7 @@ func main() {
 		log.Fatalf("koneksi DB gagal: %v", err)
 	}
 
-	if err := os.MkdirAll(*outDir, 0755); err != nil {
+	if err := os.MkdirAll(*outDir, 0o755); err != nil {
 		log.Fatalf("mkdir %s: %v", *outDir, err)
 	}
 
@@ -63,8 +63,6 @@ func main() {
 	d.dumpSholatGuide()
 	d.dumpFiqhCategories()
 	d.dumpFiqhItems()
-	d.dumpTahlilCollections()
-	d.dumpTahlilItems()
 	d.dumpSirohCategories()
 	d.dumpSirohContents()
 	d.dumpBlogCategories()
@@ -98,7 +96,7 @@ func (d *dumper) save(name string, v interface{}) {
 		log.Printf("marshal %s: %v", name, err)
 		return
 	}
-	if err := os.WriteFile(path, b, 0644); err != nil {
+	if err := os.WriteFile(path, b, 0o644); err != nil {
 		log.Printf("write %s: %v", name, err)
 		return
 	}
@@ -227,44 +225,6 @@ func (d *dumper) dumpFiqhItems() {
 		ORDER BY fc.id, fi.sort_order
 	`).Scan(&rows)
 	d.save("fiqh_item.json", rows)
-}
-
-// ── Tahlil Collection ─────────────────────────────────────────────────────────
-
-type tahlilColRow struct {
-	Type        string `json:"type"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-}
-
-func (d *dumper) dumpTahlilCollections() {
-	var rows []tahlilColRow
-	d.db.Raw(`SELECT type, title, description FROM tahlil_collection WHERE deleted_at IS NULL ORDER BY id`).Scan(&rows)
-	d.save("tahlil_collection.json", rows)
-}
-
-// ── Tahlil Item ───────────────────────────────────────────────────────────────
-
-type tahlilItemRow struct {
-	CollectionType  string `json:"collection_type"`
-	SortOrder       int    `json:"sort_order"`
-	Label           string `json:"label"`
-	Arabic          string `json:"arabic"`
-	Transliteration string `json:"transliteration"`
-	TranslationText string `json:"translation_text"`
-	Repeat          int    `json:"repeat"`
-}
-
-func (d *dumper) dumpTahlilItems() {
-	var rows []tahlilItemRow
-	d.db.Raw(`
-		SELECT tc.type AS collection_type, ti.sort_order, ti.label, ti.arabic, ti.transliteration, ti.translation AS translation_text, ti.repeat
-		FROM tahlil_item ti
-		JOIN tahlil_collection tc ON tc.id = ti.collection_id
-		WHERE ti.deleted_at IS NULL
-		ORDER BY tc.id, ti.sort_order
-	`).Scan(&rows)
-	d.save("tahlil_item.json", rows)
 }
 
 // ── Siroh Category ────────────────────────────────────────────────────────────

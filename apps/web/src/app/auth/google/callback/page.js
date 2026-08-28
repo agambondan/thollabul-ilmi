@@ -1,22 +1,24 @@
-'use client';
+"use client";
 
-import { Suspense, useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useAuth } from '@/context/Auth';
-import Link from 'next/link';
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@/context/Auth";
+import Link from "next/link";
 
 const GoogleCallbackContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { doRefresh, refetchUser } = useAuth();
-    const [status, setStatus] = useState('Menyelesaikan login dengan Google...');
-    const [error, setError] = useState('');
+    const [status, setStatus] = useState(
+        "Menyelesaikan login dengan Google...",
+    );
+    const [error, setError] = useState("");
 
     useEffect(() => {
-        const errorParam = searchParams.get('error');
+        const errorParam = searchParams.get("error");
         if (errorParam) {
             setError(decodeURIComponent(errorParam));
-            setStatus('');
+            setStatus("");
             return;
         }
 
@@ -35,16 +37,16 @@ const GoogleCallbackContent = () => {
             try {
                 const token = await doRefresh?.();
                 if (!token) {
-                    setError('Gagal menyelesaikan sesi login dari Google.');
-                    setStatus('');
+                    setError("Gagal menyelesaikan sesi login dari Google.");
+                    setStatus("");
                     return;
                 }
                 refetchUser?.();
-                setStatus('Login berhasil! Mengalihkan ke dashboard...');
-                setTimeout(() => router.replace('/dashboard'), 800);
+                setStatus("Login berhasil! Mengalihkan ke dashboard...");
+                setTimeout(() => router.replace("/dashboard"), 800);
             } catch (err) {
-                setError(err?.message || 'Gagal menyelesaikan sesi login.');
-                setStatus('');
+                setError(err?.message || "Gagal menyelesaikan sesi login.");
+                setStatus("");
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -57,7 +59,9 @@ const GoogleCallbackContent = () => {
                     Login dengan Google
                 </h1>
                 {status && (
-                    <p className='text-sm text-gray-600 dark:text-gray-300'>{status}</p>
+                    <p className='text-sm text-gray-600 dark:text-gray-300'>
+                        {status}
+                    </p>
                 )}
                 {error && (
                     <div className='mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400'>

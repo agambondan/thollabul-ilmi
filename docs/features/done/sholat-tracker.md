@@ -31,38 +31,41 @@ Catat sholat 5 waktu per hari, lihat history & statistik.
 ### API Response Shape
 
 **`GET /sholat?date=2026-05-13`**
+
 ```json
 {
-  "date": "2026-05-13",
-  "prayers": {
-    "subuh": { "id": 1, "prayer": "subuh", "status": "berjamaah" },
-    "dzuhur": { "id": 2, "prayer": "dzuhur", "status": "munfarid" },
-    "ashar": null,
-    "maghrib": { "id": 3, "prayer": "maghrib", "status": "qadha" },
-    "isya": { "id": 4, "prayer": "isya", "status": "missed" }
-  }
+    "date": "2026-05-13",
+    "prayers": {
+        "subuh": { "id": 1, "prayer": "subuh", "status": "berjamaah" },
+        "dzuhur": { "id": 2, "prayer": "dzuhur", "status": "munfarid" },
+        "ashar": null,
+        "maghrib": { "id": 3, "prayer": "maghrib", "status": "qadha" },
+        "isya": { "id": 4, "prayer": "isya", "status": "missed" }
+    }
 }
 ```
 
 **`POST /sholat`**
+
 ```json
 {
-  "date": "2026-05-13",
-  "prayer": "dzuhur",
-  "status": "berjamaah"
+    "date": "2026-05-13",
+    "prayer": "dzuhur",
+    "status": "berjamaah"
 }
 ```
 
 **`GET /sholat/stats`**
+
 ```json
 {
-  "total_days": 30,
-  "berjamaah_pct": 65.0,
-  "munfarid_pct": 20.0,
-  "qadha_pct": 10.0,
-  "missed_pct": 5.0,
-  "best_streak_days": 14,
-  "current_streak_days": 7
+    "total_days": 30,
+    "berjamaah_pct": 65.0,
+    "munfarid_pct": 20.0,
+    "qadha_pct": 10.0,
+    "missed_pct": 5.0,
+    "best_streak_days": 14,
+    "current_streak_days": 7
 }
 ```
 

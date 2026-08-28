@@ -30,20 +30,21 @@ Target belajar dengan deadline, bisa track progress. Pengguna dapat menetapkan t
 ### API Response Shape
 
 **`GET /goals`**
+
 ```json
 [
-  {
-    "id": 1,
-    "user_id": "uuid",
-    "type": "hafalan",
-    "title": "Hafal Juz 30",
-    "description": "Target menghafal juz 30 dalam 3 bulan",
-    "target": 37,
-    "progress": 15,
-    "start_date": "2026-01-01",
-    "end_date": "2026-03-31",
-    "is_completed": false
-  }
+    {
+        "id": 1,
+        "user_id": "uuid",
+        "type": "hafalan",
+        "title": "Hafal Juz 30",
+        "description": "Target menghafal juz 30 dalam 3 bulan",
+        "target": 37,
+        "progress": 15,
+        "start_date": "2026-01-01",
+        "end_date": "2026-03-31",
+        "is_completed": false
+    }
 ]
 ```
 

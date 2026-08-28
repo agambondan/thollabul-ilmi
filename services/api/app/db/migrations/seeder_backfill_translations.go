@@ -24,9 +24,6 @@ func BackfillTranslations(db *gorm.DB) error {
 	if err := backfillManasik(db); err != nil {
 		return err
 	}
-	if err := backfillTahlilItems(db); err != nil {
-		return err
-	}
 	if err := backfillAsbabunNuzul(db); err != nil {
 		return err
 	}
@@ -143,25 +140,6 @@ func backfillManasik(db *gorm.DB) error {
 			DescriptionIdn: stringPtr(row.TranslationText),
 		}
 		if err := linkTranslation(db, "manasik_step", "id", row.ID, tr); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func backfillTahlilItems(db *gorm.DB) error {
-	var rows []model.TahlilItem
-	if err := db.Where("translation_id IS NULL").Find(&rows).Error; err != nil {
-		return err
-	}
-	for _, row := range rows {
-		tr := &model.Translation{
-			Idn:            stringPtr(row.Label),
-			Ar:             stringPtr(row.Arabic),
-			LatinIdn:       stringPtr(row.Transliteration),
-			DescriptionIdn: stringPtr(row.TranslationText),
-		}
-		if err := linkTranslation(db, "tahlil_item", "id", row.ID, tr); err != nil {
 			return err
 		}
 	}

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/context/Auth';
-import { useLocale } from '@/context/Locale';
-import { hafalanApi, muhasabahApi, streakApi, userApi } from '@/lib/api';
+import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
+import { hafalanApi, muhasabahApi, streakApi, userApi } from "@/lib/api";
 import {
     calcLocalPrayerStreak,
     isHafalanMemorized,
@@ -12,14 +12,14 @@ import {
     pickItems,
     readLocalArray,
     writeLocalArray,
-} from '@/lib/personalSync';
-import { useLayoutMode } from '@/lib/useLayoutMode';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { BsChevronDown, BsChevronUp, BsPencil } from 'react-icons/bs';
+} from "@/lib/personalSync";
+import { useLayoutMode } from "@/lib/useLayoutMode";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { BsChevronDown, BsChevronUp, BsPencil } from "react-icons/bs";
 
 const inputCls =
-    'w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500';
+    "w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500";
 
 const ProfileDashboardPage = () => {
     const { user, isAuthenticated, logout, refetchUser } = useAuth();
@@ -28,21 +28,23 @@ const ProfileDashboardPage = () => {
     const [streak, setStreak] = useState(0);
     const [muhasabahCount, setMuhasabahCount] = useState(0);
     const [hafalCount, setHafalCount] = useState(0);
-    const [syncError, setSyncError] = useState('');
+    const [syncError, setSyncError] = useState("");
     const [editOpen, setEditOpen] = useState(false);
-    const [editName, setEditName] = useState('');
+    const [editName, setEditName] = useState("");
     const [editLoading, setEditLoading] = useState(false);
-    const [editMsg, setEditMsg] = useState({ type: '', text: '' });
+    const [editMsg, setEditMsg] = useState({ type: "", text: "" });
     const [sessions, setSessions] = useState([]);
     const [sessionsLoading, setSessionsLoading] = useState(false);
     const [sessionActionId, setSessionActionId] = useState(null);
-    const [sessionMsg, setSessionMsg] = useState({ type: '', text: '' });
+    const [sessionMsg, setSessionMsg] = useState({ type: "", text: "" });
     const [deleteLoading, setDeleteLoading] = useState(false);
-    const [deleteMsg, setDeleteMsg] = useState({ type: '', text: '' });
+    const [deleteMsg, setDeleteMsg] = useState({ type: "", text: "" });
 
     useEffect(() => {
-        const localMuhasabah = readLocalArray('tholabul_muhasabah').map(normalizeMuhasabah);
-        const localHafalan = readLocalArray('tholabul_hafalan').map(normalizeHafalan);
+        const localMuhasabah =
+            readLocalArray("tholabul_muhasabah").map(normalizeMuhasabah);
+        const localHafalan =
+            readLocalArray("tholabul_hafalan").map(normalizeHafalan);
         setMuhasabahCount(localMuhasabah.length);
         setHafalCount(localHafalan.filter(isHafalanMemorized).length);
 
@@ -53,15 +55,18 @@ const ProfileDashboardPage = () => {
                     muhasabahApi.list().then(parseApiJson),
                     hafalanApi.list().then(parseApiJson),
                 ]);
-                const muhasabah = pickItems(muhasabahPayload).map(normalizeMuhasabah);
+                const muhasabah =
+                    pickItems(muhasabahPayload).map(normalizeMuhasabah);
                 const hafalan = pickItems(hafalanPayload).map(normalizeHafalan);
                 setMuhasabahCount(muhasabah.length);
                 setHafalCount(hafalan.filter(isHafalanMemorized).length);
-                writeLocalArray('tholabul_muhasabah', muhasabah);
-                writeLocalArray('tholabul_hafalan', hafalan);
-                setSyncError('');
+                writeLocalArray("tholabul_muhasabah", muhasabah);
+                writeLocalArray("tholabul_hafalan", hafalan);
+                setSyncError("");
             } catch {
-                setSyncError('Stat profil memakai salinan lokal karena sinkron server belum tersedia.');
+                setSyncError(
+                    "Stat profil memakai salinan lokal karena sinkron server belum tersedia.",
+                );
             }
         };
         loadPersonalCounts();
@@ -87,7 +92,15 @@ const ProfileDashboardPage = () => {
         userApi
             .sessions()
             .then((r) => r.json())
-            .then((data) => setSessions(Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : []))
+            .then((data) =>
+                setSessions(
+                    Array.isArray(data?.data)
+                        ? data.data
+                        : Array.isArray(data)
+                          ? data
+                          : [],
+                ),
+            )
             .catch(() => setSessions([]))
             .finally(() => setSessionsLoading(false));
     }, [isAuthenticated]);
@@ -96,23 +109,27 @@ const ProfileDashboardPage = () => {
         e.preventDefault();
         if (!user?.id || !editName.trim()) return;
         setEditLoading(true);
-        setEditMsg({ type: '', text: '' });
+        setEditMsg({ type: "", text: "" });
         try {
-            const res = await userApi.updateMe(user.id, { name: editName.trim() });
+            const res = await userApi.updateMe(user.id, {
+                name: editName.trim(),
+            });
             if (!res.ok) throw new Error();
             refetchUser();
-            setEditMsg({ type: 'success', text: t('profile.update_success') });
+            setEditMsg({ type: "success", text: t("profile.update_success") });
             setEditOpen(false);
         } catch {
-            setEditMsg({ type: 'error', text: t('profile.update_error') });
+            setEditMsg({ type: "error", text: t("profile.update_error") });
         } finally {
             setEditLoading(false);
         }
     };
 
     const handleDeleteAccount = async () => {
-        setDeleteMsg({ type: '', text: '' });
-        const confirmed = window.confirm('Hapus akun ini? Aksi ini akan mengakhiri sesi kamu dan tidak dapat dibatalkan dari aplikasi.');
+        setDeleteMsg({ type: "", text: "" });
+        const confirmed = window.confirm(
+            "Hapus akun ini? Aksi ini akan mengakhiri sesi kamu dan tidak dapat dibatalkan dari aplikasi.",
+        );
         if (!confirmed) return;
         setDeleteLoading(true);
         try {
@@ -120,7 +137,10 @@ const ProfileDashboardPage = () => {
             if (!res.ok) throw new Error();
             await logout();
         } catch {
-            setDeleteMsg({ type: 'error', text: 'Akun belum bisa dihapus. Coba lagi nanti.' });
+            setDeleteMsg({
+                type: "error",
+                text: "Akun belum bisa dihapus. Coba lagi nanti.",
+            });
         } finally {
             setDeleteLoading(false);
         }
@@ -129,14 +149,22 @@ const ProfileDashboardPage = () => {
     const handleRevokeSession = async (sessionItem) => {
         if (!sessionItem?.id || sessionItem.current || sessionActionId) return;
         setSessionActionId(sessionItem.id);
-        setSessionMsg({ type: '', text: '' });
+        setSessionMsg({ type: "", text: "" });
         try {
             const res = await userApi.revokeSession(sessionItem.id);
             if (!res.ok) throw new Error();
-            setSessions((items) => items.filter((item) => item.id !== sessionItem.id));
-            setSessionMsg({ type: 'success', text: 'Sesi login lain berhasil dikeluarkan.' });
+            setSessions((items) =>
+                items.filter((item) => item.id !== sessionItem.id),
+            );
+            setSessionMsg({
+                type: "success",
+                text: "Sesi login lain berhasil dikeluarkan.",
+            });
         } catch {
-            setSessionMsg({ type: 'error', text: 'Sesi login belum bisa dikeluarkan.' });
+            setSessionMsg({
+                type: "error",
+                text: "Sesi login belum bisa dikeluarkan.",
+            });
         } finally {
             setSessionActionId(null);
         }
@@ -144,22 +172,22 @@ const ProfileDashboardPage = () => {
 
     const initials = user?.name
         ? user.name
-              .split(' ')
+              .split(" ")
               .slice(0, 2)
               .map((w) => w[0])
-              .join('')
+              .join("")
               .toUpperCase()
-        : '?';
+        : "?";
 
     const roleBadge =
-        user?.role === 'admin'
-            ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
-            : 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400';
+        user?.role === "admin"
+            ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
+            : "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400";
 
     return (
-        <div className={isWide ? 'px-4 py-6' : 'px-4 py-6 max-w-md mx-auto'}>
+        <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
             <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-6'>
-                {t('profile.title')}
+                {t("profile.title")}
             </h1>
             {syncError ? (
                 <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300'>
@@ -170,13 +198,15 @@ const ProfileDashboardPage = () => {
             {/* Avatar & info */}
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6 flex flex-col items-center text-center mb-5'>
                 <div className='w-20 h-20 rounded-full bg-emerald-700 flex items-center justify-center mb-4'>
-                    <span className='text-white text-2xl font-bold'>{initials}</span>
+                    <span className='text-white text-2xl font-bold'>
+                        {initials}
+                    </span>
                 </div>
                 <p className='text-lg font-bold text-gray-900 dark:text-white'>
-                    {user?.name ?? t('common.anonymous')}
+                    {user?.name ?? t("common.anonymous")}
                 </p>
                 <p className='text-sm text-gray-400 dark:text-gray-500 mt-0.5'>
-                    {user?.email ?? ''}
+                    {user?.email ?? ""}
                 </p>
                 {user?.role && (
                     <span
@@ -189,12 +219,12 @@ const ProfileDashboardPage = () => {
                     type='button'
                     onClick={() => {
                         setEditOpen((current) => !current);
-                        setEditMsg({ type: '', text: '' });
+                        setEditMsg({ type: "", text: "" });
                     }}
                     className='mt-4 inline-flex items-center gap-2 text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400'
                 >
                     <BsPencil />
-                    {t('profile.edit_profile')}
+                    {t("profile.edit_profile")}
                     {editOpen ? <BsChevronUp /> : <BsChevronDown />}
                 </button>
                 {editOpen && (
@@ -205,9 +235,9 @@ const ProfileDashboardPage = () => {
                         {editMsg.text && (
                             <p
                                 className={`text-xs font-semibold ${
-                                    editMsg.type === 'error'
-                                        ? 'text-red-600 dark:text-red-400'
-                                        : 'text-emerald-700 dark:text-emerald-300'
+                                    editMsg.type === "error"
+                                        ? "text-red-600 dark:text-red-400"
+                                        : "text-emerald-700 dark:text-emerald-300"
                                 }`}
                             >
                                 {editMsg.text}
@@ -215,7 +245,7 @@ const ProfileDashboardPage = () => {
                         )}
                         <div>
                             <label className='mb-1 block text-xs font-medium text-gray-600 dark:text-gray-400'>
-                                {t('auth.name')}
+                                {t("auth.name")}
                             </label>
                             <input
                                 value={editName}
@@ -229,7 +259,7 @@ const ProfileDashboardPage = () => {
                                 Email
                             </label>
                             <input
-                                value={user?.email ?? ''}
+                                value={user?.email ?? ""}
                                 disabled
                                 className={`${inputCls} cursor-not-allowed opacity-60`}
                             />
@@ -239,19 +269,21 @@ const ProfileDashboardPage = () => {
                                 type='button'
                                 onClick={() => {
                                     setEditOpen(false);
-                                    setEditName(user?.name ?? '');
-                                    setEditMsg({ type: '', text: '' });
+                                    setEditName(user?.name ?? "");
+                                    setEditMsg({ type: "", text: "" });
                                 }}
                                 className='rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-white dark:border-slate-700 dark:text-gray-300 dark:hover:bg-slate-800'
                             >
-                                {t('common.cancel')}
+                                {t("common.cancel")}
                             </button>
                             <button
                                 type='submit'
                                 disabled={editLoading}
                                 className='rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-600 disabled:opacity-60'
                             >
-                                {editLoading ? t('common.saving') : t('common.save')}
+                                {editLoading
+                                    ? t("common.saving")
+                                    : t("common.save")}
                             </button>
                         </div>
                     </form>
@@ -268,7 +300,7 @@ const ProfileDashboardPage = () => {
                         {streak}
                     </p>
                     <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
-                        {t('profile.streak_label')}
+                        {t("profile.streak_label")}
                     </p>
                 </Link>
                 <Link
@@ -279,7 +311,7 @@ const ProfileDashboardPage = () => {
                         {muhasabahCount}
                     </p>
                     <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
-                        {t('muhasabah.title')}
+                        {t("muhasabah.title")}
                     </p>
                 </Link>
                 <Link
@@ -290,7 +322,7 @@ const ProfileDashboardPage = () => {
                         {hafalCount}
                     </p>
                     <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
-                        {t('profile.hafal_label')}
+                        {t("profile.hafal_label")}
                     </p>
                 </Link>
             </div>
@@ -321,10 +353,15 @@ const ProfileDashboardPage = () => {
                                 >
                                     <div className='min-w-0'>
                                         <p className='font-semibold text-gray-800 dark:text-gray-100'>
-                                            {sessionItem.current ? 'Perangkat ini' : 'Sesi login'}
+                                            {sessionItem.current
+                                                ? "Perangkat ini"
+                                                : "Sesi login"}
                                         </p>
                                         <p className='mt-0.5 text-gray-500 dark:text-gray-400'>
-                                            Aktif sejak {new Date(sessionItem.created_at).toLocaleDateString('id-ID')}
+                                            Aktif sejak{" "}
+                                            {new Date(
+                                                sessionItem.created_at,
+                                            ).toLocaleDateString("id-ID")}
                                         </p>
                                     </div>
                                     {sessionItem.current ? (
@@ -334,11 +371,18 @@ const ProfileDashboardPage = () => {
                                     ) : (
                                         <button
                                             className='shrink-0 rounded-full border border-red-200 bg-red-50 px-3 py-1 text-[10px] font-bold text-red-600 hover:bg-red-100 disabled:opacity-60 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300'
-                                            disabled={sessionActionId === sessionItem.id}
-                                            onClick={() => handleRevokeSession(sessionItem)}
+                                            disabled={
+                                                sessionActionId ===
+                                                sessionItem.id
+                                            }
+                                            onClick={() =>
+                                                handleRevokeSession(sessionItem)
+                                            }
                                             type='button'
                                         >
-                                            {sessionActionId === sessionItem.id ? 'Keluar...' : 'Keluar'}
+                                            {sessionActionId === sessionItem.id
+                                                ? "Keluar..."
+                                                : "Keluar"}
                                         </button>
                                     )}
                                 </div>
@@ -352,9 +396,9 @@ const ProfileDashboardPage = () => {
                     {sessionMsg.text ? (
                         <p
                             className={`mt-3 text-xs font-semibold ${
-                                sessionMsg.type === 'error'
-                                    ? 'text-red-600 dark:text-red-300'
-                                    : 'text-emerald-700 dark:text-emerald-300'
+                                sessionMsg.type === "error"
+                                    ? "text-red-600 dark:text-red-300"
+                                    : "text-emerald-700 dark:text-emerald-300"
                             }`}
                         >
                             {sessionMsg.text}
@@ -367,7 +411,8 @@ const ProfileDashboardPage = () => {
                         Hapus Akun
                     </p>
                     <p className='mt-1 text-xs text-red-600/80 dark:text-red-200/80'>
-                        Menghapus akun akan mengakhiri sesi aktif dan menonaktifkan akses personal.
+                        Menghapus akun akan mengakhiri sesi aktif dan
+                        menonaktifkan akses personal.
                     </p>
                     {deleteMsg.text ? (
                         <p className='mt-3 text-xs font-semibold text-red-600 dark:text-red-300'>
@@ -380,7 +425,7 @@ const ProfileDashboardPage = () => {
                         onClick={handleDeleteAccount}
                         className='mt-4 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-100 disabled:opacity-60 dark:border-red-900/60 dark:bg-slate-900 dark:text-red-300 dark:hover:bg-red-950/40'
                     >
-                        {deleteLoading ? t('common.saving') : 'Hapus Akun'}
+                        {deleteLoading ? t("common.saving") : "Hapus Akun"}
                     </button>
                 </div>
             </div>

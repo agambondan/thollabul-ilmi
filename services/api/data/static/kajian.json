@@ -1,74 +1,74 @@
 [
-  {
-    "title": "Tafsir Surah Al-Fatihah",
-    "speaker": "Ust. Adi Hidayat",
-    "topic": "Quran \u0026 Tafsir",
-    "type": "video",
-    "description": "Kajian mendalam tentang makna dan kandungan Surah Al-Fatihah sebagai induk Al-Quran.",
-    "duration": 3600,
-    "published_at": "2024-01-15T00:00:00Z"
-  },
-  {
-    "title": "Kitab Riyadhus Shalihin: Bab Ikhlas",
-    "speaker": "Ust. Khalid Basalamah",
-    "topic": "Hadith \u0026 Sunnah",
-    "type": "video",
-    "description": "Kajian kitab Riyadhus Shalihin karya Imam Nawawi tentang bab keikhlasan beramal.",
-    "duration": 2700,
-    "published_at": "2024-02-01T00:00:00Z"
-  },
-  {
-    "title": "Fiqh Sholat Lengkap",
-    "speaker": "Ust. Firanda Andirja",
-    "topic": "Fiqh",
-    "type": "video",
-    "description": "Pembahasan lengkap fiqh sholat mulai dari syarat, rukun, sunnah, hingga hal-hal yang membatalkan.",
-    "duration": 5400,
-    "published_at": "2024-02-20T00:00:00Z"
-  },
-  {
-    "title": "Mengenal Asmaul Husna",
-    "speaker": "Ust. Hanan Attaki",
-    "topic": "Aqidah \u0026 Tauhid",
-    "type": "video",
-    "description": "Kajian 99 nama-nama Allah yang indah dan cara mengamalkannya dalam kehidupan sehari-hari.",
-    "duration": 3000,
-    "published_at": "2024-03-05T00:00:00Z"
-  },
-  {
-    "title": "Sirah Nabawiyah: Hijrah ke Madinah",
-    "speaker": "Ust. Felix Siauw",
-    "topic": "Sejarah Islam",
-    "type": "video",
-    "description": "Kisah hijrah Rasulullah ﷺ dari Makkah ke Madinah dan pelajaran yang dapat diambil.",
-    "duration": 4200,
-    "published_at": "2024-03-15T00:00:00Z"
-  },
-  {
-    "title": "Tadabbur Quran: Juz 30",
-    "speaker": "Ust. Budi Ashari",
-    "topic": "Quran \u0026 Tafsir",
-    "type": "audio",
-    "description": "Tadabbur ayat-ayat dalam Juz 30 Al-Quran dengan penjelasan makna yang mendalam.",
-    "duration": 3600,
-    "published_at": "2024-04-01T00:00:00Z"
-  },
-  {
-    "title": "Panduan Lengkap Puasa Ramadan",
-    "speaker": "Ust. Abdul Somad",
-    "topic": "Fiqh",
-    "type": "video",
-    "description": "Panduan fiqh puasa Ramadan: niat, hal yang membatalkan, fidyah, dan amalan sunnah di bulan Ramadan.",
-    "duration": 4800,
-    "published_at": "2024-03-10T00:00:00Z"
-  },
-  {
-    "title": "Adab Menuntut Ilmu",
-    "speaker": "Ust. Syafiq Riza Basalamah",
-    "topic": "Akhlak \u0026 Adab",
-    "type": "video",
-    "description": "Tuntunan adab bagi penuntut ilmu berdasarkan Al-Quran, hadith, dan kitab-kitab ulama salaf.",
-    "duration": 3300,
-    "published_at": "2024-04-20T00:00:00Z"
-  }
+    {
+        "title": "Tafsir Surah Al-Fatihah",
+        "speaker": "Ust. Adi Hidayat",
+        "topic": "Quran \u0026 Tafsir",
+        "type": "video",
+        "description": "Kajian mendalam tentang makna dan kandungan Surah Al-Fatihah sebagai induk Al-Quran.",
+        "duration": 3600,
+        "published_at": "2024-01-15T00:00:00Z"
+    },
+    {
+        "title": "Kitab Riyadhus Shalihin: Bab Ikhlas",
+        "speaker": "Ust. Khalid Basalamah",
+        "topic": "Hadith \u0026 Sunnah",
+        "type": "video",
+        "description": "Kajian kitab Riyadhus Shalihin karya Imam Nawawi tentang bab keikhlasan beramal.",
+        "duration": 2700,
+        "published_at": "2024-02-01T00:00:00Z"
+    },
+    {
+        "title": "Fiqh Sholat Lengkap",
+        "speaker": "Ust. Firanda Andirja",
+        "topic": "Fiqh",
+        "type": "video",
+        "description": "Pembahasan lengkap fiqh sholat mulai dari syarat, rukun, sunnah, hingga hal-hal yang membatalkan.",
+        "duration": 5400,
+        "published_at": "2024-02-20T00:00:00Z"
+    },
+    {
+        "title": "Mengenal Asmaul Husna",
+        "speaker": "Ust. Hanan Attaki",
+        "topic": "Aqidah \u0026 Tauhid",
+        "type": "video",
+        "description": "Kajian 99 nama-nama Allah yang indah dan cara mengamalkannya dalam kehidupan sehari-hari.",
+        "duration": 3000,
+        "published_at": "2024-03-05T00:00:00Z"
+    },
+    {
+        "title": "Sirah Nabawiyah: Hijrah ke Madinah",
+        "speaker": "Ust. Felix Siauw",
+        "topic": "Sejarah Islam",
+        "type": "video",
+        "description": "Kisah hijrah Rasulullah ﷺ dari Makkah ke Madinah dan pelajaran yang dapat diambil.",
+        "duration": 4200,
+        "published_at": "2024-03-15T00:00:00Z"
+    },
+    {
+        "title": "Tadabbur Quran: Juz 30",
+        "speaker": "Ust. Budi Ashari",
+        "topic": "Quran \u0026 Tafsir",
+        "type": "audio",
+        "description": "Tadabbur ayat-ayat dalam Juz 30 Al-Quran dengan penjelasan makna yang mendalam.",
+        "duration": 3600,
+        "published_at": "2024-04-01T00:00:00Z"
+    },
+    {
+        "title": "Panduan Lengkap Puasa Ramadan",
+        "speaker": "Ust. Abdul Somad",
+        "topic": "Fiqh",
+        "type": "video",
+        "description": "Panduan fiqh puasa Ramadan: niat, hal yang membatalkan, fidyah, dan amalan sunnah di bulan Ramadan.",
+        "duration": 4800,
+        "published_at": "2024-03-10T00:00:00Z"
+    },
+    {
+        "title": "Adab Menuntut Ilmu",
+        "speaker": "Ust. Syafiq Riza Basalamah",
+        "topic": "Akhlak \u0026 Adab",
+        "type": "video",
+        "description": "Tuntunan adab bagi penuntut ilmu berdasarkan Al-Quran, hadith, dan kitab-kitab ulama salaf.",
+        "duration": 3300,
+        "published_at": "2024-04-20T00:00:00Z"
+    }
 ]

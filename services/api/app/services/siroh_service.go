@@ -49,18 +49,23 @@ func (s *sirohService) FindAllCategories() ([]model.SirohCategory, error) {
 	}
 	return result, nil
 }
+
 func (s *sirohService) FindCategoryBySlug(slug string) (*model.SirohCategory, error) {
 	return s.repo.FindCategoryBySlug(slug)
 }
+
 func (s *sirohService) FindContentBySlug(slug string) (*model.SirohContent, error) {
 	return s.repo.FindContentBySlug(slug)
 }
+
 func (s *sirohService) FindContentsByCategoryID(id int) ([]model.SirohContent, error) {
 	return s.repo.FindContentsByCategoryID(id)
 }
+
 func (s *sirohService) FindAllContents(ctx *fiber.Ctx) *paginate.Page {
 	return s.repo.FindAllContents(ctx)
 }
+
 func (s *sirohService) SaveCategory(c *model.SirohCategory) (*model.SirohCategory, error) {
 	result, err := s.repo.SaveCategory(c)
 	if err == nil && s.cache != nil {
@@ -68,6 +73,7 @@ func (s *sirohService) SaveCategory(c *model.SirohCategory) (*model.SirohCategor
 	}
 	return result, err
 }
+
 func (s *sirohService) SaveContent(c *model.SirohContent) (*model.SirohContent, error) {
 	result, err := s.repo.SaveContent(c)
 	if err == nil && s.cache != nil {
@@ -75,6 +81,7 @@ func (s *sirohService) SaveContent(c *model.SirohContent) (*model.SirohContent, 
 	}
 	return result, err
 }
+
 func (s *sirohService) UpdateCategory(id int, c *model.SirohCategory) (*model.SirohCategory, error) {
 	result, err := s.repo.UpdateCategory(id, c)
 	if err == nil && s.cache != nil {
@@ -82,6 +89,7 @@ func (s *sirohService) UpdateCategory(id int, c *model.SirohCategory) (*model.Si
 	}
 	return result, err
 }
+
 func (s *sirohService) UpdateContent(id int, c *model.SirohContent) (*model.SirohContent, error) {
 	result, err := s.repo.UpdateContent(id, c)
 	if err == nil && s.cache != nil {
@@ -89,6 +97,7 @@ func (s *sirohService) UpdateContent(id int, c *model.SirohContent) (*model.Siro
 	}
 	return result, err
 }
+
 func (s *sirohService) DeleteCategory(id int) error {
 	err := s.repo.DeleteCategory(id)
 	if err == nil && s.cache != nil {
@@ -96,6 +105,7 @@ func (s *sirohService) DeleteCategory(id int) error {
 	}
 	return err
 }
+
 func (s *sirohService) DeleteContent(id int) error {
 	err := s.repo.DeleteContent(id)
 	if err == nil && s.cache != nil {

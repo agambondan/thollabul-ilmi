@@ -1,5 +1,5 @@
-import { HadithContent } from '@/app/hadith/page';
-import { Suspense } from 'react';
+import { HadithContent } from "@/app/hadith/page";
+import { Suspense } from "react";
 
 export default function DashboardHadithPage() {
     return (

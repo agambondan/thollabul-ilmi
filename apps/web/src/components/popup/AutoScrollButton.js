@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useLocale } from '@/context/Locale';
-import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { BsPauseFill, BsPlayFill } from 'react-icons/bs';
-import { MdSpeed } from 'react-icons/md';
+import { useLocale } from "@/context/Locale";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { BsPauseFill, BsPlayFill } from "react-icons/bs";
+import { MdSpeed } from "react-icons/md";
 
-const SPEED_KEY = 'autoScrollSpeed';
+const SPEED_KEY = "autoScrollSpeed";
 
 const AutoScrollButton = () => {
     const { t } = useLocale();
@@ -26,16 +26,16 @@ const AutoScrollButton = () => {
     const mobileControlsTimeoutRef = useRef(null);
 
     useEffect(() => {
-        const media = window.matchMedia('(max-width: 767px)');
+        const media = window.matchMedia("(max-width: 767px)");
         const updateViewport = () => setIsCompactViewport(media.matches);
         updateViewport();
-        media.addEventListener('change', updateViewport);
-        return () => media.removeEventListener('change', updateViewport);
+        media.addEventListener("change", updateViewport);
+        return () => media.removeEventListener("change", updateViewport);
     }, []);
 
     // Load speed from localStorage on mount
     useEffect(() => {
-        const saved = parseInt(localStorage.getItem(SPEED_KEY) ?? '3', 10);
+        const saved = parseInt(localStorage.getItem(SPEED_KEY) ?? "3", 10);
         const valid = isNaN(saved) ? 3 : Math.min(10, Math.max(1, saved));
         setSpeed(valid);
         speedRef.current = valid;
@@ -91,11 +91,11 @@ const AutoScrollButton = () => {
             }, 1200);
         };
 
-        window.addEventListener('wheel', pause, { passive: true });
-        window.addEventListener('touchmove', pause, { passive: true });
+        window.addEventListener("wheel", pause, { passive: true });
+        window.addEventListener("touchmove", pause, { passive: true });
         return () => {
-            window.removeEventListener('wheel', pause);
-            window.removeEventListener('touchmove', pause);
+            window.removeEventListener("wheel", pause);
+            window.removeEventListener("touchmove", pause);
             clearTimeout(resumeTimeoutRef.current);
         };
     }, []);
@@ -113,13 +113,13 @@ const AutoScrollButton = () => {
                 if (!isPlayingRef.current) setMobileControlsVisible(false);
             }, 2200);
         };
-        window.addEventListener('scroll', handler);
-        document.addEventListener('scroll', handler, true);
-        window.addEventListener('touchmove', handler, { passive: true });
+        window.addEventListener("scroll", handler);
+        document.addEventListener("scroll", handler, true);
+        window.addEventListener("touchmove", handler, { passive: true });
         return () => {
-            window.removeEventListener('scroll', handler);
-            document.removeEventListener('scroll', handler, true);
-            window.removeEventListener('touchmove', handler);
+            window.removeEventListener("scroll", handler);
+            document.removeEventListener("scroll", handler, true);
+            window.removeEventListener("touchmove", handler);
             clearTimeout(tid);
             clearTimeout(mobileControlsTimeoutRef.current);
         };
@@ -129,10 +129,10 @@ const AutoScrollButton = () => {
     useEffect(() => {
         if (!showPanel) return;
         const handler = (e) => {
-            if (!e.target.closest('#auto-scroll-panel')) setShowPanel(false);
+            if (!e.target.closest("#auto-scroll-panel")) setShowPanel(false);
         };
-        document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
     }, [showPanel]);
 
     const toggle = () => {
@@ -143,21 +143,25 @@ const AutoScrollButton = () => {
             setShowPanel(true);
         } else if (isCompactViewport) {
             clearTimeout(mobileControlsTimeoutRef.current);
-            mobileControlsTimeoutRef.current = setTimeout(() => setMobileControlsVisible(false), 1200);
+            mobileControlsTimeoutRef.current = setTimeout(
+                () => setMobileControlsVisible(false),
+                1200,
+            );
         }
     };
-    const isDashboard = pathname?.startsWith('/dashboard');
+    const isDashboard = pathname?.startsWith("/dashboard");
     const bottomClass = isDashboard
         ? navBarVisible
-            ? 'bottom-[84px] md:bottom-[52px]'
-            : 'bottom-[72px] md:bottom-2'
+            ? "bottom-[84px] md:bottom-[52px]"
+            : "bottom-[72px] md:bottom-2"
         : navBarVisible
-            ? 'bottom-[52px]'
-            : 'bottom-2';
-    const shouldShowMobileControls = !isCompactViewport || mobileControlsVisible || isPlaying || showPanel;
+          ? "bottom-[52px]"
+          : "bottom-2";
+    const shouldShowMobileControls =
+        !isCompactViewport || mobileControlsVisible || isPlaying || showPanel;
     const visibilityClass = shouldShowMobileControls
-        ? 'translate-y-0 opacity-100 pointer-events-auto'
-        : 'translate-y-2 opacity-0 pointer-events-none';
+        ? "translate-y-0 opacity-100 pointer-events-auto"
+        : "translate-y-2 opacity-0 pointer-events-none";
 
     return (
         <div
@@ -169,7 +173,7 @@ const AutoScrollButton = () => {
                     <div className='flex items-center gap-1.5 mb-3'>
                         <MdSpeed size={14} className='text-gray-400' />
                         <p className='font-semibold text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide'>
-                            {t('auto_scroll.speed')}
+                            {t("auto_scroll.speed")}
                         </p>
                     </div>
                     <input
@@ -181,41 +185,51 @@ const AutoScrollButton = () => {
                         className='w-full accent-emerald-600 cursor-pointer'
                     />
                     <div className='flex justify-between text-xs text-gray-400 dark:text-gray-500 mt-1'>
-                        <span>{t('auto_scroll.slow')}</span>
+                        <span>{t("auto_scroll.slow")}</span>
                         <span className='font-medium text-emerald-600 dark:text-emerald-400'>
                             {speed}
                         </span>
-                        <span>{t('auto_scroll.fast')}</span>
+                        <span>{t("auto_scroll.fast")}</span>
                     </div>
                     {isPlaying && (
                         <p className='text-center text-xs text-emerald-600 dark:text-emerald-400 mt-2 animate-pulse'>
-                            ● {t('auto_scroll.running')}
+                            ● {t("auto_scroll.running")}
                         </p>
                     )}
                     <button
                         type='button'
-                        title={isPlaying ? t('auto_scroll.pause') : t('auto_scroll.start')}
+                        title={
+                            isPlaying
+                                ? t("auto_scroll.pause")
+                                : t("auto_scroll.start")
+                        }
                         onClick={toggle}
                         className={`mt-3 flex w-full items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold shadow-sm transition-colors ${
                             isPlaying
-                                ? 'bg-emerald-600 text-white hover:bg-emerald-500'
-                                : 'bg-slate-800 text-white hover:opacity-90 dark:bg-slate-200 dark:text-black'
+                                ? "bg-emerald-600 text-white hover:bg-emerald-500"
+                                : "bg-slate-800 text-white hover:opacity-90 dark:bg-slate-200 dark:text-black"
                         }`}
                     >
-                        {isPlaying ? <BsPauseFill size={18} /> : <BsPlayFill size={18} />}
-                        {isPlaying ? t('auto_scroll.pause') : t('auto_scroll.start')}
+                        {isPlaying ? (
+                            <BsPauseFill size={18} />
+                        ) : (
+                            <BsPlayFill size={18} />
+                        )}
+                        {isPlaying
+                            ? t("auto_scroll.pause")
+                            : t("auto_scroll.start")}
                     </button>
                 </div>
             )}
 
             <div className='flex items-center gap-2'>
                 <button
-                    title={t('auto_scroll.speed_settings')}
+                    title={t("auto_scroll.speed_settings")}
                     onClick={() => setShowPanel((p) => !p)}
                     className={`rounded-full p-2.5 shadow transition-colors hover:opacity-90 ${
                         isPlaying
-                            ? 'bg-emerald-600 text-white'
-                            : 'bg-slate-800 text-white dark:bg-slate-200 dark:text-black'
+                            ? "bg-emerald-600 text-white"
+                            : "bg-slate-800 text-white dark:bg-slate-200 dark:text-black"
                     }`}
                 >
                     <MdSpeed size={18} />

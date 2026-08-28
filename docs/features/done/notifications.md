@@ -30,41 +30,44 @@ Notifikasi inbox, push token, reminder email, preferensi notifikasi. Mengirim pe
 ### API Response Shape
 
 **`GET /notifications`**
+
 ```json
 [
-  {
-    "id": "uuid",
-    "user_id": "uuid",
-    "title": "Waktunya Sholat",
-    "body": "Sholat Dzuhur akan masuk dalam 10 menit",
-    "type": "daily_quran",
-    "ref_id": null,
-    "is_read": false
-  }
+    {
+        "id": "uuid",
+        "user_id": "uuid",
+        "title": "Waktunya Sholat",
+        "body": "Sholat Dzuhur akan masuk dalam 10 menit",
+        "type": "daily_quran",
+        "ref_id": null,
+        "is_read": false
+    }
 ]
 ```
 
 **`GET /notifications/settings`**
+
 ```json
 [
-  {
-    "id": 1,
-    "user_id": "uuid",
-    "type": "daily_quran",
-    "time": "05:00",
-    "is_active": true,
-    "last_sent_at": "2026-05-13T05:00:00Z"
-  }
+    {
+        "id": 1,
+        "user_id": "uuid",
+        "type": "daily_quran",
+        "time": "05:00",
+        "is_active": true,
+        "last_sent_at": "2026-05-13T05:00:00Z"
+    }
 ]
 ```
 
 **`POST /notifications/push-token`**
+
 ```json
 {
-  "token": "ExponentPushToken[...]",
-  "platform": "android",
-  "provider": "expo",
-  "device_id": "device-uuid"
+    "token": "ExponentPushToken[...]",
+    "platform": "android",
+    "provider": "expo",
+    "device_id": "device-uuid"
 }
 ```
 
@@ -78,7 +81,7 @@ Notifikasi inbox, push token, reminder email, preferensi notifikasi. Mengirim pe
 | `type` | NotificationType | daily_quran, daily_hadith, doa |
 | `time` | string | HH:mm format |
 | `is_active` | bool | Toggle on/off |
-| `last_sent_at` | *time.Time | Last delivery timestamp |
+| `last_sent_at` | \*time.Time | Last delivery timestamp |
 
 **`PushToken`** (`model/notification.go`)
 | Field | Type | Notes |

@@ -2,8 +2,9 @@ package lib
 
 import (
 	"fmt"
-	"github.com/agambondan/islamic-explorer/app/lib"
 	"testing"
+
+	"github.com/agambondan/islamic-explorer/app/lib"
 
 	"github.com/gofiber/fiber/v2/utils"
 )

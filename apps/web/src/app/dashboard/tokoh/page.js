@@ -1,4 +1,4 @@
-import { TokohListContent } from '@/app/tokoh/page';
+import { TokohListContent } from "@/app/tokoh/page";
 
 export default function DashboardTokohPage() {
     return (

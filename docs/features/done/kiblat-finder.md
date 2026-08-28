@@ -31,14 +31,15 @@ Arah kiblat dari lokasi user (angle + distance Haversine).
 ### API Response Shape
 
 **`GET /kiblat?lat=-6.2&lng=106.8`**
+
 ```json
 {
-  "latitude": -6.2,
-  "longitude": 106.8,
-  "direction_degrees": 295.3,
-  "distance_km": 7925.4,
-  "compass": "barat_laut",
-  "description": "Arah kiblat dari lokasi Anda: 295.3° (barat laut)"
+    "latitude": -6.2,
+    "longitude": 106.8,
+    "direction_degrees": 295.3,
+    "distance_km": 7925.4,
+    "compass": "barat_laut",
+    "description": "Arah kiblat dari lokasi Anda: 295.3° (barat laut)"
 }
 ```
 
@@ -51,9 +52,9 @@ Arah kiblat dari lokasi user (angle + distance Haversine).
 | `longitude` | float64 | Input longitude |
 | `direction_degrees` | float64 | Qibla bearing in degrees (0–360) |
 | `distance_km` | float64 | Haversine distance to Ka'bah (km) |
-| `compass` | string | Cardinal direction label (barat_laut, etc.) |
+| `compass` | string | Cardinal direction label (barat*laut, etc.) |
 | `description` | string | Human-readable summary |
-| *Formula* | — | Bearing from (lat,lng) to Ka'bah (21.4225°N, 39.8262°E) using spherical trigonometry |
+| \_Formula* | — | Bearing from (lat,lng) to Ka'bah (21.4225°N, 39.8262°E) using spherical trigonometry |
 
 ### Key Frontend Components
 

@@ -1,52 +1,402 @@
 [
-  {"name":"Makkah Al-Mukarramah","description":"Kota suci umat Islam, tempat kelahiran Nabi Muhammad ﷺ, lokasi Masjidil Haram dan Ka'bah. Pusat ibadah haji dan umrah.","latitude":21.4225,"longitude":39.8262,"category":"kota","era":"pra-islam"},
-  {"name":"Madinah Al-Munawwarah","description":"Kota hijrah Rasulullah ﷺ, lokasi Masjid Nabawi. Pusat pemerintahan Islam pertama dan tempat dimakamkannya Rasulullah ﷺ.","latitude":24.4672,"longitude":39.6112,"category":"kota","era":"khulafa"},
-  {"name":"Ka'bah","description":"Baitullah, kiblat umat Islam sedunia. Dibangun oleh Nabi Ibrahim AS dan Ismail AS, menjadi pusat thawaf dalam ibadah haji dan umrah.","latitude":21.4225,"longitude":39.8262,"category":"masjid","era":"pra-islam"},
-  {"name":"Masjid Nabawi","description":"Masjid kedua tersuci dalam Islam, dibangun oleh Rasulullah ﷺ di Madinah. Tempat dimakamkannya Rasulullah ﷺ, Abu Bakar, dan Umar.","latitude":24.4672,"longitude":39.6112,"category":"masjid","era":"khulafa"},
-  {"name":"Masjidil Aqsha","description":"Kiblat pertama umat Islam, bagian dari kompleks Al-Haram Al-Sharif di Yerusalem. Tempat Isra' Mi'raj Rasulullah ﷺ.","latitude":31.7769,"longitude":35.2354,"category":"masjid","era":"khulafa"},
-  {"name":"Meknes","description":"Kota kekaisaran Islam di Maroko, menjadi ibu kota pada masa Sultan Moulay Ismail. Terkenal dengan arsitektur dan tembok kotanya.","latitude":33.895,"longitude":-5.552,"category":"kota","era":"klasik"},
-  {"name":"Thaif","description":"Kota peristirahatan dan tempat dakwah Rasulullah ﷺ setelah tahun dukacita. Dikenal dengan kebun anggur dan udara sejuknya.","latitude":21.267,"longitude":40.350,"category":"kota","era":"khulafa"},
-  {"name":"Badr","description":"Lokasi Perang Badr pertama (2 H), kemenangan besar umat Islam melawan Quraisy dengan 313 pasukan melawan 1000.","latitude":23.7833,"longitude":38.7833,"category":"situs","era":"khulafa"},
-  {"name":"Gunung Uhud","description":"Lokasi Perang Uhud (3 H), tempat gugurnya Hamzah bin Abdul Muthalib dan 70 sahabat lainnya.","latitude":24.500,"longitude":39.617,"category":"situs","era":"khulafa"},
-  {"name":"Khandaq (Parit)","description":"Lokasi Perang Ahzab (Khandaq) tahun 5 H, strategi pertahanan parit yang digali oleh Salman Al-Farisi.","latitude":24.467,"longitude":39.600,"category":"situs","era":"khulafa"},
-  {"name":"Khaibar","description":"Benteng Yahudi yang ditaklukkan tahun 7 H. Rasulullah ﷺ membagikan tanah Khaibar kepada kaum Muslimin.","latitude":25.683,"longitude":39.283,"category":"kota","era":"khulafa"},
-  {"name":"Hudaibiyyah","description":"Lokasi Perjanjian Hudaibiyyah (6 H), perjanjian damai antara Muslimin dan Quraisy yang membuka jalan bagi Fathu Makkah.","latitude":21.467,"longitude":39.583,"category":"situs","era":"khulafa"},
-  {"name":"Hunayn","description":"Lokasi Perang Hunain (8 H) setelah Fathu Makkah, ujian bagi pasukan Muslim yang baru bertambah besar.","latitude":21.433,"longitude":40.350,"category":"situs","era":"khulafa"},
-  {"name":"Tabuk","description":"Lokasi ekspedisi Tabuk (9 H), ekspedisi militer terakhir Rasulullah ﷺ menuju perbatasan Romawi.","latitude":28.383,"longitude":36.483,"category":"kota","era":"khulafa"},
-  {"name":"Arafah","description":"Padang Arafah, tempat wukuf dalam ibadah haji. Lokasi Khotbah Wada' Rasulullah ﷺ.","latitude":21.354,"longitude":39.984,"category":"situs","era":"pra-islam"},
-  {"name":"Muzdalifah","description":"Tempat mabit (bermalam) dalam ibadah haji, lokasi mengumpulkan batu untuk melempar jumrah.","latitude":21.379,"longitude":39.938,"category":"situs","era":"pra-islam"},
-  {"name":"Mina","description":"Lokasi melontar jumrah dalam ibadah haji. Tempat berkumpulnya jutaan jamaah haji setiap tahun.","latitude":21.413,"longitude":39.893,"category":"situs","era":"pra-islam"},
-  {"name":"Gua Hira (Jabal Nur)","description":"Gua di Jabal Nur tempat turunnya wahyu pertama Al-Quran (Surah Al-Alaq) kepada Nabi Muhammad ﷺ.","latitude":21.457,"longitude":39.861,"category":"situs","era":"pra-islam"},
-  {"name":"Baghdad","description":"Ibukota Kekhalifahan Abbasiyah, pusat peradaban Islam masa keemasan. Rumah Baitul Hikmah (House of Wisdom).","latitude":33.315,"longitude":44.366,"category":"kota","era":"abbasiyah"},
-  {"name":"Kufah","description":"Kota pusat ilmu dan pemerintahan Islam awal. Markas Khalifah Ali bin Abi Thalib RA. Pusat perkembangan tafsir dan fiqh.","latitude":32.030,"longitude":44.400,"category":"kota","era":"khulafa"},
-  {"name":"Basrah","description":"Kota pelabuhan dan pusat ilmu nahwu pertama. Tempat lahirnya tokoh-tokoh bahasa Arab dan sufi.","latitude":30.500,"longitude":47.817,"category":"kota","era":"khulafa"},
-  {"name":"Samarra","description":"Ibukota Kekhalifahan Abbasiyah pada abad ke-9 M. Terkenal dengan Masjid Agung Samarra dan menara spiralnya.","latitude":34.200,"longitude":43.867,"category":"kota","era":"abbasiyah"},
-  {"name":"Damaskus","description":"Ibukota Kekhalifahan Umayyah. Masjid Umayyah adalah salah satu masjid terbesar dan tertua di dunia.","latitude":33.513,"longitude":36.307,"category":"kota","era":"umayyah"},
-  {"name":"Aleppo","description":"Kota bersejarah di Suriah, pusat perdagangan dan ilmu pada masa Umayyah dan Abbasiyah. Masjid Agung Aleppo.","latitude":36.200,"longitude":37.150,"category":"kota","era":"umayyah"},
-  {"name":"Kairo","description":"Ibukota Mesir, rumah Universitas Al-Azhar. Pusat peradaban Islam di bawah Dinasti Fatimiyah, Ayyubiyah, dan Mamluk.","latitude":30.044,"longitude":31.236,"category":"kota","era":"fatimiyah"},
-  {"name":"Kairouan","description":"Kota suci keempat dalam Islam. Masjid Uqbah adalah masjid tertua di Afrika Utara. Pusat ilmu di era Aghlabiyah.","latitude":35.678,"longitude":10.097,"category":"kota","era":"umayyah"},
-  {"name":"Fes","description":"Rumah Universitas Al-Qarawiyyin, universitas tertua di dunia yang masih beroperasi. Pusat ilmu dan peradaban Idrisiyah.","latitude":34.021,"longitude":-4.999,"category":"kota","era":"klasik"},
-  {"name":"Marrakesh","description":"Kota kekaisaran Dinasti Murabithun dan Muwahhidun. Rumah Masjid Kutubiyyah dan pusat budaya Islam di Maghribi.","latitude":31.630,"longitude":-8.008,"category":"kota","era":"klasik"},
-  {"name":"Cordoba","description":"Ibukota Kekhalifahan Umayyah di Andalusia. Masjid-Katedral Cordoba dan pusat peradaban Islam di Eropa.","latitude":37.889,"longitude":-4.779,"category":"kota","era":"andallus"},
-  {"name":"Granada","description":"Kota terakhir kekuasaan Islam di Andalusia. Istana Alhambra adalah mahakarya arsitektur Islam. Jatuh tahun 1492 M.","latitude":37.177,"longitude":-3.598,"category":"kota","era":"andallus"},
-  {"name":"Seville","description":"Pusat peradaban Islam di Andalusia bawah Dinasti Muwahhidun. Rumah Menara Giralda (dulu menara masjid).","latitude":37.389,"longitude":-5.984,"category":"kota","era":"andallus"},
-  {"name":"Toledo","description":"Pusat penerjemahan dan pertukaran ilmu antara Islam, Kristen, dan Yahudi. Sekolah Penerjemah Toledo.","latitude":39.863,"longitude":-4.024,"category":"kota","era":"andallus"},
-  {"name":"Istanbul","description":"Ibukota Kekhalifahan Utsmaniyah. Hagia Sophia (Ayasofya) dan Masjid Sultanahmet (Blue Mosque). Pusat peradaban Islam di Eurasia.","latitude":41.008,"longitude":28.978,"category":"kota","era":"utsmaniyah"},
-  {"name":"Bursa","description":"Ibukota pertama Kekhalifahan Utsmaniyah. Pusat perkembangan arsitektur Utsmaniyah awal dengan masjid-masjid hijau.","latitude":40.183,"longitude":29.067,"category":"kota","era":"utsmaniyah"},
-  {"name":"Edirne","description":"Ibukota Kekhalifahan Utsmaniyah sebelum Istanbul. Masjid Selimiye karya arsitek Mimar Sinan.","latitude":41.683,"longitude":26.567,"category":"kota","era":"utsmaniyah"},
-  {"name":"Isfahan","description":"Permata arsitektur Islam Persia. Masjid Imam (Shah) dan Masjid Jami Isfahan. Pusat peradaban Dinasti Safawi.","latitude":32.653,"longitude":51.678,"category":"kota","era":"klasik"},
-  {"name":"Shiraz","description":"Kota budaya dan sastra Persia. Pusat perkembangan tasawuf dan syair Islam. Makam Hafiz dan Sa'di.","latitude":29.592,"longitude":52.584,"category":"kota","era":"klasik"},
-  {"name":"Samarkand","description":"Pusat peradaban Islam di Asia Tengah. Registan Square dan Makam Imam Al-Bukhari. Pusat ilmu pada era Timuriyah.","latitude":39.654,"longitude":66.976,"category":"kota","era":"klasik"},
-  {"name":"Bukhara","description":"Kota pusat ilmu hadits dan fiqh di Asia Tengah. Lahirnya Imam Bukhari. Kompleks Po-i-Kalon.","latitude":39.768,"longitude":64.422,"category":"kota","era":"klasik"},
-  {"name":"Herat","description":"Pusat peradaban Timuriyah. Masjid Jami Herat dan pusat miniatur Persia. Kota ilmu dan seni Islam.","latitude":34.342,"longitude":62.204,"category":"kota","era":"klasik"},
-  {"name":"Delhi","description":"Ibukota Kesultanan Islam di India. Masjid Jama Masjid dan Qutub Minar. Pusat peradaban Islam Asia Selatan.","latitude":28.614,"longitude":77.209,"category":"kota","era":"klasik"},
-  {"name":"Agra","description":"Kota Kekaisaran Mughal. Rumah Taj Mahal dan Benteng Agra. Pusat peradaban Islam-India.","latitude":27.176,"longitude":78.008,"category":"kota","era":"klasik"},
-  {"name":"Lahore","description":"Pusat peradaban Mughal di Punjab. Masjid Badshahi dan Benteng Lahore. Kota budaya Islam di Asia Selatan.","latitude":31.549,"longitude":74.344,"category":"kota","era":"klasik"},
-  {"name":"Banda Aceh","description":"Kota pertama masuknya Islam di Nusantara. Masjid Raya Baiturrahman. Pusat Kesultanan Aceh Darussalam.","latitude":5.550,"longitude":95.317,"category":"kota","era":"klasik"},
-  {"name":"Demak","description":"Pusat penyebaran Islam di Jawa. Masjid Agung Demak karya Wali Songo. Pusat Kesultanan Demak pertama di Jawa.","latitude":-6.895,"longitude":110.637,"category":"kota","era":"klasik"},
-  {"name":"Melaka","description":"Pusat perdagangan dan penyebaran Islam di Asia Tenggara. Kesultanan Melaka menjadi model penyebaran Islam di Nusantara.","latitude":2.189,"longitude":102.250,"category":"kota","era":"klasik"},
-  {"name":"Tlemcen","description":"Kota peradaban Islam di Aljazair. Masjid Agung Tlemcen dan pusat ilmu Dinasti Zayaniyah.","latitude":34.882,"longitude":-1.316,"category":"kota","era":"klasik"},
-  {"name":"An-Najaf","description":"Kota bersejarah di Irak, pusat ilmu dan peradaban Islam awal. Tempat dimakamkannya Imam Ali RA.","latitude":31.996,"longitude":44.315,"category":"kota","era":"khulafa"},
-  {"name":"Karbala","description":"Kota bersejarah di Irak, lokasi peristiwa penting dalam sejarah Islam. Pusat ziarah dan peradaban.","latitude":32.617,"longitude":44.033,"category":"kota","era":"umayyah"},
-  {"name":"Jeddah","description":"Kota pelabuhan utama Makkah, gerbang masuk jamaah haji dan umrah. Pusat perdagangan dan budaya Islam.","latitude":21.486,"longitude":39.192,"category":"kota","era":"khulafa"}
+    {
+        "name": "Makkah Al-Mukarramah",
+        "description": "Kota suci umat Islam, tempat kelahiran Nabi Muhammad ﷺ, lokasi Masjidil Haram dan Ka'bah. Pusat ibadah haji dan umrah.",
+        "latitude": 21.4225,
+        "longitude": 39.8262,
+        "category": "kota",
+        "era": "pra-islam"
+    },
+    {
+        "name": "Madinah Al-Munawwarah",
+        "description": "Kota hijrah Rasulullah ﷺ, lokasi Masjid Nabawi. Pusat pemerintahan Islam pertama dan tempat dimakamkannya Rasulullah ﷺ.",
+        "latitude": 24.4672,
+        "longitude": 39.6112,
+        "category": "kota",
+        "era": "khulafa"
+    },
+    {
+        "name": "Ka'bah",
+        "description": "Baitullah, kiblat umat Islam sedunia. Dibangun oleh Nabi Ibrahim AS dan Ismail AS, menjadi pusat thawaf dalam ibadah haji dan umrah.",
+        "latitude": 21.4225,
+        "longitude": 39.8262,
+        "category": "masjid",
+        "era": "pra-islam"
+    },
+    {
+        "name": "Masjid Nabawi",
+        "description": "Masjid kedua tersuci dalam Islam, dibangun oleh Rasulullah ﷺ di Madinah. Tempat dimakamkannya Rasulullah ﷺ, Abu Bakar, dan Umar.",
+        "latitude": 24.4672,
+        "longitude": 39.6112,
+        "category": "masjid",
+        "era": "khulafa"
+    },
+    {
+        "name": "Masjidil Aqsha",
+        "description": "Kiblat pertama umat Islam, bagian dari kompleks Al-Haram Al-Sharif di Yerusalem. Tempat Isra' Mi'raj Rasulullah ﷺ.",
+        "latitude": 31.7769,
+        "longitude": 35.2354,
+        "category": "masjid",
+        "era": "khulafa"
+    },
+    {
+        "name": "Meknes",
+        "description": "Kota kekaisaran Islam di Maroko, menjadi ibu kota pada masa Sultan Moulay Ismail. Terkenal dengan arsitektur dan tembok kotanya.",
+        "latitude": 33.895,
+        "longitude": -5.552,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Thaif",
+        "description": "Kota peristirahatan dan tempat dakwah Rasulullah ﷺ setelah tahun dukacita. Dikenal dengan kebun anggur dan udara sejuknya.",
+        "latitude": 21.267,
+        "longitude": 40.35,
+        "category": "kota",
+        "era": "khulafa"
+    },
+    {
+        "name": "Badr",
+        "description": "Lokasi Perang Badr pertama (2 H), kemenangan besar umat Islam melawan Quraisy dengan 313 pasukan melawan 1000.",
+        "latitude": 23.7833,
+        "longitude": 38.7833,
+        "category": "situs",
+        "era": "khulafa"
+    },
+    {
+        "name": "Gunung Uhud",
+        "description": "Lokasi Perang Uhud (3 H), tempat gugurnya Hamzah bin Abdul Muthalib dan 70 sahabat lainnya.",
+        "latitude": 24.5,
+        "longitude": 39.617,
+        "category": "situs",
+        "era": "khulafa"
+    },
+    {
+        "name": "Khandaq (Parit)",
+        "description": "Lokasi Perang Ahzab (Khandaq) tahun 5 H, strategi pertahanan parit yang digali oleh Salman Al-Farisi.",
+        "latitude": 24.467,
+        "longitude": 39.6,
+        "category": "situs",
+        "era": "khulafa"
+    },
+    {
+        "name": "Khaibar",
+        "description": "Benteng Yahudi yang ditaklukkan tahun 7 H. Rasulullah ﷺ membagikan tanah Khaibar kepada kaum Muslimin.",
+        "latitude": 25.683,
+        "longitude": 39.283,
+        "category": "kota",
+        "era": "khulafa"
+    },
+    {
+        "name": "Hudaibiyyah",
+        "description": "Lokasi Perjanjian Hudaibiyyah (6 H), perjanjian damai antara Muslimin dan Quraisy yang membuka jalan bagi Fathu Makkah.",
+        "latitude": 21.467,
+        "longitude": 39.583,
+        "category": "situs",
+        "era": "khulafa"
+    },
+    {
+        "name": "Hunayn",
+        "description": "Lokasi Perang Hunain (8 H) setelah Fathu Makkah, ujian bagi pasukan Muslim yang baru bertambah besar.",
+        "latitude": 21.433,
+        "longitude": 40.35,
+        "category": "situs",
+        "era": "khulafa"
+    },
+    {
+        "name": "Tabuk",
+        "description": "Lokasi ekspedisi Tabuk (9 H), ekspedisi militer terakhir Rasulullah ﷺ menuju perbatasan Romawi.",
+        "latitude": 28.383,
+        "longitude": 36.483,
+        "category": "kota",
+        "era": "khulafa"
+    },
+    {
+        "name": "Arafah",
+        "description": "Padang Arafah, tempat wukuf dalam ibadah haji. Lokasi Khotbah Wada' Rasulullah ﷺ.",
+        "latitude": 21.354,
+        "longitude": 39.984,
+        "category": "situs",
+        "era": "pra-islam"
+    },
+    {
+        "name": "Muzdalifah",
+        "description": "Tempat mabit (bermalam) dalam ibadah haji, lokasi mengumpulkan batu untuk melempar jumrah.",
+        "latitude": 21.379,
+        "longitude": 39.938,
+        "category": "situs",
+        "era": "pra-islam"
+    },
+    {
+        "name": "Mina",
+        "description": "Lokasi melontar jumrah dalam ibadah haji. Tempat berkumpulnya jutaan jamaah haji setiap tahun.",
+        "latitude": 21.413,
+        "longitude": 39.893,
+        "category": "situs",
+        "era": "pra-islam"
+    },
+    {
+        "name": "Gua Hira (Jabal Nur)",
+        "description": "Gua di Jabal Nur tempat turunnya wahyu pertama Al-Quran (Surah Al-Alaq) kepada Nabi Muhammad ﷺ.",
+        "latitude": 21.457,
+        "longitude": 39.861,
+        "category": "situs",
+        "era": "pra-islam"
+    },
+    {
+        "name": "Baghdad",
+        "description": "Ibukota Kekhalifahan Abbasiyah, pusat peradaban Islam masa keemasan. Rumah Baitul Hikmah (House of Wisdom).",
+        "latitude": 33.315,
+        "longitude": 44.366,
+        "category": "kota",
+        "era": "abbasiyah"
+    },
+    {
+        "name": "Kufah",
+        "description": "Kota pusat ilmu dan pemerintahan Islam awal. Markas Khalifah Ali bin Abi Thalib RA. Pusat perkembangan tafsir dan fiqh.",
+        "latitude": 32.03,
+        "longitude": 44.4,
+        "category": "kota",
+        "era": "khulafa"
+    },
+    {
+        "name": "Basrah",
+        "description": "Kota pelabuhan dan pusat ilmu nahwu pertama. Tempat lahirnya tokoh-tokoh bahasa Arab dan sufi.",
+        "latitude": 30.5,
+        "longitude": 47.817,
+        "category": "kota",
+        "era": "khulafa"
+    },
+    {
+        "name": "Samarra",
+        "description": "Ibukota Kekhalifahan Abbasiyah pada abad ke-9 M. Terkenal dengan Masjid Agung Samarra dan menara spiralnya.",
+        "latitude": 34.2,
+        "longitude": 43.867,
+        "category": "kota",
+        "era": "abbasiyah"
+    },
+    {
+        "name": "Damaskus",
+        "description": "Ibukota Kekhalifahan Umayyah. Masjid Umayyah adalah salah satu masjid terbesar dan tertua di dunia.",
+        "latitude": 33.513,
+        "longitude": 36.307,
+        "category": "kota",
+        "era": "umayyah"
+    },
+    {
+        "name": "Aleppo",
+        "description": "Kota bersejarah di Suriah, pusat perdagangan dan ilmu pada masa Umayyah dan Abbasiyah. Masjid Agung Aleppo.",
+        "latitude": 36.2,
+        "longitude": 37.15,
+        "category": "kota",
+        "era": "umayyah"
+    },
+    {
+        "name": "Kairo",
+        "description": "Ibukota Mesir, rumah Universitas Al-Azhar. Pusat peradaban Islam di bawah Dinasti Fatimiyah, Ayyubiyah, dan Mamluk.",
+        "latitude": 30.044,
+        "longitude": 31.236,
+        "category": "kota",
+        "era": "fatimiyah"
+    },
+    {
+        "name": "Kairouan",
+        "description": "Kota suci keempat dalam Islam. Masjid Uqbah adalah masjid tertua di Afrika Utara. Pusat ilmu di era Aghlabiyah.",
+        "latitude": 35.678,
+        "longitude": 10.097,
+        "category": "kota",
+        "era": "umayyah"
+    },
+    {
+        "name": "Fes",
+        "description": "Rumah Universitas Al-Qarawiyyin, universitas tertua di dunia yang masih beroperasi. Pusat ilmu dan peradaban Idrisiyah.",
+        "latitude": 34.021,
+        "longitude": -4.999,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Marrakesh",
+        "description": "Kota kekaisaran Dinasti Murabithun dan Muwahhidun. Rumah Masjid Kutubiyyah dan pusat budaya Islam di Maghribi.",
+        "latitude": 31.63,
+        "longitude": -8.008,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Cordoba",
+        "description": "Ibukota Kekhalifahan Umayyah di Andalusia. Masjid-Katedral Cordoba dan pusat peradaban Islam di Eropa.",
+        "latitude": 37.889,
+        "longitude": -4.779,
+        "category": "kota",
+        "era": "andallus"
+    },
+    {
+        "name": "Granada",
+        "description": "Kota terakhir kekuasaan Islam di Andalusia. Istana Alhambra adalah mahakarya arsitektur Islam. Jatuh tahun 1492 M.",
+        "latitude": 37.177,
+        "longitude": -3.598,
+        "category": "kota",
+        "era": "andallus"
+    },
+    {
+        "name": "Seville",
+        "description": "Pusat peradaban Islam di Andalusia bawah Dinasti Muwahhidun. Rumah Menara Giralda (dulu menara masjid).",
+        "latitude": 37.389,
+        "longitude": -5.984,
+        "category": "kota",
+        "era": "andallus"
+    },
+    {
+        "name": "Toledo",
+        "description": "Pusat penerjemahan dan pertukaran ilmu antara Islam, Kristen, dan Yahudi. Sekolah Penerjemah Toledo.",
+        "latitude": 39.863,
+        "longitude": -4.024,
+        "category": "kota",
+        "era": "andallus"
+    },
+    {
+        "name": "Istanbul",
+        "description": "Ibukota Kekhalifahan Utsmaniyah. Hagia Sophia (Ayasofya) dan Masjid Sultanahmet (Blue Mosque). Pusat peradaban Islam di Eurasia.",
+        "latitude": 41.008,
+        "longitude": 28.978,
+        "category": "kota",
+        "era": "utsmaniyah"
+    },
+    {
+        "name": "Bursa",
+        "description": "Ibukota pertama Kekhalifahan Utsmaniyah. Pusat perkembangan arsitektur Utsmaniyah awal dengan masjid-masjid hijau.",
+        "latitude": 40.183,
+        "longitude": 29.067,
+        "category": "kota",
+        "era": "utsmaniyah"
+    },
+    {
+        "name": "Edirne",
+        "description": "Ibukota Kekhalifahan Utsmaniyah sebelum Istanbul. Masjid Selimiye karya arsitek Mimar Sinan.",
+        "latitude": 41.683,
+        "longitude": 26.567,
+        "category": "kota",
+        "era": "utsmaniyah"
+    },
+    {
+        "name": "Isfahan",
+        "description": "Permata arsitektur Islam Persia. Masjid Imam (Shah) dan Masjid Jami Isfahan. Pusat peradaban Dinasti Safawi.",
+        "latitude": 32.653,
+        "longitude": 51.678,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Shiraz",
+        "description": "Kota budaya dan sastra Persia. Pusat perkembangan tasawuf dan syair Islam. Makam Hafiz dan Sa'di.",
+        "latitude": 29.592,
+        "longitude": 52.584,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Samarkand",
+        "description": "Pusat peradaban Islam di Asia Tengah. Registan Square dan Makam Imam Al-Bukhari. Pusat ilmu pada era Timuriyah.",
+        "latitude": 39.654,
+        "longitude": 66.976,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Bukhara",
+        "description": "Kota pusat ilmu hadits dan fiqh di Asia Tengah. Lahirnya Imam Bukhari. Kompleks Po-i-Kalon.",
+        "latitude": 39.768,
+        "longitude": 64.422,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Herat",
+        "description": "Pusat peradaban Timuriyah. Masjid Jami Herat dan pusat miniatur Persia. Kota ilmu dan seni Islam.",
+        "latitude": 34.342,
+        "longitude": 62.204,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Delhi",
+        "description": "Ibukota Kesultanan Islam di India. Masjid Jama Masjid dan Qutub Minar. Pusat peradaban Islam Asia Selatan.",
+        "latitude": 28.614,
+        "longitude": 77.209,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Agra",
+        "description": "Kota Kekaisaran Mughal. Rumah Taj Mahal dan Benteng Agra. Pusat peradaban Islam-India.",
+        "latitude": 27.176,
+        "longitude": 78.008,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Lahore",
+        "description": "Pusat peradaban Mughal di Punjab. Masjid Badshahi dan Benteng Lahore. Kota budaya Islam di Asia Selatan.",
+        "latitude": 31.549,
+        "longitude": 74.344,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Banda Aceh",
+        "description": "Kota pertama masuknya Islam di Nusantara. Masjid Raya Baiturrahman. Pusat Kesultanan Aceh Darussalam.",
+        "latitude": 5.55,
+        "longitude": 95.317,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Demak",
+        "description": "Pusat penyebaran Islam di Jawa. Masjid Agung Demak karya Wali Songo. Pusat Kesultanan Demak pertama di Jawa.",
+        "latitude": -6.895,
+        "longitude": 110.637,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Melaka",
+        "description": "Pusat perdagangan dan penyebaran Islam di Asia Tenggara. Kesultanan Melaka menjadi model penyebaran Islam di Nusantara.",
+        "latitude": 2.189,
+        "longitude": 102.25,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "Tlemcen",
+        "description": "Kota peradaban Islam di Aljazair. Masjid Agung Tlemcen dan pusat ilmu Dinasti Zayaniyah.",
+        "latitude": 34.882,
+        "longitude": -1.316,
+        "category": "kota",
+        "era": "klasik"
+    },
+    {
+        "name": "An-Najaf",
+        "description": "Kota bersejarah di Irak, pusat ilmu dan peradaban Islam awal. Tempat dimakamkannya Imam Ali RA.",
+        "latitude": 31.996,
+        "longitude": 44.315,
+        "category": "kota",
+        "era": "khulafa"
+    },
+    {
+        "name": "Karbala",
+        "description": "Kota bersejarah di Irak, lokasi peristiwa penting dalam sejarah Islam. Pusat ziarah dan peradaban.",
+        "latitude": 32.617,
+        "longitude": 44.033,
+        "category": "kota",
+        "era": "umayyah"
+    },
+    {
+        "name": "Jeddah",
+        "description": "Kota pelabuhan utama Makkah, gerbang masuk jamaah haji dan umrah. Pusat perdagangan dan budaya Islam.",
+        "latitude": 21.486,
+        "longitude": 39.192,
+        "category": "kota",
+        "era": "khulafa"
+    }
 ]

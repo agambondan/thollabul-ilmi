@@ -1,14 +1,17 @@
-'use client';
+"use client";
 
-import { useLocale } from '@/context/Locale';
-import { useActionPosition } from '@/lib/useActionPosition';
-import { useLayoutMode } from '@/lib/useLayoutMode';
-import { QURAN_FONTS, useQuranFont } from '@/lib/useQuranFont';
-import classNames from 'classnames';
-import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { RiSettings3Fill } from 'react-icons/ri';
-import { TbLayoutDistributeHorizontal, TbLayoutSidebarRight } from 'react-icons/tb';
+import { useLocale } from "@/context/Locale";
+import { useActionPosition } from "@/lib/useActionPosition";
+import { useLayoutMode } from "@/lib/useLayoutMode";
+import { QURAN_FONTS, useQuranFont } from "@/lib/useQuranFont";
+import classNames from "classnames";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { RiSettings3Fill } from "react-icons/ri";
+import {
+    TbLayoutDistributeHorizontal,
+    TbLayoutSidebarRight,
+} from "react-icons/tb";
 
 const SettingButton = () => {
     const { t } = useLocale();
@@ -36,11 +39,11 @@ const SettingButton = () => {
     const label = (key, fallback) => t(key) || fallback;
 
     useEffect(() => {
-        const media = window.matchMedia('(max-width: 767px)');
+        const media = window.matchMedia("(max-width: 767px)");
         const updateViewport = () => setIsCompactViewport(media.matches);
         updateViewport();
-        media.addEventListener('change', updateViewport);
-        return () => media.removeEventListener('change', updateViewport);
+        media.addEventListener("change", updateViewport);
+        return () => media.removeEventListener("change", updateViewport);
     }, []);
 
     useEffect(() => {
@@ -50,8 +53,8 @@ const SettingButton = () => {
                 setShowPopup(false);
             }
         };
-        document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
     }, [showPopup]);
 
     useEffect(() => {
@@ -66,30 +69,31 @@ const SettingButton = () => {
                 setMobileControlsVisible(false);
             }, 2200);
         };
-        window.addEventListener('scroll', handler);
-        document.addEventListener('scroll', handler, true);
-        window.addEventListener('touchmove', handler, { passive: true });
+        window.addEventListener("scroll", handler);
+        document.addEventListener("scroll", handler, true);
+        window.addEventListener("touchmove", handler, { passive: true });
         return () => {
-            window.removeEventListener('scroll', handler);
-            document.removeEventListener('scroll', handler, true);
-            window.removeEventListener('touchmove', handler);
+            window.removeEventListener("scroll", handler);
+            document.removeEventListener("scroll", handler, true);
+            window.removeEventListener("touchmove", handler);
             clearTimeout(tid);
             clearTimeout(mobileControlsTimeoutRef.current);
         };
     }, []);
 
-    const isDashboard = pathname?.startsWith('/dashboard');
+    const isDashboard = pathname?.startsWith("/dashboard");
     const bottomClass = isDashboard
         ? navBarVisible
-            ? 'bottom-[84px] md:bottom-[52px]'
-            : 'bottom-[72px] md:bottom-2'
+            ? "bottom-[84px] md:bottom-[52px]"
+            : "bottom-[72px] md:bottom-2"
         : navBarVisible
-            ? 'bottom-[52px]'
-            : 'bottom-2';
-    const shouldShowMobileControls = !isCompactViewport || mobileControlsVisible || showPopup;
+          ? "bottom-[52px]"
+          : "bottom-2";
+    const shouldShowMobileControls =
+        !isCompactViewport || mobileControlsVisible || showPopup;
     const visibilityClass = shouldShowMobileControls
-        ? 'translate-y-0 opacity-100 pointer-events-auto'
-        : 'translate-y-2 opacity-0 pointer-events-none';
+        ? "translate-y-0 opacity-100 pointer-events-auto"
+        : "translate-y-2 opacity-0 pointer-events-none";
 
     return (
         <div
@@ -102,8 +106,8 @@ const SettingButton = () => {
                 data-testid='global-setting-button'
                 className='dark:bg-slate-200 bg-slate-800 dark:text-black text-white rounded-full p-3 shadow hover:opacity-80 transition-opacity'
                 onClick={() => setShowPopup((p) => !p)}
-                title={t('settings.title')}
-                aria-label={t('settings.title')}
+                title={t("settings.title")}
+                aria-label={t("settings.title")}
             >
                 <RiSettings3Fill size={24} />
             </button>
@@ -111,44 +115,44 @@ const SettingButton = () => {
             {showPopup && (
                 <div className='absolute right-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-60 max-h-[calc(100vh-7rem)] overflow-y-auto p-3 shadow-lg text-sm text-emerald-900 dark:text-white'>
                     <p className='font-semibold mb-3 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide'>
-                        {t('settings.title')}
+                        {t("settings.title")}
                     </p>
 
                     {/* Layout toggle */}
                     <div className='hidden md:block mb-3'>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
-                            {t('settings.ayah_layout')}
+                            {t("settings.ayah_layout")}
                         </p>
                         <div className='flex gap-2'>
                             <button
                                 onClick={() => setLayout(false)}
                                 className={classNames(
-                                    'flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-lg border text-xs transition-all',
+                                    "flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-lg border text-xs transition-all",
                                     {
-                                        'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold':
+                                        "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
                                             !isWide,
-                                        'border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500':
+                                        "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
                                             isWide,
-                                    }
+                                    },
                                 )}
                             >
                                 <TbLayoutSidebarRight size={18} />
-                                {t('settings.compact')}
+                                {t("settings.compact")}
                             </button>
                             <button
                                 onClick={() => setLayout(true)}
                                 className={classNames(
-                                    'flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-lg border text-xs transition-all',
+                                    "flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-lg border text-xs transition-all",
                                     {
-                                        'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold':
+                                        "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
                                             isWide,
-                                        'border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500':
+                                        "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
                                             !isWide,
-                                    }
+                                    },
                                 )}
                             >
                                 <TbLayoutDistributeHorizontal size={18} />
-                                {t('settings.wide')}
+                                {t("settings.wide")}
                             </button>
                         </div>
                     </div>
@@ -156,50 +160,53 @@ const SettingButton = () => {
                     {/* Action layout */}
                     <div className='mb-3'>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
-                            {label('settings.action_position', 'Aksi Ayat/Hadith')}
+                            {label(
+                                "settings.action_position",
+                                "Aksi Ayat/Hadith",
+                            )}
                         </p>
                         <div className='grid grid-cols-3 gap-2'>
                             <button
-                                onClick={() => setPosition('side')}
+                                onClick={() => setPosition("side")}
                                 className={classNames(
-                                    'py-2 px-1 rounded-lg border text-xs transition-all',
+                                    "py-2 px-1 rounded-lg border text-xs transition-all",
                                     {
-                                        'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold':
-                                            position === 'side',
-                                        'border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500':
-                                            position !== 'side',
-                                    }
+                                        "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
+                                            position === "side",
+                                        "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
+                                            position !== "side",
+                                    },
                                 )}
                             >
-                                {label('settings.action_side', 'Samping')}
+                                {label("settings.action_side", "Samping")}
                             </button>
                             <button
-                                onClick={() => setPosition('menu')}
+                                onClick={() => setPosition("menu")}
                                 className={classNames(
-                                    'py-2 px-1 rounded-lg border text-xs transition-all',
+                                    "py-2 px-1 rounded-lg border text-xs transition-all",
                                     {
-                                        'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold':
+                                        "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
                                             isMenu,
-                                        'border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500':
+                                        "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
                                             !isMenu,
-                                    }
+                                    },
                                 )}
                             >
-                                {label('settings.action_menu', 'Menu')}
+                                {label("settings.action_menu", "Menu")}
                             </button>
                             <button
-                                onClick={() => setPosition('hidden')}
+                                onClick={() => setPosition("hidden")}
                                 className={classNames(
-                                    'py-2 px-1 rounded-lg border text-xs transition-all',
+                                    "py-2 px-1 rounded-lg border text-xs transition-all",
                                     {
-                                        'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold':
-                                            position === 'hidden',
-                                        'border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500':
-                                            position !== 'hidden',
-                                    }
+                                        "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
+                                            position === "hidden",
+                                        "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
+                                            position !== "hidden",
+                                    },
                                 )}
                             >
-                                {label('settings.action_hidden', 'Hide')}
+                                {label("settings.action_hidden", "Hide")}
                             </button>
                         </div>
                     </div>
@@ -207,7 +214,10 @@ const SettingButton = () => {
                     {/* Arabic font size */}
                     <div className='mb-3'>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
-                            {label('settings.arabic_size', 'Ukuran Arab (Quran/Hadis)')}
+                            {label(
+                                "settings.arabic_size",
+                                "Ukuran Arab (Quran/Hadis)",
+                            )}
                         </p>
                         <div className='flex items-center gap-2'>
                             <button
@@ -239,7 +249,10 @@ const SettingButton = () => {
                     {/* Translation font size */}
                     <div className='mb-3'>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
-                            {label('settings.translation_size', 'Ukuran Terjemahan')}
+                            {label(
+                                "settings.translation_size",
+                                "Ukuran Terjemahan",
+                            )}
                         </p>
                         <div className='flex items-center gap-2'>
                             <button
@@ -271,7 +284,7 @@ const SettingButton = () => {
                     {/* Arabic font selector */}
                     <div>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
-                            {t('settings.arabic_font')}
+                            {t("settings.arabic_font")}
                         </p>
                         <div className='flex flex-col gap-1'>
                             {QURAN_FONTS.map((font) => (
@@ -279,19 +292,19 @@ const SettingButton = () => {
                                     key={font.id}
                                     onClick={() => setFont(font.id)}
                                     className={classNames(
-                                        'flex items-center justify-between px-3 py-2 rounded-lg border text-xs transition-all',
+                                        "flex items-center justify-between px-3 py-2 rounded-lg border text-xs transition-all",
                                         {
-                                            'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold':
+                                            "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
                                                 fontId === font.id,
-                                            'border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500':
+                                            "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
                                                 fontId !== font.id,
-                                        }
+                                        },
                                     )}
                                 >
                                     <span>{font.label}</span>
                                     <span
                                         className={`${font.cls} text-base leading-none`}
-                                        style={{ direction: 'rtl' }}
+                                        style={{ direction: "rtl" }}
                                     >
                                         بِسْمِ
                                     </span>

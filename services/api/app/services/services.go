@@ -54,7 +54,6 @@ type Services struct {
 	Sholat               SholatService
 	Murojaah             MurojaahService
 	Fiqh                 FiqhService
-	Tahlil               TahlilService
 	Kajian               KajianService
 	Muhasabah            MuhasabahService
 	Goal                 GoalService
@@ -144,7 +143,6 @@ func NewServices(repo *repository.Repositories) *Services {
 		Sholat:               NewSholatService(repo.Sholat),
 		Murojaah:             NewMurojaahService(repo.Murojaah, repo.Hafalan),
 		Fiqh:                 NewFiqhServiceWithCache(repo.Fiqh, cache),
-		Tahlil:               NewTahlilServiceWithCache(repo.Tahlil, cache),
 		Kajian:               NewKajianServiceWithCache(repo.Kajian, cache),
 		Muhasabah:            NewMuhasabahService(repo.Muhasabah),
 		Goal:                 NewGoalService(repo.Goal),

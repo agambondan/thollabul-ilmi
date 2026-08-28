@@ -31,19 +31,20 @@ Kosakata per-kata (mufrodat) untuk setiap ayat Al-Quran dengan terjemahan dan ak
 ### API Response Shape
 
 **`GET /mufrodat?byAyah=1`**
+
 ```json
 [
-  {
-    "id": 1,
-    "ayah_id": 1,
-    "word_index": 1,
-    "arabic": "بِسْمِ",
-    "transliteration": "bismi",
-    "indonesian": "Dengan nama",
-    "root_word": "س م و",
-    "part_of_speech": "preposition",
-    "ayah": { "id": 1, "number": 1 }
-  }
+    {
+        "id": 1,
+        "ayah_id": 1,
+        "word_index": 1,
+        "arabic": "بِسْمِ",
+        "transliteration": "bismi",
+        "indonesian": "Dengan nama",
+        "root_word": "س م و",
+        "part_of_speech": "preposition",
+        "ayah": { "id": 1, "number": 1 }
+    }
 ]
 ```
 

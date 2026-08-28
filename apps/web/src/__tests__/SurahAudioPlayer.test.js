@@ -1,202 +1,252 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 const mockBySurah = jest.fn();
 const mockByAyah = jest.fn();
 const mockBySurahPage = jest.fn();
 
-jest.mock('@/lib/api', () => ({
-  audioApi: {
-    byAyah: (...args) => mockByAyah(...args),
-    bySurah: (...args) => mockBySurah(...args),
-  },
-  quranApi: {
-    bySurahPage: (...args) => mockBySurahPage(...args),
-  },
+jest.mock("@/lib/api", () => ({
+    audioApi: {
+        byAyah: (...args) => mockByAyah(...args),
+        bySurah: (...args) => mockBySurah(...args),
+    },
+    quranApi: {
+        bySurahPage: (...args) => mockBySurahPage(...args),
+    },
 }));
 
-jest.mock('@/context/Locale', () => ({
-  useLocale: () => ({ t: () => undefined }),
+jest.mock("@/context/Locale", () => ({
+    useLocale: () => ({ t: () => undefined }),
 }));
 
-const SurahAudioPlayer = require('@/components/SurahAudioPlayer').default;
+const SurahAudioPlayer = require("@/components/SurahAudioPlayer").default;
 
 const mockResponse = (payload) => ({
-  ok: true,
-  json: async () => payload,
+    ok: true,
+    json: async () => payload,
 });
 
-describe('SurahAudioPlayer', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-    localStorage.clear();
-    mockBySurah.mockResolvedValue(
-      mockResponse({
-        items: [
-          {
-            audio_url: 'https://example.com/alafasy-surah.mp3',
-            qari_name: 'Mishary Rashid Al-Afasy',
-            qari_slug: 'mishary-rashid-alafasy',
-          },
-          {
-            audio_url: 'https://example.com/sudais-surah.mp3',
-            qari_name: 'Abdul Rahman Al-Sudais',
-            qari_slug: 'abdul-rahman-al-sudais',
-          },
-        ],
-      }),
-    );
-    mockBySurahPage.mockResolvedValue(
-      mockResponse({
-        items: [
-          { id: 11, number: 1, surah_number: 1 },
-          { id: 12, number: 2, surah_number: 1 },
-        ],
-      }),
-    );
-    mockByAyah.mockImplementation((ayahId) =>
-      Promise.resolve(
-        mockResponse({
-          items: [
-            {
-              audio_url: `https://example.com/alafasy-${ayahId}.mp3`,
-              qari_name: 'Mishary Rashid Al-Afasy',
-              qari_slug: 'mishary-rashid-alafasy',
-            },
-            {
-              audio_url: `https://example.com/sudais-${ayahId}.mp3`,
-              qari_name: 'Abdul Rahman Al-Sudais',
-              qari_slug: 'abdul-rahman-al-sudais',
-            },
-          ],
-        }),
-      ),
-    );
-    global.Audio = jest.fn(function Audio(url) {
-      this.src = url;
-      this.currentTime = 0;
-      this.paused = true;
-      this.playbackRate = 1;
-      this.pause = jest.fn(() => {
-        this.paused = true;
-        this.onpause?.();
-      });
-      this.play = jest.fn(() => {
-        this.paused = false;
-        this.onplay?.();
-        return Promise.resolve();
-      });
-    });
-  });
-
-  test('plays Quran audio range with selected qari, repeat, and speed', async () => {
-    render(<SurahAudioPlayer surahNumber={1} surahName="Al-Fatihah" totalAyahs={7} />);
-
-    fireEvent.click(screen.getByText('Dengar Surah'));
-    await screen.findByLabelText('Pilih qari');
-    await waitFor(() => {
-      expect(screen.queryByText('Memuat...')).not.toBeInTheDocument();
+describe("SurahAudioPlayer", () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        localStorage.clear();
+        mockBySurah.mockResolvedValue(
+            mockResponse({
+                items: [
+                    {
+                        audio_url: "https://example.com/alafasy-surah.mp3",
+                        qari_name: "Mishary Rashid Al-Afasy",
+                        qari_slug: "mishary-rashid-alafasy",
+                    },
+                    {
+                        audio_url: "https://example.com/sudais-surah.mp3",
+                        qari_name: "Abdul Rahman Al-Sudais",
+                        qari_slug: "abdul-rahman-al-sudais",
+                    },
+                ],
+            }),
+        );
+        mockBySurahPage.mockResolvedValue(
+            mockResponse({
+                items: [
+                    { id: 11, number: 1, surah_number: 1 },
+                    { id: 12, number: 2, surah_number: 1 },
+                ],
+            }),
+        );
+        mockByAyah.mockImplementation((ayahId) =>
+            Promise.resolve(
+                mockResponse({
+                    items: [
+                        {
+                            audio_url: `https://example.com/alafasy-${ayahId}.mp3`,
+                            qari_name: "Mishary Rashid Al-Afasy",
+                            qari_slug: "mishary-rashid-alafasy",
+                        },
+                        {
+                            audio_url: `https://example.com/sudais-${ayahId}.mp3`,
+                            qari_name: "Abdul Rahman Al-Sudais",
+                            qari_slug: "abdul-rahman-al-sudais",
+                        },
+                    ],
+                }),
+            ),
+        );
+        global.Audio = jest.fn(function Audio(url) {
+            this.src = url;
+            this.currentTime = 0;
+            this.paused = true;
+            this.playbackRate = 1;
+            this.pause = jest.fn(() => {
+                this.paused = true;
+                this.onpause?.();
+            });
+            this.play = jest.fn(() => {
+                this.paused = false;
+                this.onplay?.();
+                return Promise.resolve();
+            });
+        });
     });
 
-    fireEvent.change(await screen.findByLabelText('Sampai ayat'), {
-      target: { value: '2' },
-    });
-    fireEvent.click(screen.getByLabelText('Pilih qari'));
-    fireEvent.click(await screen.findByText(/Abdul Rahman Al-Sudais/i));
-    fireEvent.click(screen.getByText('1.25x'));
-    fireEvent.click(screen.getByLabelText('Repeat'));
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Putar range/i })).toBeEnabled();
-    });
-    fireEvent.click(screen.getByRole('button', { name: /Putar range/i }));
+    test("plays Quran audio range with selected qari, repeat, and speed", async () => {
+        render(
+            <SurahAudioPlayer
+                surahNumber={1}
+                surahName='Al-Fatihah'
+                totalAyahs={7}
+            />,
+        );
 
-    await waitFor(() => {
-      expect(mockBySurahPage).toHaveBeenCalledWith(1, 0, 1);
-      expect(mockBySurah).not.toHaveBeenCalled();
-      expect(mockBySurahPage).toHaveBeenCalledWith(1, 0, 300);
-      expect(mockByAyah).toHaveBeenCalledWith(11);
-      expect(global.Audio).toHaveBeenCalledWith('https://example.com/sudais-11.mp3');
-    });
-    expect(global.Audio.mock.instances[0].playbackRate).toBe(1.25);
-    expect(screen.getByText('Surah 1 · Ayat 1')).toBeInTheDocument();
-  });
+        fireEvent.click(screen.getByText("Dengar Surah"));
+        await screen.findByLabelText("Pilih qari");
+        await waitFor(() => {
+            expect(screen.queryByText("Memuat...")).not.toBeInTheDocument();
+        });
 
-  test('skips to next and previous ayah in the active audio queue', async () => {
-    render(<SurahAudioPlayer surahNumber={1} surahName="Al-Fatihah" totalAyahs={7} />);
+        fireEvent.change(await screen.findByLabelText("Sampai ayat"), {
+            target: { value: "2" },
+        });
+        fireEvent.click(screen.getByLabelText("Pilih qari"));
+        fireEvent.click(await screen.findByText(/Abdul Rahman Al-Sudais/i));
+        fireEvent.click(screen.getByText("1.25x"));
+        fireEvent.click(screen.getByLabelText("Repeat"));
+        await waitFor(() => {
+            expect(
+                screen.getByRole("button", { name: /Putar range/i }),
+            ).toBeEnabled();
+        });
+        fireEvent.click(screen.getByRole("button", { name: /Putar range/i }));
 
-    fireEvent.click(screen.getByText('Dengar Surah'));
-    await screen.findByLabelText('Pilih qari');
-    fireEvent.change(await screen.findByLabelText('Sampai ayat'), {
-      target: { value: '2' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /Putar range/i }));
-
-    await waitFor(() => {
-      expect(global.Audio).toHaveBeenCalledWith('https://example.com/alafasy-11.mp3');
-      expect(screen.getByText('Surah 1 · Ayat 1')).toBeInTheDocument();
-    });
-
-    await waitFor(() => {
-      expect(screen.getByLabelText('Audio ayat berikutnya')).toBeEnabled();
-    });
-    fireEvent.click(screen.getByLabelText('Audio ayat berikutnya'));
-
-    await waitFor(() => {
-      expect(global.Audio).toHaveBeenCalledWith('https://example.com/alafasy-12.mp3');
-      expect(screen.getByText('Surah 1 · Ayat 2')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(mockBySurahPage).toHaveBeenCalledWith(1, 0, 1);
+            expect(mockBySurah).not.toHaveBeenCalled();
+            expect(mockBySurahPage).toHaveBeenCalledWith(1, 0, 300);
+            expect(mockByAyah).toHaveBeenCalledWith(11);
+            expect(global.Audio).toHaveBeenCalledWith(
+                "https://example.com/sudais-11.mp3",
+            );
+        });
+        expect(global.Audio.mock.instances[0].playbackRate).toBe(1.25);
+        expect(screen.getByText("Surah 1 · Ayat 1")).toBeInTheDocument();
     });
 
-    await waitFor(() => {
-      expect(screen.getByLabelText('Audio ayat sebelumnya')).toBeEnabled();
+    test("skips to next and previous ayah in the active audio queue", async () => {
+        render(
+            <SurahAudioPlayer
+                surahNumber={1}
+                surahName='Al-Fatihah'
+                totalAyahs={7}
+            />,
+        );
+
+        fireEvent.click(screen.getByText("Dengar Surah"));
+        await screen.findByLabelText("Pilih qari");
+        fireEvent.change(await screen.findByLabelText("Sampai ayat"), {
+            target: { value: "2" },
+        });
+        fireEvent.click(screen.getByRole("button", { name: /Putar range/i }));
+
+        await waitFor(() => {
+            expect(global.Audio).toHaveBeenCalledWith(
+                "https://example.com/alafasy-11.mp3",
+            );
+            expect(screen.getByText("Surah 1 · Ayat 1")).toBeInTheDocument();
+        });
+
+        await waitFor(() => {
+            expect(
+                screen.getByLabelText("Audio ayat berikutnya"),
+            ).toBeEnabled();
+        });
+        fireEvent.click(screen.getByLabelText("Audio ayat berikutnya"));
+
+        await waitFor(() => {
+            expect(global.Audio).toHaveBeenCalledWith(
+                "https://example.com/alafasy-12.mp3",
+            );
+            expect(screen.getByText("Surah 1 · Ayat 2")).toBeInTheDocument();
+        });
+
+        await waitFor(() => {
+            expect(
+                screen.getByLabelText("Audio ayat sebelumnya"),
+            ).toBeEnabled();
+        });
+        fireEvent.click(screen.getByLabelText("Audio ayat sebelumnya"));
+
+        await waitFor(() => {
+            expect(global.Audio).toHaveBeenLastCalledWith(
+                "https://example.com/alafasy-11.mp3",
+            );
+            expect(screen.getByText("Surah 1 · Ayat 1")).toBeInTheDocument();
+        });
     });
-    fireEvent.click(screen.getByLabelText('Audio ayat sebelumnya'));
 
-    await waitFor(() => {
-      expect(global.Audio).toHaveBeenLastCalledWith('https://example.com/alafasy-11.mp3');
-      expect(screen.getByText('Surah 1 · Ayat 1')).toBeInTheDocument();
+    test("minimizes the player without stopping current audio", async () => {
+        render(
+            <SurahAudioPlayer
+                surahNumber={1}
+                surahName='Al-Fatihah'
+                totalAyahs={7}
+            />,
+        );
+
+        fireEvent.click(screen.getByText("Dengar Surah"));
+        await screen.findByLabelText("Pilih qari");
+        await waitFor(() => {
+            expect(
+                screen.getByRole("button", { name: /Putar range/i }),
+            ).toBeEnabled();
+        });
+        fireEvent.click(screen.getByRole("button", { name: /Putar range/i }));
+
+        await waitFor(() => {
+            expect(global.Audio).toHaveBeenCalledWith(
+                "https://example.com/alafasy-11.mp3",
+            );
+            expect(screen.getByText("Surah 1 · Ayat 1")).toBeInTheDocument();
+        });
+        const audio = global.Audio.mock.instances[0];
+
+        fireEvent.click(screen.getByLabelText("Minimize audio player"));
+
+        expect(audio.pause).not.toHaveBeenCalled();
+        expect(screen.queryByLabelText("Sampai ayat")).not.toBeInTheDocument();
+        expect(screen.getByLabelText("Jeda audio")).toBeInTheDocument();
+        expect(screen.getAllByLabelText("Tampilkan player audio")).toHaveLength(
+            2,
+        );
+
+        fireEvent.click(screen.getAllByLabelText("Tampilkan player audio")[0]);
+
+        expect(screen.getByLabelText("Sampai ayat")).toBeInTheDocument();
+        expect(
+            screen.getByRole("button", { name: /Jeda/i }),
+        ).toBeInTheDocument();
     });
-  });
 
-  test('minimizes the player without stopping current audio', async () => {
-    render(<SurahAudioPlayer surahNumber={1} surahName="Al-Fatihah" totalAyahs={7} />);
+    test("rejects audio range outside Quran surah bounds", async () => {
+        render(
+            <SurahAudioPlayer
+                surahNumber={1}
+                surahName='Al-Fatihah'
+                totalAyahs={7}
+            />,
+        );
 
-    fireEvent.click(screen.getByText('Dengar Surah'));
-    await screen.findByLabelText('Pilih qari');
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /Putar range/i })).toBeEnabled();
+        fireEvent.click(screen.getByText("Dengar Surah"));
+        await screen.findByLabelText("Pilih qari");
+        fireEvent.change(await screen.findByLabelText("Sampai surat"), {
+            target: { value: "999" },
+        });
+        fireEvent.click(screen.getByRole("button", { name: /Putar range/i }));
+
+        expect(
+            await screen.findByText(
+                "Range audio belum valid: nomor surat harus 1-114.",
+            ),
+        ).toBeInTheDocument();
+        expect(mockBySurahPage).not.toHaveBeenCalledWith(1, 0, 300);
+        expect(global.Audio).not.toHaveBeenCalled();
     });
-    fireEvent.click(screen.getByRole('button', { name: /Putar range/i }));
-
-    await waitFor(() => {
-      expect(global.Audio).toHaveBeenCalledWith('https://example.com/alafasy-11.mp3');
-      expect(screen.getByText('Surah 1 · Ayat 1')).toBeInTheDocument();
-    });
-    const audio = global.Audio.mock.instances[0];
-
-    fireEvent.click(screen.getByLabelText('Minimize audio player'));
-
-    expect(audio.pause).not.toHaveBeenCalled();
-    expect(screen.queryByLabelText('Sampai ayat')).not.toBeInTheDocument();
-    expect(screen.getByLabelText('Jeda audio')).toBeInTheDocument();
-    expect(screen.getAllByLabelText('Tampilkan player audio')).toHaveLength(2);
-
-    fireEvent.click(screen.getAllByLabelText('Tampilkan player audio')[0]);
-
-    expect(screen.getByLabelText('Sampai ayat')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Jeda/i })).toBeInTheDocument();
-  });
-
-  test('rejects audio range outside Quran surah bounds', async () => {
-    render(<SurahAudioPlayer surahNumber={1} surahName="Al-Fatihah" totalAyahs={7} />);
-
-    fireEvent.click(screen.getByText('Dengar Surah'));
-    await screen.findByLabelText('Pilih qari');
-    fireEvent.change(await screen.findByLabelText('Sampai surat'), {
-      target: { value: '999' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /Putar range/i }));
-
-    expect(await screen.findByText('Range audio belum valid: nomor surat harus 1-114.')).toBeInTheDocument();
-    expect(mockBySurahPage).not.toHaveBeenCalledWith(1, 0, 300);
-    expect(global.Audio).not.toHaveBeenCalled();
-  });
 });

@@ -1,258 +1,258 @@
 name: Test
 
 on:
-  push:
-    branches: [master, main, develop]
-    paths:
-      - 'services/api/**'
-      - 'apps/web/**'
-      - 'apps/mobile/**'
-      - '.github/workflows/test.yml'
-  pull_request:
-    paths:
-      - 'services/api/**'
-      - 'apps/web/**'
-      - 'apps/mobile/**'
+    push:
+        branches: [master, main, develop]
+        paths:
+            - "services/api/**"
+            - "apps/web/**"
+            - "apps/mobile/**"
+            - ".github/workflows/test.yml"
+    pull_request:
+        paths:
+            - "services/api/**"
+            - "apps/web/**"
+            - "apps/mobile/**"
 
 env:
-  NODE_VERSION: '22'
+    NODE_VERSION: "22"
 
 jobs:
-  go-test:
-    name: Go Test
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: services/api
+    go-test:
+        name: Go Test
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: services/api
 
-    services:
-      postgres:
-        image: postgres:18-alpine
-        env:
-          POSTGRES_DB: tholabul_ilmi_test
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
+        services:
+            postgres:
+                image: postgres:18-alpine
+                env:
+                    POSTGRES_DB: tholabul_ilmi_test
+                    POSTGRES_USER: test
+                    POSTGRES_PASSWORD: test
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 5432:5432
 
-      redis:
-        image: redis:8-alpine
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 6379:6379
+            redis:
+                image: redis:8-alpine
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+                ports:
+                    - 6379:6379
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.26'
+            - name: Setup Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version: "1.26"
 
-      - name: Go mod cache
-        uses: actions/cache@v4
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('services/api/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+            - name: Go mod cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/go/pkg/mod
+                  key: ${{ runner.os }}-go-${{ hashFiles('services/api/go.sum') }}
+                  restore-keys: |
+                      ${{ runner.os }}-go-
 
-      - name: Download dependencies
-        run: go mod download
+            - name: Download dependencies
+              run: go mod download
 
-      - name: Vet
-        run: go vet ./...
+            - name: Vet
+              run: go vet ./...
 
-      - name: Test (lib + middleware + services + repository)
-        env:
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_USER: test
-          DB_PASS: test
-          DB_NAME: tholabul_ilmi_test
-          REDIS_HOST: localhost
-          REDIS_PORT: 6379
-          REDIS_PASSWORD: ""
-          REDIS_INDEX: 0
-          CACHE_TTL_SECONDS: 60
-          ENVIRONMENT: test
-        run: go test -v -count=1 -tags postgres ./app/... ./tests/lib/... ./tests/... 2>&1 | tee /tmp/test-output.txt
+            - name: Test (lib + middleware + services + repository)
+              env:
+                  DB_HOST: localhost
+                  DB_PORT: 5432
+                  DB_USER: test
+                  DB_PASS: test
+                  DB_NAME: tholabul_ilmi_test
+                  REDIS_HOST: localhost
+                  REDIS_PORT: 6379
+                  REDIS_PASSWORD: ""
+                  REDIS_INDEX: 0
+                  CACHE_TTL_SECONDS: 60
+                  ENVIRONMENT: test
+              run: go test -v -count=1 -tags postgres ./app/... ./tests/lib/... ./tests/... 2>&1 | tee /tmp/test-output.txt
 
-      - name: Check test results
-        run: |
-          if grep -q "^--- FAIL" /tmp/test-output.txt; then
-            echo "Some tests failed"
-            exit 1
-          fi
-          echo "All tests passed"
+            - name: Check test results
+              run: |
+                  if grep -q "^--- FAIL" /tmp/test-output.txt; then
+                    echo "Some tests failed"
+                    exit 1
+                  fi
+                  echo "All tests passed"
 
-  go-lint:
-    name: Go Lint
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: services/api
+    go-lint:
+        name: Go Lint
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: services/api
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.26'
+            - name: Setup Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version: "1.26"
 
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: latest
-          working-directory: services/api
+            - name: golangci-lint
+              uses: golangci/golangci-lint-action@v6
+              with:
+                  version: latest
+                  working-directory: services/api
 
-  web-test:
-    name: Web Jest
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/web
+    web-test:
+        name: Web Jest
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: apps/web
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
 
-      - name: Node cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-web-${{ hashFiles('apps/web/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-web-
+            - name: Node cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-web-${{ hashFiles('apps/web/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-web-
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Test
-        run: npx jest --no-cache 2>&1 | tee /tmp/jest-output.txt
+            - name: Test
+              run: npx jest --no-cache 2>&1 | tee /tmp/jest-output.txt
 
-      - name: Check test results
-        run: |
-          if grep -q "FAIL" /tmp/jest-output.txt; then
-            echo "Some web tests failed"
-            exit 1
-          fi
-          echo "All web tests passed"
+            - name: Check test results
+              run: |
+                  if grep -q "FAIL" /tmp/jest-output.txt; then
+                    echo "Some web tests failed"
+                    exit 1
+                  fi
+                  echo "All web tests passed"
 
-  web-lint:
-    name: Web Lint
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/web
+    web-lint:
+        name: Web Lint
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: apps/web
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Lint
-        run: npx next lint
+            - name: Lint
+              run: npx next lint
 
-  mobile-test:
-    name: Mobile Jest
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/mobile
+    mobile-test:
+        name: Mobile Jest
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: apps/mobile
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
 
-      - name: Node cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-mobile-${{ hashFiles('apps/mobile/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-mobile-
+            - name: Node cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-mobile-${{ hashFiles('apps/mobile/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-mobile-
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Test
-        run: npx jest --no-cache 2>&1 | tee /tmp/jest-output.txt
+            - name: Test
+              run: npx jest --no-cache 2>&1 | tee /tmp/jest-output.txt
 
-      - name: Check test results
-        run: |
-          if grep -q "FAIL" /tmp/jest-output.txt; then
-            echo "Some mobile tests failed"
-            exit 1
-          fi
-          echo "All mobile tests passed"
+            - name: Check test results
+              run: |
+                  if grep -q "FAIL" /tmp/jest-output.txt; then
+                    echo "Some mobile tests failed"
+                    exit 1
+                  fi
+                  echo "All mobile tests passed"
 
-  web-e2e:
-    name: Web E2E
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/web
+    web-e2e:
+        name: Web E2E
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: apps/web
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
 
-      - name: Node cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-web-e2e-${{ hashFiles('apps/web/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-web-e2e-
+            - name: Node cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-web-e2e-${{ hashFiles('apps/web/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-web-e2e-
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Install Playwright browsers
-        run: npx playwright install chromium
+            - name: Install Playwright browsers
+              run: npx playwright install chromium
 
-      - name: Run E2E tests
-        run: npm run test:e2e -- --reporter=list 2>&1 | tee /tmp/e2e-output.txt
+            - name: Run E2E tests
+              run: npm run test:e2e -- --reporter=list 2>&1 | tee /tmp/e2e-output.txt
 
-      - name: Check test results
-        run: |
-          if grep -q "failed" /tmp/e2e-output.txt; then
-            echo "Some E2E tests failed"
-            exit 1
-          fi
-          echo "All E2E tests passed"
+            - name: Check test results
+              run: |
+                  if grep -q "failed" /tmp/e2e-output.txt; then
+                    echo "Some E2E tests failed"
+                    exit 1
+                  fi
+                  echo "All E2E tests passed"

@@ -1,6 +1,6 @@
-import Footer from '@/components/Footer';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import { PanduanSholatContent } from './PanduanSholatClient';
+import Footer from "@/components/Footer";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import { PanduanSholatContent } from "./PanduanSholatClient";
 
 export default function PanduanSholatPage() {
     return (

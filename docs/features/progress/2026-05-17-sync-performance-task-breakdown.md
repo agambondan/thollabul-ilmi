@@ -82,12 +82,12 @@ Completed: `2026-05-17`
 - Tentukan apakah mobile akan punya tracker Khatam penuh atau hanya shortcut
   Quran sementara.
 - Jika tracker dibuat:
-  - tambahkan screen/modal Khatam;
-  - tampilkan progress, target, completion, dan CTA lanjut baca;
-  - sinkronkan dengan data web/dashboard jika endpoint sudah ada.
+    - tambahkan screen/modal Khatam;
+    - tampilkan progress, target, completion, dan CTA lanjut baca;
+    - sinkronkan dengan data web/dashboard jika endpoint sudah ada.
 - Jika tracker belum dibuat:
-  - ubah label CTA agar tidak menjanjikan tracker;
-  - tambahkan badge `Segera` atau copy yang jelas.
+    - ubah label CTA agar tidak menjanjikan tracker;
+    - tambahkan badge `Segera` atau copy yang jelas.
 
 ### Acceptance Criteria
 
@@ -100,7 +100,7 @@ Completed: `2026-05-17`
 - `cd apps/mobile && npm test -- --runInBand` - `PASS`
 - `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-khatam-mobile-export` - `PASS`
 - Device smoke dari tab Ibadah ke Khatam - `PASS`
-  - Evidence: `output/native/2026-05-17/khatam-screen.png`
+    - Evidence: `output/native/2026-05-17/khatam-screen.png`
 
 ### Implementation Notes
 
@@ -125,8 +125,8 @@ Completed: `2026-05-17`
   `docs/MOBILE_DESIGN_PATTERNS.md`.
 - Tambahkan CTA yang jelas dari Asmaul Husna list.
 - Pastikan mode ini sync dengan web route:
-  - `/asmaul-husna/flashcard`
-  - `/dashboard/asmaul-husna/flashcard`
+    - `/asmaul-husna/flashcard`
+    - `/dashboard/asmaul-husna/flashcard`
 
 ### Acceptance Criteria
 
@@ -142,7 +142,7 @@ Completed: `2026-05-17`
 - `cd apps/mobile && npm test -- --runInBand` - `PASS`
 - `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-asmaul-flashcard-export` - `PASS`
 - Device smoke fitur Asmaul Husna Flashcard - `PASS`
-  - Evidence: `output/native/2026-05-17/asmaul-flashcard-revealed.png`
+    - Evidence: `output/native/2026-05-17/asmaul-flashcard-revealed.png`
 
 ### Implementation Notes
 
@@ -182,7 +182,7 @@ Completed: `2026-05-17`
 - `cd apps/mobile && npm test -- --runInBand` - `PASS`
 - `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-achievements-detail-export` - `PASS`
 - Device smoke Profile -> Achievements detail - `PASS`
-  - Evidence: `output/native/2026-05-17/profile-achievements-detail.png`
+    - Evidence: `output/native/2026-05-17/profile-achievements-detail.png`
 
 ### Implementation Notes
 
@@ -207,12 +207,12 @@ Completed: `2026-05-17`
 
 - Update landing/home feature grid agar memasukkan fitur yang sudah ada tetapi
   belum menonjol:
-  - Forum
-  - Tokoh Tarikh
-  - Peta Sejarah
-  - Asmaul Husna Flashcard
-  - Jarh wa Ta'dil
-  - Wirid personal/custom jika diposisikan sebagai personal feature
+    - Forum
+    - Tokoh Tarikh
+    - Peta Sejarah
+    - Asmaul Husna Flashcard
+    - Jarh wa Ta'dil
+    - Wirid personal/custom jika diposisikan sebagai personal feature
 - Pisahkan CTA public dan personal.
 - Untuk personal feature, arahkan ke login/dashboard intent yang sesuai.
 
@@ -226,12 +226,12 @@ Completed: `2026-05-17`
 
 - `cd apps/web && npm run build` - `PASS`
 - Browser smoke `http://localhost:23001` - `PASS`
-  - `Forum Diskusi` -> `/forum`
-  - `Tokoh Tarikh` -> `/tokoh`
-  - `Peta Islam` -> `/peta`
-  - `Flashcard Asmaul Husna` -> `/asmaul-husna/flashcard`
-  - `Jarh wa Ta'dil` -> `/perawi`
-  - `Wirid Pribadi` guest -> `/auth/register?next=%2Fdashboard%2Fwirid-custom`
+    - `Forum Diskusi` -> `/forum`
+    - `Tokoh Tarikh` -> `/tokoh`
+    - `Peta Islam` -> `/peta`
+    - `Flashcard Asmaul Husna` -> `/asmaul-husna/flashcard`
+    - `Jarh wa Ta'dil` -> `/perawi`
+    - `Wirid Pribadi` guest -> `/auth/register?next=%2Fdashboard%2Fwirid-custom`
 
 ### Implementation Notes
 
@@ -254,15 +254,15 @@ Completed: `2026-05-17`
 
 - Buat source of truth feature catalog lintas platform.
 - Minimal field:
-  - `key`
-  - `title`
-  - `publicWebRoute`
-  - `dashboardWebRoute`
-  - `mobileRoute`
-  - `authRequired`
-  - `ctaLabel`
-  - `searchable`
-  - `status`
+    - `key`
+    - `title`
+    - `publicWebRoute`
+    - `dashboardWebRoute`
+    - `mobileRoute`
+    - `authRequired`
+    - `ctaLabel`
+    - `searchable`
+    - `status`
 - Tambahkan script/check sederhana untuk mendeteksi route/feature yang hilang
   dari web atau mobile.
 - Update docs agar penambahan fitur baru wajib menyentuh manifest.
@@ -278,9 +278,9 @@ Completed: `2026-05-17`
 - `node --check scripts/check-feature-parity.js` - `PASS`
 - `node -e "JSON.parse(require('fs').readFileSync('docs/features/feature-manifest.json','utf8')); console.log('manifest-json-ok')"` - `PASS`
 - `node scripts/check-feature-parity.js` - `PASS`
-  - manifest features: `49`
-  - mobile feature keys: `42`
-  - web app routes scanned: `141`
+    - manifest features: `49`
+    - mobile feature keys: `42`
+    - web app routes scanned: `141`
 
 ### Implementation Notes
 
@@ -321,9 +321,9 @@ Completed: `2026-05-17`
 - `node --check apps/web/src/app/HomePageClient.js` - `PASS`
 - `node --check apps/web/src/app/quran/[...slug]/AyahPage.js` - `PASS`
 - `cd apps/web && npm run build` - `PASS`
-  - Warning root lockfile/Turbopack tidak muncul lagi.
+    - Warning root lockfile/Turbopack tidak muncul lagi.
 - `rg -n "html2canvas" apps/web/src/app apps/web/src/components` - `PASS`
-  - Semua pemakaian `html2canvas` yang tersisa sudah lewat dynamic import.
+    - Semua pemakaian `html2canvas` yang tersisa sudah lewat dynamic import.
 
 ### Implementation Notes
 
@@ -368,16 +368,16 @@ Completed: `2026-05-17`
 - `node --check apps/mobile/src/screens/explore/FeatureCatalog.js` - `PASS`
 - `cd apps/mobile && npm test -- --runInBand src/__tests__/quranScreen.test.js src/__tests__/exploreScreen.test.js` - `PASS`
 - `cd apps/mobile && npm test -- --runInBand` - `PASS`
-  - 39 suites / 544 tests passed.
-  - Existing `act(...)` warnings still appear in several mobile tests; they do
-    not fail the suite and are tracked separately by Task 10.
+    - 39 suites / 544 tests passed.
+    - Existing `act(...)` warnings still appear in several mobile tests; they do
+      not fail the suite and are tracked separately by Task 10.
 - `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-quran-explore-perf-export` - `PASS`
 - Automated Quran deep-link regression added:
-  - target ayah 65 loads pages `[2, 3, 4]` only, not pages `0..4`.
+    - target ayah 65 loads pages `[2, 3, 4]` only, not pages `0..4`.
 - Device smoke Quran deep link target ayah `quran/2/65` - `PASS`
-  - Evidence: `output/native/2026-05-17/quran-deeplink-2-65.png`
+    - Evidence: `output/native/2026-05-17/quran-deeplink-2-65.png`
 - Device smoke Explore infinite scroll - `PASS`
-  - Evidence: `output/native/2026-05-17/explore-scroll.png`
+    - Evidence: `output/native/2026-05-17/explore-scroll.png`
 
 ### Implementation Notes
 
@@ -401,11 +401,11 @@ Completed: `2026-05-17`
 ### Scope
 
 - Tambahkan/standarkan cache key untuk:
-  - asbabun-nuzul
-  - sejarah/history
-  - tokoh-tarikh
-  - jarh-tadil
-  - public forum reads jika aman
+    - asbabun-nuzul
+    - sejarah/history
+    - tokoh-tarikh
+    - jarh-tadil
+    - public forum reads jika aman
 - Pastikan TTL mengikuti karakter data.
 - Pastikan personal data tidak memakai cache publik.
 
@@ -425,19 +425,19 @@ Completed: `2026-05-17`
 ### Implementation Notes
 
 - `cacheTTLByPrefix` sekarang mengenali prefix Redis:
-  - `asbabun-nuzul:*`
-  - `history:*`
-  - `tokoh-tarikh:*`
-  - `jarh-tadil:*`
-  - `forum:*`
+    - `asbabun-nuzul:*`
+    - `history:*`
+    - `tokoh-tarikh:*`
+    - `jarh-tadil:*`
+    - `forum:*`
 - Prefix asbabun/history/tokoh/jarh memakai TTL static; `forum:*` memakai TTL
   dynamic karena question list bisa berubah oleh pertanyaan, jawaban, dan vote.
 - Service-level cache ditambahkan untuk public read:
-  - Asbabun Nuzul list, ayah, dan surah.
-  - History list, id, dan slug.
-  - Tokoh Tarikh list dan id.
-  - Jarh wa Ta'dil list, id, dan perawi.
-  - Forum question list saja.
+    - Asbabun Nuzul list, ayah, dan surah.
+    - History list, id, dan slug.
+    - Tokoh Tarikh list dan id.
+    - Jarh wa Ta'dil list, id, dan perawi.
+    - Forum question list saja.
 - Forum detail sengaja tidak di-cache karena endpoint itu menaikkan view count
   dan perlu menjaga detail jawaban/vote tetap segar.
 - Mutation di domain terkait melakukan invalidation prefix domain masing-masing.
@@ -468,16 +468,16 @@ Completed: `2026-05-17`
 
 - `node --check apps/mobile/src/test-utils/async.js` - `PASS`
 - `cd apps/mobile && npm test -- --runInBand src/__tests__/homeScreen.test.js src/__tests__/PrayerScreen.test.js src/__tests__/quranScreen.test.js src/__tests__/exploreScreen.test.js src/__tests__/globalSearchScreen.test.js src/__tests__/sessionCard.test.js` - `PASS`
-  - 6 suites / 72 tests passed.
-  - No `act(...)` warning in targeted Home, Prayer, Quran, Explore,
-    GlobalSearch, and SessionCard tests.
+    - 6 suites / 72 tests passed.
+    - No `act(...)` warning in targeted Home, Prayer, Quran, Explore,
+      GlobalSearch, and SessionCard tests.
 - `cd apps/mobile && npm test -- --runInBand src/__tests__/notificationCenter.test.js src/__tests__/offlinePackCard.test.js src/__tests__/notesPanel.test.js src/__tests__/context-session.test.js` - `PASS`
-  - 4 suites / 39 tests passed.
-  - Low-impact warning cleanup extended to NotificationCenter,
-    OfflinePackCard, NotesPanel, and SessionProvider coverage.
+    - 4 suites / 39 tests passed.
+    - Low-impact warning cleanup extended to NotificationCenter,
+      OfflinePackCard, NotesPanel, and SessionProvider coverage.
 - `cd apps/mobile && npm test -- --runInBand` - `PASS`
-  - 39 suites / 544 tests passed.
-  - Full suite output no longer reports `not wrapped in act(...)`.
+    - 39 suites / 544 tests passed.
+    - Full suite output no longer reports `not wrapped in act(...)`.
 
 ### Implementation Notes
 
@@ -518,10 +518,10 @@ Completed: `2026-05-17`
 ### Verification
 
 - `cd apps/web && npm run build` - `PASS`
-  - `/panduan-sholat` tetap prerendered static.
-  - `/dashboard/panduan-sholat` tetap prerendered static.
-  - `/tahlil` tetap prerendered static.
-  - `/dashboard/tahlil` tetap prerendered static.
+    - `/panduan-sholat` tetap prerendered static.
+    - `/dashboard/panduan-sholat` tetap prerendered static.
+    - `/tahlil` tetap prerendered static.
+    - `/dashboard/tahlil` tetap prerendered static.
 - Device mobile smoke untuk task sebelumnya sudah dilanjutkan setelah device
   di-unlock. Khatam, Asmaul Flashcard, Achievements, Quran deep link, dan
   Explore scroll sudah `PASS`.

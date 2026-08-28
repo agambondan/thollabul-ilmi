@@ -35,13 +35,13 @@ docs/               # Dokumentasi setup dan roadmap
 
 ## Tech Stack
 
-| Layer | Stack |
-|-------|-------|
-| API Service | Go 1.26 + Fiber v2, GORM, PostgreSQL, Redis |
-| Web App | Next.js 13.5, React 18, Tailwind CSS, TanStack Query |
-| Auth | JWT (golang-jwt/jwt v5) |
-| Docs | Swagger (gofiber/swagger) |
-| Infra | Docker Compose |
+| Layer       | Stack                                                |
+| ----------- | ---------------------------------------------------- |
+| API Service | Go 1.26 + Fiber v2, GORM, PostgreSQL, Redis          |
+| Web App     | Next.js 13.5, React 18, Tailwind CSS, TanStack Query |
+| Auth        | JWT (golang-jwt/jwt v5)                              |
+| Docs        | Swagger (gofiber/swagger)                            |
+| Infra       | Docker Compose                                       |
 
 ## API Service (`services/api/`)
 
@@ -84,12 +84,12 @@ make web-dev
 
 Default ports:
 
-| Service | Port |
-|---------|------|
-| API | http://localhost:29900 |
-| Web | http://localhost:23000 |
-| PostgreSQL | localhost:54320 |
-| Redis | localhost:63790 |
+| Service    | Port                   |
+| ---------- | ---------------------- |
+| API        | http://localhost:29900 |
+| Web        | http://localhost:23000 |
+| PostgreSQL | localhost:54320        |
+| Redis      | localhost:63790        |
 
 ## Formatting
 

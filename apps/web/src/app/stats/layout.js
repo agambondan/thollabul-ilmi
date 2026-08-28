@@ -1,7 +1,7 @@
 export const metadata = {
-    title: 'Learning Statistics',
+    title: "Learning Statistics",
     description:
-        'Track your Islamic learning activity, including verses read, hadiths read, daily streaks, and memorization progress.',
+        "Track your Islamic learning activity, including verses read, hadiths read, daily streaks, and memorization progress.",
 };
 export default function StatsLayout({ children }) {
     return children;

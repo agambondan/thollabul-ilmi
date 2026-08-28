@@ -128,7 +128,9 @@ function StatusChip({ Icon, label, tone = "neutral" }) {
 export function QiblaScreen({ onBack, onOpenTab }) {
     const { isDarkTheme, isWebAppLayout } = useLayoutModePreference();
     const { t } = useMobileLocale();
-    const webAppTheme = isDarkTheme ? WEB_APP_QIBLA_THEMES.dark : WEB_APP_QIBLA_THEMES.light;
+    const webAppTheme = isDarkTheme
+        ? WEB_APP_QIBLA_THEMES.dark
+        : WEB_APP_QIBLA_THEMES.light;
     const { width } = useWindowDimensions();
     const [coords, setCoords] = useState(null);
     const [direction, setDirection] = useState(null);
@@ -186,7 +188,11 @@ export function QiblaScreen({ onBack, onOpenTab }) {
               : typeof correctionDegrees === "number"
                 ? t("qibla.guidance.rotate", {
                       degrees: correctionDegrees,
-                      direction: t(signed > 0 ? "qibla.direction.right" : "qibla.direction.left"),
+                      direction: t(
+                          signed > 0
+                              ? "qibla.direction.right"
+                              : "qibla.direction.left",
+                      ),
                   })
                 : t("qibla.guidance.waitingDirection");
 
@@ -203,10 +209,16 @@ export function QiblaScreen({ onBack, onOpenTab }) {
     const accuracyLabel =
         locationAccuracy === null || locationMode === "manual"
             ? t("qibla.accuracy.unknown")
-            : t("qibla.accuracy.meters", { meters: Math.round(locationAccuracy) });
+            : t("qibla.accuracy.meters", {
+                  meters: Math.round(locationAccuracy),
+              });
     const compassLabel =
-        heading === null ? t("qibla.compass.calibrate") : t("qibla.compass.heading", { heading: formatDegrees(heading) });
-    const screenTitle = isWebAppLayout ? t("qibla.title.webApp") : t("qibla.title.classic");
+        heading === null
+            ? t("qibla.compass.calibrate")
+            : t("qibla.compass.heading", { heading: formatDegrees(heading) });
+    const screenTitle = isWebAppLayout
+        ? t("qibla.title.webApp")
+        : t("qibla.title.classic");
     const screenSubtitle = isWebAppLayout
         ? t("qibla.subtitle.webApp")
         : t("qibla.subtitle.classic");
@@ -236,9 +248,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
             lng < -180 ||
             lng > 180
         ) {
-            setMessage(
-                t("qibla.location.invalidManual"),
-            );
+            setMessage(t("qibla.location.invalidManual"));
             return;
         }
         setMessage("");
@@ -261,9 +271,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                 setDirection(null);
                 setDistance(null);
                 setLocationAccuracy(null);
-                setMessage(
-                    t("qibla.location.permissionRequired"),
-                );
+                setMessage(t("qibla.location.permissionRequired"));
                 return;
             }
             const position = await Location.getCurrentPositionAsync({});
@@ -281,9 +289,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
             setDirection(null);
             setDistance(null);
             setLocationAccuracy(null);
-            setMessage(
-                t("qibla.location.unavailable"),
-            );
+            setMessage(t("qibla.location.unavailable"));
         } finally {
             setLoading(false);
         }
@@ -301,7 +307,11 @@ export function QiblaScreen({ onBack, onOpenTab }) {
             {onBack || onOpenTab ? (
                 <IconActionButton
                     Icon={ArrowLeft}
-                    label={onBack ? t("qibla.action.backIbadah") : t("qibla.action.backHome")}
+                    label={
+                        onBack
+                            ? t("qibla.action.backIbadah")
+                            : t("qibla.action.backHome")
+                    }
                     onPress={onBack ?? (() => onOpenTab("home"))}
                 />
             ) : null}
@@ -370,7 +380,14 @@ export function QiblaScreen({ onBack, onOpenTab }) {
 
     return (
         <Screen
-            contentStyle={isWebAppLayout ? [styles.webAppSurface, { backgroundColor: webAppTheme.bg }] : null}
+            contentStyle={
+                isWebAppLayout
+                    ? [
+                          styles.webAppSurface,
+                          { backgroundColor: webAppTheme.bg },
+                      ]
+                    : null
+            }
             title={screenTitle}
             subtitle={screenSubtitle}
             refreshing={loading}
@@ -378,54 +395,122 @@ export function QiblaScreen({ onBack, onOpenTab }) {
             actions={screenActions}
         >
             <View
-                style={isWebAppLayout ? { backgroundColor: webAppTheme.bg } : null}
-                testID={isWebAppLayout ? 'qibla-web-app-surface' : 'qibla-classic-surface'}
+                style={
+                    isWebAppLayout ? { backgroundColor: webAppTheme.bg } : null
+                }
+                testID={
+                    isWebAppLayout
+                        ? "qibla-web-app-surface"
+                        : "qibla-classic-surface"
+                }
             />
             {isWebAppLayout ? (
                 <View style={styles.webAppHeader}>
-                    <View style={[styles.webAppIconBox, { backgroundColor: webAppTheme.iconBg }]}>
+                    <View
+                        style={[
+                            styles.webAppIconBox,
+                            { backgroundColor: webAppTheme.iconBg },
+                        ]}
+                    >
                         <KaabaIcon aligned={aligned} />
                     </View>
-                    <Text style={[styles.webAppTitle, { color: webAppTheme.title }]}>{t("qibla.heading")}</Text>
-                    <Text style={[styles.webAppSubtitle, { color: webAppTheme.muted }]}>{t("qibla.headerSubtitle")}</Text>
+                    <Text
+                        style={[
+                            styles.webAppTitle,
+                            { color: webAppTheme.title },
+                        ]}
+                    >
+                        {t("qibla.heading")}
+                    </Text>
+                    <Text
+                        style={[
+                            styles.webAppSubtitle,
+                            { color: webAppTheme.muted },
+                        ]}
+                    >
+                        {t("qibla.headerSubtitle")}
+                    </Text>
                 </View>
             ) : null}
-            {message ? <Text style={[
-                styles.message,
-                isWebAppLayout ? styles.webAppMessage : null,
-                isWebAppLayout ? {
-                    backgroundColor: webAppTheme.messageBg,
-                    borderColor: webAppTheme.messageBorder,
-                    color: webAppTheme.messageText,
-                } : null,
-            ]}>{message}</Text> : null}
+            {message ? (
+                <Text
+                    style={[
+                        styles.message,
+                        isWebAppLayout ? styles.webAppMessage : null,
+                        isWebAppLayout
+                            ? {
+                                  backgroundColor: webAppTheme.messageBg,
+                                  borderColor: webAppTheme.messageBorder,
+                                  color: webAppTheme.messageText,
+                              }
+                            : null,
+                    ]}
+                >
+                    {message}
+                </Text>
+            ) : null}
             {compassMessage ? (
-                <Text style={[
-                    styles.message,
-                    isWebAppLayout ? styles.webAppMessage : null,
-                    isWebAppLayout ? {
-                        backgroundColor: webAppTheme.messageBg,
-                        borderColor: webAppTheme.messageBorder,
-                        color: webAppTheme.messageText,
-                    } : null,
-                ]}>{compassMessage}</Text>
+                <Text
+                    style={[
+                        styles.message,
+                        isWebAppLayout ? styles.webAppMessage : null,
+                        isWebAppLayout
+                            ? {
+                                  backgroundColor: webAppTheme.messageBg,
+                                  borderColor: webAppTheme.messageBorder,
+                                  color: webAppTheme.messageText,
+                              }
+                            : null,
+                    ]}
+                >
+                    {compassMessage}
+                </Text>
             ) : null}
 
             {!coords && !loading ? (
                 <Card
-                    style={isWebAppLayout ? [
-                        styles.webAppPanel,
-                        { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border },
-                    ] : null}
+                    style={
+                        isWebAppLayout
+                            ? [
+                                  styles.webAppPanel,
+                                  {
+                                      backgroundColor: webAppTheme.surface,
+                                      borderColor: webAppTheme.border,
+                                  },
+                              ]
+                            : null
+                    }
                 >
                     <CardTitle
                         meta={t("qibla.manual.meta")}
-                        metaStyle={isWebAppLayout ? [styles.webAppCardMeta, { color: webAppTheme.accent }] : null}
-                        titleStyle={isWebAppLayout ? [styles.webAppCardTitle, { color: webAppTheme.title }] : null}
+                        metaStyle={
+                            isWebAppLayout
+                                ? [
+                                      styles.webAppCardMeta,
+                                      { color: webAppTheme.accent },
+                                  ]
+                                : null
+                        }
+                        titleStyle={
+                            isWebAppLayout
+                                ? [
+                                      styles.webAppCardTitle,
+                                      { color: webAppTheme.title },
+                                  ]
+                                : null
+                        }
                     >
                         {t("qibla.manual.title")}
                     </CardTitle>
-                    <Text style={[styles.muted, isWebAppLayout ? styles.webAppMuted : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>
+                    <Text
+                        style={[
+                            styles.muted,
+                            isWebAppLayout ? styles.webAppMuted : null,
+                            isWebAppLayout
+                                ? { color: webAppTheme.muted }
+                                : null,
+                        ]}
+                    >
                         {t("qibla.manual.description")}
                     </Text>
                     <View style={styles.manualLocRow}>
@@ -433,18 +518,50 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                             keyboardType='decimal-pad'
                             onChangeText={setManualLatInput}
                             placeholder={t("qibla.manual.latPlaceholder")}
-                            placeholderTextColor={isWebAppLayout ? webAppTheme.muted : colors.muted}
+                            placeholderTextColor={
+                                isWebAppLayout
+                                    ? webAppTheme.muted
+                                    : colors.muted
+                            }
                             returnKeyType='next'
-                            style={[styles.manualLocInput, isWebAppLayout ? styles.webAppManualInput : null, isWebAppLayout ? { backgroundColor: webAppTheme.inputBg, borderColor: webAppTheme.inputBorder, color: webAppTheme.text } : null]}
+                            style={[
+                                styles.manualLocInput,
+                                isWebAppLayout
+                                    ? styles.webAppManualInput
+                                    : null,
+                                isWebAppLayout
+                                    ? {
+                                          backgroundColor: webAppTheme.inputBg,
+                                          borderColor: webAppTheme.inputBorder,
+                                          color: webAppTheme.text,
+                                      }
+                                    : null,
+                            ]}
                             value={manualLatInput}
                         />
                         <TextInput
                             keyboardType='decimal-pad'
                             onChangeText={setManualLngInput}
                             placeholder={t("qibla.manual.lngPlaceholder")}
-                            placeholderTextColor={isWebAppLayout ? webAppTheme.muted : colors.muted}
+                            placeholderTextColor={
+                                isWebAppLayout
+                                    ? webAppTheme.muted
+                                    : colors.muted
+                            }
                             returnKeyType='done'
-                            style={[styles.manualLocInput, isWebAppLayout ? styles.webAppManualInput : null, isWebAppLayout ? { backgroundColor: webAppTheme.inputBg, borderColor: webAppTheme.inputBorder, color: webAppTheme.text } : null]}
+                            style={[
+                                styles.manualLocInput,
+                                isWebAppLayout
+                                    ? styles.webAppManualInput
+                                    : null,
+                                isWebAppLayout
+                                    ? {
+                                          backgroundColor: webAppTheme.inputBg,
+                                          borderColor: webAppTheme.inputBorder,
+                                          color: webAppTheme.text,
+                                      }
+                                    : null,
+                            ]}
                             value={manualLngInput}
                         />
                     </View>
@@ -454,7 +571,9 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                         style={[
                             styles.button,
                             isWebAppLayout ? styles.webAppButton : null,
-                            isWebAppLayout ? { backgroundColor: webAppTheme.accent } : null,
+                            isWebAppLayout
+                                ? { backgroundColor: webAppTheme.accent }
+                                : null,
                             !manualLatInput || !manualLngInput
                                 ? styles.disabled
                                 : null,
@@ -471,22 +590,58 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                 style={[
                     styles.compassCard,
                     isWebAppLayout ? styles.webAppCompassPanel : null,
-                    isWebAppLayout ? { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border } : null,
+                    isWebAppLayout
+                        ? {
+                              backgroundColor: webAppTheme.surface,
+                              borderColor: webAppTheme.border,
+                          }
+                        : null,
                 ]}
             >
                 <CardTitle
                     meta={
-                        heading === null ? t("qibla.compass.northBearing") : t("qibla.compass.active")
+                        heading === null
+                            ? t("qibla.compass.northBearing")
+                            : t("qibla.compass.active")
                     }
-                    metaStyle={isWebAppLayout ? [styles.webAppCardMeta, { color: webAppTheme.accent }] : null}
-                    titleStyle={isWebAppLayout ? [styles.webAppCardTitle, { color: webAppTheme.title }] : null}
+                    metaStyle={
+                        isWebAppLayout
+                            ? [
+                                  styles.webAppCardMeta,
+                                  { color: webAppTheme.accent },
+                              ]
+                            : null
+                    }
+                    titleStyle={
+                        isWebAppLayout
+                            ? [
+                                  styles.webAppCardTitle,
+                                  { color: webAppTheme.title },
+                              ]
+                            : null
+                    }
                 >
                     {t("qibla.heading")}
                 </CardTitle>
                 {loading ? (
                     <View style={isWebAppLayout ? styles.webAppLoading : null}>
-                        <ActivityIndicator color={isWebAppLayout ? webAppTheme.accent : colors.primary} />
-                        {isWebAppLayout ? <Text style={[styles.webAppLoadingText, { color: webAppTheme.muted }]}>{t("qibla.loadingLocation")}</Text> : null}
+                        <ActivityIndicator
+                            color={
+                                isWebAppLayout
+                                    ? webAppTheme.accent
+                                    : colors.primary
+                            }
+                        />
+                        {isWebAppLayout ? (
+                            <Text
+                                style={[
+                                    styles.webAppLoadingText,
+                                    { color: webAppTheme.muted },
+                                ]}
+                            >
+                                {t("qibla.loadingLocation")}
+                            </Text>
+                        ) : null}
                     </View>
                 ) : !hasDirection ? (
                     <EmptyState
@@ -505,9 +660,7 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                                     Icon={MapPin}
                                     label={t("qibla.action.manualLocation")}
                                     onPress={() =>
-                                        setMessage(
-                                            t("qibla.manual.prompt"),
-                                        )
+                                        setMessage(t("qibla.manual.prompt"))
                                     }
                                 />
                             </View>
@@ -532,7 +685,13 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                             style={[
                                 styles.compass,
                                 isWebAppLayout ? styles.webAppCompass : null,
-                                isWebAppLayout ? { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.compassBorder } : null,
+                                isWebAppLayout
+                                    ? {
+                                          backgroundColor: webAppTheme.surface,
+                                          borderColor:
+                                              webAppTheme.compassBorder,
+                                      }
+                                    : null,
                                 {
                                     borderRadius: compassSize / 2,
                                     height: compassSize,
@@ -754,43 +913,186 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                         </View>
 
                         <View style={styles.directionSummary}>
-                            <Text style={[styles.degrees, isWebAppLayout ? styles.webAppDegrees : null, isWebAppLayout ? { color: webAppTheme.accent } : null]}>
+                            <Text
+                                style={[
+                                    styles.degrees,
+                                    isWebAppLayout
+                                        ? styles.webAppDegrees
+                                        : null,
+                                    isWebAppLayout
+                                        ? { color: webAppTheme.accent }
+                                        : null,
+                                ]}
+                            >
                                 {formatDegrees(direction ?? 0)}
                             </Text>
-                            <Text style={[styles.directionLabel, isWebAppLayout ? styles.webAppDirectionLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>
-                                {aligned ? t("qibla.direction.aligned") : t("qibla.direction.bearing")}
+                            <Text
+                                style={[
+                                    styles.directionLabel,
+                                    isWebAppLayout
+                                        ? styles.webAppDirectionLabel
+                                        : null,
+                                    isWebAppLayout
+                                        ? { color: webAppTheme.muted }
+                                        : null,
+                                ]}
+                            >
+                                {aligned
+                                    ? t("qibla.direction.aligned")
+                                    : t("qibla.direction.bearing")}
                             </Text>
                         </View>
-                        <Text style={[styles.muted, isWebAppLayout ? styles.webAppMuted : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>{guidanceText}</Text>
+                        <Text
+                            style={[
+                                styles.muted,
+                                isWebAppLayout ? styles.webAppMuted : null,
+                                isWebAppLayout
+                                    ? { color: webAppTheme.muted }
+                                    : null,
+                            ]}
+                        >
+                            {guidanceText}
+                        </Text>
                     </>
                 )}
             </Card>
 
             <View style={styles.metrics}>
-                <View style={[styles.metric, isWebAppLayout ? styles.webAppMetric : null, isWebAppLayout ? { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border } : null]}>
-                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>
-                        {isWebAppLayout ? t("qibla.metrics.distanceKaaba") : t("qibla.metrics.distance")}
+                <View
+                    style={[
+                        styles.metric,
+                        isWebAppLayout ? styles.webAppMetric : null,
+                        isWebAppLayout
+                            ? {
+                                  backgroundColor: webAppTheme.surface,
+                                  borderColor: webAppTheme.border,
+                              }
+                            : null,
+                    ]}
+                >
+                    <Text
+                        style={[
+                            styles.metricLabel,
+                            isWebAppLayout ? styles.webAppMetricLabel : null,
+                            isWebAppLayout
+                                ? { color: webAppTheme.muted }
+                                : null,
+                        ]}
+                    >
+                        {isWebAppLayout
+                            ? t("qibla.metrics.distanceKaaba")
+                            : t("qibla.metrics.distance")}
                     </Text>
-                    <Text style={[styles.metricValue, isWebAppLayout ? styles.webAppMetricValue : null, isWebAppLayout ? { color: webAppTheme.accent } : null]}>
+                    <Text
+                        style={[
+                            styles.metricValue,
+                            isWebAppLayout ? styles.webAppMetricValue : null,
+                            isWebAppLayout
+                                ? { color: webAppTheme.accent }
+                                : null,
+                        ]}
+                    >
                         {distance?.toLocaleString("en-US") ?? "-"}
                     </Text>
-                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>km</Text>
-                </View>
-                <View style={[styles.metric, isWebAppLayout ? styles.webAppMetric : null, isWebAppLayout ? { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border } : null]}>
-                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>
-                        {isWebAppLayout ? t("qibla.metrics.angle") : t("qibla.title.classic")}
+                    <Text
+                        style={[
+                            styles.metricLabel,
+                            isWebAppLayout ? styles.webAppMetricLabel : null,
+                            isWebAppLayout
+                                ? { color: webAppTheme.muted }
+                                : null,
+                        ]}
+                    >
+                        km
                     </Text>
-                    <Text style={[styles.metricValueSmall, isWebAppLayout ? styles.webAppMetricValueSmall : null, isWebAppLayout ? { color: webAppTheme.accent } : null]}>
+                </View>
+                <View
+                    style={[
+                        styles.metric,
+                        isWebAppLayout ? styles.webAppMetric : null,
+                        isWebAppLayout
+                            ? {
+                                  backgroundColor: webAppTheme.surface,
+                                  borderColor: webAppTheme.border,
+                              }
+                            : null,
+                    ]}
+                >
+                    <Text
+                        style={[
+                            styles.metricLabel,
+                            isWebAppLayout ? styles.webAppMetricLabel : null,
+                            isWebAppLayout
+                                ? { color: webAppTheme.muted }
+                                : null,
+                        ]}
+                    >
+                        {isWebAppLayout
+                            ? t("qibla.metrics.angle")
+                            : t("qibla.title.classic")}
+                    </Text>
+                    <Text
+                        style={[
+                            styles.metricValueSmall,
+                            isWebAppLayout
+                                ? styles.webAppMetricValueSmall
+                                : null,
+                            isWebAppLayout
+                                ? { color: webAppTheme.accent }
+                                : null,
+                        ]}
+                    >
                         {hasDirection ? formatDegrees(direction) : "-"}
                     </Text>
-                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>{t("qibla.metrics.trueNorth")}</Text>
+                    <Text
+                        style={[
+                            styles.metricLabel,
+                            isWebAppLayout ? styles.webAppMetricLabel : null,
+                            isWebAppLayout
+                                ? { color: webAppTheme.muted }
+                                : null,
+                        ]}
+                    >
+                        {t("qibla.metrics.trueNorth")}
+                    </Text>
                 </View>
             </View>
 
             <View style={styles.metrics}>
-                <View style={[styles.metric, isWebAppLayout ? styles.webAppMetric : null, isWebAppLayout ? { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border } : null]}>
-                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>{t("qibla.metrics.compass")}</Text>
-                    <Text style={[styles.metricValueSmall, isWebAppLayout ? styles.webAppMetricValueSmall : null, isWebAppLayout ? { color: webAppTheme.accent } : null]}>
+                <View
+                    style={[
+                        styles.metric,
+                        isWebAppLayout ? styles.webAppMetric : null,
+                        isWebAppLayout
+                            ? {
+                                  backgroundColor: webAppTheme.surface,
+                                  borderColor: webAppTheme.border,
+                              }
+                            : null,
+                    ]}
+                >
+                    <Text
+                        style={[
+                            styles.metricLabel,
+                            isWebAppLayout ? styles.webAppMetricLabel : null,
+                            isWebAppLayout
+                                ? { color: webAppTheme.muted }
+                                : null,
+                        ]}
+                    >
+                        {t("qibla.metrics.compass")}
+                    </Text>
+                    <Text
+                        style={[
+                            styles.metricValueSmall,
+                            isWebAppLayout
+                                ? styles.webAppMetricValueSmall
+                                : null,
+                            isWebAppLayout
+                                ? { color: webAppTheme.accent }
+                                : null,
+                        ]}
+                    >
                         {heading === null
                             ? hasCompass
                                 ? t("qibla.compass.calibrationShort")
@@ -798,9 +1100,40 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                             : formatDegrees(heading)}
                     </Text>
                 </View>
-                <View style={[styles.metric, isWebAppLayout ? styles.webAppMetric : null, isWebAppLayout ? { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border } : null]}>
-                    <Text style={[styles.metricLabel, isWebAppLayout ? styles.webAppMetricLabel : null, isWebAppLayout ? { color: webAppTheme.muted } : null]}>{t("qibla.metrics.location")}</Text>
-                    <Text style={[styles.metricValueSmall, isWebAppLayout ? styles.webAppMetricValueSmall : null, isWebAppLayout ? { color: webAppTheme.accent } : null]}>
+                <View
+                    style={[
+                        styles.metric,
+                        isWebAppLayout ? styles.webAppMetric : null,
+                        isWebAppLayout
+                            ? {
+                                  backgroundColor: webAppTheme.surface,
+                                  borderColor: webAppTheme.border,
+                              }
+                            : null,
+                    ]}
+                >
+                    <Text
+                        style={[
+                            styles.metricLabel,
+                            isWebAppLayout ? styles.webAppMetricLabel : null,
+                            isWebAppLayout
+                                ? { color: webAppTheme.muted }
+                                : null,
+                        ]}
+                    >
+                        {t("qibla.metrics.location")}
+                    </Text>
+                    <Text
+                        style={[
+                            styles.metricValueSmall,
+                            isWebAppLayout
+                                ? styles.webAppMetricValueSmall
+                                : null,
+                            isWebAppLayout
+                                ? { color: webAppTheme.accent }
+                                : null,
+                        ]}
+                    >
                         {coords
                             ? `${locationMode === "manual" ? t("qibla.location.manualPrefix") : ""}${coords.lat.toFixed(3)}, ${coords.lng.toFixed(3)}`
                             : "-"}
@@ -809,19 +1142,49 @@ export function QiblaScreen({ onBack, onOpenTab }) {
             </View>
 
             {isWebAppLayout && coords ? (
-                <View style={[styles.webAppLocationCard, { backgroundColor: webAppTheme.surface, borderColor: webAppTheme.border }]} testID="qibla-web-app-location-card">
+                <View
+                    style={[
+                        styles.webAppLocationCard,
+                        {
+                            backgroundColor: webAppTheme.surface,
+                            borderColor: webAppTheme.border,
+                        },
+                    ]}
+                    testID='qibla-web-app-location-card'
+                >
                     <View style={styles.webAppLocationTitleRow}>
-                        <MapPin color={webAppTheme.accent} size={16} strokeWidth={2.2} />
-                        <Text style={[styles.webAppLocationTitle, { color: webAppTheme.muted }]}>{t("qibla.location.yours")}</Text>
+                        <MapPin
+                            color={webAppTheme.accent}
+                            size={16}
+                            strokeWidth={2.2}
+                        />
+                        <Text
+                            style={[
+                                styles.webAppLocationTitle,
+                                { color: webAppTheme.muted },
+                            ]}
+                        >
+                            {t("qibla.location.yours")}
+                        </Text>
                     </View>
-                    <Text style={[styles.webAppLocationText, { color: webAppTheme.text }]}>
-                        {t("qibla.location.coordinates", { lat: coords.lat.toFixed(4), lng: coords.lng.toFixed(4) })}
+                    <Text
+                        style={[
+                            styles.webAppLocationText,
+                            { color: webAppTheme.text },
+                        ]}
+                    >
+                        {t("qibla.location.coordinates", {
+                            lat: coords.lat.toFixed(4),
+                            lng: coords.lng.toFixed(4),
+                        })}
                     </Text>
                 </View>
             ) : null}
 
             {isWebAppLayout ? (
-                <Text style={[styles.webAppGpsNote, { color: webAppTheme.note }]}>
+                <Text
+                    style={[styles.webAppGpsNote, { color: webAppTheme.note }]}
+                >
                     {t("qibla.gpsNote")}
                 </Text>
             ) : null}

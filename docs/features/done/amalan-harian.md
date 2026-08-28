@@ -30,25 +30,27 @@ Checklist amalan sunnah harian. Membantu pengguna melacak dan membiasakan amalan
 ### API Response Shape
 
 **`GET /amalan`**
+
 ```json
 [
-  {
-    "id": 1,
-    "name": "Sholat Dhuha",
-    "description": "Sholat sunnah 2 rakaat",
-    "category": "sholat",
-    "is_active": true,
-    "translation": { "idn": "Sholat Dhuha", "en": "Duha Prayer" },
-    "is_done": true,
-    "log_id": 1
-  }
+    {
+        "id": 1,
+        "name": "Sholat Dhuha",
+        "description": "Sholat sunnah 2 rakaat",
+        "category": "sholat",
+        "is_active": true,
+        "translation": { "idn": "Sholat Dhuha", "en": "Duha Prayer" },
+        "is_done": true,
+        "log_id": 1
+    }
 ]
 ```
 
 **`POST /amalan/{id}/toggle`**
+
 ```json
 {
-  "date": "2026-05-13"
+    "date": "2026-05-13"
 }
 ```
 
@@ -62,7 +64,7 @@ Checklist amalan sunnah harian. Membantu pengguna melacak dan membiasakan amalan
 | `description` | string | Explanation text |
 | `category` | AmalanCategory | sholat, puasa, dzikir, sedekah, lainnya |
 | `is_active` | bool | Whether the item is currently trackable |
-| `translation_id` | *int | FK to Translation |
+| `translation_id` | \*int | FK to Translation |
 
 **`AmalanLog`** (`model/amalan.go`)
 | Field | Type | Notes |

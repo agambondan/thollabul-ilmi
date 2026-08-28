@@ -31,21 +31,25 @@ Sebab-sebab turun ayat, terkait langsung dengan tafsir.
 ### API Response Shape
 
 **`GET /asbabun-nuzul?byAyah=1`**
+
 ```json
 [
-  {
-    "id": 1,
-    "title": "Turunnya Surat Al-Fatihah",
-    "narrator": "Ibnu Abbas",
-    "content": "Riwayat tentang turunnya surat Al-Fatihah...",
-    "source": "HR. Tirmidzi",
-    "display_ref": "QS. 1:1-7",
-    "translation": { "idn": "Sebab turun...", "en": "Reason for revelation..." },
-    "ayahs": [
-      { "id": 1, "number": 1, "surah_id": 1 },
-      { "id": 7, "number": 7, "surah_id": 1 }
-    ]
-  }
+    {
+        "id": 1,
+        "title": "Turunnya Surat Al-Fatihah",
+        "narrator": "Ibnu Abbas",
+        "content": "Riwayat tentang turunnya surat Al-Fatihah...",
+        "source": "HR. Tirmidzi",
+        "display_ref": "QS. 1:1-7",
+        "translation": {
+            "idn": "Sebab turun...",
+            "en": "Reason for revelation..."
+        },
+        "ayahs": [
+            { "id": 1, "number": 1, "surah_id": 1 },
+            { "id": 7, "number": 7, "surah_id": 1 }
+        ]
+    }
 ]
 ```
 
@@ -60,7 +64,7 @@ Sebab-sebab turun ayat, terkait langsung dengan tafsir.
 | `content` | string | Full narration text |
 | `source` | string | Source book reference |
 | `display_ref` | string | Readable ayah range |
-| `translation_id` | *int | FK to Translation |
+| `translation_id` | \*int | FK to Translation |
 | `ayahs` | []Ayah | Many-to-many with Ayah |
 
 ### Key Frontend Components

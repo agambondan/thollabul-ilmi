@@ -31,24 +31,30 @@ Jadwal imsak/fajr/maghrib sebulan Ramadan.
 ### API Response Shape
 
 **`GET /imsakiyah?year=2026&month=3&lat=-6.2&lng=106.8&method=kemenag&madhab=shafi`**
+
 ```json
 {
-  "year": 2026,
-  "month": 3,
-  "lat": -6.2,
-  "lng": 106.8,
-  "method": "kemenag",
-  "madhab": "shafi",
-  "schedule": [
-    {
-      "date": "2026-03-01",
-      "hijri": "12 Ramadhan 1447",
-      "prayers": {
-        "imsak": "04:28", "fajr": "04:38", "sunrise": "05:53",
-        "dhuhr": "11:43", "asr": "14:58", "maghrib": "17:33", "isha": "18:48"
-      }
-    }
-  ]
+    "year": 2026,
+    "month": 3,
+    "lat": -6.2,
+    "lng": 106.8,
+    "method": "kemenag",
+    "madhab": "shafi",
+    "schedule": [
+        {
+            "date": "2026-03-01",
+            "hijri": "12 Ramadhan 1447",
+            "prayers": {
+                "imsak": "04:28",
+                "fajr": "04:38",
+                "sunrise": "05:53",
+                "dhuhr": "11:43",
+                "asr": "14:58",
+                "maghrib": "17:33",
+                "isha": "18:48"
+            }
+        }
+    ]
 }
 ```
 
@@ -65,10 +71,10 @@ Jadwal imsak/fajr/maghrib sebulan Ramadan.
 | `madhab` | string | Fiqh madhab |
 | `schedule` | []ImsakiyahRow | Daily rows for the month |
 
-| Row Field | Type | Notes |
-|-----------|------|-------|
-| `date` | string | YYYY-MM-DD gregorian |
-| `hijri` | string | Hijri date string |
+| Row Field | Type       | Notes                                                                       |
+| --------- | ---------- | --------------------------------------------------------------------------- |
+| `date`    | string     | YYYY-MM-DD gregorian                                                        |
+| `hijri`   | string     | Hijri date string                                                           |
 | `prayers` | PrayerTime | Same shape as prayer-times: imsak, fajr, sunrise, dhuhr, asr, maghrib, isha |
 
 ### Key Frontend Components

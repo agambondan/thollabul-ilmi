@@ -1,5 +1,6 @@
 const pickText = (...values) =>
-    values.find((value) => typeof value === 'string' && value.trim())?.trim() ?? '';
+    values.find((value) => typeof value === "string" && value.trim())?.trim() ??
+    "";
 
 export const getTafsirAyahNumber = (entry = {}) =>
     entry.ayah?.number ?? entry.ayah_number ?? entry.number ?? null;
@@ -13,12 +14,22 @@ export const getTafsirArabic = (entry = {}) =>
         entry.arab,
     );
 
-export const getTafsirTranslation = (entry = {}, lang = 'ID') => {
+export const getTafsirTranslation = (entry = {}, lang = "ID") => {
     const ayahTranslation = entry.ayah?.translation ?? {};
-    if (lang === 'EN') {
-        return pickText(ayahTranslation.en, entry.translation?.en, ayahTranslation.idn, entry.translation?.idn);
+    if (lang === "EN") {
+        return pickText(
+            ayahTranslation.en,
+            entry.translation?.en,
+            ayahTranslation.idn,
+            entry.translation?.idn,
+        );
     }
-    return pickText(ayahTranslation.idn, entry.translation?.idn, ayahTranslation.en, entry.translation?.en);
+    return pickText(
+        ayahTranslation.idn,
+        entry.translation?.idn,
+        ayahTranslation.en,
+        entry.translation?.en,
+    );
 };
 
 export const getTafsirPrimary = (entry = {}) =>

@@ -26,13 +26,13 @@ Paket offline berbasis SQLite untuk mobile: Quran, Hadith, Doa, Dzikir, dan jadw
 
 ### Data Packs (No API — Sideloaded SQLite)
 
-| Pack | Contents | File Size Estimate |
-|------|----------|-------------------|
-| **Quran** | Full mushaf text (Arabic), per-ayah translation IDN/EN, juz mapping | ~15 MB |
-| **Hadith** | Bukhari + Muslim matan terjemah, limited to ~5000 hadith | ~20 MB |
-| **Doa** | All doa categories: arabic, transliteration, meaning, source | ~2 MB |
-| **Dzikir** | All dzikir categories with fadhilah and audio references | ~1 MB |
-| **Prayer Times** | 30-day schedule pre-calculated for major Indonesian cities | ~0.5 MB |
+| Pack             | Contents                                                            | File Size Estimate |
+| ---------------- | ------------------------------------------------------------------- | ------------------ |
+| **Quran**        | Full mushaf text (Arabic), per-ayah translation IDN/EN, juz mapping | ~15 MB             |
+| **Hadith**       | Bukhari + Muslim matan terjemah, limited to ~5000 hadith            | ~20 MB             |
+| **Doa**          | All doa categories: arabic, transliteration, meaning, source        | ~2 MB              |
+| **Dzikir**       | All dzikir categories with fadhilah and audio references            | ~1 MB              |
+| **Prayer Times** | 30-day schedule pre-calculated for major Indonesian cities          | ~0.5 MB            |
 
 ### Key Frontend Components
 

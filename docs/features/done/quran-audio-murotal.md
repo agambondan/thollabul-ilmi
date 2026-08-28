@@ -33,30 +33,32 @@ Audio murotal per ayat dari multiple qori', streaming via API.
 ### API Response Shape
 
 **`GET /audio?bySurah=1&qari=misyari`**
+
 ```json
 {
-  "surah_audio": {
-    "id": 1,
-    "surah_id": 1,
-    "qari_name": "Misyari Rasyid",
-    "qari_slug": "misyari",
-    "audio_url": "https://.../001.mp3",
-    "surah": { "id": 1, "number": 1 }
-  }
+    "surah_audio": {
+        "id": 1,
+        "surah_id": 1,
+        "qari_name": "Misyari Rasyid",
+        "qari_slug": "misyari",
+        "audio_url": "https://.../001.mp3",
+        "surah": { "id": 1, "number": 1 }
+    }
 }
 ```
 
 **`GET /audio?byAyah=1&qari=misyari`**
+
 ```json
 {
-  "ayah_audio": {
-    "id": 1,
-    "ayah_id": 1,
-    "qari_name": "Misyari Rasyid",
-    "qari_slug": "misyari",
-    "audio_url": "https://.../001001.mp3",
-    "ayah": { "id": 1, "number": 1 }
-  }
+    "ayah_audio": {
+        "id": 1,
+        "ayah_id": 1,
+        "qari_name": "Misyari Rasyid",
+        "qari_slug": "misyari",
+        "audio_url": "https://.../001001.mp3",
+        "ayah": { "id": 1, "number": 1 }
+    }
 }
 ```
 
@@ -66,7 +68,7 @@ Audio murotal per ayat dari multiple qori', streaming via API.
 | Field | Type | Notes |
 |-------|------|-------|
 | `id` | int64 (BaseID) | Primary key |
-| `surah_id` | *int | FK to Surah; unique with qari_slug |
+| `surah_id` | \*int | FK to Surah; unique with qari_slug |
 | `qari_name` | string | Qari display name |
 | `qari_slug` | string | URL-safe qari identifier |
 | `audio_url` | string | Full surah audio URL |
@@ -75,7 +77,7 @@ Audio murotal per ayat dari multiple qori', streaming via API.
 | Field | Type | Notes |
 |-------|------|-------|
 | `id` | int64 (BaseID) | Primary key |
-| `ayah_id` | *int | FK to Ayah; unique with qari_slug |
+| `ayah_id` | \*int | FK to Ayah; unique with qari_slug |
 | `qari_name` | string | Qari display name |
 | `qari_slug` | string | URL-safe qari identifier |
 | `audio_url` | string | Per-ayah audio URL |

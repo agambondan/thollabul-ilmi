@@ -31,44 +31,42 @@ Pencarian full-text di seluruh konten (Quran, Hadith, Doa, dll) dengan filter.
 ### API Response Shape
 
 **`GET /search?q=rahman&type=all`**
+
 ```json
 {
-  "ayahs": [
-    { "id": 1, "number": 1, "surah_id": 1, "translation": { "ar": "...", "idn": "..." } }
-  ],
-  "ayah_total": 10,
-  "hadiths": [
-    { "id": 1, "number": 1, "book_id": 1, "translation": { "idn": "..." } }
-  ],
-  "hadith_total": 5,
-  "dictionaries": [
-    { "id": 1, "term": "Rahman", "definition": "..." }
-  ],
-  "dictionary_total": 2,
-  "doas": [
-    { "id": 1, "category": "umum", "translation": { "idn": "..." } }
-  ],
-  "doa_total": 3,
-  "kajians": [
-    { "id": 1, "title": "Kajian...", "speaker": "Ustadz..." }
-  ],
-  "kajian_total": 4,
-  "perawis": [
-    { "id": 1, "nama_latin": "Abu Hurairah" }
-  ],
-  "perawi_total": 1,
-  "total": 25
+    "ayahs": [
+        {
+            "id": 1,
+            "number": 1,
+            "surah_id": 1,
+            "translation": { "ar": "...", "idn": "..." }
+        }
+    ],
+    "ayah_total": 10,
+    "hadiths": [
+        { "id": 1, "number": 1, "book_id": 1, "translation": { "idn": "..." } }
+    ],
+    "hadith_total": 5,
+    "dictionaries": [{ "id": 1, "term": "Rahman", "definition": "..." }],
+    "dictionary_total": 2,
+    "doas": [{ "id": 1, "category": "umum", "translation": { "idn": "..." } }],
+    "doa_total": 3,
+    "kajians": [{ "id": 1, "title": "Kajian...", "speaker": "Ustadz..." }],
+    "kajian_total": 4,
+    "perawis": [{ "id": 1, "nama_latin": "Abu Hurairah" }],
+    "perawi_total": 1,
+    "total": 25
 }
 ```
 
 ### API Parameters
 
-| Param | Type | Default | Notes |
-|-------|------|---------|-------|
-| `q` | string | required | Search query |
-| `type` | string | "all" | Filter: ayah, hadith, dictionary, doa, kajian, perawi, or all |
-| `limit` | int | 20 | Results per page (max 100) |
-| `page` | int | 0 | Page offset (0-indexed) |
+| Param   | Type   | Default  | Notes                                                         |
+| ------- | ------ | -------- | ------------------------------------------------------------- |
+| `q`     | string | required | Search query                                                  |
+| `type`  | string | "all"    | Filter: ayah, hadith, dictionary, doa, kajian, perawi, or all |
+| `limit` | int    | 20       | Results per page (max 100)                                    |
+| `page`  | int    | 0        | Page offset (0-indexed)                                       |
 
 ### Database Model
 

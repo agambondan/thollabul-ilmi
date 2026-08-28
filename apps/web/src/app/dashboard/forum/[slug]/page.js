@@ -1,4 +1,4 @@
-import { ForumDetailContent } from '@/app/forum/[slug]/page';
+import { ForumDetailContent } from "@/app/forum/[slug]/page";
 
 export default async function DashboardForumDetailPage(props) {
     const params = await props.params;

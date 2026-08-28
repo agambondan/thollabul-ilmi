@@ -31,34 +31,36 @@ Konversi Masehi-Hijriah, tanggal hari ini, event Islam.
 ### API Response Shape
 
 **`GET /hijri/today`**
+
 ```json
 {
-  "year": 1447,
-  "month": 8,
-  "day": 15,
-  "month_name": "Sya'ban",
-  "year_str": "1447 H",
-  "date_str": "15 Sya'ban 1447 H",
-  "gregorian_year": 2026,
-  "gregorian_month": 5,
-  "gregorian_day": 13
+    "year": 1447,
+    "month": 8,
+    "day": 15,
+    "month_name": "Sya'ban",
+    "year_str": "1447 H",
+    "date_str": "15 Sya'ban 1447 H",
+    "gregorian_year": 2026,
+    "gregorian_month": 5,
+    "gregorian_day": 13
 }
 ```
 
 **`GET /hijri/events?month=9`**
+
 ```json
 [
-  {
-    "id": 1,
-    "hijri_month": 9,
-    "hijri_day": 1,
-    "category": "puasa|eid|peristiwa",
-    "translation": {
-      "idn": "Awal Ramadhan",
-      "en": "Beginning of Ramadan",
-      "ar": "أول رمضان"
+    {
+        "id": 1,
+        "hijri_month": 9,
+        "hijri_day": 1,
+        "category": "puasa|eid|peristiwa",
+        "translation": {
+            "idn": "Awal Ramadhan",
+            "en": "Beginning of Ramadan",
+            "ar": "أول رمضان"
+        }
     }
-  }
 ]
 ```
 
@@ -84,7 +86,7 @@ Konversi Masehi-Hijriah, tanggal hari ini, event Islam.
 | `hijri_month` | int | Month this event falls in |
 | `hijri_day` | int | Day this event falls on |
 | `category` | IslamicEventCategory | puasa, eid, peristiwa |
-| `translation_id` | *int | FK to Translation (name + description) |
+| `translation_id` | \*int | FK to Translation (name + description) |
 
 ### Key Frontend Components
 

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { useLocale } from '@/context/Locale';
-import { audioApi, quranApi } from '@/lib/api';
-import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useLocale } from "@/context/Locale";
+import { audioApi, quranApi } from "@/lib/api";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import {
     BsChevronDown,
     BsChevronUp,
@@ -14,64 +14,64 @@ import {
     BsSkipForwardFill,
     BsVolumeUpFill,
     BsX,
-} from 'react-icons/bs';
+} from "react-icons/bs";
 
 const AUDIO_SPEED_OPTIONS = [0.75, 1, 1.25, 1.5, 2];
-const AUDIO_PREF_KEY = 'tholabul:quran-audio-web';
-const DEFAULT_QARI = 'mishary-rashid-alafasy';
+const AUDIO_PREF_KEY = "tholabul:quran-audio-web";
+const DEFAULT_QARI = "mishary-rashid-alafasy";
 const MIN_SURAH_NUMBER = 1;
 const MAX_SURAH_NUMBER = 114;
 
 const QARI_CATALOG = {
-    'mishary-rashid-alafasy': {
-        name: 'Mishary Rashid Al-Afasy',
-        country: 'Kuwait',
-        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Mishary_bin_Rashid_Al-Afasy.jpg/220px-Mishary_bin_Rashid_Al-Afasy.jpg',
+    "mishary-rashid-alafasy": {
+        name: "Mishary Rashid Al-Afasy",
+        country: "Kuwait",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Mishary_bin_Rashid_Al-Afasy.jpg/220px-Mishary_bin_Rashid_Al-Afasy.jpg",
     },
-    'abdurrahman-as-sudais': {
-        name: 'Abdurrahman As-Sudais',
-        country: 'Arab Saudi',
-        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Abdul_Rahman_Al-Sudais.jpg/220px-Abdul_Rahman_Al-Sudais.jpg',
+    "abdurrahman-as-sudais": {
+        name: "Abdurrahman As-Sudais",
+        country: "Arab Saudi",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Abdul_Rahman_Al-Sudais.jpg/220px-Abdul_Rahman_Al-Sudais.jpg",
     },
-    'abdul-basit': {
-        name: 'Abdul Basit Abdul Samad',
-        country: 'Mesir',
-        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Abdul_Basit_Abdul_Samad.jpg/220px-Abdul_Basit_Abdul_Samad.jpg',
+    "abdul-basit": {
+        name: "Abdul Basit Abdul Samad",
+        country: "Mesir",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Abdul_Basit_Abdul_Samad.jpg/220px-Abdul_Basit_Abdul_Samad.jpg",
     },
-    'saad-al-ghamidi': {
+    "saad-al-ghamidi": {
         name: "Sa'ad Al-Ghamidi",
-        country: 'Arab Saudi',
-        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Saad_Al-Ghamidi.jpg/220px-Saad_Al-Ghamidi.jpg',
+        country: "Arab Saudi",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Saad_Al-Ghamidi.jpg/220px-Saad_Al-Ghamidi.jpg",
     },
-    'yasser-al-dosari': {
-        name: 'Yasser Al-Dosari',
-        country: 'Arab Saudi',
-        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Yasser_Al-Dosari.jpg/220px-Yasser_Al-Dosari.jpg',
+    "yasser-al-dosari": {
+        name: "Yasser Al-Dosari",
+        country: "Arab Saudi",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Yasser_Al-Dosari.jpg/220px-Yasser_Al-Dosari.jpg",
     },
-    'maher-al-muaiqly': {
-        name: 'Maher Al-Muaiqly',
-        country: 'Arab Saudi',
-        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Maher_Al-Muaiqly.jpg/220px-Maher_Al-Muaiqly.jpg',
+    "maher-al-muaiqly": {
+        name: "Maher Al-Muaiqly",
+        country: "Arab Saudi",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Maher_Al-Muaiqly.jpg/220px-Maher_Al-Muaiqly.jpg",
     },
-    'hani-ar-rifai': {
-        name: 'Hani Ar-Rifai',
-        country: 'Arab Saudi',
-        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Hani_Ar-Rifai.jpg/220px-Hani_Ar-Rifai.jpg',
+    "hani-ar-rifai": {
+        name: "Hani Ar-Rifai",
+        country: "Arab Saudi",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Hani_Ar-Rifai.jpg/220px-Hani_Ar-Rifai.jpg",
     },
-    'salah-bukhatir': {
-        name: 'Salah Bukhatir',
-        country: 'Arab Saudi',
-        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Salah_Bukhatir.jpg/220px-Salah_Bukhatir.jpg',
+    "salah-bukhatir": {
+        name: "Salah Bukhatir",
+        country: "Arab Saudi",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Salah_Bukhatir.jpg/220px-Salah_Bukhatir.jpg",
     },
-    'abdullah-al-juhany': {
-        name: 'Abdullah Al-Juhany',
-        country: 'Arab Saudi',
-        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Abdullah_Al-Juhany.jpg/220px-Abdullah_Al-Juhany.jpg',
+    "abdullah-al-juhany": {
+        name: "Abdullah Al-Juhany",
+        country: "Arab Saudi",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Abdullah_Al-Juhany.jpg/220px-Abdullah_Al-Juhany.jpg",
     },
-    'ali-al-hudhaify': {
-        name: 'Ali Abdurrahman Al-Hudhaify',
-        country: 'Yaman',
-        photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Ali_Al-Hudhaify.jpg/220px-Ali_Al-Hudhaify.jpg',
+    "ali-al-hudhaify": {
+        name: "Ali Abdurrahman Al-Hudhaify",
+        country: "Yaman",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Ali_Al-Hudhaify.jpg/220px-Ali_Al-Hudhaify.jpg",
     },
 };
 
@@ -79,15 +79,19 @@ const QARI_FALLBACK_AVATAR =
     'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="%2310b981"/><text x="50%25" y="55%25" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" fill="white">Q</text></svg>';
 
 const getQariInfo = (slug) =>
-    QARI_CATALOG[slug] || { name: slug, country: '', photo: QARI_FALLBACK_AVATAR };
+    QARI_CATALOG[slug] || {
+        name: slug,
+        country: "",
+        photo: QARI_FALLBACK_AVATAR,
+    };
 
 const getQariInitials = (name) =>
     name
         .split(/\s+/)
         .filter(Boolean)
         .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase() ?? '')
-        .join('') || 'Q';
+        .map((part) => part[0]?.toUpperCase() ?? "")
+        .join("") || "Q";
 
 const normalizeItems = (payload) => {
     if (Array.isArray(payload)) return payload;
@@ -99,12 +103,14 @@ const normalizeItems = (payload) => {
 };
 
 const toPositiveInt = (value) => {
-    const numeric = Number.parseInt(`${value ?? ''}`, 10);
+    const numeric = Number.parseInt(`${value ?? ""}`, 10);
     return Number.isFinite(numeric) && numeric > 0 ? numeric : null;
 };
 
 const isValidSurahNumber = (value) =>
-    Number.isInteger(value) && value >= MIN_SURAH_NUMBER && value <= MAX_SURAH_NUMBER;
+    Number.isInteger(value) &&
+    value >= MIN_SURAH_NUMBER &&
+    value <= MAX_SURAH_NUMBER;
 
 const clampSpeed = (value) => {
     const numeric = Number(value);
@@ -115,8 +121,16 @@ const clampSpeed = (value) => {
 const normalizeAyah = (item, surahNumber) => ({
     id: item?.id,
     number: Number(item?.number ?? item?.ayah_number ?? item?.ayahNumber),
-    surahName: item?.surah?.translation?.latin_en ?? item?.surah_name ?? item?.surahName,
-    surahNumber: Number(item?.surah?.number ?? item?.surah_number ?? item?.surahNumber ?? surahNumber),
+    surahName:
+        item?.surah?.translation?.latin_en ??
+        item?.surah_name ??
+        item?.surahName,
+    surahNumber: Number(
+        item?.surah?.number ??
+            item?.surah_number ??
+            item?.surahNumber ??
+            surahNumber,
+    ),
 });
 
 export default function SurahAudioPlayer({
@@ -136,8 +150,8 @@ export default function SurahAudioPlayer({
     const qariRef = useRef(DEFAULT_QARI);
 
     const [audioList, setAudioList] = useState([]);
-    const [currentLabel, setCurrentLabel] = useState('');
-    const [error, setError] = useState('');
+    const [currentLabel, setCurrentLabel] = useState("");
+    const [error, setError] = useState("");
     const [isPlaying, setIsPlaying] = useState(false);
     const [loading, setLoading] = useState(false);
     const [minimized, setMinimized] = useState(false);
@@ -145,9 +159,9 @@ export default function SurahAudioPlayer({
     const [queueIndex, setQueueIndex] = useState(0);
     const [queueLength, setQueueLength] = useState(0);
     const [range, setRange] = useState({
-        endAyah: '',
-        endSurah: `${surahNumber ?? ''}`,
-        startSurah: `${surahNumber ?? ''}`,
+        endAyah: "",
+        endSurah: `${surahNumber ?? ""}`,
+        startSurah: `${surahNumber ?? ""}`,
     });
     const [repeat, setRepeat] = useState(false);
     const [selectedQari, setSelectedQari] = useState(DEFAULT_QARI);
@@ -159,14 +173,16 @@ export default function SurahAudioPlayer({
     };
 
     useEffect(() => {
-        if (typeof window === 'undefined') return;
+        if (typeof window === "undefined") return;
         try {
-            const stored = JSON.parse(localStorage.getItem(AUDIO_PREF_KEY) || '{}');
-            if (typeof stored.qari === 'string') {
+            const stored = JSON.parse(
+                localStorage.getItem(AUDIO_PREF_KEY) || "{}",
+            );
+            if (typeof stored.qari === "string") {
                 setSelectedQari(stored.qari);
                 qariRef.current = stored.qari;
             }
-            if (typeof stored.repeat === 'boolean') {
+            if (typeof stored.repeat === "boolean") {
                 setRepeat(stored.repeat);
                 repeatRef.current = stored.repeat;
             }
@@ -175,7 +191,7 @@ export default function SurahAudioPlayer({
                 setSpeed(nextSpeed);
                 speedRef.current = nextSpeed;
             }
-            if (stored.range && typeof stored.range === 'object') {
+            if (stored.range && typeof stored.range === "object") {
                 setRange((current) => ({
                     ...current,
                     endAyah: `${stored.range.endAyah ?? current.endAyah}`,
@@ -197,8 +213,8 @@ export default function SurahAudioPlayer({
     useEffect(() => {
         setRange((current) => ({
             ...current,
-            endSurah: current.endSurah || `${surahNumber ?? ''}`,
-            startSurah: current.startSurah || `${surahNumber ?? ''}`,
+            endSurah: current.endSurah || `${surahNumber ?? ""}`,
+            startSurah: current.startSurah || `${surahNumber ?? ""}`,
         }));
     }, [surahNumber]);
 
@@ -206,35 +222,42 @@ export default function SurahAudioPlayer({
         if (!surahNumber || !open) return;
         let active = true;
         setLoading(true);
-        setError('');
+        setError("");
         const loadQariOptions = async () => {
             const ayahRes = await quranApi.bySurahPage(surahNumber, 0, 1);
-            if (!ayahRes.ok) throw new Error('ayah');
+            if (!ayahRes.ok) throw new Error("ayah");
             const firstAyah = normalizeItems(await ayahRes.json())
                 .map((item) => normalizeAyah(item, surahNumber))
                 .find((ayah) => ayah.id);
-            if (!firstAyah?.id) throw new Error('ayah');
+            if (!firstAyah?.id) throw new Error("ayah");
 
             const audioRes = await audioApi.byAyah(firstAyah.id);
-            if (!audioRes.ok) throw new Error('audio');
-            const items = normalizeItems(await audioRes.json()).filter((item) => item.audio_url);
+            if (!audioRes.ok) throw new Error("audio");
+            const items = normalizeItems(await audioRes.json()).filter(
+                (item) => item.audio_url,
+            );
             if (items.length) return items;
 
             const surahRes = await audioApi.bySurah(surahNumber);
-            if (!surahRes.ok) throw new Error('surah-audio');
-            return normalizeItems(await surahRes.json()).filter((item) => item.audio_url);
+            if (!surahRes.ok) throw new Error("surah-audio");
+            return normalizeItems(await surahRes.json()).filter(
+                (item) => item.audio_url,
+            );
         };
 
         loadQariOptions()
             .then((items) => {
                 if (!active) return;
                 setAudioList(items);
-                if (items.length && !items.some((item) => item.qari_slug === qariRef.current)) {
+                if (
+                    items.length &&
+                    !items.some((item) => item.qari_slug === qariRef.current)
+                ) {
                     setSelectedQari(items[0].qari_slug);
                     qariRef.current = items[0].qari_slug;
                 }
             })
-            .catch(() => setError('Gagal memuat audio.'))
+            .catch(() => setError("Gagal memuat audio."))
             .finally(() => {
                 if (active) setLoading(false);
             });
@@ -255,14 +278,14 @@ export default function SurahAudioPlayer({
     useEffect(() => {
         stopPlayback({ keepOpen: true });
         setRange({
-            endAyah: '',
-            endSurah: `${surahNumber ?? ''}`,
-            startSurah: `${surahNumber ?? ''}`,
+            endAyah: "",
+            endSurah: `${surahNumber ?? ""}`,
+            startSurah: `${surahNumber ?? ""}`,
         });
     }, [surahNumber]);
 
     const persistPreferences = (next = {}) => {
-        if (typeof window === 'undefined') return;
+        if (typeof window === "undefined") return;
         const payload = {
             qari: qariRef.current,
             range,
@@ -284,7 +307,7 @@ export default function SurahAudioPlayer({
             audioRef.current.currentTime = 0;
             audioRef.current = null;
         }
-        setCurrentLabel('');
+        setCurrentLabel("");
         setIsPlaying(false);
         setLoading(false);
         if (!keepOpen) {
@@ -294,31 +317,49 @@ export default function SurahAudioPlayer({
     };
 
     const getAyahSources = async (ayah) => {
-        if (sourceCacheRef.current[ayah.id]) return sourceCacheRef.current[ayah.id];
+        if (sourceCacheRef.current[ayah.id])
+            return sourceCacheRef.current[ayah.id];
         const res = await audioApi.byAyah(ayah.id);
-        if (!res.ok) throw new Error('audio');
-        const items = normalizeItems(await res.json()).filter((item) => item.audio_url);
-        sourceCacheRef.current = { ...sourceCacheRef.current, [ayah.id]: items };
+        if (!res.ok) throw new Error("audio");
+        const items = normalizeItems(await res.json()).filter(
+            (item) => item.audio_url,
+        );
+        sourceCacheRef.current = {
+            ...sourceCacheRef.current,
+            [ayah.id]: items,
+        };
         return items;
     };
 
     const buildAudioCandidates = (sources) => {
-        const selected = sources.find((item) => item.qari_slug === qariRef.current);
+        const selected = sources.find(
+            (item) => item.qari_slug === qariRef.current,
+        );
         return [
             ...(selected ? [selected] : []),
-            ...sources.filter((item) => item.audio_url && item.qari_slug !== selected?.qari_slug),
+            ...sources.filter(
+                (item) =>
+                    item.audio_url && item.qari_slug !== selected?.qari_slug,
+            ),
         ];
     };
 
     const fetchRangeQueue = async ({ endAyah, endSurah, startSurah }) => {
         const nextQueue = [];
-        for (let currentSurah = startSurah; currentSurah <= endSurah; currentSurah += 1) {
+        for (
+            let currentSurah = startSurah;
+            currentSurah <= endSurah;
+            currentSurah += 1
+        ) {
             const res = await quranApi.bySurahPage(currentSurah, 0, 300);
-            if (!res.ok) throw new Error('ayah');
+            if (!res.ok) throw new Error("ayah");
             const ayahs = normalizeItems(await res.json())
                 .map((item) => normalizeAyah(item, currentSurah))
                 .filter((ayah) => ayah.id && Number.isFinite(ayah.number));
-            const lastAyah = currentSurah === endSurah && endAyah ? endAyah : Number.POSITIVE_INFINITY;
+            const lastAyah =
+                currentSurah === endSurah && endAyah
+                    ? endAyah
+                    : Number.POSITIVE_INFINITY;
             nextQueue.push(...ayahs.filter((ayah) => ayah.number <= lastAyah));
         }
         return nextQueue;
@@ -327,11 +368,14 @@ export default function SurahAudioPlayer({
     const playQueueItem = async (index, sessionId) => {
         if (sessionId !== sessionRef.current) return;
         const queue = queueRef.current;
-        const nextIndex = index >= queue.length && repeatRef.current && queue.length ? 0 : index;
+        const nextIndex =
+            index >= queue.length && repeatRef.current && queue.length
+                ? 0
+                : index;
         const ayah = queue[nextIndex];
 
         if (!ayah) {
-            setCurrentLabel('');
+            setCurrentLabel("");
             setIsPlaying(false);
             setLoading(false);
             return;
@@ -339,9 +383,11 @@ export default function SurahAudioPlayer({
 
         queueIndexRef.current = nextIndex;
         setQueueIndex(nextIndex);
-        setCurrentLabel(`${ayah.surahName || `Surah ${ayah.surahNumber}`} · Ayat ${ayah.number}`);
+        setCurrentLabel(
+            `${ayah.surahName || `Surah ${ayah.surahNumber}`} · Ayat ${ayah.number}`,
+        );
         setLoading(true);
-        setError('');
+        setError("");
 
         try {
             const sources = await getAyahSources(ayah);
@@ -364,13 +410,19 @@ export default function SurahAudioPlayer({
                 const audio = new Audio(source.audio_url);
                 let movedToNextCandidate = false;
                 const tryNextCandidate = async () => {
-                    if (movedToNextCandidate || sessionId !== sessionRef.current) return;
+                    if (
+                        movedToNextCandidate ||
+                        sessionId !== sessionRef.current
+                    )
+                        return;
                     movedToNextCandidate = true;
                     if (audioRef.current === audio) {
                         audioRef.current = null;
                     }
                     if (candidateIndex + 1 < candidates.length) {
-                        setError('Audio qari ini belum tersedia, mencoba qari lain.');
+                        setError(
+                            "Audio qari ini belum tersedia, mencoba qari lain.",
+                        );
                         await playCandidate(candidateIndex + 1);
                         return;
                     }
@@ -386,7 +438,7 @@ export default function SurahAudioPlayer({
                 try {
                     await audio.play();
                     setLoading(false);
-                    setError('');
+                    setError("");
                     setIsPlaying(true);
                 } catch {
                     await tryNextCandidate();
@@ -396,7 +448,7 @@ export default function SurahAudioPlayer({
             await playCandidate(0);
         } catch {
             if (sessionId !== sessionRef.current) return;
-            setError(t('audio.play_error') ?? 'Tidak dapat memutar audio.');
+            setError(t("audio.play_error") ?? "Tidak dapat memutar audio.");
             setLoading(false);
             setIsPlaying(false);
         }
@@ -409,23 +461,27 @@ export default function SurahAudioPlayer({
         const endAyah = toPositiveInt(range.endAyah) ?? null;
 
         if (startSurah > endSurah) {
-            setError('Range audio belum valid: surat awal tidak boleh melewati surat akhir.');
+            setError(
+                "Range audio belum valid: surat awal tidak boleh melewati surat akhir.",
+            );
             return;
         }
         if (!isValidSurahNumber(startSurah) || !isValidSurahNumber(endSurah)) {
-            setError(`Range audio belum valid: nomor surat harus ${MIN_SURAH_NUMBER}-${MAX_SURAH_NUMBER}.`);
+            setError(
+                `Range audio belum valid: nomor surat harus ${MIN_SURAH_NUMBER}-${MAX_SURAH_NUMBER}.`,
+            );
             return;
         }
 
         const normalizedRange = {
-            endAyah: endAyah ? `${endAyah}` : '',
+            endAyah: endAyah ? `${endAyah}` : "",
             endSurah: `${endSurah}`,
             startSurah: `${startSurah}`,
         };
         setRange(normalizedRange);
         persistPreferences({ range: normalizedRange });
         setLoading(true);
-        setError('');
+        setError("");
         if (audioRef.current) {
             audioRef.current.pause();
             audioRef.current = null;
@@ -434,9 +490,13 @@ export default function SurahAudioPlayer({
         const sessionId = sessionRef.current + 1;
         sessionRef.current = sessionId;
         try {
-            const queue = await fetchRangeQueue({ endAyah, endSurah, startSurah });
+            const queue = await fetchRangeQueue({
+                endAyah,
+                endSurah,
+                startSurah,
+            });
             if (!queue.length) {
-                setError('Ayat untuk range audio belum tersedia.');
+                setError("Ayat untuk range audio belum tersedia.");
                 setLoading(false);
                 return;
             }
@@ -447,7 +507,7 @@ export default function SurahAudioPlayer({
             await playQueueItem(0, sessionId);
         } catch {
             if (sessionId !== sessionRef.current) return;
-            setError('Range audio belum bisa dimuat.');
+            setError("Range audio belum bisa dimuat.");
             setLoading(false);
         }
     };
@@ -459,7 +519,13 @@ export default function SurahAudioPlayer({
             return;
         }
         if (audioRef.current && queueRef.current.length) {
-            audioRef.current.play().catch(() => setError(t('audio.play_error') ?? 'Tidak dapat memutar audio.'));
+            audioRef.current
+                .play()
+                .catch(() =>
+                    setError(
+                        t("audio.play_error") ?? "Tidak dapat memutar audio.",
+                    ),
+                );
             return;
         }
         startRangeAudio();
@@ -489,7 +555,7 @@ export default function SurahAudioPlayer({
     };
 
     const handleRangeChange = (field, value) => {
-        const nextRange = { ...range, [field]: value.replace(/[^\d]/g, '') };
+        const nextRange = { ...range, [field]: value.replace(/[^\d]/g, "") };
         setRange(nextRange);
         persistPreferences({ range: nextRange });
     };
@@ -515,11 +581,14 @@ export default function SurahAudioPlayer({
         persistPreferences({ speed: normalizedSpeed });
     };
 
-    const currentAudio = audioList.find((item) => item.qari_slug === selectedQari) ?? audioList[0];
-    const isDashboard = pathname?.startsWith('/dashboard');
-    const bottomClass = isDashboard ? 'bottom-[84px] md:bottom-4' : 'bottom-4';
+    const currentAudio =
+        audioList.find((item) => item.qari_slug === selectedQari) ??
+        audioList[0];
+    const isDashboard = pathname?.startsWith("/dashboard");
+    const bottomClass = isDashboard ? "bottom-[84px] md:bottom-4" : "bottom-4";
     const canSkipBackward = queueLength > 0 && (repeat || queueIndex > 0);
-    const canSkipForward = queueLength > 0 && (repeat || queueIndex < queueLength - 1);
+    const canSkipForward =
+        queueLength > 0 && (repeat || queueIndex < queueLength - 1);
 
     if (!open) {
         return (
@@ -532,23 +601,29 @@ export default function SurahAudioPlayer({
                 className='inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-medium hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors'
             >
                 <BsVolumeUpFill />
-                {label('audio.listen_surah', 'Dengar Surah')}
+                {label("audio.listen_surah", "Dengar Surah")}
             </button>
         );
     }
 
     if (minimized) {
         return (
-            <div className={`fixed ${bottomClass} left-1/2 -translate-x-1/2 z-40 w-full max-w-lg px-3 transition-[bottom] duration-200`}>
+            <div
+                className={`fixed ${bottomClass} left-1/2 -translate-x-1/2 z-40 w-full max-w-lg px-3 transition-[bottom] duration-200`}
+            >
                 <div className='flex items-center gap-2 rounded-2xl border border-emerald-100 bg-white p-2 shadow-xl dark:border-slate-700 dark:bg-slate-800'>
                     <button
                         type='button'
                         onClick={togglePlay}
                         disabled={loading}
-                        aria-label={isPlaying ? 'Jeda audio' : 'Putar audio'}
+                        aria-label={isPlaying ? "Jeda audio" : "Putar audio"}
                         className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white transition-colors hover:bg-emerald-700 disabled:opacity-60'
                     >
-                        {isPlaying ? <BsPauseFill className='text-xl' /> : <BsPlayFill className='text-xl' />}
+                        {isPlaying ? (
+                            <BsPauseFill className='text-xl' />
+                        ) : (
+                            <BsPlayFill className='text-xl' />
+                        )}
                     </button>
                     <button
                         type='button'
@@ -557,10 +632,14 @@ export default function SurahAudioPlayer({
                         className='min-w-0 flex-1 text-left'
                     >
                         <p className='truncate text-xs font-semibold text-emerald-600 dark:text-emerald-400'>
-                            {currentLabel || surahName || `Surah ${surahNumber}`}
+                            {currentLabel ||
+                                surahName ||
+                                `Surah ${surahNumber}`}
                         </p>
                         <p className='truncate text-[11px] text-gray-500 dark:text-gray-400'>
-                            {loading ? 'Memuat audio...' : `${currentAudio?.qari_name ?? 'Pilih qari'} · ${speed}x`}
+                            {loading
+                                ? "Memuat audio..."
+                                : `${currentAudio?.qari_name ?? "Pilih qari"} · ${speed}x`}
                         </p>
                     </button>
                     <button
@@ -585,15 +664,19 @@ export default function SurahAudioPlayer({
     }
 
     return (
-        <div className={`fixed ${bottomClass} left-1/2 -translate-x-1/2 z-40 w-full max-w-lg px-3 transition-[bottom] duration-200`}>
+        <div
+            className={`fixed ${bottomClass} left-1/2 -translate-x-1/2 z-40 w-full max-w-lg px-3 transition-[bottom] duration-200`}
+        >
             <div className='max-h-[calc(100vh-120px)] overflow-y-auto bg-white dark:bg-slate-800 rounded-2xl border border-emerald-100 dark:border-slate-700 shadow-xl p-3'>
                 <div className='flex items-center justify-between gap-2 mb-3'>
                     <div className='min-w-0'>
                         <p className='text-xs text-emerald-600 dark:text-emerald-400 font-semibold truncate'>
-                            {currentLabel || surahName || `Surah ${surahNumber}`}
+                            {currentLabel ||
+                                surahName ||
+                                `Surah ${surahNumber}`}
                         </p>
                         <p className='text-[11px] text-gray-500 dark:text-gray-400 truncate'>
-                            {(currentAudio?.qari_name ?? 'Pilih qari')} · {speed}x
+                            {currentAudio?.qari_name ?? "Pilih qari"} · {speed}x
                         </p>
                     </div>
                     <div className='flex shrink-0 items-center gap-1'>
@@ -618,9 +701,9 @@ export default function SurahAudioPlayer({
 
                 <div className='grid grid-cols-3 gap-2 mb-3'>
                     {[
-                        ['startSurah', 'Dari surat', `${surahNumber ?? ''}`],
-                        ['endSurah', 'Sampai surat', `${surahNumber ?? ''}`],
-                        ['endAyah', 'Sampai ayat', `${totalAyahs ?? ''}`],
+                        ["startSurah", "Dari surat", `${surahNumber ?? ""}`],
+                        ["endSurah", "Sampai surat", `${surahNumber ?? ""}`],
+                        ["endAyah", "Sampai ayat", `${totalAyahs ?? ""}`],
                     ].map(([field, label, placeholder]) => (
                         <label key={field} className='block'>
                             <span className='mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400'>
@@ -630,7 +713,9 @@ export default function SurahAudioPlayer({
                                 type='text'
                                 inputMode='numeric'
                                 value={range[field]}
-                                onChange={(event) => handleRangeChange(field, event.target.value)}
+                                onChange={(event) =>
+                                    handleRangeChange(field, event.target.value)
+                                }
                                 placeholder={placeholder}
                                 className='w-full rounded-lg border border-gray-200 bg-gray-50 px-2 py-2 text-center text-xs font-bold text-gray-900 outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white'
                             />
@@ -654,8 +739,16 @@ export default function SurahAudioPlayer({
                         disabled={loading}
                         className='inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-700 disabled:opacity-60'
                     >
-                        {isPlaying ? <BsPauseFill className='text-xl' /> : <BsPlayFill className='text-xl' />}
-                        {loading ? 'Memuat' : isPlaying ? 'Jeda' : 'Putar range'}
+                        {isPlaying ? (
+                            <BsPauseFill className='text-xl' />
+                        ) : (
+                            <BsPlayFill className='text-xl' />
+                        )}
+                        {loading
+                            ? "Memuat"
+                            : isPlaying
+                              ? "Jeda"
+                              : "Putar range"}
                     </button>
                     <button
                         type='button'
@@ -670,7 +763,7 @@ export default function SurahAudioPlayer({
 
                 {loading && (
                     <p className='text-xs text-gray-400 dark:text-gray-500 text-center py-1'>
-                        {label('common.loading', 'Memuat...')}
+                        {label("common.loading", "Memuat...")}
                     </p>
                 )}
 
@@ -688,12 +781,19 @@ export default function SurahAudioPlayer({
                         <div
                             className='relative'
                             onBlur={(event) => {
-                                if (!event.currentTarget.contains(event.relatedTarget)) setQariDropdownOpen(false);
+                                if (
+                                    !event.currentTarget.contains(
+                                        event.relatedTarget,
+                                    )
+                                )
+                                    setQariDropdownOpen(false);
                             }}
                         >
                             <button
                                 type='button'
-                                onClick={() => setQariDropdownOpen((value) => !value)}
+                                onClick={() =>
+                                    setQariDropdownOpen((value) => !value)
+                                }
                                 aria-label='Pilih qari'
                                 aria-expanded={qariDropdownOpen}
                                 className='flex w-full items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 p-2 pr-8 text-left outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900'
@@ -702,16 +802,19 @@ export default function SurahAudioPlayer({
                                     src={getQariInfo(selectedQari).photo}
                                     alt={getQariInfo(selectedQari).name}
                                     onError={(event) => {
-                                        event.currentTarget.src = QARI_FALLBACK_AVATAR;
+                                        event.currentTarget.src =
+                                            QARI_FALLBACK_AVATAR;
                                     }}
                                     className='h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-emerald-200 dark:ring-slate-600'
                                 />
                                 <span className='min-w-0 flex-1'>
                                     <span className='block truncate text-xs font-semibold text-gray-900 dark:text-white'>
-                                        {currentAudio?.qari_name ?? getQariInfo(selectedQari).name}
+                                        {currentAudio?.qari_name ??
+                                            getQariInfo(selectedQari).name}
                                     </span>
                                     <span className='block truncate text-[10px] text-gray-500 dark:text-gray-400'>
-                                        {getQariInfo(selectedQari).country || 'Syaikh'}
+                                        {getQariInfo(selectedQari).country ||
+                                            "Syaikh"}
                                     </span>
                                 </span>
                             </button>
@@ -719,27 +822,35 @@ export default function SurahAudioPlayer({
                             {qariDropdownOpen && (
                                 <div className='absolute z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white p-1 shadow-xl dark:border-slate-700 dark:bg-slate-900'>
                                     {audioList.map((item) => {
-                                        const info = getQariInfo(item.qari_slug);
+                                        const info = getQariInfo(
+                                            item.qari_slug,
+                                        );
                                         return (
                                             <button
                                                 key={item.qari_slug}
                                                 type='button'
-                                                onMouseDown={(event) => event.preventDefault()}
+                                                onMouseDown={(event) =>
+                                                    event.preventDefault()
+                                                }
                                                 onClick={() => {
-                                                    handleQariChange(item.qari_slug);
+                                                    handleQariChange(
+                                                        item.qari_slug,
+                                                    );
                                                     setQariDropdownOpen(false);
                                                 }}
                                                 className={`flex w-full items-center gap-2 rounded-lg p-2 text-left transition-colors ${
-                                                    selectedQari === item.qari_slug
-                                                        ? 'bg-emerald-50 dark:bg-emerald-900/30'
-                                                        : 'hover:bg-gray-50 dark:hover:bg-slate-800'
+                                                    selectedQari ===
+                                                    item.qari_slug
+                                                        ? "bg-emerald-50 dark:bg-emerald-900/30"
+                                                        : "hover:bg-gray-50 dark:hover:bg-slate-800"
                                                 }`}
                                             >
                                                 <img
                                                     src={info.photo}
                                                     alt={info.name}
                                                     onError={(event) => {
-                                                        event.currentTarget.src = QARI_FALLBACK_AVATAR;
+                                                        event.currentTarget.src =
+                                                            QARI_FALLBACK_AVATAR;
                                                     }}
                                                     className='h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-emerald-100 dark:ring-slate-700'
                                                 />
@@ -748,10 +859,12 @@ export default function SurahAudioPlayer({
                                                         {item.qari_name}
                                                     </span>
                                                     <span className='block truncate text-[10px] text-gray-500 dark:text-gray-400'>
-                                                        {info.country || 'Syaikh'}
+                                                        {info.country ||
+                                                            "Syaikh"}
                                                     </span>
                                                 </span>
-                                                {selectedQari === item.qari_slug && (
+                                                {selectedQari ===
+                                                    item.qari_slug && (
                                                     <span className='text-[10px] font-bold text-emerald-600 dark:text-emerald-400'>
                                                         Aktif
                                                     </span>
@@ -778,8 +891,8 @@ export default function SurahAudioPlayer({
                                     onClick={() => handleSpeedChange(option)}
                                     className={`rounded-full px-2 py-1 text-[11px] font-bold transition-colors ${
                                         speed === option
-                                            ? 'bg-emerald-500 text-white'
-                                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-slate-700 dark:text-gray-300 dark:hover:bg-slate-600'
+                                            ? "bg-emerald-500 text-white"
+                                            : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-slate-700 dark:text-gray-300 dark:hover:bg-slate-600"
                                     }`}
                                 >
                                     {option}x
@@ -791,7 +904,9 @@ export default function SurahAudioPlayer({
                         <input
                             type='checkbox'
                             checked={repeat}
-                            onChange={(event) => handleRepeatChange(event.target.checked)}
+                            onChange={(event) =>
+                                handleRepeatChange(event.target.checked)
+                            }
                             className='accent-emerald-600'
                         />
                         Repeat

@@ -18,18 +18,23 @@ type fakeDoaRepo struct {
 func (f *fakeDoaRepo) FindAll(limit, offset int) ([]model.Doa, error) {
 	return f.doas, f.err
 }
+
 func (f *fakeDoaRepo) FindByID(id int) (*model.Doa, error) {
 	return f.doa, f.err
 }
+
 func (f *fakeDoaRepo) FindByCategory(category model.DoaCategory, limit, offset int) ([]model.Doa, error) {
 	return f.categoryDoas, f.categoryErr
 }
+
 func (f *fakeDoaRepo) Create(doa *model.Doa) (*model.Doa, error) {
 	return doa, f.err
 }
+
 func (f *fakeDoaRepo) Update(id int, doa *model.Doa) (*model.Doa, error) {
 	return doa, f.err
 }
+
 func (f *fakeDoaRepo) Delete(id int) error {
 	return f.err
 }

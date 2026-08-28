@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { LibraryContent } from '@/app/library/page';
+import { LibraryContent } from "@/app/library/page";
 
 export default function DashboardLibraryPage() {
     return (

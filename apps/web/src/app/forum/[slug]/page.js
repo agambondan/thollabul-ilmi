@@ -1,23 +1,34 @@
-'use client';
+"use client";
 
-import Footer from '@/components/Footer';
-import ContentWidth from '@/components/layout/ContentWidth';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import Section from '@/components/Section';
-import { useAuth } from '@/context/Auth';
-import { useLocale } from '@/context/Locale';
-import { forumApi } from '@/lib/api';
-import Link from 'next/link';
-import { useEffect, useState, use } from 'react';
-import { BsArrowUp, BsCheckCircle, BsCheckCircleFill, BsChevronLeft, BsPlusLg, BsTrash } from 'react-icons/bs';
-import { MdQuestionAnswer } from 'react-icons/md';
+import Footer from "@/components/Footer";
+import ContentWidth from "@/components/layout/ContentWidth";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import Section from "@/components/Section";
+import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
+import { forumApi } from "@/lib/api";
+import Link from "next/link";
+import { useEffect, useState, use } from "react";
+import {
+    BsArrowUp,
+    BsCheckCircle,
+    BsCheckCircleFill,
+    BsChevronLeft,
+    BsPlusLg,
+    BsTrash,
+} from "react-icons/bs";
+import { MdQuestionAnswer } from "react-icons/md";
 
-export const ForumDetailContent = ({ slug, basePath = '/forum', loginNext = `${basePath}/${slug}` }) => {
+export const ForumDetailContent = ({
+    slug,
+    basePath = "/forum",
+    loginNext = `${basePath}/${slug}`,
+}) => {
     const { t, lang } = useLocale();
     const { isAuthenticated } = useAuth();
     const [question, setQuestion] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [answerBody, setAnswerBody] = useState('');
+    const [answerBody, setAnswerBody] = useState("");
     const [answering, setAnswering] = useState(false);
 
     const fetchQuestion = () => {
@@ -30,15 +41,26 @@ export const ForumDetailContent = ({ slug, basePath = '/forum', loginNext = `${b
             .finally(() => setLoading(false));
     };
 
-    useEffect(() => { fetchQuestion(); }, [slug]);
+    useEffect(() => {
+        fetchQuestion();
+    }, [slug]);
 
     const formatDate = (v) => {
-        if (!v) return '';
+        if (!v) return "";
         try {
-            return new Date(v).toLocaleDateString(lang === 'EN' ? 'en-US' : 'id-ID', {
-                day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
-            });
-        } catch { return ''; }
+            return new Date(v).toLocaleDateString(
+                lang === "EN" ? "en-US" : "id-ID",
+                {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                },
+            );
+        } catch {
+            return "";
+        }
     };
 
     const submitAnswer = async (e) => {
@@ -47,7 +69,7 @@ export const ForumDetailContent = ({ slug, basePath = '/forum', loginNext = `${b
         setAnswering(true);
         try {
             await forumApi.answer(question.id, { body: answerBody.trim() });
-            setAnswerBody('');
+            setAnswerBody("");
             fetchQuestion();
         } catch {}
         setAnswering(false);
@@ -55,7 +77,11 @@ export const ForumDetailContent = ({ slug, basePath = '/forum', loginNext = `${b
 
     const handleVote = async (targetType, targetId) => {
         try {
-            await forumApi.vote({ target_type: targetType, target_id: targetId, value: 1 });
+            await forumApi.vote({
+                target_type: targetType,
+                target_id: targetId,
+                value: 1,
+            });
             fetchQuestion();
         } catch {}
     };
@@ -75,38 +101,65 @@ export const ForumDetailContent = ({ slug, basePath = '/forum', loginNext = `${b
     if (!question) {
         return (
             <ContentWidth compact='max-w-3xl' className='px-4 py-6 text-center'>
-                <p className='text-gray-500 dark:text-gray-400'>{t('forum.not_found') ?? 'Pertanyaan tidak ditemukan.'}</p>
-                <Link href={basePath} className='text-blue-600 hover:underline text-sm mt-3 inline-block'>← {t('forum.back') ?? 'Kembali ke forum'}</Link>
+                <p className='text-gray-500 dark:text-gray-400'>
+                    {t("forum.not_found") ?? "Pertanyaan tidak ditemukan."}
+                </p>
+                <Link
+                    href={basePath}
+                    className='text-blue-600 hover:underline text-sm mt-3 inline-block'
+                >
+                    ← {t("forum.back") ?? "Kembali ke forum"}
+                </Link>
             </ContentWidth>
         );
     }
 
     const answers = question.answers || [];
-    const tags = question.tags ? question.tags.split(',').map((t) => t.trim()).filter(Boolean) : [];
+    const tags = question.tags
+        ? question.tags
+              .split(",")
+              .map((t) => t.trim())
+              .filter(Boolean)
+        : [];
 
     return (
         <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
             <div className='mb-6'>
-                <Link href={basePath} className='inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 mb-4'>
-                    <BsChevronLeft /> {t('forum.back') ?? 'Kembali ke forum'}
+                <Link
+                    href={basePath}
+                    className='inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 mb-4'
+                >
+                    <BsChevronLeft /> {t("forum.back") ?? "Kembali ke forum"}
                 </Link>
 
                 <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6'>
-                    <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-3'>{question.title}</h1>
+                    <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-3'>
+                        {question.title}
+                    </h1>
                     <div className='prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 mb-4 whitespace-pre-wrap'>
                         {question.body}
                     </div>
                     <div className='flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500 mb-3 flex-wrap'>
-                        <span>{question.user?.name || question.user?.email || 'Anonim'}</span>
+                        <span>
+                            {question.user?.name ||
+                                question.user?.email ||
+                                "Anonim"}
+                        </span>
                         <span>{formatDate(question.created_at)}</span>
-                        <button onClick={() => handleVote('question', question.id)} className='flex items-center gap-1 text-blue-500 hover:text-blue-700 font-medium'>
+                        <button
+                            onClick={() => handleVote("question", question.id)}
+                            className='flex items-center gap-1 text-blue-500 hover:text-blue-700 font-medium'
+                        >
                             <BsArrowUp /> {question.vote_count || 0}
                         </button>
                     </div>
                     {tags.length > 0 && (
                         <div className='flex flex-wrap gap-1'>
                             {tags.map((tag) => (
-                                <span key={tag} className='px-2 py-0.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full text-xs'>
+                                <span
+                                    key={tag}
+                                    className='px-2 py-0.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full text-xs'
+                                >
                                     {tag}
                                 </span>
                             ))}
@@ -117,43 +170,59 @@ export const ForumDetailContent = ({ slug, basePath = '/forum', loginNext = `${b
 
             <div className='mb-6'>
                 <h2 className='text-lg font-semibold text-gray-900 dark:text-white mb-3'>
-                    {answers.length} {t('forum.answers') ?? 'Jawaban'}
+                    {answers.length} {t("forum.answers") ?? "Jawaban"}
                 </h2>
 
                 {answers.length === 0 && (
                     <div className='text-center py-8 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                         <p className='text-sm text-gray-400 dark:text-gray-500'>
-                            {t('forum.no_answers') ?? 'Belum ada jawaban. Jadilah yang pertama menjawab!'}
+                            {t("forum.no_answers") ??
+                                "Belum ada jawaban. Jadilah yang pertama menjawab!"}
                         </p>
                     </div>
                 )}
 
                 <div className='space-y-3'>
                     {answers.map((a) => (
-                        <div key={a.id} className={`bg-white dark:bg-slate-800 rounded-2xl border p-5 ${a.is_accepted ? 'border-emerald-300 dark:border-emerald-700' : 'border-gray-100 dark:border-slate-700'}`}>
+                        <div
+                            key={a.id}
+                            className={`bg-white dark:bg-slate-800 rounded-2xl border p-5 ${a.is_accepted ? "border-emerald-300 dark:border-emerald-700" : "border-gray-100 dark:border-slate-700"}`}
+                        >
                             <div className='prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 mb-3 whitespace-pre-wrap'>
                                 {a.body}
                             </div>
                             <div className='flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500 flex-wrap'>
-                                <span>{a.user?.name || a.user?.email || 'Anonim'}</span>
+                                <span>
+                                    {a.user?.name || a.user?.email || "Anonim"}
+                                </span>
                                 <span>{formatDate(a.created_at)}</span>
-                                <button onClick={() => handleVote('answer', a.id)} className='flex items-center gap-1 text-blue-500 hover:text-blue-700 font-medium'>
+                                <button
+                                    onClick={() => handleVote("answer", a.id)}
+                                    className='flex items-center gap-1 text-blue-500 hover:text-blue-700 font-medium'
+                                >
                                     <BsArrowUp /> {a.vote_count || 0}
                                 </button>
                                 {a.is_accepted ? (
                                     <span className='flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium'>
-                                        <BsCheckCircleFill /> {t('forum.accepted') ?? 'Diterima'}
+                                        <BsCheckCircleFill />{" "}
+                                        {t("forum.accepted") ?? "Diterima"}
                                     </span>
-                                ) : isAuthenticated && (
-                                    <button
-                                        onClick={async () => {
-                                            await forumApi.acceptAnswer(question.id, a.id);
-                                            fetchQuestion();
-                                        }}
-                                        className='flex items-center gap-1 text-gray-400 hover:text-emerald-600'
-                                    >
-                                        <BsCheckCircle /> {t('forum.accept') ?? 'Terima'}
-                                    </button>
+                                ) : (
+                                    isAuthenticated && (
+                                        <button
+                                            onClick={async () => {
+                                                await forumApi.acceptAnswer(
+                                                    question.id,
+                                                    a.id,
+                                                );
+                                                fetchQuestion();
+                                            }}
+                                            className='flex items-center gap-1 text-gray-400 hover:text-emerald-600'
+                                        >
+                                            <BsCheckCircle />{" "}
+                                            {t("forum.accept") ?? "Terima"}
+                                        </button>
+                                    )
                                 )}
                             </div>
                         </div>
@@ -162,15 +231,21 @@ export const ForumDetailContent = ({ slug, basePath = '/forum', loginNext = `${b
             </div>
 
             {isAuthenticated && (
-                <form onSubmit={submitAnswer} className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6'>
+                <form
+                    onSubmit={submitAnswer}
+                    className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6'
+                >
                     <h3 className='text-sm font-semibold text-gray-900 dark:text-white mb-3'>
-                        {t('forum.your_answer') ?? 'Jawaban Kamu'}
+                        {t("forum.your_answer") ?? "Jawaban Kamu"}
                     </h3>
                     <textarea
                         value={answerBody}
                         onChange={(e) => setAnswerBody(e.target.value)}
                         rows={4}
-                        placeholder={t('forum.answer_placeholder') ?? 'Tulis jawaban kamu...'}
+                        placeholder={
+                            t("forum.answer_placeholder") ??
+                            "Tulis jawaban kamu..."
+                        }
                         className='w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none mb-3'
                     />
                     <button
@@ -179,15 +254,20 @@ export const ForumDetailContent = ({ slug, basePath = '/forum', loginNext = `${b
                         className='flex items-center gap-2 px-5 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors'
                     >
                         <BsPlusLg />
-                        {answering ? t('common.saving') ?? 'Mengirim...' : t('forum.post_answer') ?? 'Kirim Jawaban'}
+                        {answering
+                            ? (t("common.saving") ?? "Mengirim...")
+                            : (t("forum.post_answer") ?? "Kirim Jawaban")}
                     </button>
                 </form>
             )}
 
             {!isAuthenticated && (
                 <div className='text-center py-4 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
-                    <Link href={`/auth/login?next=${encodeURIComponent(loginNext)}`} className='text-sm text-blue-600 hover:underline'>
-                        {t('forum.login_to_answer') ?? 'Login untuk menjawab'}
+                    <Link
+                        href={`/auth/login?next=${encodeURIComponent(loginNext)}`}
+                        className='text-sm text-blue-600 hover:underline'
+                    >
+                        {t("forum.login_to_answer") ?? "Login untuk menjawab"}
                     </Link>
                 </div>
             )}

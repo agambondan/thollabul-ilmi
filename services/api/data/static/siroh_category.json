@@ -1,42 +1,42 @@
 [
-  {
-    "title": "Nasab \u0026 Kelahiran Nabi ﷺ",
-    "slug": "nasab-kelahiran",
-    "order": 1
-  },
-  {
-    "title": "Masa Kecil \u0026 Remaja",
-    "slug": "masa-kecil-remaja",
-    "order": 2
-  },
-  {
-    "title": "Kenabian \u0026 Dakwah di Makkah",
-    "slug": "kenabian-dakwah-makkah",
-    "order": 3
-  },
-  {
-    "title": "Hijrah ke Madinah",
-    "slug": "hijrah-madinah",
-    "order": 4
-  },
-  {
-    "title": "Pembangunan Masyarakat Madinah",
-    "slug": "masyarakat-madinah",
-    "order": 5
-  },
-  {
-    "title": "Perang \u0026 Ekspedisi",
-    "slug": "perang-ekspedisi",
-    "order": 6
-  },
-  {
-    "title": "Penaklukan Makkah (Fath al-Makkah)",
-    "slug": "fath-al-makkah",
-    "order": 7
-  },
-  {
-    "title": "Haji Wada' \u0026 Wafat Nabi ﷺ",
-    "slug": "haji-wada-wafat",
-    "order": 8
-  }
+    {
+        "title": "Nasab \u0026 Kelahiran Nabi ﷺ",
+        "slug": "nasab-kelahiran",
+        "order": 1
+    },
+    {
+        "title": "Masa Kecil \u0026 Remaja",
+        "slug": "masa-kecil-remaja",
+        "order": 2
+    },
+    {
+        "title": "Kenabian \u0026 Dakwah di Makkah",
+        "slug": "kenabian-dakwah-makkah",
+        "order": 3
+    },
+    {
+        "title": "Hijrah ke Madinah",
+        "slug": "hijrah-madinah",
+        "order": 4
+    },
+    {
+        "title": "Pembangunan Masyarakat Madinah",
+        "slug": "masyarakat-madinah",
+        "order": 5
+    },
+    {
+        "title": "Perang \u0026 Ekspedisi",
+        "slug": "perang-ekspedisi",
+        "order": 6
+    },
+    {
+        "title": "Penaklukan Makkah (Fath al-Makkah)",
+        "slug": "fath-al-makkah",
+        "order": 7
+    },
+    {
+        "title": "Haji Wada' \u0026 Wafat Nabi ﷺ",
+        "slug": "haji-wada-wafat",
+        "order": 8
+    }
 ]

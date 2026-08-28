@@ -30,28 +30,30 @@ Bookmark multi-tipe (ayat, hadith, doa, artikel) dengan warna/label, sync lintas
 ### API Response Shape
 
 **`GET /bookmarks`**
+
 ```json
 [
-  {
-    "id": "uuid",
-    "user_id": "uuid",
-    "ref_type": "ayah",
-    "ref_id": 1,
-    "ref_slug": "al-fatihah-1",
-    "color": "#FFD700",
-    "label": "Favorit",
-    "ayah": { "id": 1, "number": 1, "surah_id": 1 },
-    "hadith": null
-  }
+    {
+        "id": "uuid",
+        "user_id": "uuid",
+        "ref_type": "ayah",
+        "ref_id": 1,
+        "ref_slug": "al-fatihah-1",
+        "color": "#FFD700",
+        "label": "Favorit",
+        "ayah": { "id": 1, "number": 1, "surah_id": 1 },
+        "hadith": null
+    }
 ]
 ```
 
 **`POST /bookmarks`**
+
 ```json
 {
-  "ref_type": "ayah",
-  "ref_id": 1,
-  "ref_slug": "al-fatihah-1"
+    "ref_type": "ayah",
+    "ref_id": 1,
+    "ref_slug": "al-fatihah-1"
 }
 ```
 

@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
-import Footer from '@/components/Footer';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import NoteButton from '@/components/NoteButton';
-import Section from '@/components/Section';
-import { SkeletonList } from '@/components/skeleton/Skeleton';
-import { useAuth } from '@/context/Auth';
-import { bookmarkApi, libraryApi, libraryProgressApi } from '@/lib/api';
-import { useLayoutMode } from '@/lib/useLayoutMode';
-import Link from 'next/link';
-import { use, useEffect, useState } from 'react';
-import { BsBookmark, BsBookmarkFill, BsBoxArrowUpRight } from 'react-icons/bs';
+import Footer from "@/components/Footer";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import NoteButton from "@/components/NoteButton";
+import Section from "@/components/Section";
+import { SkeletonList } from "@/components/skeleton/Skeleton";
+import { useAuth } from "@/context/Auth";
+import { bookmarkApi, libraryApi, libraryProgressApi } from "@/lib/api";
+import { useLayoutMode } from "@/lib/useLayoutMode";
+import Link from "next/link";
+import { use, useEffect, useState } from "react";
+import { BsBookmark, BsBookmarkFill, BsBoxArrowUpRight } from "react-icons/bs";
 
 const normalizeBook = (data) => data?.data ?? data;
 const PROGRESS_STATUSES = [
-    { value: 'planned', label: 'Rencana' },
-    { value: 'reading', label: 'Dibaca' },
-    { value: 'paused', label: 'Dijeda' },
-    { value: 'completed', label: 'Selesai' },
+    { value: "planned", label: "Rencana" },
+    { value: "reading", label: "Dibaca" },
+    { value: "paused", label: "Dijeda" },
+    { value: "completed", label: "Selesai" },
 ];
 
 const formatFileSize = (bytes) => {
     const value = Number(bytes);
-    if (!Number.isFinite(value) || value <= 0) return '';
+    if (!Number.isFinite(value) || value <= 0) return "";
     if (value < 1024 * 1024) return `${Math.round(value / 1024)} KB`;
     return `${(value / (1024 * 1024)).toFixed(1)} MB`;
 };
@@ -33,11 +33,11 @@ const metaItems = (book) =>
         book?.category,
         book?.level,
         book?.language,
-        book?.format ? String(book.format).toUpperCase() : '',
-        book?.pages ? `${book.pages} halaman` : '',
+        book?.format ? String(book.format).toUpperCase() : "",
+        book?.pages ? `${book.pages} halaman` : "",
     ].filter(Boolean);
 
-export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
+export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
     const { isWide } = useLayoutMode();
     const { isAuthenticated } = useAuth();
     const [book, setBook] = useState(null);
@@ -47,12 +47,12 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
     const [bookmarkId, setBookmarkId] = useState(null);
     const [progress, setProgress] = useState(null);
     const [progressForm, setProgressForm] = useState({
-        current_page: '',
-        note: '',
-        status: 'reading',
+        current_page: "",
+        note: "",
+        status: "reading",
     });
     const [savingProgress, setSavingProgress] = useState(false);
-    const [progressMessage, setProgressMessage] = useState('');
+    const [progressMessage, setProgressMessage] = useState("");
 
     useEffect(() => {
         let active = true;
@@ -61,7 +61,7 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
         libraryApi
             .detail(params.slug)
             .then((res) => {
-                if (!res.ok) throw new Error('failed');
+                if (!res.ok) throw new Error("failed");
                 return res.json();
             })
             .then((data) => {
@@ -85,10 +85,14 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
             .list()
             .then((res) => res.json())
             .then((data) => {
-                const items = Array.isArray(data?.items) ? data.items : Array.isArray(data) ? data : [];
+                const items = Array.isArray(data?.items)
+                    ? data.items
+                    : Array.isArray(data)
+                      ? data
+                      : [];
                 const existing = items.find(
                     (item) =>
-                        item.ref_type === 'library_book' &&
+                        item.ref_type === "library_book" &&
                         String(item.ref_id) === String(book.id),
                 );
                 if (existing) {
@@ -96,7 +100,7 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
                     setBookmarkId(existing.id);
                 }
             })
-            .catch(e => console.error(e));
+            .catch((e) => console.error(e));
     }, [book?.id, isAuthenticated]);
 
     useEffect(() => {
@@ -109,12 +113,14 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
                 if (!item) return;
                 setProgress(item);
                 setProgressForm({
-                    current_page: item.current_page ? String(item.current_page) : '',
-                    note: item.note ?? '',
-                    status: item.status ?? 'reading',
+                    current_page: item.current_page
+                        ? String(item.current_page)
+                        : "",
+                    note: item.note ?? "",
+                    status: item.status ?? "reading",
                 });
             })
-            .catch(e => console.error(e));
+            .catch((e) => console.error(e));
     }, [book?.id, isAuthenticated]);
 
     const toggleBookmark = async () => {
@@ -127,10 +133,10 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
         }
 
         try {
-            const res = await bookmarkApi.add('library_book', book.id, {
+            const res = await bookmarkApi.add("library_book", book.id, {
                 label: book.title,
             });
-            if (!res.ok) throw new Error('failed');
+            if (!res.ok) throw new Error("failed");
             const data = await res.json();
             setBookmarked(true);
             setBookmarkId(data?.data?.id ?? data?.id ?? null);
@@ -140,19 +146,19 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
     const saveProgress = async () => {
         if (!isAuthenticated || !book?.id) return;
         setSavingProgress(true);
-        setProgressMessage('');
+        setProgressMessage("");
         try {
             const res = await libraryProgressApi.save(book.id, {
                 current_page: Number(progressForm.current_page) || 0,
                 note: progressForm.note,
                 status: progressForm.status,
             });
-            if (!res.ok) throw new Error('failed');
+            if (!res.ok) throw new Error("failed");
             const data = await res.json();
             setProgress(data?.data ?? data);
-            setProgressMessage('Progress belajar disimpan.');
+            setProgressMessage("Progress belajar disimpan.");
         } catch {
-            setProgressMessage('Progress belum bisa disimpan.');
+            setProgressMessage("Progress belum bisa disimpan.");
         } finally {
             setSavingProgress(false);
         }
@@ -161,7 +167,11 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
     if (loading) return <SkeletonList title={false} rows={4} />;
 
     return (
-        <div className={isWide ? 'w-full px-4' : 'container mx-auto max-w-4xl px-4'}>
+        <div
+            className={
+                isWide ? "w-full px-4" : "container mx-auto max-w-4xl px-4"
+            }
+        >
             <Link
                 className='mb-6 inline-flex items-center gap-1 text-sm text-emerald-700 hover:underline dark:text-emerald-300'
                 href={basePath}
@@ -179,7 +189,7 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
                         <div className='mb-4 flex flex-wrap items-start justify-between gap-3'>
                             <div>
                                 <p className='text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-300'>
-                                    {book.category || 'Perpustakaan'}
+                                    {book.category || "Perpustakaan"}
                                 </p>
                                 <h1 className='mt-2 text-2xl font-bold leading-snug text-emerald-950 dark:text-white md:text-3xl'>
                                     {book.title}
@@ -190,16 +200,27 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
                                     <button
                                         className={`rounded-lg p-2 transition ${
                                             bookmarked
-                                                ? 'text-emerald-700 hover:bg-emerald-50 dark:text-emerald-300 dark:hover:bg-slate-800'
-                                                : 'text-gray-400 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-slate-800'
+                                                ? "text-emerald-700 hover:bg-emerald-50 dark:text-emerald-300 dark:hover:bg-slate-800"
+                                                : "text-gray-400 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:bg-slate-800"
                                         }`}
                                         onClick={toggleBookmark}
-                                        title={bookmarked ? 'Hapus bookmark' : 'Simpan bookmark'}
+                                        title={
+                                            bookmarked
+                                                ? "Hapus bookmark"
+                                                : "Simpan bookmark"
+                                        }
                                     >
-                                        {bookmarked ? <BsBookmarkFill /> : <BsBookmark />}
+                                        {bookmarked ? (
+                                            <BsBookmarkFill />
+                                        ) : (
+                                            <BsBookmark />
+                                        )}
                                     </button>
                                 )}
-                                <NoteButton refType='library_book' refId={book.id} />
+                                <NoteButton
+                                    refType='library_book'
+                                    refId={book.id}
+                                />
                             </div>
                         </div>
 
@@ -248,18 +269,25 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
                             {book.file_name && (
                                 <span className='rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs text-emerald-800 dark:border-slate-700 dark:bg-slate-800 dark:text-emerald-200'>
                                     {book.file_name}
-                                    {formatFileSize(book.file_size_bytes) ? ` · ${formatFileSize(book.file_size_bytes)}` : ''}
+                                    {formatFileSize(book.file_size_bytes)
+                                        ? ` · ${formatFileSize(book.file_size_bytes)}`
+                                        : ""}
                                 </span>
                             )}
                         </div>
-                        {((book.license_status && book.license_status !== 'unverified') || book.is_source_verified || book.source_note) && (
+                        {((book.license_status &&
+                            book.license_status !== "unverified") ||
+                            book.is_source_verified ||
+                            book.source_note) && (
                             <div className='mt-4 rounded-lg border border-gray-100 bg-gray-50 p-3 text-xs leading-5 text-gray-600 dark:border-slate-800 dark:bg-slate-950/60 dark:text-gray-300'>
                                 <div className='flex flex-wrap gap-2'>
-                                    {book.license_status && book.license_status !== 'unverified' && (
-                                        <span className='rounded-full bg-white px-2 py-0.5 font-semibold text-gray-700 dark:bg-slate-900 dark:text-gray-200'>
-                                            Lisensi: {book.license_status}
-                                        </span>
-                                    )}
+                                    {book.license_status &&
+                                        book.license_status !==
+                                            "unverified" && (
+                                            <span className='rounded-full bg-white px-2 py-0.5 font-semibold text-gray-700 dark:bg-slate-900 dark:text-gray-200'>
+                                                Lisensi: {book.license_status}
+                                            </span>
+                                        )}
                                     {book.is_source_verified && (
                                         <span className='rounded-full bg-emerald-100 px-2 py-0.5 font-semibold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200'>
                                             Sumber terverifikasi
@@ -282,13 +310,15 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
                                     </h2>
                                     <p className='text-xs text-gray-500 dark:text-gray-400'>
                                         {isAuthenticated
-                                            ? 'Simpan posisi belajar dan catatan ringkas untuk resource ini.'
-                                            : 'Masuk untuk menyimpan progress belajar.'}
+                                            ? "Simpan posisi belajar dan catatan ringkas untuk resource ini."
+                                            : "Masuk untuk menyimpan progress belajar."}
                                     </p>
                                 </div>
                                 {progress?.last_studied_at && (
                                     <span className='text-xs text-gray-500 dark:text-gray-400'>
-                                        {new Date(progress.last_studied_at).toLocaleDateString('id-ID')}
+                                        {new Date(
+                                            progress.last_studied_at,
+                                        ).toLocaleDateString("id-ID")}
                                     </span>
                                 )}
                             </div>
@@ -309,7 +339,10 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
                                             value={progressForm.status}
                                         >
                                             {PROGRESS_STATUSES.map((item) => (
-                                                <option key={item.value} value={item.value}>
+                                                <option
+                                                    key={item.value}
+                                                    value={item.value}
+                                                >
                                                     {item.label}
                                                 </option>
                                             ))}
@@ -325,10 +358,15 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
                                             onChange={(event) =>
                                                 setProgressForm((current) => ({
                                                     ...current,
-                                                    current_page: event.target.value,
+                                                    current_page:
+                                                        event.target.value,
                                                 }))
                                             }
-                                            placeholder={book.pages ? `0-${book.pages}` : '0'}
+                                            placeholder={
+                                                book.pages
+                                                    ? `0-${book.pages}`
+                                                    : "0"
+                                            }
                                             type='number'
                                             value={progressForm.current_page}
                                         />
@@ -355,7 +393,9 @@ export const LibraryDetailContent = ({ params, basePath = '/library' }) => {
                                             disabled={savingProgress}
                                             onClick={saveProgress}
                                         >
-                                            {savingProgress ? 'Menyimpan...' : 'Simpan progress'}
+                                            {savingProgress
+                                                ? "Menyimpan..."
+                                                : "Simpan progress"}
                                         </button>
                                         {progressMessage && (
                                             <span className='text-xs text-gray-500 dark:text-gray-400'>
@@ -379,7 +419,10 @@ const LibraryDetailPage = ({ params }) => {
         <main className='flex min-h-screen flex-col'>
             <NavbarTailwindCss />
             <Section>
-                <LibraryDetailContent params={resolvedParams} basePath='/library' />
+                <LibraryDetailContent
+                    params={resolvedParams}
+                    basePath='/library'
+                />
             </Section>
             <Footer />
         </main>

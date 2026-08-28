@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { WiridCustomContent } from '@/app/wirid-custom/page';
+import { WiridCustomContent } from "@/app/wirid-custom/page";
 
 export default function DashboardWiridCustomPage() {
     return (

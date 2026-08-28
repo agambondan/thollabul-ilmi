@@ -63,7 +63,7 @@ func main() {
 	outDir := flag.String("out", "./data", "Folder output")
 	flag.Parse()
 
-	if err := os.MkdirAll(*outDir, 0755); err != nil {
+	if err := os.MkdirAll(*outDir, 0o755); err != nil {
 		log.Fatalf("mkdir: %v", err)
 	}
 

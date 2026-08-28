@@ -1,6 +1,10 @@
-const API_URL = process.env.API_INTERNAL_URL || process.env.API_PROXY_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:29900';
+const API_URL =
+    process.env.API_INTERNAL_URL ||
+    process.env.API_PROXY_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    "http://localhost:29900";
 const SITE_URL =
-    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tholabul-ilmi.com';
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://tholabul-ilmi.com";
 
 async function getSirohContent(id) {
     try {
@@ -36,13 +40,13 @@ export async function generateMetadata(props) {
             title,
             description,
             url: canonicalUrl,
-            images: [{ url: '/og', width: 1200, height: 630 }],
+            images: [{ url: "/og", width: 1200, height: 630 }],
         },
         twitter: {
-            card: 'summary_large_image',
+            card: "summary_large_image",
             title,
             description,
-            images: ['/og'],
+            images: ["/og"],
         },
     };
 }

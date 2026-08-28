@@ -32,13 +32,13 @@ Rekomendasi utama: pertahankan maksimal 5 tab utama dan turunkan fitur besar ke 
 
 ## Usulan 5 Tab
 
-| Tab | Role | Isi utama |
-|---|---|---|
-| Beranda | Dashboard kontekstual | Next prayer, daily ayah/hadith, shortcut favorit, lanjutkan terakhir, journal ringan |
-| Al-Quran | Quran hub | Surah list, reader, tafsir, asbab, audio, hafalan, murojaah, preferensi baca |
-| Ibadah | Daily worship hub | Jadwal sholat, qibla, doa, dzikir, wirid, tahlil, tasbih, zakat, faraidh, khatam, imsakiyah |
-| Belajar | Knowledge hub | Hadith, kajian, siroh, sejarah, fiqh, manasik, asmaul husna, kamus, quiz, blog/artikel |
-| Profil | Personal hub | Akun, goals, stats, notes, bookmarks, achievements, leaderboard, offline, notification settings, app settings |
+| Tab      | Role                  | Isi utama                                                                                                     |
+| -------- | --------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Beranda  | Dashboard kontekstual | Next prayer, daily ayah/hadith, shortcut favorit, lanjutkan terakhir, journal ringan                          |
+| Al-Quran | Quran hub             | Surah list, reader, tafsir, asbab, audio, hafalan, murojaah, preferensi baca                                  |
+| Ibadah   | Daily worship hub     | Jadwal sholat, qibla, doa, dzikir, wirid, tahlil, tasbih, zakat, faraidh, khatam, imsakiyah                   |
+| Belajar  | Knowledge hub         | Hadith, kajian, siroh, sejarah, fiqh, manasik, asmaul husna, kamus, quiz, blog/artikel                        |
+| Profil   | Personal hub          | Akun, goals, stats, notes, bookmarks, achievements, leaderboard, offline, notification settings, app settings |
 
 Catatan penting: Hadith tidak menjadi tab utama sendiri dalam approach ini. Hadith tetap fitur kelas utama, tetapi secara intent lebih cocok berada di Belajar. Kalau Hadith tetap menjadi primary tab, salah satu payung besar seperti Ibadah atau Belajar harus dikorbankan, dan itu membuat fitur backend lain lebih sulit ditemukan.
 

@@ -30,25 +30,26 @@ Progress baca Quran & Hadith: melacak posisi terakhir, persentase selesai, dan r
 ### API Response Shape
 
 **`GET /progress`**
+
 ```json
 {
-  "quran": {
-    "id": "uuid",
-    "user_id": "uuid",
-    "content_type": "quran",
-    "surah_number": 2,
-    "ayah_number": 150,
-    "ayah_id": 250,
-    "last_read_at": "2026-05-13T06:30:00Z"
-  },
-  "hadith": {
-    "id": "uuid",
-    "user_id": "uuid",
-    "content_type": "hadith",
-    "book_slug": "bukhari",
-    "hadith_id": 150,
-    "last_read_at": "2026-05-12T20:00:00Z"
-  }
+    "quran": {
+        "id": "uuid",
+        "user_id": "uuid",
+        "content_type": "quran",
+        "surah_number": 2,
+        "ayah_number": 150,
+        "ayah_id": 250,
+        "last_read_at": "2026-05-13T06:30:00Z"
+    },
+    "hadith": {
+        "id": "uuid",
+        "user_id": "uuid",
+        "content_type": "hadith",
+        "book_slug": "bukhari",
+        "hadith_id": 150,
+        "last_read_at": "2026-05-12T20:00:00Z"
+    }
 }
 ```
 

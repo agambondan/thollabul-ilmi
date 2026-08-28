@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import Footer from '@/components/Footer';
-import ContentWidth from '@/components/layout/ContentWidth';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import Section from '@/components/Section';
-import { useLocale } from '@/context/Locale';
-import { forumApi } from '@/lib/api';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { BsChatDots, BsPlusLg, BsSearch } from 'react-icons/bs';
-import { MdQuestionAnswer } from 'react-icons/md';
+import Footer from "@/components/Footer";
+import ContentWidth from "@/components/layout/ContentWidth";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import Section from "@/components/Section";
+import { useLocale } from "@/context/Locale";
+import { forumApi } from "@/lib/api";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { BsChatDots, BsPlusLg, BsSearch } from "react-icons/bs";
+import { MdQuestionAnswer } from "react-icons/md";
 
-export function ForumListContent({ basePath = '/forum' }) {
+export function ForumListContent({ basePath = "/forum" }) {
     const { t, lang } = useLocale();
     const [questions, setQuestions] = useState([]);
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
     const size = 20;
 
@@ -29,21 +29,30 @@ export function ForumListContent({ basePath = '/forum' }) {
                 setQuestions(d?.items ?? []);
                 setTotal(d?.total ?? 0);
             })
-            .catch(e => console.error(e))
+            .catch((e) => console.error(e))
             .finally(() => setLoading(false));
     };
 
-    useEffect(() => { fetchQuestions(page); }, [page]);
+    useEffect(() => {
+        fetchQuestions(page);
+    }, [page]);
 
     const totalPages = Math.ceil(total / size);
 
     const formatDate = (v) => {
-        if (!v) return '';
+        if (!v) return "";
         try {
-            return new Date(v).toLocaleDateString(lang === 'EN' ? 'en-US' : 'id-ID', {
-                day: 'numeric', month: 'short', year: 'numeric',
-            });
-        } catch { return ''; }
+            return new Date(v).toLocaleDateString(
+                lang === "EN" ? "en-US" : "id-ID",
+                {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                },
+            );
+        } catch {
+            return "";
+        }
     };
 
     return (
@@ -53,10 +62,10 @@ export function ForumListContent({ basePath = '/forum' }) {
                     <MdQuestionAnswer className='text-3xl text-blue-600 dark:text-blue-400' />
                 </div>
                 <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-1'>
-                    {t('forum.title') ?? 'Forum Diskusi'}
+                    {t("forum.title") ?? "Forum Diskusi"}
                 </h1>
                 <p className='text-sm text-gray-500 dark:text-gray-400'>
-                    {t('forum.subtitle') ?? 'Tanya jawab seputar Islam'}
+                    {t("forum.subtitle") ?? "Tanya jawab seputar Islam"}
                 </p>
             </div>
 
@@ -67,8 +76,13 @@ export function ForumListContent({ basePath = '/forum' }) {
                         type='text'
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && (setPage(1), fetchQuestions(1))}
-                        placeholder={t('forum.search_placeholder') ?? 'Cari pertanyaan...'}
+                        onKeyDown={(e) =>
+                            e.key === "Enter" && (setPage(1), fetchQuestions(1))
+                        }
+                        placeholder={
+                            t("forum.search_placeholder") ??
+                            "Cari pertanyaan..."
+                        }
                         className='flex-1 bg-transparent text-sm text-gray-700 dark:text-gray-200 outline-none'
                     />
                 </div>
@@ -77,14 +91,17 @@ export function ForumListContent({ basePath = '/forum' }) {
                     className='flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap'
                 >
                     <BsPlusLg />
-                    {t('forum.ask') ?? 'Tanya'}
+                    {t("forum.ask") ?? "Tanya"}
                 </Link>
             </div>
 
             {loading ? (
                 <div className='space-y-3'>
                     {Array.from({ length: 5 }).map((_, i) => (
-                        <div key={i} className='p-5 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 animate-pulse'>
+                        <div
+                            key={i}
+                            className='p-5 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 animate-pulse'
+                        >
                             <div className='h-4 bg-gray-200 dark:bg-slate-700 rounded w-3/4 mb-3' />
                             <div className='h-3 bg-gray-200 dark:bg-slate-700 rounded w-full mb-2' />
                             <div className='h-3 bg-gray-200 dark:bg-slate-700 rounded w-2/3' />
@@ -95,14 +112,14 @@ export function ForumListContent({ basePath = '/forum' }) {
                 <div className='text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                     <BsChatDots className='text-5xl text-gray-200 dark:text-slate-600 mx-auto mb-3' />
                     <p className='text-sm text-gray-500 dark:text-gray-400 mb-3'>
-                        {t('forum.empty') ?? 'Belum ada pertanyaan.'}
+                        {t("forum.empty") ?? "Belum ada pertanyaan."}
                     </p>
                     <Link
                         href={`${basePath}/ask`}
                         className='inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors'
                     >
                         <BsPlusLg />
-                        {t('forum.ask_first') ?? 'Ajukan pertanyaan pertama'}
+                        {t("forum.ask_first") ?? "Ajukan pertanyaan pertama"}
                     </Link>
                 </div>
             ) : (
@@ -124,11 +141,13 @@ export function ForumListContent({ basePath = '/forum' }) {
                                     <BsChatDots />
                                     {q.answer_count ?? 0}
                                 </span>
-                                <span>{q.user?.name ?? q.user?.email ?? '...'}</span>
+                                <span>
+                                    {q.user?.name ?? q.user?.email ?? "..."}
+                                </span>
                                 <span>{formatDate(q.created_at)}</span>
                                 {q.is_answered && (
                                     <span className='bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full'>
-                                        {t('forum.answered') ?? 'Terjawab'}
+                                        {t("forum.answered") ?? "Terjawab"}
                                     </span>
                                 )}
                             </div>
@@ -144,17 +163,19 @@ export function ForumListContent({ basePath = '/forum' }) {
                         disabled={page === 1}
                         className='px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-sm disabled:opacity-40'
                     >
-                        ← {t('common.prev') ?? 'Prev'}
+                        ← {t("common.prev") ?? "Prev"}
                     </button>
                     <span className='text-sm text-gray-500 dark:text-gray-400'>
                         {page} / {totalPages}
                     </span>
                     <button
-                        onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                        onClick={() =>
+                            setPage((p) => Math.min(totalPages, p + 1))
+                        }
                         disabled={page >= totalPages}
                         className='px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-sm disabled:opacity-40'
                     >
-                        {t('common.next') ?? 'Next'} →
+                        {t("common.next") ?? "Next"} →
                     </button>
                 </div>
             )}

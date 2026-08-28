@@ -31,13 +31,14 @@ Tafsir ayat dari berbagai mufassir, bisa diakses per ayat.
 ### API Response Shape
 
 **`GET /tafsir?byAyah=1`**
+
 ```json
 {
-  "id": 1,
-  "ayah_id": 1,
-  "kemenag": { "idn": "Tafsir Kemenag: ...", "en": "..." },
-  "ibnu_katsir": { "idn": "Tafsir Ibnu Katsir: ...", "en": "..." },
-  "ayah": { "id": 1, "number": 1, "surah_id": 1 }
+    "id": 1,
+    "ayah_id": 1,
+    "kemenag": { "idn": "Tafsir Kemenag: ...", "en": "..." },
+    "ibnu_katsir": { "idn": "Tafsir Ibnu Katsir: ...", "en": "..." },
+    "ayah": { "id": 1, "number": 1, "surah_id": 1 }
 }
 ```
 

@@ -1,7 +1,7 @@
 export const metadata = {
-    title: 'Daily Muhasabah',
+    title: "Daily Muhasabah",
     description:
-        'Write daily muhasabah journals and reflections to review deeds, intentions, and personal growth.',
+        "Write daily muhasabah journals and reflections to review deeds, intentions, and personal growth.",
 };
 export default function MuhasabahLayout({ children }) {
     return children;

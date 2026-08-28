@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/context/Auth';
-import { useLocale } from '@/context/Locale';
-import { muhasabahApi, streakApi } from '@/lib/api';
+import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
+import { muhasabahApi, streakApi } from "@/lib/api";
 import {
     muhasabahCreatePayload,
     normalizeMuhasabah,
@@ -11,45 +11,56 @@ import {
     readLocalArray,
     todayISO,
     writeLocalArray,
-} from '@/lib/personalSync';
-import { useEffect, useRef, useState } from 'react';
-import { BsPencilSquare, BsTrash, BsX } from 'react-icons/bs';
+} from "@/lib/personalSync";
+import { useEffect, useRef, useState } from "react";
+import { BsPencilSquare, BsTrash, BsX } from "react-icons/bs";
 
 const MOODS = [
-    { value: 'baik', label: 'Baik', emoji: '😊' },
-    { value: 'biasa', label: 'Biasa', emoji: '😐' },
-    { value: 'berat', label: 'Berat', emoji: '😢' },
-    { value: 'syukur', label: 'Syukur', emoji: '🤲' },
+    { value: "baik", label: "Baik", emoji: "😊" },
+    { value: "biasa", label: "Biasa", emoji: "😐" },
+    { value: "berat", label: "Berat", emoji: "😢" },
+    { value: "syukur", label: "Syukur", emoji: "🤲" },
 ];
 
-const getMoodEmoji = (v) => MOODS.find((m) => m.value === v)?.emoji ?? '😐';
+const getMoodEmoji = (v) => MOODS.find((m) => m.value === v)?.emoji ?? "😐";
 
 const MuhasabahPage = () => {
     const { t, lang } = useLocale();
     const { isAuthenticated } = useAuth();
     const fb = (type, msg) =>
-        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+        window.dispatchEvent(
+            new CustomEvent(type, { detail: { message: msg } }),
+        );
     const [list, setList] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [form, setForm] = useState({ date: todayISO(), mood: 'baik', content: '' });
-    const [syncError, setSyncError] = useState('');
+    const [form, setForm] = useState({
+        date: todayISO(),
+        mood: "baik",
+        content: "",
+    });
+    const [syncError, setSyncError] = useState("");
     const textRef = useRef(null);
 
     useEffect(() => {
         const load = async () => {
             if (isAuthenticated) {
                 try {
-                    const items = pickItems(await parseApiJson(await muhasabahApi.list()))
-                        .map(normalizeMuhasabah);
+                    const items = pickItems(
+                        await parseApiJson(await muhasabahApi.list()),
+                    ).map(normalizeMuhasabah);
                     setList(items);
-                    writeLocalArray('tholabul_muhasabah', items);
-                    setSyncError('');
+                    writeLocalArray("tholabul_muhasabah", items);
+                    setSyncError("");
                     return;
                 } catch {
-                    setSyncError('Belum tersinkron. Menampilkan salinan lokal.');
+                    setSyncError(
+                        "Belum tersinkron. Menampilkan salinan lokal.",
+                    );
                 }
             }
-            setList(readLocalArray('tholabul_muhasabah').map(normalizeMuhasabah));
+            setList(
+                readLocalArray("tholabul_muhasabah").map(normalizeMuhasabah),
+            );
         };
         load();
     }, [isAuthenticated]);
@@ -60,11 +71,11 @@ const MuhasabahPage = () => {
 
     const persist = (updated) => {
         setList(updated);
-        writeLocalArray('tholabul_muhasabah', updated);
+        writeLocalArray("tholabul_muhasabah", updated);
     };
 
     const openModal = () => {
-        setForm({ date: todayISO(), mood: 'baik', content: '' });
+        setForm({ date: todayISO(), mood: "baik", content: "" });
         setShowModal(true);
     };
 
@@ -75,29 +86,37 @@ const MuhasabahPage = () => {
         if (isAuthenticated) {
             try {
                 const saved = normalizeMuhasabah(
-                    await parseApiJson(await muhasabahApi.create(muhasabahCreatePayload(entry))),
+                    await parseApiJson(
+                        await muhasabahApi.create(
+                            muhasabahCreatePayload(entry),
+                        ),
+                    ),
                 );
                 persist([saved, ...list]);
-                setSyncError('');
-                fb('admin:success', t('admin.crud.save_success'));
+                setSyncError("");
+                fb("admin:success", t("admin.crud.save_success"));
             } catch {
-                setSyncError('Muhasabah tersimpan lokal. Sinkron cloud belum berhasil.');
+                setSyncError(
+                    "Muhasabah tersimpan lokal. Sinkron cloud belum berhasil.",
+                );
             }
-            streakApi.logActivity('muhasabah').catch(e => console.error(e));
+            streakApi.logActivity("muhasabah").catch((e) => console.error(e));
         }
         setShowModal(false);
     };
 
     const remove = async (id) => {
-        if (!confirm(t('muhasabah.delete_confirm'))) return;
+        if (!confirm(t("muhasabah.delete_confirm"))) return;
         persist(list.filter((e) => e.id !== id));
         if (isAuthenticated) {
             try {
                 await parseApiJson(await muhasabahApi.delete(id));
-                setSyncError('');
-                fb('admin:success', t('admin.crud.delete_success'));
+                setSyncError("");
+                fb("admin:success", t("admin.crud.delete_success"));
             } catch {
-                setSyncError('Muhasabah dihapus lokal. Sinkron cloud belum berhasil.');
+                setSyncError(
+                    "Muhasabah dihapus lokal. Sinkron cloud belum berhasil.",
+                );
             }
         }
     };
@@ -106,14 +125,14 @@ const MuhasabahPage = () => {
         <div className='px-4 py-6'>
             <div className='flex items-center justify-between mb-6'>
                 <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
-                    {t('muhasabah.title')}
+                    {t("muhasabah.title")}
                 </h1>
                 <button
                     onClick={openModal}
                     className='flex items-center gap-2 px-4 py-2 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 transition-colors'
                 >
                     <BsPencilSquare />
-                    {t('muhasabah.write_btn')}
+                    {t("muhasabah.write_btn")}
                 </button>
             </div>
             {syncError ? (
@@ -126,13 +145,13 @@ const MuhasabahPage = () => {
                 <div className='text-center py-16'>
                     <p className='text-4xl mb-3'>🤲</p>
                     <p className='text-gray-500 dark:text-gray-400 text-sm'>
-                        {t('muhasabah.empty')}
+                        {t("muhasabah.empty")}
                     </p>
                     <button
                         onClick={openModal}
                         className='mt-4 text-emerald-600 dark:text-emerald-400 text-sm hover:underline'
                     >
-                        {t('muhasabah.write_first')}
+                        {t("muhasabah.write_first")}
                     </button>
                 </div>
             ) : (
@@ -144,26 +163,30 @@ const MuhasabahPage = () => {
                         >
                             <div className='flex items-start justify-between gap-3'>
                                 <div className='flex items-center gap-2 mb-2'>
-                                    <span className='text-2xl'>{getMoodEmoji(entry.mood)}</span>
+                                    <span className='text-2xl'>
+                                        {getMoodEmoji(entry.mood)}
+                                    </span>
                                     <span className='text-xs text-gray-400 dark:text-gray-500'>
                                         {entry.date
                                             ? new Date(
-                                                  entry.date + 'T00:00:00',
+                                                  entry.date + "T00:00:00",
                                               ).toLocaleDateString(
-                                                lang === 'EN' ? 'en-US' : 'id-ID',
-                                                {
-                                                  weekday: 'long',
-                                                  day: 'numeric',
-                                                  month: 'long',
-                                                  year: 'numeric',
-                                                },
+                                                  lang === "EN"
+                                                      ? "en-US"
+                                                      : "id-ID",
+                                                  {
+                                                      weekday: "long",
+                                                      day: "numeric",
+                                                      month: "long",
+                                                      year: "numeric",
+                                                  },
                                               )
-                                            : ''}
+                                            : ""}
                                     </span>
                                 </div>
                                 <button
                                     onClick={() => remove(entry.id)}
-                                    aria-label={t('muhasabah.delete')}
+                                    aria-label={t("muhasabah.delete")}
                                     className='text-gray-300 dark:text-slate-600 hover:text-red-500 transition-colors shrink-0'
                                 >
                                     <BsTrash />
@@ -171,7 +194,7 @@ const MuhasabahPage = () => {
                             </div>
                             <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
                                 {entry.content.length > 100
-                                    ? entry.content.slice(0, 100) + '...'
+                                    ? entry.content.slice(0, 100) + "..."
                                     : entry.content}
                             </p>
                         </li>
@@ -183,12 +206,14 @@ const MuhasabahPage = () => {
             {showModal && (
                 <div
                     className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'
-                    onClick={(e) => e.target === e.currentTarget && setShowModal(false)}
+                    onClick={(e) =>
+                        e.target === e.currentTarget && setShowModal(false)
+                    }
                 >
                     <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'>
                         <div className='flex items-center justify-between mb-4'>
                             <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
-                                {t('muhasabah.write_btn')}
+                                {t("muhasabah.write_btn")}
                             </h2>
                             <button
                                 onClick={() => setShowModal(false)}
@@ -201,13 +226,16 @@ const MuhasabahPage = () => {
                         <div className='space-y-4'>
                             <div>
                                 <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                    {t('muhasabah.label_date')}
+                                    {t("muhasabah.label_date")}
                                 </label>
                                 <input
                                     type='date'
                                     value={form.date}
                                     onChange={(e) =>
-                                        setForm((f) => ({ ...f, date: e.target.value }))
+                                        setForm((f) => ({
+                                            ...f,
+                                            date: e.target.value,
+                                        }))
                                     }
                                     className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 />
@@ -215,12 +243,15 @@ const MuhasabahPage = () => {
 
                             <div>
                                 <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                    {t('muhasabah.label_mood')}
+                                    {t("muhasabah.label_mood")}
                                 </label>
                                 <select
                                     value={form.mood}
                                     onChange={(e) =>
-                                        setForm((f) => ({ ...f, mood: e.target.value }))
+                                        setForm((f) => ({
+                                            ...f,
+                                            mood: e.target.value,
+                                        }))
                                     }
                                     className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 >
@@ -234,16 +265,19 @@ const MuhasabahPage = () => {
 
                             <div>
                                 <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                    {t('muhasabah.label_notes')}
+                                    {t("muhasabah.label_notes")}
                                 </label>
                                 <textarea
                                     ref={textRef}
                                     value={form.content}
                                     onChange={(e) =>
-                                        setForm((f) => ({ ...f, content: e.target.value }))
+                                        setForm((f) => ({
+                                            ...f,
+                                            content: e.target.value,
+                                        }))
                                     }
                                     rows={5}
-                                    placeholder={t('muhasabah.placeholder')}
+                                    placeholder={t("muhasabah.placeholder")}
                                     className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none'
                                 />
                             </div>
@@ -254,14 +288,14 @@ const MuhasabahPage = () => {
                                 onClick={() => setShowModal(false)}
                                 className='px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors'
                             >
-                                {t('common.cancel')}
+                                {t("common.cancel")}
                             </button>
                             <button
                                 onClick={save}
                                 disabled={!form.content.trim()}
                                 className='px-4 py-2 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors'
                             >
-                                {t('common.save')}
+                                {t("common.save")}
                             </button>
                         </div>
                     </div>

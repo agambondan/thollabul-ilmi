@@ -9,6 +9,7 @@ Untuk daftar yang lebih granular per endpoint dan route, lihat `docs/api-endpoin
 ### 1) Hadith browsing and reader stack
 
 Web App sudah punya alur:
+
 - `src/app/hadith/byBook.js`
 - `src/app/hadith/byTheme.js`
 - `src/app/hadith/byChapter.js`
@@ -17,6 +18,7 @@ Web App sudah punya alur:
 - `src/app/hadith/[slug]/HadithPage.js`
 
 API Service perlu memastikan data berikut tersedia dan konsisten:
+
 - daftar kitab hadith
 - daftar theme lintas kitab
 - daftar chapter per kitab + theme
@@ -28,12 +30,14 @@ API Service perlu memastikan data berikut tersedia dan konsisten:
 ### 2) Quran enrichment stack
 
 Web App sudah menyiapkan reader dan pencarian untuk:
+
 - `src/app/quran/page.js`
 - `src/app/quran/[...slug]/InfiniteScrollAyahPage.js`
 - `src/app/quran/[...slug]/AyahPage.js`
 - `src/app/search/SearchClient.js`
 
 API Service perlu memastikan:
+
 - pencarian lintas ayah/hadith mengembalikan nested translation dengan struktur yang konsisten
 - tafsir per surah dan per ayah tersedia
 - mufrodat per ayah dan per root word tersedia
@@ -43,6 +47,7 @@ API Service perlu memastikan:
 ### 3) Content catalogs yang masih bergantung data API service
 
 Web App sudah punya halaman browsing/filtering untuk:
+
 - `amalan`
 - `asbabun-nuzul`
 - `asmaul-husna`
@@ -56,6 +61,7 @@ Web App sudah punya halaman browsing/filtering untuk:
 - `tafsir`
 
 API Service perlu menutup gap data berikut:
+
 - katalog doa dan dzikir lengkap beserta kategori
 - daftar asmaul husna yang konsisten
 - daftar fiqh dengan topik, dalil, dan penjelasan
@@ -83,6 +89,7 @@ Web App sudah siap untuk data yang harus tersimpan per user, tapi API service ma
 ## Notifications and Automation
 
 Web App settings sudah ada, tetapi API service masih perlu:
+
 - menyimpan notification settings user
 - menjalankan scheduler/worker untuk reminder
 - mengirim notifikasi browser ketika user mengizinkan

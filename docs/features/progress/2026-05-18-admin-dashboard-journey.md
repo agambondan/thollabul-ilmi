@@ -13,10 +13,10 @@ sidebar `/admin` disamakan dengan `/dashboard`.
 
 - Tambah section `Aksi Cepat` di `/admin`.
 - Tambah CTA task-oriented:
-  - `Tulis Artikel Baru` -> `/admin/blog/new`
-  - `Review Konten` -> `/admin/blog`
-  - `Tambah Doa` -> `/admin/doa`
-  - `Kelola User & Role` -> `/admin/users`
+    - `Tulis Artikel Baru` -> `/admin/blog/new`
+    - `Review Konten` -> `/admin/blog`
+    - `Tambah Doa` -> `/admin/doa`
+    - `Kelola User & Role` -> `/admin/users`
 - Hapus module launcher dari dashboard admin agar halaman fokus pada metric,
   chart, dan quick actions.
 - Tambah i18n ID/EN untuk quick actions.
@@ -53,15 +53,15 @@ Status: `VERIFIED`
 ### Scope
 
 - Tambah section `Antrian Review` di `/admin` dengan CTA operasional:
-  - artikel draft / arsip,
-  - artikel kurang metadata,
-  - buku perlu verifikasi sumber/lisensi,
-  - buku tanpa source/resource.
+    - artikel draft / arsip,
+    - artikel kurang metadata,
+    - buku perlu verifikasi sumber/lisensi,
+    - buku tanpa source/resource.
 - Tambah section `Kesehatan Konten` dengan progress bar:
-  - kelengkapan metadata artikel,
-  - kesiapan sumber buku,
-  - cakupan konten ibadah,
-  - cakupan konten belajar.
+    - kelengkapan metadata artikel,
+    - kesiapan sumber buku,
+    - cakupan konten ibadah,
+    - cakupan konten belajar.
 - Tambah chart `Status Konten` untuk komposisi artikel published/draft/archive.
 - Semua item queue dan health tetap link ke modul admin terkait, bukan module
   launcher umum.
@@ -81,10 +81,10 @@ Status: `VERIFIED`
 
 - Tambah section `Insight Traffic` di `/admin`.
 - Derive insight dari payload `GET /api/v1/analytics/admin/summary?days=14`:
-  - total views 14 hari,
-  - views hari ini + visitor hari ini,
-  - rata-rata views harian,
-  - hari/halaman terkuat.
+    - total views 14 hari,
+    - views hari ini + visitor hari ini,
+    - rata-rata views harian,
+    - hari/halaman terkuat.
 - Tambah i18n ID/EN untuk traffic insight.
 
 ### Verification
@@ -101,14 +101,14 @@ Status: `VERIFIED`
 
 - Tambah section `Ringkasan Operasional` di `/admin`.
 - Tambah metric cards:
-  - Pengunjung: unique visitor 14 hari terakhir dari page-view analytics.
-  - Total user: dari endpoint admin users.
-  - Konten bacaan: artikel terbit + koleksi buku.
-  - Draft / arsip: artikel yang perlu review.
+    - Pengunjung: unique visitor 14 hari terakhir dari page-view analytics.
+    - Total user: dari endpoint admin users.
+    - Konten bacaan: artikel terbit + koleksi buku.
+    - Draft / arsip: artikel yang perlu review.
 - Tambah chart:
-  - Komposisi konten dari modul blog, library, ibadah, dan belajar.
-  - Distribusi role user.
-  - Visitor chart dari event page view harian.
+    - Komposisi konten dari modul blog, library, ibadah, dan belajar.
+    - Distribusi role user.
+    - Visitor chart dari event page view harian.
 - Tambah i18n ID/EN untuk metric dan chart admin.
 
 ### Verification
@@ -128,9 +128,9 @@ Status: `VERIFIED`
 - Tambah endpoint admin `GET /api/v1/analytics/admin/summary?days=14`.
 - Tambah tracker global web yang mencatat route change dengan visitor id lokal.
 - Hubungkan admin dashboard ke summary analytics untuk:
-  - unique visitor 14 hari terakhir,
-  - chart visitor harian,
-  - halaman teratas.
+    - unique visitor 14 hari terakhir,
+    - chart visitor harian,
+    - halaman teratas.
 
 ### Verification
 
@@ -147,8 +147,8 @@ Status: `VERIFIED`
 
 - Web page-view tracker now sends auth token when a user is logged in.
 - Backend page-view rows keep both:
-  - `visitor_id` for anonymous/device journey,
-  - `user_id` for authenticated account traceability.
+    - `visitor_id` for anonymous/device journey,
+    - `user_id` for authenticated account traceability.
 - Unique visitor aggregation now counts `user_id` first when present and falls
   back to `visitor_id` for guests.
 - Daily visitor and top-page visitor counts use the same identity expression.
@@ -172,10 +172,10 @@ Status: `VERIFIED`
 - Update category edit `/admin/siroh` agar modal/inline edit tidak tertutup
   sebelum save benar-benar berhasil.
 - Tambah `aria-label` dan `title` pada action icon-only untuk:
-  - blog article edit/delete,
-  - blog category/tag add/delete,
-  - sirah category create/edit/save/cancel/delete,
-  - sirah content edit/delete.
+    - blog article edit/delete,
+    - blog category/tag add/delete,
+    - sirah category create/edit/save/cancel/delete,
+    - sirah content edit/delete.
 
 ### Verification
 
@@ -194,10 +194,10 @@ Status: `VERIFIED`
 - Inline error form sekarang memakai pesan error backend/global mutation guard
   jika tersedia dan tidak redirect sebelum save sukses.
 - Tambah back link header pada halaman:
-  - `/admin/blog/new`
-  - `/admin/blog/[id]/edit`
-  - `/admin/siroh/new`
-  - `/admin/siroh/[id]/edit`
+    - `/admin/blog/new`
+    - `/admin/blog/[id]/edit`
+    - `/admin/siroh/new`
+    - `/admin/siroh/[id]/edit`
 - Tambah back link juga pada state not-found edit Blog/Sirah.
 
 ### Verification
@@ -214,15 +214,15 @@ Status: `VERIFIED`
 
 - Isi area kosong pada card `Komposisi Konten` di `/admin`.
 - Tambah chart `Kesiapan Konten` dari data health existing:
-  - metadata artikel,
-  - sumber buku,
-  - cakupan ibadah,
-  - cakupan belajar.
+    - metadata artikel,
+    - sumber buku,
+    - cakupan ibadah,
+    - cakupan belajar.
 - Tambah chart `Beban Review` dari data queue existing:
-  - artikel draft / arsip,
-  - artikel kurang metadata,
-  - buku perlu verifikasi,
-  - buku tanpa resource.
+    - artikel draft / arsip,
+    - artikel kurang metadata,
+    - buku perlu verifikasi,
+    - buku tanpa resource.
 - Tambah i18n ID/EN untuk chart baru.
 
 ### Verification
@@ -240,10 +240,10 @@ Status: `VERIFIED`
 - Group dropdown `Konten` di navbar public agar tidak menjadi list linear yang
   terlalu panjang.
 - Tambah 4 group desktop:
-  - Ibadah & Dzikir,
-  - Quran & Ilmu,
-  - Sejarah & Media,
-  - Tools.
+    - Ibadah & Dzikir,
+    - Quran & Ilmu,
+    - Sejarah & Media,
+    - Tools.
 - Ubah dropdown desktop menjadi panel 2 kolom dengan max-height dan scroll
   internal agar item bawah tetap dapat diakses di viewport pendek.
 - Tambah i18n ID/EN untuk heading group.
@@ -263,13 +263,13 @@ Status: `VERIFIED`
 
 - Extend admin analytics summary dengan `recent_activity`.
 - Recent activity menampilkan:
-  - identitas user jika login,
-  - visitor id untuk guest,
-  - path,
-  - referrer,
-  - source,
-  - user agent,
-  - waktu event.
+    - identitas user jika login,
+    - visitor id untuk guest,
+    - path,
+    - referrer,
+    - source,
+    - user agent,
+    - waktu event.
 - Tambah table `Aktivitas Terbaru` di `/admin` untuk tracing journey user dan
   guest.
 - Tambah index `idx_page_views_user_created` untuk query active user / journey.
@@ -291,13 +291,13 @@ Status: `VERIFIED`
 - Tambah selector periode analytics di `/admin`: 7, 14, 30, dan 90 hari.
 - Selector memakai query `GET /api/v1/analytics/admin/summary?days=...`.
 - Periode aktif memengaruhi:
-  - pengunjung,
-  - insight traffic,
-  - source breakdown,
-  - chart visitor,
-  - top pages per source,
-  - active users,
-  - recent activity.
+    - pengunjung,
+    - insight traffic,
+    - source breakdown,
+    - chart visitor,
+    - top pages per source,
+    - active users,
+    - recent activity.
 - Update copy metric visitor agar tidak hardcoded 14 hari.
 - Update `docs/WEB_MOBILE_SYNC.md` untuk mencatat selector periode analytics.
 
@@ -315,10 +315,10 @@ Status: `VERIFIED`
 
 - Extend admin analytics summary dengan comparison window periode sebelumnya.
 - Tambah payload:
-  - `previous_views`,
-  - `previous_visitors`,
-  - `views_change_percent`,
-  - `visitors_change_percent`.
+    - `previous_views`,
+    - `previous_visitors`,
+    - `views_change_percent`,
+    - `visitors_change_percent`.
 - Tampilkan delta periode sebelumnya di metric pengunjung dan card total view.
 - Update `docs/WEB_MOBILE_SYNC.md` untuk mencatat trend delta analytics.
 

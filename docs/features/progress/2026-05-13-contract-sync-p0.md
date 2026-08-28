@@ -55,49 +55,49 @@ dari kontrak API.
 ## Evidence
 
 - Commands:
-  - `cd services/api && go test ./app/controllers ./app/services ./app/repository ./app/http`
-  - `cd services/api && go test ./...`
-  - `node --check apps/web/src/lib/api.js`
-  - `node --check apps/web/src/app/admin/asbabun-nuzul/page.js`
-  - `node --check apps/web/src/app/asbabun-nuzul/page.js`
-  - `npm --prefix apps/web run lint`
-  - `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-contract-sync-mobile-export`
-  - `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-contract-sync-mobile-export-2`
-  - `git diff --check`
+    - `cd services/api && go test ./app/controllers ./app/services ./app/repository ./app/http`
+    - `cd services/api && go test ./...`
+    - `node --check apps/web/src/lib/api.js`
+    - `node --check apps/web/src/app/admin/asbabun-nuzul/page.js`
+    - `node --check apps/web/src/app/asbabun-nuzul/page.js`
+    - `npm --prefix apps/web run lint`
+    - `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-contract-sync-mobile-export`
+    - `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-contract-sync-mobile-export-2`
+    - `git diff --check`
 - Route tests:
-  - `TestP0ContractRoutes` menjaga daily ayah, history, hijri convert, quiz
-    admin, asbabun nuzul list, wirid, tahlil items, manasik items, dan fiqh
-    items tetap terdaftar.
-  - `TestAsbabunNuzulRepositoryCreateAndReplaceAyahs` menjaga resolve
-    `surah_number + ayah_number`, create relasi banyak ayat, dan update yang
-    mengganti join table.
-  - `TestDzikirRepositoryCreateUpdateAndQueries`,
-    `TestTahlilRepositoryCollectionAndItemCRUD`,
-    `TestManasikRepositoryCreateUpdateAndOrder`, dan
-    `TestFiqhRepositoryItemCRUDKeepsDalilSeparate` menjaga repository CRUD
-    static content admin tetap membuat/memperbarui translation row, menjaga
-    default repeat tahlil, urutan manasik, dan pemisahan `fiqh.source` dari
-    `fiqh.dalil`.
+    - `TestP0ContractRoutes` menjaga daily ayah, history, hijri convert, quiz
+      admin, asbabun nuzul list, wirid, tahlil items, manasik items, dan fiqh
+      items tetap terdaftar.
+    - `TestAsbabunNuzulRepositoryCreateAndReplaceAyahs` menjaga resolve
+      `surah_number + ayah_number`, create relasi banyak ayat, dan update yang
+      mengganti join table.
+    - `TestDzikirRepositoryCreateUpdateAndQueries`,
+      `TestTahlilRepositoryCollectionAndItemCRUD`,
+      `TestManasikRepositoryCreateUpdateAndOrder`, dan
+      `TestFiqhRepositoryItemCRUDKeepsDalilSeparate` menjaga repository CRUD
+      static content admin tetap membuat/memperbarui translation row, menjaga
+      default repeat tahlil, urutan manasik, dan pemisahan `fiqh.source` dari
+      `fiqh.dalil`.
 - Runtime API/Web smoke:
-  - source API `http://localhost:9900`: authenticated Asbabun Nuzul
-    list/create/update/delete `PASS`.
-  - web admin `http://localhost:3001/admin/asbabun-nuzul`: browser smoke
-    create/update/delete `PASS`.
-  - Docker API `http://localhost:29900`: `GET /api/v1/asbabun-nuzul` kembali
-    `200 OK` setelah rebuild.
-  - Docker API `http://localhost:29900`: authenticated Asbabun Nuzul
-    create/update/delete `PASS`.
+    - source API `http://localhost:9900`: authenticated Asbabun Nuzul
+      list/create/update/delete `PASS`.
+    - web admin `http://localhost:3001/admin/asbabun-nuzul`: browser smoke
+      create/update/delete `PASS`.
+    - Docker API `http://localhost:29900`: `GET /api/v1/asbabun-nuzul` kembali
+      `200 OK` setelah rebuild.
+    - Docker API `http://localhost:29900`: authenticated Asbabun Nuzul
+      create/update/delete `PASS`.
 - Docker rebuild:
-  - `docker compose up -d --build tholabul-ilmi-api tholabul-ilmi-web`
-    `PASS`.
+    - `docker compose up -d --build tholabul-ilmi-api tholabul-ilmi-web`
+      `PASS`.
 - Device smoke:
-  - belum bisa dijalankan karena `adb devices -l` tidak menampilkan device.
+    - belum bisa dijalankan karena `adb devices -l` tidak menampilkan device.
 - Notes:
-  - asbabun nuzul list dan create/update UI sudah mengirim relasi `Ayahs`
-    melalui `ayah_refs`/range ayat.
-  - admin fiqh sudah memakai field `dalil` terpisah dari `source`.
-  - Imsakiyah tanpa koordinat memakai default Jakarta; UX lokasi personal tetap
-    bisa ditingkatkan di slice fitur terpisah.
+    - asbabun nuzul list dan create/update UI sudah mengirim relasi `Ayahs`
+      melalui `ayah_refs`/range ayat.
+    - admin fiqh sudah memakai field `dalil` terpisah dari `source`.
+    - Imsakiyah tanpa koordinat memakai default Jakarta; UX lokasi personal tetap
+      bisa ditingkatkan di slice fitur terpisah.
 
 ## Source of Truth
 

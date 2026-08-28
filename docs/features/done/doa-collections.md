@@ -33,18 +33,18 @@ Baca & cari kumpulan doa sehari-hari per kategori (pagi, petang, makan, tidur, s
 
 ```json
 {
-  "id": 1,
-  "category": "pagi|petang|makan|tidur|bangun|kamar_mandi|masjid|safar|belajar|umum",
-  "source": "HR. Muslim no. 123",
-  "audio_url": "https://...",
-  "translation": {
-    "idn": "Ya Allah...",
-    "en": "O Allah...",
-    "ar": "اللهم...",
-    "title_idn": "Doa Pagi",
-    "title_en": "Morning Prayer",
-    "title_ar": "دعاء الصباح"
-  }
+    "id": 1,
+    "category": "pagi|petang|makan|tidur|bangun|kamar_mandi|masjid|safar|belajar|umum",
+    "source": "HR. Muslim no. 123",
+    "audio_url": "https://...",
+    "translation": {
+        "idn": "Ya Allah...",
+        "en": "O Allah...",
+        "ar": "اللهم...",
+        "title_idn": "Doa Pagi",
+        "title_en": "Morning Prayer",
+        "title_ar": "دعاء الصباح"
+    }
 }
 ```
 

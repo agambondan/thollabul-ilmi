@@ -1,9 +1,11 @@
 package model
 
-type LibraryBookStatus string
-type LibraryBookFormat string
-type LibraryBookSourceType string
-type LibraryBookLicenseStatus string
+type (
+	LibraryBookStatus        string
+	LibraryBookFormat        string
+	LibraryBookSourceType    string
+	LibraryBookLicenseStatus string
+)
 
 const (
 	LibraryBookStatusDraft     LibraryBookStatus = "draft"

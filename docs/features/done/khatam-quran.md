@@ -32,26 +32,28 @@ Target khatam 6236 ayat dengan progress per juz dan rekomendasi bacaan harian, m
 ### API Response Shape
 
 **`GET /reading-progress`**
+
 ```json
 {
-  "id": "uuid",
-  "user_id": "uuid",
-  "content_type": "quran",
-  "surah_number": 2,
-  "ayah_number": 150,
-  "ayah_id": 250,
-  "book_slug": null,
-  "hadith_id": null,
-  "last_read_at": "2026-05-13T06:30:00Z"
+    "id": "uuid",
+    "user_id": "uuid",
+    "content_type": "quran",
+    "surah_number": 2,
+    "ayah_number": 150,
+    "ayah_id": 250,
+    "book_slug": null,
+    "hadith_id": null,
+    "last_read_at": "2026-05-13T06:30:00Z"
 }
 ```
 
 **`PUT /reading-progress/quran`**
+
 ```json
 {
-  "surah_number": 2,
-  "ayah_number": 150,
-  "ayah_id": 250
+    "surah_number": 2,
+    "ayah_number": 150,
+    "ayah_id": 250
 }
 ```
 

@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/context/Auth';
-import { useLocale } from '@/context/Locale';
-import { quizApi } from '@/lib/api';
-import { useLayoutMode } from '@/lib/useLayoutMode';
-import { getLocalizedField, getLocalizedOption } from '@/lib/translation';
+import { useEffect, useState } from "react";
+import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
+import { quizApi } from "@/lib/api";
+import { useLayoutMode } from "@/lib/useLayoutMode";
+import { getLocalizedField, getLocalizedOption } from "@/lib/translation";
 
 const toStr = (v) => {
-    if (!v) return '';
-    if (typeof v === 'string') return v;
-    return v.name ?? v.title ?? v.label ?? v.value ?? '';
+    if (!v) return "";
+    if (typeof v === "string") return v;
+    return v.name ?? v.title ?? v.label ?? v.value ?? "";
 };
 
 const QuizPage = () => {
@@ -28,7 +28,11 @@ const QuizPage = () => {
 
     useEffect(() => {
         try {
-            setHistory(JSON.parse(localStorage.getItem('tholabul_quiz_history') ?? '[]'));
+            setHistory(
+                JSON.parse(
+                    localStorage.getItem("tholabul_quiz_history") ?? "[]",
+                ),
+            );
         } catch {}
     }, []);
 
@@ -39,7 +43,8 @@ const QuizPage = () => {
                 `${process.env.NEXT_PUBLIC_API_URL}/api/v1/quiz/session?count=10`,
             );
             const data = await res.json();
-            const items = data?.data ?? data?.items ?? (Array.isArray(data) ? data : []);
+            const items =
+                data?.data ?? data?.items ?? (Array.isArray(data) ? data : []);
             if (Array.isArray(items) && items.length > 0) {
                 setQuestions(items);
                 setLoading(false);
@@ -86,10 +91,13 @@ const QuizPage = () => {
             const updated = [entry, ...history].slice(0, 15);
             setHistory(updated);
             try {
-                localStorage.setItem('tholabul_quiz_history', JSON.stringify(updated));
+                localStorage.setItem(
+                    "tholabul_quiz_history",
+                    JSON.stringify(updated),
+                );
             } catch {}
             if (isAuthenticated && sessionResults.length > 0) {
-                quizApi.submit(sessionResults).catch(e => console.error(e));
+                quizApi.submit(sessionResults).catch((e) => console.error(e));
             }
             setDone(true);
         } else {
@@ -100,24 +108,38 @@ const QuizPage = () => {
 
     if (loading) {
         return (
-            <div className={isWide ? 'px-4 py-16 text-center' : 'px-4 py-16 max-w-md mx-auto text-center'}>
-                <p className='text-gray-400 dark:text-gray-500 text-sm'>{t('quiz.loading')}</p>
+            <div
+                className={
+                    isWide
+                        ? "px-4 py-16 text-center"
+                        : "px-4 py-16 max-w-md mx-auto text-center"
+                }
+            >
+                <p className='text-gray-400 dark:text-gray-500 text-sm'>
+                    {t("quiz.loading")}
+                </p>
             </div>
         );
     }
 
     if (!questions.length) {
         return (
-            <div className={isWide ? 'px-4 py-16 text-center' : 'px-4 py-16 max-w-md mx-auto text-center'}>
+            <div
+                className={
+                    isWide
+                        ? "px-4 py-16 text-center"
+                        : "px-4 py-16 max-w-md mx-auto text-center"
+                }
+            >
                 <p className='text-5xl mb-4'>📚</p>
                 <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
-                    {t('quiz.empty')}
+                    {t("quiz.empty")}
                 </p>
                 <button
                     onClick={loadQuestions}
                     className='px-5 py-2 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 transition-colors'
                 >
-                    {t('quiz.try_again')}
+                    {t("quiz.try_again")}
                 </button>
             </div>
         );
@@ -126,32 +148,38 @@ const QuizPage = () => {
     if (done) {
         const pct = Math.round((score / questions.length) * 100);
         return (
-            <div className={isWide ? 'px-3 sm:px-4 py-6' : 'px-3 sm:px-4 py-6 max-w-md mx-auto'}>
+            <div
+                className={
+                    isWide
+                        ? "px-3 sm:px-4 py-6"
+                        : "px-3 sm:px-4 py-6 max-w-md mx-auto"
+                }
+            >
                 <h1 className='text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6'>
-                    {t('quiz.title')}
+                    {t("quiz.title")}
                 </h1>
                 <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 sm:p-8 text-center mb-5'>
                     <p className='text-4xl sm:text-5xl mb-3 sm:mb-4'>
-                        {pct >= 80 ? '🌟' : pct >= 50 ? '👍' : '💪'}
+                        {pct >= 80 ? "🌟" : pct >= 50 ? "👍" : "💪"}
                     </p>
                     <p className='text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1'>
-                        {t('quiz.score')}: {score}/{questions.length}
+                        {t("quiz.score")}: {score}/{questions.length}
                     </p>
                     <p className='text-sm text-gray-500 dark:text-gray-400 mb-5 sm:mb-6'>
-                        {pct}% {t('quiz.correct_pct')}
+                        {pct}% {t("quiz.correct_pct")}
                     </p>
                     <button
                         onClick={restart}
                         className='w-full sm:w-auto px-6 py-2.5 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 transition-colors'
                     >
-                        {t('quiz.try_again')}
+                        {t("quiz.try_again")}
                     </button>
                 </div>
 
                 {history.length > 1 && (
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
                         <p className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
-                            {t('quiz.history')}
+                            {t("quiz.history")}
                         </p>
                         <ul className='space-y-2'>
                             {history.slice(0, 8).map((h) => (
@@ -160,18 +188,24 @@ const QuizPage = () => {
                                     className='flex flex-wrap items-center justify-between gap-2 text-sm'
                                 >
                                     <span className='text-xs text-gray-400 dark:text-gray-500'>
-                                        {new Date(h.date + 'T00:00:00').toLocaleDateString(
-                                            lang === 'EN' ? 'en-US' : 'id-ID',
-                                            { day: 'numeric', month: 'short', year: 'numeric' },
+                                        {new Date(
+                                            h.date + "T00:00:00",
+                                        ).toLocaleDateString(
+                                            lang === "EN" ? "en-US" : "id-ID",
+                                            {
+                                                day: "numeric",
+                                                month: "short",
+                                                year: "numeric",
+                                            },
                                         )}
                                     </span>
                                     <span
                                         className={`font-semibold ${
                                             h.pct >= 80
-                                                ? 'text-emerald-600 dark:text-emerald-400'
+                                                ? "text-emerald-600 dark:text-emerald-400"
                                                 : h.pct >= 50
-                                                  ? 'text-amber-500 dark:text-amber-400'
-                                                  : 'text-gray-500 dark:text-gray-400'
+                                                  ? "text-amber-500 dark:text-amber-400"
+                                                  : "text-gray-500 dark:text-gray-400"
                                         }`}
                                     >
                                         {h.score}/{h.total} ({h.pct}%)
@@ -191,16 +225,16 @@ const QuizPage = () => {
     const options = Array.isArray(q.options) ? q.options : [];
 
     return (
-        <div className={isWide ? 'px-4 py-6' : 'px-4 py-6 max-w-md mx-auto'}>
+        <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
             <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-4'>
-                {t('quiz.title')}
+                {t("quiz.title")}
             </h1>
 
             {/* Progress */}
             <div className='mb-4'>
                 <div className='flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1.5'>
                     <span>
-                        {t('quiz.question_label')} {current + 1}/{total}
+                        {t("quiz.question_label")} {current + 1}/{total}
                     </span>
                     <span>{Math.round(((current + 1) / total) * 100)}%</span>
                 </div>
@@ -222,7 +256,11 @@ const QuizPage = () => {
             {/* Question */}
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 mb-4'>
                 <p className='text-base font-semibold text-gray-800 dark:text-white leading-relaxed'>
-                    {getLocalizedField(q, 'question', lang, ['question_text', 'text', 'title'])}
+                    {getLocalizedField(q, "question", lang, [
+                        "question_text",
+                        "text",
+                        "title",
+                    ])}
                 </p>
             </div>
 
@@ -230,19 +268,19 @@ const QuizPage = () => {
             <div className='space-y-2 mb-5'>
                 {options.map((opt, idx) => {
                     let cls =
-                        'w-full px-4 py-3.5 rounded-xl border text-sm font-medium text-left transition-all ';
+                        "w-full px-4 py-3.5 rounded-xl border text-sm font-medium text-left transition-all ";
                     if (selected === null) {
                         cls +=
-                            'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 text-gray-700 dark:text-gray-300 hover:border-emerald-300 dark:hover:border-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/10';
+                            "bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 text-gray-700 dark:text-gray-300 hover:border-emerald-300 dark:hover:border-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/10";
                     } else if (idx === answerIndex) {
                         cls +=
-                            'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-500 text-emerald-700 dark:text-emerald-400';
+                            "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-500 text-emerald-700 dark:text-emerald-400";
                     } else if (idx === selected && selected !== answerIndex) {
                         cls +=
-                            'bg-red-50 dark:bg-red-900/20 border-red-400 text-red-600 dark:text-red-400';
+                            "bg-red-50 dark:bg-red-900/20 border-red-400 text-red-600 dark:text-red-400";
                     } else {
                         cls +=
-                            'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 text-gray-400 dark:text-gray-500';
+                            "bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 text-gray-400 dark:text-gray-500";
                     }
                     return (
                         <button
@@ -266,7 +304,9 @@ const QuizPage = () => {
                     onClick={next}
                     className='w-full py-3 bg-emerald-700 text-white rounded-xl text-sm font-medium hover:bg-emerald-800 transition-colors'
                 >
-                    {current + 1 >= total ? t('quiz.see_result') : t('quiz.next')}
+                    {current + 1 >= total
+                        ? t("quiz.see_result")
+                        : t("quiz.next")}
                 </button>
             )}
         </div>

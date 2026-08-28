@@ -20,42 +20,54 @@ type fakeHadithRepo struct {
 func (f *fakeHadithRepo) FindByOffset(offset int64) (*model.Hadith, error) {
 	return f.findByOffsetResult, nil
 }
+
 func (f *fakeHadithRepo) FindAllKeyset(ctx *fiber.Ctx) (*lib.KeysetPage, error) {
 	return &lib.KeysetPage{}, nil
 }
 func (f *fakeHadithRepo) Save(h *model.Hadith) (*model.Hadith, error) { return h, nil }
 func (f *fakeHadithRepo) FindAll(ctx *fiber.Ctx) *paginate.Page       { return &paginate.Page{} }
 func (f *fakeHadithRepo) FindById(id *int) (*model.Hadith, error)     { return f.hadith, f.findByIdErr }
+
 func (f *fakeHadithRepo) FindManyByIds(ids []int) ([]model.Hadith, error) {
 	return []model.Hadith{}, nil
 }
+
 func (f *fakeHadithRepo) FindByBookSlug(ctx *fiber.Ctx, slug *string) (*paginate.Page, error) {
 	return &paginate.Page{}, nil
 }
+
 func (f *fakeHadithRepo) FindByBookSlugNumber(slug *string, number *int) (*model.Hadith, error) {
 	return f.hadith, f.findByIdErr
 }
+
 func (f *fakeHadithRepo) FindByThemeId(ctx *fiber.Ctx, id *int) (*paginate.Page, error) {
 	return &paginate.Page{}, nil
 }
+
 func (f *fakeHadithRepo) FindByThemeName(ctx *fiber.Ctx, name *string) (*paginate.Page, error) {
 	return &paginate.Page{}, nil
 }
+
 func (f *fakeHadithRepo) FindByBookSlugThemeId(ctx *fiber.Ctx, slug *string, id *int) (*paginate.Page, error) {
 	return &paginate.Page{}, nil
 }
+
 func (f *fakeHadithRepo) FindByChapterId(ctx *fiber.Ctx, id *int) (*paginate.Page, error) {
 	return &paginate.Page{}, nil
 }
+
 func (f *fakeHadithRepo) FindByBookSlugChapterId(ctx *fiber.Ctx, slug *string, id *int) (*paginate.Page, error) {
 	return &paginate.Page{}, nil
 }
+
 func (f *fakeHadithRepo) FindByThemeIdChapterId(ctx *fiber.Ctx, id1, id2 *int) (*paginate.Page, error) {
 	return &paginate.Page{}, nil
 }
+
 func (f *fakeHadithRepo) FindByBookSlugThemeIdChapterId(ctx *fiber.Ctx, slug *string, id1, id2 *int) (*paginate.Page, error) {
 	return &paginate.Page{}, nil
 }
+
 func (f *fakeHadithRepo) UpdateById(id *int, h *model.Hadith) (*model.Hadith, error) { return h, nil }
 func (f *fakeHadithRepo) DeleteById(id *int, scoped *string) error                   { return nil }
 func (f *fakeHadithRepo) Count() (*int64, error)                                     { return &f.count, nil }

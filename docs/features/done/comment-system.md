@@ -30,27 +30,28 @@ Sistem komentar untuk blog, hadith, dan konten lainnya dengan threading, likes, 
 ### API Response Shape
 
 **`GET /comments?refType=ayah&refId=1`**
+
 ```json
 [
-  {
-    "id": 1,
-    "user_id": "uuid",
-    "ref_type": "ayah",
-    "ref_id": 1,
-    "content": "Subhanallah, ayat yang sangat dalam...",
-    "parent_id": null,
-    "like_count": 3,
-    "replies": [
-      {
-        "id": 2,
+    {
+        "id": 1,
         "user_id": "uuid",
-        "content": "Betul, ini ayat favorit saya",
-        "parent_id": 1,
-        "like_count": 1
-      }
-    ],
-    "username": "Ahmad"
-  }
+        "ref_type": "ayah",
+        "ref_id": 1,
+        "content": "Subhanallah, ayat yang sangat dalam...",
+        "parent_id": null,
+        "like_count": 3,
+        "replies": [
+            {
+                "id": 2,
+                "user_id": "uuid",
+                "content": "Betul, ini ayat favorit saya",
+                "parent_id": 1,
+                "like_count": 1
+            }
+        ],
+        "username": "Ahmad"
+    }
 ]
 ```
 
@@ -64,7 +65,7 @@ Sistem komentar untuk blog, hadith, dan konten lainnya dengan threading, likes, 
 | `ref_type` | CommentRefType | ayah or hadith |
 | `ref_id` | int | ID of the referenced content |
 | `content` | string | Comment text |
-| `parent_id` | *int | FK to parent Comment (for threading) |
+| `parent_id` | \*int | FK to parent Comment (for threading) |
 | `like_count` | int | Denormalized like count |
 | `replies` | []Comment | Has-many child comments |
 | `username` | string | Populated on read (not stored) |

@@ -1,4 +1,4 @@
-import { FeedContent } from '@/app/feed/page';
+import { FeedContent } from "@/app/feed/page";
 
 export default function DashboardFeedPage() {
     return (

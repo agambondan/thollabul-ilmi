@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/context/Auth';
-import { useLocale } from '@/context/Locale';
-import { goalsApi } from '@/lib/api';
+import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
+import { goalsApi } from "@/lib/api";
 import {
     goalCreatePayload,
     goalUpdatePayload,
@@ -11,56 +11,62 @@ import {
     pickItems,
     readLocalArray,
     writeLocalArray,
-} from '@/lib/personalSync';
-import { useEffect, useState } from 'react';
-import { BsCheckCircleFill, BsTrash, BsX } from 'react-icons/bs';
-import { MdFlag } from 'react-icons/md';
+} from "@/lib/personalSync";
+import { useEffect, useState } from "react";
+import { BsCheckCircleFill, BsTrash, BsX } from "react-icons/bs";
+import { MdFlag } from "react-icons/md";
 
-const UNITS = ['ayat', 'halaman', 'kali', 'hari', 'umum'];
-const CATEGORIES = ['Quran', 'Hadith', 'Ibadah', 'Ilmu', 'Lainnya'];
+const UNITS = ["ayat", "halaman", "kali", "hari", "umum"];
+const CATEGORIES = ["Quran", "Hadith", "Ibadah", "Ilmu", "Lainnya"];
 
 const emptyForm = () => ({
-    title: '',
-    target: '',
-    current: '',
-    unit: 'kali',
-    deadline: '',
-    category: 'Lainnya',
+    title: "",
+    target: "",
+    current: "",
+    unit: "kali",
+    deadline: "",
+    category: "Lainnya",
 });
 
 const GoalsPage = () => {
     const { t } = useLocale();
     const { isAuthenticated } = useAuth();
     const fb = (type, msg) =>
-        window.dispatchEvent(new CustomEvent(type, { detail: { message: msg } }));
+        window.dispatchEvent(
+            new CustomEvent(type, { detail: { message: msg } }),
+        );
     const [goals, setGoals] = useState([]);
-    const [tab, setTab] = useState('aktif');
+    const [tab, setTab] = useState("aktif");
     const [showModal, setShowModal] = useState(false);
     const [editGoal, setEditGoal] = useState(null);
     const [form, setForm] = useState(emptyForm());
-    const [syncError, setSyncError] = useState('');
+    const [syncError, setSyncError] = useState("");
 
     useEffect(() => {
         const load = async () => {
             if (isAuthenticated) {
                 try {
-                    const items = pickItems(await parseApiJson(await goalsApi.list())).map(normalizeGoal);
+                    const items = pickItems(
+                        await parseApiJson(await goalsApi.list()),
+                    ).map(normalizeGoal);
                     setGoals(items);
-                    writeLocalArray('tholabul_goals', items);
-                    setSyncError('');
+                    writeLocalArray("tholabul_goals", items);
+                    setSyncError("");
                     return;
                 } catch {
-                    setSyncError('Belum tersinkron. Menampilkan salinan lokal.');
+                    setSyncError(
+                        "Belum tersinkron. Menampilkan salinan lokal.",
+                    );
                 }
             }
-            setGoals(readLocalArray('tholabul_goals').map(normalizeGoal));
+            setGoals(readLocalArray("tholabul_goals").map(normalizeGoal));
         };
         load();
     }, [isAuthenticated]);
 
     const persist = (updated) => {
         setGoals(updated);
-        writeLocalArray('tholabul_goals', updated);
+        writeLocalArray("tholabul_goals", updated);
     };
 
     const openAdd = () => {
@@ -75,9 +81,9 @@ const GoalsPage = () => {
             title: goal.title,
             target: String(goal.target),
             current: String(goal.current ?? 0),
-            unit: goal.unit ?? 'kali',
-            deadline: goal.deadline ?? '',
-            category: goal.category ?? 'Lainnya',
+            unit: goal.unit ?? "kali",
+            deadline: goal.deadline ?? "",
+            category: goal.category ?? "Lainnya",
         });
         setShowModal(true);
     };
@@ -94,16 +100,29 @@ const GoalsPage = () => {
                 category: form.category,
             };
             persist(
-                goals.map((g) => (g.id === editGoal.id ? { ...g, ...payload } : g)),
+                goals.map((g) =>
+                    g.id === editGoal.id ? { ...g, ...payload } : g,
+                ),
             );
             if (isAuthenticated) {
                 try {
-                    const saved = normalizeGoal(await parseApiJson(await goalsApi.update(editGoal.id, goalUpdatePayload(payload))));
-                    persist(goals.map((g) => (g.id === editGoal.id ? saved : g)));
-                    setSyncError('');
-                    fb('admin:success', t('admin.crud.save_success'));
+                    const saved = normalizeGoal(
+                        await parseApiJson(
+                            await goalsApi.update(
+                                editGoal.id,
+                                goalUpdatePayload(payload),
+                            ),
+                        ),
+                    );
+                    persist(
+                        goals.map((g) => (g.id === editGoal.id ? saved : g)),
+                    );
+                    setSyncError("");
+                    fb("admin:success", t("admin.crud.save_success"));
                 } catch {
-                    setSyncError('Perubahan tersimpan lokal. Sinkron cloud belum berhasil.');
+                    setSyncError(
+                        "Perubahan tersimpan lokal. Sinkron cloud belum berhasil.",
+                    );
                 }
             }
         } else {
@@ -120,12 +139,18 @@ const GoalsPage = () => {
             persist([entry, ...goals]);
             if (isAuthenticated) {
                 try {
-                    const saved = normalizeGoal(await parseApiJson(await goalsApi.create(goalCreatePayload(entry))));
+                    const saved = normalizeGoal(
+                        await parseApiJson(
+                            await goalsApi.create(goalCreatePayload(entry)),
+                        ),
+                    );
                     persist([saved, ...goals]);
-                    setSyncError('');
-                    fb('admin:success', t('admin.crud.save_success'));
+                    setSyncError("");
+                    fb("admin:success", t("admin.crud.save_success"));
                 } catch {
-                    setSyncError('Target tersimpan lokal. Sinkron cloud belum berhasil.');
+                    setSyncError(
+                        "Target tersimpan lokal. Sinkron cloud belum berhasil.",
+                    );
                 }
             }
         }
@@ -134,49 +159,62 @@ const GoalsPage = () => {
 
     const markComplete = async (id) => {
         const current = goals.find((goal) => goal.id === id);
-        persist(goals.map((g) => (g.id === id ? { ...g, completed: true } : g)));
+        persist(
+            goals.map((g) => (g.id === id ? { ...g, completed: true } : g)),
+        );
         if (isAuthenticated) {
             try {
-                const saved = normalizeGoal(await parseApiJson(await goalsApi.update(id, goalUpdatePayload({ ...current, completed: true }))));
-                    persist(goals.map((g) => (g.id === id ? saved : g)));
-                    setSyncError('');
-                    fb('admin:success', '✓ ' + t('goals.mark_done'));
-                } catch {
-                    setSyncError('Status selesai tersimpan lokal. Sinkron cloud belum berhasil.');
-                }
+                const saved = normalizeGoal(
+                    await parseApiJson(
+                        await goalsApi.update(
+                            id,
+                            goalUpdatePayload({ ...current, completed: true }),
+                        ),
+                    ),
+                );
+                persist(goals.map((g) => (g.id === id ? saved : g)));
+                setSyncError("");
+                fb("admin:success", "✓ " + t("goals.mark_done"));
+            } catch {
+                setSyncError(
+                    "Status selesai tersimpan lokal. Sinkron cloud belum berhasil.",
+                );
+            }
         }
     };
 
     const remove = async (id) => {
-        if (!confirm(t('goals.delete_confirm'))) return;
+        if (!confirm(t("goals.delete_confirm"))) return;
         persist(goals.filter((g) => g.id !== id));
         if (isAuthenticated) {
             try {
-                    await parseApiJson(await goalsApi.delete(id));
-                    setSyncError('');
-                    fb('admin:success', t('admin.crud.delete_success'));
-                } catch {
-                    setSyncError('Target dihapus lokal. Sinkron cloud belum berhasil.');
-                }
+                await parseApiJson(await goalsApi.delete(id));
+                setSyncError("");
+                fb("admin:success", t("admin.crud.delete_success"));
+            } catch {
+                setSyncError(
+                    "Target dihapus lokal. Sinkron cloud belum berhasil.",
+                );
+            }
         }
     };
 
     const filtered = goals.filter((g) =>
-        tab === 'aktif' ? !g.completed : g.completed,
+        tab === "aktif" ? !g.completed : g.completed,
     );
 
     return (
         <div className='px-4 py-6'>
             <div className='flex items-center justify-between mb-6'>
                 <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
-                    {t('goals.title')}
+                    {t("goals.title")}
                 </h1>
                 <button
                     onClick={openAdd}
                     className='flex items-center gap-2 px-4 py-2 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 transition-colors'
                 >
                     <MdFlag />
-                    {t('goals.add')}
+                    {t("goals.add")}
                 </button>
             </div>
             {syncError ? (
@@ -187,17 +225,19 @@ const GoalsPage = () => {
 
             {/* Tabs */}
             <div className='flex gap-1 mb-5 bg-gray-100 dark:bg-slate-800 rounded-lg p-1 w-fit'>
-                {['aktif', 'selesai'].map((tabKey) => (
+                {["aktif", "selesai"].map((tabKey) => (
                     <button
                         key={tabKey}
                         onClick={() => setTab(tabKey)}
                         className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors capitalize ${
                             tab === tabKey
-                                ? 'bg-white dark:bg-slate-700 text-emerald-700 dark:text-emerald-400 shadow-sm'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+                                ? "bg-white dark:bg-slate-700 text-emerald-700 dark:text-emerald-400 shadow-sm"
+                                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                         }`}
                     >
-                        {tabKey === 'aktif' ? t('goals.active') : t('goals.done')}
+                        {tabKey === "aktif"
+                            ? t("goals.active")
+                            : t("goals.done")}
                     </button>
                 ))}
             </div>
@@ -206,14 +246,16 @@ const GoalsPage = () => {
                 <div className='text-center py-16'>
                     <p className='text-4xl mb-3'>🎯</p>
                     <p className='text-gray-500 dark:text-gray-400 text-sm'>
-                        {tab === 'aktif' ? t('goals.empty_active') : t('goals.empty_done')}
+                        {tab === "aktif"
+                            ? t("goals.empty_active")
+                            : t("goals.empty_done")}
                     </p>
-                    {tab === 'aktif' && (
+                    {tab === "aktif" && (
                         <button
                             onClick={openAdd}
                             className='mt-4 text-emerald-600 dark:text-emerald-400 text-sm hover:underline'
                         >
-                            {t('goals.add_first')}
+                            {t("goals.add_first")}
                         </button>
                     )}
                 </div>
@@ -223,7 +265,9 @@ const GoalsPage = () => {
                         const pct = Math.min(
                             100,
                             Math.round(
-                                ((goal.current ?? 0) / Math.max(1, goal.target)) * 100,
+                                ((goal.current ?? 0) /
+                                    Math.max(1, goal.target)) *
+                                    100,
                             ),
                         );
                         return (
@@ -237,27 +281,34 @@ const GoalsPage = () => {
                                             {goal.title}
                                         </p>
                                         <p className='text-xs text-gray-400 dark:text-gray-500 mt-0.5'>
-                                            {goal.category} · {goal.current ?? 0}/{goal.target}{' '}
+                                            {goal.category} ·{" "}
+                                            {goal.current ?? 0}/{goal.target}{" "}
                                             {goal.unit}
                                             {goal.deadline
-                                                ? ` · ${t('goals.deadline')}: ${goal.deadline}`
-                                                : ''}
+                                                ? ` · ${t("goals.deadline")}: ${goal.deadline}`
+                                                : ""}
                                         </p>
                                     </div>
                                     <div className='flex items-center gap-1.5 shrink-0'>
                                         {!goal.completed && (
                                             <>
                                                 <button
-                                                    onClick={() => openEdit(goal)}
+                                                    onClick={() =>
+                                                        openEdit(goal)
+                                                    }
                                                     className='text-xs px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors'
                                                 >
-                                                    {t('goals.update_short')}
+                                                    {t("goals.update_short")}
                                                 </button>
                                                 <button
-                                                    onClick={() => markComplete(goal.id)}
-                                                    aria-label={t('goals.mark_done')}
+                                                    onClick={() =>
+                                                        markComplete(goal.id)
+                                                    }
+                                                    aria-label={t(
+                                                        "goals.mark_done",
+                                                    )}
                                                     className='text-emerald-500 hover:text-emerald-700 transition-colors'
-                                                    title={t('goals.mark_done')}
+                                                    title={t("goals.mark_done")}
                                                 >
                                                     <BsCheckCircleFill />
                                                 </button>
@@ -265,7 +316,7 @@ const GoalsPage = () => {
                                         )}
                                         <button
                                             onClick={() => remove(goal.id)}
-                                            aria-label={t('goals.delete')}
+                                            aria-label={t("goals.delete")}
                                             className='text-gray-300 dark:text-slate-600 hover:text-red-500 transition-colors'
                                         >
                                             <BsTrash />
@@ -276,8 +327,8 @@ const GoalsPage = () => {
                                     <div
                                         className={`h-full rounded-full transition-all ${
                                             goal.completed
-                                                ? 'bg-gray-400 dark:bg-slate-500'
-                                                : 'bg-emerald-500'
+                                                ? "bg-gray-400 dark:bg-slate-500"
+                                                : "bg-emerald-500"
                                         }`}
                                         style={{ width: `${pct}%` }}
                                     />
@@ -295,12 +346,14 @@ const GoalsPage = () => {
             {showModal && (
                 <div
                     className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'
-                    onClick={(e) => e.target === e.currentTarget && setShowModal(false)}
+                    onClick={(e) =>
+                        e.target === e.currentTarget && setShowModal(false)
+                    }
                 >
                     <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'>
                         <div className='flex items-center justify-between mb-4'>
                             <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
-                                {editGoal ? t('goals.update') : t('goals.add')}
+                                {editGoal ? t("goals.update") : t("goals.add")}
                             </h2>
                             <button
                                 onClick={() => setShowModal(false)}
@@ -313,15 +366,18 @@ const GoalsPage = () => {
                         <div className='space-y-3'>
                             <div>
                                 <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                    {t('goals.label_title')}
+                                    {t("goals.label_title")}
                                 </label>
                                 <input
                                     type='text'
                                     value={form.title}
                                     onChange={(e) =>
-                                        setForm((f) => ({ ...f, title: e.target.value }))
+                                        setForm((f) => ({
+                                            ...f,
+                                            title: e.target.value,
+                                        }))
                                     }
-                                    placeholder={t('goals.title_placeholder')}
+                                    placeholder={t("goals.title_placeholder")}
                                     className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 />
                             </div>
@@ -329,14 +385,17 @@ const GoalsPage = () => {
                             <div className='grid grid-cols-2 gap-3'>
                                 <div>
                                     <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                        {t('goals.label_target')}
+                                        {t("goals.label_target")}
                                     </label>
                                     <input
                                         type='number'
                                         min='1'
                                         value={form.target}
                                         onChange={(e) =>
-                                            setForm((f) => ({ ...f, target: e.target.value }))
+                                            setForm((f) => ({
+                                                ...f,
+                                                target: e.target.value,
+                                            }))
                                         }
                                         placeholder='30'
                                         className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
@@ -344,12 +403,15 @@ const GoalsPage = () => {
                                 </div>
                                 <div>
                                     <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                        {t('goals.label_unit')}
+                                        {t("goals.label_unit")}
                                     </label>
                                     <select
                                         value={form.unit}
                                         onChange={(e) =>
-                                            setForm((f) => ({ ...f, unit: e.target.value }))
+                                            setForm((f) => ({
+                                                ...f,
+                                                unit: e.target.value,
+                                            }))
                                         }
                                         className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                     >
@@ -365,14 +427,17 @@ const GoalsPage = () => {
                             {editGoal && (
                                 <div>
                                     <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                        {t('goals.label_current')}
+                                        {t("goals.label_current")}
                                     </label>
                                     <input
                                         type='number'
                                         min='0'
                                         value={form.current}
                                         onChange={(e) =>
-                                            setForm((f) => ({ ...f, current: e.target.value }))
+                                            setForm((f) => ({
+                                                ...f,
+                                                current: e.target.value,
+                                            }))
                                         }
                                         className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                     />
@@ -382,12 +447,15 @@ const GoalsPage = () => {
                             <div className='grid grid-cols-2 gap-3'>
                                 <div>
                                     <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                        {t('goals.label_category')}
+                                        {t("goals.label_category")}
                                     </label>
                                     <select
                                         value={form.category}
                                         onChange={(e) =>
-                                            setForm((f) => ({ ...f, category: e.target.value }))
+                                            setForm((f) => ({
+                                                ...f,
+                                                category: e.target.value,
+                                            }))
                                         }
                                         className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                     >
@@ -400,13 +468,16 @@ const GoalsPage = () => {
                                 </div>
                                 <div>
                                     <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                        {t('goals.label_deadline')}
+                                        {t("goals.label_deadline")}
                                     </label>
                                     <input
                                         type='date'
                                         value={form.deadline}
                                         onChange={(e) =>
-                                            setForm((f) => ({ ...f, deadline: e.target.value }))
+                                            setForm((f) => ({
+                                                ...f,
+                                                deadline: e.target.value,
+                                            }))
                                         }
                                         className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                     />
@@ -419,14 +490,14 @@ const GoalsPage = () => {
                                 onClick={() => setShowModal(false)}
                                 className='px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors'
                             >
-                                {t('common.cancel')}
+                                {t("common.cancel")}
                             </button>
                             <button
                                 onClick={save}
                                 disabled={!form.title.trim() || !form.target}
                                 className='px-4 py-2 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors'
                             >
-                                {t('common.save')}
+                                {t("common.save")}
                             </button>
                         </div>
                     </div>

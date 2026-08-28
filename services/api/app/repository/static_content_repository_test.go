@@ -63,69 +63,6 @@ func TestDzikirRepositoryCreateUpdateAndQueries(t *testing.T) {
 	}
 }
 
-func TestTahlilRepositoryCollectionAndItemCRUD(t *testing.T) {
-	db := newStaticContentRepositoryTestDB(t)
-	repo := NewTahlilRepository(db)
-
-	collection, err := repo.EnsureCollection(model.TahlilTypeYasin)
-	if err != nil {
-		t.Fatalf("ensure collection: %v", err)
-	}
-	again, err := repo.EnsureCollection(model.TahlilTypeYasin)
-	if err != nil {
-		t.Fatalf("ensure existing collection: %v", err)
-	}
-	if collection.ID == nil || again.ID == nil || *collection.ID != *again.ID {
-		t.Fatalf("expected ensure collection to be idempotent, got %#v and %#v", collection.ID, again.ID)
-	}
-
-	item, err := repo.CreateItem(&model.TahlilItem{
-		CollectionID:    collection.ID,
-		SortOrder:       2,
-		Label:           "Bacaan Yasin",
-		Arabic:          "يس",
-		Transliteration: "Yasin",
-		TranslationText: "Yasin",
-		Repeat:          0,
-	})
-	if err != nil {
-		t.Fatalf("create tahlil item: %v", err)
-	}
-	if item.Repeat != 1 {
-		t.Fatalf("expected repeat default to 1, got %d", item.Repeat)
-	}
-	if item.TranslationID == nil || item.Translation == nil {
-		t.Fatal("expected tahlil item translation to be created and preloaded")
-	}
-
-	updated, err := repo.UpdateItem(*item.ID, &model.TahlilItem{
-		CollectionID:    collection.ID,
-		SortOrder:       1,
-		Label:           "Bacaan Yasin Awal",
-		Arabic:          "يس",
-		Transliteration: "Yasin",
-		TranslationText: "Awal surat Yasin",
-		Repeat:          0,
-	})
-	if err != nil {
-		t.Fatalf("update tahlil item: %v", err)
-	}
-	if updated.Repeat != 1 || updated.SortOrder != 1 {
-		t.Fatalf("expected normalized repeat and sort order, got %#v", updated)
-	}
-	if updated.Translation == nil || updated.Translation.Idn == nil || *updated.Translation.Idn != "Bacaan Yasin Awal" {
-		t.Fatalf("expected translation update, got %#v", updated.Translation)
-	}
-
-	loadedCollection, err := repo.FindByID(*collection.ID)
-	if err != nil {
-		t.Fatalf("find collection: %v", err)
-	}
-	if len(loadedCollection.Items) != 1 || loadedCollection.Items[0].Translation == nil {
-		t.Fatalf("expected collection item with translation, got %#v", loadedCollection.Items)
-	}
-}
-
 func TestManasikRepositoryCreateUpdateAndOrder(t *testing.T) {
 	db := newStaticContentRepositoryTestDB(t)
 	repo := NewManasikRepository(db)
@@ -257,8 +194,6 @@ func newStaticContentRepositoryTestDB(t *testing.T) *gorm.DB {
 	if err := db.AutoMigrate(
 		&model.Translation{},
 		&model.Dzikir{},
-		&model.TahlilCollection{},
-		&model.TahlilItem{},
 		&model.ManasikStep{},
 		&model.FiqhCategory{},
 		&model.FiqhItem{},

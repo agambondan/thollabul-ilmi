@@ -6,17 +6,17 @@ dipecah menjadi task implementasi.
 
 ## Review Terbaru
 
-| Dokumen | Fokus |
-|---|---|
-| [2026-05-23-web-mobile-feature-parity-deep-review.md](./2026-05-23-web-mobile-feature-parity-deep-review.md) | Deep review parity fitur web ke mobile dan mobile ke web, termasuk stub, intentional exclusions, dan gap kedalaman |
-| [2026-05-17-web-mobile-performance-sync-deep-review.md](./2026-05-17-web-mobile-performance-sync-deep-review.md) | Deep review sync web/mobile/backend, CTA parity, dan performance risk lintas platform |
-| [2026-05-15-public-dashboard-parity-review.md](./2026-05-15-public-dashboard-parity-review.md) | Deep review parity fitur public vs dashboard customer, CTA leakage dashboard ke public route, dan pola `basePath` |
-| [2026-05-15-web-journey-cta-review.md](./2026-05-15-web-journey-cta-review.md) | Deep review user journey landing, dashboard customer, dashboard admin, dan CTA mismatch |
-| [2026-05-13-deep-review-summary.md](./2026-05-13-deep-review-summary.md) | Ringkasan prioritas dan urutan perbaikan |
-| [2026-05-13-contract-sync-review.md](./2026-05-13-contract-sync-review.md) | Drift kontrak API antara web, mobile, dan backend |
-| [2026-05-13-mobile-ui-ux-review.md](./2026-05-13-mobile-ui-ux-review.md) | Risiko bug dan polish UI/UX mobile |
-| [2026-05-13-web-dashboard-review.md](./2026-05-13-web-dashboard-review.md) | Risiko web dashboard/admin dan sync data personal |
-| [2026-05-13-verification-log.md](./2026-05-13-verification-log.md) | Evidence command yang dijalankan saat review |
+| Dokumen                                                                                                          | Fokus                                                                                                              |
+| ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| [2026-05-23-web-mobile-feature-parity-deep-review.md](./2026-05-23-web-mobile-feature-parity-deep-review.md)     | Deep review parity fitur web ke mobile dan mobile ke web, termasuk stub, intentional exclusions, dan gap kedalaman |
+| [2026-05-17-web-mobile-performance-sync-deep-review.md](./2026-05-17-web-mobile-performance-sync-deep-review.md) | Deep review sync web/mobile/backend, CTA parity, dan performance risk lintas platform                              |
+| [2026-05-15-public-dashboard-parity-review.md](./2026-05-15-public-dashboard-parity-review.md)                   | Deep review parity fitur public vs dashboard customer, CTA leakage dashboard ke public route, dan pola `basePath`  |
+| [2026-05-15-web-journey-cta-review.md](./2026-05-15-web-journey-cta-review.md)                                   | Deep review user journey landing, dashboard customer, dashboard admin, dan CTA mismatch                            |
+| [2026-05-13-deep-review-summary.md](./2026-05-13-deep-review-summary.md)                                         | Ringkasan prioritas dan urutan perbaikan                                                                           |
+| [2026-05-13-contract-sync-review.md](./2026-05-13-contract-sync-review.md)                                       | Drift kontrak API antara web, mobile, dan backend                                                                  |
+| [2026-05-13-mobile-ui-ux-review.md](./2026-05-13-mobile-ui-ux-review.md)                                         | Risiko bug dan polish UI/UX mobile                                                                                 |
+| [2026-05-13-web-dashboard-review.md](./2026-05-13-web-dashboard-review.md)                                       | Risiko web dashboard/admin dan sync data personal                                                                  |
+| [2026-05-13-verification-log.md](./2026-05-13-verification-log.md)                                               | Evidence command yang dijalankan saat review                                                                       |
 
 ## Cara Pakai
 

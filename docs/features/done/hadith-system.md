@@ -31,24 +31,32 @@ Baca, cari, dan eksplorasi hadith dari multi-kitab dengan detail sanad, takhrij,
 ### API Response Shape
 
 **`GET /hadiths?book=bukhari&theme=iman`**
+
 ```json
 [
-  {
-    "id": 1,
-    "number": 1,
-    "book_id": 1,
-    "theme_id": 1,
-    "chapter_id": 1,
-    "grade": "shahih",
-    "shahih_by": "Al-Albani",
-    "dhaif_by": null,
-    "grade_notes": "HR. Bukhari no. 1",
-    "sanad": "حَدَّثَنَا...",
-    "translation": { "idn": "Sesungguhnya amal itu tergantung niatnya...", "ar": "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ..." },
-    "book": { "id": 1, "slug": "bukhari", "translation": { "idn": "Shahih Bukhari" } },
-    "theme": { "id": 1, "translation": { "idn": "Iman" } },
-    "chapter": { "id": 1, "translation": { "idn": "Bab Niat" } }
-  }
+    {
+        "id": 1,
+        "number": 1,
+        "book_id": 1,
+        "theme_id": 1,
+        "chapter_id": 1,
+        "grade": "shahih",
+        "shahih_by": "Al-Albani",
+        "dhaif_by": null,
+        "grade_notes": "HR. Bukhari no. 1",
+        "sanad": "حَدَّثَنَا...",
+        "translation": {
+            "idn": "Sesungguhnya amal itu tergantung niatnya...",
+            "ar": "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ..."
+        },
+        "book": {
+            "id": 1,
+            "slug": "bukhari",
+            "translation": { "idn": "Shahih Bukhari" }
+        },
+        "theme": { "id": 1, "translation": { "idn": "Iman" } },
+        "chapter": { "id": 1, "translation": { "idn": "Bab Niat" } }
+    }
 ]
 ```
 

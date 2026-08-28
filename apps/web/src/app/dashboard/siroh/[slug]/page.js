@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { sirohApi } from '@/lib/api';
-import { useLocale } from '@/context/Locale';
-import { getLocalizedField } from '@/lib/translation';
-import Link from 'next/link';
-import { useEffect, useState, use } from 'react';
+import { sirohApi } from "@/lib/api";
+import { useLocale } from "@/context/Locale";
+import { getLocalizedField } from "@/lib/translation";
+import Link from "next/link";
+import { useEffect, useState, use } from "react";
 
 const toStr = (v) => {
-    if (!v) return '';
-    if (typeof v === 'string') return v;
-    return v.name ?? v.title ?? v.label ?? v.value ?? '';
+    if (!v) return "";
+    if (typeof v === "string") return v;
+    return v.name ?? v.title ?? v.label ?? v.value ?? "";
 };
 
 export default function SirohDetailPage(props) {
@@ -46,13 +46,13 @@ export default function SirohDetailPage(props) {
             <div className='p-6 text-center'>
                 <p className='text-4xl mb-3'>⚠️</p>
                 <p className='text-gray-500 dark:text-gray-400 text-sm'>
-                    {t('siroh.not_found')}
+                    {t("siroh.not_found")}
                 </p>
                 <Link
                     href='/dashboard/siroh'
                     className='mt-4 inline-block text-sm text-blue-600 dark:text-blue-400 hover:underline'
                 >
-                    ← {t('common.back')}
+                    ← {t("common.back")}
                 </Link>
             </div>
         );
@@ -64,7 +64,7 @@ export default function SirohDetailPage(props) {
                 href='/dashboard/siroh'
                 className='inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline mb-6'
             >
-                ← {t('siroh.back_to_siroh')}
+                ← {t("siroh.back_to_siroh")}
             </Link>
 
             {content.category && (
@@ -74,18 +74,22 @@ export default function SirohDetailPage(props) {
             )}
 
             <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-2'>
-                {getLocalizedField(content, 'title', lang)}
+                {getLocalizedField(content, "title", lang)}
             </h1>
 
-            {getLocalizedField(content, 'subtitle', lang) && (
+            {getLocalizedField(content, "subtitle", lang) && (
                 <p className='text-gray-500 dark:text-gray-400 mb-6'>
-                    {getLocalizedField(content, 'subtitle', lang)}
+                    {getLocalizedField(content, "subtitle", lang)}
                 </p>
             )}
 
             <div className='text-gray-700 dark:text-gray-300 leading-relaxed space-y-4'>
-                {String((getLocalizedField(content, 'content', lang) || content.content) ?? '')
-                    .split('\n')
+                {String(
+                    (getLocalizedField(content, "content", lang) ||
+                        content.content) ??
+                        "",
+                )
+                    .split("\n")
                     .filter(Boolean)
                     .map((para, i) => (
                         <p key={i}>{para}</p>
@@ -94,7 +98,7 @@ export default function SirohDetailPage(props) {
 
             {content.source && (
                 <p className='text-xs text-gray-400 dark:text-gray-500 mt-8 border-t border-gray-100 dark:border-slate-700 pt-4'>
-                    {t('common.source')}: {content.source}
+                    {t("common.source")}: {content.source}
                 </p>
             )}
         </div>

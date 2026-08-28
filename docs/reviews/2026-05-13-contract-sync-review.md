@@ -112,9 +112,9 @@ Impact:
 Rekomendasi:
 
 - Putuskan kontrak admin quiz:
-  - opsi API: tambah `/quiz/questions/*`.
-  - opsi frontend: ganti ke `/quiz` untuk create/delete dan hilangkan edit
-    sampai backend tersedia.
+    - opsi API: tambah `/quiz/questions/*`.
+    - opsi frontend: ganti ke `/quiz` untuk create/delete dan hilangkan edit
+      sampai backend tersedia.
 - Tambahkan route test admin quiz.
 
 Status: `FIXED` untuk kontrak route dan adapter payload admin web.
@@ -145,8 +145,8 @@ Impact:
 Rekomendasi:
 
 - Untuk konten static seeded, pilih salah satu:
-  - jadikan admin benar-benar read-only, atau
-  - tambahkan CRUD backend yang sesuai.
+    - jadikan admin benar-benar read-only, atau
+    - tambahkan CRUD backend yang sesuai.
 - Tambah endpoint `GET /wirid` atau ubah mobile/web ke endpoint occasion yang
   jelas.
 - Pisahkan API client `fiqhCategoryAdminApi` dan `fiqhItemAdminApi`.
@@ -249,10 +249,10 @@ Prayer tetap memakai status detail yang sudah valid.
    `apps/mobile/src/api/*.js`, dan `apps/mobile/src/data/mobileFeatures.js`.
 2. Buat test yang membandingkan daftar tersebut dengan route Fiber.
 3. Tambahkan smoke API minimal untuk endpoint P0:
-   - daily ayah
-   - history/sejarah admin
-   - quiz admin
-   - wirid/tahlil/manasik/fiqh admin
-   - asbabun nuzul admin list
-   - hijri convert
-   - imsakiyah with coordinates
+    - daily ayah
+    - history/sejarah admin
+    - quiz admin
+    - wirid/tahlil/manasik/fiqh admin
+    - asbabun nuzul admin list
+    - hijri convert
+    - imsakiyah with coordinates

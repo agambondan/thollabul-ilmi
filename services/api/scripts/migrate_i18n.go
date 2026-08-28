@@ -17,6 +17,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
@@ -30,7 +31,6 @@ var modelsToMigrate = []interface{}{
 	model.Dzikir{},
 	model.ManasikStep{},
 	model.SholatGuide{},
-	model.TahlilItem{},
 	model.AsbabunNuzul{},
 	model.FiqhCategory{},
 	model.FiqhItem{},
@@ -80,7 +80,6 @@ func main() {
 	total += migrateDzikir(db)
 	total += migrateManasikStep(db)
 	total += migrateSholatGuide(db)
-	total += migrateTahlilItem(db)
 	total += migrateAsbabunNuzul(db)
 	total += migrateFiqhCategory(db)
 	total += migrateFiqhItem(db)
@@ -185,25 +184,6 @@ func migrateSholatGuide(db *gorm.DB) int {
 		n++
 	}
 	log.Printf("sholat_guide: %d migrated", n)
-	return n
-}
-
-func migrateTahlilItem(db *gorm.DB) int {
-	var rows []model.TahlilItem
-	db.Where("translation_id IS NULL AND translation != ''").Find(&rows)
-	n := 0
-	for _, r := range rows {
-		id, err := createTranslation(db, r.Translation)
-		if err != nil || id == nil {
-			continue
-		}
-		if err := db.Model(&r).Update("translation_id", *id).Error; err != nil {
-			log.Printf("tahlil_item %d: %v", *r.ID, err)
-			continue
-		}
-		n++
-	}
-	log.Printf("tahlil_item: %d migrated", n)
 	return n
 }
 

@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import Footer from '@/components/Footer';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import Section from '@/components/Section';
-import { SkeletonInline } from '@/components/skeleton/Skeleton';
-import { sirohApi } from '@/lib/api';
-import { useLocale } from '@/context/Locale';
-import { useLayoutMode } from '@/lib/useLayoutMode';
-import { getLocalizedField } from '@/lib/translation';
-import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
-import { BsSearch } from 'react-icons/bs';
+import Footer from "@/components/Footer";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import Section from "@/components/Section";
+import { SkeletonInline } from "@/components/skeleton/Skeleton";
+import { sirohApi } from "@/lib/api";
+import { useLocale } from "@/context/Locale";
+import { useLayoutMode } from "@/lib/useLayoutMode";
+import { getLocalizedField } from "@/lib/translation";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { BsSearch } from "react-icons/bs";
 
 const PAGE_SIZE = 20;
 
@@ -22,7 +22,7 @@ const SirohPage = () => {
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(false);
     const [page, setPage] = useState(0);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState("");
     const sentinelRef = useRef(null);
 
     const fetchPage = (pageNum, append) => {
@@ -60,11 +60,16 @@ const SirohPage = () => {
         if (!el) return;
         const obs = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting && hasMore && !isLoading && !isLoadingMore) {
+                if (
+                    entry.isIntersecting &&
+                    hasMore &&
+                    !isLoading &&
+                    !isLoadingMore
+                ) {
                     setPage((p) => p + 1);
                 }
             },
-            { rootMargin: '100px' },
+            { rootMargin: "100px" },
         );
         obs.observe(el);
         return () => obs.disconnect();
@@ -74,8 +79,12 @@ const SirohPage = () => {
         const query = search.trim().toLowerCase();
         if (!query) return true;
         return (
-            getLocalizedField(chapter, 'title', lang).toLowerCase().includes(query) ||
-            getLocalizedField(chapter, 'excerpt', lang).toLowerCase().includes(query) ||
+            getLocalizedField(chapter, "title", lang)
+                .toLowerCase()
+                .includes(query) ||
+            getLocalizedField(chapter, "excerpt", lang)
+                .toLowerCase()
+                .includes(query) ||
             chapter.slug?.toLowerCase().includes(query)
         );
     });
@@ -84,19 +93,25 @@ const SirohPage = () => {
         <main className='min-h-screen flex flex-col'>
             <NavbarTailwindCss />
             <Section>
-                <div className={isWide ? 'w-full px-4' : 'container mx-auto px-4 max-w-3xl'}>
+                <div
+                    className={
+                        isWide
+                            ? "w-full px-4"
+                            : "container mx-auto px-4 max-w-3xl"
+                    }
+                >
                     <div className='text-center mb-8'>
                         <p
                             className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'
-                            style={{ fontFamily: 'Amiri, serif' }}
+                            style={{ fontFamily: "Amiri, serif" }}
                         >
                             السِّيرَةُ النَّبَوِيَّة
                         </p>
                         <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
-                            {t('siroh.title')}
+                            {t("siroh.title")}
                         </h1>
                         <p className='text-sm text-gray-500 dark:text-gray-400'>
-                            {t('siroh.page_subtitle')}
+                            {t("siroh.page_subtitle")}
                         </p>
                     </div>
 
@@ -106,7 +121,7 @@ const SirohPage = () => {
                             type='text'
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder={t('siroh.search_placeholder')}
+                            placeholder={t("siroh.search_placeholder")}
                             className='flex-1 bg-transparent text-sm text-gray-700 dark:text-gray-200 outline-none'
                         />
                     </div>
@@ -117,15 +132,15 @@ const SirohPage = () => {
                         <div className='text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                             <p
                                 className='text-4xl text-emerald-300 dark:text-emerald-700 mb-3'
-                                style={{ fontFamily: 'Amiri, serif' }}
+                                style={{ fontFamily: "Amiri, serif" }}
                             >
                                 سِيَرَة
                             </p>
                             <p className='text-gray-500 dark:text-gray-400 font-medium mb-1'>
-                                {t('siroh.empty_title')}
+                                {t("siroh.empty_title")}
                             </p>
                             <p className='text-sm text-gray-400 dark:text-gray-500'>
-                                {t('siroh.empty_hint')}
+                                {t("siroh.empty_hint")}
                             </p>
                         </div>
                     )}
@@ -142,15 +157,29 @@ const SirohPage = () => {
                                 </span>
                                 <div className='flex-1 min-w-0'>
                                     <p className='font-semibold text-emerald-900 dark:text-white text-sm truncate'>
-                                        {getLocalizedField(chapter, 'title', lang)}
+                                        {getLocalizedField(
+                                            chapter,
+                                            "title",
+                                            lang,
+                                        )}
                                     </p>
-                                    {getLocalizedField(chapter, 'excerpt', lang) && (
+                                    {getLocalizedField(
+                                        chapter,
+                                        "excerpt",
+                                        lang,
+                                    ) && (
                                         <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate'>
-                                            {getLocalizedField(chapter, 'excerpt', lang)}
+                                            {getLocalizedField(
+                                                chapter,
+                                                "excerpt",
+                                                lang,
+                                            )}
                                         </p>
                                     )}
                                 </div>
-                                <span className='text-gray-300 dark:text-gray-600 text-sm'>›</span>
+                                <span className='text-gray-300 dark:text-gray-600 text-sm'>
+                                    ›
+                                </span>
                             </Link>
                         ))}
                     </div>
@@ -165,15 +194,17 @@ const SirohPage = () => {
 
                     {!hasMore && chapters.length > 0 && !isLoading && (
                         <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
-                            {t('siroh.all_shown')}
+                            {t("siroh.all_shown")}
                         </p>
                     )}
 
-                    {!isLoading && filteredChapters.length === 0 && chapters.length > 0 && (
-                        <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
-                            {t('siroh.no_search')}
-                        </p>
-                    )}
+                    {!isLoading &&
+                        filteredChapters.length === 0 &&
+                        chapters.length > 0 && (
+                            <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
+                                {t("siroh.no_search")}
+                            </p>
+                        )}
                 </div>
             </Section>
             <Footer />

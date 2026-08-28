@@ -1,21 +1,23 @@
-'use client';
+"use client";
 /* eslint-disable @next/next/no-img-element */
 
-import { SkeletonInline } from '@/components/skeleton/Skeleton';
-import ContentWidth from '@/components/layout/ContentWidth';
-import { useLocale } from '@/context/Locale';
-import { getLocalizedTranslation } from '@/lib/translation';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { SkeletonInline } from "@/components/skeleton/Skeleton";
+import ContentWidth from "@/components/layout/ContentWidth";
+import { useLocale } from "@/context/Locale";
+import { getLocalizedTranslation } from "@/lib/translation";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-const ByBook = ({ basePath = '/hadith' }) => {
+const ByBook = ({ basePath = "/hadith" }) => {
     const { t, lang } = useLocale();
     const [isLoading, SetIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [books, setBooks] = useState([]);
 
     const fetchBooks = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/books`);
+        const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/v1/books`,
+        );
         return await res.json();
     };
 
@@ -37,18 +39,23 @@ const ByBook = ({ basePath = '/hadith' }) => {
             <div className='flex flex-col items-center justify-center min-h-[40vh] text-center px-4'>
                 <p className='text-4xl mb-3'>⚠️</p>
                 <h2 className='text-lg font-bold text-emerald-900 dark:text-white mb-2'>
-                    {t('hadith.load_error_title')}
+                    {t("hadith.load_error_title")}
                 </h2>
                 <p className='text-sm text-gray-500 dark:text-gray-400'>
-                    {t('hadith.load_error_desc')}
+                    {t("hadith.load_error_desc")}
                 </p>
             </div>
         );
 
     return (
-        <ContentWidth compact='max-w-6xl' className='grid xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 px-4'>
+        <ContentWidth
+            compact='max-w-6xl'
+            className='grid xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 px-4'
+        >
             {(books?.items ?? []).map((book) => {
-                const label = getLocalizedTranslation(book?.translation, lang) || book.slug;
+                const label =
+                    getLocalizedTranslation(book?.translation, lang) ||
+                    book.slug;
                 return (
                     <div
                         key={book.id}
@@ -72,7 +79,7 @@ const ByBook = ({ basePath = '/hadith' }) => {
                                 href={`${basePath}/${book.slug}`}
                                 className='bg-emerald-700 hover:bg-emerald-600 text-white text-sm text-center py-1.5 px-3 rounded-lg transition-colors'
                             >
-                                {t('hadith.open_reader')}
+                                {t("hadith.open_reader")}
                             </Link>
                         </div>
                     </div>

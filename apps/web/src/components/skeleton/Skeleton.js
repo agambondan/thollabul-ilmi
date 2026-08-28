@@ -1,7 +1,9 @@
-'use client';
+"use client";
 
-const S = ({ className = '' }) => (
-    <div className={`animate-pulse rounded bg-gray-200 dark:bg-slate-700 ${className}`} />
+const S = ({ className = "" }) => (
+    <div
+        className={`animate-pulse rounded bg-gray-200 dark:bg-slate-700 ${className}`}
+    />
 );
 
 export const SkeletonNavbar = () => (
@@ -100,7 +102,7 @@ export const SkeletonCards = ({ cols = 2, rows = 3 }) => (
                     <S className='h-4 w-56 mx-auto' />
                 </div>
                 <div
-                    className={`grid gap-3 ${cols === 2 ? 'grid-cols-2' : cols === 3 ? 'grid-cols-3' : 'grid-cols-1'}`}
+                    className={`grid gap-3 ${cols === 2 ? "grid-cols-2" : cols === 3 ? "grid-cols-3" : "grid-cols-1"}`}
                 >
                     {[...Array(cols * rows)].map((_, i) => (
                         <S key={i} className='h-24 rounded-xl' />
@@ -125,7 +127,10 @@ export const SkeletonStats = () => (
                     <S className='h-3 w-32 mb-4' />
                     <div className='flex items-end gap-1.5 h-20'>
                         {[60, 80, 40, 100, 70, 50, 90].map((h, i) => (
-                            <div key={i} className='flex flex-col items-center flex-1 gap-1'>
+                            <div
+                                key={i}
+                                className='flex flex-col items-center flex-1 gap-1'
+                            >
                                 <S
                                     className='w-full rounded-t-sm'
                                     style={{ height: `${h}%` }}
@@ -210,7 +215,9 @@ export const SkeletonReader = () => (
                                 <S className='h-7 w-7 rounded-lg' />
                             </div>
                         </div>
-                        <S className={`h-10 w-${i % 2 === 0 ? 'full' : '4/5'} ml-auto`} />
+                        <S
+                            className={`h-10 w-${i % 2 === 0 ? "full" : "4/5"} ml-auto`}
+                        />
                         <S className='h-4 w-3/4' />
                         <S className='h-3.5 w-2/3' />
                     </div>
@@ -229,7 +236,9 @@ export const SkeletonInline = ({ rows = 4 }) => (
             >
                 <S className='w-9 h-9 rounded-lg shrink-0' />
                 <div className='flex-1 space-y-2'>
-                    <S className={`h-3.5 ${i % 3 === 0 ? 'w-3/4' : i % 3 === 1 ? 'w-full' : 'w-2/3'}`} />
+                    <S
+                        className={`h-3.5 ${i % 3 === 0 ? "w-3/4" : i % 3 === 1 ? "w-full" : "w-2/3"}`}
+                    />
                     <S className='h-3 w-1/2' />
                 </div>
             </div>
@@ -238,7 +247,9 @@ export const SkeletonInline = ({ rows = 4 }) => (
 );
 
 export const SkeletonInlineCards = ({ cols = 2, rows = 2 }) => (
-    <div className={`grid gap-3 py-4 ${cols === 2 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+    <div
+        className={`grid gap-3 py-4 ${cols === 2 ? "grid-cols-2" : "grid-cols-1"}`}
+    >
         {[...Array(cols * rows)].map((_, i) => (
             <S key={i} className='h-20 rounded-xl' />
         ))}

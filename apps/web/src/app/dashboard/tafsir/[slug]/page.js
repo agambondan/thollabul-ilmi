@@ -1,4 +1,4 @@
-import { TafsirSurahContent } from '@/app/tafsir/[slug]/page';
+import { TafsirSurahContent } from "@/app/tafsir/[slug]/page";
 
 export default async function DashboardTafsirReaderPage(props) {
     const params = await props.params;

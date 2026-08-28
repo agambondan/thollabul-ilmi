@@ -2,13 +2,14 @@ import HadithNumberContent, {
     fetchHadithByBookNumber,
     getHadithTitle,
     normalizeHadithNumber,
-} from '@/app/hadith/[slug]/[number]/HadithNumberContent';
-import Footer from '@/components/Footer';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import Section from '@/components/Section';
-import { getLocalizedTranslation } from '@/lib/translation';
+} from "@/app/hadith/[slug]/[number]/HadithNumberContent";
+import Footer from "@/components/Footer";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import Section from "@/components/Section";
+import { getLocalizedTranslation } from "@/lib/translation";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tholabul-ilmi.com';
+const SITE_URL =
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://tholabul-ilmi.com";
 
 export async function generateMetadata(props) {
     const params = await props.params;
@@ -23,11 +24,13 @@ export async function generateMetadata(props) {
 
     const title = `${getHadithTitle(hadith, params.slug, number)} — Hadith`;
     const translation =
-        getLocalizedTranslation(hadith.translation, 'ID') ||
-        getLocalizedTranslation(hadith.translation, 'EN') ||
-        '';
+        getLocalizedTranslation(hadith.translation, "ID") ||
+        getLocalizedTranslation(hadith.translation, "EN") ||
+        "";
     const description =
-        translation.length > 160 ? `${translation.slice(0, 157)}...` : translation;
+        translation.length > 160
+            ? `${translation.slice(0, 157)}...`
+            : translation;
     const canonicalUrl = `${SITE_URL}/hadith/${params.slug}/${number}`;
 
     return {
@@ -38,13 +41,13 @@ export async function generateMetadata(props) {
             title,
             description,
             url: canonicalUrl,
-            images: [{ url: '/og', width: 1200, height: 630 }],
+            images: [{ url: "/og", width: 1200, height: 630 }],
         },
         twitter: {
-            card: 'summary_large_image',
+            card: "summary_large_image",
             title,
             description,
-            images: ['/og'],
+            images: ["/og"],
         },
     };
 }

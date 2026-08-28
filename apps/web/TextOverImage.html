@@ -1,89 +1,91 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-	<head>
-		<!-- <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script> -->
-		<script
-			src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
-			integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
-			crossorigin="anonymous"
-			referrerpolicy="no-referrer"
-		></script>
-		<style>
-			/* Container holding the image and the text */
-			.container {
-				position: relative;
-				text-align: center;
-				color: white;
-			}
+    <head>
+        <!-- <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script> -->
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+            integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <style>
+            /* Container holding the image and the text */
+            .container {
+                position: relative;
+                text-align: center;
+                color: white;
+            }
 
-			/* Bottom left text */
-			.bottom-left {
-				position: absolute;
-				bottom: 8px;
-				left: 16px;
-			}
+            /* Bottom left text */
+            .bottom-left {
+                position: absolute;
+                bottom: 8px;
+                left: 16px;
+            }
 
-			/* Top left text */
-			.top-left {
-				position: absolute;
-				top: 8px;
-				left: 16px;
-			}
+            /* Top left text */
+            .top-left {
+                position: absolute;
+                top: 8px;
+                left: 16px;
+            }
 
-			/* Top right text */
-			.top-right {
-				position: absolute;
-				top: 8px;
-				right: 16px;
-			}
+            /* Top right text */
+            .top-right {
+                position: absolute;
+                top: 8px;
+                right: 16px;
+            }
 
-			/* Bottom right text */
-			.bottom-right {
-				position: absolute;
-				bottom: 8px;
-				right: 16px;
-			}
+            /* Bottom right text */
+            .bottom-right {
+                position: absolute;
+                bottom: 8px;
+                right: 16px;
+            }
 
-			/* Centered text */
-			.centered {
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				transform: translate(-50%, -50%);
-			}
-		</style>
-	</head>
-	<body>
-		<div id="capture" class="container">
-			<img
-				id="image"
-				src="https://www.w3schools.com/howto/img_snow_wide.jpg"
-				alt="Snow"
-				style="width: 100%"
-			/>
-			<div class="bottom-left">Bottom Left</div>
-			<div class="top-left">Top Left</div>
-			<div class="top-right">Top Right</div>
-			<div class="bottom-right">Bottom Right</div>
-			<div class="centered">Centered</div>
-		</div>
-		<button onclick="takeScreenshotDiv()">Take Screenshot Div</button>
-		<button onclick="takeScreenshotImage()">Take Screenshot Image</button>
-		<script>
-			function takeScreenshotDiv() {
-				html2canvas(document.querySelector('#capture')).then((canvas) => {
-					// console.log(canvas.toDataURL('image/jpeg', 0.9));
-					console.log(canvas.toDataURL('image/png'));
-					// document.body.appendChild(canvas);
-				});
-			}
-			function takeScreenshotImage() {
-				html2canvas(document.querySelector('#image')).then((canvas) => {
-					// console.log(canvas.toDataURL('image/jpeg', 0.9));
-					console.log(canvas.toDataURL('image/png'));
-					// document.body.appendChild(canvas);
-				});
-			}
-		</script>
-	</body>
+            /* Centered text */
+            .centered {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        </style>
+    </head>
+    <body>
+        <div id="capture" class="container">
+            <img
+                id="image"
+                src="https://www.w3schools.com/howto/img_snow_wide.jpg"
+                alt="Snow"
+                style="width: 100%"
+            />
+            <div class="bottom-left">Bottom Left</div>
+            <div class="top-left">Top Left</div>
+            <div class="top-right">Top Right</div>
+            <div class="bottom-right">Bottom Right</div>
+            <div class="centered">Centered</div>
+        </div>
+        <button onclick="takeScreenshotDiv()">Take Screenshot Div</button>
+        <button onclick="takeScreenshotImage()">Take Screenshot Image</button>
+        <script>
+            function takeScreenshotDiv() {
+                html2canvas(document.querySelector("#capture")).then(
+                    (canvas) => {
+                        // console.log(canvas.toDataURL('image/jpeg', 0.9));
+                        console.log(canvas.toDataURL("image/png"));
+                        // document.body.appendChild(canvas);
+                    },
+                );
+            }
+            function takeScreenshotImage() {
+                html2canvas(document.querySelector("#image")).then((canvas) => {
+                    // console.log(canvas.toDataURL('image/jpeg', 0.9));
+                    console.log(canvas.toDataURL("image/png"));
+                    // document.body.appendChild(canvas);
+                });
+            }
+        </script>
+    </body>
 </html>

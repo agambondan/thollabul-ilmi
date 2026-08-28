@@ -1,4 +1,4 @@
-import classNames from 'classnames';
+import classNames from "classnames";
 
 const HadithTab = ({ tabs, onClickTab, activeTab, children }) => {
     return (
@@ -12,13 +12,13 @@ const HadithTab = ({ tabs, onClickTab, activeTab, children }) => {
                         <button
                             onClick={() => onClickTab(tab.href)}
                             className={classNames(
-                                'px-5 py-2 rounded-full text-sm font-medium transition-all',
+                                "px-5 py-2 rounded-full text-sm font-medium transition-all",
                                 {
-                                    'bg-emerald-700 dark:bg-emerald-700 text-white shadow-sm':
+                                    "bg-emerald-700 dark:bg-emerald-700 text-white shadow-sm":
                                         activeTab === tab.href,
-                                    'bg-parchment-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600':
+                                    "bg-parchment-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600":
                                         activeTab !== tab.href,
-                                }
+                                },
                             )}
                             role='tab'
                             aria-selected={activeTab === tab.href}

@@ -30,17 +30,30 @@ Ranking berdasarkan streak + hafalan. Memberikan gambaran pencapaian pengguna da
 ### API Response Shape
 
 **`GET /leaderboard`**
+
 ```json
 {
-  "my_rank": {
-    "rank": 15,
-    "score": 1200,
-    "total": 1000
-  },
-  "entries": [
-    { "rank": 1, "user_id": "uuid", "name": "Ahmad", "avatar": "https://...", "score": 5000 },
-    { "rank": 2, "user_id": "uuid", "name": "Siti", "avatar": null, "score": 4800 }
-  ]
+    "my_rank": {
+        "rank": 15,
+        "score": 1200,
+        "total": 1000
+    },
+    "entries": [
+        {
+            "rank": 1,
+            "user_id": "uuid",
+            "name": "Ahmad",
+            "avatar": "https://...",
+            "score": 5000
+        },
+        {
+            "rank": 2,
+            "user_id": "uuid",
+            "name": "Siti",
+            "avatar": null,
+            "score": 4800
+        }
+    ]
 }
 ```
 
@@ -52,7 +65,7 @@ Ranking berdasarkan streak + hafalan. Memberikan gambaran pencapaian pengguna da
 | `rank` | int | Computed rank position |
 | `user_id` | string | User identifier |
 | `name` | string | User display name |
-| `avatar` | *string | Avatar URL |
+| `avatar` | \*string | Avatar URL |
 | `score` | int | Score (computed from streak + hafalan + activity) |
 
 **`LeaderboardMyRank`** (`model/leaderboard.go`)

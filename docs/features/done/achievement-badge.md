@@ -30,32 +30,36 @@ Poin, badge, dan pencapaian yang bisa di-unlock. Sistem reward untuk memberikan 
 ### API Response Shape
 
 **`GET /achievements`**
+
 ```json
 {
-  "achievements": [
-    {
-      "id": 1,
-      "code": "khatam_pertama",
-      "name": "Khatam Pertama",
-      "name_en": "First Khatam",
-      "description": "Menyelesaikan bacaan Al-Quran 30 juz",
-      "desc_en": "Completed reading the entire Quran",
-      "icon": "📖",
-      "category": "tilawah",
-      "threshold": 30
+    "achievements": [
+        {
+            "id": 1,
+            "code": "khatam_pertama",
+            "name": "Khatam Pertama",
+            "name_en": "First Khatam",
+            "description": "Menyelesaikan bacaan Al-Quran 30 juz",
+            "desc_en": "Completed reading the entire Quran",
+            "icon": "📖",
+            "category": "tilawah",
+            "threshold": 30
+        }
+    ],
+    "earned": [
+        {
+            "user_id": "uuid",
+            "achievement_id": 1,
+            "achievement": {
+                "code": "khatam_pertama",
+                "name": "Khatam Pertama"
+            },
+            "earned_at": "2026-03-15T10:00:00Z"
+        }
+    ],
+    "points": {
+        "total_points": 2500
     }
-  ],
-  "earned": [
-    {
-      "user_id": "uuid",
-      "achievement_id": 1,
-      "achievement": { "code": "khatam_pertama", "name": "Khatam Pertama" },
-      "earned_at": "2026-03-15T10:00:00Z"
-    }
-  ],
-  "points": {
-    "total_points": 2500
-  }
 }
 ```
 

@@ -13,11 +13,11 @@ login atau server sedang tidak tersedia.
 ## Scope Slice Ini
 
 - Web dashboard hafalan memakai enum API:
-  - `not_started`
-  - `in_progress`
-  - `memorized`
+    - `not_started`
+    - `in_progress`
+    - `memorized`
 - Web dashboard sholat mengirim satu log per prayer:
-  - `{ date, prayer, status }`
+    - `{ date, prayer, status }`
 - Web dashboard tilawah memuat daftar dari `/api/v1/tilawah` saat login.
 - `tilawahApi.add` mengirim `date`, sesuai kontrak backend.
 - Cache lokal tetap dipakai sebagai fallback dan diberi warning
@@ -43,10 +43,10 @@ login atau server sedang tidak tersedia.
 - `node --check apps/web/src/app/dashboard/tilawah/page.js`
 - `npm --prefix apps/web run lint`
 - 2026-05-14:
-  - `node --check apps/web/src/lib/personalSync.js && node --check apps/web/src/lib/api.js`
-    `PASS`
-  - `npm --prefix apps/web run lint` `PASS WITH EXISTING WARNINGS`
-  - `npm --prefix apps/web run build` `PASS`
+    - `node --check apps/web/src/lib/personalSync.js && node --check apps/web/src/lib/api.js`
+      `PASS`
+    - `npm --prefix apps/web run lint` `PASS WITH EXISTING WARNINGS`
+    - `npm --prefix apps/web run build` `PASS`
 
 ## 2026-05-14 Update
 

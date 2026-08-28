@@ -289,7 +289,7 @@ func applyToFiles(path string, rows []localHadithRow, candidates []candidate) (i
 		return 0, err
 	}
 	content = append(content, '\n')
-	return updated, os.WriteFile(path, content, 0644)
+	return updated, os.WriteFile(path, content, 0o644)
 }
 
 func openDB() (*gorm.DB, error) {

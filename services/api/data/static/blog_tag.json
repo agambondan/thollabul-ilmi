@@ -1,66 +1,66 @@
 [
-  {
-    "name": "Sholat",
-    "slug": "sholat"
-  },
-  {
-    "name": "Puasa",
-    "slug": "puasa"
-  },
-  {
-    "name": "Zakat",
-    "slug": "zakat"
-  },
-  {
-    "name": "Haji",
-    "slug": "haji"
-  },
-  {
-    "name": "Quran",
-    "slug": "quran"
-  },
-  {
-    "name": "Hadith",
-    "slug": "hadith"
-  },
-  {
-    "name": "Akhlak",
-    "slug": "akhlak"
-  },
-  {
-    "name": "Doa",
-    "slug": "doa"
-  },
-  {
-    "name": "Dzikir",
-    "slug": "dzikir"
-  },
-  {
-    "name": "Ramadan",
-    "slug": "ramadan"
-  },
-  {
-    "name": "Fiqh",
-    "slug": "fiqh"
-  },
-  {
-    "name": "Tauhid",
-    "slug": "tauhid"
-  },
-  {
-    "name": "Sirah",
-    "slug": "sirah"
-  },
-  {
-    "name": "Keluarga",
-    "slug": "keluarga"
-  },
-  {
-    "name": "Hafalan",
-    "slug": "hafalan"
-  },
-  {
-    "name": "Tilawah",
-    "slug": "tilawah"
-  }
+    {
+        "name": "Sholat",
+        "slug": "sholat"
+    },
+    {
+        "name": "Puasa",
+        "slug": "puasa"
+    },
+    {
+        "name": "Zakat",
+        "slug": "zakat"
+    },
+    {
+        "name": "Haji",
+        "slug": "haji"
+    },
+    {
+        "name": "Quran",
+        "slug": "quran"
+    },
+    {
+        "name": "Hadith",
+        "slug": "hadith"
+    },
+    {
+        "name": "Akhlak",
+        "slug": "akhlak"
+    },
+    {
+        "name": "Doa",
+        "slug": "doa"
+    },
+    {
+        "name": "Dzikir",
+        "slug": "dzikir"
+    },
+    {
+        "name": "Ramadan",
+        "slug": "ramadan"
+    },
+    {
+        "name": "Fiqh",
+        "slug": "fiqh"
+    },
+    {
+        "name": "Tauhid",
+        "slug": "tauhid"
+    },
+    {
+        "name": "Sirah",
+        "slug": "sirah"
+    },
+    {
+        "name": "Keluarga",
+        "slug": "keluarga"
+    },
+    {
+        "name": "Hafalan",
+        "slug": "hafalan"
+    },
+    {
+        "name": "Tilawah",
+        "slug": "tilawah"
+    }
 ]

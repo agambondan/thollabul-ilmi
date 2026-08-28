@@ -1,9 +1,11 @@
-const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '';
+const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
 
 function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-    const rawData = typeof window !== 'undefined' ? window.atob(base64) : '';
+    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding)
+        .replace(/-/g, "+")
+        .replace(/_/g, "/");
+    const rawData = typeof window !== "undefined" ? window.atob(base64) : "";
     const outputArray = new Uint8Array(rawData.length);
     for (let i = 0; i < rawData.length; i++) {
         outputArray[i] = rawData.charCodeAt(i);
@@ -12,40 +14,47 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 export async function registerServiceWorker() {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        return { supported: false, reason: 'unsupported' };
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+        return { supported: false, reason: "unsupported" };
     }
 
     try {
-        const registration = await navigator.serviceWorker.register('/sw.js', {
-            scope: '/',
-            updateViaCache: 'none',
+        const registration = await navigator.serviceWorker.register("/sw.js", {
+            scope: "/",
+            updateViaCache: "none",
         });
 
         await navigator.serviceWorker.ready;
         return { supported: true, registration };
     } catch (error) {
-        return { supported: false, reason: 'registration_failed', error: error.message };
+        return {
+            supported: false,
+            reason: "registration_failed",
+            error: error.message,
+        };
     }
 }
 
 export async function subscribeToPush(registration) {
     if (!registration || !registration.pushManager) {
-        return { success: false, reason: 'no_registration' };
+        return { success: false, reason: "no_registration" };
     }
 
     let existingSubscription = null;
     try {
         existingSubscription = await registration.pushManager.getSubscription();
-    } catch {
-    }
+    } catch {}
 
     if (existingSubscription) {
-        return { success: true, subscription: existingSubscription, isExisting: true };
+        return {
+            success: true,
+            subscription: existingSubscription,
+            isExisting: true,
+        };
     }
 
     if (!VAPID_PUBLIC_KEY) {
-        return { success: false, reason: 'vapid_not_configured' };
+        return { success: false, reason: "vapid_not_configured" };
     }
 
     try {
@@ -56,10 +65,14 @@ export async function subscribeToPush(registration) {
         });
         return { success: true, subscription, isExisting: false };
     } catch (error) {
-        if (error.name === 'NotAllowedError') {
-            return { success: false, reason: 'permission_denied' };
+        if (error.name === "NotAllowedError") {
+            return { success: false, reason: "permission_denied" };
         }
-        return { success: false, reason: 'subscribe_failed', error: error.message };
+        return {
+            success: false,
+            reason: "subscribe_failed",
+            error: error.message,
+        };
     }
 }
 
@@ -90,29 +103,29 @@ export function subscriptionToPlainObject(subscription) {
 }
 
 export async function getPushPermissionStatus() {
-    if (!('Notification' in window)) {
-        return 'unsupported';
+    if (!("Notification" in window)) {
+        return "unsupported";
     }
     return Notification.permission;
 }
 
 export async function requestNotificationPermission() {
-    if (!('Notification' in window)) {
-        return { granted: false, reason: 'unsupported' };
+    if (!("Notification" in window)) {
+        return { granted: false, reason: "unsupported" };
     }
 
-    if (Notification.permission === 'granted') {
+    if (Notification.permission === "granted") {
         return { granted: true };
     }
 
-    if (Notification.permission === 'denied') {
-        return { granted: false, reason: 'denied' };
+    if (Notification.permission === "denied") {
+        return { granted: false, reason: "denied" };
     }
 
     try {
         const permission = await Notification.requestPermission();
-        return { granted: permission === 'granted', reason: permission };
+        return { granted: permission === "granted", reason: permission };
     } catch {
-        return { granted: false, reason: 'error' };
+        return { granted: false, reason: "error" };
     }
 }

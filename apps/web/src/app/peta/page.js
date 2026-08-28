@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import Footer from '@/components/Footer';
-import ContentWidth from '@/components/layout/ContentWidth';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import { useLocale } from '@/context/Locale';
-import dynamic from 'next/dynamic';
-import { MdMap } from 'react-icons/md';
+import Footer from "@/components/Footer";
+import ContentWidth from "@/components/layout/ContentWidth";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import { useLocale } from "@/context/Locale";
+import dynamic from "next/dynamic";
+import { MdMap } from "react-icons/md";
 
-const MapComponent = dynamic(() => import('./MapComponent'), { ssr: false });
+const MapComponent = dynamic(() => import("./MapComponent"), { ssr: false });
 
-export function PetaContent({ className = '' }) {
+export function PetaContent({ className = "" }) {
     const { t } = useLocale();
     return (
         <ContentWidth compact='max-w-4xl' className={`px-4 py-6 ${className}`}>
@@ -18,10 +18,11 @@ export function PetaContent({ className = '' }) {
                     <MdMap className='text-3xl text-emerald-600 dark:text-emerald-400' />
                 </div>
                 <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-1'>
-                    {t('peta.title') ?? 'Peta Islam Interaktif'}
+                    {t("peta.title") ?? "Peta Islam Interaktif"}
                 </h1>
                 <p className='text-sm text-gray-500 dark:text-gray-400'>
-                    {t('peta.subtitle') ?? 'Lokasi bersejarah dalam peradaban Islam'}
+                    {t("peta.subtitle") ??
+                        "Lokasi bersejarah dalam peradaban Islam"}
                 </p>
             </div>
             <MapComponent />

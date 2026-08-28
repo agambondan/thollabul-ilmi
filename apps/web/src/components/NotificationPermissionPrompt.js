@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { BsBell, BsBellFill, BsX } from 'react-icons/bs';
-import { notificationApi } from '@/lib/api';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { BsBell, BsBellFill, BsX } from "react-icons/bs";
+import { notificationApi } from "@/lib/api";
 import {
     getPushPermissionStatus,
     registerServiceWorker,
     requestNotificationPermission,
     subscribeToPush,
     subscriptionToPlainObject,
-} from '@/lib/pushSubscription';
-import { useAuth } from '@/context/Auth';
+} from "@/lib/pushSubscription";
+import { useAuth } from "@/context/Auth";
 import {
     getLocationPermissionState,
     isStoredUserLocationFresh,
     readStoredUserLocation,
     requestAndStoreUserLocation,
-} from '@/lib/userLocation';
+} from "@/lib/userLocation";
 
-const DISMISSED_KEY = 'tholabul_site_permission_dismissed';
+const DISMISSED_KEY = "tholabul_site_permission_dismissed";
 const DISMISS_TTL_MS = 24 * 60 * 60 * 1000;
 
 const isPromptDismissed = () => {
-    if (typeof window === 'undefined') return false;
+    if (typeof window === "undefined") return false;
     const value = Number(localStorage.getItem(DISMISSED_KEY));
     return Number.isFinite(value) && Date.now() - value < DISMISS_TTL_MS;
 };
@@ -35,7 +35,7 @@ export default function NotificationPermissionPrompt() {
     const syncedRef = useRef(false);
 
     const registerPushToken = useCallback(async () => {
-        if (typeof window === 'undefined') return false;
+        if (typeof window === "undefined") return false;
 
         const { supported, registration } = await registerServiceWorker();
         if (!supported || !registration) return false;
@@ -48,11 +48,11 @@ export default function NotificationPermissionPrompt() {
             if (sub) {
                 await notificationApi.registerPushToken({
                     token: sub.endpoint,
-                    platform: 'web',
-                    provider: 'web',
-                    device_id: `web:${navigator.userAgent?.slice(0, 40) ?? 'unknown'}`,
-                    key_p256dh: sub.keys?.p256dh ?? '',
-                    key_auth: sub.keys?.auth ?? '',
+                    platform: "web",
+                    provider: "web",
+                    device_id: `web:${navigator.userAgent?.slice(0, 40) ?? "unknown"}`,
+                    key_p256dh: sub.keys?.p256dh ?? "",
+                    key_auth: sub.keys?.auth ?? "",
                 });
             }
         }
@@ -64,30 +64,36 @@ export default function NotificationPermissionPrompt() {
         let cancelled = false;
 
         const boot = async () => {
-            if (typeof window === 'undefined' || isLoading) return;
-            const hasNotification = 'Notification' in window;
-            const hasLocation = 'geolocation' in navigator;
+            if (typeof window === "undefined" || isLoading) return;
+            const hasNotification = "Notification" in window;
+            const hasLocation = "geolocation" in navigator;
 
             const notificationPermission = hasNotification
                 ? await getPushPermissionStatus()
-                : 'unsupported';
+                : "unsupported";
             const locationPermission = hasLocation
                 ? await getLocationPermissionState()
-                : 'unsupported';
+                : "unsupported";
             const storedLocation = readStoredUserLocation();
-            const hasFreshStoredLocation = isStoredUserLocationFresh(storedLocation);
+            const hasFreshStoredLocation =
+                isStoredUserLocationFresh(storedLocation);
 
-            if (locationPermission === 'granted') {
+            if (locationPermission === "granted") {
                 requestAndStoreUserLocation().catch(() => {});
             }
 
-            const canAskNotification = notificationPermission === 'default';
+            const canAskNotification = notificationPermission === "default";
             const canAskLocation =
                 hasLocation &&
                 !hasFreshStoredLocation &&
-                (locationPermission === 'prompt' || locationPermission === 'unknown');
+                (locationPermission === "prompt" ||
+                    locationPermission === "unknown");
 
-            if (notificationPermission === 'granted' && isAuthenticated && !syncedRef.current) {
+            if (
+                notificationPermission === "granted" &&
+                isAuthenticated &&
+                !syncedRef.current
+            ) {
                 syncedRef.current = true;
                 registerPushToken().catch(() => {
                     syncedRef.current = false;
@@ -154,7 +160,9 @@ export default function NotificationPermissionPrompt() {
                         Aktifkan lokasi & notifikasi
                     </p>
                     <p className='mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400'>
-                        Izinkan lokasi untuk jadwal sholat akurat dan notifikasi untuk pengingat adzan, bacaan harian, serta reminder ibadah.
+                        Izinkan lokasi untuk jadwal sholat akurat dan notifikasi
+                        untuk pengingat adzan, bacaan harian, serta reminder
+                        ibadah.
                     </p>
                     <div className='mt-3 flex flex-wrap gap-2'>
                         <button
@@ -164,7 +172,9 @@ export default function NotificationPermissionPrompt() {
                             className='inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-3 py-2 text-xs font-bold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60'
                         >
                             <BsBell />
-                            {loading ? 'Mengaktifkan...' : 'Aktifkan lokasi & notifikasi'}
+                            {loading
+                                ? "Mengaktifkan..."
+                                : "Aktifkan lokasi & notifikasi"}
                         </button>
                         <button
                             type='button'

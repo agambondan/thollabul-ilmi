@@ -32,19 +32,23 @@ Panduan step-by-step manasik haji dan umrah yang interaktif, membantu pengguna m
 ### API Response Shape
 
 **`GET /manasik?type=haji`**
+
 ```json
 [
-  {
-    "id": 1,
-    "type": "haji",
-    "step_order": 1,
-    "description": "Miqat",
-    "arab": "...",
-    "transliteration": "...",
-    "translation": { "idn": "Niat ihram dari miqat", "en": "Ihram intention from miqat" },
-    "notes": "Miqat zamani dan makani...",
-    "is_wajib": true
-  }
+    {
+        "id": 1,
+        "type": "haji",
+        "step_order": 1,
+        "description": "Miqat",
+        "arab": "...",
+        "transliteration": "...",
+        "translation": {
+            "idn": "Niat ihram dari miqat",
+            "en": "Ihram intention from miqat"
+        },
+        "notes": "Miqat zamani dan makani...",
+        "is_wajib": true
+    }
 ]
 ```
 
@@ -63,7 +67,7 @@ Panduan step-by-step manasik haji dan umrah yang interaktif, membantu pengguna m
 | `translation_text` | string | Meaning in user language |
 | `notes` | string | Additional notes |
 | `is_wajib` | bool | Whether this step is obligatory |
-| `translation_id` | *int | FK to Translation |
+| `translation_id` | \*int | FK to Translation |
 
 ### Key Frontend Components
 

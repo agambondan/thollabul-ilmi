@@ -32,26 +32,31 @@ Menyediakan bacaan siroh nabi Muhammad SAW yang terstruktur per kategori, memuda
 ### API Response Shape
 
 **`GET /siroh`**
+
 ```json
 [
-  {
-    "id": 1,
-    "title": "Kelahiran Nabi",
-    "slug": "kelahiran-nabi",
-    "order": 1,
-    "translation": { "idn": "Kelahiran Nabi", "en": "The Birth of the Prophet", "ar": "..." },
-    "contents": [
-      {
+    {
         "id": 1,
-        "category_id": 1,
-        "title": "Masa Pra-Kelahiran",
-        "slug": "masa-pra-kelahiran",
-        "content": "...",
+        "title": "Kelahiran Nabi",
+        "slug": "kelahiran-nabi",
         "order": 1,
-        "translation": { "idn": "...", "en": "..." }
-      }
-    ]
-  }
+        "translation": {
+            "idn": "Kelahiran Nabi",
+            "en": "The Birth of the Prophet",
+            "ar": "..."
+        },
+        "contents": [
+            {
+                "id": 1,
+                "category_id": 1,
+                "title": "Masa Pra-Kelahiran",
+                "slug": "masa-pra-kelahiran",
+                "content": "...",
+                "order": 1,
+                "translation": { "idn": "...", "en": "..." }
+            }
+        ]
+    }
 ]
 ```
 
@@ -65,7 +70,7 @@ Menyediakan bacaan siroh nabi Muhammad SAW yang terstruktur per kategori, memuda
 | `slug` | string | URL-safe; unique |
 | `order` | int | Display order |
 | `contents` | []SirohContent | Has-many content items |
-| `translation_id` | *int | FK to Translation |
+| `translation_id` | \*int | FK to Translation |
 
 **`SirohContent`** (`model/siroh.go`)
 | Field | Type | Notes |

@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/context/Auth';
-import { Spinner3 } from '@/components/spinner/Spinner';
-import AdminMutationToast from '@/components/admin/AdminMutationToast';
-import { useLocale } from '@/context/Locale';
-import { ConvertFLagLanguage } from '@/lib/converter';
-import { useLayoutMode } from '@/lib/useLayoutMode';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useAuth } from "@/context/Auth";
+import { Spinner3 } from "@/components/spinner/Spinner";
+import AdminMutationToast from "@/components/admin/AdminMutationToast";
+import { useLocale } from "@/context/Locale";
+import { ConvertFLagLanguage } from "@/lib/converter";
+import { useLayoutMode } from "@/lib/useLayoutMode";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import {
     BsBook,
     BsBookHalf,
@@ -30,52 +30,120 @@ import {
     BsRepeat,
     BsStar,
     BsSunFill,
-} from 'react-icons/bs';
-import { MdLogout } from 'react-icons/md';
+} from "react-icons/bs";
+import { MdLogout } from "react-icons/md";
 
 const NAV_GROUPS = [
     {
-        titleKey: 'admin.group.content',
+        titleKey: "admin.group.content",
         links: [
-            { href: '/admin/blog', labelKey: 'admin.nav.blog', icon: <BsFileText /> },
-            { href: '/admin/library', labelKey: 'admin.nav.library', icon: <BsBook /> },
-            { href: '/admin/kajian', labelKey: 'admin.nav.studies', icon: <BsCameraVideo /> },
-            { href: '/admin/siroh', labelKey: 'admin.nav.sirah', icon: <BsJournalText /> },
-            { href: '/admin/sejarah', labelKey: 'admin.nav.history', icon: <BsClock /> },
-            { href: '/admin/asbabun-nuzul', labelKey: 'admin.nav.asbabun', icon: <BsBookmark /> },
-            { href: '/admin/reminders', label: 'Reminder Carousel', icon: <BsStar /> },
-            { href: '/admin/fiqh', labelKey: 'admin.nav.fiqh', icon: <BsListCheck /> },
+            {
+                href: "/admin/blog",
+                labelKey: "admin.nav.blog",
+                icon: <BsFileText />,
+            },
+            {
+                href: "/admin/library",
+                labelKey: "admin.nav.library",
+                icon: <BsBook />,
+            },
+            {
+                href: "/admin/kajian",
+                labelKey: "admin.nav.studies",
+                icon: <BsCameraVideo />,
+            },
+            {
+                href: "/admin/siroh",
+                labelKey: "admin.nav.sirah",
+                icon: <BsJournalText />,
+            },
+            {
+                href: "/admin/sejarah",
+                labelKey: "admin.nav.history",
+                icon: <BsClock />,
+            },
+            {
+                href: "/admin/asbabun-nuzul",
+                labelKey: "admin.nav.asbabun",
+                icon: <BsBookmark />,
+            },
+            {
+                href: "/admin/reminders",
+                label: "Reminder Carousel",
+                icon: <BsStar />,
+            },
+            {
+                href: "/admin/fiqh",
+                labelKey: "admin.nav.fiqh",
+                icon: <BsListCheck />,
+            },
         ],
     },
     {
-        titleKey: 'admin.group.worship',
+        titleKey: "admin.group.worship",
         links: [
-            { href: '/admin/doa', labelKey: 'admin.nav.prayers', icon: <BsBookHalf /> },
-            { href: '/admin/dzikir', labelKey: 'admin.nav.dhikr', icon: <BsRepeat /> },
-            { href: '/admin/wirid', labelKey: 'admin.nav.wird', icon: <BsHeart /> },
-            { href: '/admin/tahlil', labelKey: 'admin.nav.tahlil', icon: <BsMoon /> },
-            { href: '/admin/asmaul-husna', labelKey: 'admin.nav.asmaul', icon: <BsStar /> },
-            { href: '/admin/manasik', labelKey: 'admin.nav.manasik', icon: <BsMap /> },
+            {
+                href: "/admin/doa",
+                labelKey: "admin.nav.prayers",
+                icon: <BsBookHalf />,
+            },
+            {
+                href: "/admin/dzikir",
+                labelKey: "admin.nav.dhikr",
+                icon: <BsRepeat />,
+            },
+            {
+                href: "/admin/wirid",
+                labelKey: "admin.nav.wird",
+                icon: <BsHeart />,
+            },
+            {
+                href: "/admin/tahlil",
+                labelKey: "admin.nav.tahlil",
+                icon: <BsMoon />,
+            },
+            {
+                href: "/admin/asmaul-husna",
+                labelKey: "admin.nav.asmaul",
+                icon: <BsStar />,
+            },
+            {
+                href: "/admin/manasik",
+                labelKey: "admin.nav.manasik",
+                icon: <BsMap />,
+            },
         ],
     },
     {
-        titleKey: 'admin.group.tools',
+        titleKey: "admin.group.tools",
         links: [
-            { href: '/admin/kamus', labelKey: 'admin.nav.dictionary', icon: <BsBook /> },
-            { href: '/admin/quiz', labelKey: 'admin.nav.quiz', icon: <BsQuestionCircle /> },
+            {
+                href: "/admin/kamus",
+                labelKey: "admin.nav.dictionary",
+                icon: <BsBook />,
+            },
+            {
+                href: "/admin/quiz",
+                labelKey: "admin.nav.quiz",
+                icon: <BsQuestionCircle />,
+            },
         ],
     },
     {
-        titleKey: 'admin.group.system',
+        titleKey: "admin.group.system",
         links: [
-            { href: '/admin/users', labelKey: 'admin.nav.users', icon: <BsPeople /> },
-            { href: '/', labelKey: 'admin.back_to_app', icon: <BsGrid /> },
+            {
+                href: "/admin/users",
+                labelKey: "admin.nav.users",
+                icon: <BsPeople />,
+            },
+            { href: "/", labelKey: "admin.back_to_app", icon: <BsGrid /> },
         ],
     },
 ];
 
-const LANGS = ['ID', 'EN'];
-const SIDEBAR_STORAGE_KEY = 'tholabul_admin_sidebar_collapsed';
+const LANGS = ["ID", "EN"];
+const SIDEBAR_STORAGE_KEY = "tholabul_admin_sidebar_collapsed";
 
 const AdminLayout = ({ children }) => {
     const { user, isAuthenticated, isLoading, logout } = useAuth();
@@ -90,8 +158,8 @@ const AdminLayout = ({ children }) => {
 
     useEffect(() => {
         if (isLoading) return;
-        if (!isAuthenticated || user?.role !== 'admin') {
-            router.push('/');
+        if (!isAuthenticated || user?.role !== "admin") {
+            router.push("/");
         }
     }, [isLoading, isAuthenticated, user, router]);
 
@@ -101,13 +169,13 @@ const AdminLayout = ({ children }) => {
                 setAccountOpen(false);
             }
         };
-        document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
     }, []);
 
     useEffect(() => {
         try {
-            setIsCollapsed(localStorage.getItem(SIDEBAR_STORAGE_KEY) === '1');
+            setIsCollapsed(localStorage.getItem(SIDEBAR_STORAGE_KEY) === "1");
         } catch {
             setIsCollapsed(false);
         }
@@ -115,22 +183,22 @@ const AdminLayout = ({ children }) => {
 
     useEffect(() => {
         const sync = () => {
-            const dark = localStorage.getItem('theme') === 'dark';
-            document.documentElement.classList.toggle('dark', dark);
+            const dark = localStorage.getItem("theme") === "dark";
+            document.documentElement.classList.toggle("dark", dark);
             setIsDarkMode(dark);
         };
         sync();
-        window.addEventListener('storage', sync);
-        return () => window.removeEventListener('storage', sync);
+        window.addEventListener("storage", sync);
+        return () => window.removeEventListener("storage", sync);
     }, []);
 
     useEffect(() => {
-        document.documentElement.classList.toggle('dark', isDarkMode);
+        document.documentElement.classList.toggle("dark", isDarkMode);
     }, [isDarkMode]);
 
     const toggleDark = () => {
         setIsDarkMode((prev) => {
-            localStorage.setItem('theme', !prev ? 'dark' : 'light');
+            localStorage.setItem("theme", !prev ? "dark" : "light");
             return !prev;
         });
     };
@@ -139,7 +207,7 @@ const AdminLayout = ({ children }) => {
         setIsCollapsed((current) => {
             const next = !current;
             try {
-                localStorage.setItem(SIDEBAR_STORAGE_KEY, next ? '1' : '0');
+                localStorage.setItem(SIDEBAR_STORAGE_KEY, next ? "1" : "0");
             } catch {}
             return next;
         });
@@ -147,22 +215,22 @@ const AdminLayout = ({ children }) => {
 
     const initials = user?.name
         ? user.name
-              .split(' ')
+              .split(" ")
               .slice(0, 2)
               .map((w) => w[0])
-              .join('')
+              .join("")
               .toUpperCase()
-        : '?';
+        : "?";
 
-    if (isLoading || !isAuthenticated || user?.role !== 'admin') {
+    if (isLoading || !isAuthenticated || user?.role !== "admin") {
         return <Spinner3 />;
     }
 
-    const sidebarWidth = isCollapsed ? 'w-16' : 'w-60';
-    const mainOffset = isCollapsed ? 'ml-16' : 'ml-60';
+    const sidebarWidth = isCollapsed ? "w-16" : "w-60";
+    const mainOffset = isCollapsed ? "ml-16" : "ml-60";
     const sidebarToggleLabel = isCollapsed
-        ? t('sidebar.expand')
-        : t('sidebar.collapse');
+        ? t("sidebar.expand")
+        : t("sidebar.collapse");
 
     return (
         <div className='min-h-screen flex bg-gray-50 dark:bg-gray-950'>
@@ -172,23 +240,25 @@ const AdminLayout = ({ children }) => {
             >
                 <div
                     className={`border-b border-gray-100 dark:border-slate-800 ${
-                        isCollapsed ? 'p-3' : 'p-4'
+                        isCollapsed ? "p-3" : "p-4"
                     }`}
                 >
                     <Link
                         href='/admin'
-                        title={t('admin.panel')}
+                        title={t("admin.panel")}
                         className={`flex items-center group ${
-                            isCollapsed ? 'justify-center' : 'gap-2.5'
+                            isCollapsed ? "justify-center" : "gap-2.5"
                         }`}
                     >
                         <div className='w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center shrink-0'>
-                            <span className='text-white text-xs font-bold'>ط</span>
+                            <span className='text-white text-xs font-bold'>
+                                ط
+                            </span>
                         </div>
                         {!isCollapsed && (
                             <div className='min-w-0'>
                                 <p className='text-sm font-bold text-gray-900 dark:text-white leading-none truncate'>
-                                    {t('admin.panel')}
+                                    {t("admin.panel")}
                                 </p>
                                 <p className='text-[10px] text-gray-400 dark:text-gray-500 mt-0.5 arabic-text'>
                                     طُلَّابُ الْعِلْمِ
@@ -201,18 +271,18 @@ const AdminLayout = ({ children }) => {
                 <div className='px-4 py-3 border-b border-gray-100 dark:border-slate-800'>
                     {isCollapsed ? (
                         <div
-                            title={user?.name ?? 'Admin'}
+                            title={user?.name ?? "Admin"}
                             className='mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
                         >
-                            {(user?.name ?? 'A').slice(0, 1).toUpperCase()}
+                            {(user?.name ?? "A").slice(0, 1).toUpperCase()}
                         </div>
                     ) : (
                         <>
                             <p className='text-sm font-medium text-gray-800 dark:text-white truncate'>
-                                {user?.name ?? 'Admin'}
+                                {user?.name ?? "Admin"}
                             </p>
                             <p className='text-xs text-gray-400 dark:text-gray-500 truncate'>
-                                {user?.email ?? ''}
+                                {user?.email ?? ""}
                             </p>
                         </>
                     )}
@@ -221,17 +291,19 @@ const AdminLayout = ({ children }) => {
                 <div className='px-3 pt-3'>
                     <Link
                         href='/admin'
-                        title={t('admin.nav.dashboard')}
+                        title={t("admin.nav.dashboard")}
                         className={`flex items-center py-2 rounded-lg text-sm font-medium transition-colors ${
-                            isCollapsed ? 'justify-center px-0' : 'gap-2.5 px-3'
+                            isCollapsed ? "justify-center px-0" : "gap-2.5 px-3"
                         } ${
-                            pathname === '/admin'
-                                ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'
-                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'
+                            pathname === "/admin"
+                                ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400"
+                                : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white"
                         }`}
                     >
                         <BsGrid className='shrink-0' />
-                        {!isCollapsed && <span>{t('admin.nav.dashboard')}</span>}
+                        {!isCollapsed && (
+                            <span>{t("admin.nav.dashboard")}</span>
+                        )}
                     </Link>
                 </div>
 
@@ -249,26 +321,36 @@ const AdminLayout = ({ children }) => {
                                 {group.links.map((link) => {
                                     const isActive =
                                         pathname === link.href ||
-                                        (link.href !== '/' &&
-                                            pathname.startsWith(link.href + '/'));
+                                        (link.href !== "/" &&
+                                            pathname.startsWith(
+                                                link.href + "/",
+                                            ));
                                     return (
                                         <li key={link.href}>
                                             <Link
                                                 href={link.href}
-                                                title={link.label ?? t(link.labelKey)}
+                                                title={
+                                                    link.label ??
+                                                    t(link.labelKey)
+                                                }
                                                 className={`flex items-center py-1.5 rounded-lg text-sm transition-colors ${
-                                                    isCollapsed ? 'justify-center px-0' : 'gap-2.5 px-3'
+                                                    isCollapsed
+                                                        ? "justify-center px-0"
+                                                        : "gap-2.5 px-3"
                                                 } ${
                                                     isActive
-                                                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-medium'
-                                                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'
+                                                        ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-medium"
+                                                        : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white"
                                                 }`}
                                             >
                                                 <span className='shrink-0 text-base'>
                                                     {link.icon}
                                                 </span>
                                                 {!isCollapsed && (
-                                                    <span className='truncate'>{link.label ?? t(link.labelKey)}</span>
+                                                    <span className='truncate'>
+                                                        {link.label ??
+                                                            t(link.labelKey)}
+                                                    </span>
                                                 )}
                                             </Link>
                                         </li>
@@ -302,19 +384,25 @@ const AdminLayout = ({ children }) => {
                             className='flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors'
                         >
                             <div className='w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center shrink-0'>
-                                <span className='text-white text-[11px] font-semibold'>{initials}</span>
+                                <span className='text-white text-[11px] font-semibold'>
+                                    {initials}
+                                </span>
                             </div>
                             <span className='text-sm font-medium text-gray-700 dark:text-gray-200 max-w-[120px] truncate hidden sm:block'>
-                                {user?.name?.split(' ')[0] ?? 'Admin'}
+                                {user?.name?.split(" ")[0] ?? "Admin"}
                             </span>
                             <svg
-                                className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-150 ${accountOpen ? 'rotate-180' : ''}`}
+                                className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-150 ${accountOpen ? "rotate-180" : ""}`}
                                 fill='none'
                                 viewBox='0 0 24 24'
                                 stroke='currentColor'
                                 strokeWidth={2.5}
                             >
-                                <path strokeLinecap='round' strokeLinejoin='round' d='M19 9l-7 7-7-7' />
+                                <path
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
+                                    d='M19 9l-7 7-7-7'
+                                />
                             </svg>
                         </button>
 
@@ -324,14 +412,16 @@ const AdminLayout = ({ children }) => {
                                 <div className='px-4 py-3.5 border-b border-gray-100 dark:border-slate-700'>
                                     <div className='flex items-center gap-3'>
                                         <div className='w-9 h-9 rounded-full bg-emerald-700 flex items-center justify-center shrink-0'>
-                                            <span className='text-white text-sm font-semibold'>{initials}</span>
+                                            <span className='text-white text-sm font-semibold'>
+                                                {initials}
+                                            </span>
                                         </div>
                                         <div className='min-w-0'>
                                             <p className='text-sm font-semibold text-gray-900 dark:text-white truncate'>
-                                                {user?.name ?? 'Admin'}
+                                                {user?.name ?? "Admin"}
                                             </p>
                                             <p className='text-xs text-gray-400 dark:text-gray-500 truncate'>
-                                                {user?.email ?? ''}
+                                                {user?.email ?? ""}
                                             </p>
                                         </div>
                                     </div>
@@ -340,18 +430,24 @@ const AdminLayout = ({ children }) => {
                                 {/* Theme toggle */}
                                 <div className='px-4 py-2.5 flex items-center justify-between border-b border-gray-100 dark:border-slate-700'>
                                     <span className='text-sm text-gray-700 dark:text-gray-300'>
-                                        {isDarkMode ? t('nav.dark') : t('nav.light')}
+                                        {isDarkMode
+                                            ? t("nav.dark")
+                                            : t("nav.light")}
                                     </span>
                                     <button
                                         type='button'
                                         onClick={toggleDark}
                                         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                                            isDarkMode ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-slate-600'
+                                            isDarkMode
+                                                ? "bg-emerald-600"
+                                                : "bg-gray-200 dark:bg-slate-600"
                                         }`}
                                     >
                                         <span
                                             className={`inline-flex h-4 w-4 items-center justify-center rounded-full bg-white shadow transition-transform ${
-                                                isDarkMode ? 'translate-x-6' : 'translate-x-1'
+                                                isDarkMode
+                                                    ? "translate-x-6"
+                                                    : "translate-x-1"
                                             }`}
                                         >
                                             {isDarkMode ? (
@@ -372,14 +468,16 @@ const AdminLayout = ({ children }) => {
                                             onClick={() => setLang(l)}
                                             className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                                                 lang === l
-                                                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
-                                                    : 'border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500'
+                                                    ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
+                                                    : "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500"
                                             }`}
                                         >
                                             <span className='inline-flex rounded-sm overflow-hidden ring-1 ring-gray-200 dark:ring-slate-600 leading-none'>
                                                 {ConvertFLagLanguage(l)}
                                             </span>
-                                            {l === 'ID' ? 'Indonesia' : 'English'}
+                                            {l === "ID"
+                                                ? "Indonesia"
+                                                : "English"}
                                         </button>
                                     ))}
                                 </div>
@@ -395,14 +493,14 @@ const AdminLayout = ({ children }) => {
                                         className='flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
                                     >
                                         <MdLogout className='text-base' />
-                                        {t('nav.logout')}
+                                        {t("nav.logout")}
                                     </button>
                                 </div>
                             </div>
                         )}
                     </div>
                 </header>
-                <div className={isWide ? 'w-full' : 'max-w-5xl mx-auto'}>
+                <div className={isWide ? "w-full" : "max-w-5xl mx-auto"}>
                     {children}
                 </div>
             </main>

@@ -12,14 +12,14 @@ bahasa tanpa field plain string yang terkunci ke satu bahasa.
 ## Scope
 
 - API:
-  - content fields yang masih plain string dipindahkan ke translation-aware
-    model jika diperlukan
-  - controller melayani bahasa yang dipilih user
+    - content fields yang masih plain string dipindahkan ke translation-aware
+      model jika diperlukan
+    - controller melayani bahasa yang dipilih user
 - Data/Seeder:
-  - file JSON static menjadi sumber staging sebelum migration/seed insert
-  - konten EN/ID dipopulasi bertahap
+    - file JSON static menjadi sumber staging sebelum migration/seed insert
+    - konten EN/ID dipopulasi bertahap
 - Mobile/Web:
-  - menggunakan bahasa dari user setting atau fallback app locale
+    - menggunakan bahasa dari user setting atau fallback app locale
 
 ## Current Baseline
 
@@ -33,19 +33,19 @@ bahasa tanpa field plain string yang terkunci ke satu bahasa.
 ## Progress
 
 - 2026-05-18:
-  - TokohTarikh model refactored: added TranslationID + Translation relation, controller now calls GetPreferredLang + FilterByLang
-  - TokohTarikh seeder created: statis JSON (15 tokoh) + Translation row creation di seeder_static_file.go
-  - HistoryEvent seeder fixed: now creates Translation row (Idn/DescriptionIdn) before inserting each event
+    - TokohTarikh model refactored: added TranslationID + Translation relation, controller now calls GetPreferredLang + FilterByLang
+    - TokohTarikh seeder created: statis JSON (15 tokoh) + Translation row creation di seeder_static_file.go
+    - HistoryEvent seeder fixed: now creates Translation row (Idn/DescriptionIdn) before inserting each event
 - 2026-05-16:
-  - `HistoryRepository.Create` sekarang meng-upsert row `translation` dari
-    `title`/`description`, lalu menyimpan `translation_id` saat create maupun
-    upsert berdasarkan slug.
-  - `HistoryRepository.Update` sekarang mempertahankan row translation existing
-    dan memperbarui `idn`/`description_idn`, bukan hanya mengubah plain field
-    `title`/`description`.
-  - Response create/update history dikembalikan dengan `Translation` ter-preload
-    supaya API admin tidak drift dari public/detail endpoint yang sudah
-    translation-aware.
+    - `HistoryRepository.Create` sekarang meng-upsert row `translation` dari
+      `title`/`description`, lalu menyimpan `translation_id` saat create maupun
+      upsert berdasarkan slug.
+    - `HistoryRepository.Update` sekarang mempertahankan row translation existing
+      dan memperbarui `idn`/`description_idn`, bukan hanya mengubah plain field
+      `title`/`description`.
+    - Response create/update history dikembalikan dengan `Translation` ter-preload
+      supaya API admin tidak drift dari public/detail endpoint yang sudah
+      translation-aware.
 
 ## Acceptance Criteria
 
@@ -63,13 +63,13 @@ bahasa tanpa field plain string yang terkunci ke satu bahasa.
 ## Evidence
 
 - 2026-05-18:
-  - Added backfillDoa / backfillDzikir to BackfillTranslations (both have TranslationID but were missing backfill functions)
-  - Perawi + JarhTadil: added TranslationID + Translation, controller GetPreferredLang, seeder Translation rows, backfill functions
-  - Seeder model audit confirmed: all 25+ content models now have TranslationID, BackfillTranslations covers 20 of them
-  - TokohTarikh: TranslationID + Translation model, controller FindAll/FindByID pakai GetPreferredLang + FilterByLang
-  - Repository: FindAll/FindByID now preload Translation
-  - Seeder: 15 tokoh seeded from JSON with parallel Translation rows
-  - HistoryEvent seeder: now creates Translation (Idn/DescriptionIdn) per row matching IslamicEvent pattern
+    - Added backfillDoa / backfillDzikir to BackfillTranslations (both have TranslationID but were missing backfill functions)
+    - Perawi + JarhTadil: added TranslationID + Translation, controller GetPreferredLang, seeder Translation rows, backfill functions
+    - Seeder model audit confirmed: all 25+ content models now have TranslationID, BackfillTranslations covers 20 of them
+    - TokohTarikh: TranslationID + Translation model, controller FindAll/FindByID pakai GetPreferredLang + FilterByLang
+    - Repository: FindAll/FindByID now preload Translation
+    - Seeder: 15 tokoh seeded from JSON with parallel Translation rows
+    - HistoryEvent seeder: now creates Translation (Idn/DescriptionIdn) per row matching IslamicEvent pattern
 
 ## Source of Truth
 

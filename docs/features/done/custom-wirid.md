@@ -31,20 +31,21 @@ Wirid kustom user: CRUD preset pribadi, membaca wirid, dan menghitung tasbih int
 ### API Response Shape
 
 **`GET /user-wird`**
+
 ```json
 [
-  {
-    "id": "uuid",
-    "user_id": "uuid",
-    "title": "Wirid Pribadi Saya",
-    "arabic": "سُبْحَانَ اللَّهِ",
-    "transliteration": "Subhanallah",
-    "translation": "Maha Suci Allah",
-    "source": "HR. Muslim",
-    "count": 33,
-    "occasion": "pagi",
-    "note": "Dibaca setelah sholat subuh"
-  }
+    {
+        "id": "uuid",
+        "user_id": "uuid",
+        "title": "Wirid Pribadi Saya",
+        "arabic": "سُبْحَانَ اللَّهِ",
+        "transliteration": "Subhanallah",
+        "translation": "Maha Suci Allah",
+        "source": "HR. Muslim",
+        "count": 33,
+        "occasion": "pagi",
+        "note": "Dibaca setelah sholat subuh"
+    }
 ]
 ```
 

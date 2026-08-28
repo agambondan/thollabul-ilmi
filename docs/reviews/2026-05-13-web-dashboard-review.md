@@ -60,9 +60,9 @@ Rekomendasi:
 
 - ubah web status internal ke enum API.
 - mapping label tetap boleh Indonesia:
-  - `not_started` -> `Belum`
-  - `in_progress` -> `Sedang`
-  - `memorized` -> `Hafal`
+    - `not_started` -> `Belum`
+    - `in_progress` -> `Sedang`
+    - `memorized` -> `Hafal`
 
 Update 2026-05-13: dashboard web hafalan sudah memakai enum API tersebut dan
 melakukan normalisasi legacy localStorage.

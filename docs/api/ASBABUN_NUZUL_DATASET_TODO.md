@@ -7,19 +7,20 @@
 
 ## Status saat ini
 
-| Metric | Angka |
-|---|---|
-| Entri ter-seed | **216** |
-| Ayat ter-cover (range expanded) | ~380 |
-| Surat ter-cover (sebagian) | 75 |
-| Coverage vs total Quran (6,236 ayat) | ~6.1% |
-| Coverage vs estimasi total asbab shahih (~270) | ~80% |
+| Metric                                         | Angka   |
+| ---------------------------------------------- | ------- |
+| Entri ter-seed                                 | **216** |
+| Ayat ter-cover (range expanded)                | ~380    |
+| Surat ter-cover (sebagian)                     | 75      |
+| Coverage vs total Quran (6,236 ayat)           | ~6.1%   |
+| Coverage vs estimasi total asbab shahih (~270) | ~80%    |
 
 ## Target final (MVP shahih)
 
 **~250-350 entri** total — setara dengan dataset:
-- *Shahih Asbabun Nuzul* karya Syaikh Muqbil Al-Wadi'i (~270 riwayat shahih)
-- atau *Lubabun Nuqul* As-Suyuthi setelah filter shahih (~300-400 riwayat)
+
+- _Shahih Asbabun Nuzul_ karya Syaikh Muqbil Al-Wadi'i (~270 riwayat shahih)
+- atau _Lubabun Nuqul_ As-Suyuthi setelah filter shahih (~300-400 riwayat)
 
 ## Rules wajib
 
@@ -39,34 +40,44 @@ Surat-surat berikut paling sering dibuka di mobile app + paling banyak riwayat s
 ### Tier 1 — Surat panjang utama
 
 #### Al-Baqarah (2) — covered: 14/286
+
 Sudah ada: 97-98, 104, 115, 142-143, 144, 158, 177, 178-179, 187, 189, 196, 219, 222, 223, 233, 235, 238, 255, 267, 272, 284-286.
 Gap target (sisa):
+
 - [ ] **2:1-7** — Pembagian manusia (mukmin/kafir/munafik) — Tafsir Ibnu Katsir
 
 #### An-Nisa' (4) — covered: 11/176
+
 Sudah ada: 7, 11-12, 19, 24, 29, 32, 34, 43, 48, 59, 65, 88, 94, 95, 97-99, 127, 128, 176.
 
 #### Ali 'Imran (3) — covered: 9/200
+
 Sudah ada: 7, 72-73, 118-120, 122, 128-129, 140-142, 154, 172-174, 181, 186, 188, 190-191, 200.
 
 #### Al-Maidah (5) — covered: 10/120
+
 Sudah ada: 3, 6, 27-31, 38, 41-42, 67, 90-91, 93, 101-102, 103.
 
 ### Tier 2 — Surat sedang
 
 #### At-Taubah (9) — covered: 8/129
+
 Sudah ada: 1-5, 25-26, 38-41, 42, 79, 84, 107-108, 113, 117-118, 128-129.
 
 #### An-Nur (24) — covered: 6/64
+
 Sudah ada: 6-9, 11-21, 22, 23, 27-28, 31, 33.
 
 #### Al-Anfal (8) — covered: 4/75
+
 Sudah ada: 1, 9-12, 65-66, 67-68.
 
 #### Al-Ahzab (33) — covered: 9/73
+
 Sudah ada: 6, 23, 33, 35, 37, 50-51, 53, 56, 69.
 
 #### Al-Hujurat (49) — covered: 5/18
+
 Sudah ada: 1, 2-3, 6, 11, 13.
 
 ### Tier 3 — Surat pendek (Juz Amma)
@@ -124,9 +135,9 @@ Setiap batch:
 
 1. Ambil 25-40 entri dari satu/dua tier prioritas.
 2. Cross-check tiap riwayat di:
-   - Maktabah Syamilah (kitab digital ulama)
-   - Sahih Bukhari/Muslim numbering (cek nomor hadis)
-   - Tashih ulama: cek di Maktabah Asy-Syamilah atau dorar.net
+    - Maktabah Syamilah (kitab digital ulama)
+    - Sahih Bukhari/Muslim numbering (cek nomor hadis)
+    - Tashih ulama: cek di Maktabah Asy-Syamilah atau dorar.net
 3. Append ke `verifiedAsbabunNuzulDataset()` di `seeder_asbabun_nuzul_data.go`.
 4. Update angka di section "Status saat ini" doc ini.
 5. `go build ./...` → harus hijau.
@@ -144,6 +155,7 @@ Setiap batch:
 ## Catatan derajat hadis
 
 Saat menulis field `Source`:
+
 - **Shahih (Muttafaq 'alaih)**: ada di Bukhari + Muslim
 - **Shahih (Bukhari)** atau **Shahih (Muslim)**: hanya di salah satu
 - **Hasan Shahih**: derajat di bawah shahih lighairih

@@ -19,6 +19,7 @@ Total commits: **~25 commits**, from `b83770a` → `4ff6a94`.
 ## What's Been Done (Current Session)
 
 **CI Pipeline (`.github/workflows/test.yml`):**
+
 - Added `web-test` job: Node 22 setup, npm ci, npx jest — runs all 423 web unit tests
 - Added `web-lint` job: Node 22 setup, npm ci, npx next lint
 - Added `mobile-test` job: Node 22 setup, npm ci, npx jest — runs all 530 mobile tests
@@ -27,30 +28,37 @@ Total commits: **~25 commits**, from `b83770a` → `4ff6a94`.
 - Node module caching via `actions/cache@v4` for both web and mobile
 
 **Backend:**
+
 - Removed `//go:build postgres` build tag from `search_repository_test.go` — tests use SQLite in-memory, no build tag needed. They now run in CI when `-tags postgres` is passed.
 - Normalized all 32 controller `@Router` annotations: removed `/api/v1/` prefix → relative paths (`/route` instead of `/api/v1/route`). Total 157 annotations fixed across 32 files. Swagger consistency restored.
 
 **Mobile (`apps/mobile/src/screens/GlobalSearchScreen.js`):**
 Fixed 4 critical bugs in the search state machine:
+
 - **Bug 1 (infinite loop)**: Effect B (auto-load on tab switch) removed `remoteResultsByFilter` from dependency array + `loadedFullRef` tracks which filter/query combos already loaded. Prevents re-fetch on every state change.
 - **Bug 2 (race condition)**: `searchGenRef` (incrementing counter) added to both Effect A and Effect B — stale fetches from competing effects no longer overwrite each other.
 - **Bug 3 (page calculation)**: Derived `Math.floor(items.length / PAGE_SIZE)` replaced with tracked `pageByFilter` state — deterministic pagination independent of API response size.
 - **Bug 4 (total overwrite)**: `handleLoadMore` uses `Math.max` to preserve highest total across pages instead of replacing with each page's response total.
 
 ### E2E Web (`apps/web/tests/`)
+
 **Mock API infrastructure:**
+
 - `tests/fixtures/mockApi.js` — Playwright route interception for all `/api/v1/*` calls. Returns mock JSON instantly instead of hitting real backend.
 - All 16 flow test files updated: import `setupApiMocks` in `beforeEach` + replaced `waitForTimeout(1000-3000ms)` with `waitForLoadState('networkidle')`.
 - `smoke.spec.js` updated: 93 routes now use mock API, dashboard routes authenticate via `isAuthenticated: true`.
 - Estimated speedup: **~4 min → ~1 min** (API calls return instantly, no 3s waits).
 
 **Dashboard auth E2E:**
+
 - `tests/flows/dashboard-auth.spec.js` — 9 new tests: 8 dashboard pages render for authenticated user + login redirects to dashboard when already logged in.
 - `setupAuthenticatedPage` fixture: sets `localStorage` auth token + mocks `/api/v1/auth/me` to return valid user.
 - `web-e2e` job added to CI workflow: installs Playwright chromium + runs `npx playwright test`.
 
 ### Mobile (`apps/mobile/`)
+
 **Gesture handler integration:**
+
 - `react-native-gesture-handler ~2.21.0` added to dependencies.
 - `App.js` wrapped root with `GestureHandlerRootView`.
 - `src/components/SwipeBackView.js` — PanResponder-based swipe-back gesture for internal views. Wraps each screen pane, activates when tab has an internal route open.
@@ -60,6 +68,7 @@ Fixed 4 critical bugs in the search state machine:
 ### Backend (`services/api/`)
 
 **Performance:**
+
 - DB pool: `MaxOpenConns 10→50`, `MaxIdleConns 10→25`
 - GORM: `PrepareStmt: true`, `SkipDefaultTransaction: true`
 - `pg_trgm` GIN indexes for all ILIKE search columns (translation.ar/idn/en, dll)
@@ -68,6 +77,7 @@ Fixed 4 critical bugs in the search state machine:
 - Preload→Joins migration: doa, dzikir, kajian — eliminated N+1 queries
 
 **Caching:**
+
 - `lib/cache.go` — Redis wrapper with `Remember` pattern, Prometheus metrics wired
 - Per-key TTL: 15 static prefixes (surah, asmaul, doa, dll) = 300s, default = 60s
 - 14 services with `WithCache` constructors: Surah, Doa, Dzikir, Fiqh, Manasik, Tafsir, Siroh, Tahlil, Kajian, Perawi, AsmaulHusna, Books, Themes, Chapters
@@ -75,11 +85,13 @@ Fixed 4 critical bugs in the search state machine:
 - Redis optional: graceful fallback, no panic on Redis down
 
 **Concurrency:**
+
 - `errgroup` parallel queries: search "all" type (6 categories), sync endpoint (6 categories), dashboard (7 sources), surah detail (next/prev/ayahs)
 - Parallel language filtering in search controller (4 goroutines)
 - `recover()` in all fire-and-forget goroutines
 
 **Monitoring:**
+
 - Prometheus: `/metrics` with request count, duration, active requests, DB query duration, cache hit/miss
 - Sentry: error tracking via `sentry-go`, fiber middleware, graceful skip if `SENTRY_DSN` unset
 - Request ID: `X-Request-ID` middleware + structured `slog` logging
@@ -88,6 +100,7 @@ Fixed 4 critical bugs in the search state machine:
 - Deep healthcheck: `/health` tests DB ping + Redis ping + pool stats, returns 503 if degraded
 
 **Infrastructure:**
+
 - Graceful shutdown: `signal.NotifyContext(SIGTERM/SIGINT/SIGQUIT)`, 10s timeout
 - DB connection retry: 5x with 2s backoff
 - Pool exhaustion protection: returns 503 when `InUse >= MaxOpenConns - 2`
@@ -97,12 +110,14 @@ Fixed 4 critical bugs in the search state machine:
 - Docker: `distroless/base:nonroot`, `HEALTHCHECK` via `-healthcheck` flag
 
 **Documentation:**
+
 - Swagger regenerated: 15 stale → 208 documented routes, 92 models
 - All 57 controller files annotated with `@Router`, `@Summary`, `@Tags`, `@Param`
 - `make swagger` target in root Makefile
 - Feature docs enhanced: 50 files with `## Details` (API response shape, model fields, components)
 
 **Testing (47 tests):**
+
 - Search service: errgroup, totals, pagination, bounds (7 tests)
 - Search repository: ILIKE for all 6 categories (build tag: postgres)
 - Ayah, Hadith, Surah, Doa, Dzikir services (21 tests)
@@ -110,11 +125,13 @@ Fixed 4 critical bugs in the search state machine:
 ### Mobile (`apps/mobile/`)
 
 **Test infrastructure:**
+
 - Jest + jest-expo + `@testing-library/react-native`
 - Config: `jest.config.js`, `babel.config.js`, `jest.setup.js`
 - 530 tests total
 
 **Coverage by layer:**
+
 - API normalizers: `pickItems`, `appendQuery`, 7 `normalize*` functions (40 tests)
 - API modules: auth, explore, personal, social (78 tests)
 - Utils: deepLinks (27), qibla (10), compass (14), haptics (8), audioPlayer (8), push/prayer/smart notifications (24) = 91 tests
@@ -129,11 +146,13 @@ Fixed 4 critical bugs in the search state machine:
 ### Web (`apps/web/`)
 
 **Test infrastructure:**
+
 - Jest + `@testing-library/react` + `@testing-library/jest-dom`
 - Config: `jest.config.js` (next/jest), `jest.setup.js`
 - 423 unit tests + 152 Playwright E2E = 575 total
 
 **Unit coverage:**
+
 - Pure functions: translation(16), search(10), khatamHelper(19), faraidh(19), puasaSunnah(18), tafsirContent(20), converter(9), personalSync(33), const(16) = 160 tests
 - Libs: bookmarkLabels(7), share(6), copy(4), i18n(7) = 24 tests
 - SearchClient: 22 tests (all tabs, Lihat Semua, Muat Lainnya, edges)
@@ -145,6 +164,7 @@ Fixed 4 critical bugs in the search state machine:
 - Hooks: useLayoutMode(5), useQuranFont(5), useRequireAuth(5) = 15 tests
 
 **E2E (Playwright):**
+
 - Smoke: 93 routes (public + dashboard)
 - User journeys: search(3), quran(3), hadith(2), doa(1), dzikir(2), auth(2), homepage(2), navigation(2), dashboard(8), tafsir(2), asmaul-husna(1), siroh+sejarah(2), fiqh+manasik+panduan+sholat+kiblat(5), calculators(5), learning(4), personal(6), extra pages(9)
 - Total E2E: 152 tests
@@ -156,21 +176,21 @@ Fixed 4 critical bugs in the search state machine:
 
 ## Key Files to Know
 
-| File | Purpose |
-|------|---------|
-| `services/api/main.go` | Entry point, graceful shutdown, signal handling |
-| `services/api/app/http/routes.go` | All 230+ route definitions |
-| `services/api/app/lib/cache.go` | Redis cache wrapper with Prometheus metrics |
-| `services/api/app/http/middlewares/metrics.go` | Prometheus middleware |
-| `services/api/app/http/middlewares/request_id.go` | Request ID middleware |
-| `services/api/app/repository/repository.go` | DB + cache adapter init, composite indexes |
-| `apps/mobile/src/screens/GlobalSearchScreen.js` | Global search with 7 category tabs |
-| `apps/mobile/src/components/SwipeBackView.js` | Swipe-back gesture wrapper for detail views |
-| `apps/mobile/src/components/AppModalSheet.js` | Bottom sheet modal with drag-to-dismiss |
-| `apps/web/src/app/search/SearchClient.js` | Web search client component |
-| `apps/web/tests/fixtures/mockApi.js` | Playwright API mock fixture for E2E tests |
-| `apps/web/tests/flows/dashboard-auth.spec.js` | Authenticated dashboard E2E tests |
-| `.github/workflows/test.yml` | CI pipeline (Go + Web Jest + Web Lint + Mobile Jest + Web E2E) |
+| File                                              | Purpose                                                        |
+| ------------------------------------------------- | -------------------------------------------------------------- |
+| `services/api/main.go`                            | Entry point, graceful shutdown, signal handling                |
+| `services/api/app/http/routes.go`                 | All 230+ route definitions                                     |
+| `services/api/app/lib/cache.go`                   | Redis cache wrapper with Prometheus metrics                    |
+| `services/api/app/http/middlewares/metrics.go`    | Prometheus middleware                                          |
+| `services/api/app/http/middlewares/request_id.go` | Request ID middleware                                          |
+| `services/api/app/repository/repository.go`       | DB + cache adapter init, composite indexes                     |
+| `apps/mobile/src/screens/GlobalSearchScreen.js`   | Global search with 7 category tabs                             |
+| `apps/mobile/src/components/SwipeBackView.js`     | Swipe-back gesture wrapper for detail views                    |
+| `apps/mobile/src/components/AppModalSheet.js`     | Bottom sheet modal with drag-to-dismiss                        |
+| `apps/web/src/app/search/SearchClient.js`         | Web search client component                                    |
+| `apps/web/tests/fixtures/mockApi.js`              | Playwright API mock fixture for E2E tests                      |
+| `apps/web/tests/flows/dashboard-auth.spec.js`     | Authenticated dashboard E2E tests                              |
+| `.github/workflows/test.yml`                      | CI pipeline (Go + Web Jest + Web Lint + Mobile Jest + Web E2E) |
 
 ---
 
@@ -195,6 +215,7 @@ Fixed 4 critical bugs in the search state machine:
 ## Agent Instructions for Continuing
 
 ### To run tests:
+
 ```bash
 # Backend Go (need .env.local)
 cd services/api && go test -tags postgres ./app/... ./tests/... -count=1
@@ -216,6 +237,7 @@ act -j go-test -j web-test -j mobile-test -j go-lint -j web-lint
 ```
 
 ### Built with:
+
 - **Go 1.26** — `services/api/`
 - **Expo SDK 54** — `apps/mobile/`
 - **Next.js 13.5.6** — `apps/web/`
@@ -223,6 +245,7 @@ act -j go-test -j web-test -j mobile-test -j go-lint -j web-lint
 - **Docker Compose** — local dev at root `docker-compose.yaml`
 
 ### Key commands:
+
 ```bash
 make run-dev       # Start API
 make swagger       # Regenerate swagger

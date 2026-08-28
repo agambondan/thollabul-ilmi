@@ -30,15 +30,16 @@ Catatan pribadi yang bisa me-reference ayat atau hadith. Pengguna dapat membuat 
 ### API Response Shape
 
 **`GET /notes?refType=ayah&refId=1`**
+
 ```json
 [
-  {
-    "id": 1,
-    "user_id": "uuid",
-    "ref_type": "ayah",
-    "ref_id": 1,
-    "content": "Catatan pribadi tentang ayat ini..."
-  }
+    {
+        "id": 1,
+        "user_id": "uuid",
+        "ref_type": "ayah",
+        "ref_id": 1,
+        "content": "Catatan pribadi tentang ayat ini..."
+    }
 ]
 ```
 

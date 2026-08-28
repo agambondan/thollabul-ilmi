@@ -32,37 +32,40 @@ Mencatat bacaan Quran harian (halaman, juz) dan menyediakan statistik tilawah un
 ### API Response Shape
 
 **`GET /tilawah?date=2026-05-13`**
+
 ```json
 [
-  {
-    "id": 1,
-    "user_id": "uuid",
-    "date": "2026-05-13",
-    "pages_read": 10,
-    "juz_read": 0.5,
-    "note": "Baca setelah subuh"
-  }
+    {
+        "id": 1,
+        "user_id": "uuid",
+        "date": "2026-05-13",
+        "pages_read": 10,
+        "juz_read": 0.5,
+        "note": "Baca setelah subuh"
+    }
 ]
 ```
 
 **`POST /tilawah`**
+
 ```json
 {
-  "date": "2026-05-13",
-  "pages_read": 10,
-  "juz_read": 0.5,
-  "note": "Baca setelah subuh"
+    "date": "2026-05-13",
+    "pages_read": 10,
+    "juz_read": 0.5,
+    "note": "Baca setelah subuh"
 }
 ```
 
 **`GET /tilawah/summary`**
+
 ```json
 {
-  "total_pages": 120,
-  "total_juz": 6.0,
-  "daily_avg_pages": 4.0,
-  "est_khatam_days": 150,
-  "log_count": 30
+    "total_pages": 120,
+    "total_juz": 6.0,
+    "daily_avg_pages": 4.0,
+    "est_khatam_days": 150,
+    "log_count": 30
 }
 ```
 

@@ -7,13 +7,13 @@ Started: 2026-05-26 23:14 WIB
 
 - Route/feature: mobile `ProfileScreen` large-file split.
 - Files I may edit:
-  - `apps/mobile/src/screens/ProfileScreen.js`
-  - `apps/mobile/src/screens/ProfileScreen.styles.js`
-  - relevant `apps/mobile` profile tests, if needed
+    - `apps/mobile/src/screens/ProfileScreen.js`
+    - `apps/mobile/src/screens/ProfileScreen.styles.js`
+    - relevant `apps/mobile` profile tests, if needed
 - Files I will avoid:
-  - dirty web audit/admin files
-  - `ExploreScreen` split files owned by the other agent
-  - Quran/Mushaf files
+    - dirty web audit/admin files
+    - `ExploreScreen` split files owned by the other agent
+    - Quran/Mushaf files
 
 ## Current Notes
 

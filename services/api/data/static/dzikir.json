@@ -1,275 +1,275 @@
 [
-  {
-    "category": "dzikir_umum",
-    "title": "Hauqalah",
-    "arabic": "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
-    "transliteration": "Laa hawla wa laa quwwata illaa billaah",
-    "translation_text": "Tidak ada daya dan kekuatan kecuali dengan (pertolongan) Allah",
-    "count": 1,
-    "fadhilah": "Salah satu perbendaharaan surga",
-    "source": "HR. Bukhari No. 6384; HR. Muslim No. 2704; Shahih"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Basmalah",
-    "arabic": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
-    "transliteration": "Bismillahir rahmaanir rahiim",
-    "translation_text": "Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang",
-    "count": 1,
-    "source": "QS. Al-Fatihah: 1; QS. An-Naml: 30"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Istirja' (Inna lillahi)",
-    "arabic": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
-    "transliteration": "Innaa lillaahi wa innaa ilaihi raaji'uun",
-    "translation_text": "Sesungguhnya kami milik Allah dan kepada-Nya lah kami kembali",
-    "count": 1,
-    "source": "QS. Al-Baqarah: 156; HR. Muslim No. 918; Shahih"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Perbanyak Sholawat di Hari Jumat",
-    "arabic": "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ",
-    "transliteration": "Allahumma sholli 'alaa Muhammad wa 'alaa aali Muhammad",
-    "translation_text": "Ya Allah, limpahkanlah sholawat kepada Muhammad dan kepada keluarga Muhammad",
-    "count": 100,
-    "fadhilah": "Nabi ﷺ bersabda: 'Perbanyaklah sholawat kepadaku pada malam dan hari Jumat.' (HR. Al-Baihaqi)",
-    "source": "HR. Al-Baihaqi No. 3/249; Shahih (Al-Albani, Shahihul Jami' No. 1209)",
-    "occasion": "jumat"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Doa Mustajab Akhir Ashar Jumat",
-    "arabic": "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، عَلَيْكَ تَوَكَّلْتُ وَأَنْتَ رَبُّ الْعَرْشِ الْعَظِيمِ",
-    "transliteration": "Allahumma anta rabbii laa ilaaha illaa anta, 'alaika tawakkaltu wa anta rabbul 'arsyil 'azhiim",
-    "translation_text": "Ya Allah, Engkau adalah Rabbku, tidak ada ilah selain Engkau, kepada-Mu aku bertawakal dan Engkau adalah Rabb Arsy yang agung",
-    "count": 1,
-    "fadhilah": "Terdapat waktu mustajab di hari Jumat — pendapat kuat: setelah Ashar hingga Maghrib (HR. Abu Dawud)",
-    "source": "HR. Abu Dawud; HR. Tirmidzi",
-    "occasion": "jumat"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Membaca Surat Al-Kahfi di Hari Jumat",
-    "arabic": "",
-    "transliteration": "",
-    "translation_text": "Membaca Surat Al-Kahfi (QS. 18) setiap hari Jumat — boleh di siang atau malam Jumat",
-    "count": 1,
-    "fadhilah": "Nabi ﷺ bersabda: 'Barangsiapa membaca Surat Al-Kahfi pada hari Jumat, maka ia akan mendapat cahaya di antara dua Jumat.' (HR. Al-Hakim; Shahih menurut Al-Albani)",
-    "source": "HR. Al-Hakim No. 2/368; Shahihul Jami' No. 6470 (Al-Albani: Shahih)",
-    "occasion": "jumat"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Doa Terbaik Hari Arafah",
-    "arabic": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
-    "transliteration": "Laa ilaaha illallah wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa 'alaa kulli syai'in qadiir",
-    "translation_text": "Tidak ada ilah yang berhak disembah selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya segala kerajaan dan pujian, dan Dia Maha Kuasa atas segala sesuatu",
-    "count": 1,
-    "fadhilah": "Nabi ﷺ bersabda: 'Doa terbaik adalah doa di hari Arafah.' (HR. Tirmidzi)",
-    "source": "HR. Tirmidzi No. 3585; Hasan Shahih",
-    "occasion": "arafah"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Takbir Hari Tasyrik (9-13 Dzulhijjah)",
-    "arabic": "اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، لَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، وَلِلَّهِ الْحَمْدُ",
-    "transliteration": "Allahu akbar, allahu akbar, laa ilaaha illallah, wallahu akbar, allahu akbar, walillaahil hamd",
-    "translation_text": "Allah Maha Besar, Allah Maha Besar, tidak ada ilah selain Allah, Allah Maha Besar, Allah Maha Besar, dan hanya bagi Allah segala pujian",
-    "count": 1,
-    "fadhilah": "Dianjurkan memperbanyak takbir dari fajar 9 Dzulhijjah hingga Ashar 13 Dzulhijjah (Hari Tasyrik terakhir)",
-    "source": "HR. Ahmad; Ibnu Abi Syaibah; Atsar para Sahabat; Shahih",
-    "occasion": "arafah"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Doa Lailatul Qadar",
-    "arabic": "اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي",
-    "transliteration": "Allahumma innaka 'afuwwun tuhibbul 'afwa fa'fu 'annii",
-    "translation_text": "Ya Allah, sesungguhnya Engkau Maha Pemaaf, mencintai maaf, maka maafkanlah aku",
-    "count": 1,
-    "fadhilah": "Aisyah ra. bertanya: 'Wahai Rasulullah, apa yang aku baca jika aku mendapati Lailatul Qadar?' Beliau menjawab: 'Baca doa ini.'",
-    "source": "HR. Tirmidzi No. 3513; Shahih",
-    "occasion": "lailatul_qadar"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Qiyamul Lail 10 Malam Terakhir Ramadan",
-    "arabic": "",
-    "transliteration": "",
-    "translation_text": "Perbanyak sholat malam, tilawah Al-Quran, dzikir, dan doa pada 10 malam terakhir Ramadan. Nabi ﷺ lebih giat beribadah pada 10 malam terakhir dari malam-malam lainnya.",
-    "count": 1,
-    "fadhilah": "Nabi ﷺ bersabda: 'Carilah Lailatul Qadar pada malam-malam ganjil dari 10 terakhir Ramadan.' (HR. Bukhari)",
-    "source": "HR. Bukhari No. 2017; HR. Muslim No. 1169",
-    "occasion": "lailatul_qadar"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Doa Berbuka Puasa",
-    "arabic": "اللَّهُمَّ لَكَ صُمْتُ وَبِكَ آمَنْتُ وَعَلَيْكَ تَوَكَّلْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ",
-    "transliteration": "Allahumma laka shumtu wa bika aamantu wa 'alaika tawakkaltu wa 'alaa rizqika afthartu",
-    "translation_text": "Ya Allah, untuk-Mu aku berpuasa, kepada-Mu aku beriman, kepada-Mu aku bertawakal, dan dengan rezeki-Mu aku berbuka",
-    "count": 1,
-    "source": "HR. Abu Dawud No. 2358; Hadith Hasan",
-    "occasion": "ramadan"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Doa Menyambut Ramadan",
-    "arabic": "اللَّهُمَّ بَارِكْ لَنَا فِي رَجَبَ وَشَعْبَانَ وَبَلِّغْنَا رَمَضَانَ",
-    "transliteration": "Allahumma baarik lanaa fii rajabin wa sya'baana wa ballighnaa ramadhaan",
-    "translation_text": "Ya Allah, berkahilah kami di bulan Rajab dan Sya'ban, dan sampaikan kami ke bulan Ramadan",
-    "count": 1,
-    "source": "HR. Ahmad No. 2346; dilemahkan sebagian ulama, namun maknanya baik",
-    "occasion": "ramadan"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Niat Puasa Ramadan",
-    "arabic": "نَوَيْتُ صَوْمَ غَدٍ عَنْ أَدَاءِ فَرْضِ شَهْرِ رَمَضَانَ هَذِهِ السَّنَةِ لِلَّهِ تَعَالَى",
-    "transliteration": "Nawaitu shauma ghadin 'an adaa'i fardhi syahri ramadhana haadzihi as-sanati lillaahi ta'aalaa",
-    "translation_text": "Aku berniat puasa esok hari untuk menunaikan kewajiban puasa bulan Ramadan tahun ini karena Allah Ta'ala",
-    "count": 1,
-    "source": "Kitab fiqh; niat adalah amalan hati",
-    "occasion": "ramadan"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Takbiran Idul Fitri",
-    "arabic": "اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، لَا إِلَهَ إِلَّا اللَّهُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، وَلِلَّهِ الْحَمْدُ",
-    "transliteration": "Allahu akbar, allahu akbar, allahu akbar, laa ilaaha illallah, allahu akbar, allahu akbar, walillaahil hamd",
-    "translation_text": "Allah Maha Besar (3x), tidak ada ilah selain Allah, Allah Maha Besar (2x), dan hanya bagi Allah segala pujian",
-    "count": 1,
-    "fadhilah": "Dianjurkan bertakbir sejak malam Idul Fitri hingga selesai sholat Id",
-    "source": "QS. Al-Baqarah: 185; HR. Al-Baihaqi",
-    "occasion": "iedul_fitri"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Ucapan Selamat Hari Raya",
-    "arabic": "تَقَبَّلَ اللَّهُ مِنَّا وَمِنْكُمْ",
-    "transliteration": "Taqabbalallahu minnaa wa minkum",
-    "translation_text": "Semoga Allah menerima (ibadah) dari kami dan dari kalian",
-    "count": 1,
-    "fadhilah": "Ucapan yang dicontohkan para sahabat saat bertemu di hari raya",
-    "source": "HR. Ahmad; Ibnu Hajar, Fathul Bari",
-    "occasion": "iedul_fitri"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Takbiran Idul Adha",
-    "arabic": "اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، لَا إِلَهَ إِلَّا اللَّهُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، وَلِلَّهِ الْحَمْدُ",
-    "transliteration": "Allahu akbar, allahu akbar, allahu akbar, laa ilaaha illallah, allahu akbar, allahu akbar, walillaahil hamd",
-    "translation_text": "Allah Maha Besar (3x), tidak ada ilah selain Allah, Allah Maha Besar (2x), dan hanya bagi Allah segala pujian",
-    "count": 1,
-    "fadhilah": "Dianjurkan bertakbir dari fajar 9 Dzulhijjah hingga Ashar 13 Dzulhijjah",
-    "source": "QS. Al-Hajj: 28; HR. Al-Baihaqi",
-    "occasion": "iedul_adha"
-  },
-  {
-    "category": "dzikir_umum",
-    "title": "Doa Menyembelih Hewan Kurban",
-    "arabic": "بِسْمِ اللَّهِ، اللَّهُ أَكْبَرُ، اللَّهُمَّ هَذَا مِنْكَ وَلَكَ، اللَّهُمَّ تَقَبَّلْ مِنِّي",
-    "transliteration": "Bismillah, Allahu akbar, Allahumma haadzaa minka wa laka, Allahumma taqabbal minnii",
-    "translation_text": "Dengan nama Allah, Allah Maha Besar. Ya Allah, ini dari-Mu dan untuk-Mu. Ya Allah, terimalah dariku",
-    "count": 1,
-    "source": "HR. Muslim No. 1966; Abu Dawud No. 2795",
-    "occasion": "iedul_adha"
-  },
-  {
-    "category": "pagi",
-    "title": "Ayat Kursi",
-    "arabic": "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ...",
-    "transliteration": "Allahu laa ilaaha illaa huwal hayyul qayyuum...",
-    "translation_text": "Allah, tidak ada ilah melainkan Dia, Yang Maha Hidup lagi terus-menerus mengurus (makhluk-Nya)...",
-    "count": 1,
-    "source": "QS. Al-Baqarah: 255"
-  },
-  {
-    "category": "pagi",
-    "title": "Tasbih Pagi",
-    "arabic": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
-    "transliteration": "Subhaanallaahi wa bihamdih",
-    "translation_text": "Maha Suci Allah dan segala puji bagi-Nya",
-    "count": 100,
-    "fadhilah": "Dosa-dosanya diampuni walaupun sebanyak buih di lautan",
-    "source": "HR. Bukhari No. 6405; HR. Muslim No. 2691; Shahih"
-  },
-  {
-    "category": "pagi",
-    "title": "Dzikir Pagi (Sayyidul Istighfar)",
-    "arabic": "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ",
-    "transliteration": "Allahumma anta rabbii laa ilaaha illaa anta, khalaqtanii wa ana 'abduka",
-    "translation_text": "Ya Allah, Engkau adalah Rabbku, tidak ada ilah selain Engkau. Engkau yang menciptakanku dan aku adalah hamba-Mu",
-    "count": 1,
-    "fadhilah": "Jika dibaca pagi hari dengan yakin lalu meninggal, ia masuk surga",
-    "source": "HR. Bukhari No. 6306; Shahih"
-  },
-  {
-    "category": "petang",
-    "title": "Tasbih Petang",
-    "arabic": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
-    "transliteration": "Subhaanallaahi wa bihamdih",
-    "translation_text": "Maha Suci Allah dan segala puji bagi-Nya",
-    "count": 100,
-    "source": "HR. Bukhari No. 6405; HR. Muslim No. 2691; Shahih"
-  },
-  {
-    "category": "petang",
-    "title": "Doa Perlindungan Petang",
-    "arabic": "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
-    "transliteration": "A'uudzu bikalimaatillaahit taammaati min syarri maa khalaq",
-    "translation_text": "Aku berlindung dengan kalimat-kalimat Allah yang sempurna dari kejahatan makhluk yang Dia ciptakan",
-    "count": 3,
-    "fadhilah": "Tidak ada racun, binatang berbisa, atau pencuri yang membahayakannya",
-    "source": "HR. Muslim No. 2709; HR. Tirmidzi No. 3604; Shahih"
-  },
-  {
-    "category": "safar",
-    "title": "Doa Naik Kendaraan",
-    "arabic": "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ",
-    "transliteration": "Subhaanal ladzii sakhkhara lanaa haadzaa wa maa kunnaa lahu muqriniin, wa innaa ilaa rabbinaa lamunqalibuun",
-    "translation_text": "Maha Suci Allah yang telah menundukkan ini bagi kami padahal kami sebelumnya tidak mampu menguasainya, dan sesungguhnya kami akan kembali kepada Rabb kami",
-    "count": 1,
-    "source": "HR. Muslim No. 1342; HR. Abu Dawud No. 2602; HR. Tirmidzi No. 3446; Shahih"
-  },
-  {
-    "category": "setelah_sholat",
-    "title": "Tasbih Tahmid Takbir",
-    "arabic": "سُبْحَانَ اللَّهِ — الْحَمْدُ لِلَّهِ — اللَّهُ أَكْبَرُ",
-    "transliteration": "Subhaanallaah — Alhamdulillaah — Allaahu Akbar",
-    "translation_text": "Maha Suci Allah — Segala puji bagi Allah — Allah Maha Besar",
-    "count": 33,
-    "source": "HR. Muslim No. 597; Shahih"
-  },
-  {
-    "category": "setelah_sholat",
-    "title": "Istighfar Setelah Sholat",
-    "arabic": "أَسْتَغْفِرُ اللَّهَ",
-    "transliteration": "Astaghfirullah",
-    "translation_text": "Aku memohon ampun kepada Allah",
-    "count": 3,
-    "source": "HR. Muslim No. 591; Shahih"
-  },
-  {
-    "category": "tidur",
-    "title": "Tasbih Sebelum Tidur",
-    "arabic": "سُبْحَانَ اللَّهِ — الْحَمْدُ لِلَّهِ — اللَّهُ أَكْبَرُ",
-    "transliteration": "Subhaanallaah — Alhamdulillaah — Allaahu Akbar",
-    "translation_text": "Maha Suci Allah — Segala puji bagi Allah — Allah Maha Besar",
-    "count": 33,
-    "fadhilah": "Lebih baik dari seorang pembantu",
-    "source": "HR. Bukhari No. 3113; HR. Muslim No. 2727; Shahih"
-  },
-  {
-    "category": "tidur",
-    "title": "Al-Ikhlas, Al-Falaq, An-Nas sebelum tidur",
-    "arabic": "قُلْ هُوَ اللَّهُ أَحَدٌ... قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ... قُلْ أَعُوذُ بِرَبِّ النَّاسِ...",
-    "transliteration": "Qul huwallahu ahad... Qul a'uudzu birabbil falaq... Qul a'uudzu birabbin naas...",
-    "translation_text": "Surat Al-Ikhlas, Al-Falaq, dan An-Nas",
-    "count": 3,
-    "fadhilah": "Cukup dari segala sesuatu",
-    "source": "HR. Bukhari No. 5017; HR. Abu Dawud No. 5056; Shahih"
-  }
+    {
+        "category": "dzikir_umum",
+        "title": "Hauqalah",
+        "arabic": "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
+        "transliteration": "Laa hawla wa laa quwwata illaa billaah",
+        "translation_text": "Tidak ada daya dan kekuatan kecuali dengan (pertolongan) Allah",
+        "count": 1,
+        "fadhilah": "Salah satu perbendaharaan surga",
+        "source": "HR. Bukhari No. 6384; HR. Muslim No. 2704; Shahih"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Basmalah",
+        "arabic": "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ",
+        "transliteration": "Bismillahir rahmaanir rahiim",
+        "translation_text": "Dengan nama Allah Yang Maha Pengasih lagi Maha Penyayang",
+        "count": 1,
+        "source": "QS. Al-Fatihah: 1; QS. An-Naml: 30"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Istirja' (Inna lillahi)",
+        "arabic": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
+        "transliteration": "Innaa lillaahi wa innaa ilaihi raaji'uun",
+        "translation_text": "Sesungguhnya kami milik Allah dan kepada-Nya lah kami kembali",
+        "count": 1,
+        "source": "QS. Al-Baqarah: 156; HR. Muslim No. 918; Shahih"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Perbanyak Sholawat di Hari Jumat",
+        "arabic": "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ",
+        "transliteration": "Allahumma sholli 'alaa Muhammad wa 'alaa aali Muhammad",
+        "translation_text": "Ya Allah, limpahkanlah sholawat kepada Muhammad dan kepada keluarga Muhammad",
+        "count": 100,
+        "fadhilah": "Nabi ﷺ bersabda: 'Perbanyaklah sholawat kepadaku pada malam dan hari Jumat.' (HR. Al-Baihaqi)",
+        "source": "HR. Al-Baihaqi No. 3/249; Shahih (Al-Albani, Shahihul Jami' No. 1209)",
+        "occasion": "jumat"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Doa Mustajab Akhir Ashar Jumat",
+        "arabic": "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، عَلَيْكَ تَوَكَّلْتُ وَأَنْتَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+        "transliteration": "Allahumma anta rabbii laa ilaaha illaa anta, 'alaika tawakkaltu wa anta rabbul 'arsyil 'azhiim",
+        "translation_text": "Ya Allah, Engkau adalah Rabbku, tidak ada ilah selain Engkau, kepada-Mu aku bertawakal dan Engkau adalah Rabb Arsy yang agung",
+        "count": 1,
+        "fadhilah": "Terdapat waktu mustajab di hari Jumat — pendapat kuat: setelah Ashar hingga Maghrib (HR. Abu Dawud)",
+        "source": "HR. Abu Dawud; HR. Tirmidzi",
+        "occasion": "jumat"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Membaca Surat Al-Kahfi di Hari Jumat",
+        "arabic": "",
+        "transliteration": "",
+        "translation_text": "Membaca Surat Al-Kahfi (QS. 18) setiap hari Jumat — boleh di siang atau malam Jumat",
+        "count": 1,
+        "fadhilah": "Nabi ﷺ bersabda: 'Barangsiapa membaca Surat Al-Kahfi pada hari Jumat, maka ia akan mendapat cahaya di antara dua Jumat.' (HR. Al-Hakim; Shahih menurut Al-Albani)",
+        "source": "HR. Al-Hakim No. 2/368; Shahihul Jami' No. 6470 (Al-Albani: Shahih)",
+        "occasion": "jumat"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Doa Terbaik Hari Arafah",
+        "arabic": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+        "transliteration": "Laa ilaaha illallah wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa 'alaa kulli syai'in qadiir",
+        "translation_text": "Tidak ada ilah yang berhak disembah selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya segala kerajaan dan pujian, dan Dia Maha Kuasa atas segala sesuatu",
+        "count": 1,
+        "fadhilah": "Nabi ﷺ bersabda: 'Doa terbaik adalah doa di hari Arafah.' (HR. Tirmidzi)",
+        "source": "HR. Tirmidzi No. 3585; Hasan Shahih",
+        "occasion": "arafah"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Takbir Hari Tasyrik (9-13 Dzulhijjah)",
+        "arabic": "اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، لَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، وَلِلَّهِ الْحَمْدُ",
+        "transliteration": "Allahu akbar, allahu akbar, laa ilaaha illallah, wallahu akbar, allahu akbar, walillaahil hamd",
+        "translation_text": "Allah Maha Besar, Allah Maha Besar, tidak ada ilah selain Allah, Allah Maha Besar, Allah Maha Besar, dan hanya bagi Allah segala pujian",
+        "count": 1,
+        "fadhilah": "Dianjurkan memperbanyak takbir dari fajar 9 Dzulhijjah hingga Ashar 13 Dzulhijjah (Hari Tasyrik terakhir)",
+        "source": "HR. Ahmad; Ibnu Abi Syaibah; Atsar para Sahabat; Shahih",
+        "occasion": "arafah"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Doa Lailatul Qadar",
+        "arabic": "اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي",
+        "transliteration": "Allahumma innaka 'afuwwun tuhibbul 'afwa fa'fu 'annii",
+        "translation_text": "Ya Allah, sesungguhnya Engkau Maha Pemaaf, mencintai maaf, maka maafkanlah aku",
+        "count": 1,
+        "fadhilah": "Aisyah ra. bertanya: 'Wahai Rasulullah, apa yang aku baca jika aku mendapati Lailatul Qadar?' Beliau menjawab: 'Baca doa ini.'",
+        "source": "HR. Tirmidzi No. 3513; Shahih",
+        "occasion": "lailatul_qadar"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Qiyamul Lail 10 Malam Terakhir Ramadan",
+        "arabic": "",
+        "transliteration": "",
+        "translation_text": "Perbanyak sholat malam, tilawah Al-Quran, dzikir, dan doa pada 10 malam terakhir Ramadan. Nabi ﷺ lebih giat beribadah pada 10 malam terakhir dari malam-malam lainnya.",
+        "count": 1,
+        "fadhilah": "Nabi ﷺ bersabda: 'Carilah Lailatul Qadar pada malam-malam ganjil dari 10 terakhir Ramadan.' (HR. Bukhari)",
+        "source": "HR. Bukhari No. 2017; HR. Muslim No. 1169",
+        "occasion": "lailatul_qadar"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Doa Berbuka Puasa",
+        "arabic": "اللَّهُمَّ لَكَ صُمْتُ وَبِكَ آمَنْتُ وَعَلَيْكَ تَوَكَّلْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ",
+        "transliteration": "Allahumma laka shumtu wa bika aamantu wa 'alaika tawakkaltu wa 'alaa rizqika afthartu",
+        "translation_text": "Ya Allah, untuk-Mu aku berpuasa, kepada-Mu aku beriman, kepada-Mu aku bertawakal, dan dengan rezeki-Mu aku berbuka",
+        "count": 1,
+        "source": "HR. Abu Dawud No. 2358; Hadith Hasan",
+        "occasion": "ramadan"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Doa Menyambut Ramadan",
+        "arabic": "اللَّهُمَّ بَارِكْ لَنَا فِي رَجَبَ وَشَعْبَانَ وَبَلِّغْنَا رَمَضَانَ",
+        "transliteration": "Allahumma baarik lanaa fii rajabin wa sya'baana wa ballighnaa ramadhaan",
+        "translation_text": "Ya Allah, berkahilah kami di bulan Rajab dan Sya'ban, dan sampaikan kami ke bulan Ramadan",
+        "count": 1,
+        "source": "HR. Ahmad No. 2346; dilemahkan sebagian ulama, namun maknanya baik",
+        "occasion": "ramadan"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Niat Puasa Ramadan",
+        "arabic": "نَوَيْتُ صَوْمَ غَدٍ عَنْ أَدَاءِ فَرْضِ شَهْرِ رَمَضَانَ هَذِهِ السَّنَةِ لِلَّهِ تَعَالَى",
+        "transliteration": "Nawaitu shauma ghadin 'an adaa'i fardhi syahri ramadhana haadzihi as-sanati lillaahi ta'aalaa",
+        "translation_text": "Aku berniat puasa esok hari untuk menunaikan kewajiban puasa bulan Ramadan tahun ini karena Allah Ta'ala",
+        "count": 1,
+        "source": "Kitab fiqh; niat adalah amalan hati",
+        "occasion": "ramadan"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Takbiran Idul Fitri",
+        "arabic": "اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، لَا إِلَهَ إِلَّا اللَّهُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، وَلِلَّهِ الْحَمْدُ",
+        "transliteration": "Allahu akbar, allahu akbar, allahu akbar, laa ilaaha illallah, allahu akbar, allahu akbar, walillaahil hamd",
+        "translation_text": "Allah Maha Besar (3x), tidak ada ilah selain Allah, Allah Maha Besar (2x), dan hanya bagi Allah segala pujian",
+        "count": 1,
+        "fadhilah": "Dianjurkan bertakbir sejak malam Idul Fitri hingga selesai sholat Id",
+        "source": "QS. Al-Baqarah: 185; HR. Al-Baihaqi",
+        "occasion": "iedul_fitri"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Ucapan Selamat Hari Raya",
+        "arabic": "تَقَبَّلَ اللَّهُ مِنَّا وَمِنْكُمْ",
+        "transliteration": "Taqabbalallahu minnaa wa minkum",
+        "translation_text": "Semoga Allah menerima (ibadah) dari kami dan dari kalian",
+        "count": 1,
+        "fadhilah": "Ucapan yang dicontohkan para sahabat saat bertemu di hari raya",
+        "source": "HR. Ahmad; Ibnu Hajar, Fathul Bari",
+        "occasion": "iedul_fitri"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Takbiran Idul Adha",
+        "arabic": "اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، لَا إِلَهَ إِلَّا اللَّهُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، وَلِلَّهِ الْحَمْدُ",
+        "transliteration": "Allahu akbar, allahu akbar, allahu akbar, laa ilaaha illallah, allahu akbar, allahu akbar, walillaahil hamd",
+        "translation_text": "Allah Maha Besar (3x), tidak ada ilah selain Allah, Allah Maha Besar (2x), dan hanya bagi Allah segala pujian",
+        "count": 1,
+        "fadhilah": "Dianjurkan bertakbir dari fajar 9 Dzulhijjah hingga Ashar 13 Dzulhijjah",
+        "source": "QS. Al-Hajj: 28; HR. Al-Baihaqi",
+        "occasion": "iedul_adha"
+    },
+    {
+        "category": "dzikir_umum",
+        "title": "Doa Menyembelih Hewan Kurban",
+        "arabic": "بِسْمِ اللَّهِ، اللَّهُ أَكْبَرُ، اللَّهُمَّ هَذَا مِنْكَ وَلَكَ، اللَّهُمَّ تَقَبَّلْ مِنِّي",
+        "transliteration": "Bismillah, Allahu akbar, Allahumma haadzaa minka wa laka, Allahumma taqabbal minnii",
+        "translation_text": "Dengan nama Allah, Allah Maha Besar. Ya Allah, ini dari-Mu dan untuk-Mu. Ya Allah, terimalah dariku",
+        "count": 1,
+        "source": "HR. Muslim No. 1966; Abu Dawud No. 2795",
+        "occasion": "iedul_adha"
+    },
+    {
+        "category": "pagi",
+        "title": "Ayat Kursi",
+        "arabic": "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ...",
+        "transliteration": "Allahu laa ilaaha illaa huwal hayyul qayyuum...",
+        "translation_text": "Allah, tidak ada ilah melainkan Dia, Yang Maha Hidup lagi terus-menerus mengurus (makhluk-Nya)...",
+        "count": 1,
+        "source": "QS. Al-Baqarah: 255"
+    },
+    {
+        "category": "pagi",
+        "title": "Tasbih Pagi",
+        "arabic": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+        "transliteration": "Subhaanallaahi wa bihamdih",
+        "translation_text": "Maha Suci Allah dan segala puji bagi-Nya",
+        "count": 100,
+        "fadhilah": "Dosa-dosanya diampuni walaupun sebanyak buih di lautan",
+        "source": "HR. Bukhari No. 6405; HR. Muslim No. 2691; Shahih"
+    },
+    {
+        "category": "pagi",
+        "title": "Dzikir Pagi (Sayyidul Istighfar)",
+        "arabic": "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ",
+        "transliteration": "Allahumma anta rabbii laa ilaaha illaa anta, khalaqtanii wa ana 'abduka",
+        "translation_text": "Ya Allah, Engkau adalah Rabbku, tidak ada ilah selain Engkau. Engkau yang menciptakanku dan aku adalah hamba-Mu",
+        "count": 1,
+        "fadhilah": "Jika dibaca pagi hari dengan yakin lalu meninggal, ia masuk surga",
+        "source": "HR. Bukhari No. 6306; Shahih"
+    },
+    {
+        "category": "petang",
+        "title": "Tasbih Petang",
+        "arabic": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+        "transliteration": "Subhaanallaahi wa bihamdih",
+        "translation_text": "Maha Suci Allah dan segala puji bagi-Nya",
+        "count": 100,
+        "source": "HR. Bukhari No. 6405; HR. Muslim No. 2691; Shahih"
+    },
+    {
+        "category": "petang",
+        "title": "Doa Perlindungan Petang",
+        "arabic": "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+        "transliteration": "A'uudzu bikalimaatillaahit taammaati min syarri maa khalaq",
+        "translation_text": "Aku berlindung dengan kalimat-kalimat Allah yang sempurna dari kejahatan makhluk yang Dia ciptakan",
+        "count": 3,
+        "fadhilah": "Tidak ada racun, binatang berbisa, atau pencuri yang membahayakannya",
+        "source": "HR. Muslim No. 2709; HR. Tirmidzi No. 3604; Shahih"
+    },
+    {
+        "category": "safar",
+        "title": "Doa Naik Kendaraan",
+        "arabic": "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ",
+        "transliteration": "Subhaanal ladzii sakhkhara lanaa haadzaa wa maa kunnaa lahu muqriniin, wa innaa ilaa rabbinaa lamunqalibuun",
+        "translation_text": "Maha Suci Allah yang telah menundukkan ini bagi kami padahal kami sebelumnya tidak mampu menguasainya, dan sesungguhnya kami akan kembali kepada Rabb kami",
+        "count": 1,
+        "source": "HR. Muslim No. 1342; HR. Abu Dawud No. 2602; HR. Tirmidzi No. 3446; Shahih"
+    },
+    {
+        "category": "setelah_sholat",
+        "title": "Tasbih Tahmid Takbir",
+        "arabic": "سُبْحَانَ اللَّهِ — الْحَمْدُ لِلَّهِ — اللَّهُ أَكْبَرُ",
+        "transliteration": "Subhaanallaah — Alhamdulillaah — Allaahu Akbar",
+        "translation_text": "Maha Suci Allah — Segala puji bagi Allah — Allah Maha Besar",
+        "count": 33,
+        "source": "HR. Muslim No. 597; Shahih"
+    },
+    {
+        "category": "setelah_sholat",
+        "title": "Istighfar Setelah Sholat",
+        "arabic": "أَسْتَغْفِرُ اللَّهَ",
+        "transliteration": "Astaghfirullah",
+        "translation_text": "Aku memohon ampun kepada Allah",
+        "count": 3,
+        "source": "HR. Muslim No. 591; Shahih"
+    },
+    {
+        "category": "tidur",
+        "title": "Tasbih Sebelum Tidur",
+        "arabic": "سُبْحَانَ اللَّهِ — الْحَمْدُ لِلَّهِ — اللَّهُ أَكْبَرُ",
+        "transliteration": "Subhaanallaah — Alhamdulillaah — Allaahu Akbar",
+        "translation_text": "Maha Suci Allah — Segala puji bagi Allah — Allah Maha Besar",
+        "count": 33,
+        "fadhilah": "Lebih baik dari seorang pembantu",
+        "source": "HR. Bukhari No. 3113; HR. Muslim No. 2727; Shahih"
+    },
+    {
+        "category": "tidur",
+        "title": "Al-Ikhlas, Al-Falaq, An-Nas sebelum tidur",
+        "arabic": "قُلْ هُوَ اللَّهُ أَحَدٌ... قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ... قُلْ أَعُوذُ بِرَبِّ النَّاسِ...",
+        "transliteration": "Qul huwallahu ahad... Qul a'uudzu birabbil falaq... Qul a'uudzu birabbin naas...",
+        "translation_text": "Surat Al-Ikhlas, Al-Falaq, dan An-Nas",
+        "count": 3,
+        "fadhilah": "Cukup dari segala sesuatu",
+        "source": "HR. Bukhari No. 5017; HR. Abu Dawud No. 5056; Shahih"
+    }
 ]

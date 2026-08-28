@@ -22,15 +22,15 @@ Apa yang sudah ada sekarang dan bisa dipakai sebagai fondasi.
 
 ## Task List
 
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 ## Acceptance Criteria
 
-- 
-- 
-- 
+-
+-
+-
 
 ## Evidence
 
@@ -40,5 +40,4 @@ Apa yang sudah ada sekarang dan bisa dipakai sebagai fondasi.
 
 ## Source of Truth
 
-- 
-
+-

@@ -42,19 +42,19 @@ func GeneratePassword(passwordLength, minSpecialChar, minNum, minUpperCase int) 
 	)
 	var password strings.Builder
 
-	//Set special character
+	// Set special character
 	for i := 0; i < minSpecialChar; i++ {
 		random, _ := rand.Int(rand.Reader, big.NewInt(int64(len(specialCharSet))))
 		password.WriteString(string(specialCharSet[random.BitLen()]))
 	}
 
-	//Set numeric
+	// Set numeric
 	for i := 0; i < minNum; i++ {
 		random, _ := rand.Int(rand.Reader, big.NewInt(int64(len(numberSet))))
 		password.WriteString(string(numberSet[random.BitLen()]))
 	}
 
-	//Set uppercase
+	// Set uppercase
 	for i := 0; i < minUpperCase; i++ {
 		random, _ := rand.Int(rand.Reader, big.NewInt(int64(len(upperCharSet))))
 		password.WriteString(string(upperCharSet[random.BitLen()]))

@@ -569,22 +569,22 @@ Acceptance Criteria:
 - `npm run lint`
 - `npm run build`
 - Manual route smoke:
-  - `/dashboard/search`
-  - `/dashboard/hadith`
-  - `/dashboard/forum`
-  - `/dashboard/zakat`
-  - `/dashboard/asbabun-nuzul`
-  - `/dashboard/tafsir/al-fatihah`
-  - `/dashboard/quran`
-  - `/dashboard/bookmarks`
+    - `/dashboard/search`
+    - `/dashboard/hadith`
+    - `/dashboard/forum`
+    - `/dashboard/zakat`
+    - `/dashboard/asbabun-nuzul`
+    - `/dashboard/tafsir/al-fatihah`
+    - `/dashboard/quran`
+    - `/dashboard/bookmarks`
 - Floating settings/layout smoke:
-  - `/`
-  - `/auth/login`
-  - `/quran`
-  - `/quran/surah/al-fatihah`
-  - `/dashboard`
-  - `/dashboard/quran`
-  - `/admin`
+    - `/`
+    - `/auth/login`
+    - `/quran`
+    - `/quran/surah/al-fatihah`
+    - `/dashboard`
+    - `/dashboard/quran`
+    - `/admin`
 - Browser checks for guest login `next` and dashboard CTA containment.
 
 ## Evidence
@@ -605,6 +605,6 @@ Acceptance Criteria:
 - `npm run build` passed after the dashboard profile and legacy Sidebar
   account-route follow-up.
 - Targeted ESLint command was attempted with `npx eslint src/app/page.js
-  src/app/dashboard/page.js src/app/dashboard/notifications/page.js
-  src/lib/i18n.js`, but the local ESLint setup currently fails before linting
+src/app/dashboard/page.js src/app/dashboard/notifications/page.js
+src/lib/i18n.js`, but the local ESLint setup currently fails before linting
   because `typescript` is missing from `apps/web/node_modules`.

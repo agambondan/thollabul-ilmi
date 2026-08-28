@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { KhatamContent } from '@/app/khatam/page';
+import { KhatamContent } from "@/app/khatam/page";
 
 export default function DashboardKhatamPage() {
     return (

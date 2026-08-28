@@ -117,7 +117,6 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	newSholatController := controllers.NewSholatController(newServices)
 	newMurojaahController := controllers.NewMurojaahController(newServices)
 	newFiqhController := controllers.NewFiqhController(newServices)
-	newTahlilController := controllers.NewTahlilController(newServices)
 	newKajianController := controllers.NewKajianController(newServices)
 	newMuhasabahController := controllers.NewMuhasabahController(newServices)
 	newGoalController := controllers.NewGoalController(newServices)
@@ -547,14 +546,6 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Post("/fiqh/items", middlewares.EditorOrAdminMiddleware(), newFiqhController.CreateItem)
 	master.Put("/fiqh/items/:id", middlewares.EditorOrAdminMiddleware(), newFiqhController.UpdateItem)
 	master.Delete("/fiqh/items/:id", middlewares.EditorOrAdminMiddleware(), newFiqhController.DeleteItem)
-
-	// Tahlil & Yasin (public)
-	master.Get("/tahlil", newTahlilController.FindAll)
-	master.Get("/tahlil/items", middlewares.EditorOrAdminMiddleware(), newTahlilController.FindAllItems)
-	master.Post("/tahlil/items", middlewares.EditorOrAdminMiddleware(), newTahlilController.CreateItem)
-	master.Put("/tahlil/items/:id", middlewares.EditorOrAdminMiddleware(), newTahlilController.UpdateItem)
-	master.Delete("/tahlil/items/:id", middlewares.EditorOrAdminMiddleware(), newTahlilController.DeleteItem)
-	master.Get("/tahlil/:id", newTahlilController.FindByID)
 
 	// Koleksi Kajian (public read, editor/admin write)
 	master.Get("/kajian", newKajianController.FindAll)

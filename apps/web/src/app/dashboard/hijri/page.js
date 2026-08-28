@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import PuasaSunnahPanel from '@/components/PuasaSunnahPanel';
-import RamadanCountdown from '@/components/RamadanCountdown';
-import { useEffect, useState } from 'react';
-import { useLocale } from '@/context/Locale';
-import { useLayoutMode } from '@/lib/useLayoutMode';
+import PuasaSunnahPanel from "@/components/PuasaSunnahPanel";
+import RamadanCountdown from "@/components/RamadanCountdown";
+import { useEffect, useState } from "react";
+import { useLocale } from "@/context/Locale";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 
 const todayIso = () => {
     const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 };
 
 const toAladhan = (iso) => {
-    const [y, m, d] = iso.split('-');
+    const [y, m, d] = iso.split("-");
     return `${d}-${m}-${y}`;
 };
 
@@ -37,10 +37,10 @@ const HijriPage = () => {
             if (h) {
                 setResult({
                     day: h.day,
-                    monthAr: h.month?.ar ?? '',
-                    monthEn: h.month?.en ?? '',
+                    monthAr: h.month?.ar ?? "",
+                    monthEn: h.month?.en ?? "",
                     year: h.year,
-                    weekdayAr: h.weekday?.ar ?? '',
+                    weekdayAr: h.weekday?.ar ?? "",
                 });
             }
         } catch {}
@@ -59,17 +59,17 @@ const HijriPage = () => {
                 if (h) {
                     setTodayHijri({
                         day: h.day,
-                        monthAr: h.month?.ar ?? '',
-                        monthEn: h.month?.en ?? '',
+                        monthAr: h.month?.ar ?? "",
+                        monthEn: h.month?.en ?? "",
                         year: h.year,
-                        weekdayAr: h.weekday?.ar ?? '',
+                        weekdayAr: h.weekday?.ar ?? "",
                     });
                     setResult({
                         day: h.day,
-                        monthAr: h.month?.ar ?? '',
-                        monthEn: h.month?.en ?? '',
+                        monthAr: h.month?.ar ?? "",
+                        monthEn: h.month?.en ?? "",
                         year: h.year,
-                        weekdayAr: h.weekday?.ar ?? '',
+                        weekdayAr: h.weekday?.ar ?? "",
                     });
                 }
             } catch {}
@@ -82,23 +82,27 @@ const HijriPage = () => {
     };
 
     return (
-        <div className={isWide ? 'px-4 py-6' : 'px-4 py-6 max-w-md mx-auto'}>
+        <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
             <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-6'>
-                {t('hijri.title')}
+                {t("hijri.title")}
             </h1>
 
             {/* Today's hijri */}
             {todayHijri && (
                 <div className='bg-emerald-700 dark:bg-emerald-800 rounded-2xl p-6 mb-4 text-center text-white'>
-                    <p className='text-xs font-medium text-emerald-200 mb-2'>{t('hijri.today')}</p>
+                    <p className='text-xs font-medium text-emerald-200 mb-2'>
+                        {t("hijri.today")}
+                    </p>
                     <p
                         className='text-3xl font-bold mb-1 arabic-text'
                         dir='rtl'
                     >
-                        {todayHijri.day} {todayHijri.monthAr} {todayHijri.year} هـ
+                        {todayHijri.day} {todayHijri.monthAr} {todayHijri.year}{" "}
+                        هـ
                     </p>
                     <p className='text-base text-emerald-100'>
-                        {todayHijri.day} {todayHijri.monthEn} {todayHijri.year} H
+                        {todayHijri.day} {todayHijri.monthEn} {todayHijri.year}{" "}
+                        H
                     </p>
                 </div>
             )}
@@ -114,7 +118,7 @@ const HijriPage = () => {
             {/* Converter */}
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
                 <p className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
-                    {t('hijri.converter_title')}
+                    {t("hijri.converter_title")}
                 </p>
                 <div className='flex gap-2'>
                     <input
@@ -128,7 +132,7 @@ const HijriPage = () => {
                         disabled={loading}
                         className='px-4 py-2 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 disabled:opacity-60 transition-colors'
                     >
-                        {loading ? '...' : t('hijri.convert_btn')}
+                        {loading ? "..." : t("hijri.convert_btn")}
                     </button>
                 </div>
 

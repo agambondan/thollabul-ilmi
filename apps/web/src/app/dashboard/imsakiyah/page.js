@@ -1,27 +1,37 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useLocale } from '@/context/Locale';
+import { useEffect, useState } from "react";
+import { useLocale } from "@/context/Locale";
 
 const MONTHS = [
-    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
 ];
 
 const PRAYERS = [
-    { key: 'Imsak', label: 'Imsak' },
-    { key: 'Fajr', label: 'Subuh' },
-    { key: 'Sunrise', label: 'Syuruq' },
-    { key: 'Dhuhr', label: 'Dzuhur' },
-    { key: 'Asr', label: 'Ashar' },
-    { key: 'Maghrib', label: 'Maghrib' },
-    { key: 'Isha', label: 'Isya' },
+    { key: "Imsak", label: "Imsak" },
+    { key: "Fajr", label: "Subuh" },
+    { key: "Sunrise", label: "Syuruq" },
+    { key: "Dhuhr", label: "Dzuhur" },
+    { key: "Asr", label: "Ashar" },
+    { key: "Maghrib", label: "Maghrib" },
+    { key: "Isha", label: "Isya" },
 ];
 
-const cleanTime = (t) => (t ? t.replace(/ \(.*\)$/, '') : '-');
+const cleanTime = (t) => (t ? t.replace(/ \(.*\)$/, "") : "-");
 
 const todayStr = (d) =>
-    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
 const ImsakiyahPage = () => {
     const { t } = useLocale();
@@ -43,8 +53,8 @@ const ImsakiyahPage = () => {
                 const days = data?.data ?? [];
                 setRows(
                     days.map((day) => ({
-                        date: day.date?.gregorian?.date ?? '',
-                        day: day.date?.gregorian?.day ?? '',
+                        date: day.date?.gregorian?.date ?? "",
+                        day: day.date?.gregorian?.day ?? "",
                         timings: day.timings ?? {},
                     })),
                 );
@@ -56,21 +66,27 @@ const ImsakiyahPage = () => {
     const today = todayStr(now);
 
     const prevMonth = () => {
-        if (month === 1) { setMonth(12); setYear((y) => y - 1); }
-        else setMonth((m) => m - 1);
+        if (month === 1) {
+            setMonth(12);
+            setYear((y) => y - 1);
+        } else setMonth((m) => m - 1);
     };
 
     const nextMonth = () => {
-        if (month === 12) { setMonth(1); setYear((y) => y + 1); }
-        else setMonth((m) => m + 1);
+        if (month === 12) {
+            setMonth(1);
+            setYear((y) => y + 1);
+        } else setMonth((m) => m + 1);
     };
 
     return (
         <div className='p-6'>
             <div className='mb-5'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>{t('imsakiyah.title')}</h1>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                    {t("imsakiyah.title")}
+                </h1>
                 <p className='text-sm text-gray-500 dark:text-gray-400 mt-0.5'>
-                    {t('imsakiyah.subtitle')}
+                    {t("imsakiyah.subtitle")}
                 </p>
             </div>
 
@@ -95,13 +111,13 @@ const ImsakiyahPage = () => {
 
             {loading && (
                 <div className='text-center py-12 text-sm text-gray-400'>
-                    {t('imsakiyah.loading')}
+                    {t("imsakiyah.loading")}
                 </div>
             )}
 
             {error && !loading && (
                 <div className='text-center py-12 text-sm text-red-500'>
-                    {t('imsakiyah.error')}
+                    {t("imsakiyah.error")}
                 </div>
             )}
 
@@ -110,9 +126,14 @@ const ImsakiyahPage = () => {
                     <table className='w-full text-xs min-w-[640px]'>
                         <thead className='bg-emerald-700 text-white'>
                             <tr>
-                                <th className='px-3 py-2.5 text-left font-medium w-10'>No</th>
+                                <th className='px-3 py-2.5 text-left font-medium w-10'>
+                                    No
+                                </th>
                                 {PRAYERS.map((p) => (
-                                    <th key={p.key} className='px-3 py-2.5 text-center font-medium'>
+                                    <th
+                                        key={p.key}
+                                        className='px-3 py-2.5 text-center font-medium'
+                                    >
                                         {p.label}
                                     </th>
                                 ))}
@@ -121,22 +142,22 @@ const ImsakiyahPage = () => {
                         <tbody className='bg-white dark:bg-slate-800 divide-y divide-gray-50 dark:divide-slate-700/50'>
                             {rows.map((row) => {
                                 const isToday =
-                                    `${year}-${String(month).padStart(2, '0')}-${String(row.day).padStart(2, '0')}` ===
+                                    `${year}-${String(month).padStart(2, "0")}-${String(row.day).padStart(2, "0")}` ===
                                     today;
                                 return (
                                     <tr
                                         key={row.date}
                                         className={
                                             isToday
-                                                ? 'bg-emerald-50 dark:bg-emerald-900/20'
-                                                : 'hover:bg-gray-50 dark:hover:bg-slate-750'
+                                                ? "bg-emerald-50 dark:bg-emerald-900/20"
+                                                : "hover:bg-gray-50 dark:hover:bg-slate-750"
                                         }
                                     >
                                         <td
                                             className={`px-3 py-2 font-semibold ${
                                                 isToday
-                                                    ? 'text-emerald-700 dark:text-emerald-400'
-                                                    : 'text-gray-700 dark:text-gray-300'
+                                                    ? "text-emerald-700 dark:text-emerald-400"
+                                                    : "text-gray-700 dark:text-gray-300"
                                             }`}
                                         >
                                             {row.day}
@@ -148,11 +169,11 @@ const ImsakiyahPage = () => {
                                             <td
                                                 key={p.key}
                                                 className={`px-3 py-2 text-center ${
-                                                    p.key === 'Imsak'
-                                                        ? 'font-semibold text-amber-600 dark:text-amber-400'
+                                                    p.key === "Imsak"
+                                                        ? "font-semibold text-amber-600 dark:text-amber-400"
                                                         : isToday
-                                                          ? 'text-emerald-700 dark:text-emerald-400'
-                                                          : 'text-gray-700 dark:text-gray-300'
+                                                          ? "text-emerald-700 dark:text-emerald-400"
+                                                          : "text-gray-700 dark:text-gray-300"
                                                 }`}
                                             >
                                                 {cleanTime(row.timings[p.key])}

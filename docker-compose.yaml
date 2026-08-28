@@ -1,118 +1,118 @@
 name: tholabul-ilmi
 
 services:
-  tholabul-ilmi-api:
-    image: tholabul-ilmi-api
-    build:
-      context: ./services/api
-      dockerfile: Dockerfile
-    ports:
-      - "29900:9900"
-    environment:
-      - PORT=9900
-      - ENDPOINT=/api/v1/
-      - ENVIRONMENT=production
-      - DB_HOST=tholabul-ilmi-postgres
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASS=postgres
-      - DB_NAME=thullabul_ilmi
-      - DB_TABLE_PREFIX=
-      - REDIS_HOST=tholabul-ilmi-redis
-      - REDIS_PORT=6379
-      - REDIS_PASS=
-      - REDIS_INDEX=3
-      - PREFORK=false
-      - CACHE_TTL_SECONDS=60
-      - BODY_LIMIT_BYTES=26214400
-      - LIBRARY_UPLOAD_MAX_BYTES=26214400
-      - MINIO_ENDPOINT=tholabul-ilmi-minio:9000
-      - MINIO_PUBLIC_URL=http://localhost:9020
-      - MINIO_ACCESS=minioadmin
-      - MINIO_SECRET=minioadmin
-      - MINIO_LIBRARY_BUCKET=thollabul-ilmi-library
-      - MINIO_USE_SSL=false
-      - RATE_LIMIT_GLOBAL=180
-      - RATE_LIMIT_SEARCH=60
-      - RATE_LIMIT_AUTH=10
-      - RATE_LIMIT_DEV=120
-      - ALLOW_ORIGINS=http://localhost:3000,http://localhost:3001,http://localhost:5173,http://localhost:8081,http://localhost:19006,http://localhost:23000,http://127.0.0.1:3000,http://127.0.0.1:3001,http://127.0.0.1:5173,http://127.0.0.1:8081,http://127.0.0.1:19006,http://127.0.0.1:23000
-      - ALLOW_METHODS=GET,POST,PUT,DELETE,OPTIONS
-      - ALLOW_HEADERS=Origin,Content-Type,Accept,Authorization
-    depends_on:
-      tholabul-ilmi-postgres:
-        condition: service_healthy
-      tholabul-ilmi-redis:
-        condition: service_started
-    networks:
-      - tholabul-ilmi-network
-    restart: unless-stopped
+    tholabul-ilmi-api:
+        image: tholabul-ilmi-api
+        build:
+            context: ./services/api
+            dockerfile: Dockerfile
+        ports:
+            - "29900:9900"
+        environment:
+            - PORT=9900
+            - ENDPOINT=/api/v1/
+            - ENVIRONMENT=production
+            - DB_HOST=tholabul-ilmi-postgres
+            - DB_PORT=5432
+            - DB_USER=postgres
+            - DB_PASS=postgres
+            - DB_NAME=thullabul_ilmi
+            - DB_TABLE_PREFIX=
+            - REDIS_HOST=tholabul-ilmi-redis
+            - REDIS_PORT=6379
+            - REDIS_PASS=
+            - REDIS_INDEX=3
+            - PREFORK=false
+            - CACHE_TTL_SECONDS=60
+            - BODY_LIMIT_BYTES=26214400
+            - LIBRARY_UPLOAD_MAX_BYTES=26214400
+            - MINIO_ENDPOINT=tholabul-ilmi-minio:9000
+            - MINIO_PUBLIC_URL=http://localhost:9020
+            - MINIO_ACCESS=minioadmin
+            - MINIO_SECRET=minioadmin
+            - MINIO_LIBRARY_BUCKET=thollabul-ilmi-library
+            - MINIO_USE_SSL=false
+            - RATE_LIMIT_GLOBAL=180
+            - RATE_LIMIT_SEARCH=60
+            - RATE_LIMIT_AUTH=10
+            - RATE_LIMIT_DEV=120
+            - ALLOW_ORIGINS=http://localhost:3000,http://localhost:3001,http://localhost:5173,http://localhost:8081,http://localhost:19006,http://localhost:23000,http://127.0.0.1:3000,http://127.0.0.1:3001,http://127.0.0.1:5173,http://127.0.0.1:8081,http://127.0.0.1:19006,http://127.0.0.1:23000
+            - ALLOW_METHODS=GET,POST,PUT,DELETE,OPTIONS
+            - ALLOW_HEADERS=Origin,Content-Type,Accept,Authorization
+        depends_on:
+            tholabul-ilmi-postgres:
+                condition: service_healthy
+            tholabul-ilmi-redis:
+                condition: service_started
+        networks:
+            - tholabul-ilmi-network
+        restart: unless-stopped
 
-  tholabul-ilmi-web:
-    image: tholabul-ilmi-web
-    build:
-      context: ./apps/web
-      dockerfile: Dockerfile
-    ports:
-      - "23000:3000"
-    environment:
-      - NEXT_PUBLIC_API_URL=
-      - API_INTERNAL_URL=http://tholabul-ilmi-api:9900
-    depends_on:
-      - tholabul-ilmi-api
-    networks:
-      - tholabul-ilmi-network
-    restart: unless-stopped
+    tholabul-ilmi-web:
+        image: tholabul-ilmi-web
+        build:
+            context: ./apps/web
+            dockerfile: Dockerfile
+        ports:
+            - "23000:3000"
+        environment:
+            - NEXT_PUBLIC_API_URL=
+            - API_INTERNAL_URL=http://tholabul-ilmi-api:9900
+        depends_on:
+            - tholabul-ilmi-api
+        networks:
+            - tholabul-ilmi-network
+        restart: unless-stopped
 
-  tholabul-ilmi-postgres:
-    image: postgres:18-alpine
-    ports:
-      - "54320:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=thullabul_ilmi
-    volumes:
-      - tholabul-ilmi-postgres-data:/var/lib/postgresql
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - tholabul-ilmi-network
-    restart: unless-stopped
+    tholabul-ilmi-postgres:
+        image: postgres:18-alpine
+        ports:
+            - "54320:5432"
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=thullabul_ilmi
+        volumes:
+            - tholabul-ilmi-postgres-data:/var/lib/postgresql
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        networks:
+            - tholabul-ilmi-network
+        restart: unless-stopped
 
-  tholabul-ilmi-redis:
-    image: redis:8-alpine
-    ports:
-      - "63790:6379"
-    volumes:
-      - tholabul-ilmi-redis-data:/data
-    networks:
-      - tholabul-ilmi-network
-    restart: unless-stopped
+    tholabul-ilmi-redis:
+        image: redis:8-alpine
+        ports:
+            - "63790:6379"
+        volumes:
+            - tholabul-ilmi-redis-data:/data
+        networks:
+            - tholabul-ilmi-network
+        restart: unless-stopped
 
-  tholabul-ilmi-minio:
-    image: minio/minio:latest
-    ports:
-      - "9020:9000"
-      - "9021:9001"
-    environment:
-      - MINIO_ROOT_USER=minioadmin
-      - MINIO_ROOT_PASSWORD=minioadmin
-    volumes:
-      - tholabul-ilmi-minio-data:/data
-    command: server /data --console-address ":9001"
-    networks:
-      - tholabul-ilmi-network
-    restart: unless-stopped
+    tholabul-ilmi-minio:
+        image: minio/minio:latest
+        ports:
+            - "9020:9000"
+            - "9021:9001"
+        environment:
+            - MINIO_ROOT_USER=minioadmin
+            - MINIO_ROOT_PASSWORD=minioadmin
+        volumes:
+            - tholabul-ilmi-minio-data:/data
+        command: server /data --console-address ":9001"
+        networks:
+            - tholabul-ilmi-network
+        restart: unless-stopped
 
 volumes:
-  tholabul-ilmi-postgres-data:
-  tholabul-ilmi-redis-data:
-  tholabul-ilmi-minio-data:
+    tholabul-ilmi-postgres-data:
+    tholabul-ilmi-redis-data:
+    tholabul-ilmi-minio-data:
 
 networks:
-  tholabul-ilmi-network:
-    driver: bridge
+    tholabul-ilmi-network:
+        driver: bridge

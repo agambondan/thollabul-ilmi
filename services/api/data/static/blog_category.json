@@ -1,42 +1,42 @@
 [
-  {
-    "name": "Quran \u0026 Tafsir",
-    "slug": "quran-tafsir",
-    "description": "Kajian seputar Al-Quran, tafsir, dan ilmu-ilmu Quran"
-  },
-  {
-    "name": "Hadith \u0026 Sunnah",
-    "slug": "hadith-sunnah",
-    "description": "Kajian hadith, syarah hadith, dan sunnah Nabi ﷺ"
-  },
-  {
-    "name": "Fiqh \u0026 Hukum Islam",
-    "slug": "fiqh-hukum",
-    "description": "Pembahasan hukum-hukum Islam dalam kehidupan sehari-hari"
-  },
-  {
-    "name": "Akhlak \u0026 Adab",
-    "slug": "akhlak-adab",
-    "description": "Adab dan akhlak Islami dalam berbagai aspek kehidupan"
-  },
-  {
-    "name": "Aqidah \u0026 Tauhid",
-    "slug": "aqidah-tauhid",
-    "description": "Penguatan aqidah dan pemahaman tauhid yang benar"
-  },
-  {
-    "name": "Sejarah Islam",
-    "slug": "sejarah-islam",
-    "description": "Sirah Nabawiyah dan sejarah peradaban Islam"
-  },
-  {
-    "name": "Keluarga Muslim",
-    "slug": "keluarga-muslim",
-    "description": "Tuntunan membangun keluarga sakinah mawaddah warahmah"
-  },
-  {
-    "name": "Inspirasi \u0026 Motivasi",
-    "slug": "inspirasi-motivasi",
-    "description": "Artikel motivasi dan inspirasi bagi kehidupan muslim"
-  }
+    {
+        "name": "Quran \u0026 Tafsir",
+        "slug": "quran-tafsir",
+        "description": "Kajian seputar Al-Quran, tafsir, dan ilmu-ilmu Quran"
+    },
+    {
+        "name": "Hadith \u0026 Sunnah",
+        "slug": "hadith-sunnah",
+        "description": "Kajian hadith, syarah hadith, dan sunnah Nabi ﷺ"
+    },
+    {
+        "name": "Fiqh \u0026 Hukum Islam",
+        "slug": "fiqh-hukum",
+        "description": "Pembahasan hukum-hukum Islam dalam kehidupan sehari-hari"
+    },
+    {
+        "name": "Akhlak \u0026 Adab",
+        "slug": "akhlak-adab",
+        "description": "Adab dan akhlak Islami dalam berbagai aspek kehidupan"
+    },
+    {
+        "name": "Aqidah \u0026 Tauhid",
+        "slug": "aqidah-tauhid",
+        "description": "Penguatan aqidah dan pemahaman tauhid yang benar"
+    },
+    {
+        "name": "Sejarah Islam",
+        "slug": "sejarah-islam",
+        "description": "Sirah Nabawiyah dan sejarah peradaban Islam"
+    },
+    {
+        "name": "Keluarga Muslim",
+        "slug": "keluarga-muslim",
+        "description": "Tuntunan membangun keluarga sakinah mawaddah warahmah"
+    },
+    {
+        "name": "Inspirasi \u0026 Motivasi",
+        "slug": "inspirasi-motivasi",
+        "description": "Artikel motivasi dan inspirasi bagi kehidupan muslim"
+    }
 ]

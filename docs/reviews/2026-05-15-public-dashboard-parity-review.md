@@ -18,30 +18,30 @@ interactive element tidak menyamarkan aksi.
 
 ## Ringkasan Prioritas
 
-| Priority | Area | Temuan |
-|---|---|---|
-| P0 | Dashboard search | `DashboardSearchPage` memakai `SearchClient` public, sehingga semua hasil dan `Lihat Semua` keluar ke public route. |
-| P0 | Dashboard forum | Forum dashboard reuse public component tanpa `basePath`; CTA `Tanya` dan detail question keluar ke `/forum/*`. |
-| P0 | Dashboard Daily Ayah widget | Dashboard mengirim `basePath='/dashboard/quran'`, tetapi widget membuat URL `/dashboard/quran/surah/:slug` yang tidak ada routenya. |
-| P0 | Dashboard hadis | Search hadis dashboard mengarah ke `/search`, bukan `/dashboard/search`; dashboard index juga tidak sync dengan fitur tab public. |
-| P1 | Dashboard tafsir | Reader dashboard adalah duplikasi yang drift dari public reader; fitur filter kitab/side-by-side public belum ada di dashboard. |
-| P1 | Dashboard Quran | Index public dan dashboard terpisah; route dashboard saat ini benar, tetapi shared behavior rawan drift. |
-| P1 | Dashboard bookmarks | Mapping bookmark dashboard belum sync dengan ref type aktual dan beberapa target masih public. |
-| P1 | Dashboard zakat | CTA `Lihat Riwayat Zakat` dari dashboard mengarah ke `/zakat/history`, dan dashboard history belum ada. |
-| P1 | Dashboard Asbabun Nuzul | Result badge ayah dari dashboard mengarah ke Quran public, bukan dashboard Quran. |
-| P1 | Asmaul Husna subflow | Main Asmaul sudah context-aware, tetapi flashcard/wirid back link dari dashboard balik ke public. |
-| P1 | Dashboard profile | CTA edit profile keluar dari dashboard ke `/profile`. |
-| P1 | Public profile | Jika user keluar dari dashboard profile ke public profile, quick links personal semuanya public route. |
-| P1 | Public navbar account menu | Logged-in account menu di public shell masih mengarah ke public personal routes, bukan dashboard equivalents. |
-| P1 | Global floating settings/layout mode | `SettingButton` belum dipasang di root route tree; sebagian route tidak punya tombol setting, dan sebagian content container belum merespons `wide`/`compact`. |
-| P2 | Public footer/sidebar shortcuts | Footer dan legacy sidebar masih punya shortcut personal ke public routes, bukan dashboard equivalents. |
-| P2 | Auth/register intent | Login sudah support `next`, tetapi register dan beberapa auth CTA belum meneruskan `next`. |
-| P2 | Public personal empty states | Beberapa halaman personal public punya empty-state CTA ke public routes, bukan dashboard route atau preserved intent. |
-| P2 | Global 404/error recovery | 404 dan global error selalu menawarkan public home/content, tidak context-aware untuk dashboard/admin. |
-| P2 | Forum detail guest recovery | Forum detail guest login/back CTA hardcode public route tanpa `next`. |
-| P2 | Admin generic CRUD | Banyak admin CRUD module catch error kosong dan icon-only action belum punya accessible label. |
-| P2 | Tahlil/dashboard | Link Surah Yasin di note tahlil keluar ke public Quran. |
-| P2 | Login fallback reused content | Beberapa reused public content masih mengarah ke `/auth/login` tanpa preserve dashboard intent. |
+| Priority | Area                                 | Temuan                                                                                                                                                         |
+| -------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P0       | Dashboard search                     | `DashboardSearchPage` memakai `SearchClient` public, sehingga semua hasil dan `Lihat Semua` keluar ke public route.                                            |
+| P0       | Dashboard forum                      | Forum dashboard reuse public component tanpa `basePath`; CTA `Tanya` dan detail question keluar ke `/forum/*`.                                                 |
+| P0       | Dashboard Daily Ayah widget          | Dashboard mengirim `basePath='/dashboard/quran'`, tetapi widget membuat URL `/dashboard/quran/surah/:slug` yang tidak ada routenya.                            |
+| P0       | Dashboard hadis                      | Search hadis dashboard mengarah ke `/search`, bukan `/dashboard/search`; dashboard index juga tidak sync dengan fitur tab public.                              |
+| P1       | Dashboard tafsir                     | Reader dashboard adalah duplikasi yang drift dari public reader; fitur filter kitab/side-by-side public belum ada di dashboard.                                |
+| P1       | Dashboard Quran                      | Index public dan dashboard terpisah; route dashboard saat ini benar, tetapi shared behavior rawan drift.                                                       |
+| P1       | Dashboard bookmarks                  | Mapping bookmark dashboard belum sync dengan ref type aktual dan beberapa target masih public.                                                                 |
+| P1       | Dashboard zakat                      | CTA `Lihat Riwayat Zakat` dari dashboard mengarah ke `/zakat/history`, dan dashboard history belum ada.                                                        |
+| P1       | Dashboard Asbabun Nuzul              | Result badge ayah dari dashboard mengarah ke Quran public, bukan dashboard Quran.                                                                              |
+| P1       | Asmaul Husna subflow                 | Main Asmaul sudah context-aware, tetapi flashcard/wirid back link dari dashboard balik ke public.                                                              |
+| P1       | Dashboard profile                    | CTA edit profile keluar dari dashboard ke `/profile`.                                                                                                          |
+| P1       | Public profile                       | Jika user keluar dari dashboard profile ke public profile, quick links personal semuanya public route.                                                         |
+| P1       | Public navbar account menu           | Logged-in account menu di public shell masih mengarah ke public personal routes, bukan dashboard equivalents.                                                  |
+| P1       | Global floating settings/layout mode | `SettingButton` belum dipasang di root route tree; sebagian route tidak punya tombol setting, dan sebagian content container belum merespons `wide`/`compact`. |
+| P2       | Public footer/sidebar shortcuts      | Footer dan legacy sidebar masih punya shortcut personal ke public routes, bukan dashboard equivalents.                                                         |
+| P2       | Auth/register intent                 | Login sudah support `next`, tetapi register dan beberapa auth CTA belum meneruskan `next`.                                                                     |
+| P2       | Public personal empty states         | Beberapa halaman personal public punya empty-state CTA ke public routes, bukan dashboard route atau preserved intent.                                          |
+| P2       | Global 404/error recovery            | 404 dan global error selalu menawarkan public home/content, tidak context-aware untuk dashboard/admin.                                                         |
+| P2       | Forum detail guest recovery          | Forum detail guest login/back CTA hardcode public route tanpa `next`.                                                                                          |
+| P2       | Admin generic CRUD                   | Banyak admin CRUD module catch error kosong dan icon-only action belum punya accessible label.                                                                 |
+| P2       | Tahlil/dashboard                     | Link Surah Yasin di note tahlil keluar ke public Quran.                                                                                                        |
+| P2       | Login fallback reused content        | Beberapa reused public content masih mengarah ke `/auth/login` tanpa preserve dashboard intent.                                                                |
 
 ---
 
@@ -164,12 +164,12 @@ Impact:
 Recommendation:
 
 - `SearchClient` menerima `baseRoutes`:
-  - ayah detail `-> /dashboard/quran/:slug#ayah`
-  - hadis detail `-> /dashboard/hadith/:book#number`
-  - doa `-> /dashboard/doa#id`
-  - kamus `-> /dashboard/kamus?q=...`
-  - kajian `-> /dashboard/kajian/:id`
-  - perawi `-> /dashboard/perawi/:id`
+    - ayah detail `-> /dashboard/quran/:slug#ayah`
+    - hadis detail `-> /dashboard/hadith/:book#number`
+    - doa `-> /dashboard/doa#id`
+    - kamus `-> /dashboard/kamus?q=...`
+    - kajian `-> /dashboard/kajian/:id`
+    - perawi `-> /dashboard/perawi/:id`
 - `SECTION_HREFS` juga harus context-aware:
   `/dashboard/search?q=...&type=ayah`, bukan `/search?...`.
 
@@ -200,8 +200,8 @@ Recommendation:
 - Dashboard wrapper:
   `basePath='/dashboard/forum'`.
 - Tambahkan dashboard routes:
-  - `/dashboard/forum/ask`
-  - `/dashboard/forum/[slug]`
+    - `/dashboard/forum/ask`
+    - `/dashboard/forum/[slug]`
 - Jika forum sengaja dianggap community public, label sidebar dashboard harus
   eksplisit seperti `Forum Publik`, bukan sekadar `Forum`.
 
@@ -316,9 +316,9 @@ Recommendation:
 - Samakan ref type dengan producer aktual:
   `ayah`, `hadith`, `article`, `doa`, `dzikir`, `asmaul_husna`.
 - Dashboard `refHref` harus mengarah ke dashboard equivalents:
-  - ayah `-> /dashboard/quran/:surahSlug#ayah`
-  - hadith `-> /dashboard/hadith/:bookSlug#number`
-  - article `-> /dashboard/blog/:slug`
+    - ayah `-> /dashboard/quran/:surahSlug#ayah`
+    - hadith `-> /dashboard/hadith/:bookSlug#number`
+    - article `-> /dashboard/blog/:slug`
 - Jika backend bookmark belum menyimpan slug cukup, simpan route metadata saat
   bookmark dibuat atau resolve metadata sebelum render.
 
@@ -405,8 +405,8 @@ Recommendation:
 
 - Footer links untuk fitur public tetap public.
 - Footer/account links untuk fitur personal sebaiknya:
-  - guest: `/auth/login?next=/dashboard/<feature>`
-  - logged-in: `/dashboard/<feature>`
+    - guest: `/auth/login?next=/dashboard/<feature>`
+    - logged-in: `/dashboard/<feature>`
 - Jika `Sidebar` legacy, tandai deprecated atau hapus dari navigasi aktif supaya
   tidak jadi sumber drift baru.
 
@@ -469,9 +469,9 @@ Impact:
 Recommendation:
 
 - Untuk public personal pages, pilih salah satu:
-  - redirect canonical ke `/dashboard/<feature>`
-  - atau jadikan public wrapper yang hanya preserve intent ke dashboard setelah
-    login.
+    - redirect canonical ke `/dashboard/<feature>`
+    - atau jadikan public wrapper yang hanya preserve intent ke dashboard setelah
+      login.
 - `useRequireAuth` harus preserve current path sebagai `next`, atau menerima
   target dashboard canonical.
 
@@ -495,9 +495,9 @@ Impact:
 Recommendation:
 
 - 404/error perlu membaca pathname dan memilih recovery:
-  - `/dashboard/*` -> `/dashboard`
-  - `/admin/*` -> `/admin`
-  - public -> `/`
+    - `/dashboard/*` -> `/dashboard`
+    - `/admin/*` -> `/admin`
+    - public -> `/`
 - Quick links pada 404 dashboard sebaiknya dashboard-aware:
   `/dashboard/search`, `/dashboard/quran`, `/dashboard/hadith`, atau
   `Kembali ke Dashboard`.
@@ -531,18 +531,18 @@ Recommendation:
 Evidence:
 
 - Pola save/delete tanpa `res.ok` atau error UI terlihat di banyak module:
-  - `apps/web/src/app/admin/doa/page.js:67-89`
-  - `apps/web/src/app/admin/dzikir/page.js:69-91`
-  - `apps/web/src/app/admin/fiqh/page.js:75-97`
-  - `apps/web/src/app/admin/kajian/page.js:81-103`
-  - `apps/web/src/app/admin/asbabun-nuzul/page.js:108-141`
-  - `apps/web/src/app/admin/asmaul-husna/page.js:66-89`
-  - `apps/web/src/app/admin/kamus/page.js:60-82`
-  - `apps/web/src/app/admin/manasik/page.js:78-101`
-  - `apps/web/src/app/admin/tahlil/page.js:63-86`
-  - `apps/web/src/app/admin/wirid/page.js:67-89`
-  - `apps/web/src/app/admin/quiz/page.js:75-104`
-  - `apps/web/src/app/admin/sejarah/page.js:72-94`
+    - `apps/web/src/app/admin/doa/page.js:67-89`
+    - `apps/web/src/app/admin/dzikir/page.js:69-91`
+    - `apps/web/src/app/admin/fiqh/page.js:75-97`
+    - `apps/web/src/app/admin/kajian/page.js:81-103`
+    - `apps/web/src/app/admin/asbabun-nuzul/page.js:108-141`
+    - `apps/web/src/app/admin/asmaul-husna/page.js:66-89`
+    - `apps/web/src/app/admin/kamus/page.js:60-82`
+    - `apps/web/src/app/admin/manasik/page.js:78-101`
+    - `apps/web/src/app/admin/tahlil/page.js:63-86`
+    - `apps/web/src/app/admin/wirid/page.js:67-89`
+    - `apps/web/src/app/admin/quiz/page.js:75-104`
+    - `apps/web/src/app/admin/sejarah/page.js:72-94`
 - Banyak table actions memakai icon-only edit/delete/open buttons tanpa
   `aria-label`, contohnya `apps/web/src/app/admin/kajian/page.js:188-209`.
 
@@ -557,10 +557,10 @@ Impact:
 Recommendation:
 
 - Semua admin API mutation harus:
-  - cek `res.ok`
-  - tampilkan inline error/toast
-  - tidak menutup modal sebelum sukses
-  - disable submit hanya selama request aktif
+    - cek `res.ok`
+    - tampilkan inline error/toast
+    - tidak menutup modal sebelum sukses
+    - disable submit hanya selama request aktif
 - Icon-only row actions wajib punya `aria-label` dan `title` spesifik:
   `Edit doa: {title}`, `Hapus kajian: {title}`, `Buka tautan kajian`.
 
@@ -802,24 +802,24 @@ Recommendation:
 
 ## Parity Matrix
 
-| Feature | Public capability | Dashboard state | Risk | Fix pattern |
-|---|---|---|---|---|
-| Quran | Index, mushaf shortcut, surah detail | Index duplicate, detail uses shared reader with `basePath` | Medium drift | Shared `QuranIndexContent` |
-| Daily Ayah widget | Public link uses `/quran/surah/:slug` | Dashboard receives `/dashboard/quran` and builds missing `/dashboard/quran/surah/:slug` | High broken CTA | `buildHref` formatter |
-| Hadis | Book/theme/chapter/number tabs | Book list only, search leaks public | High drift/leak | Shared `HadithContent(basePath)` |
-| Tafsir | Kitab filter, side-by-side, read-in-Quran | Separate reader without full public controls | High drift | Shared `TafsirReaderContent(routeMap)` |
-| Search | Multi-domain global result | Reused public result links | High leak | `SearchClient(baseRoutes)` |
-| Forum | List, ask, detail | List only, ask/detail leak public | High leak | `ForumContent(basePath)` plus dashboard subroutes |
-| Bookmarks | Public bookmarks use saved URL for ayah/hadith | Dashboard mapping misses `ayah` and routes `article` to public blog | High broken/leak | Shared bookmark route resolver |
-| Zakat | Calculator and public history | Calculator only, history leaks public | High leak | `ZakatContent(basePath)` plus dashboard history |
-| Asbabun Nuzul | Search result links to Quran ayah | Reused public result link leaks to Quran public | Medium leak | `AsbabunNuzulContent(quranBasePath)` |
-| Asmaul Husna | List, flashcard, wirid | Main context-aware, child back links leak | Medium leak | Pass `basePath` to child content |
-| Public account surfaces | Navbar, footer, profile, legacy sidebar | Many personal shortcuts still target public personal routes | Medium leak/drift | Dashboard-aware account route map |
-| Global recovery | 404/error recovery links | Always recover to public home/content | Low context leak | Path-aware recovery target |
-| Admin generic CRUD | Many modules share modal CRUD pattern | Save/delete failures can be silent; icon-only actions under-labeled | Low/medium CTA trust risk | Shared admin mutation/error action primitive |
-| Tahlil | Content with Yasin reference | Reused public content | Low/medium leak | Pass `quranBasePath` |
-| Blog | List/detail | Already passes `basePath` | Low | Keep as reference pattern |
-| Quran reader | Shared reader with `basePath` | Correct | Low | Use as reference pattern |
+| Feature                 | Public capability                              | Dashboard state                                                                         | Risk                      | Fix pattern                                       |
+| ----------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------- | ------------------------------------------------- |
+| Quran                   | Index, mushaf shortcut, surah detail           | Index duplicate, detail uses shared reader with `basePath`                              | Medium drift              | Shared `QuranIndexContent`                        |
+| Daily Ayah widget       | Public link uses `/quran/surah/:slug`          | Dashboard receives `/dashboard/quran` and builds missing `/dashboard/quran/surah/:slug` | High broken CTA           | `buildHref` formatter                             |
+| Hadis                   | Book/theme/chapter/number tabs                 | Book list only, search leaks public                                                     | High drift/leak           | Shared `HadithContent(basePath)`                  |
+| Tafsir                  | Kitab filter, side-by-side, read-in-Quran      | Separate reader without full public controls                                            | High drift                | Shared `TafsirReaderContent(routeMap)`            |
+| Search                  | Multi-domain global result                     | Reused public result links                                                              | High leak                 | `SearchClient(baseRoutes)`                        |
+| Forum                   | List, ask, detail                              | List only, ask/detail leak public                                                       | High leak                 | `ForumContent(basePath)` plus dashboard subroutes |
+| Bookmarks               | Public bookmarks use saved URL for ayah/hadith | Dashboard mapping misses `ayah` and routes `article` to public blog                     | High broken/leak          | Shared bookmark route resolver                    |
+| Zakat                   | Calculator and public history                  | Calculator only, history leaks public                                                   | High leak                 | `ZakatContent(basePath)` plus dashboard history   |
+| Asbabun Nuzul           | Search result links to Quran ayah              | Reused public result link leaks to Quran public                                         | Medium leak               | `AsbabunNuzulContent(quranBasePath)`              |
+| Asmaul Husna            | List, flashcard, wirid                         | Main context-aware, child back links leak                                               | Medium leak               | Pass `basePath` to child content                  |
+| Public account surfaces | Navbar, footer, profile, legacy sidebar        | Many personal shortcuts still target public personal routes                             | Medium leak/drift         | Dashboard-aware account route map                 |
+| Global recovery         | 404/error recovery links                       | Always recover to public home/content                                                   | Low context leak          | Path-aware recovery target                        |
+| Admin generic CRUD      | Many modules share modal CRUD pattern          | Save/delete failures can be silent; icon-only actions under-labeled                     | Low/medium CTA trust risk | Shared admin mutation/error action primitive      |
+| Tahlil                  | Content with Yasin reference                   | Reused public content                                                                   | Low/medium leak           | Pass `quranBasePath`                              |
+| Blog                    | List/detail                                    | Already passes `basePath`                                                               | Low                       | Keep as reference pattern                         |
+| Quran reader            | Shared reader with `basePath`                  | Correct                                                                                 | Low                       | Use as reference pattern                          |
 
 ---
 

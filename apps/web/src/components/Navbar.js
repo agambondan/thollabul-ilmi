@@ -1,14 +1,18 @@
-'use client';
+"use client";
 
-import SmallDropDown from '@/components/dropdown/SmallDropDown';
-import { useAuth } from '@/context/Auth';
-import { useLocale } from '@/context/Locale';
-import { linksMenu, linksMenuContent, linksMenuContentGroups } from '@/lib/const';
-import { ConvertFLagLanguage } from '@/lib/converter';
-import classNames from 'classnames';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import SmallDropDown from "@/components/dropdown/SmallDropDown";
+import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
+import {
+    linksMenu,
+    linksMenuContent,
+    linksMenuContentGroups,
+} from "@/lib/const";
+import { ConvertFLagLanguage } from "@/lib/converter";
+import classNames from "classnames";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import {
     BsBarChart,
     BsBell,
@@ -17,9 +21,9 @@ import {
     BsPerson,
     BsSearch,
     BsShieldLock,
-} from 'react-icons/bs';
-import { MdFormatListBulleted, MdMenuBook } from 'react-icons/md';
-import { IoMoonSharp, IoSunnySharp } from 'react-icons/io5';
+} from "react-icons/bs";
+import { MdFormatListBulleted, MdMenuBook } from "react-icons/md";
+import { IoMoonSharp, IoSunnySharp } from "react-icons/io5";
 
 export const NavbarTailwindCss = () => {
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -35,7 +39,7 @@ export const NavbarTailwindCss = () => {
 
     const clickSetDarkMode = () => {
         setIsDarkMode((prev) => {
-            localStorage.setItem('theme', !prev ? 'dark' : 'light');
+            localStorage.setItem("theme", !prev ? "dark" : "light");
             return !prev;
         });
     };
@@ -45,35 +49,39 @@ export const NavbarTailwindCss = () => {
 
     useEffect(() => {
         const handleStorageChange = () => {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.documentElement.classList.add('dark');
+            if (localStorage.getItem("theme") === "dark") {
+                document.documentElement.classList.add("dark");
                 setIsDarkMode(true);
             } else {
-                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.remove("dark");
                 setIsDarkMode(false);
             }
         };
         handleStorageChange();
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
+        window.addEventListener("storage", handleStorageChange);
+        return () => window.removeEventListener("storage", handleStorageChange);
     }, []);
 
     useEffect(() => {
         if (isDarkMode) {
-            document.documentElement.classList.add('dark');
+            document.documentElement.classList.add("dark");
         } else {
-            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.remove("dark");
         }
     }, [isDarkMode]);
 
     useEffect(() => {
         const handleClickOutside = (e) => {
-            if (profileMenuRef.current && !profileMenuRef.current.contains(e.target)) {
+            if (
+                profileMenuRef.current &&
+                !profileMenuRef.current.contains(e.target)
+            ) {
                 setIsProfileMenuOpen(false);
             }
         };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     useEffect(() => {
@@ -85,7 +93,7 @@ export const NavbarTailwindCss = () => {
 
     useEffect(() => {
         const handleKeyDown = (event) => {
-            if (event.key === 'Escape') {
+            if (event.key === "Escape") {
                 setMobileMenuOpen(false);
                 setIsSmallDropdownOpen(false);
                 setIsProfileMenuOpen(false);
@@ -93,29 +101,33 @@ export const NavbarTailwindCss = () => {
             }
         };
 
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
     }, []);
 
     const [isContentMenuOpen, setIsContentMenuOpen] = useState(false);
     const contentMenuRef = useRef(null);
 
-    const languages = ['ID', 'EN'];
+    const languages = ["ID", "EN"];
 
     const mainLinks = [
         ...linksMenu,
         ...linksMenuContent,
-        { label: t('nav.search'), href: '/search', icon: <BsSearch /> },
+        { label: t("nav.search"), href: "/search", icon: <BsSearch /> },
     ];
 
     useEffect(() => {
         const handleClickOutside = (e) => {
-            if (contentMenuRef.current && !contentMenuRef.current.contains(e.target)) {
+            if (
+                contentMenuRef.current &&
+                !contentMenuRef.current.contains(e.target)
+            ) {
                 setIsContentMenuOpen(false);
             }
         };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     return (
@@ -127,16 +139,16 @@ export const NavbarTailwindCss = () => {
                 >
                     <span
                         className={classNames({
-                            'text-lg font-extrabold tracking-wide': true,
-                            'text-gold-400': '/' === currentPath,
-                            'text-white': '/' !== currentPath,
+                            "text-lg font-extrabold tracking-wide": true,
+                            "text-gold-400": "/" === currentPath,
+                            "text-white": "/" !== currentPath,
                         })}
                     >
                         Thullaabul &apos;Ilmi
                     </span>
                     <span
                         className='text-xs text-emerald-300 leading-tight'
-                        style={{ fontFamily: 'Amiri, serif' }}
+                        style={{ fontFamily: "Amiri, serif" }}
                     >
                         طُلَّابُ الْعِلْمِ
                     </span>
@@ -150,7 +162,9 @@ export const NavbarTailwindCss = () => {
                     aria-expanded={isMobileMenuOpen}
                 >
                     <span className='sr-only'>
-                        {isMobileMenuOpen ? t('nav.close_menu') : t('nav.open_menu')}
+                        {isMobileMenuOpen
+                            ? t("nav.close_menu")
+                            : t("nav.open_menu")}
                     </span>
                     {isMobileMenuOpen ? (
                         <svg
@@ -191,23 +205,25 @@ export const NavbarTailwindCss = () => {
                     <ul className='flex flex-row items-center gap-1'>
                         {linksMenu.map((link) => {
                             const isActive =
-                                link.href === '/'
-                                    ? currentPath === '/'
+                                link.href === "/"
+                                    ? currentPath === "/"
                                     : currentPath.startsWith(link.href);
                             return (
                                 <li key={link.href}>
                                     <Link
                                         href={link.href}
                                         className={classNames({
-                                            'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all': true,
-                                            'bg-emerald-800 text-gold-300 font-semibold':
+                                            "flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all": true,
+                                            "bg-emerald-800 text-gold-300 font-semibold":
                                                 isActive,
-                                            'text-emerald-100 hover:bg-emerald-800 hover:text-white':
+                                            "text-emerald-100 hover:bg-emerald-800 hover:text-white":
                                                 !isActive,
                                         })}
                                     >
                                         {link.icon}
-                                        {link.labelKey ? t(link.labelKey) : link.label}
+                                        {link.labelKey
+                                            ? t(link.labelKey)
+                                            : link.label}
                                     </Link>
                                 </li>
                             );
@@ -217,25 +233,28 @@ export const NavbarTailwindCss = () => {
                             <button
                                 onClick={() => setIsContentMenuOpen((p) => !p)}
                                 className={classNames({
-                                    'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all': true,
-                                    'bg-emerald-800 text-gold-300 font-semibold':
+                                    "flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all": true,
+                                    "bg-emerald-800 text-gold-300 font-semibold":
                                         linksMenuContent.some((l) =>
-                                            currentPath.startsWith(l.href)
+                                            currentPath.startsWith(l.href),
                                         ),
-                                    'text-emerald-100 hover:bg-emerald-800 hover:text-white':
+                                    "text-emerald-100 hover:bg-emerald-800 hover:text-white":
                                         !linksMenuContent.some((l) =>
-                                            currentPath.startsWith(l.href)
+                                            currentPath.startsWith(l.href),
                                         ),
                                 })}
                             >
                                 <MdMenuBook />
-                                {t('nav.content')} ▾
+                                {t("nav.content")} ▾
                             </button>
                             {isContentMenuOpen && (
                                 <div className='absolute right-0 top-full z-50 mt-2 max-h-[calc(100vh-96px)] w-[min(92vw,720px)] overflow-y-auto rounded-xl border border-gray-100 bg-white p-3 shadow-2xl dark:border-slate-700 dark:bg-slate-800'>
                                     <div className='grid grid-cols-2 gap-3'>
                                         {linksMenuContentGroups.map((group) => (
-                                            <div key={group.labelKey} className='rounded-lg border border-gray-100 bg-gray-50/70 p-2 dark:border-slate-700 dark:bg-slate-900/40'>
+                                            <div
+                                                key={group.labelKey}
+                                                className='rounded-lg border border-gray-100 bg-gray-50/70 p-2 dark:border-slate-700 dark:bg-slate-900/40'
+                                            >
                                                 <p className='px-2 pb-1.5 text-[11px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500'>
                                                     {t(group.labelKey)}
                                                 </p>
@@ -244,16 +263,30 @@ export const NavbarTailwindCss = () => {
                                                         <Link
                                                             key={link.href}
                                                             href={link.href}
-                                                            onClick={() => setIsContentMenuOpen(false)}
+                                                            onClick={() =>
+                                                                setIsContentMenuOpen(
+                                                                    false,
+                                                                )
+                                                            }
                                                             className={classNames(
-                                                                'flex min-h-9 items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors',
-                                                                currentPath.startsWith(link.href)
-                                                                    ? 'bg-emerald-50 text-emerald-700 font-semibold dark:bg-emerald-900/20 dark:text-emerald-300'
-                                                                    : 'text-emerald-900 hover:bg-white dark:text-white dark:hover:bg-slate-700'
+                                                                "flex min-h-9 items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors",
+                                                                currentPath.startsWith(
+                                                                    link.href,
+                                                                )
+                                                                    ? "bg-emerald-50 text-emerald-700 font-semibold dark:bg-emerald-900/20 dark:text-emerald-300"
+                                                                    : "text-emerald-900 hover:bg-white dark:text-white dark:hover:bg-slate-700",
                                                             )}
                                                         >
-                                                            <span className='shrink-0 text-sm'>{link.icon}</span>
-                                                            <span className='leading-5'>{link.labelKey ? t(link.labelKey) : link.label}</span>
+                                                            <span className='shrink-0 text-sm'>
+                                                                {link.icon}
+                                                            </span>
+                                                            <span className='leading-5'>
+                                                                {link.labelKey
+                                                                    ? t(
+                                                                          link.labelKey,
+                                                                      )
+                                                                    : link.label}
+                                                            </span>
                                                         </Link>
                                                     ))}
                                                 </div>
@@ -268,15 +301,15 @@ export const NavbarTailwindCss = () => {
                             <Link
                                 href='/search'
                                 className={classNames({
-                                    'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all': true,
-                                    'bg-emerald-800 text-gold-300 font-semibold':
-                                        currentPath.startsWith('/search'),
-                                    'text-emerald-100 hover:bg-emerald-800 hover:text-white':
-                                        !currentPath.startsWith('/search'),
+                                    "flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all": true,
+                                    "bg-emerald-800 text-gold-300 font-semibold":
+                                        currentPath.startsWith("/search"),
+                                    "text-emerald-100 hover:bg-emerald-800 hover:text-white":
+                                        !currentPath.startsWith("/search"),
                                 })}
                             >
                                 <BsSearch />
-                                {t('nav.search')}
+                                {t("nav.search")}
                             </Link>
                         </li>
 
@@ -288,12 +321,12 @@ export const NavbarTailwindCss = () => {
                                 {isDarkMode ? (
                                     <>
                                         <IoSunnySharp />
-                                        <span>{t('nav.light')}</span>
+                                        <span>{t("nav.light")}</span>
                                     </>
                                 ) : (
                                     <>
                                         <IoMoonSharp />
-                                        <span>{t('nav.dark')}</span>
+                                        <span>{t("nav.dark")}</span>
                                     </>
                                 )}
                             </button>
@@ -317,9 +350,16 @@ export const NavbarTailwindCss = () => {
                                         <span className='inline-flex rounded-sm overflow-hidden ring-1 ring-gray-200 dark:ring-slate-600 leading-none'>
                                             {ConvertFLagLanguage(lang)}
                                         </span>
-                                        <span>{lang === 'ID' ? 'Indonesia' : 'English'}</span>
-                                        {language.toLowerCase() === lang.toLowerCase() && (
-                                            <span className='ml-auto text-emerald-600 dark:text-emerald-400'>✓</span>
+                                        <span>
+                                            {lang === "ID"
+                                                ? "Indonesia"
+                                                : "English"}
+                                        </span>
+                                        {language.toLowerCase() ===
+                                            lang.toLowerCase() && (
+                                            <span className='ml-auto text-emerald-600 dark:text-emerald-400'>
+                                                ✓
+                                            </span>
                                         )}
                                     </button>
                                 ))}
@@ -329,21 +369,28 @@ export const NavbarTailwindCss = () => {
                         {isAuthenticated ? (
                             <li className='relative' ref={profileMenuRef}>
                                 <button
-                                    onClick={() => setIsProfileMenuOpen((p) => !p)}
+                                    onClick={() =>
+                                        setIsProfileMenuOpen((p) => !p)
+                                    }
                                     className='flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-emerald-100 hover:bg-emerald-800 hover:text-white transition-all'
                                 >
                                     <BsPerson />
-                                    <span>{user?.name?.split(' ')[0] ?? t('nav.profile')}</span>
+                                    <span>
+                                        {user?.name?.split(" ")[0] ??
+                                            t("nav.profile")}
+                                    </span>
                                 </button>
                                 {isProfileMenuOpen && (
                                     <div className='absolute right-0 top-full mt-1 w-44 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-lg py-1 z-50 text-emerald-900 dark:text-white'>
                                         <Link
                                             href='/dashboard'
-                                            onClick={() => setIsProfileMenuOpen(false)}
+                                            onClick={() =>
+                                                setIsProfileMenuOpen(false)
+                                            }
                                             className='flex items-center gap-2 px-4 py-2 text-sm font-medium text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                                         >
                                             <BsBarChart />
-                                            {t('nav.dashboard')}
+                                            {t("nav.dashboard")}
                                         </Link>
                                         <hr className='my-1 border-gray-100 dark:border-slate-700' />
                                         <Link
@@ -354,7 +401,7 @@ export const NavbarTailwindCss = () => {
                                             className='flex items-center gap-2 px-4 py-2 text-sm hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                                         >
                                             <BsPerson />
-                                            {t('nav.profile_streak')}
+                                            {t("nav.profile_streak")}
                                         </Link>
                                         <Link
                                             href='/dashboard/bookmarks'
@@ -364,65 +411,81 @@ export const NavbarTailwindCss = () => {
                                             className='flex items-center gap-2 px-4 py-2 text-sm hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                                         >
                                             <BsBookmark />
-                                            {t('nav.bookmarks')}
+                                            {t("nav.bookmarks")}
                                         </Link>
                                         <Link
                                             href='/dashboard/hafalan'
-                                            onClick={() => setIsProfileMenuOpen(false)}
+                                            onClick={() =>
+                                                setIsProfileMenuOpen(false)
+                                            }
                                             className='flex items-center gap-2 px-4 py-2 text-sm hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                                         >
-                                            <span className='text-base'>📖</span>
-                                            {t('nav.memorization')}
+                                            <span className='text-base'>
+                                                📖
+                                            </span>
+                                            {t("nav.memorization")}
                                         </Link>
                                         <Link
                                             href='/dashboard/muroja-ah'
-                                            onClick={() => setIsProfileMenuOpen(false)}
+                                            onClick={() =>
+                                                setIsProfileMenuOpen(false)
+                                            }
                                             className='flex items-center gap-2 px-4 py-2 text-sm hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                                         >
                                             <MdMenuBook />
-                                            {t('nav.review')}
+                                            {t("nav.review")}
                                         </Link>
                                         <Link
                                             href='/dashboard/tilawah'
-                                            onClick={() => setIsProfileMenuOpen(false)}
+                                            onClick={() =>
+                                                setIsProfileMenuOpen(false)
+                                            }
                                             className='flex items-center gap-2 px-4 py-2 text-sm hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                                         >
                                             <BsJournalCheck />
-                                            {t('nav.recitation')}
+                                            {t("nav.recitation")}
                                         </Link>
                                         <Link
                                             href='/dashboard/amalan'
-                                            onClick={() => setIsProfileMenuOpen(false)}
+                                            onClick={() =>
+                                                setIsProfileMenuOpen(false)
+                                            }
                                             className='flex items-center gap-2 px-4 py-2 text-sm hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                                         >
                                             <MdFormatListBulleted />
-                                            {t('nav.deeds')}
+                                            {t("nav.deeds")}
                                         </Link>
                                         <Link
                                             href='/dashboard/notes'
-                                            onClick={() => setIsProfileMenuOpen(false)}
+                                            onClick={() =>
+                                                setIsProfileMenuOpen(false)
+                                            }
                                             className='flex items-center gap-2 px-4 py-2 text-sm hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                                         >
                                             <BsBookmark />
-                                            {t('nav.notes')}
+                                            {t("nav.notes")}
                                         </Link>
                                         <Link
                                             href='/dashboard/notifications'
-                                            onClick={() => setIsProfileMenuOpen(false)}
+                                            onClick={() =>
+                                                setIsProfileMenuOpen(false)
+                                            }
                                             className='flex items-center gap-2 px-4 py-2 text-sm hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                                         >
                                             <BsBell />
-                                            {t('nav.notifications')}
+                                            {t("nav.notifications")}
                                         </Link>
                                         <Link
                                             href='/dashboard/stats'
-                                            onClick={() => setIsProfileMenuOpen(false)}
+                                            onClick={() =>
+                                                setIsProfileMenuOpen(false)
+                                            }
                                             className='flex items-center gap-2 px-4 py-2 text-sm hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                                         >
                                             <BsBarChart />
-                                            {t('nav.statistics')}
+                                            {t("nav.statistics")}
                                         </Link>
-                                        {user?.role === 'admin' && (
+                                        {user?.role === "admin" && (
                                             <Link
                                                 href='/admin'
                                                 onClick={() => {
@@ -431,7 +494,7 @@ export const NavbarTailwindCss = () => {
                                                 className='flex items-center gap-2 px-4 py-2 text-sm text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors font-medium'
                                             >
                                                 <BsShieldLock />
-                                                {t('nav.admin')}
+                                                {t("nav.admin")}
                                             </Link>
                                         )}
                                         <hr className='my-1 border-gray-100 dark:border-slate-700' />
@@ -442,7 +505,7 @@ export const NavbarTailwindCss = () => {
                                             }}
                                             className='flex w-full items-center gap-2 px-4 py-2 text-sm text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
                                         >
-                                            {t('nav.logout')}
+                                            {t("nav.logout")}
                                         </button>
                                     </div>
                                 )}
@@ -450,11 +513,11 @@ export const NavbarTailwindCss = () => {
                         ) : (
                             <li>
                                 <Link
-                                    href={`/auth/login?next=${encodeURIComponent(currentPath || '/')}`}
+                                    href={`/auth/login?next=${encodeURIComponent(currentPath || "/")}`}
                                     className='flex items-center gap-2 px-3 py-2 rounded-lg text-sm bg-emerald-700 hover:bg-emerald-600 text-white transition-all'
                                 >
                                     <BsPerson />
-                                    {t('nav.login')}
+                                    {t("nav.login")}
                                 </Link>
                             </li>
                         )}
@@ -463,13 +526,13 @@ export const NavbarTailwindCss = () => {
             </div>
 
             <div
-                className={`${isMobileMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'} lg:hidden absolute inset-x-0 top-full transition-all duration-200`}
+                className={`${isMobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"} lg:hidden absolute inset-x-0 top-full transition-all duration-200`}
                 aria-hidden={!isMobileMenuOpen}
             >
                 <button
                     type='button'
                     aria-label='Close menu'
-                    className={`absolute inset-0 h-[calc(100svh_-_var(--navbar-height))] w-full bg-black/30 backdrop-blur-[2px] transition-opacity duration-200 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0'}`}
+                    className={`absolute inset-0 h-[calc(100svh_-_var(--navbar-height))] w-full bg-black/30 backdrop-blur-[2px] transition-opacity duration-200 ${isMobileMenuOpen ? "opacity-100" : "opacity-0"}`}
                     onClick={() => setMobileMenuOpen(false)}
                 />
                 <div
@@ -480,22 +543,24 @@ export const NavbarTailwindCss = () => {
                         <div className='mb-4 flex items-center justify-between'>
                             <div>
                                 <p className='text-xs uppercase tracking-[0.2em] text-emerald-300/80'>
-                                    {t('nav.menu')}
+                                    {t("nav.menu")}
                                 </p>
                                 <h2 className='text-base font-semibold text-white'>
-                                    {t('nav.quick_browse')}
+                                    {t("nav.quick_browse")}
                                 </h2>
                             </div>
                             <span className='rounded-full border border-emerald-700 bg-emerald-900/70 px-3 py-1 text-xs text-emerald-200'>
-                                {isAuthenticated ? t('nav.active_account') : t('nav.guest')}
+                                {isAuthenticated
+                                    ? t("nav.active_account")
+                                    : t("nav.guest")}
                             </span>
                         </div>
 
                         <div className='grid grid-cols-2 gap-3'>
                             {mainLinks.map((link) => {
                                 const isActive =
-                                    link.href === '/'
-                                        ? currentPath === '/'
+                                    link.href === "/"
+                                        ? currentPath === "/"
                                         : currentPath.startsWith(link.href);
 
                                 return (
@@ -504,14 +569,20 @@ export const NavbarTailwindCss = () => {
                                         href={link.href}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className={classNames(
-                                            'flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm transition-all',
+                                            "flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm transition-all",
                                             isActive
-                                                ? 'border-emerald-400 bg-emerald-500/15 text-white shadow-[0_0_0_1px_rgba(52,211,153,0.15)]'
-                                                : 'border-emerald-800/80 bg-white/5 text-emerald-100 hover:border-emerald-500 hover:bg-white/10'
+                                                ? "border-emerald-400 bg-emerald-500/15 text-white shadow-[0_0_0_1px_rgba(52,211,153,0.15)]"
+                                                : "border-emerald-800/80 bg-white/5 text-emerald-100 hover:border-emerald-500 hover:bg-white/10",
                                         )}
                                     >
-                                        <span className='text-base'>{link.icon}</span>
-                                        <span className='font-medium'>{link.labelKey ? t(link.labelKey) : link.label}</span>
+                                        <span className='text-base'>
+                                            {link.icon}
+                                        </span>
+                                        <span className='font-medium'>
+                                            {link.labelKey
+                                                ? t(link.labelKey)
+                                                : link.label}
+                                        </span>
                                     </Link>
                                 );
                             })}
@@ -525,19 +596,19 @@ export const NavbarTailwindCss = () => {
                                 {isDarkMode ? (
                                     <>
                                         <IoSunnySharp />
-                                        <span>{t('nav.light')}</span>
+                                        <span>{t("nav.light")}</span>
                                     </>
                                 ) : (
                                     <>
                                         <IoMoonSharp />
-                                        <span>{t('nav.dark')}</span>
+                                        <span>{t("nav.dark")}</span>
                                     </>
                                 )}
                             </button>
 
                             <div className='rounded-2xl border border-emerald-800 bg-white/5 px-3 py-2 text-emerald-100'>
                                 <div className='mb-1 text-[11px] uppercase tracking-[0.18em] text-emerald-300/75'>
-                                    {t('nav.language')}
+                                    {t("nav.language")}
                                 </div>
                                 <SmallDropDown
                                     flag={ConvertFLagLanguage(language)}
@@ -555,7 +626,9 @@ export const NavbarTailwindCss = () => {
                                         >
                                             {ConvertFLagLanguage(lang)}
                                             <span className='text-xs text-gray-500'>
-                                                {lang === 'ID' ? 'Indonesia' : 'English'}
+                                                {lang === "ID"
+                                                    ? "Indonesia"
+                                                    : "English"}
                                             </span>
                                         </button>
                                     ))}
@@ -571,10 +644,10 @@ export const NavbarTailwindCss = () => {
                                     </div>
                                     <div>
                                         <p className='text-sm font-semibold text-white'>
-                                            {user?.name ?? t('nav.profile')}
+                                            {user?.name ?? t("nav.profile")}
                                         </p>
                                         <p className='text-xs text-emerald-300/80'>
-                                            {t('nav.manage_profile')}
+                                            {t("nav.manage_profile")}
                                         </p>
                                     </div>
                                 </div>
@@ -586,7 +659,7 @@ export const NavbarTailwindCss = () => {
                                         className='flex items-center gap-2 rounded-xl bg-emerald-500/20 border border-emerald-400/30 px-4 py-3 text-sm font-semibold text-emerald-100 transition-colors hover:bg-emerald-500/30'
                                     >
                                         <BsBarChart />
-                                        {t('nav.dashboard')}
+                                        {t("nav.dashboard")}
                                     </Link>
                                     <Link
                                         href='/dashboard/profile'
@@ -594,7 +667,7 @@ export const NavbarTailwindCss = () => {
                                         className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
                                     >
                                         <BsPerson />
-                                        {t('nav.profile_streak')}
+                                        {t("nav.profile_streak")}
                                     </Link>
                                     <Link
                                         href='/dashboard/bookmarks'
@@ -602,7 +675,7 @@ export const NavbarTailwindCss = () => {
                                         className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
                                     >
                                         <BsBookmark />
-                                        {t('nav.bookmarks')}
+                                        {t("nav.bookmarks")}
                                     </Link>
                                     <Link
                                         href='/dashboard/hafalan'
@@ -610,7 +683,7 @@ export const NavbarTailwindCss = () => {
                                         className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
                                     >
                                         <span className='text-base'>📖</span>
-                                        {t('nav.memorization')}
+                                        {t("nav.memorization")}
                                     </Link>
                                     <Link
                                         href='/dashboard/muroja-ah'
@@ -618,7 +691,7 @@ export const NavbarTailwindCss = () => {
                                         className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
                                     >
                                         <MdMenuBook />
-                                        {t('nav.review')}
+                                        {t("nav.review")}
                                     </Link>
                                     <Link
                                         href='/dashboard/tilawah'
@@ -626,7 +699,7 @@ export const NavbarTailwindCss = () => {
                                         className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
                                     >
                                         <BsJournalCheck />
-                                        {t('nav.recitation')}
+                                        {t("nav.recitation")}
                                     </Link>
                                     <Link
                                         href='/dashboard/amalan'
@@ -634,7 +707,7 @@ export const NavbarTailwindCss = () => {
                                         className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
                                     >
                                         <MdFormatListBulleted />
-                                        {t('nav.deeds')}
+                                        {t("nav.deeds")}
                                     </Link>
                                     <Link
                                         href='/dashboard/notes'
@@ -642,7 +715,7 @@ export const NavbarTailwindCss = () => {
                                         className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
                                     >
                                         <BsBookmark />
-                                        {t('nav.notes')}
+                                        {t("nav.notes")}
                                     </Link>
                                     <Link
                                         href='/dashboard/notifications'
@@ -650,7 +723,7 @@ export const NavbarTailwindCss = () => {
                                         className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
                                     >
                                         <BsBell />
-                                        {t('nav.notifications')}
+                                        {t("nav.notifications")}
                                     </Link>
                                     <Link
                                         href='/dashboard/stats'
@@ -658,16 +731,18 @@ export const NavbarTailwindCss = () => {
                                         className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
                                     >
                                         <BsBarChart />
-                                        {t('nav.statistics')}
+                                        {t("nav.statistics")}
                                     </Link>
-                                    {user?.role === 'admin' && (
+                                    {user?.role === "admin" && (
                                         <Link
                                             href='/admin'
-                                            onClick={() => setMobileMenuOpen(false)}
+                                            onClick={() =>
+                                                setMobileMenuOpen(false)
+                                            }
                                             className='flex items-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-700/60 px-4 py-3 text-sm text-emerald-100 transition-colors hover:bg-emerald-700'
                                         >
                                             <BsShieldLock />
-                                            {t('nav.admin')}
+                                            {t("nav.admin")}
                                         </Link>
                                     )}
                                     <button
@@ -677,18 +752,18 @@ export const NavbarTailwindCss = () => {
                                         }}
                                         className='flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200 transition-colors hover:bg-red-500/20'
                                     >
-                                        {t('nav.logout')}
+                                        {t("nav.logout")}
                                     </button>
                                 </div>
                             </div>
                         ) : (
                             <Link
-                                href={`/auth/login?next=${encodeURIComponent(currentPath || '/')}`}
+                                href={`/auth/login?next=${encodeURIComponent(currentPath || "/")}`}
                                 onClick={() => setMobileMenuOpen(false)}
                                 className='mt-4 flex items-center justify-center gap-2 rounded-2xl bg-gold-500 px-4 py-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-gold-400'
                             >
                                 <BsPerson />
-                                {t('nav.login_account')}
+                                {t("nav.login_account")}
                             </Link>
                         )}
                     </div>

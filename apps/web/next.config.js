@@ -1,11 +1,11 @@
-const path = require('path');
+const path = require("path");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'standalone',
+    output: "standalone",
     outputFileTracingRoot: path.resolve(__dirname),
     env: {
-        NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || '',
+        NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "",
     },
     turbopack: {
         root: path.resolve(__dirname),

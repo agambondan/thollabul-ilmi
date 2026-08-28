@@ -5,9 +5,10 @@ package lib
 
 import (
 	"errors"
-	"github.com/agambondan/islamic-explorer/app/lib"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/agambondan/islamic-explorer/app/lib"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/utils"

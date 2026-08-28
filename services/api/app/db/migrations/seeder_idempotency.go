@@ -1,7 +1,6 @@
 package migrations
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
@@ -24,8 +23,6 @@ func DeduplicateSeedData(db *gorm.DB) {
 		{model: model.AmalanItem{}, groupColumns: []string{"category", "name"}},
 		{model: model.Dzikir{}, groupColumns: []string{"category", "title"}},
 		{model: model.SholatGuide{}, groupColumns: []string{"step"}},
-		{model: model.TahlilCollection{}, groupColumns: []string{"type"}},
-		{model: model.TahlilItem{}, groupColumns: []string{"collection_id", "sort_order"}},
 		{model: model.Kajian{}, groupColumns: []string{"title", "speaker", "published_at"}},
 		{model: model.IslamicEvent{}, groupColumns: []string{"hijri_month", "hijri_day", "name"}},
 	}
@@ -57,9 +54,6 @@ func UpsertSeedData(db *gorm.DB) error {
 		return err
 	}
 	if err := upsertSholatGuideSeeds(db); err != nil {
-		return err
-	}
-	if err := upsertTahlilCollectionSeeds(db); err != nil {
 		return err
 	}
 	if err := upsertKajianSeeds(db); err != nil {
@@ -249,28 +243,6 @@ func upsertSholatGuideSeeds(db *gorm.DB) error {
 			Columns:   []clause.Column{{Name: "step"}},
 			DoUpdates: clause.AssignmentColumns([]string{"title", "arabic", "transliteration", "translation", "description", "source", "notes"}),
 		}).Create(&items[i]).Error; err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func upsertTahlilCollectionSeeds(db *gorm.DB) error {
-	items := seedTahlilCollections()
-	for i := range items {
-		var existing model.TahlilCollection
-		err := db.Where("type = ?", items[i].Type).First(&existing).Error
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			if err := db.Create(&items[i]).Error; err != nil {
-				return err
-			}
-		} else if err == nil {
-			existing.Title = items[i].Title
-			existing.Description = items[i].Description
-			if err := db.Save(&existing).Error; err != nil {
-				return err
-			}
-		} else {
 			return err
 		}
 	}

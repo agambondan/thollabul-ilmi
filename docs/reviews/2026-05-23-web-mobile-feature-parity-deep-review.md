@@ -66,13 +66,13 @@ Tidak ditemukan fitur manifest aktif yang hanya tersedia di web tanpa entry mobi
 
 ### Gap Web Depth
 
-| Area | Web | Mobile | Verdict |
-|---|---|---|---|
-| Achievements | `/dashboard/achievements` dedicated page | `profile:achievements` | Ada parity konsep, belum parity kedalaman chart/layout. |
-| Stats | `/stats` dan `/dashboard/stats` | `feature:stats` | Ada entry mobile, tetapi perlu device smoke untuk memastikan data/visual setara. |
-| Admin CRUD | `/admin/*` untuk konten dan users | Tidak ada | Intentional web-only operational surface. |
-| Dev tools | `/dev` dan API key manager | Tidak ada | Intentional web-only utility surface. |
-| Jarh Ta'dil | Web digabung di Perawi route | Mobile entry `jarh-tadil` | Parity route lewat `/perawi`, tetapi IA/taxonomy beda. |
+| Area         | Web                                      | Mobile                    | Verdict                                                                          |
+| ------------ | ---------------------------------------- | ------------------------- | -------------------------------------------------------------------------------- |
+| Achievements | `/dashboard/achievements` dedicated page | `profile:achievements`    | Ada parity konsep, belum parity kedalaman chart/layout.                          |
+| Stats        | `/stats` dan `/dashboard/stats`          | `feature:stats`           | Ada entry mobile, tetapi perlu device smoke untuk memastikan data/visual setara. |
+| Admin CRUD   | `/admin/*` untuk konten dan users        | Tidak ada                 | Intentional web-only operational surface.                                        |
+| Dev tools    | `/dev` dan API key manager               | Tidak ada                 | Intentional web-only utility surface.                                            |
+| Jarh Ta'dil  | Web digabung di Perawi route             | Mobile entry `jarh-tadil` | Parity route lewat `/perawi`, tetapi IA/taxonomy beda.                           |
 
 ## Mobile To Web
 
@@ -88,21 +88,21 @@ Tidak ditemukan mobile feature utama yang tidak punya web route manifest.
 
 ### Gap Mobile-Specific
 
-| Area | Mobile | Web | Verdict |
-|---|---|---|---|
-| Offline packs | `OfflinePackCard` di Profile > Penyimpanan | Tidak ada download/offline pack management eksplisit | Mobile-only platform capability. Perlu diputuskan apakah web harus punya PWA offline management atau cukup documented exclusion. |
-| Native reminders | Notification center dan local reminders | Web notification/push/adzan service worker | Domain sama, mechanics beda. Perlu device/browser smoke, bukan sekadar parity checker. |
-| Haptics/device UX | Ada di mobile interactions tertentu | Tidak relevan di web | Platform-specific, bukan gap fitur. |
+| Area              | Mobile                                     | Web                                                  | Verdict                                                                                                                          |
+| ----------------- | ------------------------------------------ | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Offline packs     | `OfflinePackCard` di Profile > Penyimpanan | Tidak ada download/offline pack management eksplisit | Mobile-only platform capability. Perlu diputuskan apakah web harus punya PWA offline management atau cukup documented exclusion. |
+| Native reminders  | Notification center dan local reminders    | Web notification/push/adzan service worker           | Domain sama, mechanics beda. Perlu device/browser smoke, bukan sekadar parity checker.                                           |
+| Haptics/device UX | Ada di mobile interactions tertentu        | Tidak relevan di web                                 | Platform-specific, bukan gap fitur.                                                                                              |
 
 ## Stub Or Partial Surface
 
 Stub/coming-soon eksplisit yang ditemukan:
 
-| Platform | File | Surface | Catatan |
-|---|---|---|---|
-| Mobile | `apps/mobile/src/screens/ProfileScreen.js` | Profile > Tampilan | Follow-up implemented: pilihan tema lokal, bahasa konten, dan mode layout. App-wide dark theme penuh masih tracked karena butuh theme provider. |
-| Mobile | `apps/mobile/src/screens/ProfileScreen.js` | Profile > Keamanan | Follow-up implemented: current-device session, sign-out, dan form ganti sandi. Login history multi-device masih tracked karena butuh backend endpoint. |
-| Web | `apps/web/src/app/dev/DevPageClient.js` via `apps/web/src/lib/i18n.js` | Dev docs | Copy `dev.full_docs_soon` menyatakan dokumentasi lengkap request/response belum tersedia. Ini utility docs, bukan user feature utama. |
+| Platform | File                                                                   | Surface            | Catatan                                                                                                                                                |
+| -------- | ---------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Mobile   | `apps/mobile/src/screens/ProfileScreen.js`                             | Profile > Tampilan | Follow-up implemented: pilihan tema lokal, bahasa konten, dan mode layout. App-wide dark theme penuh masih tracked karena butuh theme provider.        |
+| Mobile   | `apps/mobile/src/screens/ProfileScreen.js`                             | Profile > Keamanan | Follow-up implemented: current-device session, sign-out, dan form ganti sandi. Login history multi-device masih tracked karena butuh backend endpoint. |
+| Web      | `apps/web/src/app/dev/DevPageClient.js` via `apps/web/src/lib/i18n.js` | Dev docs           | Copy `dev.full_docs_soon` menyatakan dokumentasi lengkap request/response belum tersedia. Ini utility docs, bukan user feature utama.                  |
 
 Empty state seperti "artikel sedang disiapkan", "tidak ada hasil", atau "belum ada data" muncul di banyak route. Itu bukan otomatis stub; sebagian besar adalah state data kosong dari API/koleksi.
 

@@ -31,39 +31,42 @@ Registrasi, login JWT, forgot/reset password, role-based access control (admin/e
 ### API Response Shape
 
 **`POST /auth/register`**
+
 ```json
 {
-  "name": "Ahmad",
-  "email": "ahmad@example.com",
-  "password": "securepassword"
+    "name": "Ahmad",
+    "email": "ahmad@example.com",
+    "password": "securepassword"
 }
 ```
 
 **`POST /auth/login`**
+
 ```json
 {
-  "token": "eyJhbGciOi...",
-  "refresh_token": "dGhpcyBpcyBh...",
-  "user": {
+    "token": "eyJhbGciOi...",
+    "refresh_token": "dGhpcyBpcyBh...",
+    "user": {
+        "id": "uuid",
+        "name": "Ahmad",
+        "email": "ahmad@example.com",
+        "role": "user",
+        "avatar": "https://...",
+        "preferred_lang": "idn"
+    }
+}
+```
+
+**`GET /users/me`**
+
+```json
+{
     "id": "uuid",
     "name": "Ahmad",
     "email": "ahmad@example.com",
     "role": "user",
     "avatar": "https://...",
     "preferred_lang": "idn"
-  }
-}
-```
-
-**`GET /users/me`**
-```json
-{
-  "id": "uuid",
-  "name": "Ahmad",
-  "email": "ahmad@example.com",
-  "role": "user",
-  "avatar": "https://...",
-  "preferred_lang": "idn"
 }
 ```
 
@@ -78,14 +81,14 @@ Registrasi, login JWT, forgot/reset password, role-based access control (admin/e
 | `password` | *string | Hashed password (hidden from JSON) |
 | `role` | UserRole | admin, author, editor, user |
 | `avatar` | *string | Avatar URL |
-| `preferred_lang` | *string | Language preference (default: "idn") |
+| `preferred_lang` | \*string | Language preference (default: "idn") |
 
 **`LoginResponse`** (`model/user.go`)
 | Field | Type | Notes |
 |-------|------|-------|
 | `token` | string | JWT access token |
 | `refresh_token` | string | Refresh token |
-| `user` | *User | Authenticated user object |
+| `user` | \*User | Authenticated user object |
 
 **`RefreshToken`** & **`PasswordResetToken`** support token rotation and password recovery flows.
 

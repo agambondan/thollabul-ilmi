@@ -1,102 +1,102 @@
 [
-  {
-    "perawi_nama_latin": "Abu Hurairah",
-    "penilai_nama_latin": "Muhammad bin Ismail al-Bukhari",
-    "jenis_nilai": "tadil",
-    "tingkat": 1,
-    "teks_nilai": "tsiqah huffazh as-shahabah",
-    "sumber": "At-Tarikh Al-Kabir",
-    "catatan": "Imam Bukhari menetapkan Abu Hurairah sebagai perawi paling tsiqah di kalangan sahabat dalam hal hafalan"
-  },
-  {
-    "perawi_nama_latin": "Abu Hurairah",
-    "penilai_nama_latin": "Muslim bin al-Hajjaj",
-    "jenis_nilai": "tadil",
-    "tingkat": 1,
-    "teks_nilai": "min kibaril huffazh was-siqat",
-    "sumber": "Rijal Shahih Muslim",
-    "catatan": "Imam Muslim memasukkan Abu Hurairah sebagai sahabat paling produktif dan tsiqah"
-  },
-  {
-    "perawi_nama_latin": "Abdullah bin Umar",
-    "penilai_nama_latin": "Muhammad bin Ismail al-Bukhari",
-    "jenis_nilai": "tadil",
-    "tingkat": 1,
-    "teks_nilai": "sahabatun thiqatun huffazh",
-    "sumber": "At-Tarikh Al-Kabir",
-    "catatan": "Abdullah bin Umar dikenal sangat ketat mengikuti sunnah hingga detail kecil"
-  },
-  {
-    "perawi_nama_latin": "Anas bin Malik",
-    "penilai_nama_latin": "Muhammad bin Ismail al-Bukhari",
-    "jenis_nilai": "tadil",
-    "tingkat": 1,
-    "teks_nilai": "khadimun Nabi ﷺ, tsiqah",
-    "sumber": "At-Tarikh Al-Kabir",
-    "catatan": "Pelayan Nabi ﷺ selama 10 tahun, hafalan kuat"
-  },
-  {
-    "perawi_nama_latin": "Aisyah Ummul Mukminin",
-    "penilai_nama_latin": "Muhammad bin Ismail al-Bukhari",
-    "jenis_nilai": "tadil",
-    "tingkat": 1,
-    "teks_nilai": "Ummul Mukminin, hafizhatun faqihah",
-    "sumber": "At-Tarikh Al-Kabir",
-    "catatan": "Paling faqih di antara Ummahatul Mukminin, sering mengoreksi hadith sahabat lain"
-  },
-  {
-    "perawi_nama_latin": "Nafi'",
-    "penilai_nama_latin": "Malik bin Anas",
-    "jenis_nilai": "tadil",
-    "tingkat": 1,
-    "teks_nilai": "Nafi'un thiqatun tsiqah, imamun fi al-hadith",
-    "sumber": "Al-Jarh wat Ta'dil oleh Ibn Abi Hatim",
-    "halaman": "VIII/449",
-    "catatan": "Imam Malik menyebut sanad Malik-Nafi-Ibn Umar sebagai silsilah dzahabiyyah (rantai emas)"
-  },
-  {
-    "perawi_nama_latin": "Muhammad bin Muslim az-Zuhri (Ibnu Syihab)",
-    "penilai_nama_latin": "Malik bin Anas",
-    "jenis_nilai": "tadil",
-    "tingkat": 1,
-    "teks_nilai": "az-Zuhri awtsaqun nas wa ahfazunum fil hadith",
-    "sumber": "Tahdzib al-Kamal, Al-Mizzi",
-    "catatan": "Imam Malik menilai Az-Zuhri sebagai manusia paling tsiqah dan paling hafal hadith"
-  },
-  {
-    "perawi_nama_latin": "Malik bin Anas",
-    "penilai_nama_latin": "Muhammad bin Ismail al-Bukhari",
-    "jenis_nilai": "tadil",
-    "tingkat": 1,
-    "teks_nilai": "asahhu al-asanid: Malik an Nafi' an Ibn Umar",
-    "sumber": "Shahih al-Bukhari, muqaddimah",
-    "catatan": "Imam Bukhari menyebut sanad Malik sebagai yang paling shahih"
-  },
-  {
-    "perawi_nama_latin": "Muhammad bin Ismail al-Bukhari",
-    "penilai_nama_latin": "Muslim bin al-Hajjaj",
-    "jenis_nilai": "tadil",
-    "tingkat": 1,
-    "teks_nilai": "laisa fi ad-dunya mitsluhu",
-    "sumber": "Siyar A'lam an-Nubala', adz-Dzahabi XII/434",
-    "catatan": "Imam Muslim sujud syukur kepada al-Bukhari sambil berkata: tidak ada di dunia ini orang yang menyamaimu dalam ilmu hadith"
-  },
-  {
-    "perawi_nama_latin": "Qutaibah bin Sa'id",
-    "penilai_nama_latin": "Muhammad bin Ismail al-Bukhari",
-    "jenis_nilai": "tadil",
-    "tingkat": 2,
-    "teks_nilai": "tsiqah tsabtun",
-    "sumber": "At-Tarikh Al-Kabir",
-    "catatan": "Imam Bukhari menilai Qutaibah sebagai guru tsiqah dan tsabt"
-  },
-  {
-    "perawi_nama_latin": "Qutaibah bin Sa'id",
-    "penilai_nama_latin": "Muslim bin al-Hajjaj",
-    "jenis_nilai": "tadil",
-    "tingkat": 3,
-    "teks_nilai": "tsiqah",
-    "sumber": "Rijal Shahih Muslim",
-    "catatan": "Imam Muslim meriwayatkan darinya banyak hadith dalam Shahih-nya"
-  }
+    {
+        "perawi_nama_latin": "Abu Hurairah",
+        "penilai_nama_latin": "Muhammad bin Ismail al-Bukhari",
+        "jenis_nilai": "tadil",
+        "tingkat": 1,
+        "teks_nilai": "tsiqah huffazh as-shahabah",
+        "sumber": "At-Tarikh Al-Kabir",
+        "catatan": "Imam Bukhari menetapkan Abu Hurairah sebagai perawi paling tsiqah di kalangan sahabat dalam hal hafalan"
+    },
+    {
+        "perawi_nama_latin": "Abu Hurairah",
+        "penilai_nama_latin": "Muslim bin al-Hajjaj",
+        "jenis_nilai": "tadil",
+        "tingkat": 1,
+        "teks_nilai": "min kibaril huffazh was-siqat",
+        "sumber": "Rijal Shahih Muslim",
+        "catatan": "Imam Muslim memasukkan Abu Hurairah sebagai sahabat paling produktif dan tsiqah"
+    },
+    {
+        "perawi_nama_latin": "Abdullah bin Umar",
+        "penilai_nama_latin": "Muhammad bin Ismail al-Bukhari",
+        "jenis_nilai": "tadil",
+        "tingkat": 1,
+        "teks_nilai": "sahabatun thiqatun huffazh",
+        "sumber": "At-Tarikh Al-Kabir",
+        "catatan": "Abdullah bin Umar dikenal sangat ketat mengikuti sunnah hingga detail kecil"
+    },
+    {
+        "perawi_nama_latin": "Anas bin Malik",
+        "penilai_nama_latin": "Muhammad bin Ismail al-Bukhari",
+        "jenis_nilai": "tadil",
+        "tingkat": 1,
+        "teks_nilai": "khadimun Nabi ﷺ, tsiqah",
+        "sumber": "At-Tarikh Al-Kabir",
+        "catatan": "Pelayan Nabi ﷺ selama 10 tahun, hafalan kuat"
+    },
+    {
+        "perawi_nama_latin": "Aisyah Ummul Mukminin",
+        "penilai_nama_latin": "Muhammad bin Ismail al-Bukhari",
+        "jenis_nilai": "tadil",
+        "tingkat": 1,
+        "teks_nilai": "Ummul Mukminin, hafizhatun faqihah",
+        "sumber": "At-Tarikh Al-Kabir",
+        "catatan": "Paling faqih di antara Ummahatul Mukminin, sering mengoreksi hadith sahabat lain"
+    },
+    {
+        "perawi_nama_latin": "Nafi'",
+        "penilai_nama_latin": "Malik bin Anas",
+        "jenis_nilai": "tadil",
+        "tingkat": 1,
+        "teks_nilai": "Nafi'un thiqatun tsiqah, imamun fi al-hadith",
+        "sumber": "Al-Jarh wat Ta'dil oleh Ibn Abi Hatim",
+        "halaman": "VIII/449",
+        "catatan": "Imam Malik menyebut sanad Malik-Nafi-Ibn Umar sebagai silsilah dzahabiyyah (rantai emas)"
+    },
+    {
+        "perawi_nama_latin": "Muhammad bin Muslim az-Zuhri (Ibnu Syihab)",
+        "penilai_nama_latin": "Malik bin Anas",
+        "jenis_nilai": "tadil",
+        "tingkat": 1,
+        "teks_nilai": "az-Zuhri awtsaqun nas wa ahfazunum fil hadith",
+        "sumber": "Tahdzib al-Kamal, Al-Mizzi",
+        "catatan": "Imam Malik menilai Az-Zuhri sebagai manusia paling tsiqah dan paling hafal hadith"
+    },
+    {
+        "perawi_nama_latin": "Malik bin Anas",
+        "penilai_nama_latin": "Muhammad bin Ismail al-Bukhari",
+        "jenis_nilai": "tadil",
+        "tingkat": 1,
+        "teks_nilai": "asahhu al-asanid: Malik an Nafi' an Ibn Umar",
+        "sumber": "Shahih al-Bukhari, muqaddimah",
+        "catatan": "Imam Bukhari menyebut sanad Malik sebagai yang paling shahih"
+    },
+    {
+        "perawi_nama_latin": "Muhammad bin Ismail al-Bukhari",
+        "penilai_nama_latin": "Muslim bin al-Hajjaj",
+        "jenis_nilai": "tadil",
+        "tingkat": 1,
+        "teks_nilai": "laisa fi ad-dunya mitsluhu",
+        "sumber": "Siyar A'lam an-Nubala', adz-Dzahabi XII/434",
+        "catatan": "Imam Muslim sujud syukur kepada al-Bukhari sambil berkata: tidak ada di dunia ini orang yang menyamaimu dalam ilmu hadith"
+    },
+    {
+        "perawi_nama_latin": "Qutaibah bin Sa'id",
+        "penilai_nama_latin": "Muhammad bin Ismail al-Bukhari",
+        "jenis_nilai": "tadil",
+        "tingkat": 2,
+        "teks_nilai": "tsiqah tsabtun",
+        "sumber": "At-Tarikh Al-Kabir",
+        "catatan": "Imam Bukhari menilai Qutaibah sebagai guru tsiqah dan tsabt"
+    },
+    {
+        "perawi_nama_latin": "Qutaibah bin Sa'id",
+        "penilai_nama_latin": "Muslim bin al-Hajjaj",
+        "jenis_nilai": "tadil",
+        "tingkat": 3,
+        "teks_nilai": "tsiqah",
+        "sumber": "Rijal Shahih Muslim",
+        "catatan": "Imam Muslim meriwayatkan darinya banyak hadith dalam Shahih-nya"
+    }
 ]

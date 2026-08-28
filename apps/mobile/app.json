@@ -1,57 +1,57 @@
 {
-  "expo": {
-    "name": "Thullaabul Ilmi",
-    "slug": "thullaabul-ilmi-mobile",
-    "scheme": "thullaabulilmi",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#f6f7f2"
-    },
-    "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Thullaabul Ilmi uses your location to calculate prayer times and Qibla direction."
-      }
-    },
-    "android": {
-      "permissions": [
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION",
-        "POST_NOTIFICATIONS"
-      ],
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#065f46"
-      },
-      "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.thullaabulilmimobile"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-notifications",
-      "expo-secure-store",
-      "expo-audio",
-      "expo-asset",
-      "expo-sqlite",
-      "@react-native-community/datetimepicker",
-      [
-        "expo-font",
-        {
-          "fonts": [
-            "./assets/fonts/Kitab-Regular.ttf",
-            "./assets/fonts/noorehidayat.ttf",
-            "./assets/fonts/kfc_naskh-webfont.ttf"
-          ]
-        }
-      ]
-    ]
-  }
+    "expo": {
+        "name": "Thullaabul Ilmi",
+        "slug": "thullaabul-ilmi-mobile",
+        "scheme": "thullaabulilmi",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "userInterfaceStyle": "automatic",
+        "newArchEnabled": true,
+        "splash": {
+            "image": "./assets/splash-icon.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#f6f7f2"
+        },
+        "ios": {
+            "supportsTablet": true,
+            "infoPlist": {
+                "NSLocationWhenInUseUsageDescription": "Thullaabul Ilmi uses your location to calculate prayer times and Qibla direction."
+            }
+        },
+        "android": {
+            "permissions": [
+                "ACCESS_COARSE_LOCATION",
+                "ACCESS_FINE_LOCATION",
+                "POST_NOTIFICATIONS"
+            ],
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/adaptive-icon.png",
+                "backgroundColor": "#065f46"
+            },
+            "edgeToEdgeEnabled": true,
+            "package": "com.anonymous.thullaabulilmimobile"
+        },
+        "web": {
+            "favicon": "./assets/favicon.png"
+        },
+        "plugins": [
+            "expo-notifications",
+            "expo-secure-store",
+            "expo-audio",
+            "expo-asset",
+            "expo-sqlite",
+            "@react-native-community/datetimepicker",
+            [
+                "expo-font",
+                {
+                    "fonts": [
+                        "./assets/fonts/Kitab-Regular.ttf",
+                        "./assets/fonts/noorehidayat.ttf",
+                        "./assets/fonts/kfc_naskh-webfont.ttf"
+                    ]
+                }
+            ]
+        ]
+    }
 }

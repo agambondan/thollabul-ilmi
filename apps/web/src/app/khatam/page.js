@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import Footer from '@/components/Footer';
-import ContentWidth from '@/components/layout/ContentWidth';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import Section from '@/components/Section';
-import { useAuth } from '@/context/Auth';
-import { useLocale } from '@/context/Locale';
-import { progressApi } from '@/lib/api';
+import Footer from "@/components/Footer";
+import ContentWidth from "@/components/layout/ContentWidth";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import Section from "@/components/Section";
+import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
+import { progressApi } from "@/lib/api";
 import {
     ayahIndex,
     dailyTarget,
     juzProgress,
     progressPct,
     TOTAL_AYAH,
-} from '@/lib/khatamHelper';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { BsCheckCircleFill, BsCircle, BsFlag } from 'react-icons/bs';
-import { FaQuran } from 'react-icons/fa';
+} from "@/lib/khatamHelper";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { BsCheckCircleFill, BsCircle, BsFlag } from "react-icons/bs";
+import { FaQuran } from "react-icons/fa";
 
-const STORAGE_KEY = 'tholabul_khatam_target';
+const STORAGE_KEY = "tholabul_khatam_target";
 
 const todayPlus = (days) => {
     const d = new Date();
@@ -27,7 +27,7 @@ const todayPlus = (days) => {
     return d.toISOString().slice(0, 10);
 };
 
-export function KhatamContent({ basePath = '/quran' }) {
+export function KhatamContent({ basePath = "/quran" }) {
     const { isAuthenticated } = useAuth();
     const { t, lang } = useLocale();
     const [progress, setProgress] = useState(null);
@@ -58,10 +58,16 @@ export function KhatamContent({ basePath = '/quran' }) {
                         updatedAt: p.updated_at ?? p.last_read_at,
                     });
                 } else {
-                    setProgress({ surahNumber: 1, ayahNumber: 1, updatedAt: null });
+                    setProgress({
+                        surahNumber: 1,
+                        ayahNumber: 1,
+                        updatedAt: null,
+                    });
                 }
             })
-            .catch(() => setProgress({ surahNumber: 1, ayahNumber: 1, updatedAt: null }))
+            .catch(() =>
+                setProgress({ surahNumber: 1, ayahNumber: 1, updatedAt: null }),
+            )
             .finally(() => setLoading(false));
     }, [isAuthenticated]);
 
@@ -82,20 +88,23 @@ export function KhatamContent({ basePath = '/quran' }) {
 
     if (!isAuthenticated) {
         return (
-            <ContentWidth compact='max-w-2xl' className='px-4 py-10 text-center'>
+            <ContentWidth
+                compact='max-w-2xl'
+                className='px-4 py-10 text-center'
+            >
                 <FaQuran className='mx-auto text-5xl text-emerald-300 dark:text-emerald-700 mb-4' />
                 <h1 className='text-xl font-bold text-emerald-900 dark:text-white mb-2'>
-                    {t('khatam.title') ?? 'Khatam Tracker'}
+                    {t("khatam.title") ?? "Khatam Tracker"}
                 </h1>
                 <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
-                    {t('khatam.login_required') ??
-                        'Login untuk melihat progress khatam Quran-mu.'}
+                    {t("khatam.login_required") ??
+                        "Login untuk melihat progress khatam Quran-mu."}
                 </p>
                 <Link
                     href='/auth/login'
                     className='inline-block px-6 py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-sm font-medium transition-colors'
                 >
-                    {t('auth.login_btn') ?? 'Masuk'}
+                    {t("auth.login_btn") ?? "Masuk"}
                 </Link>
             </ContentWidth>
         );
@@ -114,10 +123,11 @@ export function KhatamContent({ basePath = '/quran' }) {
             <div className='text-center mb-6'>
                 <FaQuran className='mx-auto text-3xl text-emerald-600 dark:text-emerald-400 mb-2' />
                 <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
-                    {t('khatam.title') ?? 'Khatam Tracker'}
+                    {t("khatam.title") ?? "Khatam Tracker"}
                 </h1>
                 <p className='text-sm text-gray-500 dark:text-gray-400'>
-                    {t('khatam.subtitle') ?? 'Pantau progress khatam Al-Quran kamu'}
+                    {t("khatam.subtitle") ??
+                        "Pantau progress khatam Al-Quran kamu"}
                 </p>
             </div>
 
@@ -126,13 +136,16 @@ export function KhatamContent({ basePath = '/quran' }) {
                 <div className='flex items-center justify-between mb-3'>
                     <div>
                         <p className='text-xs text-emerald-100/80 uppercase tracking-wider'>
-                            {t('khatam.current_progress') ?? 'Progress saat ini'}
+                            {t("khatam.current_progress") ??
+                                "Progress saat ini"}
                         </p>
-                        <p className='text-3xl font-bold mt-1'>{pct.toFixed(1)}%</p>
+                        <p className='text-3xl font-bold mt-1'>
+                            {pct.toFixed(1)}%
+                        </p>
                     </div>
                     <div className='text-right'>
                         <p className='text-xs text-emerald-100/80'>
-                            {t('khatam.last_read') ?? 'Terakhir dibaca'}
+                            {t("khatam.last_read") ?? "Terakhir dibaca"}
                         </p>
                         <p className='text-base font-semibold'>
                             QS. {progress.surahNumber}:{progress.ayahNumber}
@@ -147,10 +160,11 @@ export function KhatamContent({ basePath = '/quran' }) {
                 </div>
                 <div className='flex justify-between text-xs text-emerald-100/80 mt-2'>
                     <span>
-                        {currentIdx} / {TOTAL_AYAH} {t('khatam.ayah_unit') ?? 'ayat'}
+                        {currentIdx} / {TOTAL_AYAH}{" "}
+                        {t("khatam.ayah_unit") ?? "ayat"}
                     </span>
                     <span>
-                        {ayahsLeft} {t('khatam.remaining') ?? 'tersisa'}
+                        {ayahsLeft} {t("khatam.remaining") ?? "tersisa"}
                     </span>
                 </div>
             </div>
@@ -159,12 +173,12 @@ export function KhatamContent({ basePath = '/quran' }) {
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 mb-5'>
                 <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2'>
                     <BsFlag className='text-amber-500' />
-                    {t('khatam.target_section') ?? 'Target Khatam'}
+                    {t("khatam.target_section") ?? "Target Khatam"}
                 </h2>
                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3'>
                     <div>
                         <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                            {t('khatam.target_date') ?? 'Tanggal Target'}
+                            {t("khatam.target_date") ?? "Tanggal Target"}
                         </label>
                         <input
                             type='date'
@@ -175,11 +189,11 @@ export function KhatamContent({ basePath = '/quran' }) {
                     </div>
                     <div className='flex flex-wrap gap-1.5 items-end'>
                         {[
-                            { days: 30, label: '30d' },
-                            { days: 60, label: '60d' },
-                            { days: 90, label: '3 bln' },
-                            { days: 180, label: '6 bln' },
-                            { days: 365, label: '1 thn' },
+                            { days: 30, label: "30d" },
+                            { days: 60, label: "60d" },
+                            { days: 90, label: "3 bln" },
+                            { days: 180, label: "6 bln" },
+                            { days: 365, label: "1 thn" },
                         ].map((p) => (
                             <button
                                 key={p.days}
@@ -199,7 +213,7 @@ export function KhatamContent({ basePath = '/quran' }) {
                             {daysLeft}
                         </p>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
-                            {t('khatam.days_left') ?? 'Hari tersisa'}
+                            {t("khatam.days_left") ?? "Hari tersisa"}
                         </p>
                     </div>
                     <div className='text-center bg-amber-50 dark:bg-amber-900/10 rounded-xl p-3'>
@@ -207,7 +221,7 @@ export function KhatamContent({ basePath = '/quran' }) {
                             {ayahsPerDay}
                         </p>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
-                            {t('khatam.ayahs_per_day') ?? 'Ayat/hari'}
+                            {t("khatam.ayahs_per_day") ?? "Ayat/hari"}
                         </p>
                     </div>
                     <div className='text-center bg-blue-50 dark:bg-blue-900/10 rounded-xl p-3'>
@@ -215,7 +229,7 @@ export function KhatamContent({ basePath = '/quran' }) {
                             {Math.ceil(ayahsPerDay / 15)}
                         </p>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
-                            ~ {t('khatam.minutes') ?? 'menit/hari'}
+                            ~ {t("khatam.minutes") ?? "menit/hari"}
                         </p>
                     </div>
                 </div>
@@ -224,7 +238,7 @@ export function KhatamContent({ basePath = '/quran' }) {
             {/* Per-juz visualization */}
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
                 <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
-                    {t('khatam.juz_progress') ?? 'Progress per Juz'}
+                    {t("khatam.juz_progress") ?? "Progress per Juz"}
                 </h2>
                 <div className='grid grid-cols-5 sm:grid-cols-6 md:grid-cols-10 gap-1.5'>
                     {juzList.map((j) => {
@@ -235,11 +249,11 @@ export function KhatamContent({ basePath = '/quran' }) {
                                 title={`Juz ${j.juz}: ${j.read}/${j.total} (${j.pct}%)`}
                                 className={`relative aspect-square rounded-lg flex items-center justify-center text-xs font-medium transition-all ${
                                     isDone
-                                        ? 'bg-emerald-500 text-white'
+                                        ? "bg-emerald-500 text-white"
                                         : j.pct > 0
-                                            ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
-                                            : 'bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500'
-                                } ${j.isCurrent ? 'ring-2 ring-amber-400 dark:ring-amber-500' : ''}`}
+                                          ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
+                                          : "bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500"
+                                } ${j.isCurrent ? "ring-2 ring-amber-400 dark:ring-amber-500" : ""}`}
                             >
                                 <span>{j.juz}</span>
                                 {j.pct > 0 && j.pct < 100 && (
@@ -258,19 +272,19 @@ export function KhatamContent({ basePath = '/quran' }) {
                 <div className='flex flex-wrap gap-3 mt-4 text-xs'>
                     <span className='flex items-center gap-1.5 text-gray-500 dark:text-gray-400'>
                         <span className='inline-block w-3 h-3 rounded bg-emerald-500' />
-                        {t('khatam.juz_done') ?? 'Selesai'}
+                        {t("khatam.juz_done") ?? "Selesai"}
                     </span>
                     <span className='flex items-center gap-1.5 text-gray-500 dark:text-gray-400'>
                         <span className='inline-block w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/30' />
-                        {t('khatam.juz_partial') ?? 'Sebagian'}
+                        {t("khatam.juz_partial") ?? "Sebagian"}
                     </span>
                     <span className='flex items-center gap-1.5 text-gray-500 dark:text-gray-400'>
                         <span className='inline-block w-3 h-3 rounded bg-gray-100 dark:bg-slate-700' />
-                        {t('khatam.juz_untouched') ?? 'Belum dibaca'}
+                        {t("khatam.juz_untouched") ?? "Belum dibaca"}
                     </span>
                     <span className='flex items-center gap-1.5 text-gray-500 dark:text-gray-400'>
                         <span className='inline-block w-3 h-3 rounded bg-white dark:bg-slate-800 ring-2 ring-amber-400' />
-                        {t('khatam.juz_current') ?? 'Saat ini'}
+                        {t("khatam.juz_current") ?? "Saat ini"}
                     </span>
                 </div>
                 <Link
@@ -278,7 +292,7 @@ export function KhatamContent({ basePath = '/quran' }) {
                     className='inline-flex items-center gap-2 mt-4 px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-sm font-medium transition-colors'
                 >
                     <BsCircle />
-                    {t('khatam.continue_reading') ?? 'Lanjutkan baca'}
+                    {t("khatam.continue_reading") ?? "Lanjutkan baca"}
                 </Link>
             </div>
         </ContentWidth>

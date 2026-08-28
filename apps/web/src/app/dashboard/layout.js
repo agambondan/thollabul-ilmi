@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import AdminMutationToast from '@/components/admin/AdminMutationToast';
-import { useAuth } from '@/context/Auth';
-import { useLocale } from '@/context/Locale';
-import { ConvertFLagLanguage } from '@/lib/converter';
-import { useLayoutMode } from '@/lib/useLayoutMode';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import AdminMutationToast from "@/components/admin/AdminMutationToast";
+import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
+import { ConvertFLagLanguage } from "@/lib/converter";
+import { useLayoutMode } from "@/lib/useLayoutMode";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import {
     BsArrowRepeat,
     BsAward,
@@ -32,10 +32,10 @@ import {
     BsStickyFill,
     BsSunFill,
     BsTrophyFill,
-} from 'react-icons/bs';
-import { FaBrain, FaQuran } from 'react-icons/fa';
-import { GiOpenBook } from 'react-icons/gi';
-import { ImBook } from 'react-icons/im';
+} from "react-icons/bs";
+import { FaBrain, FaQuran } from "react-icons/fa";
+import { GiOpenBook } from "react-icons/gi";
+import { ImBook } from "react-icons/im";
 import {
     MdAccessTime,
     MdCalendarMonth,
@@ -54,10 +54,10 @@ import {
     MdSelfImprovement,
     MdStar,
     MdTimeline,
-} from 'react-icons/md';
+} from "react-icons/md";
 
-const LANGS = ['ID', 'EN'];
-const SIDEBAR_STORAGE_KEY = 'tholabul_dashboard_sidebar_collapsed';
+const LANGS = ["ID", "EN"];
+const SIDEBAR_STORAGE_KEY = "tholabul_dashboard_sidebar_collapsed";
 
 const DashboardLayout = ({ children }) => {
     const { user, isAuthenticated, isLoading, logout } = useAuth();
@@ -77,13 +77,13 @@ const DashboardLayout = ({ children }) => {
                 setAccountOpen(false);
             }
         };
-        document.addEventListener('mousedown', handler);
-        return () => document.removeEventListener('mousedown', handler);
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
     }, []);
 
     useEffect(() => {
         try {
-            setIsCollapsed(localStorage.getItem(SIDEBAR_STORAGE_KEY) === '1');
+            setIsCollapsed(localStorage.getItem(SIDEBAR_STORAGE_KEY) === "1");
         } catch {
             setIsCollapsed(false);
         }
@@ -91,22 +91,22 @@ const DashboardLayout = ({ children }) => {
 
     useEffect(() => {
         const sync = () => {
-            const dark = localStorage.getItem('theme') === 'dark';
-            document.documentElement.classList.toggle('dark', dark);
+            const dark = localStorage.getItem("theme") === "dark";
+            document.documentElement.classList.toggle("dark", dark);
             setIsDarkMode(dark);
         };
         sync();
-        window.addEventListener('storage', sync);
-        return () => window.removeEventListener('storage', sync);
+        window.addEventListener("storage", sync);
+        return () => window.removeEventListener("storage", sync);
     }, []);
 
     useEffect(() => {
-        document.documentElement.classList.toggle('dark', isDarkMode);
+        document.documentElement.classList.toggle("dark", isDarkMode);
     }, [isDarkMode]);
 
     const toggleDark = () => {
         setIsDarkMode((prev) => {
-            localStorage.setItem('theme', !prev ? 'dark' : 'light');
+            localStorage.setItem("theme", !prev ? "dark" : "light");
             return !prev;
         });
     };
@@ -115,7 +115,7 @@ const DashboardLayout = ({ children }) => {
         setIsCollapsed((current) => {
             const next = !current;
             try {
-                localStorage.setItem(SIDEBAR_STORAGE_KEY, next ? '1' : '0');
+                localStorage.setItem(SIDEBAR_STORAGE_KEY, next ? "1" : "0");
             } catch {}
             return next;
         });
@@ -123,84 +123,272 @@ const DashboardLayout = ({ children }) => {
 
     const initials = user?.name
         ? user.name
-              .split(' ')
+              .split(" ")
               .slice(0, 2)
               .map((w) => w[0])
-              .join('')
+              .join("")
               .toUpperCase()
-        : '?';
+        : "?";
 
     const GROUPS = [
         {
-            titleKey: 'sidebar.main_reading',
+            titleKey: "sidebar.main_reading",
             links: [
-                { labelKey: 'link.quran', href: '/dashboard/quran', icon: <FaQuran /> },
-                { labelKey: 'link.hadith', href: '/dashboard/hadith', icon: <ImBook /> },
-                { labelKey: 'link.perawi', href: '/dashboard/perawi', icon: <ImBook /> },
-                { labelKey: 'link.khatam', href: '/dashboard/khatam', icon: <BsBookHalf /> },
+                {
+                    labelKey: "link.quran",
+                    href: "/dashboard/quran",
+                    icon: <FaQuran />,
+                },
+                {
+                    labelKey: "link.hadith",
+                    href: "/dashboard/hadith",
+                    icon: <ImBook />,
+                },
+                {
+                    labelKey: "link.perawi",
+                    href: "/dashboard/perawi",
+                    icon: <ImBook />,
+                },
+                {
+                    labelKey: "link.khatam",
+                    href: "/dashboard/khatam",
+                    icon: <BsBookHalf />,
+                },
             ],
         },
         {
-            titleKey: 'sidebar.worship_tracker',
+            titleKey: "sidebar.worship_tracker",
             links: [
-                { labelKey: 'link.sholat_tracker', href: '/dashboard/sholat-tracker', icon: <MdMosque /> },
-                { labelKey: 'link.prayer_guide', href: '/dashboard/panduan-sholat', icon: <MdMenuBook /> },
-                { labelKey: 'link.recitation', href: '/dashboard/tilawah', icon: <BsJournalCheck /> },
-                { labelKey: 'link.memorization', href: '/dashboard/hafalan', icon: <BsBook /> },
-                { labelKey: 'link.review', href: '/dashboard/muroja-ah', icon: <MdRefresh /> },
-                { labelKey: 'link.tasbih', href: '/dashboard/tasbih', icon: <BsArrowRepeat /> },
-                { labelKey: 'link.deeds', href: '/dashboard/amalan', icon: <MdFormatListBulleted /> },
-                { labelKey: 'link.muhasabah', href: '/dashboard/muhasabah', icon: <MdSelfImprovement /> },
-                { labelKey: 'link.goals', href: '/dashboard/goals', icon: <MdFlag /> },
+                {
+                    labelKey: "link.sholat_tracker",
+                    href: "/dashboard/sholat-tracker",
+                    icon: <MdMosque />,
+                },
+                {
+                    labelKey: "link.prayer_guide",
+                    href: "/dashboard/panduan-sholat",
+                    icon: <MdMenuBook />,
+                },
+                {
+                    labelKey: "link.recitation",
+                    href: "/dashboard/tilawah",
+                    icon: <BsJournalCheck />,
+                },
+                {
+                    labelKey: "link.memorization",
+                    href: "/dashboard/hafalan",
+                    icon: <BsBook />,
+                },
+                {
+                    labelKey: "link.review",
+                    href: "/dashboard/muroja-ah",
+                    icon: <MdRefresh />,
+                },
+                {
+                    labelKey: "link.tasbih",
+                    href: "/dashboard/tasbih",
+                    icon: <BsArrowRepeat />,
+                },
+                {
+                    labelKey: "link.deeds",
+                    href: "/dashboard/amalan",
+                    icon: <MdFormatListBulleted />,
+                },
+                {
+                    labelKey: "link.muhasabah",
+                    href: "/dashboard/muhasabah",
+                    icon: <MdSelfImprovement />,
+                },
+                {
+                    labelKey: "link.goals",
+                    href: "/dashboard/goals",
+                    icon: <MdFlag />,
+                },
             ],
         },
         {
-            titleKey: 'sidebar.islamic_content',
+            titleKey: "sidebar.islamic_content",
             links: [
-                { labelKey: 'link.tafsir', href: '/dashboard/tafsir', icon: <MdOutlineAutoStories /> },
-                { labelKey: 'link.asbabun_nuzul', href: '/dashboard/asbabun-nuzul', icon: <MdOutlineAutoStories /> },
-                { labelKey: 'link.asmaul_husna', href: '/dashboard/asmaul-husna', icon: <MdStar /> },
-                { labelKey: 'link.doa', href: '/dashboard/doa', icon: <MdSelfImprovement /> },
-                { labelKey: 'link.dhikr', href: '/dashboard/dzikir', icon: <GiOpenBook /> },
-                { labelKey: 'link.wird', href: '/dashboard/wirid', icon: <GiOpenBook /> },
-                { labelKey: 'link.wirid_custom', href: '/dashboard/wirid-custom', icon: <BsJournalPlus /> },
-                { labelKey: 'link.tahlil', href: '/dashboard/tahlil', icon: <BsBook /> },
-                { labelKey: 'link.kajian', href: '/dashboard/kajian', icon: <MdOutlinePlayLesson /> },
-                { labelKey: 'link.sirah_short', href: '/dashboard/siroh', icon: <MdMenuBook /> },
-                { labelKey: 'link.brief_fiqh', href: '/dashboard/fiqh', icon: <MdMenuBook /> },
-                { labelKey: 'link.islamic_history', href: '/dashboard/sejarah', icon: <MdTimeline /> },
-                { labelKey: 'link.tokoh', href: '/dashboard/tokoh', icon: <BsPeopleFill /> },
-                { labelKey: 'link.peta', href: '/dashboard/peta', icon: <MdExplore /> },
-                { labelKey: 'link.manasik', href: '/dashboard/manasik', icon: <MdOutlineDirectionsWalk /> },
-                { labelKey: 'link.library', href: '/dashboard/library', icon: <BsBook /> },
-                { labelKey: 'link.blog', href: '/dashboard/blog', icon: <BsNewspaper /> },
-                { labelKey: 'link.feed', href: '/dashboard/feed', icon: <BsGlobe /> },
+                {
+                    labelKey: "link.tafsir",
+                    href: "/dashboard/tafsir",
+                    icon: <MdOutlineAutoStories />,
+                },
+                {
+                    labelKey: "link.asbabun_nuzul",
+                    href: "/dashboard/asbabun-nuzul",
+                    icon: <MdOutlineAutoStories />,
+                },
+                {
+                    labelKey: "link.asmaul_husna",
+                    href: "/dashboard/asmaul-husna",
+                    icon: <MdStar />,
+                },
+                {
+                    labelKey: "link.doa",
+                    href: "/dashboard/doa",
+                    icon: <MdSelfImprovement />,
+                },
+                {
+                    labelKey: "link.dhikr",
+                    href: "/dashboard/dzikir",
+                    icon: <GiOpenBook />,
+                },
+                {
+                    labelKey: "link.wird",
+                    href: "/dashboard/wirid",
+                    icon: <GiOpenBook />,
+                },
+                {
+                    labelKey: "link.wirid_custom",
+                    href: "/dashboard/wirid-custom",
+                    icon: <BsJournalPlus />,
+                },
+                {
+                    labelKey: "link.tahlil",
+                    href: "/dashboard/tahlil",
+                    icon: <BsBook />,
+                },
+                {
+                    labelKey: "link.kajian",
+                    href: "/dashboard/kajian",
+                    icon: <MdOutlinePlayLesson />,
+                },
+                {
+                    labelKey: "link.sirah_short",
+                    href: "/dashboard/siroh",
+                    icon: <MdMenuBook />,
+                },
+                {
+                    labelKey: "link.brief_fiqh",
+                    href: "/dashboard/fiqh",
+                    icon: <MdMenuBook />,
+                },
+                {
+                    labelKey: "link.islamic_history",
+                    href: "/dashboard/sejarah",
+                    icon: <MdTimeline />,
+                },
+                {
+                    labelKey: "link.tokoh",
+                    href: "/dashboard/tokoh",
+                    icon: <BsPeopleFill />,
+                },
+                {
+                    labelKey: "link.peta",
+                    href: "/dashboard/peta",
+                    icon: <MdExplore />,
+                },
+                {
+                    labelKey: "link.manasik",
+                    href: "/dashboard/manasik",
+                    icon: <MdOutlineDirectionsWalk />,
+                },
+                {
+                    labelKey: "link.library",
+                    href: "/dashboard/library",
+                    icon: <BsBook />,
+                },
+                {
+                    labelKey: "link.blog",
+                    href: "/dashboard/blog",
+                    icon: <BsNewspaper />,
+                },
+                {
+                    labelKey: "link.feed",
+                    href: "/dashboard/feed",
+                    icon: <BsGlobe />,
+                },
             ],
         },
         {
-            titleKey: 'sidebar.tools',
+            titleKey: "sidebar.tools",
             links: [
-                { labelKey: 'link.prayer_schedule', href: '/dashboard/jadwal-sholat', icon: <MdAccessTime /> },
-                { labelKey: 'link.hijri_calendar', href: '/dashboard/hijri', icon: <MdCalendarMonth /> },
-                { labelKey: 'link.arabic_dict', href: '/dashboard/kamus', icon: <BsBook /> },
-                { labelKey: 'link.kiblat', href: '/dashboard/kiblat', icon: <MdExplore /> },
-                { labelKey: 'link.faraidh', href: '/dashboard/faraidh', icon: <BsCalculator /> },
-                { labelKey: 'link.zakat', href: '/dashboard/zakat', icon: <BsCurrencyDollar /> },
-                { labelKey: 'link.search', href: '/dashboard/search', icon: <BsSearch /> },
-                { labelKey: 'link.quiz', href: '/dashboard/quiz', icon: <FaBrain /> },
-                { labelKey: 'link.leaderboard', href: '/dashboard/leaderboard', icon: <BsTrophyFill /> },
-                { labelKey: 'link.achievements', href: '/dashboard/achievements', icon: <BsAward /> },
-                { labelKey: 'link.imsakiyah', href: '/dashboard/imsakiyah', icon: <BsCalendar3 /> },
+                {
+                    labelKey: "link.prayer_schedule",
+                    href: "/dashboard/jadwal-sholat",
+                    icon: <MdAccessTime />,
+                },
+                {
+                    labelKey: "link.hijri_calendar",
+                    href: "/dashboard/hijri",
+                    icon: <MdCalendarMonth />,
+                },
+                {
+                    labelKey: "link.arabic_dict",
+                    href: "/dashboard/kamus",
+                    icon: <BsBook />,
+                },
+                {
+                    labelKey: "link.kiblat",
+                    href: "/dashboard/kiblat",
+                    icon: <MdExplore />,
+                },
+                {
+                    labelKey: "link.faraidh",
+                    href: "/dashboard/faraidh",
+                    icon: <BsCalculator />,
+                },
+                {
+                    labelKey: "link.zakat",
+                    href: "/dashboard/zakat",
+                    icon: <BsCurrencyDollar />,
+                },
+                {
+                    labelKey: "link.search",
+                    href: "/dashboard/search",
+                    icon: <BsSearch />,
+                },
+                {
+                    labelKey: "link.quiz",
+                    href: "/dashboard/quiz",
+                    icon: <FaBrain />,
+                },
+                {
+                    labelKey: "link.leaderboard",
+                    href: "/dashboard/leaderboard",
+                    icon: <BsTrophyFill />,
+                },
+                {
+                    labelKey: "link.achievements",
+                    href: "/dashboard/achievements",
+                    icon: <BsAward />,
+                },
+                {
+                    labelKey: "link.imsakiyah",
+                    href: "/dashboard/imsakiyah",
+                    icon: <BsCalendar3 />,
+                },
             ],
         },
     ];
 
     const ACCOUNT_LINKS = [
-        { labelKey: 'link.profile', href: '/dashboard/profile', icon: <BsPerson /> },
-        { labelKey: 'link.bookmarks', href: '/dashboard/bookmarks', icon: <BsBookmark /> },
-        { labelKey: 'link.notes', href: '/dashboard/notes', icon: <BsStickyFill /> },
-        { labelKey: 'link.statistics', href: '/dashboard/stats', icon: <BsBarChart /> },
-        { labelKey: 'link.notifications', href: '/dashboard/notifications', icon: <BsBell /> },
+        {
+            labelKey: "link.profile",
+            href: "/dashboard/profile",
+            icon: <BsPerson />,
+        },
+        {
+            labelKey: "link.bookmarks",
+            href: "/dashboard/bookmarks",
+            icon: <BsBookmark />,
+        },
+        {
+            labelKey: "link.notes",
+            href: "/dashboard/notes",
+            icon: <BsStickyFill />,
+        },
+        {
+            labelKey: "link.statistics",
+            href: "/dashboard/stats",
+            icon: <BsBarChart />,
+        },
+        {
+            labelKey: "link.notifications",
+            href: "/dashboard/notifications",
+            icon: <BsBell />,
+        },
     ];
 
     useEffect(() => {
@@ -213,14 +401,28 @@ const DashboardLayout = ({ children }) => {
 
     if (isLoading || !isAuthenticated) return null;
 
-    const sidebarWidth = isCollapsed ? 'w-16' : 'w-60';
-    const mainOffset = isCollapsed ? 'md:ml-16' : 'md:ml-60';
-    const sidebarToggleLabel = isCollapsed ? t('sidebar.expand') : t('sidebar.collapse');
+    const sidebarWidth = isCollapsed ? "w-16" : "w-60";
+    const mainOffset = isCollapsed ? "md:ml-16" : "md:ml-60";
+    const sidebarToggleLabel = isCollapsed
+        ? t("sidebar.expand")
+        : t("sidebar.collapse");
     const mobilePrimaryLinks = [
-        { labelKey: 'link.dashboard', href: '/dashboard', icon: <BsBarChart /> },
-        { labelKey: 'link.quran', href: '/dashboard/quran', icon: <FaQuran /> },
-        { labelKey: 'link.hadith', href: '/dashboard/hadith', icon: <ImBook /> },
-        { labelKey: 'link.search', href: '/dashboard/search', icon: <BsSearch /> },
+        {
+            labelKey: "link.dashboard",
+            href: "/dashboard",
+            icon: <BsBarChart />,
+        },
+        { labelKey: "link.quran", href: "/dashboard/quran", icon: <FaQuran /> },
+        {
+            labelKey: "link.hadith",
+            href: "/dashboard/hadith",
+            icon: <ImBook />,
+        },
+        {
+            labelKey: "link.search",
+            href: "/dashboard/search",
+            icon: <BsSearch />,
+        },
     ];
 
     return (
@@ -232,18 +434,20 @@ const DashboardLayout = ({ children }) => {
                 {/* Logo */}
                 <div
                     className={`border-b border-gray-100 dark:border-slate-800 ${
-                        isCollapsed ? 'p-3' : 'p-4'
+                        isCollapsed ? "p-3" : "p-4"
                     }`}
                 >
                     <Link
                         href='/dashboard'
                         title="Thullaabul 'Ilmi"
                         className={`flex items-center group ${
-                            isCollapsed ? 'justify-center' : 'gap-2.5'
+                            isCollapsed ? "justify-center" : "gap-2.5"
                         }`}
                     >
                         <div className='w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center shrink-0'>
-                            <span className='text-white text-xs font-bold'>ط</span>
+                            <span className='text-white text-xs font-bold'>
+                                ط
+                            </span>
                         </div>
                         {!isCollapsed && (
                             <div>
@@ -262,18 +466,20 @@ const DashboardLayout = ({ children }) => {
                 <div className='px-4 py-3 border-b border-gray-100 dark:border-slate-800'>
                     {isCollapsed ? (
                         <div
-                            title={user?.name ?? t('common.user')}
+                            title={user?.name ?? t("common.user")}
                             className='mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
                         >
-                            {(user?.name ?? t('common.user')).slice(0, 1).toUpperCase()}
+                            {(user?.name ?? t("common.user"))
+                                .slice(0, 1)
+                                .toUpperCase()}
                         </div>
                     ) : (
                         <>
                             <p className='text-sm font-medium text-gray-800 dark:text-white truncate'>
-                                {user?.name ?? t('common.user')}
+                                {user?.name ?? t("common.user")}
                             </p>
                             <p className='text-xs text-gray-400 dark:text-gray-500 truncate'>
-                                {user?.email ?? ''}
+                                {user?.email ?? ""}
                             </p>
                         </>
                     )}
@@ -283,17 +489,17 @@ const DashboardLayout = ({ children }) => {
                 <div className='px-3 pt-3'>
                     <Link
                         href='/dashboard'
-                        title={t('link.dashboard')}
+                        title={t("link.dashboard")}
                         className={`flex items-center py-2 rounded-lg text-sm font-medium transition-colors ${
-                            isCollapsed ? 'justify-center px-0' : 'gap-2.5 px-3'
+                            isCollapsed ? "justify-center px-0" : "gap-2.5 px-3"
                         } ${
-                            pathname === '/dashboard'
-                                ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'
-                                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'
+                            pathname === "/dashboard"
+                                ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400"
+                                : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white"
                         }`}
                     >
                         <BsBarChart className='shrink-0' />
-                        {!isCollapsed && <span>{t('link.dashboard')}</span>}
+                        {!isCollapsed && <span>{t("link.dashboard")}</span>}
                     </Link>
                 </div>
 
@@ -312,26 +518,32 @@ const DashboardLayout = ({ children }) => {
                                 {group.links.map((link) => {
                                     const isActive =
                                         pathname === link.href ||
-                                        (link.href !== '/' &&
-                                            pathname.startsWith(link.href + '/'));
+                                        (link.href !== "/" &&
+                                            pathname.startsWith(
+                                                link.href + "/",
+                                            ));
                                     return (
                                         <li key={link.href}>
                                             <Link
                                                 href={link.href}
                                                 title={t(link.labelKey)}
                                                 className={`flex items-center py-1.5 rounded-lg text-sm transition-colors ${
-                                                    isCollapsed ? 'justify-center px-0' : 'gap-2.5 px-3'
+                                                    isCollapsed
+                                                        ? "justify-center px-0"
+                                                        : "gap-2.5 px-3"
                                                 } ${
                                                     isActive
-                                                        ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-medium'
-                                                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'
+                                                        ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-medium"
+                                                        : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white"
                                                 }`}
                                             >
                                                 <span className='shrink-0 text-base'>
                                                     {link.icon}
                                                 </span>
                                                 {!isCollapsed && (
-                                                    <span className='truncate'>{t(link.labelKey)}</span>
+                                                    <span className='truncate'>
+                                                        {t(link.labelKey)}
+                                                    </span>
                                                 )}
                                             </Link>
                                         </li>
@@ -357,7 +569,11 @@ const DashboardLayout = ({ children }) => {
                             title={sidebarToggleLabel}
                             className='hidden md:inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors'
                         >
-                            {isCollapsed ? <BsChevronRight /> : <BsChevronLeft />}
+                            {isCollapsed ? (
+                                <BsChevronRight />
+                            ) : (
+                                <BsChevronLeft />
+                            )}
                         </button>
                         <Link
                             href='/dashboard'
@@ -365,7 +581,9 @@ const DashboardLayout = ({ children }) => {
                             aria-label="Thullaabul 'Ilmi"
                         >
                             <div className='w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center shrink-0'>
-                                <span className='text-white text-xs font-bold'>ط</span>
+                                <span className='text-white text-xs font-bold'>
+                                    ط
+                                </span>
                             </div>
                             <span className='text-sm font-bold text-gray-900 dark:text-white truncate'>
                                 Thullaabul &apos;Ilmi
@@ -381,19 +599,25 @@ const DashboardLayout = ({ children }) => {
                             className='flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors'
                         >
                             <div className='w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center shrink-0'>
-                                <span className='text-white text-[11px] font-semibold'>{initials}</span>
+                                <span className='text-white text-[11px] font-semibold'>
+                                    {initials}
+                                </span>
                             </div>
                             <span className='text-sm font-medium text-gray-700 dark:text-gray-200 max-w-[120px] truncate hidden sm:block'>
-                                {user?.name?.split(' ')[0] ?? t('common.user')}
+                                {user?.name?.split(" ")[0] ?? t("common.user")}
                             </span>
                             <svg
-                                className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-150 ${accountOpen ? 'rotate-180' : ''}`}
+                                className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-150 ${accountOpen ? "rotate-180" : ""}`}
                                 fill='none'
                                 viewBox='0 0 24 24'
                                 stroke='currentColor'
                                 strokeWidth={2.5}
                             >
-                                <path strokeLinecap='round' strokeLinejoin='round' d='M19 9l-7 7-7-7' />
+                                <path
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
+                                    d='M19 9l-7 7-7-7'
+                                />
                             </svg>
                         </button>
 
@@ -403,14 +627,16 @@ const DashboardLayout = ({ children }) => {
                                 <div className='px-4 py-3.5 border-b border-gray-100 dark:border-slate-700'>
                                     <div className='flex items-center gap-3'>
                                         <div className='w-9 h-9 rounded-full bg-emerald-700 flex items-center justify-center shrink-0'>
-                                            <span className='text-white text-sm font-semibold'>{initials}</span>
+                                            <span className='text-white text-sm font-semibold'>
+                                                {initials}
+                                            </span>
                                         </div>
                                         <div className='min-w-0'>
                                             <p className='text-sm font-semibold text-gray-900 dark:text-white truncate'>
-                                                {user?.name ?? t('common.user')}
+                                                {user?.name ?? t("common.user")}
                                             </p>
                                             <p className='text-xs text-gray-400 dark:text-gray-500 truncate'>
-                                                {user?.email ?? ''}
+                                                {user?.email ?? ""}
                                             </p>
                                         </div>
                                     </div>
@@ -422,7 +648,9 @@ const DashboardLayout = ({ children }) => {
                                         <Link
                                             key={item.href}
                                             href={item.href}
-                                            onClick={() => setAccountOpen(false)}
+                                            onClick={() =>
+                                                setAccountOpen(false)
+                                            }
                                             className='flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
                                         >
                                             <span className='text-base text-gray-400 dark:text-gray-500'>
@@ -438,18 +666,24 @@ const DashboardLayout = ({ children }) => {
                                 {/* Theme toggle */}
                                 <div className='px-4 py-2.5 flex items-center justify-between'>
                                     <span className='text-sm text-gray-700 dark:text-gray-300'>
-                                        {isDarkMode ? t('nav.dark') : t('nav.light')}
+                                        {isDarkMode
+                                            ? t("nav.dark")
+                                            : t("nav.light")}
                                     </span>
                                     <button
                                         type='button'
                                         onClick={toggleDark}
                                         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                                            isDarkMode ? 'bg-emerald-600' : 'bg-gray-200 dark:bg-slate-600'
+                                            isDarkMode
+                                                ? "bg-emerald-600"
+                                                : "bg-gray-200 dark:bg-slate-600"
                                         }`}
                                     >
                                         <span
                                             className={`inline-flex h-4 w-4 items-center justify-center rounded-full bg-white shadow transition-transform ${
-                                                isDarkMode ? 'translate-x-6' : 'translate-x-1'
+                                                isDarkMode
+                                                    ? "translate-x-6"
+                                                    : "translate-x-1"
                                             }`}
                                         >
                                             {isDarkMode ? (
@@ -470,14 +704,16 @@ const DashboardLayout = ({ children }) => {
                                             onClick={() => setLang(l)}
                                             className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                                                 lang === l
-                                                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
-                                                    : 'border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500'
+                                                    ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
+                                                    : "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500"
                                             }`}
                                         >
                                             <span className='inline-flex rounded-sm overflow-hidden ring-1 ring-gray-200 dark:ring-slate-600 leading-none'>
                                                 {ConvertFLagLanguage(l)}
                                             </span>
-                                            {l === 'ID' ? 'Indonesia' : 'English'}
+                                            {l === "ID"
+                                                ? "Indonesia"
+                                                : "English"}
                                         </button>
                                     ))}
                                 </div>
@@ -495,7 +731,7 @@ const DashboardLayout = ({ children }) => {
                                         className='flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
                                     >
                                         <MdLogout className='text-base' />
-                                        {t('nav.logout')}
+                                        {t("nav.logout")}
                                     </button>
                                 </div>
                             </div>
@@ -504,7 +740,7 @@ const DashboardLayout = ({ children }) => {
                 </header>
 
                 <AdminMutationToast />
-                <div className={isWide ? 'w-full' : 'max-w-5xl mx-auto'}>
+                <div className={isWide ? "w-full" : "max-w-5xl mx-auto"}>
                     {children}
                 </div>
 
@@ -512,7 +748,7 @@ const DashboardLayout = ({ children }) => {
                     <div className='md:hidden fixed inset-0 z-50'>
                         <button
                             type='button'
-                            aria-label={t('nav.close_menu')}
+                            aria-label={t("nav.close_menu")}
                             className='absolute inset-0 bg-slate-950/50'
                             onClick={() => setMobileMenuOpen(false)}
                         />
@@ -520,15 +756,15 @@ const DashboardLayout = ({ children }) => {
                             <div className='sticky top-0 z-10 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 px-4 py-3 flex items-center justify-between'>
                                 <div>
                                     <p className='text-sm font-semibold text-gray-900 dark:text-white'>
-                                        {t('nav.menu')}
+                                        {t("nav.menu")}
                                     </p>
                                     <p className='text-xs text-gray-400 dark:text-gray-500'>
-                                        {user?.name ?? t('common.user')}
+                                        {user?.name ?? t("common.user")}
                                     </p>
                                 </div>
                                 <button
                                     type='button'
-                                    aria-label={t('nav.close_menu')}
+                                    aria-label={t("nav.close_menu")}
                                     onClick={() => setMobileMenuOpen(false)}
                                     className='h-9 w-9 inline-flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800'
                                 >
@@ -545,20 +781,31 @@ const DashboardLayout = ({ children }) => {
                                             {group.links.map((link) => {
                                                 const isActive =
                                                     pathname === link.href ||
-                                                    (link.href !== '/' && pathname.startsWith(link.href + '/'));
+                                                    (link.href !== "/" &&
+                                                        pathname.startsWith(
+                                                            link.href + "/",
+                                                        ));
                                                 return (
                                                     <Link
                                                         key={link.href}
                                                         href={link.href}
-                                                        onClick={() => setMobileMenuOpen(false)}
+                                                        onClick={() =>
+                                                            setMobileMenuOpen(
+                                                                false,
+                                                            )
+                                                        }
                                                         className={`min-h-11 flex items-center gap-2 rounded-xl border px-3 py-2 text-sm transition-colors ${
                                                             isActive
-                                                                ? 'border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
-                                                                : 'border-gray-100 dark:border-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800'
+                                                                ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                                                                : "border-gray-100 dark:border-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800"
                                                         }`}
                                                     >
-                                                        <span className='text-base shrink-0'>{link.icon}</span>
-                                                        <span className='truncate'>{t(link.labelKey)}</span>
+                                                        <span className='text-base shrink-0'>
+                                                            {link.icon}
+                                                        </span>
+                                                        <span className='truncate'>
+                                                            {t(link.labelKey)}
+                                                        </span>
                                                     </Link>
                                                 );
                                             })}
@@ -575,34 +822,41 @@ const DashboardLayout = ({ children }) => {
                         {mobilePrimaryLinks.map((link) => {
                             const isActive =
                                 pathname === link.href ||
-                                (link.href !== '/dashboard' && pathname.startsWith(link.href + '/'));
+                                (link.href !== "/dashboard" &&
+                                    pathname.startsWith(link.href + "/"));
                             return (
                                 <Link
                                     key={link.href}
                                     href={link.href}
                                     className={`min-h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 text-[10px] transition-colors ${
                                         isActive
-                                            ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30'
-                                            : 'text-gray-500 dark:text-gray-400'
+                                            ? "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30"
+                                            : "text-gray-500 dark:text-gray-400"
                                     }`}
                                 >
-                                    <span className='text-base'>{link.icon}</span>
-                                    <span className='max-w-full px-1 truncate'>{t(link.labelKey)}</span>
+                                    <span className='text-base'>
+                                        {link.icon}
+                                    </span>
+                                    <span className='max-w-full px-1 truncate'>
+                                        {t(link.labelKey)}
+                                    </span>
                                 </Link>
                             );
                         })}
                         <button
                             type='button'
                             onClick={() => setMobileMenuOpen(true)}
-                            aria-label={t('nav.open_menu')}
+                            aria-label={t("nav.open_menu")}
                             className={`min-h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 text-[10px] transition-colors ${
                                 mobileMenuOpen
-                                    ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30'
-                                    : 'text-gray-500 dark:text-gray-400'
+                                    ? "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30"
+                                    : "text-gray-500 dark:text-gray-400"
                             }`}
                         >
                             <MdMenu className='text-lg' />
-                            <span className='max-w-full px-1 truncate'>{t('nav.menu')}</span>
+                            <span className='max-w-full px-1 truncate'>
+                                {t("nav.menu")}
+                            </span>
                         </button>
                     </div>
                 </nav>

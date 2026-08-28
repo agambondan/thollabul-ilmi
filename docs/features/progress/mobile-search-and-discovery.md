@@ -12,15 +12,15 @@ Quran, Hadis, Doa, Kajian, dan feature tanpa pindah-pindah tab.
 ## Scope
 
 - Mobile:
-  - global search
-  - pinned shortcut
-  - recently opened
-  - contextual shortcut di Beranda
-  - deep link dari hasil search ke detail yang benar
+    - global search
+    - pinned shortcut
+    - recently opened
+    - contextual shortcut di Beranda
+    - deep link dari hasil search ke detail yang benar
 - API:
-  - endpoint search existing tetap jadi sumber data utama
+    - endpoint search existing tetap jadi sumber data utama
 - Data:
-  - metadata hasil search perlu cukup untuk routing detail
+    - metadata hasil search perlu cukup untuk routing detail
 
 ## Current Baseline
 
@@ -60,24 +60,24 @@ Quran, Hadis, Doa, Kajian, dan feature tanpa pindah-pindah tab.
 - `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-mobile-global-search-polish-export`
   `PASS`.
 - Device/API smoke 2026-05-14:
-  - `curl 'http://localhost:9900/api/v1/search?q=shalat&type=all&limit=18'`
-    `HTTP 200`; runtime API aktif masih mengembalikan shape legacy top-level
-    `ayahs/hadiths/...`, dan mobile client sudah menormalisasi shape legacy
-    maupun wrapped `data`.
-  - Deep link `exp://10.13.55.208:19007/--/search?q=shalat` membuka screen
-    Cari tanpa fatal/redbox/network error pada logcat snapshot.
-  - Screenshot evidence: `/tmp/thollabul-smoke/search-2026-05-14.png`.
+    - `curl 'http://localhost:9900/api/v1/search?q=shalat&type=all&limit=18'`
+      `HTTP 200`; runtime API aktif masih mengembalikan shape legacy top-level
+      `ayahs/hadiths/...`, dan mobile client sudah menormalisasi shape legacy
+      maupun wrapped `data`.
+    - Deep link `exp://10.13.55.208:19007/--/search?q=shalat` membuka screen
+      Cari tanpa fatal/redbox/network error pada logcat snapshot.
+    - Screenshot evidence: `/tmp/thollabul-smoke/search-2026-05-14.png`.
 - Smoke klik hasil source selain Quran masih perlu sentuhan manual di device
   karena ADB input otomatis diblokir MIUI.
 - Fix count mismatch `sabar` 2026-05-14:
-  - Runtime API terbukti berbeda karena `type=all` mengembalikan Quran `6`,
-    sedangkan `type=ayah` mengembalikan Quran `24` untuk query `sabar`.
-  - `GlobalSearchScreen` sekarang saat filter `Semua` tetap mengambil hasil
-    global, tetapi menghidrasi hasil Quran dengan request `type=ayah` sehingga
-    angka `Quran` tidak berubah dari 6 ke 24 saat user pindah tab.
-  - `node --check apps/mobile/src/screens/GlobalSearchScreen.js` `PASS`.
-  - `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-mobile-search-sabar-count-export`
-    `PASS`.
+    - Runtime API terbukti berbeda karena `type=all` mengembalikan Quran `6`,
+      sedangkan `type=ayah` mengembalikan Quran `24` untuk query `sabar`.
+    - `GlobalSearchScreen` sekarang saat filter `Semua` tetap mengambil hasil
+      global, tetapi menghidrasi hasil Quran dengan request `type=ayah` sehingga
+      angka `Quran` tidak berubah dari 6 ke 24 saat user pindah tab.
+    - `node --check apps/mobile/src/screens/GlobalSearchScreen.js` `PASS`.
+    - `cd apps/mobile && npx expo export --platform android --dev --output-dir /tmp/thollabul-mobile-search-sabar-count-export`
+      `PASS`.
 
 ## Source of Truth
 

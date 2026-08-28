@@ -22,18 +22,18 @@ Rombak desain mobile agar konsisten dengan visual Paper, tetapi mengikuti rule b
 Checklist ini berlaku untuk setiap screen yang dirombak:
 
 - [x] Tidak ada text user-facing dengan font minimal 8px maksimal 20px.
-  - Tidak ada fontSize < 8. Display numbers > 20px (tasbih `64`, qibla `34`, prayer time `26`) adalah visual exception yang disengaja.
+    - Tidak ada fontSize < 8. Display numbers > 20px (tasbih `64`, qibla `34`, prayer time `26`) adalah visual exception yang disengaja.
 - [x] Tidak ada data fallback/dummy yang ditampilkan sebagai konten asli.
-  - Phase 1: `fallback.js` dihapus, semua fallback lokasi/audio/ayah diganti empty state.
+    - Phase 1: `fallback.js` dihapus, semua fallback lokasi/audio/ayah diganti empty state.
 - [x] Empty/error state jelas: jelaskan data gagal dimuat atau perlu izin/lokasi/login.
 - [x] Header, spacing, card shape, dan tab pattern konsisten dengan Paper reference.
-  - Semua screen pakai `Screen`, `Card`, `CardTitle`, `SubScreen`, `TabBar` dari Phase 0.
+    - Semua screen pakai `Screen`, `Card`, `CardTitle`, `SubScreen`, `TabBar` dari Phase 0.
 - [x] Layar tidak menumpuk fitur berbeda dalam scroll panjang.
-  - Prayer: main vs settings sub-page. Profile: push/pop stack. Hadith: tab Teks/Sanad/Perawi/Takhrij/Catatan.
+    - Prayer: main vs settings sub-page. Profile: push/pop stack. Hadith: tab Teks/Sanad/Perawi/Takhrij/Catatan.
 - [x] Input form aman dari keyboard, validasi jelas, dan format angka/waktu ramah user.
-  - `Screen` wrap `KeyboardAvoidingView`. Zakat/Faraidh punya `keyboardType="numeric"` + `formatNumericInput`. NotificationCenter validasi HH:MM.
+    - `Screen` wrap `KeyboardAvoidingView`. Zakat/Faraidh punya `keyboardType="numeric"` + `formatNumericInput`. NotificationCenter validasi HH:MM.
 - [x] Loading, disabled, offline, dan auth state punya UI yang eksplisit.
-  - Semua screen punya `loading` state + ActivityIndicator atau text placeholder. Auth check `!user` di tiap fitur personal. Offline state di Prayer/Qibla dengan manual location input.
+    - Semua screen punya `loading` state + ActivityIndicator atau text placeholder. Auth check `!user` di tiap fitur personal. Offline state di Prayer/Qibla dengan manual location input.
 - [x] Smoke test web export dan doctor hijau sebelum task dianggap selesai.
 
 > Status 2026-05-06: Design contract sudah mulai diterapkan sebagai fondasi shared,
@@ -46,15 +46,15 @@ Checklist ini berlaku untuk setiap screen yang dirombak:
 ## Phase 0 - Foundation
 
 - [x] Buat shared `PaperScreen`/update `Screen` untuk standar padding, header, search slot, action icon slot.
-  - File: `apps/mobile/src/components/Screen.js`
+    - File: `apps/mobile/src/components/Screen.js`
 - [x] Buat shared list row/card primitives: compact row, section header, segmented tabs, empty state, error state.
-  - File: `apps/mobile/src/components/`
+    - File: `apps/mobile/src/components/`
 - [x] Standarkan token design Paper: color, radius, shadow, typography, tab bar contrast.
-  - File: `apps/mobile/src/theme.js`, `apps/mobile/src/components/TabBar.js`
+    - File: `apps/mobile/src/theme.js`, `apps/mobile/src/components/TabBar.js`
 - [x] Audit semua text teknis di `apps/mobile/src` dan ganti copy user-facing.
 - [x] Pastikan semua screen memakai icon action dari `lucide-react-native`.
 - [x] Tambahkan route/view state sederhana untuk sub-page internal tanpa menambah tab utama.
-  - File: `apps/mobile/App.js`
+    - File: `apps/mobile/App.js`
 
 > Phase 0 selesai pada 2026-05-06. Catatan scope: audit copy teknis hanya
 > berlaku untuk teks user-facing; identifier internal seperti `endpoint`,
@@ -66,48 +66,48 @@ Checklist ini berlaku untuk setiap screen yang dirombak:
 
 - [x] Hapus `apps/mobile/src/data/fallback.js`.
 - [x] Bersihkan import fallback di API client.
-  - File: `apps/mobile/src/api/client.js`
+    - File: `apps/mobile/src/api/client.js`
 - [x] Ganti fallback ayah Home dengan endpoint real daily ayah atau empty state.
-  - File: `apps/mobile/src/screens/HomeScreen.js`, `apps/mobile/src/api/client.js`
+    - File: `apps/mobile/src/screens/HomeScreen.js`, `apps/mobile/src/api/client.js`
 - [x] Ganti fallback lokasi Jakarta dengan flow izin lokasi + opsi pilih lokasi manual.
-  - File: `apps/mobile/src/screens/HomeScreen.js`, `apps/mobile/src/screens/PrayerScreen.js`, `apps/mobile/src/screens/QiblaScreen.js`
+    - File: `apps/mobile/src/screens/HomeScreen.js`, `apps/mobile/src/screens/PrayerScreen.js`, `apps/mobile/src/screens/QiblaScreen.js`
 - [x] Hapus audio fallback EveryAyah; jika backend kosong, tampilkan "Audio belum tersedia".
-  - File: `apps/mobile/src/api/client.js`, `apps/mobile/src/screens/QuranScreen.js`
+    - File: `apps/mobile/src/api/client.js`, `apps/mobile/src/screens/QuranScreen.js`
 - [x] Refactor Quran ayah render dari `.map()` dalam `ScrollView` ke `FlatList`.
-  - File: `apps/mobile/src/screens/QuranScreen.js`
+    - File: `apps/mobile/src/screens/QuranScreen.js`
 - [x] Batasi offline hadith download dan tambahkan guardrail ukuran/konfirmasi.
-  - File: `apps/mobile/src/storage/offlineContent.native.js`, `apps/mobile/src/components/OfflinePackCard.js`
-  - Status 2026-05-07: paket offline sekarang bisa dipilih per modul. Al-Quran dapat diunduh penuh, sedangkan Hadis diunduh per kitab yang dipilih user.
+    - File: `apps/mobile/src/storage/offlineContent.native.js`, `apps/mobile/src/components/OfflinePackCard.js`
+    - Status 2026-05-07: paket offline sekarang bisa dipilih per modul. Al-Quran dapat diunduh penuh, sedangkan Hadis diunduh per kitab yang dipilih user.
 - [x] Tambahkan pagination/infinite load untuk tab Hadis dan prioritaskan data Hadis yang sudah diunduh.
-  - File: `apps/mobile/src/screens/HadithScreen.js`, `apps/mobile/src/api/client.js`, `apps/mobile/src/components/Screen.js`
-  - Status 2026-05-07: tab Hadis memakai SQLite offline pack jika tersedia; jika tidak, request backend `page=0` lalu auto-load `page=1+` saat scroll mendekati bawah.
+    - File: `apps/mobile/src/screens/HadithScreen.js`, `apps/mobile/src/api/client.js`, `apps/mobile/src/components/Screen.js`
+    - Status 2026-05-07: tab Hadis memakai SQLite offline pack jika tersedia; jika tidak, request backend `page=0` lalu auto-load `page=1+` saat scroll mendekati bawah.
 - [x] Tambahkan pagination/load-more untuk Explore list.
-  - File: `apps/mobile/src/screens/ExploreScreen.js`, `apps/mobile/src/api/explore.js`
+    - File: `apps/mobile/src/screens/ExploreScreen.js`, `apps/mobile/src/api/explore.js`
 
 ---
 
 ## Phase 2 - App Shell & Navigation
 
 - [x] Pastikan tab utama tetap 5: Beranda, Quran, Ibadah, Ilmu, Profil.
-  - File: `apps/mobile/src/components/TabBar.js`
+    - File: `apps/mobile/src/components/TabBar.js`
 - [x] Tambahkan internal navigation stack/view state untuk halaman detail:
-  - Quran reader detail
-  - Hadith detail
-  - Prayer settings
-  - Profile settings
-  - Explore feature detail
-  - File: `apps/mobile/App.js`
+    - Quran reader detail
+    - Hadith detail
+    - Prayer settings
+    - Profile settings
+    - Explore feature detail
+    - File: `apps/mobile/App.js`
 - [x] Gunakan pola Paper floating tab bar, tetapi soft contrast.
-  - File: `apps/mobile/src/components/TabBar.js`, `apps/mobile/src/theme.js`
+    - File: `apps/mobile/src/components/TabBar.js`, `apps/mobile/src/theme.js`
 - [x] Tambahkan auto-hide bottom tab seperti taskbar desktop dan ubah warna aktif menjadi netral paper/ink.
-  - File: `apps/mobile/src/components/TabBar.js`
-  - Screenshot: `output/playwright/mobile-tabbar-autohide-neutral.png`
-  - Updated 2026-05-07: hidden tab tidak punya handle/touch target lagi; tab muncul saat user scroll dan hide lagi saat idle agar tidak bentrok dengan gesture Android.
-  - Native screenshot: `output/native/android-tabbar-idle-after-scroll-hidden.png`
+    - File: `apps/mobile/src/components/TabBar.js`
+    - Screenshot: `output/playwright/mobile-tabbar-autohide-neutral.png`
+    - Updated 2026-05-07: hidden tab tidak punya handle/touch target lagi; tab muncul saat user scroll dan hide lagi saat idle agar tidak bentrok dengan gesture Android.
+    - Native screenshot: `output/native/android-tabbar-idle-after-scroll-hidden.png`
 - [x] Pertahankan state per tab saat berpindah tab.
-  - File: `apps/mobile/App.js`
+    - File: `apps/mobile/App.js`
 - [x] Standardisasi back button icon/action, bukan text panjang.
-  - File: `apps/mobile/src/screens/*.js`
+    - File: `apps/mobile/src/screens/*.js`
 
 ---
 
@@ -116,12 +116,12 @@ Checklist ini berlaku untuk setiap screen yang dirombak:
 ### Home / Beranda
 
 - [x] Ubah layout menjadi dashboard ringkas Paper:
-  - profile header
-  - next prayer card
-  - 8 shortcut icon grid
-  - daily reading card
-  - journal card
-  - File: `apps/mobile/src/screens/HomeScreen.js`
+    - profile header
+    - next prayer card
+    - 8 shortcut icon grid
+    - daily reading card
+    - journal card
+    - File: `apps/mobile/src/screens/HomeScreen.js`
 - [x] Hapus semua fallback data harian.
 - [x] Search icon langsung fokus ke input pencarian kamus.
 - [x] Notification icon langsung buka notification center.
@@ -131,7 +131,7 @@ Checklist ini berlaku untuk setiap screen yang dirombak:
 ### Quran
 
 - [x] Pertahankan Paper list: title serif, search bar, Surah/Hafalan/Murojaah segmented tabs, diamond number.
-  - File: `apps/mobile/src/screens/QuranScreen.js`
+    - File: `apps/mobile/src/screens/QuranScreen.js`
 - [x] Gunakan `FlatList` untuk daftar surah dan daftar ayat.
 - [x] Pisah reader ayat ke view detail agar list tidak berat.
 - [x] Hafalan tab menjadi workflow nyata: pilih surah, ayat awal/akhir, status, lanjutkan progress.
@@ -139,16 +139,16 @@ Checklist ini berlaku untuk setiap screen yang dirombak:
 - [x] Empty state jika ayat/audio/tafsir belum tersedia dari backend.
 - [x] Hindari render ratusan ayat sekaligus.
 - [x] Pindahkan aksi per ayat ke menu titik tiga/bottom sheet agar reader fokus baca.
-  - File: `apps/mobile/src/screens/QuranScreen.js`
+    - File: `apps/mobile/src/screens/QuranScreen.js`
 - [x] Jadikan Model Tampilan Mushaf lebih nyata:
-  - Terjemah: Arab + latin + arti.
-  - Fokus: Arab dominan tanpa latin/terjemah.
-  - Mushaf: framing halaman, header mushaf, nomor ayat, dan Arab full.
+    - Terjemah: Arab + latin + arti.
+    - Fokus: Arab dominan tanpa latin/terjemah.
+    - Mushaf: framing halaman, header mushaf, nomor ayat, dan Arab full.
 
 ### Ibadah / Prayer
 
 - [x] Layar utama hanya menampilkan jadwal hari ini + log sholat.
-  - File: `apps/mobile/src/screens/PrayerScreen.js`
+    - File: `apps/mobile/src/screens/PrayerScreen.js`
 - [x] Pindahkan manual correction ke sub-page "Prayer Settings".
 - [x] Pindahkan reminder/offline pack ke sub-page/settings.
 - [x] Tambahkan lokasi manual jika GPS ditolak.
@@ -159,7 +159,7 @@ Checklist ini berlaku untuk setiap screen yang dirombak:
 ### Qibla
 
 - [x] Pertahankan compass visual, tetapi buat status permission/lokasi lebih jelas.
-  - File: `apps/mobile/src/screens/QiblaScreen.js`
+    - File: `apps/mobile/src/screens/QiblaScreen.js`
 - [x] Hapus fallback Jakarta sebagai arah default.
 - [x] Tambahkan CTA pilih lokasi manual atau retry permission.
 - [x] Gunakan icon action untuk refresh/back.
@@ -168,12 +168,12 @@ Checklist ini berlaku untuk setiap screen yang dirombak:
 ### Hadith
 
 - [x] Pecah detail hadith menjadi section/tab internal:
-  - Text
-  - Sanad
-  - Narrators
-  - Takhrij
-  - Notes
-  - File: `apps/mobile/src/screens/HadithScreen.js`
+    - Text
+    - Sanad
+    - Narrators
+    - Takhrij
+    - Notes
+    - File: `apps/mobile/src/screens/HadithScreen.js`
 - [x] Jangan render semua detail panjang dalam satu scroll.
 - [x] Narrator detail masuk panel/sub-view khusus, bukan inline panjang.
 - [x] Guru/murid tetap punya show all/show less.
@@ -183,12 +183,12 @@ Checklist ini berlaku untuk setiap screen yang dirombak:
 ### Ilmu / Explore
 
 - [x] Ubah Explore menjadi katalog modular Paper:
-  - group tabs
-  - compact feature grid
-  - feature detail view
-  - File: `apps/mobile/src/screens/ExploreScreen.js`
+    - group tabs
+    - compact feature grid
+    - feature detail view
+    - File: `apps/mobile/src/screens/ExploreScreen.js`
 - [x] Dinamiskan Tafsir & Asbabun Nuzul, jangan hardcode `/surah/1`.
-  - File: `apps/mobile/src/data/mobileFeatures.js`, `apps/mobile/src/screens/ExploreScreen.js`
+    - File: `apps/mobile/src/data/mobileFeatures.js`, `apps/mobile/src/screens/ExploreScreen.js`
 - [x] Tambahkan selector surah untuk tafsir/asbabun nuzul.
 - [x] Tambahkan pagination/load more untuk semua list.
 - [x] Kuis tetap render pilihan jawaban penuh.
@@ -198,11 +198,11 @@ Checklist ini berlaku untuk setiap screen yang dirombak:
 ### Profile
 
 - [x] Profile utama hanya berisi summary user, points/streak, shortcut penting.
-  - File: `apps/mobile/src/screens/ProfileScreen.js`
+    - File: `apps/mobile/src/screens/ProfileScreen.js`
 - [x] Settings icon masuk ke sub-page Settings list.
 - [x] Settings detail dipisah: Account, Language, Notifications, Offline, Cache, Security.
 - [x] SessionCard tetap punya Sign In, Register, Forgot Password.
-  - File: `apps/mobile/src/components/SessionCard.js`
+    - File: `apps/mobile/src/components/SessionCard.js`
 - [x] Hapus dead-link; semua menu harus navigate, disabled jelas, atau hidden.
 - [x] Hindari menumpuk offline/cache/auth/menu panjang dalam satu layar.
 
@@ -213,7 +213,7 @@ Checklist ini berlaku untuk setiap screen yang dirombak:
 ### Notification Center
 
 - [x] Jadikan notification center sub-page dari Profile/Explore, bukan card panjang.
-  - File: `apps/mobile/src/components/NotificationCenter.js`
+    - File: `apps/mobile/src/components/NotificationCenter.js`
 - [x] Native time picker untuk mobile, fallback HH:MM hanya untuk web.
 - [x] Tambahkan validasi format waktu untuk web.
 - [x] Pisahkan Settings dan Inbox dengan segmented tabs.
@@ -221,17 +221,17 @@ Checklist ini berlaku untuk setiap screen yang dirombak:
 ### Offline Pack & Cache
 
 - [x] Offline pack hanya untuk Quran/Hadith dan konten yang jarang berubah.
-  - File: `apps/mobile/src/components/OfflinePackCard.js`
+    - File: `apps/mobile/src/components/OfflinePackCard.js`
 - [x] Tambahkan estimasi ukuran download sebelum mulai.
 - [x] Tambahkan konfirmasi untuk download besar dan clear data.
 - [x] Hilangkan cache/fallback konten mobile; data offline hanya lewat paket yang user unduh.
-  - File: `apps/mobile/src/components/OfflinePackCard.js`, `apps/mobile/src/storage/offlineContent.native.js`
-  - Catatan status: paket utama menyimpan pilihan Quran/Hadith; prayer pack tetap punya kontrol offline terpisah.
+    - File: `apps/mobile/src/components/OfflinePackCard.js`, `apps/mobile/src/storage/offlineContent.native.js`
+    - Catatan status: paket utama menyimpan pilihan Quran/Hadith; prayer pack tetap punya kontrol offline terpisah.
 
 ### Notes & Bookmarks
 
 - [x] Notes panel punya compact composer dan list yang tidak memanjang tanpa batas.
-  - File: `apps/mobile/src/components/NotesPanel.js`
+    - File: `apps/mobile/src/components/NotesPanel.js`
 - [x] Bookmark row menampilkan sumber dan action buka sumber.
 - [x] Notes/Bookmarks tidak muncul sebagai fallback kosong palsu.
 
@@ -243,24 +243,24 @@ Checklist ini berlaku untuk setiap screen yang dirombak:
 - [x] `npx expo export --platform web` pass.
 - [x] `git diff --check -- apps/mobile` clean.
 - [x] Screenshot smoke desktop/mobile web untuk:
-  - Home
-  - Quran list
-  - Quran reader long surah
-  - Prayer main
-  - Prayer settings
-  - Hadith detail tabs
-  - Explore feature detail
-  - Profile settings
-  - Konvensi penyimpanan: simpan evidence per tanggal di folder `output/playwright/YYYY-MM-DD/` (web) dan `output/native/YYYY-MM-DD/` (native).
+    - Home
+    - Quran list
+    - Quran reader long surah
+    - Prayer main
+    - Prayer settings
+    - Hadith detail tabs
+    - Explore feature detail
+    - Profile settings
+    - Konvensi penyimpanan: simpan evidence per tanggal di folder `output/playwright/YYYY-MM-DD/` (web) dan `output/native/YYYY-MM-DD/` (native).
 - [x] Manual native check untuk:
-  - Keyboard behavior
-  - Native time picker
-  - Location permission
-  - Compass unavailable state
-  - Offline pack guardrail
-  - Passed 2026-05-08 (device `985c2f0e`): interaksi form/permission tervalidasi dengan ADB tap + screenshot.
-  - Evidence manual checks: `output/native/2026-05-08/manual-checks/01-keyboard-global-search.png`, `02-location-permission-prompt.png`, `03-offline-download-confirm.png`, `10-native-time-picker-open.png`, `11-storage-before-clear.png`.
-  - Compass unavailable fallback: state Qibla tetap aman di jalur fallback (no crash + status card render) pada `output/native/2026-05-08/android-native-smoke-qibla-2026-05-08.png`.
+    - Keyboard behavior
+    - Native time picker
+    - Location permission
+    - Compass unavailable state
+    - Offline pack guardrail
+    - Passed 2026-05-08 (device `985c2f0e`): interaksi form/permission tervalidasi dengan ADB tap + screenshot.
+    - Evidence manual checks: `output/native/2026-05-08/manual-checks/01-keyboard-global-search.png`, `02-location-permission-prompt.png`, `03-offline-download-confirm.png`, `10-native-time-picker-open.png`, `11-storage-before-clear.png`.
+    - Compass unavailable fallback: state Qibla tetap aman di jalur fallback (no crash + status card render) pada `output/native/2026-05-08/android-native-smoke-qibla-2026-05-08.png`.
 
 ---
 

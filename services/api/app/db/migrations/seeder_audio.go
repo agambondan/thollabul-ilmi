@@ -125,7 +125,8 @@ func SeedAudioFromCDN(db *gorm.DB) {
 func seedSurahAudioForQari(db *gorm.DB, surahs *[]struct {
 	ID     int
 	Number int
-}, q qariInfo) {
+}, q qariInfo,
+) {
 	log.Printf("[seeder] surah audio: %s (%s)", q.Name, q.Slug)
 	for _, s := range *surahs {
 		row := model.SurahAudio{
@@ -145,7 +146,8 @@ func seedAyahAudioForQari(db *gorm.DB, ayahs *[]struct {
 	ID          int
 	Number      int
 	SurahNumber int
-}, q qariInfo) {
+}, q qariInfo,
+) {
 	log.Printf("[seeder] ayah audio: %s (%s) — %d ayah", q.Name, q.Slug, len(*ayahs))
 	batchSize := 100
 	for i := 0; i < len(*ayahs); i += batchSize {

@@ -255,7 +255,6 @@ func collectTargetIDs(db *gorm.DB) []int {
 		"SELECT translation_id FROM dzikir WHERE translation_id IS NOT NULL",
 		"SELECT translation_id FROM manasik_step WHERE translation_id IS NOT NULL",
 		"SELECT translation_id FROM sholat_guide WHERE translation_id IS NOT NULL",
-		"SELECT translation_id FROM tahlil_item WHERE translation_id IS NOT NULL",
 		"SELECT translation_id FROM asbabun_nuzul WHERE translation_id IS NOT NULL",
 		"SELECT translation_id FROM fiqh_category WHERE translation_id IS NOT NULL",
 		"SELECT translation_id FROM fiqh_item WHERE translation_id IS NOT NULL",

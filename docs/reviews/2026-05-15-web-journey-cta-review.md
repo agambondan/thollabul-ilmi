@@ -16,16 +16,16 @@ tetapi jangan sampai dashboard berubah menjadi sitemap kedua dari seluruh app.
 
 ## Ringkasan Prioritas
 
-| Priority | Area | Temuan |
-|---|---|---|
-| P0 | Landing -> auth -> personal feature | CTA fitur personal mengarah ke route publik/login tanpa menjaga intent awal user. |
-| P0 | Forum/dashboard | CTA `Tanya` dari dashboard keluar ke public forum dan user unauthenticated tidak punya CTA login. |
-| P1 | Dashboard customer | Beberapa kartu statistik terlihat clickable, tapi hanya sebagian yang benar-benar bisa diklik. |
-| P1 | Dashboard customer | Navigasi dashboard terlalu bercampur antara personal tooling dan global content browsing. |
-| P1 | Admin dashboard | Admin cards hanya navigasi modul, bukan entry point tugas utama seperti create/review draft. |
-| P1 | Admin CRUD | Icon-only edit/delete/add banyak yang tidak punya label eksplisit/aria dan beberapa delete terlalu dekat dengan aksi edit. |
-| P2 | Dashboard interaction | Beberapa surface clickable memakai `li/div onClick`, bukan `button`/`Link`, sehingga keyboard journey lemah. |
-| P2 | Form CTA | Beberapa submit flow tidak cek `res.ok`, sehingga CTA bisa terlihat berhasil padahal backend menolak. |
+| Priority | Area                                | Temuan                                                                                                                     |
+| -------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| P0       | Landing -> auth -> personal feature | CTA fitur personal mengarah ke route publik/login tanpa menjaga intent awal user.                                          |
+| P0       | Forum/dashboard                     | CTA `Tanya` dari dashboard keluar ke public forum dan user unauthenticated tidak punya CTA login.                          |
+| P1       | Dashboard customer                  | Beberapa kartu statistik terlihat clickable, tapi hanya sebagian yang benar-benar bisa diklik.                             |
+| P1       | Dashboard customer                  | Navigasi dashboard terlalu bercampur antara personal tooling dan global content browsing.                                  |
+| P1       | Admin dashboard                     | Admin cards hanya navigasi modul, bukan entry point tugas utama seperti create/review draft.                               |
+| P1       | Admin CRUD                          | Icon-only edit/delete/add banyak yang tidak punya label eksplisit/aria dan beberapa delete terlalu dekat dengan aksi edit. |
+| P2       | Dashboard interaction               | Beberapa surface clickable memakai `li/div onClick`, bukan `button`/`Link`, sehingga keyboard journey lemah.               |
+| P2       | Form CTA                            | Beberapa submit flow tidak cek `res.ok`, sehingga CTA bisa terlihat berhasil padahal backend menolak.                      |
 
 ---
 
@@ -79,9 +79,9 @@ Impact:
 Recommendation:
 
 - Hero CTA adaptif:
-  - guest: `Mulai Personal Tracker` -> `/auth/register?next=/dashboard`
-  - logged-in: `Lanjutkan Dashboard` -> `/dashboard`
-  - secondary tetap `Baca Quran`.
+    - guest: `Mulai Personal Tracker` -> `/auth/register?next=/dashboard`
+    - logged-in: `Lanjutkan Dashboard` -> `/dashboard`
+    - secondary tetap `Baca Quran`.
 - Final CTA tetap register, tetapi gunakan `next=/dashboard` agar journey
   setelah signup/login tidak terputus.
 
@@ -102,9 +102,9 @@ Impact:
 Recommendation:
 
 - Pisahkan landing feature groups menjadi:
-  - `Bisa Dibaca Langsung`
-  - `Butuh Akun / Personal Tracker`
-  - `Tools Harian`
+    - `Bisa Dibaca Langsung`
+    - `Butuh Akun / Personal Tracker`
+    - `Tools Harian`
 - Tambahkan microcopy/badge pada personal cards: `Sinkron akun`, `Perlu login`,
   atau `Tersimpan di dashboard`.
 
@@ -123,8 +123,8 @@ Impact:
 Recommendation:
 
 - Ubah CTA menjadi:
-  - `Kelola Bookmark` jika target `/dashboard/bookmarks`
-  - `Baca Hadis & Bookmark` jika target `/hadith`
+    - `Kelola Bookmark` jika target `/dashboard/bookmarks`
+    - `Baca Hadis & Bookmark` jika target `/hadith`
 
 ---
 
@@ -150,10 +150,10 @@ Impact:
 Recommendation:
 
 - Sidebar dashboard dibagi lebih tegas:
-  - `Hari Ini`: sholat tracker, tilawah, muhasabah, goals, notifications.
-  - `Progress Saya`: hafalan, muroja'ah, khatam, stats, achievements.
-  - `Simpanan Saya`: bookmarks, notes, wirid custom.
-  - `Referensi`: Quran, Hadith, Tafsir, Doa, dst sebagai secondary group.
+    - `Hari Ini`: sholat tracker, tilawah, muhasabah, goals, notifications.
+    - `Progress Saya`: hafalan, muroja'ah, khatam, stats, achievements.
+    - `Simpanan Saya`: bookmarks, notes, wirid custom.
+    - `Referensi`: Quran, Hadith, Tafsir, Doa, dst sebagai secondary group.
 - Quick access di dashboard utama sebaiknya personal-first, bukan content-first.
 
 ### P1. Kartu Statistik Dashboard Tidak Konsisten Clickability-nya
@@ -174,10 +174,10 @@ Impact:
 Recommendation:
 
 - Jadikan semua stat cards clickable:
-  - prayer `-> /dashboard/sholat-tracker`
-  - goals `-> /dashboard/goals`
-  - bookmarks `-> /dashboard/bookmarks`
-  - streak `-> /dashboard/stats`
+    - prayer `-> /dashboard/sholat-tracker`
+    - goals `-> /dashboard/goals`
+    - bookmarks `-> /dashboard/bookmarks`
+    - streak `-> /dashboard/stats`
 - Atau jadikan semua non-clickable dan sediakan CTA eksplisit di bawah tiap
   section.
 
@@ -237,8 +237,8 @@ Recommendation:
 
 - `ForumListContent` perlu menerima `basePath`.
 - Dari dashboard gunakan:
-  - ask `-> /dashboard/forum/ask`
-  - detail `-> /dashboard/forum/:slug`
+    - ask `-> /dashboard/forum/ask`
+    - detail `-> /dashboard/forum/:slug`
 - Jika forum memang public/community global, jangan taruh sebagai core customer
   dashboard item. Taruh sebagai secondary global link.
 
@@ -259,8 +259,8 @@ Impact:
 Recommendation:
 
 - Tambahkan CTA:
-  - `Login untuk Bertanya` -> `/auth/login?next=/forum/ask`
-  - `Buat Akun` -> `/auth/register?next=/forum/ask`
+    - `Login untuk Bertanya` -> `/auth/login?next=/forum/ask`
+    - `Buat Akun` -> `/auth/register?next=/forum/ask`
 
 ### P2. Notification Cards Mark Read Tapi Tidak Menjalankan Action
 
@@ -279,9 +279,9 @@ Impact:
 Recommendation:
 
 - Notification item harus punya primary CTA sesuai type:
-  - sholat `Catat Sholat` -> `/dashboard/sholat-tracker`
-  - muhasabah `Tulis Muhasabah` -> `/dashboard/muhasabah`
-  - tilawah `Catat Tilawah` -> `/dashboard/tilawah`
+    - sholat `Catat Sholat` -> `/dashboard/sholat-tracker`
+    - muhasabah `Tulis Muhasabah` -> `/dashboard/muhasabah`
+    - tilawah `Catat Tilawah` -> `/dashboard/tilawah`
 - Mark read bisa jadi secondary action/icon.
 
 ### P2. Clickable `li/div` Melemahkan Keyboard Journey
@@ -319,9 +319,9 @@ Impact:
 Recommendation:
 
 - Ubah label aksi menjadi eksplisit:
-  - `Tandai Dipelajari`
-  - `Tandai Hafal`
-  - `Reset Status`
+    - `Tandai Dipelajari`
+    - `Tandai Hafal`
+    - `Reset Status`
 - Atau pakai dropdown/segmented control status.
 
 ---
@@ -346,11 +346,11 @@ Impact:
 Recommendation:
 
 - Admin dashboard perlu task cards:
-  - `Tulis Artikel Baru`
-  - `Review Draft`
-  - `Tambah Konten Doa/Dzikir`
-  - `Kelola User & Role`
-  - `Cek Konten Terbaru`
+    - `Tulis Artikel Baru`
+    - `Review Draft`
+    - `Tambah Konten Doa/Dzikir`
+    - `Kelola User & Role`
+    - `Cek Konten Terbaru`
 - Module cards tidak perlu tampil di dashboard utama jika sidebar admin sudah
   menjadi navigasi modul.
 
@@ -377,10 +377,10 @@ Impact:
 Recommendation:
 
 - Kelompokkan sidebar:
-  - `Konten`: blog, siroh, kajian, sejarah
-  - `Ibadah`: doa, dzikir, wirid, tahlil, manasik, fiqh
-  - `Data Referensi`: kamus, asmaul husna, asbabun nuzul, quiz
-  - `Access`: users
+    - `Konten`: blog, siroh, kajian, sejarah
+    - `Ibadah`: doa, dzikir, wirid, tahlil, manasik, fiqh
+    - `Data Referensi`: kamus, asmaul husna, asbabun nuzul, quiz
+    - `Access`: users
 
 Implementation note:
 
@@ -412,9 +412,9 @@ Impact:
 Recommendation:
 
 - Tambahkan `aria-label` dan `title` yang spesifik:
-  - `Edit artikel: {title}`
-  - `Hapus artikel: {title}`
-  - `Tambah kategori`
+    - `Edit artikel: {title}`
+    - `Hapus artikel: {title}`
+    - `Tambah kategori`
 - Pertimbangkan action menu per row untuk destructive action.
 
 Implementation note:
@@ -510,8 +510,8 @@ Impact:
 Recommendation:
 
 - Tambahkan breadcrumb/header action:
-  - `Blog / Artikel Baru`
-  - Back link `Kembali ke Blog`
+    - `Blog / Artikel Baru`
+    - Back link `Kembali ke Blog`
 - Pastikan Cancel tetap terlihat di atas untuk form panjang.
 
 Implementation note:
@@ -546,15 +546,15 @@ Recommendation:
 
 Gunakan pola ini supaya label CTA sesuai fungsi:
 
-| Intent | Label CTA | Target |
-|---|---|---|
-| Membaca konten publik | `Baca Quran`, `Baca Hadis`, `Lihat Tafsir` | public route |
-| Memulai aktivitas personal | `Mulai Hafalan`, `Catat Sholat`, `Tulis Muhasabah` | dashboard route |
-| Mengelola data personal | `Kelola Catatan`, `Kelola Bookmark`, `Lihat Statistik Saya` | dashboard route |
-| Membuat konten admin | `Tulis Artikel Baru`, `Tambah Doa`, `Tambah Konten Siroh` | admin create route |
-| Menyimpan form | `Simpan Perubahan`, `Terbitkan Artikel`, `Simpan Draft` | submit action |
-| Destructive | `Hapus Artikel`, `Hapus User`, `Hapus Tag` | modal confirmation |
-| Navigation fallback | `Kembali ke Blog`, `Kembali ke Dashboard` | Link |
+| Intent                     | Label CTA                                                   | Target             |
+| -------------------------- | ----------------------------------------------------------- | ------------------ |
+| Membaca konten publik      | `Baca Quran`, `Baca Hadis`, `Lihat Tafsir`                  | public route       |
+| Memulai aktivitas personal | `Mulai Hafalan`, `Catat Sholat`, `Tulis Muhasabah`          | dashboard route    |
+| Mengelola data personal    | `Kelola Catatan`, `Kelola Bookmark`, `Lihat Statistik Saya` | dashboard route    |
+| Membuat konten admin       | `Tulis Artikel Baru`, `Tambah Doa`, `Tambah Konten Siroh`   | admin create route |
+| Menyimpan form             | `Simpan Perubahan`, `Terbitkan Artikel`, `Simpan Draft`     | submit action      |
+| Destructive                | `Hapus Artikel`, `Hapus User`, `Hapus Tag`                  | modal confirmation |
+| Navigation fallback        | `Kembali ke Blog`, `Kembali ke Dashboard`                   | Link               |
 
 Rules:
 

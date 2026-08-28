@@ -4,6 +4,7 @@
 > Scope: `apps/mobile`
 > Created: 2026-05-25
 > Related source of truth:
+>
 > - `docs/MOBILE_IA_FINAL_APPROACH.md`
 > - `docs/MOBILE_DESIGN_PATTERNS.md`
 > - `docs/MOBILE_LAYOUT_MODES.md`
@@ -43,9 +44,9 @@ buat renderer atau component terpisah untuk masing-masing layout.
 
 User-facing layout mode saat ini:
 
-| Mode | Makna |
-| --- | --- |
-| `classic` | Pengalaman native mobile lama yang stabil. |
+| Mode      | Makna                                                           |
+| --------- | --------------------------------------------------------------- |
+| `classic` | Pengalaman native mobile lama yang stabil.                      |
 | `web_app` | Pengalaman native yang mengikuti struktur dashboard mobile web. |
 
 Catatan naming:
@@ -100,7 +101,10 @@ EXPO_PUBLIC_API_URL=http://localhost:29900 npx expo start --web --port 23010 --h
 Untuk Expo web target, pastikan AsyncStorage layout mode diset ke:
 
 ```js
-localStorage.setItem('tholabul:pref:app-layout-mode', JSON.stringify('web_app'));
+localStorage.setItem(
+    "tholabul:pref:app-layout-mode",
+    JSON.stringify("web_app"),
+);
 ```
 
 Catat mismatch visual sebelum patch. Patch native mobile dulu, bukan web,
@@ -195,12 +199,12 @@ Jika layout mulai berbeda secara struktur, buat selector eksplisit:
 
 ```js
 export const screenLayouts = {
-  paper: 'paper',
-  webApp: 'web_app',
+    paper: "paper",
+    webApp: "web_app",
 };
 
 export function getScreenRenderer(layoutMode) {
-  return layoutMode === screenLayouts.webApp ? WebAppRenderer : PaperRenderer;
+    return layoutMode === screenLayouts.webApp ? WebAppRenderer : PaperRenderer;
 }
 ```
 
@@ -208,11 +212,11 @@ Lalu screen utama cukup memanggil component agregator:
 
 ```jsx
 return (
-  <ScreenContent
-    isWebAppLayout={isWebAppLayout}
-    data={data}
-    onOpenTab={onOpenTab}
-  />
+    <ScreenContent
+        isWebAppLayout={isWebAppLayout}
+        data={data}
+        onOpenTab={onOpenTab}
+    />
 );
 ```
 
@@ -254,14 +258,14 @@ Layout boleh berbeda pada:
 
 Pilih boundary seperti ini:
 
-| Layer | Boleh berisi | Tidak boleh berisi |
-| --- | --- | --- |
-| `App.js` / shell | provider, active tab, shell selection | screen-specific data loading |
-| `layout/` | top header, bottom nav, account/menu sheet | feature business logic |
-| `screens/*Screen.js` | screen state, effects, route handling | semua variasi visual layout besar |
-| `screens/<domain>/` | renderer dan presentational section | duplicated API/storage logic |
-| `components/` | primitive reusable UI | screen-specific orchestration |
-| `hooks/` | reusable state/derived behavior | layout-specific JSX besar |
+| Layer                | Boleh berisi                               | Tidak boleh berisi                |
+| -------------------- | ------------------------------------------ | --------------------------------- |
+| `App.js` / shell     | provider, active tab, shell selection      | screen-specific data loading      |
+| `layout/`            | top header, bottom nav, account/menu sheet | feature business logic            |
+| `screens/*Screen.js` | screen state, effects, route handling      | semua variasi visual layout besar |
+| `screens/<domain>/`  | renderer dan presentational section        | duplicated API/storage logic      |
+| `components/`        | primitive reusable UI                      | screen-specific orchestration     |
+| `hooks/`             | reusable state/derived behavior            | layout-specific JSX besar         |
 
 Jika component hanya dipakai satu screen dan spesifik domain, letakkan di
 folder domain screen, bukan di `components/`.
@@ -337,8 +341,12 @@ Minimum test untuk perubahan layout mode:
 Contoh guard yang disarankan:
 
 ```js
-expect(getHomeDashboardRenderer(homeDashboardLayouts.paper)).toBe(PaperHomeDashboard);
-expect(getHomeDashboardRenderer(homeDashboardLayouts.webApp)).toBe(WebAppHomeDashboard);
+expect(getHomeDashboardRenderer(homeDashboardLayouts.paper)).toBe(
+    PaperHomeDashboard,
+);
+expect(getHomeDashboardRenderer(homeDashboardLayouts.webApp)).toBe(
+    WebAppHomeDashboard,
+);
 ```
 
 Command umum:
@@ -383,15 +391,15 @@ Sebelum perubahan `web_app` dianggap selesai:
 Pola yang sudah dipakai:
 
 - `apps/mobile/src/screens/HomeScreen.js`
-  - mengurus data home, lokasi, jadwal sholat, daily content, recent/pinned
-    feature, dan navigation.
+    - mengurus data home, lokasi, jadwal sholat, daily content, recent/pinned
+      feature, dan navigation.
 - `apps/mobile/src/screens/home/HomeDashboardContent.js`
-  - memilih renderer dashboard;
-  - menyimpan renderer `PaperHomeDashboard` dan `WebAppHomeDashboard`;
-  - menyimpan presentation-specific styles dan UI section.
+    - memilih renderer dashboard;
+    - menyimpan renderer `PaperHomeDashboard` dan `WebAppHomeDashboard`;
+    - menyimpan presentation-specific styles dan UI section.
 - `apps/mobile/src/__tests__/homeScreen.test.js`
-  - memastikan renderer layout dipilih eksplisit;
-  - menjaga `classic` dan `web_app` tetap render marker yang benar.
+    - memastikan renderer layout dipilih eksplisit;
+    - menjaga `classic` dan `web_app` tetap render marker yang benar.
 
 Gunakan pola ini sebagai acuan untuk screen berikutnya yang membutuhkan isi
 content berbeda antara `classic` dan `web_app`.

@@ -59,8 +59,6 @@ var ModelMigrations []interface{} = []interface{}{
 	model.MurojaahSession{},
 	model.FiqhCategory{},
 	model.FiqhItem{},
-	model.TahlilCollection{},
-	model.TahlilItem{},
 	model.Kajian{},
 	model.Muhasabah{},
 	model.StudyGoal{},

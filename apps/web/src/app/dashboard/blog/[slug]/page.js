@@ -1,7 +1,7 @@
-'use client';;
+"use client";
 import { use } from "react";
 
-import { BlogDetailContent } from '@/app/blog/[slug]/page';
+import { BlogDetailContent } from "@/app/blog/[slug]/page";
 
 export default function DashboardBlogDetailPage(props) {
     const params = use(props.params);

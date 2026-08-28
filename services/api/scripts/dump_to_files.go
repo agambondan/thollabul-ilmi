@@ -239,7 +239,7 @@ func dumpMufrodat(db *gorm.DB, outPath string) error {
 }
 
 func writeJSON(path string, v interface{}) error {
-	if err := os.MkdirAll("data", 0755); err != nil {
+	if err := os.MkdirAll("data", 0o755); err != nil {
 		return err
 	}
 	f, err := os.Create(path)

@@ -32,29 +32,34 @@ Blog dengan sistem posting, kategori, tags, dan related posts untuk menyediakan 
 ### API Response Shape
 
 **`GET /blog`**
+
 ```json
 [
-  {
-    "id": "uuid",
-    "author_id": "uuid",
-    "category_id": 1,
-    "slug": "keutamaan-sedekah",
-    "cover_image": "https://...",
-    "status": "published",
-    "published_at": "2026-01-10T08:00:00Z",
-    "view_count": 1200,
-    "author": { "id": "uuid", "name": "Admin", "avatar": "..." },
-    "category": { "id": 1, "slug": "amal", "translation": { "idn": "Amal" } },
-    "tags": [
-      { "id": 1, "slug": "sedekah", "translation": { "idn": "Sedekah" } }
-    ],
-    "translation": {
-      "idn": "Keutamaan Sedekah",
-      "en": "The Virtue of Charity",
-      "title_idn": "Keutamaan Sedekah",
-      "title_en": "The Virtue of Charity"
+    {
+        "id": "uuid",
+        "author_id": "uuid",
+        "category_id": 1,
+        "slug": "keutamaan-sedekah",
+        "cover_image": "https://...",
+        "status": "published",
+        "published_at": "2026-01-10T08:00:00Z",
+        "view_count": 1200,
+        "author": { "id": "uuid", "name": "Admin", "avatar": "..." },
+        "category": {
+            "id": 1,
+            "slug": "amal",
+            "translation": { "idn": "Amal" }
+        },
+        "tags": [
+            { "id": 1, "slug": "sedekah", "translation": { "idn": "Sedekah" } }
+        ],
+        "translation": {
+            "idn": "Keutamaan Sedekah",
+            "en": "The Virtue of Charity",
+            "title_idn": "Keutamaan Sedekah",
+            "title_en": "The Virtue of Charity"
+        }
     }
-  }
 ]
 ```
 

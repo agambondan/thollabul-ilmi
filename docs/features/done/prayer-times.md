@@ -33,22 +33,23 @@ Jadwal sholat harian berdasarkan lokasi (koordinat), dengan 7 metode perhitungan
 ### API Response Shape
 
 **`GET /sholat-times?lat=-6.2&lng=106.8&method=kemenag&madhab=shafi`**
+
 ```json
 {
-  "date": "2026-05-13",
-  "lat": -6.2,
-  "lng": 106.8,
-  "method": "kemenag",
-  "madhab": "shafi",
-  "prayers": {
-    "imsak": "04:30",
-    "fajr": "04:40",
-    "sunrise": "05:55",
-    "dhuhr": "11:45",
-    "asr": "15:00",
-    "maghrib": "17:35",
-    "isha": "18:50"
-  }
+    "date": "2026-05-13",
+    "lat": -6.2,
+    "lng": 106.8,
+    "method": "kemenag",
+    "madhab": "shafi",
+    "prayers": {
+        "imsak": "04:30",
+        "fajr": "04:40",
+        "sunrise": "05:55",
+        "dhuhr": "11:45",
+        "asr": "15:00",
+        "maghrib": "17:35",
+        "isha": "18:50"
+    }
 }
 ```
 

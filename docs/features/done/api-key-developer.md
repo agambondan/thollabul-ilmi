@@ -29,32 +29,36 @@ Portal developer untuk integrasi eksternal: register sebagai developer, membuat 
 ### API Response Shape
 
 **`GET /developer/keys`**
+
 ```json
 [
-  {
-    "id": 1,
-    "name": "My App",
-    "key_prefix": "tib_****...****a1b2",
-    "is_active": true,
-    "last_used_at": "2026-05-13T10:00:00Z",
-    "request_count": 1500
-  }
+    {
+        "id": 1,
+        "name": "My App",
+        "key_prefix": "tib_****...****a1b2",
+        "is_active": true,
+        "last_used_at": "2026-05-13T10:00:00Z",
+        "request_count": 1500
+    }
 ]
 ```
 
 **`POST /developer/keys`**
+
 ```json
 {
-  "name": "My App"
+    "name": "My App"
 }
 ```
+
 Returns full key (only shown once):
+
 ```json
 {
-  "id": 1,
-  "name": "My App",
-  "key": "tib_a1b2c3d4e5f6...",
-  "is_active": true
+    "id": 1,
+    "name": "My App",
+    "key": "tib_a1b2c3d4e5f6...",
+    "is_active": true
 }
 ```
 
@@ -68,7 +72,7 @@ Returns full key (only shown once):
 | `name` | string | Key identifier for the developer |
 | `key` | string | Hashed API key; unique |
 | `is_active` | bool | Can be revoked by toggling |
-| `last_used_at` | *time.Time | Last usage timestamp |
+| `last_used_at` | \*time.Time | Last usage timestamp |
 | `request_count` | int | Total request count |
 
 **`APIKeyPublic`** is the safe response shape (key prefix only, full key never stored).

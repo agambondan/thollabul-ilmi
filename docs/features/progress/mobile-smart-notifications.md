@@ -12,16 +12,16 @@ mengatur kategori, waktu tenang, reminder, dan inbox notifikasi.
 ## Scope
 
 - Mobile:
-  - notification center
-  - pengaturan reminder
-  - kategori notifikasi
-  - quiet hours
-  - local cache/inbox
+    - notification center
+    - pengaturan reminder
+    - kategori notifikasi
+    - quiet hours
+    - local cache/inbox
 - API:
-  - registrasi Expo push token
-  - dispatch push untuk reminder harian
+    - registrasi Expo push token
+    - dispatch push untuk reminder harian
 - Data:
-  - state notifikasi user harus tetap personal
+    - state notifikasi user harus tetap personal
 
 ## Current Baseline
 
@@ -60,13 +60,13 @@ mengatur kategori, waktu tenang, reminder, dan inbox notifikasi.
   sudah tersedia pada sesi 2026-05-14, tetapi tap/swipe/keyevent manual via ADB
   masih diblokir MIUI dengan `INJECT_EVENTS`.
 - Smoke tambahan 2026-05-14:
-  - Home device menampilkan `LOKASI AKTIF`, bukan fallback `Lokasi belum terbaca`.
-    Screenshot: `/tmp/thollabul-smoke/current-2026-05-14.png`.
-  - `GET /api/v1/notifications/settings` tanpa token mengembalikan
-    `HTTP 401`, sesuai endpoint personal yang butuh login.
-  - Deep link otomatis ke notification route belum terkonfirmasi karena device
-    tetap berada di search screen dengan keyboard aktif; perlu tap manual dari
-    user/device untuk validasi inbox, mark read, dan quiet hours.
+    - Home device menampilkan `LOKASI AKTIF`, bukan fallback `Lokasi belum terbaca`.
+      Screenshot: `/tmp/thollabul-smoke/current-2026-05-14.png`.
+    - `GET /api/v1/notifications/settings` tanpa token mengembalikan
+      `HTTP 401`, sesuai endpoint personal yang butuh login.
+    - Deep link otomatis ke notification route belum terkonfirmasi karena device
+      tetap berada di search screen dengan keyboard aktif; perlu tap manual dari
+      user/device untuk validasi inbox, mark read, dan quiet hours.
 
 ## Source of Truth
 

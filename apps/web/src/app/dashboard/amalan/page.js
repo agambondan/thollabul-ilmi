@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/context/Auth';
-import { useLocale } from '@/context/Locale';
-import { amalanApi, streakApi } from '@/lib/api';
-import { useEffect, useState } from 'react';
-import { BsCheckCircleFill, BsCircle } from 'react-icons/bs';
+import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
+import { amalanApi, streakApi } from "@/lib/api";
+import { useEffect, useState } from "react";
+import { BsCheckCircleFill, BsCircle } from "react-icons/bs";
 
 const FALLBACK_KEYS = [
-    'amalan.item.subuh_jamaah',
-    'amalan.item.dhuha',
-    'amalan.item.tahajud',
-    'amalan.item.quran',
-    'amalan.item.dzikir_pagi',
-    'amalan.item.dzikir_petang',
-    'amalan.item.puasa_sunnah',
+    "amalan.item.subuh_jamaah",
+    "amalan.item.dhuha",
+    "amalan.item.tahajud",
+    "amalan.item.quran",
+    "amalan.item.dzikir_pagi",
+    "amalan.item.dzikir_petang",
+    "amalan.item.puasa_sunnah",
 ];
 
 const todayStr = () => {
     const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 };
 
 const localKey = () => `tholabul_amalan_${todayStr()}`;
@@ -33,7 +33,7 @@ const AmalanPage = () => {
     useEffect(() => {
         const stored = (() => {
             try {
-                return JSON.parse(localStorage.getItem(localKey()) ?? '{}');
+                return JSON.parse(localStorage.getItem(localKey()) ?? "{}");
             } catch {
                 return {};
             }
@@ -57,12 +57,17 @@ const AmalanPage = () => {
                 .today()
                 .then((r) => r.json())
                 .then((data) => {
-                    const list = data?.items ?? (Array.isArray(data) ? data : []);
+                    const list =
+                        data?.items ?? (Array.isArray(data) ? data : []);
                     if (list.length > 0) {
                         setItems(
                             list.map((item) => ({
                                 id: String(item.id),
-                                label: item.name_id ?? item.name ?? item.title ?? String(item.id),
+                                label:
+                                    item.name_id ??
+                                    item.name ??
+                                    item.title ??
+                                    String(item.id),
                                 done: !!item.is_checked,
                                 serverId: item.id,
                                 isKey: false,
@@ -82,18 +87,22 @@ const AmalanPage = () => {
     const toggle = (idx) => {
         const item = items[idx];
         const newDone = !item.done;
-        const updated = items.map((it, i) => (i === idx ? { ...it, done: newDone } : it));
+        const updated = items.map((it, i) =>
+            i === idx ? { ...it, done: newDone } : it,
+        );
         setItems(updated);
 
         try {
-            const stored = JSON.parse(localStorage.getItem(localKey()) ?? '{}');
+            const stored = JSON.parse(localStorage.getItem(localKey()) ?? "{}");
             stored[item.id] = newDone;
             localStorage.setItem(localKey(), JSON.stringify(stored));
         } catch {}
 
         if (isAuthenticated) {
-            if (item.serverId !== null) amalanApi.check(item.serverId).catch(e => console.error(e));
-            if (newDone) streakApi.logActivity('amalan').catch(e => console.error(e));
+            if (item.serverId !== null)
+                amalanApi.check(item.serverId).catch((e) => console.error(e));
+            if (newDone)
+                streakApi.logActivity("amalan").catch((e) => console.error(e));
         }
     };
 
@@ -104,10 +113,10 @@ const AmalanPage = () => {
     return (
         <div className='px-4 py-6'>
             <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-1'>
-                {t('amalan.title')}
+                {t("amalan.title")}
             </h1>
             <p className='text-sm text-gray-500 dark:text-gray-400 mb-6'>
-                {t('amalan.completed_today')}:{' '}
+                {t("amalan.completed_today")}:{" "}
                 <span className='font-semibold text-emerald-700 dark:text-emerald-400'>
                     {doneCount}
                 </span>
@@ -117,7 +126,7 @@ const AmalanPage = () => {
             <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-5 mb-6'>
                 <div className='flex items-center justify-between mb-2'>
                     <span className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
-                        {t('amalan.progress')}
+                        {t("amalan.progress")}
                     </span>
                     <span className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
                         {doneCount}/{total}
@@ -129,7 +138,9 @@ const AmalanPage = () => {
                         style={{ width: `${pct}%` }}
                     />
                 </div>
-                <p className='text-xs text-gray-400 dark:text-gray-500 mt-1.5'>{pct}%</p>
+                <p className='text-xs text-gray-400 dark:text-gray-500 mt-1.5'>
+                    {pct}%
+                </p>
             </div>
 
             {/* Checklist */}
@@ -144,8 +155,8 @@ const AmalanPage = () => {
                                     onClick={() => toggle(idx)}
                                     className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl border transition-all text-left ${
                                         done
-                                            ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700'
-                                            : 'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-700'
+                                            ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700"
+                                            : "bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-700"
                                     }`}
                                 >
                                     {done ? (
@@ -156,8 +167,8 @@ const AmalanPage = () => {
                                     <span
                                         className={`text-sm font-medium ${
                                             done
-                                                ? 'text-emerald-700 dark:text-emerald-400 line-through'
-                                                : 'text-gray-700 dark:text-gray-300'
+                                                ? "text-emerald-700 dark:text-emerald-400 line-through"
+                                                : "text-gray-700 dark:text-gray-300"
                                         }`}
                                     >
                                         {label}

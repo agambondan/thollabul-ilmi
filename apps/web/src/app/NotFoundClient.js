@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import { useLocale } from '@/context/Locale';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useLocale } from "@/context/Locale";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const QUICK_LINKS = [
-    { href: '/quran', labelKey: 'link.quran' },
-    { href: '/hadith', labelKey: 'link.hadith' },
-    { href: '/doa', labelKey: 'link.doa' },
-    { href: '/dzikir', labelKey: 'link.dhikr' },
-    { href: '/blog', labelKey: 'link.blog' },
+    { href: "/quran", labelKey: "link.quran" },
+    { href: "/hadith", labelKey: "link.hadith" },
+    { href: "/doa", labelKey: "link.doa" },
+    { href: "/dzikir", labelKey: "link.dhikr" },
+    { href: "/blog", labelKey: "link.blog" },
 ];
 
 const recoveryBase = (pathname) => {
-    if (pathname?.startsWith('/admin')) return '/admin';
-    if (pathname?.startsWith('/dashboard')) return '/dashboard';
-    return '/';
+    if (pathname?.startsWith("/admin")) return "/admin";
+    if (pathname?.startsWith("/dashboard")) return "/dashboard";
+    return "/";
 };
 
 const scopedHref = (href, basePath) => {
-    if (basePath === '/dashboard') return `/dashboard${href}`;
+    if (basePath === "/dashboard") return `/dashboard${href}`;
     return href;
 };
 
@@ -35,10 +35,10 @@ export default function NotFoundClient() {
                     404
                 </div>
                 <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-2'>
-                    {t('not_found.title')}
+                    {t("not_found.title")}
                 </h1>
                 <p className='text-sm text-gray-500 dark:text-gray-400 mb-8 leading-relaxed'>
-                    {t('not_found.desc')}
+                    {t("not_found.desc")}
                 </p>
 
                 <div className='flex flex-wrap gap-2 justify-center mb-8'>
@@ -57,7 +57,7 @@ export default function NotFoundClient() {
                     href={homeHref}
                     className='inline-block bg-emerald-700 hover:bg-emerald-600 text-white text-sm px-6 py-2.5 rounded-full transition-colors font-medium'
                 >
-                    {t('not_found.home')}
+                    {t("not_found.home")}
                 </Link>
             </div>
         </div>

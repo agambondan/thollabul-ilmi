@@ -39,7 +39,6 @@ var cacheTTLByPrefix = map[string]int{
 	"doa:":           CacheTTLStatic,
 	"dzikir:":        CacheTTLStatic,
 	"fiqh:":          CacheTTLStatic,
-	"tahlil:":        CacheTTLStatic,
 	"manasik:":       CacheTTLStatic,
 	"books:":         CacheTTLStatic,
 	"themes:":        CacheTTLStatic,

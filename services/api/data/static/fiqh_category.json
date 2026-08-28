@@ -1,42 +1,42 @@
 [
-  {
-    "name": "Thaharah",
-    "slug": "thaharah",
-    "description": "Hukum-hukum bersuci: wudhu, mandi wajib, tayammum, najis"
-  },
-  {
-    "name": "Sholat",
-    "slug": "sholat",
-    "description": "Hukum-hukum sholat: syarat, rukun, hal yang membatalkan"
-  },
-  {
-    "name": "Puasa",
-    "slug": "puasa",
-    "description": "Hukum-hukum puasa: syarat, rukun, yang membatalkan, fidyah"
-  },
-  {
-    "name": "Zakat",
-    "slug": "zakat",
-    "description": "Hukum-hukum zakat: nisab, haul, jenis harta, mustahiq"
-  },
-  {
-    "name": "Haji \u0026 Umrah",
-    "slug": "haji-umrah",
-    "description": "Manasik haji dan umrah, syarat, rukun, wajib, dam"
-  },
-  {
-    "name": "Muamalah",
-    "slug": "muamalah",
-    "description": "Hukum jual beli, utang piutang, sewa, gadai dalam Islam"
-  },
-  {
-    "name": "Nikah",
-    "slug": "nikah",
-    "description": "Hukum pernikahan: syarat, rukun, mahar, hak dan kewajiban"
-  },
-  {
-    "name": "Jenazah",
-    "slug": "jenazah",
-    "description": "Hukum mengurus jenazah: memandikan, mengkafani, mensholatkan, menguburkan"
-  }
+    {
+        "name": "Thaharah",
+        "slug": "thaharah",
+        "description": "Hukum-hukum bersuci: wudhu, mandi wajib, tayammum, najis"
+    },
+    {
+        "name": "Sholat",
+        "slug": "sholat",
+        "description": "Hukum-hukum sholat: syarat, rukun, hal yang membatalkan"
+    },
+    {
+        "name": "Puasa",
+        "slug": "puasa",
+        "description": "Hukum-hukum puasa: syarat, rukun, yang membatalkan, fidyah"
+    },
+    {
+        "name": "Zakat",
+        "slug": "zakat",
+        "description": "Hukum-hukum zakat: nisab, haul, jenis harta, mustahiq"
+    },
+    {
+        "name": "Haji \u0026 Umrah",
+        "slug": "haji-umrah",
+        "description": "Manasik haji dan umrah, syarat, rukun, wajib, dam"
+    },
+    {
+        "name": "Muamalah",
+        "slug": "muamalah",
+        "description": "Hukum jual beli, utang piutang, sewa, gadai dalam Islam"
+    },
+    {
+        "name": "Nikah",
+        "slug": "nikah",
+        "description": "Hukum pernikahan: syarat, rukun, mahar, hak dan kewajiban"
+    },
+    {
+        "name": "Jenazah",
+        "slug": "jenazah",
+        "description": "Hukum mengurus jenazah: memandikan, mengkafani, mensholatkan, menguburkan"
+    }
 ]

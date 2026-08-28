@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { FaraidhContent } from '@/app/faraidh/page';
+import { FaraidhContent } from "@/app/faraidh/page";
 
 export default function DashboardFaraidhPage() {
     return (

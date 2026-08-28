@@ -54,9 +54,9 @@ Evidence:
 
 - Android bundle generated.
 - Quran font assets included:
-  - `assets/fonts/kfc_naskh-webfont.ttf`
-  - `assets/fonts/Kitab-Regular.ttf`
-  - `assets/fonts/noorehidayat.ttf`
+    - `assets/fonts/kfc_naskh-webfont.ttf`
+    - `assets/fonts/Kitab-Regular.ttf`
+    - `assets/fonts/noorehidayat.ttf`
 - output directory: `/tmp/thollabul-review-mobile-export`
 
 ## What This Does Not Prove
@@ -270,7 +270,11 @@ Coverage:
 Observed output:
 
 ```json
-{"status":"created-updated-deleted","title":"Codex UI Smoke 1778675597748","updatedTitle":"Codex UI Smoke 1778675597748 Updated"}
+{
+    "status": "created-updated-deleted",
+    "title": "Codex UI Smoke 1778675597748",
+    "updatedTitle": "Codex UI Smoke 1778675597748 Updated"
+}
 ```
 
 ### Docker Rebuild + API Smoke

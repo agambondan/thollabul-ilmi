@@ -1,4 +1,4 @@
-import { PetaContent } from '@/app/peta/page';
+import { PetaContent } from "@/app/peta/page";
 
 export default function DashboardPetaPage() {
     return (

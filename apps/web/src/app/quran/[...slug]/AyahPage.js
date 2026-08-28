@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import BookmarkButton from '@/components/BookmarkButton';
-import NoteButton from '@/components/NoteButton';
-import { PopUpIsCopied, ShareAyah } from '@/components/popup/ListImage';
-import { audioApi, mufrodatApi, munasabahApi, tafsirApi } from '@/lib/api';
-import { useLocale } from '@/context/Locale';
-import { listMasjidImage } from '@/lib/const';
-import { NumberToArabic } from '@/lib/converter';
-import { CopyImageToClipboard, CopyToClipboard } from '@/lib/copy';
-import { getLocalizedTranslation } from '@/lib/translation';
-import { useActionPosition } from '@/lib/useActionPosition';
-import { useQuranFont } from '@/lib/useQuranFont';
-import classNames from 'classnames';
-import { useEffect, useRef, useState } from 'react';
+import BookmarkButton from "@/components/BookmarkButton";
+import NoteButton from "@/components/NoteButton";
+import { PopUpIsCopied, ShareAyah } from "@/components/popup/ListImage";
+import { audioApi, mufrodatApi, munasabahApi, tafsirApi } from "@/lib/api";
+import { useLocale } from "@/context/Locale";
+import { listMasjidImage } from "@/lib/const";
+import { NumberToArabic } from "@/lib/converter";
+import { CopyImageToClipboard, CopyToClipboard } from "@/lib/copy";
+import { getLocalizedTranslation } from "@/lib/translation";
+import { useActionPosition } from "@/lib/useActionPosition";
+import { useQuranFont } from "@/lib/useQuranFont";
+import classNames from "classnames";
+import { useEffect, useRef, useState } from "react";
 import {
     BsBook,
     BsFileEarmarkPlay,
@@ -22,15 +22,15 @@ import {
     BsShare,
     BsThreeDotsVertical,
     BsTranslate,
-} from 'react-icons/bs';
-import { IoIosLink, IoMdCopy, IoMdImages } from 'react-icons/io';
+} from "react-icons/bs";
+import { IoIosLink, IoMdCopy, IoMdImages } from "react-icons/io";
 
 const AyahPage = ({
     surah,
     ayah,
     newLimit,
     isLast,
-    hafalanMode = 'off',
+    hafalanMode = "off",
     selectedQari,
     onQariChange,
     isActionMenuOpen,
@@ -38,7 +38,8 @@ const AyahPage = ({
 }) => {
     const { t, lang } = useLocale();
     const { arabicFontSize, fontCls, translationFontSize } = useQuranFont();
-    const { isHidden: actionsHidden, isMenu: actionsMenu } = useActionPosition();
+    const { isHidden: actionsHidden, isMenu: actionsMenu } =
+        useActionPosition();
     const cardRef = useRef();
     const audioRef = useRef(null);
     const [isCopied, SetIsCopied] = useState(false);
@@ -59,16 +60,23 @@ const AyahPage = ({
     const [munasabahLoading, setMunasabahLoading] = useState(false);
 
     const [audioUrls, setAudioUrls] = useState([]);
-    const [audioError, setAudioError] = useState('');
+    const [audioError, setAudioError] = useState("");
     const [isPlaying, setIsPlaying] = useState(false);
     const [audioLoading, setAudioLoading] = useState(false);
     const [showQariMenu, setShowQariMenu] = useState(false);
     const [revealed, setRevealed] = useState(false);
     const ayahTranslation = getLocalizedTranslation(ayah.translation, lang);
-    const ayahLatin = ayah.translation?.latin_idn ?? ayah.translation?.latin_en ?? '';
-    const settingPopUp = typeof isActionMenuOpen === 'boolean' ? isActionMenuOpen : localSettingPopUp;
+    const ayahLatin =
+        ayah.translation?.latin_idn ?? ayah.translation?.latin_en ?? "";
+    const settingPopUp =
+        typeof isActionMenuOpen === "boolean"
+            ? isActionMenuOpen
+            : localSettingPopUp;
     const SetSettingPopUp = (nextValue) => {
-        const next = typeof nextValue === 'function' ? nextValue(settingPopUp) : nextValue;
+        const next =
+            typeof nextValue === "function"
+                ? nextValue(settingPopUp)
+                : nextValue;
         if (onActionMenuToggle) {
             onActionMenuToggle(next);
             return;
@@ -76,10 +84,10 @@ const AyahPage = ({
         setLocalSettingPopUp(next);
     };
 
-    const hideArabic = hafalanMode === 'hide_arabic' && !revealed;
-    const hideTranslation = hafalanMode === 'hide_translation' && !revealed;
-    const hideAll = hafalanMode === 'hide_all' && !revealed;
-    const arabicHtml = ayah.translation?.ar_html || ayah.translation?.ar || '';
+    const hideArabic = hafalanMode === "hide_arabic" && !revealed;
+    const hideTranslation = hafalanMode === "hide_translation" && !revealed;
+    const hideAll = hafalanMode === "hide_all" && !revealed;
+    const arabicHtml = ayah.translation?.ar_html || ayah.translation?.ar || "";
 
     const copyText = (value) => {
         CopyToClipboard(value);
@@ -88,7 +96,7 @@ const AyahPage = ({
     };
 
     const actionMenuButtonClass =
-        'flex w-full items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-left';
+        "flex w-full items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-left";
 
     useEffect(() => {
         if (!cardRef?.current) return;
@@ -173,7 +181,7 @@ const AyahPage = ({
                 setAudioUrls(urls);
                 await playFirstAvailableAudio(urls);
             } catch {
-                setAudioError('Audio ayat belum bisa diputar.');
+                setAudioError("Audio ayat belum bisa diputar.");
             } finally {
                 setAudioLoading(false);
             }
@@ -195,40 +203,46 @@ const AyahPage = ({
         const chosen = pickQariUrl(urls);
         const candidates = [
             ...(chosen ? [chosen] : []),
-            ...(urls ?? []).filter((item) => item.audio_url && item.qari_slug !== chosen?.qari_slug),
+            ...(urls ?? []).filter(
+                (item) =>
+                    item.audio_url && item.qari_slug !== chosen?.qari_slug,
+            ),
         ];
         for (const candidate of candidates) {
             try {
                 await playAudio(candidate.audio_url);
-                setAudioError('');
+                setAudioError("");
                 return;
             } catch {
                 // Try the next qari when the selected CDN URL is unavailable.
             }
         }
-        setAudioError('Audio qari ini belum tersedia.');
+        setAudioError("Audio qari ini belum tersedia.");
     };
 
     const playAudio = (url) => {
         if (!url) return;
         return new Promise((resolve, reject) => {
-        if (!audioRef.current) {
-            audioRef.current = new Audio(url);
-            audioRef.current.onended = () => setIsPlaying(false);
-        } else {
-            audioRef.current.src = url;
-        }
-        audioRef.current.onerror = () => {
-            setIsPlaying(false);
-            reject(new Error('audio'));
-        };
-        audioRef.current.play().then(() => {
-            setIsPlaying(true);
-            resolve();
-        }).catch((err) => {
-            setIsPlaying(false);
-            reject(err);
-        });
+            if (!audioRef.current) {
+                audioRef.current = new Audio(url);
+                audioRef.current.onended = () => setIsPlaying(false);
+            } else {
+                audioRef.current.src = url;
+            }
+            audioRef.current.onerror = () => {
+                setIsPlaying(false);
+                reject(new Error("audio"));
+            };
+            audioRef.current
+                .play()
+                .then(() => {
+                    setIsPlaying(true);
+                    resolve();
+                })
+                .catch((err) => {
+                    setIsPlaying(false);
+                    reject(err);
+                });
         });
     };
 
@@ -236,7 +250,7 @@ const AyahPage = ({
         <div ref={cardRef} id={`ayah-${ayah.number}`}>
             {clipboardPopUp && (
                 <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-full shadow-lg'>
-                    {t('ayah.copied_to_clipboard')}
+                    {t("ayah.copied_to_clipboard")}
                 </div>
             )}
             {shareImagePopUp && (
@@ -246,12 +260,12 @@ const AyahPage = ({
                     text={`Allah Subhanahu Wa Ta'ala berfirman:\n`
                         .concat(`${ayah.translation.ar} `)
                         .concat(`۝${NumberToArabic(ayah.number)}\n`)
-                        .concat(ayahLatin ? `${ayahLatin}\n` : '')
+                        .concat(ayahLatin ? `${ayahLatin}\n` : "")
                         .concat(`${ayahTranslation}\n`)
                         .concat(
-                            `(QS. ${surah.translation.latin_en} ${surah.number}: ${t('common.verse')} ${ayah.number})\n`.concat(
-                                `Via Thullaabul 'Ilmi ${window.location.href.split('#')[0]}#ayah-${ayah.number}`
-                            )
+                            `(QS. ${surah.translation.latin_en} ${surah.number}: ${t("common.verse")} ${ayah.number})\n`.concat(
+                                `Via Thullaabul 'Ilmi ${window.location.href.split("#")[0]}#ayah-${ayah.number}`,
+                            ),
                         )}
                 />
             )}
@@ -263,29 +277,33 @@ const AyahPage = ({
 
             <ul
                 className={classNames({
-                    'flex flex-row justify-between p-4 border-b border-gray-100 dark:border-slate-800': true,
-                    'bg-gray-50/60 dark:bg-slate-800/35': ayah.number % 2 === 1,
-                    'bg-white dark:bg-slate-900': ayah.number % 2 === 0,
-                    'text-gray-900 dark:text-white': true,
+                    "flex flex-row justify-between p-4 border-b border-gray-100 dark:border-slate-800": true,
+                    "bg-gray-50/60 dark:bg-slate-800/35": ayah.number % 2 === 1,
+                    "bg-white dark:bg-slate-900": ayah.number % 2 === 0,
+                    "text-gray-900 dark:text-white": true,
                 })}
             >
                 {!actionsHidden && (
                     <ul
                         className='flex flex-col p-2 space-y-1'
-                        style={{ direction: 'ltr' }}
+                        style={{ direction: "ltr" }}
                     >
                         <li className='flex justify-center text-sm font-medium text-gray-500 dark:text-gray-400 pb-1'>
                             {surah.number}:{ayah.number}
                         </li>
-                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                        <li
+                            className={
+                                actionsMenu ? "hidden" : "flex justify-center"
+                            }
+                        >
                             <button
-                                title={isPlaying ? 'Pause' : 'Putar Audio'}
+                                title={isPlaying ? "Pause" : "Putar Audio"}
                                 onClick={handleAudio}
                                 disabled={audioLoading}
                                 className={`p-2 rounded-lg text-lg transition-colors disabled:opacity-50 ${
                                     isPlaying
-                                        ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20'
-                                        : 'text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700'
+                                        ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20"
+                                        : "text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700"
                                 }`}
                             >
                                 {audioLoading ? (
@@ -297,54 +315,78 @@ const AyahPage = ({
                                 )}
                             </button>
                         </li>
-                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                        <li
+                            className={
+                                actionsMenu ? "hidden" : "flex justify-center"
+                            }
+                        >
                             <button
-                                title={t('tafsir.title')}
+                                title={t("tafsir.title")}
                                 onClick={toggleTafsir}
                                 className={`p-2 rounded-lg text-lg transition-colors ${
                                     tafsirOpen
-                                        ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20'
-                                        : 'text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700'
+                                        ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20"
+                                        : "text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700"
                                 }`}
                             >
                                 <BsBook />
                             </button>
                         </li>
-                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                        <li
+                            className={
+                                actionsMenu ? "hidden" : "flex justify-center"
+                            }
+                        >
                             <button
-                                title={t('ayah.mufrodat_title')}
+                                title={t("ayah.mufrodat_title")}
                                 onClick={toggleMufrodat}
                                 className={`p-2 rounded-lg text-lg transition-colors ${
                                     mufrodatOpen
-                                        ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20'
-                                        : 'text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700'
+                                        ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20"
+                                        : "text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700"
                                 }`}
                             >
                                 <BsTranslate />
                             </button>
                         </li>
-                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                        <li
+                            className={
+                                actionsMenu ? "hidden" : "flex justify-center"
+                            }
+                        >
                             <button
-                                title={t('munasabah.title') ?? 'Ayat Terkait'}
+                                title={t("munasabah.title") ?? "Ayat Terkait"}
                                 onClick={toggleMunasabah}
                                 className={`p-2 rounded-lg text-lg transition-colors ${
                                     munasabahOpen
-                                        ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20'
-                                        : 'text-gray-400 dark:text-gray-500 hover:bg-purple-100 dark:hover:bg-slate-700'
+                                        ? "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20"
+                                        : "text-gray-400 dark:text-gray-500 hover:bg-purple-100 dark:hover:bg-slate-700"
                                 }`}
                             >
                                 <BsLink45Deg />
                             </button>
                         </li>
-                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                        <li
+                            className={
+                                actionsMenu ? "hidden" : "flex justify-center"
+                            }
+                        >
                             <BookmarkButton refType='ayah' refId={ayah.id} />
                         </li>
-                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                        <li
+                            className={
+                                actionsMenu ? "hidden" : "flex justify-center"
+                            }
+                        >
                             <NoteButton refType='ayah' refId={ayah.id} />
                         </li>
-                        <li className={actionsMenu ? 'hidden' : 'flex justify-center'}>
+                        <li
+                            className={
+                                actionsMenu ? "hidden" : "flex justify-center"
+                            }
+                        >
                             <button
-                                title={t('common.share')}
+                                title={t("common.share")}
                                 onClick={() => SetShareImagePopUp(true)}
                                 className='p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
                             >
@@ -352,172 +394,234 @@ const AyahPage = ({
                             </button>
                         </li>
                         <li className='flex justify-center relative'>
-                        <button
-                            title={t('common.more')}
-                            onClick={() => SetSettingPopUp(!settingPopUp)}
-                            className='p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
-                        >
-                            <BsThreeDotsVertical />
-                        </button>
-                        {settingPopUp && (
-                            <div className='absolute left-9 top-0 z-10'>
-                                <div className='flex flex-col bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-56 p-1 shadow-lg text-emerald-900 dark:text-white'>
-                                    {actionsMenu && (
-                                        <div className='border-b border-emerald-50 dark:border-slate-700 pb-1 mb-1'>
-                                            <button
-                                                className={actionMenuButtonClass}
-                                                onClick={() => {
-                                                    handleAudio();
-                                                    SetSettingPopUp(false);
-                                                }}
-                                                disabled={audioLoading}
-                                            >
-                                                {isPlaying ? <BsPauseFill /> : <BsFileEarmarkPlay />}
-                                                {audioLoading ? 'Memuat audio...' : isPlaying ? 'Pause Audio' : 'Putar Audio'}
-                                            </button>
-                                            <button
-                                                className={actionMenuButtonClass}
-                                                onClick={() => {
-                                                    toggleTafsir();
-                                                    SetSettingPopUp(false);
-                                                }}
-                                            >
-                                                <BsBook />
-                                                {t('tafsir.title')}
-                                            </button>
-                                            <button
-                                                className={actionMenuButtonClass}
-                                                onClick={() => {
-                                                    toggleMufrodat();
-                                                    SetSettingPopUp(false);
-                                                }}
-                                            >
-                                                <BsTranslate />
-                                                {t('ayah.mufrodat_title')}
-                                            </button>
-                                            <button
-                                                className={actionMenuButtonClass}
-                                                onClick={() => {
-                                                    toggleMunasabah();
-                                                    SetSettingPopUp(false);
-                                                }}
-                                            >
-                                                <BsLink45Deg />
-                                                {t('munasabah.title') ?? 'Ayat Terkait'}
-                                            </button>
-                                            <div className='flex items-center justify-between gap-3 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'>
-                                                <span>Bookmark</span>
-                                                <BookmarkButton refType='ayah' refId={ayah.id} />
+                            <button
+                                title={t("common.more")}
+                                onClick={() => SetSettingPopUp(!settingPopUp)}
+                                className='p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
+                            >
+                                <BsThreeDotsVertical />
+                            </button>
+                            {settingPopUp && (
+                                <div className='absolute left-9 top-0 z-10'>
+                                    <div className='flex flex-col bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-56 p-1 shadow-lg text-emerald-900 dark:text-white'>
+                                        {actionsMenu && (
+                                            <div className='border-b border-emerald-50 dark:border-slate-700 pb-1 mb-1'>
+                                                <button
+                                                    className={
+                                                        actionMenuButtonClass
+                                                    }
+                                                    onClick={() => {
+                                                        handleAudio();
+                                                        SetSettingPopUp(false);
+                                                    }}
+                                                    disabled={audioLoading}
+                                                >
+                                                    {isPlaying ? (
+                                                        <BsPauseFill />
+                                                    ) : (
+                                                        <BsFileEarmarkPlay />
+                                                    )}
+                                                    {audioLoading
+                                                        ? "Memuat audio..."
+                                                        : isPlaying
+                                                          ? "Pause Audio"
+                                                          : "Putar Audio"}
+                                                </button>
+                                                <button
+                                                    className={
+                                                        actionMenuButtonClass
+                                                    }
+                                                    onClick={() => {
+                                                        toggleTafsir();
+                                                        SetSettingPopUp(false);
+                                                    }}
+                                                >
+                                                    <BsBook />
+                                                    {t("tafsir.title")}
+                                                </button>
+                                                <button
+                                                    className={
+                                                        actionMenuButtonClass
+                                                    }
+                                                    onClick={() => {
+                                                        toggleMufrodat();
+                                                        SetSettingPopUp(false);
+                                                    }}
+                                                >
+                                                    <BsTranslate />
+                                                    {t("ayah.mufrodat_title")}
+                                                </button>
+                                                <button
+                                                    className={
+                                                        actionMenuButtonClass
+                                                    }
+                                                    onClick={() => {
+                                                        toggleMunasabah();
+                                                        SetSettingPopUp(false);
+                                                    }}
+                                                >
+                                                    <BsLink45Deg />
+                                                    {t("munasabah.title") ??
+                                                        "Ayat Terkait"}
+                                                </button>
+                                                <div className='flex items-center justify-between gap-3 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'>
+                                                    <span>Bookmark</span>
+                                                    <BookmarkButton
+                                                        refType='ayah'
+                                                        refId={ayah.id}
+                                                    />
+                                                </div>
+                                                <div className='flex items-center justify-between gap-3 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'>
+                                                    <span>Catatan</span>
+                                                    <NoteButton
+                                                        refType='ayah'
+                                                        refId={ayah.id}
+                                                    />
+                                                </div>
+                                                <button
+                                                    className={
+                                                        actionMenuButtonClass
+                                                    }
+                                                    onClick={() => {
+                                                        SetShareImagePopUp(
+                                                            true,
+                                                        );
+                                                        SetSettingPopUp(false);
+                                                    }}
+                                                >
+                                                    <BsShare />
+                                                    {t("common.share")}
+                                                </button>
                                             </div>
-                                            <div className='flex items-center justify-between gap-3 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'>
-                                                <span>Catatan</span>
-                                                <NoteButton refType='ayah' refId={ayah.id} />
-                                            </div>
-                                            <button
-                                                className={actionMenuButtonClass}
-                                                onClick={() => {
-                                                    SetShareImagePopUp(true);
-                                                    SetSettingPopUp(false);
-                                                }}
-                                            >
-                                                <BsShare />
-                                                {t('common.share')}
-                                            </button>
-                                        </div>
-                                    )}
-                                    <button
-                                        className={actionMenuButtonClass}
-                                        onClick={() =>
-                                            copyText(`${window.location.href.split('#')[0]}#ayah-${ayah.number}`)
-                                        }
-                                    >
-                                        <IoIosLink />
-                                        Copy Link
-                                    </button>
-                                    <button
-                                        className={actionMenuButtonClass}
-                                        onClick={() => {
-                                            SetSettingPopUp(false);
-                                            setTimeout(() => {
-                                                import('html2canvas')
-                                                    .then(({ default: html2canvas }) =>
-                                                        html2canvas(
-                                                            document.getElementById(
-                                                                `${surah.translation.latin_en}-${ayah.number}`
-                                                            )
+                                        )}
+                                        <button
+                                            className={actionMenuButtonClass}
+                                            onClick={() =>
+                                                copyText(
+                                                    `${window.location.href.split("#")[0]}#ayah-${ayah.number}`,
+                                                )
+                                            }
+                                        >
+                                            <IoIosLink />
+                                            Copy Link
+                                        </button>
+                                        <button
+                                            className={actionMenuButtonClass}
+                                            onClick={() => {
+                                                SetSettingPopUp(false);
+                                                setTimeout(() => {
+                                                    import("html2canvas")
+                                                        .then(
+                                                            ({
+                                                                default:
+                                                                    html2canvas,
+                                                            }) =>
+                                                                html2canvas(
+                                                                    document.getElementById(
+                                                                        `${surah.translation.latin_en}-${ayah.number}`,
+                                                                    ),
+                                                                ),
                                                         )
-                                                    )
-                                                    .then((canvas) => {
-                                                        CopyImageToClipboard(canvas);
-                                                        SetIsCopied(true);
-                                                        setTimeout(() => SetIsCopied(false), 1000);
-                                                    });
-                                            }, 1000);
-                                        }}
-                                    >
-                                        <IoMdImages />
-                                        Copy Image
-                                    </button>
-                                    <button
-                                        className={actionMenuButtonClass}
-                                        onClick={() =>
-                                            copyText(
-                                                `Allah Subhanahu Wa Ta'ala berfirman:\n\n`
-                                                    .concat(`${ayah.translation.ar}\n\n`)
-                                                    .concat(ayahLatin ? `${ayahLatin}\n\n` : '')
-                                                    .concat(`${ayahTranslation}\n\n`)
-                                                    .concat(
-                                                        `(QS. ${surah.translation.latin_en} ${surah.number}: ${t('common.verse')} ${ayah.number})\n`.concat(
-                                                            `Via Thullaabul 'Ilmi ${window.location.href.split('#')[0]}#ayah-${ayah.number}`
+                                                        .then((canvas) => {
+                                                            CopyImageToClipboard(
+                                                                canvas,
+                                                            );
+                                                            SetIsCopied(true);
+                                                            setTimeout(
+                                                                () =>
+                                                                    SetIsCopied(
+                                                                        false,
+                                                                    ),
+                                                                1000,
+                                                            );
+                                                        });
+                                                }, 1000);
+                                            }}
+                                        >
+                                            <IoMdImages />
+                                            Copy Image
+                                        </button>
+                                        <button
+                                            className={actionMenuButtonClass}
+                                            onClick={() =>
+                                                copyText(
+                                                    `Allah Subhanahu Wa Ta'ala berfirman:\n\n`
+                                                        .concat(
+                                                            `${ayah.translation.ar}\n\n`,
                                                         )
-                                                    )
-                                            )
-                                        }
-                                    >
-                                        <IoMdCopy />
-                                        Copy Ayah
-                                    </button>
+                                                        .concat(
+                                                            ayahLatin
+                                                                ? `${ayahLatin}\n\n`
+                                                                : "",
+                                                        )
+                                                        .concat(
+                                                            `${ayahTranslation}\n\n`,
+                                                        )
+                                                        .concat(
+                                                            `(QS. ${surah.translation.latin_en} ${surah.number}: ${t("common.verse")} ${ayah.number})\n`.concat(
+                                                                `Via Thullaabul 'Ilmi ${window.location.href.split("#")[0]}#ayah-${ayah.number}`,
+                                                            ),
+                                                        ),
+                                                )
+                                            }
+                                        >
+                                            <IoMdCopy />
+                                            Copy Ayah
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
                         </li>
                     </ul>
                 )}
 
-                <ul className={`flex flex-col w-full justify-center ${fontCls}`} style={{ direction: 'rtl' }}>
+                <ul
+                    className={`flex flex-col w-full justify-center ${fontCls}`}
+                    style={{ direction: "rtl" }}
+                >
                     <li
-                        style={{ fontSize: `${arabicFontSize}px`, lineHeight: '2.10' }}
-                        className={hideArabic || hideAll ? 'blur-sm select-none' : ''}
+                        style={{
+                            fontSize: `${arabicFontSize}px`,
+                            lineHeight: "2.10",
+                        }}
+                        className={
+                            hideArabic || hideAll ? "blur-sm select-none" : ""
+                        }
                         dangerouslySetInnerHTML={{
                             __html: arabicHtml.concat(
-                                `&nbsp;<span class="font-kitab">&#x06DD;${NumberToArabic(ayah.number)}</span>`
+                                `&nbsp;<span class="font-kitab">&#x06DD;${NumberToArabic(ayah.number)}</span>`,
                             ),
                         }}
                     />
                     {ayah.translation.latin_idn && (
                         <li
-                            className={`text-left p-2 text-sm text-gray-500 dark:text-gray-400 italic ${hideTranslation || hideAll ? 'blur-sm select-none' : ''}`}
-                            style={{ direction: 'ltr' }}
+                            className={`text-left p-2 text-sm text-gray-500 dark:text-gray-400 italic ${hideTranslation || hideAll ? "blur-sm select-none" : ""}`}
+                            style={{ direction: "ltr" }}
                         >
                             {ayah.translation.latin_idn}
                         </li>
                     )}
                     <li
-                        className={`text-left p-2 ${hideTranslation || hideAll ? 'blur-sm select-none' : ''}`}
-                        style={{ direction: 'ltr', fontSize: `${translationFontSize}px`, lineHeight: '1.75' }}
+                        className={`text-left p-2 ${hideTranslation || hideAll ? "blur-sm select-none" : ""}`}
+                        style={{
+                            direction: "ltr",
+                            fontSize: `${translationFontSize}px`,
+                            lineHeight: "1.75",
+                        }}
                     >
                         {ayahTranslation}
                     </li>
-                    {hafalanMode !== 'off' && (
-                        <li className='px-2 pb-2' style={{ direction: 'ltr' }}>
+                    {hafalanMode !== "off" && (
+                        <li className='px-2 pb-2' style={{ direction: "ltr" }}>
                             <button
                                 type='button'
                                 onClick={() => setRevealed((v) => !v)}
                                 className='text-xs px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
                             >
                                 {revealed
-                                    ? t('hafalan.hide_again') ?? 'Sembunyikan lagi'
-                                    : t('hafalan.reveal') ?? 'Tampilkan'}
+                                    ? (t("hafalan.hide_again") ??
+                                      "Sembunyikan lagi")
+                                    : (t("hafalan.reveal") ?? "Tampilkan")}
                             </button>
                         </li>
                     )}
@@ -527,7 +631,7 @@ const AyahPage = ({
             {audioUrls.length > 1 && (
                 <div className='border-b border-gray-100 dark:border-slate-800 px-4 py-2 flex items-center gap-2 flex-wrap text-xs'>
                     <span className='text-gray-500 dark:text-gray-400'>
-                        {t('ayah.qari') ?? 'Qari'}:
+                        {t("ayah.qari") ?? "Qari"}:
                     </span>
                     {audioUrls.map((u) => (
                         <button
@@ -535,9 +639,10 @@ const AyahPage = ({
                             type='button'
                             onClick={() => switchQari(u.qari_slug)}
                             className={`px-2.5 py-1 rounded-full font-medium transition-colors ${
-                                (selectedQari ?? audioUrls[0].qari_slug) === u.qari_slug
-                                    ? 'bg-emerald-500 text-white'
-                                    : 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600'
+                                (selectedQari ?? audioUrls[0].qari_slug) ===
+                                u.qari_slug
+                                    ? "bg-emerald-500 text-white"
+                                    : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600"
                             }`}
                         >
                             {u.qari_name}
@@ -549,16 +654,20 @@ const AyahPage = ({
             {tafsirOpen && (
                 <div className='bg-amber-50 dark:bg-amber-900/10 border-b border-amber-100 dark:border-amber-900/30 px-4 py-4'>
                     <p className='text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wide mb-3'>
-                        {t('ayah.tafsir_label')} {surah.number}:{ayah.number}
+                        {t("ayah.tafsir_label")} {surah.number}:{ayah.number}
                     </p>
                     {tafsirLoading && (
-                        <p className='text-sm text-gray-400 dark:text-gray-500'>{t('ayah.loading_tafsir')}</p>
-                    )}
-                    {!tafsirLoading && Array.isArray(tafsir) && tafsir.length === 0 && (
-                        <p className='text-sm text-gray-500 dark:text-gray-400 italic'>
-                            {t('ayah.tafsir_empty')}
+                        <p className='text-sm text-gray-400 dark:text-gray-500'>
+                            {t("ayah.loading_tafsir")}
                         </p>
                     )}
+                    {!tafsirLoading &&
+                        Array.isArray(tafsir) &&
+                        tafsir.length === 0 && (
+                            <p className='text-sm text-gray-500 dark:text-gray-400 italic'>
+                                {t("ayah.tafsir_empty")}
+                            </p>
+                        )}
                     {!tafsirLoading &&
                         Array.isArray(tafsir) &&
                         tafsir.map((entry, i) => (
@@ -579,18 +688,25 @@ const AyahPage = ({
             {mufrodatOpen && (
                 <div className='bg-sky-50 dark:bg-sky-900/10 border-b border-sky-100 dark:border-sky-900/30 px-4 py-4'>
                     <p className='text-xs font-semibold text-sky-700 dark:text-sky-400 uppercase tracking-wide mb-3'>
-                        {t('ayah.mufrodat_label')} {surah.number}:{ayah.number}
+                        {t("ayah.mufrodat_label")} {surah.number}:{ayah.number}
                     </p>
                     {mufrodatLoading && (
-                        <p className='text-sm text-gray-400 dark:text-gray-500'>{t('ayah.loading_mufrodat')}</p>
-                    )}
-                    {!mufrodatLoading && Array.isArray(mufrodat) && mufrodat.length === 0 && (
-                        <p className='text-sm text-gray-500 dark:text-gray-400 italic'>
-                            {t('ayah.mufrodat_empty')}
+                        <p className='text-sm text-gray-400 dark:text-gray-500'>
+                            {t("ayah.loading_mufrodat")}
                         </p>
                     )}
+                    {!mufrodatLoading &&
+                        Array.isArray(mufrodat) &&
+                        mufrodat.length === 0 && (
+                            <p className='text-sm text-gray-500 dark:text-gray-400 italic'>
+                                {t("ayah.mufrodat_empty")}
+                            </p>
+                        )}
                     {!mufrodatLoading && Array.isArray(mufrodat) && (
-                        <div className='flex flex-wrap gap-2' style={{ direction: 'rtl' }}>
+                        <div
+                            className='flex flex-wrap gap-2'
+                            style={{ direction: "rtl" }}
+                        >
                             {mufrodat.map((word, i) => (
                                 <div
                                     key={i}
@@ -598,7 +714,7 @@ const AyahPage = ({
                                 >
                                     <p
                                         className='text-lg font-bold text-emerald-900 dark:text-white mb-0.5'
-                                        style={{ fontFamily: 'Amiri, serif' }}
+                                        style={{ fontFamily: "Amiri, serif" }}
                                     >
                                         {word.arabic}
                                     </p>
@@ -625,24 +741,42 @@ const AyahPage = ({
             {munasabahOpen && (
                 <div className='bg-purple-50 dark:bg-purple-900/10 border-b border-purple-100 dark:border-purple-900/30 px-4 py-4'>
                     <p className='text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wide mb-3'>
-                        {t('munasabah.title') ?? 'Ayat Terkait'} {surah.number}:{ayah.number}
+                        {t("munasabah.title") ?? "Ayat Terkait"} {surah.number}:
+                        {ayah.number}
                     </p>
                     {munasabahLoading && (
-                        <p className='text-sm text-gray-400 dark:text-gray-500'>{t('ayah.loading_tafsir') ?? 'Memuat...'}</p>
-                    )}
-                    {!munasabahLoading && Array.isArray(munasabah) && munasabah.length === 0 && (
-                        <p className='text-sm text-gray-500 dark:text-gray-400 italic'>
-                            {t('munasabah.empty') ?? 'Belum ada ayat terkait.'}
+                        <p className='text-sm text-gray-400 dark:text-gray-500'>
+                            {t("ayah.loading_tafsir") ?? "Memuat..."}
                         </p>
                     )}
-                    {!munasabahLoading && Array.isArray(munasabah) && munasabah.map((m, i) => (
-                        <div key={i} className='mb-3 last:mb-0 bg-white dark:bg-slate-800 rounded-lg p-3'>
-                            <p className='text-xs text-purple-600 dark:text-purple-400 font-medium mb-1'>
-                                {m.ayah_from?.surah?.translation?.latin_en ?? `QS ${m.ayah_from?.surah?.number}:${m.ayah_from?.number}`} ↔ {m.ayah_to?.surah?.translation?.latin_en ?? `QS ${m.ayah_to?.surah?.number}:${m.ayah_to?.number}`}
+                    {!munasabahLoading &&
+                        Array.isArray(munasabah) &&
+                        munasabah.length === 0 && (
+                            <p className='text-sm text-gray-500 dark:text-gray-400 italic'>
+                                {t("munasabah.empty") ??
+                                    "Belum ada ayat terkait."}
                             </p>
-                            <p className='text-sm text-gray-700 dark:text-gray-300'>{m.description}</p>
-                        </div>
-                    ))}
+                        )}
+                    {!munasabahLoading &&
+                        Array.isArray(munasabah) &&
+                        munasabah.map((m, i) => (
+                            <div
+                                key={i}
+                                className='mb-3 last:mb-0 bg-white dark:bg-slate-800 rounded-lg p-3'
+                            >
+                                <p className='text-xs text-purple-600 dark:text-purple-400 font-medium mb-1'>
+                                    {m.ayah_from?.surah?.translation
+                                        ?.latin_en ??
+                                        `QS ${m.ayah_from?.surah?.number}:${m.ayah_from?.number}`}{" "}
+                                    ↔{" "}
+                                    {m.ayah_to?.surah?.translation?.latin_en ??
+                                        `QS ${m.ayah_to?.surah?.number}:${m.ayah_to?.number}`}
+                                </p>
+                                <p className='text-sm text-gray-700 dark:text-gray-300'>
+                                    {m.description}
+                                </p>
+                            </div>
+                        ))}
                 </div>
             )}
 

@@ -1,794 +1,794 @@
 [
-  {
-    "number": 1,
-    "arabic": "اللَّهُ",
-    "transliteration": "Allah",
-    "indonesian": "Yang Maha Agung",
-    "english": "Allah",
-    "meaning": "Nama yang paling agung, mencakup semua sifat kesempurnaan"
-  },
-  {
-    "number": 2,
-    "arabic": "الرَّحْمَنُ",
-    "transliteration": "Ar-Rahman",
-    "indonesian": "Yang Maha Pengasih",
-    "english": "The Most Gracious",
-    "meaning": "Yang memiliki rahmat yang luas mencakup seluruh makhluk di dunia"
-  },
-  {
-    "number": 3,
-    "arabic": "الرَّحِيمُ",
-    "transliteration": "Ar-Rahim",
-    "indonesian": "Yang Maha Penyayang",
-    "english": "The Most Merciful",
-    "meaning": "Yang mengkhususkan rahmat-Nya bagi orang-orang beriman di akhirat"
-  },
-  {
-    "number": 4,
-    "arabic": "الْمَلِكُ",
-    "transliteration": "Al-Malik",
-    "indonesian": "Yang Maha Merajai",
-    "english": "The King",
-    "meaning": "Yang memiliki kerajaan mutlak dan berkuasa atas segala sesuatu"
-  },
-  {
-    "number": 5,
-    "arabic": "الْقُدُّوسُ",
-    "transliteration": "Al-Quddus",
-    "indonesian": "Yang Maha Suci",
-    "english": "The Most Holy",
-    "meaning": "Yang Maha Suci dari segala kekurangan dan aib"
-  },
-  {
-    "number": 6,
-    "arabic": "السَّلَامُ",
-    "transliteration": "As-Salam",
-    "indonesian": "Yang Maha Sejahtera",
-    "english": "The Source of Peace",
-    "meaning": "Yang selamat dari segala kekurangan dan yang memberi keselamatan"
-  },
-  {
-    "number": 7,
-    "arabic": "الْمُؤْمِنُ",
-    "transliteration": "Al-Mu'min",
-    "indonesian": "Yang Maha Memberi Keamanan",
-    "english": "The Guardian of Faith",
-    "meaning": "Yang memberi keamanan dan membenarkan para rasul-Nya"
-  },
-  {
-    "number": 8,
-    "arabic": "الْمُهَيْمِنُ",
-    "transliteration": "Al-Muhaymin",
-    "indonesian": "Yang Maha Memelihara",
-    "english": "The Protector",
-    "meaning": "Yang mengawasi dan memelihara segala sesuatu"
-  },
-  {
-    "number": 9,
-    "arabic": "الْعَزِيزُ",
-    "transliteration": "Al-Aziz",
-    "indonesian": "Yang Maha Perkasa",
-    "english": "The Almighty",
-    "meaning": "Yang Maha Mulia tidak terkalahkan dan tidak tertandingi"
-  },
-  {
-    "number": 10,
-    "arabic": "الْجَبَّارُ",
-    "transliteration": "Al-Jabbar",
-    "indonesian": "Yang Maha Kuasa",
-    "english": "The Compeller",
-    "meaning": "Yang kehendak-Nya tidak dapat dikalahkan, Yang Maha Tinggi"
-  },
-  {
-    "number": 11,
-    "arabic": "الْمُتَكَبِّرُ",
-    "transliteration": "Al-Mutakabbir",
-    "indonesian": "Yang Maha Megah",
-    "english": "The Supreme",
-    "meaning": "Yang memiliki kebesaran dan keagungan yang mutlak"
-  },
-  {
-    "number": 12,
-    "arabic": "الْخَالِقُ",
-    "transliteration": "Al-Khaliq",
-    "indonesian": "Yang Maha Pencipta",
-    "english": "The Creator",
-    "meaning": "Yang menciptakan segala sesuatu dari ketiadaan"
-  },
-  {
-    "number": 13,
-    "arabic": "الْبَارِئُ",
-    "transliteration": "Al-Bari'",
-    "indonesian": "Yang Maha Mengadakan",
-    "english": "The Evolver",
-    "meaning": "Yang mengadakan dan memisahkan antara makhluk satu dengan lainnya"
-  },
-  {
-    "number": 14,
-    "arabic": "الْمُصَوِّرُ",
-    "transliteration": "Al-Musawwir",
-    "indonesian": "Yang Maha Membentuk Rupa",
-    "english": "The Fashioner",
-    "meaning": "Yang memberikan bentuk dan rupa kepada segala sesuatu"
-  },
-  {
-    "number": 15,
-    "arabic": "الْغَفَّارُ",
-    "transliteration": "Al-Ghaffar",
-    "indonesian": "Yang Maha Pengampun",
-    "english": "The Ever-Forgiving",
-    "meaning": "Yang terus-menerus mengampuni dosa hamba-Nya"
-  },
-  {
-    "number": 16,
-    "arabic": "الْقَهَّارُ",
-    "transliteration": "Al-Qahhar",
-    "indonesian": "Yang Maha Mengalahkan",
-    "english": "The Subduer",
-    "meaning": "Yang menundukkan seluruh makhluk dan menguasai segalanya"
-  },
-  {
-    "number": 17,
-    "arabic": "الْوَهَّابُ",
-    "transliteration": "Al-Wahhab",
-    "indonesian": "Yang Maha Pemberi",
-    "english": "The Bestower",
-    "meaning": "Yang memberi tanpa batas dan tanpa mengharapkan imbalan"
-  },
-  {
-    "number": 18,
-    "arabic": "الرَّزَّاقُ",
-    "transliteration": "Ar-Razzaq",
-    "indonesian": "Yang Maha Pemberi Rezeki",
-    "english": "The Provider",
-    "meaning": "Yang memberikan rezeki kepada seluruh makhluk-Nya"
-  },
-  {
-    "number": 19,
-    "arabic": "الْفَتَّاحُ",
-    "transliteration": "Al-Fattah",
-    "indonesian": "Yang Maha Pembuka Rahmat",
-    "english": "The Opener",
-    "meaning": "Yang membuka pintu rahmat dan kemenangan bagi hamba-Nya"
-  },
-  {
-    "number": 20,
-    "arabic": "الْعَلِيمُ",
-    "transliteration": "Al-'Alim",
-    "indonesian": "Yang Maha Mengetahui",
-    "english": "The All-Knowing",
-    "meaning": "Yang mengetahui segala sesuatu, lahir dan batin, dahulu dan akan datang"
-  },
-  {
-    "number": 21,
-    "arabic": "الْقَابِضُ",
-    "transliteration": "Al-Qabidh",
-    "indonesian": "Yang Maha Menyempitkan",
-    "english": "The Withholder",
-    "meaning": "Yang menyempitkan dan menahan sesuai hikmah-Nya"
-  },
-  {
-    "number": 22,
-    "arabic": "الْبَاسِطُ",
-    "transliteration": "Al-Basith",
-    "indonesian": "Yang Maha Melapangkan",
-    "english": "The Extender",
-    "meaning": "Yang melapangkan rezeki dan rahmat kepada siapa yang dikehendaki"
-  },
-  {
-    "number": 23,
-    "arabic": "الْخَافِضُ",
-    "transliteration": "Al-Khafidh",
-    "indonesian": "Yang Maha Merendahkan",
-    "english": "The Abaser",
-    "meaning": "Yang merendahkan siapa yang dikehendaki dengan keadilan-Nya"
-  },
-  {
-    "number": 24,
-    "arabic": "الرَّافِعُ",
-    "transliteration": "Ar-Rafi'",
-    "indonesian": "Yang Maha Meninggikan",
-    "english": "The Exalter",
-    "meaning": "Yang meninggikan derajat siapa yang dikehendaki dengan karunia-Nya"
-  },
-  {
-    "number": 25,
-    "arabic": "الْمُعِزُّ",
-    "transliteration": "Al-Mu'izz",
-    "indonesian": "Yang Maha Memuliakan",
-    "english": "The Honourer",
-    "meaning": "Yang memberikan kemuliaan kepada siapa yang dikehendaki"
-  },
-  {
-    "number": 26,
-    "arabic": "الْمُذِلُّ",
-    "transliteration": "Al-Mudzill",
-    "indonesian": "Yang Maha Menghinakan",
-    "english": "The Dishonorer",
-    "meaning": "Yang menghinakan siapa yang dikehendaki dengan keadilan-Nya"
-  },
-  {
-    "number": 27,
-    "arabic": "السَّمِيعُ",
-    "transliteration": "As-Sami'",
-    "indonesian": "Yang Maha Mendengar",
-    "english": "The All-Hearing",
-    "meaning": "Yang mendengar semua suara dan bisikan hati"
-  },
-  {
-    "number": 28,
-    "arabic": "الْبَصِيرُ",
-    "transliteration": "Al-Bashir",
-    "indonesian": "Yang Maha Melihat",
-    "english": "The All-Seeing",
-    "meaning": "Yang melihat segala sesuatu meskipun tersembunyi"
-  },
-  {
-    "number": 29,
-    "arabic": "الْحَكَمُ",
-    "transliteration": "Al-Hakam",
-    "indonesian": "Yang Maha Menetapkan",
-    "english": "The Judge",
-    "meaning": "Yang menetapkan hukum dan keputusan dengan adil"
-  },
-  {
-    "number": 30,
-    "arabic": "الْعَدْلُ",
-    "transliteration": "Al-'Adl",
-    "indonesian": "Yang Maha Adil",
-    "english": "The Just",
-    "meaning": "Yang Maha Adil dalam setiap keputusan dan tindakan-Nya"
-  },
-  {
-    "number": 31,
-    "arabic": "اللَّطِيفُ",
-    "transliteration": "Al-Lathif",
-    "indonesian": "Yang Maha Lembut",
-    "english": "The Subtle One",
-    "meaning": "Yang Maha Halus dalam mengetahui dan bertindak"
-  },
-  {
-    "number": 32,
-    "arabic": "الْخَبِيرُ",
-    "transliteration": "Al-Khabir",
-    "indonesian": "Yang Maha Mengenal",
-    "english": "The All-Aware",
-    "meaning": "Yang mengetahui hakikat segala sesuatu secara mendalam"
-  },
-  {
-    "number": 33,
-    "arabic": "الْحَلِيمُ",
-    "transliteration": "Al-Halim",
-    "indonesian": "Yang Maha Penyantun",
-    "english": "The Forbearing",
-    "meaning": "Yang Maha Sabar dan tidak tergesa-gesa dalam menghukum"
-  },
-  {
-    "number": 34,
-    "arabic": "الْعَظِيمُ",
-    "transliteration": "Al-'Azhim",
-    "indonesian": "Yang Maha Agung",
-    "english": "The Magnificent",
-    "meaning": "Yang memiliki keagungan yang tidak terbatas"
-  },
-  {
-    "number": 35,
-    "arabic": "الْغَفُورُ",
-    "transliteration": "Al-Ghafur",
-    "indonesian": "Yang Maha Memaafkan",
-    "english": "The All-Forgiving",
-    "meaning": "Yang menutup dosa-dosa hamba-Nya dengan ampunan-Nya"
-  },
-  {
-    "number": 36,
-    "arabic": "الشَّكُورُ",
-    "transliteration": "Asy-Syakur",
-    "indonesian": "Yang Maha Mensyukuri",
-    "english": "The Most Appreciative",
-    "meaning": "Yang membalas amal-amal kecil dengan pahala yang besar"
-  },
-  {
-    "number": 37,
-    "arabic": "الْعَلِيُّ",
-    "transliteration": "Al-'Ali",
-    "indonesian": "Yang Maha Tinggi",
-    "english": "The Most High",
-    "meaning": "Yang Maha Tinggi di atas segala makhluk-Nya"
-  },
-  {
-    "number": 38,
-    "arabic": "الْكَبِيرُ",
-    "transliteration": "Al-Kabir",
-    "indonesian": "Yang Maha Besar",
-    "english": "The Most Great",
-    "meaning": "Yang memiliki kebesaran dalam zat dan sifat-Nya"
-  },
-  {
-    "number": 39,
-    "arabic": "الْحَفِيظُ",
-    "transliteration": "Al-Hafizh",
-    "indonesian": "Yang Maha Memelihara",
-    "english": "The Preserver",
-    "meaning": "Yang memelihara segala sesuatu dan tidak lalai"
-  },
-  {
-    "number": 40,
-    "arabic": "الْمُقِيتُ",
-    "transliteration": "Al-Muqit",
-    "indonesian": "Yang Maha Pemberi Kecukupan",
-    "english": "The Nourisher",
-    "meaning": "Yang memberikan makanan dan kecukupan kepada setiap makhluk"
-  },
-  {
-    "number": 41,
-    "arabic": "الْحَسِيبُ",
-    "transliteration": "Al-Hasib",
-    "indonesian": "Yang Maha Membuat Perhitungan",
-    "english": "The Reckoner",
-    "meaning": "Yang mencukupi dan menghitung amal perbuatan hamba-Nya"
-  },
-  {
-    "number": 42,
-    "arabic": "الْجَلِيلُ",
-    "transliteration": "Al-Jalil",
-    "indonesian": "Yang Maha Luhur",
-    "english": "The Majestic",
-    "meaning": "Yang memiliki keluhuran dan keagungan yang sempurna"
-  },
-  {
-    "number": 43,
-    "arabic": "الْكَرِيمُ",
-    "transliteration": "Al-Karim",
-    "indonesian": "Yang Maha Mulia",
-    "english": "The Most Generous",
-    "meaning": "Yang Maha Dermawan dan mulia dalam memberi"
-  },
-  {
-    "number": 44,
-    "arabic": "الرَّقِيبُ",
-    "transliteration": "Ar-Raqib",
-    "indonesian": "Yang Maha Mengawasi",
-    "english": "The Watchful",
-    "meaning": "Yang mengawasi setiap gerak dan diam makhluk-Nya"
-  },
-  {
-    "number": 45,
-    "arabic": "الْمُجِيبُ",
-    "transliteration": "Al-Mujib",
-    "indonesian": "Yang Maha Mengabulkan",
-    "english": "The Responsive",
-    "meaning": "Yang mengabulkan doa dan permintaan hamba-Nya"
-  },
-  {
-    "number": 46,
-    "arabic": "الْوَاسِعُ",
-    "transliteration": "Al-Wasi'",
-    "indonesian": "Yang Maha Luas",
-    "english": "The All-Encompassing",
-    "meaning": "Yang Maha Luas ilmu, rahmat, dan kekuasaan-Nya"
-  },
-  {
-    "number": 47,
-    "arabic": "الْحَكِيمُ",
-    "transliteration": "Al-Hakim",
-    "indonesian": "Yang Maha Bijaksana",
-    "english": "The Wise",
-    "meaning": "Yang menempatkan segala sesuatu pada tempat yang tepat"
-  },
-  {
-    "number": 48,
-    "arabic": "الْوَدُودُ",
-    "transliteration": "Al-Wadud",
-    "indonesian": "Yang Maha Mencintai",
-    "english": "The Loving",
-    "meaning": "Yang mencintai orang-orang beriman dan dicintai oleh mereka"
-  },
-  {
-    "number": 49,
-    "arabic": "الْمَجِيدُ",
-    "transliteration": "Al-Majid",
-    "indonesian": "Yang Maha Mulia",
-    "english": "The Most Glorious",
-    "meaning": "Yang memiliki kemuliaan yang sempurna dan keagungan yang tinggi"
-  },
-  {
-    "number": 50,
-    "arabic": "الْبَاعِثُ",
-    "transliteration": "Al-Ba'its",
-    "indonesian": "Yang Maha Membangkitkan",
-    "english": "The Resurrector",
-    "meaning": "Yang akan membangkitkan seluruh makhluk pada hari kiamat"
-  },
-  {
-    "number": 51,
-    "arabic": "الشَّهِيدُ",
-    "transliteration": "Asy-Syahid",
-    "indonesian": "Yang Maha Menyaksikan",
-    "english": "The Witness",
-    "meaning": "Yang menyaksikan segala sesuatu yang terjadi"
-  },
-  {
-    "number": 52,
-    "arabic": "الْحَقُّ",
-    "transliteration": "Al-Haqq",
-    "indonesian": "Yang Maha Benar",
-    "english": "The Truth",
-    "meaning": "Yang wujud-Nya pasti dan benar, tidak ada yang lebih benar dari-Nya"
-  },
-  {
-    "number": 53,
-    "arabic": "الْوَكِيلُ",
-    "transliteration": "Al-Wakil",
-    "indonesian": "Yang Maha Memelihara",
-    "english": "The Trustee",
-    "meaning": "Yang memelihara dan mengurus urusan hamba-Nya yang bertawakal"
-  },
-  {
-    "number": 54,
-    "arabic": "الْقَوِيُّ",
-    "transliteration": "Al-Qawi",
-    "indonesian": "Yang Maha Kuat",
-    "english": "The Most Strong",
-    "meaning": "Yang memiliki kekuatan sempurna yang tidak dapat dikalahkan"
-  },
-  {
-    "number": 55,
-    "arabic": "الْمَتِينُ",
-    "transliteration": "Al-Matin",
-    "indonesian": "Yang Maha Kokoh",
-    "english": "The Firm",
-    "meaning": "Yang memiliki kekuatan yang sangat kokoh dan tidak pernah lemah"
-  },
-  {
-    "number": 56,
-    "arabic": "الْوَلِيُّ",
-    "transliteration": "Al-Wali",
-    "indonesian": "Yang Maha Melindungi",
-    "english": "The Protecting Friend",
-    "meaning": "Yang menjadi wali dan pelindung orang-orang beriman"
-  },
-  {
-    "number": 57,
-    "arabic": "الْحَمِيدُ",
-    "transliteration": "Al-Hamid",
-    "indonesian": "Yang Maha Terpuji",
-    "english": "The Praiseworthy",
-    "meaning": "Yang berhak mendapatkan segala pujian dan sanjungan"
-  },
-  {
-    "number": 58,
-    "arabic": "الْمُحْصِي",
-    "transliteration": "Al-Muhshi",
-    "indonesian": "Yang Maha Menghitung",
-    "english": "The Appraiser",
-    "meaning": "Yang menghitung dan mengetahui semua hal dengan terperinci"
-  },
-  {
-    "number": 59,
-    "arabic": "الْمُبْدِئُ",
-    "transliteration": "Al-Mubdi'",
-    "indonesian": "Yang Maha Memulai",
-    "english": "The Originator",
-    "meaning": "Yang menciptakan makhluk pertama kali tanpa contoh sebelumnya"
-  },
-  {
-    "number": 60,
-    "arabic": "الْمُعِيدُ",
-    "transliteration": "Al-Mu'id",
-    "indonesian": "Yang Maha Mengembalikan Kehidupan",
-    "english": "The Restorer",
-    "meaning": "Yang akan mengembalikan makhluk setelah kematian"
-  },
-  {
-    "number": 61,
-    "arabic": "الْمُحْيِي",
-    "transliteration": "Al-Muhyi",
-    "indonesian": "Yang Maha Menghidupkan",
-    "english": "The Giver of Life",
-    "meaning": "Yang memberikan kehidupan kepada siapa yang dikehendaki"
-  },
-  {
-    "number": 62,
-    "arabic": "الْمُمِيتُ",
-    "transliteration": "Al-Mumit",
-    "indonesian": "Yang Maha Mematikan",
-    "english": "The Taker of Life",
-    "meaning": "Yang mematikan makhluk sesuai dengan kehendak dan hikmah-Nya"
-  },
-  {
-    "number": 63,
-    "arabic": "الْحَيُّ",
-    "transliteration": "Al-Hayy",
-    "indonesian": "Yang Maha Hidup",
-    "english": "The Ever-Living",
-    "meaning": "Yang hidup kekal abadi, tidak terkena kematian"
-  },
-  {
-    "number": 64,
-    "arabic": "الْقَيُّومُ",
-    "transliteration": "Al-Qayyum",
-    "indonesian": "Yang Maha Berdiri Sendiri",
-    "english": "The Self-Subsisting",
-    "meaning": "Yang berdiri sendiri dan menopang segala sesuatu"
-  },
-  {
-    "number": 65,
-    "arabic": "الْوَاجِدُ",
-    "transliteration": "Al-Wajid",
-    "indonesian": "Yang Maha Menemukan",
-    "english": "The Perceiver",
-    "meaning": "Yang Maha Kaya dan tidak kekurangan apapun"
-  },
-  {
-    "number": 66,
-    "arabic": "الْمَاجِدُ",
-    "transliteration": "Al-Majid",
-    "indonesian": "Yang Maha Mulia",
-    "english": "The Noble",
-    "meaning": "Yang memiliki kemuliaan dalam perbuatan-Nya"
-  },
-  {
-    "number": 67,
-    "arabic": "الْوَاحِدُ",
-    "transliteration": "Al-Wahid",
-    "indonesian": "Yang Maha Esa",
-    "english": "The One",
-    "meaning": "Yang Maha Esa dalam zat, sifat, dan perbuatan-Nya"
-  },
-  {
-    "number": 68,
-    "arabic": "الْأَحَدُ",
-    "transliteration": "Al-Ahad",
-    "indonesian": "Yang Maha Tunggal",
-    "english": "The Unique",
-    "meaning": "Yang tunggal tidak ada yang menyerupai-Nya"
-  },
-  {
-    "number": 69,
-    "arabic": "الصَّمَدُ",
-    "transliteration": "As-Samad",
-    "indonesian": "Yang Maha Dibutuhkan",
-    "english": "The Eternal",
-    "meaning": "Yang menjadi tujuan semua kebutuhan dan tidak membutuhkan apapun"
-  },
-  {
-    "number": 70,
-    "arabic": "الْقَادِرُ",
-    "transliteration": "Al-Qadir",
-    "indonesian": "Yang Maha Menentukan",
-    "english": "The Capable",
-    "meaning": "Yang berkuasa atas segala sesuatu tanpa ada hambatan"
-  },
-  {
-    "number": 71,
-    "arabic": "الْمُقْتَدِرُ",
-    "transliteration": "Al-Muqtadir",
-    "indonesian": "Yang Maha Berkuasa",
-    "english": "The Powerful",
-    "meaning": "Yang memiliki kekuasaan penuh atas segala sesuatu"
-  },
-  {
-    "number": 72,
-    "arabic": "الْمُقَدِّمُ",
-    "transliteration": "Al-Muqaddim",
-    "indonesian": "Yang Maha Mendahulukan",
-    "english": "The Expediter",
-    "meaning": "Yang mendahulukan siapa yang dikehendaki sesuai hikmah-Nya"
-  },
-  {
-    "number": 73,
-    "arabic": "الْمُؤَخِّرُ",
-    "transliteration": "Al-Mu'akhkhir",
-    "indonesian": "Yang Maha Mengakhirkan",
-    "english": "The Delayer",
-    "meaning": "Yang mengakhirkan siapa yang dikehendaki sesuai hikmah-Nya"
-  },
-  {
-    "number": 74,
-    "arabic": "الْأَوَّلُ",
-    "transliteration": "Al-Awwal",
-    "indonesian": "Yang Maha Awal",
-    "english": "The First",
-    "meaning": "Yang ada sebelum segala sesuatu ada"
-  },
-  {
-    "number": 75,
-    "arabic": "الْآخِرُ",
-    "transliteration": "Al-Akhir",
-    "indonesian": "Yang Maha Akhir",
-    "english": "The Last",
-    "meaning": "Yang tetap ada setelah segala sesuatu tiada"
-  },
-  {
-    "number": 76,
-    "arabic": "الظَّاهِرُ",
-    "transliteration": "Az-Zhahir",
-    "indonesian": "Yang Maha Nyata",
-    "english": "The Manifest",
-    "meaning": "Yang jelas dan nyata keberadaan-Nya melalui tanda-tanda kekuasaan-Nya"
-  },
-  {
-    "number": 77,
-    "arabic": "الْبَاطِنُ",
-    "transliteration": "Al-Bathin",
-    "indonesian": "Yang Maha Tersembunyi",
-    "english": "The Hidden",
-    "meaning": "Yang tersembunyi dari pandangan makhluk, tidak terjangkau oleh indera"
-  },
-  {
-    "number": 78,
-    "arabic": "الْوَالِي",
-    "transliteration": "Al-Wali",
-    "indonesian": "Yang Maha Memerintah",
-    "english": "The Governor",
-    "meaning": "Yang mengatur dan memerintah seluruh urusan alam semesta"
-  },
-  {
-    "number": 79,
-    "arabic": "الْمُتَعَالِي",
-    "transliteration": "Al-Muta'ali",
-    "indonesian": "Yang Maha Tinggi",
-    "english": "The Self Exalted",
-    "meaning": "Yang Maha Tinggi di atas segala sifat kekurangan"
-  },
-  {
-    "number": 80,
-    "arabic": "الْبَرُّ",
-    "transliteration": "Al-Barr",
-    "indonesian": "Yang Maha Dermawan",
-    "english": "The Source of All Good",
-    "meaning": "Yang Maha Baik dan berbuat kebaikan kepada hamba-Nya"
-  },
-  {
-    "number": 81,
-    "arabic": "التَّوَّابُ",
-    "transliteration": "At-Tawwab",
-    "indonesian": "Yang Maha Penerima Tobat",
-    "english": "The Ever-Returning",
-    "meaning": "Yang menerima tobat hamba-Nya berulang kali dengan penuh kasih"
-  },
-  {
-    "number": 82,
-    "arabic": "الْمُنْتَقِمُ",
-    "transliteration": "Al-Muntaqim",
-    "indonesian": "Yang Maha Pemberi Hukuman",
-    "english": "The Avenger",
-    "meaning": "Yang memberikan hukuman setimpal kepada orang yang zalim"
-  },
-  {
-    "number": 83,
-    "arabic": "الْعَفُوُّ",
-    "transliteration": "Al-'Afuw",
-    "indonesian": "Yang Maha Pemaaf",
-    "english": "The Pardoner",
-    "meaning": "Yang menghapus dosa tanpa meninggalkan bekas"
-  },
-  {
-    "number": 84,
-    "arabic": "الرَّؤُوفُ",
-    "transliteration": "Ar-Ra'uf",
-    "indonesian": "Yang Maha Pengasih",
-    "english": "The Compassionate",
-    "meaning": "Yang memiliki kasih sayang yang sangat lembut kepada hamba-Nya"
-  },
-  {
-    "number": 85,
-    "arabic": "مَالِكُ الْمُلْكِ",
-    "transliteration": "Malikal Mulk",
-    "indonesian": "Yang Maha Memiliki Kerajaan",
-    "english": "The Owner of All",
-    "meaning": "Yang memiliki kerajaan secara mutlak dan memberikannya kepada siapa yang dikehendaki"
-  },
-  {
-    "number": 86,
-    "arabic": "ذُو الْجَلَالِ وَالْإِكْرَامِ",
-    "transliteration": "Dzul Jalali wal Ikram",
-    "indonesian": "Yang Maha Memiliki Kebesaran dan Kemuliaan",
-    "english": "The Lord of Majesty",
-    "meaning": "Yang memiliki keagungan dan kemuliaan yang sempurna"
-  },
-  {
-    "number": 87,
-    "arabic": "الْمُقْسِطُ",
-    "transliteration": "Al-Muqsith",
-    "indonesian": "Yang Maha Adil",
-    "english": "The Equitable One",
-    "meaning": "Yang berlaku adil dalam setiap keputusan-Nya"
-  },
-  {
-    "number": 88,
-    "arabic": "الْجَامِعُ",
-    "transliteration": "Al-Jami'",
-    "indonesian": "Yang Maha Mengumpulkan",
-    "english": "The Gatherer",
-    "meaning": "Yang mengumpulkan makhluk pada hari kiamat"
-  },
-  {
-    "number": 89,
-    "arabic": "الْغَنِيُّ",
-    "transliteration": "Al-Ghani",
-    "indonesian": "Yang Maha Kaya",
-    "english": "The Self-Sufficient",
-    "meaning": "Yang tidak membutuhkan apapun dari makhluk-Nya"
-  },
-  {
-    "number": 90,
-    "arabic": "الْمُغْنِي",
-    "transliteration": "Al-Mughni",
-    "indonesian": "Yang Maha Memberikan Kekayaan",
-    "english": "The Enricher",
-    "meaning": "Yang memberikan kekayaan kepada siapa yang dikehendaki"
-  },
-  {
-    "number": 91,
-    "arabic": "الْمَانِعُ",
-    "transliteration": "Al-Mani'",
-    "indonesian": "Yang Maha Mencegah",
-    "english": "The Preventer",
-    "meaning": "Yang mencegah sesuatu sesuai dengan hikmah dan keadilan-Nya"
-  },
-  {
-    "number": 92,
-    "arabic": "الضَّارُّ",
-    "transliteration": "Ad-Dharr",
-    "indonesian": "Yang Maha Pemberi Derita",
-    "english": "The Distresser",
-    "meaning": "Yang memberikan mudarat kepada siapa yang dikehendaki sebagai ujian"
-  },
-  {
-    "number": 93,
-    "arabic": "النَّافِعُ",
-    "transliteration": "An-Nafi'",
-    "indonesian": "Yang Maha Memberi Manfaat",
-    "english": "The Propitious",
-    "meaning": "Yang memberikan manfaat kepada siapa yang dikehendaki"
-  },
-  {
-    "number": 94,
-    "arabic": "النُّورُ",
-    "transliteration": "An-Nur",
-    "indonesian": "Yang Maha Bercahaya",
-    "english": "The Light",
-    "meaning": "Yang menerangi langit, bumi, dan hati orang-orang beriman"
-  },
-  {
-    "number": 95,
-    "arabic": "الْهَادِي",
-    "transliteration": "Al-Hadi",
-    "indonesian": "Yang Maha Pemberi Petunjuk",
-    "english": "The Guide",
-    "meaning": "Yang memberikan petunjuk kepada siapa yang dikehendaki"
-  },
-  {
-    "number": 96,
-    "arabic": "الْبَدِيعُ",
-    "transliteration": "Al-Badi'",
-    "indonesian": "Yang Maha Pencipta yang Baru",
-    "english": "The Originator",
-    "meaning": "Yang menciptakan sesuatu yang baru tanpa ada contoh sebelumnya"
-  },
-  {
-    "number": 97,
-    "arabic": "الْبَاقِي",
-    "transliteration": "Al-Baqi",
-    "indonesian": "Yang Maha Kekal",
-    "english": "The Everlasting",
-    "meaning": "Yang kekal abadi tanpa permulaan dan tanpa akhir"
-  },
-  {
-    "number": 98,
-    "arabic": "الْوَارِثُ",
-    "transliteration": "Al-Warits",
-    "indonesian": "Yang Maha Mewarisi",
-    "english": "The Inheritor",
-    "meaning": "Yang mewarisi segala sesuatu setelah semua makhluk musnah"
-  },
-  {
-    "number": 99,
-    "arabic": "الرَّشِيدُ",
-    "transliteration": "Ar-Rasyid",
-    "indonesian": "Yang Maha Pandai",
-    "english": "The Guide to the Right Path",
-    "meaning": "Yang membimbing makhluk-Nya ke jalan yang lurus dan benar"
-  }
+    {
+        "number": 1,
+        "arabic": "اللَّهُ",
+        "transliteration": "Allah",
+        "indonesian": "Yang Maha Agung",
+        "english": "Allah",
+        "meaning": "Nama yang paling agung, mencakup semua sifat kesempurnaan"
+    },
+    {
+        "number": 2,
+        "arabic": "الرَّحْمَنُ",
+        "transliteration": "Ar-Rahman",
+        "indonesian": "Yang Maha Pengasih",
+        "english": "The Most Gracious",
+        "meaning": "Yang memiliki rahmat yang luas mencakup seluruh makhluk di dunia"
+    },
+    {
+        "number": 3,
+        "arabic": "الرَّحِيمُ",
+        "transliteration": "Ar-Rahim",
+        "indonesian": "Yang Maha Penyayang",
+        "english": "The Most Merciful",
+        "meaning": "Yang mengkhususkan rahmat-Nya bagi orang-orang beriman di akhirat"
+    },
+    {
+        "number": 4,
+        "arabic": "الْمَلِكُ",
+        "transliteration": "Al-Malik",
+        "indonesian": "Yang Maha Merajai",
+        "english": "The King",
+        "meaning": "Yang memiliki kerajaan mutlak dan berkuasa atas segala sesuatu"
+    },
+    {
+        "number": 5,
+        "arabic": "الْقُدُّوسُ",
+        "transliteration": "Al-Quddus",
+        "indonesian": "Yang Maha Suci",
+        "english": "The Most Holy",
+        "meaning": "Yang Maha Suci dari segala kekurangan dan aib"
+    },
+    {
+        "number": 6,
+        "arabic": "السَّلَامُ",
+        "transliteration": "As-Salam",
+        "indonesian": "Yang Maha Sejahtera",
+        "english": "The Source of Peace",
+        "meaning": "Yang selamat dari segala kekurangan dan yang memberi keselamatan"
+    },
+    {
+        "number": 7,
+        "arabic": "الْمُؤْمِنُ",
+        "transliteration": "Al-Mu'min",
+        "indonesian": "Yang Maha Memberi Keamanan",
+        "english": "The Guardian of Faith",
+        "meaning": "Yang memberi keamanan dan membenarkan para rasul-Nya"
+    },
+    {
+        "number": 8,
+        "arabic": "الْمُهَيْمِنُ",
+        "transliteration": "Al-Muhaymin",
+        "indonesian": "Yang Maha Memelihara",
+        "english": "The Protector",
+        "meaning": "Yang mengawasi dan memelihara segala sesuatu"
+    },
+    {
+        "number": 9,
+        "arabic": "الْعَزِيزُ",
+        "transliteration": "Al-Aziz",
+        "indonesian": "Yang Maha Perkasa",
+        "english": "The Almighty",
+        "meaning": "Yang Maha Mulia tidak terkalahkan dan tidak tertandingi"
+    },
+    {
+        "number": 10,
+        "arabic": "الْجَبَّارُ",
+        "transliteration": "Al-Jabbar",
+        "indonesian": "Yang Maha Kuasa",
+        "english": "The Compeller",
+        "meaning": "Yang kehendak-Nya tidak dapat dikalahkan, Yang Maha Tinggi"
+    },
+    {
+        "number": 11,
+        "arabic": "الْمُتَكَبِّرُ",
+        "transliteration": "Al-Mutakabbir",
+        "indonesian": "Yang Maha Megah",
+        "english": "The Supreme",
+        "meaning": "Yang memiliki kebesaran dan keagungan yang mutlak"
+    },
+    {
+        "number": 12,
+        "arabic": "الْخَالِقُ",
+        "transliteration": "Al-Khaliq",
+        "indonesian": "Yang Maha Pencipta",
+        "english": "The Creator",
+        "meaning": "Yang menciptakan segala sesuatu dari ketiadaan"
+    },
+    {
+        "number": 13,
+        "arabic": "الْبَارِئُ",
+        "transliteration": "Al-Bari'",
+        "indonesian": "Yang Maha Mengadakan",
+        "english": "The Evolver",
+        "meaning": "Yang mengadakan dan memisahkan antara makhluk satu dengan lainnya"
+    },
+    {
+        "number": 14,
+        "arabic": "الْمُصَوِّرُ",
+        "transliteration": "Al-Musawwir",
+        "indonesian": "Yang Maha Membentuk Rupa",
+        "english": "The Fashioner",
+        "meaning": "Yang memberikan bentuk dan rupa kepada segala sesuatu"
+    },
+    {
+        "number": 15,
+        "arabic": "الْغَفَّارُ",
+        "transliteration": "Al-Ghaffar",
+        "indonesian": "Yang Maha Pengampun",
+        "english": "The Ever-Forgiving",
+        "meaning": "Yang terus-menerus mengampuni dosa hamba-Nya"
+    },
+    {
+        "number": 16,
+        "arabic": "الْقَهَّارُ",
+        "transliteration": "Al-Qahhar",
+        "indonesian": "Yang Maha Mengalahkan",
+        "english": "The Subduer",
+        "meaning": "Yang menundukkan seluruh makhluk dan menguasai segalanya"
+    },
+    {
+        "number": 17,
+        "arabic": "الْوَهَّابُ",
+        "transliteration": "Al-Wahhab",
+        "indonesian": "Yang Maha Pemberi",
+        "english": "The Bestower",
+        "meaning": "Yang memberi tanpa batas dan tanpa mengharapkan imbalan"
+    },
+    {
+        "number": 18,
+        "arabic": "الرَّزَّاقُ",
+        "transliteration": "Ar-Razzaq",
+        "indonesian": "Yang Maha Pemberi Rezeki",
+        "english": "The Provider",
+        "meaning": "Yang memberikan rezeki kepada seluruh makhluk-Nya"
+    },
+    {
+        "number": 19,
+        "arabic": "الْفَتَّاحُ",
+        "transliteration": "Al-Fattah",
+        "indonesian": "Yang Maha Pembuka Rahmat",
+        "english": "The Opener",
+        "meaning": "Yang membuka pintu rahmat dan kemenangan bagi hamba-Nya"
+    },
+    {
+        "number": 20,
+        "arabic": "الْعَلِيمُ",
+        "transliteration": "Al-'Alim",
+        "indonesian": "Yang Maha Mengetahui",
+        "english": "The All-Knowing",
+        "meaning": "Yang mengetahui segala sesuatu, lahir dan batin, dahulu dan akan datang"
+    },
+    {
+        "number": 21,
+        "arabic": "الْقَابِضُ",
+        "transliteration": "Al-Qabidh",
+        "indonesian": "Yang Maha Menyempitkan",
+        "english": "The Withholder",
+        "meaning": "Yang menyempitkan dan menahan sesuai hikmah-Nya"
+    },
+    {
+        "number": 22,
+        "arabic": "الْبَاسِطُ",
+        "transliteration": "Al-Basith",
+        "indonesian": "Yang Maha Melapangkan",
+        "english": "The Extender",
+        "meaning": "Yang melapangkan rezeki dan rahmat kepada siapa yang dikehendaki"
+    },
+    {
+        "number": 23,
+        "arabic": "الْخَافِضُ",
+        "transliteration": "Al-Khafidh",
+        "indonesian": "Yang Maha Merendahkan",
+        "english": "The Abaser",
+        "meaning": "Yang merendahkan siapa yang dikehendaki dengan keadilan-Nya"
+    },
+    {
+        "number": 24,
+        "arabic": "الرَّافِعُ",
+        "transliteration": "Ar-Rafi'",
+        "indonesian": "Yang Maha Meninggikan",
+        "english": "The Exalter",
+        "meaning": "Yang meninggikan derajat siapa yang dikehendaki dengan karunia-Nya"
+    },
+    {
+        "number": 25,
+        "arabic": "الْمُعِزُّ",
+        "transliteration": "Al-Mu'izz",
+        "indonesian": "Yang Maha Memuliakan",
+        "english": "The Honourer",
+        "meaning": "Yang memberikan kemuliaan kepada siapa yang dikehendaki"
+    },
+    {
+        "number": 26,
+        "arabic": "الْمُذِلُّ",
+        "transliteration": "Al-Mudzill",
+        "indonesian": "Yang Maha Menghinakan",
+        "english": "The Dishonorer",
+        "meaning": "Yang menghinakan siapa yang dikehendaki dengan keadilan-Nya"
+    },
+    {
+        "number": 27,
+        "arabic": "السَّمِيعُ",
+        "transliteration": "As-Sami'",
+        "indonesian": "Yang Maha Mendengar",
+        "english": "The All-Hearing",
+        "meaning": "Yang mendengar semua suara dan bisikan hati"
+    },
+    {
+        "number": 28,
+        "arabic": "الْبَصِيرُ",
+        "transliteration": "Al-Bashir",
+        "indonesian": "Yang Maha Melihat",
+        "english": "The All-Seeing",
+        "meaning": "Yang melihat segala sesuatu meskipun tersembunyi"
+    },
+    {
+        "number": 29,
+        "arabic": "الْحَكَمُ",
+        "transliteration": "Al-Hakam",
+        "indonesian": "Yang Maha Menetapkan",
+        "english": "The Judge",
+        "meaning": "Yang menetapkan hukum dan keputusan dengan adil"
+    },
+    {
+        "number": 30,
+        "arabic": "الْعَدْلُ",
+        "transliteration": "Al-'Adl",
+        "indonesian": "Yang Maha Adil",
+        "english": "The Just",
+        "meaning": "Yang Maha Adil dalam setiap keputusan dan tindakan-Nya"
+    },
+    {
+        "number": 31,
+        "arabic": "اللَّطِيفُ",
+        "transliteration": "Al-Lathif",
+        "indonesian": "Yang Maha Lembut",
+        "english": "The Subtle One",
+        "meaning": "Yang Maha Halus dalam mengetahui dan bertindak"
+    },
+    {
+        "number": 32,
+        "arabic": "الْخَبِيرُ",
+        "transliteration": "Al-Khabir",
+        "indonesian": "Yang Maha Mengenal",
+        "english": "The All-Aware",
+        "meaning": "Yang mengetahui hakikat segala sesuatu secara mendalam"
+    },
+    {
+        "number": 33,
+        "arabic": "الْحَلِيمُ",
+        "transliteration": "Al-Halim",
+        "indonesian": "Yang Maha Penyantun",
+        "english": "The Forbearing",
+        "meaning": "Yang Maha Sabar dan tidak tergesa-gesa dalam menghukum"
+    },
+    {
+        "number": 34,
+        "arabic": "الْعَظِيمُ",
+        "transliteration": "Al-'Azhim",
+        "indonesian": "Yang Maha Agung",
+        "english": "The Magnificent",
+        "meaning": "Yang memiliki keagungan yang tidak terbatas"
+    },
+    {
+        "number": 35,
+        "arabic": "الْغَفُورُ",
+        "transliteration": "Al-Ghafur",
+        "indonesian": "Yang Maha Memaafkan",
+        "english": "The All-Forgiving",
+        "meaning": "Yang menutup dosa-dosa hamba-Nya dengan ampunan-Nya"
+    },
+    {
+        "number": 36,
+        "arabic": "الشَّكُورُ",
+        "transliteration": "Asy-Syakur",
+        "indonesian": "Yang Maha Mensyukuri",
+        "english": "The Most Appreciative",
+        "meaning": "Yang membalas amal-amal kecil dengan pahala yang besar"
+    },
+    {
+        "number": 37,
+        "arabic": "الْعَلِيُّ",
+        "transliteration": "Al-'Ali",
+        "indonesian": "Yang Maha Tinggi",
+        "english": "The Most High",
+        "meaning": "Yang Maha Tinggi di atas segala makhluk-Nya"
+    },
+    {
+        "number": 38,
+        "arabic": "الْكَبِيرُ",
+        "transliteration": "Al-Kabir",
+        "indonesian": "Yang Maha Besar",
+        "english": "The Most Great",
+        "meaning": "Yang memiliki kebesaran dalam zat dan sifat-Nya"
+    },
+    {
+        "number": 39,
+        "arabic": "الْحَفِيظُ",
+        "transliteration": "Al-Hafizh",
+        "indonesian": "Yang Maha Memelihara",
+        "english": "The Preserver",
+        "meaning": "Yang memelihara segala sesuatu dan tidak lalai"
+    },
+    {
+        "number": 40,
+        "arabic": "الْمُقِيتُ",
+        "transliteration": "Al-Muqit",
+        "indonesian": "Yang Maha Pemberi Kecukupan",
+        "english": "The Nourisher",
+        "meaning": "Yang memberikan makanan dan kecukupan kepada setiap makhluk"
+    },
+    {
+        "number": 41,
+        "arabic": "الْحَسِيبُ",
+        "transliteration": "Al-Hasib",
+        "indonesian": "Yang Maha Membuat Perhitungan",
+        "english": "The Reckoner",
+        "meaning": "Yang mencukupi dan menghitung amal perbuatan hamba-Nya"
+    },
+    {
+        "number": 42,
+        "arabic": "الْجَلِيلُ",
+        "transliteration": "Al-Jalil",
+        "indonesian": "Yang Maha Luhur",
+        "english": "The Majestic",
+        "meaning": "Yang memiliki keluhuran dan keagungan yang sempurna"
+    },
+    {
+        "number": 43,
+        "arabic": "الْكَرِيمُ",
+        "transliteration": "Al-Karim",
+        "indonesian": "Yang Maha Mulia",
+        "english": "The Most Generous",
+        "meaning": "Yang Maha Dermawan dan mulia dalam memberi"
+    },
+    {
+        "number": 44,
+        "arabic": "الرَّقِيبُ",
+        "transliteration": "Ar-Raqib",
+        "indonesian": "Yang Maha Mengawasi",
+        "english": "The Watchful",
+        "meaning": "Yang mengawasi setiap gerak dan diam makhluk-Nya"
+    },
+    {
+        "number": 45,
+        "arabic": "الْمُجِيبُ",
+        "transliteration": "Al-Mujib",
+        "indonesian": "Yang Maha Mengabulkan",
+        "english": "The Responsive",
+        "meaning": "Yang mengabulkan doa dan permintaan hamba-Nya"
+    },
+    {
+        "number": 46,
+        "arabic": "الْوَاسِعُ",
+        "transliteration": "Al-Wasi'",
+        "indonesian": "Yang Maha Luas",
+        "english": "The All-Encompassing",
+        "meaning": "Yang Maha Luas ilmu, rahmat, dan kekuasaan-Nya"
+    },
+    {
+        "number": 47,
+        "arabic": "الْحَكِيمُ",
+        "transliteration": "Al-Hakim",
+        "indonesian": "Yang Maha Bijaksana",
+        "english": "The Wise",
+        "meaning": "Yang menempatkan segala sesuatu pada tempat yang tepat"
+    },
+    {
+        "number": 48,
+        "arabic": "الْوَدُودُ",
+        "transliteration": "Al-Wadud",
+        "indonesian": "Yang Maha Mencintai",
+        "english": "The Loving",
+        "meaning": "Yang mencintai orang-orang beriman dan dicintai oleh mereka"
+    },
+    {
+        "number": 49,
+        "arabic": "الْمَجِيدُ",
+        "transliteration": "Al-Majid",
+        "indonesian": "Yang Maha Mulia",
+        "english": "The Most Glorious",
+        "meaning": "Yang memiliki kemuliaan yang sempurna dan keagungan yang tinggi"
+    },
+    {
+        "number": 50,
+        "arabic": "الْبَاعِثُ",
+        "transliteration": "Al-Ba'its",
+        "indonesian": "Yang Maha Membangkitkan",
+        "english": "The Resurrector",
+        "meaning": "Yang akan membangkitkan seluruh makhluk pada hari kiamat"
+    },
+    {
+        "number": 51,
+        "arabic": "الشَّهِيدُ",
+        "transliteration": "Asy-Syahid",
+        "indonesian": "Yang Maha Menyaksikan",
+        "english": "The Witness",
+        "meaning": "Yang menyaksikan segala sesuatu yang terjadi"
+    },
+    {
+        "number": 52,
+        "arabic": "الْحَقُّ",
+        "transliteration": "Al-Haqq",
+        "indonesian": "Yang Maha Benar",
+        "english": "The Truth",
+        "meaning": "Yang wujud-Nya pasti dan benar, tidak ada yang lebih benar dari-Nya"
+    },
+    {
+        "number": 53,
+        "arabic": "الْوَكِيلُ",
+        "transliteration": "Al-Wakil",
+        "indonesian": "Yang Maha Memelihara",
+        "english": "The Trustee",
+        "meaning": "Yang memelihara dan mengurus urusan hamba-Nya yang bertawakal"
+    },
+    {
+        "number": 54,
+        "arabic": "الْقَوِيُّ",
+        "transliteration": "Al-Qawi",
+        "indonesian": "Yang Maha Kuat",
+        "english": "The Most Strong",
+        "meaning": "Yang memiliki kekuatan sempurna yang tidak dapat dikalahkan"
+    },
+    {
+        "number": 55,
+        "arabic": "الْمَتِينُ",
+        "transliteration": "Al-Matin",
+        "indonesian": "Yang Maha Kokoh",
+        "english": "The Firm",
+        "meaning": "Yang memiliki kekuatan yang sangat kokoh dan tidak pernah lemah"
+    },
+    {
+        "number": 56,
+        "arabic": "الْوَلِيُّ",
+        "transliteration": "Al-Wali",
+        "indonesian": "Yang Maha Melindungi",
+        "english": "The Protecting Friend",
+        "meaning": "Yang menjadi wali dan pelindung orang-orang beriman"
+    },
+    {
+        "number": 57,
+        "arabic": "الْحَمِيدُ",
+        "transliteration": "Al-Hamid",
+        "indonesian": "Yang Maha Terpuji",
+        "english": "The Praiseworthy",
+        "meaning": "Yang berhak mendapatkan segala pujian dan sanjungan"
+    },
+    {
+        "number": 58,
+        "arabic": "الْمُحْصِي",
+        "transliteration": "Al-Muhshi",
+        "indonesian": "Yang Maha Menghitung",
+        "english": "The Appraiser",
+        "meaning": "Yang menghitung dan mengetahui semua hal dengan terperinci"
+    },
+    {
+        "number": 59,
+        "arabic": "الْمُبْدِئُ",
+        "transliteration": "Al-Mubdi'",
+        "indonesian": "Yang Maha Memulai",
+        "english": "The Originator",
+        "meaning": "Yang menciptakan makhluk pertama kali tanpa contoh sebelumnya"
+    },
+    {
+        "number": 60,
+        "arabic": "الْمُعِيدُ",
+        "transliteration": "Al-Mu'id",
+        "indonesian": "Yang Maha Mengembalikan Kehidupan",
+        "english": "The Restorer",
+        "meaning": "Yang akan mengembalikan makhluk setelah kematian"
+    },
+    {
+        "number": 61,
+        "arabic": "الْمُحْيِي",
+        "transliteration": "Al-Muhyi",
+        "indonesian": "Yang Maha Menghidupkan",
+        "english": "The Giver of Life",
+        "meaning": "Yang memberikan kehidupan kepada siapa yang dikehendaki"
+    },
+    {
+        "number": 62,
+        "arabic": "الْمُمِيتُ",
+        "transliteration": "Al-Mumit",
+        "indonesian": "Yang Maha Mematikan",
+        "english": "The Taker of Life",
+        "meaning": "Yang mematikan makhluk sesuai dengan kehendak dan hikmah-Nya"
+    },
+    {
+        "number": 63,
+        "arabic": "الْحَيُّ",
+        "transliteration": "Al-Hayy",
+        "indonesian": "Yang Maha Hidup",
+        "english": "The Ever-Living",
+        "meaning": "Yang hidup kekal abadi, tidak terkena kematian"
+    },
+    {
+        "number": 64,
+        "arabic": "الْقَيُّومُ",
+        "transliteration": "Al-Qayyum",
+        "indonesian": "Yang Maha Berdiri Sendiri",
+        "english": "The Self-Subsisting",
+        "meaning": "Yang berdiri sendiri dan menopang segala sesuatu"
+    },
+    {
+        "number": 65,
+        "arabic": "الْوَاجِدُ",
+        "transliteration": "Al-Wajid",
+        "indonesian": "Yang Maha Menemukan",
+        "english": "The Perceiver",
+        "meaning": "Yang Maha Kaya dan tidak kekurangan apapun"
+    },
+    {
+        "number": 66,
+        "arabic": "الْمَاجِدُ",
+        "transliteration": "Al-Majid",
+        "indonesian": "Yang Maha Mulia",
+        "english": "The Noble",
+        "meaning": "Yang memiliki kemuliaan dalam perbuatan-Nya"
+    },
+    {
+        "number": 67,
+        "arabic": "الْوَاحِدُ",
+        "transliteration": "Al-Wahid",
+        "indonesian": "Yang Maha Esa",
+        "english": "The One",
+        "meaning": "Yang Maha Esa dalam zat, sifat, dan perbuatan-Nya"
+    },
+    {
+        "number": 68,
+        "arabic": "الْأَحَدُ",
+        "transliteration": "Al-Ahad",
+        "indonesian": "Yang Maha Tunggal",
+        "english": "The Unique",
+        "meaning": "Yang tunggal tidak ada yang menyerupai-Nya"
+    },
+    {
+        "number": 69,
+        "arabic": "الصَّمَدُ",
+        "transliteration": "As-Samad",
+        "indonesian": "Yang Maha Dibutuhkan",
+        "english": "The Eternal",
+        "meaning": "Yang menjadi tujuan semua kebutuhan dan tidak membutuhkan apapun"
+    },
+    {
+        "number": 70,
+        "arabic": "الْقَادِرُ",
+        "transliteration": "Al-Qadir",
+        "indonesian": "Yang Maha Menentukan",
+        "english": "The Capable",
+        "meaning": "Yang berkuasa atas segala sesuatu tanpa ada hambatan"
+    },
+    {
+        "number": 71,
+        "arabic": "الْمُقْتَدِرُ",
+        "transliteration": "Al-Muqtadir",
+        "indonesian": "Yang Maha Berkuasa",
+        "english": "The Powerful",
+        "meaning": "Yang memiliki kekuasaan penuh atas segala sesuatu"
+    },
+    {
+        "number": 72,
+        "arabic": "الْمُقَدِّمُ",
+        "transliteration": "Al-Muqaddim",
+        "indonesian": "Yang Maha Mendahulukan",
+        "english": "The Expediter",
+        "meaning": "Yang mendahulukan siapa yang dikehendaki sesuai hikmah-Nya"
+    },
+    {
+        "number": 73,
+        "arabic": "الْمُؤَخِّرُ",
+        "transliteration": "Al-Mu'akhkhir",
+        "indonesian": "Yang Maha Mengakhirkan",
+        "english": "The Delayer",
+        "meaning": "Yang mengakhirkan siapa yang dikehendaki sesuai hikmah-Nya"
+    },
+    {
+        "number": 74,
+        "arabic": "الْأَوَّلُ",
+        "transliteration": "Al-Awwal",
+        "indonesian": "Yang Maha Awal",
+        "english": "The First",
+        "meaning": "Yang ada sebelum segala sesuatu ada"
+    },
+    {
+        "number": 75,
+        "arabic": "الْآخِرُ",
+        "transliteration": "Al-Akhir",
+        "indonesian": "Yang Maha Akhir",
+        "english": "The Last",
+        "meaning": "Yang tetap ada setelah segala sesuatu tiada"
+    },
+    {
+        "number": 76,
+        "arabic": "الظَّاهِرُ",
+        "transliteration": "Az-Zhahir",
+        "indonesian": "Yang Maha Nyata",
+        "english": "The Manifest",
+        "meaning": "Yang jelas dan nyata keberadaan-Nya melalui tanda-tanda kekuasaan-Nya"
+    },
+    {
+        "number": 77,
+        "arabic": "الْبَاطِنُ",
+        "transliteration": "Al-Bathin",
+        "indonesian": "Yang Maha Tersembunyi",
+        "english": "The Hidden",
+        "meaning": "Yang tersembunyi dari pandangan makhluk, tidak terjangkau oleh indera"
+    },
+    {
+        "number": 78,
+        "arabic": "الْوَالِي",
+        "transliteration": "Al-Wali",
+        "indonesian": "Yang Maha Memerintah",
+        "english": "The Governor",
+        "meaning": "Yang mengatur dan memerintah seluruh urusan alam semesta"
+    },
+    {
+        "number": 79,
+        "arabic": "الْمُتَعَالِي",
+        "transliteration": "Al-Muta'ali",
+        "indonesian": "Yang Maha Tinggi",
+        "english": "The Self Exalted",
+        "meaning": "Yang Maha Tinggi di atas segala sifat kekurangan"
+    },
+    {
+        "number": 80,
+        "arabic": "الْبَرُّ",
+        "transliteration": "Al-Barr",
+        "indonesian": "Yang Maha Dermawan",
+        "english": "The Source of All Good",
+        "meaning": "Yang Maha Baik dan berbuat kebaikan kepada hamba-Nya"
+    },
+    {
+        "number": 81,
+        "arabic": "التَّوَّابُ",
+        "transliteration": "At-Tawwab",
+        "indonesian": "Yang Maha Penerima Tobat",
+        "english": "The Ever-Returning",
+        "meaning": "Yang menerima tobat hamba-Nya berulang kali dengan penuh kasih"
+    },
+    {
+        "number": 82,
+        "arabic": "الْمُنْتَقِمُ",
+        "transliteration": "Al-Muntaqim",
+        "indonesian": "Yang Maha Pemberi Hukuman",
+        "english": "The Avenger",
+        "meaning": "Yang memberikan hukuman setimpal kepada orang yang zalim"
+    },
+    {
+        "number": 83,
+        "arabic": "الْعَفُوُّ",
+        "transliteration": "Al-'Afuw",
+        "indonesian": "Yang Maha Pemaaf",
+        "english": "The Pardoner",
+        "meaning": "Yang menghapus dosa tanpa meninggalkan bekas"
+    },
+    {
+        "number": 84,
+        "arabic": "الرَّؤُوفُ",
+        "transliteration": "Ar-Ra'uf",
+        "indonesian": "Yang Maha Pengasih",
+        "english": "The Compassionate",
+        "meaning": "Yang memiliki kasih sayang yang sangat lembut kepada hamba-Nya"
+    },
+    {
+        "number": 85,
+        "arabic": "مَالِكُ الْمُلْكِ",
+        "transliteration": "Malikal Mulk",
+        "indonesian": "Yang Maha Memiliki Kerajaan",
+        "english": "The Owner of All",
+        "meaning": "Yang memiliki kerajaan secara mutlak dan memberikannya kepada siapa yang dikehendaki"
+    },
+    {
+        "number": 86,
+        "arabic": "ذُو الْجَلَالِ وَالْإِكْرَامِ",
+        "transliteration": "Dzul Jalali wal Ikram",
+        "indonesian": "Yang Maha Memiliki Kebesaran dan Kemuliaan",
+        "english": "The Lord of Majesty",
+        "meaning": "Yang memiliki keagungan dan kemuliaan yang sempurna"
+    },
+    {
+        "number": 87,
+        "arabic": "الْمُقْسِطُ",
+        "transliteration": "Al-Muqsith",
+        "indonesian": "Yang Maha Adil",
+        "english": "The Equitable One",
+        "meaning": "Yang berlaku adil dalam setiap keputusan-Nya"
+    },
+    {
+        "number": 88,
+        "arabic": "الْجَامِعُ",
+        "transliteration": "Al-Jami'",
+        "indonesian": "Yang Maha Mengumpulkan",
+        "english": "The Gatherer",
+        "meaning": "Yang mengumpulkan makhluk pada hari kiamat"
+    },
+    {
+        "number": 89,
+        "arabic": "الْغَنِيُّ",
+        "transliteration": "Al-Ghani",
+        "indonesian": "Yang Maha Kaya",
+        "english": "The Self-Sufficient",
+        "meaning": "Yang tidak membutuhkan apapun dari makhluk-Nya"
+    },
+    {
+        "number": 90,
+        "arabic": "الْمُغْنِي",
+        "transliteration": "Al-Mughni",
+        "indonesian": "Yang Maha Memberikan Kekayaan",
+        "english": "The Enricher",
+        "meaning": "Yang memberikan kekayaan kepada siapa yang dikehendaki"
+    },
+    {
+        "number": 91,
+        "arabic": "الْمَانِعُ",
+        "transliteration": "Al-Mani'",
+        "indonesian": "Yang Maha Mencegah",
+        "english": "The Preventer",
+        "meaning": "Yang mencegah sesuatu sesuai dengan hikmah dan keadilan-Nya"
+    },
+    {
+        "number": 92,
+        "arabic": "الضَّارُّ",
+        "transliteration": "Ad-Dharr",
+        "indonesian": "Yang Maha Pemberi Derita",
+        "english": "The Distresser",
+        "meaning": "Yang memberikan mudarat kepada siapa yang dikehendaki sebagai ujian"
+    },
+    {
+        "number": 93,
+        "arabic": "النَّافِعُ",
+        "transliteration": "An-Nafi'",
+        "indonesian": "Yang Maha Memberi Manfaat",
+        "english": "The Propitious",
+        "meaning": "Yang memberikan manfaat kepada siapa yang dikehendaki"
+    },
+    {
+        "number": 94,
+        "arabic": "النُّورُ",
+        "transliteration": "An-Nur",
+        "indonesian": "Yang Maha Bercahaya",
+        "english": "The Light",
+        "meaning": "Yang menerangi langit, bumi, dan hati orang-orang beriman"
+    },
+    {
+        "number": 95,
+        "arabic": "الْهَادِي",
+        "transliteration": "Al-Hadi",
+        "indonesian": "Yang Maha Pemberi Petunjuk",
+        "english": "The Guide",
+        "meaning": "Yang memberikan petunjuk kepada siapa yang dikehendaki"
+    },
+    {
+        "number": 96,
+        "arabic": "الْبَدِيعُ",
+        "transliteration": "Al-Badi'",
+        "indonesian": "Yang Maha Pencipta yang Baru",
+        "english": "The Originator",
+        "meaning": "Yang menciptakan sesuatu yang baru tanpa ada contoh sebelumnya"
+    },
+    {
+        "number": 97,
+        "arabic": "الْبَاقِي",
+        "transliteration": "Al-Baqi",
+        "indonesian": "Yang Maha Kekal",
+        "english": "The Everlasting",
+        "meaning": "Yang kekal abadi tanpa permulaan dan tanpa akhir"
+    },
+    {
+        "number": 98,
+        "arabic": "الْوَارِثُ",
+        "transliteration": "Al-Warits",
+        "indonesian": "Yang Maha Mewarisi",
+        "english": "The Inheritor",
+        "meaning": "Yang mewarisi segala sesuatu setelah semua makhluk musnah"
+    },
+    {
+        "number": 99,
+        "arabic": "الرَّشِيدُ",
+        "transliteration": "Ar-Rasyid",
+        "indonesian": "Yang Maha Pandai",
+        "english": "The Guide to the Right Path",
+        "meaning": "Yang membimbing makhluk-Nya ke jalan yang lurus dan benar"
+    }
 ]

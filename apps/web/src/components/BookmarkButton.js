@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/context/Auth';
-import { useLocale } from '@/context/Locale';
-import { bookmarkApi } from '@/lib/api';
-import { buildLoginHref } from '@/lib/authRedirect';
+import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
+import { bookmarkApi } from "@/lib/api";
+import { buildLoginHref } from "@/lib/authRedirect";
 import {
     BOOKMARK_COLORS,
     clearBookmarkMeta,
     colorById,
     getBookmarkMeta,
     setBookmarkMeta,
-} from '@/lib/bookmarkLabels';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { BsBookmark, BsBookmarkFill, BsCheck2, BsX } from 'react-icons/bs';
+} from "@/lib/bookmarkLabels";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { BsBookmark, BsBookmarkFill, BsCheck2, BsX } from "react-icons/bs";
 
 let bookmarkListCache = null;
 let bookmarkListPromise = null;
@@ -43,9 +43,16 @@ const loadBookmarkList = () => {
 };
 
 const unwrapBookmark = (payload) => payload?.data ?? payload;
-const bookmarkRecordId = (bookmark) => bookmark?.id ?? bookmark?._id ?? bookmark?.ID ?? null;
+const bookmarkRecordId = (bookmark) =>
+    bookmark?.id ?? bookmark?._id ?? bookmark?.ID ?? null;
 
-const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = '' }) => {
+const BookmarkButton = ({
+    refType,
+    refId,
+    refSlug = "",
+    extra = {},
+    className = "",
+}) => {
     const { isAuthenticated } = useAuth();
     const { t, lang } = useLocale();
     const router = useRouter();
@@ -54,7 +61,7 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
     const [isLoading, setIsLoading] = useState(false);
     const [meta, setMeta] = useState(null);
     const [showMenu, setShowMenu] = useState(false);
-    const [labelDraft, setLabelDraft] = useState('');
+    const [labelDraft, setLabelDraft] = useState("");
 
     useEffect(() => {
         if (!isAuthenticated) return;
@@ -82,10 +89,10 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
                         label: beMeta.label ?? localMeta?.label,
                     };
                     setMeta(finalMeta);
-                    setLabelDraft(finalMeta.label ?? '');
+                    setLabelDraft(finalMeta.label ?? "");
                 }
             })
-            .catch(e => console.error(e));
+            .catch((e) => console.error(e));
         return () => {
             isActive = false;
         };
@@ -94,8 +101,8 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
     const toggleBookmark = async () => {
         if (!isAuthenticated) {
             const currentPath =
-                typeof window === 'undefined'
-                    ? '/dashboard'
+                typeof window === "undefined"
+                    ? "/dashboard"
                     : `${window.location.pathname}${window.location.search}`;
             router.push(buildLoginHref(currentPath));
             return;
@@ -106,20 +113,20 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
         try {
             if (isBookmarked) {
                 const res = await bookmarkApi.remove(bookmarkId);
-                if (!res.ok) throw new Error('bookmark remove failed');
+                if (!res.ok) throw new Error("bookmark remove failed");
                 resetBookmarkListCache();
                 clearBookmarkMeta(refType, refId);
                 setIsBookmarked(false);
                 setBookmarkId(null);
                 setMeta(null);
-                setLabelDraft('');
+                setLabelDraft("");
                 setShowMenu(false);
             } else {
                 const res = await bookmarkApi.add(refType, refId, {
                     ...extra,
                     ...(refSlug ? { ref_slug: refSlug } : {}),
                 });
-                if (!res.ok) throw new Error('bookmark failed');
+                if (!res.ok) throw new Error("bookmark failed");
                 const data = unwrapBookmark(await res.json());
                 resetBookmarkListCache();
                 setIsBookmarked(true);
@@ -166,18 +173,20 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
         }
     };
 
-    const colorTw = meta?.color ? colorById(meta.color).tw : '';
+    const colorTw = meta?.color ? colorById(meta.color).tw : "";
 
     return (
         <div className='relative inline-block'>
             <button
-                title={isBookmarked ? t('bookmarks.remove') : t('bookmarks.save')}
+                title={
+                    isBookmarked ? t("bookmarks.remove") : t("bookmarks.save")
+                }
                 onClick={onMainClick}
                 disabled={isLoading}
                 className={`relative p-2 rounded-lg text-lg transition-colors disabled:opacity-50 ${
                     isBookmarked
-                        ? 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-slate-700'
-                        : 'text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700'
+                        ? "text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-slate-700"
+                        : "text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700"
                 } ${className}`}
             >
                 {isBookmarked ? <BsBookmarkFill /> : <BsBookmark />}
@@ -192,7 +201,7 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
                 <div className='absolute z-30 mt-1 left-0 top-full w-56 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg p-3'>
                     <div className='flex items-center justify-between mb-2'>
                         <p className='text-xs font-semibold text-gray-700 dark:text-gray-200'>
-                            {t('bookmarks.color') ?? 'Warna'}
+                            {t("bookmarks.color") ?? "Warna"}
                         </p>
                         <button
                             type='button'
@@ -208,22 +217,27 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
                                 key={c.id}
                                 type='button'
                                 onClick={() => pickColor(c.id)}
-                                title={lang === 'EN' ? c.label_en : c.label_id}
+                                title={lang === "EN" ? c.label_en : c.label_id}
                                 className={`w-7 h-7 rounded-full ${c.tw} flex items-center justify-center text-white shadow-sm hover:scale-110 transition-transform`}
                             >
-                                {meta?.color === c.id && <BsCheck2 className='text-sm' />}
+                                {meta?.color === c.id && (
+                                    <BsCheck2 className='text-sm' />
+                                )}
                             </button>
                         ))}
                     </div>
 
                     <p className='text-xs font-semibold text-gray-700 dark:text-gray-200 mb-1.5'>
-                        {t('bookmarks.label') ?? 'Label'}
+                        {t("bookmarks.label") ?? "Label"}
                     </p>
                     <input
                         type='text'
                         value={labelDraft}
                         onChange={(e) => setLabelDraft(e.target.value)}
-                        placeholder={t('bookmarks.label_placeholder') ?? 'tadabbur, hafalan...'}
+                        placeholder={
+                            t("bookmarks.label_placeholder") ??
+                            "tadabbur, hafalan..."
+                        }
                         maxLength={40}
                         className='w-full text-xs px-2 py-1.5 border border-gray-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 mb-2'
                     />
@@ -233,7 +247,7 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
                             onClick={saveLabel}
                             className='flex-1 px-2 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs rounded-lg font-medium transition-colors'
                         >
-                            {t('common.save') ?? 'Simpan'}
+                            {t("common.save") ?? "Simpan"}
                         </button>
                         <button
                             type='button'
@@ -241,7 +255,7 @@ const BookmarkButton = ({ refType, refId, refSlug = '', extra = {}, className = 
                             disabled={isLoading}
                             className='px-2 py-1.5 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-xs rounded-lg font-medium hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors disabled:opacity-40'
                         >
-                            {t('bookmarks.remove') ?? 'Hapus'}
+                            {t("bookmarks.remove") ?? "Hapus"}
                         </button>
                     </div>
                 </div>

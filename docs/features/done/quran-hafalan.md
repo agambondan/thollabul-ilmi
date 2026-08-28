@@ -32,50 +32,58 @@ Tracker menghafal Quran per surah dengan progress status dan muroja'ah mode untu
 ### API Response Shape
 
 **`GET /hafalan`**
+
 ```json
 [
-  {
-    "id": "uuid",
-    "user_id": "uuid",
-    "surah_id": 1,
-    "status": "in_progress",
-    "started_at": "2026-01-01T00:00:00Z",
-    "completed_at": null,
-    "surah": { "id": 1, "number": 1, "translation": { "idn": "Al-Fatihah" } }
-  }
+    {
+        "id": "uuid",
+        "user_id": "uuid",
+        "surah_id": 1,
+        "status": "in_progress",
+        "started_at": "2026-01-01T00:00:00Z",
+        "completed_at": null,
+        "surah": {
+            "id": 1,
+            "number": 1,
+            "translation": { "idn": "Al-Fatihah" }
+        }
+    }
 ]
 ```
 
 **`GET /hafalan/summary`**
+
 ```json
 {
-  "total": 114,
-  "not_started": 80,
-  "in_progress": 20,
-  "memorized": 14
+    "total": 114,
+    "not_started": 80,
+    "in_progress": 20,
+    "memorized": 14
 }
 ```
 
 **`POST /murojaah`**
+
 ```json
 {
-  "date": "2026-05-13",
-  "surah_id": 1,
-  "from_ayah": 1,
-  "to_ayah": 7,
-  "score": 85,
-  "duration_seconds": 120,
-  "note": "Lancar sedikit tersendat di ayat 5"
+    "date": "2026-05-13",
+    "surah_id": 1,
+    "from_ayah": 1,
+    "to_ayah": 7,
+    "score": 85,
+    "duration_seconds": 120,
+    "note": "Lancar sedikit tersendat di ayat 5"
 }
 ```
 
 **`GET /murojaah/stats`**
+
 ```json
 {
-  "total_sessions": 30,
-  "avg_score": 82.5,
-  "total_duration_seconds": 5400,
-  "surah_covered": 14
+    "total_sessions": 30,
+    "avg_score": 82.5,
+    "total_duration_seconds": 5400,
+    "surah_covered": 14
 }
 ```
 

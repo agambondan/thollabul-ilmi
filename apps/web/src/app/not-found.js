@@ -1,7 +1,7 @@
-import NotFoundClient from './NotFoundClient';
+import NotFoundClient from "./NotFoundClient";
 
 export const metadata = {
-    title: 'Page Not Found',
+    title: "Page Not Found",
     robots: { index: false, follow: false },
 };
 

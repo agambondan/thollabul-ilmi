@@ -1,7 +1,7 @@
-import Footer from '@/components/Footer';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import Section from '@/components/Section';
-import { TahlilContent } from './TahlilClient';
+import Footer from "@/components/Footer";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import Section from "@/components/Section";
+import { TahlilContent } from "./TahlilClient";
 
 export default function TahlilPage() {
     return (

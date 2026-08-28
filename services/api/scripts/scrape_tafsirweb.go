@@ -131,7 +131,7 @@ func main() {
 
 	// Create output dirs
 	for surahNum := 1; surahNum <= 114; surahNum++ {
-		if err := os.MkdirAll(filepath.Join(*outDir, fmt.Sprintf("%d", surahNum)), 0755); err != nil {
+		if err := os.MkdirAll(filepath.Join(*outDir, fmt.Sprintf("%d", surahNum)), 0o755); err != nil {
 			log.Fatalf("mkdir: %v", err)
 		}
 	}

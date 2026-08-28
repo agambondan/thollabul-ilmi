@@ -6,22 +6,23 @@
 > Created: 2026-05-07
 > Scope: `apps/mobile`
 > Inputs:
+>
 > - `docs/MOBILE_IA_APPROACH_A.md`
 > - `docs/MOBILE_INFORMATION_ARCHITECTURE_APPROACH_CODEX.md`
 > - `docs/MOBILE_FEATURE_REFERENCE.md`
 > - `docs/MOBILE_UX_REVIEW.md`
-> Implementation tasklist: `docs/MOBILE_IA_REVAMP_TASKLIST.md`
+>   Implementation tasklist: `docs/MOBILE_IA_REVAMP_TASKLIST.md`
 
 ## Final Decision
 
 Gunakan 5 tab utama:
 
-| Tab | Role | Keputusan |
-|---|---|---|
-| Beranda | Contextual dashboard | Tetap menjadi cockpit harian dan delivery surface |
-| Quran | Primary reading content | Tetap first-class tab |
-| Hadis | Primary reading/reference content | Tetap first-class tab |
-| Ibadah | Daily worship hub | Menggantikan tab Prayer yang terlalu sempit |
+| Tab     | Role                               | Keputusan                                                       |
+| ------- | ---------------------------------- | --------------------------------------------------------------- |
+| Beranda | Contextual dashboard               | Tetap menjadi cockpit harian dan delivery surface               |
+| Quran   | Primary reading content            | Tetap first-class tab                                           |
+| Hadis   | Primary reading/reference content  | Tetap first-class tab                                           |
+| Ibadah  | Daily worship hub                  | Menggantikan tab Prayer yang terlalu sempit                     |
 | Belajar | Knowledge + personal secondary hub | Menggantikan Explore/Profile sebagai hub discovery dan personal |
 
 Profil tidak menjadi tab utama. Profil tetap penting, tetapi di mobile ia lebih tepat menjadi account/settings surface yang bisa diakses dari avatar/header dan section Personal di tab Belajar. Keputusan ini menjaga tab bar tetap 5 item sambil mempertahankan Quran dan Hadis sebagai dua konten utama aplikasi Islamic.
@@ -55,15 +56,15 @@ Gabungan terbaiknya:
 
 ## Comparison Summary
 
-| Decision Area | Approach A | Approach Codex | Final |
-|---|---|---|---|
-| Max tab count | 5 | 5 | 5 |
-| Hadis | Primary tab | Dalam Belajar | Primary tab |
-| Profil | Section di Belajar | Primary tab | Account surface + Personal section |
-| Explore | Dihilangkan | Jadi Belajar | Jadi Belajar |
-| Prayer | Jadi Ibadah | Jadi Ibadah | Jadi Ibadah |
-| Long-tail features | Dibagi ke Ibadah/Belajar | Hub + search/favorites | Hub + search/favorites/recent |
-| Contextual delivery | Ada di Beranda | Kuat | Wajib |
+| Decision Area       | Approach A               | Approach Codex         | Final                              |
+| ------------------- | ------------------------ | ---------------------- | ---------------------------------- |
+| Max tab count       | 5                        | 5                      | 5                                  |
+| Hadis               | Primary tab              | Dalam Belajar          | Primary tab                        |
+| Profil              | Section di Belajar       | Primary tab            | Account surface + Personal section |
+| Explore             | Dihilangkan              | Jadi Belajar           | Jadi Belajar                       |
+| Prayer              | Jadi Ibadah              | Jadi Ibadah            | Jadi Ibadah                        |
+| Long-tail features  | Dibagi ke Ibadah/Belajar | Hub + search/favorites | Hub + search/favorites/recent      |
+| Contextual delivery | Ada di Beranda           | Kuat                   | Wajib                              |
 
 ## Navigation Model
 

@@ -1,7 +1,7 @@
-import HadithPage from '@/app/hadith/[slug]/HadithPage';
-import ContentWidth from '@/components/layout/ContentWidth';
-import HadithThemeError from '@/app/hadith/theme/[slug]/HadithThemeError';
-import { getHadithsByThemeSlug } from '@/lib/hadithTheme';
+import HadithPage from "@/app/hadith/[slug]/HadithPage";
+import ContentWidth from "@/components/layout/ContentWidth";
+import HadithThemeError from "@/app/hadith/theme/[slug]/HadithThemeError";
+import { getHadithsByThemeSlug } from "@/lib/hadithTheme";
 
 export default async function DashboardHadithThemePage(props) {
     const params = await props.params;

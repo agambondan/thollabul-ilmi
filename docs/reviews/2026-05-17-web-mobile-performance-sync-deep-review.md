@@ -14,13 +14,13 @@ dijalankan pada device fisik setelah device di-unlock.
 
 Verdict teknis setelah Task 1-11:
 
-| Area | Status | Catatan |
-|---|---|---|
-| Web build | `PASS` | `cd apps/web && npm run build` berhasil setelah Task 7 dan Task 11. Root lockfile/Turbopack warning sudah ditutup lewat config web. |
-| Mobile unit/integration test | `PASS` | `cd apps/mobile && npm test -- --runInBand` lulus 39 suites / 544 tests. Full suite tidak lagi melaporkan `act(...)` warning. |
-| Backend test | `PASS` | `cd services/api/app && go test ./...` hijau setelah cache/test hardening dan cache key coverage. |
-| Feature parity web/mobile | `DEVICE_VERIFIED` | Khatam, Asmaul Flashcard, Achievements, landing discovery, dan feature manifest sudah ditutup dan smoke device lulus. |
-| Performance readiness | `PARTIAL_VERIFIED` | Backend cache, Quran deep target, Explore catalog, Quran screenshot dynamic import, landing server wrapper, serta `/panduan-sholat` dan `/tahlil` client island sudah ditutup. Sisa: lanjut client-island pass route content-heavy lain. |
+| Area                         | Status             | Catatan                                                                                                                                                                                                                                  |
+| ---------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Web build                    | `PASS`             | `cd apps/web && npm run build` berhasil setelah Task 7 dan Task 11. Root lockfile/Turbopack warning sudah ditutup lewat config web.                                                                                                      |
+| Mobile unit/integration test | `PASS`             | `cd apps/mobile && npm test -- --runInBand` lulus 39 suites / 544 tests. Full suite tidak lagi melaporkan `act(...)` warning.                                                                                                            |
+| Backend test                 | `PASS`             | `cd services/api/app && go test ./...` hijau setelah cache/test hardening dan cache key coverage.                                                                                                                                        |
+| Feature parity web/mobile    | `DEVICE_VERIFIED`  | Khatam, Asmaul Flashcard, Achievements, landing discovery, dan feature manifest sudah ditutup dan smoke device lulus.                                                                                                                    |
+| Performance readiness        | `PARTIAL_VERIFIED` | Backend cache, Quran deep target, Explore catalog, Quran screenshot dynamic import, landing server wrapper, serta `/panduan-sholat` dan `/tahlil` client island sudah ditutup. Sisa: lanjut client-island pass route content-heavy lain. |
 
 ## Resolution Update 2026-05-17
 
@@ -156,13 +156,13 @@ Status 2026-05-17: `CLOSED_BY_TASK_6`.
 Beberapa fitur punya perbedaan penamaan antara web route, mobile registry, dan
 copy UI:
 
-| Domain | Web / API | Mobile | Risiko |
-|---|---|---|---|
-| Peta Sejarah | `/peta` | `historical-map` | Search, deep link, dan analytics sulit dibaca konsisten. |
-| Wirid Custom | `/wirid-custom` | `user-wird` | Ada typo/alias yang rawan salah mapping. |
-| Murojaah | `/dashboard/muroja-ah` | `murojaah` | Deep link dan docs mudah drift. |
-| Jadwal Sholat | `/jadwal-sholat` | Tab/fitur Prayer | Bisa muncul sebagai duplikat atau hilang dari manifest. |
-| Kiblat | `/kiblat` | Tab/fitur Qibla | Sama seperti jadwal sholat. |
+| Domain        | Web / API              | Mobile           | Risiko                                                   |
+| ------------- | ---------------------- | ---------------- | -------------------------------------------------------- |
+| Peta Sejarah  | `/peta`                | `historical-map` | Search, deep link, dan analytics sulit dibaca konsisten. |
+| Wirid Custom  | `/wirid-custom`        | `user-wird`      | Ada typo/alias yang rawan salah mapping.                 |
+| Murojaah      | `/dashboard/muroja-ah` | `murojaah`       | Deep link dan docs mudah drift.                          |
+| Jadwal Sholat | `/jadwal-sholat`       | Tab/fitur Prayer | Bisa muncul sebagai duplikat atau hilang dari manifest.  |
+| Kiblat        | `/kiblat`              | Tab/fitur Qibla  | Sama seperti jadwal sholat.                              |
 
 Rekomendasi:
 
@@ -237,13 +237,13 @@ Rekomendasi:
 
 - Buat dokumen/manifest `feature-catalog` lintas platform.
 - Setiap penambahan fitur wajib mengisi:
-  - public web route
-  - dashboard web route jika ada
-  - mobile route/screen
-  - auth requirement
-  - CTA label
-  - empty state
-  - search/discovery inclusion
+    - public web route
+    - dashboard web route jika ada
+    - mobile route/screen
+    - auth requirement
+    - CTA label
+    - empty state
+    - search/discovery inclusion
 
 ## Performance Findings
 

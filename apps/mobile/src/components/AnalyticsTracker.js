@@ -1,32 +1,32 @@
-import { useEffect, useRef } from 'react';
-import { trackScreenView } from '../api/analytics';
+import { useEffect, useRef } from "react";
+import { trackScreenView } from "../api/analytics";
 
 const TAB_PATHS = {
-  home: 'mobile:/home',
-  quran: 'mobile:/quran',
-  hadith: 'mobile:/hadith',
-  ibadah: 'mobile:/ibadah',
-  belajar: 'mobile:/belajar',
-  profile: 'mobile:/profile',
+    home: "mobile:/home",
+    quran: "mobile:/quran",
+    hadith: "mobile:/hadith",
+    ibadah: "mobile:/ibadah",
+    belajar: "mobile:/belajar",
+    profile: "mobile:/profile",
 };
 
 const AnalyticsTracker = ({ activeTab, internalRoutes }) => {
-  const prevPathRef = useRef(null);
+    const prevPathRef = useRef(null);
 
-  useEffect(() => {
-    const currentView = internalRoutes?.[activeTab] ?? null;
-    const path = currentView
-      ? `mobile:/${activeTab}/${currentView.view}`
-      : TAB_PATHS[activeTab] ?? `mobile:/${activeTab}`;
+    useEffect(() => {
+        const currentView = internalRoutes?.[activeTab] ?? null;
+        const path = currentView
+            ? `mobile:/${activeTab}/${currentView.view}`
+            : (TAB_PATHS[activeTab] ?? `mobile:/${activeTab}`);
 
-    if (path === prevPathRef.current) return;
+        if (path === prevPathRef.current) return;
 
-    const referrer = prevPathRef.current ?? '';
-    trackScreenView({ path, referrer });
-    prevPathRef.current = path;
-  }, [activeTab, internalRoutes]);
+        const referrer = prevPathRef.current ?? "";
+        trackScreenView({ path, referrer });
+        prevPathRef.current = path;
+    }, [activeTab, internalRoutes]);
 
-  return null;
+    return null;
 };
 
 export default AnalyticsTracker;

@@ -1,12 +1,12 @@
-export const getSafeNextPath = (nextPath, fallback = '/dashboard') => {
-    if (!nextPath || typeof nextPath !== 'string') return fallback;
-    if (!nextPath.startsWith('/') || nextPath.startsWith('//')) return fallback;
+export const getSafeNextPath = (nextPath, fallback = "/dashboard") => {
+    if (!nextPath || typeof nextPath !== "string") return fallback;
+    if (!nextPath.startsWith("/") || nextPath.startsWith("//")) return fallback;
     return nextPath;
 };
 
 export const getCurrentPath = (pathname, searchParams) => {
-    const path = pathname || '/';
-    const query = searchParams?.toString?.() ?? '';
+    const path = pathname || "/";
+    const query = searchParams?.toString?.() ?? "";
     return query ? `${path}?${query}` : path;
 };
 

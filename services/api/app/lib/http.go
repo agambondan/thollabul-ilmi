@@ -1,8 +1,9 @@
 package lib
 
 import (
-	"github.com/go-resty/resty/v2"
 	"time"
+
+	"github.com/go-resty/resty/v2"
 )
 
 // HttpRequest create a simple request object with resty

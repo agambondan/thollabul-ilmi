@@ -6,12 +6,8 @@
     "paths": {
         "/api/v1/achievements": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get all achievements",
                 "responses": {
                     "200": {
@@ -31,12 +27,8 @@
         },
         "/api/v1/achievements/mine": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get my earned achievements",
                 "responses": {
                     "200": {
@@ -62,12 +54,8 @@
         },
         "/api/v1/achievements/points": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get my achievement points",
                 "responses": {
                     "200": {
@@ -93,15 +81,9 @@
         },
         "/api/v1/activity": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Record activity for streak",
                 "parameters": [
                     {
@@ -144,12 +126,8 @@
         },
         "/api/v1/amalan": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "List all amalan items",
                 "responses": {
                     "200": {
@@ -169,12 +147,8 @@
         },
         "/api/v1/amalan/history": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get amalan history",
                 "parameters": [
                     {
@@ -214,12 +188,8 @@
         },
         "/api/v1/amalan/today": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get today's amalan status",
                 "responses": {
                     "200": {
@@ -245,15 +215,9 @@
         },
         "/api/v1/amalan/{id}/check": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Check/uncheck amalan item",
                 "parameters": [
                     {
@@ -309,15 +273,9 @@
         "/api/v1/asbabun-nuzul": {
             "get": {
                 "description": "Get paginated list of all asbabun nuzul (reasons for revelation)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AsbabunNuzul"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["AsbabunNuzul"],
                 "summary": "List all asbabun nuzul",
                 "responses": {
                     "200": {
@@ -336,15 +294,9 @@
             },
             "post": {
                 "description": "Create a new asbabun nuzul entry",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AsbabunNuzul"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["AsbabunNuzul"],
                 "summary": "Create asbabun nuzul",
                 "parameters": [
                     {
@@ -382,15 +334,9 @@
         "/api/v1/asbabun-nuzul/ayah/{id}": {
             "get": {
                 "description": "Get reasons for revelation for a specific ayah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AsbabunNuzul"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["AsbabunNuzul"],
                 "summary": "Get asbabun nuzul by ayah ID",
                 "parameters": [
                     {
@@ -426,15 +372,9 @@
         "/api/v1/asbabun-nuzul/surah/{number}": {
             "get": {
                 "description": "Get reasons for revelation for a surah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AsbabunNuzul"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["AsbabunNuzul"],
                 "summary": "Get asbabun nuzul by surah number",
                 "parameters": [
                     {
@@ -470,15 +410,9 @@
         "/api/v1/asbabun-nuzul/{id}": {
             "put": {
                 "description": "Update asbabun nuzul by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AsbabunNuzul"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["AsbabunNuzul"],
                 "summary": "Update asbabun nuzul",
                 "parameters": [
                     {
@@ -521,15 +455,9 @@
             },
             "delete": {
                 "description": "Delete asbabun nuzul by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "AsbabunNuzul"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["AsbabunNuzul"],
                 "summary": "Delete asbabun nuzul",
                 "parameters": [
                     {
@@ -565,15 +493,9 @@
         "/api/v1/audio/ayah": {
             "post": {
                 "description": "Add audio recording for a specific ayah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Audio"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Audio"],
                 "summary": "Add ayah audio",
                 "parameters": [
                     {
@@ -611,15 +533,9 @@
         "/api/v1/audio/ayah/{ayahId}": {
             "get": {
                 "description": "Get all audio recordings for a specific ayah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Audio"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Audio"],
                 "summary": "Get ayah audio",
                 "parameters": [
                     {
@@ -655,15 +571,9 @@
         "/api/v1/audio/ayah/{id}": {
             "delete": {
                 "description": "Delete audio recording for a specific ayah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Audio"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Audio"],
                 "summary": "Delete ayah audio",
                 "parameters": [
                     {
@@ -699,15 +609,9 @@
         "/api/v1/audio/surah": {
             "post": {
                 "description": "Add audio recording for a surah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Audio"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Audio"],
                 "summary": "Add surah audio",
                 "parameters": [
                     {
@@ -745,15 +649,9 @@
         "/api/v1/audio/surah/{id}": {
             "delete": {
                 "description": "Delete audio recording for a surah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Audio"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Audio"],
                 "summary": "Delete surah audio",
                 "parameters": [
                     {
@@ -789,15 +687,9 @@
         "/api/v1/audio/surah/{surahId}": {
             "get": {
                 "description": "Get all audio recordings for a surah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Audio"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Audio"],
                 "summary": "Get surah audio",
                 "parameters": [
                     {
@@ -833,15 +725,9 @@
         "/api/v1/ayah": {
             "get": {
                 "description": "Get paginated list of all ayah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ayah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ayah"],
                 "summary": "List all ayah",
                 "responses": {
                     "200": {
@@ -860,15 +746,9 @@
             },
             "post": {
                 "description": "Create a new ayah entry",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ayah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ayah"],
                 "summary": "Create ayah",
                 "parameters": [
                     {
@@ -906,15 +786,9 @@
         "/api/v1/ayah/daily": {
             "get": {
                 "description": "Get a random ayah for daily reading",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ayah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ayah"],
                 "summary": "Get daily ayah",
                 "responses": {
                     "200": {
@@ -935,15 +809,9 @@
         "/api/v1/ayah/hizb/{hizb}": {
             "get": {
                 "description": "Get all ayah in a specific hizb quarter (1-240)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ayah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ayah"],
                 "summary": "Get ayah by hizb quarter",
                 "parameters": [
                     {
@@ -979,15 +847,9 @@
         "/api/v1/ayah/keyset": {
             "get": {
                 "description": "Get paginated list of ayah using keyset pagination",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ayah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ayah"],
                 "summary": "List ayah with keyset pagination",
                 "responses": {
                     "200": {
@@ -1014,15 +876,9 @@
         "/api/v1/ayah/number/{number}": {
             "get": {
                 "description": "Get ayah by its number within a surah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ayah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ayah"],
                 "summary": "Get ayah by number",
                 "parameters": [
                     {
@@ -1058,15 +914,9 @@
         "/api/v1/ayah/page/{page}": {
             "get": {
                 "description": "Get all ayah on a specific Quran page (1-604)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ayah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ayah"],
                 "summary": "Get ayah by page",
                 "parameters": [
                     {
@@ -1102,15 +952,9 @@
         "/api/v1/ayah/surah/number/{number}": {
             "get": {
                 "description": "Get all ayah for a specific surah number",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ayah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ayah"],
                 "summary": "Get ayah by surah number",
                 "parameters": [
                     {
@@ -1146,15 +990,9 @@
         "/api/v1/ayah/{id}": {
             "get": {
                 "description": "Get a single ayah by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ayah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ayah"],
                 "summary": "Get ayah by ID",
                 "parameters": [
                     {
@@ -1188,15 +1026,9 @@
             },
             "put": {
                 "description": "Update ayah by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ayah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ayah"],
                 "summary": "Update ayah",
                 "parameters": [
                     {
@@ -1241,15 +1073,9 @@
         "/api/v1/ayah/{id}/{scoped}": {
             "delete": {
                 "description": "Soft delete ayah by ID and scope",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ayah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ayah"],
                 "summary": "Delete ayah",
                 "parameters": [
                     {
@@ -1291,12 +1117,8 @@
         },
         "/api/v1/bookmarks": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get all bookmarks",
                 "responses": {
                     "200": {
@@ -1320,15 +1142,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Create bookmark",
                 "parameters": [
                     {
@@ -1388,15 +1204,9 @@
         },
         "/api/v1/bookmarks/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Update bookmark",
                 "parameters": [
                     {
@@ -1444,12 +1254,8 @@
                 }
             },
             "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Delete bookmark",
                 "parameters": [
                     {
@@ -1491,15 +1297,9 @@
         "/api/v1/books": {
             "get": {
                 "description": "Get paginated list of all books",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Books"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Books"],
                 "summary": "List all books",
                 "responses": {
                     "200": {
@@ -1518,15 +1318,9 @@
             },
             "post": {
                 "description": "Create a new book entry",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Books"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Books"],
                 "summary": "Create book",
                 "parameters": [
                     {
@@ -1564,15 +1358,9 @@
         "/api/v1/books/slug/{slug}": {
             "get": {
                 "description": "Get a single book by its slug",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Books"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Books"],
                 "summary": "Get book by slug",
                 "parameters": [
                     {
@@ -1608,15 +1396,9 @@
         "/api/v1/books/{id}": {
             "get": {
                 "description": "Get a single book by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Books"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Books"],
                 "summary": "Get book by ID",
                 "parameters": [
                     {
@@ -1650,15 +1432,9 @@
             },
             "put": {
                 "description": "Update book by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Books"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Books"],
                 "summary": "Update book",
                 "parameters": [
                     {
@@ -1701,15 +1477,9 @@
             },
             "delete": {
                 "description": "Delete book by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Books"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Books"],
                 "summary": "Delete book",
                 "parameters": [
                     {
@@ -1745,15 +1515,9 @@
         "/api/v1/chapters": {
             "get": {
                 "description": "Get paginated list of all chapters",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Chapters"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Chapters"],
                 "summary": "List all chapters",
                 "responses": {
                     "200": {
@@ -1772,15 +1536,9 @@
             },
             "post": {
                 "description": "Create a new chapter entry",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Chapters"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Chapters"],
                 "summary": "Create chapter",
                 "parameters": [
                     {
@@ -1818,15 +1576,9 @@
         "/api/v1/chapters/book/{slug}/theme/{themeId}": {
             "get": {
                 "description": "Get chapters filtered by book slug and theme ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Chapters"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Chapters"],
                 "summary": "Get chapters by book slug and theme ID",
                 "parameters": [
                     {
@@ -1869,15 +1621,9 @@
         "/api/v1/chapters/theme/{id}": {
             "get": {
                 "description": "Get chapters filtered by theme ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Chapters"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Chapters"],
                 "summary": "Get chapters by theme ID",
                 "parameters": [
                     {
@@ -1913,15 +1659,9 @@
         "/api/v1/chapters/{id}": {
             "get": {
                 "description": "Get a single chapter by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Chapters"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Chapters"],
                 "summary": "Get chapter by ID",
                 "parameters": [
                     {
@@ -1955,15 +1695,9 @@
             },
             "put": {
                 "description": "Update chapter by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Chapters"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Chapters"],
                 "summary": "Update chapter",
                 "parameters": [
                     {
@@ -2006,15 +1740,9 @@
             },
             "delete": {
                 "description": "Delete chapter by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Chapters"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Chapters"],
                 "summary": "Delete chapter",
                 "parameters": [
                     {
@@ -2049,12 +1777,8 @@
         },
         "/api/v1/comments": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sosial"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Sosial"],
                 "summary": "Get comments by reference",
                 "parameters": [
                     {
@@ -2094,15 +1818,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sosial"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Sosial"],
                 "summary": "Create comment",
                 "parameters": [
                     {
@@ -2145,12 +1863,8 @@
         },
         "/api/v1/comments/{id}": {
             "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sosial"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Sosial"],
                 "summary": "Delete comment",
                 "parameters": [
                     {
@@ -2191,12 +1905,8 @@
         },
         "/api/v1/feed": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sosial"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Sosial"],
                 "summary": "Get feed posts",
                 "parameters": [
                     {
@@ -2222,15 +1932,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sosial"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Sosial"],
                 "summary": "Create feed post",
                 "parameters": [
                     {
@@ -2267,12 +1971,8 @@
         },
         "/api/v1/feed/{id}": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sosial"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Sosial"],
                 "summary": "Get feed post by ID",
                 "parameters": [
                     {
@@ -2299,12 +1999,8 @@
                 }
             },
             "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sosial"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Sosial"],
                 "summary": "Delete feed post",
                 "parameters": [
                     {
@@ -2345,12 +2041,8 @@
         },
         "/api/v1/feed/{id}/like": {
             "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sosial"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Sosial"],
                 "summary": "Like feed post",
                 "parameters": [
                     {
@@ -2385,12 +2077,8 @@
         },
         "/api/v1/goals": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get all study goals",
                 "responses": {
                     "200": {
@@ -2414,15 +2102,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Create study goal",
                 "parameters": [
                     {
@@ -2465,15 +2147,9 @@
         },
         "/api/v1/goals/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Update study goal",
                 "parameters": [
                     {
@@ -2521,12 +2197,8 @@
                 }
             },
             "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Delete study goal",
                 "parameters": [
                     {
@@ -2567,12 +2239,8 @@
         },
         "/api/v1/hafalan": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get all hafalan progress",
                 "responses": {
                     "200": {
@@ -2598,12 +2266,8 @@
         },
         "/api/v1/hafalan/summary": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get hafalan summary",
                 "responses": {
                     "200": {
@@ -2629,15 +2293,9 @@
         },
         "/api/v1/hafalan/surah/{surahId}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Update hafalan progress for a surah",
                 "parameters": [
                     {
@@ -2687,12 +2345,8 @@
         },
         "/api/v1/hijri/convert": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Convert Gregorian to Hijri date",
                 "parameters": [
                     {
@@ -2735,12 +2389,8 @@
         },
         "/api/v1/hijri/events": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get Hijri events",
                 "parameters": [
                     {
@@ -2768,12 +2418,8 @@
         },
         "/api/v1/hijri/events/{month}": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get Hijri events by month",
                 "parameters": [
                     {
@@ -2808,12 +2454,8 @@
         },
         "/api/v1/hijri/today": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get today's Hijri date",
                 "responses": {
                     "200": {
@@ -2828,15 +2470,9 @@
         "/api/v1/jarh-tadil": {
             "get": {
                 "description": "Get paginated list of all jarh-tadil",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "JarhTadil"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["JarhTadil"],
                 "summary": "List all jarh-tadil",
                 "responses": {
                     "200": {
@@ -2855,15 +2491,9 @@
             },
             "post": {
                 "description": "Create a new jarh-tadil entry",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "JarhTadil"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["JarhTadil"],
                 "summary": "Create jarh-tadil",
                 "parameters": [
                     {
@@ -2901,15 +2531,9 @@
         "/api/v1/jarh-tadil/{id}": {
             "get": {
                 "description": "Get a single jarh-tadil by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "JarhTadil"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["JarhTadil"],
                 "summary": "Get jarh-tadil by ID",
                 "parameters": [
                     {
@@ -2943,15 +2567,9 @@
             },
             "put": {
                 "description": "Update jarh-tadil by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "JarhTadil"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["JarhTadil"],
                 "summary": "Update jarh-tadil",
                 "parameters": [
                     {
@@ -2994,15 +2612,9 @@
             },
             "delete": {
                 "description": "Delete jarh-tadil by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "JarhTadil"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["JarhTadil"],
                 "summary": "Delete jarh-tadil",
                 "parameters": [
                     {
@@ -3038,15 +2650,9 @@
         "/api/v1/juz": {
             "get": {
                 "description": "Get paginated list of all juz",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Juz"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Juz"],
                 "summary": "List all juz",
                 "responses": {
                     "200": {
@@ -3065,15 +2671,9 @@
             },
             "post": {
                 "description": "Create a new juz entry",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Juz"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Juz"],
                 "summary": "Create juz",
                 "parameters": [
                     {
@@ -3111,15 +2711,9 @@
         "/api/v1/juz/surah/{name}": {
             "get": {
                 "description": "Find which juz contains a surah by name",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Juz"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Juz"],
                 "summary": "Get juz by surah name",
                 "parameters": [
                     {
@@ -3155,15 +2749,9 @@
         "/api/v1/juz/{id}": {
             "get": {
                 "description": "Get a single juz by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Juz"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Juz"],
                 "summary": "Get juz by ID",
                 "parameters": [
                     {
@@ -3197,15 +2785,9 @@
             },
             "put": {
                 "description": "Update juz by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Juz"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Juz"],
                 "summary": "Update juz",
                 "parameters": [
                     {
@@ -3250,15 +2832,9 @@
         "/api/v1/juz/{id}/{scoped}": {
             "delete": {
                 "description": "Soft delete juz by ID and scope",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Juz"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Juz"],
                 "summary": "Delete juz",
                 "parameters": [
                     {
@@ -3300,12 +2876,8 @@
         },
         "/api/v1/leaderboard/hafalan": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sosial"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Sosial"],
                 "summary": "Get hafalan leaderboard",
                 "parameters": [
                     {
@@ -3333,12 +2905,8 @@
         },
         "/api/v1/leaderboard/me": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sosial"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Sosial"],
                 "summary": "Get my leaderboard rank",
                 "responses": {
                     "200": {
@@ -3364,12 +2932,8 @@
         },
         "/api/v1/leaderboard/streak": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sosial"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Sosial"],
                 "summary": "Get streak leaderboard",
                 "parameters": [
                     {
@@ -3398,15 +2962,9 @@
         "/api/v1/mufrodat/ayah/{id}": {
             "get": {
                 "description": "Get word-by-word translation for a specific ayah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Mufrodat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Mufrodat"],
                 "summary": "Get mufrodat by ayah ID",
                 "parameters": [
                     {
@@ -3442,15 +3000,9 @@
         "/api/v1/mufrodat/page/{page}": {
             "get": {
                 "description": "Get word-by-word translations for all ayah on a specific page",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Mufrodat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Mufrodat"],
                 "summary": "Get mufrodat by page",
                 "parameters": [
                     {
@@ -3486,15 +3038,9 @@
         "/api/v1/mufrodat/root/{word}": {
             "get": {
                 "description": "Search word-by-word translations by Arabic root word",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Mufrodat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Mufrodat"],
                 "summary": "Get mufrodat by root word",
                 "parameters": [
                     {
@@ -3530,15 +3076,9 @@
         "/api/v1/mufrodat/surah/{number}": {
             "get": {
                 "description": "Get word-by-word translations for all ayah in a surah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Mufrodat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Mufrodat"],
                 "summary": "Get mufrodat by surah number",
                 "parameters": [
                     {
@@ -3574,15 +3114,9 @@
         "/api/v1/mufrodat/surah/{surah}/ayah/{ayah}": {
             "get": {
                 "description": "Get word-by-word translation for a specific ayah by surah and ayah number",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Mufrodat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Mufrodat"],
                 "summary": "Get mufrodat by surah and ayah number",
                 "parameters": [
                     {
@@ -3624,12 +3158,8 @@
         },
         "/api/v1/muhasabah": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get all muhasabah entries",
                 "parameters": [
                     {
@@ -3667,15 +3197,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Create muhasabah entry",
                 "parameters": [
                     {
@@ -3718,12 +3242,8 @@
         },
         "/api/v1/muhasabah/{id}": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get muhasabah entry by ID",
                 "parameters": [
                     {
@@ -3762,15 +3282,9 @@
                 }
             },
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Update muhasabah entry",
                 "parameters": [
                     {
@@ -3818,12 +3332,8 @@
                 }
             },
             "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Delete muhasabah entry",
                 "parameters": [
                     {
@@ -3864,12 +3374,8 @@
         },
         "/api/v1/murojaah/history": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get murojaah history",
                 "parameters": [
                     {
@@ -3903,15 +3409,9 @@
         },
         "/api/v1/murojaah/result": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Submit murojaah result",
                 "parameters": [
                     {
@@ -3954,12 +3454,8 @@
         },
         "/api/v1/murojaah/session": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get murojaah session (random ayahs)",
                 "parameters": [
                     {
@@ -3993,12 +3489,8 @@
         },
         "/api/v1/murojaah/stats": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get murojaah stats",
                 "responses": {
                     "200": {
@@ -4024,12 +3516,8 @@
         },
         "/api/v1/notes": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get all notes",
                 "parameters": [
                     {
@@ -4067,15 +3555,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Create note",
                 "parameters": [
                     {
@@ -4118,15 +3600,9 @@
         },
         "/api/v1/notes/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Update note",
                 "parameters": [
                     {
@@ -4174,12 +3650,8 @@
                 }
             },
             "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Delete note",
                 "parameters": [
                     {
@@ -4220,12 +3692,8 @@
         },
         "/api/v1/notifications/inbox": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "List notification inbox",
                 "responses": {
                     "200": {
@@ -4251,12 +3719,8 @@
         },
         "/api/v1/notifications/inbox/read-all": {
             "put": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Mark all notifications as read",
                 "responses": {
                     "200": {
@@ -4282,12 +3746,8 @@
         },
         "/api/v1/notifications/inbox/{id}/read": {
             "put": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Mark notification as read",
                 "parameters": [
                     {
@@ -4328,12 +3788,8 @@
         },
         "/api/v1/notifications/push-test": {
             "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Send test push notification",
                 "responses": {
                     "200": {
@@ -4359,15 +3815,9 @@
         },
         "/api/v1/notifications/push-token": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Register push notification token",
                 "parameters": [
                     {
@@ -4404,12 +3854,8 @@
         },
         "/api/v1/notifications/push-tokens": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get registered push tokens",
                 "responses": {
                     "200": {
@@ -4435,12 +3881,8 @@
         },
         "/api/v1/notifications/settings": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get notification settings",
                 "responses": {
                     "200": {
@@ -4464,15 +3906,9 @@
                 }
             },
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Update notification settings",
                 "parameters": [
                     {
@@ -4510,15 +3946,9 @@
         "/api/v1/perawi": {
             "get": {
                 "description": "Get paginated list of all perawi",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Perawi"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Perawi"],
                 "summary": "List all perawi",
                 "responses": {
                     "200": {
@@ -4537,15 +3967,9 @@
             },
             "post": {
                 "description": "Create a new perawi entry",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Perawi"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Perawi"],
                 "summary": "Create perawi",
                 "parameters": [
                     {
@@ -4583,15 +4007,9 @@
         "/api/v1/perawi/search": {
             "get": {
                 "description": "Search perawi by query",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Perawi"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Perawi"],
                 "summary": "Search perawi",
                 "parameters": [
                     {
@@ -4621,15 +4039,9 @@
         "/api/v1/perawi/tabaqah/{tabaqah}": {
             "get": {
                 "description": "Get perawi filtered by tabaqah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Perawi"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Perawi"],
                 "summary": "Get perawi by tabaqah",
                 "parameters": [
                     {
@@ -4659,15 +4071,9 @@
         "/api/v1/perawi/{id}": {
             "get": {
                 "description": "Get a single perawi by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Perawi"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Perawi"],
                 "summary": "Get perawi by ID",
                 "parameters": [
                     {
@@ -4701,15 +4107,9 @@
             },
             "put": {
                 "description": "Update perawi by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Perawi"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Perawi"],
                 "summary": "Update perawi",
                 "parameters": [
                     {
@@ -4752,15 +4152,9 @@
             },
             "delete": {
                 "description": "Delete perawi by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Perawi"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Perawi"],
                 "summary": "Delete perawi",
                 "parameters": [
                     {
@@ -4796,15 +4190,9 @@
         "/api/v1/perawi/{id}/guru": {
             "get": {
                 "description": "Get list of teachers for a given perawi",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Perawi"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Perawi"],
                 "summary": "Get guru (teachers) of a perawi",
                 "parameters": [
                     {
@@ -4840,15 +4228,9 @@
         "/api/v1/perawi/{id}/murid": {
             "get": {
                 "description": "Get list of students for a given perawi",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Perawi"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Perawi"],
                 "summary": "Get murid (students) of a perawi",
                 "parameters": [
                     {
@@ -4883,12 +4265,8 @@
         },
         "/api/v1/progress": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get all reading progress",
                 "responses": {
                     "200": {
@@ -4914,12 +4292,8 @@
         },
         "/api/v1/progress/hadith": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get Hadith reading progress",
                 "responses": {
                     "200": {
@@ -4937,15 +4311,9 @@
                 }
             },
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Save Hadith reading progress",
                 "parameters": [
                     {
@@ -4988,12 +4356,8 @@
         },
         "/api/v1/progress/quran": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get Quran reading progress",
                 "responses": {
                     "200": {
@@ -5011,15 +4375,9 @@
                 }
             },
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Save Quran reading progress",
                 "parameters": [
                     {
@@ -5063,15 +4421,9 @@
         "/api/v1/sanad": {
             "post": {
                 "description": "Create a new sanad entry",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sanad"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Sanad"],
                 "summary": "Create sanad",
                 "parameters": [
                     {
@@ -5109,15 +4461,9 @@
         "/api/v1/sanad/{id}": {
             "get": {
                 "description": "Get a single sanad by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sanad"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Sanad"],
                 "summary": "Get sanad by ID",
                 "parameters": [
                     {
@@ -5151,15 +4497,9 @@
             },
             "put": {
                 "description": "Update sanad by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sanad"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Sanad"],
                 "summary": "Update sanad",
                 "parameters": [
                     {
@@ -5202,15 +4542,9 @@
             },
             "delete": {
                 "description": "Delete sanad by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Sanad"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Sanad"],
                 "summary": "Delete sanad",
                 "parameters": [
                     {
@@ -5245,12 +4579,8 @@
         },
         "/api/v1/stats": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get user stats summary",
                 "responses": {
                     "200": {
@@ -5276,12 +4606,8 @@
         },
         "/api/v1/stats/monthly": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get monthly stats recap",
                 "parameters": [
                     {
@@ -5321,12 +4647,8 @@
         },
         "/api/v1/stats/weekly": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get weekly stats",
                 "responses": {
                     "200": {
@@ -5352,12 +4674,8 @@
         },
         "/api/v1/stats/yearly": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get yearly stats recap",
                 "parameters": [
                     {
@@ -5391,12 +4709,8 @@
         },
         "/api/v1/streak": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get user streak",
                 "responses": {
                     "200": {
@@ -5422,12 +4736,8 @@
         },
         "/api/v1/streak/weekly": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Personal"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Personal"],
                 "summary": "Get weekly streak data",
                 "responses": {
                     "200": {
@@ -5454,15 +4764,9 @@
         "/api/v1/surah": {
             "get": {
                 "description": "Get paginated list of all surah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Surah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Surah"],
                 "summary": "List all surah",
                 "responses": {
                     "200": {
@@ -5481,15 +4785,9 @@
             },
             "post": {
                 "description": "Create a new surah entry",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Surah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Surah"],
                 "summary": "Create surah",
                 "parameters": [
                     {
@@ -5527,15 +4825,9 @@
         "/api/v1/surah/name/{name}": {
             "get": {
                 "description": "Get surah by its name (Arabic or Latin)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Surah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Surah"],
                 "summary": "Get surah by name",
                 "parameters": [
                     {
@@ -5571,15 +4863,9 @@
         "/api/v1/surah/number/{number}": {
             "get": {
                 "description": "Get a single surah by its number (1-114)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Surah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Surah"],
                 "summary": "Get surah by number",
                 "parameters": [
                     {
@@ -5615,15 +4901,9 @@
         "/api/v1/surah/{id}": {
             "get": {
                 "description": "Get a single surah by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Surah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Surah"],
                 "summary": "Get surah by ID",
                 "parameters": [
                     {
@@ -5657,15 +4937,9 @@
             },
             "put": {
                 "description": "Update surah by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Surah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Surah"],
                 "summary": "Update surah",
                 "parameters": [
                     {
@@ -5710,15 +4984,9 @@
         "/api/v1/surah/{id}/{scoped}": {
             "delete": {
                 "description": "Soft delete surah by ID and scope",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Surah"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Surah"],
                 "summary": "Delete surah",
                 "parameters": [
                     {
@@ -5761,15 +5029,9 @@
         "/api/v1/tafsir": {
             "post": {
                 "description": "Create a new tafsir entry",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Tafsir"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Tafsir"],
                 "summary": "Create tafsir",
                 "parameters": [
                     {
@@ -5807,15 +5069,9 @@
         "/api/v1/tafsir/ayah/{id}": {
             "get": {
                 "description": "Get tafsir (interpretation) for a specific ayah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Tafsir"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Tafsir"],
                 "summary": "Get tafsir by ayah ID",
                 "parameters": [
                     {
@@ -5849,15 +5105,9 @@
             },
             "put": {
                 "description": "Update tafsir entry for a specific ayah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Tafsir"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Tafsir"],
                 "summary": "Update tafsir by ayah ID",
                 "parameters": [
                     {
@@ -5902,15 +5152,9 @@
         "/api/v1/tafsir/surah/{number}": {
             "get": {
                 "description": "Get tafsir (interpretation) for all ayah in a surah",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Tafsir"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Tafsir"],
                 "summary": "Get tafsir by surah number",
                 "parameters": [
                     {
@@ -5946,15 +5190,9 @@
         "/api/v1/takhrij": {
             "get": {
                 "description": "Get paginated list of all takhrij",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Takhrij"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Takhrij"],
                 "summary": "List all takhrij",
                 "responses": {
                     "200": {
@@ -5973,15 +5211,9 @@
             },
             "post": {
                 "description": "Create a new takhrij entry",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Takhrij"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Takhrij"],
                 "summary": "Create takhrij",
                 "parameters": [
                     {
@@ -6019,15 +5251,9 @@
         "/api/v1/takhrij/{id}": {
             "get": {
                 "description": "Get a single takhrij by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Takhrij"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Takhrij"],
                 "summary": "Get takhrij by ID",
                 "parameters": [
                     {
@@ -6061,15 +5287,9 @@
             },
             "put": {
                 "description": "Update takhrij by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Takhrij"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Takhrij"],
                 "summary": "Update takhrij",
                 "parameters": [
                     {
@@ -6112,15 +5332,9 @@
             },
             "delete": {
                 "description": "Delete takhrij by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Takhrij"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Takhrij"],
                 "summary": "Delete takhrij",
                 "parameters": [
                     {
@@ -6156,15 +5370,9 @@
         "/api/v1/themes": {
             "get": {
                 "description": "Get paginated list of all themes",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Themes"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Themes"],
                 "summary": "List all themes",
                 "responses": {
                     "200": {
@@ -6183,15 +5391,9 @@
             },
             "post": {
                 "description": "Create a new theme entry",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Themes"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Themes"],
                 "summary": "Create theme",
                 "parameters": [
                     {
@@ -6229,15 +5431,9 @@
         "/api/v1/themes/book/{slug}": {
             "get": {
                 "description": "Get themes filtered by book slug",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Themes"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Themes"],
                 "summary": "Get themes by book slug",
                 "parameters": [
                     {
@@ -6273,15 +5469,9 @@
         "/api/v1/themes/{id}": {
             "get": {
                 "description": "Get a single theme by its ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Themes"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Themes"],
                 "summary": "Get theme by ID",
                 "parameters": [
                     {
@@ -6315,15 +5505,9 @@
             },
             "put": {
                 "description": "Update theme by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Themes"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Themes"],
                 "summary": "Update theme",
                 "parameters": [
                     {
@@ -6366,15 +5550,9 @@
             },
             "delete": {
                 "description": "Delete theme by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Themes"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Themes"],
                 "summary": "Delete theme",
                 "parameters": [
                     {
@@ -6409,12 +5587,8 @@
         },
         "/api/v1/tilawah": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get tilawah logs",
                 "parameters": [
                     {
@@ -6452,15 +5626,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Add tilawah (recitation) log",
                 "parameters": [
                     {
@@ -6503,12 +5671,8 @@
         },
         "/api/v1/tilawah/summary": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get tilawah summary",
                 "responses": {
                     "200": {
@@ -6534,12 +5698,8 @@
         },
         "/api/v1/tilawah/{id}": {
             "delete": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Delete tilawah log",
                 "parameters": [
                     {
@@ -6580,16 +5740,9 @@
         },
         "/asmaul-husna": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Asmaul Husna"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Asmaul Husna"],
                 "summary": "Get all Asmaul Husna",
                 "parameters": [
                     {
@@ -6623,16 +5776,9 @@
         },
         "/asmaul-husna/{number}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Asmaul Husna"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Asmaul Husna"],
                 "summary": "Get Asmaul Husna by number",
                 "parameters": [
                     {
@@ -6667,15 +5813,9 @@
         },
         "/auth/forgot-password": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "Send forgot password email",
                 "parameters": [
                     {
@@ -6706,15 +5846,9 @@
         },
         "/auth/login": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "Login user",
                 "parameters": [
                     {
@@ -6751,15 +5885,9 @@
         },
         "/auth/logout": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "Logout user",
                 "parameters": [
                     {
@@ -6793,15 +5921,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "Get current user profile",
                 "responses": {
                     "200": {
@@ -6824,15 +5946,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "Update current user profile",
                 "parameters": [
                     {
@@ -6874,15 +5990,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "Change current user password",
                 "parameters": [
                     {
@@ -6919,15 +6029,9 @@
         },
         "/auth/refresh": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "Refresh access token",
                 "parameters": [
                     {
@@ -6968,15 +6072,9 @@
         },
         "/auth/register": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "Register a new user",
                 "parameters": [
                     {
@@ -7013,15 +6111,9 @@
         },
         "/auth/reset-password": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Auth"],
                 "summary": "Reset user password",
                 "parameters": [
                     {
@@ -7052,15 +6144,9 @@
         },
         "/blog/categories": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get all blog categories",
                 "responses": {
                     "200": {
@@ -7078,15 +6164,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Create a blog category",
                 "parameters": [
                     {
@@ -7123,15 +6203,9 @@
         },
         "/blog/categories/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Update a blog category",
                 "parameters": [
                     {
@@ -7173,15 +6247,9 @@
                 }
             },
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Delete a blog category",
                 "parameters": [
                     {
@@ -7216,15 +6284,9 @@
         },
         "/blog/categories/{slug}/posts": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get blog posts by category slug",
                 "parameters": [
                     {
@@ -7265,15 +6327,9 @@
         },
         "/blog/posts": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get all blog posts with pagination",
                 "parameters": [
                     {
@@ -7323,15 +6379,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Create a blog post",
                 "parameters": [
                     {
@@ -7374,15 +6424,9 @@
         },
         "/blog/posts/popular": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get popular blog posts",
                 "parameters": [
                     {
@@ -7410,15 +6454,9 @@
         },
         "/blog/posts/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Update a blog post",
                 "parameters": [
                     {
@@ -7472,15 +6510,9 @@
                 }
             },
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Delete a blog post",
                 "parameters": [
                     {
@@ -7521,15 +6553,9 @@
         },
         "/blog/posts/{id}/preview": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Preview blog post by ID",
                 "parameters": [
                     {
@@ -7570,15 +6596,9 @@
         },
         "/blog/posts/{slug}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get blog post by slug",
                 "parameters": [
                     {
@@ -7607,15 +6627,9 @@
         },
         "/blog/posts/{slug}/related": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get related blog posts",
                 "parameters": [
                     {
@@ -7644,15 +6658,9 @@
         },
         "/blog/tags": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get all blog tags",
                 "responses": {
                     "200": {
@@ -7670,15 +6678,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Create a blog tag",
                 "parameters": [
                     {
@@ -7715,15 +6717,9 @@
         },
         "/blog/tags/{id}": {
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Delete a blog tag",
                 "parameters": [
                     {
@@ -7758,15 +6754,9 @@
         },
         "/blog/tags/{slug}/posts": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get blog posts by tag slug",
                 "parameters": [
                     {
@@ -7812,15 +6802,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Developer"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Developer"],
                 "summary": "List developer API keys",
                 "responses": {
                     "200": {
@@ -7843,15 +6827,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Developer"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Developer"],
                 "summary": "Create a new developer API key",
                 "parameters": [
                     {
@@ -7893,15 +6871,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Developer"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Developer"],
                 "summary": "Revoke a developer API key",
                 "parameters": [
                     {
@@ -7941,15 +6913,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Developer"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Developer"],
                 "summary": "Register for developer API access",
                 "responses": {
                     "200": {
@@ -7969,15 +6935,9 @@
         },
         "/dictionary": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get all dictionary terms",
                 "parameters": [
                     {
@@ -8009,15 +6969,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Create a dictionary term",
                 "parameters": [
                     {
@@ -8054,15 +7008,9 @@
         },
         "/dictionary/category/{category}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get dictionary terms by category",
                 "parameters": [
                     {
@@ -8091,15 +7039,9 @@
         },
         "/dictionary/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Update a dictionary term",
                 "parameters": [
                     {
@@ -8141,15 +7083,9 @@
                 }
             },
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Delete a dictionary term",
                 "parameters": [
                     {
@@ -8184,15 +7120,9 @@
         },
         "/dictionary/{term}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get dictionary term by term",
                 "parameters": [
                     {
@@ -8221,15 +7151,9 @@
         },
         "/doa": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Doa"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Doa"],
                 "summary": "Get all doa",
                 "parameters": [
                     {
@@ -8263,15 +7187,9 @@
         },
         "/doa/category/{category}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Doa"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Doa"],
                 "summary": "Get doa by category",
                 "parameters": [
                     {
@@ -8312,15 +7230,9 @@
         },
         "/doa/{id}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Doa"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Doa"],
                 "summary": "Get doa by ID",
                 "parameters": [
                     {
@@ -8355,15 +7267,9 @@
         },
         "/dzikir": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Dzikir"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Dzikir"],
                 "summary": "Get all dzikir",
                 "parameters": [
                     {
@@ -8397,16 +7303,9 @@
         },
         "/dzikir/log": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Dzikir Log"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Dzikir Log"],
                 "summary": "Log dzikir completion",
                 "parameters": [
                     {
@@ -8443,16 +7342,9 @@
         },
         "/dzikir/log/today": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Dzikir Log"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Dzikir Log"],
                 "summary": "Get today's dzikir log",
                 "responses": {
                     "200": {
@@ -8472,16 +7364,9 @@
         },
         "/dzikir/log/{id}": {
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Dzikir Log"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Dzikir Log"],
                 "summary": "Delete dzikir log by ID",
                 "parameters": [
                     {
@@ -8516,15 +7401,9 @@
         },
         "/dzikir/{id}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Dzikir"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Dzikir"],
                 "summary": "Get dzikir by ID",
                 "parameters": [
                     {
@@ -8559,16 +7438,9 @@
         },
         "/fiqh": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Fiqh"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Fiqh"],
                 "summary": "Get all fiqh categories",
                 "parameters": [
                     {
@@ -8602,16 +7474,9 @@
         },
         "/fiqh/categories": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Fiqh"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Fiqh"],
                 "summary": "Create a fiqh category (admin)",
                 "parameters": [
                     {
@@ -8648,16 +7513,9 @@
         },
         "/fiqh/categories/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Fiqh"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Fiqh"],
                 "summary": "Update a fiqh category (admin)",
                 "parameters": [
                     {
@@ -8699,16 +7557,9 @@
                 }
             },
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Fiqh"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Fiqh"],
                 "summary": "Delete a fiqh category (admin)",
                 "parameters": [
                     {
@@ -8743,16 +7594,9 @@
         },
         "/fiqh/categories/{slug}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Fiqh"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Fiqh"],
                 "summary": "Get fiqh category by slug",
                 "parameters": [
                     {
@@ -8799,16 +7643,9 @@
         },
         "/fiqh/item/{slug}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Fiqh"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Fiqh"],
                 "summary": "Get fiqh item by slug",
                 "parameters": [
                     {
@@ -8843,16 +7680,9 @@
         },
         "/fiqh/items": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Fiqh"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Fiqh"],
                 "summary": "Get all fiqh items (admin)",
                 "parameters": [
                     {
@@ -8884,16 +7714,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Fiqh"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Fiqh"],
                 "summary": "Create a fiqh item (admin)",
                 "parameters": [
                     {
@@ -8930,16 +7753,9 @@
         },
         "/fiqh/items/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Fiqh"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Fiqh"],
                 "summary": "Update a fiqh item (admin)",
                 "parameters": [
                     {
@@ -8981,16 +7797,9 @@
                 }
             },
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Fiqh"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Fiqh"],
                 "summary": "Delete a fiqh item (admin)",
                 "parameters": [
                     {
@@ -9025,16 +7834,9 @@
         },
         "/fiqh/{slug}/{id}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Fiqh"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Fiqh"],
                 "summary": "Get fiqh item by category slug and ID",
                 "parameters": [
                     {
@@ -9076,15 +7878,9 @@
         },
         "/hadiths": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hadith"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Hadith"],
                 "summary": "Find all hadiths",
                 "responses": {
                     "200": {
@@ -9096,15 +7892,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hadith"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Hadith"],
                 "summary": "Create a new hadith",
                 "parameters": [
                     {
@@ -9141,15 +7931,9 @@
         },
         "/hadiths/book/{slug}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hadith"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Hadith"],
                 "summary": "Find hadiths by book slug",
                 "parameters": [
                     {
@@ -9178,15 +7962,9 @@
         },
         "/hadiths/daily": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hadith"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Hadith"],
                 "summary": "Find daily hadith",
                 "responses": {
                     "200": {
@@ -9206,15 +7984,9 @@
         },
         "/hadiths/keyset": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hadith"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Hadith"],
                 "summary": "Find all hadiths with keyset pagination",
                 "responses": {
                     "200": {
@@ -9234,15 +8006,9 @@
         },
         "/hadiths/theme/slug/{slug}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hadith"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Hadith"],
                 "summary": "Find hadiths by theme slug",
                 "parameters": [
                     {
@@ -9277,15 +8043,9 @@
         },
         "/hadiths/theme/{themeId}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hadith"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Hadith"],
                 "summary": "Find hadiths by theme ID",
                 "parameters": [
                     {
@@ -9320,15 +8080,9 @@
         },
         "/hadiths/{id}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Hadith"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Hadith"],
                 "summary": "Find hadith by ID",
                 "parameters": [
                     {
@@ -9363,15 +8117,9 @@
         },
         "/history": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get all history events",
                 "parameters": [
                     {
@@ -9421,15 +8169,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Create a history event",
                 "parameters": [
                     {
@@ -9466,15 +8208,9 @@
         },
         "/history/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Update a history event",
                 "parameters": [
                     {
@@ -9516,15 +8252,9 @@
                 }
             },
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Delete a history event",
                 "parameters": [
                     {
@@ -9559,15 +8289,9 @@
         },
         "/history/{slug}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get history event by slug",
                 "parameters": [
                     {
@@ -9596,16 +8320,9 @@
         },
         "/imsakiyah": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Jadwal Sholat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Jadwal Sholat"],
                 "summary": "Get imsakiyah schedule for a month",
                 "parameters": [
                     {
@@ -9667,15 +8384,9 @@
         },
         "/kajian": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get all kajian with pagination",
                 "parameters": [
                     {
@@ -9719,15 +8430,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Create a kajian",
                 "parameters": [
                     {
@@ -9764,15 +8469,9 @@
         },
         "/kajian/{id}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get kajian by ID",
                 "parameters": [
                     {
@@ -9805,15 +8504,9 @@
                 }
             },
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Update a kajian",
                 "parameters": [
                     {
@@ -9855,15 +8548,9 @@
                 }
             },
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Delete a kajian",
                 "parameters": [
                     {
@@ -9898,16 +8585,9 @@
         },
         "/kiblat": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Kiblat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Kiblat"],
                 "summary": "Calculate kiblat direction",
                 "parameters": [
                     {
@@ -9943,16 +8623,9 @@
         },
         "/manasik": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Manasik"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Manasik"],
                 "summary": "Get all manasik steps",
                 "parameters": [
                     {
@@ -9984,16 +8657,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Manasik"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Manasik"],
                 "summary": "Create a manasik step (admin)",
                 "parameters": [
                     {
@@ -10030,16 +8696,9 @@
         },
         "/manasik/items": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Manasik"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Manasik"],
                 "summary": "Get all manasik items (admin)",
                 "responses": {
                     "200": {
@@ -10059,16 +8718,9 @@
         },
         "/manasik/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Manasik"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Manasik"],
                 "summary": "Update a manasik step by ID (admin)",
                 "parameters": [
                     {
@@ -10110,16 +8762,9 @@
                 }
             },
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Manasik"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Manasik"],
                 "summary": "Delete a manasik step by ID (admin)",
                 "parameters": [
                     {
@@ -10154,16 +8799,9 @@
         },
         "/manasik/{type}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Manasik"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Manasik"],
                 "summary": "Get manasik steps by type (haji/umrah)",
                 "parameters": [
                     {
@@ -10204,16 +8842,9 @@
         },
         "/manasik/{type}/{step}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Manasik"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Manasik"],
                 "summary": "Get manasik step by type and step",
                 "parameters": [
                     {
@@ -10256,15 +8887,9 @@
         "/master/": {
             "get": {
                 "description": "show basic response",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "API"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["API"],
                 "summary": "show basic response",
                 "responses": {
                     "200": {
@@ -10303,15 +8928,9 @@
         "/master/health": {
             "get": {
                 "description": "show info response",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "API"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["API"],
                 "summary": "show info response",
                 "responses": {
                     "200": {
@@ -10351,15 +8970,9 @@
         "/master/info": {
             "get": {
                 "description": "show info response",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "API"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["API"],
                 "summary": "show info response",
                 "responses": {
                     "200": {
@@ -10398,16 +9011,9 @@
         },
         "/panduan-sholat": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Sholat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Sholat"],
                 "summary": "Get all prayer guides",
                 "responses": {
                     "200": {
@@ -10427,16 +9033,9 @@
         },
         "/panduan-sholat/{step}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Sholat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Sholat"],
                 "summary": "Get prayer guide by step",
                 "parameters": [
                     {
@@ -10471,15 +9070,9 @@
         },
         "/quiz/session": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get quiz session",
                 "parameters": [
                     {
@@ -10513,15 +9106,9 @@
         },
         "/search": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Search"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Search"],
                 "summary": "Global search across Quran, Hadith, Doa, and Kajian",
                 "parameters": [
                     {
@@ -10577,15 +9164,9 @@
         },
         "/share/ayah/{id}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Share"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Share"],
                 "summary": "Get ayah sharing metadata",
                 "parameters": [
                     {
@@ -10620,15 +9201,9 @@
         },
         "/share/hadith/{id}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Share"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Share"],
                 "summary": "Get hadith sharing metadata",
                 "parameters": [
                     {
@@ -10663,16 +9238,9 @@
         },
         "/sholat-times": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Jadwal Sholat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Jadwal Sholat"],
                 "summary": "Get prayer times by date",
                 "parameters": [
                     {
@@ -10729,16 +9297,9 @@
         },
         "/sholat-times/week": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Jadwal Sholat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Jadwal Sholat"],
                 "summary": "Get weekly prayer times",
                 "parameters": [
                     {
@@ -10788,16 +9349,9 @@
         },
         "/sholat/history": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Sholat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Sholat"],
                 "summary": "Get prayer history",
                 "parameters": [
                     {
@@ -10831,16 +9385,9 @@
         },
         "/sholat/stats": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Sholat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Sholat"],
                 "summary": "Get prayer statistics",
                 "responses": {
                     "200": {
@@ -10860,16 +9407,9 @@
         },
         "/sholat/today": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Sholat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Sholat"],
                 "summary": "Get today's prayer status",
                 "responses": {
                     "200": {
@@ -10887,16 +9427,9 @@
                 }
             },
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Sholat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Sholat"],
                 "summary": "Log prayer for today",
                 "parameters": [
                     {
@@ -10933,15 +9466,9 @@
         },
         "/siroh/categories": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get all siroh categories",
                 "responses": {
                     "200": {
@@ -10959,15 +9486,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Create siroh category",
                 "parameters": [
                     {
@@ -11004,15 +9525,9 @@
         },
         "/siroh/categories/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Update siroh category",
                 "parameters": [
                     {
@@ -11054,15 +9569,9 @@
                 }
             },
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Delete siroh category",
                 "parameters": [
                     {
@@ -11097,15 +9606,9 @@
         },
         "/siroh/categories/{slug}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get siroh category by slug",
                 "parameters": [
                     {
@@ -11134,15 +9637,9 @@
         },
         "/siroh/contents": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get all siroh contents with pagination",
                 "parameters": [
                     {
@@ -11174,15 +9671,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Create siroh content",
                 "parameters": [
                     {
@@ -11219,15 +9710,9 @@
         },
         "/siroh/contents/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Update siroh content",
                 "parameters": [
                     {
@@ -11269,15 +9754,9 @@
                 }
             },
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Delete siroh content",
                 "parameters": [
                     {
@@ -11312,15 +9791,9 @@
         },
         "/siroh/contents/{slug}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Belajar"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Belajar"],
                 "summary": "Get siroh content by slug",
                 "parameters": [
                     {
@@ -11349,16 +9822,9 @@
         },
         "/tahlil": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Tahlil"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Tahlil"],
                 "summary": "Get all tahlil collections",
                 "parameters": [
                     {
@@ -11392,16 +9858,9 @@
         },
         "/tahlil/items": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Tahlil"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Tahlil"],
                 "summary": "Get all tahlil items (admin)",
                 "parameters": [
                     {
@@ -11433,16 +9892,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Tahlil"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Tahlil"],
                 "summary": "Create a tahlil item (admin)",
                 "parameters": [
                     {
@@ -11479,16 +9931,9 @@
         },
         "/tahlil/items/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Tahlil"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Tahlil"],
                 "summary": "Update a tahlil item (admin)",
                 "parameters": [
                     {
@@ -11530,16 +9975,9 @@
                 }
             },
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Tahlil"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Tahlil"],
                 "summary": "Delete a tahlil item (admin)",
                 "parameters": [
                     {
@@ -11574,16 +10012,9 @@
         },
         "/tahlil/{id}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Tahlil"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Tahlil"],
                 "summary": "Get tahlil collection by ID",
                 "parameters": [
                     {
@@ -11618,16 +10049,9 @@
         },
         "/user-wird": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "User Wird"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "User Wird"],
                 "summary": "Get all user wirds",
                 "responses": {
                     "200": {
@@ -11645,16 +10069,9 @@
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "User Wird"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "User Wird"],
                 "summary": "Create a user wird",
                 "parameters": [
                     {
@@ -11691,16 +10108,9 @@
         },
         "/user-wird/{id}": {
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "User Wird"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "User Wird"],
                 "summary": "Update a user wird by ID",
                 "parameters": [
                     {
@@ -11748,16 +10158,9 @@
                 }
             },
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "User Wird"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "User Wird"],
                 "summary": "Delete a user wird by ID",
                 "parameters": [
                     {
@@ -11803,15 +10206,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Admin"],
                 "summary": "List all users (admin only)",
                 "parameters": [
                     {
@@ -11856,15 +10253,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Users"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Users"],
                 "summary": "Get user by ID",
                 "parameters": [
                     {
@@ -11908,15 +10299,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Admin"],
                 "summary": "Update user by ID (admin only)",
                 "parameters": [
                     {
@@ -11975,15 +10360,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Admin"],
                 "summary": "Delete user by ID (admin only)",
                 "parameters": [
                     {
@@ -12029,15 +10408,9 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Admin"],
                 "summary": "Update user role (admin only)",
                 "parameters": [
                     {
@@ -12093,16 +10466,9 @@
         },
         "/zakat/fitrah": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Zakat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Zakat"],
                 "summary": "Calculate zakat fitrah",
                 "parameters": [
                     {
@@ -12133,16 +10499,9 @@
         },
         "/zakat/maal": {
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Zakat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Zakat"],
                 "summary": "Calculate zakat maal (wealth)",
                 "parameters": [
                     {
@@ -12173,16 +10532,9 @@
         },
         "/zakat/nishab": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ibadah",
-                    "Zakat"
-                ],
+                "consumes": ["application/json"],
+                "produces": ["application/json"],
+                "tags": ["Ibadah", "Zakat"],
                 "summary": "Get nishab threshold",
                 "responses": {
                     "200": {
@@ -12357,11 +10709,7 @@
         },
         "model.ActivityType": {
             "type": "string",
-            "enum": [
-                "quran",
-                "hadith",
-                "doa"
-            ],
+            "enum": ["quran", "hadith", "doa"],
             "x-enum-varnames": [
                 "ActivityQuran",
                 "ActivityHadith",
@@ -12474,11 +10822,7 @@
         },
         "model.BlogStatus": {
             "type": "string",
-            "enum": [
-                "draft",
-                "published",
-                "archived"
-            ],
+            "enum": ["draft", "published", "archived"],
             "x-enum-varnames": [
                 "BlogStatusDraft",
                 "BlogStatusPublished",
@@ -12594,20 +10938,12 @@
         },
         "model.CommentRefType": {
             "type": "string",
-            "enum": [
-                "ayah",
-                "hadith"
-            ],
-            "x-enum-varnames": [
-                "CommentRefTypeAyah",
-                "CommentRefTypeHadith"
-            ]
+            "enum": ["ayah", "hadith"],
+            "x-enum-varnames": ["CommentRefTypeAyah", "CommentRefTypeHadith"]
         },
         "model.CreateAPIKeyRequest": {
             "type": "object",
-            "required": [
-                "name"
-            ],
+            "required": ["name"],
             "properties": {
                 "name": {
                     "type": "string"
@@ -12616,9 +10952,7 @@
         },
         "model.CreateBlogCategoryRequest": {
             "type": "object",
-            "required": [
-                "name"
-            ],
+            "required": ["name"],
             "properties": {
                 "description": {
                     "type": "string"
@@ -12633,10 +10967,7 @@
         },
         "model.CreateBlogPostRequest": {
             "type": "object",
-            "required": [
-                "content",
-                "title"
-            ],
+            "required": ["content", "title"],
             "properties": {
                 "category_id": {
                     "type": "integer"
@@ -12669,9 +11000,7 @@
         },
         "model.CreateBlogTagRequest": {
             "type": "object",
-            "required": [
-                "name"
-            ],
+            "required": ["name"],
             "properties": {
                 "name": {
                     "type": "string"
@@ -12683,11 +11012,7 @@
         },
         "model.CreateCommentRequest": {
             "type": "object",
-            "required": [
-                "content",
-                "ref_id",
-                "ref_type"
-            ],
+            "required": ["content", "ref_id", "ref_type"],
             "properties": {
                 "content": {
                     "type": "string",
@@ -12706,10 +11031,7 @@
         },
         "model.CreateFeedPostRequest": {
             "type": "object",
-            "required": [
-                "ref_id",
-                "ref_type"
-            ],
+            "required": ["ref_id", "ref_type"],
             "properties": {
                 "caption": {
                     "type": "string"
@@ -12718,10 +11040,7 @@
                     "type": "integer"
                 },
                 "ref_type": {
-                    "enum": [
-                        "ayah",
-                        "hadith"
-                    ],
+                    "enum": ["ayah", "hadith"],
                     "allOf": [
                         {
                             "$ref": "#/definitions/model.FeedRefType"
@@ -12732,10 +11051,7 @@
         },
         "model.CreateFiqhCategoryRequest": {
             "type": "object",
-            "required": [
-                "name",
-                "slug"
-            ],
+            "required": ["name", "slug"],
             "properties": {
                 "description": {
                     "type": "string"
@@ -12750,11 +11066,7 @@
         },
         "model.CreateGoalRequest": {
             "type": "object",
-            "required": [
-                "start_date",
-                "title",
-                "type"
-            ],
+            "required": ["start_date", "title", "type"],
             "properties": {
                 "description": {
                     "type": "string"
@@ -12790,10 +11102,7 @@
         },
         "model.CreateHistoryEventRequest": {
             "type": "object",
-            "required": [
-                "slug",
-                "title"
-            ],
+            "required": ["slug", "title"],
             "properties": {
                 "category": {
                     "$ref": "#/definitions/model.HistoryCategory"
@@ -12820,10 +11129,7 @@
         },
         "model.CreateIslamicTermRequest": {
             "type": "object",
-            "required": [
-                "definition",
-                "term"
-            ],
+            "required": ["definition", "term"],
             "properties": {
                 "category": {
                     "$ref": "#/definitions/model.TermCategory"
@@ -12847,10 +11153,7 @@
         },
         "model.CreateKajianRequest": {
             "type": "object",
-            "required": [
-                "title",
-                "type"
-            ],
+            "required": ["title", "type"],
             "properties": {
                 "description": {
                     "type": "string"
@@ -12874,11 +11177,7 @@
                     "type": "string"
                 },
                 "type": {
-                    "enum": [
-                        "video",
-                        "audio",
-                        "text"
-                    ],
+                    "enum": ["video", "audio", "text"],
                     "allOf": [
                         {
                             "$ref": "#/definitions/model.KajianType"
@@ -12892,10 +11191,7 @@
         },
         "model.CreateMuhasabahRequest": {
             "type": "object",
-            "required": [
-                "content",
-                "date"
-            ],
+            "required": ["content", "date"],
             "properties": {
                 "content": {
                     "type": "string"
@@ -12915,11 +11211,7 @@
         },
         "model.CreateNoteRequest": {
             "type": "object",
-            "required": [
-                "content",
-                "ref_id",
-                "ref_type"
-            ],
+            "required": ["content", "ref_id", "ref_type"],
             "properties": {
                 "content": {
                     "type": "string",
@@ -12935,9 +11227,7 @@
         },
         "model.CreateTilawahRequest": {
             "type": "object",
-            "required": [
-                "date"
-            ],
+            "required": ["date"],
             "properties": {
                 "date": {
                     "type": "string"
@@ -12957,9 +11247,7 @@
         },
         "model.CreateUserWirdRequest": {
             "type": "object",
-            "required": [
-                "title"
-            ],
+            "required": ["title"],
             "properties": {
                 "arabic": {
                     "type": "string"
@@ -12990,20 +11278,12 @@
         },
         "model.FeedRefType": {
             "type": "string",
-            "enum": [
-                "ayah",
-                "hadith"
-            ],
-            "x-enum-varnames": [
-                "FeedRefTypeAyah",
-                "FeedRefTypeHadith"
-            ]
+            "enum": ["ayah", "hadith"],
+            "x-enum-varnames": ["FeedRefTypeAyah", "FeedRefTypeHadith"]
         },
         "model.ForgotPasswordRequest": {
             "type": "object",
-            "required": [
-                "email"
-            ],
+            "required": ["email"],
             "properties": {
                 "email": {
                     "type": "string"
@@ -13012,13 +11292,7 @@
         },
         "model.GoalType": {
             "type": "string",
-            "enum": [
-                "hafalan",
-                "khatam",
-                "tilawah",
-                "hadith",
-                "custom"
-            ],
+            "enum": ["hafalan", "khatam", "tilawah", "hadith", "custom"],
             "x-enum-varnames": [
                 "GoalTypeHafalan",
                 "GoalTypeKhatam",
@@ -13140,11 +11414,7 @@
         },
         "model.HafalanStatus": {
             "type": "string",
-            "enum": [
-                "not_started",
-                "in_progress",
-                "memorized"
-            ],
+            "enum": ["not_started", "in_progress", "memorized"],
             "x-enum-varnames": [
                 "HafalanNotStarted",
                 "HafalanInProgress",
@@ -13153,13 +11423,7 @@
         },
         "model.HistoryCategory": {
             "type": "string",
-            "enum": [
-                "nabi",
-                "khulafa",
-                "dinasti",
-                "ulama",
-                "peristiwa"
-            ],
+            "enum": ["nabi", "khulafa", "dinasti", "ulama", "peristiwa"],
             "x-enum-varnames": [
                 "HistoryCategoryNabi",
                 "HistoryCategoryKhulafa",
@@ -13208,14 +11472,8 @@
         },
         "model.JarhTadilJenis": {
             "type": "string",
-            "enum": [
-                "tadil",
-                "jarh"
-            ],
-            "x-enum-varnames": [
-                "JenisTadil",
-                "JenisJarh"
-            ]
+            "enum": ["tadil", "jarh"],
+            "x-enum-varnames": ["JenisTadil", "JenisJarh"]
         },
         "model.Juz": {
             "type": "object",
@@ -13286,11 +11544,7 @@
         },
         "model.KajianType": {
             "type": "string",
-            "enum": [
-                "video",
-                "audio",
-                "text"
-            ],
+            "enum": ["video", "audio", "text"],
             "x-enum-varnames": [
                 "KajianTypeVideo",
                 "KajianTypeAudio",
@@ -13299,9 +11553,7 @@
         },
         "model.LogDzikirRequest": {
             "type": "object",
-            "required": [
-                "dzikir_id"
-            ],
+            "required": ["dzikir_id"],
             "properties": {
                 "category": {
                     "type": "string"
@@ -13317,23 +11569,13 @@
         },
         "model.LogSholatRequest": {
             "type": "object",
-            "required": [
-                "date",
-                "prayer",
-                "status"
-            ],
+            "required": ["date", "prayer", "status"],
             "properties": {
                 "date": {
                     "type": "string"
                 },
                 "prayer": {
-                    "enum": [
-                        "subuh",
-                        "dzuhur",
-                        "ashar",
-                        "maghrib",
-                        "isya"
-                    ],
+                    "enum": ["subuh", "dzuhur", "ashar", "maghrib", "isya"],
                     "allOf": [
                         {
                             "$ref": "#/definitions/model.PrayerName"
@@ -13341,12 +11583,7 @@
                     ]
                 },
                 "status": {
-                    "enum": [
-                        "berjamaah",
-                        "munfarid",
-                        "qadha",
-                        "missed"
-                    ],
+                    "enum": ["berjamaah", "munfarid", "qadha", "missed"],
                     "allOf": [
                         {
                             "$ref": "#/definitions/model.PrayerStatus"
@@ -13357,10 +11594,7 @@
         },
         "model.LoginRequest": {
             "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
+            "required": ["email", "password"],
             "properties": {
                 "email": {
                     "type": "string"
@@ -13466,22 +11700,12 @@
         },
         "model.NoteRefType": {
             "type": "string",
-            "enum": [
-                "ayah",
-                "hadith"
-            ],
-            "x-enum-varnames": [
-                "NoteRefTypeAyah",
-                "NoteRefTypeHadith"
-            ]
+            "enum": ["ayah", "hadith"],
+            "x-enum-varnames": ["NoteRefTypeAyah", "NoteRefTypeHadith"]
         },
         "model.NotificationSettingRequest": {
             "type": "object",
-            "required": [
-                "is_active",
-                "time",
-                "type"
-            ],
+            "required": ["is_active", "time", "type"],
             "properties": {
                 "is_active": {
                     "type": "boolean"
@@ -13490,11 +11714,7 @@
                     "type": "string"
                 },
                 "type": {
-                    "enum": [
-                        "daily_quran",
-                        "daily_hadith",
-                        "doa"
-                    ],
+                    "enum": ["daily_quran", "daily_hadith", "doa"],
                     "allOf": [
                         {
                             "$ref": "#/definitions/model.NotificationType"
@@ -13505,9 +11725,7 @@
         },
         "model.NotificationSettingsUpsertRequest": {
             "type": "object",
-            "required": [
-                "settings"
-            ],
+            "required": ["settings"],
             "properties": {
                 "settings": {
                     "type": "array",
@@ -13519,11 +11737,7 @@
         },
         "model.NotificationType": {
             "type": "string",
-            "enum": [
-                "daily_quran",
-                "daily_hadith",
-                "doa"
-            ],
+            "enum": ["daily_quran", "daily_hadith", "doa"],
             "x-enum-varnames": [
                 "NotificationTypeDailyQuran",
                 "NotificationTypeDailyHadith",
@@ -13600,13 +11814,7 @@
         },
         "model.PrayerName": {
             "type": "string",
-            "enum": [
-                "subuh",
-                "dzuhur",
-                "ashar",
-                "maghrib",
-                "isya"
-            ],
+            "enum": ["subuh", "dzuhur", "ashar", "maghrib", "isya"],
             "x-enum-varnames": [
                 "PrayerSubuh",
                 "PrayerDzuhur",
@@ -13617,12 +11825,7 @@
         },
         "model.PrayerStatus": {
             "type": "string",
-            "enum": [
-                "berjamaah",
-                "munfarid",
-                "qadha",
-                "missed"
-            ],
+            "enum": ["berjamaah", "munfarid", "qadha", "missed"],
             "x-enum-varnames": [
                 "PrayerBerjamaah",
                 "PrayerMunfarid",
@@ -13632,10 +11835,7 @@
         },
         "model.PushTokenRegisterRequest": {
             "type": "object",
-            "required": [
-                "platform",
-                "token"
-            ],
+            "required": ["platform", "token"],
             "properties": {
                 "device_id": {
                     "type": "string"
@@ -13653,16 +11853,10 @@
         },
         "model.RecordActivityRequest": {
             "type": "object",
-            "required": [
-                "type"
-            ],
+            "required": ["type"],
             "properties": {
                 "type": {
-                    "enum": [
-                        "quran",
-                        "hadith",
-                        "doa"
-                    ],
+                    "enum": ["quran", "hadith", "doa"],
                     "allOf": [
                         {
                             "$ref": "#/definitions/model.ActivityType"
@@ -13673,10 +11867,7 @@
         },
         "model.RecordMurojaahRequest": {
             "type": "object",
-            "required": [
-                "date",
-                "surah_id"
-            ],
+            "required": ["date", "surah_id"],
             "properties": {
                 "date": {
                     "type": "string"
@@ -13709,11 +11900,7 @@
         },
         "model.RegisterRequest": {
             "type": "object",
-            "required": [
-                "email",
-                "name",
-                "password"
-            ],
+            "required": ["email", "name", "password"],
             "properties": {
                 "email": {
                     "type": "string"
@@ -13729,10 +11916,7 @@
         },
         "model.ResetPasswordRequest": {
             "type": "object",
-            "required": [
-                "new_password",
-                "token"
-            ],
+            "required": ["new_password", "token"],
             "properties": {
                 "new_password": {
                     "type": "string",
@@ -13777,13 +11961,7 @@
         },
         "model.SanadJenis": {
             "type": "string",
-            "enum": [
-                "musnad",
-                "mursal",
-                "munqathi",
-                "mudhal",
-                "muallaq"
-            ],
+            "enum": ["musnad", "mursal", "munqathi", "mudhal", "muallaq"],
             "x-enum-varnames": [
                 "SanadMusnad",
                 "SanadMursal",
@@ -13794,14 +11972,8 @@
         },
         "model.SanadStatus": {
             "type": "string",
-            "enum": [
-                "muttashil",
-                "munqathi"
-            ],
-            "x-enum-varnames": [
-                "SanadMuttashil",
-                "SanadMunqathiStatus"
-            ]
+            "enum": ["muttashil", "munqathi"],
+            "x-enum-varnames": ["SanadMuttashil", "SanadMunqathiStatus"]
         },
         "model.SirohCategory": {
             "type": "object",
@@ -14206,10 +12378,7 @@
         },
         "model.UpdateHadithProgressRequest": {
             "type": "object",
-            "required": [
-                "book_slug",
-                "hadith_id"
-            ],
+            "required": ["book_slug", "hadith_id"],
             "properties": {
                 "book_slug": {
                     "type": "string"
@@ -14221,16 +12390,10 @@
         },
         "model.UpdateHafalanRequest": {
             "type": "object",
-            "required": [
-                "status"
-            ],
+            "required": ["status"],
             "properties": {
                 "status": {
-                    "enum": [
-                        "not_started",
-                        "in_progress",
-                        "memorized"
-                    ],
+                    "enum": ["not_started", "in_progress", "memorized"],
                     "allOf": [
                         {
                             "$ref": "#/definitions/model.HafalanStatus"
@@ -14257,9 +12420,7 @@
         },
         "model.UpdateNoteRequest": {
             "type": "object",
-            "required": [
-                "content"
-            ],
+            "required": ["content"],
             "properties": {
                 "content": {
                     "type": "string"
@@ -14268,10 +12429,7 @@
         },
         "model.UpdatePasswordRequest": {
             "type": "object",
-            "required": [
-                "new_password",
-                "old_password"
-            ],
+            "required": ["new_password", "old_password"],
             "properties": {
                 "new_password": {
                     "type": "string",
@@ -14298,11 +12456,7 @@
         },
         "model.UpdateQuranProgressRequest": {
             "type": "object",
-            "required": [
-                "ayah_id",
-                "ayah_number",
-                "surah_number"
-            ],
+            "required": ["ayah_id", "ayah_number", "surah_number"],
             "properties": {
                 "ayah_id": {
                     "type": "integer"
@@ -14317,17 +12471,10 @@
         },
         "model.UpdateRoleRequest": {
             "type": "object",
-            "required": [
-                "role"
-            ],
+            "required": ["role"],
             "properties": {
                 "role": {
-                    "enum": [
-                        "admin",
-                        "author",
-                        "editor",
-                        "user"
-                    ],
+                    "enum": ["admin", "author", "editor", "user"],
                     "allOf": [
                         {
                             "$ref": "#/definitions/model.UserRole"
@@ -14367,10 +12514,7 @@
         },
         "model.User": {
             "type": "object",
-            "required": [
-                "email",
-                "name"
-            ],
+            "required": ["email", "name"],
             "properties": {
                 "avatar": {
                     "type": "string"
@@ -14394,12 +12538,7 @@
         },
         "model.UserRole": {
             "type": "string",
-            "enum": [
-                "admin",
-                "author",
-                "editor",
-                "user"
-            ],
+            "enum": ["admin", "author", "editor", "user"],
             "x-enum-varnames": [
                 "RoleAdmin",
                 "RoleAuthor",
@@ -14409,9 +12548,7 @@
         },
         "service.ZakatFitrahRequest": {
             "type": "object",
-            "required": [
-                "person_count"
-            ],
+            "required": ["person_count"],
             "properties": {
                 "person_count": {
                     "type": "integer",

@@ -1,9 +1,9 @@
-'use client';;
+"use client";
 import { use } from "react";
 
-import InfiniteScrollAyahPage from '@/app/quran/[...slug]/InfiniteScrollAyahPage';
+import InfiniteScrollAyahPage from "@/app/quran/[...slug]/InfiniteScrollAyahPage";
 
-const DashboardQuranReaderPage = props => {
+const DashboardQuranReaderPage = (props) => {
     const searchParams = use(props.searchParams);
     const params = use(props.params);
     return (

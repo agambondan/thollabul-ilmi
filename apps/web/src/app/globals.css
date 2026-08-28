@@ -10,10 +10,12 @@
 @layer base {
     :root {
         --navbar-height: 4.5rem;
-        --font-arabic-body: 'Kitab', 'Uthmani', 'Othmani', 'NooreHidayah', 'Naskh',
-            'Scheherazade', 'Amiri', serif;
-        --font-arabic-display: 'NooreHidayah', 'Kitab', 'Uthmani', 'Othmani',
-            'Naskh', 'Scheherazade', 'Amiri', serif;
+        --font-arabic-body:
+            "Kitab", "Uthmani", "Othmani", "NooreHidayah", "Naskh",
+            "Scheherazade", "Amiri", serif;
+        --font-arabic-display:
+            "NooreHidayah", "Kitab", "Uthmani", "Othmani", "Naskh",
+            "Scheherazade", "Amiri", serif;
     }
 }
 
@@ -53,7 +55,7 @@
 
 .ornament-divider::before,
 .ornament-divider::after {
-    content: '';
+    content: "";
     flex: 1;
     height: 1px;
     background: linear-gradient(to right, transparent, #d97706, transparent);
@@ -67,21 +69,21 @@
 }
 
 tajweed.ghn {
-    color: #FF7E1E;
+    color: #ff7e1e;
 }
 
 tajweed.ghn:hover {
-    background-color: #FF7E1E;
+    background-color: #ff7e1e;
     color: black;
 }
 
 tajweed.qlq {
-    color: #DD0008;
+    color: #dd0008;
 }
 
 tajweed.qlq:hover {
-    background-color: #F3A6A9;
-    color: #DD0008;
+    background-color: #f3a6a9;
+    color: #dd0008;
     cursor: pointer;
 }
 
@@ -90,7 +92,7 @@ tajweed.idgh_ghn {
 }
 
 tajweed.idgh_ghn:hover {
-    background-color: #9CE58E;
+    background-color: #9ce58e;
     color: #169200;
     cursor: pointer;
 }
@@ -100,182 +102,183 @@ tajweed.idgh_w_ghn {
 }
 
 tajweed.idgh_w_ghn:hover {
-    background-color: #9CE58E;
+    background-color: #9ce58e;
     color: #169200;
     cursor: pointer;
 }
 
 tajweed.iqlb {
-    color: #26BFFD;
+    color: #26bffd;
 }
 
 tajweed.iqlb:hover {
-    background-color: #92E5FF;
-    color: #0099C5;
+    background-color: #92e5ff;
+    color: #0099c5;
     cursor: pointer;
 }
 
 tajweed.ikhf {
-    color: #9400A8;
+    color: #9400a8;
 }
 
 tajweed.ikhf:hover {
-    background-color: #DAA6E1;
-    color: #9400A8;
+    background-color: #daa6e1;
+    color: #9400a8;
     cursor: pointer;
 }
 
 tajweed.ikhf_shfw {
-    color: #D500B7;
+    color: #d500b7;
 }
 
 tajweed.ikhf_shfw:hover {
-    background-color: #F0A6E6;
-    color: #D500B7;
+    background-color: #f0a6e6;
+    color: #d500b7;
     cursor: pointer;
 }
 
 tajweed.idghm_shfw {
-    color: #58B800;
+    color: #58b800;
 }
 
 tajweed.idghm_shfw:hover {
-    background-color: #BAE890;
-    color: #58B800;
+    background-color: #bae890;
+    color: #58b800;
     cursor: pointer;
 }
 
 tajweed.slnt {
-    color: #AAAAAA;
+    color: #aaaaaa;
 }
 
 tajweed.ham_wasl {
-    color: #AAAAAA;
+    color: #aaaaaa;
 }
 
 tajweed.ham_wasl:hover {
-    background-color: #D7D7D7;
+    background-color: #d7d7d7;
 }
 
 tajweed.madda_necessary {
-    color: #000EBC;
+    color: #000ebc;
 }
 
 tajweed.madda_obligatory {
-    color: #2144C1;
+    color: #2144c1;
 }
 
 tajweed.madda_permissible {
-    color: #4050FF;
+    color: #4050ff;
 }
 
 tajweed.madda_normal {
-    color: #537FFF;
+    color: #537fff;
 }
 
 tajweed.idgh_mus {
-    color: #A1A1A1;
+    color: #a1a1a1;
 }
 
 tajweed.idgh_mus:hover {
-    background-color: #D7D7D7;
+    background-color: #d7d7d7;
 }
 
 @font-face {
-    font-family: 'MeQuran';
-    src: url('//cdn.alquran.cloud/public/fonts/me_quran-webfont.otf');
+    font-family: "MeQuran";
+    src: url("//cdn.alquran.cloud/public/fonts/me_quran-webfont.otf");
 }
 
 .font-mequran {
-    font-family: 'MeQuran';
+    font-family: "MeQuran";
 }
 
 @font-face {
-    font-family: 'MeQuran2';
-    src: url('//cdn.alquran.cloud/public/fonts/me_quran_2.ttf');
+    font-family: "MeQuran2";
+    src: url("//cdn.alquran.cloud/public/fonts/me_quran_2.ttf");
 }
 
 .font-mequran2 {
-    font-family: 'MeQuran2';
+    font-family: "MeQuran2";
 }
 
 @font-face {
-    font-family: 'NooreHidayah';
-    src: url('/fonts/noorehidayat.ttf');
+    font-family: "NooreHidayah";
+    src: url("/fonts/noorehidayat.ttf");
 }
 
 .font-nh {
-    font-family: 'NooreHidayah';
+    font-family: "NooreHidayah";
     font-synthesis: none;
     font-style: normal;
     font-weight: 400;
 }
 
 @font-face {
-    font-family: 'Othmani';
-    src: url('//cdn.alquran.cloud/public/fonts/ar-Othmani.ttf');
+    font-family: "Othmani";
+    src: url("//cdn.alquran.cloud/public/fonts/ar-Othmani.ttf");
 }
 
 .font-othmani {
-    font-family: 'Othmani';
+    font-family: "Othmani";
 }
 
 @font-face {
-    font-family: 'Quran';
-    src: url('//cdn.alquran.cloud/public/fonts/QUR_STD.TTF');
+    font-family: "Quran";
+    src: url("//cdn.alquran.cloud/public/fonts/QUR_STD.TTF");
 }
 
 .font-quran {
-    font-family: 'Quran';
+    font-family: "Quran";
 }
 
 @font-face {
-    font-family: 'Uthmani';
-    src: url("//cdn.alquran.cloud/public/fonts/uthman_tn09.otf") format("opentype");
+    font-family: "Uthmani";
+    src: url("//cdn.alquran.cloud/public/fonts/uthman_tn09.otf")
+        format("opentype");
 }
 
 .font-uthmani {
-    font-family: 'Uthmani', serif;
+    font-family: "Uthmani", serif;
 }
 
 @font-face {
-    font-family: 'Scheherazade';
+    font-family: "Scheherazade";
     src: url("/fonts/Scheherazade-webfont.ttf");
 }
 
 .font-scheherazade {
-    font-family: 'Scheherazade';
+    font-family: "Scheherazade";
 }
 
 @font-face {
-    font-family: 'Naskh';
+    font-family: "Naskh";
     src: url("//cdn.alquran.cloud/public/fonts/kfc_naskh-webfont.ttf");
 }
 
 .font-naskh {
-    font-family: 'Naskh';
+    font-family: "Naskh";
 }
 
 @font-face {
-    font-family: 'Kitab';
+    font-family: "Kitab";
     src: url("/fonts/Kitab-Regular.ttf");
 }
 
 .font-kitab {
-    font-family: 'Kitab';
+    font-family: "Kitab";
 }
 
 @font-face {
-    font-family: 'Kitab Bold';
+    font-family: "Kitab Bold";
     src: url("//cdn.alquran.cloud/public/fonts/Kitab-Bold.ttf");
 }
 
 .font-kitab-bold {
-    font-family: 'Kitab Bold';
+    font-family: "Kitab Bold";
 }
 
 @font-face {
-    font-family: 'LPMQ IsepMisbah';
+    font-family: "LPMQ IsepMisbah";
     src: url("/fonts/LPMQ-Isep-Misbah.woff2") format("woff2");
     font-weight: normal;
     font-style: normal;
@@ -283,23 +286,23 @@ tajweed.idgh_mus:hover {
 }
 
 .font-lpmq {
-    font-family: 'LPMQ IsepMisbah', serif;
+    font-family: "LPMQ IsepMisbah", serif;
 }
 
 .font-amiri {
-    font-family: 'Amiri', serif;
+    font-family: "Amiri", serif;
 }
 
 .font-droid-arabic-kufi {
-    font-family: 'Droid Arabic Kufi', serif;
+    font-family: "Droid Arabic Kufi", serif;
 }
 
 .font-droid-arabic-naskh {
-    font-family: 'Droid Arabic Naskh', serif;
+    font-family: "Droid Arabic Naskh", serif;
 }
 
 .font-thabit {
-    font-family: 'Thabit', serif;
+    font-family: "Thabit", serif;
 }
 
 /* ─── Global Arabic Font Contract ──────────────────────────────── */
@@ -320,13 +323,13 @@ tajweed.idgh_mus:hover {
     letter-spacing: 0;
 }
 
-:where([dir='rtl']) {
+:where([dir="rtl"]) {
     font-family: var(--font-arabic-body);
     font-synthesis: none;
     letter-spacing: 0;
 }
 
-:where([style*='Amiri'], [style*='Uthmani'], [style*='Othmani']) {
+:where([style*="Amiri"], [style*="Uthmani"], [style*="Othmani"]) {
     font-family: var(--font-arabic-body) !important;
     font-synthesis: none;
     letter-spacing: 0;

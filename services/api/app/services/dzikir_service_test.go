@@ -18,12 +18,15 @@ type fakeDzikirRepo struct {
 func (f *fakeDzikirRepo) FindAll(limit, offset int) ([]model.Dzikir, error) {
 	return f.dzikirs, f.err
 }
+
 func (f *fakeDzikirRepo) FindByID(id int) (*model.Dzikir, error) {
 	return f.dzikir, f.err
 }
+
 func (f *fakeDzikirRepo) FindByCategory(category model.DzikirCategory, limit, offset int) ([]model.Dzikir, error) {
 	return f.categoryDzikirs, f.categoryErr
 }
+
 func (f *fakeDzikirRepo) FindByOccasion(occasion string, limit, offset int) ([]model.Dzikir, error) {
 	return f.dzikirs, f.err
 }

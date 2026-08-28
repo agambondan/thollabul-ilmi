@@ -1,15 +1,20 @@
-'use client';
+"use client";
 
-import Footer from '@/components/Footer';
-import ContentWidth from '@/components/layout/ContentWidth';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import Section from '@/components/Section';
-import { useLocale } from '@/context/Locale';
-import { asmaulHusnaApi } from '@/lib/api';
-import { getLocalizedTranslation } from '@/lib/translation';
-import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
-import { BsArrowCounterclockwise, BsArrowLeft, BsArrowRight, BsShuffle } from 'react-icons/bs';
+import Footer from "@/components/Footer";
+import ContentWidth from "@/components/layout/ContentWidth";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import Section from "@/components/Section";
+import { useLocale } from "@/context/Locale";
+import { asmaulHusnaApi } from "@/lib/api";
+import { getLocalizedTranslation } from "@/lib/translation";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import {
+    BsArrowCounterclockwise,
+    BsArrowLeft,
+    BsArrowRight,
+    BsShuffle,
+} from "react-icons/bs";
 
 const shuffleArray = (arr) => {
     const a = [...arr];
@@ -20,7 +25,7 @@ const shuffleArray = (arr) => {
     return a;
 };
 
-export function AsmaulHusnaFlashcardContent({ basePath = '/asmaul-husna' }) {
+export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
     const { t, lang } = useLocale();
     const [items, setItems] = useState([]);
     const [order, setOrder] = useState([]);
@@ -43,7 +48,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = '/asmaul-husna' }) {
                     setOrder(sorted.map((_, i) => i));
                 }
             })
-            .catch(e => console.error(e))
+            .catch((e) => console.error(e))
             .finally(() => setLoading(false));
     }, []);
 
@@ -84,7 +89,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = '/asmaul-husna' }) {
     if (!current) {
         return (
             <div className='text-center py-20 text-sm text-gray-500 dark:text-gray-400'>
-                {t('asmaul.flashcard_empty') ?? 'Tidak ada data Asmaul Husna.'}
+                {t("asmaul.flashcard_empty") ?? "Tidak ada data Asmaul Husna."}
             </div>
         );
     }
@@ -96,13 +101,14 @@ export function AsmaulHusnaFlashcardContent({ basePath = '/asmaul-husna' }) {
                     href={basePath}
                     className='text-sm text-emerald-700 dark:text-emerald-400 hover:underline'
                 >
-                    ← {t('asmaul.back_to_list') ?? 'Kembali ke Daftar'}
+                    ← {t("asmaul.back_to_list") ?? "Kembali ke Daftar"}
                 </Link>
                 <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mt-2'>
-                    {t('asmaul.flashcard_title') ?? 'Flashcard Asmaul Husna'}
+                    {t("asmaul.flashcard_title") ?? "Flashcard Asmaul Husna"}
                 </h1>
                 <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
-                    {t('asmaul.flashcard_subtitle') ?? 'Uji hafalan 99 nama Allah'}
+                    {t("asmaul.flashcard_subtitle") ??
+                        "Uji hafalan 99 nama Allah"}
                 </p>
             </div>
 
@@ -116,12 +122,12 @@ export function AsmaulHusnaFlashcardContent({ basePath = '/asmaul-husna' }) {
                         onClick={shuffle}
                         className={`flex items-center gap-1 px-2.5 py-1 rounded-lg transition-colors ${
                             shuffled
-                                ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
-                                : 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-amber-50 dark:hover:bg-amber-900/20'
+                                ? "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"
+                                : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-amber-50 dark:hover:bg-amber-900/20"
                         }`}
                     >
                         <BsShuffle />
-                        {t('asmaul.shuffle') ?? 'Acak'}
+                        {t("asmaul.shuffle") ?? "Acak"}
                     </button>
                     {shuffled && (
                         <button
@@ -130,7 +136,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = '/asmaul-husna' }) {
                             className='flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors'
                         >
                             <BsArrowCounterclockwise />
-                            {t('asmaul.reset_order') ?? 'Urutan Asli'}
+                            {t("asmaul.reset_order") ?? "Urutan Asli"}
                         </button>
                     )}
                 </div>
@@ -145,8 +151,8 @@ export function AsmaulHusnaFlashcardContent({ basePath = '/asmaul-husna' }) {
                 </span>
                 <span className='absolute top-4 right-4 text-xs text-gray-400 dark:text-gray-500'>
                     {revealed
-                        ? t('asmaul.tap_to_hide') ?? 'Tap untuk sembunyikan'
-                        : t('asmaul.tap_to_reveal') ?? 'Tap untuk lihat arti'}
+                        ? (t("asmaul.tap_to_hide") ?? "Tap untuk sembunyikan")
+                        : (t("asmaul.tap_to_reveal") ?? "Tap untuk lihat arti")}
                 </span>
 
                 <p
@@ -162,13 +168,18 @@ export function AsmaulHusnaFlashcardContent({ basePath = '/asmaul-husna' }) {
                             {current.latin ?? current.translation?.latin_idn}
                         </p>
                         <p className='text-base text-emerald-700 dark:text-emerald-400 text-center mt-2 font-medium'>
-                            {getLocalizedTranslation(current.translation, lang) ??
-                                current.meaning}
+                            {getLocalizedTranslation(
+                                current.translation,
+                                lang,
+                            ) ?? current.meaning}
                         </p>
                         {current.description && (
                             <p className='text-sm text-gray-500 dark:text-gray-400 text-center mt-3 leading-relaxed'>
                                 {getLocalizedTranslation(
-                                    { idn: current.description, en: current.description_en },
+                                    {
+                                        idn: current.description,
+                                        en: current.description_en,
+                                    },
                                     lang,
                                 ) ?? current.description}
                             </p>
@@ -176,7 +187,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = '/asmaul-husna' }) {
                     </>
                 ) : (
                     <p className='text-sm italic text-gray-400 dark:text-gray-500 mt-4'>
-                        {t('asmaul.guess_meaning') ?? 'Ingat-ingat artinya...'}
+                        {t("asmaul.guess_meaning") ?? "Ingat-ingat artinya..."}
                     </p>
                 )}
             </div>
@@ -188,7 +199,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = '/asmaul-husna' }) {
                     className='flex items-center gap-2 px-4 py-2.5 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-medium hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors'
                 >
                     <BsArrowLeft />
-                    {t('common.prev') ?? 'Sebelumnya'}
+                    {t("common.prev") ?? "Sebelumnya"}
                 </button>
 
                 <button
@@ -197,8 +208,8 @@ export function AsmaulHusnaFlashcardContent({ basePath = '/asmaul-husna' }) {
                     className='flex-1 px-4 py-2.5 bg-emerald-700 text-white rounded-xl text-sm font-medium hover:bg-emerald-800 transition-colors'
                 >
                     {revealed
-                        ? t('hafalan.hide_again') ?? 'Sembunyikan'
-                        : t('hafalan.reveal') ?? 'Tampilkan'}
+                        ? (t("hafalan.hide_again") ?? "Sembunyikan")
+                        : (t("hafalan.reveal") ?? "Tampilkan")}
                 </button>
 
                 <button
@@ -206,7 +217,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = '/asmaul-husna' }) {
                     onClick={next}
                     className='flex items-center gap-2 px-4 py-2.5 bg-emerald-700 text-white rounded-xl text-sm font-medium hover:bg-emerald-800 transition-colors'
                 >
-                    {t('common.next') ?? 'Selanjutnya'}
+                    {t("common.next") ?? "Selanjutnya"}
                     <BsArrowRight />
                 </button>
             </div>

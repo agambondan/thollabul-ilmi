@@ -30,4 +30,3 @@ Tanggal: `2026-05-07`
 - `docs/MOBILE_DESIGN_PATTERNS.md`
 - `docs/MOBILE_DESIGN_REWORK_TASKLIST.md`
 - `AGENTS.md`
-

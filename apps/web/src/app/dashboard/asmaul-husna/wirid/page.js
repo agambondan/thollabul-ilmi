@@ -1,4 +1,4 @@
-import { AsmaulWiridContent } from '@/app/asmaul-husna/wirid/page';
+import { AsmaulWiridContent } from "@/app/asmaul-husna/wirid/page";
 
 export default function DashboardAsmaulWiridPage() {
     return (

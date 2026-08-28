@@ -1,4 +1,5 @@
 # Spesifikasi Aplikasi Hadis — v2.0
+
 > Stack: **Golang** (backend/API) · **GORM** (ORM) · **Next.js** (frontend)
 
 ---
@@ -20,15 +21,17 @@
 ## 1. Overview Aplikasi
 
 ### Tujuan
+
 Platform digital untuk penelitian, pencarian, dan manajemen hadis secara komprehensif — mencakup teks hadis, data perawi, rantai sanad, klasifikasi, dan metodologi takhrij.
 
 ### Pengguna Target
-| Tipe | Kebutuhan Utama |
-|------|----------------|
+
+| Tipe               | Kebutuhan Utama                         |
+| ------------------ | --------------------------------------- |
 | Peneliti/Akademisi | Takhrij, analisis sanad, jarh wa ta'dil |
-| Mahasiswa | Belajar ilmu hadis, referensi tugas |
-| Ustaz/Da'i | Verifikasi hadis, pencarian tematik |
-| Umum | Membaca dan mencari hadis sehari-hari |
+| Mahasiswa          | Belajar ilmu hadis, referensi tugas     |
+| Ustaz/Da'i         | Verifikasi hadis, pencarian tematik     |
+| Umum               | Membaca dan mencari hadis sehari-hari   |
 
 ---
 
@@ -96,7 +99,7 @@ type Hadis struct {
 }
 ```
 
-### 3.2 Tabel `perawi` *(BARU)*
+### 3.2 Tabel `perawi` _(BARU)_
 
 ```go
 type Perawi struct {
@@ -121,7 +124,7 @@ type Perawi struct {
 }
 ```
 
-### 3.3 Tabel `jarh_tadil` *(BARU)*
+### 3.3 Tabel `jarh_tadil` _(BARU)_
 
 ```go
 type JarhTadil struct {
@@ -141,7 +144,7 @@ type JarhTadil struct {
 }
 ```
 
-### 3.4 Tabel `sanad` *(BARU)*
+### 3.4 Tabel `sanad` _(BARU)_
 
 ```go
 type Sanad struct {
@@ -156,7 +159,7 @@ type Sanad struct {
 }
 ```
 
-### 3.5 Tabel `mata_sanad` *(BARU)*
+### 3.5 Tabel `mata_sanad` _(BARU)_
 
 ```go
 type MataSanad struct {
@@ -210,7 +213,7 @@ type Tag struct {
 }
 ```
 
-### 3.9 Tabel `takhrij` *(BARU)*
+### 3.9 Tabel `takhrij` _(BARU)_
 
 ```go
 type Takhrij struct {
@@ -246,18 +249,19 @@ Hadis ──────── Sanad ──────── MataSanad ──�
 
 ### 4.1 Hadis
 
-| Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
-| `GET` | `/hadis` | List hadis dengan filter & pagination |
-| `GET` | `/hadis/:id` | Detail hadis lengkap (sanad, perawi, takhrij) |
-| `POST` | `/hadis` | Tambah hadis baru |
-| `PUT` | `/hadis/:id` | Update hadis |
-| `DELETE` | `/hadis/:id` | Hapus hadis |
-| `GET` | `/hadis/search` | Full-text search matan |
-| `GET` | `/hadis/:id/sanad` | Sanad lengkap hadis tertentu |
-| `GET` | `/hadis/:id/takhrij` | Takhrij hadis di kitab-kitab lain |
+| Method   | Endpoint             | Deskripsi                                     |
+| -------- | -------------------- | --------------------------------------------- |
+| `GET`    | `/hadis`             | List hadis dengan filter & pagination         |
+| `GET`    | `/hadis/:id`         | Detail hadis lengkap (sanad, perawi, takhrij) |
+| `POST`   | `/hadis`             | Tambah hadis baru                             |
+| `PUT`    | `/hadis/:id`         | Update hadis                                  |
+| `DELETE` | `/hadis/:id`         | Hapus hadis                                   |
+| `GET`    | `/hadis/search`      | Full-text search matan                        |
+| `GET`    | `/hadis/:id/sanad`   | Sanad lengkap hadis tertentu                  |
+| `GET`    | `/hadis/:id/takhrij` | Takhrij hadis di kitab-kitab lain             |
 
 **Query Params `/hadis`:**
+
 ```
 ?q=          # search keyword
 ?kitab=      # filter by kitab ID
@@ -270,6 +274,7 @@ Hadis ──────── Sanad ──────── MataSanad ──�
 ```
 
 **Response Detail Hadis:**
+
 ```json
 {
   "id": 1,
@@ -306,89 +311,91 @@ Hadis ──────── Sanad ──────── MataSanad ──�
 
 ### 4.2 Perawi
 
-| Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
-| `GET` | `/perawi` | List perawi |
-| `GET` | `/perawi/:id` | Detail perawi |
-| `POST` | `/perawi` | Tambah perawi |
-| `PUT` | `/perawi/:id` | Update perawi |
-| `GET` | `/perawi/:id/hadis` | Hadis yang diriwayatkan perawi ini |
-| `GET` | `/perawi/:id/guru` | Daftar guru perawi |
-| `GET` | `/perawi/:id/murid` | Daftar murid perawi |
-| `GET` | `/perawi/:id/jarh-tadil` | Penilaian jarh wa ta'dil perawi |
-| `GET` | `/perawi/search` | Cari perawi by nama |
+| Method | Endpoint                 | Deskripsi                          |
+| ------ | ------------------------ | ---------------------------------- |
+| `GET`  | `/perawi`                | List perawi                        |
+| `GET`  | `/perawi/:id`            | Detail perawi                      |
+| `POST` | `/perawi`                | Tambah perawi                      |
+| `PUT`  | `/perawi/:id`            | Update perawi                      |
+| `GET`  | `/perawi/:id/hadis`      | Hadis yang diriwayatkan perawi ini |
+| `GET`  | `/perawi/:id/guru`       | Daftar guru perawi                 |
+| `GET`  | `/perawi/:id/murid`      | Daftar murid perawi                |
+| `GET`  | `/perawi/:id/jarh-tadil` | Penilaian jarh wa ta'dil perawi    |
+| `GET`  | `/perawi/search`         | Cari perawi by nama                |
 
 ---
 
 ### 4.3 Sanad
 
-| Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
-| `GET` | `/sanad/:id` | Detail satu jalur sanad |
-| `POST` | `/sanad` | Tambah jalur sanad |
-| `PUT` | `/sanad/:id` | Update sanad |
-| `DELETE` | `/sanad/:id` | Hapus sanad |
-| `POST` | `/sanad/:id/mata-sanad` | Tambah perawi ke dalam sanad |
-| `PUT` | `/mata-sanad/:id` | Update mata sanad |
-| `DELETE` | `/mata-sanad/:id` | Hapus satu mata sanad |
+| Method   | Endpoint                | Deskripsi                    |
+| -------- | ----------------------- | ---------------------------- |
+| `GET`    | `/sanad/:id`            | Detail satu jalur sanad      |
+| `POST`   | `/sanad`                | Tambah jalur sanad           |
+| `PUT`    | `/sanad/:id`            | Update sanad                 |
+| `DELETE` | `/sanad/:id`            | Hapus sanad                  |
+| `POST`   | `/sanad/:id/mata-sanad` | Tambah perawi ke dalam sanad |
+| `PUT`    | `/mata-sanad/:id`       | Update mata sanad            |
+| `DELETE` | `/mata-sanad/:id`       | Hapus satu mata sanad        |
 
 ---
 
 ### 4.4 Jarh wa Ta'dil
 
-| Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
-| `GET` | `/jarh-tadil` | List semua penilaian |
-| `POST` | `/jarh-tadil` | Tambah penilaian |
-| `PUT` | `/jarh-tadil/:id` | Update penilaian |
-| `DELETE` | `/jarh-tadil/:id` | Hapus penilaian |
+| Method   | Endpoint          | Deskripsi            |
+| -------- | ----------------- | -------------------- |
+| `GET`    | `/jarh-tadil`     | List semua penilaian |
+| `POST`   | `/jarh-tadil`     | Tambah penilaian     |
+| `PUT`    | `/jarh-tadil/:id` | Update penilaian     |
+| `DELETE` | `/jarh-tadil/:id` | Hapus penilaian      |
 
 ---
 
 ### 4.5 Kitab & Bab
 
-| Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
-| `GET` | `/kitab` | List semua kitab |
-| `GET` | `/kitab/:id` | Detail kitab |
-| `GET` | `/kitab/:id/bab` | List bab dalam kitab |
-| `POST` | `/kitab` | Tambah kitab |
-| `GET` | `/bab/:id/hadis` | Hadis dalam bab tertentu |
+| Method | Endpoint         | Deskripsi                |
+| ------ | ---------------- | ------------------------ |
+| `GET`  | `/kitab`         | List semua kitab         |
+| `GET`  | `/kitab/:id`     | Detail kitab             |
+| `GET`  | `/kitab/:id/bab` | List bab dalam kitab     |
+| `POST` | `/kitab`         | Tambah kitab             |
+| `GET`  | `/bab/:id/hadis` | Hadis dalam bab tertentu |
 
 ---
 
 ### 4.6 Takhrij
 
-| Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
-| `GET` | `/takhrij` | List takhrij |
-| `POST` | `/takhrij` | Tambah referensi takhrij |
-| `PUT` | `/takhrij/:id` | Update takhrij |
-| `DELETE` | `/takhrij/:id` | Hapus takhrij |
+| Method   | Endpoint       | Deskripsi                |
+| -------- | -------------- | ------------------------ |
+| `GET`    | `/takhrij`     | List takhrij             |
+| `POST`   | `/takhrij`     | Tambah referensi takhrij |
+| `PUT`    | `/takhrij/:id` | Update takhrij           |
+| `DELETE` | `/takhrij/:id` | Hapus takhrij            |
 
 ---
 
 ### 4.7 Tags & Utility
 
-| Method | Endpoint | Deskripsi |
-|--------|----------|-----------|
-| `GET` | `/tags` | List semua tag |
-| `POST` | `/tags` | Tambah tag |
-| `GET` | `/stats` | Statistik database (jumlah hadis, perawi, dll) |
-| `GET` | `/search?q=` | Global search (hadis + perawi) |
+| Method | Endpoint     | Deskripsi                                      |
+| ------ | ------------ | ---------------------------------------------- |
+| `GET`  | `/tags`      | List semua tag                                 |
+| `POST` | `/tags`      | Tambah tag                                     |
+| `GET`  | `/stats`     | Statistik database (jumlah hadis, perawi, dll) |
+| `GET`  | `/search?q=` | Global search (hadis + perawi)                 |
 
 ---
 
 ## 5. Fitur & Modul
 
-### 5.1 Modul Hadis *(sudah ada, perlu enhancement)*
+### 5.1 Modul Hadis _(sudah ada, perlu enhancement)_
+
 - [x] CRUD hadis dasar
 - [ ] Filter multi-parameter (kualitas, jenis, kitab, sandaran, tag)
 - [ ] Full-text search matan (Arab & terjemahan)
 - [ ] Export hadis ke PDF / Word
 - [ ] Salin matan dengan format kutipan
 
-### 5.2 Modul Perawi *(BARU)*
+### 5.2 Modul Perawi _(BARU)_
+
 - [ ] Database perawi lengkap (nama, kunyah, laqab, nisbah)
 - [ ] Info tabaqah (generasi perawi)
 - [ ] Hubungan guru–murid (pohon sanad)
@@ -396,34 +403,39 @@ Hadis ──────── Sanad ──────── MataSanad ──�
 - [ ] Detail biografi singkat
 - [ ] Pencarian perawi by nama / tabaqah
 
-### 5.3 Modul Sanad *(BARU)*
+### 5.3 Modul Sanad _(BARU)_
+
 - [ ] Input rantai sanad per hadis (multi-jalur)
 - [ ] Visualisasi pohon sanad (tree/diagram)
 - [ ] Deteksi status sanad: muttashil, munqathi', mursal, dll
 - [ ] Highlight perawi bermasalah (dhaif/matruk) dalam rantai
 - [ ] Identifikasi syahid & mutabi'
 
-### 5.4 Modul Jarh wa Ta'dil *(BARU)*
+### 5.4 Modul Jarh wa Ta'dil _(BARU)_
+
 - [ ] Penilaian per perawi oleh ulama lain
 - [ ] Tingkatan ta'dil (7 tingkat) dan jarh (5 tingkat)
 - [ ] Referensi sumber kitab untuk setiap penilaian
 - [ ] Kesimpulan status perawi (otomatis / manual)
 - [ ] Perbandingan penilaian ulama berbeda terhadap satu perawi
 
-### 5.5 Modul Takhrij *(BARU)*
+### 5.5 Modul Takhrij _(BARU)_
+
 - [ ] Mapping hadis ke referensi kitab lain
 - [ ] Tampilkan di kitab mana saja hadis ini ditemukan
 - [ ] Perbandingan matan antar riwayat (idhtirob)
 - [ ] Catatan perbedaan lafaz (ziyadah/nuqshan)
 
-### 5.6 Modul Pencarian & Filter *(BARU)*
+### 5.6 Modul Pencarian & Filter _(BARU)_
+
 - [ ] Pencarian by kata dalam matan (Arab/Indonesia)
 - [ ] Pencarian by nama perawi
 - [ ] Pencarian by tema/tag
 - [ ] Filter kombinasi: kualitas + kitab + sanad
 - [ ] Hasil pencarian dengan highlight keyword
 
-### 5.7 Modul Admin *(BARU)*
+### 5.7 Modul Admin _(BARU)_
+
 - [ ] Dashboard statistik (jumlah hadis, perawi, dll)
 - [ ] Manajemen user & role (admin, editor, viewer)
 - [ ] Log aktivitas penambahan/perubahan data
@@ -458,19 +470,19 @@ app/
 
 ### 6.2 Komponen Utama
 
-| Komponen | Deskripsi |
-|----------|-----------|
-| `HadisCard` | Kartu ringkasan hadis (matan + kualitas badge) |
-| `HadisDetail` | Halaman detail lengkap hadis |
-| `SanadTree` | Visualisasi pohon sanad (SVG / D3.js / react-flow) |
-| `PerawiCard` | Info ringkas perawi |
-| `PerawiDetail` | Profil lengkap perawi + jarh ta'dil |
-| `JarhTadilTable` | Tabel penilaian ulama terhadap perawi |
-| `MatanArab` | Komponen khusus render teks Arab (RTL, font hadis) |
-| `KualitasBadge` | Badge warna untuk status hadis |
-| `SearchBar` | Global search dengan autocomplete |
-| `SanadChain` | Tampilan rantai sanad horizontal/vertikal |
-| `TakhrijList` | List referensi kitab untuk satu hadis |
+| Komponen         | Deskripsi                                          |
+| ---------------- | -------------------------------------------------- |
+| `HadisCard`      | Kartu ringkasan hadis (matan + kualitas badge)     |
+| `HadisDetail`    | Halaman detail lengkap hadis                       |
+| `SanadTree`      | Visualisasi pohon sanad (SVG / D3.js / react-flow) |
+| `PerawiCard`     | Info ringkas perawi                                |
+| `PerawiDetail`   | Profil lengkap perawi + jarh ta'dil                |
+| `JarhTadilTable` | Tabel penilaian ulama terhadap perawi              |
+| `MatanArab`      | Komponen khusus render teks Arab (RTL, font hadis) |
+| `KualitasBadge`  | Badge warna untuk status hadis                     |
+| `SearchBar`      | Global search dengan autocomplete                  |
+| `SanadChain`     | Tampilan rantai sanad horizontal/vertikal          |
+| `TakhrijList`    | List referensi kitab untuk satu hadis              |
 
 ### 6.3 Tampilan Halaman Detail Hadis
 
@@ -562,7 +574,8 @@ ELSE IF ada perawi dhaif tapi ada penguat (mutabi'/syahid)
 ELSE IF ada perawi matruk/kadzdzab
   → Maudhu' / Matruk
 ```
-> *Catatan: Ini bersifat asistensi/saran, keputusan final tetap di tangan editor/peneliti.*
+
+> _Catatan: Ini bersifat asistensi/saran, keputusan final tetap di tangan editor/peneliti._
 
 ### 7.2 Validasi Sanad
 
@@ -593,24 +606,28 @@ JARH (Dicela):
 ## 8. Non-Functional Requirements
 
 ### 8.1 Performa
+
 - Response API < 200ms untuk query sederhana
 - Pagination wajib untuk semua list endpoint
 - Index database pada kolom: `nomor_hadis`, `nama_latin` (perawi), `kitab_id`, `kualitas_hadis`
 - Redis cache untuk data yang sering diakses (kitab list, tag list, perawi populer)
 
 ### 8.2 Keamanan
+
 - JWT Authentication untuk endpoint admin
 - Role-based access: `admin`, `editor`, `viewer`
 - Input sanitasi dan validasi di level handler
 - Rate limiting pada endpoint pencarian
 
 ### 8.3 Teks Arab
+
 - Gunakan font **Noto Naskh Arabic** atau **Scheherazade** di frontend
 - Semua field Arab harus RTL (`dir="rtl"`)
 - Dukung harakat (tashkil) penuh dalam penyimpanan dan tampilan
 - Pencarian Arab dengan/tanpa harakat (normalisasi sebelum search)
 
 ### 8.4 Aksesibilitas
+
 - Dark mode support
 - Font size adjustable untuk teks Arab
 - Mobile responsive (prioritas untuk pembaca hadis)
@@ -619,33 +636,38 @@ JARH (Dicela):
 
 ## 9. Roadmap Pengembangan
 
-### Fase 1 — Core Enhancement *(saat ini → 1 bulan)*
+### Fase 1 — Core Enhancement _(saat ini → 1 bulan)_
+
 - [ ] Tambah tabel & model: `perawi`, `sanad`, `mata_sanad`
 - [ ] API CRUD perawi
 - [ ] API sanad (input rantai sanad untuk hadis yang sudah ada)
 - [ ] Tampilkan sanad di halaman detail hadis (teks linear)
 - [ ] Relasi hadis–kitab–bab di frontend
 
-### Fase 2 — Ilmu Rijal *(1–2 bulan)*
+### Fase 2 — Ilmu Rijal _(1–2 bulan)_
+
 - [ ] Tabel `jarh_tadil`
 - [ ] Halaman detail perawi
 - [ ] Hubungan guru–murid
 - [ ] Filter hadis by perawi
 - [ ] Badge status perawi di tampilan sanad
 
-### Fase 3 — Visualisasi & Takhrij *(2–3 bulan)*
+### Fase 3 — Visualisasi & Takhrij _(2–3 bulan)_
+
 - [ ] Pohon sanad visual (React Flow / D3)
 - [ ] Tabel `takhrij` dan halamannya
 - [ ] Highlight perawi bermasalah di pohon sanad
 - [ ] Export sanad ke gambar/PDF
 
-### Fase 4 — Search & Analytics *(3–4 bulan)*
+### Fase 4 — Search & Analytics _(3–4 bulan)_
+
 - [ ] Full-text search (PostgreSQL FTS / ElasticSearch)
 - [ ] Search teks Arab dengan normalisasi harakat
 - [ ] Filter kombinasi lanjutan
 - [ ] Halaman statistik & dashboard
 
-### Fase 5 — Admin & Kolaborasi *(4–6 bulan)*
+### Fase 5 — Admin & Kolaborasi _(4–6 bulan)_
+
 - [ ] Panel admin lengkap
 - [ ] Import data bulk (CSV/JSON)
 - [ ] User management & role
@@ -657,27 +679,34 @@ JARH (Dicela):
 ## Catatan Teknis Tambahan
 
 ### Migrasi dari Schema Lama
+
 Jika tabel `hadis` sudah ada, tambahkan kolom baru secara bertahap menggunakan GORM AutoMigrate atau migration manual agar tidak merusak data yang sudah ada:
+
 ```go
 db.AutoMigrate(&Perawi{}, &Sanad{}, &MataSanad{}, &JarhTadil{}, &Takhrij{})
 db.AutoMigrate(&Hadis{}) // update kolom baru
 ```
 
 ### Font Arab (Next.js)
+
 ```js
 // next.config.js — tambahkan font Arab
-import { Noto_Naskh_Arabic } from 'next/font/google'
-const arabicFont = Noto_Naskh_Arabic({ subsets: ['arabic'], weight: ['400','700'] })
+import { Noto_Naskh_Arabic } from "next/font/google";
+const arabicFont = Noto_Naskh_Arabic({
+    subsets: ["arabic"],
+    weight: ["400", "700"],
+});
 ```
 
 ### Teks Arab RTL (Tailwind)
+
 ```jsx
-<p className="font-arabic text-2xl leading-loose text-right" dir="rtl">
-  {hadis.matan_arab}
+<p className='font-arabic text-2xl leading-loose text-right' dir='rtl'>
+    {hadis.matan_arab}
 </p>
 ```
 
 ---
 
-*Spesifikasi ini bersifat living document — diperbarui seiring perkembangan proyek.*
-*Versi: 2.0 | Dibuat: Mei 2026*
+_Spesifikasi ini bersifat living document — diperbarui seiring perkembangan proyek._
+_Versi: 2.0 | Dibuat: Mei 2026_

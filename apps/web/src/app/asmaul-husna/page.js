@@ -1,31 +1,35 @@
-'use client';
+"use client";
 
-import Footer from '@/components/Footer';
-import { NavbarTailwindCss } from '@/components/Navbar';
-import Section from '@/components/Section';
-import { useLocale } from '@/context/Locale';
-import { useLayoutMode } from '@/lib/useLayoutMode';
-import { asmaulHusnaApi } from '@/lib/api';
-import { getLocalizedField, getLocalizedText } from '@/lib/translation';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { BsPauseFill, BsPlayFill, BsSearch, BsVolumeUpFill } from 'react-icons/bs';
-import { GiPrayerBeads } from 'react-icons/gi';
-import { MdOutlineFlipCameraAndroid } from 'react-icons/md';
-
+import Footer from "@/components/Footer";
+import { NavbarTailwindCss } from "@/components/Navbar";
+import Section from "@/components/Section";
+import { useLocale } from "@/context/Locale";
+import { useLayoutMode } from "@/lib/useLayoutMode";
+import { asmaulHusnaApi } from "@/lib/api";
+import { getLocalizedField, getLocalizedText } from "@/lib/translation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import {
+    BsPauseFill,
+    BsPlayFill,
+    BsSearch,
+    BsVolumeUpFill,
+} from "react-icons/bs";
+import { GiPrayerBeads } from "react-icons/gi";
+import { MdOutlineFlipCameraAndroid } from "react-icons/md";
 
 export const AsmaulHusnaContent = () => {
     const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
     const pathname = usePathname();
-    const flashcardHref = pathname?.startsWith('/dashboard')
-        ? '/dashboard/asmaul-husna/flashcard'
-        : '/asmaul-husna/flashcard';
+    const flashcardHref = pathname?.startsWith("/dashboard")
+        ? "/dashboard/asmaul-husna/flashcard"
+        : "/asmaul-husna/flashcard";
     const [names, setNames] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [selected, setSelected] = useState(null);
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState("");
     const [playing, setPlaying] = useState(false);
     const audioRef = useRef(null);
 
@@ -36,11 +40,11 @@ export const AsmaulHusnaContent = () => {
             .then((data) => {
                 const items = (data?.items ?? data ?? []).map((item) => ({
                     ...item,
-                    description: item.description ?? item.meaning ?? '',
+                    description: item.description ?? item.meaning ?? "",
                 }));
                 if (items.length > 0) setNames(items);
             })
-            .catch(e => console.error(e))
+            .catch((e) => console.error(e))
             .finally(() => setIsLoading(false));
     }, []);
 
@@ -60,19 +64,22 @@ export const AsmaulHusnaContent = () => {
         if (!url) return;
         if (audioRef.current) {
             audioRef.current.pause();
-            audioRef.current.src = '';
+            audioRef.current.src = "";
         }
         const audio = new Audio(url);
         audioRef.current = audio;
         audio.onended = () => setPlaying(false);
         audio.onerror = () => setPlaying(false);
-        audio.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+        audio
+            .play()
+            .then(() => setPlaying(true))
+            .catch(() => setPlaying(false));
     };
 
     const stopAudio = () => {
         if (audioRef.current) {
             audioRef.current.pause();
-            audioRef.current.src = '';
+            audioRef.current.src = "";
         }
         setPlaying(false);
     };
@@ -84,116 +91,140 @@ export const AsmaulHusnaContent = () => {
 
     return (
         <>
-                <div className={isWide ? 'w-full px-4' : 'container mx-auto px-4 max-w-5xl'}>
-                    <div className='text-center mb-8'>
-                        <p
-                            className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'
-                            style={{ fontFamily: 'Amiri, serif' }}
-                        >
-                            أَسْمَاءُ اللهِ الْحُسْنَى
-                        </p>
-                        <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
-                            Asmaul Husna
-                        </h1>
-                        <p className='text-sm text-gray-500 dark:text-gray-400'>
-                            {t('asmaul.subtitle')}
-                        </p>
-                    </div>
-
-                    {/* Flashcard shortcut */}
-                    <Link
-                        href={flashcardHref}
-                        className='flex items-center gap-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl px-4 py-3 mb-4 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors group'
+            <div
+                className={
+                    isWide ? "w-full px-4" : "container mx-auto px-4 max-w-5xl"
+                }
+            >
+                <div className='text-center mb-8'>
+                    <p
+                        className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'
+                        style={{ fontFamily: "Amiri, serif" }}
                     >
-                        <MdOutlineFlipCameraAndroid className='text-2xl text-emerald-600 dark:text-emerald-400 shrink-0' />
-                        <div className='flex-1 min-w-0'>
-                            <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300 group-hover:underline'>
-                                {t('asmaul.flashcard_title') ?? 'Flashcard Asmaul Husna'}
-                            </p>
-                            <p className='text-xs text-emerald-600 dark:text-emerald-500 truncate'>
-                                {t('asmaul.flashcard_subtitle') ?? 'Hafal satu per satu dengan kartu bolak-balik'}
-                            </p>
-                        </div>
-                        <span className='text-emerald-400 dark:text-emerald-600 text-sm'>›</span>
-                    </Link>
-
-                    {/* Wirid shortcut */}
-                    <Link
-                        href={pathname?.startsWith('/dashboard') ? '/dashboard/asmaul-husna/wirid' : '/asmaul-husna/wirid'}
-                        className='flex items-center gap-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-3 mb-4 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors group'
-                    >
-                        <GiPrayerBeads className='text-2xl text-amber-600 dark:text-amber-400 shrink-0' />
-                        <div className='flex-1 min-w-0'>
-                            <p className='text-sm font-semibold text-amber-800 dark:text-amber-300 group-hover:underline'>
-                                {t('asmaul.wirid_title') ?? 'Wirid Asmaul Husna'}
-                            </p>
-                            <p className='text-xs text-amber-600 dark:text-amber-500 truncate'>
-                                {t('asmaul.wirid_subtitle') ?? 'Hitung wirid dengan 99 nama Allah'}
-                            </p>
-                        </div>
-                        <span className='text-amber-400 dark:text-amber-600 text-sm'>›</span>
-                    </Link>
-
-                    <div className='flex items-center gap-2 mb-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
-                        <BsSearch className='text-gray-400 shrink-0' />
-                        <input
-                            type='text'
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            placeholder={t('asmaul.search_placeholder')}
-                            className='flex-1 bg-transparent text-sm text-gray-700 dark:text-gray-200 outline-none'
-                        />
-                    </div>
-
-                    {isLoading ? (
-                        <div className='grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3'>
-                            {Array.from({ length: 12 }).map((_, i) => (
-                                <div key={i} className='p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 animate-pulse'>
-                                    <div className='h-3 bg-gray-200 dark:bg-slate-700 rounded mb-3 w-1/4' />
-                                    <div className='h-8 bg-gray-200 dark:bg-slate-700 rounded mb-2' />
-                                    <div className='h-3 bg-gray-200 dark:bg-slate-700 rounded w-3/4' />
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className='grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3'>
-                            {filteredNames.map((name) => (
-                                <button
-                                    key={name.number}
-                                    onClick={() => setSelected(name)}
-                                    className='text-left p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm transition-all'
-                                >
-                                    <div className='flex items-start justify-between mb-2'>
-                                        <span className='text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 rounded-full w-6 h-6 flex items-center justify-center'>
-                                            {name.number}
-                                        </span>
-                                        {name.audio_url && (
-                                            <BsVolumeUpFill className='text-emerald-400 dark:text-emerald-600 text-sm' />
-                                        )}
-                                    </div>
-                                    <p
-                                        className='text-2xl font-bold text-emerald-900 dark:text-white mb-1 text-right'
-                                        style={{ fontFamily: 'Amiri, serif' }}
-                                    >
-                                        {name.arabic}
-                                    </p>
-                                    <p className='text-xs text-gray-500 dark:text-gray-400 italic mb-0.5'>
-                                        {name.transliteration}
-                                    </p>
-                                    <p className='text-sm font-medium text-gray-700 dark:text-gray-200'>
-                                        {getLocalizedText({ idn: name.indonesian, en: name.english }, lang)}
-                                    </p>
-                                </button>
-                            ))}
-                        </div>
-                    )}
-
-                    {!isLoading && filteredNames.length === 0 && (
-                        <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
-                            {t('asmaul.not_found')}
-                        </p>
-                    )}
+                        أَسْمَاءُ اللهِ الْحُسْنَى
+                    </p>
+                    <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                        Asmaul Husna
+                    </h1>
+                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                        {t("asmaul.subtitle")}
+                    </p>
                 </div>
+
+                {/* Flashcard shortcut */}
+                <Link
+                    href={flashcardHref}
+                    className='flex items-center gap-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl px-4 py-3 mb-4 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors group'
+                >
+                    <MdOutlineFlipCameraAndroid className='text-2xl text-emerald-600 dark:text-emerald-400 shrink-0' />
+                    <div className='flex-1 min-w-0'>
+                        <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300 group-hover:underline'>
+                            {t("asmaul.flashcard_title") ??
+                                "Flashcard Asmaul Husna"}
+                        </p>
+                        <p className='text-xs text-emerald-600 dark:text-emerald-500 truncate'>
+                            {t("asmaul.flashcard_subtitle") ??
+                                "Hafal satu per satu dengan kartu bolak-balik"}
+                        </p>
+                    </div>
+                    <span className='text-emerald-400 dark:text-emerald-600 text-sm'>
+                        ›
+                    </span>
+                </Link>
+
+                {/* Wirid shortcut */}
+                <Link
+                    href={
+                        pathname?.startsWith("/dashboard")
+                            ? "/dashboard/asmaul-husna/wirid"
+                            : "/asmaul-husna/wirid"
+                    }
+                    className='flex items-center gap-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-3 mb-4 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors group'
+                >
+                    <GiPrayerBeads className='text-2xl text-amber-600 dark:text-amber-400 shrink-0' />
+                    <div className='flex-1 min-w-0'>
+                        <p className='text-sm font-semibold text-amber-800 dark:text-amber-300 group-hover:underline'>
+                            {t("asmaul.wirid_title") ?? "Wirid Asmaul Husna"}
+                        </p>
+                        <p className='text-xs text-amber-600 dark:text-amber-500 truncate'>
+                            {t("asmaul.wirid_subtitle") ??
+                                "Hitung wirid dengan 99 nama Allah"}
+                        </p>
+                    </div>
+                    <span className='text-amber-400 dark:text-amber-600 text-sm'>
+                        ›
+                    </span>
+                </Link>
+
+                <div className='flex items-center gap-2 mb-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+                    <BsSearch className='text-gray-400 shrink-0' />
+                    <input
+                        type='text'
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder={t("asmaul.search_placeholder")}
+                        className='flex-1 bg-transparent text-sm text-gray-700 dark:text-gray-200 outline-none'
+                    />
+                </div>
+
+                {isLoading ? (
+                    <div className='grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3'>
+                        {Array.from({ length: 12 }).map((_, i) => (
+                            <div
+                                key={i}
+                                className='p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 animate-pulse'
+                            >
+                                <div className='h-3 bg-gray-200 dark:bg-slate-700 rounded mb-3 w-1/4' />
+                                <div className='h-8 bg-gray-200 dark:bg-slate-700 rounded mb-2' />
+                                <div className='h-3 bg-gray-200 dark:bg-slate-700 rounded w-3/4' />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className='grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3'>
+                        {filteredNames.map((name) => (
+                            <button
+                                key={name.number}
+                                onClick={() => setSelected(name)}
+                                className='text-left p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm transition-all'
+                            >
+                                <div className='flex items-start justify-between mb-2'>
+                                    <span className='text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 rounded-full w-6 h-6 flex items-center justify-center'>
+                                        {name.number}
+                                    </span>
+                                    {name.audio_url && (
+                                        <BsVolumeUpFill className='text-emerald-400 dark:text-emerald-600 text-sm' />
+                                    )}
+                                </div>
+                                <p
+                                    className='text-2xl font-bold text-emerald-900 dark:text-white mb-1 text-right'
+                                    style={{ fontFamily: "Amiri, serif" }}
+                                >
+                                    {name.arabic}
+                                </p>
+                                <p className='text-xs text-gray-500 dark:text-gray-400 italic mb-0.5'>
+                                    {name.transliteration}
+                                </p>
+                                <p className='text-sm font-medium text-gray-700 dark:text-gray-200'>
+                                    {getLocalizedText(
+                                        {
+                                            idn: name.indonesian,
+                                            en: name.english,
+                                        },
+                                        lang,
+                                    )}
+                                </p>
+                            </button>
+                        ))}
+                    </div>
+                )}
+
+                {!isLoading && filteredNames.length === 0 && (
+                    <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
+                        {t("asmaul.not_found")}
+                    </p>
+                )}
+            </div>
 
             {selected && (
                 <div
@@ -211,7 +242,7 @@ export const AsmaulHusnaContent = () => {
                         </div>
                         <p
                             className='text-4xl font-bold text-emerald-900 dark:text-white text-center mb-2'
-                            style={{ fontFamily: 'Amiri, serif' }}
+                            style={{ fontFamily: "Amiri, serif" }}
                         >
                             {selected.arabic}
                         </p>
@@ -219,36 +250,51 @@ export const AsmaulHusnaContent = () => {
                             {selected.transliteration}
                         </p>
                         <p className='text-base font-semibold text-emerald-800 dark:text-emerald-300 text-center mb-2'>
-                            {getLocalizedText({ idn: selected.indonesian, en: selected.english }, lang)}
+                            {getLocalizedText(
+                                {
+                                    idn: selected.indonesian,
+                                    en: selected.english,
+                                },
+                                lang,
+                            )}
                         </p>
                         <p className='text-sm text-gray-500 dark:text-gray-400 text-center mb-4'>
                             {getLocalizedText(
-                                { idn: selected.indonesian, en: selected.english },
-                                lang === 'EN' ? 'ID' : 'EN',
+                                {
+                                    idn: selected.indonesian,
+                                    en: selected.english,
+                                },
+                                lang === "EN" ? "ID" : "EN",
                             )}
                         </p>
-                        {getLocalizedField(selected, 'description', lang) && (
+                        {getLocalizedField(selected, "description", lang) && (
                             <p className='text-sm text-gray-600 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3'>
-                                {getLocalizedField(selected, 'description', lang)}
+                                {getLocalizedField(
+                                    selected,
+                                    "description",
+                                    lang,
+                                )}
                             </p>
                         )}
                         {selected.audio_url && (
                             <button
                                 type='button'
                                 onClick={() =>
-                                    playing ? stopAudio() : playAudio(selected.audio_url)
+                                    playing
+                                        ? stopAudio()
+                                        : playAudio(selected.audio_url)
                                 }
                                 className='mt-4 w-full flex items-center justify-center gap-2 py-2 border border-emerald-500 dark:border-emerald-600 text-emerald-700 dark:text-emerald-400 rounded-xl text-sm font-medium hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors'
                             >
                                 {playing ? (
                                     <>
                                         <BsPauseFill />
-                                        {t('common.pause') ?? 'Pause'}
+                                        {t("common.pause") ?? "Pause"}
                                     </>
                                 ) : (
                                     <>
                                         <BsPlayFill />
-                                        {t('asmaul.play_audio') ?? 'Dengarkan'}
+                                        {t("asmaul.play_audio") ?? "Dengarkan"}
                                     </>
                                 )}
                             </button>
@@ -257,7 +303,7 @@ export const AsmaulHusnaContent = () => {
                             onClick={closeModal}
                             className='mt-3 w-full py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-sm font-medium transition-colors'
                         >
-                            {t('common.close')}
+                            {t("common.close")}
                         </button>
                     </div>
                 </div>

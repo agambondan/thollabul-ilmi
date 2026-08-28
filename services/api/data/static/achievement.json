@@ -1,112 +1,112 @@
 [
-  {
-    "code": "bookmark_1",
-    "name": "Pertama Disimpan",
-    "name_en": "First Saved",
-    "description": "Simpan 1 bookmark",
-    "desc_en": "Save 1 bookmark",
-    "icon": "🔖",
-    "category": "bookmark",
-    "threshold": 1
-  },
-  {
-    "code": "bookmark_10",
-    "name": "Kolektor",
-    "name_en": "Collector",
-    "description": "Simpan 10 bookmark",
-    "desc_en": "Save 10 bookmarks",
-    "icon": "📚",
-    "category": "bookmark",
-    "threshold": 10
-  },
-  {
-    "code": "bookmark_50",
-    "name": "Pustakawan",
-    "name_en": "Librarian",
-    "description": "Simpan 50 bookmark",
-    "desc_en": "Save 50 bookmarks",
-    "icon": "🏛️",
-    "category": "bookmark",
-    "threshold": 50
-  },
-  {
-    "code": "hafalan_1",
-    "name": "Hafal Pertama",
-    "name_en": "First Memorization",
-    "description": "Hafal 1 surah",
-    "desc_en": "Memorize 1 surah",
-    "icon": "📖",
-    "category": "hafalan",
-    "threshold": 1
-  },
-  {
-    "code": "hafalan_5",
-    "name": "5 Surah Hafal",
-    "name_en": "5 Surahs Memorized",
-    "description": "Hafal 5 surah",
-    "desc_en": "Memorize 5 surahs",
-    "icon": "🕌",
-    "category": "hafalan",
-    "threshold": 5
-  },
-  {
-    "code": "hafalan_10",
-    "name": "Juz Amma",
-    "name_en": "Juz Amma",
-    "description": "Hafal 10 surah juz 30",
-    "desc_en": "Memorized 10 surahs",
-    "icon": "🎓",
-    "category": "hafalan",
-    "threshold": 10
-  },
-  {
-    "code": "hafalan_30",
-    "name": "Penghafal Sejati",
-    "name_en": "True Hafiz",
-    "description": "Hafal 30 surah",
-    "desc_en": "Memorize 30 surahs",
-    "icon": "👑",
-    "category": "hafalan",
-    "threshold": 30
-  },
-  {
-    "code": "streak_3",
-    "name": "Konsisten 3 Hari",
-    "name_en": "3-Day Streak",
-    "description": "Belajar 3 hari berturut-turut",
-    "desc_en": "Learn 3 days in a row",
-    "icon": "🔥",
-    "category": "streak",
-    "threshold": 3
-  },
-  {
-    "code": "streak_7",
-    "name": "Seminggu Penuh",
-    "name_en": "Full Week",
-    "description": "Streak 7 hari",
-    "desc_en": "7-day streak",
-    "icon": "⚡",
-    "category": "streak",
-    "threshold": 7
-  },
-  {
-    "code": "streak_30",
-    "name": "Sebulan Istiqomah",
-    "name_en": "Month of Istiqomah",
-    "description": "Streak 30 hari — luar biasa!",
-    "desc_en": "30-day streak — amazing!",
-    "icon": "🌟",
-    "category": "streak",
-    "threshold": 30
-  },
-  {
-    "code": "streak_100",
-    "name": "100 Hari Bersama",
-    "name_en": "100 Days Together",
-    "description": "Streak 100 hari",
-    "desc_en": "100-day streak",
-    "icon": "💎",
-    "category": "streak",
-    "threshold": 100
-  }
+    {
+        "code": "bookmark_1",
+        "name": "Pertama Disimpan",
+        "name_en": "First Saved",
+        "description": "Simpan 1 bookmark",
+        "desc_en": "Save 1 bookmark",
+        "icon": "🔖",
+        "category": "bookmark",
+        "threshold": 1
+    },
+    {
+        "code": "bookmark_10",
+        "name": "Kolektor",
+        "name_en": "Collector",
+        "description": "Simpan 10 bookmark",
+        "desc_en": "Save 10 bookmarks",
+        "icon": "📚",
+        "category": "bookmark",
+        "threshold": 10
+    },
+    {
+        "code": "bookmark_50",
+        "name": "Pustakawan",
+        "name_en": "Librarian",
+        "description": "Simpan 50 bookmark",
+        "desc_en": "Save 50 bookmarks",
+        "icon": "🏛️",
+        "category": "bookmark",
+        "threshold": 50
+    },
+    {
+        "code": "hafalan_1",
+        "name": "Hafal Pertama",
+        "name_en": "First Memorization",
+        "description": "Hafal 1 surah",
+        "desc_en": "Memorize 1 surah",
+        "icon": "📖",
+        "category": "hafalan",
+        "threshold": 1
+    },
+    {
+        "code": "hafalan_5",
+        "name": "5 Surah Hafal",
+        "name_en": "5 Surahs Memorized",
+        "description": "Hafal 5 surah",
+        "desc_en": "Memorize 5 surahs",
+        "icon": "🕌",
+        "category": "hafalan",
+        "threshold": 5
+    },
+    {
+        "code": "hafalan_10",
+        "name": "Juz Amma",
+        "name_en": "Juz Amma",
+        "description": "Hafal 10 surah juz 30",
+        "desc_en": "Memorized 10 surahs",
+        "icon": "🎓",
+        "category": "hafalan",
+        "threshold": 10
+    },
+    {
+        "code": "hafalan_30",
+        "name": "Penghafal Sejati",
+        "name_en": "True Hafiz",
+        "description": "Hafal 30 surah",
+        "desc_en": "Memorize 30 surahs",
+        "icon": "👑",
+        "category": "hafalan",
+        "threshold": 30
+    },
+    {
+        "code": "streak_3",
+        "name": "Konsisten 3 Hari",
+        "name_en": "3-Day Streak",
+        "description": "Belajar 3 hari berturut-turut",
+        "desc_en": "Learn 3 days in a row",
+        "icon": "🔥",
+        "category": "streak",
+        "threshold": 3
+    },
+    {
+        "code": "streak_7",
+        "name": "Seminggu Penuh",
+        "name_en": "Full Week",
+        "description": "Streak 7 hari",
+        "desc_en": "7-day streak",
+        "icon": "⚡",
+        "category": "streak",
+        "threshold": 7
+    },
+    {
+        "code": "streak_30",
+        "name": "Sebulan Istiqomah",
+        "name_en": "Month of Istiqomah",
+        "description": "Streak 30 hari — luar biasa!",
+        "desc_en": "30-day streak — amazing!",
+        "icon": "🌟",
+        "category": "streak",
+        "threshold": 30
+    },
+    {
+        "code": "streak_100",
+        "name": "100 Hari Bersama",
+        "name_en": "100 Days Together",
+        "description": "Streak 100 hari",
+        "desc_en": "100-day streak",
+        "icon": "💎",
+        "category": "streak",
+        "threshold": 100
+    }
 ]

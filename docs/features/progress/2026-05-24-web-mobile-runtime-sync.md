@@ -13,15 +13,15 @@ baseline, while the dashboard-like mobile web layout becomes an optional
 
 ## Decisions
 
-| Area | Decision |
-| --- | --- |
-| Mobile layout modes | Keep `classic`; add `web_app` incrementally as a layout option. Layout switching must not remove features. |
-| Quran ayah actions | Treat the three-dot ayah menu as an action sheet/menu, not a separate feature. It must include play audio, tafsir, mufrodat, ayat terkait, bookmark, catatan, share, copy link, copy image, and copy ayah. |
-| Share journey | Share must continue past image generation/selection into an actual channel choice: system share sheet, WhatsApp, copy link, download/copy image, or equivalent native target. |
-| Quran audio | Qari choices should come from playable ayah audio data. Surah audio consumers may use the first playable ayah source as fallback when full surah audio is unavailable. |
-| Prayer location | Do not hardcode district labels such as Cileungsi. Ask location permission, store the resolved location, refresh stale GPS location, and use the same stored location across home/dashboard/prayer pages. |
-| Notification permission | Permission should be requested early but respectfully. Web dismiss TTL is 24 hours; mobile should use an equivalent native prompt cooldown. |
-| Date handling | Prayer schedule requests must use the local calendar date, not UTC slicing, to avoid date drift around midnight. |
+| Area                    | Decision                                                                                                                                                                                                   |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mobile layout modes     | Keep `classic`; add `web_app` incrementally as a layout option. Layout switching must not remove features.                                                                                                 |
+| Quran ayah actions      | Treat the three-dot ayah menu as an action sheet/menu, not a separate feature. It must include play audio, tafsir, mufrodat, ayat terkait, bookmark, catatan, share, copy link, copy image, and copy ayah. |
+| Share journey           | Share must continue past image generation/selection into an actual channel choice: system share sheet, WhatsApp, copy link, download/copy image, or equivalent native target.                              |
+| Quran audio             | Qari choices should come from playable ayah audio data. Surah audio consumers may use the first playable ayah source as fallback when full surah audio is unavailable.                                     |
+| Prayer location         | Do not hardcode district labels such as Cileungsi. Ask location permission, store the resolved location, refresh stale GPS location, and use the same stored location across home/dashboard/prayer pages.  |
+| Notification permission | Permission should be requested early but respectfully. Web dismiss TTL is 24 hours; mobile should use an equivalent native prompt cooldown.                                                                |
+| Date handling           | Prayer schedule requests must use the local calendar date, not UTC slicing, to avoid date drift around midnight.                                                                                           |
 
 ## Web Verification Snapshot
 

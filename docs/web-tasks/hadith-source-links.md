@@ -17,16 +17,16 @@ Parse field `source` dan render setiap referensi sebagai **clickable link** yang
 
 ## URL Mapping per Kitab
 
-| Kitab | URL Template |
-|---|---|
-| HR. Bukhari No. `{N}` | `https://sunnah.com/bukhari:{N}` |
-| HR. Muslim No. `{N}` | `https://sunnah.com/muslim:{N}` |
-| HR. Abu Dawud No. `{N}` | `https://sunnah.com/abudawud:{N}` |
-| HR. Tirmidzi No. `{N}` | `https://sunnah.com/tirmidzi:{N}` |
-| HR. Ibnu Majah No. `{N}` | `https://sunnah.com/ibnmajah:{N}` |
-| HR. Nasai No. `{N}` | `https://sunnah.com/nasai:{N}` |
-| HR. Ahmad No. `{N}` | `https://sunnah.com/ahmad:{N}` |
-| QS. `{Surah}: {Ayat}` | `/quran/surah/{Surah}#{Ayat}` (internal route) |
+| Kitab                    | URL Template                                   |
+| ------------------------ | ---------------------------------------------- |
+| HR. Bukhari No. `{N}`    | `https://sunnah.com/bukhari:{N}`               |
+| HR. Muslim No. `{N}`     | `https://sunnah.com/muslim:{N}`                |
+| HR. Abu Dawud No. `{N}`  | `https://sunnah.com/abudawud:{N}`              |
+| HR. Tirmidzi No. `{N}`   | `https://sunnah.com/tirmidzi:{N}`              |
+| HR. Ibnu Majah No. `{N}` | `https://sunnah.com/ibnmajah:{N}`              |
+| HR. Nasai No. `{N}`      | `https://sunnah.com/nasai:{N}`                 |
+| HR. Ahmad No. `{N}`      | `https://sunnah.com/ahmad:{N}`                 |
+| QS. `{Surah}: {Ayat}`    | `/quran/surah/{Surah}#{Ayat}` (internal route) |
 
 Referensi lain (Al-Baihaqi, Al-Hakim, Al-Albani, dll.) tidak punya URL online yang konsisten — cukup render sebagai plain text.
 
@@ -35,28 +35,35 @@ Referensi lain (Al-Baihaqi, Al-Hakim, Al-Albani, dll.) tidak punya URL online ya
 ```js
 // Contoh parser sederhana
 function parseSource(source) {
-  // Split by ";" untuk dapat tiap bagian
-  const parts = source.split(';').map(s => s.trim());
-  return parts.map(part => {
-    const hrMatch = part.match(/HR\.\s*(Bukhari|Muslim|Abu Dawud|Tirmidzi|Ibnu Majah|Nasai|Ahmad)\s+No\.\s*(\d+)/i);
-    if (hrMatch) {
-      const kitab = hrMatch[1].toLowerCase().replace(' ', '');
-      const no = hrMatch[2];
-      const slugMap = {
-        'bukhari': 'bukhari', 'muslim': 'muslim', 'abudawud': 'abudawud',
-        'tirmidzi': 'tirmidzi', 'ibnumajah': 'ibnmajah', 'nasai': 'nasai', 'ahmad': 'ahmad',
-      };
-      const slug = slugMap[kitab] || kitab;
-      return { text: part, url: `https://sunnah.com/${slug}:${no}` };
-    }
-    const qsMatch = part.match(/QS\.\s*([^:]+):\s*(\d+)/i);
-    if (qsMatch) {
-      const surah = qsMatch[1].trim();
-      const ayat = qsMatch[2];
-      return { text: part, url: `/quran/surah/${surah}#${ayat}` };
-    }
-    return { text: part, url: null };
-  });
+    // Split by ";" untuk dapat tiap bagian
+    const parts = source.split(";").map((s) => s.trim());
+    return parts.map((part) => {
+        const hrMatch = part.match(
+            /HR\.\s*(Bukhari|Muslim|Abu Dawud|Tirmidzi|Ibnu Majah|Nasai|Ahmad)\s+No\.\s*(\d+)/i,
+        );
+        if (hrMatch) {
+            const kitab = hrMatch[1].toLowerCase().replace(" ", "");
+            const no = hrMatch[2];
+            const slugMap = {
+                bukhari: "bukhari",
+                muslim: "muslim",
+                abudawud: "abudawud",
+                tirmidzi: "tirmidzi",
+                ibnumajah: "ibnmajah",
+                nasai: "nasai",
+                ahmad: "ahmad",
+            };
+            const slug = slugMap[kitab] || kitab;
+            return { text: part, url: `https://sunnah.com/${slug}:${no}` };
+        }
+        const qsMatch = part.match(/QS\.\s*([^:]+):\s*(\d+)/i);
+        if (qsMatch) {
+            const surah = qsMatch[1].trim();
+            const ayat = qsMatch[2];
+            return { text: part, url: `/quran/surah/${surah}#${ayat}` };
+        }
+        return { text: part, url: null };
+    });
 }
 ```
 
@@ -64,22 +71,32 @@ function parseSource(source) {
 
 ```jsx
 function SourceBadges({ source }) {
-  if (!source) return null;
-  const refs = parseSource(source);
-  return (
-    <div className="flex flex-wrap gap-1 mt-1">
-      {refs.map((ref, i) => (
-        ref.url
-          ? <a key={i} href={ref.url} target="_blank" rel="noopener noreferrer"
-               className="text-xs text-blue-600 dark:text-blue-400 underline hover:text-blue-800">
-              {ref.text}
-            </a>
-          : <span key={i} className="text-xs text-neutral-500 dark:text-neutral-400">
-              {ref.text}
-            </span>
-      ))}
-    </div>
-  );
+    if (!source) return null;
+    const refs = parseSource(source);
+    return (
+        <div className='flex flex-wrap gap-1 mt-1'>
+            {refs.map((ref, i) =>
+                ref.url ? (
+                    <a
+                        key={i}
+                        href={ref.url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='text-xs text-blue-600 dark:text-blue-400 underline hover:text-blue-800'
+                    >
+                        {ref.text}
+                    </a>
+                ) : (
+                    <span
+                        key={i}
+                        className='text-xs text-neutral-500 dark:text-neutral-400'
+                    >
+                        {ref.text}
+                    </span>
+                ),
+            )}
+        </div>
+    );
 }
 ```
 

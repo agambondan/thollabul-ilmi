@@ -30,14 +30,14 @@ padahal sudah ada, dan route parity perlu dibuat smoke/test kecil.
 - CTA dashboard audit: `apps/web/src/app/dashboard/layout.js`.
 - Mobile Ibadah copy audit: `apps/mobile/src/screens/IbadahScreen.js`.
 - Runtime smoke:
-  - `/dashboard/tokoh` stays inside dashboard shell with authenticated local
-    token stub.
-  - `/dashboard/peta` stays inside dashboard shell with authenticated local
-    token stub and renders Leaflet map.
-  - Dashboard brand click from `/dashboard/peta` lands on `/dashboard`.
+    - `/dashboard/tokoh` stays inside dashboard shell with authenticated local
+      token stub.
+    - `/dashboard/peta` stays inside dashboard shell with authenticated local
+      token stub and renders Leaflet map.
+    - Dashboard brand click from `/dashboard/peta` lands on `/dashboard`.
 - Build/test:
-  - PASS: `cd apps/web && npm run build`
-  - PASS: `cd apps/mobile && npm test -- --runInBand`
+    - PASS: `cd apps/web && npm run build`
+    - PASS: `cd apps/mobile && npm test -- --runInBand`
 - Guideline reference: Vercel Web Interface Guidelines, terutama rule
   navigation state dan CTA label spesifik.
 
@@ -98,7 +98,7 @@ bagian dari jadwal, padahal log sudah dipisah sesuai keputusan UX terakhir.
 Fix:
 
 - Subtitle `Jadwal Sholat` diganti menjadi `Jadwal, pengingat, dan pengaturan
-  waktu`.
+waktu`.
 
 ### F-04 - Dokumentasi Sync Lama Sudah Stale
 

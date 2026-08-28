@@ -1,9 +1,13 @@
-import HadithPage from '@/app/hadith/[slug]/HadithPage';
-import { getLocalizedTranslation } from '@/lib/translation';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import HadithPage from "@/app/hadith/[slug]/HadithPage";
+import { getLocalizedTranslation } from "@/lib/translation";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
-const API_URL = process.env.API_INTERNAL_URL || process.env.API_PROXY_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:29900';
+const API_URL =
+    process.env.API_INTERNAL_URL ||
+    process.env.API_PROXY_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    "http://localhost:29900";
 
 export const normalizeHadithNumber = (value) => {
     const number = Number(value);
@@ -27,14 +31,17 @@ export const fetchHadithByBookNumber = async (slug, number, options = {}) => {
 
 export const getHadithTitle = (hadith, slug, number) => {
     const bookName =
-        getLocalizedTranslation(hadith?.book?.translation, 'ID') ||
-        getLocalizedTranslation(hadith?.book?.translation, 'EN') ||
+        getLocalizedTranslation(hadith?.book?.translation, "ID") ||
+        getLocalizedTranslation(hadith?.book?.translation, "EN") ||
         hadith?.book?.slug ||
         slug;
     return `${bookName} No. ${hadith?.number ?? number}`;
 };
 
-export default async function HadithNumberContent({ params, basePath = '/hadith' }) {
+export default async function HadithNumberContent({
+    params,
+    basePath = "/hadith",
+}) {
     const number = normalizeHadithNumber(params.number);
     const hadith = await fetchHadithByBookNumber(params.slug, number);
 
@@ -60,7 +67,12 @@ export default async function HadithNumberContent({ params, basePath = '/hadith'
                     {getHadithTitle(hadith, params.slug, number)}
                 </h1>
             </div>
-            <HadithPage params={{ slug: params.slug }} book={book} hadith={hadith} basePath={basePath} />
+            <HadithPage
+                params={{ slug: params.slug }}
+                book={book}
+                hadith={hadith}
+                basePath={basePath}
+            />
         </div>
     );
 }

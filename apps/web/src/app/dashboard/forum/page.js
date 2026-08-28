@@ -1,4 +1,4 @@
-import { ForumListContent } from '@/app/forum/page';
+import { ForumListContent } from "@/app/forum/page";
 
 export default function DashboardForumPage() {
     return (

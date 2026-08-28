@@ -1,41 +1,77 @@
-'use client';
+"use client";
 
-import ContentWidth from '@/components/layout/ContentWidth';
-import { useLocale } from '@/context/Locale';
-import { useEffect, useState } from 'react';
-import { BsCalendar3, BsGeoAlt } from 'react-icons/bs';
-import { MdAccessTime } from 'react-icons/md';
+import ContentWidth from "@/components/layout/ContentWidth";
+import { useLocale } from "@/context/Locale";
+import { useEffect, useState } from "react";
+import { BsCalendar3, BsGeoAlt } from "react-icons/bs";
+import { MdAccessTime } from "react-icons/md";
 
 const CITIES = [
-    { label: 'Jakarta', lat: -6.2088, lng: 106.8456 },
-    { label: 'Bandung', lat: -6.9175, lng: 107.6191 },
-    { label: 'Surabaya', lat: -7.2575, lng: 112.7521 },
-    { label: 'Yogyakarta', lat: -7.7956, lng: 110.3695 },
-    { label: 'Semarang', lat: -6.9932, lng: 110.4203 },
-    { label: 'Medan', lat: 3.5952, lng: 98.6722 },
-    { label: 'Makassar', lat: -5.1477, lng: 119.4327 },
-    { label: 'Palembang', lat: -2.9761, lng: 104.7754 },
-    { label: 'Denpasar', lat: -8.6705, lng: 115.2126 },
-    { label: 'Padang', lat: -0.9471, lng: 100.4172 },
-    { label: 'Malang', lat: -7.9666, lng: 112.6326 },
-    { label: 'Solo', lat: -7.5755, lng: 110.8243 },
-    { label: 'Bogor', lat: -6.5971, lng: 106.806 },
-    { label: 'Aceh', lat: 5.5483, lng: 95.3238 },
-    { label: 'Pontianak', lat: -0.0263, lng: 109.3425 },
+    { label: "Jakarta", lat: -6.2088, lng: 106.8456 },
+    { label: "Bandung", lat: -6.9175, lng: 107.6191 },
+    { label: "Surabaya", lat: -7.2575, lng: 112.7521 },
+    { label: "Yogyakarta", lat: -7.7956, lng: 110.3695 },
+    { label: "Semarang", lat: -6.9932, lng: 110.4203 },
+    { label: "Medan", lat: 3.5952, lng: 98.6722 },
+    { label: "Makassar", lat: -5.1477, lng: 119.4327 },
+    { label: "Palembang", lat: -2.9761, lng: 104.7754 },
+    { label: "Denpasar", lat: -8.6705, lng: 115.2126 },
+    { label: "Padang", lat: -0.9471, lng: 100.4172 },
+    { label: "Malang", lat: -7.9666, lng: 112.6326 },
+    { label: "Solo", lat: -7.5755, lng: 110.8243 },
+    { label: "Bogor", lat: -6.5971, lng: 106.806 },
+    { label: "Aceh", lat: 5.5483, lng: 95.3238 },
+    { label: "Pontianak", lat: -0.0263, lng: 109.3425 },
 ];
 
-const DAYS_ID = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-const DAYS_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const DAYS_ID = [
+    "Minggu",
+    "Senin",
+    "Selasa",
+    "Rabu",
+    "Kamis",
+    "Jumat",
+    "Sabtu",
+];
+const DAYS_EN = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+];
 const MONTHS_ID = [
-    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
 ];
 const MONTHS_EN = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
 ];
 
-const stripTz = (t) => (t ? t.split(' ')[0] : '-');
+const stripTz = (t) => (t ? t.split(" ")[0] : "-");
 
 export default function ImsakiyahPage() {
     const { lang, t } = useLocale();
@@ -45,30 +81,33 @@ export default function ImsakiyahPage() {
     const [cityIndex, setCityIndex] = useState(0);
     const [useGps, setUseGps] = useState(false);
     const [gpsCoords, setGpsCoords] = useState(null);
-    const [gpsLabel, setGpsLabel] = useState('');
+    const [gpsLabel, setGpsLabel] = useState("");
     const [schedule, setSchedule] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const [error, setError] = useState("");
 
     const fetchGps = () => {
         if (!navigator.geolocation) {
-            setError(t('imsakiyah.gps_unavailable'));
+            setError(t("imsakiyah.gps_unavailable"));
             return;
         }
         navigator.geolocation.getCurrentPosition(
             (pos) => {
-                setGpsCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-                setGpsLabel(t('imsakiyah.gps_location'));
+                setGpsCoords({
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude,
+                });
+                setGpsLabel(t("imsakiyah.gps_location"));
                 setUseGps(true);
             },
-            () => setError(t('imsakiyah.gps_error')),
+            () => setError(t("imsakiyah.gps_error")),
         );
     };
 
     useEffect(() => {
         const load = async () => {
             setLoading(true);
-            setError('');
+            setError("");
             try {
                 let url;
                 if (useGps && gpsCoords) {
@@ -82,10 +121,10 @@ export default function ImsakiyahPage() {
                 if (json.code === 200 && json.data) {
                     setSchedule(json.data);
                 } else {
-                    setError(t('imsakiyah.load_error'));
+                    setError(t("imsakiyah.load_error"));
                 }
             } catch {
-                setError(t('imsakiyah.load_exception'));
+                setError(t("imsakiyah.load_exception"));
             } finally {
                 setLoading(false);
             }
@@ -94,18 +133,22 @@ export default function ImsakiyahPage() {
     }, [year, month, cityIndex, useGps, gpsCoords]);
 
     const prevMonth = () => {
-        if (month === 1) { setMonth(12); setYear((y) => y - 1); }
-        else setMonth((m) => m - 1);
+        if (month === 1) {
+            setMonth(12);
+            setYear((y) => y - 1);
+        } else setMonth((m) => m - 1);
     };
 
     const nextMonth = () => {
-        if (month === 12) { setMonth(1); setYear((y) => y + 1); }
-        else setMonth((m) => m + 1);
+        if (month === 12) {
+            setMonth(1);
+            setYear((y) => y + 1);
+        } else setMonth((m) => m + 1);
     };
 
     const cityName = useGps ? gpsLabel : CITIES[cityIndex].label;
-    const monthNames = lang === 'EN' ? MONTHS_EN : MONTHS_ID;
-    const dayNames = lang === 'EN' ? DAYS_EN : DAYS_ID;
+    const monthNames = lang === "EN" ? MONTHS_EN : MONTHS_ID;
+    const dayNames = lang === "EN" ? DAYS_EN : DAYS_ID;
 
     return (
         <main className='min-h-screen bg-parchment-50 dark:bg-slate-900 pb-12'>
@@ -115,12 +158,12 @@ export default function ImsakiyahPage() {
                     <div className='flex items-center gap-2 mb-1'>
                         <BsCalendar3 className='text-emerald-300' />
                         <span className='text-xs font-semibold uppercase tracking-widest text-emerald-300'>
-                            {t('imsakiyah.schedule_label')}
+                            {t("imsakiyah.schedule_label")}
                         </span>
                     </div>
                     <h1 className='text-2xl font-bold mb-1'>Imsakiyah</h1>
                     <p className='text-sm text-emerald-200'>
-                        {t('imsakiyah.subtitle')} — {cityName},{' '}
+                        {t("imsakiyah.subtitle")} — {cityName},{" "}
                         {monthNames[month - 1]} {year}
                     </p>
                 </ContentWidth>
@@ -189,7 +232,7 @@ export default function ImsakiyahPage() {
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-12 text-center'>
                         <MdAccessTime className='text-4xl text-emerald-400 mx-auto mb-3 animate-spin' />
                         <p className='text-sm text-gray-500 dark:text-gray-400'>
-                            {t('imsakiyah.loading')}
+                            {t("imsakiyah.loading")}
                         </p>
                     </div>
                 ) : schedule.length > 0 ? (
@@ -199,62 +242,69 @@ export default function ImsakiyahPage() {
                                 <thead>
                                     <tr className='bg-emerald-50 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300'>
                                         <th className='px-3 py-3 text-left font-semibold whitespace-nowrap'>
-                                            {t('common.date_short')}
+                                            {t("common.date_short")}
                                         </th>
                                         <th className='px-3 py-3 text-left font-semibold whitespace-nowrap'>
-                                            {t('common.day')}
+                                            {t("common.day")}
                                         </th>
                                         <th className='px-3 py-3 text-center font-semibold whitespace-nowrap bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400'>
                                             Imsak
                                         </th>
                                         <th className='px-3 py-3 text-center font-semibold whitespace-nowrap'>
-                                            {t('prayer.fajr')}
+                                            {t("prayer.fajr")}
                                         </th>
                                         <th className='px-3 py-3 text-center font-semibold whitespace-nowrap text-gray-400 dark:text-gray-500'>
-                                            {t('prayer.sunrise')}
+                                            {t("prayer.sunrise")}
                                         </th>
                                         <th className='px-3 py-3 text-center font-semibold whitespace-nowrap'>
-                                            {t('prayer.dhuhr')}
+                                            {t("prayer.dhuhr")}
                                         </th>
                                         <th className='px-3 py-3 text-center font-semibold whitespace-nowrap'>
-                                            {t('prayer.asr')}
+                                            {t("prayer.asr")}
                                         </th>
                                         <th className='px-3 py-3 text-center font-semibold whitespace-nowrap bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-400'>
                                             Maghrib
                                         </th>
                                         <th className='px-3 py-3 text-center font-semibold whitespace-nowrap'>
-                                            {t('prayer.isha')}
+                                            {t("prayer.isha")}
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody className='divide-y divide-gray-50 dark:divide-slate-700'>
                                     {schedule.map((day, idx) => {
                                         const dateStr =
-                                            day.date?.gregorian?.date ?? '';
-                                        const parts = dateStr.split('-');
-                                        const dateObj = parts.length === 3
-                                            ? new Date(`${parts[2]}-${parts[1]}-${parts[0]}`)
-                                            : null;
+                                            day.date?.gregorian?.date ?? "";
+                                        const parts = dateStr.split("-");
+                                        const dateObj =
+                                            parts.length === 3
+                                                ? new Date(
+                                                      `${parts[2]}-${parts[1]}-${parts[0]}`,
+                                                  )
+                                                : null;
                                         const dayName = dateObj
                                             ? dayNames[dateObj.getDay()]
-                                            : '-';
-                                        const dayNum = parts[0] ?? String(idx + 1);
+                                            : "-";
+                                        const dayNum =
+                                            parts[0] ?? String(idx + 1);
                                         const isJumat = dateObj?.getDay() === 5;
                                         const isToday =
                                             dateObj &&
-                                            dateObj.getDate() === now.getDate() &&
-                                            dateObj.getMonth() === now.getMonth() &&
-                                            dateObj.getFullYear() === now.getFullYear();
+                                            dateObj.getDate() ===
+                                                now.getDate() &&
+                                            dateObj.getMonth() ===
+                                                now.getMonth() &&
+                                            dateObj.getFullYear() ===
+                                                now.getFullYear();
 
                                         return (
                                             <tr
                                                 key={idx}
                                                 className={`transition-colors ${
                                                     isToday
-                                                        ? 'bg-emerald-50 dark:bg-emerald-900/20'
+                                                        ? "bg-emerald-50 dark:bg-emerald-900/20"
                                                         : isJumat
-                                                          ? 'bg-amber-50/40 dark:bg-amber-900/10'
-                                                          : 'hover:bg-gray-50 dark:hover:bg-slate-700/50'
+                                                          ? "bg-amber-50/40 dark:bg-amber-900/10"
+                                                          : "hover:bg-gray-50 dark:hover:bg-slate-700/50"
                                                 }`}
                                             >
                                                 <td className='px-3 py-2.5 font-semibold text-gray-800 dark:text-white whitespace-nowrap'>
@@ -269,29 +319,37 @@ export default function ImsakiyahPage() {
                                                 <td
                                                     className={`px-3 py-2.5 whitespace-nowrap ${
                                                         isJumat
-                                                            ? 'text-amber-700 dark:text-amber-400 font-medium'
-                                                            : 'text-gray-600 dark:text-gray-300'
+                                                            ? "text-amber-700 dark:text-amber-400 font-medium"
+                                                            : "text-gray-600 dark:text-gray-300"
                                                     }`}
                                                 >
                                                     {dayName}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center font-medium text-amber-700 dark:text-amber-400 whitespace-nowrap bg-amber-50/50 dark:bg-amber-900/10'>
-                                                    {stripTz(day.timings?.Imsak)}
+                                                    {stripTz(
+                                                        day.timings?.Imsak,
+                                                    )}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center text-gray-700 dark:text-gray-200 whitespace-nowrap'>
                                                     {stripTz(day.timings?.Fajr)}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center text-gray-400 dark:text-gray-500 whitespace-nowrap'>
-                                                    {stripTz(day.timings?.Sunrise)}
+                                                    {stripTz(
+                                                        day.timings?.Sunrise,
+                                                    )}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center text-gray-700 dark:text-gray-200 whitespace-nowrap'>
-                                                    {stripTz(day.timings?.Dhuhr)}
+                                                    {stripTz(
+                                                        day.timings?.Dhuhr,
+                                                    )}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center text-gray-700 dark:text-gray-200 whitespace-nowrap'>
                                                     {stripTz(day.timings?.Asr)}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center font-medium text-rose-700 dark:text-rose-400 whitespace-nowrap bg-rose-50/50 dark:bg-rose-900/10'>
-                                                    {stripTz(day.timings?.Maghrib)}
+                                                    {stripTz(
+                                                        day.timings?.Maghrib,
+                                                    )}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center text-gray-700 dark:text-gray-200 whitespace-nowrap'>
                                                     {stripTz(day.timings?.Isha)}
@@ -303,7 +361,9 @@ export default function ImsakiyahPage() {
                             </table>
                         </div>
                         <div className='px-4 py-3 border-t border-gray-100 dark:border-slate-700 text-[11px] text-gray-400 dark:text-gray-500'>
-                            {t('common.source')}: aladhan.com · {t('imsakiyah.method')}: Kemenag RI (11) · {cityName}
+                            {t("common.source")}: aladhan.com ·{" "}
+                            {t("imsakiyah.method")}: Kemenag RI (11) ·{" "}
+                            {cityName}
                         </div>
                     </div>
                 ) : null}

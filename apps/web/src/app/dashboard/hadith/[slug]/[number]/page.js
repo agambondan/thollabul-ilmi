@@ -1,4 +1,4 @@
-import HadithNumberContent from '@/app/hadith/[slug]/[number]/HadithNumberContent';
+import HadithNumberContent from "@/app/hadith/[slug]/[number]/HadithNumberContent";
 
 export default async function Page(props) {
     const params = await props.params;

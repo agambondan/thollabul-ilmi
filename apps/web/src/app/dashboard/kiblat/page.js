@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { KiblatContent } from '@/app/kiblat/page';
+import { KiblatContent } from "@/app/kiblat/page";
 
 export default function DashboardKiblatPage() {
     return (

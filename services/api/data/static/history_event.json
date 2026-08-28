@@ -1,290 +1,290 @@
 [
-  {
-    "year_hijri": -53,
-    "year_miladi": 570,
-    "title": "Kelahiran Nabi Muhammad ﷺ",
-    "slug": "kelahiran-nabi",
-    "description": "Nabi Muhammad ﷺ lahir di Makkah pada 12 Rabi'ul Awwal, Tahun Gajah (570 M). Ayahnya, Abdullah, wafat sebelum beliau lahir. Ibunya, Aminah binti Wahb, menyusui beliau hingga beberapa bulan, kemudian diserahkan kepada Halimah Sa'diyah dari Bani Sa'd untuk disusui di pedesaan.\n\nSumber: Ar-Raheeq Al-Makhtum, hal. 56-65",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": -43,
-    "year_miladi": 580,
-    "title": "Wafatnya Ibu Nabi: Aminah binti Wahb",
-    "slug": "wafat-aminah",
-    "description": "Ketika Nabi ﷺ berusia sekitar 6 tahun, ibunya Aminah wafat di Abwa' dalam perjalanan pulang dari Madinah (Yatsrib) setelah mengunjungi keluarga ayahnya. Beliau kemudian diasuh oleh kakeknya, Abdul Muthalib.\n\nSumber: Ar-Raheeq Al-Makhtum, hal. 67",
-    "category": "nabi",
-    "is_significant": false
-  },
-  {
-    "year_hijri": -40,
-    "year_miladi": 583,
-    "title": "Wafatnya Abdul Muthalib, Kakek Nabi",
-    "slug": "wafat-abdul-muthalib",
-    "description": "Ketika Nabi ﷺ berusia 8 tahun, kakeknya Abdul Muthalib wafat. Penjagaan beliau kemudian diserahkan kepada pamannya, Abu Thalib.\n\nSumber: Sirah Ibnu Hisyam",
-    "category": "nabi",
-    "is_significant": false
-  },
-  {
-    "year_hijri": -28,
-    "year_miladi": 595,
-    "title": "Pernikahan Nabi dengan Khadijah",
-    "slug": "pernikahan-khadijah",
-    "description": "Pada usia 25 tahun, Nabi ﷺ menikahi Khadijah binti Khuwailid (40 tahun) setelah beliau bekerja sebagai pedagang untuk Khadijah. Khadijah adalah wanita pertama yang masuk Islam dan merupakan istri paling dicintai Nabi. Mereka dikaruniai 6 anak: Qasim, Abdullah, Zainab, Ruqayyah, Ummu Kulsum, dan Fatimah.\n\nSumber: Ar-Raheeq Al-Makhtum, hal. 83",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 1,
-    "year_miladi": 610,
-    "title": "Turunnya Wahyu Pertama (Nuzulul Quran)",
-    "slug": "wahyu-pertama",
-    "description": "Pada malam 17 Ramadan, tahun 610 M, ketika Nabi ﷺ berusia 40 tahun sedang berkhalwat di Gua Hira, malaikat Jibril datang dan menurunkan wahyu pertama: QS. Al-Alaq ayat 1-5 ('Iqra' bismi rabbika...'). Inilah awal kenabian Muhammad ﷺ.\n\nSumber: HR. Bukhari No. 3, Muslim No. 160",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 3,
-    "year_miladi": 613,
-    "title": "Dakwah Terbuka di Makkah",
-    "slug": "dakwah-terbuka-makkah",
-    "description": "Setelah 3 tahun dakwah secara sembunyi-sembunyi (sirriyah), Nabi ﷺ diperintahkan untuk berdakwah secara terang-terangan berdasarkan QS. Al-Hijr: 94. Beliau menyeru keluarga besar Bani Hasyim di bukit Shafa: 'Andaikan kuberitahu kalian bahwa di balik bukit ini ada pasukan kuda yang hendak menyerang kalian, apakah kalian percaya?' Mereka menjawab: 'Ya.' Beliau berkata: 'Sesungguhnya aku adalah pemberi peringatan kepada kalian dari azab yang pedih.'\n\nSumber: HR. Bukhari No. 4770, Muslim No. 208",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 5,
-    "year_miladi": 615,
-    "title": "Hijrah Pertama ke Habasyah",
-    "slug": "hijrah-habasyah",
-    "description": "Karena tekanan keras kaum Quraisy, Nabi ﷺ mengizinkan sekelompok kaum muslimin (sekitar 15 orang, dipimpin Utsman bin Affan) untuk berhijrah ke Habasyah (Ethiopia) mencari perlindungan kepada Raja Najasyi (Ashhamah). Ini adalah hijrah pertama dalam sejarah Islam.\n\nSumber: Ar-Raheeq Al-Makhtum, hal. 128",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 10,
-    "year_miladi": 619,
-    "title": "Tahun Duka Cita ('Aam Al-Huzn)",
-    "slug": "tahun-duka-cita",
-    "description": "Dalam satu tahun yang sama, dua orang paling dekat dengan Nabi ﷺ wafat: pertama, Khadijah istri beliau yang setia selama 25 tahun; kemudian Abu Thalib paman yang selalu melindungi beliau meski tidak masuk Islam. Nabi ﷺ sangat berduka, dan tahun ini dikenal sebagai 'Aam Al-Huzn' (Tahun Duka Cita).\n\nSumber: Ar-Raheeq Al-Makhtum, hal. 163",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 10,
-    "year_miladi": 621,
-    "title": "Isra' Mi'raj",
-    "slug": "isra-miraj",
-    "description": "Nabi ﷺ diperjalankan dari Masjidil Haram ke Masjidil Aqsha (Isra'), kemudian naik ke Sidratul Muntaha (Mi'raj) dalam satu malam. Di sinilah beliau menerima perintah sholat 5 waktu langsung dari Allah SWT — awalnya 50 waktu, kemudian dikurangi menjadi 5 waktu atas saran Nabi Musa as.\n\nSumber: HR. Bukhari No. 349, Muslim No. 163; QS. Al-Isra: 1",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 13,
-    "year_miladi": 622,
-    "title": "Hijrah ke Madinah",
-    "slug": "hijrah-madinah",
-    "description": "Pada bulan Rabi'ul Awwal tahun 622 M, Nabi ﷺ dan Abu Bakar berhijrah dari Makkah ke Madinah (Yatsrib). Peristiwa ini menjadi tonggak awal kalender Hijriah dan pembentukan komunitas Islam pertama. Di Madinah, Nabi ﷺ mempersaudarakan kaum Muhajirin dan Anshar, serta menyusun Piagam Madinah.\n\nSumber: Ar-Raheeq Al-Makhtum, hal. 201-215",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 2,
-    "year_miladi": 624,
-    "title": "Perang Badar",
-    "slug": "perang-badar",
-    "description": "Perang Badar (17 Ramadan 2 H / 624 M) adalah perang besar pertama kaum muslimin. 313 pasukan Muslim menghadapi 1.000 pasukan Quraisy. Dengan pertolongan Allah, kaum muslimin menang. 70 musuh tewas (termasuk pemimpin Quraisy: Abu Jahal) dan 70 tertawan. Kemenangan ini memperkuat posisi Islam di jazirah Arab.\n\nSumber: HR. Bukhari No. 3992; QS. Al-Anfal: 9",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 3,
-    "year_miladi": 625,
-    "title": "Perang Uhud",
-    "slug": "perang-uhud",
-    "description": "Dalam perang Uhud (7 Syawal 3 H), kaum muslimin awalnya unggul namun sebagian pasukan pemanah meninggalkan posnya karena rakus terhadap harta rampasan. Hal ini dimanfaatkan Khalid bin Walid (saat itu masih kafir) untuk menyerang dari belakang. 70 sahabat syahid termasuk Hamzah bin Abdul Muthalib. Nabi ﷺ sendiri terluka.\n\nSumber: HR. Bukhari No. 4043; QS. Ali Imran: 121-179",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 5,
-    "year_miladi": 627,
-    "title": "Perang Khandaq (Ahzab)",
-    "slug": "perang-khandaq",
-    "description": "Kaum Quraisy bersama sekutu (sekitar 10.000 pasukan) mengepung Madinah. Atas saran Salman Al-Farisi, Nabi ﷺ memerintahkan penggalian parit (khandaq) di utara Madinah. Pengepungan berlangsung sebulan tanpa berhasil menerobos. Akhirnya Allah mengutus angin kencang yang memorak-porandakan pasukan musuh dan mereka mundur.\n\nSumber: HR. Bukhari No. 4106; QS. Al-Ahzab: 9-27",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 6,
-    "year_miladi": 628,
-    "title": "Perjanjian Hudaibiyyah",
-    "slug": "perjanjian-hudaibiyyah",
-    "description": "Nabi ﷺ dan 1.400 sahabat berangkat untuk umrah, namun dihadang Quraisy di Hudaibiyyah. Ditandatangani perjanjian damai 10 tahun: kaum muslimin tidak boleh umrah tahun ini, namun boleh tahun depan; jika ada Quraisy yang lari ke Muslim harus dikembalikan, tapi jika ada Muslim yang lari ke Quraisy tidak perlu dikembalikan. Meski tampak merugikan, Allah menyebutnya sebagai 'kemenangan yang nyata' (QS. Al-Fath: 1).\n\nSumber: HR. Bukhari No. 2731; QS. Al-Fath: 1-3",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 8,
-    "year_miladi": 630,
-    "title": "Fathu Makkah (Pembebasan Makkah)",
-    "slug": "fathu-makkah",
-    "description": "Setelah Quraisy melanggar perjanjian Hudaibiyyah, Nabi ﷺ bergerak dengan 10.000 pasukan menuju Makkah. Kota Makkah menyerah hampir tanpa perlawanan pada 20 Ramadan 8 H. Nabi ﷺ memberi amnesti umum kepada penduduk Makkah: 'Pergilah kalian, kalian bebas.' Ka'bah dibersihkan dari 360 berhala. Mayoritas penduduk Makkah masuk Islam.\n\nSumber: HR. Bukhari No. 4280; Ar-Raheeq Al-Makhtum, hal. 376-386",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 10,
-    "year_miladi": 632,
-    "title": "Haji Wada' dan Khutbah Terakhir",
-    "slug": "haji-wada",
-    "description": "Pada tahun 10 H (632 M), Nabi ﷺ melaksanakan haji terakhir bersama lebih dari 100.000 sahabat. Di Padang Arafah, beliau menyampaikan Khutbah Wada' yang berisi prinsip-prinsip fundamental Islam: kesetaraan manusia, kesucian darah dan harta, penghapusan riba, hak-hak perempuan, dan amanah Al-Quran \u0026 Sunnah. Turun QS. Al-Maidah: 3 menyatakan kesempurnaan agama Islam.\n\nSumber: HR. Bukhari No. 1741, Muslim No. 1218",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 11,
-    "year_miladi": 632,
-    "title": "Khalifah Abu Bakar Ash-Shiddiq (11-13 H)",
-    "slug": "khilafah-abu-bakar",
-    "description": "Abu Bakar ra. terpilih sebagai khalifah pertama melalui musyawarah di Saqifah Bani Sa'idah. Masa kekhalifahannya (632-634 M) ditandai dengan: (1) Memerangi kaum murtad (Riddah Wars), (2) Memerangi Musailamah Al-Kadzab, (3) Pengumpulan Al-Quran pertama kali atas usulan Umar bin Khattab dan dilaksanakan oleh Zaid bin Tsabit setelah banyak hafizh syahid di Yamamah.\n\nSumber: HR. Bukhari No. 4986",
-    "category": "khulafa",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 11,
-    "year_miladi": 632,
-    "title": "Wafatnya Rasulullah ﷺ",
-    "slug": "wafat-rasulullah",
-    "description": "Pada Senin, 12 Rabi'ul Awwal 11 H (8 Juni 632 M), Nabi ﷺ wafat di kamar Aisyah ra. dalam usia 63 tahun. Abu Bakar berkhutbah: 'Barangsiapa menyembah Muhammad, sesungguhnya Muhammad telah wafat. Barangsiapa menyembah Allah, sesungguhnya Allah Maha Hidup tidak akan mati.' (QS. Ali Imran: 144). Beliau dikebumikan di tempat beliau wafat.\n\nSumber: HR. Bukhari No. 4448; Ar-Raheeq Al-Makhtum",
-    "category": "nabi",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 13,
-    "year_miladi": 634,
-    "title": "Khalifah Umar bin Khattab (13-23 H)",
-    "slug": "khilafah-umar",
-    "description": "Umar bin Khattab ra. menjadi khalifah kedua (634-644 M), ditunjuk langsung oleh Abu Bakar. Masa kekhalifahannya adalah masa ekspansi terbesar Islam: penaklukan Persia, Syam, dan Mesir. Beliau mendirikan sistem administrasi, menetapkan kalender Hijriah, membangun Baitul Mal, dan dikenal sebagai pemimpin yang sangat adil dan sederhana. Beliau syahid ditikam oleh Abu Lu'lu'ah Al-Majusi.\n\nSumber: Ar-Raheeq Al-Makhtum; Tarikh Ath-Thabari",
-    "category": "khulafa",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 23,
-    "year_miladi": 644,
-    "title": "Khalifah Utsman bin Affan (23-35 H)",
-    "slug": "khilafah-utsman",
-    "description": "Utsman bin Affan ra. terpilih melalui syura (musyawarah enam orang). Masa kekhalifahannya (644-656 M) ditandai dengan: (1) Pembukuan resmi Al-Quran (Mushaf Utsmani) yang menjadi standar hingga kini, (2) Ekspansi ke Afrika Utara dan Persia timur, (3) Pembangunan angkatan laut Islam pertama. Beliau syahid dibunuh oleh kaum pemberontak pada usia sekitar 82 tahun.\n\nSumber: HR. Bukhari No. 4986",
-    "category": "khulafa",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 35,
-    "year_miladi": 656,
-    "title": "Khalifah Ali bin Abi Thalib (35-40 H)",
-    "slug": "khilafah-ali",
-    "description": "Ali bin Abi Thalib ra. menjadi khalifah keempat (656-661 M). Masa kekhalifahannya diwarnai fitnah (ujian besar): Perang Jamal (melawan Aisyah, Thalhah, dan Zubair) dan Perang Shiffin (melawan Mu'awiyah). Kedua perang ini berakhir tanpa pemenang jelas. Ali ra. syahid ditikam Abdurrahman bin Muljam dari kelompok Khawarij. Kekhalifahannya menandai berakhirnya era Khulafaur Rasyidin.\n\nSumber: Tarikh Al-Khulafa, As-Suyuthi",
-    "category": "khulafa",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 41,
-    "year_miladi": 661,
-    "title": "Dinasti Umayyah (41-132 H / 661-750 M)",
-    "slug": "dinasti-umayyah",
-    "description": "Dinasti Umayyah didirikan oleh Mu'awiyah bin Abi Sufyan setelah Hassan bin Ali menyerahkan kekuasaan demi persatuan umat. Ibu kota dipindah ke Damaskus. Masa ini ditandai dengan ekspansi Islam terluas: ke Spanyol (Al-Andalus) di barat, Asia Tengah di timur, dan India. Puncak kejayaan pada masa Umar bin Abdul Aziz (Umar II, 99-101 H) yang terkenal dengan keadilannya.\n\nSumber: Tarikh Ath-Thabari; Al-Bidayah wan Nihayah",
-    "category": "dinasti",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 132,
-    "year_miladi": 750,
-    "title": "Dinasti Abbasiyyah (132-656 H / 750-1258 M)",
-    "slug": "dinasti-abbasiyyah",
-    "description": "Dinasti Abbasiyyah menggantikan Umayyah dengan ibu kota Baghdad. Masa ini adalah Zaman Keemasan Islam (The Golden Age of Islam): kemajuan pesat ilmu pengetahuan, filsafat, matematika, astronomi, kedokteran (Ibnu Sina, Al-Khawarizmi, Al-Biruni, dll). Bayt Al-Hikmah (Rumah Kebijaksanaan) di Baghdad menjadi pusat keilmuan dunia. Berakhir dengan penghancuran Baghdad oleh Mongol (Hulagu Khan) pada 656 H/1258 M.\n\nSumber: Tarikh Al-Islam, Adz-Dzahabi",
-    "category": "dinasti",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 150,
-    "year_miladi": 767,
-    "title": "Imam Abu Hanifah (80-150 H)",
-    "slug": "imam-abu-hanifah",
-    "description": "Nu'man bin Tsabit, dikenal sebagai Imam Abu Hanifah atau 'Al-Imam Al-A'zham' (Imam Terbesar). Pendiri mazhab Hanafi — mazhab fiqh terbesar di dunia (mencakup Turki, Asia Selatan, Asia Tengah). Dikenal dengan metode qiyas (analogi) yang kuat. Pernah dipenjara karena menolak jabatan qadhi (hakim) yang ditawarkan khalifah Abbasiyyah.\n\nSumber: Siyar A'lam An-Nubala, Adz-Dzahabi",
-    "category": "ulama",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 179,
-    "year_miladi": 795,
-    "title": "Imam Malik bin Anas (93-179 H)",
-    "slug": "imam-malik",
-    "description": "Imam Malik bin Anas, pendiri mazhab Maliki. Karya monumentalnya Al-Muwaththa' adalah koleksi hadith tertua yang masih ada. Imam Syafi'i menyebutnya: 'Jika ulama disebut, maka Malik adalah bintang.' Pernah dihukum cambuk karena memberikan fatwa yang tidak sesuai keinginan penguasa. Muridnya tersebar di Afrika Utara dan Spanyol.\n\nSumber: Siyar A'lam An-Nubala, Adz-Dzahabi",
-    "category": "ulama",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 204,
-    "year_miladi": 820,
-    "title": "Imam Muhammad bin Idris Asy-Syafi'i (150-204 H)",
-    "slug": "imam-syafii",
-    "description": "Imam Syafi'i adalah pendiri mazhab Syafi'i dan Ilmu Ushul Fiqh. Karya terbesarnya: Ar-Risalah (pertama membahas metodologi hukum Islam) dan Al-Umm. Beliau belajar kepada Imam Malik di Madinah dan murid-murid Abu Hanifah di Irak. Mazhab Syafi'i menjadi mazhab dominan di Indonesia, Malaysia, Mesir, dan sebagian besar dunia Muslim.\n\nSumber: Manaqib Asy-Syafi'i, Al-Baihaqi",
-    "category": "ulama",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 241,
-    "year_miladi": 855,
-    "title": "Imam Ahmad bin Hanbal (164-241 H)",
-    "slug": "imam-ahmad-hanbal",
-    "description": "Imam Ahmad bin Hanbal, pendiri mazhab Hanbali dan Imam Ahli Sunnah. Karya terbesarnya: Musnad Ahmad (sekitar 30.000 hadith). Beliau mengalami ujian berat (Mihnah) di bawah Khalifah Al-Ma'mun dan Al-Mu'tashim yang memaksanya menerima paham Mu'tazilah bahwa Al-Quran adalah makhluk. Beliau menolak meski disiksa, dan menjadi simbol keteguhan aqidah.\n\nSumber: Manaqib Al-Imam Ahmad, Ibnu Al-Jauzi",
-    "category": "ulama",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 256,
-    "year_miladi": 870,
-    "title": "Imam Al-Bukhari Menyelesaikan Shahih Bukhari (194-256 H)",
-    "slug": "shahih-bukhari",
-    "description": "Muhammad bin Ismail Al-Bukhari menyelesaikan kitab Shahih-nya — koleksi hadith paling shahih setelah Al-Quran. Dari 600.000 hadith yang dihafal, beliau memilih sekitar 7.275 hadith (2.602 tanpa pengulangan) setelah seleksi ketat selama 16 tahun. Imam Syafi'i berkata: 'Aku tidak melihat orang yang lebih faqih tentang hadith daripada pemuda dari Khurasan ini.'\n\nSumber: Hady As-Sari, Ibnu Hajar",
-    "category": "ulama",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 583,
-    "year_miladi": 1187,
-    "title": "Shalahuddin Al-Ayyubi Membebaskan Yerusalem",
-    "slug": "pembebasan-yerusalem",
-    "description": "Setelah Yerusalem (Al-Quds) dikuasai Tentara Salib selama 88 tahun (1099-1187 M), Shalahuddin Al-Ayyubi (Saladin) berhasil membebaskannya pada 27 Rajab 583 H. Berbeda dengan penaklukan Tentara Salib yang penuh pembantaian, Shalahuddin memberikan amnesti kepada penduduk Kristen yang ingin pergi, dan melindungi gereja-gereja mereka.\n\nSumber: Al-Kamil fit Tarikh, Ibnu Al-Atsir",
-    "category": "peristiwa",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 656,
-    "year_miladi": 1258,
-    "title": "Jatuhnya Baghdad ke Tangan Mongol",
-    "slug": "jatuhnya-baghdad",
-    "description": "Pada 656 H (1258 M), pasukan Mongol di bawah Hulagu Khan menghancurkan Baghdad — ibu kota Kekhalifahan Abbasiyyah. Khalifah Al-Mu'tashim billah dibunuh. Jutaan manuskrip ilmu pengetahuan dibuang ke Sungai Tigris hingga air sungai berubah warna karena tinta. Peristiwa ini menandai berakhirnya kekuasaan Abbasiyyah di Baghdad.\n\nSumber: Al-Bidayah wan Nihayah, Ibnu Katsir",
-    "category": "peristiwa",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 728,
-    "year_miladi": 1328,
-    "title": "Ibnu Taimiyah (661-728 H)",
-    "slug": "ibnu-taimiyah",
-    "description": "Taqiyuddin Ahmad Ibnu Taimiyah — ulama besar mazhab Hanbali yang sangat berpengaruh. Hidup di masa invasi Mongol dan Tentara Salib, beliau aktif berjihad dan berfatwa. Dikenal dengan seruan kembali kepada Al-Quran dan Sunnah, menolak bid'ah dan khurafat. Dipenjara beberapa kali karena fatwa-fatwanya yang kontroversial. Muridnya: Ibnu Qayyim Al-Jauziyyah.\n\nSumber: Siyar A'lam An-Nubala, Adz-Dzahabi",
-    "category": "ulama",
-    "is_significant": true
-  },
-  {
-    "year_hijri": 926,
-    "year_miladi": 1520,
-    "title": "Puncak Kejayaan Kesultanan Utsmaniyah (Ottoman)",
-    "slug": "ottoman-suleiman",
-    "description": "Masa pemerintahan Sultan Suleiman Al-Qanuni (926-974 H / 1520-1566 M) merupakan puncak kejayaan Kesultanan Utsmaniyah. Wilayahnya mencakup tiga benua: Asia, Afrika, dan Eropa. Istanbul menjadi pusat peradaban Islam. Masjid Sulaiman (Süleymaniye Mosque) dibangun sebagai simbol kejayaan. Beliau juga dikenal sebagai legislator ulung.\n\nSumber: The Ottoman Empire and the World Around It, Suraiya Faroqhi",
-    "category": "dinasti",
-    "is_significant": true
-  }
+    {
+        "year_hijri": -53,
+        "year_miladi": 570,
+        "title": "Kelahiran Nabi Muhammad ﷺ",
+        "slug": "kelahiran-nabi",
+        "description": "Nabi Muhammad ﷺ lahir di Makkah pada 12 Rabi'ul Awwal, Tahun Gajah (570 M). Ayahnya, Abdullah, wafat sebelum beliau lahir. Ibunya, Aminah binti Wahb, menyusui beliau hingga beberapa bulan, kemudian diserahkan kepada Halimah Sa'diyah dari Bani Sa'd untuk disusui di pedesaan.\n\nSumber: Ar-Raheeq Al-Makhtum, hal. 56-65",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": -43,
+        "year_miladi": 580,
+        "title": "Wafatnya Ibu Nabi: Aminah binti Wahb",
+        "slug": "wafat-aminah",
+        "description": "Ketika Nabi ﷺ berusia sekitar 6 tahun, ibunya Aminah wafat di Abwa' dalam perjalanan pulang dari Madinah (Yatsrib) setelah mengunjungi keluarga ayahnya. Beliau kemudian diasuh oleh kakeknya, Abdul Muthalib.\n\nSumber: Ar-Raheeq Al-Makhtum, hal. 67",
+        "category": "nabi",
+        "is_significant": false
+    },
+    {
+        "year_hijri": -40,
+        "year_miladi": 583,
+        "title": "Wafatnya Abdul Muthalib, Kakek Nabi",
+        "slug": "wafat-abdul-muthalib",
+        "description": "Ketika Nabi ﷺ berusia 8 tahun, kakeknya Abdul Muthalib wafat. Penjagaan beliau kemudian diserahkan kepada pamannya, Abu Thalib.\n\nSumber: Sirah Ibnu Hisyam",
+        "category": "nabi",
+        "is_significant": false
+    },
+    {
+        "year_hijri": -28,
+        "year_miladi": 595,
+        "title": "Pernikahan Nabi dengan Khadijah",
+        "slug": "pernikahan-khadijah",
+        "description": "Pada usia 25 tahun, Nabi ﷺ menikahi Khadijah binti Khuwailid (40 tahun) setelah beliau bekerja sebagai pedagang untuk Khadijah. Khadijah adalah wanita pertama yang masuk Islam dan merupakan istri paling dicintai Nabi. Mereka dikaruniai 6 anak: Qasim, Abdullah, Zainab, Ruqayyah, Ummu Kulsum, dan Fatimah.\n\nSumber: Ar-Raheeq Al-Makhtum, hal. 83",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 1,
+        "year_miladi": 610,
+        "title": "Turunnya Wahyu Pertama (Nuzulul Quran)",
+        "slug": "wahyu-pertama",
+        "description": "Pada malam 17 Ramadan, tahun 610 M, ketika Nabi ﷺ berusia 40 tahun sedang berkhalwat di Gua Hira, malaikat Jibril datang dan menurunkan wahyu pertama: QS. Al-Alaq ayat 1-5 ('Iqra' bismi rabbika...'). Inilah awal kenabian Muhammad ﷺ.\n\nSumber: HR. Bukhari No. 3, Muslim No. 160",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 3,
+        "year_miladi": 613,
+        "title": "Dakwah Terbuka di Makkah",
+        "slug": "dakwah-terbuka-makkah",
+        "description": "Setelah 3 tahun dakwah secara sembunyi-sembunyi (sirriyah), Nabi ﷺ diperintahkan untuk berdakwah secara terang-terangan berdasarkan QS. Al-Hijr: 94. Beliau menyeru keluarga besar Bani Hasyim di bukit Shafa: 'Andaikan kuberitahu kalian bahwa di balik bukit ini ada pasukan kuda yang hendak menyerang kalian, apakah kalian percaya?' Mereka menjawab: 'Ya.' Beliau berkata: 'Sesungguhnya aku adalah pemberi peringatan kepada kalian dari azab yang pedih.'\n\nSumber: HR. Bukhari No. 4770, Muslim No. 208",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 5,
+        "year_miladi": 615,
+        "title": "Hijrah Pertama ke Habasyah",
+        "slug": "hijrah-habasyah",
+        "description": "Karena tekanan keras kaum Quraisy, Nabi ﷺ mengizinkan sekelompok kaum muslimin (sekitar 15 orang, dipimpin Utsman bin Affan) untuk berhijrah ke Habasyah (Ethiopia) mencari perlindungan kepada Raja Najasyi (Ashhamah). Ini adalah hijrah pertama dalam sejarah Islam.\n\nSumber: Ar-Raheeq Al-Makhtum, hal. 128",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 10,
+        "year_miladi": 619,
+        "title": "Tahun Duka Cita ('Aam Al-Huzn)",
+        "slug": "tahun-duka-cita",
+        "description": "Dalam satu tahun yang sama, dua orang paling dekat dengan Nabi ﷺ wafat: pertama, Khadijah istri beliau yang setia selama 25 tahun; kemudian Abu Thalib paman yang selalu melindungi beliau meski tidak masuk Islam. Nabi ﷺ sangat berduka, dan tahun ini dikenal sebagai 'Aam Al-Huzn' (Tahun Duka Cita).\n\nSumber: Ar-Raheeq Al-Makhtum, hal. 163",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 10,
+        "year_miladi": 621,
+        "title": "Isra' Mi'raj",
+        "slug": "isra-miraj",
+        "description": "Nabi ﷺ diperjalankan dari Masjidil Haram ke Masjidil Aqsha (Isra'), kemudian naik ke Sidratul Muntaha (Mi'raj) dalam satu malam. Di sinilah beliau menerima perintah sholat 5 waktu langsung dari Allah SWT — awalnya 50 waktu, kemudian dikurangi menjadi 5 waktu atas saran Nabi Musa as.\n\nSumber: HR. Bukhari No. 349, Muslim No. 163; QS. Al-Isra: 1",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 13,
+        "year_miladi": 622,
+        "title": "Hijrah ke Madinah",
+        "slug": "hijrah-madinah",
+        "description": "Pada bulan Rabi'ul Awwal tahun 622 M, Nabi ﷺ dan Abu Bakar berhijrah dari Makkah ke Madinah (Yatsrib). Peristiwa ini menjadi tonggak awal kalender Hijriah dan pembentukan komunitas Islam pertama. Di Madinah, Nabi ﷺ mempersaudarakan kaum Muhajirin dan Anshar, serta menyusun Piagam Madinah.\n\nSumber: Ar-Raheeq Al-Makhtum, hal. 201-215",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 2,
+        "year_miladi": 624,
+        "title": "Perang Badar",
+        "slug": "perang-badar",
+        "description": "Perang Badar (17 Ramadan 2 H / 624 M) adalah perang besar pertama kaum muslimin. 313 pasukan Muslim menghadapi 1.000 pasukan Quraisy. Dengan pertolongan Allah, kaum muslimin menang. 70 musuh tewas (termasuk pemimpin Quraisy: Abu Jahal) dan 70 tertawan. Kemenangan ini memperkuat posisi Islam di jazirah Arab.\n\nSumber: HR. Bukhari No. 3992; QS. Al-Anfal: 9",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 3,
+        "year_miladi": 625,
+        "title": "Perang Uhud",
+        "slug": "perang-uhud",
+        "description": "Dalam perang Uhud (7 Syawal 3 H), kaum muslimin awalnya unggul namun sebagian pasukan pemanah meninggalkan posnya karena rakus terhadap harta rampasan. Hal ini dimanfaatkan Khalid bin Walid (saat itu masih kafir) untuk menyerang dari belakang. 70 sahabat syahid termasuk Hamzah bin Abdul Muthalib. Nabi ﷺ sendiri terluka.\n\nSumber: HR. Bukhari No. 4043; QS. Ali Imran: 121-179",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 5,
+        "year_miladi": 627,
+        "title": "Perang Khandaq (Ahzab)",
+        "slug": "perang-khandaq",
+        "description": "Kaum Quraisy bersama sekutu (sekitar 10.000 pasukan) mengepung Madinah. Atas saran Salman Al-Farisi, Nabi ﷺ memerintahkan penggalian parit (khandaq) di utara Madinah. Pengepungan berlangsung sebulan tanpa berhasil menerobos. Akhirnya Allah mengutus angin kencang yang memorak-porandakan pasukan musuh dan mereka mundur.\n\nSumber: HR. Bukhari No. 4106; QS. Al-Ahzab: 9-27",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 6,
+        "year_miladi": 628,
+        "title": "Perjanjian Hudaibiyyah",
+        "slug": "perjanjian-hudaibiyyah",
+        "description": "Nabi ﷺ dan 1.400 sahabat berangkat untuk umrah, namun dihadang Quraisy di Hudaibiyyah. Ditandatangani perjanjian damai 10 tahun: kaum muslimin tidak boleh umrah tahun ini, namun boleh tahun depan; jika ada Quraisy yang lari ke Muslim harus dikembalikan, tapi jika ada Muslim yang lari ke Quraisy tidak perlu dikembalikan. Meski tampak merugikan, Allah menyebutnya sebagai 'kemenangan yang nyata' (QS. Al-Fath: 1).\n\nSumber: HR. Bukhari No. 2731; QS. Al-Fath: 1-3",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 8,
+        "year_miladi": 630,
+        "title": "Fathu Makkah (Pembebasan Makkah)",
+        "slug": "fathu-makkah",
+        "description": "Setelah Quraisy melanggar perjanjian Hudaibiyyah, Nabi ﷺ bergerak dengan 10.000 pasukan menuju Makkah. Kota Makkah menyerah hampir tanpa perlawanan pada 20 Ramadan 8 H. Nabi ﷺ memberi amnesti umum kepada penduduk Makkah: 'Pergilah kalian, kalian bebas.' Ka'bah dibersihkan dari 360 berhala. Mayoritas penduduk Makkah masuk Islam.\n\nSumber: HR. Bukhari No. 4280; Ar-Raheeq Al-Makhtum, hal. 376-386",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 10,
+        "year_miladi": 632,
+        "title": "Haji Wada' dan Khutbah Terakhir",
+        "slug": "haji-wada",
+        "description": "Pada tahun 10 H (632 M), Nabi ﷺ melaksanakan haji terakhir bersama lebih dari 100.000 sahabat. Di Padang Arafah, beliau menyampaikan Khutbah Wada' yang berisi prinsip-prinsip fundamental Islam: kesetaraan manusia, kesucian darah dan harta, penghapusan riba, hak-hak perempuan, dan amanah Al-Quran \u0026 Sunnah. Turun QS. Al-Maidah: 3 menyatakan kesempurnaan agama Islam.\n\nSumber: HR. Bukhari No. 1741, Muslim No. 1218",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 11,
+        "year_miladi": 632,
+        "title": "Khalifah Abu Bakar Ash-Shiddiq (11-13 H)",
+        "slug": "khilafah-abu-bakar",
+        "description": "Abu Bakar ra. terpilih sebagai khalifah pertama melalui musyawarah di Saqifah Bani Sa'idah. Masa kekhalifahannya (632-634 M) ditandai dengan: (1) Memerangi kaum murtad (Riddah Wars), (2) Memerangi Musailamah Al-Kadzab, (3) Pengumpulan Al-Quran pertama kali atas usulan Umar bin Khattab dan dilaksanakan oleh Zaid bin Tsabit setelah banyak hafizh syahid di Yamamah.\n\nSumber: HR. Bukhari No. 4986",
+        "category": "khulafa",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 11,
+        "year_miladi": 632,
+        "title": "Wafatnya Rasulullah ﷺ",
+        "slug": "wafat-rasulullah",
+        "description": "Pada Senin, 12 Rabi'ul Awwal 11 H (8 Juni 632 M), Nabi ﷺ wafat di kamar Aisyah ra. dalam usia 63 tahun. Abu Bakar berkhutbah: 'Barangsiapa menyembah Muhammad, sesungguhnya Muhammad telah wafat. Barangsiapa menyembah Allah, sesungguhnya Allah Maha Hidup tidak akan mati.' (QS. Ali Imran: 144). Beliau dikebumikan di tempat beliau wafat.\n\nSumber: HR. Bukhari No. 4448; Ar-Raheeq Al-Makhtum",
+        "category": "nabi",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 13,
+        "year_miladi": 634,
+        "title": "Khalifah Umar bin Khattab (13-23 H)",
+        "slug": "khilafah-umar",
+        "description": "Umar bin Khattab ra. menjadi khalifah kedua (634-644 M), ditunjuk langsung oleh Abu Bakar. Masa kekhalifahannya adalah masa ekspansi terbesar Islam: penaklukan Persia, Syam, dan Mesir. Beliau mendirikan sistem administrasi, menetapkan kalender Hijriah, membangun Baitul Mal, dan dikenal sebagai pemimpin yang sangat adil dan sederhana. Beliau syahid ditikam oleh Abu Lu'lu'ah Al-Majusi.\n\nSumber: Ar-Raheeq Al-Makhtum; Tarikh Ath-Thabari",
+        "category": "khulafa",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 23,
+        "year_miladi": 644,
+        "title": "Khalifah Utsman bin Affan (23-35 H)",
+        "slug": "khilafah-utsman",
+        "description": "Utsman bin Affan ra. terpilih melalui syura (musyawarah enam orang). Masa kekhalifahannya (644-656 M) ditandai dengan: (1) Pembukuan resmi Al-Quran (Mushaf Utsmani) yang menjadi standar hingga kini, (2) Ekspansi ke Afrika Utara dan Persia timur, (3) Pembangunan angkatan laut Islam pertama. Beliau syahid dibunuh oleh kaum pemberontak pada usia sekitar 82 tahun.\n\nSumber: HR. Bukhari No. 4986",
+        "category": "khulafa",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 35,
+        "year_miladi": 656,
+        "title": "Khalifah Ali bin Abi Thalib (35-40 H)",
+        "slug": "khilafah-ali",
+        "description": "Ali bin Abi Thalib ra. menjadi khalifah keempat (656-661 M). Masa kekhalifahannya diwarnai fitnah (ujian besar): Perang Jamal (melawan Aisyah, Thalhah, dan Zubair) dan Perang Shiffin (melawan Mu'awiyah). Kedua perang ini berakhir tanpa pemenang jelas. Ali ra. syahid ditikam Abdurrahman bin Muljam dari kelompok Khawarij. Kekhalifahannya menandai berakhirnya era Khulafaur Rasyidin.\n\nSumber: Tarikh Al-Khulafa, As-Suyuthi",
+        "category": "khulafa",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 41,
+        "year_miladi": 661,
+        "title": "Dinasti Umayyah (41-132 H / 661-750 M)",
+        "slug": "dinasti-umayyah",
+        "description": "Dinasti Umayyah didirikan oleh Mu'awiyah bin Abi Sufyan setelah Hassan bin Ali menyerahkan kekuasaan demi persatuan umat. Ibu kota dipindah ke Damaskus. Masa ini ditandai dengan ekspansi Islam terluas: ke Spanyol (Al-Andalus) di barat, Asia Tengah di timur, dan India. Puncak kejayaan pada masa Umar bin Abdul Aziz (Umar II, 99-101 H) yang terkenal dengan keadilannya.\n\nSumber: Tarikh Ath-Thabari; Al-Bidayah wan Nihayah",
+        "category": "dinasti",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 132,
+        "year_miladi": 750,
+        "title": "Dinasti Abbasiyyah (132-656 H / 750-1258 M)",
+        "slug": "dinasti-abbasiyyah",
+        "description": "Dinasti Abbasiyyah menggantikan Umayyah dengan ibu kota Baghdad. Masa ini adalah Zaman Keemasan Islam (The Golden Age of Islam): kemajuan pesat ilmu pengetahuan, filsafat, matematika, astronomi, kedokteran (Ibnu Sina, Al-Khawarizmi, Al-Biruni, dll). Bayt Al-Hikmah (Rumah Kebijaksanaan) di Baghdad menjadi pusat keilmuan dunia. Berakhir dengan penghancuran Baghdad oleh Mongol (Hulagu Khan) pada 656 H/1258 M.\n\nSumber: Tarikh Al-Islam, Adz-Dzahabi",
+        "category": "dinasti",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 150,
+        "year_miladi": 767,
+        "title": "Imam Abu Hanifah (80-150 H)",
+        "slug": "imam-abu-hanifah",
+        "description": "Nu'man bin Tsabit, dikenal sebagai Imam Abu Hanifah atau 'Al-Imam Al-A'zham' (Imam Terbesar). Pendiri mazhab Hanafi — mazhab fiqh terbesar di dunia (mencakup Turki, Asia Selatan, Asia Tengah). Dikenal dengan metode qiyas (analogi) yang kuat. Pernah dipenjara karena menolak jabatan qadhi (hakim) yang ditawarkan khalifah Abbasiyyah.\n\nSumber: Siyar A'lam An-Nubala, Adz-Dzahabi",
+        "category": "ulama",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 179,
+        "year_miladi": 795,
+        "title": "Imam Malik bin Anas (93-179 H)",
+        "slug": "imam-malik",
+        "description": "Imam Malik bin Anas, pendiri mazhab Maliki. Karya monumentalnya Al-Muwaththa' adalah koleksi hadith tertua yang masih ada. Imam Syafi'i menyebutnya: 'Jika ulama disebut, maka Malik adalah bintang.' Pernah dihukum cambuk karena memberikan fatwa yang tidak sesuai keinginan penguasa. Muridnya tersebar di Afrika Utara dan Spanyol.\n\nSumber: Siyar A'lam An-Nubala, Adz-Dzahabi",
+        "category": "ulama",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 204,
+        "year_miladi": 820,
+        "title": "Imam Muhammad bin Idris Asy-Syafi'i (150-204 H)",
+        "slug": "imam-syafii",
+        "description": "Imam Syafi'i adalah pendiri mazhab Syafi'i dan Ilmu Ushul Fiqh. Karya terbesarnya: Ar-Risalah (pertama membahas metodologi hukum Islam) dan Al-Umm. Beliau belajar kepada Imam Malik di Madinah dan murid-murid Abu Hanifah di Irak. Mazhab Syafi'i menjadi mazhab dominan di Indonesia, Malaysia, Mesir, dan sebagian besar dunia Muslim.\n\nSumber: Manaqib Asy-Syafi'i, Al-Baihaqi",
+        "category": "ulama",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 241,
+        "year_miladi": 855,
+        "title": "Imam Ahmad bin Hanbal (164-241 H)",
+        "slug": "imam-ahmad-hanbal",
+        "description": "Imam Ahmad bin Hanbal, pendiri mazhab Hanbali dan Imam Ahli Sunnah. Karya terbesarnya: Musnad Ahmad (sekitar 30.000 hadith). Beliau mengalami ujian berat (Mihnah) di bawah Khalifah Al-Ma'mun dan Al-Mu'tashim yang memaksanya menerima paham Mu'tazilah bahwa Al-Quran adalah makhluk. Beliau menolak meski disiksa, dan menjadi simbol keteguhan aqidah.\n\nSumber: Manaqib Al-Imam Ahmad, Ibnu Al-Jauzi",
+        "category": "ulama",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 256,
+        "year_miladi": 870,
+        "title": "Imam Al-Bukhari Menyelesaikan Shahih Bukhari (194-256 H)",
+        "slug": "shahih-bukhari",
+        "description": "Muhammad bin Ismail Al-Bukhari menyelesaikan kitab Shahih-nya — koleksi hadith paling shahih setelah Al-Quran. Dari 600.000 hadith yang dihafal, beliau memilih sekitar 7.275 hadith (2.602 tanpa pengulangan) setelah seleksi ketat selama 16 tahun. Imam Syafi'i berkata: 'Aku tidak melihat orang yang lebih faqih tentang hadith daripada pemuda dari Khurasan ini.'\n\nSumber: Hady As-Sari, Ibnu Hajar",
+        "category": "ulama",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 583,
+        "year_miladi": 1187,
+        "title": "Shalahuddin Al-Ayyubi Membebaskan Yerusalem",
+        "slug": "pembebasan-yerusalem",
+        "description": "Setelah Yerusalem (Al-Quds) dikuasai Tentara Salib selama 88 tahun (1099-1187 M), Shalahuddin Al-Ayyubi (Saladin) berhasil membebaskannya pada 27 Rajab 583 H. Berbeda dengan penaklukan Tentara Salib yang penuh pembantaian, Shalahuddin memberikan amnesti kepada penduduk Kristen yang ingin pergi, dan melindungi gereja-gereja mereka.\n\nSumber: Al-Kamil fit Tarikh, Ibnu Al-Atsir",
+        "category": "peristiwa",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 656,
+        "year_miladi": 1258,
+        "title": "Jatuhnya Baghdad ke Tangan Mongol",
+        "slug": "jatuhnya-baghdad",
+        "description": "Pada 656 H (1258 M), pasukan Mongol di bawah Hulagu Khan menghancurkan Baghdad — ibu kota Kekhalifahan Abbasiyyah. Khalifah Al-Mu'tashim billah dibunuh. Jutaan manuskrip ilmu pengetahuan dibuang ke Sungai Tigris hingga air sungai berubah warna karena tinta. Peristiwa ini menandai berakhirnya kekuasaan Abbasiyyah di Baghdad.\n\nSumber: Al-Bidayah wan Nihayah, Ibnu Katsir",
+        "category": "peristiwa",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 728,
+        "year_miladi": 1328,
+        "title": "Ibnu Taimiyah (661-728 H)",
+        "slug": "ibnu-taimiyah",
+        "description": "Taqiyuddin Ahmad Ibnu Taimiyah — ulama besar mazhab Hanbali yang sangat berpengaruh. Hidup di masa invasi Mongol dan Tentara Salib, beliau aktif berjihad dan berfatwa. Dikenal dengan seruan kembali kepada Al-Quran dan Sunnah, menolak bid'ah dan khurafat. Dipenjara beberapa kali karena fatwa-fatwanya yang kontroversial. Muridnya: Ibnu Qayyim Al-Jauziyyah.\n\nSumber: Siyar A'lam An-Nubala, Adz-Dzahabi",
+        "category": "ulama",
+        "is_significant": true
+    },
+    {
+        "year_hijri": 926,
+        "year_miladi": 1520,
+        "title": "Puncak Kejayaan Kesultanan Utsmaniyah (Ottoman)",
+        "slug": "ottoman-suleiman",
+        "description": "Masa pemerintahan Sultan Suleiman Al-Qanuni (926-974 H / 1520-1566 M) merupakan puncak kejayaan Kesultanan Utsmaniyah. Wilayahnya mencakup tiga benua: Asia, Afrika, dan Eropa. Istanbul menjadi pusat peradaban Islam. Masjid Sulaiman (Süleymaniye Mosque) dibangun sebagai simbol kejayaan. Beliau juga dikenal sebagai legislator ulung.\n\nSumber: The Ottoman Empire and the World Around It, Suraiya Faroqhi",
+        "category": "dinasti",
+        "is_significant": true
+    }
 ]

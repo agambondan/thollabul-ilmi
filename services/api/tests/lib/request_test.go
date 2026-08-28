@@ -2,10 +2,11 @@ package lib
 
 import (
 	"encoding/json"
-	"github.com/agambondan/islamic-explorer/app/lib"
 	"io/ioutil"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/agambondan/islamic-explorer/app/lib"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/utils"
@@ -97,7 +98,6 @@ func TestGetXAgentID(t *testing.T) {
 	utils.AssertEqual(t, nil, err)
 	utils.AssertEqual(t, 200, response3.StatusCode)
 	viper.Set("AGENT_ID", "")
-
 }
 
 func TestGetXCorporateID(t *testing.T) {

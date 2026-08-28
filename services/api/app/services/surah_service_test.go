@@ -20,9 +20,11 @@ func (f *fakeSurahRepo) FindAll(ctx *fiber.Ctx) *paginate.Page     { return &pag
 func (f *fakeSurahRepo) FindById(ctx *fiber.Ctx, id *int) (*model.Surah, error) {
 	return f.surah, nil
 }
+
 func (f *fakeSurahRepo) FindByNumber(ctx *fiber.Ctx, number *int) (*model.Surah, error) {
 	return f.surah, f.findByNumberErr
 }
+
 func (f *fakeSurahRepo) FindByName(ctx *fiber.Ctx, name *string) (*model.Surah, error) {
 	return f.surah, nil
 }

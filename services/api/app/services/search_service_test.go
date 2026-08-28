@@ -26,18 +26,23 @@ type fakeSearchRepo struct {
 func (f *fakeSearchRepo) SearchAyah(query string, limit, offset int) ([]model.Ayah, int64, error) {
 	return f.ayahs, f.ayahTot, f.err
 }
+
 func (f *fakeSearchRepo) SearchHadith(query string, limit, offset int) ([]model.Hadith, int64, error) {
 	return f.hadiths, f.hadithTot, f.err
 }
+
 func (f *fakeSearchRepo) SearchDictionary(query string, limit, offset int) ([]model.IslamicTerm, int64, error) {
 	return f.dicts, f.dictTot, f.err
 }
+
 func (f *fakeSearchRepo) SearchDoa(query string, limit, offset int) ([]model.Doa, int64, error) {
 	return f.doas, f.doaTot, f.err
 }
+
 func (f *fakeSearchRepo) SearchKajian(query string, limit, offset int) ([]model.Kajian, int64, error) {
 	return f.kajians, f.kajianTot, f.err
 }
+
 func (f *fakeSearchRepo) SearchPerawi(query string, limit, offset int) ([]model.Perawi, int64, error) {
 	return f.perawis, f.perawiTot, f.err
 }

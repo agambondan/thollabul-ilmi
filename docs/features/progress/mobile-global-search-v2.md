@@ -43,9 +43,9 @@ mobile.
 ## Evidence
 
 - Commands:
-  - `node --check apps/mobile/src/screens/GlobalSearchScreen.js`
-  - `node --check apps/mobile/src/api/client.js`
-  - `cd services/api && go test ./...`
+    - `node --check apps/mobile/src/screens/GlobalSearchScreen.js`
+    - `node --check apps/mobile/src/api/client.js`
+    - `cd services/api && go test ./...`
 - Device/API/Web smoke: mobile smoke penuh ditunda sampai device input bisa
   dites manual.
 - Notes: device tap/swipe manual ditunda karena MIUI memblokir `adb input`.

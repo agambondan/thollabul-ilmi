@@ -1,12 +1,20 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/context/Auth';
-import { useLocale } from '@/context/Locale';
-import { notesApi } from '@/lib/api';
-import { buildLoginHref } from '@/lib/authRedirect';
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { BsSticky, BsStickyFill, BsTrash, BsX, BsTypeBold, BsTypeItalic, BsListUl } from 'react-icons/bs';
+import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
+import { notesApi } from "@/lib/api";
+import { buildLoginHref } from "@/lib/authRedirect";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import {
+    BsSticky,
+    BsStickyFill,
+    BsTrash,
+    BsX,
+    BsTypeBold,
+    BsTypeItalic,
+    BsListUl,
+} from "react-icons/bs";
 
 let noteListCache = null;
 let noteListPromise = null;
@@ -35,17 +43,17 @@ const loadNoteList = () => {
     return noteListPromise;
 };
 
-const NoteButton = ({ refType, refId, className = '' }) => {
+const NoteButton = ({ refType, refId, className = "" }) => {
     const { isAuthenticated } = useAuth();
     const { t } = useLocale();
     const router = useRouter();
     const [note, setNote] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [content, setContent] = useState('');
+    const [content, setContent] = useState("");
     const [saving, setSaving] = useState(false);
     const textareaRef = useRef(null);
 
-    const insertFormat = (prefix, suffix = '') => {
+    const insertFormat = (prefix, suffix = "") => {
         const el = textareaRef.current;
         if (!el) return;
         const start = el.selectionStart;
@@ -77,10 +85,10 @@ const NoteButton = ({ refType, refId, className = '' }) => {
                 );
                 if (found) {
                     setNote(found);
-                    setContent(found.content ?? '');
+                    setContent(found.content ?? "");
                 }
             })
-            .catch(e => console.error(e));
+            .catch((e) => console.error(e));
         return () => {
             isActive = false;
         };
@@ -89,13 +97,13 @@ const NoteButton = ({ refType, refId, className = '' }) => {
     const openModal = () => {
         if (!isAuthenticated) {
             const currentPath =
-                typeof window === 'undefined'
-                    ? '/dashboard'
+                typeof window === "undefined"
+                    ? "/dashboard"
                     : `${window.location.pathname}${window.location.search}`;
             router.push(buildLoginHref(currentPath));
             return;
         }
-        setContent(note?.content ?? '');
+        setContent(note?.content ?? "");
         setShowModal(true);
     };
 
@@ -107,17 +115,21 @@ const NoteButton = ({ refType, refId, className = '' }) => {
                 const res = await notesApi.update(note.id ?? note._id, {
                     content: content.trim(),
                 });
-                if (!res.ok) throw new Error('update failed');
+                if (!res.ok) throw new Error("update failed");
                 const data = await res.json();
                 resetNoteListCache();
-                setNote({ ...(note ?? {}), ...(data ?? {}), content: content.trim() });
+                setNote({
+                    ...(note ?? {}),
+                    ...(data ?? {}),
+                    content: content.trim(),
+                });
             } else {
                 const res = await notesApi.create({
                     ref_type: refType,
                     ref_id: Number(refId),
                     content: content.trim(),
                 });
-                if (!res.ok) throw new Error('create failed');
+                if (!res.ok) throw new Error("create failed");
                 const data = await res.json();
                 resetNoteListCache();
                 setNote(data ?? { content: content.trim() });
@@ -134,10 +146,10 @@ const NoteButton = ({ refType, refId, className = '' }) => {
         setSaving(true);
         try {
             const res = await notesApi.delete(note.id ?? note._id);
-            if (!res.ok) throw new Error('delete failed');
+            if (!res.ok) throw new Error("delete failed");
             resetNoteListCache();
             setNote(null);
-            setContent('');
+            setContent("");
             setShowModal(false);
         } catch {
         } finally {
@@ -148,12 +160,16 @@ const NoteButton = ({ refType, refId, className = '' }) => {
     return (
         <>
             <button
-                title={note ? t('notes.edit') ?? 'Edit Catatan' : t('notes.add') ?? 'Tambah Catatan'}
+                title={
+                    note
+                        ? (t("notes.edit") ?? "Edit Catatan")
+                        : (t("notes.add") ?? "Tambah Catatan")
+                }
                 onClick={openModal}
                 className={`p-2 rounded-lg text-lg transition-colors ${
                     note
-                        ? 'text-amber-500 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-700'
-                        : 'text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700'
+                        ? "text-amber-500 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-700"
+                        : "text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700"
                 } ${className}`}
             >
                 {note ? <BsStickyFill /> : <BsSticky />}
@@ -162,12 +178,16 @@ const NoteButton = ({ refType, refId, className = '' }) => {
             {showModal && (
                 <div
                     className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
-                    onClick={(e) => e.target === e.currentTarget && setShowModal(false)}
+                    onClick={(e) =>
+                        e.target === e.currentTarget && setShowModal(false)
+                    }
                 >
                     <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-6'>
                         <div className='flex items-center justify-between mb-4'>
                             <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
-                                {note ? t('notes.edit') ?? 'Edit Catatan' : t('notes.add') ?? 'Tambah Catatan'}
+                                {note
+                                    ? (t("notes.edit") ?? "Edit Catatan")
+                                    : (t("notes.add") ?? "Tambah Catatan")}
                             </h2>
                             <button
                                 onClick={() => setShowModal(false)}
@@ -179,24 +199,24 @@ const NoteButton = ({ refType, refId, className = '' }) => {
                         <div className='flex items-center gap-1 mb-2 border-b border-gray-100 dark:border-slate-700 pb-2'>
                             <button
                                 type='button'
-                                title={t('notes.bold') ?? 'Tebal'}
-                                onClick={() => insertFormat('**', '**')}
+                                title={t("notes.bold") ?? "Tebal"}
+                                onClick={() => insertFormat("**", "**")}
                                 className='p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors'
                             >
                                 <BsTypeBold />
                             </button>
                             <button
                                 type='button'
-                                title={t('notes.italic') ?? 'Miring'}
-                                onClick={() => insertFormat('*', '*')}
+                                title={t("notes.italic") ?? "Miring"}
+                                onClick={() => insertFormat("*", "*")}
                                 className='p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors'
                             >
                                 <BsTypeItalic />
                             </button>
                             <button
                                 type='button'
-                                title={t('notes.list') ?? 'Daftar'}
-                                onClick={() => insertFormat('\n- ')}
+                                title={t("notes.list") ?? "Daftar"}
+                                onClick={() => insertFormat("\n- ")}
                                 className='p-1.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors'
                             >
                                 <BsListUl />
@@ -210,7 +230,10 @@ const NoteButton = ({ refType, refId, className = '' }) => {
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             rows={6}
-                            placeholder={t('notes.content_placeholder') ?? 'Tulis catatan tadabbur Anda...'}
+                            placeholder={
+                                t("notes.content_placeholder") ??
+                                "Tulis catatan tadabbur Anda..."
+                            }
                             autoFocus
                             className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none'
                         />
@@ -223,7 +246,7 @@ const NoteButton = ({ refType, refId, className = '' }) => {
                                     className='flex items-center gap-1.5 px-3 py-2 text-xs text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors disabled:opacity-40'
                                 >
                                     <BsTrash />
-                                    {t('common.delete') ?? 'Hapus'}
+                                    {t("common.delete") ?? "Hapus"}
                                 </button>
                             ) : (
                                 <span />
@@ -233,14 +256,16 @@ const NoteButton = ({ refType, refId, className = '' }) => {
                                     onClick={() => setShowModal(false)}
                                     className='px-4 py-2 text-sm text-gray-600 dark:text-gray-400'
                                 >
-                                    {t('common.cancel') ?? 'Batal'}
+                                    {t("common.cancel") ?? "Batal"}
                                 </button>
                                 <button
                                     onClick={save}
                                     disabled={saving || !content.trim()}
                                     className='px-4 py-2 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 disabled:opacity-40 transition-colors'
                                 >
-                                    {saving ? t('common.saving') ?? 'Menyimpan...' : t('common.save') ?? 'Simpan'}
+                                    {saving
+                                        ? (t("common.saving") ?? "Menyimpan...")
+                                        : (t("common.save") ?? "Simpan")}
                                 </button>
                             </div>
                         </div>
