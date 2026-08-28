@@ -1,6 +1,12 @@
 "use client";
 
-import { PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
+import {
+    PanelPage,
+    PanelTable,
+    Td,
+    Th,
+    Tr,
+} from "@/components/panel/DataPanel";
 import { useEffect, useState } from "react";
 import { adminUserApi } from "@/lib/api";
 import { useAuth } from "@/context/Auth";
@@ -56,7 +62,10 @@ const AdminUsersPage = () => {
                 const res = await adminUserApi.list();
                 if (!res.ok) throw new Error(t("admin.users.load_error"));
                 const data = await res.json();
-                setUsers(Array.isArray(data) ? data : (data.data ?? []));
+                // The API returns a paginate.Page — { items, page, size,
+                // total } — not { data }, which is why this list came back
+                // empty. Same shape every other admin list reads.
+                setUsers(data?.items ?? (Array.isArray(data) ? data : []));
             } catch (err) {
                 setError(err.message || t("admin.error.load_data"));
             } finally {
@@ -113,7 +122,7 @@ const AdminUsersPage = () => {
     }
 
     return (
-        <div className='p-6 max-w-5xl'>
+        <PanelPage>
             <div className='mb-6'>
                 <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
                     {t("admin.users.title")}
@@ -259,7 +268,7 @@ const AdminUsersPage = () => {
                 <strong>{t("admin.users.role_notes_title")}:</strong>{" "}
                 {t("admin.users.role_notes")}
             </div>
-        </div>
+        </PanelPage>
     );
 };
 
