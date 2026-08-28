@@ -1,5 +1,9 @@
 # Audit Kematangan Fitur per Route — apps/web
 
+> **Lihat [FINDINGS.md](FINDINGS.md) untuk daftar temuan + statusnya dalam satu tabel.**
+> Dokumen ini adalah analisis mendalamnya, ditulis bertahap sebagai addendum —
+> beberapa kesimpulan awal terbukti salah dan diralat di addendum berikutnya.
+
 **Tanggal:** 28 Agustus 2026
 **Sumber:** `screenshots/` — 318 PNG (159 route × desktop 1280×800 + mobile 390×844)
 **Metode:** dedup md5 → analisis tinggi/berat halaman → review visual contact-sheet

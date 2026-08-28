@@ -65,6 +65,35 @@ export default function FiqhPage() {
         };
     }, []);
 
+    // Load every item up front. The counts under each category and the search
+    // box both read from itemsByCategory, so loading only on expand meant every
+    // category showed "0 topik" and search could not see anything the user had
+    // not already opened. It is one request for ~27 rows.
+    useEffect(() => {
+        let cancelled = false;
+        fiqhApi
+            .listItems()
+            .then((res) => res.json())
+            .then((data) => {
+                if (cancelled) return;
+                const items = Array.isArray(data?.items) ? data.items : [];
+                if (items.length === 0) return;
+                const grouped = {};
+                for (const item of items) {
+                    const slug = item.category;
+                    if (!slug) continue;
+                    (grouped[slug] ??= []).push(item);
+                }
+                setItemsByCategory((prev) => ({ ...grouped, ...prev }));
+            })
+            .catch(() => {
+                // Categories still expand one at a time via loadCategoryItems.
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
     const loadCategoryItems = async (slug) => {
         if (itemsByCategory[slug]) return;
         try {

@@ -49,6 +49,9 @@ type fiqhAdminItemResponse struct {
 	Source     string `json:"source"`
 	Dalil      string `json:"dalil"`
 	SortOrder  int    `json:"sort_order"`
+	// The list is public and rendered by a localized UI, so it has to carry the
+	// translation the same way the per-category endpoint does.
+	Translation *model.Translation `json:"translation,omitempty"`
 }
 
 func NewFiqhController(services *service.Services) FiqhController {
@@ -103,8 +106,12 @@ func (c *fiqhController) FindAllItems(ctx *fiber.Ctx) error {
 	if err != nil {
 		return lib.ErrorInternal(ctx)
 	}
+	lang := lib.GetPreferredLang(ctx)
 	result := make([]fiqhAdminItemResponse, 0, len(list))
 	for i := range list {
+		if list[i].Translation != nil {
+			list[i].Translation.FilterByLang(lang)
+		}
 		result = append(result, fiqhItemToAdminResponse(&list[i]))
 	}
 	return lib.OK(ctx, fiber.Map{"items": result})
@@ -387,14 +394,15 @@ func fiqhItemToAdminResponse(item *model.FiqhItem) fiqhAdminItemResponse {
 		category = item.Category.Slug
 	}
 	return fiqhAdminItemResponse{
-		ID:         item.ID,
-		CategoryID: item.CategoryID,
-		Category:   category,
-		Title:      item.Title,
-		Slug:       item.Slug,
-		Content:    item.Content,
-		Source:     item.Source,
-		Dalil:      item.Dalil,
-		SortOrder:  item.SortOrder,
+		ID:          item.ID,
+		CategoryID:  item.CategoryID,
+		Category:    category,
+		Title:       item.Title,
+		Slug:        item.Slug,
+		Content:     item.Content,
+		Source:      item.Source,
+		Dalil:       item.Dalil,
+		SortOrder:   item.SortOrder,
+		Translation: item.Translation,
 	}
 }

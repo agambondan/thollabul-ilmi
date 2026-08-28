@@ -642,6 +642,8 @@ export const wiridApi = {
 
 export const fiqhApi = {
     listCategories: () => fetch(`${API_URL}/api/v1/fiqh`),
+    listItems: (size = 500) =>
+        fetch(`${API_URL}/api/v1/fiqh/items?size=${size}`),
     categoryBySlug: (slug) =>
         fetch(`${API_URL}/api/v1/fiqh/${encodeURIComponent(slug)}`),
     itemBySlug: (slug) =>
