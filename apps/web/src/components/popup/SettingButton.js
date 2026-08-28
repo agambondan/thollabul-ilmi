@@ -7,11 +7,14 @@ import { QURAN_FONTS, useQuranFont } from "@/lib/useQuranFont";
 import classNames from "classnames";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { RiSettings3Fill } from "react-icons/ri";
 import {
-    TbLayoutDistributeHorizontal,
-    TbLayoutSidebarRight,
-} from "react-icons/tb";
+    BsLayoutSidebarReverse,
+    BsLayoutSplit,
+    BsLayoutTextSidebarReverse,
+    BsMenuButtonWide,
+    BsEyeSlash,
+} from "react-icons/bs";
+import { RiSettings3Fill } from "react-icons/ri";
 
 const SettingButton = () => {
     const { t } = useLocale();
@@ -126,8 +129,10 @@ const SettingButton = () => {
                         <div className='flex gap-2'>
                             <button
                                 onClick={() => setLayout(false)}
+                                title={t("settings.compact")}
+                                aria-label={t("settings.compact")}
                                 className={classNames(
-                                    "flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-lg border text-xs transition-all",
+                                    "flex-1 flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
                                     {
                                         "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
                                             !isWide,
@@ -136,13 +141,14 @@ const SettingButton = () => {
                                     },
                                 )}
                             >
-                                <TbLayoutSidebarRight size={18} />
-                                {t("settings.compact")}
+                                <BsLayoutSidebarReverse size={18} />
                             </button>
                             <button
                                 onClick={() => setLayout(true)}
+                                title={t("settings.wide")}
+                                aria-label={t("settings.wide")}
                                 className={classNames(
-                                    "flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-lg border text-xs transition-all",
+                                    "flex-1 flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
                                     {
                                         "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
                                             isWide,
@@ -151,8 +157,7 @@ const SettingButton = () => {
                                     },
                                 )}
                             >
-                                <TbLayoutDistributeHorizontal size={18} />
-                                {t("settings.wide")}
+                                <BsLayoutSplit size={18} />
                             </button>
                         </div>
                     </div>
@@ -168,8 +173,10 @@ const SettingButton = () => {
                         <div className='grid grid-cols-3 gap-2'>
                             <button
                                 onClick={() => setPosition("side")}
+                                title={label("settings.action_side", "Samping")}
+                                aria-label={label("settings.action_side", "Samping")}
                                 className={classNames(
-                                    "py-2 px-1 rounded-lg border text-xs transition-all",
+                                    "flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
                                     {
                                         "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
                                             position === "side",
@@ -178,12 +185,14 @@ const SettingButton = () => {
                                     },
                                 )}
                             >
-                                {label("settings.action_side", "Samping")}
+                                <BsLayoutTextSidebarReverse size={16} />
                             </button>
                             <button
                                 onClick={() => setPosition("menu")}
+                                title={label("settings.action_menu", "Menu")}
+                                aria-label={label("settings.action_menu", "Menu")}
                                 className={classNames(
-                                    "py-2 px-1 rounded-lg border text-xs transition-all",
+                                    "flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
                                     {
                                         "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
                                             isMenu,
@@ -192,12 +201,14 @@ const SettingButton = () => {
                                     },
                                 )}
                             >
-                                {label("settings.action_menu", "Menu")}
+                                <BsMenuButtonWide size={16} />
                             </button>
                             <button
                                 onClick={() => setPosition("hidden")}
+                                title={label("settings.action_hidden", "Hide")}
+                                aria-label={label("settings.action_hidden", "Hide")}
                                 className={classNames(
-                                    "py-2 px-1 rounded-lg border text-xs transition-all",
+                                    "flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
                                     {
                                         "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
                                             position === "hidden",
@@ -206,7 +217,7 @@ const SettingButton = () => {
                                     },
                                 )}
                             >
-                                {label("settings.action_hidden", "Hide")}
+                                <BsEyeSlash size={16} />
                             </button>
                         </div>
                     </div>
