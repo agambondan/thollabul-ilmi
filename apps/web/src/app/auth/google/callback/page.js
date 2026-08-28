@@ -8,40 +8,47 @@ import Link from 'next/link';
 const GoogleCallbackContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { setSession } = useAuth();
+    const { doRefresh, refetchUser } = useAuth();
     const [status, setStatus] = useState('Menyelesaikan login dengan Google...');
     const [error, setError] = useState('');
 
     useEffect(() => {
         const errorParam = searchParams.get('error');
-        const token = searchParams.get('token');
-        const refreshToken = searchParams.get('refresh_token');
-        const userId = searchParams.get('user_id');
-
         if (errorParam) {
             setError(decodeURIComponent(errorParam));
             setStatus('');
             return;
         }
 
-        if (!token || !refreshToken) {
-            setError('Token tidak diterima dari server.');
-            setStatus('');
-            return;
-        }
-
-        try {
-            localStorage.setItem('auth_token', token);
-            localStorage.setItem('refresh_token', refreshToken);
-            if (userId) localStorage.setItem('user_id', userId);
-            setSession?.(token);
-            setStatus('Login berhasil! Mengalihkan ke dashboard...');
-            setTimeout(() => router.replace('/dashboard'), 800);
-        } catch (err) {
-            setError(err?.message || 'Gagal menyimpan sesi login.');
-            setStatus('');
-        }
-    }, [searchParams, router, setSession]);
+        // The backend already set the auth cookies (httpOnly refresh_token +
+        // token) on the redirect that landed here — it never puts tokens in
+        // this URL. Mint a fresh access token from the refresh_token cookie
+        // and load it into app state.
+        //
+        // Deliberately run once on mount: doRefresh()/refetchUser() are
+        // recreated on every AuthProvider render (not memoized), and unlike
+        // the old URL-token flow, each doRefresh() call mints a genuinely
+        // new token value, so setToken() never bails out on an identical
+        // value — including them in the deps array would re-fire this
+        // effect after every refresh, calling /auth/refresh in a loop.
+        (async () => {
+            try {
+                const token = await doRefresh?.();
+                if (!token) {
+                    setError('Gagal menyelesaikan sesi login dari Google.');
+                    setStatus('');
+                    return;
+                }
+                refetchUser?.();
+                setStatus('Login berhasil! Mengalihkan ke dashboard...');
+                setTimeout(() => router.replace('/dashboard'), 800);
+            } catch (err) {
+                setError(err?.message || 'Gagal menyelesaikan sesi login.');
+                setStatus('');
+            }
+        })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <main className='min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4'>

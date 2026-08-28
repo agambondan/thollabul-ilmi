@@ -137,19 +137,17 @@ func (c *googleAuthController) Callback(ctx *fiber.Ctx) error {
 		return c.renderErrorPage(ctx, fmt.Sprintf("user provisioning failed: %v", err))
 	}
 
+	// Tokens travel via httpOnly cookies (same as the regular email/password
+	// login), never via the redirect URL — a URL query string ends up in
+	// browser history, server/proxy access logs, and any Referer header sent
+	// from the landing page.
+	setAuthCookies(ctx, loginResp.Token, loginResp.RefreshToken)
+
 	frontend := os.Getenv("FRONTEND_URL")
 	if frontend == "" {
 		frontend = "https://thollabul.jangkauin.site"
 	}
-	u, _ := url.Parse(frontend + "/auth/google/callback")
-	q := u.Query()
-	q.Set("token", loginResp.Token)
-	q.Set("refresh_token", loginResp.RefreshToken)
-	if loginResp.User != nil {
-		q.Set("user_id", loginResp.User.ID.String())
-	}
-	u.RawQuery = q.Encode()
-	return ctx.Redirect(u.String(), fiber.StatusTemporaryRedirect)
+	return ctx.Redirect(frontend+"/auth/google/callback", fiber.StatusTemporaryRedirect)
 }
 
 func (c *googleAuthController) renderErrorPage(ctx *fiber.Ctx, msg string) error {
