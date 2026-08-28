@@ -1,5 +1,6 @@
 'use client';
 
+import { PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
 import { useLocale } from '@/context/Locale';
 import { authFetch } from '@/lib/api';
 import { useEffect, useState } from 'react';
@@ -118,45 +119,40 @@ export default function AdminLessonsPage() {
                 </button>
             </div>
 
-            <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden'>
-                <div className='overflow-x-auto'>
-                    <table className='w-full text-left text-sm min-w-[640px]'>
-                        <thead className='bg-gray-50 dark:bg-slate-900/50 text-gray-500'>
-                            <tr>
-                                <th className='p-4'>Urutan</th>
-                                <th className='p-4'>Judul</th>
-                                <th className='p-4'>Slug</th>
-                                <th className='p-4'>Langkah</th>
-                                <th className='p-4 text-right'>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody className='divide-y divide-gray-100 dark:divide-slate-700'>
-                            {loading ? (
-                                <tr><td colSpan={5} className='p-4 text-center text-gray-400'>Memuat data...</td></tr>
-                            ) : modules.length === 0 ? (
-                                <tr><td colSpan={5} className='p-4 text-center text-gray-400'>Belum ada modul</td></tr>
-                            ) : (
-                                modules.map((m) => (
-                                    <tr key={m.id} className='hover:bg-gray-50 dark:hover:bg-slate-700/30'>
-                                        <td className='p-4 font-bold'>{m.order}</td>
-                                        <td className='p-4 font-semibold text-gray-900 dark:text-white'>{m.title}</td>
-                                        <td className='p-4 text-gray-500'>{m.slug}</td>
-                                        <td className='p-4 text-gray-500'>{m.steps?.length || 0} langkah</td>
-                                        <td className='p-4 text-right space-x-2'>
-                                            <button onClick={() => handleOpen(m)} className='p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-blue-600'>
-                                                <BsPencil />
-                                            </button>
-                                            <button onClick={() => handleDelete(m.id)} className='p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-rose-600'>
-                                                <BsTrash />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <PanelTable
+                head={
+                    <>
+                        <Th>Urutan</Th>
+                        <Th>Judul</Th>
+                        <Th>Slug</Th>
+                        <Th>Langkah</Th>
+                        <Th align='right'>Aksi</Th>
+                    </>
+                }
+            >
+                {loading ? (
+                    <Tr><Td colSpan={5} className='text-center text-gray-400'>Memuat data...</Td></Tr>
+                ) : modules.length === 0 ? (
+                    <Tr><Td colSpan={5} className='text-center text-gray-400'>Belum ada modul</Td></Tr>
+                ) : (
+                    modules.map((m) => (
+                        <Tr key={m.id} className='hover:bg-gray-50 dark:hover:bg-slate-700/30'>
+                            <Td className='font-bold'>{m.order}</Td>
+                            <Td className='font-semibold text-gray-900 dark:text-white'>{m.title}</Td>
+                            <Td className='text-gray-500'>{m.slug}</Td>
+                            <Td className='text-gray-500'>{m.steps?.length || 0} langkah</Td>
+                            <Td className='text-right space-x-2'>
+                                <button onClick={() => handleOpen(m)} className='p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-blue-600'>
+                                    <BsPencil />
+                                </button>
+                                <button onClick={() => handleDelete(m.id)} className='p-1.5 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-rose-600'>
+                                    <BsTrash />
+                                </button>
+                            </Td>
+                        </Tr>
+                    ))
+                )}
+            </PanelTable>
 
             {/* Modal */}
             {modalOpen && (

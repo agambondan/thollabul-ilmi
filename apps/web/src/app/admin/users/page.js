@@ -1,5 +1,6 @@
 "use client";
 
+import { PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
 import { useEffect, useState } from "react";
 import { adminUserApi } from "@/lib/api";
 import { useAuth } from "@/context/Auth";
@@ -153,111 +154,106 @@ const AdminUsersPage = () => {
                 </div>
             )}
 
-            <div className='bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden'>
-                <div className='overflow-x-auto'>
-                    <table className='w-full text-sm min-w-[640px]'>
-                        <thead>
-                            <tr className='border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50'>
-                                <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-400'>
-                                    {t("admin.field.name")}
-                                </th>
-                                <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-400'>
-                                    Email
-                                </th>
-                                <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-400'>
-                                    Role
-                                </th>
-                                <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-400'>
-                                    {t("admin.users.change_role")}
-                                </th>
-                                <th className='text-right px-4 py-3 font-medium text-gray-600 dark:text-gray-400'>
-                                    {t("admin.field.actions")}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className='divide-y divide-gray-100 dark:divide-gray-800'>
-                            {users.length === 0 && (
-                                <tr>
-                                    <td
-                                        colSpan={5}
-                                        className='px-4 py-8 text-center text-gray-400 dark:text-gray-600'
+            <PanelTable
+                head={
+                    <>
+                        <Th>
+                            {t("admin.field.name")}
+                        </Th>
+                        <Th>
+                            Email
+                        </Th>
+                        <Th>
+                            Role
+                        </Th>
+                        <Th>
+                            {t("admin.users.change_role")}
+                        </Th>
+                        <Th align='right'>
+                            {t("admin.field.actions")}
+                        </Th>
+                    </>
+                }
+            >
+                {users.length === 0 && (
+                    <Tr>
+                        <Td
+                            colSpan={5}
+                            className='px-4 py-8 text-center text-gray-400 dark:text-gray-600'
+                        >
+                            {t("admin.users.empty")}
+                        </Td>
+                    </Tr>
+                )}
+                {users.map((u) => {
+                    const isSelf = u.id === currentUser?.id;
+                    return (
+                        <Tr
+                            key={u.id}
+                            className='hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors'
+                        >
+                            <Td className='text-gray-900 dark:text-white font-medium'>
+                                {u.name}
+                                {isSelf && (
+                                    <span className='ml-2 text-xs text-emerald-600 dark:text-emerald-400'>
+                                        ({t("admin.users.you")})
+                                    </span>
+                                )}
+                            </Td>
+                            <Td className='text-gray-600 dark:text-gray-400'>
+                                {u.email}
+                            </Td>
+                            <Td>
+                                <RoleBadge role={u.role} t={t} />
+                            </Td>
+                            <Td>
+                                <select
+                                    value={u.role}
+                                    onChange={(e) =>
+                                        handleChangeRole(
+                                            u,
+                                            e.target.value,
+                                        )
+                                    }
+                                    disabled={
+                                        isSelf || changingId === u.id
+                                    }
+                                    className='text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed'
+                                >
+                                    {ROLES.map((r) => (
+                                        <option
+                                            key={r.value}
+                                            value={r.value}
+                                        >
+                                            {t(`admin.role.${r.value}`)}
+                                        </option>
+                                    ))}
+                                </select>
+                                {changingId === u.id && (
+                                    <span className='ml-2 text-xs text-gray-400'>
+                                        {t("common.saving")}
+                                    </span>
+                                )}
+                            </Td>
+                            <Td>
+                                <div className='flex justify-end'>
+                                    <button
+                                        onClick={() => handleDelete(u)}
+                                        disabled={isSelf}
+                                        title={t(
+                                            "admin.users.delete_user",
+                                        )}
+                                        className='flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40'
                                     >
-                                        {t("admin.users.empty")}
-                                    </td>
-                                </tr>
-                            )}
-                            {users.map((u) => {
-                                const isSelf = u.id === currentUser?.id;
-                                return (
-                                    <tr
-                                        key={u.id}
-                                        className='hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors'
-                                    >
-                                        <td className='px-4 py-3 text-gray-900 dark:text-white font-medium'>
-                                            {u.name}
-                                            {isSelf && (
-                                                <span className='ml-2 text-xs text-emerald-600 dark:text-emerald-400'>
-                                                    ({t("admin.users.you")})
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td className='px-4 py-3 text-gray-600 dark:text-gray-400'>
-                                            {u.email}
-                                        </td>
-                                        <td className='px-4 py-3'>
-                                            <RoleBadge role={u.role} t={t} />
-                                        </td>
-                                        <td className='px-4 py-3'>
-                                            <select
-                                                value={u.role}
-                                                onChange={(e) =>
-                                                    handleChangeRole(
-                                                        u,
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                disabled={
-                                                    isSelf || changingId === u.id
-                                                }
-                                                className='text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed'
-                                            >
-                                                {ROLES.map((r) => (
-                                                    <option
-                                                        key={r.value}
-                                                        value={r.value}
-                                                    >
-                                                        {t(`admin.role.${r.value}`)}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            {changingId === u.id && (
-                                                <span className='ml-2 text-xs text-gray-400'>
-                                                    {t("common.saving")}
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td className='px-4 py-3'>
-                                            <div className='flex justify-end'>
-                                                <button
-                                                    onClick={() => handleDelete(u)}
-                                                    disabled={isSelf}
-                                                    title={t(
-                                                        "admin.users.delete_user",
-                                                    )}
-                                                    className='flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40'
-                                                >
-                                                    <BsTrash className='text-sm' />
-                                                    {t("common.delete")}
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                                        <BsTrash className='text-sm' />
+                                        {t("common.delete")}
+                                    </button>
+                                </div>
+                            </Td>
+                        </Tr>
+                    );
+                })}
+            </PanelTable>
 
             <div className='mt-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 text-xs'>
                 <strong>{t("admin.users.role_notes_title")}:</strong>{" "}

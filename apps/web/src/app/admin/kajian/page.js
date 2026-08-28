@@ -1,5 +1,6 @@
 "use client";
 
+import { PanelEmpty, PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
 import { adminKajianApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
@@ -194,96 +195,81 @@ const AdminStudiesPage = () => {
             {loading ? (
                 <p className='text-sm text-gray-500'>{t("common.loading")}</p>
             ) : (
-                <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 overflow-hidden'>
-                    <div className='overflow-x-auto'>
-                        <table className='w-full text-sm min-w-[640px]'>
-                            <thead className='bg-gray-50 dark:bg-slate-700'>
-                                <tr>
-                                    <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300'>
-                                        {t("admin.field.title")}
-                                    </th>
-                                    <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300 hidden md:table-cell'>
-                                        Ustadz
-                                    </th>
-                                    <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300 w-24'>
-                                        Tipe
-                                    </th>
-                                    <th className='text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300 w-24 hidden lg:table-cell'>
-                                        {t("admin.field.category")}
-                                    </th>
-                                    <th className='px-4 py-3 w-24'></th>
-                                </tr>
-                            </thead>
-                            <tbody className='divide-y divide-gray-100 dark:divide-slate-700'>
-                                {filtered.map((item) => (
-                                    <tr
-                                        key={item.id ?? item._id}
-                                        className='hover:bg-gray-50 dark:hover:bg-slate-700'
-                                    >
-                                        <td className='px-4 py-3 text-gray-900 dark:text-white font-medium max-w-xs truncate'>
-                                            {getLocalizedField(item, "title", lang)}
-                                        </td>
-                                        <td className='px-4 py-3 text-gray-500 dark:text-gray-400 hidden md:table-cell'>
-                                            {item.speaker ?? "-"}
-                                        </td>
-                                        <td className='px-4 py-3'>
-                                            <span className='px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded text-xs capitalize'>
-                                                {item.type ?? "-"}
-                                            </span>
-                                        </td>
-                                        <td className='px-4 py-3 text-gray-500 dark:text-gray-400 hidden lg:table-cell capitalize'>
-                                            {item.topic}
-                                        </td>
-                                        <td className='px-4 py-3'>
-                                            <div className='flex items-center gap-1.5 justify-end'>
-                                                {item.url && (
-                                                    <a
-                                                        href={item.url}
-                                                        target='_blank'
-                                                        rel='noreferrer'
-                                                        className='p-1.5 text-gray-400 hover:text-gray-600 rounded'
-                                                    >
-                                                        <BsBoxArrowUpRight />
-                                                    </a>
-                                                )}
-                                                <button
-                                                    onClick={() => openEdit(item)}
-                                                    aria-label={t("common.edit")}
-                                                    title={t("common.edit")}
-                                                    className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
-                                                >
-                                                    <BsPencil />
-                                                </button>
-                                                <button
-                                                    onClick={() =>
-                                                        setDeleteId(
-                                                            item.id ?? item._id,
-                                                        )
-                                                    }
-                                                    aria-label={t("common.delete")}
-                                                    title={t("common.delete")}
-                                                    className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
-                                                >
-                                                    <BsTrash />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                                {filtered.length === 0 && (
-                                    <tr>
-                                        <td
-                                            colSpan={5}
-                                            className='px-4 py-8 text-center text-gray-400'
+                <PanelTable
+                    head={
+                        <>
+                            <Th>
+                                {t("admin.field.title")}
+                            </Th>
+                            <Th className='hidden md:table-cell'>
+                                Ustadz
+                            </Th>
+                            <Th className='w-24'>
+                                Tipe
+                            </Th>
+                            <Th className='w-24 hidden lg:table-cell'>
+                                {t("admin.field.category")}
+                            </Th>
+                            <Th className='w-24'></Th>
+                        </>
+                    }
+                >
+                    {filtered.map((item) => (
+                        <Tr key={item.id ?? item._id}>
+                            <Td className='text-gray-900 dark:text-white font-medium max-w-xs truncate'>
+                                {getLocalizedField(item, "title", lang)}
+                            </Td>
+                            <Td className='text-gray-500 dark:text-gray-400 hidden md:table-cell'>
+                                {item.speaker ?? "-"}
+                            </Td>
+                            <Td>
+                                <span className='px-2 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded text-xs capitalize'>
+                                    {item.type ?? "-"}
+                                </span>
+                            </Td>
+                            <Td className='text-gray-500 dark:text-gray-400 hidden lg:table-cell capitalize'>
+                                {item.topic}
+                            </Td>
+                            <Td>
+                                <div className='flex items-center gap-1.5 justify-end'>
+                                    {item.url && (
+                                        <a
+                                            href={item.url}
+                                            target='_blank'
+                                            rel='noreferrer'
+                                            className='p-1.5 text-gray-400 hover:text-gray-600 rounded'
                                         >
-                                            {t("admin.crud.no_data")}
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                            <BsBoxArrowUpRight />
+                                        </a>
+                                    )}
+                                    <button
+                                        onClick={() => openEdit(item)}
+                                        aria-label={t("common.edit")}
+                                        title={t("common.edit")}
+                                        className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
+                                    >
+                                        <BsPencil />
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            setDeleteId(
+                                                item.id ?? item._id,
+                                            )
+                                        }
+                                        aria-label={t("common.delete")}
+                                        title={t("common.delete")}
+                                        className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
+                                    >
+                                        <BsTrash />
+                                    </button>
+                                </div>
+                            </Td>
+                        </Tr>
+                    ))}
+                    {filtered.length === 0 && (
+                        <PanelEmpty colSpan={5}>{t("admin.crud.no_data")}</PanelEmpty>
+                    )}
+                </PanelTable>
             )}
 
             {showModal && (

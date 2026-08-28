@@ -5,7 +5,6 @@ import { Spinner3 } from "@/components/spinner/Spinner";
 import AdminMutationToast from "@/components/admin/AdminMutationToast";
 import { useLocale } from "@/context/Locale";
 import { ConvertFLagLanguage } from "@/lib/converter";
-import { useLayoutMode } from "@/lib/useLayoutMode";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -149,7 +148,6 @@ const SIDEBAR_STORAGE_KEY = "tholabul_admin_sidebar_collapsed";
 const AdminLayout = ({ children }) => {
     const { user, isAuthenticated, isLoading, logout, refetchUser } = useAuth();
     const { t, lang, setLang } = useLocale();
-    const { isWide } = useLayoutMode();
     const router = useRouter();
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -582,9 +580,10 @@ const AdminLayout = ({ children }) => {
                         )}
                     </div>
                 </header>
-                <div className={isWide ? "w-full" : "max-w-5xl mx-auto"}>
-                    {children}
-                </div>
+                {/* Panel screens are always full width: they hold tables and
+                    forms, not prose, so the reading-width toggle used by the
+                    public pages would only waste horizontal space here. */}
+                <div className='w-full'>{children}</div>
             </main>
         </div>
     );
