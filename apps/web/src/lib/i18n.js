@@ -222,7 +222,7 @@ export const translations = {
         // Quran public page
         "quran.error_title": "Gagal Memuat Al-Quran",
         "quran.error_desc":
-            "Server API tidak dapat dijangkau. Pastikan backend berjalan lalu refresh halaman.",
+            "Isi surah belum bisa dimuat sekarang. Coba muat ulang sebentar lagi.",
         "quran.back_to_surah_list": "Kembali ke daftar surah",
         "quran.page_subtitle":
             "Lengkap dengan Tajweed berwarna, transliterasi, dan terjemahan",
@@ -1512,7 +1512,7 @@ export const translations = {
             "Tidak ada hadis untuk tema ini. Mungkin temanya sudah diganti atau salah ketik.",
         "hadith.back_to_hadith": "Kembali ke Hadis",
         "hadith.load_error_desc":
-            "Server API tidak dapat dijangkau. Pastikan server backend berjalan.",
+            "Hadith belum bisa dimuat sekarang. Coba muat ulang sebentar lagi.",
         "hadith.search_hint": "Pilih kitab lalu cari nomor atau kata kunci",
         "hadith.not_found_title": "Hadis tidak ditemukan",
         "hadith.not_found_hint":
@@ -1651,7 +1651,7 @@ export const translations = {
         // Global error page
         "global_error.title": "Terjadi Kesalahan",
         "global_error.api_unreachable":
-            "Server API tidak dapat dijangkau. Pastikan backend berjalan.",
+            "Data belum bisa dimuat sekarang. Coba muat ulang sebentar lagi.",
         "global_error.unexpected": "Terjadi kesalahan yang tidak terduga.",
         // Dashboard – Jadwal Sholat
         "jadwal.title": "Jadwal Sholat",
@@ -1710,8 +1710,7 @@ export const translations = {
         "wirid.search_placeholder": "Cari wirid...",
         "wirid.loading": "Memuat wirid...",
         "wirid.load_error": "Gagal Memuat Wirid",
-        "wirid.backend_hint":
-            "Pastikan server backend berjalan lalu refresh halaman.",
+        "wirid.backend_hint": "Coba muat ulang sebentar lagi.",
         "wirid.not_found": "Tidak ada wirid ditemukan.",
         "wirid.all": "Semua",
         // Dashboard – Manasik
@@ -2246,7 +2245,7 @@ export const translations = {
         // Quran public page
         "quran.error_title": "Failed to Load Al-Quran",
         "quran.error_desc":
-            "API server unreachable. Make sure the backend is running then refresh.",
+            "This surah could not be loaded right now. Try reloading in a moment.",
         "quran.back_to_surah_list": "Back to surah list",
         "quran.page_subtitle":
             "Complete with color-coded Tajweed, transliteration, and translation",
@@ -3538,7 +3537,7 @@ export const translations = {
             "No hadith found for this theme. It may have been renamed, or the link is mistyped.",
         "hadith.back_to_hadith": "Back to Hadith",
         "hadith.load_error_desc":
-            "The API server cannot be reached. Make sure the backend server is running.",
+            "The hadith could not be loaded right now. Try reloading in a moment.",
         "hadith.search_hint": "Select a book, then search by number or keyword",
         "hadith.not_found_title": "Hadith not found",
         "hadith.not_found_hint":
@@ -3675,7 +3674,7 @@ export const translations = {
         // Global error page
         "global_error.title": "Something Went Wrong",
         "global_error.api_unreachable":
-            "The API server cannot be reached. Make sure the backend is running.",
+            "This could not be loaded right now. Try reloading in a moment.",
         "global_error.unexpected": "An unexpected error occurred.",
         // Dashboard – Jadwal Sholat
         "jadwal.title": "Prayer Schedule",
@@ -3735,8 +3734,7 @@ export const translations = {
         "wirid.search_placeholder": "Search wird...",
         "wirid.loading": "Loading wird...",
         "wirid.load_error": "Failed to Load Wird",
-        "wirid.backend_hint":
-            "Make sure the backend server is running, then refresh the page.",
+        "wirid.backend_hint": "Try reloading in a moment.",
         "wirid.not_found": "No wird found.",
         "wirid.all": "All",
         // Dashboard – Manasik

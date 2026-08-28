@@ -18,8 +18,8 @@ Analisis lengkap tiap item ada di [UI_MATURITY_AUDIT_2026-08-28.md](UI_MATURITY_
 
 | Status | Jumlah |
 |---|---|
-| ✅ Selesai | 38 |
-| 📋 Terbuka | 6 |
+| ✅ Selesai | 41 |
+| 📋 Terbuka | 3 |
 | ⏸️ Menunggu | 3 |
 | ❌ Dicabut | 9 |
 | **Total** | **56** |
@@ -77,10 +77,10 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 | D2 | 16 tabel admin tanpa kontainer scroll horizontal | web | ✅ Selesai | Kemudian diabstraksi jadi `DataPanel` oleh refactor lain |
 | D3 | Tombol & aksen biru di forum/feed padahal aplikasi serba emerald | web | ✅ Selesai | Biru di `dashboard/hadith/[slug]` sengaja dibiarkan (aksen informasi) |
 | D4 | Toast "Aktifkan lokasi & notifikasi" muncul di semua route, tak pernah hilang | web | ❌ Dicabut | Dismiss berfungsi, TTL 24 jam; crawler tak pernah klik |
-| D5 | Tab strip `/dashboard/panduan-sholat` terpotong di mobile | web | 📋 Terbuka | Sudah `overflow-x-auto` + `no-scrollbar` — jadi **bisa** di-scroll, yang kurang hanya indikator visual |
+| D5 | Tab strip `/dashboard/panduan-sholat` terpotong di mobile | web | ✅ Selesai | Fade tepi kanan (`.scroll-x-fade`). `no-scrollbar` ternyata class mati — tak pernah didefinisikan |
 | D6 | Label bottom nav terpotong ("Pusat Bela…") | web | ✅ Selesai | Label pendek khusus bottom nav (`link.belajar_short`); grid 5 kolom ternyata sudah benar |
 | D7 | Route detail blank tanpa pesan: `/hadith/theme/[slug]`, `/siroh/[id]`, `/dashboard/siroh/[slug]` | web | ✅ Selesai | Siroh: 404 tetap parse JSON jadi `.catch` tak pernah jalan. Hadith theme: tidak ada empty state |
-| D8 | Copy error menyesatkan — 4xx/429 dilaporkan sebagai "server tidak dapat dijangkau" | web | 📋 Terbuka | — |
+| D8 | Copy error menyesatkan — 4xx/429 dilaporkan sebagai "server tidak dapat dijangkau" | web | ✅ Selesai | 8 string di 2 bahasa; berhenti menyuruh pengunjung menyalakan backend |
 | D9 | 404 di `/dashboard/hadith/[slug]/[number]` menggantikan seluruh shell dashboard | web | ✅ Selesai | Tambah `app/dashboard/not-found.js`. **Verifikasi visual tertunda** — password admin berubah di tengah sesi |
 | D10 | 9 pasang route publik/dashboard byte-identik | web | ⏸️ Menunggu | Konsolidasi = perubahan navigasi, butuh keputusan |
 
@@ -88,7 +88,7 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 
 | ID | Temuan | Area | Status | Catatan |
 |---|---|---|---|---|
-| E1 | `/admin/asbabun-nuzul` render 11.675px — 216 entri tanpa paginasi | web | 📋 Terbuka | — |
+| E1 | `/admin/asbabun-nuzul` render 11.675px — 216 entri tanpa paginasi | web | ✅ Selesai | `PanelPagination` (25/halaman) → 1.632px; search tetap menjangkau seluruh data |
 | E2 | `/quran` & `/dashboard/quran` 114 surah tanpa virtualisasi | web | 📋 Terbuka | Mobile sampai 10.952px |
 | E3 | 22 statement `CREATE INDEX` dianggap gagal semua | api | ❌ Dicabut | Salah diagnosis saya; nama tabel sudah benar |
 

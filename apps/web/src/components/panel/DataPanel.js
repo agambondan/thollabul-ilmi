@@ -131,3 +131,49 @@ export const PanelEmpty = ({ colSpan, children }) => (
         </td>
     </tr>
 );
+
+/**
+ * Footer pager for a panel list.
+ *
+ * Admin screens hold their whole dataset in memory so search can span it, but
+ * rendering all of it produced pages tens of thousands of pixels tall. Slice at
+ * the render boundary instead: search still sees everything, the DOM does not.
+ */
+export const PanelPagination = ({
+    page,
+    pageCount,
+    total,
+    onChange,
+    labels,
+}) => {
+    if (pageCount <= 1) return null;
+    const btn =
+        "px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors disabled:opacity-40 disabled:cursor-not-allowed border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-300 enabled:hover:bg-gray-50 dark:enabled:hover:bg-slate-700";
+
+    return (
+        <div className='flex items-center justify-between gap-3 mt-4'>
+            <p className='text-xs text-gray-500 dark:text-gray-400'>
+                {page} / {pageCount}
+                {typeof total === "number" ? ` · ${total}` : null}
+            </p>
+            <div className='flex items-center gap-2'>
+                <button
+                    type='button'
+                    className={btn}
+                    onClick={() => onChange(page - 1)}
+                    disabled={page <= 1}
+                >
+                    {labels?.prev ?? "Prev"}
+                </button>
+                <button
+                    type='button'
+                    className={btn}
+                    onClick={() => onChange(page + 1)}
+                    disabled={page >= pageCount}
+                >
+                    {labels?.next ?? "Next"}
+                </button>
+            </div>
+        </div>
+    );
+};

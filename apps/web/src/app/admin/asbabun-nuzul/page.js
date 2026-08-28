@@ -1,11 +1,20 @@
 "use client";
 
-import { PanelEmpty, PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
+import {
+    PanelEmpty,
+    PanelPagination,
+    PanelTable,
+    Td,
+    Th,
+    Tr,
+} from "@/components/panel/DataPanel";
 import { adminAsbabunNuzulApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
+
+const PAGE_SIZE = 25;
 
 const EMPTY_FORM = {
     surah_number: "",
@@ -70,6 +79,7 @@ const AdminAsbabunNuzulPage = () => {
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
     const [deleteId, setDeleteId] = useState(null);
+    const [page, setPage] = useState(1);
 
     const load = async () => {
         setLoading(true);
@@ -184,6 +194,15 @@ const AdminAsbabunNuzulPage = () => {
                 .includes(search.toLowerCase()),
     );
 
+    // 216 rows rendered at once produced a page ~11.700px tall. Search still
+    // runs over everything; only the slice reaches the DOM.
+    const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    const currentPage = Math.min(page, pageCount);
+    const visible = filtered.slice(
+        (currentPage - 1) * PAGE_SIZE,
+        currentPage * PAGE_SIZE,
+    );
+
     return (
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
@@ -209,7 +228,10 @@ const AdminAsbabunNuzulPage = () => {
                     type='text'
                     placeholder={t("admin.asbabun.search_placeholder")}
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                        setSearch(e.target.value);
+                        setPage(1);
+                    }}
                     className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
                 />
             </div>
@@ -217,69 +239,76 @@ const AdminAsbabunNuzulPage = () => {
             {loading ? (
                 <p className='text-sm text-gray-500'>{t("common.loading")}</p>
             ) : (
-                <PanelTable
-                    head={
-                        <>
-                            <Th className='w-20'>
-                                Surah
-                            </Th>
-                            <Th className='w-16'>
-                                {t("common.verse")}
-                            </Th>
-                            <Th>
-                                {t("admin.field.title")}
-                            </Th>
-                            <Th className='hidden md:table-cell'>
-                                {t("common.source")}
-                            </Th>
-                            <Th className='w-20'></Th>
-                        </>
-                    }
-                >
-                    {filtered.map((item) => (
-                        <Tr key={item.id ?? item._id}>
-                            <Td className='text-gray-500 dark:text-gray-400 font-mono text-xs'>
-                                {getSurahNumber(item)}
-                            </Td>
-                            <Td className='text-gray-500 dark:text-gray-400 font-mono text-xs'>
-                                {formatAyahRange(item)}
-                            </Td>
-                            <Td className='text-gray-900 dark:text-white font-medium max-w-xs truncate'>
-                                {getLocalizedField(item, "title", lang)}
-                            </Td>
-                            <Td className='text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
-                                {item.source ?? "-"}
-                            </Td>
-                            <Td>
-                                <div className='flex items-center gap-2 justify-end'>
-                                    <button
-                                        onClick={() => openEdit(item)}
-                                        aria-label={t("common.edit")}
-                                        title={t("common.edit")}
-                                        className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
-                                    >
-                                        <BsPencil />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            setDeleteId(
-                                                item.id ?? item._id,
-                                            )
-                                        }
-                                        aria-label={t("common.delete")}
-                                        title={t("common.delete")}
-                                        className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
-                                    >
-                                        <BsTrash />
-                                    </button>
-                                </div>
-                            </Td>
-                        </Tr>
-                    ))}
-                    {filtered.length === 0 && (
-                        <PanelEmpty colSpan={5}>{t("admin.crud.no_data")}</PanelEmpty>
-                    )}
-                </PanelTable>
+                <>
+                    <PanelTable
+                        head={
+                            <>
+                                <Th className='w-20'>Surah</Th>
+                                <Th className='w-16'>{t("common.verse")}</Th>
+                                <Th>{t("admin.field.title")}</Th>
+                                <Th className='hidden md:table-cell'>
+                                    {t("common.source")}
+                                </Th>
+                                <Th className='w-20'></Th>
+                            </>
+                        }
+                    >
+                        {visible.map((item) => (
+                            <Tr key={item.id ?? item._id}>
+                                <Td className='text-gray-500 dark:text-gray-400 font-mono text-xs'>
+                                    {getSurahNumber(item)}
+                                </Td>
+                                <Td className='text-gray-500 dark:text-gray-400 font-mono text-xs'>
+                                    {formatAyahRange(item)}
+                                </Td>
+                                <Td className='text-gray-900 dark:text-white font-medium max-w-xs truncate'>
+                                    {getLocalizedField(item, "title", lang)}
+                                </Td>
+                                <Td className='text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
+                                    {item.source ?? "-"}
+                                </Td>
+                                <Td>
+                                    <div className='flex items-center gap-2 justify-end'>
+                                        <button
+                                            onClick={() => openEdit(item)}
+                                            aria-label={t("common.edit")}
+                                            title={t("common.edit")}
+                                            className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
+                                        >
+                                            <BsPencil />
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                setDeleteId(item.id ?? item._id)
+                                            }
+                                            aria-label={t("common.delete")}
+                                            title={t("common.delete")}
+                                            className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
+                                        >
+                                            <BsTrash />
+                                        </button>
+                                    </div>
+                                </Td>
+                            </Tr>
+                        ))}
+                        {filtered.length === 0 && (
+                            <PanelEmpty colSpan={5}>
+                                {t("admin.crud.no_data")}
+                            </PanelEmpty>
+                        )}
+                    </PanelTable>
+
+                    <PanelPagination
+                        page={currentPage}
+                        pageCount={pageCount}
+                        total={filtered.length}
+                        onChange={setPage}
+                        labels={{
+                            prev: t("common.prev"),
+                            next: t("common.next"),
+                        }}
+                    />
+                </>
             )}
 
             {showModal && (

@@ -334,3 +334,22 @@ tajweed.idgh_mus:hover {
     font-synthesis: none;
     letter-spacing: 0;
 }
+
+/*
+ * Horizontal strips (tab rows, chip filters) that scroll on narrow screens.
+ * The fade sits over the right edge, so it is only visible once content
+ * actually reaches it — a strip that fits shows nothing, and no JS has to
+ * measure anything.
+ */
+.scroll-x-fade {
+    -webkit-mask-image: linear-gradient(
+        to right,
+        #000 calc(100% - 1.5rem),
+        transparent
+    );
+    mask-image: linear-gradient(
+        to right,
+        #000 calc(100% - 1.5rem),
+        transparent
+    );
+}

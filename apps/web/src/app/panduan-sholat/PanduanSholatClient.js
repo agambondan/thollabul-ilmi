@@ -150,7 +150,7 @@ export function PanduanSholatContent() {
             </div>
 
             {/* Prayer selector */}
-            <div className='flex gap-2 overflow-x-auto pb-2 mb-6 no-scrollbar'>
+            <div className='flex gap-2 overflow-x-auto pb-2 mb-6 scroll-x-fade'>
                 {PRAYERS.map((p, i) => (
                     <button
                         key={p.name}

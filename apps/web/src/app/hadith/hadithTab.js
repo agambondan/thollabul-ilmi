@@ -7,7 +7,7 @@ const HadithTab = ({ tabs, onClickTab, activeTab, children }) => {
     return (
         <div className='w-full'>
             <ul
-                className='flex flex-nowrap gap-2 justify-center px-4 overflow-x-auto no-scrollbar'
+                className='flex flex-nowrap gap-2 justify-center px-4 overflow-x-auto scroll-x-fade'
                 role='tablist'
             >
                 {tabs.map((tab) => {
