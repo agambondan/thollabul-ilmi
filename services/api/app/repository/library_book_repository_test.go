@@ -10,6 +10,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 )
 
 func TestLibraryBookRepositoryPublicAndAdminStatusScope(t *testing.T) {
@@ -85,8 +86,11 @@ func TestLibraryBookRepositoryResourceLifecycle(t *testing.T) {
 
 func newLibraryBookRepositoryTestDB(t *testing.T) *gorm.DB {
 	t.Helper()
+	// Mirror the app's naming strategy (app/db/postgresql.go) so queries that
+	// qualify columns by table name behave the same as in production.
 	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Silent),
+		NamingStrategy: schema.NamingStrategy{SingularTable: true},
+		Logger:         logger.Default.LogMode(logger.Silent),
 	})
 	if err != nil {
 		t.Fatalf("open sqlite: %v", err)

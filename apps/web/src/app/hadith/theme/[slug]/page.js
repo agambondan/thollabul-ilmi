@@ -14,8 +14,8 @@ const Page = async (props) => {
         <main className='min-h-screen flex flex-col'>
             <NavbarTailwindCss />
             <Section>
-                {isError ? (
-                    <HadithThemeError />
+                {isError || hadiths.length === 0 ? (
+                    <HadithThemeError variant={isError ? "error" : "empty"} />
                 ) : (
                     <ContentWidth
                         compact='max-w-4xl'

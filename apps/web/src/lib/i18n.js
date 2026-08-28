@@ -1507,6 +1507,10 @@ export const translations = {
         "hadith.open_reader": "Buka Reader",
         "hadith.jump": "Lompat",
         "hadith.load_error_title": "Gagal Memuat Hadith",
+        "hadith.theme_empty_title": "Tema Tidak Ditemukan",
+        "hadith.theme_empty_desc":
+            "Tidak ada hadith untuk tema ini. Mungkin temanya sudah diganti atau salah ketik.",
+        "hadith.back_to_hadith": "Kembali ke Hadith",
         "hadith.load_error_desc":
             "Server API tidak dapat dijangkau. Pastikan server backend berjalan.",
         "hadith.search_hint": "Pilih kitab lalu cari nomor atau kata kunci",
@@ -3527,6 +3531,10 @@ export const translations = {
         "hadith.open_reader": "Open Reader",
         "hadith.jump": "Jump",
         "hadith.load_error_title": "Failed to Load Hadith",
+        "hadith.theme_empty_title": "Theme Not Found",
+        "hadith.theme_empty_desc":
+            "No hadith found for this theme. It may have been renamed, or the link is mistyped.",
+        "hadith.back_to_hadith": "Back to Hadith",
         "hadith.load_error_desc":
             "The API server cannot be reached. Make sure the backend server is running.",
         "hadith.search_hint": "Select a book, then search by number or keyword",

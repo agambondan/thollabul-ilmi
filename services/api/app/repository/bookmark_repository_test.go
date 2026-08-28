@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 func TestBookmarkRepositoryDeleteAllowsRecreateSameReference(t *testing.T) {
@@ -95,7 +96,11 @@ func TestBookmarkRepositorySaveRestoresExistingSoftDeletedReference(t *testing.T
 func newBookmarkTestDB(t *testing.T) *gorm.DB {
 	t.Helper()
 
-	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+	// Mirror the app's naming strategy (app/db/postgresql.go) so queries that
+	// qualify columns by table name behave the same as in production.
+	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{SingularTable: true},
+	})
 	if err != nil {
 		t.Fatalf("open sqlite: %v", err)
 	}

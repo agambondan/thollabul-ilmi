@@ -18,8 +18,8 @@ Analisis lengkap tiap item ada di [UI_MATURITY_AUDIT_2026-08-28.md](UI_MATURITY_
 
 | Status | Jumlah |
 |---|---|
-| ✅ Selesai | 28 |
-| 📋 Terbuka | 10 |
+| ✅ Selesai | 30 |
+| 📋 Terbuka | 8 |
 | ⏸️ Menunggu | 4 |
 | ❌ Dicabut | 7 |
 | **Total** | **49** |
@@ -79,7 +79,7 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 | D4 | Toast "Aktifkan lokasi & notifikasi" muncul di semua route, tak pernah hilang | web | ❌ Dicabut | Dismiss berfungsi, TTL 24 jam; crawler tak pernah klik |
 | D5 | Tab strip `/dashboard/panduan-sholat` terpotong di mobile | web | 📋 Terbuka | Tanpa indikator scroll |
 | D6 | Label bottom nav terpotong ("Pusat Bela…") | web | 📋 Terbuka | — |
-| D7 | Route detail blank tanpa pesan: `/hadith/theme/[slug]`, `/siroh/[id]`, `/dashboard/siroh/[slug]` | web | 📋 Terbuka | Yang lain sudah punya pesan "tidak ditemukan" |
+| D7 | Route detail blank tanpa pesan: `/hadith/theme/[slug]`, `/siroh/[id]`, `/dashboard/siroh/[slug]` | web | ✅ Selesai | Siroh: 404 tetap parse JSON jadi `.catch` tak pernah jalan. Hadith theme: tidak ada empty state |
 | D8 | Copy error menyesatkan — 4xx/429 dilaporkan sebagai "server tidak dapat dijangkau" | web | 📋 Terbuka | — |
 | D9 | 404 di `/dashboard/hadith/[slug]/[number]` menggantikan seluruh shell dashboard | web | 📋 Terbuka | Inkonsisten dengan 404 lain |
 | D10 | 9 pasang route publik/dashboard byte-identik | web | ⏸️ Menunggu | Konsolidasi = perubahan navigasi, butuh keputusan |
@@ -109,6 +109,6 @@ audit dilakukan (G1: crawler memotret sebelum data datang), bukan dari aplikasi.
 | G1 | Crawler screenshot memotret 600 ms setelah `domcontentloaded` → banyak false positive | tooling | ✅ Selesai | Jadi `networkidle`; sumber A9/B5/B6/B7/D4 |
 | G2 | Test repository membuka GORM tanpa naming strategy aplikasi — menguji skema yang tak pernah ada | api | ✅ Selesai | Helper dzikir/fiqh disamakan; ini yang membongkar A7 |
 | G3 | AutoMigrate tidak jalan saat aplikasi start untuk Postgres — skema prod bisa drift diam-diam | ops | ⏸️ Menunggu | Jadikan bagian dari deploy? |
-| G4 | Helper test lain (`bookmark`, `library_book`, `audio`, `delete_result`) masih tanpa `SingularTable` | api | 📋 Terbuka | Belum menimbulkan masalah, tapi rawan berulang |
+| G4 | Helper test lain (`bookmark`, `library_book`, `audio`, `delete_result`) masih tanpa `SingularTable` | api | ✅ Selesai | Semua helper test kini seragam dengan konfigurasi aplikasi |
 | G5 | ESLint rusak — `@typescript-eslint` gagal load | tooling | 📋 Terbuka | Pre-existing; verifikasi terpaksa lewat build |
 | G6 | Docker lokal `No space left on device` padahal host 64G kosong | env | 📋 Terbuka | Bukan dari repo; menghambat verifikasi |

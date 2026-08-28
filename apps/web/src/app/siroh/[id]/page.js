@@ -22,8 +22,17 @@ const SirohDetailPage = (props) => {
     useEffect(() => {
         sirohApi
             .detail(params.id)
-            .then((r) => r.json())
-            .then((data) => setContent(data))
+            // A 404 still parses as JSON, so checking res.ok is what separates
+            // "not found" from a real payload — without it the error body was
+            // stored as content and the article rendered blank.
+            .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+            .then((data) => {
+                if (data && (data.title || data.slug || data.id)) {
+                    setContent(data);
+                } else {
+                    setError(true);
+                }
+            })
             .catch(() => setError(true))
             .finally(() => setIsLoading(false));
     }, [params.id]);
