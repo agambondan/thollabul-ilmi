@@ -641,3 +641,91 @@ update 200 ✅, delete 200 ✅. SSE `/komunitas/chat/stream` 200 ✅.
 5. Sisa dari laporan utama yang belum dikerjakan: `/dashboard/quiz` tanpa opsi
    jawaban, kontrak `/dashboard/fiqh`, toast lokasi di semua route, tombol forum
    biru, duplikasi 9 route, performa halaman panjang.
+
+---
+---
+
+# Addendum 4 — Lanjutan Perbaikan & Koreksi False Positive
+
+## Diperbaiki
+
+### `/dashboard/quiz` — opsi jawaban tidak pernah tampil
+
+API mengirim `options` sebagai **string JSON** dan `correct_answer` sebagai
+**teks jawaban**, bukan indeks:
+
+```json
+"options": "[\"Al-Ikhlas (4 ayat)\", \"Al-Kautsar (3 ayat)\", …]",
+"correct_answer": "Al-Kautsar (3 ayat)"
+```
+
+Halaman dashboard mengasumsikan array + indeks numerik, jadi:
+
+- `Array.isArray(q.options)` → false → `options = []` → **tidak ada opsi dirender**
+- penilaian membandingkan indeks dengan `Number("Al-Kautsar (3 ayat)")` = `NaN`,
+  jadi jawaban benar pun selalu dihitung salah
+
+Halaman publik `/quiz` sudah punya `normalizeQuestion` untuk kasus persis ini
+(`app/quiz/page.js:15`). Versi dashboard kini memakai bentuk yang sama, dengan
+guard di sekitar `JSON.parse`.
+
+Verifikasi: 4 opsi A–D tampil, opsi benar ter-highlight hijau, tombol "Lanjut →"
+muncul, tanpa `pageerror`.
+
+### Aksen biru di forum & feed
+
+Biru hanya dipakai di 5 file sementara emerald di 110 — jelas outlier. Tombol
+utama, ikon hero, chip tag, focus ring, dan warna link di `/forum`, `/forum/ask`,
+`/forum/[slug]`, dan `/feed` kini mengikuti palet aplikasi. Diverifikasi lewat
+`getComputedStyle`: tidak ada elemen biru tersisa di kedua halaman.
+
+`dashboard/hadith/[slug]` **sengaja tidak diubah** — di sana biru dipakai
+konsisten sebagai aksen informasi (status grading, tab), bukan tombol aksi
+nyasar. Konversi sebagian sempat dicoba lalu di-revert karena justru merusak
+koherensinya.
+
+## Koreksi: toast lokasi ternyata BUKAN bug
+
+Laporan utama (P5.1) menyebut toast "Aktifkan lokasi & notifikasi" muncul di
+100% route dan tidak pernah hilang. **Itu salah** — artefak crawler lagi, karena
+crawler tidak pernah menekan tombol tutup.
+
+`components/NotificationPermissionPrompt.js` sudah benar: ada
+`tholabul_site_permission_dismissed` dengan TTL 24 jam. Diuji di viewport mobile:
+
+```
+kunjungan pertama /          toast: MUNCUL
+setelah klik "Nanti"         toast: tidak muncul
+navigasi ke /doa             toast: tidak muncul
+navigasi ke /dzikir          toast: tidak muncul
+navigasi ke /kamus           toast: tidak muncul
+localStorage dismissed       tersimpan
+```
+
+Tidak ada perubahan kode. Ini false positive ketiga dari audit awal, setelah
+"fitur dashboard mati" (race 600 ms) dan "6 route admin redirect" (guard auth).
+
+## Status sisa pekerjaan
+
+| Item | Status |
+|---|---|
+| `/dashboard/quiz` opsi jawaban | ✅ selesai |
+| Tombol/aksen biru forum & feed | ✅ selesai |
+| Toast lokasi | ✅ bukan bug — dicoret |
+| `/dashboard/fiqh` kontrak endpoint | ⏸️ butuh keputusan produk |
+| Duplikasi 9 route publik/dashboard | ⏸️ belum |
+| AutoMigrate saat deploy | ⏸️ tugas ops |
+| Ganti password admin produksi | ⏸️ tugas ops, **mendesak** |
+
+## Catatan: ada pekerjaan lain berjalan di working tree
+
+Saat sesi ini, 16 halaman `admin/*/page.js` sedang di-refactor ke komponen
+bersama `components/panel/DataPanel.js` oleh proses lain. Refactor itu
+**mempertahankan** perbaikan scroll horizontal (`overflow-x-auto` + `minWidth:
+640`) dalam bentuk yang lebih rapi.
+
+Namun saat dicek, `next build` **gagal parse** di 5 file
+(`users`, `kajian`, `lessons`, `library`, `reminders`) — pekerjaan itu masih
+setengah jalan. Karena itu commit di sesi ini **hanya memasukkan berkas milik
+sendiri**; refactor DataPanel sengaja dibiarkan tidak ter-commit sampai
+build-nya hijau.
