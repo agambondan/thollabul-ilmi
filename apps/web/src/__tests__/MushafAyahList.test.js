@@ -40,7 +40,7 @@ describe('MushafAyahList', () => {
       'href',
       '/quran/surah/Al-Baqara#ayah-1',
     );
-    expect(container.querySelector('p.font-kitab')).toHaveStyle({ fontSize: '40px' });
+    expect(container.querySelector('p.font-lpmq')).toHaveStyle({ fontSize: '40px' });
     expect(container.querySelector('tajweed.madda_necessary')).not.toBeNull();
     expect(screen.getByText('Alif laam miim.')).toHaveStyle({ fontSize: '16px' });
   });
