@@ -126,13 +126,13 @@ export default function SejarahDashboardPage() {
             </div>
 
             {loading && (
-                <p className='text-center text-gray-400 dark:text-gray-500 py-10'>
+                <p className='text-center text-gray-400 py-10'>
                     {t("sejarah.loading")}
                 </p>
             )}
 
             {!loading && filtered.length === 0 && (
-                <p className='text-center text-gray-400 dark:text-gray-500 py-10'>
+                <p className='text-center text-gray-400 py-10'>
                     {t("sejarah.not_found")}
                 </p>
             )}

@@ -267,7 +267,7 @@ const AdminLibraryPage = () => {
                         <tbody className='divide-y divide-gray-100 dark:divide-slate-700'>
                             {filtered.map((item) => (
                                 <tr
-                                    className='hover:bg-gray-50 dark:hover:bg-slate-750'
+                                    className='hover:bg-gray-50 dark:hover:bg-slate-700'
                                     key={item.id ?? item.slug}
                                 >
                                     <td className='max-w-xs truncate px-4 py-3 font-medium text-gray-900 dark:text-white'>

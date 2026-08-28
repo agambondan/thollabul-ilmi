@@ -95,7 +95,7 @@ export default function MushafAyahList({
                         key={ayah.id}
                         className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4'
                     >
-                        <div className='flex min-w-0 items-center justify-between gap-3 mb-2 text-xs text-gray-400 dark:text-gray-500'>
+                        <div className='flex min-w-0 items-center justify-between gap-3 mb-2 text-xs text-gray-400'>
                             <Link
                                 href={href}
                                 className='min-w-0 truncate font-semibold text-emerald-700 dark:text-emerald-400 hover:underline'

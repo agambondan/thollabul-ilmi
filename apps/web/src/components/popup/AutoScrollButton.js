@@ -184,7 +184,7 @@ const AutoScrollButton = () => {
                         onChange={(e) => setSpeed(parseInt(e.target.value, 10))}
                         className='w-full accent-emerald-600 cursor-pointer'
                     />
-                    <div className='flex justify-between text-xs text-gray-400 dark:text-gray-500 mt-1'>
+                    <div className='flex justify-between text-xs text-gray-400 mt-1'>
                         <span>{t("auto_scroll.slow")}</span>
                         <span className='font-medium text-emerald-600 dark:text-emerald-400'>
                             {speed}

@@ -116,7 +116,7 @@ export default function QuizPage() {
                         {t("quiz.intro_desc_prefix")} {QUESTIONS_PER_ROUND}{" "}
                         {t("quiz.intro_desc_suffix")}
                     </p>
-                    <p className='text-xs text-gray-400 dark:text-gray-500 mb-8'>
+                    <p className='text-xs text-gray-400 mb-8'>
                         {t("quiz.random_each_session")}
                     </p>
                     {fetchError && (

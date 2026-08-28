@@ -169,7 +169,7 @@ const NoteButton = ({ refType, refId, className = "" }) => {
                 className={`p-2 rounded-lg text-lg transition-colors ${
                     note
                         ? "text-amber-500 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-slate-700"
-                        : "text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700"
+                        : "text-gray-400 hover:bg-emerald-100 dark:hover:bg-slate-700"
                 } ${className}`}
             >
                 {note ? <BsStickyFill /> : <BsSticky />}

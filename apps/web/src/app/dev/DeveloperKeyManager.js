@@ -179,7 +179,7 @@ const DeveloperKeyManager = () => {
                         </p>
                     </div>
                     <div className='rounded-2xl bg-slate-50 px-4 py-3 text-right dark:bg-slate-900/60'>
-                        <p className='text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500'>
+                        <p className='text-xs uppercase tracking-wide text-gray-400'>
                             {t("dev.keys.total_request")}
                         </p>
                         <p className='text-2xl font-extrabold text-emerald-700 dark:text-emerald-400'>
@@ -189,7 +189,7 @@ const DeveloperKeyManager = () => {
                 </div>
 
                 {user?.name && (
-                    <p className='mt-4 text-xs text-gray-400 dark:text-gray-500'>
+                    <p className='mt-4 text-xs text-gray-400'>
                         {t("dev.keys.signed_in_as")} {user.name}
                     </p>
                 )}

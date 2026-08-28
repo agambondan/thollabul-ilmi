@@ -81,7 +81,7 @@ export default function SourceBadges({ source }) {
                 ) : (
                     <span
                         key={i}
-                        className='text-xs text-gray-400 dark:text-gray-500'
+                        className='text-xs text-gray-400'
                     >
                         {ref.text}
                     </span>

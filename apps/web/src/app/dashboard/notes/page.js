@@ -242,7 +242,7 @@ const NotesPage = () => {
                                     <p className='text-sm font-bold text-gray-800 dark:text-white truncate'>
                                         {note.title}
                                     </p>
-                                    <p className='text-xs text-gray-400 dark:text-gray-500 mt-0.5'>
+                                    <p className='text-xs text-gray-400 mt-0.5'>
                                         {note.date
                                             ? new Date(
                                                   note.date + "T00:00:00",

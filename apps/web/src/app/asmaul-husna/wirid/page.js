@@ -223,7 +223,7 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
                                 style={{ width: `${progressPct}%` }}
                             />
                         </div>
-                        <p className='text-xs text-gray-400 dark:text-gray-500 mt-1.5 text-center'>
+                        <p className='text-xs text-gray-400 mt-1.5 text-center'>
                             {Math.round(progressPct)}% · {count}/{TOTAL_NAMES}
                         </p>
                     </div>

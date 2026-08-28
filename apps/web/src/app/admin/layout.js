@@ -255,7 +255,7 @@ const AdminLayout = ({ children }) => {
                                 <p className='text-sm font-bold text-gray-900 dark:text-white leading-none truncate'>
                                     {t("admin.panel")}
                                 </p>
-                                <p className='text-[10px] text-gray-400 dark:text-gray-500 mt-0.5 arabic-text'>
+                                <p className='text-[10px] text-gray-400 mt-0.5 arabic-text'>
                                     طُلَّابُ الْعِلْمِ
                                 </p>
                             </div>
@@ -276,7 +276,7 @@ const AdminLayout = ({ children }) => {
                             <p className='text-sm font-medium text-gray-800 dark:text-white truncate'>
                                 {user?.name ?? "Admin"}
                             </p>
-                            <p className='text-xs text-gray-400 dark:text-gray-500 truncate'>
+                            <p className='text-xs text-gray-400 truncate'>
                                 {user?.email ?? ""}
                             </p>
                         </>
@@ -308,7 +308,7 @@ const AdminLayout = ({ children }) => {
                             {isCollapsed ? (
                                 <div className='mx-3 mb-1 h-px bg-gray-100 dark:bg-slate-800' />
                             ) : (
-                                <p className='px-3 text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1'>
+                                <p className='px-3 text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1'>
                                     {t(group.titleKey)}
                                 </p>
                             )}
@@ -415,7 +415,7 @@ const AdminLayout = ({ children }) => {
                                             <p className='text-sm font-semibold text-gray-900 dark:text-white truncate'>
                                                 {user?.name ?? "Admin"}
                                             </p>
-                                            <p className='text-xs text-gray-400 dark:text-gray-500 truncate'>
+                                            <p className='text-xs text-gray-400 truncate'>
                                                 {user?.email ?? ""}
                                             </p>
                                         </div>

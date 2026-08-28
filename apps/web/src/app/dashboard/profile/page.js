@@ -205,7 +205,7 @@ const ProfileDashboardPage = () => {
                 <p className='text-lg font-bold text-gray-900 dark:text-white'>
                     {user?.name ?? t("common.anonymous")}
                 </p>
-                <p className='text-sm text-gray-400 dark:text-gray-500 mt-0.5'>
+                <p className='text-sm text-gray-400 mt-0.5'>
                     {user?.email ?? ""}
                 </p>
                 {user?.role && (

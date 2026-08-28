@@ -544,7 +544,7 @@ const NotificationsPage = () => {
                                                                 className='w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500'
                                                             />
                                                             <span
-                                                                className={`text-sm font-medium ${active ? "text-gray-800 dark:text-white" : "text-gray-400 dark:text-gray-500"}`}
+                                                                className={`text-sm font-medium ${active ? "text-gray-800 dark:text-white" : "text-gray-400"}`}
                                                             >
                                                                 {t(r.labelKey)}
                                                             </span>
@@ -568,7 +568,7 @@ const NotificationsPage = () => {
                                                                 className='border border-gray-200 dark:border-slate-600 rounded-lg px-2 py-1 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
                                                             />
                                                         ) : (
-                                                            <span className='text-xs text-gray-400 dark:text-gray-500 italic'>
+                                                            <span className='text-xs text-gray-400 italic'>
                                                                 {t(
                                                                     "notifications.inactive_reminder",
                                                                 )}
@@ -724,7 +724,7 @@ const NotificationsPage = () => {
                                         {notif.body}
                                     </p>
                                     {notif.date && (
-                                        <p className='text-xs text-gray-400 dark:text-gray-500 mt-1'>
+                                        <p className='text-xs text-gray-400 mt-1'>
                                             {new Date(
                                                 notif.date + "T00:00:00",
                                             ).toLocaleDateString(

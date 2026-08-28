@@ -97,7 +97,7 @@ export default function SirohDetailPage(props) {
             </div>
 
             {content.source && (
-                <p className='text-xs text-gray-400 dark:text-gray-500 mt-8 border-t border-gray-100 dark:border-slate-700 pt-4'>
+                <p className='text-xs text-gray-400 mt-8 border-t border-gray-100 dark:border-slate-700 pt-4'>
                     {t("common.source")}: {content.source}
                 </p>
             )}

@@ -195,7 +195,7 @@ const AdminSirahPage = () => {
 
                     <div className='space-y-2'>
                         {categories.length === 0 && (
-                            <p className='text-sm text-gray-400 dark:text-gray-500'>
+                            <p className='text-sm text-gray-400'>
                                 {t("admin.blog.empty_categories")}
                             </p>
                         )}
@@ -254,7 +254,7 @@ const AdminSirahPage = () => {
                                                 <p className='text-sm font-medium text-gray-900 dark:text-white'>
                                                     {title}
                                                 </p>
-                                                <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                                <p className='text-xs text-gray-400'>
                                                     {t("admin.field.order")}:{" "}
                                                     {cat.order ?? 0} ·{" "}
                                                     {cat.slug}
@@ -299,7 +299,7 @@ const AdminSirahPage = () => {
                     </h2>
                     <div className='space-y-2'>
                         {contents.length === 0 && (
-                            <p className='text-sm text-gray-400 dark:text-gray-500'>
+                            <p className='text-sm text-gray-400'>
                                 {t("admin.sirah.empty_content")}
                             </p>
                         )}
@@ -325,7 +325,7 @@ const AdminSirahPage = () => {
                                         <p className='text-sm font-medium text-gray-900 dark:text-white truncate'>
                                             {title}
                                         </p>
-                                        <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                        <p className='text-xs text-gray-400'>
                                             {categoryTitle} ·{" "}
                                             {t("admin.field.order")}{" "}
                                             {item.order ?? 0}

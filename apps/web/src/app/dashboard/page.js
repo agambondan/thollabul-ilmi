@@ -216,7 +216,7 @@ const DashboardPage = () => {
                                         <p className='text-xs font-medium text-gray-700 dark:text-gray-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors'>
                                             Al-Quran
                                         </p>
-                                        <p className='text-[11px] text-gray-400 dark:text-gray-500 capitalize'>
+                                        <p className='text-[11px] text-gray-400 capitalize'>
                                             {quranProgress.surah_latin.replace(
                                                 /-/g,
                                                 " ",
@@ -249,7 +249,7 @@ const DashboardPage = () => {
                                             )}
                                         </p>
                                         {hadithProgress.hadith_id && (
-                                            <p className='text-[11px] text-gray-400 dark:text-gray-500'>
+                                            <p className='text-[11px] text-gray-400'>
                                                 Hadith #
                                                 {hadithProgress.hadith_id}
                                             </p>
@@ -314,7 +314,7 @@ const DashboardPage = () => {
                     </div>
                     {lastMuhasabah !== null ? (
                         <div>
-                            <p className='text-[11px] text-gray-400 dark:text-gray-500 mb-1'>
+                            <p className='text-[11px] text-gray-400 mb-1'>
                                 {lastMuhasabah.date
                                     ? new Date(
                                           lastMuhasabah.date + "T00:00:00",
@@ -331,7 +331,7 @@ const DashboardPage = () => {
                         </div>
                     ) : (
                         <div className='text-center py-4'>
-                            <p className='text-xs text-gray-400 dark:text-gray-500'>
+                            <p className='text-xs text-gray-400'>
                                 {t("dash.no_muhasabah")}
                             </p>
                             <Link

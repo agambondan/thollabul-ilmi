@@ -215,7 +215,7 @@ const DashboardPageMushafPage = () => {
 
             {!loading && ayahs.length === 0 && (
                 <div className='text-center py-12'>
-                    <p className='text-gray-400 dark:text-gray-500 text-sm'>
+                    <p className='text-gray-400 text-sm'>
                         {t("mushaf.empty_hint")}
                     </p>
                 </div>

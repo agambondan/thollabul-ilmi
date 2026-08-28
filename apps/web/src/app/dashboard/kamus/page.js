@@ -76,7 +76,7 @@ export default function DashboardKamusPage() {
 
             {/* Empty state */}
             {!loading && query.trim().length < 2 && (
-                <div className='text-center py-16 text-gray-400 dark:text-gray-500'>
+                <div className='text-center py-16 text-gray-400'>
                     <BsSearch className='mx-auto text-4xl mb-3 opacity-30' />
                     <p className='text-sm'>{t("kamus.prompt")}</p>
                     <p className='text-xs mt-1 opacity-70'>
@@ -141,7 +141,7 @@ export default function DashboardKamusPage() {
                                                 lang,
                                             ) || "—"}
                                         </td>
-                                        <td className='px-4 py-3 text-gray-400 dark:text-gray-500'>
+                                        <td className='px-4 py-3 text-gray-400'>
                                             {toStr(
                                                 item.root ??
                                                     item.word_root ??

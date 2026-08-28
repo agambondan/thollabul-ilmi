@@ -75,13 +75,13 @@ const LeaderboardPage = () => {
             </div>
 
             {loading ? (
-                <div className='text-center py-16 text-gray-400 dark:text-gray-500 text-sm'>
+                <div className='text-center py-16 text-gray-400 text-sm'>
                     {t("leaderboard.loading")}
                 </div>
             ) : activeList.length === 0 ? (
                 <div className='text-center py-16'>
                     <BsTrophyFill className='mx-auto text-4xl text-gray-200 dark:text-slate-700 mb-3' />
-                    <p className='text-gray-400 dark:text-gray-500 text-sm'>
+                    <p className='text-gray-400 text-sm'>
                         {t("leaderboard.empty") ??
                             "Belum ada data leaderboard."}
                     </p>
@@ -131,7 +131,7 @@ const LeaderboardPage = () => {
                                     }`}
                                 >
                                     {item.score}{" "}
-                                    <span className='text-xs font-normal text-gray-400 dark:text-gray-500'>
+                                    <span className='text-xs font-normal text-gray-400'>
                                         {scoreLabel}
                                     </span>
                                 </span>

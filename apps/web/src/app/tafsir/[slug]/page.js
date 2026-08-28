@@ -206,7 +206,7 @@ export const TafsirSurahContent = ({
                     </button>
                     <button
                         onClick={collapseAll}
-                        className='text-xs text-gray-400 dark:text-gray-500 hover:underline'
+                        className='text-xs text-gray-400 hover:underline'
                     >
                         {t("tafsir.collapse_all")}
                     </button>
@@ -234,7 +234,7 @@ export const TafsirSurahContent = ({
             </div>
 
             {!isLoading && ayahs.length > 0 && (
-                <div className='mb-3 flex items-center justify-between text-xs text-gray-400 dark:text-gray-500'>
+                <div className='mb-3 flex items-center justify-between text-xs text-gray-400'>
                     <span>
                         {t("common.showing")} {visibleAyahs.length}{" "}
                         {t("common.of")} {ayahs.length} {t("common.verse")}
@@ -430,7 +430,7 @@ export const TafsirSurahContent = ({
                                             )
                                         ) : (
                                             <div className='bg-gray-50 dark:bg-slate-700/40 rounded-lg px-4 py-3'>
-                                                <p className='text-xs text-gray-400 dark:text-gray-500 italic'>
+                                                <p className='text-xs text-gray-400 italic'>
                                                     {t("ayah.tafsir_empty")}
                                                 </p>
                                             </div>

@@ -115,7 +115,7 @@ const QuizPage = () => {
                         : "px-4 py-16 max-w-md mx-auto text-center"
                 }
             >
-                <p className='text-gray-400 dark:text-gray-500 text-sm'>
+                <p className='text-gray-400 text-sm'>
                     {t("quiz.loading")}
                 </p>
             </div>
@@ -187,7 +187,7 @@ const QuizPage = () => {
                                     key={h.id}
                                     className='flex flex-wrap items-center justify-between gap-2 text-sm'
                                 >
-                                    <span className='text-xs text-gray-400 dark:text-gray-500'>
+                                    <span className='text-xs text-gray-400'>
                                         {new Date(
                                             h.date + "T00:00:00",
                                         ).toLocaleDateString(
@@ -280,7 +280,7 @@ const QuizPage = () => {
                             "bg-red-50 dark:bg-red-900/20 border-red-400 text-red-600 dark:text-red-400";
                     } else {
                         cls +=
-                            "bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 text-gray-400 dark:text-gray-500";
+                            "bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 text-gray-400";
                     }
                     return (
                         <button
@@ -289,7 +289,7 @@ const QuizPage = () => {
                             disabled={selected !== null}
                             className={cls}
                         >
-                            <span className='mr-2 text-gray-400 dark:text-gray-500 font-normal'>
+                            <span className='mr-2 text-gray-400 font-normal'>
                                 {String.fromCharCode(65 + idx)}.
                             </span>
                             {getLocalizedOption(opt, lang) || toStr(opt)}

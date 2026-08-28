@@ -667,7 +667,7 @@ const AdminDashboard = () => {
                                                 {identity}
                                             </div>
                                             <div
-                                                className='truncate text-gray-400 dark:text-gray-500'
+                                                className='truncate text-gray-400'
                                                 title={
                                                     activity.email ||
                                                     activity.visitor_id
@@ -714,7 +714,7 @@ const AdminDashboard = () => {
                                 <tr>
                                     <td
                                         colSpan={6}
-                                        className='px-4 py-6 text-center text-gray-400 dark:text-gray-500'
+                                        className='px-4 py-6 text-center text-gray-400'
                                     >
                                         {t("admin.metrics.no_visitor_data")}
                                     </td>
@@ -738,7 +738,7 @@ const AdminDashboard = () => {
                         </p>
                     </div>
                     <div className='flex items-center gap-2 rounded-xl border border-gray-100 bg-white p-1 dark:border-slate-700 dark:bg-slate-800'>
-                        <span className='hidden px-2 text-xs font-semibold text-gray-400 dark:text-gray-500 sm:inline'>
+                        <span className='hidden px-2 text-xs font-semibold text-gray-400 sm:inline'>
                             {t("admin.analytics.period")}
                         </span>
                         {ANALYTICS_WINDOW_OPTIONS.map((days) => (
@@ -765,7 +765,7 @@ const AdminDashboard = () => {
                             className='rounded-xl border border-gray-100 bg-white p-4 dark:border-slate-700 dark:bg-slate-800'
                         >
                             <div className='mb-3 flex items-center justify-between gap-3'>
-                                <p className='text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500'>
+                                <p className='text-xs font-semibold uppercase tracking-wide text-gray-400'>
                                     {t(item.labelKey)}
                                 </p>
                                 <BsActivity className='text-emerald-600 dark:text-emerald-400' />
@@ -1321,7 +1321,7 @@ const AdminDashboard = () => {
                             ))}
                             {!overview.loading &&
                             overview.sourceBreakdown.length === 0 ? (
-                                <p className='col-span-2 text-xs text-gray-400 dark:text-gray-500'>
+                                <p className='col-span-2 text-xs text-gray-400'>
                                     {t("admin.metrics.no_visitor_data")}
                                 </p>
                             ) : null}
@@ -1384,7 +1384,7 @@ const AdminDashboard = () => {
                             <p className='mb-0.5 text-xs font-semibold text-gray-700 dark:text-gray-300'>
                                 {t("admin.metrics.top_pages_source")}
                             </p>
-                            <p className='mb-3 text-xs text-gray-400 dark:text-gray-500'>
+                            <p className='mb-3 text-xs text-gray-400'>
                                 {t("admin.metrics.top_pages_source_desc")}
                             </p>
                             {overview.topPagesBySource.length > 0 ? (
@@ -1436,7 +1436,7 @@ const AdminDashboard = () => {
                                     );
                                 })()
                             ) : !overview.loading ? (
-                                <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                <p className='text-xs text-gray-400'>
                                     {t("admin.metrics.no_visitor_data")}
                                 </p>
                             ) : null}
@@ -1522,7 +1522,7 @@ const AdminDashboard = () => {
                                 <tr>
                                     <td
                                         colSpan={6}
-                                        className='px-4 py-6 text-center text-gray-400 dark:text-gray-500'
+                                        className='px-4 py-6 text-center text-gray-400'
                                     >
                                         {t("admin.metrics.no_visitor_data")}
                                     </td>

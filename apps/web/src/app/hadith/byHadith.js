@@ -231,7 +231,7 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                                 >
                                     <div className='flex items-start justify-between gap-3 mb-3'>
                                         <div>
-                                            <p className='text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500'>
+                                            <p className='text-xs uppercase tracking-wider text-gray-400'>
                                                 {getLocalizedTranslation(
                                                     currentBook?.translation,
                                                     lang,

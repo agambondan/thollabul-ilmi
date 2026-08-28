@@ -129,7 +129,7 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                     className={inputCls}
                     placeholder='url-friendly-slug'
                 />
-                <p className='text-xs text-gray-400 dark:text-gray-500 mt-1'>
+                <p className='text-xs text-gray-400 mt-1'>
                     /blog/{slug || "..."}
                 </p>
             </div>
@@ -160,7 +160,7 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                     className={`${inputCls} font-mono leading-relaxed`}
                     placeholder={t("admin.blog.content_placeholder")}
                 />
-                <p className='text-xs text-gray-400 dark:text-gray-500 mt-1'>
+                <p className='text-xs text-gray-400 mt-1'>
                     {t("admin.form.paragraph_hint")}
                 </p>
             </div>

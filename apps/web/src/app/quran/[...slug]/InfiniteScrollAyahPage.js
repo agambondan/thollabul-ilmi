@@ -295,7 +295,7 @@ const InfiniteScrollAyahPage = ({
         <div className={isWide ? "w-full" : "max-w-3xl mx-auto"}>
             <div className='overflow-hidden rounded-2xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm'>
                 <div className='text-center py-6 px-4 border-b border-gray-100 dark:border-slate-800'>
-                    <p className='text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1'>
+                    <p className='text-xs font-medium text-gray-400 uppercase tracking-widest mb-1'>
                         Surah {surah?.number ?? "-"}
                     </p>
                     {surah?.number && (

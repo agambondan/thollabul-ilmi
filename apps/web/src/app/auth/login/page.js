@@ -132,7 +132,7 @@ const LoginPage = () => {
 
                     <div className='my-5 flex items-center gap-3'>
                         <div className='flex-1 h-px bg-gray-200 dark:bg-slate-600' />
-                        <span className='text-xs uppercase text-gray-400 dark:text-gray-500 tracking-wider'>
+                        <span className='text-xs uppercase text-gray-400 tracking-wider'>
                             atau
                         </span>
                         <div className='flex-1 h-px bg-gray-200 dark:bg-slate-600' />

@@ -168,7 +168,7 @@ export default function FiqhPage() {
                 </div>
 
                 {isLoading && (
-                    <div className='text-center py-12 text-gray-400 dark:text-gray-500 text-sm'>
+                    <div className='text-center py-12 text-gray-400 text-sm'>
                         ...
                     </div>
                 )}
@@ -185,7 +185,7 @@ export default function FiqhPage() {
                 {!isLoading && !error && (
                     <div className='space-y-3'>
                         {filteredCategories.length === 0 ? (
-                            <div className='text-center py-16 text-gray-400 dark:text-gray-500 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
+                            <div className='text-center py-16 text-gray-400 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                                 {t("fiqh.no_match")}
                             </div>
                         ) : (
@@ -219,7 +219,7 @@ export default function FiqhPage() {
                                                     </p>
                                                     {arabic && (
                                                         <p
-                                                            className='text-xs text-gray-400 dark:text-gray-500'
+                                                            className='text-xs text-gray-400'
                                                             style={{
                                                                 fontFamily:
                                                                     "Amiri, serif",
@@ -245,7 +245,7 @@ export default function FiqhPage() {
                                             <div className='border-t border-gray-50 dark:border-slate-700 divide-y divide-gray-50 dark:divide-slate-700'>
                                                 {(cat.items?.length ?? 0) ===
                                                 0 ? (
-                                                    <div className='px-5 py-6 text-center text-xs text-gray-400 dark:text-gray-500'>
+                                                    <div className='px-5 py-6 text-center text-xs text-gray-400'>
                                                         {t(
                                                             "fiqh.empty_category",
                                                         )}
@@ -320,7 +320,7 @@ export default function FiqhPage() {
                     </div>
                 )}
 
-                <p className='text-center text-xs text-gray-400 dark:text-gray-500 mt-8'>
+                <p className='text-center text-xs text-gray-400 mt-8'>
                     {t("fiqh.disclaimer")}
                 </p>
             </ContentWidth>

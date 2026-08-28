@@ -39,11 +39,11 @@ function SanadPanel({ hadithId }) {
 
     if (loading)
         return (
-            <p className='text-xs text-gray-400 dark:text-gray-500 py-2'>...</p>
+            <p className='text-xs text-gray-400 py-2'>...</p>
         );
     if (!data?.length)
         return (
-            <p className='text-xs text-gray-400 dark:text-gray-500 py-2'>
+            <p className='text-xs text-gray-400 py-2'>
                 {t("hadith.sanad_empty")}
             </p>
         );
@@ -69,13 +69,13 @@ function SanadPanel({ hadithId }) {
                                             `Perawi ${idx + 1}`}
                                     </span>
                                     {ms.metode && (
-                                        <span className='text-[10px] text-gray-400 dark:text-gray-500'>
+                                        <span className='text-[10px] text-gray-400'>
                                             {ms.metode}
                                         </span>
                                     )}
                                 </span>
                                 {idx < arr.length - 1 && (
-                                    <span className='text-gray-400 dark:text-gray-500 text-sm'>
+                                    <span className='text-gray-400 text-sm'>
                                         ←
                                     </span>
                                 )}
@@ -105,11 +105,11 @@ function TakhrijPanel({ hadithId }) {
 
     if (loading)
         return (
-            <p className='text-xs text-gray-400 dark:text-gray-500 py-2'>...</p>
+            <p className='text-xs text-gray-400 py-2'>...</p>
         );
     if (!data?.length)
         return (
-            <p className='text-xs text-gray-400 dark:text-gray-500 py-2'>
+            <p className='text-xs text-gray-400 py-2'>
                 {t("hadith.takhrij_empty")}
             </p>
         );
@@ -363,7 +363,7 @@ const HadithPage = ({
                                     firstAudioSource
                                         ? isPlayingAudio
                                             ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20"
-                                            : "text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700"
+                                            : "text-gray-400 hover:bg-emerald-100 dark:hover:bg-slate-700"
                                         : "text-gray-300 dark:text-gray-600 hover:bg-emerald-50 dark:hover:bg-slate-800",
                                 )}
                             >
@@ -567,7 +567,7 @@ const HadithPage = ({
                     <HadithAuthenticity hadith={hadith} />
                 </div>
             )}
-            <p className='px-4 pt-2 text-[11px] text-gray-400 dark:text-gray-500 text-center'>
+            <p className='px-4 pt-2 text-[11px] text-gray-400 text-center'>
                 Audio diputar bila media hadith tersedia. Tafsir hadith masih
                 dalam tahap persiapan.
             </p>
@@ -599,7 +599,7 @@ const HadithPage = ({
             </div>
             {showSanad && (
                 <div className='px-4 pb-3'>
-                    <p className='text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2'>
+                    <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2'>
                         {t("hadith.sanad")}
                     </p>
                     <SanadPanel hadithId={hadith.id} />
@@ -607,7 +607,7 @@ const HadithPage = ({
             )}
             {showTakhrij && (
                 <div className='px-4 pb-3'>
-                    <p className='text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2'>
+                    <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2'>
                         {t("hadith.takhrij")}
                     </p>
                     <TakhrijPanel hadithId={hadith.id} />

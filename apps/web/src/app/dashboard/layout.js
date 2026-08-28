@@ -470,7 +470,7 @@ const DashboardLayout = ({ children }) => {
                                 <p className='text-sm font-bold text-gray-900 dark:text-white leading-none'>
                                     Thullaabul &apos;Ilmi
                                 </p>
-                                <p className='text-[10px] text-gray-400 dark:text-gray-500 mt-0.5 arabic-text'>
+                                <p className='text-[10px] text-gray-400 mt-0.5 arabic-text'>
                                     طُلَّابُ الْعِلْمِ
                                 </p>
                             </div>
@@ -494,7 +494,7 @@ const DashboardLayout = ({ children }) => {
                             <p className='text-sm font-medium text-gray-800 dark:text-white truncate'>
                                 {user?.name ?? t("common.user")}
                             </p>
-                            <p className='text-xs text-gray-400 dark:text-gray-500 truncate'>
+                            <p className='text-xs text-gray-400 truncate'>
                                 {user?.email ?? ""}
                             </p>
                         </>
@@ -526,7 +526,7 @@ const DashboardLayout = ({ children }) => {
                             {isCollapsed ? (
                                 <div className='mx-3 mb-1 h-px bg-gray-100 dark:bg-slate-800' />
                             ) : (
-                                <p className='px-3 text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1'>
+                                <p className='px-3 text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1'>
                                     {t(group.titleKey)}
                                 </p>
                             )}
@@ -651,7 +651,7 @@ const DashboardLayout = ({ children }) => {
                                             <p className='text-sm font-semibold text-gray-900 dark:text-white truncate'>
                                                 {user?.name ?? t("common.user")}
                                             </p>
-                                            <p className='text-xs text-gray-400 dark:text-gray-500 truncate'>
+                                            <p className='text-xs text-gray-400 truncate'>
                                                 {user?.email ?? ""}
                                             </p>
                                         </div>
@@ -669,7 +669,7 @@ const DashboardLayout = ({ children }) => {
                                             }
                                             className='flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
                                         >
-                                            <span className='text-base text-gray-400 dark:text-gray-500'>
+                                            <span className='text-base text-gray-400'>
                                                 {item.icon}
                                             </span>
                                             {t(item.labelKey)}
@@ -774,7 +774,7 @@ const DashboardLayout = ({ children }) => {
                                     <p className='text-sm font-semibold text-gray-900 dark:text-white'>
                                         {t("nav.menu")}
                                     </p>
-                                    <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                    <p className='text-xs text-gray-400'>
                                         {user?.name ?? t("common.user")}
                                     </p>
                                 </div>
@@ -790,7 +790,7 @@ const DashboardLayout = ({ children }) => {
                             <div className='px-4 py-3 space-y-5'>
                                 {GROUPS.map((group) => (
                                     <section key={group.titleKey}>
-                                        <p className='text-[10px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2'>
+                                        <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2'>
                                             {t(group.titleKey)}
                                         </p>
                                         <div className='grid grid-cols-2 gap-2'>

@@ -252,7 +252,7 @@ export function KhatamContent({ basePath = "/quran" }) {
                                         ? "bg-emerald-500 text-white"
                                         : j.pct > 0
                                           ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
-                                          : "bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-gray-500"
+                                          : "bg-gray-100 dark:bg-slate-700 text-gray-400"
                                 } ${j.isCurrent ? "ring-2 ring-amber-400 dark:ring-amber-500" : ""}`}
                             >
                                 <span>{j.juz}</span>

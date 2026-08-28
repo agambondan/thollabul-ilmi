@@ -325,7 +325,7 @@ export default function KamusPage() {
 
                 {!loading && (
                     <>
-                        <p className='text-xs text-gray-400 dark:text-gray-500 mb-4'>
+                        <p className='text-xs text-gray-400 mb-4'>
                             {displayResults.length} {t("kamus.results_unit")}
                         </p>
                         <div className='space-y-2'>

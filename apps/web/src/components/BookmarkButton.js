@@ -186,7 +186,7 @@ const BookmarkButton = ({
                 className={`relative p-2 rounded-lg text-lg transition-colors disabled:opacity-50 ${
                     isBookmarked
                         ? "text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-slate-700"
-                        : "text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700"
+                        : "text-gray-400 hover:bg-emerald-100 dark:hover:bg-slate-700"
                 } ${className}`}
             >
                 {isBookmarked ? <BsBookmarkFill /> : <BsBookmark />}

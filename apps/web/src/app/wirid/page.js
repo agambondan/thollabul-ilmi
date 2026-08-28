@@ -236,7 +236,7 @@ export const WiridContent = () => {
                                             ["name"],
                                         )}
                                     </p>
-                                    <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                    <p className='text-xs text-gray-400'>
                                         {item.count}
                                     </p>
                                 </div>

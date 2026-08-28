@@ -92,7 +92,7 @@ const ByTheme = ({ themeBasePath = "/hadith/theme" }) => {
                                     {theme.total_hadith ?? 0} Hadith
                                 </p>
                             </div>
-                            <p className='text-xs text-gray-400 dark:text-gray-500'>
+                            <p className='text-xs text-gray-400'>
                                 Perawi: {themeBooksLabel}
                             </p>
                         </div>

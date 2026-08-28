@@ -136,7 +136,7 @@ export function ForumListContent({ basePath = "/forum" }) {
                             <p className='text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-3'>
                                 {q.body}
                             </p>
-                            <div className='flex items-center gap-4 text-xs text-gray-400 dark:text-gray-500'>
+                            <div className='flex items-center gap-4 text-xs text-gray-400'>
                                 <span className='flex items-center gap-1'>
                                     <BsChatDots />
                                     {q.answer_count ?? 0}

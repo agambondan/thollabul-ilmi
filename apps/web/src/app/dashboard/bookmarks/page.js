@@ -139,7 +139,7 @@ const BookmarksPage = () => {
                 <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
                     {t("bookmarks.title")}
                 </h1>
-                <span className='text-xs text-gray-400 dark:text-gray-500'>
+                <span className='text-xs text-gray-400'>
                     {bookmarks.length} item
                 </span>
             </div>
@@ -156,7 +156,7 @@ const BookmarksPage = () => {
                     <p className='text-gray-500 dark:text-gray-400 text-sm'>
                         {t("bookmarks.empty")}
                     </p>
-                    <p className='text-xs text-gray-400 dark:text-gray-500 mt-1'>
+                    <p className='text-xs text-gray-400 mt-1'>
                         {t("bookmarks.hint")}
                     </p>
                 </div>
@@ -173,7 +173,7 @@ const BookmarksPage = () => {
                                 <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
                                     {typeLabel(type)}
                                 </h2>
-                                <span className='text-xs text-gray-400 dark:text-gray-500'>
+                                <span className='text-xs text-gray-400'>
                                     ({items.length})
                                 </span>
                             </div>
@@ -221,11 +221,11 @@ const BookmarksPage = () => {
                                                             </span>
                                                         )}
                                                         {b.ref_slug ? (
-                                                            <p className='text-xs text-gray-400 dark:text-gray-500 mt-0.5'>
+                                                            <p className='text-xs text-gray-400 mt-0.5'>
                                                                 {b.ref_slug}
                                                             </p>
                                                         ) : b.ref_id ? (
-                                                            <p className='text-xs text-gray-400 dark:text-gray-500 mt-0.5'>
+                                                            <p className='text-xs text-gray-400 mt-0.5'>
                                                                 ID: {b.ref_id}
                                                             </p>
                                                         ) : null}

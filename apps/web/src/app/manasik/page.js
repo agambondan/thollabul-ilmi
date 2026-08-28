@@ -169,7 +169,7 @@ const ManasikPage = () => {
                                                 </p>
                                                 {!isOpen && arabic && (
                                                     <p
-                                                        className='text-xs text-gray-400 dark:text-gray-500 truncate'
+                                                        className='text-xs text-gray-400 truncate'
                                                         style={{
                                                             fontFamily:
                                                                 "Amiri, serif",

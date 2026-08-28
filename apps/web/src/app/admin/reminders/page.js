@@ -182,7 +182,7 @@ const AdminRemindersPage = () => {
                             {filtered.map((item) => (
                                 <tr
                                     key={item.id ?? item._id}
-                                    className='hover:bg-gray-50 dark:hover:bg-slate-750'
+                                    className='hover:bg-gray-50 dark:hover:bg-slate-700'
                                 >
                                     <td className='px-4 py-3'>
                                         <p className='font-medium text-gray-900 dark:text-white'>

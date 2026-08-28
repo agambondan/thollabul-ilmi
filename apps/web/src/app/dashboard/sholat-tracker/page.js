@@ -186,7 +186,7 @@ const SholatTrackerPage = () => {
                         style={{ width: `${pct}%` }}
                     />
                 </div>
-                <p className='text-xs text-gray-400 dark:text-gray-500 mt-1.5'>
+                <p className='text-xs text-gray-400 mt-1.5'>
                     {pct}% {t("sholat.pct_done")}
                 </p>
             </div>
@@ -233,7 +233,7 @@ const SholatTrackerPage = () => {
                 </div>
                 <table className='w-full text-sm'>
                     <thead>
-                        <tr className='text-xs text-gray-400 dark:text-gray-500 border-b border-gray-50 dark:border-slate-700'>
+                        <tr className='text-xs text-gray-400 border-b border-gray-50 dark:border-slate-700'>
                             <th className='text-left px-5 py-2 font-medium'>
                                 {t("sholat.date_col")}
                             </th>
@@ -271,7 +271,7 @@ const SholatTrackerPage = () => {
                                                 ? "text-emerald-600 dark:text-emerald-400"
                                                 : row.count >= 3
                                                   ? "text-amber-500 dark:text-amber-400"
-                                                  : "text-gray-400 dark:text-gray-500"
+                                                  : "text-gray-400"
                                         }`}
                                     >
                                         {row.count}/5
@@ -290,7 +290,7 @@ const SholatTrackerPage = () => {
                         <p className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
                             {t("sholat.monthly_title")}
                         </p>
-                        <span className='text-xs text-gray-400 dark:text-gray-500'>
+                        <span className='text-xs text-gray-400'>
                             {monthDays.filter((d) => d.count === 5).length}{" "}
                             {t("sholat.perfect_days")} ✨
                         </span>
@@ -304,7 +304,7 @@ const SholatTrackerPage = () => {
                         ).map((d) => (
                             <div
                                 key={d}
-                                className='text-[10px] text-gray-400 dark:text-gray-500 text-center font-medium pb-1'
+                                className='text-[10px] text-gray-400 text-center font-medium pb-1'
                             >
                                 {d}
                             </div>
@@ -343,7 +343,7 @@ const SholatTrackerPage = () => {
                                             ? "text-gray-300 dark:text-slate-600"
                                             : d.count > 0
                                               ? "text-white"
-                                              : "text-gray-400 dark:text-gray-500"
+                                              : "text-gray-400"
                                     }`}
                                 >
                                     {d.day}
@@ -351,7 +351,7 @@ const SholatTrackerPage = () => {
                             );
                         })}
                     </div>
-                    <div className='flex items-center gap-3 mt-3 text-[10px] text-gray-400 dark:text-gray-500'>
+                    <div className='flex items-center gap-3 mt-3 text-[10px] text-gray-400'>
                         <span className='flex items-center gap-1'>
                             <span className='w-2.5 h-2.5 rounded-sm bg-emerald-500 inline-block' />
                             5/5

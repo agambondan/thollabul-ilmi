@@ -70,7 +70,7 @@ function PerawiMiniCard({ perawi, basePath = "/dashboard/perawi" }) {
                     {perawi.nama_latin}
                 </p>
                 {perawi.tabaqah && (
-                    <p className='text-xs text-gray-400 dark:text-gray-500 capitalize'>
+                    <p className='text-xs text-gray-400 capitalize'>
                         {perawi.tabaqah.replace(/_/g, " ")}
                     </p>
                 )}
@@ -117,7 +117,7 @@ export function PerawiDetailContent({
 
     if (loading) {
         return (
-            <div className='p-6 text-center text-sm text-gray-400 dark:text-gray-500'>
+            <div className='p-6 text-center text-sm text-gray-400'>
                 {t("perawi.loading")}
             </div>
         );
@@ -177,7 +177,7 @@ export function PerawiDetailContent({
                         </span>
                     )}
                     {data.tahun_wafat && (
-                        <span className='text-xs text-gray-400 dark:text-gray-500'>
+                        <span className='text-xs text-gray-400'>
                             w. {data.tahun_wafat} {t("perawi.hijri")}
                         </span>
                     )}
@@ -261,7 +261,7 @@ export function PerawiDetailContent({
                                     </p>
                                 )}
                                 {j.sumber && (
-                                    <p className='text-xs text-gray-400 dark:text-gray-500 mt-1'>
+                                    <p className='text-xs text-gray-400 mt-1'>
                                         📖 {j.sumber}
                                         {j.halaman ? ` hlm. ${j.halaman}` : ""}
                                     </p>

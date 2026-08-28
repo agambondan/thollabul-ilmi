@@ -181,7 +181,7 @@ const AdminBlogPage = () => {
             {/* Post list */}
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden mb-8'>
                 {posts.length === 0 ? (
-                    <div className='p-8 text-center text-gray-400 dark:text-gray-500 text-sm'>
+                    <div className='p-8 text-center text-gray-400 text-sm'>
                         {t("admin.blog.empty_articles")}
                     </div>
                 ) : (
@@ -227,7 +227,7 @@ const AdminBlogPage = () => {
                                                 "excerpt",
                                                 lang,
                                             ) && (
-                                                <p className='text-xs text-gray-400 dark:text-gray-500 line-clamp-1 mt-0.5'>
+                                                <p className='text-xs text-gray-400 line-clamp-1 mt-0.5'>
                                                     {getLocalizedField(
                                                         post,
                                                         "excerpt",
@@ -246,7 +246,7 @@ const AdminBlogPage = () => {
                                                 {t(badge.labelKey)}
                                             </span>
                                         </td>
-                                        <td className='px-5 py-3 text-gray-400 dark:text-gray-500 text-xs hidden sm:table-cell'>
+                                        <td className='px-5 py-3 text-gray-400 text-xs hidden sm:table-cell'>
                                             {post.published_at
                                                 ? new Date(
                                                       post.published_at,
@@ -344,7 +344,7 @@ const AdminBlogPage = () => {
                             </div>
                         ))}
                         {categories.length === 0 && (
-                            <p className='text-xs text-gray-400 dark:text-gray-500'>
+                            <p className='text-xs text-gray-400'>
                                 {t("admin.blog.empty_categories")}
                             </p>
                         )}
@@ -394,7 +394,7 @@ const AdminBlogPage = () => {
                             </span>
                         ))}
                         {tags.length === 0 && (
-                            <p className='text-xs text-gray-400 dark:text-gray-500'>
+                            <p className='text-xs text-gray-400'>
                                 {t("admin.blog.empty_tags")}
                             </p>
                         )}

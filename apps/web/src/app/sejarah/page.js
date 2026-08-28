@@ -164,14 +164,14 @@ const SejarahPage = () => {
                     </div>
 
                     {!isLoading && !error && (
-                        <p className='text-xs text-gray-400 dark:text-gray-500 mb-4'>
+                        <p className='text-xs text-gray-400 mb-4'>
                             {filtered.length} {t("history.event_unit")}
                         </p>
                     )}
 
                     {/* Loading */}
                     {isLoading && (
-                        <div className='text-center py-12 text-gray-400 dark:text-gray-500 text-sm'>
+                        <div className='text-center py-12 text-gray-400 text-sm'>
                             ...
                         </div>
                     )}
@@ -244,7 +244,7 @@ const SejarahPage = () => {
                                                                     </span>
                                                                 )}
                                                                 {hijriLabel && (
-                                                                    <span className='text-[10px] text-gray-400 dark:text-gray-500'>
+                                                                    <span className='text-[10px] text-gray-400'>
                                                                         (
                                                                         {
                                                                             hijriLabel
@@ -308,7 +308,7 @@ const SejarahPage = () => {
                         )
                     )}
 
-                    <p className='text-center text-xs text-gray-400 dark:text-gray-500 mt-8'>
+                    <p className='text-center text-xs text-gray-400 mt-8'>
                         {t("history.source_note")}
                     </p>
                 </div>

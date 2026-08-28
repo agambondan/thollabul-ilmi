@@ -177,11 +177,11 @@ export function PerawiContent({ basePath = "/dashboard/perawi" }) {
 
             {/* List */}
             {loading && perawi.length === 0 ? (
-                <div className='text-center py-16 text-gray-400 dark:text-gray-500 text-sm'>
+                <div className='text-center py-16 text-gray-400 text-sm'>
                     {t("perawi.loading")}
                 </div>
             ) : perawi.length === 0 ? (
-                <div className='text-center py-16 text-gray-400 dark:text-gray-500 text-sm'>
+                <div className='text-center py-16 text-gray-400 text-sm'>
                     {t("perawi.empty")}
                 </div>
             ) : (
@@ -212,7 +212,7 @@ export function PerawiContent({ basePath = "/dashboard/perawi" }) {
                                         </span>
                                     )}
                                     {p.tahun_wafat && (
-                                        <span className='text-xs text-gray-400 dark:text-gray-500'>
+                                        <span className='text-xs text-gray-400'>
                                             · {p.tahun_wafat}{" "}
                                             {t("perawi.hijri")}
                                         </span>

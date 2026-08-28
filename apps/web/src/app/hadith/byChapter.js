@@ -231,7 +231,7 @@ const ByChapter = ({ basePath = "/hadith" }) => {
                                     >
                                         <div className='flex items-start justify-between gap-3'>
                                             <div className='min-w-0'>
-                                                <p className='text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-1'>
+                                                <p className='text-xs uppercase tracking-wider text-gray-400 mb-1'>
                                                     Bab {chapter?.id ?? "-"}
                                                 </p>
                                                 <h3 className='text-base font-bold text-emerald-900 dark:text-white leading-snug'>

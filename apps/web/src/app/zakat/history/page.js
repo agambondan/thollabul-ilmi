@@ -146,7 +146,7 @@ export function ZakatHistoryContent() {
                                                         "zakat.maal",
                                                 )}
                                         </p>
-                                        <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                        <p className='text-xs text-gray-400'>
                                             {formatDate(item.created_at)}
                                         </p>
                                     </div>

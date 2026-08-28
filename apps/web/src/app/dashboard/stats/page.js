@@ -276,7 +276,7 @@ const StatsPage = () => {
                 </p>
                 <p className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
                     {hafalCount}
-                    <span className='text-sm font-normal text-gray-400 dark:text-gray-500 ml-1'>
+                    <span className='text-sm font-normal text-gray-400 ml-1'>
                         {t("stats.surah_unit")}
                     </span>
                 </p>
@@ -291,22 +291,22 @@ const StatsPage = () => {
                     <div>
                         <p className='text-2xl font-bold text-teal-600 dark:text-teal-400'>
                             {tilawahWeek}
-                            <span className='text-xs font-normal text-gray-400 dark:text-gray-500 ml-1'>
+                            <span className='text-xs font-normal text-gray-400 ml-1'>
                                 {t("tilawah.pages_unit")}
                             </span>
                         </p>
-                        <p className='text-xs text-gray-400 dark:text-gray-500 mt-0.5'>
+                        <p className='text-xs text-gray-400 mt-0.5'>
                             {t("stats.this_week")}
                         </p>
                     </div>
                     <div>
                         <p className='text-2xl font-bold text-teal-600 dark:text-teal-400'>
                             {tilawahMonth}
-                            <span className='text-xs font-normal text-gray-400 dark:text-gray-500 ml-1'>
+                            <span className='text-xs font-normal text-gray-400 ml-1'>
                                 {t("tilawah.pages_unit")}
                             </span>
                         </p>
-                        <p className='text-xs text-gray-400 dark:text-gray-500 mt-0.5'>
+                        <p className='text-xs text-gray-400 mt-0.5'>
                             {t("stats.this_month")}
                         </p>
                     </div>
@@ -372,7 +372,7 @@ const StatsPage = () => {
                                     }`}
                                     style={{ height: `${heightPct}%` }}
                                 />
-                                <span className='text-[10px] text-gray-400 dark:text-gray-500'>
+                                <span className='text-[10px] text-gray-400'>
                                     {new Date(
                                         row.date + "T00:00:00",
                                     ).toLocaleDateString(

@@ -303,7 +303,7 @@ const AyahPage = ({
                                 className={`p-2 rounded-lg text-lg transition-colors disabled:opacity-50 ${
                                     isPlaying
                                         ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20"
-                                        : "text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700"
+                                        : "text-gray-400 hover:bg-emerald-100 dark:hover:bg-slate-700"
                                 }`}
                             >
                                 {audioLoading ? (
@@ -326,7 +326,7 @@ const AyahPage = ({
                                 className={`p-2 rounded-lg text-lg transition-colors ${
                                     tafsirOpen
                                         ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20"
-                                        : "text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700"
+                                        : "text-gray-400 hover:bg-emerald-100 dark:hover:bg-slate-700"
                                 }`}
                             >
                                 <BsBook />
@@ -343,7 +343,7 @@ const AyahPage = ({
                                 className={`p-2 rounded-lg text-lg transition-colors ${
                                     mufrodatOpen
                                         ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20"
-                                        : "text-gray-400 dark:text-gray-500 hover:bg-emerald-100 dark:hover:bg-slate-700"
+                                        : "text-gray-400 hover:bg-emerald-100 dark:hover:bg-slate-700"
                                 }`}
                             >
                                 <BsTranslate />
@@ -360,7 +360,7 @@ const AyahPage = ({
                                 className={`p-2 rounded-lg text-lg transition-colors ${
                                     munasabahOpen
                                         ? "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20"
-                                        : "text-gray-400 dark:text-gray-500 hover:bg-purple-100 dark:hover:bg-slate-700"
+                                        : "text-gray-400 hover:bg-purple-100 dark:hover:bg-slate-700"
                                 }`}
                             >
                                 <BsLink45Deg />
@@ -657,7 +657,7 @@ const AyahPage = ({
                         {t("ayah.tafsir_label")} {surah.number}:{ayah.number}
                     </p>
                     {tafsirLoading && (
-                        <p className='text-sm text-gray-400 dark:text-gray-500'>
+                        <p className='text-sm text-gray-400'>
                             {t("ayah.loading_tafsir")}
                         </p>
                     )}
@@ -691,7 +691,7 @@ const AyahPage = ({
                         {t("ayah.mufrodat_label")} {surah.number}:{ayah.number}
                     </p>
                     {mufrodatLoading && (
-                        <p className='text-sm text-gray-400 dark:text-gray-500'>
+                        <p className='text-sm text-gray-400'>
                             {t("ayah.loading_mufrodat")}
                         </p>
                     )}
@@ -719,7 +719,7 @@ const AyahPage = ({
                                         {word.arabic}
                                     </p>
                                     {word.transliteration && (
-                                        <p className='text-xs italic text-gray-400 dark:text-gray-500 mb-0.5'>
+                                        <p className='text-xs italic text-gray-400 mb-0.5'>
                                             {word.transliteration}
                                         </p>
                                     )}
@@ -745,7 +745,7 @@ const AyahPage = ({
                         {ayah.number}
                     </p>
                     {munasabahLoading && (
-                        <p className='text-sm text-gray-400 dark:text-gray-500'>
+                        <p className='text-sm text-gray-400'>
                             {t("ayah.loading_tafsir") ?? "Memuat..."}
                         </p>
                     )}

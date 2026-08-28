@@ -280,7 +280,7 @@ const GoalsPage = () => {
                                         <p className='text-sm font-semibold text-gray-800 dark:text-white'>
                                             {goal.title}
                                         </p>
-                                        <p className='text-xs text-gray-400 dark:text-gray-500 mt-0.5'>
+                                        <p className='text-xs text-gray-400 mt-0.5'>
                                             {goal.category} ·{" "}
                                             {goal.current ?? 0}/{goal.target}{" "}
                                             {goal.unit}
@@ -333,7 +333,7 @@ const GoalsPage = () => {
                                         style={{ width: `${pct}%` }}
                                     />
                                 </div>
-                                <p className='text-xs text-gray-400 dark:text-gray-500 mt-1'>
+                                <p className='text-xs text-gray-400 mt-1'>
                                     {pct}%
                                 </p>
                             </li>

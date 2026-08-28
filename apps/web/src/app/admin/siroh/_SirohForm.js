@@ -158,7 +158,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                     className={inputCls}
                     placeholder='url-friendly-slug'
                 />
-                <p className='text-xs text-gray-400 dark:text-gray-500 mt-1'>
+                <p className='text-xs text-gray-400 mt-1'>
                     /siroh/{slug || "..."}
                 </p>
             </div>
@@ -176,7 +176,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                     className={`${inputCls} font-mono leading-relaxed`}
                     placeholder={t("admin.sirah.content_placeholder")}
                 />
-                <p className='text-xs text-gray-400 dark:text-gray-500 mt-1'>
+                <p className='text-xs text-gray-400 mt-1'>
                     {content.length.toLocaleString()}{" "}
                     {t("admin.form.characters")}
                 </p>

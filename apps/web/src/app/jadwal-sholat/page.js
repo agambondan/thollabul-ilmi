@@ -311,7 +311,7 @@ export default function JadwalSholatPage() {
                         </p>
                     )}
                     {gpsStatus === "detecting" && (
-                        <p className='text-xs text-gray-400 dark:text-gray-500 mt-2 flex items-center gap-1'>
+                        <p className='text-xs text-gray-400 mt-2 flex items-center gap-1'>
                             <span className='w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin' />
                             {t("geo.auto_detecting") ?? "Mendeteksi lokasi..."}
                         </p>
@@ -427,7 +427,7 @@ export default function JadwalSholatPage() {
                         </div>
                     )}
                     {!countdown && prayers && !nextPrayer && (
-                        <p className='mt-1 text-xs text-gray-400 dark:text-gray-500'>
+                        <p className='mt-1 text-xs text-gray-400'>
                             {t("prayer_schedule.all_passed") ??
                                 "Semua waktu sholat hari ini telah berlalu"}
                         </p>
@@ -479,7 +479,7 @@ export default function JadwalSholatPage() {
                                                 {t(p.labelKey)}
                                             </p>
                                             <p
-                                                className={`text-xs ${isNext ? "text-emerald-200" : "text-gray-400 dark:text-gray-500"}`}
+                                                className={`text-xs ${isNext ? "text-emerald-200" : "text-gray-400"}`}
                                                 style={{
                                                     fontFamily: "Amiri, serif",
                                                 }}
@@ -503,7 +503,7 @@ export default function JadwalSholatPage() {
                     </div>
                 )}
 
-                <p className='text-center text-xs text-gray-400 dark:text-gray-500 mt-6'>
+                <p className='text-center text-xs text-gray-400 mt-6'>
                     {t("prayer_schedule.source_note_be") ??
                         `Metode: ${METHODS.find((m) => m.value === method)?.label} · Madhab: ${MADHABS.find((m) => m.value === madhab)?.label}`}
                 </p>

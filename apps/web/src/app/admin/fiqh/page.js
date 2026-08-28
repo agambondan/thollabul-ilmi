@@ -203,7 +203,7 @@ const AdminFiqhPage = () => {
                             {filtered.map((item) => (
                                 <tr
                                     key={item.id ?? item._id}
-                                    className='hover:bg-gray-50 dark:hover:bg-slate-750'
+                                    className='hover:bg-gray-50 dark:hover:bg-slate-700'
                                 >
                                     <td className='px-4 py-3 text-gray-900 dark:text-white font-medium max-w-xs truncate'>
                                         {getLocalizedField(item, "title", lang)}
@@ -213,7 +213,7 @@ const AdminFiqhPage = () => {
                                             {item.category}
                                         </span>
                                     </td>
-                                    <td className='px-4 py-3 text-gray-400 dark:text-gray-500 text-xs hidden md:table-cell max-w-xs truncate'>
+                                    <td className='px-4 py-3 text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
                                         {item.dalil ?? "-"}
                                     </td>
                                     <td className='px-4 py-3'>

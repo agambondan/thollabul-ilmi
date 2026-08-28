@@ -284,7 +284,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                         <h1 className='text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 leading-snug'>
                             {getLocalizedField(post, "title", lang)}
                         </h1>
-                        <div className='flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500 mb-6 pb-6 border-b border-gray-100 dark:border-slate-700'>
+                        <div className='flex items-center gap-3 text-xs text-gray-400 mb-6 pb-6 border-b border-gray-100 dark:border-slate-700'>
                             {postAuthorName && (
                                 <span>
                                     {t("blog.by_author")} {postAuthorName}
@@ -437,7 +437,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                                             lang,
                                                         )}
                                                     </h3>
-                                                    <p className='text-xs text-gray-400 dark:text-gray-500 mt-0.5'>
+                                                    <p className='text-xs text-gray-400 mt-0.5'>
                                                         {formatDate(
                                                             item.published_at ??
                                                                 item.created_at,

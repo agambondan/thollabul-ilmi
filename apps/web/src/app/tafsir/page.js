@@ -74,7 +74,7 @@ export const TafsirIndexContent = ({ tafsirBasePath = "/tafsir" }) => {
 
             {/* Search */}
             <div className='relative mb-5'>
-                <BsSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-sm' />
+                <BsSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm' />
                 <input
                     type='text'
                     placeholder={t("tafsir.search_placeholder")}
@@ -95,7 +95,7 @@ export const TafsirIndexContent = ({ tafsirBasePath = "/tafsir" }) => {
                     ))}
                 </div>
             ) : filtered.length === 0 ? (
-                <div className='text-center py-16 text-gray-400 dark:text-gray-500'>
+                <div className='text-center py-16 text-gray-400'>
                     <MdOutlineAutoStories className='text-4xl mx-auto mb-2' />
                     <p className='text-sm'>{t("quran.not_found")}</p>
                 </div>
@@ -115,7 +115,7 @@ export const TafsirIndexContent = ({ tafsirBasePath = "/tafsir" }) => {
                                     {s.translation?.latin_en ??
                                         `Surah ${s.number}`}
                                 </p>
-                                <p className='text-xs text-gray-400 dark:text-gray-500 truncate'>
+                                <p className='text-xs text-gray-400 truncate'>
                                     {getLocalizedTranslation(
                                         s.translation,
                                         lang,

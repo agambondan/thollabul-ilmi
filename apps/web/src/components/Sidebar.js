@@ -241,7 +241,7 @@ const Sidebar = ({ onClose }) => {
                     <p className='text-xs font-semibold text-gray-900 dark:text-white truncate'>
                         {user.name ?? user.username ?? t("common.user")}
                     </p>
-                    <p className='text-[11px] text-gray-400 dark:text-gray-500 truncate'>
+                    <p className='text-[11px] text-gray-400 truncate'>
                         {user.email}
                     </p>
                 </div>
@@ -253,7 +253,7 @@ const Sidebar = ({ onClose }) => {
                     if (group.auth && !isAuthenticated) return null;
                     return (
                         <div key={group.titleKey}>
-                            <p className='px-2 mb-1 text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500'>
+                            <p className='px-2 mb-1 text-[10px] font-semibold uppercase tracking-widest text-gray-400'>
                                 {t(group.titleKey)}
                             </p>
                             <ul className='space-y-0.5'>
@@ -293,7 +293,7 @@ const Sidebar = ({ onClose }) => {
 
             {/* Footer */}
             <div className='px-4 py-3 border-t border-gray-100 dark:border-slate-700/50 flex-shrink-0'>
-                <p className='text-[10px] text-gray-400 dark:text-gray-500 text-center'>
+                <p className='text-[10px] text-gray-400 text-center'>
                     Thullaabul Ilmi v2
                 </p>
             </div>

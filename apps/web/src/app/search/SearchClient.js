@@ -105,7 +105,7 @@ const AyahCard = ({ item, lang, hrefBuilder }) => {
                 {arabic}
             </p>
             {latin && (
-                <p className='text-xs text-gray-400 dark:text-gray-500 italic mb-1'>
+                <p className='text-xs text-gray-400 italic mb-1'>
                     {latin}
                 </p>
             )}
@@ -147,7 +147,7 @@ const HadithCard = ({ item, lang, hrefBuilder }) => {
                 {arabic}
             </p>
             {latin && (
-                <p className='text-xs text-gray-400 dark:text-gray-500 italic mb-1'>
+                <p className='text-xs text-gray-400 italic mb-1'>
                     {latin}
                 </p>
             )}

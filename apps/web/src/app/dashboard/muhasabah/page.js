@@ -166,7 +166,7 @@ const MuhasabahPage = () => {
                                     <span className='text-2xl'>
                                         {getMoodEmoji(entry.mood)}
                                     </span>
-                                    <span className='text-xs text-gray-400 dark:text-gray-500'>
+                                    <span className='text-xs text-gray-400'>
                                         {entry.date
                                             ? new Date(
                                                   entry.date + "T00:00:00",

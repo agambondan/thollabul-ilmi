@@ -146,7 +146,7 @@ export default function PuasaSunnahPanel() {
                                 className='flex items-start gap-3 text-sm border-b border-gray-50 dark:border-slate-700 last:border-0 pb-2 last:pb-0'
                             >
                                 <div className='w-12 text-center shrink-0'>
-                                    <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                    <p className='text-xs text-gray-400'>
                                         {(lang === "EN"
                                             ? dayNamesEn
                                             : dayNamesId)[

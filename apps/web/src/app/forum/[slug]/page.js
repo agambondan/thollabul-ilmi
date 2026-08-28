@@ -139,7 +139,7 @@ export const ForumDetailContent = ({
                     <div className='prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 mb-4 whitespace-pre-wrap'>
                         {question.body}
                     </div>
-                    <div className='flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500 mb-3 flex-wrap'>
+                    <div className='flex items-center gap-3 text-xs text-gray-400 mb-3 flex-wrap'>
                         <span>
                             {question.user?.name ||
                                 question.user?.email ||
@@ -175,7 +175,7 @@ export const ForumDetailContent = ({
 
                 {answers.length === 0 && (
                     <div className='text-center py-8 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
-                        <p className='text-sm text-gray-400 dark:text-gray-500'>
+                        <p className='text-sm text-gray-400'>
                             {t("forum.no_answers") ??
                                 "Belum ada jawaban. Jadilah yang pertama menjawab!"}
                         </p>
@@ -191,7 +191,7 @@ export const ForumDetailContent = ({
                             <div className='prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 mb-3 whitespace-pre-wrap'>
                                 {a.body}
                             </div>
-                            <div className='flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500 flex-wrap'>
+                            <div className='flex items-center gap-3 text-xs text-gray-400 flex-wrap'>
                                 <span>
                                     {a.user?.name || a.user?.email || "Anonim"}
                                 </span>

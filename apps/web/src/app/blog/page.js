@@ -219,7 +219,7 @@ export const BlogContent = ({ basePath = "/blog" }) => {
                     <p className='text-gray-500 dark:text-gray-400 font-medium mb-1'>
                         {t("blog.empty_title")}
                     </p>
-                    <p className='text-sm text-gray-400 dark:text-gray-500'>
+                    <p className='text-sm text-gray-400'>
                         {t("blog.empty_hint")}
                     </p>
                 </div>
@@ -233,7 +233,7 @@ export const BlogContent = ({ basePath = "/blog" }) => {
                         <p className='text-gray-500 dark:text-gray-400 font-medium mb-1'>
                             {t("blog.no_match_title")}
                         </p>
-                        <p className='text-sm text-gray-400 dark:text-gray-500'>
+                        <p className='text-sm text-gray-400'>
                             {t("blog.no_match_hint")}
                         </p>
                         <button
@@ -277,7 +277,7 @@ export const BlogContent = ({ basePath = "/blog" }) => {
                                     {getLocalizedField(post, "excerpt", lang)}
                                 </p>
                             )}
-                            <div className='flex items-center justify-between text-xs text-gray-400 dark:text-gray-500'>
+                            <div className='flex items-center justify-between text-xs text-gray-400'>
                                 {getAuthorName(post.author) && (
                                     <span>{getAuthorName(post.author)}</span>
                                 )}

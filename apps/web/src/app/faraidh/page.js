@@ -323,7 +323,7 @@ export function FaraidhContent() {
                                 placeholder='0'
                                 className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                             />
-                            <p className='text-xs text-gray-400 dark:text-gray-500 mt-1'>
+                            <p className='text-xs text-gray-400 mt-1'>
                                 {t("faraidh.will_cap_label") ??
                                     "Maksimal wasiat"}
                                 : {fmtNumber(willCap, lang)}
@@ -355,7 +355,7 @@ export function FaraidhContent() {
                             </div>
                         ))}
                     </div>
-                    <p className='text-xs text-gray-400 dark:text-gray-500 mt-3'>
+                    <p className='text-xs text-gray-400 mt-3'>
                         {t("faraidh.heir_count_label") ?? "Jumlah ahli waris"}:{" "}
                         {totalHeirs}
                     </p>
@@ -368,7 +368,7 @@ export function FaraidhContent() {
                         {t("faraidh.result") ?? "Hasil Perhitungan"}
                     </h2>
                     <div className='flex items-center gap-2'>
-                        <span className='text-xs text-gray-400 dark:text-gray-500 hidden sm:block'>
+                        <span className='text-xs text-gray-400 hidden sm:block'>
                             {t("faraidh.net_wealth") ?? "Tirkah bersih"}:{" "}
                             {fmtNumber(totalNet, lang)}
                         </span>
@@ -413,12 +413,12 @@ export function FaraidhContent() {
                 </div>
 
                 {totalHeirs === 0 ? (
-                    <p className='text-center text-gray-400 dark:text-gray-500 py-8 text-sm'>
+                    <p className='text-center text-gray-400 py-8 text-sm'>
                         {t("faraidh.fill_heirs") ??
                             "Masukkan ahli waris untuk melihat hasil."}
                     </p>
                 ) : result.rows.length === 0 ? (
-                    <p className='text-center text-gray-400 dark:text-gray-500 py-8 text-sm'>
+                    <p className='text-center text-gray-400 py-8 text-sm'>
                         {t("faraidh.no_eligible") ??
                             "Kombinasi ahli waris tidak menghasilkan pembagian Ashabul Furudh / Ashabah dasar."}
                     </p>
@@ -427,7 +427,7 @@ export function FaraidhContent() {
                         <div className='overflow-x-auto'>
                             <table className='w-full text-sm'>
                                 <thead>
-                                    <tr className='text-xs text-gray-400 dark:text-gray-500 border-b border-gray-100 dark:border-slate-700'>
+                                    <tr className='text-xs text-gray-400 border-b border-gray-100 dark:border-slate-700'>
                                         <th className='text-left px-3 py-2 font-medium'>
                                             {t("faraidh.col_heir") ??
                                                 "Ahli Waris"}
@@ -568,13 +568,13 @@ export function FaraidhContent() {
                                     >
                                         <p className='text-sm font-medium text-gray-800 dark:text-white'>
                                             {fmtNumber(net, lang)}{" "}
-                                            <span className='text-xs font-normal text-gray-400 dark:text-gray-500'>
+                                            <span className='text-xs font-normal text-gray-400'>
                                                 — {heirCount}{" "}
                                                 {t("faraidh.heir_unit") ??
                                                     "ahli waris"}
                                             </span>
                                         </p>
-                                        <p className='text-xs text-gray-400 dark:text-gray-500 mt-0.5'>
+                                        <p className='text-xs text-gray-400 mt-0.5'>
                                             {new Date(
                                                 entry.date + "T00:00:00",
                                             ).toLocaleDateString(

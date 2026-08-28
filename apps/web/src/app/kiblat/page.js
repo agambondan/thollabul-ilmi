@@ -270,18 +270,18 @@ export function KiblatContent() {
                     {/* Info cards */}
                     <div className='grid grid-cols-2 gap-4 mb-6'>
                         <div className='bg-white dark:bg-slate-800 rounded-2xl p-4 text-center border border-gray-100 dark:border-slate-700 shadow-sm'>
-                            <p className='text-xs text-gray-400 dark:text-gray-500 mb-1'>
+                            <p className='text-xs text-gray-400 mb-1'>
                                 {t("qibla.angle")}
                             </p>
                             <p className='text-2xl font-extrabold text-emerald-700 dark:text-emerald-300'>
                                 {Math.round(qiblaAngle)}°
                             </p>
-                            <p className='text-xs text-gray-400 dark:text-gray-500'>
+                            <p className='text-xs text-gray-400'>
                                 {t("qibla.from_north")}
                             </p>
                         </div>
                         <div className='bg-white dark:bg-slate-800 rounded-2xl p-4 text-center border border-gray-100 dark:border-slate-700 shadow-sm'>
-                            <p className='text-xs text-gray-400 dark:text-gray-500 mb-1'>
+                            <p className='text-xs text-gray-400 mb-1'>
                                 {t("qibla.distance_to_kaaba")}
                             </p>
                             <p className='text-2xl font-extrabold text-emerald-700 dark:text-emerald-300'>
@@ -289,7 +289,7 @@ export function KiblatContent() {
                                     lang === "EN" ? "en-US" : "id-ID",
                                 )}
                             </p>
-                            <p className='text-xs text-gray-400 dark:text-gray-500'>
+                            <p className='text-xs text-gray-400'>
                                 km
                             </p>
                         </div>
@@ -328,7 +328,7 @@ export function KiblatContent() {
                 </>
             )}
 
-            <p className='text-center text-xs text-gray-400 dark:text-gray-500 mt-6'>
+            <p className='text-center text-xs text-gray-400 mt-6'>
                 {t("qibla.gps_note")}
             </p>
         </ContentWidth>

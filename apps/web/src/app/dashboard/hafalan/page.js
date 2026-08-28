@@ -192,7 +192,7 @@ const HafalanPage = () => {
             </div>
 
             {loading ? (
-                <div className='text-center py-16 text-gray-400 dark:text-gray-500 text-sm'>
+                <div className='text-center py-16 text-gray-400 text-sm'>
                     {t("hafalan.loading")}
                 </div>
             ) : filtered.length === 0 ? (
@@ -206,7 +206,7 @@ const HafalanPage = () => {
                 <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 overflow-hidden'>
                     <table className='w-full text-sm'>
                         <thead>
-                            <tr className='text-xs text-gray-400 dark:text-gray-500 border-b border-gray-100 dark:border-slate-700'>
+                            <tr className='text-xs text-gray-400 border-b border-gray-100 dark:border-slate-700'>
                                 <th className='text-left px-4 py-2.5 font-medium w-12'>
                                     #
                                 </th>
@@ -224,7 +224,7 @@ const HafalanPage = () => {
                                     key={item.surah_number ?? idx}
                                     className='border-b border-gray-50 dark:border-slate-700/50 last:border-0 hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors'
                                 >
-                                    <td className='px-4 py-2.5 text-gray-400 dark:text-gray-500 text-xs'>
+                                    <td className='px-4 py-2.5 text-gray-400 text-xs'>
                                         {item.surah_number}
                                     </td>
                                     <td className='px-4 py-2.5 text-gray-700 dark:text-gray-300'>

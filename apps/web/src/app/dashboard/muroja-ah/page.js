@@ -212,7 +212,7 @@ const MurojaahPage = () => {
 
             {/* Loading */}
             {loading && (
-                <div className='text-center py-12 text-gray-400 dark:text-gray-500 text-sm'>
+                <div className='text-center py-12 text-gray-400 text-sm'>
                     {t("common.loading")}
                 </div>
             )}

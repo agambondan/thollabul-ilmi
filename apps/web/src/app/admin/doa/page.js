@@ -177,7 +177,7 @@ const AdminPrayersPage = () => {
                             {filtered.map((item) => (
                                 <tr
                                     key={item.id ?? item._id}
-                                    className='hover:bg-gray-50 dark:hover:bg-slate-750'
+                                    className='hover:bg-gray-50 dark:hover:bg-slate-700'
                                 >
                                     <td className='px-4 py-3 text-gray-900 dark:text-white font-medium'>
                                         {getLocalizedField(item, "title", lang)}

@@ -79,7 +79,7 @@ export default function KajianDashboardPage() {
             {/* Stats */}
             <div className='grid grid-cols-3 gap-3 mb-5'>
                 <div className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-3'>
-                    <p className='text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500'>
+                    <p className='text-[10px] uppercase tracking-wide text-gray-400'>
                         {t("kajian.total_label") ?? "Total"}
                     </p>
                     <p className='text-lg font-bold text-emerald-700 dark:text-emerald-400'>
@@ -87,7 +87,7 @@ export default function KajianDashboardPage() {
                     </p>
                 </div>
                 <div className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-3'>
-                    <p className='text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500'>
+                    <p className='text-[10px] uppercase tracking-wide text-gray-400'>
                         Video
                     </p>
                     <p className='text-lg font-bold text-emerald-700 dark:text-emerald-400'>
@@ -95,7 +95,7 @@ export default function KajianDashboardPage() {
                     </p>
                 </div>
                 <div className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-3'>
-                    <p className='text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500'>
+                    <p className='text-[10px] uppercase tracking-wide text-gray-400'>
                         {t("kajian.categories_label") ?? "Kategori"}
                     </p>
                     <p className='text-lg font-bold text-emerald-700 dark:text-emerald-400'>
@@ -146,13 +146,13 @@ export default function KajianDashboardPage() {
             </div>
 
             {loading && (
-                <p className='text-center text-gray-400 dark:text-gray-500 py-10'>
+                <p className='text-center text-gray-400 py-10'>
                     {t("kajian.loading")}
                 </p>
             )}
 
             {!loading && filtered.length === 0 && (
-                <p className='text-center text-gray-400 dark:text-gray-500 py-10'>
+                <p className='text-center text-gray-400 py-10'>
                     {t("kajian.not_found")}
                 </p>
             )}
@@ -192,7 +192,7 @@ export default function KajianDashboardPage() {
                                 {toStr(item.speaker)}
                             </p>
                             {item.duration_seconds ? (
-                                <p className='text-xs text-gray-400 dark:text-gray-500 mb-2'>
+                                <p className='text-xs text-gray-400 mb-2'>
                                     {item.duration_seconds} detik
                                 </p>
                             ) : null}

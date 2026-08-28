@@ -127,7 +127,7 @@ export const AsbabunNuzulContent = ({ quranBasePath = "/quran" }) => {
             </form>
 
             <div className='mb-5'>
-                <p className='text-xs text-gray-400 dark:text-gray-500 mb-2'>
+                <p className='text-xs text-gray-400 mb-2'>
                     {t("asbabun.quick_example")}
                 </p>
                 <div className='flex gap-2 flex-wrap'>
@@ -188,7 +188,7 @@ export const AsbabunNuzulContent = ({ quranBasePath = "/quran" }) => {
                                 {asbabunAyahLabel(item, t)}
                             </Link>
                             {item.source && (
-                                <span className='text-xs text-gray-400 dark:text-gray-500'>
+                                <span className='text-xs text-gray-400'>
                                     {item.source}
                                 </span>
                             )}

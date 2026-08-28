@@ -38,14 +38,14 @@ function SanadPanel({ hadithId, t }) {
 
     if (sanads === null) {
         return (
-            <p className='text-xs text-gray-400 dark:text-gray-500 py-1'>
+            <p className='text-xs text-gray-400 py-1'>
                 {t("common.loading") ?? "Memuat..."}
             </p>
         );
     }
     if (sanads.length === 0) {
         return (
-            <p className='text-xs text-gray-400 dark:text-gray-500 py-1'>
+            <p className='text-xs text-gray-400 py-1'>
                 {t("hadith.sanad_empty")}
             </p>
         );
@@ -77,13 +77,13 @@ function SanadPanel({ hadithId, t }) {
                                                 `Perawi ${m.urutan}`}
                                         </span>
                                         {m.metode && (
-                                            <span className='text-gray-400 dark:text-gray-500 text-[10px]'>
+                                            <span className='text-gray-400 text-[10px]'>
                                                 {m.metode}
                                             </span>
                                         )}
                                     </span>
                                     {i < arr.length - 1 && (
-                                        <span className='text-gray-400 dark:text-gray-500'>
+                                        <span className='text-gray-400'>
                                             ←
                                         </span>
                                     )}
@@ -91,7 +91,7 @@ function SanadPanel({ hadithId, t }) {
                             ))}
                     </div>
                     {sanad.catatan && (
-                        <p className='text-xs text-gray-400 dark:text-gray-500 mt-1.5 italic'>
+                        <p className='text-xs text-gray-400 mt-1.5 italic'>
                             {sanad.catatan}
                         </p>
                     )}
@@ -119,14 +119,14 @@ function TakhrijPanel({ hadithId, t }) {
 
     if (takhrijList === null) {
         return (
-            <p className='text-xs text-gray-400 dark:text-gray-500 py-1'>
+            <p className='text-xs text-gray-400 py-1'>
                 {t("common.loading") ?? "Memuat..."}
             </p>
         );
     }
     if (takhrijList.length === 0) {
         return (
-            <p className='text-xs text-gray-400 dark:text-gray-500 py-1'>
+            <p className='text-xs text-gray-400 py-1'>
                 {t("hadith.takhrij_empty")}
             </p>
         );
@@ -305,7 +305,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                             <Link
                                 href={detailPath}
                                 title='Buka halaman detail'
-                                className={`${actionsMenu ? "hidden" : ""} p-2 rounded-lg text-base text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors`}
+                                className={`${actionsMenu ? "hidden" : ""} p-2 rounded-lg text-base text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors`}
                             >
                                 <IoIosLink />
                             </Link>
@@ -325,7 +325,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                 className={`${actionsMenu ? "hidden" : ""} p-2 rounded-lg text-base transition-colors disabled:opacity-40 ${
                                     isPlayingAudio
                                         ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20"
-                                        : "text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-700"
+                                        : "text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700"
                                 }`}
                             >
                                 {audioLoading ? (
@@ -344,7 +344,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                             type='button'
                             title={t("common.share")}
                             onClick={() => setShareImagePopUp(true)}
-                            className={`${actionsMenu ? "hidden" : ""} p-2 rounded-lg text-base text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors`}
+                            className={`${actionsMenu ? "hidden" : ""} p-2 rounded-lg text-base text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors`}
                         >
                             <BsShare />
                         </button>
@@ -353,7 +353,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                 type='button'
                                 title={t("common.more")}
                                 onClick={() => setSettingPopUp((v) => !v)}
-                                className='p-2 rounded-lg text-base text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors'
+                                className='p-2 rounded-lg text-base text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors'
                             >
                                 <BsThreeDotsVertical />
                             </button>
@@ -715,7 +715,7 @@ export function HadithDetailContent({
             </h1>
 
             {loading ? (
-                <div className='text-center py-16 text-gray-400 dark:text-gray-500 text-sm'>
+                <div className='text-center py-16 text-gray-400 text-sm'>
                     {t("common.loading")}
                 </div>
             ) : (
@@ -795,13 +795,13 @@ export function HadithDetailContent({
                     </div>
 
                     {loadingHadith && (
-                        <div className='text-center py-8 text-gray-400 dark:text-gray-500 text-sm'>
+                        <div className='text-center py-8 text-gray-400 text-sm'>
                             {t("hadith.loading_hadiths")}
                         </div>
                     )}
 
                     {!loadingHadith && hadiths.length === 0 && (
-                        <div className='text-center py-12 text-gray-400 dark:text-gray-500 text-sm'>
+                        <div className='text-center py-12 text-gray-400 text-sm'>
                             {t("hadith.not_found_title")}
                         </div>
                     )}

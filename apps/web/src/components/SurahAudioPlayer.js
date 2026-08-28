@@ -762,7 +762,7 @@ export default function SurahAudioPlayer({
                 </div>
 
                 {loading && (
-                    <p className='text-xs text-gray-400 dark:text-gray-500 text-center py-1'>
+                    <p className='text-xs text-gray-400 text-center py-1'>
                         {label("common.loading", "Memuat...")}
                     </p>
                 )}

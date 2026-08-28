@@ -130,7 +130,7 @@ const KajianPage = () => {
 
                     <div className='grid grid-cols-3 gap-3 mb-4'>
                         <div className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-3'>
-                            <p className='text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500'>
+                            <p className='text-[10px] uppercase tracking-wide text-gray-400'>
                                 {t("kajian.total_label")}
                             </p>
                             <p className='text-lg font-bold text-emerald-700 dark:text-emerald-400'>
@@ -138,7 +138,7 @@ const KajianPage = () => {
                             </p>
                         </div>
                         <div className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-3'>
-                            <p className='text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500'>
+                            <p className='text-[10px] uppercase tracking-wide text-gray-400'>
                                 {t("kajian.youtube_label")}
                             </p>
                             <p className='text-lg font-bold text-emerald-700 dark:text-emerald-400'>
@@ -146,7 +146,7 @@ const KajianPage = () => {
                             </p>
                         </div>
                         <div className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-3'>
-                            <p className='text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500'>
+                            <p className='text-[10px] uppercase tracking-wide text-gray-400'>
                                 {t("kajian.categories_label")}
                             </p>
                             <p className='text-lg font-bold text-emerald-700 dark:text-emerald-400'>
@@ -173,7 +173,7 @@ const KajianPage = () => {
                     </div>
 
                     {/* Results count */}
-                    <div className='mb-4 flex items-center justify-between text-xs text-gray-400 dark:text-gray-500'>
+                    <div className='mb-4 flex items-center justify-between text-xs text-gray-400'>
                         <span>
                             {filtered.length} {t("kajian.results_found")}
                         </span>
@@ -190,7 +190,7 @@ const KajianPage = () => {
 
                     {/* Cards */}
                     {filtered.length === 0 ? (
-                        <div className='text-center py-16 text-gray-400 dark:text-gray-500'>
+                        <div className='text-center py-16 text-gray-400'>
                             <BsPlayCircle className='text-4xl mx-auto mb-3' />
                             <p className='text-sm'>{t("kajian.not_found")}</p>
                         </div>
@@ -234,7 +234,7 @@ const KajianPage = () => {
                                         <p className='font-semibold text-gray-800 dark:text-gray-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-1'>
                                             {k.title}
                                         </p>
-                                        <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                        <p className='text-xs text-gray-400'>
                                             {k.speaker} ·{" "}
                                             {k.duration
                                                 ? `${Math.floor(k.duration / 60)}m`
@@ -267,7 +267,7 @@ const KajianPage = () => {
 
                                     {/* Footer */}
                                     <div className='flex items-center justify-between'>
-                                        <span className='text-xs text-gray-400 dark:text-gray-500'>
+                                        <span className='text-xs text-gray-400'>
                                             {k.duration}
                                         </span>
                                         <span className='text-xs text-emerald-600 dark:text-emerald-400 font-medium group-hover:underline'>
@@ -279,7 +279,7 @@ const KajianPage = () => {
                         </div>
                     )}
 
-                    <p className='text-center text-xs text-gray-400 dark:text-gray-500 mt-8'>
+                    <p className='text-center text-xs text-gray-400 mt-8'>
                         {t("kajian.external_note")}
                     </p>
                 </div>

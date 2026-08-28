@@ -149,7 +149,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                 <span className='absolute top-4 left-4 text-xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium'>
                     #{current.number}
                 </span>
-                <span className='absolute top-4 right-4 text-xs text-gray-400 dark:text-gray-500'>
+                <span className='absolute top-4 right-4 text-xs text-gray-400'>
                     {revealed
                         ? (t("asmaul.tap_to_hide") ?? "Tap untuk sembunyikan")
                         : (t("asmaul.tap_to_reveal") ?? "Tap untuk lihat arti")}
@@ -186,7 +186,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                         )}
                     </>
                 ) : (
-                    <p className='text-sm italic text-gray-400 dark:text-gray-500 mt-4'>
+                    <p className='text-sm italic text-gray-400 mt-4'>
                         {t("asmaul.guess_meaning") ?? "Ingat-ingat artinya..."}
                     </p>
                 )}

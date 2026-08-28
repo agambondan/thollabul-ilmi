@@ -261,7 +261,7 @@ export default function NotesPage() {
                         <p className='text-gray-500 dark:text-gray-400 font-semibold mb-2'>
                             {t("notes.empty")}
                         </p>
-                        <p className='text-sm text-gray-400 dark:text-gray-500 mb-4'>
+                        <p className='text-sm text-gray-400 mb-4'>
                             {t("notes.empty_hint2")}
                         </p>
                         <button
@@ -288,7 +288,7 @@ export default function NotesPage() {
                                 {note.body}
                             </p>
                             <div className='flex items-center justify-between mt-3'>
-                                <p className='text-[10px] text-gray-400 dark:text-gray-500'>
+                                <p className='text-[10px] text-gray-400'>
                                     {new Date(
                                         note.updated_at ?? note.created_at,
                                     ).toLocaleDateString(

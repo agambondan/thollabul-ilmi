@@ -150,7 +150,7 @@ const ImsakiyahPage = () => {
                                         className={
                                             isToday
                                                 ? "bg-emerald-50 dark:bg-emerald-900/20"
-                                                : "hover:bg-gray-50 dark:hover:bg-slate-750"
+                                                : "hover:bg-gray-50 dark:hover:bg-slate-700"
                                         }
                                     >
                                         <td

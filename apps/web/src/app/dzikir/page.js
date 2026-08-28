@@ -236,7 +236,7 @@ export const DzikirContent = () => {
                 ))}
             </div>
 
-            <div className='mb-3 flex items-center justify-between text-xs text-gray-400 dark:text-gray-500'>
+            <div className='mb-3 flex items-center justify-between text-xs text-gray-400'>
                 <span>
                     {t("common.showing")} {filtered.length} {t("common.of")}{" "}
                     {dzikirList.length} {t("dzikir.unit")}

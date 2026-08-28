@@ -253,7 +253,7 @@ export default function ImsakiyahPage() {
                                         <th className='px-3 py-3 text-center font-semibold whitespace-nowrap'>
                                             {t("prayer.fajr")}
                                         </th>
-                                        <th className='px-3 py-3 text-center font-semibold whitespace-nowrap text-gray-400 dark:text-gray-500'>
+                                        <th className='px-3 py-3 text-center font-semibold whitespace-nowrap text-gray-400'>
                                             {t("prayer.sunrise")}
                                         </th>
                                         <th className='px-3 py-3 text-center font-semibold whitespace-nowrap'>
@@ -333,7 +333,7 @@ export default function ImsakiyahPage() {
                                                 <td className='px-3 py-2.5 text-center text-gray-700 dark:text-gray-200 whitespace-nowrap'>
                                                     {stripTz(day.timings?.Fajr)}
                                                 </td>
-                                                <td className='px-3 py-2.5 text-center text-gray-400 dark:text-gray-500 whitespace-nowrap'>
+                                                <td className='px-3 py-2.5 text-center text-gray-400 whitespace-nowrap'>
                                                     {stripTz(
                                                         day.timings?.Sunrise,
                                                     )}
@@ -360,7 +360,7 @@ export default function ImsakiyahPage() {
                                 </tbody>
                             </table>
                         </div>
-                        <div className='px-4 py-3 border-t border-gray-100 dark:border-slate-700 text-[11px] text-gray-400 dark:text-gray-500'>
+                        <div className='px-4 py-3 border-t border-gray-100 dark:border-slate-700 text-[11px] text-gray-400'>
                             {t("common.source")}: aladhan.com ·{" "}
                             {t("imsakiyah.method")}: Kemenag RI (11) ·{" "}
                             {cityName}

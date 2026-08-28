@@ -112,12 +112,12 @@ const JadwalSholatPage = () => {
                     year: "numeric",
                 })}
             </p>
-            <p className='text-xs text-gray-400 dark:text-gray-500 mb-6'>
+            <p className='text-xs text-gray-400 mb-6'>
                 {(location || DEFAULT_PRAYER_LOCATION).label} · Metode Kemenag
             </p>
 
             {loading ? (
-                <div className='text-center py-16 text-gray-400 dark:text-gray-500 text-sm'>
+                <div className='text-center py-16 text-gray-400 text-sm'>
                     {t("jadwal.loading")}
                 </div>
             ) : (
