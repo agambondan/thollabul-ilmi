@@ -13,7 +13,11 @@ const Page = (props) => {
             <NavbarTailwindCss />
             <Section>
                 <div className='dark:text-white'>
-                    <HadithDetailContent params={params} basePath='/hadith' />
+                    <HadithDetailContent
+                        params={params}
+                        basePath='/hadith'
+                        showSelectors={false}
+                    />
                 </div>
             </Section>
             <Footer />

@@ -600,12 +600,19 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
 
 export default function DashboardHadithDetailPage(props) {
     const params = use(props.params);
-    return <HadithDetailContent params={params} basePath='/dashboard/hadith' />;
+    return (
+        <HadithDetailContent
+            params={params}
+            basePath='/dashboard/hadith'
+            showSelectors={false}
+        />
+    );
 }
 
 export function HadithDetailContent({
     params,
     basePath = "/dashboard/hadith",
+    showSelectors = true,
 }) {
     const { slug } = params;
     const { t, lang } = useLocale();
@@ -631,7 +638,7 @@ export function HadithDetailContent({
                 setThemes(list);
                 if (list.length > 0) {
                     const firstId = themeId(list[0]);
-                    setSelectedTheme(firstId);
+                    if (showSelectors) setSelectedTheme(firstId);
                     setBookName(
                         BOOK_NAMES[slug] ||
                             getLocalizedTranslation(
@@ -645,7 +652,7 @@ export function HadithDetailContent({
             })
             .catch((e) => console.error(e))
             .finally(() => setLoading(false));
-    }, [slug, lang]);
+    }, [slug, lang, showSelectors]);
 
     useEffect(() => {
         if (!selectedTheme) return;
@@ -664,15 +671,21 @@ export function HadithDetailContent({
     }, [selectedTheme, slug]);
 
     useEffect(() => {
-        if (!selectedTheme || !selectedChapter) return;
-        setHadiths([]);
-        setPage(0);
-        setHasMore(true);
-        loadHadiths(0, selectedTheme, selectedChapter.id, true);
+        if (showSelectors) {
+            if (!selectedTheme || !selectedChapter) return;
+            loadHadiths(0, selectedTheme, selectedChapter.id, true);
+        } else {
+            loadBookHadiths(0, true);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedTheme, selectedChapter]);
+    }, [selectedTheme, selectedChapter, slug, showSelectors]);
 
-    const loadHadiths = async (pg, tid, cid, reset = false) => {
+    async function loadHadiths(pg, tid, cid, reset = false) {
+        if (reset) {
+            setHadiths([]);
+            setPage(0);
+            setHasMore(true);
+        }
         setLoadingHadith(true);
         try {
             const res = await fetch(
@@ -693,13 +706,45 @@ export function HadithDetailContent({
         } finally {
             setLoadingHadith(false);
         }
-    };
+    }
+
+    async function loadBookHadiths(pg, reset = false) {
+        if (reset) {
+            setHadiths([]);
+            setPage(0);
+            setHasMore(true);
+        }
+        setLoadingHadith(true);
+        try {
+            const res = await fetch(
+                `${API_URL}/api/v1/hadiths/book/${slug}?page=${pg}&size=20`,
+            );
+            const data = await res.json();
+            const items = Array.isArray(data?.items ?? data)
+                ? (data?.items ?? data)
+                : [];
+            if (reset) {
+                setHadiths(items);
+            } else {
+                setHadiths((prev) => [...prev, ...items]);
+            }
+            setHasMore(items.length === 20);
+        } catch {
+            setHasMore(false);
+        } finally {
+            setLoadingHadith(false);
+        }
+    }
 
     const loadMore = () => {
         const nextPage = page + 1;
         setPage(nextPage);
-        if (selectedTheme && selectedChapter) {
-            loadHadiths(nextPage, selectedTheme, selectedChapter.id);
+        if (showSelectors) {
+            if (selectedTheme && selectedChapter) {
+                loadHadiths(nextPage, selectedTheme, selectedChapter.id);
+            }
+        } else {
+            loadBookHadiths(nextPage);
         }
     };
 
@@ -738,66 +783,70 @@ export function HadithDetailContent({
                 </div>
             ) : (
                 <>
-                    {/* Dropdowns */}
-                    <div className='flex flex-col gap-3 mb-5'>
-                        <SelectOptionWithLabel
-                            id='theme'
-                            label={t("hadith.select_theme")}
-                            callbackOnChange={(e) => {
-                                const picked = themes.find(
-                                    (t) =>
-                                        String(themeId(t)) === e.target.value,
-                                );
-                                if (picked) setSelectedTheme(themeId(picked));
-                            }}
-                            defaultValue={
-                                selectedTheme != null
-                                    ? String(selectedTheme)
-                                    : ""
-                            }
-                        >
-                            {themes.map((t) => {
-                                const tid = themeId(t);
-                                return (
-                                    <Select.Option
-                                        key={tid}
-                                        value={String(tid)}
-                                    >
-                                        {themeName(t, lang)}
-                                    </Select.Option>
-                                );
-                            })}
-                        </SelectOptionWithLabel>
-
-                        {chapters.length > 0 && (
+                    {showSelectors && (
+                        <div className='flex flex-col gap-3 mb-5'>
                             <SelectOptionWithLabel
-                                id='chapter'
-                                label={t("hadith.select_chapter")}
+                                id='theme'
+                                label={t("hadith.select_theme")}
                                 callbackOnChange={(e) => {
-                                    const ch = chapters.find(
-                                        (c) => String(c.id) === e.target.value,
+                                    const picked = themes.find(
+                                        (t) =>
+                                            String(themeId(t)) ===
+                                            e.target.value,
                                     );
-                                    if (ch) setSelectedChapter(ch);
+                                    if (picked)
+                                        setSelectedTheme(themeId(picked));
                                 }}
                                 defaultValue={
-                                    selectedChapter?.id != null
-                                        ? String(selectedChapter.id)
+                                    selectedTheme != null
+                                        ? String(selectedTheme)
                                         : ""
                                 }
                             >
-                                {chapters.map((c) => (
-                                    <Select.Option
-                                        key={c.id}
-                                        value={String(c.id)}
-                                    >
-                                        {chapterName(c, lang)}
-                                    </Select.Option>
-                                ))}
+                                {themes.map((t) => {
+                                    const tid = themeId(t);
+                                    return (
+                                        <Select.Option
+                                            key={tid}
+                                            value={String(tid)}
+                                        >
+                                            {themeName(t, lang)}
+                                        </Select.Option>
+                                    );
+                                })}
                             </SelectOptionWithLabel>
-                        )}
-                    </div>
 
-                    {/* Hadith list */}
+                            {chapters.length > 0 && (
+                                <SelectOptionWithLabel
+                                    id='chapter'
+                                    label={t("hadith.select_chapter")}
+                                    callbackOnChange={(e) => {
+                                        const ch = chapters.find(
+                                            (c) =>
+                                                String(c.id) ===
+                                                e.target.value,
+                                        );
+                                        if (ch) setSelectedChapter(ch);
+                                    }}
+                                    defaultValue={
+                                        selectedChapter?.id != null
+                                            ? String(selectedChapter.id)
+                                            : ""
+                                    }
+                                >
+                                    {chapters.map((c) => (
+                                        <Select.Option
+                                            key={c.id}
+                                            value={String(c.id)}
+                                        >
+                                            {chapterName(c, lang)}
+                                        </Select.Option>
+                                    ))}
+                                </SelectOptionWithLabel>
+                            )}
+                        </div>
+                    )}
+
                     <div className='space-y-4'>
                         {hadiths.map((h, idx) => (
                             <HadithCard
