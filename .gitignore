@@ -10,11 +10,14 @@
 
 # Node / Next.js
 node_modules/
-.pnp
+.pnp/
 .pnp.js
 .next/
 out/
 coverage/
+
+# Firecrawl scrape cache (transient, not version-controlled)
+.firecrawl/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
