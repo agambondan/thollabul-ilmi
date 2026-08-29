@@ -622,13 +622,15 @@ export function HadithDetailContent({
     const [hadiths, setHadiths] = useState([]);
     const [selectedTheme, setSelectedTheme] = useState(null);
     const [selectedChapter, setSelectedChapter] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(showSelectors);
     const [loadingHadith, setLoadingHadith] = useState(false);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [bookName, setBookName] = useState("");
 
     useEffect(() => {
+        if (!showSelectors) return;
+
         fetch(`${API_URL}/api/v1/themes/book/${slug}`)
             .then((r) => r.json())
             .then((d) => {
@@ -638,7 +640,7 @@ export function HadithDetailContent({
                 setThemes(list);
                 if (list.length > 0) {
                     const firstId = themeId(list[0]);
-                    if (showSelectors) setSelectedTheme(firstId);
+                    setSelectedTheme(firstId);
                     setBookName(
                         BOOK_NAMES[slug] ||
                             getLocalizedTranslation(
@@ -717,7 +719,7 @@ export function HadithDetailContent({
         setLoadingHadith(true);
         try {
             const res = await fetch(
-                `${API_URL}/api/v1/hadiths/book/${slug}?page=${pg}&size=20`,
+                `${API_URL}/api/v1/hadiths/book/${slug}?page=${pg}&size=20&slim=1`,
             );
             const data = await res.json();
             const items = Array.isArray(data?.items ?? data)
@@ -774,7 +776,7 @@ export function HadithDetailContent({
             </Link>
 
             <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-4'>
-                {bookName || slug}
+                {bookName || BOOK_NAMES[slug] || slug}
             </h1>
 
             {loading ? (

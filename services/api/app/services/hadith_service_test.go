@@ -36,6 +36,10 @@ func (f *fakeHadithRepo) FindByBookSlug(ctx *fiber.Ctx, slug *string) (*paginate
 	return &paginate.Page{}, nil
 }
 
+func (f *fakeHadithRepo) FindByBookSlugSlim(ctx *fiber.Ctx, slug *string) (*paginate.Page, error) {
+	return &paginate.Page{}, nil
+}
+
 func (f *fakeHadithRepo) FindByBookSlugNumber(slug *string, number *int) (*model.Hadith, error) {
 	return f.hadith, f.findByIdErr
 }

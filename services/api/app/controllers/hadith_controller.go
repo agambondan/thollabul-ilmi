@@ -130,7 +130,13 @@ func (c *hadithController) FindById(ctx *fiber.Ctx) error {
 // @Router /hadiths/book/{slug} [get]
 func (c *hadithController) FindByBookSlug(ctx *fiber.Ctx) error {
 	bookSlug := ctx.Params("slug")
-	data, err := c.hadith.FindByBookSlug(ctx, &bookSlug)
+	var data interface{}
+	var err error
+	if ctx.Query("slim") == "1" {
+		data, err = c.hadith.FindByBookSlugSlim(ctx, &bookSlug)
+	} else {
+		data, err = c.hadith.FindByBookSlug(ctx, &bookSlug)
+	}
 	if err != nil {
 		return lib.ErrorNotFound(ctx)
 	}

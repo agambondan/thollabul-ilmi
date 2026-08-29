@@ -29,6 +29,7 @@ type HadithRepository interface {
 	FindById(*int) (*model.Hadith, error)
 	FindManyByIds(ids []int) ([]model.Hadith, error)
 	FindByBookSlug(*fiber.Ctx, *string) (*paginate.Page, error)
+	FindByBookSlugSlim(*fiber.Ctx, *string) (*paginate.Page, error)
 	FindByBookSlugNumber(*string, *int) (*model.Hadith, error)
 	FindByThemeId(*fiber.Ctx, *int) (*paginate.Page, error)
 	FindByThemeName(*fiber.Ctx, *string) (*paginate.Page, error)
@@ -133,6 +134,22 @@ func (c *hadithRepo) FindByBookSlug(ctx *fiber.Ctx, bookSlug *string) (*paginate
 	mod := c.withRelations(c.db.Model(&model.Hadith{})).
 		Where(`"Book".slug = ?`, bookSlug).
 		Preload("Media").Order("hadith.number ASC, hadith.id ASC")
+	if updatedAfter := parseUpdatedAfter(ctx); updatedAfter != nil {
+		mod = mod.Where("hadith.updated_at > ?", *updatedAfter)
+	}
+	page := c.pg.With(mod).Request(ctx.Request()).Response(&hadiths)
+
+	return &page, nil
+}
+
+func (c *hadithRepo) FindByBookSlugSlim(ctx *fiber.Ctx, bookSlug *string) (*paginate.Page, error) {
+	var hadiths []model.Hadith
+	mod := c.db.Model(&model.Hadith{}).
+		Joins("Book").
+		Preload("Translation").
+		Preload("Media").
+		Where(`"Book".slug = ?`, bookSlug).
+		Order("hadith.number ASC, hadith.id ASC")
 	if updatedAfter := parseUpdatedAfter(ctx); updatedAfter != nil {
 		mod = mod.Where("hadith.updated_at > ?", *updatedAfter)
 	}

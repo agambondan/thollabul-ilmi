@@ -17,6 +17,7 @@ type HadithService interface {
 	FindById(*int) (*model.Hadith, error)
 	FindDaily() (*model.Hadith, error)
 	FindByBookSlug(*fiber.Ctx, *string) (*paginate.Page, error)
+	FindByBookSlugSlim(*fiber.Ctx, *string) (*paginate.Page, error)
 	FindByBookSlugNumber(*string, *int) (*model.Hadith, error)
 	FindByThemeId(*fiber.Ctx, *int) (*paginate.Page, error)
 	FindByThemeName(*fiber.Ctx, *string) (*paginate.Page, error)
@@ -67,6 +68,21 @@ func (b *hadithService) FindByBookSlug(ctx *fiber.Ctx, bookSlug *string) (*pagin
 	key := lib.RequestCacheKey("hadith:book", ctx, *bookSlug)
 	err := b.cache.Remember(key, &result, func() (interface{}, error) {
 		return b.hadith.FindByBookSlug(ctx, bookSlug)
+	})
+	if err != nil {
+		return result, err
+	}
+	return result, nil
+}
+
+func (b *hadithService) FindByBookSlugSlim(ctx *fiber.Ctx, bookSlug *string) (*paginate.Page, error) {
+	if b.cache == nil {
+		return b.hadith.FindByBookSlugSlim(ctx, bookSlug)
+	}
+	var result *paginate.Page
+	key := lib.RequestCacheKey("hadith:book-slim", ctx, *bookSlug)
+	err := b.cache.Remember(key, &result, func() (interface{}, error) {
+		return b.hadith.FindByBookSlugSlim(ctx, bookSlug)
 	})
 	if err != nil {
 		return result, err
