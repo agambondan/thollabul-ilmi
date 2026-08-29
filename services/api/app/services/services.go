@@ -112,7 +112,7 @@ func NewServices(repo *repository.Repositories) *Services {
 		ReadingProgress:      NewReadingProgressService(repo.ReadingProgress, repo.UserActivity),
 		Hafalan:              NewHafalanService(repo.Hafalan),
 		Streak:               streak,
-		Search:               NewSearchService(repo.Search),
+		Search:               NewSearchServiceWithCache(repo.Search, cache),
 		Mufrodat:             NewMufrodatService(repo.Mufrodat),
 		Notification:         NewNotificationService(repo.Notification, repo.NotificationInbox),
 		NotificationInbox:    NewNotificationInboxService(repo.NotificationInbox),

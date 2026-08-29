@@ -54,6 +54,7 @@ var cacheTTLByPrefix = map[string]int{
 	"tokoh-tarikh:":  CacheTTLStatic,
 	"hijri:":         CacheTTLStatic,
 	"dictionary:":    CacheTTLStatic,
+	"search:":        CacheTTLDynamic,
 	"sync:":          CacheTTLStatic,
 	"forum:":         CacheTTLDynamic,
 }

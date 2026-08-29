@@ -5,7 +5,7 @@ import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { searchApi } from "@/lib/api";
-import { getLocalizedTranslation } from "@/lib/translation";
+import { getLocalizedField, getLocalizedTranslation } from "@/lib/translation";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
@@ -414,10 +414,10 @@ export default function SearchClient({
                                                 lang,
                                             )
                                         }
-                                        excerpt={
-                                            item.translation?.idn ||
-                                            item.translation?.en
-                                        }
+                                        excerpt={getLocalizedTranslation(
+                                            item?.translation,
+                                            lang,
+                                        )}
                                         href={routeMap.doa({
                                             item,
                                             id: item.id,
@@ -458,7 +458,11 @@ export default function SearchClient({
                                             )
                                         }
                                         excerpt={
-                                            item.speaker || item.description
+                                            getLocalizedField(
+                                                item,
+                                                "description",
+                                                lang,
+                                            ) || item.speaker
                                         }
                                         href={routeMap.kajian({
                                             item,
@@ -545,10 +549,10 @@ export default function SearchClient({
                                                     lang,
                                                 )
                                             }
-                                            excerpt={
-                                                item.translation?.idn ||
-                                                item.translation?.en
-                                            }
+                                            excerpt={getLocalizedTranslation(
+                                                item?.translation,
+                                                lang,
+                                            )}
                                             href={routeMap.doa({
                                                 item,
                                                 id: item.id,
@@ -602,7 +606,11 @@ export default function SearchClient({
                                                 )
                                             }
                                             excerpt={
-                                                item.speaker || item.description
+                                                getLocalizedField(
+                                                    item,
+                                                    "description",
+                                                    lang,
+                                                ) || item.speaker
                                             }
                                             href={routeMap.kajian({
                                                 item,

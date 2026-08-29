@@ -1,6 +1,9 @@
 package service
 
 import (
+	"strconv"
+
+	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/repository"
 	"golang.org/x/sync/errgroup"
@@ -27,14 +30,45 @@ type SearchService interface {
 }
 
 type searchService struct {
-	repo repository.SearchRepository
+	repo  repository.SearchRepository
+	cache *lib.CacheService
 }
 
 func NewSearchService(repo repository.SearchRepository) SearchService {
-	return &searchService{repo}
+	return &searchService{repo: repo}
+}
+
+func NewSearchServiceWithCache(repo repository.SearchRepository, cache *lib.CacheService) SearchService {
+	return &searchService{repo: repo, cache: cache}
+}
+
+func searchCacheKey(query, searchType string, bookID *int, limit, page int) string {
+	bookPart := ""
+	if bookID != nil {
+		bookPart = ":b" + strconv.Itoa(*bookID)
+	}
+	return "search:" + searchType + bookPart + ":q=" + query + ":l=" + strconv.Itoa(limit) + ":p=" + strconv.Itoa(page)
 }
 
 func (s *searchService) Search(query, searchType string, bookID *int, limit, page int) (*SearchResult, error) {
+	if limit <= 0 || limit > 100 {
+		limit = 20
+	}
+
+	if s.cache != nil {
+		key := searchCacheKey(query, searchType, bookID, limit, page)
+		var cached SearchResult
+		if err := s.cache.Remember(key, &cached, func() (interface{}, error) {
+			return s.searchFromRepo(query, searchType, bookID, limit, page)
+		}); err == nil {
+			return &cached, nil
+		}
+	}
+
+	return s.searchFromRepo(query, searchType, bookID, limit, page)
+}
+
+func (s *searchService) searchFromRepo(query, searchType string, bookID *int, limit, page int) (*SearchResult, error) {
 	if limit <= 0 || limit > 100 {
 		limit = 20
 	}
