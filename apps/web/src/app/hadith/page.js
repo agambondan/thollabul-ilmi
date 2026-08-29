@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { hadithTabList } from "@/lib/const";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
 export const HadithContent = ({
@@ -17,22 +17,15 @@ export const HadithContent = ({
     themeBasePath = "/hadith/theme",
 }) => {
     const searchParams = useSearchParams();
-    const router = useRouter();
     const tab = searchParams.get("tab") || "book";
     const activeTab = `#${tab}`;
-
-    const showContent = (menu) => {
-        router.push(`${basePath}?tab=${menu.replace("#", "")}`, {
-            scroll: false,
-        });
-    };
 
     return (
         <>
             <div className='py-2' />
             <HadithTab
                 tabs={hadithTabList}
-                onClickTab={showContent}
+                basePath={basePath}
                 activeTab={activeTab}
             />
             <div className='py-4' />
