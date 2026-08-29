@@ -2,6 +2,7 @@ package migrations
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -72,12 +73,12 @@ func backfillBlankThemeTranslations(db *gorm.DB) error {
 		if theme.ID == nil || theme.Translation == nil || theme.Translation.ID == nil {
 			continue
 		}
-		if strings.TrimSpace(valueOf(theme.Translation.En)) == "" {
+		if isMissingThemeLabel(theme.Translation.En, *theme.ID) {
 			if err := db.Model(&model.Translation{}).Where("id = ?", *theme.Translation.ID).Update("en", "Belum dikategorikan").Error; err != nil {
 				return err
 			}
 		}
-		if strings.TrimSpace(valueOf(theme.Translation.Idn)) == "" {
+		if isMissingThemeLabel(theme.Translation.Idn, *theme.ID) {
 			if err := db.Model(&model.Translation{}).Where("id = ?", *theme.Translation.ID).Update("idn", "Belum dikategorikan").Error; err != nil {
 				return err
 			}
@@ -95,18 +96,28 @@ func backfillBlankChapterTranslations(db *gorm.DB) error {
 		if chapter.ID == nil || chapter.Translation == nil || chapter.Translation.ID == nil {
 			continue
 		}
-		if strings.TrimSpace(valueOf(chapter.Translation.En)) == "" {
+		if isMissingChapterLabel(chapter.Translation.En, *chapter.ID) {
 			if err := db.Model(&model.Translation{}).Where("id = ?", *chapter.Translation.ID).Update("en", "Belum dikategorikan").Error; err != nil {
 				return err
 			}
 		}
-		if strings.TrimSpace(valueOf(chapter.Translation.Idn)) == "" {
+		if isMissingChapterLabel(chapter.Translation.Idn, *chapter.ID) {
 			if err := db.Model(&model.Translation{}).Where("id = ?", *chapter.Translation.ID).Update("idn", "Belum dikategorikan").Error; err != nil {
 				return err
 			}
 		}
 	}
 	return nil
+}
+
+func isMissingThemeLabel(value *string, id int) bool {
+	label := strings.TrimSpace(valueOf(value))
+	return label == "" || label == fmt.Sprintf("Tema %d", id)
+}
+
+func isMissingChapterLabel(value *string, id int) bool {
+	label := strings.TrimSpace(valueOf(value))
+	return label == "" || label == fmt.Sprintf("Bab %d", id)
 }
 
 func valueOf(value *string) string {
