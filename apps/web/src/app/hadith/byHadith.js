@@ -50,8 +50,11 @@ const ByHadith = ({ basePath = "/hadith" }) => {
             else setIsLoading(true);
 
             try {
+                const bookIdParam = currentBook?.id
+                    ? `&book_id=${currentBook.id}`
+                    : "";
                 const res = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/search?q=${encodeURIComponent(q)}&type=hadith&limit=${PAGE_SIZE}&page=${pg}&lang=${lang}`,
+                    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/search?q=${encodeURIComponent(q)}&type=hadith&limit=${PAGE_SIZE}&page=${pg}&lang=${lang}${bookIdParam}`,
                 );
                 const data = await res.json();
                 const items = data?.hadiths ?? [];
@@ -65,7 +68,7 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                 else setIsLoading(false);
             }
         },
-        [lang],
+        [lang, currentBook],
     );
 
     const fetchHadiths = async (bookSlug, pageNum, append) => {

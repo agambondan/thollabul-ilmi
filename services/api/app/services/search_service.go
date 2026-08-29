@@ -23,7 +23,7 @@ type SearchResult struct {
 }
 
 type SearchService interface {
-	Search(query, searchType string, limit, page int) (*SearchResult, error)
+	Search(query, searchType string, bookID *int, limit, page int) (*SearchResult, error)
 }
 
 type searchService struct {
@@ -34,7 +34,7 @@ func NewSearchService(repo repository.SearchRepository) SearchService {
 	return &searchService{repo}
 }
 
-func (s *searchService) Search(query, searchType string, limit, page int) (*SearchResult, error) {
+func (s *searchService) Search(query, searchType string, bookID *int, limit, page int) (*SearchResult, error) {
 	if limit <= 0 || limit > 100 {
 		limit = 20
 	}
@@ -58,7 +58,7 @@ func (s *searchService) Search(query, searchType string, limit, page int) (*Sear
 		result.Ayahs = ayahs
 		result.AyahTotal = total
 	case "hadith":
-		hadiths, total, err := s.repo.SearchHadith(query, limit, offset)
+		hadiths, total, err := s.repo.SearchHadith(query, bookID, limit, offset)
 		if err != nil {
 			return nil, err
 		}
@@ -107,7 +107,7 @@ func (s *searchService) Search(query, searchType string, limit, page int) (*Sear
 		var hadiths []model.Hadith
 		var hadithTotal int64
 		g.Go(func() (err error) {
-			hadiths, hadithTotal, err = s.repo.SearchHadith(query, each, 0)
+			hadiths, hadithTotal, err = s.repo.SearchHadith(query, bookID, each, 0)
 			return
 		})
 		var terms []model.IslamicTerm

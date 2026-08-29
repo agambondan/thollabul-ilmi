@@ -1,13 +1,15 @@
 package repository
 
 import (
+	"strings"
+
 	"github.com/agambondan/islamic-explorer/app/model"
 	"gorm.io/gorm"
 )
 
 type SearchRepository interface {
 	SearchAyah(query string, limit, offset int) ([]model.Ayah, int64, error)
-	SearchHadith(query string, limit, offset int) ([]model.Hadith, int64, error)
+	SearchHadith(query string, bookID *int, limit, offset int) ([]model.Hadith, int64, error)
 	SearchDictionary(query string, limit, offset int) ([]model.IslamicTerm, int64, error)
 	SearchDoa(query string, limit, offset int) ([]model.Doa, int64, error)
 	SearchKajian(query string, limit, offset int) ([]model.Kajian, int64, error)
@@ -31,12 +33,29 @@ const tsvHadith = `to_tsvector('simple', coalesce("Translation".idn,'') || ' ' |
 // tsvTranslation builds the same expression without a join alias for subqueries.
 const tsvTranslation = `to_tsvector('simple', coalesce(idn,'') || ' ' || coalesce(en,''))`
 
+// prefixQuery turns a user query into a prefix-aware tsquery so "iman"
+// matches "iman", "beriman", "imani", etc. websearch_to_tsquery already
+// handles phrase/OR/- correctly; we just append :* to the last token.
+func prefixQuery(query string) string {
+	trimmed := strings.TrimSpace(query)
+	if trimmed == "" {
+		return trimmed
+	}
+	tokens := strings.Fields(trimmed)
+	if len(tokens) == 0 {
+		return trimmed
+	}
+	tokens[len(tokens)-1] = tokens[len(tokens)-1] + ":*"
+	return strings.Join(tokens, " ")
+}
+
 func (r *searchRepo) SearchAyah(query string, limit, offset int) ([]model.Ayah, int64, error) {
 	var ayahs []model.Ayah
 	var total int64
 
+	prefixed := prefixQuery(query)
 	filter := tsvAyah + ` @@ websearch_to_tsquery('simple', ?) OR "Translation".ar ILIKE ?`
-	args := []interface{}{query, "%" + query + "%"}
+	args := []interface{}{prefixed, "%" + query + "%"}
 
 	r.db.Model(&model.Ayah{}).
 		Joins("Translation").
@@ -48,34 +67,42 @@ func (r *searchRepo) SearchAyah(query string, limit, offset int) ([]model.Ayah, 
 		Joins("Translation").
 		Joins("Surah").Joins("Surah.Translation").
 		Where(filter, args...).
-		Order(gorm.Expr(`ts_rank(`+tsvAyah+`, websearch_to_tsquery('simple', ?)) DESC`, query)).
+		Order(gorm.Expr(`ts_rank(`+tsvAyah+`, websearch_to_tsquery('simple', ?)) DESC`, prefixed)).
 		Limit(limit).Offset(offset).
 		Find(&ayahs).Error
 	return ayahs, total, err
 }
 
-func (r *searchRepo) SearchHadith(query string, limit, offset int) ([]model.Hadith, int64, error) {
+func (r *searchRepo) SearchHadith(query string, bookID *int, limit, offset int) ([]model.Hadith, int64, error) {
 	var hadiths []model.Hadith
 	var total int64
 
+	prefixed := prefixQuery(query)
 	filter := tsvHadith + ` @@ websearch_to_tsquery('simple', ?) OR "Translation".ar ILIKE ?`
 	translationFilter := tsvTranslation + ` @@ websearch_to_tsquery('simple', ?) OR ar ILIKE ?`
-	args := []interface{}{query, "%" + query + "%"}
+	args := []interface{}{prefixed, "%" + query + "%"}
 	matchingTranslations := r.db.Model(&model.Translation{}).
 		Select("id").
 		Where(translationFilter, args...)
 
-	r.db.Model(&model.Hadith{}).
-		Where("translation_id IN (?)", matchingTranslations).
-		Count(&total)
+	hadithQuery := r.db.Model(&model.Hadith{}).
+		Where("translation_id IN (?)", matchingTranslations)
+	if bookID != nil {
+		hadithQuery = hadithQuery.Where("book_id = ?", *bookID)
+	}
+	hadithQuery.Count(&total)
 
-	err := r.db.Model(&model.Hadith{}).
+	results := r.db.Model(&model.Hadith{}).
 		Joins("Translation").
 		Preload("Book.Translation").
 		Preload("Theme.Translation").
 		Preload("Chapter.Translation").
-		Where(filter, args...).
-		Order(gorm.Expr(`ts_rank(`+tsvHadith+`, websearch_to_tsquery('simple', ?)) DESC`, query)).
+		Where(filter, args...)
+	if bookID != nil {
+		results = results.Where("hadith.book_id = ?", *bookID)
+	}
+	err := results.
+		Order(gorm.Expr(`ts_rank(`+tsvHadith+`, websearch_to_tsquery('simple', ?)) DESC`, prefixed)).
 		Limit(limit).Offset(offset).
 		Find(&hadiths).Error
 	return hadiths, total, err

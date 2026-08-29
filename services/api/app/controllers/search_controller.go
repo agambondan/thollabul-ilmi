@@ -44,7 +44,14 @@ func (c *searchController) Search(ctx *fiber.Ctx) error {
 	page, _ := strconv.Atoi(ctx.Query("page", "0"))
 	lang := lib.GetPreferredLang(ctx)
 
-	result, err := c.svc.Search(q, searchType, limit, page)
+	var bookID *int
+	if raw := ctx.Query("book_id"); raw != "" {
+		if v, err := strconv.Atoi(raw); err == nil && v > 0 {
+			bookID = &v
+		}
+	}
+
+	result, err := c.svc.Search(q, searchType, bookID, limit, page)
 	if err != nil {
 		return lib.ErrorInternal(ctx)
 	}

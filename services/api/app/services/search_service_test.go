@@ -27,7 +27,7 @@ func (f *fakeSearchRepo) SearchAyah(query string, limit, offset int) ([]model.Ay
 	return f.ayahs, f.ayahTot, f.err
 }
 
-func (f *fakeSearchRepo) SearchHadith(query string, limit, offset int) ([]model.Hadith, int64, error) {
+func (f *fakeSearchRepo) SearchHadith(query string, bookID *int, limit, offset int) ([]model.Hadith, int64, error) {
 	return f.hadiths, f.hadithTot, f.err
 }
 
@@ -54,7 +54,7 @@ func TestSearchServiceSingleTypeReturnsTotal(t *testing.T) {
 	}
 	svc := NewSearchService(repo)
 
-	result, err := svc.Search("sabar", "hadith", 20, 0)
+	result, err := svc.Search("sabar", "hadith", nil, 20, 0)
 	if err != nil {
 		t.Fatalf("search hadith: %v", err)
 	}
@@ -86,7 +86,7 @@ func TestSearchServiceAllTypeSumsAllTotals(t *testing.T) {
 	}
 	svc := NewSearchService(repo)
 
-	result, err := svc.Search("sabar", "all", 20, 0)
+	result, err := svc.Search("sabar", "all", nil, 20, 0)
 	if err != nil {
 		t.Fatalf("search all: %v", err)
 	}
@@ -119,7 +119,7 @@ func TestSearchServiceAllTypeEachCategoryGetsLimitDivided(t *testing.T) {
 	}
 	svc := NewSearchService(repo)
 
-	result, err := svc.Search("sabar", "all", 18, 0)
+	result, err := svc.Search("sabar", "all", nil, 18, 0)
 	if err != nil {
 		t.Fatalf("search all: %v", err)
 	}
@@ -135,7 +135,7 @@ func TestSearchServiceRespectsPageOffset(t *testing.T) {
 	}
 	svc := NewSearchService(repo)
 
-	result, err := svc.Search("sabar", "hadith", 20, 1)
+	result, err := svc.Search("sabar", "hadith", nil, 20, 1)
 	if err != nil {
 		t.Fatalf("search with page: %v", err)
 	}
@@ -148,7 +148,7 @@ func TestSearchServicePropagatesError(t *testing.T) {
 	repo := &fakeSearchRepo{err: errors.New("db error")}
 	svc := NewSearchService(repo)
 
-	if _, err := svc.Search("x", "ayah", 20, 0); err == nil {
+	if _, err := svc.Search("x", "ayah", nil, 20, 0); err == nil {
 		t.Fatal("expected error to propagate")
 	}
 }
@@ -161,7 +161,7 @@ func TestSearchServiceLimitsBounds(t *testing.T) {
 	svc := NewSearchService(repo)
 
 	limit := 999
-	result, err := svc.Search("test", "hadith", limit, 0)
+	result, err := svc.Search("test", "hadith", nil, limit, 0)
 	if err != nil {
 		t.Fatalf("search with large limit: %v", err)
 	}
@@ -169,7 +169,7 @@ func TestSearchServiceLimitsBounds(t *testing.T) {
 		t.Fatalf("expected total 20, got %d", result.HadithTotal)
 	}
 
-	result, err = svc.Search("test", "hadith", -1, 0)
+	result, err = svc.Search("test", "hadith", nil, -1, 0)
 	if err != nil {
 		t.Fatalf("search with negative limit: %v", err)
 	}
@@ -195,7 +195,7 @@ func TestSearchServiceUnknownTypeDefaultsToAll(t *testing.T) {
 	}
 	svc := NewSearchService(repo)
 
-	result, err := svc.Search("test", "unknown_type", 20, 0)
+	result, err := svc.Search("test", "unknown_type", nil, 20, 0)
 	if err != nil {
 		t.Fatalf("search unknown type: %v", err)
 	}
