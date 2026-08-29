@@ -2,10 +2,12 @@ package migrations
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 	"strings"
 
+	"github.com/agambondan/islamic-explorer/app/model"
 	"gorm.io/gorm"
 )
 
@@ -52,5 +54,65 @@ func BackfillHadithSectionTranslations(db *gorm.DB) error {
 			return err
 		}
 	}
+
+	if err := backfillBlankThemeTranslations(db); err != nil {
+		return err
+	}
+	if err := backfillBlankChapterTranslations(db); err != nil {
+		return err
+	}
 	return nil
+}
+
+func backfillBlankThemeTranslations(db *gorm.DB) error {
+	var themes []model.Theme
+	if err := db.Preload("Translation").Where("translation_id IS NOT NULL").Find(&themes).Error; err != nil {
+		return err
+	}
+	for _, theme := range themes {
+		if theme.ID == nil || theme.Translation == nil || theme.Translation.ID == nil {
+			continue
+		}
+		if strings.TrimSpace(valueOf(theme.Translation.En)) == "" {
+			if err := db.Model(&model.Translation{}).Where("id = ?", *theme.Translation.ID).Update("en", fmt.Sprintf("Tema %d", *theme.ID)).Error; err != nil {
+				return err
+			}
+		}
+		if strings.TrimSpace(valueOf(theme.Translation.Idn)) == "" {
+			if err := db.Model(&model.Translation{}).Where("id = ?", *theme.Translation.ID).Update("idn", fmt.Sprintf("Tema %d", *theme.ID)).Error; err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func backfillBlankChapterTranslations(db *gorm.DB) error {
+	var chapters []model.Chapter
+	if err := db.Preload("Translation").Where("translation_id IS NOT NULL").Find(&chapters).Error; err != nil {
+		return err
+	}
+	for _, chapter := range chapters {
+		if chapter.ID == nil || chapter.Translation == nil || chapter.Translation.ID == nil {
+			continue
+		}
+		if strings.TrimSpace(valueOf(chapter.Translation.En)) == "" {
+			if err := db.Model(&model.Translation{}).Where("id = ?", *chapter.Translation.ID).Update("en", fmt.Sprintf("Bab %d", *chapter.ID)).Error; err != nil {
+				return err
+			}
+		}
+		if strings.TrimSpace(valueOf(chapter.Translation.Idn)) == "" {
+			if err := db.Model(&model.Translation{}).Where("id = ?", *chapter.Translation.ID).Update("idn", fmt.Sprintf("Bab %d", *chapter.ID)).Error; err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func valueOf(value *string) string {
+	if value == nil {
+		return ""
+	}
+	return *value
 }

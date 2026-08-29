@@ -72,10 +72,13 @@ func (r *hadithRow) themeKey(bookID int) string {
 }
 
 func (r *hadithRow) themeName() string {
-	if r.SectionEn != "" {
-		return r.SectionEn
+	if strings.TrimSpace(r.SectionEn) != "" {
+		return strings.TrimSpace(r.SectionEn)
 	}
-	return r.Kitab
+	if strings.TrimSpace(r.Kitab) != "" {
+		return strings.TrimSpace(r.Kitab)
+	}
+	return fmt.Sprintf("Tema %d", r.SectionNo)
 }
 
 func (r *hadithRow) chapterKey(themeID int) string {
@@ -86,10 +89,13 @@ func (r *hadithRow) chapterKey(themeID int) string {
 }
 
 func (r *hadithRow) chapterName() string {
-	if r.SectionEn != "" {
-		return r.SectionEn
+	if strings.TrimSpace(r.SectionEn) != "" {
+		return strings.TrimSpace(r.SectionEn)
 	}
-	return r.Bab
+	if strings.TrimSpace(r.Bab) != "" {
+		return strings.TrimSpace(r.Bab)
+	}
+	return fmt.Sprintf("Bab %d", r.SectionNo)
 }
 
 func (r *hadithRow) translationIdn() string {

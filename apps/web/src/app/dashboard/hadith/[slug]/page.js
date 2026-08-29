@@ -184,7 +184,8 @@ const toStr = (v) => {
 const themeId = (t) => t?.theme?.id ?? t?.id;
 const themeName = (t, lang) =>
     getLocalizedTranslation(t?.theme?.translation, lang) ||
-    toStr(t?.name ?? t?.title);
+    toStr(t?.name ?? t?.title) ||
+    `Tema ${themeId(t)}`;
 
 const chapterName = (c, lang) =>
     getLocalizedTranslation(c?.translation, lang) ||
