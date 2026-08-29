@@ -132,7 +132,7 @@ func (c *hadithRepo) FindByBookSlug(ctx *fiber.Ctx, bookSlug *string) (*paginate
 	var hadiths []model.Hadith
 	mod := c.withRelations(c.db.Model(&model.Hadith{})).
 		Where(`"Book".slug = ?`, bookSlug).
-		Preload("Media").Order("id")
+		Preload("Media").Order("hadith.number ASC, hadith.id ASC")
 	if updatedAfter := parseUpdatedAfter(ctx); updatedAfter != nil {
 		mod = mod.Where("hadith.updated_at > ?", *updatedAfter)
 	}
