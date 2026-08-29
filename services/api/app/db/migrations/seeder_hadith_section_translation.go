@@ -2,7 +2,6 @@ package migrations
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -74,12 +73,12 @@ func backfillBlankThemeTranslations(db *gorm.DB) error {
 			continue
 		}
 		if strings.TrimSpace(valueOf(theme.Translation.En)) == "" {
-			if err := db.Model(&model.Translation{}).Where("id = ?", *theme.Translation.ID).Update("en", fmt.Sprintf("Tema %d", *theme.ID)).Error; err != nil {
+			if err := db.Model(&model.Translation{}).Where("id = ?", *theme.Translation.ID).Update("en", "Belum dikategorikan").Error; err != nil {
 				return err
 			}
 		}
 		if strings.TrimSpace(valueOf(theme.Translation.Idn)) == "" {
-			if err := db.Model(&model.Translation{}).Where("id = ?", *theme.Translation.ID).Update("idn", fmt.Sprintf("Tema %d", *theme.ID)).Error; err != nil {
+			if err := db.Model(&model.Translation{}).Where("id = ?", *theme.Translation.ID).Update("idn", "Belum dikategorikan").Error; err != nil {
 				return err
 			}
 		}
@@ -97,12 +96,12 @@ func backfillBlankChapterTranslations(db *gorm.DB) error {
 			continue
 		}
 		if strings.TrimSpace(valueOf(chapter.Translation.En)) == "" {
-			if err := db.Model(&model.Translation{}).Where("id = ?", *chapter.Translation.ID).Update("en", fmt.Sprintf("Bab %d", *chapter.ID)).Error; err != nil {
+			if err := db.Model(&model.Translation{}).Where("id = ?", *chapter.Translation.ID).Update("en", "Belum dikategorikan").Error; err != nil {
 				return err
 			}
 		}
 		if strings.TrimSpace(valueOf(chapter.Translation.Idn)) == "" {
-			if err := db.Model(&model.Translation{}).Where("id = ?", *chapter.Translation.ID).Update("idn", fmt.Sprintf("Bab %d", *chapter.ID)).Error; err != nil {
+			if err := db.Model(&model.Translation{}).Where("id = ?", *chapter.Translation.ID).Update("idn", "Belum dikategorikan").Error; err != nil {
 				return err
 			}
 		}

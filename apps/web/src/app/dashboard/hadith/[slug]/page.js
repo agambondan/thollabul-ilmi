@@ -185,12 +185,12 @@ const themeId = (t) => t?.theme?.id ?? t?.id;
 const themeName = (t, lang) =>
     getLocalizedTranslation(t?.theme?.translation, lang) ||
     toStr(t?.name ?? t?.title) ||
-    `Tema ${themeId(t)}`;
+    "Belum dikategorikan";
 
 const chapterName = (c, lang) =>
     getLocalizedTranslation(c?.translation, lang) ||
     toStr(c?.name ?? c?.title) ||
-    `Bab ${c?.id}`;
+    "Belum dikategorikan";
 
 // ─── Hadith Card ─────────────────────────────────────────────────────────────
 

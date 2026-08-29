@@ -252,7 +252,7 @@ const InfiniteScrollHadithPage = ({
                             {getLocalizedTranslation(
                                 item.theme.translation,
                                 lang,
-                            ) || `Kitab ${item.theme.id}`}
+                            ) || "Belum dikategorikan"}
                         </Select.Option>
                     ))}
                 </SelectOptionWithLabel>
@@ -268,7 +268,7 @@ const InfiniteScrollHadithPage = ({
                     {(chapters?.items ?? []).map((item) => (
                         <Select.Option key={item.id} value={item.id}>
                             {getLocalizedTranslation(item.translation, lang) ||
-                                `Bab ${item.id}`}
+                                "Belum dikategorikan"}
                         </Select.Option>
                     ))}
                 </SelectOptionWithLabel>

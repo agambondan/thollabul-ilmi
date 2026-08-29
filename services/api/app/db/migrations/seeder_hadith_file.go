@@ -78,7 +78,7 @@ func (r *hadithRow) themeName() string {
 	if strings.TrimSpace(r.Kitab) != "" {
 		return strings.TrimSpace(r.Kitab)
 	}
-	return fmt.Sprintf("Tema %d", r.SectionNo)
+	return "Belum dikategorikan"
 }
 
 func (r *hadithRow) chapterKey(themeID int) string {
@@ -95,7 +95,7 @@ func (r *hadithRow) chapterName() string {
 	if strings.TrimSpace(r.Bab) != "" {
 		return strings.TrimSpace(r.Bab)
 	}
-	return fmt.Sprintf("Bab %d", r.SectionNo)
+	return "Belum dikategorikan"
 }
 
 func (r *hadithRow) translationIdn() string {
