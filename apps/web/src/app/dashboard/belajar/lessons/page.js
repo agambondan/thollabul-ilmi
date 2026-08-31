@@ -95,7 +95,7 @@ export default function LessonsPage() {
     };
 
     if (loading) {
-        return <div className="p-8 text-center text-gray-500">Memuat modul pelajaran...</div>;
+        return <div className="p-8 text-center text-gray-500">{t('belajar.loading_modules')}</div>;
     }
 
     if (!activeModule || !step) {
@@ -109,7 +109,7 @@ export default function LessonsPage() {
     return (
         <div className={isWide ? 'px-4 py-6' : 'px-4 py-6 max-w-md mx-auto'}>
             <Link href='/dashboard/belajar' className='inline-flex items-center text-sm text-gray-500 hover:text-emerald-600 mb-3'>
-                <BsChevronLeft /> <span className='ml-1'>Kembali ke Belajar</span>
+                <BsChevronLeft /> <span className='ml-1'>{t('belajar.back_to_learn')}</span>
             </Link>
             <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-6'>
                 {t('belajar.lessons')}

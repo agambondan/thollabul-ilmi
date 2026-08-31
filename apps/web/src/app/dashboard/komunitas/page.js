@@ -107,22 +107,22 @@ export default function KomunitasPage() {
                 <div className='space-y-6'>
                     <div className='bg-gradient-to-br from-emerald-700 to-teal-800 rounded-2xl p-6 text-white shadow-md'>
                         <BsChatDots className='text-3xl text-emerald-300 mb-3' />
-                        <h2 className='text-lg font-bold mb-1'>Tanya Jawab Islam</h2>
+                        <h2 className='text-lg font-bold mb-1'>{t('komunitas.qa_title')}</h2>
                         <p className='text-sm text-emerald-100 mb-4 opacity-90 leading-relaxed'>
-                            Diskusikan hal-hal seputar fiqh, aqidah, dan keseharian bersama komunitas.
+                            {t('komunitas.qa_desc')}
                         </p>
                         <div className='flex flex-wrap gap-2'>
                             <Link
                                 href='/dashboard/forum/ask'
                                 className='inline-block px-4 py-2 bg-white text-emerald-800 text-xs font-bold rounded-lg hover:bg-emerald-50 transition-colors'
                             >
-                                Buat Pertanyaan
+                                {t('komunitas.ask_question')}
                             </Link>
                             <Link
                                 href='/dashboard/forum'
                                 className='inline-block px-4 py-2 bg-emerald-900/40 text-white text-xs font-bold rounded-lg hover:bg-emerald-900/60 transition-colors border border-emerald-400/30'
                             >
-                                Lihat Forum
+                                {t('komunitas.view_forum')}
                             </Link>
                         </div>
                     </div>
@@ -133,9 +133,9 @@ export default function KomunitasPage() {
                 <div className='space-y-6'>
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
                         <h3 className='text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2'>
-                            <BsStarFill className='text-amber-500' /> Hall of Fame
+                            <BsStarFill className='text-amber-500' /> {t('komunitas.hall_of_fame')}
                         </h3>
-                        <p className='text-xs text-gray-500 mb-3'>Top 3 hafalan dan muroja&apos;ah minggu ini</p>
+                        <p className='text-xs text-gray-500 mb-3'>{t('komunitas.weekly_top')}</p>
                         {hallOfFame.length === 0 ? (
                             <LeaderboardSkeleton />
                         ) : (

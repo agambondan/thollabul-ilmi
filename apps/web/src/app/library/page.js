@@ -317,7 +317,7 @@ export const LibraryContent = ({
                     onChange={(event) => setCategory(event.target.value)}
                     value={category}
                 >
-                    <option value=''>Semua kategori</option>
+                    <option value=''>{t('library.all_categories')}</option>
                     {categories.map((item) => (
                         <option key={item} value={item}>
                             {item}
@@ -329,7 +329,7 @@ export const LibraryContent = ({
                     onChange={(event) => setLevel(event.target.value)}
                     value={level}
                 >
-                    <option value=''>Semua level</option>
+                    <option value=''>{t('library.all_levels')}</option>
                     {levels.map((item) => (
                         <option key={item} value={item}>
                             {item}
@@ -344,7 +344,7 @@ export const LibraryContent = ({
                         }
                         value={progressStatus}
                     >
-                        <option value=''>Semua progress</option>
+                        <option value=''>{t('library.all_progress')}</option>
                         {PROGRESS_FILTERS.map((item) => (
                             <option key={item.value} value={item.value}>
                                 {item.label}

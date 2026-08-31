@@ -56,7 +56,7 @@ export default function ChatBox() {
                     <span className='w-2 h-2 rounded-full bg-emerald-500 animate-pulse'></span>
                     {t('komunitas.chat')}
                 </div>
-                {isAdmin && <span className='text-[10px] text-amber-500 font-bold'>Mode Moderasi Admin</span>}
+                {isAdmin && <span className='text-[10px] text-amber-500 font-bold'>{t('komunitas.admin_mode')}</span>}
             </div>
             
             <div ref={scrollRef} className='flex-1 overflow-y-auto p-4 space-y-3'>
@@ -108,7 +108,7 @@ export default function ChatBox() {
                     </form>
                 ) : (
                     <p className='text-xs text-center text-gray-500'>
-                        {t('feed.login_required')} <Link href='/auth/login' className='text-emerald-600 font-bold hover:underline'>Login</Link>
+                        {t('feed.login_required')} <Link href='/auth/login' className='text-emerald-600 font-bold hover:underline'>{t('nav.login')}</Link>
                     </p>
                 )}
             </div>

@@ -436,7 +436,7 @@ const InfiniteScrollAyahPage = ({
                             <span className='hidden sm:inline'>
                                 {t("quran.prev_surah")}
                             </span>
-                            <span className='sm:hidden'>Prev</span>
+                            <span className='sm:hidden'>{t("quran.prev")}</span>
                         </Link>
                     </div>
                     <div
@@ -452,7 +452,7 @@ const InfiniteScrollAyahPage = ({
                             <span className='hidden sm:inline'>
                                 {t("quran.next_surah")}
                             </span>
-                            <span className='sm:hidden'>Next</span>
+                            <span className='sm:hidden'>{t("quran.next")}</span>
                             <TbPlayerTrackNext size={14} />
                         </Link>
                     </div>
@@ -542,7 +542,7 @@ const InfiniteScrollAyahPage = ({
                             <span className='hidden sm:inline'>
                                 {t("quran.prev_surah")}
                             </span>
-                            <span className='sm:hidden'>Prev</span>
+                            <span className='sm:hidden'>{t("quran.prev")}</span>
                         </Link>
                     </div>
                     <div
@@ -558,7 +558,7 @@ const InfiniteScrollAyahPage = ({
                             <span className='hidden sm:inline'>
                                 {t("quran.next_surah")}
                             </span>
-                            <span className='sm:hidden'>Next</span>
+                            <span className='sm:hidden'>{t("quran.next")}</span>
                             <TbPlayerTrackNext size={14} />
                         </Link>
                     </div>
