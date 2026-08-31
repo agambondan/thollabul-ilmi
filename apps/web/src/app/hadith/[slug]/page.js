@@ -16,7 +16,7 @@ const Page = (props) => {
                     <HadithDetailContent
                         params={params}
                         basePath='/hadith'
-                        showSelectors={false}
+                        showSelectors={true}
                     />
                 </div>
             </Section>

@@ -611,7 +611,7 @@ export default function DashboardHadithDetailPage(props) {
         <HadithDetailContent
             params={params}
             basePath='/dashboard/hadith'
-            showSelectors={false}
+            showSelectors={true}
         />
     );
 }
