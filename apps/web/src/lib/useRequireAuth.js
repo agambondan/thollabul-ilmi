@@ -14,7 +14,7 @@ export const useRequireAuth = () => {
         if (!auth.isAuthenticated) {
             const currentPath =
                 typeof window === "undefined"
-                    ? "/dashboard"
+                    ? "/"
                     : `${window.location.pathname}${window.location.search}`;
             router.push(buildLoginHref(currentPath));
         }

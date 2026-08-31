@@ -1,4 +1,4 @@
-export const getSafeNextPath = (nextPath, fallback = "/dashboard") => {
+export const getSafeNextPath = (nextPath, fallback = "/") => {
     if (!nextPath || typeof nextPath !== "string") return fallback;
     if (!nextPath.startsWith("/") || nextPath.startsWith("//")) return fallback;
     return nextPath;
