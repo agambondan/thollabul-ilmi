@@ -151,7 +151,7 @@ export default function PrayerCountdownWidget({ basePath = "/jadwal-sholat" }) {
         <Link
             href={basePath}
             className='block rounded-2xl border border-emerald-100 bg-white px-4 py-4 text-slate-900 shadow-sm transition-colors hover:border-emerald-200 hover:bg-emerald-50/30 dark:border-emerald-900/30 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-emerald-700'
-            aria-label='Jadwal sholat hari ini'
+            aria-label={t("prayer_countdown.today")}
         >
             <div className='flex flex-wrap items-start justify-between gap-3'>
                 <div className='inline-flex max-w-full items-center gap-1.5 rounded-lg border border-emerald-100 bg-emerald-50 px-2.5 py-2 text-[10px] font-extrabold uppercase tracking-wide text-emerald-800 dark:border-emerald-900/40 dark:bg-emerald-900/20 dark:text-emerald-300'>

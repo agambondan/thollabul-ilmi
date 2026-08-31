@@ -235,7 +235,7 @@ const SettingButton = () => {
                                 type='button'
                                 onClick={decreaseArabicFontSize}
                                 className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
-                                aria-label='Perkecil huruf Arab'
+                                aria-label={t("settings.decrease_arabic_size")}
                             >
                                 A-
                             </button>
@@ -250,7 +250,7 @@ const SettingButton = () => {
                                 type='button'
                                 onClick={increaseArabicFontSize}
                                 className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
-                                aria-label='Perbesar huruf Arab'
+                                aria-label={t("settings.increase_arabic_size")}
                             >
                                 A+
                             </button>
@@ -270,7 +270,7 @@ const SettingButton = () => {
                                 type='button'
                                 onClick={decreaseTranslationFontSize}
                                 className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
-                                aria-label='Perkecil huruf terjemahan'
+                                aria-label={t("settings.decrease_translation_size")}
                             >
                                 T-
                             </button>
@@ -285,7 +285,7 @@ const SettingButton = () => {
                                 type='button'
                                 onClick={increaseTranslationFontSize}
                                 className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
-                                aria-label='Perbesar huruf terjemahan'
+                                aria-label={t("settings.increase_translation_size")}
                             >
                                 T+
                             </button>

@@ -148,7 +148,7 @@ const AdminRemindersPage = () => {
             <div className='mb-4'>
                 <input
                     type='text'
-                    placeholder='Cari judul, isi, ulama, atau sumber'
+                    placeholder={t("reminders.title_source_example")}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className='w-full max-w-sm rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white'

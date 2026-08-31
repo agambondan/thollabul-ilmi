@@ -323,7 +323,7 @@ export function WiridCustomContent() {
                                     setForm((f) => ({ ...f, title: v }))
                                 }
                                 required
-                                placeholder='Sholawat Ibrahimiyah'
+                                placeholder={t("wirid_custom.title_example")}
                             />
                             <Field
                                 label={
@@ -385,7 +385,7 @@ export function WiridCustomContent() {
                                     onChange={(v) =>
                                         setForm((f) => ({ ...f, occasion: v }))
                                     }
-                                    placeholder='pagi, jumat, ...'
+                                    placeholder={t("wirid_custom.occasion_example")}
                                 />
                             </div>
                             <Field
@@ -396,7 +396,7 @@ export function WiridCustomContent() {
                                 onChange={(v) =>
                                     setForm((f) => ({ ...f, source: v }))
                                 }
-                                placeholder='HR. Bukhari, dll.'
+                                    placeholder={t("wirid_custom.source_example")}
                             />
                             <Field
                                 label={

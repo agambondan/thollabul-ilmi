@@ -531,7 +531,7 @@ export const NavbarTailwindCss = () => {
             >
                 <button
                     type='button'
-                    aria-label='Close menu'
+                    aria-label={t("common.close_menu")}
                     className={`absolute inset-0 h-[calc(100svh_-_var(--navbar-height))] w-full bg-black/30 backdrop-blur-[2px] transition-opacity duration-200 ${isMobileMenuOpen ? "opacity-100" : "opacity-0"}`}
                     onClick={() => setMobileMenuOpen(false)}
                 />

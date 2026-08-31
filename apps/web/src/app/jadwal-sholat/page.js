@@ -481,7 +481,7 @@ export default function JadwalSholatPage() {
                                     );
                                 }}
                                 className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
-                                aria-label='Suara Adzan'
+                                aria-label={t("prayer.adhan_sound")}
                             >
                                 {adzanOptions.map((s) => (
                                     <option key={s.value} value={s.value}>
@@ -505,7 +505,7 @@ export default function JadwalSholatPage() {
                                     )
                                 }
                                 className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
-                                aria-label='Jeda pengingat'
+                                aria-label={t("prayer.reminder_lead")}
                             >
                                 {REMINDER_LEAD_OPTIONS.map((m) => (
                                     <option key={m} value={m}>
@@ -538,7 +538,7 @@ export default function JadwalSholatPage() {
                                             );
                                         }}
                                         className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
-                                        aria-label={`Jeda ${key}`}
+                                        aria-label={t("prayer.reminder_lead_prayer", { prayer: key })}
                                     >
                                         <option value='global'>
                                             {label} {t("prayer_schedule.global")}

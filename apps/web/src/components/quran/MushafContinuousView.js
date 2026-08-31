@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuranFont } from "@/lib/useQuranFont";
+import { useLocale } from "@/context/Locale";
 import { useMemo } from "react";
 
 const toArabicNumber = (n) => {
@@ -79,6 +80,7 @@ export default function MushafContinuousView({
 }) {
     const { fontCls, arabicFontSize, translationFontSize, setArabicFontSize } =
         useQuranFont();
+    const { t } = useLocale();
 
     const groups = useMemo(() => {
         const result = [];
@@ -178,7 +180,7 @@ export default function MushafContinuousView({
                         type='button'
                         onClick={() => setArabicFontSize(arabicFontSize - 4)}
                         className='w-9 h-9 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 text-lg font-bold text-emerald-700 dark:text-emerald-400'
-                        aria-label='zoom out'
+                        aria-label={t("mushaf.zoom_out")}
                     >
                         −
                     </button>
@@ -189,7 +191,7 @@ export default function MushafContinuousView({
                         type='button'
                         onClick={() => setArabicFontSize(arabicFontSize + 4)}
                         className='w-9 h-9 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 text-lg font-bold text-emerald-700 dark:text-emerald-400'
-                        aria-label='zoom in'
+                        aria-label={t("mushaf.zoom_in")}
                     >
                         +
                     </button>

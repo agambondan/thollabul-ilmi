@@ -127,7 +127,7 @@ export function ForumAskContent({
                         type='text'
                         value={tags}
                         onChange={(e) => setTags(e.target.value)}
-                        placeholder='fiqh, sholat, zakat'
+                        placeholder={t("forum.tag_example")}
                         className='w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                     />
                 </div>

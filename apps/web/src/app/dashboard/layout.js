@@ -450,7 +450,7 @@ const DashboardLayout = ({ children }) => {
                 >
                     <Link
                         href='/dashboard'
-                        title="Thullaabul 'Ilmi"
+                        title={t("nav.brand_title")}
                         className={`flex items-center group ${
                             isCollapsed ? "justify-center" : "gap-2.5"
                         }`}
@@ -589,7 +589,7 @@ const DashboardLayout = ({ children }) => {
                         <Link
                             href='/dashboard'
                             className='md:hidden flex items-center gap-2 min-w-0'
-                            aria-label="Thullaabul 'Ilmi"
+                            aria-label={t("nav.brand_title")}
                         >
                             <div className='w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center shrink-0'>
                                 <span className='text-white text-xs font-bold'>

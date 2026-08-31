@@ -616,7 +616,7 @@ export default function SurahAudioPlayer({
                         type='button'
                         onClick={togglePlay}
                         disabled={loading}
-                        aria-label={isPlaying ? "Jeda audio" : "Putar audio"}
+                        aria-label={isPlaying ? t("audio.pause") : t("audio.play")}
                         className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white transition-colors hover:bg-emerald-700 disabled:opacity-60'
                     >
                         {isPlaying ? (
@@ -628,7 +628,7 @@ export default function SurahAudioPlayer({
                     <button
                         type='button'
                         onClick={() => setMinimized(false)}
-                        aria-label='Tampilkan player audio'
+                        aria-label={t("audio.show")}
                         className='min-w-0 flex-1 text-left'
                     >
                         <p className='truncate text-xs font-semibold text-emerald-600 dark:text-emerald-400'>
@@ -645,7 +645,7 @@ export default function SurahAudioPlayer({
                     <button
                         type='button'
                         onClick={() => setMinimized(false)}
-                        aria-label='Tampilkan player audio'
+                        aria-label={t("audio.show")}
                         className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-slate-700 dark:hover:text-white'
                     >
                         <BsChevronUp className='text-lg' />
@@ -653,7 +653,7 @@ export default function SurahAudioPlayer({
                     <button
                         type='button'
                         onClick={() => stopPlayback()}
-                        aria-label='Tutup player audio'
+                        aria-label={t("audio.close")}
                         className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-slate-700 dark:hover:text-gray-200'
                     >
                         <BsX className='text-lg' />
@@ -683,7 +683,7 @@ export default function SurahAudioPlayer({
                         <button
                             type='button'
                             onClick={() => setMinimized(true)}
-                            aria-label='Minimize audio player'
+                            aria-label={t("audio.minimize")}
                             className='flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-slate-700 dark:hover:text-gray-200'
                         >
                             <BsChevronDown className='text-base' />
@@ -691,7 +691,7 @@ export default function SurahAudioPlayer({
                         <button
                             type='button'
                             onClick={() => stopPlayback()}
-                            aria-label='Tutup player audio'
+                        aria-label={t("audio.close")}
                             className='flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-slate-700 dark:hover:text-gray-200'
                         >
                             <BsX className='text-lg' />
@@ -728,7 +728,7 @@ export default function SurahAudioPlayer({
                         type='button'
                         onClick={() => skipQueueItem(-1)}
                         disabled={loading || !canSkipBackward}
-                        aria-label='Audio ayat sebelumnya'
+                        aria-label={t("audio.prev")}
                         className='p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-30 transition-colors'
                     >
                         <BsSkipBackwardFill />
@@ -754,7 +754,7 @@ export default function SurahAudioPlayer({
                         type='button'
                         onClick={() => skipQueueItem(1)}
                         disabled={loading || !canSkipForward}
-                        aria-label='Audio ayat berikutnya'
+                        aria-label={t("audio.next")}
                         className='p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-30 transition-colors'
                     >
                         <BsSkipForwardFill />
@@ -794,7 +794,7 @@ export default function SurahAudioPlayer({
                                 onClick={() =>
                                     setQariDropdownOpen((value) => !value)
                                 }
-                                aria-label='Pilih qari'
+                                aria-label={t("audio.select_qari")}
                                 aria-expanded={qariDropdownOpen}
                                 className='flex w-full items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 p-2 pr-8 text-left outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900'
                             >

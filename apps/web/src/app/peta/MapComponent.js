@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useEffect, useState } from "react";
+import { useLocale } from "@/context/Locale";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -42,6 +43,7 @@ const hasValidCoordinate = (loc) =>
     Number.isFinite(Number(loc?.longitude));
 
 export default function MapComponent() {
+    const { t } = useLocale();
     const [locations, setLocations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
@@ -72,7 +74,7 @@ export default function MapComponent() {
                     type='text'
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder='Cari lokasi...'
+                    placeholder={t("peta.search_placeholder")}
                     className='flex-1 min-w-[200px] rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500'
                 />
                 <select

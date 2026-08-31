@@ -5,6 +5,7 @@ import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
 import { libraryApi, libraryProgressApi } from "@/lib/api";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import Link from "next/link";
@@ -76,6 +77,7 @@ export const LibraryContent = ({
 }) => {
     const { isWide } = useLayoutMode();
     const { isAuthenticated } = useAuth();
+    const { t } = useLocale();
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
@@ -306,7 +308,7 @@ export const LibraryContent = ({
                     <input
                         className='w-full bg-transparent text-sm text-gray-800 outline-none placeholder:text-gray-400 dark:text-gray-100'
                         onChange={(event) => setSearch(event.target.value)}
-                        placeholder='Cari judul, penulis, atau topik'
+                        placeholder={t("library.search_placeholder")}
                         value={search}
                     />
                 </div>

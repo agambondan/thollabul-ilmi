@@ -12,6 +12,7 @@ import {
     subscriptionToPlainObject,
 } from "@/lib/pushSubscription";
 import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
 import {
     getLocationPermissionState,
     isStoredUserLocationFresh,
@@ -32,6 +33,7 @@ export default function NotificationPermissionPrompt() {
     const pathname = usePathname() || "";
     const isDashboard = pathname.startsWith("/dashboard");
     const { isAuthenticated, isLoading } = useAuth();
+    const { t } = useLocale();
     const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const locationRequestedRef = useRef(false);
@@ -154,7 +156,7 @@ export default function NotificationPermissionPrompt() {
                 type='button'
                 onClick={handleDismiss}
                 className='absolute right-3 top-3 rounded-full p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200'
-                aria-label='Tutup'
+                aria-label={t("notification.close")}
             >
                 <BsX className='text-lg' />
             </button>

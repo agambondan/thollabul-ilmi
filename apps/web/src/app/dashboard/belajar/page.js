@@ -52,7 +52,7 @@ export default function BelajarPage() {
                     type='text'
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder='Cari materi atau modul...'
+                    placeholder={t("belajar.search_placeholder")}
                     className='w-full pl-9 pr-4 py-2 text-sm bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500'
                 />
             </div>

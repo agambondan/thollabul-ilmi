@@ -73,7 +73,7 @@ export default function ChatBox() {
                                         <button
                                             onClick={() => handleDelete(m.id)}
                                             className='opacity-0 group-hover:opacity-100 text-rose-500 text-[10px] hover:underline'
-                                            title='Hapus pesan'
+                                            title={t("common.delete_message")}
                                         >
                                             <BsTrash />
                                         </button>

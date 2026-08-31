@@ -157,7 +157,7 @@ export default function DailyReminderCarousel({
     hadithBasePath = "/hadith",
     ayahBasePath = "/quran",
 }) {
-    const { lang } = useLocale();
+    const { lang, t } = useLocale();
     const [dynamicSlides, setDynamicSlides] = useState([]);
     const [activeIndex, setActiveIndex] = useState(0);
 
@@ -241,7 +241,7 @@ export default function DailyReminderCarousel({
                 <div className='flex shrink-0 items-center gap-1.5'>
                     <button
                         type='button'
-                        aria-label='Sebelumnya'
+                        aria-label={t("common.prev")}
                         onClick={goPrev}
                         className={`flex h-8 w-8 items-center justify-center rounded-full border text-lg transition-colors ${theme.button}`}
                     >
@@ -249,7 +249,7 @@ export default function DailyReminderCarousel({
                     </button>
                     <button
                         type='button'
-                        aria-label='Berikutnya'
+                        aria-label={t("common.next")}
                         onClick={goNext}
                         className={`flex h-8 w-8 items-center justify-center rounded-full border text-lg transition-colors ${theme.button}`}
                     >
