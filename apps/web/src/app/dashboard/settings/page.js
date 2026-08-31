@@ -80,20 +80,68 @@ export default function SettingsPage() {
         updateSetting("notifAdzan", next);
     };
 
+    const [isPlayingPreview, setIsPlayingPreview] = useState(false);
+
     const updateAdzanSound = (sound) => {
         updateSetting("adzanSound", sound.value);
         updateSetting("adzanSoundUrl", sound.src);
         updateSetting("adzanSoundLabel", sound.label);
     };
 
+    const stopAdzanPreview = () => {
+        if (previewAudioRef.current) {
+            previewAudioRef.current.pause();
+            previewAudioRef.current.currentTime = 0;
+            previewAudioRef.current = null;
+        }
+        setIsPlayingPreview(false);
+    };
+
     const playAdzanPreview = () => {
-        if (!selectedAdzan) return;
+        if (!selectedAdzan || !selectedAdzan.src) {
+            toast.error("Sumber audio tidak valid");
+            return;
+        }
+
+        if (isPlayingPreview) {
+            stopAdzanPreview();
+            return;
+        }
+
         try {
-            previewAudioRef.current?.pause();
-        } catch {}
-        const audio = new Audio(selectedAdzan.src);
-        previewAudioRef.current = audio;
-        audio.play().catch(() => toast.error(t("settings.sound_blocked")));
+            if (previewAudioRef.current) {
+                previewAudioRef.current.pause();
+            }
+            const audio = new Audio(selectedAdzan.src);
+            previewAudioRef.current = audio;
+            setIsPlayingPreview(true);
+
+            audio.onended = () => {
+                setIsPlayingPreview(false);
+            };
+
+            audio.onerror = (e) => {
+                setIsPlayingPreview(false);
+                toast.error("Gagal memutar audio (URL tidak dapat diakses)");
+            };
+
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch((err) => {
+                    setIsPlayingPreview(false);
+                    if (err.name === "NotAllowedError") {
+                        toast.error(t("settings.sound_blocked"));
+                    } else {
+                        toast.error(
+                            `Error: ${err.message || "Gagal memutar audio"}`,
+                        );
+                    }
+                });
+            }
+        } catch (err) {
+            setIsPlayingPreview(false);
+            toast.error("Audio player error");
+        }
     };
 
     const handleAdzanUpload = async (e) => {
@@ -278,9 +326,15 @@ export default function SettingsPage() {
                             <button
                                 type='button'
                                 onClick={playAdzanPreview}
-                                className='px-2.5 py-1.5 text-xs rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30'
+                                className={`px-2.5 py-1.5 text-xs rounded-lg border transition-colors ${
+                                    isPlayingPreview
+                                        ? "border-amber-500 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 font-semibold"
+                                        : "border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30"
+                                }`}
                             >
-                                {t("settings.test_sound")}
+                                {isPlayingPreview
+                                    ? "Stop"
+                                    : t("settings.test_sound")}
                             </button>
                         </div>
                     </SettingRow>
