@@ -5,6 +5,7 @@ import ContentWidth from "@/components/layout/ContentWidth";
 import { NavbarTailwindCss } from "@/components/Navbar";
 import { useLocale } from "@/context/Locale";
 import { toLocalISODate } from "@/lib/date";
+import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
 import { requestAndStoreUserLocation } from "@/lib/userLocation";
 import { useEffect, useRef, useState } from "react";
 import { BsBell, BsBellFill, BsGeoAlt } from "react-icons/bs";
@@ -77,6 +78,7 @@ const parseTimeStr = (str) => {
 
 export default function JadwalSholatPage() {
     const { lang, t } = useLocale();
+    const { settings, updateSetting } = useSettings();
     const [city, setCity] = useState(CITIES[0]);
     const [prayers, setPrayers] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -88,11 +90,35 @@ export default function JadwalSholatPage() {
     const [showSettings, setShowSettings] = useState(false);
     const [gpsStatus, setGpsStatus] = useState("idle");
     const [countdown, setCountdown] = useState("");
-    const [adzanEnabled, setAdzanEnabled] = useState(false);
-    const [notifGranted, setNotifGranted] = useState(false);
+    const [notifGranted, setNotifGranted] = useState(
+        () =>
+            typeof Notification !== "undefined" &&
+            Notification.permission === "granted",
+    );
     const gpsTriedRef = useRef(false);
     const audioRef = useRef(null);
     const lastNotifRef = useRef("");
+
+    const fetchByCoords = (lat, lng, label) => {
+        setLoading(true);
+        setError("");
+        const today = toLocalISODate();
+        fetch(
+            `${API_URL}/api/v1/sholat-times?lat=${lat}&lng=${lng}&method=${method}&madhab=${madhab}&date=${today}`,
+        )
+            .then((r) => r.json())
+            .then((d) => {
+                const data = d?.data ?? d;
+                if (data?.prayers) {
+                    setPrayers(data.prayers);
+                    setGeoLabel(label);
+                } else {
+                    setError(t("prayer_schedule.load_error"));
+                }
+            })
+            .catch(() => setError(t("prayer_schedule.network_error")))
+            .finally(() => setLoading(false));
+    };
 
     useEffect(() => {
         const iv = setInterval(() => setNow(new Date()), 15000);
@@ -100,19 +126,10 @@ export default function JadwalSholatPage() {
     }, []);
 
     useEffect(() => {
-        if (
-            typeof Notification !== "undefined" &&
-            Notification.permission === "granted"
-        ) {
-            setNotifGranted(true);
-        }
-    }, []);
-
-    useEffect(() => {
         if (gpsTriedRef.current || gpsStatus !== "idle") return;
         if (!navigator.geolocation) return;
         gpsTriedRef.current = true;
-        setGpsStatus("detecting");
+        queueMicrotask(() => setGpsStatus("detecting"));
         requestAndStoreUserLocation({ fallbackLabel: t("geo.my_location") })
             .then((result) => {
                 if (result.ok && result.location) {
@@ -142,7 +159,8 @@ export default function JadwalSholatPage() {
                     const s = Math.floor((diff % 60000) / 1000);
                     if (
                         diff < 10000 &&
-                        adzanEnabled &&
+                        diff >= 0 &&
+                        settings.notifAdzan &&
                         lastNotifRef.current !== p.key
                     ) {
                         lastNotifRef.current = p.key;
@@ -187,28 +205,7 @@ export default function JadwalSholatPage() {
         tick();
         const iv = setInterval(tick, 1000);
         return () => clearInterval(iv);
-    }, [prayers, adzanEnabled]);
-
-    const fetchByCoords = (lat, lng, label) => {
-        setLoading(true);
-        setError("");
-        const today = toLocalISODate();
-        fetch(
-            `${API_URL}/api/v1/sholat-times?lat=${lat}&lng=${lng}&method=${method}&madhab=${madhab}&date=${today}`,
-        )
-            .then((r) => r.json())
-            .then((d) => {
-                const data = d?.data ?? d;
-                if (data?.prayers) {
-                    setPrayers(data.prayers);
-                    setGeoLabel(label);
-                } else {
-                    setError(t("prayer_schedule.load_error"));
-                }
-            })
-            .catch(() => setError(t("prayer_schedule.network_error")))
-            .finally(() => setLoading(false));
-    };
+    }, [prayers, settings.notifAdzan, settings.adzanSound, notifGranted, t]);
 
     useEffect(() => {
         fetchByCoords(city.lat, city.lng, city.name);
@@ -386,16 +383,39 @@ export default function JadwalSholatPage() {
                                     </button>
                                 )}
                             <button
-                                onClick={() => setAdzanEnabled((v) => !v)}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${adzanEnabled ? "bg-emerald-700 text-white" : "bg-gray-100 dark:bg-slate-700 text-gray-500"}`}
+                                onClick={() =>
+                                    updateSetting(
+                                        "notifAdzan",
+                                        !settings.notifAdzan,
+                                    )
+                                }
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${settings.notifAdzan ? "bg-emerald-700 text-white" : "bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300"}`}
                             >
-                                {adzanEnabled ? <BsBellFill /> : <BsBell />}
-                                {adzanEnabled
+                                {settings.notifAdzan ? (
+                                    <BsBellFill />
+                                ) : (
+                                    <BsBell />
+                                )}
+                                {settings.notifAdzan
                                     ? (t("prayer_schedule.adzan_on") ??
                                       "Adzan On")
                                     : (t("prayer_schedule.adzan_off") ??
                                       "Adzan Off")}
                             </button>
+                            <select
+                                value={settings.adzanSound}
+                                onChange={(e) =>
+                                    updateSetting("adzanSound", e.target.value)
+                                }
+                                className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
+                                aria-label='Suara Adzan'
+                            >
+                                {ADZAN_SOUNDS.map((s) => (
+                                    <option key={s.value} value={s.value}>
+                                        {s.label}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     )}
                 </div>
@@ -509,19 +529,15 @@ export default function JadwalSholatPage() {
                 </p>
             </ContentWidth>
             <Footer />
-            {adzanEnabled && (
+            {settings.notifAdzan && (
                 <audio
                     ref={audioRef}
-                    src='/audio/adzan.mp3'
+                    src={
+                        ADZAN_SOUNDS.find(
+                            (s) => s.value === settings.adzanSound,
+                        )?.src || ADZAN_SOUNDS[0].src
+                    }
                     preload='auto'
-                    onError={(e) => {
-                        if (
-                            e.target.src !==
-                            "https://www.islamcan.com/audio/adzan/azan1.mp3"
-                        )
-                            e.target.src =
-                                "https://www.islamcan.com/audio/adzan/azan1.mp3";
-                    }}
                 />
             )}
         </main>

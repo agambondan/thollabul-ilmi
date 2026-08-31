@@ -1,18 +1,28 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from "react";
 
-import { authFetch } from './api';
+import { authFetch } from "./api";
 
-const SETTINGS_KEY = 'tholabul_app_settings';
+const SETTINGS_KEY = "tholabul_app_settings";
+
+export const ADZAN_SOUNDS = [
+    { value: "default", label: "Default Aplikasi", src: "/audio/adzan.mp3" },
+    {
+        value: "islamcan",
+        label: "IslamCan Azan 1",
+        src: "https://www.islamcan.com/audio/adzan/azan1.mp3",
+    },
+];
 
 const DEFAULT_SETTINGS = {
-    theme: 'system',
-    lang: 'ID',
-    quranFont: 'LPMQ',
-    hadithFont: 'Amiri',
+    theme: "system",
+    lang: "ID",
+    quranFont: "LPMQ",
+    hadithFont: "Amiri",
     readerSize: 24,
     notifAdzan: true,
+    adzanSound: "default",
     notifKajian: true,
     highContrast: false,
     reduceMotion: false,
@@ -26,17 +36,20 @@ const SettingsContext = createContext({
     syncWithBackend: async () => {},
 });
 
-export const SettingsProvider = ({ children }) => {
-    const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+const readStoredSettings = () => {
+    if (typeof window === "undefined") return DEFAULT_SETTINGS;
+    try {
+        const raw = localStorage.getItem(SETTINGS_KEY);
+        return raw
+            ? { ...DEFAULT_SETTINGS, ...JSON.parse(raw) }
+            : DEFAULT_SETTINGS;
+    } catch {
+        return DEFAULT_SETTINGS;
+    }
+};
 
-    useEffect(() => {
-        try {
-            const raw = localStorage.getItem(SETTINGS_KEY);
-            if (raw) {
-                setSettings({ ...DEFAULT_SETTINGS, ...JSON.parse(raw) });
-            }
-        } catch {}
-    }, []);
+export const SettingsProvider = ({ children }) => {
+    const [settings, setSettings] = useState(readStoredSettings);
 
     const updateSetting = (key, value) => {
         setSettings((prev) => {
@@ -58,8 +71,8 @@ export const SettingsProvider = ({ children }) => {
 
     const syncWithBackend = async () => {
         try {
-            const res = await authFetch('/api/v1/settings', {
-                method: 'PUT',
+            const res = await authFetch("/api/v1/settings", {
+                method: "PUT",
                 body: JSON.stringify({ settings: JSON.stringify(settings) }),
             });
             if (res.ok) {
@@ -68,7 +81,7 @@ export const SettingsProvider = ({ children }) => {
                 return data;
             }
         } catch (e) {
-            console.error('Settings sync failed', e);
+            console.error("Settings sync failed", e);
             throw e;
         }
     };

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/context/Locale";
+import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { toLocalISODate } from "@/lib/date";
 import {
@@ -28,18 +29,36 @@ const parseHour = (timeStr) => {
     return h * 60 + (m ?? 0);
 };
 
+const parsePrayerDate = (timeStr) => {
+    const mins = parseHour(timeStr);
+    if (mins === null) return null;
+    const now = new Date();
+    return new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        Math.floor(mins / 60),
+        mins % 60,
+    );
+};
+
 const JadwalSholatPage = () => {
     const { t } = useLocale();
     const { isWide } = useLayoutMode();
+    const { settings } = useSettings();
     const [prayers, setPrayers] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [location, setLocation] = useState(null);
+    const [location, setLocation] = useState(() =>
+        typeof window === "undefined"
+            ? DEFAULT_PRAYER_LOCATION
+            : readStoredUserLocation() || DEFAULT_PRAYER_LOCATION,
+    );
+    const [now, setNow] = useState(() => new Date());
+    const audioRef = useRef(null);
+    const lastNotifRef = useRef("");
 
     useEffect(() => {
-        const stored = readStoredUserLocation();
-        setLocation(stored || DEFAULT_PRAYER_LOCATION);
-
         const handleLocationUpdate = (event) => {
             if (event.detail) setLocation(event.detail);
         };
@@ -77,7 +96,56 @@ const JadwalSholatPage = () => {
         fetchSchedule();
     }, [location?.lat, location?.lng]);
 
-    const now = new Date();
+    useEffect(() => {
+        const tick = () => {
+            const n = new Date();
+            setNow(n);
+            if (!prayers || !settings.notifAdzan) return;
+
+            for (const p of PRAYER_MAP.filter((x) => !x.info)) {
+                const pt = parsePrayerDate(prayers[p.key]);
+                if (pt && n >= pt && n - pt < 10000) {
+                    const todayKey = `${toLocalISODate()}-${p.key}`;
+                    if (lastNotifRef.current !== todayKey) {
+                        lastNotifRef.current = todayKey;
+                        const soundSrc =
+                            ADZAN_SOUNDS.find(
+                                (s) => s.value === settings.adzanSound,
+                            )?.src || ADZAN_SOUNDS[0].src;
+                        audioRef.current = new Audio(soundSrc);
+                        audioRef.current.play().catch(() => {});
+
+                        const nTitle = `Waktu ${p.label}`;
+                        const nBody = `Sudah masuk waktu ${p.label}`;
+                        if (
+                            typeof Notification !== "undefined" &&
+                            Notification.permission === "granted"
+                        ) {
+                            new Notification(nTitle, {
+                                body: nBody,
+                                icon: "/icon.png",
+                            });
+                        }
+                        if (
+                            "serviceWorker" in navigator &&
+                            navigator.serviceWorker.controller
+                        ) {
+                            navigator.serviceWorker.controller.postMessage({
+                                type: "ADZAN_NOTIFICATION",
+                                title: nTitle,
+                                body: nBody,
+                                url: "/dashboard/jadwal-sholat",
+                            });
+                        }
+                    }
+                    break;
+                }
+            }
+        };
+        const iv = setInterval(tick, 1000);
+        return () => clearInterval(iv);
+    }, [prayers, settings.notifAdzan, settings.adzanSound]);
+
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
     const prayerRows = PRAYER_MAP.map(({ key, label, icon, info }) => ({
@@ -112,8 +180,14 @@ const JadwalSholatPage = () => {
                     year: "numeric",
                 })}
             </p>
-            <p className='text-xs text-gray-400 mb-6'>
+            <p className='text-xs text-gray-400 mb-1'>
                 {(location || DEFAULT_PRAYER_LOCATION).label} · Metode Kemenag
+            </p>
+            <p className='text-xs text-gray-400 mb-6'>
+                Adzan{" "}
+                {settings.notifAdzan
+                    ? `aktif · ${ADZAN_SOUNDS.find((s) => s.value === settings.adzanSound)?.label || ADZAN_SOUNDS[0].label}`
+                    : "mati"}
             </p>
 
             {loading ? (
