@@ -272,7 +272,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
         <div
             ref={cardRef}
             id={cardId}
-            className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-5'
+            className='relative bg-amber-50/70 dark:bg-slate-800 rounded-md border border-amber-200/80 dark:border-amber-900/40 px-5 sm:px-7 py-6 shadow-[0_1px_0_0_rgba(180,140,80,0.15)] font-serif'
         >
             {clipboardPopUp && (
                 <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-full shadow-lg'>
@@ -292,11 +292,18 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
             )}
 
             {/* Header: number + grade + actions */}
-            <div className='flex items-center justify-between mb-3'>
-                <div className='flex items-center gap-2'>
-                    <span className='w-8 h-8 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs font-bold flex items-center justify-center shrink-0'>
+            <div className='flex items-center justify-between mb-4 pb-3 border-b border-amber-200/70 dark:border-amber-900/40'>
+                <div className='flex items-center gap-3'>
+                    <span
+                        className='font-serif italic text-amber-800 dark:text-amber-400 text-lg leading-none shrink-0'
+                        title='Nomor Hadits'
+                    >
+                        №
+                    </span>
+                    <span className='font-serif text-2xl font-semibold text-amber-900 dark:text-amber-300 leading-none shrink-0'>
                         {h.number ?? idx + 1}
                     </span>
+                    <span className='w-px h-5 bg-amber-300/70 dark:bg-amber-700/60' />
                     <GradeBadge grade={h.grade} />
                 </div>
 
@@ -508,7 +515,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
             {arabicText && (
                 <p
                     dir='rtl'
-                    className={`${fontCls} text-gray-800 dark:text-gray-100 leading-loose text-right mb-4`}
+                    className={`${fontCls} text-gray-800 dark:text-gray-100 leading-loose text-right mb-4 pb-4 border-b border-dotted border-amber-300/60 dark:border-amber-800/40`}
                     style={{ fontSize: `${arabicFontSize}px` }}
                 >
                     {arabicText}
@@ -516,15 +523,15 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
             )}
             {hadithText && (
                 <p
-                    className='text-gray-600 dark:text-gray-400 leading-relaxed'
+                    className='text-amber-950 dark:text-amber-100 leading-relaxed text-justify [text-justify:inter-word] first-letter:font-semibold'
                     style={{ fontSize: `${translationFontSize}px` }}
                 >
                     {hadithText}
                 </p>
             )}
             {h.perawi && (
-                <p className='text-xs text-blue-600 dark:text-blue-400 mt-3 font-medium'>
-                    {toStr(h.perawi)}
+                <p className='text-xs italic text-amber-800 dark:text-amber-400 mt-4 font-medium'>
+                    — {toStr(h.perawi)}
                 </p>
             )}
             {(h.grade ||
@@ -539,7 +546,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
 
             {/* Sanad & Takhrij toggles */}
             {h.id && (
-                <div className='mt-4 pt-3 border-t border-gray-100 dark:border-slate-700'>
+                <div className='mt-5 pt-4 border-t border-amber-200/70 dark:border-amber-900/40'>
                     <div className='flex gap-2'>
                         <button
                             type='button'
