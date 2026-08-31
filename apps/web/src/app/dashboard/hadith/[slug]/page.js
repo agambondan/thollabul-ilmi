@@ -276,7 +276,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
         >
             {clipboardPopUp && (
                 <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-full shadow-lg'>
-                    Tersalin ke clipboard!
+                    {t("hadith.copy_success")}
                 </div>
             )}
             {shareImagePopUp && (
@@ -286,7 +286,10 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                     text={`${arabicText}\n`
                         .concat(`${hadithText}\n`)
                         .concat(
-                            `(HR. ${slug}: ${h.number})\nVia Thullaabul 'Ilmi`,
+                            `${t("hadith.citation", {
+                                slug,
+                                number: h.number,
+                            })}\n${t("hadith.via")}`,
                         )}
                 />
             )}
@@ -296,7 +299,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                 <div className='flex items-center gap-3'>
                     <span
                         className='font-serif italic text-amber-800 dark:text-amber-400 text-lg leading-none shrink-0'
-                        title='Nomor Hadits'
+                        title={t("hadith.hadith_number_title")}
                     >
                         №
                     </span>
@@ -313,7 +316,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                         {detailPath && (
                             <Link
                                 href={detailPath}
-                                title='Buka halaman detail'
+                                title={t("hadith.open_detail")}
                                 className={`${actionsMenu ? "hidden" : ""} p-2 rounded-lg text-base text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors`}
                             >
                                 <IoIosLink />
@@ -324,10 +327,10 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                 type='button'
                                 title={
                                     isPlayingAudio
-                                        ? "Pause Audio"
+                                        ? t("hadith.audio_pause")
                                         : firstAudioSource
-                                          ? "Putar Audio"
-                                          : "Audio belum tersedia"
+                                          ? t("hadith.audio_play")
+                                          : t("hadith.audio_unavailable_short")
                                 }
                                 onClick={handleAudio}
                                 disabled={audioLoading || !firstAudioSource}
@@ -383,8 +386,10 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                             )
                                                         }
                                                     >
-                                                        <IoIosLink /> Buka
-                                                        Detail
+                                                        <IoIosLink />{" "}
+                                                        {t(
+                                                            "hadith.open_detail_menu",
+                                                        )}
                                                     </Link>
                                                 )}
                                                 {h.id && (
@@ -410,12 +415,20 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                             <BsFileEarmarkPlay />
                                                         )}
                                                         {audioLoading
-                                                            ? "Memuat audio..."
+                                                            ? t(
+                                                                  "hadith.audio_loading",
+                                                              )
                                                             : isPlayingAudio
-                                                              ? "Pause Audio"
+                                                              ? t(
+                                                                    "hadith.audio_pause",
+                                                                )
                                                               : firstAudioSource
-                                                                ? "Putar Audio"
-                                                                : "Audio belum tersedia"}
+                                                                ? t(
+                                                                      "hadith.audio_play",
+                                                                  )
+                                                                : t(
+                                                                      "hadith.audio_unavailable_short",
+                                                                  )}
                                                     </button>
                                                 )}
                                                 {/* Ikon di KIRI lalu label, sama seperti item lain di menu ini.
@@ -430,7 +443,11 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                             refId={h.id}
                                                             className="!p-0 !text-base relative before:absolute before:-inset-2 before:content-['']"
                                                         />
-                                                        <span>Bookmark</span>
+                                                        <span>
+                                                            {t(
+                                                                "hadith.bookmark_label",
+                                                            )}
+                                                        </span>
                                                     </div>
                                                 )}
                                                 <button
@@ -458,7 +475,8 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                 setSettingPopUp(false);
                                             }}
                                         >
-                                            <IoIosLink /> Copy Link
+                                            <IoIosLink />{" "}
+                                            {t("hadith.copy_link")}
                                         </button>
                                         <button
                                             type='button'
@@ -490,19 +508,21 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                 }, 500);
                                             }}
                                         >
-                                            <IoMdImages /> Copy Image
+                                            <IoMdImages />{" "}
+                                            {t("hadith.copy_image")}
                                         </button>
                                         <button
                                             type='button'
                                             className={actionMenuButtonClass}
                                             onClick={() => {
                                                 copyText(
-                                                    `${arabicText}\n\n${hadithText}\n\n(HR. ${slug}: ${h.number})\nVia Thullaabul 'Ilmi`,
+                                                    `${arabicText}\n\n${hadithText}\n\n${t("hadith.citation", { slug, number: h.number })}\n${t("hadith.via")}`,
                                                 );
                                                 setSettingPopUp(false);
                                             }}
                                         >
-                                            <IoMdCopy /> Copy Text
+                                            <IoMdCopy />{" "}
+                                            {t("hadith.copy_text")}
                                         </button>
                                     </div>
                                 </div>

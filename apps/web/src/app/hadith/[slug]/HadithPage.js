@@ -280,8 +280,8 @@ const HadithPage = ({
         <>
             {clipboardPopUp && (
                 <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-full shadow-lg'>
-                    Tersalin ke clipboard!
-                </div>
+                    {t("hadith.copy_success")}
+               </div>
             )}
             {statusMsg && (
                 <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-700 text-white text-sm font-medium px-4 py-2 rounded-full shadow-lg'>
@@ -295,8 +295,8 @@ const HadithPage = ({
                     text={`${hadith.translation.ar}\n`
                         .concat(`${hadithTranslation}\n`)
                         .concat(
-                            `(HR. ${params.slug}: ${hadith.number})\n`.concat(
-                                `Via Thullaabul 'Ilmi ${detailUrl() || window.location.href}`,
+                            `${t("hadith.citation", { slug: params.slug, number: hadith.number })}\n`.concat(
+                                `${t("hadith.via")} ${detailUrl() || window.location.href}`,
                             ),
                         )}
                 />
@@ -337,12 +337,12 @@ const HadithPage = ({
                             >
                                 <Link
                                     href={detailPath}
-                                    title='Buka halaman detail'
+                                    title={t("hadith.open_detail")}
                                     className='p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
                                 >
                                     <IoIosLink />
-                                </Link>
-                            </li>
+                               </Link>
+                           </li>
                         )}
                         <li
                             className={
@@ -353,9 +353,9 @@ const HadithPage = ({
                                 title={
                                     firstAudioSource
                                         ? isPlayingAudio
-                                            ? "Pause Audio"
-                                            : "Putar Audio"
-                                        : "Audio belum tersedia"
+                                            ? t("hadith.audio_pause")
+                                            : t("hadith.audio_play")
+                                        : t("hadith.audio_unavailable_short")
                                 }
                                 onClick={handleAudio}
                                 disabled={audioLoading}
@@ -426,8 +426,10 @@ const HadithPage = ({
                                                         }
                                                     >
                                                         <IoIosLink />
-                                                        Buka Detail
-                                                    </Link>
+                                                        {t(
+                                                            "hadith.open_detail_menu",
+                                                        )}
+                                                   </Link>
                                                 )}
                                                 <button
                                                     className={
@@ -445,10 +447,16 @@ const HadithPage = ({
                                                         <BsFileEarmarkPlay />
                                                     )}
                                                     {audioLoading
-                                                        ? "Memuat audio..."
+                                                        ? t(
+                                                              "hadith.audio_loading",
+                                                          )
                                                         : isPlayingAudio
-                                                          ? "Pause Audio"
-                                                          : "Putar Audio"}
+                                                          ? t(
+                                                                "hadith.audio_pause",
+                                                            )
+                                                          : t(
+                                                                "hadith.audio_play",
+                                                            )}
                                                 </button>
                                                 {/* Ikon di KIRI lalu label, sama seperti item lain di menu ini.
                                                     Sebelumnya barisnya memakai justify-between dengan label dulu,
@@ -461,8 +469,12 @@ const HadithPage = ({
                                                         refId={hadith.id}
                                                         className="!p-0 !text-base relative before:absolute before:-inset-2 before:content-['']"
                                                     />
-                                                    <span>Bookmark</span>
-                                                </div>
+                                                    <span>
+                                                        {t(
+                                                            "hadith.bookmark_label",
+                                                        )}
+                                                   </span>
+                                               </div>
                                                 <button
                                                     className={
                                                         actionMenuButtonClass
@@ -487,7 +499,7 @@ const HadithPage = ({
                                             }}
                                         >
                                             <IoIosLink />
-                                            Copy Link
+                                            {t("hadith.copy_link")}
                                         </button>
                                         <button
                                             className={actionMenuButtonClass}
@@ -515,7 +527,7 @@ const HadithPage = ({
                                             }}
                                         >
                                             <IoMdImages />
-                                            Copy Image
+                                            {t("hadith.copy_image")}
                                         </button>
                                         <button
                                             className={actionMenuButtonClass}
@@ -526,15 +538,15 @@ const HadithPage = ({
                                                             `${hadithTranslation}\n`,
                                                         )
                                                         .concat(
-                                                            `(HR. ${params.slug}: ${hadith.number})\n`.concat(
-                                                                `Via Thullaabul 'Ilmi ${detailUrl() || window.location.href}`,
+                                                            `${t("hadith.citation", { slug: params.slug, number: hadith.number })}\n`.concat(
+                                                                `${t("hadith.via")} ${detailUrl() || window.location.href}`,
                                                             ),
                                                         ),
                                                 );
                                             }}
                                         >
                                             <IoMdCopy />
-                                            Copy Text
+                                            {t("hadith.copy_text")}
                                         </button>
                                     </div>
                                 </div>
@@ -575,9 +587,8 @@ const HadithPage = ({
                 </div>
             )}
             <p className='px-4 pt-2 text-[11px] text-gray-400 text-center'>
-                Audio diputar bila media hadith tersedia. Tafsir hadith masih
-                dalam tahap persiapan.
-            </p>
+                {t("hadith.audio_tafsir_note")}
+           </p>
             <div className='px-4 pt-2 pb-1 flex gap-2 flex-wrap'>
                 <button
                     type='button'
