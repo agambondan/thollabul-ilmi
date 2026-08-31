@@ -366,51 +366,6 @@ const DashboardPage = () => {
                     </Link>
                 ))}
             </div>
-            {/* Akun shortcuts */}
-            <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
-                {t("dash.account")}
-            </h2>
-            <div className='grid grid-cols-2 sm:grid-cols-4 gap-3'>
-                {[
-                    {
-                        labelKey: "link.profile",
-                        href: "/dashboard/profile",
-                        icon: <BsPerson />,
-                        color: "text-gray-600 dark:text-gray-300",
-                    },
-                    {
-                        labelKey: "link.bookmarks",
-                        href: "/dashboard/bookmarks",
-                        icon: <BsBookmark />,
-                        color: "text-amber-600 dark:text-amber-400",
-                    },
-                    {
-                        labelKey: "link.notes",
-                        href: "/dashboard/notes",
-                        icon: <BsStickyFill />,
-                        color: "text-yellow-600 dark:text-yellow-400",
-                    },
-                    {
-                        labelKey: "link.statistics",
-                        href: "/dashboard/stats",
-                        icon: <BsBarChart />,
-                        color: "text-indigo-600 dark:text-indigo-400",
-                    },
-                ].map((item) => (
-                    <Link
-                        key={item.href}
-                        href={item.href}
-                        className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-700 hover:shadow-sm transition-all px-4 py-3 flex items-center gap-3 group'
-                    >
-                        <span className={`text-lg ${item.color}`}>
-                            {item.icon}
-                        </span>
-                        <span className='text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors'>
-                            {t(item.labelKey)}
-                        </span>
-                    </Link>
-                ))}
-            </div>
             {/* Write muhasabah CTA */}
             <div className='mt-6 bg-emerald-700 dark:bg-emerald-800 rounded-xl p-5 flex items-center justify-between gap-4'>
                 <div>

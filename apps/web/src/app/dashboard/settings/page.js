@@ -15,7 +15,7 @@ export default function SettingsPage() {
     const previewAudioRef = useRef(null);
     const [customSounds, setCustomSounds] = useState([]);
     const [uploadName, setUploadName] = useState("");
-    const [uploadingAdzan, setUploadingAdzan] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
 
     const adzanOptions = useMemo(
         () => [
@@ -154,27 +154,64 @@ export default function SettingsPage() {
             "name",
             uploadName || file.name.replace(/\.[^.]+$/, ""),
         );
-        setUploadingAdzan(true);
-        try {
-            const res = await adzanSoundApi.upload(formData);
-            if (!res.ok) {
-                const err = await res.json().catch(() => ({}));
-                toast.error(err?.message || t("settings.upload_adzan_limit"));
-                return;
-            }
-            const data = await res.json();
-            const sound = data?.data ?? data;
-            await loadAdzanSounds();
-            updateAdzanSound({
-                value: `custom:${sound.id}`,
-                label: sound.name,
-                src: sound.url,
-            });
-            setUploadName("");
-            toast.success(t("settings.upload_adzan_success"));
-        } finally {
-            setUploadingAdzan(false);
+        setUploadProgress(1); // Mulai progress
+
+        const token = localStorage.getItem("auth_token");
+        const xhr = new XMLHttpRequest();
+        xhr.open(
+            "POST",
+            `${process.env.NEXT_PUBLIC_API_URL || ""}/api/v1/adzan-sounds`,
+            true,
+        );
+        if (token) {
+            xhr.setRequestHeader("Authorization", `Bearer ${token}`);
         }
+
+        xhr.upload.onprogress = (event) => {
+            if (event.lengthComputable) {
+                const percent = Math.round((event.loaded / event.total) * 100);
+                setUploadProgress(Math.max(1, percent));
+            }
+        };
+
+        xhr.onload = async () => {
+            setUploadProgress(0);
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    const data = JSON.parse(xhr.responseText);
+                    const sound = data?.data ?? data;
+                    await loadAdzanSounds();
+                    updateAdzanSound({
+                        value: `custom:${sound.id}`,
+                        label: sound.name,
+                        src: sound.url,
+                    });
+                    setUploadName("");
+                    toast.success(t("settings.upload_adzan_success"));
+                } catch {
+                    toast.success(t("settings.upload_adzan_success"));
+                    loadAdzanSounds();
+                }
+            } else {
+                try {
+                    const err = JSON.parse(xhr.responseText);
+                    toast.error(
+                        err?.message ||
+                            err?.error ||
+                            t("settings.upload_adzan_limit"),
+                    );
+                } catch {
+                    toast.error(t("settings.upload_adzan_limit"));
+                }
+            }
+        };
+
+        xhr.onerror = () => {
+            setUploadProgress(0);
+            toast.error("Upload gagal. Periksa koneksi internet.");
+        };
+
+        xhr.send(formData);
     };
 
     const deleteAdzanSound = async (sound) => {
@@ -352,18 +389,28 @@ export default function SettingsPage() {
                                 className='flex-1 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                             />
                             <label
-                                className={`px-3 py-1.5 text-xs rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 cursor-pointer ${uploadingAdzan || customSounds.length >= 3 ? "opacity-50 pointer-events-none" : ""}`}
+                                className={`px-3 py-1.5 text-xs rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 cursor-pointer ${uploadProgress > 0 || customSounds.length >= 3 ? "opacity-50 pointer-events-none" : ""}`}
                             >
-                                {t("settings.upload_adzan")}
+                                {uploadProgress > 0
+                                    ? `${uploadProgress}%`
+                                    : t("settings.upload_adzan")}
                                 <input
                                     type='file'
                                     accept='audio/*'
                                     className='hidden'
                                     onChange={handleAdzanUpload}
-                                    disabled={uploadingAdzan}
+                                    disabled={uploadProgress > 0}
                                 />
                             </label>
                         </div>
+                        {uploadProgress > 0 && (
+                            <div className='w-full bg-gray-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden mt-1'>
+                                <div
+                                    className='bg-emerald-600 h-1.5 rounded-full transition-all duration-200'
+                                    style={{ width: `${uploadProgress}%` }}
+                                />
+                            </div>
+                        )}
                         {customSounds.length > 0 && (
                             <ul className='mt-1 space-y-1'>
                                 {customSounds.map((s) => (
