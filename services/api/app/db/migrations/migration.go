@@ -97,4 +97,5 @@ var ModelMigrations []interface{} = []interface{}{
 	model.LessonModule{},
 	model.LessonStep{},
 	model.UserLessonProgress{},
+	model.AdzanSound{},
 }

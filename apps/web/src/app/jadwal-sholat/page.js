@@ -98,6 +98,17 @@ export default function JadwalSholatPage() {
     const gpsTriedRef = useRef(false);
     const audioRef = useRef(null);
     const lastNotifRef = useRef("");
+    const adzanOptions =
+        settings.adzanSound?.startsWith("custom:") && settings.adzanSoundUrl
+            ? [
+                  ...ADZAN_SOUNDS,
+                  {
+                      value: settings.adzanSound,
+                      label: settings.adzanSoundLabel || "Upload Adzan",
+                      src: settings.adzanSoundUrl,
+                  },
+              ]
+            : ADZAN_SOUNDS;
 
     const fetchByCoords = (lat, lng, label) => {
         setLoading(true);
@@ -404,13 +415,22 @@ export default function JadwalSholatPage() {
                             </button>
                             <select
                                 value={settings.adzanSound}
-                                onChange={(e) =>
-                                    updateSetting("adzanSound", e.target.value)
-                                }
+                                onChange={(e) => {
+                                    const next = adzanOptions.find(
+                                        (s) => s.value === e.target.value,
+                                    );
+                                    if (!next) return;
+                                    updateSetting("adzanSound", next.value);
+                                    updateSetting("adzanSoundUrl", next.src);
+                                    updateSetting(
+                                        "adzanSoundLabel",
+                                        next.label,
+                                    );
+                                }}
                                 className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
                                 aria-label='Suara Adzan'
                             >
-                                {ADZAN_SOUNDS.map((s) => (
+                                {adzanOptions.map((s) => (
                                     <option key={s.value} value={s.value}>
                                         {s.label}
                                     </option>
@@ -533,9 +553,11 @@ export default function JadwalSholatPage() {
                 <audio
                     ref={audioRef}
                     src={
+                        settings.adzanSoundUrl ||
                         ADZAN_SOUNDS.find(
                             (s) => s.value === settings.adzanSound,
-                        )?.src || ADZAN_SOUNDS[0].src
+                        )?.src ||
+                        ADZAN_SOUNDS[0].src
                     }
                     preload='auto'
                 />

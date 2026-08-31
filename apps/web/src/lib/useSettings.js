@@ -23,6 +23,8 @@ const DEFAULT_SETTINGS = {
     readerSize: 24,
     notifAdzan: true,
     adzanSound: "default",
+    adzanSoundUrl: "",
+    adzanSoundLabel: "Default Aplikasi",
     notifKajian: true,
     highContrast: false,
     reduceMotion: false,

@@ -109,9 +109,11 @@ const JadwalSholatPage = () => {
                     if (lastNotifRef.current !== todayKey) {
                         lastNotifRef.current = todayKey;
                         const soundSrc =
+                            settings.adzanSoundUrl ||
                             ADZAN_SOUNDS.find(
                                 (s) => s.value === settings.adzanSound,
-                            )?.src || ADZAN_SOUNDS[0].src;
+                            )?.src ||
+                            ADZAN_SOUNDS[0].src;
                         audioRef.current = new Audio(soundSrc);
                         audioRef.current.play().catch(() => {});
 
@@ -144,7 +146,12 @@ const JadwalSholatPage = () => {
         };
         const iv = setInterval(tick, 1000);
         return () => clearInterval(iv);
-    }, [prayers, settings.notifAdzan, settings.adzanSound]);
+    }, [
+        prayers,
+        settings.notifAdzan,
+        settings.adzanSound,
+        settings.adzanSoundUrl,
+    ]);
 
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
@@ -186,7 +193,7 @@ const JadwalSholatPage = () => {
             <p className='text-xs text-gray-400 mb-6'>
                 Adzan{" "}
                 {settings.notifAdzan
-                    ? `aktif · ${ADZAN_SOUNDS.find((s) => s.value === settings.adzanSound)?.label || ADZAN_SOUNDS[0].label}`
+                    ? `aktif · ${settings.adzanSoundLabel || ADZAN_SOUNDS.find((s) => s.value === settings.adzanSound)?.label || ADZAN_SOUNDS[0].label}`
                     : "mati"}
             </p>
 

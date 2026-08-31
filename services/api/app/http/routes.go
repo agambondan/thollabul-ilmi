@@ -135,6 +135,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	newSettingsController := controllers.NewSettingsController(newServices)
 	newChatController := controllers.NewChatController(newServices)
 	newLessonController := controllers.NewLessonController(newServices)
+	newAdzanSoundController := controllers.NewAdzanSoundController(newServices)
 
 	app.Use(middlewares.MetricsMiddleware())
 	app.Get("/health", func(c *fiber.Ctx) error {
@@ -632,6 +633,11 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	// #47b User Settings (protected, sync)
 	master.Get("/settings", jwt, newSettingsController.Get)
 	master.Put("/settings", jwt, newSettingsController.Upsert)
+
+	// Adzan sounds: user-uploaded adzan playlist (max 3 per user)
+	master.Get("/adzan-sounds", jwt, newAdzanSoundController.FindMine)
+	master.Post("/adzan-sounds", jwt, newAdzanSoundController.Upload)
+	master.Delete("/adzan-sounds/:id", jwt, newAdzanSoundController.Delete)
 
 	// #47c Lessons (public read, protected progress)
 	master.Get("/lessons", newLessonController.List)

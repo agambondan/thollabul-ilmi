@@ -1746,6 +1746,11 @@ export const translations = {
         "settings.notif_adzan": "Reminder Adzan",
         "settings.adzan_sound": "Suara Adzan",
         "settings.test_sound": "Tes Suara",
+        "settings.upload_adzan": "Upload Adzan",
+        "settings.upload_adzan_name": "Nama suara",
+        "settings.upload_adzan_limit": "Maksimal 3 upload adzan per user",
+        "settings.upload_adzan_success": "Suara adzan tersimpan",
+        "settings.delete_adzan": "Hapus",
         "settings.notif_denied": "Izin notifikasi ditolak browser",
         "settings.sound_blocked":
             "Audio diblokir browser. Klik Tes Suara lagi.",
@@ -4022,6 +4027,11 @@ export const translations = {
         "settings.notif_adzan": "Adzan Reminder",
         "settings.adzan_sound": "Adzan Sound",
         "settings.test_sound": "Test Sound",
+        "settings.upload_adzan": "Upload Adzan",
+        "settings.upload_adzan_name": "Sound name",
+        "settings.upload_adzan_limit": "Maximum 3 adzan uploads per user",
+        "settings.upload_adzan_success": "Adzan sound saved",
+        "settings.delete_adzan": "Delete",
         "settings.notif_denied": "Browser notification permission denied",
         "settings.sound_blocked":
             "Audio blocked by browser. Click Test Sound again.",

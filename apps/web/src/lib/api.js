@@ -484,6 +484,17 @@ export const developerApi = {
         authFetch(`/api/v1/developer/keys/${id}`, { method: "DELETE" }),
 };
 
+export const adzanSoundApi = {
+    list: () => authFetch("/api/v1/adzan-sounds"),
+    upload: (formData) =>
+        authFetch("/api/v1/adzan-sounds", {
+            method: "POST",
+            body: formData,
+        }),
+    remove: (id) =>
+        authFetch(`/api/v1/adzan-sounds/${id}`, { method: "DELETE" }),
+};
+
 export const notificationApi = {
     getSettings: () => authFetch("/api/v1/notifications/settings"),
     updateSettings: (settings) =>

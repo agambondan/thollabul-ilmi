@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "@/context/Locale";
+import { adzanSoundApi } from "@/lib/api";
 import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import SettingRow from "./_components/SettingRow";
@@ -12,6 +13,48 @@ export default function SettingsPage() {
     const { settings, updateSetting, syncWithBackend } = useSettings();
     const { isWide } = useLayoutMode();
     const previewAudioRef = useRef(null);
+    const [customSounds, setCustomSounds] = useState([]);
+    const [uploadName, setUploadName] = useState("");
+    const [uploadingAdzan, setUploadingAdzan] = useState(false);
+
+    const adzanOptions = useMemo(
+        () => [
+            ...ADZAN_SOUNDS,
+            ...customSounds.map((s) => ({
+                value: `custom:${s.id}`,
+                label: s.name,
+                src: s.url,
+                custom: true,
+                id: s.id,
+            })),
+        ],
+        [customSounds],
+    );
+    const selectedAdzan =
+        adzanOptions.find((s) => s.value === settings.adzanSound) ||
+        adzanOptions[0];
+
+    const loadAdzanSounds = async () => {
+        const res = await adzanSoundApi.list();
+        if (!res.ok) return;
+        const data = await res.json();
+        setCustomSounds(data?.data ?? data ?? []);
+    };
+
+    useEffect(() => {
+        let mounted = true;
+        adzanSoundApi
+            .list()
+            .then(async (res) => {
+                if (!res.ok || !mounted) return;
+                const data = await res.json();
+                setCustomSounds(data?.data ?? data ?? []);
+            })
+            .catch(() => {});
+        return () => {
+            mounted = false;
+        };
+    }, []);
 
     const handleAdzanToggle = async (e) => {
         const next = e.target.checked;
@@ -37,17 +80,61 @@ export default function SettingsPage() {
         updateSetting("notifAdzan", next);
     };
 
+    const updateAdzanSound = (sound) => {
+        updateSetting("adzanSound", sound.value);
+        updateSetting("adzanSoundUrl", sound.src);
+        updateSetting("adzanSoundLabel", sound.label);
+    };
+
     const playAdzanPreview = () => {
-        const sound =
-            ADZAN_SOUNDS.find((s) => s.value === settings.adzanSound) ||
-            ADZAN_SOUNDS[0];
-        if (!sound) return;
+        if (!selectedAdzan) return;
         try {
             previewAudioRef.current?.pause();
         } catch {}
-        const audio = new Audio(sound.src);
+        const audio = new Audio(selectedAdzan.src);
         previewAudioRef.current = audio;
         audio.play().catch(() => toast.error(t("settings.sound_blocked")));
+    };
+
+    const handleAdzanUpload = async (e) => {
+        const file = e.target.files?.[0];
+        e.target.value = "";
+        if (!file) return;
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append(
+            "name",
+            uploadName || file.name.replace(/\.[^.]+$/, ""),
+        );
+        setUploadingAdzan(true);
+        try {
+            const res = await adzanSoundApi.upload(formData);
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                toast.error(err?.message || t("settings.upload_adzan_limit"));
+                return;
+            }
+            const data = await res.json();
+            const sound = data?.data ?? data;
+            await loadAdzanSounds();
+            updateAdzanSound({
+                value: `custom:${sound.id}`,
+                label: sound.name,
+                src: sound.url,
+            });
+            setUploadName("");
+            toast.success(t("settings.upload_adzan_success"));
+        } finally {
+            setUploadingAdzan(false);
+        }
+    };
+
+    const deleteAdzanSound = async (sound) => {
+        const res = await adzanSoundApi.remove(sound.id);
+        if (!res.ok) return;
+        await loadAdzanSounds();
+        if (settings.adzanSound === `custom:${sound.id}`)
+            updateAdzanSound(ADZAN_SOUNDS[0]);
     };
 
     const handleThemeChange = (val) => {
@@ -174,12 +261,15 @@ export default function SettingsPage() {
                         <div className='flex items-center gap-2'>
                             <select
                                 value={settings.adzanSound}
-                                onChange={(e) =>
-                                    updateSetting("adzanSound", e.target.value)
-                                }
+                                onChange={(e) => {
+                                    const next = adzanOptions.find(
+                                        (s) => s.value === e.target.value,
+                                    );
+                                    if (next) updateAdzanSound(next);
+                                }}
                                 className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                             >
-                                {ADZAN_SOUNDS.map((s) => (
+                                {adzanOptions.map((s) => (
                                     <option key={s.value} value={s.value}>
                                         {s.label}
                                     </option>
@@ -194,6 +284,54 @@ export default function SettingsPage() {
                             </button>
                         </div>
                     </SettingRow>
+                    <div className='mt-3 flex flex-col gap-2'>
+                        <p className='text-xs text-gray-500 dark:text-gray-400'>
+                            {t("settings.upload_adzan_limit")} (
+                            {customSounds.length}/3)
+                        </p>
+                        <div className='flex items-center gap-2'>
+                            <input
+                                type='text'
+                                value={uploadName}
+                                onChange={(e) => setUploadName(e.target.value)}
+                                placeholder={t("settings.upload_adzan_name")}
+                                className='flex-1 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                            />
+                            <label
+                                className={`px-3 py-1.5 text-xs rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 cursor-pointer ${uploadingAdzan || customSounds.length >= 3 ? "opacity-50 pointer-events-none" : ""}`}
+                            >
+                                {t("settings.upload_adzan")}
+                                <input
+                                    type='file'
+                                    accept='audio/*'
+                                    className='hidden'
+                                    onChange={handleAdzanUpload}
+                                    disabled={uploadingAdzan}
+                                />
+                            </label>
+                        </div>
+                        {customSounds.length > 0 && (
+                            <ul className='mt-1 space-y-1'>
+                                {customSounds.map((s) => (
+                                    <li
+                                        key={s.id}
+                                        className='flex items-center justify-between text-xs text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-slate-700/40 rounded-lg px-3 py-1.5'
+                                    >
+                                        <span className='truncate'>
+                                            {s.name}
+                                        </span>
+                                        <button
+                                            type='button'
+                                            onClick={() => deleteAdzanSound(s)}
+                                            className='text-red-600 dark:text-red-400 hover:underline'
+                                        >
+                                            {t("settings.delete_adzan")}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
                     <SettingRow label={t("settings.notif_kajian")}>
                         <input
                             type='checkbox'
