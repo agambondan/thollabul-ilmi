@@ -258,14 +258,14 @@ const AyahPage = ({
                 <ShareAyah
                     images={listMasjidImage}
                     isCopiedCallback={() => SetShareImagePopUp(false)}
-                    text={`Allah Subhanahu Wa Ta'ala berfirman:\n`
+                    text={`${t("ayah.allah_says")}\n`
                         .concat(`${ayah.translation.ar} `)
                         .concat(`۝${NumberToArabic(ayah.number)}\n`)
                         .concat(ayahLatin ? `${ayahLatin}\n` : "")
                         .concat(`${ayahTranslation}\n`)
                         .concat(
-                            `(QS. ${surah.translation.latin_en} ${surah.number}: ${t("common.verse")} ${ayah.number})\n`.concat(
-                                `Via Thullaabul 'Ilmi ${window.location.href.split("#")[0]}#ayah-${ayah.number}`,
+                            `${t("ayah.citation", { latin: surah.translation.latin_en, number: surah.number, verse: t("common.verse"), ayah: ayah.number })}\n`.concat(
+                                `${t("ayah.via")} ${window.location.href.split("#")[0]}#ayah-${ayah.number}`,
                             ),
                         )}
                 />
@@ -298,7 +298,7 @@ const AyahPage = ({
                             }
                         >
                             <button
-                                title={isPlaying ? "Pause" : "Putar Audio"}
+                                title={isPlaying ? t("ayah.audio_pause") : t("ayah.audio_play")}
                                 onClick={handleAudio}
                                 disabled={audioLoading}
                                 className={`p-2 rounded-lg text-lg transition-colors disabled:opacity-50 ${
@@ -423,10 +423,10 @@ const AyahPage = ({
                                                         <BsFileEarmarkPlay />
                                                     )}
                                                     {audioLoading
-                                                        ? "Memuat audio..."
+                                                        ? t("ayah.audio_loading")
                                                         : isPlaying
-                                                          ? "Pause Audio"
-                                                          : "Putar Audio"}
+                                                          ? t("ayah.audio_pause")
+                                                          : t("ayah.audio_play")}
                                                 </button>
                                                 <button
                                                     className={
@@ -476,7 +476,7 @@ const AyahPage = ({
                                                         refId={ayah.id}
                                                         className="!p-0 !text-base relative before:absolute before:-inset-2 before:content-['']"
                                                     />
-                                                    <span>Bookmark</span>
+                                                    <span>{t("ayah.bookmark_label")}</span>
                                                 </div>
                                                 <div className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'>
                                                     <NoteButton
@@ -484,7 +484,7 @@ const AyahPage = ({
                                                         refId={ayah.id}
                                                         className="!p-0 !text-base relative before:absolute before:-inset-2 before:content-['']"
                                                     />
-                                                    <span>Catatan</span>
+                                                    <span>{t("ayah.note_label")}</span>
                                                 </div>
                                                 <button
                                                     className={
@@ -511,7 +511,7 @@ const AyahPage = ({
                                             }
                                         >
                                             <IoIosLink />
-                                            Copy Link
+                                            {t("ayah.copy_link")}
                                         </button>
                                         <button
                                             className={actionMenuButtonClass}
@@ -547,13 +547,13 @@ const AyahPage = ({
                                             }}
                                         >
                                             <IoMdImages />
-                                            Copy Image
+                                            {t("ayah.copy_image")}
                                         </button>
                                         <button
                                             className={actionMenuButtonClass}
                                             onClick={() =>
                                                 copyText(
-                                                    `Allah Subhanahu Wa Ta'ala berfirman:\n\n`
+                                                    `${t("ayah.allah_says")}\n\n`
                                                         .concat(
                                                             `${ayah.translation.ar}\n\n`,
                                                         )
@@ -566,15 +566,15 @@ const AyahPage = ({
                                                             `${ayahTranslation}\n\n`,
                                                         )
                                                         .concat(
-                                                            `(QS. ${surah.translation.latin_en} ${surah.number}: ${t("common.verse")} ${ayah.number})\n`.concat(
-                                                                `Via Thullaabul 'Ilmi ${window.location.href.split("#")[0]}#ayah-${ayah.number}`,
+                                                            `${t("ayah.citation", { latin: surah.translation.latin_en, number: surah.number, verse: t("common.verse"), ayah: ayah.number })}\n`.concat(
+                                                                `${t("ayah.via")} ${window.location.href.split("#")[0]}#ayah-${ayah.number}`,
                                                             ),
                                                         ),
                                                 )
                                             }
                                         >
                                             <IoMdCopy />
-                                            Copy Ayah
+                                            {t("ayah.copy_ayah")}
                                         </button>
                                     </div>
                                 </div>
