@@ -24,7 +24,7 @@ const getSurahName = (ayah, lang) => {
 };
 const stripTags = (html) => (html || "").replace(/<[^>]+>/g, "");
 
-const pageMeta = (ayahs, lang, page) => {
+const pageMeta = (ayahs, lang, page, fallback) => {
     const first = ayahs[0] ?? {};
     const names = [];
     for (const ayah of ayahs) {
@@ -32,9 +32,9 @@ const pageMeta = (ayahs, lang, page) => {
         if (label && !names.includes(label)) names.push(label);
     }
     return {
-        juz: first.juz_number || first.juz || "-",
+        juz: first.juz_number || first.juz || fallback,
         page: first.page || page,
-        surah: names.join(" / ") || "-",
+        surah: names.join(" / ") || fallback,
     };
 };
 
@@ -100,7 +100,10 @@ export default function MushafPageReader() {
         window.addEventListener("keydown", handler);
         return () => window.removeEventListener("keydown", handler);
     }, [goToPage, loading, page]);
-    const meta = useMemo(() => pageMeta(ayahs, lang, page), [ayahs, lang, page]);
+    const meta = useMemo(
+        () => pageMeta(ayahs, lang, page, t("mushaf.placeholder")),
+        [ayahs, lang, page, t],
+    );
     const wordsByAyah = useMemo(() => {
         const map = new Map();
         for (const word of words) {
@@ -159,7 +162,7 @@ export default function MushafPageReader() {
                                     : "bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
                             }`}
                         >
-                            {f.label}
+                            {t(`mushaf.font_${f.id}`, { defaultValue: f.label })}
                         </button>
                     ))}
                     <button
@@ -180,9 +183,15 @@ export default function MushafPageReader() {
                 onTouchEnd={handleTouchEnd}
             >
                 <div className='grid grid-cols-3 gap-2 bg-[#fff4bf] px-3 py-2 text-[11px] font-bold text-center border-b-2 border-emerald-500'>
-                    <div className='rounded-full bg-white border border-emerald-500 py-1'>JUZ {meta.juz}</div>
-                    <div className='rounded-full bg-white border border-emerald-500 py-1'>{meta.page}</div>
-                    <div className='rounded-full bg-white border border-emerald-500 py-1 truncate'>{meta.surah}</div>
+                    <div className='rounded-full bg-white border border-emerald-500 py-1'>
+                        {t("mushaf.juz")} {meta.juz}
+                    </div>
+                    <div className='rounded-full bg-white border border-emerald-500 py-1'>
+                        {meta.page}
+                    </div>
+                    <div className='rounded-full bg-white border border-emerald-500 py-1 truncate'>
+                        {meta.surah}
+                    </div>
                 </div>
 
                 <div className='min-h-[720px] p-3 space-y-3'>
