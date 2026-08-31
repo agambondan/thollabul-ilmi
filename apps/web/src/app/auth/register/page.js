@@ -19,7 +19,7 @@ const RegisterPage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const nextUrl = getSafeNextPath(searchParams.get("next"), "/dashboard");
+    const nextUrl = getSafeNextPath(searchParams.get("next"), "/");
 
     useEffect(() => {
         if (authLoading) return;

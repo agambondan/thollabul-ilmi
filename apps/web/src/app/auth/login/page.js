@@ -19,7 +19,7 @@ const LoginPage = () => {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const nextUrl = getSafeNextPath(searchParams.get("next"), "/dashboard");
+    const nextUrl = getSafeNextPath(searchParams.get("next"), "/");
     const registered = searchParams.get("registered") === "1";
 
     useEffect(() => {
