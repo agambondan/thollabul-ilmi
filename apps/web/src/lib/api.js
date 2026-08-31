@@ -961,6 +961,7 @@ export const quranApi = {
         ),
     byPage: (page) => fetch(`${API_URL}/api/v1/ayah/page/${page}`),
     byHizb: (hizb) => fetch(`${API_URL}/api/v1/ayah/hizb/${hizb}`),
+    mufrodatByPage: (page) => fetch(`${API_URL}/api/v1/mufrodat/page/${page}`),
 };
 
 export const kalkulasiZakatApi = {
