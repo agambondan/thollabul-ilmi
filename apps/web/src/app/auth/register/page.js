@@ -2,6 +2,7 @@
 
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
+import PwaInstallNotice from "@/components/PwaInstallNotice";
 import { buildLoginHref, getSafeNextPath } from "@/lib/authRedirect";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -42,6 +43,14 @@ const RegisterPage = () => {
     return (
         <main className='min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4'>
             <div className='w-full max-w-md'>
+                <div className='flex justify-end mb-3'>
+                    <Link
+                        href='/'
+                        className='inline-flex items-center gap-1 text-sm text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300'
+                    >
+                        ← {t("auth.back_home")}
+                    </Link>
+                </div>
                 <div className='text-center mb-8'>
                     <Link href='/' className='inline-block'>
                         <h1 className='text-2xl font-extrabold text-emerald-800 dark:text-emerald-400'>
@@ -60,6 +69,8 @@ const RegisterPage = () => {
                     <h2 className='text-xl font-bold text-emerald-900 dark:text-white mb-6'>
                         {t("auth.register_title")}
                     </h2>
+
+                    <PwaInstallNotice />
 
                     {error && (
                         <div className='mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400'>
@@ -114,8 +125,8 @@ const RegisterPage = () => {
                                     type='button'
                                     aria-label={
                                         showPassword
-                                            ? "Sembunyikan password"
-                                            : "Lihat password"
+                                            ? t("auth.hide_password")
+                                            : t("auth.show_password")
                                     }
                                     onClick={() =>
                                         setShowPassword((current) => !current)
@@ -140,7 +151,7 @@ const RegisterPage = () => {
                     <div className='my-5 flex items-center gap-3'>
                         <div className='flex-1 h-px bg-gray-200 dark:bg-slate-600' />
                         <span className='text-xs uppercase text-gray-400 tracking-wider'>
-                            atau
+                            {t("auth.or")}
                         </span>
                         <div className='flex-1 h-px bg-gray-200 dark:bg-slate-600' />
                     </div>
@@ -173,7 +184,7 @@ const RegisterPage = () => {
                                 d='M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z'
                             />
                         </svg>
-                        Daftar dengan Google
+                        {t("auth.google_register")}
                     </a>
 
                     <p className='mt-5 text-center text-sm text-gray-500 dark:text-gray-400'>

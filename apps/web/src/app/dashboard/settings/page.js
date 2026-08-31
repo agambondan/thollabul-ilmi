@@ -8,6 +8,15 @@ import { useLayoutMode } from "@/lib/useLayoutMode";
 import SettingRow from "./_components/SettingRow";
 import { toast } from "react-hot-toast";
 
+const REMINDER_LEAD_OPTIONS = [0, 5, 10, 15, 30];
+const PRAYER_REMINDER_ROWS = [
+    ["fajr", "prayer.fajr"],
+    ["dhuhr", "prayer.dhuhr"],
+    ["asr", "prayer.asr"],
+    ["maghrib", "prayer.maghrib"],
+    ["isha", "prayer.isha"],
+];
+
 export default function SettingsPage() {
     const { t, lang, setLang } = useLocale();
     const { settings, updateSetting, syncWithBackend } = useSettings();
@@ -81,6 +90,16 @@ export default function SettingsPage() {
     };
 
     const [isPlayingPreview, setIsPlayingPreview] = useState(false);
+
+    const updateAdzanReminderLead = (value) =>
+        updateSetting("adzanReminderLead", Number(value));
+
+    const updateAdzanReminderLeadForPrayer = (key, value) => {
+        const next = { ...(settings.adzanReminderLeadByPrayer || {}) };
+        if (value === "global") delete next[key];
+        else next[key] = Number(value);
+        updateSetting("adzanReminderLeadByPrayer", next);
+    };
 
     const updateAdzanSound = (sound) => {
         updateSetting("adzanSound", sound.value);
@@ -314,6 +333,54 @@ export default function SettingsPage() {
                             onChange={handleAdzanToggle}
                             className='w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 dark:focus:ring-emerald-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
                         />
+                    </SettingRow>
+                    <SettingRow label={t("settings.adzan_reminder_lead")}>
+                        <select
+                            value={settings.adzanReminderLead ?? 10}
+                            onChange={(e) => updateAdzanReminderLead(e.target.value)}
+                            className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                        >
+                            {REMINDER_LEAD_OPTIONS.map((m) => (
+                                <option key={m} value={m}>
+                                    {m === 0
+                                        ? t("settings.adzan_at_time")
+                                        : `${m} ${t("settings.minutes_before")}`}
+                                </option>
+                            ))}
+                        </select>
+                    </SettingRow>
+                    <SettingRow label={t("settings.adzan_reminder_per_prayer")}>
+                        <div className='flex flex-wrap gap-2'>
+                            {PRAYER_REMINDER_ROWS.map(([key, labelKey]) => (
+                                <select
+                                    key={key}
+                                    value={
+                                        settings.adzanReminderLeadByPrayer?.[
+                                            key
+                                        ] ?? "global"
+                                    }
+                                    onChange={(e) =>
+                                        updateAdzanReminderLeadForPrayer(
+                                            key,
+                                            e.target.value,
+                                        )
+                                    }
+                                    className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
+                                >
+                                    <option value='global'>
+                                        {t(labelKey)} {t("settings.global")}
+                                    </option>
+                                    {REMINDER_LEAD_OPTIONS.map((m) => (
+                                        <option key={m} value={m}>
+                                            {t(labelKey)} ·{" "}
+                                            {m === 0
+                                                ? t("settings.adzan_at_time")
+                                                : `${m} ${t("settings.minutes_before")}`}
+                                        </option>
+                                    ))}
+                                </select>
+                            ))}
+                        </div>
                     </SettingRow>
                     <SettingRow label={t("settings.adzan_sound")}>
                         <div className='flex items-center gap-2'>

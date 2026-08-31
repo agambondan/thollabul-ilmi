@@ -98,6 +98,22 @@ export default function JadwalSholatPage() {
     const gpsTriedRef = useRef(false);
     const audioRef = useRef(null);
     const lastNotifRef = useRef("");
+    const lastReminderRef = useRef("");
+    const REMINDER_LEAD_OPTIONS = [0, 5, 10, 15, 30];
+    const PRAYER_KEYS_FOR_REMINDER = [
+        "fajr",
+        "dhuhr",
+        "asr",
+        "maghrib",
+        "isha",
+    ];
+    const getLeadForPrayer = (key) => {
+        const perPrayer = settings.adzanReminderLeadByPrayer?.[key];
+        if (REMINDER_LEAD_OPTIONS.includes(perPrayer)) return perPrayer;
+        return REMINDER_LEAD_OPTIONS.includes(settings.adzanReminderLead)
+            ? settings.adzanReminderLead
+            : 10;
+    };
     const adzanOptions =
         settings.adzanSound?.startsWith("custom:") && settings.adzanSoundUrl
             ? [
@@ -204,6 +220,34 @@ export default function JadwalSholatPage() {
                             });
                         }
                     }
+                    const lead = getLeadForPrayer(p.key);
+                    if (
+                        settings.notifAdzan &&
+                        lead > 0 &&
+                        diff <= lead * 60 * 1000 &&
+                        lastReminderRef.current !== p.key
+                    ) {
+                        lastReminderRef.current = p.key;
+                        const rTitle = `${t("prayer_schedule.reminder_title")} ${t(p.labelKey)}`;
+                        const rBody = `${t("prayer_schedule.reminder_body")} ${lead} ${t("prayer_schedule.minutes")}`;
+                        if (notifGranted) {
+                            new Notification(rTitle, {
+                                body: rBody,
+                                icon: "/icon.png",
+                            });
+                        }
+                        if (
+                            "serviceWorker" in navigator &&
+                            navigator.serviceWorker.controller
+                        ) {
+                            navigator.serviceWorker.controller.postMessage({
+                                type: "ADZAN_NOTIFICATION",
+                                title: rTitle,
+                                body: rBody,
+                                url: "/jadwal-sholat",
+                            });
+                        }
+                    }
                     setCountdown(
                         `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`,
                     );
@@ -212,11 +256,20 @@ export default function JadwalSholatPage() {
             }
             setCountdown("");
             lastNotifRef.current = "";
+            lastReminderRef.current = "";
         };
         tick();
         const iv = setInterval(tick, 1000);
         return () => clearInterval(iv);
-    }, [prayers, settings.notifAdzan, settings.adzanSound, notifGranted, t]);
+    }, [
+        prayers,
+        settings.notifAdzan,
+        settings.adzanSound,
+        settings.adzanReminderLead,
+        settings.adzanReminderLeadByPrayer,
+        notifGranted,
+        t,
+    ]);
 
     useEffect(() => {
         fetchByCoords(city.lat, city.lng, city.name);
@@ -433,9 +486,75 @@ export default function JadwalSholatPage() {
                                 {adzanOptions.map((s) => (
                                     <option key={s.value} value={s.value}>
                                         {s.label}
-                                    </option>
+                                   </option>
                                 ))}
-                            </select>
+                           </select>
+                       </div>
+                    )}
+                    {showSettings && (
+                        <div className='mt-3 flex items-center gap-3'>
+                            <span className='text-xs text-gray-500 dark:text-gray-400'>
+                                {t("prayer_schedule.reminder_lead")}
+                           </span>
+                            <select
+                                value={settings.adzanReminderLead ?? 10}
+                                onChange={(e) =>
+                                    updateSetting(
+                                        "adzanReminderLead",
+                                        Number(e.target.value),
+                                    )
+                                }
+                                className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
+                                aria-label='Jeda pengingat'
+                            >
+                                {REMINDER_LEAD_OPTIONS.map((m) => (
+                                    <option key={m} value={m}>
+                                        {m === 0
+                                            ? t("prayer_schedule.at_time")
+                                            : `${m} ${t("prayer_schedule.minutes")}`}
+                                   </option>
+                                ))}
+                           </select>
+                            {PRAYER_KEYS_FOR_REMINDER.map((key) => {
+                                const row = PRAYERS.find((p) => p.key === key);
+                                const label = row ? t(row.labelKey) : key;
+                                const perPrayer =
+                                    settings.adzanReminderLeadByPrayer?.[key];
+                                return (
+                                    <select
+                                        key={key}
+                                        value={perPrayer ?? "global"}
+                                        onChange={(e) => {
+                                            const v = e.target.value;
+                                            const next = {
+                                                ...(settings.adzanReminderLeadByPrayer ||
+                                                    {}),
+                                            };
+                                            if (v === "global") delete next[key];
+                                            else next[key] = Number(v);
+                                            updateSetting(
+                                                "adzanReminderLeadByPrayer",
+                                                next,
+                                            );
+                                        }}
+                                        className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
+                                        aria-label={`Jeda ${key}`}
+                                    >
+                                        <option value='global'>
+                                            {label} {t("prayer_schedule.global")}
+                                       </option>
+                                        {REMINDER_LEAD_OPTIONS.map((m) => (
+                                            <option key={m} value={m}>
+                                                {label}{" "}
+                                                {m === 0
+                                                    ? t("prayer_schedule.at_time")
+                                                    : `${m} ${t("prayer_schedule.minutes")}`}
+                                           </option>
+                                        ))}
+                                   </select>
+                                );
+                            })}
+                            <span className='sr-only'>Per-prayer reminder config</span>
                         </div>
                     )}
                 </div>

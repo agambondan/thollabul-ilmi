@@ -25,6 +25,8 @@ const DEFAULT_SETTINGS = {
     adzanSound: "default",
     adzanSoundUrl: "",
     adzanSoundLabel: "Default Aplikasi",
+    adzanReminderLead: 10,
+    adzanReminderLeadByPrayer: {},
     notifKajian: true,
     highContrast: false,
     reduceMotion: false,
