@@ -2,7 +2,7 @@
 
 import { PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
 import { useLocale } from "@/context/Locale";
-import { adminLibraryApi } from "@/lib/api";
+import { adminLibraryApi, uploadWithProgress } from "@/lib/api";
 import { useEffect, useState } from "react";
 import {
     BsBoxArrowUpRight,
@@ -87,6 +87,7 @@ const AdminLibraryPage = () => {
     const [deleteId, setDeleteId] = useState(null);
     const [resourceFile, setResourceFile] = useState(null);
     const [uploadingResource, setUploadingResource] = useState(false);
+    const [resourceUploadProgress, setResourceUploadProgress] = useState(0);
     const [clearingResource, setClearingResource] = useState(false);
 
     const load = async () => {
@@ -161,11 +162,16 @@ const AdminLibraryPage = () => {
     const uploadResource = async () => {
         if (!editId || !resourceFile) return;
         setUploadingResource(true);
+        setResourceUploadProgress(1);
         try {
-            const res = await adminLibraryApi.uploadResource(
-                editId,
-                resourceFile,
+            const fd = new FormData();
+            fd.append("file", resourceFile);
+            const res = await uploadWithProgress(
+                `/api/v1/library/books/${editId}/resource`,
+                fd,
+                (percent) => setResourceUploadProgress(percent),
             );
+            setResourceUploadProgress(0);
             if (!res.ok) throw new Error("upload failed");
             const data = await res.json();
             const book = data?.data ?? data;
@@ -176,6 +182,7 @@ const AdminLibraryPage = () => {
             fb("admin:mutation-error", err.message || "Gagal unggah resource.");
         } finally {
             setUploadingResource(false);
+            setResourceUploadProgress(0);
         }
     };
 
@@ -287,8 +294,7 @@ const AdminLibraryPage = () => {
                             <Td className='hidden lg:table-cell'>
                                 <span
                                     className={`rounded px-2 py-0.5 text-xs ${
-                                        item.license_status ===
-                                        "verified"
+                                        item.license_status === "verified"
                                             ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
                                             : item.license_status ===
                                                 "restricted"
@@ -296,14 +302,11 @@ const AdminLibraryPage = () => {
                                               : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
                                     }`}
                                 >
-                                    {item.license_status ||
-                                        "unverified"}
+                                    {item.license_status || "unverified"}
                                 </span>
                                 {item.is_source_verified ? (
                                     <p className='mt-1 text-[11px] text-emerald-600 dark:text-emerald-300'>
-                                        {t(
-                                            "admin.library.source_verified",
-                                        )}
+                                        {t("admin.library.source_verified")}
                                     </p>
                                 ) : null}
                             </Td>
@@ -337,9 +340,7 @@ const AdminLibraryPage = () => {
                                         aria-label={t("common.delete")}
                                         className='rounded p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
                                         onClick={() =>
-                                            setDeleteId(
-                                                item.id ?? item._id,
-                                            )
+                                            setDeleteId(item.id ?? item._id)
                                         }
                                         title={t("common.delete")}
                                     >
@@ -609,13 +610,23 @@ const AdminLibraryPage = () => {
                                                     type='button'
                                                 >
                                                     {uploadingResource
-                                                        ? t(
-                                                              "admin.library.uploading_resource",
-                                                          )
+                                                        ? `${t("admin.library.uploading_resource")} ${resourceUploadProgress}%`
                                                         : t(
                                                               "admin.library.upload_resource",
                                                           )}
                                                 </button>
+                                                {uploadingResource &&
+                                                    resourceUploadProgress >
+                                                        0 && (
+                                                        <div className='w-full bg-gray-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden'>
+                                                            <div
+                                                                className='bg-emerald-600 h-1.5 rounded-full transition-all duration-200'
+                                                                style={{
+                                                                    width: `${resourceUploadProgress}%`,
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    )}
                                                 {form.file_name ? (
                                                     <>
                                                         <span className='text-xs text-gray-500 dark:text-gray-400'>

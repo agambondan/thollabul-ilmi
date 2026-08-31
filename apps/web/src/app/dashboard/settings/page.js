@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "@/context/Locale";
-import { adzanSoundApi } from "@/lib/api";
+import { adzanSoundApi, uploadWithProgress } from "@/lib/api";
 import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import SettingRow from "./_components/SettingRow";
@@ -154,64 +154,37 @@ export default function SettingsPage() {
             "name",
             uploadName || file.name.replace(/\.[^.]+$/, ""),
         );
-        setUploadProgress(1); // Mulai progress
-
-        const token = localStorage.getItem("auth_token");
-        const xhr = new XMLHttpRequest();
-        xhr.open(
-            "POST",
-            `${process.env.NEXT_PUBLIC_API_URL || ""}/api/v1/adzan-sounds`,
-            true,
-        );
-        if (token) {
-            xhr.setRequestHeader("Authorization", `Bearer ${token}`);
-        }
-
-        xhr.upload.onprogress = (event) => {
-            if (event.lengthComputable) {
-                const percent = Math.round((event.loaded / event.total) * 100);
-                setUploadProgress(Math.max(1, percent));
-            }
-        };
-
-        xhr.onload = async () => {
+        setUploadProgress(1);
+        try {
+            const res = await uploadWithProgress(
+                "/api/v1/adzan-sounds",
+                formData,
+                (percent) => setUploadProgress(percent),
+            );
             setUploadProgress(0);
-            if (xhr.status >= 200 && xhr.status < 300) {
+            if (!res.ok) {
+                let msg = t("settings.upload_adzan_limit");
                 try {
-                    const data = JSON.parse(xhr.responseText);
-                    const sound = data?.data ?? data;
-                    await loadAdzanSounds();
-                    updateAdzanSound({
-                        value: `custom:${sound.id}`,
-                        label: sound.name,
-                        src: sound.url,
-                    });
-                    setUploadName("");
-                    toast.success(t("settings.upload_adzan_success"));
-                } catch {
-                    toast.success(t("settings.upload_adzan_success"));
-                    loadAdzanSounds();
-                }
-            } else {
-                try {
-                    const err = JSON.parse(xhr.responseText);
-                    toast.error(
-                        err?.message ||
-                            err?.error ||
-                            t("settings.upload_adzan_limit"),
-                    );
-                } catch {
-                    toast.error(t("settings.upload_adzan_limit"));
-                }
+                    const err = await res.json();
+                    msg = err?.message || err?.error || msg;
+                } catch {}
+                toast.error(msg);
+                return;
             }
-        };
-
-        xhr.onerror = () => {
+            const data = await res.json();
+            const sound = data?.data ?? data;
+            await loadAdzanSounds();
+            updateAdzanSound({
+                value: `custom:${sound.id}`,
+                label: sound.name,
+                src: sound.url,
+            });
+            setUploadName("");
+            toast.success(t("settings.upload_adzan_success"));
+        } catch (err) {
             setUploadProgress(0);
             toast.error("Upload gagal. Periksa koneksi internet.");
-        };
-
-        xhr.send(formData);
+        }
     };
 
     const deleteAdzanSound = async (sound) => {

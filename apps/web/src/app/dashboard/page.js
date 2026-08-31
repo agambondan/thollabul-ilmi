@@ -1,6 +1,7 @@
 "use client";
 
 import DailyReminderCarousel from "@/components/DailyReminderCarousel";
+import AdzanQuickControl from "@/components/AdzanQuickControl";
 import PrayerCountdownWidget from "@/components/PrayerCountdownWidget";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
@@ -343,6 +344,10 @@ const DashboardPage = () => {
                         </div>
                     )}
                 </div>
+            </div>
+            {/* Adzan quick control */}
+            <div className='mb-6'>
+                <AdzanQuickControl />
             </div>
             {/* Quick access */}
             <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>

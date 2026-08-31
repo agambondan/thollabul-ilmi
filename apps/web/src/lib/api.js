@@ -1092,3 +1092,32 @@ export const userWirdApi = {
         }),
     delete: (id) => authFetch(`/api/v1/user-wird/${id}`, { method: "DELETE" }),
 };
+
+export const uploadWithProgress = (path, formData, onProgress) => {
+    return new Promise((resolve, reject) => {
+        if (typeof XMLHttpRequest === "undefined") {
+            reject(new Error("XHR not supported"));
+            return;
+        }
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", `${API_URL}${path}`, true);
+        const token = getToken();
+        if (token) xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+        xhr.upload.onprogress = (event) => {
+            if (event.lengthComputable && typeof onProgress === "function") {
+                const percent = Math.round((event.loaded / event.total) * 100);
+                onProgress(percent);
+            }
+        };
+        xhr.onload = () => {
+            const res = new Response(xhr.responseText, {
+                status: xhr.status,
+                statusText: xhr.statusText,
+                headers: xhr.getAllResponseHeaders(),
+            });
+            resolve(res);
+        };
+        xhr.onerror = () => reject(new Error("Network error"));
+        xhr.send(formData);
+    });
+};

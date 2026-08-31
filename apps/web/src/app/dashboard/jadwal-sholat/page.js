@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/context/Locale";
 import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
 import { useLayoutMode } from "@/lib/useLayoutMode";
+import AdzanQuickControl from "@/components/AdzanQuickControl";
 import { toLocalISODate } from "@/lib/date";
 import {
     DEFAULT_PRAYER_LOCATION,
@@ -253,6 +254,10 @@ const JadwalSholatPage = () => {
                     {t("jadwal.error")}
                 </p>
             )}
+
+            <div className='mt-6'>
+                <AdzanQuickControl compact />
+            </div>
         </div>
     );
 };
