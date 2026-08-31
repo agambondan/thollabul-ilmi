@@ -48,7 +48,8 @@ export default function AdzanQuickControl({
             .then(async (res) => {
                 if (!res.ok || !mounted) return;
                 const data = await res.json();
-                setCustomSounds(data?.data ?? data ?? []);
+                const sounds = data?.data ?? data?.items ?? data ?? [];
+                setCustomSounds(Array.isArray(sounds) ? sounds : []);
             })
             .catch(() => {});
         return () => {
@@ -139,9 +140,9 @@ export default function AdzanQuickControl({
                 setUploading(0);
                 if (!res.ok) return;
                 const data = await res.json();
-                const sound = data?.data ?? data;
+                const sound = data?.data ?? data?.items?.[0] ?? data;
                 await loadCustom()();
-                selectAdzan(`custom:${sound.id}`);
+                if (sound?.id) selectAdzan(`custom:${sound.id}`);
             })
             .catch(() => setUploading(0));
     };

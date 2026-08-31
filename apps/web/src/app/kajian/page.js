@@ -128,7 +128,7 @@ const KajianPage = () => {
                         )}
                     </div>
 
-                    <div className='grid grid-cols-3 gap-3 mb-4'>
+                    <div className='grid grid-cols-3 gap-2 sm:gap-3 mb-4'>
                         <div className='rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-3'>
                             <p className='text-[10px] uppercase tracking-wide text-gray-400'>
                                 {t("kajian.total_label")}

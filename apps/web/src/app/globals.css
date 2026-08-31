@@ -17,6 +17,12 @@
             "NooreHidayah", "Kitab", "Uthmani", "Othmani", "Naskh",
             "Scheherazade", "Amiri", serif;
     }
+
+    html,
+    body {
+        max-width: 100%;
+        overflow-x: clip;
+    }
 }
 
 /* ─── Custom Scrollbar ─────────────────────────────────────────── */

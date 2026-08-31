@@ -132,7 +132,7 @@ const AdminUsersPage = () => {
                 </p>
             </div>
 
-            <div className='mb-5 grid grid-cols-4 gap-3'>
+            <div className='mb-5 grid grid-cols-2 md:grid-cols-4 gap-3'>
                 {ROLES.map((r) => {
                     const count = users.filter(
                         (u) => u.role === r.value,

@@ -353,7 +353,7 @@ const DashboardPage = () => {
             <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
                 {t("dash.quick_access")}
             </h2>
-            <div className='grid grid-cols-4 gap-3 mb-6'>
+            <div className='grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6'>
                 {QUICK_LINKS.map((item) => (
                     <Link
                         key={item.href}

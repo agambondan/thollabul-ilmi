@@ -210,7 +210,7 @@ export function KhatamContent({ basePath = "/quran" }) {
                     </div>
                 </div>
 
-                <div className='grid grid-cols-3 gap-3 mt-3'>
+                <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3'>
                     <div className='text-center bg-emerald-50 dark:bg-emerald-900/10 rounded-xl p-3'>
                         <p className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
                             {daysLeft}
@@ -243,7 +243,7 @@ export function KhatamContent({ basePath = "/quran" }) {
                 <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
                     {t("khatam.juz_progress") ?? "Progress per Juz"}
                 </h2>
-                <div className='grid grid-cols-5 sm:grid-cols-6 md:grid-cols-10 gap-1.5'>
+                <div className='grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-1.5'>
                     {juzList.map((j) => {
                         const isDone = j.pct === 100;
                         return (

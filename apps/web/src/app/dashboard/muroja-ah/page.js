@@ -154,7 +154,7 @@ const MurojaahPage = () => {
 
             {/* Stats */}
             {!loading && hafalan.length > 0 && (
-                <div className='grid grid-cols-3 gap-3 mb-5'>
+                <div className='grid grid-cols-3 gap-2 sm:gap-3 mb-5'>
                     {[
                         {
                             label: t("murojaah.stat_total"),

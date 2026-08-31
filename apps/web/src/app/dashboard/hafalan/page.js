@@ -143,7 +143,7 @@ const HafalanPage = () => {
             ) : null}
 
             {/* Stat cards */}
-            <div className='grid grid-cols-3 gap-3 mb-6'>
+            <div className='grid grid-cols-3 gap-2 sm:gap-3 mb-6'>
                 <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 text-center'>
                     <p className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
                         {hafal}
