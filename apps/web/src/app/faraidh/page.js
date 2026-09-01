@@ -24,12 +24,18 @@ const HEIR_FIELDS = [
     { key: "istri", max: 4, group: "spouse" },
     { key: "anakL", max: 20, group: "children" },
     { key: "anakP", max: 20, group: "children" },
+    { key: "cucuL", max: 20, group: "grandchildren" },
+    { key: "cucuP", max: 20, group: "grandchildren" },
     { key: "ayah", max: 1, group: "parents" },
     { key: "ibu", max: 1, group: "parents" },
     { key: "kakek", max: 1, group: "grandparents" },
     { key: "nenek", max: 4, group: "grandparents" },
     { key: "saudaraL", max: 20, group: "siblings" },
     { key: "saudaraP", max: 20, group: "siblings" },
+    { key: "saudaraSeayahL", max: 20, group: "half_siblings" },
+    { key: "saudaraSeayahP", max: 20, group: "half_siblings" },
+    { key: "saudaraSeibuL", max: 10, group: "maternal_siblings" },
+    { key: "saudaraSeibuP", max: 10, group: "maternal_siblings" },
 ];
 
 const HEIR_LABEL = {
@@ -37,6 +43,14 @@ const HEIR_LABEL = {
     istri: { idn: "Istri", en: "Wife" },
     anakL: { idn: "Anak Laki-laki", en: "Son" },
     anakP: { idn: "Anak Perempuan", en: "Daughter" },
+    cucuL: {
+        idn: "Cucu Laki-laki (dari anak L)",
+        en: "Grandson (from son)",
+    },
+    cucuP: {
+        idn: "Cucu Perempuan (dari anak L)",
+        en: "Granddaughter (from son)",
+    },
     ayah: { idn: "Ayah", en: "Father" },
     ibu: { idn: "Ibu", en: "Mother" },
     kakek: {
@@ -47,8 +61,24 @@ const HEIR_LABEL = {
         idn: "Nenek (jika ibu tidak ada)",
         en: "Grandmother (if mother absent)",
     },
-    saudaraL: { idn: "Saudara Laki-laki Kandung", en: "Brother" },
-    saudaraP: { idn: "Saudara Perempuan Kandung", en: "Sister" },
+    saudaraL: { idn: "Saudara Laki-laki Kandung", en: "Full Brother" },
+    saudaraP: { idn: "Saudara Perempuan Kandung", en: "Full Sister" },
+    saudaraSeayahL: {
+        idn: "Sd Laki Seayah",
+        en: "Paternal Half-Brother",
+    },
+    saudaraSeayahP: {
+        idn: "Sd Perempuan Seayah",
+        en: "Paternal Half-Sister",
+    },
+    saudaraSeibuL: {
+        idn: "Sd Laki Seibu",
+        en: "Maternal Half-Brother",
+    },
+    saudaraSeibuP: {
+        idn: "Sd Perempuan Seibu",
+        en: "Maternal Half-Sister",
+    },
 };
 
 const heirLabel = (key, lang) =>
@@ -81,12 +111,18 @@ export function FaraidhContent() {
         istri: 0,
         anakL: 0,
         anakP: 0,
+        cucuL: 0,
+        cucuP: 0,
         ayah: 0,
         ibu: 0,
         kakek: 0,
         nenek: 0,
         saudaraL: 0,
         saudaraP: 0,
+        saudaraSeayahL: 0,
+        saudaraSeayahP: 0,
+        saudaraSeibuL: 0,
+        saudaraSeibuP: 0,
     });
 
     const setHeir = (key, value) => {
@@ -336,24 +372,46 @@ export function FaraidhContent() {
                     <h2 className='text-base font-semibold text-gray-800 dark:text-white mb-4'>
                         {t("faraidh.heirs_section") ?? "Ahli Waris"}
                     </h2>
-                    <div className='grid grid-cols-2 gap-x-3 gap-y-3'>
-                        {HEIR_FIELDS.map((field) => (
-                            <div key={field.key}>
-                                <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
-                                    {heirLabel(field.key, lang)}
-                                </label>
-                                <input
-                                    type='number'
-                                    min='0'
-                                    max={field.max}
-                                    value={heirs[field.key]}
-                                    onChange={(e) =>
-                                        setHeir(field.key, e.target.value)
-                                    }
-                                    className='w-full px-3 py-1.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
-                                />
-                            </div>
-                        ))}
+                    <div className='space-y-4'>
+                        {[
+                            { key: "spouse", label: t("faraidh.group_spouse") ?? "Pasangan" },
+                            { key: "children", label: t("faraidh.group_children") ?? "Anak" },
+                            { key: "grandchildren", label: t("faraidh.group_grandchildren") ?? "Cucu (dari anak laki-laki)" },
+                            { key: "parents", label: t("faraidh.group_parents") ?? "Orang Tua" },
+                            { key: "grandparents", label: t("faraidh.group_grandparents") ?? "Kakek/Nenek" },
+                            { key: "siblings", label: t("faraidh.group_siblings") ?? "Saudara Kandung" },
+                            { key: "half_siblings", label: t("faraidh.group_half_siblings") ?? "Saudara Seayah" },
+                            { key: "maternal_siblings", label: t("faraidh.group_maternal_siblings") ?? "Saudara Seibu" },
+                        ].map((group) => {
+                            const fields = HEIR_FIELDS.filter((f) => f.group === group.key);
+                            if (fields.length === 0) return null;
+                            return (
+                                <div key={group.key} className='border border-gray-100 dark:border-slate-700 rounded-xl p-3 bg-gray-50 dark:bg-slate-800/50'>
+                                    <h3 className='text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2'>
+                                        {group.label}
+                                    </h3>
+                                    <div className='grid grid-cols-2 gap-x-3 gap-y-3'>
+                                        {fields.map((field) => (
+                                            <div key={field.key}>
+                                                <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                                    {heirLabel(field.key, lang)}
+                                                </label>
+                                                <input
+                                                    type='number'
+                                                    min='0'
+                                                    max={field.max}
+                                                    value={heirs[field.key]}
+                                                    onChange={(e) =>
+                                                        setHeir(field.key, e.target.value)
+                                                    }
+                                                    className='w-full px-3 py-1.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                     <p className='text-xs text-gray-400 mt-3'>
                         {t("faraidh.heir_count_label") ?? "Jumlah ahli waris"}:{" "}
@@ -504,10 +562,15 @@ export function FaraidhContent() {
                             </table>
                         </div>
 
-                        {(result.applied.aul || result.applied.radd) && (
-                            <div className='mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg text-xs text-blue-800 dark:text-blue-300'>
+                        {(result.applied.aul ||
+                            result.applied.radd ||
+                            result.applied.umariyyah ||
+                            result.applied.musytarakah ||
+                            result.applied.kakek_saudara ||
+                            result.applied.akdariyah) && (
+                            <div className='mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg text-xs text-blue-800 dark:text-blue-300 space-y-1'>
                                 {result.applied.aul && (
-                                    <p className='mb-1'>
+                                    <p>
                                         <strong>
                                             {t("faraidh.aul_applied") ??
                                                 "Aul diterapkan"}
@@ -526,6 +589,35 @@ export function FaraidhContent() {
                                         </strong>{" "}
                                         {t("faraidh.radd_desc") ??
                                             "Sisa harta dikembalikan ke ahli waris (selain pasangan) secara proporsional."}
+                                    </p>
+                                )}
+                                {result.applied.umariyyah && (
+                                    <p>
+                                        <strong>Umariyyatain:</strong> ayah
+                                        mengambil sisa setelah pasangan, sesuai
+                                        musyawarah Umar dengan 6 sahabat senior.
+                                    </p>
+                                )}
+                                {result.applied.musytarakah && (
+                                    <p>
+                                        <strong>Musytarakah:</strong> 1/3
+                                        bersama untuk ibu + saudara, dibagi
+                                        proporsional lalu sisa dikembalikan
+                                        (radd).
+                                    </p>
+                                )}
+                                {result.applied.kakek_saudara && (
+                                    <p>
+                                        <strong>Minbariyah (Zaid):</strong>{" "}
+                                        kakek ambil 1/6 tetap, saudara ashabah
+                                        mengambil sisanya.
+                                    </p>
+                                )}
+                                {result.applied.akdariyah && (
+                                    <p>
+                                        <strong>Akdariyah:</strong> kakek
+                                        1/6, saudara P ashabul furudh (1/2 atau
+                                        2/3), sisa jadi ashabah kakek.
                                     </p>
                                 )}
                             </div>

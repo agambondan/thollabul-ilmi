@@ -37,16 +37,42 @@ import {
 } from "../ExploreScreen.helpers";
 
 const HEIR_FIELDS = [
-    { key: "suami", label: "Suami", max: 1 },
-    { key: "istri", label: "Istri", max: 4 },
-    { key: "anakL", label: "Anak Lk", max: 20 },
-    { key: "anakP", label: "Anak Pr", max: 20 },
-    { key: "ayah", label: "Ayah", max: 1 },
-    { key: "ibu", label: "Ibu", max: 1 },
-    { key: "kakek", label: "Kakek", max: 1 },
-    { key: "nenek", label: "Nenek", max: 4 },
-    { key: "saudaraL", label: "Sdr Lk", max: 20 },
-    { key: "saudaraP", label: "Sdr Pr", max: 20 },
+    { key: "suami", label: "Suami", max: 1, group: "spouse" },
+    { key: "istri", label: "Istri", max: 4, group: "spouse" },
+    { key: "anakL", label: "Anak Lk", max: 20, group: "children" },
+    { key: "anakP", label: "Anak Pr", max: 20, group: "children" },
+    { key: "cucuL", label: "Cucu Lk", max: 20, group: "grandchildren" },
+    { key: "cucuP", label: "Cucu Pr", max: 20, group: "grandchildren" },
+    { key: "ayah", label: "Ayah", max: 1, group: "parents" },
+    { key: "ibu", label: "Ibu", max: 1, group: "parents" },
+    { key: "kakek", label: "Kakek", max: 1, group: "grandparents" },
+    { key: "nenek", label: "Nenek", max: 4, group: "grandparents" },
+    { key: "saudaraL", label: "Sdr Lk", max: 20, group: "siblings" },
+    { key: "saudaraP", label: "Sdr Pr", max: 20, group: "siblings" },
+    {
+        key: "saudaraSeayahL",
+        label: "Sd Lk Seayah",
+        max: 20,
+        group: "half_siblings",
+    },
+    {
+        key: "saudaraSeayahP",
+        label: "Sd Pr Seayah",
+        max: 20,
+        group: "half_siblings",
+    },
+    {
+        key: "saudaraSeibuL",
+        label: "Sd Lk Seibu",
+        max: 10,
+        group: "maternal_siblings",
+    },
+    {
+        key: "saudaraSeibuP",
+        label: "Sd Pr Seibu",
+        max: 10,
+        group: "maternal_siblings",
+    },
 ];
 
 const formatDate = (item = {}, language, t) => {
@@ -468,17 +494,37 @@ export function WebAppFaraidhRoute({ context }) {
                         {t("explore.faraidh.heirCount", { count: heirCount })}
                     </Text>
                 </View>
-                <View style={styles.heirGrid}>
-                    {HEIR_FIELDS.map((field) => (
-                        <HeirStepper
-                            count={faraidh.heirs[field.key] ?? 0}
-                            field={field}
-                            key={field.key}
-                            onChange={setHeir}
-                            t={t}
-                        />
-                    ))}
-                </View>
+                {[
+                    { key: "spouse", label: t("explore.faraidh.group_spouse") ?? "Pasangan" },
+                    { key: "children", label: t("explore.faraidh.group_children") ?? "Anak" },
+                    { key: "grandchildren", label: t("explore.faraidh.group_grandchildren") ?? "Cucu (dari anak laki-laki)" },
+                    { key: "parents", label: t("explore.faraidh.group_parents") ?? "Orang Tua" },
+                    { key: "grandparents", label: t("explore.faraidh.group_grandparents") ?? "Kakek/Nenek" },
+                    { key: "siblings", label: t("explore.faraidh.group_siblings") ?? "Saudara Kandung" },
+                    { key: "half_siblings", label: t("explore.faraidh.group_half_siblings") ?? "Saudara Seayah" },
+                    { key: "maternal_siblings", label: t("explore.faraidh.group_maternal_siblings") ?? "Saudara Seibu" },
+                ].map((group) => {
+                    const fields = HEIR_FIELDS.filter((f) => f.group === group.key);
+                    if (fields.length === 0) return null;
+                    return (
+                        <View key={group.key} style={styles.heirGroup}>
+                            <Text style={styles.heirGroupLabel}>
+                                {group.label}
+                            </Text>
+                            <View style={styles.heirGrid}>
+                                {fields.map((field) => (
+                                    <HeirStepper
+                                        count={faraidh.heirs[field.key] ?? 0}
+                                        field={field}
+                                        key={field.key}
+                                        onChange={setHeir}
+                                        t={t}
+                                    />
+                                ))}
+                            </View>
+                        </View>
+                    );
+                })}
             </View>
 
             <View style={styles.card}>
@@ -500,6 +546,21 @@ export function WebAppFaraidhRoute({ context }) {
                 {calculation?.applied?.musytarakah ? (
                     <Notice tone='blue'>
                         {t("explore.faraidh.musytarakahNotice")}
+                    </Notice>
+                ) : null}
+                {calculation?.applied?.umariyyah ? (
+                    <Notice tone='blue'>
+                        {t("explore.faraidh.umariyyahNotice")}
+                    </Notice>
+                ) : null}
+                {calculation?.applied?.kakek_saudara ? (
+                    <Notice tone='blue'>
+                        {t("explore.faraidh.kakekSaudaraNotice")}
+                    </Notice>
+                ) : null}
+                {calculation?.applied?.akdariyah ? (
+                    <Notice tone='blue'>
+                        {t("explore.faraidh.akdariyahNotice")}
                     </Notice>
                 ) : null}
                 {calculation?.applied?.aul ? (
@@ -698,6 +759,20 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         gap: spacing.sm,
+    },
+    heirGroup: {
+        marginBottom: spacing.md,
+        paddingBottom: spacing.md,
+        borderBottomColor: "#e5e7eb",
+        borderBottomWidth: 1,
+    },
+    heirGroupLabel: {
+        color: "#64748b",
+        fontSize: 11,
+        fontWeight: "900",
+        textTransform: "uppercase",
+        letterSpacing: 0.5,
+        marginBottom: spacing.sm,
     },
     heirCard: {
         backgroundColor: "#f8fafc",

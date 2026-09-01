@@ -223,6 +223,12 @@ const dictionaries = {
         "explore.faraidh.heir.saudaraL": "Sdr Lk",
         "explore.faraidh.heir.saudaraP": "Sdr Pr",
         "explore.faraidh.heir.suami": "Suami",
+        "explore.faraidh.heir.cucuL": "Cucu Lk",
+        "explore.faraidh.heir.cucuP": "Cucu Pr",
+        "explore.faraidh.heir.saudaraSeayahL": "Sd Lk Seayah",
+        "explore.faraidh.heir.saudaraSeayahP": "Sd Pr Seayah",
+        "explore.faraidh.heir.saudaraSeibuL": "Sd Lk Seibu",
+        "explore.faraidh.heir.saudaraSeibuP": "Sd Pr Seibu",
         "explore.faraidh.heirCount": "{count} ahli waris",
         "explore.faraidh.heirsSection": "Ahli Waris",
         "explore.faraidh.history": "Riwayat",
@@ -243,6 +249,12 @@ const dictionaries = {
             "Radd diterapkan untuk mengembalikan sisa harta ke ahli waris.",
         "explore.faraidh.remainder": "Sisa",
         "explore.faraidh.resultSection": "Hasil Perhitungan",
+        "explore.faraidh.umariyyahNotice":
+            "Umariyyatain: ayah mengambil sisa setelah pasangan.",
+        "explore.faraidh.kakekSaudaraNotice":
+            "Minbariyah: kakek 1/6, saudara ashabah sisanya.",
+        "explore.faraidh.akdariyahNotice":
+            "Akdariyah: kakek 1/6, saudara P 1/2 atau 2/3, sisa kakek ashabah.",
         "explore.faraidh.save": "Simpan",
         "explore.faraidh.saveError": "Gagal menyimpan.",
         "explore.faraidh.savedAccount": "Kalkulasi faraidh tersimpan ke akun.",
@@ -250,7 +262,7 @@ const dictionaries = {
             "Kalkulasi faraidh tersimpan di perangkat.",
         "explore.faraidh.saving": "Menyimpan...",
         "explore.faraidh.scopeNotice":
-            "Kalkulator ini menangani kasus dasar. Kasus kompleks tetap perlu dikonfirmasi ke ahli faraidh.",
+            "Kalkulator mengikuti fikih Syafi'i (MUI) untuk kasus dasar & khusus (Umariyyatain, Musytarakah, Minbariyah, Akdariyah, saudara seayah/seibu, cucu/furu'). Madzhab lain dapat berbeda. Munasakhah, khuntsa, gono-gini butuh konsultasi ulama.",
         "explore.faraidh.subtitle":
             "Perhitungan pembagian harta warisan sesuai Ashabul Furudh.",
         "explore.faraidh.title": "Kalkulator Waris",
@@ -1350,6 +1362,12 @@ const dictionaries = {
         "explore.faraidh.heir.saudaraL": "Brother",
         "explore.faraidh.heir.saudaraP": "Sister",
         "explore.faraidh.heir.suami": "Husband",
+        "explore.faraidh.heir.cucuL": "Grandson",
+        "explore.faraidh.heir.cucuP": "Granddaughter",
+        "explore.faraidh.heir.saudaraSeayahL": "Paternal Half-Brother",
+        "explore.faraidh.heir.saudaraSeayahP": "Paternal Half-Sister",
+        "explore.faraidh.heir.saudaraSeibuL": "Maternal Half-Brother",
+        "explore.faraidh.heir.saudaraSeibuP": "Maternal Half-Sister",
         "explore.faraidh.heirCount": "{count} heirs",
         "explore.faraidh.heirsSection": "Heirs",
         "explore.faraidh.history": "History",
@@ -1370,6 +1388,12 @@ const dictionaries = {
             "Radd is applied to return remaining estate to heirs.",
         "explore.faraidh.remainder": "Remainder",
         "explore.faraidh.resultSection": "Calculation Result",
+        "explore.faraidh.umariyyahNotice":
+            "Umariyyatain: father takes the remainder after spouse.",
+        "explore.faraidh.kakekSaudaraNotice":
+            "Minbariyah: grandfather takes 1/6, siblings take the remainder as ashabah.",
+        "explore.faraidh.akdariyahNotice":
+            "Akdariyah: grandfather 1/6, sister 1/2 or 2/3, remainder to grandfather as ashabah.",
         "explore.faraidh.save": "Save",
         "explore.faraidh.saveError": "Save failed.",
         "explore.faraidh.savedAccount": "Faraidh calculation saved to account.",
@@ -1377,7 +1401,7 @@ const dictionaries = {
             "Faraidh calculation saved on this device.",
         "explore.faraidh.saving": "Saving...",
         "explore.faraidh.scopeNotice":
-            "This calculator handles basic cases. Complex cases should still be confirmed with a faraidh expert.",
+            "Calculator follows Syafi'i fiqh (MUI) for basic & special cases (Umariyyatain, Mushtarakah, Minbariyah, Akdariyah, half-siblings, grandchildren/furu'). Other madhhabs may differ. Munasakhah, khuntsa, gono-gini require ulama consultation.",
         "explore.faraidh.subtitle":
             "Inheritance distribution calculation according to Ashabul Furudh.",
         "explore.faraidh.title": "Inheritance Calculator",

@@ -306,12 +306,18 @@ export function ExploreScreen({
             istri: 0,
             anakL: 0,
             anakP: 0,
+            cucuL: 0,
+            cucuP: 0,
             ayah: 0,
             ibu: 0,
             kakek: 0,
             nenek: 0,
             saudaraL: 0,
             saudaraP: 0,
+            saudaraSeayahL: 0,
+            saudaraSeayahP: 0,
+            saudaraSeibuL: 0,
+            saudaraSeibuP: 0,
         },
     });
     const [faraidhHistory, setFaraidhHistory] = useState([]);

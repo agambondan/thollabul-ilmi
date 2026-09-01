@@ -7,14 +7,20 @@ describe("HEIR_LABELS", () => {
             "istri",
             "anak_laki",
             "anak_perempuan",
+            "cucu_laki",
+            "cucu_perempuan",
             "ayah",
             "ayah_residue",
             "ibu",
             "kakek",
+            "kakek_residue",
             "nenek",
             "saudara_laki",
             "saudara_perempuan",
-            "ibu_musytarakah",
+            "saudara_seayah_laki",
+            "saudara_seayah_perempuan",
+            "saudara_seibu",
+            "ibu_saudara_musytarakah",
         ]);
     });
     test("suami has idn/en labels", () => {
@@ -186,5 +192,174 @@ describe("calculateFaraidh", () => {
         const result = calculateFaraidh({ suami: 1, anakP: 1 }, 200);
         const totalAmount = result.rows.reduce((s, r) => s + r.amount, 0);
         expect(totalAmount).toBeCloseTo(200, 5);
+    });
+
+    describe("Umariyyatain (ayah + pasangan)", () => {
+        test("ayah + suami tanpa anak: suami 1/2, ayah sisa", () => {
+            const result = calculateFaraidh({ ayah: 1, suami: 1 }, 100);
+            expect(result.applied.umariyyah).toBe(true);
+            const suami = result.rows.find((r) => r.key === "suami");
+            const ayah = result.rows.find(
+                (r) => r.key === "ayah" || r.key === "ayah_residue",
+            );
+            expect(suami.share).toBeCloseTo(0.5, 5);
+            expect(ayah.share).toBeCloseTo(0.5, 5);
+        });
+
+        test("ayah + istri tanpa anak: istri 1/4, ayah sisa", () => {
+            const result = calculateFaraidh({ ayah: 1, istri: 1 }, 100);
+            expect(result.applied.umariyyah).toBe(true);
+            const istri = result.rows.find((r) => r.key === "istri");
+            const ayah = result.rows.find(
+                (r) => r.key === "ayah" || r.key === "ayah_residue",
+            );
+            expect(istri.share).toBeCloseTo(0.25, 5);
+            expect(ayah.share).toBeCloseTo(0.75, 5);
+        });
+
+        test("ayah + suami + anak: bukan umariyyah, suami 1/4", () => {
+            const result = calculateFaraidh(
+                { ayah: 1, suami: 1, anakL: 1 },
+                100,
+            );
+            expect(result.applied.umariyyah).toBe(false);
+            const suami = result.rows.find((r) => r.key === "suami");
+            expect(suami.share).toBeCloseTo(0.25, 5);
+        });
+    });
+
+    describe("Minbariyah (kakek + saudara kandung)", () => {
+        test("kakek + 1 saudara L: kakek 1/6, saudara sisa", () => {
+            const result = calculateFaraidh({ kakek: 1, saudaraL: 1 }, 100);
+            expect(result.applied.kakek_saudara).toBe(true);
+            const kakek = result.rows.find((r) => r.key === "kakek");
+            expect(kakek.share).toBeCloseTo(1 / 6, 5);
+            expect(result.totalShare).toBeCloseTo(1, 5);
+        });
+
+        test("kakek + 2 saudara L: kakek 1/6, saudara ashabah 5/6 (2:1)", () => {
+            const result = calculateFaraidh({ kakek: 1, saudaraL: 2 }, 100);
+            const kakek = result.rows.find((r) => r.key === "kakek");
+            expect(kakek.share).toBeCloseTo(1 / 6, 5);
+            expect(result.totalShare).toBeCloseTo(1, 5);
+        });
+    });
+
+    describe("Akdariyah (kakek + saudara P kandung)", () => {
+        test("kakek + 1 saudara P: kakek 1/6, saudara P 1/2, sisa kakek ashabah", () => {
+            const result = calculateFaraidh({ kakek: 1, saudaraP: 1 }, 100);
+            expect(result.applied.akdariyah).toBe(true);
+            expect(result.totalShare).toBeCloseTo(1, 5);
+        });
+
+        test("kakek + 2 saudara P: kakek 1/6, saudara P 2/3, sisa kakek ashabah", () => {
+            const result = calculateFaraidh({ kakek: 1, saudaraP: 2 }, 100);
+            expect(result.applied.akdariyah).toBe(true);
+            expect(result.totalShare).toBeCloseTo(1, 5);
+        });
+    });
+
+    describe("Saudara seayah", () => {
+        test("seayah L ashabah jika kandung tidak ada", () => {
+            const result = calculateFaraidh({ saudaraSeayahL: 1 }, 100);
+            const row = result.rows.find(
+                (r) => r.key === "saudara_seayah_laki",
+            );
+            expect(row).toBeDefined();
+            expect(row.share).toBeCloseTo(1, 5);
+        });
+
+        test("seayah terhalang oleh kandung L", () => {
+            const result = calculateFaraidh(
+                { saudaraL: 1, saudaraSeayahL: 1 },
+                100,
+            );
+            const seayah = result.rows.find(
+                (r) => r.key === "saudara_seayah_laki",
+            );
+            expect(seayah).toBeUndefined();
+        });
+
+        test("seayah terhalang oleh ayah", () => {
+            const result = calculateFaraidh(
+                { ayah: 1, saudaraSeayahL: 1 },
+                100,
+            );
+            const seayah = result.rows.find(
+                (r) => r.key === "saudara_seayah_laki",
+            );
+            expect(seayah).toBeUndefined();
+        });
+    });
+
+    describe("Saudara seibu", () => {
+        test("seibu + suami: radd applies sisa 1/3 ke seibu", () => {
+            const result = calculateFaraidh(
+                { suami: 1, saudaraSeibuL: 1 },
+                100,
+            );
+            const row = result.rows.find((r) => r.key === "saudara_seibu");
+            expect(result.applied.radd).toBe(true);
+            expect(row.share).toBeCloseTo(0.5, 5);
+        });
+
+        test("seibu 1 org tanpa ashabah: radd -> full share", () => {
+            const result = calculateFaraidh({ saudaraSeibuL: 1 }, 100);
+            const row = result.rows.find((r) => r.key === "saudara_seibu");
+            expect(row.share).toBeCloseTo(1, 5);
+            expect(result.applied.radd).toBe(true);
+        });
+
+        test("seibu >1 + suami: radd applies", () => {
+            const result = calculateFaraidh(
+                { suami: 1, saudaraSeibuL: 1, saudaraSeibuP: 1 },
+                100,
+            );
+            const row = result.rows.find((r) => r.key === "saudara_seibu");
+            expect(result.applied.radd).toBe(true);
+            expect(row.share).toBeCloseTo(1 / 3 + 1 / 6, 5);
+        });
+
+        test("seibu terhalang oleh anak", () => {
+            const result = calculateFaraidh(
+                { anakL: 1, saudaraSeibuL: 1 },
+                100,
+            );
+            const row = result.rows.find((r) => r.key === "saudara_seibu");
+            expect(row).toBeUndefined();
+        });
+
+        test("seibu terhalang oleh saudara kandung", () => {
+            const result = calculateFaraidh(
+                { saudaraL: 1, saudaraSeibuL: 1 },
+                100,
+            );
+            const row = result.rows.find((r) => r.key === "saudara_seibu");
+            expect(row).toBeUndefined();
+        });
+    });
+
+    describe("Cucu (furu' dari anak laki)", () => {
+        test("cucu L + cucu P ashabah 2:1", () => {
+            const result = calculateFaraidh({ cucuL: 1, cucuP: 1 }, 100);
+            const L = result.rows.find((r) => r.key === "cucu_laki");
+            const P = result.rows.find((r) => r.key === "cucu_perempuan");
+            expect(L).toBeDefined();
+            expect(P).toBeDefined();
+            expect(L.share).toBeCloseTo(P.share * 2, 5);
+        });
+
+        test("1 cucu P dapat 1/2 + radd", () => {
+            const result = calculateFaraidh({ cucuP: 1 }, 100);
+            const P = result.rows.find((r) => r.key === "cucu_perempuan");
+            expect(P.share).toBeCloseTo(1, 5);
+            expect(result.applied.radd).toBe(true);
+        });
+
+        test("cucu terhalang oleh anak L", () => {
+            const result = calculateFaraidh({ anakL: 1, cucuL: 1 }, 100);
+            const cucuL = result.rows.find((r) => r.key === "cucu_laki");
+            expect(cucuL).toBeUndefined();
+        });
     });
 });
