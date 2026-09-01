@@ -1,11 +1,18 @@
 "use client";
 
-import { PanelEmpty, PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
+import {
+    PanelEmpty,
+    PanelTable,
+    Td,
+    Th,
+    Tr,
+} from "@/components/panel/DataPanel";
 import { adminQuizApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
+import ModalShell from "@/components/ModalShell";
 
 const CATEGORIES = [
     "aqidah",
@@ -198,9 +205,7 @@ const AdminQuizPage = () => {
                 <PanelTable
                     head={
                         <>
-                            <Th>
-                                {t("admin.quiz.question")}
-                            </Th>
+                            <Th>{t("admin.quiz.question")}</Th>
                             <Th className='w-28'>
                                 {t("admin.field.category")}
                             </Th>
@@ -214,12 +219,10 @@ const AdminQuizPage = () => {
                     {filtered.map((item) => (
                         <Tr key={item.id ?? item._id}>
                             <Td className='text-gray-900 dark:text-white max-w-xs truncate'>
-                                {getLocalizedField(
-                                    item,
-                                    "question",
-                                    lang,
-                                    ["question_text", "text"],
-                                )}
+                                {getLocalizedField(item, "question", lang, [
+                                    "question_text",
+                                    "text",
+                                ])}
                             </Td>
                             <Td>
                                 <span className='px-2 py-0.5 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 rounded text-xs capitalize'>
@@ -241,9 +244,7 @@ const AdminQuizPage = () => {
                                     </button>
                                     <button
                                         onClick={() =>
-                                            setDeleteId(
-                                                item.id ?? item._id,
-                                            )
+                                            setDeleteId(item.id ?? item._id)
                                         }
                                         aria-label={t("common.delete")}
                                         title={t("common.delete")}
@@ -256,14 +257,19 @@ const AdminQuizPage = () => {
                         </Tr>
                     ))}
                     {filtered.length === 0 && (
-                        <PanelEmpty colSpan={4}>{t("admin.crud.no_data")}</PanelEmpty>
+                        <PanelEmpty colSpan={4}>
+                            {t("admin.crud.no_data")}
+                        </PanelEmpty>
                     )}
                 </PanelTable>
             )}
 
             {showModal && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'>
+                <ModalShell
+                    onClose={() => setShowModal(false)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                >
                         <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
                             <h2 className='font-bold text-gray-900 dark:text-white'>
                                 {editId
@@ -279,7 +285,10 @@ const AdminQuizPage = () => {
                         </div>
                         <div className='p-5 space-y-4'>
                             <div>
-                                <label htmlFor='page-question' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-question'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.quiz.question")}
                                 </label>
                                 <textarea
@@ -316,7 +325,10 @@ const AdminQuizPage = () => {
                             ))}
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label htmlFor='page-correct-answer' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-correct-answer'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.quiz.correct_answer")}
                                     </label>
                                     <select
@@ -341,7 +353,10 @@ const AdminQuizPage = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label htmlFor='page-category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-category'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.field.category")}
                                     </label>
                                     <select
@@ -364,7 +379,10 @@ const AdminQuizPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label htmlFor='page-explanation-optional' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-explanation-optional'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.quiz.explanation_optional")}
                                 </label>
                                 <textarea
@@ -398,13 +416,15 @@ const AdminQuizPage = () => {
                                 {saving ? t("common.saving") : t("common.save")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
 
             {deleteId && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'>
+                <ModalShell
+                    onClose={() => setDeleteId(null)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
+                >
                         <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
                             {t("admin.crud.delete_title").replace(
                                 "{item}",
@@ -428,8 +448,7 @@ const AdminQuizPage = () => {
                                 {t("common.delete")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
         </div>
     );

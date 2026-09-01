@@ -6,8 +6,8 @@ import {
 } from "@/lib/const";
 
 describe("linksMenu", () => {
-    test("has 4 items", () => {
-        expect(linksMenu).toHaveLength(4);
+    test("has 3 items", () => {
+        expect(linksMenu).toHaveLength(3);
     });
     test("contains Quran", () => {
         expect(linksMenu[0].href).toBe("/quran");
@@ -15,11 +15,12 @@ describe("linksMenu", () => {
     test("contains Hadith", () => {
         expect(linksMenu[1].href).toBe("/hadith");
     });
-    test("contains Dev", () => {
-        expect(linksMenu[2].href).toBe("/dev");
+    // /dev is an internal API explorer and must stay out of the public nav.
+    test("does not expose the dev page", () => {
+        expect(linksMenu.some((item) => item.href === "/dev")).toBe(false);
     });
     test("contains Contact", () => {
-        expect(linksMenu[3].href).toBe("/contact");
+        expect(linksMenu[2].href).toBe("/contact");
     });
     test("all items have href and label", () => {
         linksMenu.forEach((item) => {

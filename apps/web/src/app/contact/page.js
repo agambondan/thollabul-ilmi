@@ -1,6 +1,4 @@
 import { openGraphFor } from "@/lib/site";
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import ContactPageClient from "./ContactPageClient";
 
@@ -15,11 +13,9 @@ export const metadata = {
 export default function ContactPage() {
     return (
         <main className='min-h-screen flex flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 <ContactPageClient />
             </Section>
-            <Footer />
         </main>
     );
 }

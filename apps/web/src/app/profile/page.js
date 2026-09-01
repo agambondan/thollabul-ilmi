@@ -1,8 +1,6 @@
 "use client";
 
 import ProfileContent from "@/components/account/ProfileContent";
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 
 /**
@@ -11,13 +9,11 @@ import Section from "@/components/Section";
  */
 const ProfilePage = () => (
     <main className='min-h-screen flex flex-col'>
-        <NavbarTailwindCss />
         <Section>
             <div className='w-full px-4'>
                 <ProfileContent />
             </div>
         </Section>
-        <Footer />
     </main>
 );
 

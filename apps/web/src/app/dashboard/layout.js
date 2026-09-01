@@ -3,6 +3,7 @@
 import AdminMutationToast from "@/components/admin/AdminMutationToast";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
+import { useTheme } from "@/lib/useTheme";
 import { ConvertFLagLanguage } from "@/lib/converter";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -62,11 +63,11 @@ const SIDEBAR_STORAGE_KEY = "tholabul_dashboard_sidebar_collapsed";
 const DashboardLayout = ({ children }) => {
     const { user, isAuthenticated, isLoading, logout } = useAuth();
     const { t, lang, setLang } = useLocale();
+    const { isDark: isDarkMode, toggleTheme } = useTheme();
     const router = useRouter();
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [accountOpen, setAccountOpen] = useState(false);
-    const [isDarkMode, setIsDarkMode] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const accountRef = useRef(null);
 
@@ -88,27 +89,8 @@ const DashboardLayout = ({ children }) => {
         }
     }, []);
 
-    useEffect(() => {
-        const sync = () => {
-            const dark = localStorage.getItem("theme") === "dark";
-            document.documentElement.classList.toggle("dark", dark);
-            setIsDarkMode(dark);
-        };
-        sync();
-        window.addEventListener("storage", sync);
-        return () => window.removeEventListener("storage", sync);
-    }, []);
 
-    useEffect(() => {
-        document.documentElement.classList.toggle("dark", isDarkMode);
-    }, [isDarkMode]);
-
-    const toggleDark = () => {
-        setIsDarkMode((prev) => {
-            localStorage.setItem("theme", !prev ? "dark" : "light");
-            return !prev;
-        });
-    };
+    const toggleDark = toggleTheme;
 
     const toggleSidebar = () => {
         setIsCollapsed((current) => {
@@ -537,6 +519,9 @@ const DashboardLayout = ({ children }) => {
                     <Link
                         href='/dashboard'
                         title={t("link.dashboard")}
+                        aria-current={
+                            pathname === "/dashboard" ? "page" : undefined
+                        }
                         className={`flex items-center py-2 rounded-lg text-sm font-medium transition-colors ${
                             isCollapsed ? "justify-center px-0" : "gap-2.5 px-3"
                         } ${
@@ -574,6 +559,11 @@ const DashboardLayout = ({ children }) => {
                                             <Link
                                                 href={link.href}
                                                 title={t(link.labelKey)}
+                                                aria-current={
+                                                    isActive
+                                                        ? "page"
+                                                        : undefined
+                                                }
                                                 className={`flex items-center py-1.5 rounded-lg text-sm transition-colors ${
                                                     isCollapsed
                                                         ? "justify-center px-0"

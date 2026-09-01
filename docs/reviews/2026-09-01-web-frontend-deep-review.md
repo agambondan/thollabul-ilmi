@@ -2,7 +2,7 @@
 
 Tanggal: `2026-09-01`
 Scope: `apps/web` (159 route, 284 file, ~67k LOC) + spot-check `apps/mobile`
-Status: `REVIEWED_NO_FIX`
+Status: `REVIEWED_WITH_PARTIAL_FIX`
 Branch: `master @ 965caee`
 
 Review menyeluruh antarmuka, pengalaman pakai, kelengkapan data, dan penyajian
@@ -28,6 +28,84 @@ Command yang dijalankan ada di bagian [Verification Log](#verification-log).
 | Error eslint                          | 0 (12 warning)             |
 | Key i18n                              | 1880 ID = 1880 EN          |
 | Tautan internal statis rusak          | 0 dari 123 href            |
+
+---
+
+## Status Perbaikan (update 2026-09-01)
+
+Semua P0 dan sebagian besar P1 sudah dikerjakan. Verifikasi: `next build` exit 0,
+`jest` 486 test lulus di 53 suite, `eslint .` 0 error, `prettier --check` bersih.
+
+| #   | Temuan                                   | Status                                                                  |
+| --- | ---------------------------------------- | ----------------------------------------------------------------------- |
+| 1   | Metode hitung sholat tidak konsisten     | ✅ Selesai — `lib/prayerTimes.js` jadi satu-satunya pembangun URL       |
+| 2   | Jadwal tidak refetch lewat tengah malam  | ✅ Selesai — `useLocalDateKey()` + refetch saat tab visible             |
+| 3   | Dashboard layar kosong saat auth         | ✅ Selesai — skeleton shell menggantikan `return null`                  |
+| 4   | Label form tidak terhubung               | ✅ Sebagian — `htmlFor` 5 → 121; sisanya label di dalam `.map()`        |
+| 5   | Modal tanpa semantik dialog              | 🟡 Sebagian — `components/Dialog.js` dibuat, baru ShareDoaModal migrasi |
+| 6   | Error jaringan tampil sebagai empty      | ✅ Selesai di reader Quran — `useAsyncResource` + `PanelStatus`         |
+| 7   | Settings font/ukuran tidak berefek       | ❌ Belum — lihat catatan di bawah                                       |
+| 8   | Setelan mati                             | ❌ Belum                                                                |
+| 9   | Atribusi sumber tidak merata             | 🟡 Sebagian — fiqh, asbabun-nuzul, siroh naik ke `SourceBadges`         |
+| 10  | Hadis tanpa derajat tanpa keterangan     | ✅ Selesai — badge "Derajat belum diverifikasi" + hint                  |
+| 11  | Jam beranda beku                         | ✅ Selesai — store berdetak per menit                                   |
+| 12  | ~305 KB gzip first-load                  | 🟡 283 KB — turun 22 KB, butuh split per-route untuk lebih jauh         |
+| 13  | Kamus i18n 167 KB di semua halaman       | ✅ Selesai — `i18n/id.js` + `i18n/en.js`, EN dimuat on demand           |
+| 14  | 4 `@import` font memblok render          | ✅ Selesai — 4 → 1, tiga font tak terpakai dibuang                      |
+| 15  | Font TTF tanpa `font-display`            | 🟡 Sebagian — `swap` ditambahkan; konversi woff2 belum                  |
+| 16  | Tajweed tanpa varian dark mode           | ✅ Selesai — 15 override `.dark tajweed.*`                              |
+| 17  | Navbar/Footer per-halaman                | ❌ Belum — refactor 53 file, sengaja ditunda                            |
+| 18  | Tiga halaman publik tanpa navigasi       | ✅ Selesai — `/belajar`, `/komunitas`, `/imsakiyah` dapat chrome        |
+| 19  | Dark mode duplikat + FOUC                | 🟡 Sebagian — script anti-FOUC di root; 4 implementasi masih ada        |
+| 20  | Deep-link ayat di balik navbar           | ✅ Selesai — `scroll-padding-top` + `scroll-margin-top`                 |
+| 21  | Nol `loading.js`                         | ❌ Belum                                                                |
+| 22  | Widget countdown separuh Indonesia       | ✅ Selesai — seluruh label lewat `t()`, hijri ikut bahasa aktif         |
+| 23  | `/dev` di navigasi publik                | ✅ Selesai — dikeluarkan dari `linksMenu`                               |
+| 24  | `robots.js` tidak disallow `/dashboard/` | ✅ Selesai                                                              |
+| 25  | PWA tanpa offline                        | ❌ Belum — butuh strategi cache tersendiri                              |
+| 26  | 179 client component                     | ❌ Belum                                                                |
+| 27  | `aria-current` / `aria-live` nol         | 🟡 Sebagian — `aria-live` 0 → 4; `aria-current` belum                   |
+| 28  | HTML API tanpa sanitasi                  | ❌ Belum                                                                |
+| 29  | Dependensi mati                          | ✅ Selesai — `@tanstack/react-query` & `@mantine/hooks` dihapus         |
+| 30  | Offset navbar angka ajaib                | 🟡 Sebagian — token `--navbar-offset` dibuat, 18 `pt-24` masih ada      |
+| 31  | Hasil search tidak bisa di-share         | ❌ Belum                                                                |
+| 32  | Toast putih di dark mode                 | ✅ Selesai — token `--toast-bg` / `--toast-fg`                          |
+| 33  | Kedipan status login                     | ❌ Belum                                                                |
+| 34  | Kartu PWA muncul walau tak bisa dipasang | ❌ Belum                                                                |
+| 35  | Ikon notifikasi 404                      | ✅ Selesai — `/icon.png` → `/icon.svg`                                  |
+| 36  | Halaman orphan di sitemap                | ✅ Selesai — `/belajar` & `/komunitas` masuk nav konten                 |
+| 37  | String Indonesia hardcode                | 🟡 Sebagian — chip search & callback Google; `MapComponent` disisakan   |
+| 38  | 61 file gagal prettier                   | ✅ Selesai — 0 file gagal                                               |
+| 39  | Beban IA                                 | ❌ Belum — keputusan produk, bukan bug                                  |
+| 40  | Memory leak reader Quran                 | 🟡 Sebagian — interval countdown; `IntersectionObserver` belum          |
+
+### Catatan #7 (Settings font tidak berefek)
+
+Sengaja belum disentuh karena butuh keputusan produk lebih dulu: opsi di
+Settings (LPMQ / Amiri / Scheherazade) berbeda dari opsi reader (Uthmani /
+Kemenag / Indopak / Naskh), jadi menyambungkannya begitu saja akan mengubah
+pilihan yang sudah tersimpan di akun user. Dua jalan:
+
+1. Jadikan `useSettings` sumber tunggal dan migrasikan nilai lama ke id reader.
+2. Hapus kontrol font & ukuran dari Settings, biarkan tombol gear yang mengatur.
+
+### Yang sengaja tidak dikerjakan sekarang
+
+- **#17 Navbar/Footer ke layout** — menyentuh 53 file page sekaligus; layak jadi
+  PR terpisah supaya diff-nya bisa direview.
+- **#26 kurangi client component** dan **#21 `loading.js`** — keduanya bergantung
+  pada #17 selesai lebih dulu.
+- **#25 offline PWA** — perlu desain strategi cache (mana yang precache, mana
+  stale-while-revalidate), bukan tambalan.
+
+### Perubahan yang mungkin perlu perhatian
+
+- `apps/web/src/lib/i18n.js` sekarang hanya agregator untuk test parity.
+  **Kode aplikasi tidak boleh mengimpornya** — pakai `useLocale().t`.
+- Label form yang berada di dalam `.map()` sengaja dilewati codemod supaya tidak
+  menghasilkan `id` duplikat.
+- `MapComponent` masih memakai label Indonesia hardcode; seluruh daftar filternya
+  hardcode, jadi menerjemahkan satu entri saja akan membuat tidak konsisten.
 
 ---
 

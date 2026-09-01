@@ -1,7 +1,5 @@
 "use client";
 
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { ShareDoaModal } from "@/components/ShareDoaModal";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
@@ -159,206 +157,207 @@ export const DoaContent = () => {
                 }
             >
                 <div className='text-center mb-8'>
-                <p
-                    className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'
-                    style={{ fontFamily: "Amiri, serif" }}
-                >
-                    الدُّعَاء
-                </p>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
-                    {t("doa.title")}
-                </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
-                    {t("doa.subtitle")}
-                </p>
-            </div>
-
-            <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
-                <BsSearch className='text-gray-400 shrink-0' />
-                <input
-                    type='text'
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder={t("doa.search_placeholder")}
-                    className='flex-1 bg-transparent text-sm text-gray-700 dark:text-gray-200 outline-none'
-                />
-            </div>
-
-            <div className='flex gap-2 flex-wrap mb-6'>
-                {CATEGORIES.map((c) => (
-                    <button
-                        key={c.value}
-                        onClick={() => setCategory(c.value)}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                            category === c.value
-                                ? "bg-emerald-700 text-white"
-                                : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600"
-                        }`}
+                    <p
+                        className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'
+                        style={{ fontFamily: "Amiri, serif" }}
                     >
-                        {t(c.labelKey)}
-                    </button>
-                ))}
-            </div>
-
-            <div className='mb-3 flex items-center justify-between text-xs text-gray-400'>
-                <span>
-                    {t("common.showing")} {filtered.length} {t("common.of")}{" "}
-                    {doas.length} {t("doa.unit")}
-                </span>
-                {search && (
-                    <button
-                        type='button'
-                        onClick={() => setSearch("")}
-                        className='font-medium text-emerald-600 dark:text-emerald-400'
-                    >
-                        {t("common.reset_search")}
-                    </button>
-                )}
-            </div>
-
-            {isLoading && <SkeletonInline rows={5} />}
-
-            {!isLoading && filtered.length === 0 && (
-                <div className='text-center py-16'>
-                    <p className='text-gray-500 dark:text-gray-400'>
-                        {doas.length === 0
-                            ? t("doa.empty_unavailable")
-                            : t("doa.no_match")}
+                        الدُّعَاء
+                    </p>
+                    <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                        {t("doa.title")}
+                    </h1>
+                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                        {t("doa.subtitle")}
                     </p>
                 </div>
-            )}
 
-            <div className='space-y-3'>
-                {filtered.map((doa) => (
-                    <div
-                        key={doa.id}
-                        className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 overflow-hidden'
-                    >
+                <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+                    <BsSearch className='text-gray-400 shrink-0' />
+                    <input
+                        type='text'
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder={t("doa.search_placeholder")}
+                        className='flex-1 bg-transparent text-sm text-gray-700 dark:text-gray-200 outline-none'
+                    />
+                </div>
+
+                <div className='flex gap-2 flex-wrap mb-6'>
+                    {CATEGORIES.map((c) => (
                         <button
-                            className='w-full text-left px-4 py-3 flex items-center justify-between gap-3'
-                            onClick={() =>
-                                setExpanded(expanded === doa.id ? null : doa.id)
-                            }
+                            key={c.value}
+                            onClick={() => setCategory(c.value)}
+                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                                category === c.value
+                                    ? "bg-emerald-700 text-white"
+                                    : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600"
+                            }`}
                         >
-                            <div className='flex items-center gap-2 flex-wrap min-w-0'>
-                                <span className='text-sm font-semibold text-emerald-900 dark:text-white'>
-                                    {getLocalizedField(doa, "title", lang, [
-                                        "name",
-                                    ])}
-                                </span>
-                                {doa.category && (
-                                    <span className='text-xs px-2 py-0.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full'>
-                                        {t(
-                                            CATEGORIES.find(
-                                                (item) =>
-                                                    item.value === doa.category,
-                                            )?.labelKey,
-                                        ) || doa.category}
-                                    </span>
-                                )}
-                                {doa.audio_url && (
-                                    <BsVolumeUpFill className='text-emerald-500 text-xs' />
-                                )}
-                            </div>
-                            <span className='text-gray-400 text-xs shrink-0'>
-                                {expanded === doa.id ? "▲" : "▼"}
-                            </span>
+                            {t(c.labelKey)}
                         </button>
+                    ))}
+                </div>
 
-                        {expanded === doa.id && (
-                            <div className='px-4 pb-4 border-t border-gray-50 dark:border-slate-700 pt-3 space-y-3'>
-                                <p
-                                    className='text-2xl leading-[2.2] text-right font-kitab text-emerald-900 dark:text-white'
-                                    style={{
-                                        direction: "rtl",
-                                        fontFamily: "Amiri, serif",
-                                    }}
-                                >
-                                    {doa.translation?.ar}
-                                </p>
-                                {doa.translation?.latin_idn && (
-                                    <p className='text-sm italic text-gray-500 dark:text-gray-400'>
-                                        {doa.translation.latin_idn}
-                                    </p>
-                                )}
-                                <p className='text-sm text-gray-700 dark:text-gray-300'>
-                                    {getLocalizedField(
-                                        doa,
-                                        "description",
-                                        lang,
-                                        ["meaning"],
+                <div className='mb-3 flex items-center justify-between text-xs text-gray-400'>
+                    <span>
+                        {t("common.showing")} {filtered.length} {t("common.of")}{" "}
+                        {doas.length} {t("doa.unit")}
+                    </span>
+                    {search && (
+                        <button
+                            type='button'
+                            onClick={() => setSearch("")}
+                            className='font-medium text-emerald-600 dark:text-emerald-400'
+                        >
+                            {t("common.reset_search")}
+                        </button>
+                    )}
+                </div>
+
+                {isLoading && <SkeletonInline rows={5} />}
+
+                {!isLoading && filtered.length === 0 && (
+                    <div className='text-center py-16'>
+                        <p className='text-gray-500 dark:text-gray-400'>
+                            {doas.length === 0
+                                ? t("doa.empty_unavailable")
+                                : t("doa.no_match")}
+                        </p>
+                    </div>
+                )}
+
+                <div className='space-y-3'>
+                    {filtered.map((doa) => (
+                        <div
+                            key={doa.id}
+                            className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 overflow-hidden'
+                        >
+                            <button
+                                className='w-full text-left px-4 py-3 flex items-center justify-between gap-3'
+                                onClick={() =>
+                                    setExpanded(
+                                        expanded === doa.id ? null : doa.id,
+                                    )
+                                }
+                            >
+                                <div className='flex items-center gap-2 flex-wrap min-w-0'>
+                                    <span className='text-sm font-semibold text-emerald-900 dark:text-white'>
+                                        {getLocalizedField(doa, "title", lang, [
+                                            "name",
+                                        ])}
+                                    </span>
+                                    {doa.category && (
+                                        <span className='text-xs px-2 py-0.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full'>
+                                            {t(
+                                                CATEGORIES.find(
+                                                    (item) =>
+                                                        item.value ===
+                                                        doa.category,
+                                                )?.labelKey,
+                                            ) || doa.category}
+                                        </span>
                                     )}
-                                </p>
-                                {doa.audio_url && (
+                                    {doa.audio_url && (
+                                        <BsVolumeUpFill className='text-emerald-500 text-xs' />
+                                    )}
+                                </div>
+                                <span className='text-gray-400 text-xs shrink-0'>
+                                    {expanded === doa.id ? "▲" : "▼"}
+                                </span>
+                            </button>
+
+                            {expanded === doa.id && (
+                                <div className='px-4 pb-4 border-t border-gray-50 dark:border-slate-700 pt-3 space-y-3'>
+                                    <p
+                                        className='text-2xl leading-[2.2] text-right font-kitab text-emerald-900 dark:text-white'
+                                        style={{
+                                            direction: "rtl",
+                                            fontFamily: "Amiri, serif",
+                                        }}
+                                    >
+                                        {doa.translation?.ar}
+                                    </p>
+                                    {doa.translation?.latin_idn && (
+                                        <p className='text-sm italic text-gray-500 dark:text-gray-400'>
+                                            {doa.translation.latin_idn}
+                                        </p>
+                                    )}
+                                    <p className='text-sm text-gray-700 dark:text-gray-300'>
+                                        {getLocalizedField(
+                                            doa,
+                                            "description",
+                                            lang,
+                                            ["meaning"],
+                                        )}
+                                    </p>
+                                    {doa.audio_url && (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                playing === doa.audio_url
+                                                    ? stopAudio()
+                                                    : playAudio(doa.audio_url);
+                                            }}
+                                            className='flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
+                                        >
+                                            {playing === doa.audio_url ? (
+                                                <BsPauseFill />
+                                            ) : (
+                                                <BsPlayFill />
+                                            )}
+                                            {playing === doa.audio_url
+                                                ? t("common.pause")
+                                                : t("asmaul.play_audio")}
+                                        </button>
+                                    )}
+                                    {doa.source && (
+                                        <SourceBadges source={doa.source} />
+                                    )}
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            playing === doa.audio_url
-                                                ? stopAudio()
-                                                : playAudio(doa.audio_url);
+                                            openShare(doa);
                                         }}
                                         className='flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
                                     >
-                                        {playing === doa.audio_url ? (
-                                            <BsPauseFill />
-                                        ) : (
-                                            <BsPlayFill />
-                                        )}
-                                        {playing === doa.audio_url
-                                            ? t("common.pause")
-                                            : t("asmaul.play_audio")}
+                                        <BsShare className='text-sm' />
+                                        {t("common.share")}
                                     </button>
-                                )}
-                                {doa.source && (
-                                    <SourceBadges source={doa.source} />
-                                )}
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        openShare(doa);
-                                    }}
-                                    className='flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
-                                >
-                                    <BsShare className='text-sm' />
-                                    {t("common.share")}
-                                </button>
-                            </div>
-                        )}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+
+                {isLoadingMore && (
+                    <div className='flex justify-center py-6'>
+                        <div className='w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin' />
                     </div>
-                ))}
+                )}
+
+                <div ref={sentinelRef} className='h-1' />
+
+                {!hasMore && doas.length > 0 && !isLoading && (
+                    <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
+                        {t("doa.all_shown")}
+                    </p>
+                )}
             </div>
 
-            {isLoadingMore && (
-                <div className='flex justify-center py-6'>
-                    <div className='w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin' />
-                </div>
-            )}
-
-            <div ref={sentinelRef} className='h-1' />
-
-            {!hasMore && doas.length > 0 && !isLoading && (
-                <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
-                    {t("doa.all_shown")}
-               </p>
-            )}
-       </div>
-
-        <ShareDoaModal
-            isOpen={sharePopUp}
-            onClose={closeShare}
-            doa={shareDoa}
-        />
+            <ShareDoaModal
+                isOpen={sharePopUp}
+                onClose={closeShare}
+                doa={shareDoa}
+            />
         </>
     );
 };
 
 const DoaPage = () => (
     <main className='min-h-screen flex flex-col'>
-        <NavbarTailwindCss />
         <Section>
             <DoaContent />
         </Section>
-        <Footer />
     </main>
 );
 

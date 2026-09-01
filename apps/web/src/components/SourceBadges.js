@@ -79,10 +79,7 @@ export default function SourceBadges({ source }) {
                         {ref.text}
                     </Link>
                 ) : (
-                    <span
-                        key={i}
-                        className='text-xs text-gray-400'
-                    >
+                    <span key={i} className='text-xs text-gray-400'>
                         {ref.text}
                     </span>
                 ),

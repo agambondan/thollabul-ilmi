@@ -5,8 +5,6 @@ import ByChapter from "@/app/hadith/byChapter";
 import ByHadith from "@/app/hadith/byHadith";
 import ByTheme from "@/app/hadith/byTheme";
 import HadithTab from "@/app/hadith/hadithTab";
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { hadithTabList } from "@/lib/const";
 import { useSearchParams } from "next/navigation";
@@ -41,13 +39,11 @@ export const HadithContent = ({
 const Page = () => {
     return (
         <main className='min-h-screen flex flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 <Suspense fallback={<div className='py-4' />}>
                     <HadithContent />
                 </Suspense>
             </Section>
-            <Footer />
         </main>
     );
 };

@@ -117,7 +117,10 @@ const BlogForm = ({ initialData = null, postId = null }) => {
             </div>
 
             <div>
-                <label htmlFor='blogform-slug' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label
+                    htmlFor='blogform-slug'
+                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                >
                     {t("admin.field.slug")}
                 </label>
                 <input
@@ -136,7 +139,10 @@ const BlogForm = ({ initialData = null, postId = null }) => {
             </div>
 
             <div>
-                <label htmlFor='blogform-summary' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label
+                    htmlFor='blogform-summary'
+                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                >
                     {t("admin.field.summary")}
                 </label>
                 <textarea
@@ -168,7 +174,10 @@ const BlogForm = ({ initialData = null, postId = null }) => {
             </div>
 
             <div>
-                <label htmlFor='blogform-cover-image-url' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label
+                    htmlFor='blogform-cover-image-url'
+                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                >
                     {t("admin.field.cover_image_url")}
                 </label>
                 <input
@@ -190,7 +199,10 @@ const BlogForm = ({ initialData = null, postId = null }) => {
 
             <div className='grid sm:grid-cols-2 gap-4'>
                 <div>
-                    <label htmlFor='blogform-category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                    <label
+                        htmlFor='blogform-category'
+                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                    >
                         {t("admin.field.category")}
                     </label>
                     <select
@@ -211,7 +223,10 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                 </div>
 
                 <div>
-                    <label htmlFor='blogform-status' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                    <label
+                        htmlFor='blogform-status'
+                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                    >
                         {t("common.status")}
                     </label>
                     <select

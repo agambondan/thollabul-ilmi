@@ -11,7 +11,7 @@ import {
     BsStickyFill,
     BsTrophyFill,
 } from "react-icons/bs";
-import { FaBrain, FaQuran } from "react-icons/fa";
+import { FaBrain, FaGraduationCap, FaQuran } from "react-icons/fa";
 import { GiCompass, GiOpenBook, GiPrayerBeads } from "react-icons/gi";
 import { ImBook } from "react-icons/im";
 import {
@@ -33,7 +33,6 @@ import {
     MdStar,
     MdTimeline,
 } from "react-icons/md";
-import { TbApi } from "react-icons/tb";
 
 export const linksMenu = [
     {
@@ -48,7 +47,6 @@ export const linksMenu = [
         href: "/hadith",
         icon: <ImBook />,
     },
-    { label: "Dev", labelKey: "link.dev", href: "/dev", icon: <TbApi /> },
     {
         label: "Contact",
         labelKey: "link.contact",
@@ -58,6 +56,18 @@ export const linksMenu = [
 ];
 
 export const linksMenuContent = [
+    {
+        label: "Pusat Belajar",
+        labelKey: "link.belajar",
+        href: "/belajar",
+        icon: <FaGraduationCap />,
+    },
+    {
+        label: "Komunitas",
+        labelKey: "link.komunitas",
+        href: "/komunitas",
+        icon: <BsPeopleFill />,
+    },
     {
         label: "Asmaul Husna",
         labelKey: "link.asmaul_husna",
@@ -262,6 +272,7 @@ export const linksMenuContentGroups = [
     {
         labelKey: "nav.content_group.quran_learning",
         items: pickContentLinks([
+            "/belajar",
             "/tafsir",
             "/asbabun-nuzul",
             "/fiqh",
@@ -269,6 +280,7 @@ export const linksMenuContentGroups = [
             "/quiz",
             "/library",
             "/forum",
+            "/komunitas",
         ]),
     },
     {

@@ -4,11 +4,8 @@ import HadithNumberContent, {
     getHadithTitle,
     normalizeHadithNumber,
 } from "@/app/hadith/[slug]/[number]/HadithNumberContent";
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { getLocalizedTranslation } from "@/lib/translation";
-
 
 export async function generateMetadata(props) {
     const params = await props.params;
@@ -58,13 +55,11 @@ export default async function Page(props) {
 
     return (
         <main className='min-h-screen flex flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 <div className='dark:text-white'>
                     <HadithNumberContent params={params} basePath='/hadith' />
                 </div>
             </Section>
-            <Footer />
         </main>
     );
 }

@@ -22,6 +22,10 @@ jest.mock("@/context/Locale", () => ({
                 "search.type.all": "Semua",
                 "search.type.ayah": "Al-Quran",
                 "search.type.hadith": "Hadith",
+                "search.type.doa": "Doa",
+                "search.type.dictionary": "Kamus",
+                "search.type.kajian": "Kajian",
+                "search.type.perawi": "Perawi",
                 "common.search": "Cari",
                 "common.no_results": "Tidak ditemukan",
                 "search.error": "Terjadi kesalahan",
@@ -31,6 +35,15 @@ jest.mock("@/context/Locale", () => ({
         lang: "id",
     }),
     LocaleProvider: ({ children }) => children,
+}));
+
+// The component now mirrors query + type into the URL so results are
+// shareable; that needs the app router.
+const mockReplace = jest.fn();
+jest.mock("next/navigation", () => ({
+    useRouter: () => ({ replace: mockReplace, push: jest.fn() }),
+    usePathname: () => "/search",
+    useSearchParams: () => new URLSearchParams(),
 }));
 
 jest.mock("@/lib/useLayoutMode", () => ({
@@ -130,6 +143,17 @@ describe("SearchClient", () => {
         expect(screen.getByText("Kamus")).toBeInTheDocument();
         expect(screen.getByText("Kajian")).toBeInTheDocument();
         expect(screen.getByText("Perawi")).toBeInTheDocument();
+    });
+
+    test("mirrors the query into the URL so results can be shared", async () => {
+        searchApi.search.mockReturnValue(mockSearchResponse(mockAllResults));
+        const user = userEvent.setup();
+        render(<SearchClient />);
+        await user.type(screen.getByPlaceholderText("Cari..."), "taqwa");
+        await user.click(screen.getByRole("button", { name: /Cari/i }));
+        expect(mockReplace).toHaveBeenCalledWith("/search?q=taqwa", {
+            scroll: false,
+        });
     });
 
     test("renders title", () => {

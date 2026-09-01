@@ -13,11 +13,26 @@ const buildShareUrls = ({ text, url, title }) => {
 
     return [
         ["WhatsApp", `https://wa.me/?text=${encodedText}`],
-        ["Telegram", `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`],
-        ["Facebook", `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`],
-        ["X", `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`],
-        ["Threads", `https://www.threads.net/intent/post?text=${encodeURIComponent(`${text}\n${url}`)}`],
-        ["LinkedIn", `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`],
+        [
+            "Telegram",
+            `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
+        ],
+        [
+            "Facebook",
+            `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+        ],
+        [
+            "X",
+            `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`,
+        ],
+        [
+            "Threads",
+            `https://www.threads.net/intent/post?text=${encodeURIComponent(`${text}\n${url}`)}`,
+        ],
+        [
+            "LinkedIn",
+            `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+        ],
         ["Email", `mailto:?subject=${encodedTitle}&body=${encodedText}`],
     ];
 };
@@ -52,7 +67,8 @@ export function ShareDoaModal({ isOpen, onClose, doa }) {
         setTimeout(() => setCopied(false), 1500);
     };
 
-    const openShareWindow = (url) => window.open(url, "_blank", "noopener,noreferrer");
+    const openShareWindow = (url) =>
+        window.open(url, "_blank", "noopener,noreferrer");
 
     return (
         <Dialog
@@ -92,7 +108,8 @@ export function ShareDoaModal({ isOpen, onClose, doa }) {
                                     });
                                     onClose();
                                 } catch (err) {
-                                    if (err.name !== "AbortError") copyShareText();
+                                    if (err.name !== "AbortError")
+                                        copyShareText();
                                 }
                             }}
                             className='rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300'
@@ -100,18 +117,20 @@ export function ShareDoaModal({ isOpen, onClose, doa }) {
                             {t("common.share_sheet")}
                         </button>
                     )}
-                    {buildShareUrls({ text: shareText, url: shareUrl, title }).map(
-                        ([label, url]) => (
-                            <button
-                                key={label}
-                                type='button'
-                                onClick={() => openShareWindow(url)}
-                                className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
-                            >
-                                {label}
-                            </button>
-                        ),
-                    )}
+                    {buildShareUrls({
+                        text: shareText,
+                        url: shareUrl,
+                        title,
+                    }).map(([label, url]) => (
+                        <button
+                            key={label}
+                            type='button'
+                            onClick={() => openShareWindow(url)}
+                            className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
+                        >
+                            {label}
+                        </button>
+                    ))}
                     <button
                         type='button'
                         onClick={copyShareText}

@@ -1,7 +1,5 @@
 "use client";
 
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
@@ -303,11 +301,9 @@ export const WiridContent = () => {
 
 const WiridPage = () => (
     <main className='min-h-screen flex flex-col'>
-        <NavbarTailwindCss />
         <Section>
             <WiridContent />
         </Section>
-        <Footer />
     </main>
 );
 

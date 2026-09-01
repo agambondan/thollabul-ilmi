@@ -117,7 +117,10 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                 </div>
 
                 <div>
-                    <label htmlFor='sirohform-order' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                    <label
+                        htmlFor='sirohform-order'
+                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                    >
                         {t("admin.field.order")}
                     </label>
                     <input
@@ -147,7 +150,10 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             </div>
 
             <div>
-                <label htmlFor='sirohform-slug' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label
+                    htmlFor='sirohform-slug'
+                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                >
                     {t("admin.field.slug")}
                 </label>
                 <input

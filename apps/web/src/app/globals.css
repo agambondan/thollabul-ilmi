@@ -51,6 +51,75 @@
     }
 }
 
+/*
+ * Accessibility preferences from the settings page.
+ * `reduce-motion` also honours the OS-level setting, which nothing respected
+ * before.
+ */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+.high-contrast {
+    --toast-fg: #000000;
+}
+
+.high-contrast body {
+    color: #0b0f0d;
+}
+
+.high-contrast.dark body {
+    color: #ffffff;
+}
+
+.high-contrast .text-gray-400,
+.high-contrast .text-gray-500,
+.high-contrast .text-slate-400,
+.high-contrast .text-slate-500 {
+    color: #45525c !important;
+}
+
+.high-contrast.dark .text-gray-400,
+.high-contrast.dark .text-gray-500,
+.high-contrast.dark .text-slate-400,
+.high-contrast.dark .text-slate-500 {
+    color: #d3dde4 !important;
+}
+
+.high-contrast a:focus-visible,
+.high-contrast button:focus-visible,
+.high-contrast input:focus-visible,
+.high-contrast select:focus-visible,
+.high-contrast textarea:focus-visible {
+    outline: 3px solid #0b5e43;
+    outline-offset: 2px;
+}
+
+/*
+ * Top offset for the fixed public navbar. Pages used to hardcode `pt-24` in 18
+ * places while :root declared --navbar-height: 4.5rem, so the token and the
+ * real spacing disagreed. This class is now the single knob.
+ */
+.pt-navbar {
+    padding-top: var(--navbar-offset);
+}
+
 /* ─── Custom Scrollbar ─────────────────────────────────────────── */
 ::-webkit-scrollbar {
     width: 8px;

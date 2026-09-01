@@ -174,7 +174,10 @@ const SettingButton = () => {
                             <button
                                 onClick={() => setPosition("side")}
                                 title={label("settings.action_side", "Samping")}
-                                aria-label={label("settings.action_side", "Samping")}
+                                aria-label={label(
+                                    "settings.action_side",
+                                    "Samping",
+                                )}
                                 className={classNames(
                                     "flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
                                     {
@@ -190,7 +193,10 @@ const SettingButton = () => {
                             <button
                                 onClick={() => setPosition("menu")}
                                 title={label("settings.action_menu", "Menu")}
-                                aria-label={label("settings.action_menu", "Menu")}
+                                aria-label={label(
+                                    "settings.action_menu",
+                                    "Menu",
+                                )}
                                 className={classNames(
                                     "flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
                                     {
@@ -206,7 +212,10 @@ const SettingButton = () => {
                             <button
                                 onClick={() => setPosition("hidden")}
                                 title={label("settings.action_hidden", "Hide")}
-                                aria-label={label("settings.action_hidden", "Hide")}
+                                aria-label={label(
+                                    "settings.action_hidden",
+                                    "Hide",
+                                )}
                                 className={classNames(
                                     "flex justify-center items-center py-2 px-1 rounded-lg border text-xs transition-all",
                                     {
@@ -270,7 +279,9 @@ const SettingButton = () => {
                                 type='button'
                                 onClick={decreaseTranslationFontSize}
                                 className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
-                                aria-label={t("settings.decrease_translation_size")}
+                                aria-label={t(
+                                    "settings.decrease_translation_size",
+                                )}
                             >
                                 T-
                             </button>
@@ -285,7 +296,9 @@ const SettingButton = () => {
                                 type='button'
                                 onClick={increaseTranslationFontSize}
                                 className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
-                                aria-label={t("settings.increase_translation_size")}
+                                aria-label={t(
+                                    "settings.increase_translation_size",
+                                )}
                             >
                                 T+
                             </button>

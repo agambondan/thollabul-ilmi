@@ -1,6 +1,12 @@
 "use client";
 
-import { PanelEmpty, PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
+import {
+    PanelEmpty,
+    PanelTable,
+    Td,
+    Th,
+    Tr,
+} from "@/components/panel/DataPanel";
 import { adminKajianApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
@@ -12,6 +18,7 @@ import {
     BsTrash,
     BsX,
 } from "react-icons/bs";
+import ModalShell from "@/components/ModalShell";
 
 const CATEGORIES = [
     "aqidah",
@@ -198,15 +205,9 @@ const AdminStudiesPage = () => {
                 <PanelTable
                     head={
                         <>
-                            <Th>
-                                {t("admin.field.title")}
-                            </Th>
-                            <Th className='hidden md:table-cell'>
-                                Ustadz
-                            </Th>
-                            <Th className='w-24'>
-                                Tipe
-                            </Th>
+                            <Th>{t("admin.field.title")}</Th>
+                            <Th className='hidden md:table-cell'>Ustadz</Th>
+                            <Th className='w-24'>Tipe</Th>
                             <Th className='w-24 hidden lg:table-cell'>
                                 {t("admin.field.category")}
                             </Th>
@@ -252,9 +253,7 @@ const AdminStudiesPage = () => {
                                     </button>
                                     <button
                                         onClick={() =>
-                                            setDeleteId(
-                                                item.id ?? item._id,
-                                            )
+                                            setDeleteId(item.id ?? item._id)
                                         }
                                         aria-label={t("common.delete")}
                                         title={t("common.delete")}
@@ -267,14 +266,19 @@ const AdminStudiesPage = () => {
                         </Tr>
                     ))}
                     {filtered.length === 0 && (
-                        <PanelEmpty colSpan={5}>{t("admin.crud.no_data")}</PanelEmpty>
+                        <PanelEmpty colSpan={5}>
+                            {t("admin.crud.no_data")}
+                        </PanelEmpty>
                     )}
                 </PanelTable>
             )}
 
             {showModal && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'>
+                <ModalShell
+                    onClose={() => setShowModal(false)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                >
                         <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
                             <h2 className='font-bold text-gray-900 dark:text-white'>
                                 {editId
@@ -290,7 +294,10 @@ const AdminStudiesPage = () => {
                         </div>
                         <div className='p-5 space-y-4'>
                             <div>
-                                <label htmlFor='page-title' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-title'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.field.title")}
                                 </label>
                                 <input
@@ -308,7 +315,10 @@ const AdminStudiesPage = () => {
                             </div>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label htmlFor='page-ustadz' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-ustadz'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         Ustadz
                                     </label>
                                     <input
@@ -325,7 +335,10 @@ const AdminStudiesPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor='page-duration' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-duration'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.kajian.duration")}
                                     </label>
                                     <input
@@ -339,14 +352,19 @@ const AdminStudiesPage = () => {
                                                     e.target.value,
                                             })
                                         }
-                                    placeholder={t("admin.kajian.duration_placeholder")}
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                        placeholder={t(
+                                            "admin.kajian.duration_placeholder",
+                                        )}
+                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
                                 </div>
                             </div>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label htmlFor='page-tipe' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-tipe'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         Tipe
                                     </label>
                                     <select
@@ -368,7 +386,10 @@ const AdminStudiesPage = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label htmlFor='page-category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-category'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.field.category")}
                                     </label>
                                     <select
@@ -391,7 +412,10 @@ const AdminStudiesPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label htmlFor='page-url' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-url'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     URL
                                 </label>
                                 <input
@@ -404,32 +428,42 @@ const AdminStudiesPage = () => {
                                             url: e.target.value,
                                         })
                                     }
-                                placeholder={t("admin.kajian.url_placeholder")}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor='page-thumbnail-url' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
-                                {t("admin.kajian.thumbnail_url")}
-                            </label>
-                            <input
-                                id='page-thumbnail-url'
-                                type='url'
-                                value={form.thumbnail_url}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
+                                    placeholder={t(
+                                        "admin.kajian.url_placeholder",
+                                    )}
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor='page-thumbnail-url'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
+                                    {t("admin.kajian.thumbnail_url")}
+                                </label>
+                                <input
+                                    id='page-thumbnail-url'
+                                    type='url'
+                                    value={form.thumbnail_url}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
                                             thumbnail_url: e.target.value,
                                         })
                                     }
-                                placeholder={t("admin.kajian.url_placeholder")}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor='page-description' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
-                                {t("admin.field.description")}
-                            </label>
+                                    placeholder={t(
+                                        "admin.kajian.url_placeholder",
+                                    )}
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor='page-description'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
+                                    {t("admin.field.description")}
+                                </label>
                                 <textarea
                                     id='page-description'
                                     value={form.description}
@@ -459,13 +493,15 @@ const AdminStudiesPage = () => {
                                 {saving ? t("common.saving") : t("common.save")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
 
             {deleteId && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'>
+                <ModalShell
+                    onClose={() => setDeleteId(null)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
+                >
                         <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
                             {t("admin.crud.delete_title", {
                                 item: t("admin.kajian.study"),
@@ -488,8 +524,7 @@ const AdminStudiesPage = () => {
                                 {t("common.delete")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
         </div>
     );

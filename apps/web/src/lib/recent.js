@@ -1,7 +1,7 @@
-const RECENT_KEY = 'tholabul_belajar_recent';
+const RECENT_KEY = "tholabul_belajar_recent";
 
 export const pushRecentBelajar = (item) => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
     try {
         const raw = localStorage.getItem(RECENT_KEY);
         let items = raw ? JSON.parse(raw) : [];
@@ -12,7 +12,7 @@ export const pushRecentBelajar = (item) => {
 };
 
 export const getRecentBelajar = () => {
-    if (typeof window === 'undefined') return [];
+    if (typeof window === "undefined") return [];
     try {
         const raw = localStorage.getItem(RECENT_KEY);
         return raw ? JSON.parse(raw) : [];

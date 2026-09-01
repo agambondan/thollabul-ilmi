@@ -1,13 +1,12 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { useLocale } from "@/context/Locale";
 import { tokohTarikhApi } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { BsPeopleFill, BsSearch } from "react-icons/bs";
+import { useModalA11y } from "@/lib/useModalA11y";
 
 const ERA_FILTERS = [
     { value: "", labelKey: "common.all" },
@@ -27,6 +26,10 @@ export function TokohListContent({ className = "" }) {
     const [search, setSearch] = useState("");
     const [era, setEra] = useState("");
     const [selected, setSelected] = useState(null);
+    const modalA11y = useModalA11y({
+        open: !!selected,
+        onClose: () => setSelected(null),
+    });
     const page = 1;
 
     useEffect(() => {
@@ -145,7 +148,7 @@ export function TokohListContent({ className = "" }) {
                     className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4'
                     onClick={() => setSelected(null)}
                 >
-                    <div
+                    <div {...modalA11y}
                         className='bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-xl'
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -202,9 +205,7 @@ export function TokohListContent({ className = "" }) {
 export default function TokohPage() {
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-            <NavbarTailwindCss />
-            <TokohListContent className='pt-24' />
-            <Footer />
+            <TokohListContent className='pt-navbar' />
         </main>
     );
 }

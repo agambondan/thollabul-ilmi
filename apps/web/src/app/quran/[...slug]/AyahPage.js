@@ -27,6 +27,7 @@ import {
 } from "react-icons/bs";
 import { IoIosLink, IoMdCopy, IoMdImages } from "react-icons/io";
 import PanelCloseButton from "@/components/PanelCloseButton";
+import { sanitizeHtml } from "@/lib/sanitizeHtml";
 
 const AyahPage = ({
     surah,
@@ -107,6 +108,7 @@ const AyahPage = ({
             }
         });
         observer.observe(cardRef.current);
+        return () => observer.disconnect();
     }, [isLast, newLimit]);
 
     useEffect(() => {
@@ -273,7 +275,11 @@ const AyahPage = ({
                             }
                         >
                             <button
-                                title={isPlaying ? t("ayah.audio_pause") : t("ayah.audio_play")}
+                                title={
+                                    isPlaying
+                                        ? t("ayah.audio_pause")
+                                        : t("ayah.audio_play")
+                                }
                                 onClick={handleAudio}
                                 disabled={audioLoading}
                                 className={`p-2 rounded-lg text-lg transition-colors disabled:opacity-50 ${
@@ -398,10 +404,16 @@ const AyahPage = ({
                                                         <BsFileEarmarkPlay />
                                                     )}
                                                     {audioLoading
-                                                        ? t("ayah.audio_loading")
+                                                        ? t(
+                                                              "ayah.audio_loading",
+                                                          )
                                                         : isPlaying
-                                                          ? t("ayah.audio_pause")
-                                                          : t("ayah.audio_play")}
+                                                          ? t(
+                                                                "ayah.audio_pause",
+                                                            )
+                                                          : t(
+                                                                "ayah.audio_play",
+                                                            )}
                                                 </button>
                                                 <button
                                                     className={
@@ -451,7 +463,11 @@ const AyahPage = ({
                                                         refId={ayah.id}
                                                         className="!p-0 !text-base relative before:absolute before:-inset-2 before:content-['']"
                                                     />
-                                                    <span>{t("ayah.bookmark_label")}</span>
+                                                    <span>
+                                                        {t(
+                                                            "ayah.bookmark_label",
+                                                        )}
+                                                    </span>
                                                 </div>
                                                 <div className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'>
                                                     <NoteButton
@@ -459,7 +475,9 @@ const AyahPage = ({
                                                         refId={ayah.id}
                                                         className="!p-0 !text-base relative before:absolute before:-inset-2 before:content-['']"
                                                     />
-                                                    <span>{t("ayah.note_label")}</span>
+                                                    <span>
+                                                        {t("ayah.note_label")}
+                                                    </span>
                                                 </div>
                                                 <button
                                                     className={
@@ -571,7 +589,7 @@ const AyahPage = ({
                             hideArabic || hideAll ? "blur-sm select-none" : ""
                         }
                         dangerouslySetInnerHTML={{
-                            __html: arabicHtml.concat(
+                            __html: sanitizeHtml(arabicHtml).concat(
                                 `&nbsp;<span class="font-kitab">&#x06DD;${NumberToArabic(ayah.number)}</span>`,
                             ),
                         }}
@@ -595,7 +613,10 @@ const AyahPage = ({
                         {ayahTranslation}
                     </li>
                     {hafalanMode !== "off" && (
-                        <li className='pb-2 md:px-2' style={{ direction: "ltr" }}>
+                        <li
+                            className='pb-2 md:px-2'
+                            style={{ direction: "ltr" }}
+                        >
                             <button
                                 type='button'
                                 onClick={() => setRevealed((v) => !v)}
@@ -689,39 +710,42 @@ const AyahPage = ({
                         emptyText={t("ayah.mufrodat_empty")}
                         onRetry={mufrodatRes.retry}
                     />
-                    {!mufrodatRes.isLoading && Array.isArray(mufrodatRes.data) && (
-                        <div
-                            className='flex flex-wrap gap-2'
-                            style={{ direction: "rtl" }}
-                        >
-                            {mufrodatRes.data.map((word, i) => (
-                                <div
-                                    key={i}
-                                    className='text-center bg-white dark:bg-slate-800 rounded-lg border border-sky-100 dark:border-slate-700 px-3 py-2 min-w-[60px]'
-                                >
-                                    <p
-                                        className='text-lg font-bold text-emerald-900 dark:text-white mb-0.5'
-                                        style={{ fontFamily: "Amiri, serif" }}
+                    {!mufrodatRes.isLoading &&
+                        Array.isArray(mufrodatRes.data) && (
+                            <div
+                                className='flex flex-wrap gap-2'
+                                style={{ direction: "rtl" }}
+                            >
+                                {mufrodatRes.data.map((word, i) => (
+                                    <div
+                                        key={i}
+                                        className='text-center bg-white dark:bg-slate-800 rounded-lg border border-sky-100 dark:border-slate-700 px-3 py-2 min-w-[60px]'
                                     >
-                                        {word.arabic}
-                                    </p>
-                                    {word.transliteration && (
-                                        <p className='text-xs italic text-gray-400 mb-0.5'>
-                                            {word.transliteration}
+                                        <p
+                                            className='text-lg font-bold text-emerald-900 dark:text-white mb-0.5'
+                                            style={{
+                                                fontFamily: "Amiri, serif",
+                                            }}
+                                        >
+                                            {word.arabic}
                                         </p>
-                                    )}
-                                    <p className='text-xs text-gray-600 dark:text-gray-300'>
-                                        {word.indonesian ?? word.meaning}
-                                    </p>
-                                    {word.root_word && (
-                                        <p className='text-xs text-sky-500 dark:text-sky-400 mt-0.5'>
-                                            {word.root_word}
+                                        {word.transliteration && (
+                                            <p className='text-xs italic text-gray-400 mb-0.5'>
+                                                {word.transliteration}
+                                            </p>
+                                        )}
+                                        <p className='text-xs text-gray-600 dark:text-gray-300'>
+                                            {word.indonesian ?? word.meaning}
                                         </p>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                                        {word.root_word && (
+                                            <p className='text-xs text-sky-500 dark:text-sky-400 mt-0.5'>
+                                                {word.root_word}
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                 </div>
             )}
 

@@ -277,10 +277,7 @@ const AdminDashboard = () => {
                 needsLibraryResource,
             );
             const worshipTotal =
-                doa.count +
-                dzikir.count +
-                wirid.count +
-                manasik.count;
+                doa.count + dzikir.count + wirid.count + manasik.count;
             const learningTotal =
                 quiz.count +
                 kamus.count +

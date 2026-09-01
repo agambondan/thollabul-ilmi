@@ -80,7 +80,10 @@ const RegisterPage = () => {
 
                     <form onSubmit={handleSubmit} className='space-y-4'>
                         <div>
-                            <label htmlFor='page-name' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                            <label
+                                htmlFor='page-name'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                            >
                                 {t("auth.name")}
                             </label>
                             <input
@@ -94,7 +97,10 @@ const RegisterPage = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor='page-email' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                            <label
+                                htmlFor='page-email'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                            >
                                 {t("auth.email")}
                             </label>
                             <input
@@ -108,7 +114,10 @@ const RegisterPage = () => {
                             />
                         </div>
                         <div>
-                            <label htmlFor='page-password' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                            <label
+                                htmlFor='page-password'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                            >
                                 {t("auth.password")}
                             </label>
                             <div className='relative'>

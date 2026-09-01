@@ -242,7 +242,9 @@ const InfiniteScrollHadithPage = ({
                     callbackOnChange={(event) => {
                         setSelectedTheme(event.target.value);
                     }}
-                    defaultValue={selectedTheme == null ? "" : String(selectedTheme)}
+                    defaultValue={
+                        selectedTheme == null ? "" : String(selectedTheme)
+                    }
                 >
                     {themes.map((item) => (
                         <Select.Option
@@ -263,7 +265,9 @@ const InfiniteScrollHadithPage = ({
                     callbackOnChange={(event) => {
                         setSelectedChapter(event.target.value);
                     }}
-                    defaultValue={selectedChapter == null ? "" : String(selectedChapter)}
+                    defaultValue={
+                        selectedChapter == null ? "" : String(selectedChapter)
+                    }
                 >
                     {(chapters?.items ?? []).map((item) => (
                         <Select.Option key={item.id} value={item.id}>

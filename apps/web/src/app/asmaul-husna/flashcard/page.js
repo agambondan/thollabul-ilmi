@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { useLocale } from "@/context/Locale";
 import { asmaulHusnaApi } from "@/lib/api";
@@ -228,11 +226,9 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
 export default function AsmaulHusnaFlashcardPage() {
     return (
         <main className='min-h-screen flex flex-col bg-gradient-to-b from-emerald-50/40 via-white to-white dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'>
-            <NavbarTailwindCss />
             <Section>
                 <AsmaulHusnaFlashcardContent />
             </Section>
-            <Footer />
         </main>
     );
 }

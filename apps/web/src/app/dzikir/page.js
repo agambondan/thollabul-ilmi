@@ -1,7 +1,5 @@
 "use client";
 
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useAuth } from "@/context/Auth";
@@ -451,11 +449,9 @@ export const DzikirContent = () => {
 
 const DzikirPage = () => (
     <main className='min-h-screen flex flex-col'>
-        <NavbarTailwindCss />
         <Section>
             <DzikirContent />
         </Section>
-        <Footer />
     </main>
 );
 

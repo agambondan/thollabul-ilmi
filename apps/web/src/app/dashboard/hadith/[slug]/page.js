@@ -84,9 +84,7 @@ function SanadPanel({ hadithId, t }) {
                                         )}
                                     </span>
                                     {i < arr.length - 1 && (
-                                        <span className='text-gray-400'>
-                                            ←
-                                        </span>
+                                        <span className='text-gray-400'>←</span>
                                     )}
                                 </span>
                             ))}
@@ -283,14 +281,12 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                 <ShareAyah
                     images={listMasjidImage}
                     isCopiedCallback={() => setShareImagePopUp(false)}
-                    text={`${arabicText}\n`
-                        .concat(`${hadithText}\n`)
-                        .concat(
-                            `${t("hadith.citation", {
-                                slug,
-                                number: h.number,
-                            })}\n${t("hadith.via")} ${getCardUrl()}`,
-                        )}
+                    text={`${arabicText}\n`.concat(`${hadithText}\n`).concat(
+                        `${t("hadith.citation", {
+                            slug,
+                            number: h.number,
+                        })}\n${t("hadith.via")} ${getCardUrl()}`,
+                    )}
                 />
             )}
 
@@ -521,8 +517,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                 setSettingPopUp(false);
                                             }}
                                         >
-                                            <IoMdCopy />{" "}
-                                            {t("hadith.copy_text")}
+                                            <IoMdCopy /> {t("hadith.copy_text")}
                                         </button>
                                     </div>
                                 </div>
@@ -852,8 +847,7 @@ export function HadithDetailContent({
                                     callbackOnChange={(e) => {
                                         const ch = chapters.find(
                                             (c) =>
-                                                String(c.id) ===
-                                                e.target.value,
+                                                String(c.id) === e.target.value,
                                         );
                                         if (ch) setSelectedChapter(ch);
                                     }}

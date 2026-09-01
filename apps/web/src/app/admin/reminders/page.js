@@ -1,10 +1,17 @@
 "use client";
 
-import { PanelEmpty, PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
+import {
+    PanelEmpty,
+    PanelTable,
+    Td,
+    Th,
+    Tr,
+} from "@/components/panel/DataPanel";
 import { adminReminderApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
+import ModalShell from "@/components/ModalShell";
 
 const TYPES = [
     { value: "ulama", label: "Nasihat Ulama" },
@@ -173,9 +180,7 @@ const AdminRemindersPage = () => {
                             <Th className='hidden font-medium text-gray-600 dark:text-gray-300 lg:table-cell'>
                                 Status
                             </Th>
-                            <Th align='right'>
-                                Aksi
-                            </Th>
+                            <Th align='right'>Aksi</Th>
                         </>
                     }
                 >
@@ -208,9 +213,7 @@ const AdminRemindersPage = () => {
                                             : "bg-gray-100 text-gray-500 dark:bg-slate-700 dark:text-gray-400"
                                     }`}
                                 >
-                                    {item.is_active
-                                        ? "Aktif"
-                                        : "Nonaktif"}
+                                    {item.is_active ? "Aktif" : "Nonaktif"}
                                 </span>
                             </Td>
                             <Td>
@@ -225,9 +228,7 @@ const AdminRemindersPage = () => {
                                     </button>
                                     <button
                                         onClick={() =>
-                                            setDeleteId(
-                                                item.id ?? item._id,
-                                            )
+                                            setDeleteId(item.id ?? item._id)
                                         }
                                         aria-label={t("common.delete")}
                                         title={t("common.delete")}
@@ -240,14 +241,19 @@ const AdminRemindersPage = () => {
                         </Tr>
                     ))}
                     {filtered.length === 0 && (
-                        <PanelEmpty colSpan={5}>{t("admin.crud.no_data")}</PanelEmpty>
+                        <PanelEmpty colSpan={5}>
+                            {t("admin.crud.no_data")}
+                        </PanelEmpty>
                     )}
                 </PanelTable>
             )}
 
             {showModal && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white dark:bg-slate-800'>
+                <ModalShell
+                    onClose={() => setShowModal(false)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white dark:bg-slate-800'
+                >
                         <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700'>
                             <h2 className='font-bold text-gray-900 dark:text-white'>
                                 {editId ? "Edit Reminder" : "Tambah Reminder"}
@@ -336,7 +342,9 @@ const AdminRemindersPage = () => {
                                                 source: e.target.value,
                                             })
                                         }
-                                        placeholder={t("admin.reminders.source_placeholder")}
+                                        placeholder={t(
+                                            "admin.reminders.source_placeholder",
+                                        )}
                                         className={INPUT_CLASS}
                                     />
                                 </Field>
@@ -404,13 +412,15 @@ const AdminRemindersPage = () => {
                                 {saving ? t("common.saving") : t("common.save")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
 
             {deleteId && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='w-full max-w-sm rounded-2xl bg-white p-6 dark:bg-slate-800'>
+                <ModalShell
+                    onClose={() => setDeleteId(null)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='w-full max-w-sm rounded-2xl bg-white p-6 dark:bg-slate-800'
+                >
                         <h2 className='mb-2 font-bold text-gray-900 dark:text-white'>
                             Hapus Reminder
                         </h2>
@@ -431,8 +441,7 @@ const AdminRemindersPage = () => {
                                 {t("common.delete")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
         </div>
     );

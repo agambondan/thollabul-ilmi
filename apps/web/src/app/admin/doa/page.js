@@ -1,11 +1,18 @@
 "use client";
 
-import { PanelEmpty, PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
+import {
+    PanelEmpty,
+    PanelTable,
+    Td,
+    Th,
+    Tr,
+} from "@/components/panel/DataPanel";
 import { adminDoaApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
+import ModalShell from "@/components/ModalShell";
 
 const CATEGORIES = [
     "pagi",
@@ -161,9 +168,7 @@ const AdminPrayersPage = () => {
                 <PanelTable
                     head={
                         <>
-                            <Th>
-                                {t("admin.field.title")}
-                            </Th>
+                            <Th>{t("admin.field.title")}</Th>
                             <Th className='w-28'>
                                 {t("admin.field.category")}
                             </Th>
@@ -199,9 +204,7 @@ const AdminPrayersPage = () => {
                                     </button>
                                     <button
                                         onClick={() =>
-                                            setDeleteId(
-                                                item.id ?? item._id,
-                                            )
+                                            setDeleteId(item.id ?? item._id)
                                         }
                                         aria-label={t("common.delete")}
                                         title={t("common.delete")}
@@ -214,15 +217,20 @@ const AdminPrayersPage = () => {
                         </Tr>
                     ))}
                     {filtered.length === 0 && (
-                        <PanelEmpty colSpan={4}>{t("admin.crud.no_data")}</PanelEmpty>
+                        <PanelEmpty colSpan={4}>
+                            {t("admin.crud.no_data")}
+                        </PanelEmpty>
                     )}
                 </PanelTable>
             )}
 
             {/* Modal Create/Edit */}
             {showModal && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'>
+                <ModalShell
+                    onClose={() => setShowModal(false)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                >
                         <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
                             <h2 className='font-bold text-gray-900 dark:text-white'>
                                 {editId
@@ -238,7 +246,10 @@ const AdminPrayersPage = () => {
                         </div>
                         <div className='p-5 space-y-4'>
                             <div>
-                                <label htmlFor='page-title' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-title'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.field.title")}
                                 </label>
                                 <input
@@ -255,7 +266,10 @@ const AdminPrayersPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-arabic' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-arabic'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.field.arabic")}
                                 </label>
                                 <textarea
@@ -273,7 +287,10 @@ const AdminPrayersPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-latin' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-latin'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.field.latin")}
                                 </label>
                                 <textarea
@@ -290,7 +307,10 @@ const AdminPrayersPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-translation' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-translation'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("common.translation")}
                                 </label>
                                 <textarea
@@ -307,7 +327,10 @@ const AdminPrayersPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-category'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.field.category")}
                                 </label>
                                 <select
@@ -329,7 +352,10 @@ const AdminPrayersPage = () => {
                                 </select>
                             </div>
                             <div>
-                                <label htmlFor='page-source' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-source'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("common.source")}
                                 </label>
                                 <input
@@ -342,7 +368,9 @@ const AdminPrayersPage = () => {
                                             source: e.target.value,
                                         })
                                     }
-                                    placeholder={t("admin.doa.source_placeholder")}
+                                    placeholder={t(
+                                        "admin.doa.source_placeholder",
+                                    )}
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
@@ -362,14 +390,16 @@ const AdminPrayersPage = () => {
                                 {saving ? t("common.saving") : t("common.save")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
 
             {/* Delete Confirm */}
             {deleteId && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'>
+                <ModalShell
+                    onClose={() => setDeleteId(null)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
+                >
                         <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
                             {t("admin.crud.delete_title").replace(
                                 "{item}",
@@ -393,8 +423,7 @@ const AdminPrayersPage = () => {
                                 {t("common.delete")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
         </div>
     );

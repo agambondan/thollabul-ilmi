@@ -1,7 +1,5 @@
 "use client";
 
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import PuasaSunnahPanel from "@/components/PuasaSunnahPanel";
 import RamadanCountdown from "@/components/RamadanCountdown";
 import Section from "@/components/Section";
@@ -147,7 +145,6 @@ const HijriPage = () => {
 
     return (
         <main className='min-h-screen flex flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 <div
                     className={
@@ -435,7 +432,6 @@ const HijriPage = () => {
                     )}
                 </div>
             </Section>
-            <Footer />
         </main>
     );
 };

@@ -3,6 +3,7 @@
 import { getLocalizedField } from "@/lib/translation";
 import { useQuranFont } from "@/lib/useQuranFont";
 import Link from "next/link";
+import { sanitizeHtml } from "@/lib/sanitizeHtml";
 
 const getSurahReaderSlug = (ayah, lang) => {
     const surah = ayah?.surah ?? {};
@@ -113,7 +114,7 @@ export default function MushafAyahList({
                                 fontSize: `${arabicFontSize}px`,
                                 lineHeight: "2.1",
                             }}
-                            dangerouslySetInnerHTML={{ __html: arabicHtml }}
+                            dangerouslySetInnerHTML={{ __html: sanitizeHtml(arabicHtml) }}
                         />
                         {translation && (
                             <p

@@ -41,7 +41,11 @@ const tryPageNotification = (title, body) => {
     }
 };
 
-export const fireAdzanNotification = async (title, body, url = "/jadwal-sholat") => {
+export const fireAdzanNotification = async (
+    title,
+    body,
+    url = "/jadwal-sholat",
+) => {
     if (tryControllerPost(title, body, url)) return;
     if (tryPageNotification(title, body)) return;
     await tryRegistrationNotify(title, body, url);

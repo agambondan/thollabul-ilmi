@@ -98,7 +98,10 @@ const Dialog = ({
 
             const items = Array.from(
                 panelRef.current.querySelectorAll(FOCUSABLE),
-            ).filter((el) => el.offsetParent !== null || el === document.activeElement);
+            ).filter(
+                (el) =>
+                    el.offsetParent !== null || el === document.activeElement,
+            );
             if (items.length === 0) {
                 event.preventDefault();
                 panelRef.current.focus();
@@ -179,13 +182,18 @@ const Dialog = ({
                                 aria-label={t("common.close")}
                                 className='-mr-1 shrink-0 rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:hover:bg-slate-800 dark:hover:text-gray-200'
                             >
-                                <MdClose className='text-xl' aria-hidden='true' />
+                                <MdClose
+                                    className='text-xl'
+                                    aria-hidden='true'
+                                />
                             </button>
                         )}
                     </div>
                 )}
 
-                <div className='flex-1 overflow-y-auto px-5 py-4'>{children}</div>
+                <div className='flex-1 overflow-y-auto px-5 py-4'>
+                    {children}
+                </div>
 
                 {footer && (
                     <div className='border-t border-gray-100 px-5 py-3 dark:border-slate-800'>

@@ -93,7 +93,8 @@ const ByTheme = ({ themeBasePath = "/hadith/theme" }) => {
                                 </p>
                             </div>
                             <p className='text-xs text-gray-400'>
-                                {lang === "ID" ? "Perawi:" : "Narrator:"} {themeBooksLabel}
+                                {lang === "ID" ? "Perawi:" : "Narrator:"}{" "}
+                                {themeBooksLabel}
                             </p>
                         </div>
                     </Link>

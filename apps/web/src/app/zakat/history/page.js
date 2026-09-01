@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
@@ -208,11 +206,9 @@ export function ZakatHistoryContent() {
 export default function ZakatHistoryPage() {
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-            <NavbarTailwindCss />
-            <div className='pt-24'>
+            <div className='pt-navbar'>
                 <ZakatHistoryContent />
             </div>
-            <Footer />
         </main>
     );
 }

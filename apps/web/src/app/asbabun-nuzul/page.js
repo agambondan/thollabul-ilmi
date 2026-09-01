@@ -1,7 +1,5 @@
 "use client";
 
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { asbabunNuzulApi } from "@/lib/api";
@@ -11,6 +9,7 @@ import { getLocalizedField } from "@/lib/translation";
 import Link from "next/link";
 import { useState } from "react";
 import { BsSearch } from "react-icons/bs";
+import SourceBadges from "@/components/SourceBadges";
 
 const SURAH_COUNT = 114;
 const QUICK_SURAH = [1, 2, 4, 18, 36, 67, 112];
@@ -188,9 +187,7 @@ export const AsbabunNuzulContent = ({ quranBasePath = "/quran" }) => {
                                 {asbabunAyahLabel(item, t)}
                             </Link>
                             {item.source && (
-                                <span className='text-xs text-gray-400'>
-                                    {item.source}
-                                </span>
+                                <SourceBadges source={item.source} />
                             )}
                         </div>
                         <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
@@ -208,11 +205,9 @@ export const AsbabunNuzulContent = ({ quranBasePath = "/quran" }) => {
 
 const AsbabunNuzulPage = () => (
     <main className='min-h-screen flex flex-col'>
-        <NavbarTailwindCss />
         <Section>
             <AsbabunNuzulContent />
         </Section>
-        <Footer />
     </main>
 );
 

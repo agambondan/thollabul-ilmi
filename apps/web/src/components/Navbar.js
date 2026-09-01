@@ -2,6 +2,7 @@
 
 import SmallDropDown from "@/components/dropdown/SmallDropDown";
 import { useAuth } from "@/context/Auth";
+import { useTheme } from "@/lib/useTheme";
 import { useLocale } from "@/context/Locale";
 import {
     linksMenu,
@@ -31,44 +32,17 @@ export const NavbarTailwindCss = () => {
     const currentPath = usePathname();
     const [isSmallDropdownOpen, setIsSmallDropdownOpen] = useState(false);
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-    const [isDarkMode, setIsDarkMode] = useState(false);
     const { lang: language, setLang: setLanguage, t } = useLocale();
     const profileMenuRef = useRef(null);
     const mobileMenuRef = useRef(null);
     const { isAuthenticated, user, logout } = useAuth();
+    const { isDark: isDarkMode, toggleTheme } = useTheme();
 
-    const clickSetDarkMode = () => {
-        setIsDarkMode((prev) => {
-            localStorage.setItem("theme", !prev ? "dark" : "light");
-            return !prev;
-        });
-    };
+    const clickSetDarkMode = toggleTheme;
 
     const toggleSmallDropdown = () =>
         setIsSmallDropdownOpen(!isSmallDropdownOpen);
 
-    useEffect(() => {
-        const handleStorageChange = () => {
-            if (localStorage.getItem("theme") === "dark") {
-                document.documentElement.classList.add("dark");
-                setIsDarkMode(true);
-            } else {
-                document.documentElement.classList.remove("dark");
-                setIsDarkMode(false);
-            }
-        };
-        handleStorageChange();
-        window.addEventListener("storage", handleStorageChange);
-        return () => window.removeEventListener("storage", handleStorageChange);
-    }, []);
-
-    useEffect(() => {
-        if (isDarkMode) {
-            document.documentElement.classList.add("dark");
-        } else {
-            document.documentElement.classList.remove("dark");
-        }
-    }, [isDarkMode]);
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -212,6 +186,9 @@ export const NavbarTailwindCss = () => {
                                 <li key={link.href}>
                                     <Link
                                         href={link.href}
+                                        aria-current={
+                                            isActive ? "page" : undefined
+                                        }
                                         className={classNames({
                                             "flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all": true,
                                             "bg-emerald-800 text-gold-300 font-semibold":

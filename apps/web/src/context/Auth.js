@@ -6,6 +6,9 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
+    // Seeded synchronously so the first render already knows a session exists;
+    // reading it in an effect made Navbar and the home CTA flash "Sign in"
+    // before switching to the avatar on every page load.
     const [token, setToken] = useState(null);
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -24,6 +27,11 @@ export const AuthProvider = ({ children }) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // True while a stored token is still being verified. Consumers use it to
+    // hold neutral UI instead of rendering a signed-out state that will flip a
+    // moment later.
+    const isResolvingSession = isLoading;
 
     const doRefresh = async () => {
         if (refreshingRef.current) return refreshingRef.current;
@@ -168,6 +176,7 @@ export const AuthProvider = ({ children }) => {
                 token,
                 user,
                 isLoading,
+                isResolvingSession,
                 isAuthenticated: !!token,
                 login,
                 register,

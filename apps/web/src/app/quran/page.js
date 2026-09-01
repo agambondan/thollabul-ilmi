@@ -1,7 +1,5 @@
 export const dynamic = "force-dynamic";
 
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import QuranPageClient from "./QuranPageClient";
 
@@ -21,11 +19,9 @@ const QuranPage = async () => {
 
     return (
         <main className='min-h-screen flex flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 <QuranPageClient items={items} isError={isError} />
             </Section>
-            <Footer />
         </main>
     );
 };

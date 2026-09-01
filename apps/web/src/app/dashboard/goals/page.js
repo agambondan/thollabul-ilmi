@@ -15,6 +15,7 @@ import {
 import { useEffect, useState } from "react";
 import { BsCheckCircleFill, BsTrash, BsX } from "react-icons/bs";
 import { MdFlag } from "react-icons/md";
+import { useModalA11y } from "@/lib/useModalA11y";
 
 const UNITS = ["ayat", "halaman", "kali", "hari", "umum"];
 const CATEGORIES = ["Quran", "Hadith", "Ibadah", "Ilmu", "Lainnya"];
@@ -40,6 +41,10 @@ const GoalsPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [editGoal, setEditGoal] = useState(null);
     const [form, setForm] = useState(emptyForm());
+    const modalA11y = useModalA11y({
+        open: showModal,
+        onClose: () => setShowModal(false),
+    });
     const [syncError, setSyncError] = useState("");
 
     useEffect(() => {
@@ -350,7 +355,7 @@ const GoalsPage = () => {
                         e.target === e.currentTarget && setShowModal(false)
                     }
                 >
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'>
+                    <div {...modalA11y} className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'>
                         <div className='flex items-center justify-between mb-4'>
                             <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
                                 {editGoal ? t("goals.update") : t("goals.add")}
@@ -365,7 +370,10 @@ const GoalsPage = () => {
 
                         <div className='space-y-3'>
                             <div>
-                                <label htmlFor='page-label-title' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label
+                                    htmlFor='page-label-title'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                >
                                     {t("goals.label_title")}
                                 </label>
                                 <input
@@ -385,7 +393,10 @@ const GoalsPage = () => {
 
                             <div className='grid grid-cols-2 gap-3'>
                                 <div>
-                                    <label htmlFor='page-label-target' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label
+                                        htmlFor='page-label-target'
+                                        className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                    >
                                         {t("goals.label_target")}
                                     </label>
                                     <input
@@ -404,7 +415,10 @@ const GoalsPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor='page-label-unit' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label
+                                        htmlFor='page-label-unit'
+                                        className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                    >
                                         {t("goals.label_unit")}
                                     </label>
                                     <select
@@ -429,7 +443,10 @@ const GoalsPage = () => {
 
                             {editGoal && (
                                 <div>
-                                    <label htmlFor='page-label-current' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label
+                                        htmlFor='page-label-current'
+                                        className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                    >
                                         {t("goals.label_current")}
                                     </label>
                                     <input
@@ -450,7 +467,10 @@ const GoalsPage = () => {
 
                             <div className='grid grid-cols-2 gap-3'>
                                 <div>
-                                    <label htmlFor='page-label-category' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label
+                                        htmlFor='page-label-category'
+                                        className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                    >
                                         {t("goals.label_category")}
                                     </label>
                                     <select
@@ -472,7 +492,10 @@ const GoalsPage = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label htmlFor='page-label-deadline' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label
+                                        htmlFor='page-label-deadline'
+                                        className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                    >
                                         {t("goals.label_deadline")}
                                     </label>
                                     <input

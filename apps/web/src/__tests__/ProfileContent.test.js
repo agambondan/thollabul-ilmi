@@ -11,7 +11,8 @@ import { render, screen, waitFor } from "@testing-library/react";
  * that branch actually executes.
  */
 
-const ok = (payload) => Promise.resolve({ ok: true, json: async () => payload });
+const ok = (payload) =>
+    Promise.resolve({ ok: true, json: async () => payload });
 
 jest.mock("@/lib/api", () => ({
     hafalanApi: { summary: () => ok({ memorized: 3 }) },

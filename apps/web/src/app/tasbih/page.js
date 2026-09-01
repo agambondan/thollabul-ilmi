@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useRef, useState } from "react";
@@ -360,11 +358,9 @@ export function TasbihContent() {
 export default function TasbihPage() {
     return (
         <main className='min-h-screen flex flex-col bg-gradient-to-b from-emerald-50 via-white to-emerald-50/40 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'>
-            <NavbarTailwindCss />
             <Section>
                 <TasbihContent />
             </Section>
-            <Footer />
         </main>
     );
 }

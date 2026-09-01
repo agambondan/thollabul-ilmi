@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
@@ -308,7 +306,10 @@ export function FaraidhContent() {
                     </h2>
                     <div className='space-y-3'>
                         <div>
-                            <label htmlFor='page-total-wealth' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                            <label
+                                htmlFor='page-total-wealth'
+                                className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                            >
                                 {t("faraidh.total_wealth") ??
                                     "Total Harta (Rp)"}
                             </label>
@@ -323,7 +324,10 @@ export function FaraidhContent() {
                             />
                         </div>
                         <div>
-                            <label htmlFor='page-debt' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                            <label
+                                htmlFor='page-debt'
+                                className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                            >
                                 {t("faraidh.debt") ?? "Hutang Almarhum (Rp)"}
                             </label>
                             <input
@@ -337,7 +341,10 @@ export function FaraidhContent() {
                             />
                         </div>
                         <div>
-                            <label htmlFor='page-funeral' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                            <label
+                                htmlFor='page-funeral'
+                                className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                            >
                                 {t("faraidh.funeral") ?? "Biaya Pemakaman (Rp)"}
                             </label>
                             <input
@@ -351,7 +358,10 @@ export function FaraidhContent() {
                             />
                         </div>
                         <div>
-                            <label htmlFor='page-will' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                            <label
+                                htmlFor='page-will'
+                                className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                            >
                                 {t("faraidh.will") ?? "Wasiat (Rp, maks 1/3)"}
                             </label>
                             <input
@@ -378,19 +388,59 @@ export function FaraidhContent() {
                     </h2>
                     <div className='space-y-4'>
                         {[
-                            { key: "spouse", label: t("faraidh.group_spouse") ?? "Pasangan" },
-                            { key: "children", label: t("faraidh.group_children") ?? "Anak" },
-                            { key: "grandchildren", label: t("faraidh.group_grandchildren") ?? "Cucu (dari anak laki-laki)" },
-                            { key: "parents", label: t("faraidh.group_parents") ?? "Orang Tua" },
-                            { key: "grandparents", label: t("faraidh.group_grandparents") ?? "Kakek/Nenek" },
-                            { key: "siblings", label: t("faraidh.group_siblings") ?? "Saudara Kandung" },
-                            { key: "half_siblings", label: t("faraidh.group_half_siblings") ?? "Saudara Seayah" },
-                            { key: "maternal_siblings", label: t("faraidh.group_maternal_siblings") ?? "Saudara Seibu" },
+                            {
+                                key: "spouse",
+                                label: t("faraidh.group_spouse") ?? "Pasangan",
+                            },
+                            {
+                                key: "children",
+                                label: t("faraidh.group_children") ?? "Anak",
+                            },
+                            {
+                                key: "grandchildren",
+                                label:
+                                    t("faraidh.group_grandchildren") ??
+                                    "Cucu (dari anak laki-laki)",
+                            },
+                            {
+                                key: "parents",
+                                label:
+                                    t("faraidh.group_parents") ?? "Orang Tua",
+                            },
+                            {
+                                key: "grandparents",
+                                label:
+                                    t("faraidh.group_grandparents") ??
+                                    "Kakek/Nenek",
+                            },
+                            {
+                                key: "siblings",
+                                label:
+                                    t("faraidh.group_siblings") ??
+                                    "Saudara Kandung",
+                            },
+                            {
+                                key: "half_siblings",
+                                label:
+                                    t("faraidh.group_half_siblings") ??
+                                    "Saudara Seayah",
+                            },
+                            {
+                                key: "maternal_siblings",
+                                label:
+                                    t("faraidh.group_maternal_siblings") ??
+                                    "Saudara Seibu",
+                            },
                         ].map((group) => {
-                            const fields = HEIR_FIELDS.filter((f) => f.group === group.key);
+                            const fields = HEIR_FIELDS.filter(
+                                (f) => f.group === group.key,
+                            );
                             if (fields.length === 0) return null;
                             return (
-                                <div key={group.key} className='border border-gray-100 dark:border-slate-700 rounded-xl p-3 bg-gray-50 dark:bg-slate-800/50'>
+                                <div
+                                    key={group.key}
+                                    className='border border-gray-100 dark:border-slate-700 rounded-xl p-3 bg-gray-50 dark:bg-slate-800/50'
+                                >
                                     <h3 className='text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2'>
                                         {group.label}
                                     </h3>
@@ -406,7 +456,10 @@ export function FaraidhContent() {
                                                     max={field.max}
                                                     value={heirs[field.key]}
                                                     onChange={(e) =>
-                                                        setHeir(field.key, e.target.value)
+                                                        setHeir(
+                                                            field.key,
+                                                            e.target.value,
+                                                        )
                                                     }
                                                     className='w-full px-3 py-1.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                                 />
@@ -619,9 +672,9 @@ export function FaraidhContent() {
                                 )}
                                 {result.applied.akdariyah && (
                                     <p>
-                                        <strong>Akdariyah:</strong> kakek
-                                        1/6, saudara P ashabul furudh (1/2 atau
-                                        2/3), sisa jadi ashabah kakek.
+                                        <strong>Akdariyah:</strong> kakek 1/6,
+                                        saudara P ashabul furudh (1/2 atau 2/3),
+                                        sisa jadi ashabah kakek.
                                     </p>
                                 )}
                             </div>
@@ -704,11 +757,9 @@ export function FaraidhContent() {
 export default function FaraidhPage() {
     return (
         <main className='min-h-screen flex flex-col bg-gray-50 dark:bg-slate-950'>
-            <NavbarTailwindCss />
             <Section>
                 <FaraidhContent />
             </Section>
-            <Footer />
         </main>
     );
 }

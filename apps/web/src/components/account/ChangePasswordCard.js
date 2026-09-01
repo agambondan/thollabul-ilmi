@@ -94,7 +94,10 @@ const ChangePasswordCard = ({ className = "" }) => {
                         </p>
                     )}
                     <div>
-                        <label htmlFor='changepasswordcard-old-password' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                        <label
+                            htmlFor='changepasswordcard-old-password'
+                            className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                        >
                             {t("profile.old_password")}
                         </label>
                         <input
@@ -108,7 +111,10 @@ const ChangePasswordCard = ({ className = "" }) => {
                         />
                     </div>
                     <div>
-                        <label htmlFor='changepasswordcard-new-password' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                        <label
+                            htmlFor='changepasswordcard-new-password'
+                            className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                        >
                             {t("profile.new_password")}
                         </label>
                         <input
@@ -123,7 +129,10 @@ const ChangePasswordCard = ({ className = "" }) => {
                         />
                     </div>
                     <div>
-                        <label htmlFor='changepasswordcard-confirm-new-password' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                        <label
+                            htmlFor='changepasswordcard-confirm-new-password'
+                            className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                        >
                             {t("profile.confirm_new_password")}
                         </label>
                         <input

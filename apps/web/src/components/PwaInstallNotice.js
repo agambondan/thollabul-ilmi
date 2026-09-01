@@ -25,7 +25,10 @@ export default function PwaInstallNotice() {
         return () => window.removeEventListener("beforeinstallprompt", handler);
     }, [hidden]);
 
-    if (hidden) return null;
+    // Without a captured beforeinstallprompt there is nothing to offer: the
+    // card used to render on iOS Safari and desktop Firefox showing
+    // Android-only instructions and no button at all.
+    if (hidden || !prompt) return null;
 
     const install = async () => {
         if (!prompt) return;

@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useRef, useState } from "react";
 import { BsGeoAlt } from "react-icons/bs";
@@ -289,9 +287,7 @@ export function KiblatContent() {
                                     lang === "EN" ? "en-US" : "id-ID",
                                 )}
                             </p>
-                            <p className='text-xs text-gray-400'>
-                                km
-                            </p>
+                            <p className='text-xs text-gray-400'>km</p>
                         </div>
                     </div>
 
@@ -338,11 +334,9 @@ export function KiblatContent() {
 export default function KiblatPage() {
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-            <NavbarTailwindCss />
-            <div className='pt-24'>
+            <div className='pt-navbar'>
                 <KiblatContent />
             </div>
-            <Footer />
         </main>
     );
 }

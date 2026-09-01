@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { notesApi } from "@/lib/api";
@@ -184,10 +182,9 @@ export default function NotesPage() {
     if (!user) {
         return (
             <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-                <NavbarTailwindCss />
                 <ContentWidth
                     compact='max-w-xl'
-                    className='flex-1 px-4 pt-24 pb-8 text-center'
+                    className='flex-1 px-4 pt-navbar pb-8 text-center'
                 >
                     <MdOutlineStickyNote2 className='text-6xl text-emerald-400 mx-auto mb-4' />
                     <h1 className='text-2xl font-extrabold text-emerald-900 dark:text-emerald-100 mb-3'>
@@ -203,17 +200,15 @@ export default function NotesPage() {
                         {t("nav.login")}
                     </Link>
                 </ContentWidth>
-                <Footer />
             </main>
         );
     }
 
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-            <NavbarTailwindCss />
             <ContentWidth
                 compact='max-w-3xl'
-                className='flex-1 px-4 pt-24 pb-8'
+                className='flex-1 px-4 pt-navbar pb-8'
             >
                 {/* Header */}
                 <div className='flex items-center justify-between mb-6'>
@@ -389,7 +384,6 @@ export default function NotesPage() {
                 </div>
             )}
 
-            <Footer />
         </main>
     );
 }

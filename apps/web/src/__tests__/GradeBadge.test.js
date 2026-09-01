@@ -31,23 +31,17 @@ describe("GradeBadge", () => {
     // indistinguishable from an authenticated hadith.
     test("labels a falsy grade as unverified", () => {
         render(<GradeBadge grade={null} />);
-        expect(
-            screen.getByText("hadith.grade_unverified"),
-        ).toBeInTheDocument();
+        expect(screen.getByText("hadith.grade_unverified")).toBeInTheDocument();
     });
 
     test("labels an undefined grade as unverified", () => {
         render(<GradeBadge />);
-        expect(
-            screen.getByText("hadith.grade_unverified"),
-        ).toBeInTheDocument();
+        expect(screen.getByText("hadith.grade_unverified")).toBeInTheDocument();
     });
 
     test("labels an unknown grade as unverified", () => {
         render(<GradeBadge grade='unknown_grade' />);
-        expect(
-            screen.getByText("hadith.grade_unverified"),
-        ).toBeInTheDocument();
+        expect(screen.getByText("hadith.grade_unverified")).toBeInTheDocument();
     });
 });
 
@@ -55,9 +49,7 @@ describe("HadithAuthenticity", () => {
     test("states the grade is unverified when no authenticity fields", () => {
         render(<HadithAuthenticity hadith={{}} />);
         expect(screen.getByText("hadith.authenticity")).toBeInTheDocument();
-        expect(
-            screen.getByText("hadith.grade_unverified"),
-        ).toBeInTheDocument();
+        expect(screen.getByText("hadith.grade_unverified")).toBeInTheDocument();
         expect(
             screen.getByText("hadith.grade_unverified_hint"),
         ).toBeInTheDocument();

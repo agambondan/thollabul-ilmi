@@ -1,12 +1,18 @@
-'use client';
+"use client";
 
-import { useLocale } from '@/context/Locale';
-import { useLayoutMode } from '@/lib/useLayoutMode';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { BsChatDots, BsStarFill, BsBook, BsChatLeftDots, BsNewspaper } from 'react-icons/bs';
-import ChatBox from './_components/ChatBox';
-import { blogApi, forumApi, leaderboardApi } from '@/lib/api';
+import { useLocale } from "@/context/Locale";
+import { useLayoutMode } from "@/lib/useLayoutMode";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import {
+    BsChatDots,
+    BsStarFill,
+    BsBook,
+    BsChatLeftDots,
+    BsNewspaper,
+} from "react-icons/bs";
+import ChatBox from "./_components/ChatBox";
+import { blogApi, forumApi, leaderboardApi } from "@/lib/api";
 
 const pickItems = (payload) => {
     if (Array.isArray(payload?.data?.items)) return payload.data.items;
@@ -17,25 +23,33 @@ const pickItems = (payload) => {
 };
 
 const getAuthorName = (author) => {
-    if (!author) return '';
-    if (typeof author === 'string') return author;
-    return author.name ?? '';
+    if (!author) return "";
+    if (typeof author === "string") return author;
+    return author.name ?? "";
 };
 
 const formatRelative = (iso) => {
-    if (!iso) return '';
+    if (!iso) return "";
     const t = new Date(iso).getTime();
-    if (Number.isNaN(t)) return '';
+    if (Number.isNaN(t)) return "";
     const diff = Date.now() - t;
     const day = 1000 * 60 * 60 * 24;
-    if (diff < day) return 'Hari ini';
-    if (diff < day * 2) return 'Kemarin';
+    if (diff < day) return "Hari ini";
+    if (diff < day * 2) return "Kemarin";
     if (diff < day * 7) return `${Math.floor(diff / day)} hari lalu`;
     if (diff < day * 30) return `${Math.floor(diff / (day * 7))} minggu lalu`;
-    return new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+    return new Date(iso).toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "short",
+    });
 };
 
-export default function KomunitasPage() {
+/**
+ * Also rendered by the public /komunitas route; `basePath` keeps an anonymous
+ * visitor on public URLs rather than pushing them into the dashboard tree.
+ */
+export default function KomunitasPage({ basePath = "/dashboard" }) {
+    const root = basePath === "/dashboard" ? "/dashboard" : "";
     const { t } = useLocale();
     const { isWide } = useLayoutMode();
     const [blogPosts, setBlogPosts] = useState([]);
@@ -56,11 +70,17 @@ export default function KomunitasPage() {
 
         const fetchForum = async () => {
             try {
-                const res = await forumApi.list({ page: 0, size: 50, sort: 'top' });
+                const res = await forumApi.list({
+                    page: 0,
+                    size: 50,
+                    sort: "top",
+                });
                 if (!res.ok) return;
                 const data = await res.json();
                 const items = pickItems(data);
-                const sorted = [...items].sort((a, b) => (b.vote_count || 0) - (a.vote_count || 0));
+                const sorted = [...items].sort(
+                    (a, b) => (b.vote_count || 0) - (a.vote_count || 0),
+                );
                 if (!cancelled) setTopForum(sorted.slice(0, 3));
             } catch {}
         };
@@ -87,19 +107,22 @@ export default function KomunitasPage() {
     const LeaderboardSkeleton = () => (
         <div className='space-y-3'>
             {[0, 1, 2].map((i) => (
-                <div key={i} className='h-9 bg-gray-50 dark:bg-slate-900 rounded-lg animate-pulse' />
+                <div
+                    key={i}
+                    className='h-9 bg-gray-50 dark:bg-slate-900 rounded-lg animate-pulse'
+                />
             ))}
         </div>
     );
 
     return (
-        <div className={isWide ? 'px-4 py-6' : 'px-4 py-6 max-w-md mx-auto'}>
+        <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
             <div className='mb-6'>
                 <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-2'>
-                    {t('komunitas.title')}
+                    {t("komunitas.title")}
                 </h1>
                 <p className='text-sm text-gray-600 dark:text-gray-400'>
-                    {t('komunitas.desc')}
+                    {t("komunitas.desc")}
                 </p>
             </div>
 
@@ -107,22 +130,24 @@ export default function KomunitasPage() {
                 <div className='space-y-6'>
                     <div className='bg-gradient-to-br from-emerald-700 to-teal-800 rounded-2xl p-6 text-white shadow-md'>
                         <BsChatDots className='text-3xl text-emerald-300 mb-3' />
-                        <h2 className='text-lg font-bold mb-1'>{t('komunitas.qa_title')}</h2>
+                        <h2 className='text-lg font-bold mb-1'>
+                            {t("komunitas.qa_title")}
+                        </h2>
                         <p className='text-sm text-emerald-100 mb-4 opacity-90 leading-relaxed'>
-                            {t('komunitas.qa_desc')}
+                            {t("komunitas.qa_desc")}
                         </p>
                         <div className='flex flex-wrap gap-2'>
                             <Link
-                                href='/dashboard/forum/ask'
+                                href={`${root}/forum/ask`}
                                 className='inline-block px-4 py-2 bg-white text-emerald-800 text-xs font-bold rounded-lg hover:bg-emerald-50 transition-colors'
                             >
-                                {t('komunitas.ask_question')}
+                                {t("komunitas.ask_question")}
                             </Link>
                             <Link
-                                href='/dashboard/forum'
+                                href={`${root}/forum`}
                                 className='inline-block px-4 py-2 bg-emerald-900/40 text-white text-xs font-bold rounded-lg hover:bg-emerald-900/60 transition-colors border border-emerald-400/30'
                             >
-                                {t('komunitas.view_forum')}
+                                {t("komunitas.view_forum")}
                             </Link>
                         </div>
                     </div>
@@ -133,9 +158,12 @@ export default function KomunitasPage() {
                 <div className='space-y-6'>
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
                         <h3 className='text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2'>
-                            <BsStarFill className='text-amber-500' /> {t('komunitas.hall_of_fame')}
+                            <BsStarFill className='text-amber-500' />{" "}
+                            {t("komunitas.hall_of_fame")}
                         </h3>
-                        <p className='text-xs text-gray-500 mb-3'>{t('komunitas.weekly_top')}</p>
+                        <p className='text-xs text-gray-500 mb-3'>
+                            {t("komunitas.weekly_top")}
+                        </p>
                         {hallOfFame.length === 0 ? (
                             <LeaderboardSkeleton />
                         ) : (
@@ -150,38 +178,55 @@ export default function KomunitasPage() {
                                                 {i + 1}
                                             </div>
                                             <span className='text-sm font-medium text-gray-800 dark:text-gray-200 truncate'>
-                                                {u.name || u.user_name || u.user?.name || 'Anonim'}
+                                                {u.name ||
+                                                    u.user_name ||
+                                                    u.user?.name ||
+                                                    "Anonim"}
                                             </span>
                                         </div>
                                         <span className='text-xs font-bold text-amber-600 shrink-0'>
-                                            {u.points ?? u.score ?? u.total ?? 0} pts
+                                            {u.points ??
+                                                u.score ??
+                                                u.total ??
+                                                0}{" "}
+                                            pts
                                         </span>
                                     </div>
                                 ))}
                             </div>
                         )}
-                        <Link href='/dashboard/leaderboard' className='block text-center text-xs font-bold text-emerald-600 mt-4 hover:underline'>
+                        <Link
+                            href={`${root}/leaderboard`}
+                            className='block text-center text-xs font-bold text-emerald-600 mt-4 hover:underline'
+                        >
                             Lihat Peringkat Penuh &rarr;
                         </Link>
                     </div>
 
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
                         <h3 className='text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2'>
-                            <BsChatLeftDots className='text-rose-500' /> {t('komunitas.hot_forum')}
+                            <BsChatLeftDots className='text-rose-500' />{" "}
+                            {t("komunitas.hot_forum")}
                         </h3>
                         {topForum.length === 0 ? (
                             <LeaderboardSkeleton />
                         ) : (
                             <div className='space-y-4'>
                                 {topForum.map((q) => (
-                                    <Link key={q.id || q.slug} href={`/dashboard/forum/${q.slug}`} className='block group'>
+                                    <Link
+                                        key={q.id || q.slug}
+                                        href={`/dashboard/forum/${q.slug}`}
+                                        className='block group'
+                                    >
                                         <p className='text-sm font-bold text-gray-800 dark:text-gray-200 group-hover:text-emerald-600 transition-colors line-clamp-2'>
                                             {q.title}
                                         </p>
                                         <p className='text-xs text-gray-500 mt-1 flex items-center gap-2'>
                                             <span>▲ {q.vote_count || 0}</span>
                                             <span>•</span>
-                                            <span>{q.answer_count || 0} jawaban</span>
+                                            <span>
+                                                {q.answer_count || 0} jawaban
+                                            </span>
                                         </p>
                                     </Link>
                                 ))}
@@ -191,27 +236,46 @@ export default function KomunitasPage() {
 
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
                         <h3 className='text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2'>
-                            <BsNewspaper className='text-blue-500' /> {t('komunitas.highlight')}
+                            <BsNewspaper className='text-blue-500' />{" "}
+                            {t("komunitas.highlight")}
                         </h3>
                         {blogPosts.length === 0 ? (
                             <LeaderboardSkeleton />
                         ) : (
                             <div className='space-y-4'>
                                 {blogPosts.map((p) => (
-                                    <Link key={p.id || p.slug} href={`/dashboard/blog/${p.slug}`} className='block group'>
+                                    <Link
+                                        key={p.id || p.slug}
+                                        href={`/dashboard/blog/${p.slug}`}
+                                        className='block group'
+                                    >
                                         <p className='text-sm font-bold text-gray-800 dark:text-gray-200 group-hover:text-emerald-600 transition-colors line-clamp-2'>
                                             {p.title}
                                         </p>
                                         <p className='text-xs text-gray-500 mt-1 flex items-center gap-2'>
-                                            <span>Oleh {getAuthorName(p.author) || p.author_name || 'Tim Redaksi'}</span>
+                                            <span>
+                                                Oleh{" "}
+                                                {getAuthorName(p.author) ||
+                                                    p.author_name ||
+                                                    "Tim Redaksi"}
+                                            </span>
                                             <span>•</span>
-                                            <span>{formatRelative(p.published_at || p.created_at || p.createdAt)}</span>
+                                            <span>
+                                                {formatRelative(
+                                                    p.published_at ||
+                                                        p.created_at ||
+                                                        p.createdAt,
+                                                )}
+                                            </span>
                                         </p>
                                     </Link>
                                 ))}
                             </div>
                         )}
-                        <Link href='/dashboard/blog' className='block text-center text-xs font-bold text-emerald-600 mt-4 hover:underline'>
+                        <Link
+                            href={`${root}/blog`}
+                            className='block text-center text-xs font-bold text-emerald-600 mt-4 hover:underline'
+                        >
                             Lihat Semua Blog &rarr;
                         </Link>
                     </div>

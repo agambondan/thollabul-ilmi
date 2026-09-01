@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { useLocale } from "@/context/Locale";
 import { asmaulHusnaApi } from "@/lib/api";
@@ -300,11 +298,9 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
 export default function AsmaulWiridPage() {
     return (
         <main className='min-h-screen flex flex-col bg-gradient-to-b from-emerald-50 via-white to-emerald-50/40 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'>
-            <NavbarTailwindCss />
             <Section>
                 <AsmaulWiridContent />
             </Section>
-            <Footer />
         </main>
     );
 }

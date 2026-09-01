@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  * Lazy panel data with an honest failure state.
@@ -15,31 +15,41 @@ export const useAsyncResource = (loader) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(false);
     const loaderRef = useRef(loader);
-    loaderRef.current = loader;
 
-    const load = useCallback(async (force = false) => {
-        if (!force && data !== null) return;
-        setIsLoading(true);
-        setError(false);
-        try {
-            const res = await loaderRef.current();
-            if (res && typeof res.ok === "boolean" && !res.ok) {
-                throw new Error(`HTTP ${res.status}`);
+    // Callers pass an inline arrow, so `loader` is a new function every
+    // render; syncing it in an effect (rather than during render) keeps the
+    // latest closure without making `load` a new callback each time.
+    useEffect(() => {
+        loaderRef.current = loader;
+    });
+
+    const load = useCallback(
+        async (force = false) => {
+            if (!force && data !== null) return;
+            setIsLoading(true);
+            setError(false);
+            try {
+                const res = await loaderRef.current();
+                if (res && typeof res.ok === "boolean" && !res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
+                const payload =
+                    res && typeof res.json === "function"
+                        ? await res.json()
+                        : res;
+                setData(
+                    payload?.items ?? (Array.isArray(payload) ? payload : []),
+                );
+            } catch {
+                setData(null);
+                setError(true);
+            } finally {
+                setIsLoading(false);
             }
-            const payload =
-                res && typeof res.json === "function" ? await res.json() : res;
-            setData(payload?.items ?? (Array.isArray(payload) ? payload : []));
-        } catch {
-            setData(null);
-            setError(true);
-        } finally {
-            setIsLoading(false);
-        }
-        // `data` is read to skip refetching an already-loaded panel; the
-        // identity of `loader` is held in a ref so callers can pass an inline
-        // arrow without re-creating this callback on every render.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data]);
+            // `data` is read to skip refetching an already-loaded panel.
+        },
+        [data],
+    );
 
     const retry = useCallback(() => load(true), [load]);
 

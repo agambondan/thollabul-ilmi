@@ -100,7 +100,9 @@ export default function MapComponent() {
                     ))}
                 </select>
                 {loading && (
-                    <span className='text-xs text-gray-400'>{t("peta.loading")}</span>
+                    <span className='text-xs text-gray-400'>
+                        {t("peta.loading")}
+                    </span>
                 )}
                 {!loading && (
                     <span className='text-xs text-gray-400'>

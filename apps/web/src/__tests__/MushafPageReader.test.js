@@ -72,7 +72,9 @@ describe("MushafPageReader", () => {
         jest.clearAllMocks();
         window.history.replaceState(null, "", "/quran/page-mushaf?page=295");
         mockByPage.mockResolvedValue({ json: async () => ({ items: [ayah] }) });
-        mockMufrodatByPage.mockResolvedValue({ json: async () => ({ items: [word] }) });
+        mockMufrodatByPage.mockResolvedValue({
+            json: async () => ({ items: [word] }),
+        });
     });
 
     test("loads by mushaf page, renders localized labels, and keeps page in URL", async () => {
@@ -93,7 +95,9 @@ describe("MushafPageReader", () => {
         expect(await screen.findByText("وَإِذِ")).toBeInTheDocument();
         expect(mockByPage).toHaveBeenCalledWith(295);
 
-        fireEvent.click(screen.getByRole("button", { name: "Halaman Berikutnya" }));
+        fireEvent.click(
+            screen.getByRole("button", { name: "Halaman Berikutnya" }),
+        );
 
         await waitFor(() => expect(mockByPage).toHaveBeenCalledWith(296));
         expect(window.location.search).toBe("?page=296");

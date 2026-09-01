@@ -80,7 +80,9 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                 `${process.env.NEXT_PUBLIC_API_URL}/api/v1/hadiths/book/${bookSlug}?page=${pageNum}&size=${PAGE_SIZE}`,
             );
             const data = await res.json();
-            const items = normalizeItems(data).slice().sort((a, b) => (a.number ?? 0) - (b.number ?? 0));
+            const items = normalizeItems(data)
+                .slice()
+                .sort((a, b) => (a.number ?? 0) - (b.number ?? 0));
 
             setTotal(data?.total ?? items.length);
             setHadiths((prev) => (append ? [...prev, ...items] : items));
@@ -133,7 +135,10 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                 <div className='grid gap-3 md:grid-cols-[1fr_auto] md:items-end'>
                     <div className='grid gap-3 sm:grid-cols-2'>
                         <div>
-                            <label htmlFor='byhadith-select-book' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+                            <label
+                                htmlFor='byhadith-select-book'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                            >
                                 {t("hadith.select_book")}
                             </label>
                             <select
@@ -156,7 +161,10 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                         </div>
 
                         <div>
-                            <label htmlFor='byhadith-search-label' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+                            <label
+                                htmlFor='byhadith-search-label'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                            >
                                 {t("hadith.search_label")}
                             </label>
                             <input
@@ -209,7 +217,11 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                             {t("common.showing")} {hadiths.length}{" "}
                             {t("common.of")} {total} {t("hadith.unit")}
                         </p>
-                        {isSearching && <p>{t("common.search")}: &quot;{query}&quot;</p>}
+                        {isSearching && (
+                            <p>
+                                {t("common.search")}: &quot;{query}&quot;
+                            </p>
+                        )}
                         {!isSearching && <p>{t("hadith.search_hint")}</p>}
                     </div>
 

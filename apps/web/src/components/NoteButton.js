@@ -15,6 +15,7 @@ import {
     BsTypeItalic,
     BsListUl,
 } from "react-icons/bs";
+import { useModalA11y } from "@/lib/useModalA11y";
 
 let noteListCache = null;
 let noteListPromise = null;
@@ -52,6 +53,10 @@ const NoteButton = ({ refType, refId, className = "" }) => {
     const [content, setContent] = useState("");
     const [saving, setSaving] = useState(false);
     const textareaRef = useRef(null);
+    const modalA11y = useModalA11y({
+        open: showModal,
+        onClose: () => setShowModal(false),
+    });
 
     const insertFormat = (prefix, suffix = "") => {
         const el = textareaRef.current;
@@ -182,7 +187,7 @@ const NoteButton = ({ refType, refId, className = "" }) => {
                         e.target === e.currentTarget && setShowModal(false)
                     }
                 >
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-6'>
+                    <div {...modalA11y} className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-6'>
                         <div className='flex items-center justify-between mb-4'>
                             <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
                                 {note

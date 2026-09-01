@@ -138,9 +138,7 @@ const AmalanPage = () => {
                         style={{ width: `${pct}%` }}
                     />
                 </div>
-                <p className='text-xs text-gray-400 mt-1.5'>
-                    {pct}%
-                </p>
+                <p className='text-xs text-gray-400 mt-1.5'>{pct}%</p>
             </div>
 
             {/* Checklist */}

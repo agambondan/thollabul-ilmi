@@ -1,7 +1,11 @@
 export const CopyImageToClipboard = (canvas) => {
     return new Promise((resolve, reject) => {
         try {
-            if (navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+            if (
+                navigator.clipboard &&
+                navigator.clipboard.write &&
+                window.ClipboardItem
+            ) {
                 canvas.toBlob(async (blob) => {
                     try {
                         const item = new ClipboardItem({ "image/png": blob });

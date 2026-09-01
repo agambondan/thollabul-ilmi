@@ -5,6 +5,8 @@ import { useLocale } from "@/context/Locale";
 import { adzanSoundApi, uploadWithProgress } from "@/lib/api";
 import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
 import { PRAYER_MADHABS, PRAYER_METHODS } from "@/lib/prayerTimes";
+import { useTheme } from "@/lib/useTheme";
+import { QURAN_FONTS, useQuranFont } from "@/lib/useQuranFont";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import SettingRow from "./_components/SettingRow";
 import { toast } from "react-hot-toast";
@@ -21,6 +23,15 @@ const PRAYER_REMINDER_ROWS = [
 export default function SettingsPage() {
     const { t, lang, setLang } = useLocale();
     const { settings, updateSetting, syncWithBackend } = useSettings();
+    const { setTheme } = useTheme();
+    const {
+        arabicFontSize,
+        fontId,
+        setArabicFontSize,
+        setFont,
+        setTranslationFontSize,
+        translationFontSize,
+    } = useQuranFont();
     const { isWide } = useLayoutMode();
     const previewAudioRef = useRef(null);
     const [customSounds, setCustomSounds] = useState([]);
@@ -217,17 +228,10 @@ export default function SettingsPage() {
 
     const handleThemeChange = (val) => {
         updateSetting("theme", val);
-        if (
-            val === "dark" ||
-            (val === "system" &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches)
-        ) {
-            document.documentElement.classList.add("dark");
-            localStorage.setItem("theme", "dark");
-        } else {
-            document.documentElement.classList.remove("dark");
-            localStorage.setItem("theme", "light");
-        }
+        const prefersDark =
+            typeof window !== "undefined" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+        setTheme(val === "dark" || (val === "system" && prefersDark));
     };
 
     const handleSync = async () => {
@@ -288,37 +292,75 @@ export default function SettingsPage() {
                     <h2 className='text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider'>
                         {t("settings.section_reading")}
                     </h2>
+                    {/*
+                      * These write through useQuranFont, which every reader
+                      * reads from — the options here used to be a separate,
+                      * inert set that named faces the readers do not offer.
+                      */}
                     <SettingRow label={t("settings.quran_font")}>
                         <select
-                            value={settings.quranFont}
-                            onChange={(e) =>
-                                updateSetting("quranFont", e.target.value)
-                            }
+                            value={fontId}
+                            onChange={(e) => setFont(e.target.value)}
                             className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                         >
-                            <option value='LPMQ'>{t("settings.font_lpmq")}</option>
-                            <option value='Amiri'>{t("settings.font_amiri")}</option>
-                            <option value='Scheherazade'>{t("settings.font_scheherazade")}</option>
+                            {QURAN_FONTS.map((font) => (
+                                <option key={font.id} value={font.id}>
+                                    {font.label}
+                                </option>
+                            ))}
                         </select>
                     </SettingRow>
                     <SettingRow label={t("settings.reader_size")}>
                         <input
                             type='range'
-                            min='16'
-                            max='48'
+                            min='14'
+                            max='64'
                             step='2'
-                            value={settings.readerSize}
+                            value={arabicFontSize}
                             onChange={(e) =>
-                                updateSetting(
-                                    "readerSize",
-                                    Number(e.target.value),
-                                )
+                                setArabicFontSize(Number(e.target.value))
                             }
                             className='w-32 accent-emerald-600'
                         />
-                        <span className='ml-2 text-xs text-gray-500 dark:text-gray-300 w-8'>
-                            {settings.readerSize}px
+                        <span className='ml-2 w-10 text-xs text-gray-500 dark:text-gray-300'>
+                            {arabicFontSize}px
                         </span>
+                    </SettingRow>
+                    <SettingRow label={t("settings.translation_size")}>
+                        <input
+                            type='range'
+                            min='12'
+                            max='28'
+                            step='2'
+                            value={translationFontSize}
+                            onChange={(e) =>
+                                setTranslationFontSize(Number(e.target.value))
+                            }
+                            className='w-32 accent-emerald-600'
+                        />
+                        <span className='ml-2 w-10 text-xs text-gray-500 dark:text-gray-300'>
+                            {translationFontSize}px
+                        </span>
+                    </SettingRow>
+                    <SettingRow label={t("settings.high_contrast")}>
+                        <input
+                            type='checkbox'
+                            checked={!!settings.highContrast}
+                            onChange={(e) =>
+                                updateSetting("highContrast", e.target.checked)
+                            }
+                            className='w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 dark:bg-gray-700 dark:border-gray-600'
+                        />
+                    </SettingRow>
+                    <SettingRow label={t("settings.reduce_motion")}>
+                        <input
+                            type='checkbox'
+                            checked={!!settings.reduceMotion}
+                            onChange={(e) =>
+                                updateSetting("reduceMotion", e.target.checked)
+                            }
+                            className='w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 dark:bg-gray-700 dark:border-gray-600'
+                        />
                     </SettingRow>
                 </section>
 
@@ -378,7 +420,9 @@ export default function SettingsPage() {
                     <SettingRow label={t("settings.adzan_reminder_lead")}>
                         <select
                             value={settings.adzanReminderLead ?? 10}
-                            onChange={(e) => updateAdzanReminderLead(e.target.value)}
+                            onChange={(e) =>
+                                updateAdzanReminderLead(e.target.value)
+                            }
                             className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                             aria-label={t("prayer.reminder_lead")}
                         >
@@ -408,9 +452,12 @@ export default function SettingsPage() {
                                         )
                                     }
                                     className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
-                                    aria-label={t("prayer.reminder_lead_prayer", {
-                                        prayer: key,
-                                    })}
+                                    aria-label={t(
+                                        "prayer.reminder_lead_prayer",
+                                        {
+                                            prayer: key,
+                                        },
+                                    )}
                                 >
                                     <option value='global'>
                                         {t(labelKey)} {t("settings.global")}
@@ -518,16 +565,6 @@ export default function SettingsPage() {
                             </ul>
                         )}
                     </div>
-                    <SettingRow label={t("settings.notif_kajian")}>
-                        <input
-                            type='checkbox'
-                            checked={settings.notifKajian}
-                            onChange={(e) =>
-                                updateSetting("notifKajian", e.target.checked)
-                            }
-                            className='w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 dark:focus:ring-emerald-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-                        />
-                    </SettingRow>
                 </section>
 
                 <div className='flex justify-end'>

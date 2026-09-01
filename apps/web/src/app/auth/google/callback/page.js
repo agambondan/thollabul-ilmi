@@ -3,15 +3,15 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/Auth";
+import { useLocale } from "@/context/Locale";
 import Link from "next/link";
 
 const GoogleCallbackContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { doRefresh, refetchUser } = useAuth();
-    const [status, setStatus] = useState(
-        "Menyelesaikan login dengan Google...",
-    );
+    const { t } = useLocale();
+    const [status, setStatus] = useState(() => t("auth.google_finishing"));
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -37,15 +37,15 @@ const GoogleCallbackContent = () => {
             try {
                 const token = await doRefresh?.();
                 if (!token) {
-                    setError("Gagal menyelesaikan sesi login dari Google.");
+                    setError(t("auth.google_session_failed"));
                     setStatus("");
                     return;
                 }
                 refetchUser?.();
-                setStatus("Login berhasil! Mengalihkan ke dashboard...");
+                setStatus(t("auth.google_success"));
                 setTimeout(() => router.replace("/dashboard"), 800);
             } catch (err) {
-                setError(err?.message || "Gagal menyelesaikan sesi login.");
+                setError(err?.message || t("auth.session_failed"));
                 setStatus("");
             }
         })();

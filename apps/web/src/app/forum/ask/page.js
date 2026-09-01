@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
@@ -90,7 +88,10 @@ export function ForumAskContent({
                 className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6 space-y-4'
             >
                 <div>
-                    <label htmlFor='page-label-title' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                    <label
+                        htmlFor='page-label-title'
+                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                    >
                         {t("forum.label_title") ?? "Judul"}
                     </label>
                     <input
@@ -106,7 +107,10 @@ export function ForumAskContent({
                     />
                 </div>
                 <div>
-                    <label htmlFor='page-label-body' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                    <label
+                        htmlFor='page-label-body'
+                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                    >
                         {t("forum.label_body") ?? "Isi Pertanyaan"}
                     </label>
                     <textarea
@@ -122,7 +126,10 @@ export function ForumAskContent({
                     />
                 </div>
                 <div>
-                    <label htmlFor='page-label-tags' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                    <label
+                        htmlFor='page-label-tags'
+                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                    >
                         {t("forum.label_tags") ?? "Tag (pisahkan dengan koma)"}
                     </label>
                     <input
@@ -159,11 +166,9 @@ export function ForumAskContent({
 export default function ForumAskPage() {
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-            <NavbarTailwindCss />
-            <div className='pt-24'>
+            <div className='pt-navbar'>
                 <ForumAskContent />
             </div>
-            <Footer />
         </main>
     );
 }

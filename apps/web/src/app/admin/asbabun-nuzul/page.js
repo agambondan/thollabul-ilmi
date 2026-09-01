@@ -13,6 +13,7 @@ import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
+import ModalShell from "@/components/ModalShell";
 
 const PAGE_SIZE = 25;
 
@@ -312,8 +313,11 @@ const AdminAsbabunNuzulPage = () => {
             )}
 
             {showModal && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'>
+                <ModalShell
+                    onClose={() => setShowModal(false)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                >
                         <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
                             <h2 className='font-bold text-gray-900 dark:text-white'>
                                 {editId
@@ -330,7 +334,10 @@ const AdminAsbabunNuzulPage = () => {
                         <div className='p-5 space-y-4'>
                             <div className='grid grid-cols-3 gap-4'>
                                 <div>
-                                    <label htmlFor='page-surah-number' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-surah-number'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.asbabun.surah_number")}
                                     </label>
                                     <input
@@ -349,7 +356,10 @@ const AdminAsbabunNuzulPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor='page-ayat-awal' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-ayat-awal'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         Ayat awal
                                     </label>
                                     <input
@@ -367,7 +377,10 @@ const AdminAsbabunNuzulPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor='page-ayat-akhir' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-ayat-akhir'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         Ayat akhir
                                     </label>
                                     <input
@@ -381,13 +394,18 @@ const AdminAsbabunNuzulPage = () => {
                                             })
                                         }
                                         min={1}
-                                        placeholder={t("admin.asbabun_nuzul.optional")}
+                                        placeholder={t(
+                                            "admin.asbabun_nuzul.optional",
+                                        )}
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
                                 </div>
                             </div>
                             <div>
-                                <label htmlFor='page-title' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-title'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.field.title")}
                                 </label>
                                 <input
@@ -405,7 +423,10 @@ const AdminAsbabunNuzulPage = () => {
                             </div>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label htmlFor='page-perawi' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-perawi'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         Perawi
                                     </label>
                                     <input
@@ -418,12 +439,17 @@ const AdminAsbabunNuzulPage = () => {
                                                 narrator: e.target.value,
                                             })
                                         }
-                                        placeholder={t("admin.asbabun_nuzul.scholar_placeholder")}
+                                        placeholder={t(
+                                            "admin.asbabun_nuzul.scholar_placeholder",
+                                        )}
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor='page-referensi-tampil' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-referensi-tampil'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         Referensi tampil
                                     </label>
                                     <input
@@ -436,15 +462,20 @@ const AdminAsbabunNuzulPage = () => {
                                                 display_ref: e.target.value,
                                             })
                                         }
-                                        placeholder={t("admin.asbabun_nuzul.verse_placeholder")}
+                                        placeholder={t(
+                                            "admin.asbabun_nuzul.verse_placeholder",
+                                        )}
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
-                               </div>
-                           </div>
+                                </div>
+                            </div>
                             <div>
-                                <label htmlFor='page-content' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-content'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.field.content")}
-                               </label>
+                                </label>
                                 <textarea
                                     id='page-content'
                                     value={form.content}
@@ -459,7 +490,10 @@ const AdminAsbabunNuzulPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-source' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-source'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("common.source")}
                                 </label>
                                 <input
@@ -472,7 +506,9 @@ const AdminAsbabunNuzulPage = () => {
                                             source: e.target.value,
                                         })
                                     }
-                                    placeholder={t("admin.asbabun_nuzul.source_placeholder")}
+                                    placeholder={t(
+                                        "admin.asbabun_nuzul.source_placeholder",
+                                    )}
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
@@ -498,13 +534,15 @@ const AdminAsbabunNuzulPage = () => {
                                 {saving ? t("common.saving") : t("common.save")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
 
             {deleteId && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'>
+                <ModalShell
+                    onClose={() => setDeleteId(null)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
+                >
                         <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
                             {t("admin.crud.delete_title").replace(
                                 "{item}",
@@ -528,8 +566,7 @@ const AdminAsbabunNuzulPage = () => {
                                 {t("common.delete")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
         </div>
     );

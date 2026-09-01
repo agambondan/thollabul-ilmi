@@ -4,6 +4,7 @@ import { useLocale } from "@/context/Locale";
 import { quranApi } from "@/lib/api";
 import { QURAN_FONTS, useQuranFont } from "@/lib/useQuranFont";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { sanitizeHtml } from "@/lib/sanitizeHtml";
 
 const MIN_PAGE = 1;
 const MAX_PAGE = 604;
@@ -11,7 +12,9 @@ const MAX_PAGE = 604;
 const clampPage = (page) => Math.max(MIN_PAGE, Math.min(MAX_PAGE, page || 1));
 const readInitialPage = () => {
     if (typeof window === "undefined") return 1;
-    return clampPage(Number(new URLSearchParams(window.location.search).get("page")));
+    return clampPage(
+        Number(new URLSearchParams(window.location.search).get("page")),
+    );
 };
 const syncPageUrl = (page) => {
     if (typeof window === "undefined") return;
@@ -26,20 +29,32 @@ const syncPageUrl = (page) => {
 const toArabicNumber = (n) =>
     String(n)
         .split("")
-        .map((d) => ("٠١٢٣٤٥٦٧٨٩"[Number(d)] ?? d))
+        .map((d) => "٠١٢٣٤٥٦٧٨٩"[Number(d)] ?? d)
         .join("");
 const getItems = (data) =>
     Array.isArray(data) ? data : (data?.items ?? data?.data?.items ?? []);
-const getArabic = (ayah) => ayah?.translation?.ar_html || ayah?.translation?.ar || "";
+const getArabic = (ayah) =>
+    ayah?.translation?.ar_html || ayah?.translation?.ar || "";
 const getTranslation = (ayah, lang) => {
     const key = lang === "EN" ? "en" : "idn";
-    return ayah?.translation?.[key] || ayah?.translation?.idn || ayah?.translation?.en || "";
+    return (
+        ayah?.translation?.[key] ||
+        ayah?.translation?.idn ||
+        ayah?.translation?.en ||
+        ""
+    );
 };
 const getSurahNumber = (ayah) => ayah?.surah?.number || ayah?.surah_id || "";
 const getSurahName = (ayah, lang) => {
     const s = ayah?.surah ?? {};
     const key = lang === "EN" ? "latin_en" : "latin_idn";
-    return s?.translation?.[key] || s?.translation?.latin_idn || s?.translation?.latin_en || s?.slug || "";
+    return (
+        s?.translation?.[key] ||
+        s?.translation?.latin_idn ||
+        s?.translation?.latin_en ||
+        s?.slug ||
+        ""
+    );
 };
 const stripTags = (html) => (html || "").replace(/<[^>]+>/g, "");
 
@@ -47,7 +62,8 @@ const pageMeta = (ayahs, lang, page, fallback) => {
     const first = ayahs[0] ?? {};
     const names = [];
     for (const ayah of ayahs) {
-        const label = `${getSurahNumber(ayah)}. ${getSurahName(ayah, lang)}`.trim();
+        const label =
+            `${getSurahNumber(ayah)}. ${getSurahName(ayah, lang)}`.trim();
         if (label && !names.includes(label)) names.push(label);
     }
     return {
@@ -59,7 +75,8 @@ const pageMeta = (ayahs, lang, page, fallback) => {
 
 export default function MushafPageReader() {
     const { t, lang } = useLocale();
-    const { fontCls, fontId, setFont, arabicFontSize, setArabicFontSize } = useQuranFont();
+    const { fontCls, fontId, setFont, arabicFontSize, setArabicFontSize } =
+        useQuranFont();
     const [page, setPage] = useState(1);
     const inputRef = useRef(null);
     const [ayahs, setAyahs] = useState([]);
@@ -112,7 +129,8 @@ export default function MushafPageReader() {
         setLoading(true);
         setPage(clampPage(nextPage));
     }, []);
-    const goInputPage = () => goToPage(clampPage(Number(inputRef.current?.value)));
+    const goInputPage = () =>
+        goToPage(clampPage(Number(inputRef.current?.value)));
 
     useEffect(() => {
         syncPageUrl(page);
@@ -195,7 +213,9 @@ export default function MushafPageReader() {
                                     : "bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
                             }`}
                         >
-                            {t(`mushaf.font_${f.id}`, { defaultValue: f.label })}
+                            {t(`mushaf.font_${f.id}`, {
+                                defaultValue: f.label,
+                            })}
                         </button>
                     ))}
                     <button
@@ -203,7 +223,9 @@ export default function MushafPageReader() {
                         onClick={() => setShowTranslation((v) => !v)}
                         className='px-2.5 py-1 rounded-md text-xs font-medium bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300'
                     >
-                        {showTranslation ? t("mushaf.translation_off") : t("mushaf.translation_on")}
+                        {showTranslation
+                            ? t("mushaf.translation_off")
+                            : t("mushaf.translation_on")}
                     </button>
                 </div>
             </div>
@@ -218,62 +240,105 @@ export default function MushafPageReader() {
                 <div className='h-3 bg-[repeating-linear-gradient(90deg,#0f766e_0_10px,#f59e0b_10px_16px,#14b8a6_16px_26px,#fef3c7_26px_30px)]' />
                 <div className='grid grid-cols-3 gap-2 bg-[#fff4bf] px-3 py-2 text-[11px] font-bold text-center border-y-2 border-emerald-500'>
                     <div>
-                        <p className='text-[9px] tracking-widest text-amber-700 uppercase'>{t("mushaf.juz")}</p>
-                        <p className='rounded-full bg-white border border-emerald-500 py-0.5'>{meta.juz}</p>
+                        <p className='text-[9px] tracking-widest text-amber-700 uppercase'>
+                            {t("mushaf.juz")}
+                        </p>
+                        <p className='rounded-full bg-white border border-emerald-500 py-0.5'>
+                            {meta.juz}
+                        </p>
                     </div>
                     <div>
-                        <p className='text-[9px] tracking-widest text-amber-700 uppercase'>{t("mushaf.page")}</p>
-                        <p className='rounded-full bg-white border border-emerald-500 py-0.5'>{meta.page}</p>
+                        <p className='text-[9px] tracking-widest text-amber-700 uppercase'>
+                            {t("mushaf.page")}
+                        </p>
+                        <p className='rounded-full bg-white border border-emerald-500 py-0.5'>
+                            {meta.page}
+                        </p>
                     </div>
                     <div>
-                        <p className='text-[9px] tracking-widest text-amber-700 uppercase'>{t("mushaf.surah")}</p>
-                        <p className='rounded-full bg-white border border-emerald-500 py-0.5 truncate'>{meta.surah}</p>
+                        <p className='text-[9px] tracking-widest text-amber-700 uppercase'>
+                            {t("mushaf.surah")}
+                        </p>
+                        <p className='rounded-full bg-white border border-emerald-500 py-0.5 truncate'>
+                            {meta.surah}
+                        </p>
                     </div>
                 </div>
 
                 <div className='min-h-[720px] bg-[linear-gradient(180deg,rgba(16,185,129,0.08)_0,rgba(16,185,129,0)_56px)] p-3 space-y-2'>
                     {loading && (
-                        <div className='text-center py-24 text-sm text-gray-500'>{t("common.loading")}</div>
+                        <div className='text-center py-24 text-sm text-gray-500'>
+                            {t("common.loading")}
+                        </div>
                     )}
-                    {!loading && ayahs.map((ayah) => {
-                        const wordList = wordsByAyah.get(ayah.id) ?? [];
-                        const translation = getTranslation(ayah, lang);
-                        return (
-                            <section key={ayah.id} className='border-b border-dashed border-emerald-200 pb-1.5 last:border-b-0'>
-                                <div className='flex flex-row-reverse flex-wrap justify-start gap-x-0.5 gap-y-1.5 text-right' dir='rtl'>
-                                    {wordList.length ? wordList.map((word) => (
-                                        <span key={word.id} className='inline-flex min-w-[3.25rem] flex-col items-center border-l border-rose-200 px-0.5' dir='rtl'>
+                    {!loading &&
+                        ayahs.map((ayah) => {
+                            const wordList = wordsByAyah.get(ayah.id) ?? [];
+                            const translation = getTranslation(ayah, lang);
+                            return (
+                                <section
+                                    key={ayah.id}
+                                    className='border-b border-dashed border-emerald-200 pb-1.5 last:border-b-0'
+                                >
+                                    <div
+                                        className='flex flex-row-reverse flex-wrap justify-start gap-x-0.5 gap-y-1.5 text-right'
+                                        dir='rtl'
+                                    >
+                                        {wordList.length ? (
+                                            wordList.map((word) => (
+                                                <span
+                                                    key={word.id}
+                                                    className='inline-flex min-w-[3.25rem] flex-col items-center border-l border-rose-200 px-0.5'
+                                                    dir='rtl'
+                                                >
+                                                    <span
+                                                        className={`${fontCls} leading-tight text-slate-950`}
+                                                        style={{
+                                                            fontSize: `${Math.max(24, arabicFontSize - 8)}px`,
+                                                        }}
+                                                    >
+                                                        {word.arabic}
+                                                    </span>
+                                                    <span
+                                                        className='text-[10px] leading-tight text-rose-600'
+                                                        dir='ltr'
+                                                    >
+                                                        {word.transliteration}
+                                                    </span>
+                                                    <span
+                                                        className='text-[10px] leading-tight text-slate-700'
+                                                        dir='ltr'
+                                                    >
+                                                        {word.indonesian}
+                                                    </span>
+                                                </span>
+                                            ))
+                                        ) : (
                                             <span
-                                                className={`${fontCls} leading-tight text-slate-950`}
-                                                style={{ fontSize: `${Math.max(24, arabicFontSize - 8)}px` }}
-                                            >
-                                                {word.arabic}
-                                            </span>
-                                            <span className='text-[10px] leading-tight text-rose-600' dir='ltr'>
-                                                {word.transliteration}
-                                            </span>
-                                            <span className='text-[10px] leading-tight text-slate-700' dir='ltr'>
-                                                {word.indonesian}
-                                            </span>
-                                        </span>
-                                    )) : (
+                                                className={`${fontCls} text-[2rem] leading-loose`}
+                                                dangerouslySetInnerHTML={{
+                                                    __html: sanitizeHtml(getArabic(ayah)),
+                                                }}
+                                            />
+                                        )}
                                         <span
-                                            className={`${fontCls} text-[2rem] leading-loose`}
-                                            dangerouslySetInnerHTML={{ __html: getArabic(ayah) }}
-                                        />
+                                            className='inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-amber-500 bg-white text-base font-bold text-rose-700'
+                                            dir='ltr'
+                                        >
+                                            {toArabicNumber(ayah.number)}
+                                        </span>
+                                    </div>
+                                    {showTranslation && translation && (
+                                        <p className='mt-1.5 text-xs leading-relaxed text-slate-700'>
+                                            <span className='font-semibold'>
+                                                {ayah.number}.{" "}
+                                            </span>
+                                            {translation}
+                                        </p>
                                     )}
-                                    <span className='inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-amber-500 bg-white text-base font-bold text-rose-700' dir='ltr'>
-                                        {toArabicNumber(ayah.number)}
-                                    </span>
-                                </div>
-                                {showTranslation && translation && (
-                                    <p className='mt-1.5 text-xs leading-relaxed text-slate-700'>
-                                        <span className='font-semibold'>{ayah.number}. </span>{translation}
-                                    </p>
-                                )}
-                            </section>
-                        );
-                    })}
+                                </section>
+                            );
+                        })}
                 </div>
                 <div className='h-3 bg-[repeating-linear-gradient(90deg,#fef3c7_0_4px,#14b8a6_4px_14px,#f59e0b_14px_20px,#0f766e_20px_30px)]' />
             </div>

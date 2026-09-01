@@ -1,11 +1,18 @@
 "use client";
 
-import { PanelEmpty, PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
+import {
+    PanelEmpty,
+    PanelTable,
+    Td,
+    Th,
+    Tr,
+} from "@/components/panel/DataPanel";
 import { adminAsmaulHusnaApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
+import ModalShell from "@/components/ModalShell";
 
 const EMPTY_FORM = {
     number: "",
@@ -153,15 +160,9 @@ const AdminAsmaulHusnaPage = () => {
                 <PanelTable
                     head={
                         <>
-                            <Th className='w-12'>
-                                {t("admin.field.number")}
-                            </Th>
-                            <Th>
-                                {t("admin.field.arabic")}
-                            </Th>
-                            <Th>
-                                {t("admin.field.latin")}
-                            </Th>
+                            <Th className='w-12'>{t("admin.field.number")}</Th>
+                            <Th>{t("admin.field.arabic")}</Th>
+                            <Th>{t("admin.field.latin")}</Th>
                             <Th className='hidden md:table-cell'>
                                 {t("admin.asmaul.meaning")}
                             </Th>
@@ -181,12 +182,10 @@ const AdminAsmaulHusnaPage = () => {
                                 {item.transliteration}
                             </Td>
                             <Td className='text-gray-500 dark:text-gray-400 hidden md:table-cell'>
-                                {getLocalizedField(
-                                    item,
-                                    "meaning",
-                                    lang,
-                                    ["indonesian", "english"],
-                                )}
+                                {getLocalizedField(item, "meaning", lang, [
+                                    "indonesian",
+                                    "english",
+                                ])}
                             </Td>
                             <Td>
                                 <div className='flex items-center gap-2 justify-end'>
@@ -200,9 +199,7 @@ const AdminAsmaulHusnaPage = () => {
                                     </button>
                                     <button
                                         onClick={() =>
-                                            setDeleteId(
-                                                item.id ?? item._id,
-                                            )
+                                            setDeleteId(item.id ?? item._id)
                                         }
                                         aria-label={t("common.delete")}
                                         title={t("common.delete")}
@@ -215,14 +212,19 @@ const AdminAsmaulHusnaPage = () => {
                         </Tr>
                     ))}
                     {filtered.length === 0 && (
-                        <PanelEmpty colSpan={5}>{t("admin.crud.no_data")}</PanelEmpty>
+                        <PanelEmpty colSpan={5}>
+                            {t("admin.crud.no_data")}
+                        </PanelEmpty>
                     )}
                 </PanelTable>
             )}
 
             {showModal && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'>
+                <ModalShell
+                    onClose={() => setShowModal(false)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                >
                         <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
                             <h2 className='font-bold text-gray-900 dark:text-white'>
                                 {editId
@@ -239,7 +241,10 @@ const AdminAsmaulHusnaPage = () => {
                         <div className='p-5 space-y-4'>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label htmlFor='page-number' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-number'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.field.number")}
                                     </label>
                                     <input
@@ -258,7 +263,10 @@ const AdminAsmaulHusnaPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor='page-arabic' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-arabic'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.field.arabic")}
                                     </label>
                                     <input
@@ -277,7 +285,10 @@ const AdminAsmaulHusnaPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label htmlFor='page-latin' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-latin'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.field.latin")}
                                 </label>
                                 <input
@@ -295,7 +306,10 @@ const AdminAsmaulHusnaPage = () => {
                             </div>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label htmlFor='page-meaning-id' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-meaning-id'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.asmaul.meaning_id")}
                                     </label>
                                     <input
@@ -312,7 +326,10 @@ const AdminAsmaulHusnaPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor='page-meaning-en' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-meaning-en'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.asmaul.meaning_en")}
                                     </label>
                                     <input
@@ -330,7 +347,10 @@ const AdminAsmaulHusnaPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label htmlFor='page-notes' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-notes'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.asmaul.notes")}
                                 </label>
                                 <textarea
@@ -362,13 +382,15 @@ const AdminAsmaulHusnaPage = () => {
                                 {saving ? t("common.saving") : t("common.save")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
 
             {deleteId && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'>
+                <ModalShell
+                    onClose={() => setDeleteId(null)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
+                >
                         <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
                             {t("admin.crud.delete_title", {
                                 item: t("admin.asmaul.name"),
@@ -391,8 +413,7 @@ const AdminAsmaulHusnaPage = () => {
                                 {t("common.delete")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
         </div>
     );

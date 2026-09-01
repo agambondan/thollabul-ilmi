@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import { useLocale } from "@/context/Locale";
 import dynamic from "next/dynamic";
 import { MdMap } from "react-icons/md";
@@ -33,9 +31,7 @@ export function PetaContent({ className = "" }) {
 export default function PetaPage() {
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-            <NavbarTailwindCss />
-            <PetaContent className='pt-24' />
-            <Footer />
+            <PetaContent className='pt-navbar' />
         </main>
     );
 }

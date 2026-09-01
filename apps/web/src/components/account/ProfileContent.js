@@ -4,7 +4,13 @@ import ChangePasswordCard from "@/components/account/ChangePasswordCard";
 import EditProfileCard from "@/components/account/EditProfileCard";
 import { SkeletonProfile } from "@/components/skeleton/Skeleton";
 import { useLocale } from "@/context/Locale";
-import { hafalanApi, muhasabahApi, streakApi, userApi, progressApi } from "@/lib/api";
+import {
+    hafalanApi,
+    muhasabahApi,
+    streakApi,
+    userApi,
+    progressApi,
+} from "@/lib/api";
 import {
     calcLocalPrayerStreak,
     isHafalanMemorized,
@@ -553,9 +559,7 @@ const ProfileContent = () => {
                             ].map((lang) => (
                                 <button
                                     key={lang.value}
-                                    onClick={() =>
-                                        handleChangeLang(lang.value)
-                                    }
+                                    onClick={() => handleChangeLang(lang.value)}
                                     disabled={langLoading}
                                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 ${
                                         selectedLang === lang.value
@@ -580,8 +584,7 @@ const ProfileContent = () => {
                             Sesi Aktif
                         </p>
                         <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
-                            Daftar sesi login yang masih aktif di akun
-                            ini.
+                            Daftar sesi login yang masih aktif di akun ini.
                         </p>
                     </div>
                     {sessionsLoading ? (
@@ -618,18 +621,14 @@ const ProfileContent = () => {
                                     <button
                                         className='shrink-0 rounded-full border border-red-200 bg-red-50 px-3 py-1 text-[10px] font-bold text-red-600 hover:bg-red-100 disabled:opacity-60 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300'
                                         disabled={
-                                            sessionActionId ===
-                                            sessionItem.id
+                                            sessionActionId === sessionItem.id
                                         }
                                         onClick={() =>
-                                            handleRevokeSession(
-                                                sessionItem,
-                                            )
+                                            handleRevokeSession(sessionItem)
                                         }
                                         type='button'
                                     >
-                                        {sessionActionId ===
-                                        sessionItem.id
+                                        {sessionActionId === sessionItem.id
                                             ? "Keluar..."
                                             : "Keluar"}
                                     </button>
@@ -660,8 +659,8 @@ const ProfileContent = () => {
                     Hapus Akun
                 </p>
                 <p className='mt-1 text-xs text-red-600/80 dark:text-red-200/80'>
-                    Menghapus akun akan mengakhiri sesi aktif dan
-                    menonaktifkan akses personal.
+                    Menghapus akun akan mengakhiri sesi aktif dan menonaktifkan
+                    akses personal.
                 </p>
                 {deleteMsg.text ? (
                     <p className='mt-3 text-xs font-semibold text-red-600 dark:text-red-300'>

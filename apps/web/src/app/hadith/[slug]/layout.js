@@ -1,7 +1,6 @@
 import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
 import { getBooks } from "@/lib/api";
 
-
 export async function generateStaticParams() {
     const books = await getBooks();
     return books.map((k) => ({ slug: k.slug }));

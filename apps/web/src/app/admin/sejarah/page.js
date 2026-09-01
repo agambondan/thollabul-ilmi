@@ -1,11 +1,18 @@
 "use client";
 
-import { PanelEmpty, PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
+import {
+    PanelEmpty,
+    PanelTable,
+    Td,
+    Th,
+    Tr,
+} from "@/components/panel/DataPanel";
 import { adminSejarahApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
+import ModalShell from "@/components/ModalShell";
 
 const CATEGORIES = [
     "khulafa",
@@ -181,9 +188,7 @@ const AdminHistoryPage = () => {
                             <Th className='w-20'>
                                 {t("admin.history.year_h")}
                             </Th>
-                            <Th>
-                                {t("admin.history.event")}
-                            </Th>
+                            <Th>{t("admin.history.event")}</Th>
                             <Th className='w-32'>
                                 {t("admin.field.category")}
                             </Th>
@@ -194,9 +199,7 @@ const AdminHistoryPage = () => {
                     {filtered.map((item) => (
                         <Tr key={item.id ?? item._id}>
                             <Td className='text-gray-500 dark:text-gray-400 font-mono text-xs'>
-                                {item.year_hijri
-                                    ? `${item.year_hijri} H`
-                                    : "-"}
+                                {item.year_hijri ? `${item.year_hijri} H` : "-"}
                             </Td>
                             <Td className='text-gray-900 dark:text-white font-medium'>
                                 {getLocalizedField(item, "title", lang)}
@@ -218,9 +221,7 @@ const AdminHistoryPage = () => {
                                     </button>
                                     <button
                                         onClick={() =>
-                                            setDeleteId(
-                                                item.id ?? item._id,
-                                            )
+                                            setDeleteId(item.id ?? item._id)
                                         }
                                         aria-label={t("common.delete")}
                                         title={t("common.delete")}
@@ -233,14 +234,19 @@ const AdminHistoryPage = () => {
                         </Tr>
                     ))}
                     {filtered.length === 0 && (
-                        <PanelEmpty colSpan={4}>{t("admin.crud.no_data")}</PanelEmpty>
+                        <PanelEmpty colSpan={4}>
+                            {t("admin.crud.no_data")}
+                        </PanelEmpty>
                     )}
                 </PanelTable>
             )}
 
             {showModal && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'>
+                <ModalShell
+                    onClose={() => setShowModal(false)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                >
                         <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
                             <h2 className='font-bold text-gray-900 dark:text-white'>
                                 {editId
@@ -257,7 +263,10 @@ const AdminHistoryPage = () => {
                         <div className='p-5 space-y-4'>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label htmlFor='page-year-hijri' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-year-hijri'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.history.year_hijri")}
                                     </label>
                                     <input
@@ -270,12 +279,17 @@ const AdminHistoryPage = () => {
                                                 year_hijri: e.target.value,
                                             })
                                         }
-                                        placeholder={t("admin.sejarah.year_placeholder")}
+                                        placeholder={t(
+                                            "admin.sejarah.year_placeholder",
+                                        )}
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor='page-tahun-masehi' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-tahun-masehi'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         Tahun Masehi
                                     </label>
                                     <input
@@ -288,14 +302,19 @@ const AdminHistoryPage = () => {
                                                 year_miladi: e.target.value,
                                             })
                                         }
-                                        placeholder={t("admin.sejarah.century_placeholder")}
+                                        placeholder={t(
+                                            "admin.sejarah.century_placeholder",
+                                        )}
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
                                 </div>
                             </div>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label htmlFor='page-category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-category'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.field.category")}
                                     </label>
                                     <select
@@ -317,7 +336,10 @@ const AdminHistoryPage = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label htmlFor='page-slug' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-slug'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.field.slug")}
                                     </label>
                                     <input
@@ -330,13 +352,18 @@ const AdminHistoryPage = () => {
                                                 slug: e.target.value,
                                             })
                                         }
-                                        placeholder={t("admin.sejarah.auto_slug")}
+                                        placeholder={t(
+                                            "admin.sejarah.auto_slug",
+                                        )}
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
                                 </div>
                             </div>
                             <div>
-                                <label htmlFor='page-event-title' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-event-title'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.history.event_title")}
                                 </label>
                                 <input
@@ -360,7 +387,10 @@ const AdminHistoryPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-description' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-description'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.field.description")}
                                 </label>
                                 <textarea
@@ -406,13 +436,15 @@ const AdminHistoryPage = () => {
                                 {saving ? t("common.saving") : t("common.save")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
 
             {deleteId && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'>
+                <ModalShell
+                    onClose={() => setDeleteId(null)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
+                >
                         <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
                             {t("admin.crud.delete_title").replace(
                                 "{item}",
@@ -436,8 +468,7 @@ const AdminHistoryPage = () => {
                                 {t("common.delete")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
         </div>
     );

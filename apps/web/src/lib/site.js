@@ -21,8 +21,7 @@ export const OG_IMAGE = {
     alt: "Thullaabul 'Ilmi — Al-Quran, Hadith, and Islamic knowledge portal",
 };
 
-export const ogImages = (image) =>
-    image ? [image, OG_IMAGE] : [OG_IMAGE];
+export const ogImages = (image) => (image ? [image, OG_IMAGE] : [OG_IMAGE]);
 
 /**
  * Open Graph block for one route.

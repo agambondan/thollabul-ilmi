@@ -5,6 +5,7 @@ import { useLocale } from "@/context/Locale";
 import { streakApi, tilawahApi } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { BsJournalCheck, BsX } from "react-icons/bs";
+import { useModalA11y } from "@/lib/useModalA11y";
 
 const todayStr = () => {
     const d = new Date();
@@ -52,6 +53,10 @@ const TilawahPage = () => {
     const [entries, setEntries] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [form, setForm] = useState(emptyForm());
+    const modalA11y = useModalA11y({
+        open: showModal,
+        onClose: () => setShowModal(false),
+    });
     const [syncError, setSyncError] = useState("");
 
     useEffect(() => {
@@ -272,7 +277,7 @@ const TilawahPage = () => {
                         e.target === e.currentTarget && setShowModal(false)
                     }
                 >
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'>
+                    <div {...modalA11y} className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'>
                         <div className='flex items-center justify-between mb-4'>
                             <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
                                 {t("tilawah.modal_title")}
@@ -287,7 +292,10 @@ const TilawahPage = () => {
 
                         <div className='space-y-3'>
                             <div>
-                                <label htmlFor='page-label-surah' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label
+                                    htmlFor='page-label-surah'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                >
                                     {t("tilawah.label_surah")}
                                 </label>
                                 <input
@@ -306,7 +314,10 @@ const TilawahPage = () => {
                             </div>
                             <div className='grid grid-cols-2 gap-3'>
                                 <div>
-                                    <label htmlFor='page-label-ayah-from' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label
+                                        htmlFor='page-label-ayah-from'
+                                        className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                    >
                                         {t("tilawah.label_ayah_from")}
                                     </label>
                                     <input
@@ -325,7 +336,10 @@ const TilawahPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor='page-label-ayah-to' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label
+                                        htmlFor='page-label-ayah-to'
+                                        className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                    >
                                         {t("tilawah.label_ayah_to")}
                                     </label>
                                     <input
@@ -345,7 +359,10 @@ const TilawahPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label htmlFor='page-label-pages' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label
+                                    htmlFor='page-label-pages'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                >
                                     {t("tilawah.label_pages")}
                                 </label>
                                 <input
@@ -364,7 +381,10 @@ const TilawahPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-label-notes' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label
+                                    htmlFor='page-label-notes'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                >
                                     {t("tilawah.label_notes")}
                                 </label>
                                 <input

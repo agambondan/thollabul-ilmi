@@ -13,6 +13,8 @@ const getToken = () =>
 
 const mutationMethods = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
+// api.js runs outside React, so it cannot call useLocale(). The admin panel is
+// Indonesian-only today; these strings move into i18n when it is translated.
 const adminMutationFallback = (method) =>
     method === "DELETE"
         ? "Gagal menghapus data. Periksa koneksi atau coba lagi."

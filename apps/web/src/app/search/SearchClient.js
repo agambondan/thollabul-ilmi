@@ -3,6 +3,7 @@
 import GradeBadge from "@/components/GradeBadge";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useLocale } from "@/context/Locale";
+import { usePathname, useRouter } from "next/navigation";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { searchApi } from "@/lib/api";
 import { getLocalizedField, getLocalizedTranslation } from "@/lib/translation";
@@ -105,9 +106,7 @@ const AyahCard = ({ item, lang, hrefBuilder }) => {
                 {arabic}
             </p>
             {latin && (
-                <p className='text-xs text-gray-400 italic mb-1'>
-                    {latin}
-                </p>
+                <p className='text-xs text-gray-400 italic mb-1'>{latin}</p>
             )}
             <p className='text-sm text-gray-600 dark:text-gray-300 line-clamp-2'>
                 {meaning}
@@ -147,9 +146,7 @@ const HadithCard = ({ item, lang, hrefBuilder }) => {
                 {arabic}
             </p>
             {latin && (
-                <p className='text-xs text-gray-400 italic mb-1'>
-                    {latin}
-                </p>
+                <p className='text-xs text-gray-400 italic mb-1'>{latin}</p>
             )}
             <p className='text-sm text-gray-600 dark:text-gray-300 line-clamp-2'>
                 {meaning}
@@ -233,11 +230,13 @@ export default function SearchClient({
         { value: "all", label: t("search.type.all") },
         { value: "ayah", label: t("search.type.ayah") },
         { value: "hadith", label: t("search.type.hadith") },
-        { value: "doa", label: "Doa" },
-        { value: "dictionary", label: "Kamus" },
-        { value: "kajian", label: "Kajian" },
-        { value: "perawi", label: "Perawi" },
+        { value: "doa", label: t("search.type.doa") },
+        { value: "dictionary", label: t("search.type.dictionary") },
+        { value: "kajian", label: t("search.type.kajian") },
+        { value: "perawi", label: t("search.type.perawi") },
     ];
+    const router = useRouter();
+    const pathname = usePathname();
     const [query, setQuery] = useState(initialQuery);
     const [type, setType] = useState(
         TYPE_VALUES.includes(initialType) ? initialType : "all",
@@ -293,18 +292,41 @@ export default function SearchClient({
         if (initialQuery) {
             doSearch(initialQuery, type, 0, false);
         }
-        inputRef.current?.focus();
+        if (
+            !initialQuery &&
+            typeof window !== "undefined" &&
+            window.matchMedia("(hover: hover)").matches
+        ) {
+            inputRef.current?.focus();
+        }
     }, []);
+
+    // Mirror the search into the querystring: without it a result set could
+    // not be shared, bookmarked, or restored with the back button.
+    const syncUrl = useCallback(
+        (q, tp) => {
+            const params = new URLSearchParams();
+            if (q.trim()) params.set("q", q.trim());
+            if (tp && tp !== "all") params.set("type", tp);
+            const qs = params.toString();
+            router.replace(qs ? `${pathname}?${qs}` : pathname, {
+                scroll: false,
+            });
+        },
+        [pathname, router],
+    );
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setPage(0);
+        syncUrl(query, type);
         doSearch(query, type, 0, false);
     };
 
     const handleTypeChange = (newType) => {
         setType(newType);
         setPage(0);
+        syncUrl(query, newType);
         if (query.trim()) doSearch(query, newType, 0, false);
     };
 
@@ -401,7 +423,7 @@ export default function SearchClient({
                                 seeAllHref={routeMap.section.hadith(query)}
                             />
                             <ResultSection
-                                label='Doa'
+                                label={t("search.type.doa")}
                                 total={getTotal(results, "doa")}
                                 items={getItems(results, "doas")}
                                 renderCard={(item) => (
@@ -427,7 +449,7 @@ export default function SearchClient({
                                 seeAllHref={routeMap.section.doa(query)}
                             />
                             <ResultSection
-                                label='Kamus'
+                                label={t("search.type.dictionary")}
                                 total={getTotal(results, "dictionary")}
                                 items={getItems(results, "dictionaries")}
                                 renderCard={(item) => (
@@ -444,7 +466,7 @@ export default function SearchClient({
                                 seeAllHref={routeMap.section.dictionary(query)}
                             />
                             <ResultSection
-                                label='Kajian'
+                                label={t("search.type.kajian")}
                                 total={getTotal(results, "kajian")}
                                 items={getItems(results, "kajians")}
                                 renderCard={(item) => (
@@ -473,7 +495,7 @@ export default function SearchClient({
                                 seeAllHref={routeMap.section.kajian(query)}
                             />
                             <ResultSection
-                                label='Perawi'
+                                label={t("search.type.perawi")}
                                 total={getTotal(results, "perawi")}
                                 items={getItems(results, "perawis")}
                                 renderCard={(item) => (
@@ -536,7 +558,7 @@ export default function SearchClient({
                             )}
                             {type === "doa" && (
                                 <ResultSection
-                                    label='Doa'
+                                    label={t("search.type.doa")}
                                     total={getTotal(results, "doa")}
                                     items={getItems(results, "doas")}
                                     renderCard={(item) => (
@@ -568,7 +590,7 @@ export default function SearchClient({
                             )}
                             {type === "dictionary" && (
                                 <ResultSection
-                                    label='Kamus'
+                                    label={t("search.type.dictionary")}
                                     total={getTotal(results, "dictionary")}
                                     items={getItems(results, "dictionaries")}
                                     renderCard={(item) => (
@@ -592,7 +614,7 @@ export default function SearchClient({
                             )}
                             {type === "kajian" && (
                                 <ResultSection
-                                    label='Kajian'
+                                    label={t("search.type.kajian")}
                                     total={getTotal(results, "kajian")}
                                     items={getItems(results, "kajians")}
                                     renderCard={(item) => (
@@ -627,7 +649,7 @@ export default function SearchClient({
                             )}
                             {type === "perawi" && (
                                 <ResultSection
-                                    label='Perawi'
+                                    label={t("search.type.perawi")}
                                     total={getTotal(results, "perawi")}
                                     items={getItems(results, "perawis")}
                                     renderCard={(item) => (

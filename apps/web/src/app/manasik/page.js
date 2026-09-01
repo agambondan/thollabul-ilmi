@@ -1,7 +1,5 @@
 "use client";
 
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useLocale } from "@/context/Locale";
@@ -58,7 +56,6 @@ const ManasikPage = () => {
 
     return (
         <main className='min-h-screen flex flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 <div
                     className={
@@ -270,7 +267,6 @@ const ManasikPage = () => {
                     </div>
                 </div>
             </Section>
-            <Footer />
         </main>
     );
 };

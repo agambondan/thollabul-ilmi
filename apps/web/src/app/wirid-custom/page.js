@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
@@ -18,6 +16,7 @@ import {
     BsX,
 } from "react-icons/bs";
 import { GiOpenBook } from "react-icons/gi";
+import { useModalA11y } from "@/lib/useModalA11y";
 
 const EMPTY_FORM = {
     title: "",
@@ -40,6 +39,10 @@ export function WiridCustomContent() {
     const [form, setForm] = useState(EMPTY_FORM);
     const [saving, setSaving] = useState(false);
     const [expanded, setExpanded] = useState(null);
+    const modalA11y = useModalA11y({
+        open: showModal,
+        onClose: () => setShowModal(false),
+    });
 
     const load = () => {
         if (!isAuthenticated) {
@@ -298,7 +301,7 @@ export function WiridCustomContent() {
                         e.target === e.currentTarget && setShowModal(false)
                     }
                 >
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto'>
+                    <div {...modalA11y} className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto'>
                         <div className='flex items-center justify-between mb-4'>
                             <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
                                 {editId
@@ -385,7 +388,9 @@ export function WiridCustomContent() {
                                     onChange={(v) =>
                                         setForm((f) => ({ ...f, occasion: v }))
                                     }
-                                    placeholder={t("wirid_custom.occasion_example")}
+                                    placeholder={t(
+                                        "wirid_custom.occasion_example",
+                                    )}
                                 />
                             </div>
                             <Field
@@ -396,7 +401,7 @@ export function WiridCustomContent() {
                                 onChange={(v) =>
                                     setForm((f) => ({ ...f, source: v }))
                                 }
-                                    placeholder={t("wirid_custom.source_example")}
+                                placeholder={t("wirid_custom.source_example")}
                             />
                             <Field
                                 label={
@@ -478,11 +483,9 @@ function Field({
 export default function WiridCustomPage() {
     return (
         <main className='min-h-screen flex flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 <WiridCustomContent />
             </Section>
-            <Footer />
         </main>
     );
 }

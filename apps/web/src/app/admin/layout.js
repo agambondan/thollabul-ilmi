@@ -4,6 +4,7 @@ import { useAuth } from "@/context/Auth";
 import { Spinner3 } from "@/components/spinner/Spinner";
 import AdminMutationToast from "@/components/admin/AdminMutationToast";
 import { useLocale } from "@/context/Locale";
+import { useTheme } from "@/lib/useTheme";
 import { ConvertFLagLanguage } from "@/lib/converter";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -148,13 +149,13 @@ const SIDEBAR_STORAGE_KEY = "tholabul_admin_sidebar_collapsed";
 const AdminLayout = ({ children }) => {
     const { user, isAuthenticated, isLoading, logout, refetchUser } = useAuth();
     const { t, lang, setLang } = useLocale();
+    const { isDark: isDarkMode, toggleTheme } = useTheme();
     const router = useRouter();
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [mobileNavOpen, setMobileNavOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [accountOpen, setAccountOpen] = useState(false);
-    const [isDarkMode, setIsDarkMode] = useState(false);
     const accountRef = useRef(null);
 
     // A token without a profile means /auth/me failed with something other than
@@ -206,27 +207,8 @@ const AdminLayout = ({ children }) => {
         setMobileNavOpen(false);
     }, [pathname]);
 
-    useEffect(() => {
-        const sync = () => {
-            const dark = localStorage.getItem("theme") === "dark";
-            document.documentElement.classList.toggle("dark", dark);
-            setIsDarkMode(dark);
-        };
-        sync();
-        window.addEventListener("storage", sync);
-        return () => window.removeEventListener("storage", sync);
-    }, []);
 
-    useEffect(() => {
-        document.documentElement.classList.toggle("dark", isDarkMode);
-    }, [isDarkMode]);
-
-    const toggleDark = () => {
-        setIsDarkMode((prev) => {
-            localStorage.setItem("theme", !prev ? "dark" : "light");
-            return !prev;
-        });
-    };
+    const toggleDark = toggleTheme;
 
     const toggleSidebar = () => {
         setIsCollapsed((current) => {
@@ -371,9 +353,7 @@ const AdminLayout = ({ children }) => {
                         }`}
                     >
                         <BsGrid className='shrink-0' />
-                        {!collapsed && (
-                            <span>{t("admin.nav.dashboard")}</span>
-                        )}
+                        {!collapsed && <span>{t("admin.nav.dashboard")}</span>}
                     </Link>
                 </div>
 
@@ -402,6 +382,11 @@ const AdminLayout = ({ children }) => {
                                                 title={
                                                     link.label ??
                                                     t(link.labelKey)
+                                                }
+                                                aria-current={
+                                                    isActive
+                                                        ? "page"
+                                                        : undefined
                                                 }
                                                 className={`flex items-center py-1.5 rounded-lg text-sm transition-colors ${
                                                     collapsed

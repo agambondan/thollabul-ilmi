@@ -16,6 +16,8 @@ import {
 } from "@/lib/personalSync";
 import { useEffect, useState } from "react";
 import { BsPencilSquare, BsTrash, BsX } from "react-icons/bs";
+import { sanitizeHtml } from "@/lib/sanitizeHtml";
+import { useModalA11y } from "@/lib/useModalA11y";
 
 const renderMarkdownInline = (text) => {
     if (!text) return "";
@@ -45,6 +47,10 @@ const NotesPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [editNote, setEditNote] = useState(null);
     const [form, setForm] = useState({ title: "", content: "", tags: "" });
+    const modalA11y = useModalA11y({
+        open: showModal,
+        onClose: () => setShowModal(false),
+    });
     const [syncError, setSyncError] = useState("");
 
     useEffect(() => {
@@ -262,7 +268,7 @@ const NotesPage = () => {
                                         <div
                                             className='text-sm text-gray-600 dark:text-gray-400 mt-1 leading-relaxed'
                                             dangerouslySetInnerHTML={{
-                                                __html:
+                                                __html: sanitizeHtml(
                                                     note.content.length > 100
                                                         ? renderMarkdownInline(
                                                               note.content.slice(
@@ -273,6 +279,7 @@ const NotesPage = () => {
                                                         : renderMarkdownInline(
                                                               note.content,
                                                           ),
+                                                ),
                                             }}
                                         />
                                     )}
@@ -313,7 +320,7 @@ const NotesPage = () => {
                         e.target === e.currentTarget && setShowModal(false)
                     }
                 >
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'>
+                    <div {...modalA11y} className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'>
                         <div className='flex items-center justify-between mb-4'>
                             <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
                                 {editNote ? t("notes.edit") : t("notes.add")}
@@ -328,7 +335,10 @@ const NotesPage = () => {
 
                         <div className='space-y-3'>
                             <div>
-                                <label htmlFor='page-label-title' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label
+                                    htmlFor='page-label-title'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                >
                                     {t("notes.label_title")}
                                 </label>
                                 <input
@@ -346,7 +356,10 @@ const NotesPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-label-content' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label
+                                    htmlFor='page-label-content'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                >
                                     {t("notes.label_content")}
                                 </label>
                                 <textarea
@@ -364,7 +377,10 @@ const NotesPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-label-tags' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label
+                                    htmlFor='page-label-tags'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                >
                                     {t("notes.label_tags")}
                                 </label>
                                 <input

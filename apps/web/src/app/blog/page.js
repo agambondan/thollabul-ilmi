@@ -1,8 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { blogApi } from "@/lib/api";
@@ -323,11 +321,9 @@ export const BlogContent = ({ basePath = "/blog" }) => {
 
 const BlogPage = () => (
     <main className='min-h-screen flex flex-col'>
-        <NavbarTailwindCss />
         <Section>
             <BlogContent basePath='/blog' />
         </Section>
-        <Footer />
     </main>
 );
 

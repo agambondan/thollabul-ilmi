@@ -1,8 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { SkeletonList } from "@/components/skeleton/Skeleton";
 import { useAuth } from "@/context/Auth";
@@ -469,11 +467,9 @@ const BlogDetailPage = (props) => {
 
     return (
         <main className='min-h-screen flex flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 <BlogDetailContent params={params} basePath='/blog' />
             </Section>
-            <Footer />
         </main>
     );
 };

@@ -11,6 +11,7 @@ import {
     BsTrash,
     BsX,
 } from "react-icons/bs";
+import ModalShell from "@/components/ModalShell";
 
 const FORMATS = ["link", "pdf", "epub", "html"];
 const STATUSES = ["published", "draft"];
@@ -364,8 +365,11 @@ const AdminLibraryPage = () => {
             )}
 
             {showModal && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white dark:bg-slate-800'>
+                <ModalShell
+                    onClose={() => setShowModal(false)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white dark:bg-slate-800'
+                >
                         <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700'>
                             <h2 className='font-bold text-gray-900 dark:text-white'>
                                 {editId
@@ -402,7 +406,9 @@ const AdminLibraryPage = () => {
                                                 slug: e.target.value,
                                             })
                                         }
-                                        placeholder={t("admin.library.auto_slug")}
+                                        placeholder={t(
+                                            "admin.library.auto_slug",
+                                        )}
                                         value={form.slug}
                                     />
                                 </Field>
@@ -429,7 +435,9 @@ const AdminLibraryPage = () => {
                                                 category: e.target.value,
                                             })
                                         }
-                                        placeholder={t("admin.library.category_placeholder")}
+                                        placeholder={t(
+                                            "admin.library.category_placeholder",
+                                        )}
                                         value={form.category}
                                     />
                                 </Field>
@@ -579,7 +587,9 @@ const AdminLibraryPage = () => {
                                             source_url: e.target.value,
                                         })
                                     }
-                                    placeholder={t("admin.library.url_placeholder")}
+                                    placeholder={t(
+                                        "admin.library.url_placeholder",
+                                    )}
                                     type='url'
                                     value={form.source_url}
                                 />
@@ -675,9 +685,11 @@ const AdminLibraryPage = () => {
                                             cover_url: e.target.value,
                                         })
                                     }
-                                placeholder={t("admin.library.url_placeholder")}
-                                type='url'
-                                value={form.cover_url}
+                                    placeholder={t(
+                                        "admin.library.url_placeholder",
+                                    )}
+                                    type='url'
+                                    value={form.cover_url}
                                 />
                             </Field>
                             <Field label={t("admin.field.description")}>
@@ -748,13 +760,15 @@ const AdminLibraryPage = () => {
                                 {saving ? t("common.saving") : t("common.save")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
 
             {deleteId && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='w-full max-w-sm rounded-2xl bg-white p-6 dark:bg-slate-800'>
+                <ModalShell
+                    onClose={() => setDeleteId(null)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='w-full max-w-sm rounded-2xl bg-white p-6 dark:bg-slate-800'
+                >
                         <h2 className='mb-2 font-bold text-gray-900 dark:text-white'>
                             {t("admin.crud.delete_title", {
                                 item: t("admin.library.book"),
@@ -777,8 +791,7 @@ const AdminLibraryPage = () => {
                                 {t("common.delete")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
         </div>
     );

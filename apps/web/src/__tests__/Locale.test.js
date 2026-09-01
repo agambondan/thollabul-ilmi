@@ -1,12 +1,17 @@
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LocaleProvider, useLocale } from "@/context/Locale";
 
-jest.mock("@/lib/i18n", () => ({
-    translations: {
-        ID: { greeting: "Halo", welcome: "Selamat datang {name}" },
-        EN: { greeting: "Hello", welcome: "Welcome {name}" },
-    },
+// The dictionaries are code-split: Indonesian is bundled, English is fetched
+// on demand, so each language is mocked as its own module.
+jest.mock("@/lib/i18n/id", () => ({
+    __esModule: true,
+    default: { greeting: "Halo", welcome: "Selamat datang {name}" },
+}));
+
+jest.mock("@/lib/i18n/en", () => ({
+    __esModule: true,
+    default: { greeting: "Hello", welcome: "Welcome {name}" },
 }));
 
 const TestConsumer = () => {
@@ -73,7 +78,10 @@ describe("LocaleProvider", () => {
         );
         await userEvent.click(screen.getByText("Switch EN"));
         expect(screen.getByTestId("lang").textContent).toBe("EN");
-        expect(screen.getByTestId("greeting").textContent).toBe("Hello");
+        // The English chunk resolves asynchronously.
+        await waitFor(() =>
+            expect(screen.getByTestId("greeting").textContent).toBe("Hello"),
+        );
     });
 
     test("persists language to localStorage", async () => {
@@ -86,14 +94,16 @@ describe("LocaleProvider", () => {
         expect(localStorage.getItem("lang")).toBe("EN");
     });
 
-    test("restores saved language from localStorage", () => {
+    test("restores saved language from localStorage", async () => {
         localStorage.setItem("lang", "EN");
         render(
             <LocaleProvider>
                 <TestConsumer />
             </LocaleProvider>,
         );
-        expect(screen.getByTestId("lang").textContent).toBe("EN");
+        await waitFor(() =>
+            expect(screen.getByTestId("lang").textContent).toBe("EN"),
+        );
     });
 
     test("ignores invalid localStorage lang value", () => {

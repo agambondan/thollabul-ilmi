@@ -1,10 +1,17 @@
 "use client";
 
-import { PanelEmpty, PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
+import {
+    PanelEmpty,
+    PanelTable,
+    Td,
+    Th,
+    Tr,
+} from "@/components/panel/DataPanel";
 import { adminKamusApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
+import ModalShell from "@/components/ModalShell";
 
 const CATEGORIES = [
     "fiqh",
@@ -157,15 +164,9 @@ const AdminDictionaryPage = () => {
                 <PanelTable
                     head={
                         <>
-                            <Th>
-                                Istilah
-                            </Th>
-                            <Th>
-                                {t("admin.field.category")}
-                            </Th>
-                            <Th>
-                                Definisi
-                            </Th>
+                            <Th>Istilah</Th>
+                            <Th>{t("admin.field.category")}</Th>
+                            <Th>Definisi</Th>
                             <Th className='hidden md:table-cell'>
                                 Asal/Sumber
                             </Th>
@@ -185,10 +186,7 @@ const AdminDictionaryPage = () => {
                                 {item.definition ?? item.meaning}
                             </Td>
                             <Td className='text-gray-400 text-xs hidden md:table-cell'>
-                                {item.origin ||
-                                    item.source ||
-                                    item.root ||
-                                    "-"}
+                                {item.origin || item.source || item.root || "-"}
                             </Td>
                             <Td>
                                 <div className='flex items-center gap-2 justify-end'>
@@ -202,9 +200,7 @@ const AdminDictionaryPage = () => {
                                     </button>
                                     <button
                                         onClick={() =>
-                                            setDeleteId(
-                                                item.id ?? item._id,
-                                            )
+                                            setDeleteId(item.id ?? item._id)
                                         }
                                         aria-label={t("common.delete")}
                                         title={t("common.delete")}
@@ -217,14 +213,19 @@ const AdminDictionaryPage = () => {
                         </Tr>
                     ))}
                     {filtered.length === 0 && (
-                        <PanelEmpty colSpan={5}>{t("admin.crud.no_data")}</PanelEmpty>
+                        <PanelEmpty colSpan={5}>
+                            {t("admin.crud.no_data")}
+                        </PanelEmpty>
                     )}
                 </PanelTable>
             )}
 
             {showModal && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto'>
+                <ModalShell
+                    onClose={() => setShowModal(false)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto'
+                >
                         <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
                             <h2 className='font-bold text-gray-900 dark:text-white'>
                                 {editId
@@ -240,7 +241,10 @@ const AdminDictionaryPage = () => {
                         </div>
                         <div className='p-5 space-y-4'>
                             <div>
-                                <label htmlFor='page-istilah' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-istilah'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     Istilah
                                 </label>
                                 <input
@@ -257,7 +261,10 @@ const AdminDictionaryPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-category'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.field.category")}
                                 </label>
                                 <select
@@ -279,7 +286,10 @@ const AdminDictionaryPage = () => {
                                 </select>
                             </div>
                             <div>
-                                <label htmlFor='page-definisi' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-definisi'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     Definisi
                                 </label>
                                 <textarea
@@ -364,13 +374,15 @@ const AdminDictionaryPage = () => {
                                 {saving ? t("common.saving") : t("common.save")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
 
             {deleteId && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'>
+                <ModalShell
+                    onClose={() => setDeleteId(null)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
+                >
                         <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
                             {t("admin.crud.delete_title", {
                                 item: t("admin.kamus.word"),
@@ -393,8 +405,7 @@ const AdminDictionaryPage = () => {
                                 {t("common.delete")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
         </div>
     );

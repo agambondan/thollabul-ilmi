@@ -1,7 +1,5 @@
 "use client";
 
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { SkeletonList } from "@/components/skeleton/Skeleton";
 import { sirohApi } from "@/lib/api";
@@ -10,6 +8,7 @@ import { useLayoutMode } from "@/lib/useLayoutMode";
 import { getLocalizedField } from "@/lib/translation";
 import Link from "next/link";
 import { useEffect, useState, use } from "react";
+import SourceBadges from "@/components/SourceBadges";
 
 const SirohDetailPage = (props) => {
     const params = use(props.params);
@@ -41,7 +40,6 @@ const SirohDetailPage = (props) => {
 
     return (
         <main className='min-h-screen flex flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 <div
                     className={
@@ -96,15 +94,17 @@ const SirohDetailPage = (props) => {
                                     ))}
                             </div>
                             {content.source && (
-                                <p className='text-xs text-gray-400 mt-8 border-t border-gray-100 dark:border-slate-700 pt-4'>
-                                    {t("common.source")}: {content.source}
-                                </p>
+                                <div className='mt-8 border-t border-gray-100 dark:border-slate-700 pt-4'>
+                                    <p className='text-xs text-gray-400'>
+                                        {t("common.source")}:
+                                    </p>
+                                    <SourceBadges source={content.source} />
+                                </div>
                             )}
                         </article>
                     )}
                 </div>
             </Section>
-            <Footer />
         </main>
     );
 };

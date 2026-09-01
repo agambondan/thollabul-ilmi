@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
 
-const FONT_KEY = "quranFont";
-const ARABIC_FONT_SIZE_KEY = "quranArabicFontSize";
-const TRANSLATION_FONT_SIZE_KEY = "quranTranslationFontSize";
+import { useSettings } from "@/lib/useSettings";
+
 const DEFAULT_ARABIC_FONT_SIZE = 40;
 const MIN_ARABIC_FONT_SIZE = 14;
 const MAX_ARABIC_FONT_SIZE = 64;
@@ -23,129 +22,6 @@ export const QURAN_FONTS = [
 
 const DEFAULT_FONT = QURAN_FONTS[1];
 
-export const useQuranFont = () => {
-    const [fontId, setFontId] = useState(DEFAULT_FONT.id);
-    const [arabicFontSize, setArabicFontSizeState] = useState(
-        DEFAULT_ARABIC_FONT_SIZE,
-    );
-    const [translationFontSize, setTranslationFontSizeState] = useState(
-        DEFAULT_TRANSLATION_FONT_SIZE,
-    );
-
-    useEffect(() => {
-        const stored = localStorage.getItem(FONT_KEY);
-        if (stored && QURAN_FONTS.find((f) => f.id === stored)) {
-            setFontId(stored);
-        }
-        const storedArabicSize = Number.parseInt(
-            localStorage.getItem(ARABIC_FONT_SIZE_KEY) ?? "",
-            10,
-        );
-        if (Number.isFinite(storedArabicSize)) {
-            setArabicFontSizeState(clampArabicFontSize(storedArabicSize));
-        }
-        const storedTranslationSize = Number.parseInt(
-            localStorage.getItem(TRANSLATION_FONT_SIZE_KEY) ?? "",
-            10,
-        );
-        if (Number.isFinite(storedTranslationSize)) {
-            setTranslationFontSizeState(
-                clampTranslationFontSize(storedTranslationSize),
-            );
-        }
-        const handler = (e) => {
-            if (
-                e.key === FONT_KEY &&
-                QURAN_FONTS.find((f) => f.id === e.newValue)
-            ) {
-                setFontId(e.newValue);
-            }
-            if (e.key === ARABIC_FONT_SIZE_KEY) {
-                const nextSize = Number.parseInt(e.newValue ?? "", 10);
-                if (Number.isFinite(nextSize)) {
-                    setArabicFontSizeState(clampArabicFontSize(nextSize));
-                }
-            }
-            if (e.key === TRANSLATION_FONT_SIZE_KEY) {
-                const nextSize = Number.parseInt(e.newValue ?? "", 10);
-                if (Number.isFinite(nextSize)) {
-                    setTranslationFontSizeState(
-                        clampTranslationFontSize(nextSize),
-                    );
-                }
-            }
-        };
-        window.addEventListener("storage", handler);
-        return () => window.removeEventListener("storage", handler);
-    }, []);
-
-    const setFont = (id) => {
-        localStorage.setItem(FONT_KEY, id);
-        window.dispatchEvent(
-            new StorageEvent("storage", { key: FONT_KEY, newValue: id }),
-        );
-        setFontId(id);
-    };
-
-    const setArabicFontSize = (value) => {
-        const nextSize = clampArabicFontSize(value);
-        localStorage.setItem(ARABIC_FONT_SIZE_KEY, `${nextSize}`);
-        window.dispatchEvent(
-            new StorageEvent("storage", {
-                key: ARABIC_FONT_SIZE_KEY,
-                newValue: `${nextSize}`,
-            }),
-        );
-        setArabicFontSizeState(nextSize);
-    };
-
-    const setTranslationFontSize = (value) => {
-        const nextSize = clampTranslationFontSize(value);
-        localStorage.setItem(TRANSLATION_FONT_SIZE_KEY, `${nextSize}`);
-        window.dispatchEvent(
-            new StorageEvent("storage", {
-                key: TRANSLATION_FONT_SIZE_KEY,
-                newValue: `${nextSize}`,
-            }),
-        );
-        setTranslationFontSizeState(nextSize);
-    };
-
-    const increaseArabicFontSize = () =>
-        setArabicFontSize(arabicFontSize + ARABIC_FONT_SIZE_STEP);
-    const decreaseArabicFontSize = () =>
-        setArabicFontSize(arabicFontSize - ARABIC_FONT_SIZE_STEP);
-    const resetArabicFontSize = () =>
-        setArabicFontSize(DEFAULT_ARABIC_FONT_SIZE);
-    const increaseTranslationFontSize = () =>
-        setTranslationFontSize(
-            translationFontSize + TRANSLATION_FONT_SIZE_STEP,
-        );
-    const decreaseTranslationFontSize = () =>
-        setTranslationFontSize(
-            translationFontSize - TRANSLATION_FONT_SIZE_STEP,
-        );
-    const resetTranslationFontSize = () =>
-        setTranslationFontSize(DEFAULT_TRANSLATION_FONT_SIZE);
-
-    const current = QURAN_FONTS.find((f) => f.id === fontId) ?? DEFAULT_FONT;
-    return {
-        arabicFontSize,
-        decreaseArabicFontSize,
-        decreaseTranslationFontSize,
-        fontId,
-        fontCls: current.cls,
-        increaseArabicFontSize,
-        increaseTranslationFontSize,
-        resetArabicFontSize,
-        resetTranslationFontSize,
-        setArabicFontSize,
-        setFont,
-        setTranslationFontSize,
-        translationFontSize,
-    };
-};
-
 const clampArabicFontSize = (value) => {
     const numeric = Number.parseInt(`${value ?? ""}`, 10);
     if (!Number.isFinite(numeric)) return DEFAULT_ARABIC_FONT_SIZE;
@@ -162,4 +38,74 @@ const clampTranslationFontSize = (value) => {
         MIN_TRANSLATION_FONT_SIZE,
         Math.min(MAX_TRANSLATION_FONT_SIZE, numeric),
     );
+};
+
+/**
+ * Reading preferences for the Quran and Hadith readers.
+ *
+ * Backed by `useSettings` so there is exactly one store: the floating gear
+ * button and the Settings page now write the same values, and they sync to the
+ * account. Previously this hook kept its own localStorage keys, which is why
+ * the font and size controls on /dashboard/settings changed nothing.
+ *
+ * Reading through context also removes the per-ayah `storage` listener this
+ * hook used to register — a surah like Al-Baqarah mounted hundreds of them.
+ */
+export const useQuranFont = () => {
+    const { settings, updateSetting } = useSettings();
+
+    const fontId = settings.quranFontId ?? DEFAULT_FONT.id;
+    const arabicFontSize = clampArabicFontSize(settings.quranArabicSize);
+    const translationFontSize = clampTranslationFontSize(
+        settings.quranTranslationSize,
+    );
+
+    const setFont = useCallback(
+        (id) => {
+            if (!QURAN_FONTS.some((f) => f.id === id)) return;
+            updateSetting("quranFontId", id);
+        },
+        [updateSetting],
+    );
+
+    const setArabicFontSize = useCallback(
+        (value) => updateSetting("quranArabicSize", clampArabicFontSize(value)),
+        [updateSetting],
+    );
+
+    const setTranslationFontSize = useCallback(
+        (value) =>
+            updateSetting(
+                "quranTranslationSize",
+                clampTranslationFontSize(value),
+            ),
+        [updateSetting],
+    );
+
+    const current = QURAN_FONTS.find((f) => f.id === fontId) ?? DEFAULT_FONT;
+
+    return {
+        arabicFontSize,
+        decreaseArabicFontSize: () =>
+            setArabicFontSize(arabicFontSize - ARABIC_FONT_SIZE_STEP),
+        decreaseTranslationFontSize: () =>
+            setTranslationFontSize(
+                translationFontSize - TRANSLATION_FONT_SIZE_STEP,
+            ),
+        fontId: current.id,
+        fontCls: current.cls,
+        increaseArabicFontSize: () =>
+            setArabicFontSize(arabicFontSize + ARABIC_FONT_SIZE_STEP),
+        increaseTranslationFontSize: () =>
+            setTranslationFontSize(
+                translationFontSize + TRANSLATION_FONT_SIZE_STEP,
+            ),
+        resetArabicFontSize: () => setArabicFontSize(DEFAULT_ARABIC_FONT_SIZE),
+        resetTranslationFontSize: () =>
+            setTranslationFontSize(DEFAULT_TRANSLATION_FONT_SIZE),
+        setArabicFontSize,
+        setFont,
+        setTranslationFontSize,
+        translationFontSize,
+    };
 };

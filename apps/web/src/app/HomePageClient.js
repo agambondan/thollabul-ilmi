@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import TajweedTable from "@/components/table/Tajweed";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
@@ -573,7 +571,6 @@ export default function Home() {
 
     return (
         <main className='bg-parchment-50 dark:bg-slate-900'>
-            <NavbarTailwindCss />
 
             {/* ── Hero ─────────────────────────────────────────────── */}
             <section className='relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800'>
@@ -854,7 +851,6 @@ export default function Home() {
                 </ContentWidth>
             </section>
 
-            <Footer />
         </main>
     );
 }

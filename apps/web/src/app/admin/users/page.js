@@ -166,21 +166,11 @@ const AdminUsersPage = () => {
             <PanelTable
                 head={
                     <>
-                        <Th>
-                            {t("admin.field.name")}
-                        </Th>
-                        <Th>
-                            Email
-                        </Th>
-                        <Th>
-                            Role
-                        </Th>
-                        <Th>
-                            {t("admin.users.change_role")}
-                        </Th>
-                        <Th align='right'>
-                            {t("admin.field.actions")}
-                        </Th>
+                        <Th>{t("admin.field.name")}</Th>
+                        <Th>Email</Th>
+                        <Th>Role</Th>
+                        <Th>{t("admin.users.change_role")}</Th>
+                        <Th align='right'>{t("admin.field.actions")}</Th>
                     </>
                 }
             >
@@ -219,21 +209,13 @@ const AdminUsersPage = () => {
                                 <select
                                     value={u.role}
                                     onChange={(e) =>
-                                        handleChangeRole(
-                                            u,
-                                            e.target.value,
-                                        )
+                                        handleChangeRole(u, e.target.value)
                                     }
-                                    disabled={
-                                        isSelf || changingId === u.id
-                                    }
+                                    disabled={isSelf || changingId === u.id}
                                     className='text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed'
                                 >
                                     {ROLES.map((r) => (
-                                        <option
-                                            key={r.value}
-                                            value={r.value}
-                                        >
+                                        <option key={r.value} value={r.value}>
                                             {t(`admin.role.${r.value}`)}
                                         </option>
                                     ))}
@@ -249,9 +231,7 @@ const AdminUsersPage = () => {
                                     <button
                                         onClick={() => handleDelete(u)}
                                         disabled={isSelf}
-                                        title={t(
-                                            "admin.users.delete_user",
-                                        )}
+                                        title={t("admin.users.delete_user")}
                                         className='flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40'
                                     >
                                         <BsTrash className='text-sm' />

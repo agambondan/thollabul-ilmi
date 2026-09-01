@@ -1,7 +1,5 @@
 "use client";
 
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import NoteButton from "@/components/NoteButton";
 import Section from "@/components/Section";
 import { SkeletonList } from "@/components/skeleton/Skeleton";
@@ -325,7 +323,10 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                             {isAuthenticated ? (
                                 <div className='grid gap-3 md:grid-cols-[160px_1fr]'>
                                     <div>
-                                        <label htmlFor='page-status' className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'>
+                                        <label
+                                            htmlFor='page-status'
+                                            className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'
+                                        >
                                             Status
                                         </label>
                                         <select
@@ -350,7 +351,10 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label htmlFor='page-halaman-terakhir' className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'>
+                                        <label
+                                            htmlFor='page-halaman-terakhir'
+                                            className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'
+                                        >
                                             Halaman terakhir
                                         </label>
                                         <input
@@ -374,7 +378,10 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                         />
                                     </div>
                                     <div className='md:col-span-2'>
-                                        <label htmlFor='page-catatan-ringkas' className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'>
+                                        <label
+                                            htmlFor='page-catatan-ringkas'
+                                            className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'
+                                        >
                                             Catatan ringkas
                                         </label>
                                         <textarea
@@ -420,14 +427,12 @@ const LibraryDetailPage = ({ params }) => {
     const resolvedParams = use(params);
     return (
         <main className='flex min-h-screen flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 <LibraryDetailContent
                     params={resolvedParams}
                     basePath='/library'
                 />
             </Section>
-            <Footer />
         </main>
     );
 };

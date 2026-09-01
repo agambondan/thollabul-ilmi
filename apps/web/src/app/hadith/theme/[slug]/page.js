@@ -1,7 +1,5 @@
 import HadithPage from "@/app/hadith/[slug]/HadithPage";
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import HadithThemeError from "./HadithThemeError";
 import { getHadithsByThemeSlug } from "@/lib/hadithTheme";
@@ -12,7 +10,6 @@ const Page = async (props) => {
 
     return (
         <main className='min-h-screen flex flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 {isError || hadiths.length === 0 ? (
                     <HadithThemeError variant={isError ? "error" : "empty"} />
@@ -34,7 +31,6 @@ const Page = async (props) => {
                     </ContentWidth>
                 )}
             </Section>
-            <Footer />
         </main>
     );
 };

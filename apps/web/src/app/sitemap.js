@@ -72,7 +72,10 @@ const privateRoutes = [
 ];
 
 const publicStaticRoutes = staticRoutes.filter(
-    (route) => !privateRoutes.some((path) => route.url.startsWith(`${SITE_URL}${path}`)),
+    (route) =>
+        !privateRoutes.some((path) =>
+            route.url.startsWith(`${SITE_URL}${path}`),
+        ),
 );
 
 async function getSurahRoutes() {

@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { feedApi, commentApi } from "@/lib/api";
@@ -496,11 +494,9 @@ export function FeedContent({ basePath = "/feed" }) {
 export default function FeedPage() {
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-            <NavbarTailwindCss />
-            <div className='pt-24'>
+            <div className='pt-navbar'>
                 <FeedContent />
             </div>
-            <Footer />
         </main>
     );
 }

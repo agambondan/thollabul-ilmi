@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
@@ -180,7 +178,10 @@ export function KhatamContent({ basePath = "/quran" }) {
                 </h2>
                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3'>
                     <div>
-                        <label htmlFor='page-target-date' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                        <label
+                            htmlFor='page-target-date'
+                            className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                        >
                             {t("khatam.target_date") ?? "Tanggal Target"}
                         </label>
                         <input
@@ -306,11 +307,9 @@ export function KhatamContent({ basePath = "/quran" }) {
 export default function KhatamPage() {
     return (
         <main className='min-h-screen flex flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 <KhatamContent />
             </Section>
-            <Footer />
         </main>
     );
 }

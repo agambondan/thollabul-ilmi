@@ -22,7 +22,11 @@ const PanelStatus = ({
 
     if (isLoading) {
         return (
-            <p className='text-sm text-gray-400' role='status' aria-live='polite'>
+            <p
+                className='text-sm text-gray-400'
+                role='status'
+                aria-live='polite'
+            >
                 {loadingText ?? t("common.loading")}
             </p>
         );

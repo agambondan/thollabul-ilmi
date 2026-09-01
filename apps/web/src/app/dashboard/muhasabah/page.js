@@ -14,6 +14,7 @@ import {
 } from "@/lib/personalSync";
 import { useEffect, useRef, useState } from "react";
 import { BsPencilSquare, BsTrash, BsX } from "react-icons/bs";
+import { useModalA11y } from "@/lib/useModalA11y";
 
 const MOODS = [
     { value: "baik", label: "Baik", emoji: "😊" },
@@ -39,6 +40,10 @@ const MuhasabahPage = () => {
         content: "",
     });
     const [syncError, setSyncError] = useState("");
+    const modalA11y = useModalA11y({
+        open: showModal,
+        onClose: () => setShowModal(false),
+    });
     const textRef = useRef(null);
 
     useEffect(() => {
@@ -210,7 +215,7 @@ const MuhasabahPage = () => {
                         e.target === e.currentTarget && setShowModal(false)
                     }
                 >
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'>
+                    <div {...modalA11y} className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'>
                         <div className='flex items-center justify-between mb-4'>
                             <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
                                 {t("muhasabah.write_btn")}
@@ -225,7 +230,10 @@ const MuhasabahPage = () => {
 
                         <div className='space-y-4'>
                             <div>
-                                <label htmlFor='page-label-date' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label
+                                    htmlFor='page-label-date'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                >
                                     {t("muhasabah.label_date")}
                                 </label>
                                 <input
@@ -243,7 +251,10 @@ const MuhasabahPage = () => {
                             </div>
 
                             <div>
-                                <label htmlFor='page-label-mood' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label
+                                    htmlFor='page-label-mood'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                >
                                     {t("muhasabah.label_mood")}
                                 </label>
                                 <select
@@ -266,7 +277,10 @@ const MuhasabahPage = () => {
                             </div>
 
                             <div>
-                                <label htmlFor='page-label-notes' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label
+                                    htmlFor='page-label-notes'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                >
                                     {t("muhasabah.label_notes")}
                                 </label>
                                 <textarea

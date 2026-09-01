@@ -341,7 +341,8 @@ const JadwalSholatPage = () => {
                                     </span>
                                     <select
                                         value={
-                                            settings.adzanReminderLeadByPrayer?.[
+                                            settings
+                                                .adzanReminderLeadByPrayer?.[
                                                 key
                                             ] ?? "global"
                                         }

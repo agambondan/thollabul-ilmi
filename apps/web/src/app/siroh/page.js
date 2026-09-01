@@ -1,7 +1,5 @@
 "use client";
 
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { sirohApi } from "@/lib/api";
@@ -91,7 +89,6 @@ const SirohPage = () => {
 
     return (
         <main className='min-h-screen flex flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 <div
                     className={
@@ -207,7 +204,6 @@ const SirohPage = () => {
                         )}
                 </div>
             </Section>
-            <Footer />
         </main>
     );
 };

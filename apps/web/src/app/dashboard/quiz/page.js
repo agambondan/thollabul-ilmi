@@ -138,9 +138,7 @@ const QuizPage = () => {
                         : "px-4 py-16 max-w-md mx-auto text-center"
                 }
             >
-                <p className='text-gray-400 text-sm'>
-                    {t("quiz.loading")}
-                </p>
+                <p className='text-gray-400 text-sm'>{t("quiz.loading")}</p>
             </div>
         );
     }

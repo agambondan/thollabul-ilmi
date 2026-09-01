@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import { useLocale } from "@/context/Locale";
 import { kamusApi } from "@/lib/api";
 import { getLocalizedField } from "@/lib/translation";
@@ -101,10 +99,9 @@ export default function KamusPage() {
 
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-            <NavbarTailwindCss />
             <ContentWidth
                 compact='max-w-2xl'
-                className='flex-1 px-4 pt-24 pb-8'
+                className='flex-1 px-4 pt-navbar pb-8'
             >
                 {/* Header */}
                 <div className='mb-8 text-center'>
@@ -242,7 +239,6 @@ export default function KamusPage() {
                     </>
                 )}
             </ContentWidth>
-            <Footer />
         </main>
     );
 }

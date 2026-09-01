@@ -1,8 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import Footer from "@/components/Footer";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useAuth } from "@/context/Auth";
@@ -87,7 +85,6 @@ const LeaderboardPage = () => {
 
     return (
         <main className='min-h-screen flex flex-col'>
-            <NavbarTailwindCss />
             <Section>
                 <div
                     className={
@@ -272,7 +269,6 @@ const LeaderboardPage = () => {
                     )}
                 </div>
             </Section>
-            <Footer />
         </main>
     );
 };

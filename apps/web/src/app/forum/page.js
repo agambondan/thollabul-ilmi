@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
 import { useLocale } from "@/context/Locale";
 import { forumApi } from "@/lib/api";
@@ -186,11 +184,9 @@ export function ForumListContent({ basePath = "/forum" }) {
 export default function ForumListPage() {
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-            <NavbarTailwindCss />
-            <div className='pt-24'>
+            <div className='pt-navbar'>
                 <ForumListContent />
             </div>
-            <Footer />
         </main>
     );
 }

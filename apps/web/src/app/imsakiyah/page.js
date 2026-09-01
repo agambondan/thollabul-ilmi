@@ -153,7 +153,7 @@ export default function ImsakiyahPage() {
     return (
         <main className='min-h-screen bg-parchment-50 dark:bg-slate-900 pb-12'>
             {/* Header */}
-            <div className='bg-gradient-to-br from-emerald-900 to-emerald-800 text-white px-6 pt-10 pb-8'>
+            <div className='bg-gradient-to-br from-emerald-900 to-emerald-800 text-white px-6 pt-28 pb-8'>
                 <ContentWidth compact='max-w-5xl'>
                     <div className='flex items-center gap-2 mb-1'>
                         <BsCalendar3 className='text-emerald-300' />
@@ -161,7 +161,9 @@ export default function ImsakiyahPage() {
                             {t("imsakiyah.schedule_label")}
                         </span>
                     </div>
-                    <h1 className='text-2xl font-bold mb-1'>{t("imsakiyah.title")}</h1>
+                    <h1 className='text-2xl font-bold mb-1'>
+                        {t("imsakiyah.title")}
+                    </h1>
                     <p className='text-sm text-emerald-200'>
                         {t("imsakiyah.subtitle")} — {cityName},{" "}
                         {monthNames[month - 1]} {year}

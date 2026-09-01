@@ -35,8 +35,7 @@ export function calculateFaraidh(input, total) {
     const hasMother = ibu > 0;
     const hasGrandmother = nenek > 0 && !hasMother;
 
-    const totalSiblings =
-        saudaraL + saudaraP + saudaraSeayahL + saudaraSeayahP;
+    const totalSiblings = saudaraL + saudaraP + saudaraSeayahL + saudaraSeayahP;
     const hasMultipleSiblings = totalSiblings >= 2;
     const hasSiblingsKandung = saudaraL > 0 || saudaraP > 0;
     const hasSiblingsSeayah = saudaraSeayahL > 0 || saudaraSeayahP > 0;
@@ -57,9 +56,7 @@ export function calculateFaraidh(input, total) {
     const activeSaudaraP = blockedKandung ? 0 : saudaraP;
     const activeSaudaraSeayahL = blockedSeayah ? 0 : saudaraSeayahL;
     const activeSaudaraSeayahP = blockedSeayah ? 0 : saudaraSeayahP;
-    const activeSaudaraSeibu = blockedSeibu
-        ? 0
-        : saudaraSeibuL + saudaraSeibuP;
+    const activeSaudaraSeibu = blockedSeibu ? 0 : saudaraSeibuL + saudaraSeibuP;
 
     const hasActiveKandung = activeSaudaraL > 0 || activeSaudaraP > 0;
     const hasActiveSeayah =
@@ -86,11 +83,11 @@ export function calculateFaraidh(input, total) {
         !hasGrandfather &&
         !hasChildren &&
         !hasGrandson &&
-        (activeSaudaraL +
+        activeSaudaraL +
             activeSaudaraP +
             activeSaudaraSeayahL +
             activeSaudaraSeayahP >=
-            2);
+            2;
 
     const isKakekSaudara =
         hasGrandfather &&
@@ -315,13 +312,10 @@ export function calculateFaraidh(input, total) {
                 const spouseRow = rows.find(
                     (r) => r.key === "suami" || r.key === "istri",
                 );
-                const spouseShare = spouseRow
-                    ? frToDec(spouseRow.fraction)
-                    : 0;
+                const spouseShare = spouseRow ? frToDec(spouseRow.fraction) : 0;
                 const remaining = 1 - spouseShare;
                 const radSubjects = rows.filter(
-                    (r) =>
-                        r.key !== "suami" && r.key !== "istri" && r.fraction,
+                    (r) => r.key !== "suami" && r.key !== "istri" && r.fraction,
                 );
                 const radTotal = radSubjects.reduce(
                     (s, r) => s + frToDec(r.fraction),

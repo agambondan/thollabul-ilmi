@@ -1,14 +1,13 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import { useLocale } from "@/context/Locale";
 import { fiqhApi } from "@/lib/api";
 import { getLocalizedField, getLocalizedText } from "@/lib/translation";
 import { useEffect, useMemo, useState } from "react";
 import { BsChevronDown, BsSearch } from "react-icons/bs";
 import { MdOutlineAutoStories } from "react-icons/md";
+import SourceBadges from "@/components/SourceBadges";
 
 const CATEGORY_ICON = {
     thaharah: "💧",
@@ -158,10 +157,9 @@ export default function FiqhPage() {
 
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-            <NavbarTailwindCss />
             <ContentWidth
                 compact='max-w-2xl'
-                className='flex-1 px-4 pt-24 pb-8'
+                className='flex-1 px-4 pt-navbar pb-8'
             >
                 {/* Header */}
                 <div className='mb-8 text-center'>
@@ -323,15 +321,20 @@ export default function FiqhPage() {
                                                                                 )}
                                                                             </p>
                                                                             {item.source && (
-                                                                                <p className='text-xs text-emerald-600 dark:text-emerald-400 font-medium'>
-                                                                                    {t(
-                                                                                        "fiqh.evidence",
-                                                                                    )}
-                                                                                    :{" "}
-                                                                                    {
-                                                                                        item.source
-                                                                                    }
-                                                                                </p>
+                                                                                <div>
+                                                                                    <p className='text-xs text-emerald-600 dark:text-emerald-400 font-medium'>
+                                                                                        {t(
+                                                                                            "fiqh.evidence",
+                                                                                        )}
+
+                                                                                        :
+                                                                                    </p>
+                                                                                    <SourceBadges
+                                                                                        source={
+                                                                                            item.source
+                                                                                        }
+                                                                                    />
+                                                                                </div>
                                                                             )}
                                                                         </div>
                                                                     )}
@@ -353,7 +356,6 @@ export default function FiqhPage() {
                     {t("fiqh.disclaimer")}
                 </p>
             </ContentWidth>
-            <Footer />
         </main>
     );
 }

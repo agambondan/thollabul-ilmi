@@ -38,10 +38,7 @@ function SanadPanel({ hadithId }) {
             .finally(() => setLoading(false));
     }, [hadithId]);
 
-    if (loading)
-        return (
-            <p className='text-xs text-gray-400 py-2'>...</p>
-        );
+    if (loading) return <p className='text-xs text-gray-400 py-2'>...</p>;
     if (!data?.length)
         return (
             <p className='text-xs text-gray-400 py-2'>
@@ -104,10 +101,7 @@ function TakhrijPanel({ hadithId }) {
             .finally(() => setLoading(false));
     }, [hadithId]);
 
-    if (loading)
-        return (
-            <p className='text-xs text-gray-400 py-2'>...</p>
-        );
+    if (loading) return <p className='text-xs text-gray-400 py-2'>...</p>;
     if (!data?.length)
         return (
             <p className='text-xs text-gray-400 py-2'>
@@ -281,7 +275,7 @@ const HadithPage = ({
             {clipboardPopUp && (
                 <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-emerald-700 text-white text-sm font-medium px-4 py-2 rounded-full shadow-lg'>
                     {t("hadith.copy_success")}
-               </div>
+                </div>
             )}
             {statusMsg && (
                 <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-700 text-white text-sm font-medium px-4 py-2 rounded-full shadow-lg'>
@@ -349,8 +343,8 @@ const HadithPage = ({
                                     className='p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
                                 >
                                     <IoIosLink />
-                               </Link>
-                           </li>
+                                </Link>
+                            </li>
                         )}
                         <li
                             className={
@@ -437,7 +431,7 @@ const HadithPage = ({
                                                         {t(
                                                             "hadith.open_detail_menu",
                                                         )}
-                                                   </Link>
+                                                    </Link>
                                                 )}
                                                 <button
                                                     className={
@@ -481,8 +475,8 @@ const HadithPage = ({
                                                         {t(
                                                             "hadith.bookmark_label",
                                                         )}
-                                                   </span>
-                                               </div>
+                                                    </span>
+                                                </div>
                                                 <button
                                                     className={
                                                         actionMenuButtonClass
@@ -596,7 +590,7 @@ const HadithPage = ({
             )}
             <p className='px-4 pt-2 text-[11px] text-gray-400 text-center'>
                 {t("hadith.audio_tafsir_note")}
-           </p>
+            </p>
             <div className='px-4 pt-2 pb-1 flex gap-2 flex-wrap'>
                 <button
                     type='button'

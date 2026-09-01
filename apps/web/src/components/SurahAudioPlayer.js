@@ -616,7 +616,9 @@ export default function SurahAudioPlayer({
                         type='button'
                         onClick={togglePlay}
                         disabled={loading}
-                        aria-label={isPlaying ? t("audio.pause") : t("audio.play")}
+                        aria-label={
+                            isPlaying ? t("audio.pause") : t("audio.play")
+                        }
                         className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white transition-colors hover:bg-emerald-700 disabled:opacity-60'
                     >
                         {isPlaying ? (
@@ -691,7 +693,7 @@ export default function SurahAudioPlayer({
                         <button
                             type='button'
                             onClick={() => stopPlayback()}
-                        aria-label={t("audio.close")}
+                            aria-label={t("audio.close")}
                             className='flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-slate-700 dark:hover:text-gray-200'
                         >
                             <BsX className='text-lg' />

@@ -29,6 +29,29 @@ export const ADZAN_SOUNDS = [
     },
 ];
 
+/*
+ * Reading preferences live here (and therefore sync to the account) rather
+ * than in useQuranFont's private localStorage keys. The old split meant the
+ * Settings page wrote `quranFont`/`readerSize` to the server while every
+ * reader read different keys, so nothing the user changed there had any
+ * effect.
+ */
+const LEGACY_FONT_KEYS = {
+    quranFontId: "quranFont",
+    quranArabicSize: "quranArabicFontSize",
+    quranTranslationSize: "quranTranslationFontSize",
+};
+
+// Values the old Settings dropdown could store, mapped onto the ids the
+// readers actually understand.
+const LEGACY_FONT_NAME_MAP = {
+    LPMQ: "lpmq",
+    Amiri: "naskh",
+    Scheherazade: "naskh",
+    Kitab: "kitab",
+    Indopak: "indopak",
+};
+
 const REMINDER_LEAD_KEYS = [0, 5, 10, 15, 30];
 const REMINDER_PRAYER_KEYS = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
 
@@ -54,27 +77,63 @@ const sanitizeSettings = (raw) => {
     }
     next.prayerMethod = normalizePrayerMethod(next.prayerMethod);
     next.prayerMadhab = normalizePrayerMadhab(next.prayerMadhab);
+
+    // Fold the pre-split font settings forward so a returning user keeps the
+    // face and size they had picked.
+    if (!next.quranFontId && next.quranFont) {
+        next.quranFontId = LEGACY_FONT_NAME_MAP[next.quranFont] ?? "lpmq";
+    }
+    if (!Number.isFinite(next.quranArabicSize) && Number.isFinite(next.readerSize)) {
+        next.quranArabicSize = next.readerSize;
+    }
+    delete next.quranFont;
+    delete next.readerSize;
+    delete next.hadithFont;
+    delete next.autoSync;
+    delete next.notifKajian;
     return next;
+};
+
+/**
+ * One-time import of the reader's own localStorage keys, written before these
+ * preferences moved into the synced settings object.
+ */
+const readLegacyFontKeys = () => {
+    if (typeof window === "undefined") return {};
+    const out = {};
+    try {
+        const font = localStorage.getItem(LEGACY_FONT_KEYS.quranFontId);
+        if (font) out.quranFontId = font;
+        const arabic = Number.parseInt(
+            localStorage.getItem(LEGACY_FONT_KEYS.quranArabicSize) ?? "",
+            10,
+        );
+        if (Number.isFinite(arabic)) out.quranArabicSize = arabic;
+        const translation = Number.parseInt(
+            localStorage.getItem(LEGACY_FONT_KEYS.quranTranslationSize) ?? "",
+            10,
+        );
+        if (Number.isFinite(translation)) out.quranTranslationSize = translation;
+    } catch {}
+    return out;
 };
 
 const DEFAULT_SETTINGS = {
     theme: "system",
     lang: "ID",
-    quranFont: "LPMQ",
-    hadithFont: "Amiri",
-    readerSize: 24,
+    quranFontId: "lpmq",
+    quranArabicSize: 40,
+    quranTranslationSize: 16,
     notifAdzan: true,
     adzanSound: "default",
     adzanSoundUrl: "",
     adzanSoundLabel: "Default Aplikasi",
     adzanReminderLead: 10,
     adzanReminderLeadByPrayer: {},
-    notifKajian: true,
     prayerMethod: DEFAULT_PRAYER_METHOD,
     prayerMadhab: DEFAULT_PRAYER_MADHAB,
     highContrast: false,
     reduceMotion: false,
-    autoSync: false,
 };
 
 const SettingsContext = createContext({
@@ -89,9 +148,8 @@ const readStoredSettings = () => {
     if (typeof window === "undefined") return DEFAULT_SETTINGS;
     try {
         const raw = localStorage.getItem(SETTINGS_KEY);
-        return raw
-            ? { ...DEFAULT_SETTINGS, ...sanitizeSettings(JSON.parse(raw)) }
-            : DEFAULT_SETTINGS;
+        const stored = raw ? sanitizeSettings(JSON.parse(raw)) : {};
+        return { ...DEFAULT_SETTINGS, ...readLegacyFontKeys(), ...stored };
     } catch {
         return DEFAULT_SETTINGS;
     }
@@ -142,6 +200,14 @@ export const SettingsProvider = ({ children }) => {
             cancelled = true;
         };
     }, [isAuthenticated]);
+
+    // highContrast and reduceMotion were dead settings — declared, stored, and
+    // never consulted. They now drive root classes that globals.css hooks into.
+    useEffect(() => {
+        const root = document.documentElement;
+        root.classList.toggle("high-contrast", !!settings.highContrast);
+        root.classList.toggle("reduce-motion", !!settings.reduceMotion);
+    }, [settings.highContrast, settings.reduceMotion]);
 
     const syncSettingsWithBackend = async (nextSettings) => {
         const res = await authFetch("/api/v1/settings", {

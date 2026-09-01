@@ -64,7 +64,9 @@ describe("useSettings", () => {
 
         fireEvent.click(view.getByText("set"));
 
-        const stored = JSON.parse(localStorage.getItem("tholabul_app_settings"));
+        const stored = JSON.parse(
+            localStorage.getItem("tholabul_app_settings"),
+        );
         expect(stored.adzanSound).toBe("islamcan");
         await waitFor(() =>
             expect(mockAuthFetch).toHaveBeenCalledWith(
@@ -92,7 +94,9 @@ describe("useSettings", () => {
         const view = renderProvider();
 
         await waitFor(() => {
-            const raw = view.getByTestId("settings").getAttribute("data-settings");
+            const raw = view
+                .getByTestId("settings")
+                .getAttribute("data-settings");
             const parsed = JSON.parse(raw);
             expect(parsed.adzanReminderLead).toBe(30);
             expect(parsed.adzanReminderLeadByPrayer).toEqual({ fajr: 5 });
@@ -109,7 +113,9 @@ describe("useSettings", () => {
         const view = renderProvider();
 
         await waitFor(() => {
-            const raw = view.getByTestId("settings").getAttribute("data-settings");
+            const raw = view
+                .getByTestId("settings")
+                .getAttribute("data-settings");
             const parsed = JSON.parse(raw);
             expect(parsed.adzanReminderLead).toBe(10);
             expect(parsed.adzanReminderLeadByPrayer).toEqual({});
@@ -119,5 +125,9 @@ describe("useSettings", () => {
 
 const Setter = () => {
     const { updateSetting } = useSettings();
-    return <button onClick={() => updateSetting("adzanSound", "islamcan")}>set</button>;
+    return (
+        <button onClick={() => updateSetting("adzanSound", "islamcan")}>
+            set
+        </button>
+    );
 };

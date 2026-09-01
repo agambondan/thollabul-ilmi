@@ -1,8 +1,6 @@
 "use client";
 
-import Footer from "@/components/Footer";
 import ContentWidth from "@/components/layout/ContentWidth";
-import { NavbarTailwindCss } from "@/components/Navbar";
 import { useLocale } from "@/context/Locale";
 import { toLocalISODate } from "@/lib/date";
 import {
@@ -103,10 +101,7 @@ export default function JadwalSholatPage() {
                 ? settings.adzanReminderLead
                 : 10;
         },
-        [
-            settings.adzanReminderLead,
-            settings.adzanReminderLeadByPrayer,
-        ],
+        [settings.adzanReminderLead, settings.adzanReminderLeadByPrayer],
     );
     const adzanOptions =
         settings.adzanSound?.startsWith("custom:") && settings.adzanSoundUrl
@@ -123,9 +118,7 @@ export default function JadwalSholatPage() {
     const fetchByCoords = (lat, lng, label) => {
         setLoading(true);
         setError("");
-        fetch(
-            buildSholatTimesUrl({ lat, lng, method, madhab, date: dateKey }),
-        )
+        fetch(buildSholatTimesUrl({ lat, lng, method, madhab, date: dateKey }))
             .then((r) => r.json())
             .then((d) => {
                 const data = d?.data ?? d;
@@ -314,8 +307,7 @@ export default function JadwalSholatPage() {
 
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-            <NavbarTailwindCss />
-            <ContentWidth compact='max-w-lg' className='flex-1 px-4 pt-24 pb-8'>
+            <ContentWidth compact='max-w-lg' className='flex-1 px-4 pt-navbar pb-8'>
                 {/* Header */}
                 <div className='mb-6 text-center'>
                     <div className='inline-flex items-center justify-center w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl mb-4'>
@@ -386,7 +378,10 @@ export default function JadwalSholatPage() {
                     {showSettings && (
                         <div className='mt-3 grid grid-cols-2 gap-3'>
                             <div>
-                                <label htmlFor='page-method' className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'>
+                                <label
+                                    htmlFor='page-method'
+                                    className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'
+                                >
                                     {t("prayer_schedule.method") ??
                                         "Metode Hisab"}
                                 </label>
@@ -404,7 +399,10 @@ export default function JadwalSholatPage() {
                                 </select>
                             </div>
                             <div>
-                                <label htmlFor='page-madhab' className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'>
+                                <label
+                                    htmlFor='page-madhab'
+                                    className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'
+                                >
                                     {t("prayer_schedule.madhab") ??
                                         "Madhab Asar"}
                                 </label>
@@ -484,16 +482,16 @@ export default function JadwalSholatPage() {
                                 {adzanOptions.map((s) => (
                                     <option key={s.value} value={s.value}>
                                         {s.label}
-                                   </option>
+                                    </option>
                                 ))}
-                           </select>
-                       </div>
+                            </select>
+                        </div>
                     )}
                     {showSettings && (
                         <div className='mt-3 flex items-center gap-3'>
                             <span className='text-xs text-gray-500 dark:text-gray-400'>
                                 {t("prayer_schedule.reminder_lead")}
-                           </span>
+                            </span>
                             <select
                                 value={settings.adzanReminderLead ?? 10}
                                 onChange={(e) =>
@@ -510,9 +508,9 @@ export default function JadwalSholatPage() {
                                         {m === 0
                                             ? t("prayer_schedule.at_time")
                                             : `${m} ${t("prayer_schedule.minutes")}`}
-                                   </option>
+                                    </option>
                                 ))}
-                           </select>
+                            </select>
                             {PRAYER_KEYS_FOR_REMINDER.map((key) => {
                                 const row = PRAYERS.find((p) => p.key === key);
                                 const label = row ? t(row.labelKey) : key;
@@ -528,7 +526,8 @@ export default function JadwalSholatPage() {
                                                 ...(settings.adzanReminderLeadByPrayer ||
                                                     {}),
                                             };
-                                            if (v === "global") delete next[key];
+                                            if (v === "global")
+                                                delete next[key];
                                             else next[key] = Number(v);
                                             updateSetting(
                                                 "adzanReminderLeadByPrayer",
@@ -536,23 +535,31 @@ export default function JadwalSholatPage() {
                                             );
                                         }}
                                         className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
-                                        aria-label={t("prayer.reminder_lead_prayer", { prayer: key })}
+                                        aria-label={t(
+                                            "prayer.reminder_lead_prayer",
+                                            { prayer: key },
+                                        )}
                                     >
                                         <option value='global'>
-                                            {label} {t("prayer_schedule.global")}
-                                       </option>
+                                            {label}{" "}
+                                            {t("prayer_schedule.global")}
+                                        </option>
                                         {REMINDER_LEAD_OPTIONS.map((m) => (
                                             <option key={m} value={m}>
                                                 {label}{" "}
                                                 {m === 0
-                                                    ? t("prayer_schedule.at_time")
+                                                    ? t(
+                                                          "prayer_schedule.at_time",
+                                                      )
                                                     : `${m} ${t("prayer_schedule.minutes")}`}
-                                           </option>
+                                            </option>
                                         ))}
-                                   </select>
+                                    </select>
                                 );
                             })}
-                            <span className='sr-only'>Per-prayer reminder config</span>
+                            <span className='sr-only'>
+                                Per-prayer reminder config
+                            </span>
                         </div>
                     )}
                 </div>
@@ -665,7 +672,6 @@ export default function JadwalSholatPage() {
                         `${PRAYER_METHODS.find((m) => m.value === method)?.label} · ${t(PRAYER_MADHABS.find((m) => m.value === madhab)?.labelKey)}`}
                 </p>
             </ContentWidth>
-            <Footer />
             {settings.notifAdzan && (
                 <audio
                     ref={audioRef}

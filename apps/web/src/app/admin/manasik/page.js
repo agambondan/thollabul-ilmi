@@ -1,11 +1,18 @@
 "use client";
 
-import { PanelEmpty, PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
+import {
+    PanelEmpty,
+    PanelTable,
+    Td,
+    Th,
+    Tr,
+} from "@/components/panel/DataPanel";
 import { adminManasikApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
+import ModalShell from "@/components/ModalShell";
 
 const TYPES = ["haji", "umrah"];
 
@@ -170,12 +177,8 @@ const AdminManasikPage = () => {
                 <PanelTable
                     head={
                         <>
-                            <Th className='w-16'>
-                                {t("admin.manasik.step")}
-                            </Th>
-                            <Th>
-                                {t("admin.field.title")}
-                            </Th>
+                            <Th className='w-16'>{t("admin.manasik.step")}</Th>
+                            <Th>{t("admin.field.title")}</Th>
                             <Th className='hidden md:table-cell'>
                                 {t("admin.field.description")}
                             </Th>
@@ -210,9 +213,7 @@ const AdminManasikPage = () => {
                                     </button>
                                     <button
                                         onClick={() =>
-                                            setDeleteId(
-                                                item.id ?? item._id,
-                                            )
+                                            setDeleteId(item.id ?? item._id)
                                         }
                                         aria-label={t("common.delete")}
                                         title={t("common.delete")}
@@ -225,14 +226,19 @@ const AdminManasikPage = () => {
                         </Tr>
                     ))}
                     {filtered.length === 0 && (
-                        <PanelEmpty colSpan={4}>{t("admin.crud.no_data")} {filter}</PanelEmpty>
+                        <PanelEmpty colSpan={4}>
+                            {t("admin.crud.no_data")} {filter}
+                        </PanelEmpty>
                     )}
                 </PanelTable>
             )}
 
             {showModal && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'>
+                <ModalShell
+                    onClose={() => setShowModal(false)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
+                >
                         <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
                             <h2 className='font-bold text-gray-900 dark:text-white'>
                                 {editId
@@ -249,7 +255,10 @@ const AdminManasikPage = () => {
                         <div className='p-5 space-y-4'>
                             <div className='grid grid-cols-3 gap-4'>
                                 <div>
-                                    <label htmlFor='page-type' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-type'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.manasik.type")}
                                     </label>
                                     <select
@@ -271,7 +280,10 @@ const AdminManasikPage = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label htmlFor='page-step' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label
+                                        htmlFor='page-step'
+                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    >
                                         {t("admin.manasik.step")}
                                     </label>
                                     <input
@@ -291,7 +303,10 @@ const AdminManasikPage = () => {
                                 <div className='col-span-1' />
                             </div>
                             <div>
-                                <label htmlFor='page-title' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-title'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.field.title")}
                                 </label>
                                 <input
@@ -326,7 +341,10 @@ const AdminManasikPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-latin' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-latin'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.field.latin")}
                                 </label>
                                 <textarea
@@ -343,7 +361,10 @@ const AdminManasikPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-translation' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-translation'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("common.translation")}
                                 </label>
                                 <textarea
@@ -360,7 +381,10 @@ const AdminManasikPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-description' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-description'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("admin.field.description")}
                                 </label>
                                 <textarea
@@ -377,7 +401,10 @@ const AdminManasikPage = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor='page-notes' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label
+                                    htmlFor='page-notes'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
                                     {t("common.notes")}
                                 </label>
                                 <textarea
@@ -423,13 +450,15 @@ const AdminManasikPage = () => {
                                 {saving ? t("common.saving") : t("common.save")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
 
             {deleteId && (
-                <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-                    <div className='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'>
+                <ModalShell
+                    onClose={() => setDeleteId(null)}
+                    overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
+                    panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
+                >
                         <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
                             {t("admin.crud.delete_title").replace(
                                 "{item}",
@@ -453,8 +482,7 @@ const AdminManasikPage = () => {
                                 {t("common.delete")}
                             </button>
                         </div>
-                    </div>
-                </div>
+                </ModalShell>
             )}
         </div>
     );
