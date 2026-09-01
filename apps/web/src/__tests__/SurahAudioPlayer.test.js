@@ -15,7 +15,20 @@ jest.mock("@/lib/api", () => ({
 }));
 
 jest.mock("@/context/Locale", () => ({
-    useLocale: () => ({ t: () => undefined }),
+    useLocale: () => ({
+        t: (key) =>
+            ({
+                "audio.select_qari": "Pilih qari",
+                "audio.show": "Tampilkan player audio",
+                "audio.minimize": "Minimize audio player",
+                "audio.close": "Tutup audio player",
+                "audio.play": "Putar audio",
+                "audio.pause": "Jeda audio",
+                "audio.prev": "Audio ayat sebelumnya",
+                "audio.next": "Audio ayat berikutnya",
+                "audio.repeat": "Repeat",
+            })[key] ?? key,
+    }),
 }));
 
 const SurahAudioPlayer = require("@/components/SurahAudioPlayer").default;

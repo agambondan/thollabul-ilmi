@@ -61,7 +61,10 @@ describe("copy utilities", () => {
                 writable: true,
                 configurable: true,
             });
-            const canvas = { toBlob: jest.fn() };
+            const canvas = {
+                toBlob: jest.fn(),
+                toDataURL: jest.fn(() => "data:image/png;base64,"),
+            };
             await expect(CopyImageToClipboard(canvas)).resolves.toBeUndefined();
         });
     });
