@@ -35,13 +35,13 @@ docs/               # Dokumentasi setup dan roadmap
 
 ## Tech Stack
 
-| Layer       | Stack                                                    |
-| ----------- | -------------------------------------------------------- |
-| API Service | Go 1.26 + Fiber v2, GORM, PostgreSQL, Redis              |
-| Web App     | Next.js 16.2, React 19, Tailwind CSS 3, TanStack Query 5 |
-| Auth        | JWT (golang-jwt/jwt v5)                                  |
-| Docs        | Swagger (gofiber/swagger)                                |
-| Infra       | Docker Compose                                           |
+| Layer       | Stack                                       |
+| ----------- | ------------------------------------------- |
+| API Service | Go 1.26 + Fiber v2, GORM, PostgreSQL, Redis |
+| Web App     | Next.js 16.2, React 19, Tailwind CSS 3      |
+| Auth        | JWT (golang-jwt/jwt v5)                     |
+| Docs        | Swagger (gofiber/swagger)                   |
+| Infra       | Docker Compose                              |
 
 ## API Service (`services/api/`)
 
@@ -137,6 +137,6 @@ Urutan tier: Bookmark → Search → Reading Progress → Hafalan → Streak →
 That directory is a **mirrored backup**, not configuration for this repo. Deploys
 run from `~/works/me` on the laptop (`make help`), and `~/works/me` is not a git
 repo, so every repo carries an identical copy of its `deploy.sh` + `Makefile` as
-the only versioned record. The `Makefile` there lists targets for *every*
+the only versioned record. The `Makefile` there lists targets for _every_
 project — that is expected, it mirrors the workspace file. Read
 `ops/deploy-workspace/README.md` before touching it.
