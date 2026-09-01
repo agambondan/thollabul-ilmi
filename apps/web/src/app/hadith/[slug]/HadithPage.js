@@ -306,7 +306,7 @@ const HadithPage = ({
             <ul
                 id={`${params.slug}-${hadith.number}`}
                 className={classNames({
-                    "flex flex-row justify-between p-4 border-b border-emerald-100 dark:border-slate-700": true,
+                    "flex flex-col md:flex-row md:justify-between px-3 py-3 md:p-4 border-b border-emerald-100 dark:border-slate-700": true,
                     "bg-parchment-50 dark:bg-slate-800":
                         hadith.number % 2 === 1,
                     "bg-white dark:bg-slate-900": hadith.number % 2 === 0,
@@ -316,14 +316,22 @@ const HadithPage = ({
             >
                 {!actionsHidden && (
                     <ul
-                        className='flex flex-col p-2 space-y-1'
+                        className='flex flex-row flex-wrap items-center w-full gap-0.5 pb-1 md:flex-col md:flex-nowrap md:w-auto md:gap-1 md:p-2 md:pb-2'
                         style={{ direction: "ltr" }}
                     >
-                        <li className='flex justify-center text-sm font-medium text-gray-500 dark:text-gray-400 pb-1'>
+                        <li
+                            className={classNames(
+                                "flex justify-center text-sm font-medium text-gray-500 dark:text-gray-400 md:mr-0 md:pb-1",
+                                // Di mobile rail ini jadi header horizontal: nomor duduk di kiri,
+                                // ikon aksi di kanan. Yang mendorong jarak itu elemen terakhir
+                                // sebelum ikon -- badge grade kalau ada, kalau tidak ya nomor ini.
+                                hadith.grade ? "mr-1.5" : "mr-auto",
+                            )}
+                        >
                             {book.slug}:{hadith.number}
                         </li>
                         {hadith.grade && (
-                            <li className='flex justify-center'>
+                            <li className='flex justify-center mr-auto md:mr-0'>
                                 <GradeBadge grade={hadith.grade} />
                             </li>
                         )}
@@ -409,7 +417,7 @@ const HadithPage = ({
                                 <BsThreeDotsVertical />
                             </button>
                             {settingPopUp ? (
-                                <div className='absolute left-9 top-0 z-10'>
+                                <div className='absolute right-0 top-9 z-20 md:right-auto md:left-9 md:top-0'>
                                     <div className='flex flex-col bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-56 p-1 shadow-lg text-emerald-900 dark:text-white'>
                                         {actionsMenu && (
                                             <div className='border-b border-emerald-50 dark:border-slate-700 pb-1 mb-1'>
@@ -567,7 +575,7 @@ const HadithPage = ({
                         {hadith.translation.ar}
                     </li>
                     <li
-                        className='text-left p-2'
+                        className='text-left py-2 md:p-2'
                         style={{
                             direction: "ltr",
                             fontSize: `${translationFontSize}px`,

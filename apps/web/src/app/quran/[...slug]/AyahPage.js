@@ -278,7 +278,7 @@ const AyahPage = ({
 
             <ul
                 className={classNames({
-                    "flex flex-row justify-between p-4 border-b border-gray-100 dark:border-slate-800": true,
+                    "flex flex-col md:flex-row md:justify-between px-3 py-3 md:p-4 border-b border-gray-100 dark:border-slate-800": true,
                     "bg-gray-50/60 dark:bg-slate-800/35": ayah.number % 2 === 1,
                     "bg-white dark:bg-slate-900": ayah.number % 2 === 0,
                     "text-gray-900 dark:text-white": true,
@@ -286,10 +286,10 @@ const AyahPage = ({
             >
                 {!actionsHidden && (
                     <ul
-                        className='flex flex-col p-2 space-y-1'
+                        className='flex flex-row flex-wrap items-center w-full gap-0.5 pb-1 md:flex-col md:flex-nowrap md:w-auto md:gap-1 md:p-2 md:pb-2'
                         style={{ direction: "ltr" }}
                     >
-                        <li className='flex justify-center text-sm font-medium text-gray-500 dark:text-gray-400 pb-1'>
+                        <li className='flex justify-center text-sm font-medium text-gray-500 dark:text-gray-400 mr-auto md:mr-0 md:pb-1'>
                             {surah.number}:{ayah.number}
                         </li>
                         <li
@@ -403,7 +403,7 @@ const AyahPage = ({
                                 <BsThreeDotsVertical />
                             </button>
                             {settingPopUp && (
-                                <div className='absolute left-9 top-0 z-10'>
+                                <div className='absolute right-0 top-9 z-20 md:right-auto md:left-9 md:top-0'>
                                     <div className='flex flex-col bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-56 p-1 shadow-lg text-emerald-900 dark:text-white'>
                                         {actionsMenu && (
                                             <div className='border-b border-emerald-50 dark:border-slate-700 pb-1 mb-1'>
@@ -603,14 +603,14 @@ const AyahPage = ({
                     />
                     {ayah.translation.latin_idn && (
                         <li
-                            className={`text-left p-2 text-sm text-gray-500 dark:text-gray-400 italic ${hideTranslation || hideAll ? "blur-sm select-none" : ""}`}
+                            className={`text-left py-2 md:p-2 text-sm text-gray-500 dark:text-gray-400 italic ${hideTranslation || hideAll ? "blur-sm select-none" : ""}`}
                             style={{ direction: "ltr" }}
                         >
                             {ayah.translation.latin_idn}
                         </li>
                     )}
                     <li
-                        className={`text-left p-2 ${hideTranslation || hideAll ? "blur-sm select-none" : ""}`}
+                        className={`text-left py-2 md:p-2 ${hideTranslation || hideAll ? "blur-sm select-none" : ""}`}
                         style={{
                             direction: "ltr",
                             fontSize: `${translationFontSize}px`,
@@ -620,7 +620,7 @@ const AyahPage = ({
                         {ayahTranslation}
                     </li>
                     {hafalanMode !== "off" && (
-                        <li className='px-2 pb-2' style={{ direction: "ltr" }}>
+                        <li className='pb-2 md:px-2' style={{ direction: "ltr" }}>
                             <button
                                 type='button'
                                 onClick={() => setRevealed((v) => !v)}
