@@ -60,13 +60,17 @@ const pageMeta = (ayahs, lang, page, fallback) => {
 export default function MushafPageReader() {
     const { t, lang } = useLocale();
     const { fontCls, fontId, setFont, arabicFontSize, setArabicFontSize } = useQuranFont();
-    const [page, setPage] = useState(readInitialPage);
+    const [page, setPage] = useState(1);
     const inputRef = useRef(null);
     const [ayahs, setAyahs] = useState([]);
     const [words, setWords] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showTranslation, setShowTranslation] = useState(false);
     const touchX = useRef(null);
+
+    useEffect(() => {
+        setPage(readInitialPage());
+    }, []);
 
     const fetchPageData = useCallback(async (nextPage) => {
         const [ayahRes, wordRes] = await Promise.all([
