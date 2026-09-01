@@ -93,12 +93,16 @@ const EditProfileCard = ({ user, refetchUser, className = "" }) => {
                         />
                     </div>
                     <div>
-                        <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                        <label
+                            htmlFor='editprofilecard-email'
+                            className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                        >
                             Email
                         </label>
                         {/* Read-only: the account is keyed on it and there is no
                             change-email flow behind the API yet. */}
                         <input
+                            id='editprofilecard-email'
                             value={user?.email ?? ""}
                             disabled
                             className={`${INPUT_CLS} cursor-not-allowed opacity-60`}

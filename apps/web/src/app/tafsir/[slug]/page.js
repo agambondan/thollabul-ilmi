@@ -18,6 +18,7 @@ import {
     BsSearch,
 } from "react-icons/bs";
 import { MdOutlineAutoStories } from "react-icons/md";
+import InlineError from "@/components/InlineError";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -34,6 +35,7 @@ export const TafsirSurahContent = ({
     const [ayahs, setAyahs] = useState([]);
     const [tafsirMap, setTafsirMap] = useState({});
     const [isLoadingAyah, setIsLoadingAyah] = useState(true);
+    const [ayahLoadFailed, setAyahLoadFailed] = useState(false);
     const [isLoadingTafsir, setIsLoadingTafsir] = useState(true);
     const [open, setOpen] = useState(new Set());
     const [showLatin, setShowLatin] = useState(true);
@@ -55,7 +57,7 @@ export const TafsirSurahContent = ({
                     loadTafsir(data.number);
                 }
             })
-            .catch(() => setAyahs([]))
+            .catch(() => setAyahLoadFailed(true))
             .finally(() => setIsLoadingAyah(false));
     }, [decodedSlug]);
 
@@ -96,6 +98,7 @@ export const TafsirSurahContent = ({
 
     const hasTafsirData = Object.keys(tafsirMap).length > 0;
     const isLoading = isLoadingAyah;
+    const showLoadError = ayahLoadFailed && !isLoadingAyah;
     const query = search.trim().toLowerCase();
     const visibleAyahs = ayahs.filter((ayah) => {
         if (!query) return true;
@@ -259,6 +262,7 @@ export const TafsirSurahContent = ({
             )}
 
             {/* Loading */}
+            {showLoadError && <InlineError />}
             {isLoading && (
                 <div className='space-y-2'>
                     {Array.from({ length: 8 }).map((_, i) => (
@@ -271,7 +275,7 @@ export const TafsirSurahContent = ({
             )}
 
             {/* Error state */}
-            {!isLoading && ayahs.length === 0 && (
+            {!isLoading && !showLoadError && ayahs.length === 0 && (
                 <div className='text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                     <MdOutlineAutoStories className='text-5xl text-gray-200 dark:text-slate-600 mx-auto mb-3' />
                     <p className='text-gray-500 dark:text-gray-400 mb-1'>

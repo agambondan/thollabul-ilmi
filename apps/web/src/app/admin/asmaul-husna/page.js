@@ -225,163 +225,163 @@ const AdminAsmaulHusnaPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
                 >
-                        <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
-                            <h2 className='font-bold text-gray-900 dark:text-white'>
-                                {editId
-                                    ? t("admin.asmaul.edit_name")
-                                    : t("admin.asmaul.add_name")}
-                            </h2>
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
-                            >
-                                <BsX className='text-xl' />
-                            </button>
-                        </div>
-                        <div className='p-5 space-y-4'>
-                            <div className='grid grid-cols-2 gap-4'>
-                                <div>
-                                    <label
-                                        htmlFor='page-number'
-                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                    >
-                                        {t("admin.field.number")}
-                                    </label>
-                                    <input
-                                        id='page-number'
-                                        type='number'
-                                        value={form.number}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                number: e.target.value,
-                                            })
-                                        }
-                                        min={1}
-                                        max={99}
-                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor='page-arabic'
-                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                    >
-                                        {t("admin.field.arabic")}
-                                    </label>
-                                    <input
-                                        id='page-arabic'
-                                        type='text'
-                                        value={form.arabic}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                arabic: e.target.value,
-                                            })
-                                        }
-                                        dir='rtl'
-                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white font-arabic text-lg'
-                                    />
-                                </div>
-                            </div>
+                    <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
+                        <h2 className='font-bold text-gray-900 dark:text-white'>
+                            {editId
+                                ? t("admin.asmaul.edit_name")
+                                : t("admin.asmaul.add_name")}
+                        </h2>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                        >
+                            <BsX className='text-xl' />
+                        </button>
+                    </div>
+                    <div className='p-5 space-y-4'>
+                        <div className='grid grid-cols-2 gap-4'>
                             <div>
                                 <label
-                                    htmlFor='page-latin'
+                                    htmlFor='page-number'
                                     className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
-                                    {t("admin.field.latin")}
+                                    {t("admin.field.number")}
                                 </label>
                                 <input
-                                    id='page-latin'
-                                    type='text'
-                                    value={form.transliteration}
+                                    id='page-number'
+                                    type='number'
+                                    value={form.number}
                                     onChange={(e) =>
                                         setForm({
                                             ...form,
-                                            transliteration: e.target.value,
+                                            number: e.target.value,
                                         })
                                     }
+                                    min={1}
+                                    max={99}
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
-                            </div>
-                            <div className='grid grid-cols-2 gap-4'>
-                                <div>
-                                    <label
-                                        htmlFor='page-meaning-id'
-                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                    >
-                                        {t("admin.asmaul.meaning_id")}
-                                    </label>
-                                    <input
-                                        id='page-meaning-id'
-                                        type='text'
-                                        value={form.indonesian}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                indonesian: e.target.value,
-                                            })
-                                        }
-                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor='page-meaning-en'
-                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                    >
-                                        {t("admin.asmaul.meaning_en")}
-                                    </label>
-                                    <input
-                                        id='page-meaning-en'
-                                        type='text'
-                                        value={form.english}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                english: e.target.value,
-                                            })
-                                        }
-                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                    />
-                                </div>
                             </div>
                             <div>
                                 <label
-                                    htmlFor='page-notes'
+                                    htmlFor='page-arabic'
                                     className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
-                                    {t("admin.asmaul.notes")}
+                                    {t("admin.field.arabic")}
                                 </label>
-                                <textarea
-                                    id='page-notes'
-                                    value={form.description}
+                                <input
+                                    id='page-arabic'
+                                    type='text'
+                                    value={form.arabic}
                                     onChange={(e) =>
                                         setForm({
                                             ...form,
-                                            description: e.target.value,
+                                            arabic: e.target.value,
                                         })
                                     }
-                                    rows={3}
+                                    dir='rtl'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white font-arabic text-lg'
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                htmlFor='page-latin'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                            >
+                                {t("admin.field.latin")}
+                            </label>
+                            <input
+                                id='page-latin'
+                                type='text'
+                                value={form.transliteration}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        transliteration: e.target.value,
+                                    })
+                                }
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                            />
+                        </div>
+                        <div className='grid grid-cols-2 gap-4'>
+                            <div>
+                                <label
+                                    htmlFor='page-meaning-id'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
+                                    {t("admin.asmaul.meaning_id")}
+                                </label>
+                                <input
+                                    id='page-meaning-id'
+                                    type='text'
+                                    value={form.indonesian}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            indonesian: e.target.value,
+                                        })
+                                    }
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor='page-meaning-en'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
+                                    {t("admin.asmaul.meaning_en")}
+                                </label>
+                                <input
+                                    id='page-meaning-en'
+                                    type='text'
+                                    value={form.english}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            english: e.target.value,
+                                        })
+                                    }
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
                         </div>
-                        <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
+                        <div>
+                            <label
+                                htmlFor='page-notes'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
-                                {t("common.cancel")}
-                            </button>
-                            <button
-                                onClick={save}
-                                disabled={saving || !form.arabic}
-                                className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
-                            >
-                                {saving ? t("common.saving") : t("common.save")}
-                            </button>
+                                {t("admin.asmaul.notes")}
+                            </label>
+                            <textarea
+                                id='page-notes'
+                                value={form.description}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        description: e.target.value,
+                                    })
+                                }
+                                rows={3}
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                            />
                         </div>
+                    </div>
+                    <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
+                        >
+                            {t("common.cancel")}
+                        </button>
+                        <button
+                            onClick={save}
+                            disabled={saving || !form.arabic}
+                            className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
+                        >
+                            {saving ? t("common.saving") : t("common.save")}
+                        </button>
+                    </div>
                 </ModalShell>
             )}
 
@@ -391,28 +391,28 @@ const AdminAsmaulHusnaPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
                 >
-                        <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
-                            {t("admin.crud.delete_title", {
-                                item: t("admin.asmaul.name"),
-                            })}
-                        </h2>
-                        <p className='text-sm text-gray-500 dark:text-gray-400 mb-5'>
-                            {t("admin.crud.delete_body")}
-                        </p>
-                        <div className='flex gap-3'>
-                            <button
-                                onClick={() => setDeleteId(null)}
-                                className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium'
-                            >
-                                {t("common.cancel")}
-                            </button>
-                            <button
-                                onClick={confirmDelete}
-                                className='flex-1 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-medium'
-                            >
-                                {t("common.delete")}
-                            </button>
-                        </div>
+                    <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
+                        {t("admin.crud.delete_title", {
+                            item: t("admin.asmaul.name"),
+                        })}
+                    </h2>
+                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-5'>
+                        {t("admin.crud.delete_body")}
+                    </p>
+                    <div className='flex gap-3'>
+                        <button
+                            onClick={() => setDeleteId(null)}
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium'
+                        >
+                            {t("common.cancel")}
+                        </button>
+                        <button
+                            onClick={confirmDelete}
+                            className='flex-1 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-medium'
+                        >
+                            {t("common.delete")}
+                        </button>
+                    </div>
                 </ModalShell>
             )}
         </div>

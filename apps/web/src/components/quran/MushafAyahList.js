@@ -114,7 +114,9 @@ export default function MushafAyahList({
                                 fontSize: `${arabicFontSize}px`,
                                 lineHeight: "2.1",
                             }}
-                            dangerouslySetInnerHTML={{ __html: sanitizeHtml(arabicHtml) }}
+                            dangerouslySetInnerHTML={{
+                                __html: sanitizeHtml(arabicHtml),
+                            }}
                         />
                         {translation && (
                             <p

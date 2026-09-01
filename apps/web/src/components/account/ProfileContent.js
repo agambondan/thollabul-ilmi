@@ -46,6 +46,7 @@ import {
     MdRefresh,
     MdSelfImprovement,
 } from "react-icons/md";
+import InlineError from "@/components/InlineError";
 
 const inputCls =
     "w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500";
@@ -82,6 +83,7 @@ const ProfileContent = () => {
     const [syncError, setSyncError] = useState("");
     const [sessions, setSessions] = useState([]);
     const [sessionsLoading, setSessionsLoading] = useState(false);
+    const [sessionsFailed, setSessionsFailed] = useState(false);
     const [sessionActionId, setSessionActionId] = useState(null);
     const [sessionMsg, setSessionMsg] = useState({ type: "", text: "" });
     const [deleteLoading, setDeleteLoading] = useState(false);
@@ -144,7 +146,7 @@ const ProfileContent = () => {
                           : [],
                 ),
             )
-            .catch(() => setSessions([]))
+            .catch(() => setSessionsFailed(true))
             .finally(() => setSessionsLoading(false));
     }, [isAuthenticated]);
 
@@ -587,6 +589,9 @@ const ProfileContent = () => {
                             Daftar sesi login yang masih aktif di akun ini.
                         </p>
                     </div>
+                    {sessionsFailed && !sessionsLoading ? (
+                        <InlineError />
+                    ) : null}
                     {sessionsLoading ? (
                         <span className='text-xs font-semibold text-emerald-700 dark:text-emerald-300'>
                             Memuat...

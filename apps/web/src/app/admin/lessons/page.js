@@ -207,155 +207,164 @@ export default function AdminLessonsPage() {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 shadow-xl'
                 >
-                        <h2 className='text-lg font-bold text-gray-900 dark:text-white mb-4'>
-                            {editing ? "Edit Modul" : "Tambah Modul"}
-                        </h2>
-                        <form onSubmit={handleSave} className='space-y-4'>
-                            <div className='grid grid-cols-2 gap-4'>
-                                <div>
-                                    <label htmlFor='page-field-1' className='block text-xs font-semibold mb-1'>
-                                        Judul
-                                    </label>
-                                    <input
-                                        id='page-field-1'
-                                        type='text'
-                                        required
-                                        value={form.title}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                title: e.target.value,
-                                            })
-                                        }
-                                        className='w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-slate-700'
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor='page-field-2' className='block text-xs font-semibold mb-1'>
-                                        Slug
-                                    </label>
-                                    <input
-                                        id='page-field-2'
-                                        type='text'
-                                        required
-                                        value={form.slug}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                slug: e.target.value,
-                                            })
-                                        }
-                                        className='w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-slate-700'
-                                    />
-                                </div>
-                            </div>
+                    <h2 className='text-lg font-bold text-gray-900 dark:text-white mb-4'>
+                        {editing ? "Edit Modul" : "Tambah Modul"}
+                    </h2>
+                    <form onSubmit={handleSave} className='space-y-4'>
+                        <div className='grid grid-cols-2 gap-4'>
                             <div>
-                                <label htmlFor='page-field-3' className='block text-xs font-semibold mb-1'>
-                                    Deskripsi
+                                <label
+                                    htmlFor='page-field-1'
+                                    className='block text-xs font-semibold mb-1'
+                                >
+                                    Judul
                                 </label>
-                                <textarea
-                                    id='page-field-3'
-                                    value={form.description}
+                                <input
+                                    id='page-field-1'
+                                    type='text'
+                                    required
+                                    value={form.title}
                                     onChange={(e) =>
                                         setForm({
                                             ...form,
-                                            description: e.target.value,
+                                            title: e.target.value,
                                         })
                                     }
                                     className='w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-slate-700'
-                                    rows={2}
                                 />
                             </div>
-
-                            {/* Langkah-langkah */}
                             <div>
-                                <div className='flex items-center justify-between mb-2'>
-                                    <label className='text-xs font-bold uppercase'>
-                                        Langkah Belajar
-                                    </label>
-                                    <button
-                                        type='button'
-                                        onClick={addStep}
-                                        className='text-xs text-emerald-600 font-semibold'
-                                    >
-                                        + Tambah Langkah
-                                    </button>
-                                </div>
-                                <div className='space-y-3'>
-                                    {form.steps.map((s, idx) => (
-                                        <div
-                                            key={idx}
-                                            className='p-3 border rounded-xl dark:border-slate-700 bg-gray-50 dark:bg-slate-900/40 relative'
-                                        >
-                                            <div className='flex items-center justify-between mb-2'>
-                                                <span className='text-xs font-bold text-gray-500'>
-                                                    Langkah {idx + 1}
-                                                </span>
-                                                {form.steps.length > 1 && (
-                                                    <button
-                                                        type='button'
-                                                        onClick={() =>
-                                                            removeStep(idx)
-                                                        }
-                                                        className='text-rose-500 text-xs'
-                                                    >
-                                                        Hapus
-                                                    </button>
-                                                )}
-                                            </div>
-                                            <input
-                                                type='text'
-                                                placeholder={t(
-                                                    "admin.lessons.step_title_placeholder",
-                                                )}
-                                                value={s.title}
-                                                onChange={(e) =>
-                                                    updateStep(
-                                                        idx,
-                                                        "title",
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                className='w-full px-3 py-1.5 mb-2 text-sm border rounded-lg dark:bg-slate-800 dark:border-slate-700'
-                                                required
-                                            />
-                                            <textarea
-                                                placeholder={t(
-                                                    "admin.lessons.step_desc_placeholder",
-                                                )}
-                                                value={s.body}
-                                                onChange={(e) =>
-                                                    updateStep(
-                                                        idx,
-                                                        "body",
-                                                        e.target.value,
-                                                    )
-                                                }
-                                                className='w-full px-3 py-1.5 text-sm border rounded-lg dark:bg-slate-800 dark:border-slate-700'
-                                                rows={2}
-                                                required
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
+                                <label
+                                    htmlFor='page-field-2'
+                                    className='block text-xs font-semibold mb-1'
+                                >
+                                    Slug
+                                </label>
+                                <input
+                                    id='page-field-2'
+                                    type='text'
+                                    required
+                                    value={form.slug}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            slug: e.target.value,
+                                        })
+                                    }
+                                    className='w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-slate-700'
+                                />
                             </div>
+                        </div>
+                        <div>
+                            <label
+                                htmlFor='page-field-3'
+                                className='block text-xs font-semibold mb-1'
+                            >
+                                Deskripsi
+                            </label>
+                            <textarea
+                                id='page-field-3'
+                                value={form.description}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        description: e.target.value,
+                                    })
+                                }
+                                className='w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-slate-700'
+                                rows={2}
+                            />
+                        </div>
 
-                            <div className='flex justify-end gap-2 mt-6'>
+                        {/* Langkah-langkah */}
+                        <div>
+                            <div className='flex items-center justify-between mb-2'>
+                                <h3 className='text-xs font-bold uppercase'>
+                                    {t("admin.lessons.steps")}
+                                </h3>
                                 <button
                                     type='button'
-                                    onClick={() => setModalOpen(false)}
-                                    className='px-4 py-2 text-sm border rounded-lg'
+                                    onClick={addStep}
+                                    className='text-xs text-emerald-600 font-semibold'
                                 >
-                                    Batal
-                                </button>
-                                <button
-                                    type='submit'
-                                    className='px-5 py-2 text-sm bg-emerald-700 text-white rounded-lg'
-                                >
-                                    Simpan
+                                    {t("admin.lessons.add_step")}
                                 </button>
                             </div>
-                        </form>
+                            <div className='space-y-3'>
+                                {form.steps.map((s, idx) => (
+                                    <div
+                                        key={idx}
+                                        className='p-3 border rounded-xl dark:border-slate-700 bg-gray-50 dark:bg-slate-900/40 relative'
+                                    >
+                                        <div className='flex items-center justify-between mb-2'>
+                                            <span className='text-xs font-bold text-gray-500'>
+                                                Langkah {idx + 1}
+                                            </span>
+                                            {form.steps.length > 1 && (
+                                                <button
+                                                    type='button'
+                                                    onClick={() =>
+                                                        removeStep(idx)
+                                                    }
+                                                    className='text-rose-500 text-xs'
+                                                >
+                                                    Hapus
+                                                </button>
+                                            )}
+                                        </div>
+                                        <input
+                                            type='text'
+                                            placeholder={t(
+                                                "admin.lessons.step_title_placeholder",
+                                            )}
+                                            value={s.title}
+                                            onChange={(e) =>
+                                                updateStep(
+                                                    idx,
+                                                    "title",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className='w-full px-3 py-1.5 mb-2 text-sm border rounded-lg dark:bg-slate-800 dark:border-slate-700'
+                                            required
+                                        />
+                                        <textarea
+                                            placeholder={t(
+                                                "admin.lessons.step_desc_placeholder",
+                                            )}
+                                            value={s.body}
+                                            onChange={(e) =>
+                                                updateStep(
+                                                    idx,
+                                                    "body",
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className='w-full px-3 py-1.5 text-sm border rounded-lg dark:bg-slate-800 dark:border-slate-700'
+                                            rows={2}
+                                            required
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className='flex justify-end gap-2 mt-6'>
+                            <button
+                                type='button'
+                                onClick={() => setModalOpen(false)}
+                                className='px-4 py-2 text-sm border rounded-lg'
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type='submit'
+                                className='px-5 py-2 text-sm bg-emerald-700 text-white rounded-lg'
+                            >
+                                Simpan
+                            </button>
+                        </div>
+                    </form>
                 </ModalShell>
             )}
         </div>

@@ -95,7 +95,6 @@ const DashboardLayout = ({ children }) => {
         }
     }, []);
 
-
     const toggleDark = toggleTheme;
 
     const toggleSidebar = () => {

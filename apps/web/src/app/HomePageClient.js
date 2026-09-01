@@ -571,7 +571,6 @@ export default function Home() {
 
     return (
         <main className='bg-parchment-50 dark:bg-slate-900'>
-
             {/* ── Hero ─────────────────────────────────────────────── */}
             <section className='relative flex min-h-[78svh] items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800'>
                 <div
@@ -850,7 +849,6 @@ export default function Home() {
                     </div>
                 </ContentWidth>
             </section>
-
         </main>
     );
 }

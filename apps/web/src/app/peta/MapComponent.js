@@ -5,6 +5,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useEffect, useState } from "react";
 import { useLocale } from "@/context/Locale";
+import InlineError from "@/components/InlineError";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -47,6 +48,7 @@ export default function MapComponent() {
     const { t } = useLocale();
     const [locations, setLocations] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("");
     const [era, setEra] = useState("");
@@ -61,8 +63,11 @@ export default function MapComponent() {
         setLoading(true);
         fetch(`${API_URL}/api/v1/locations?${params}`)
             .then((r) => r.json())
-            .then((d) => setLocations(d?.items ?? []))
-            .catch(() => setLocations([]))
+            .then((d) => {
+                setLocations(d?.items ?? []);
+                setLoadError(false);
+            })
+            .catch(() => setLoadError(true))
             .finally(() => setLoading(false));
     }, [search, category, era]);
 
@@ -105,12 +110,14 @@ export default function MapComponent() {
                         {t("peta.loading")}
                     </span>
                 )}
-                {!loading && (
+                {!loading && !loadError && (
                     <span className='text-xs text-gray-400'>
-                        {locations.length} lokasi
+                        {t("peta.count", { count: locations.length })}
                     </span>
                 )}
             </div>
+
+            {loadError && !loading ? <InlineError /> : null}
 
             <div
                 className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden'

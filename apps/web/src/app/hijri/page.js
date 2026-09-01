@@ -8,8 +8,9 @@ import { useLocale } from "@/context/Locale";
 import { hijriApi } from "@/lib/api";
 import { getLocalizedField } from "@/lib/translation";
 import { useLayoutMode } from "@/lib/useLayoutMode";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BsCalendar3, BsSearch } from "react-icons/bs";
+import InlineError from "@/components/InlineError";
 
 const HIJRI_MONTHS = [
     "Muharram",
@@ -70,19 +71,26 @@ const HijriPage = () => {
     const [selectedMonth, setSelectedMonth] = useState("");
     const [events, setEvents] = useState([]);
     const [eventsLoading, setEventsLoading] = useState(true);
+    const [eventsError, setEventsError] = useState(false);
 
     useEffect(() => {
         setConvertDate(new Date().toISOString().slice(0, 10));
     }, []);
 
-    useEffect(() => {
+    const loadEvents = useCallback(() => {
+        setEventsLoading(true);
+        setEventsError(false);
         hijriApi
             .events()
             .then((r) => r.json())
             .then((data) => setEvents(Array.isArray(data) ? data : []))
-            .catch(() => setEvents([]))
+            .catch(() => setEventsError(true))
             .finally(() => setEventsLoading(false));
     }, []);
+
+    useEffect(() => {
+        loadEvents();
+    }, [loadEvents]);
 
     useEffect(() => {
         const load = async () => {
@@ -285,6 +293,9 @@ const HijriPage = () => {
                                     )}
                                 </div>
 
+                                {eventsError && !eventsLoading ? (
+                                    <InlineError onRetry={loadEvents} />
+                                ) : null}
                                 {eventsLoading ? (
                                     <SkeletonInline rows={4} />
                                 ) : (
@@ -370,7 +381,9 @@ const HijriPage = () => {
                                     )
                                 )}
 
-                                {!eventsLoading && events.length === 0 ? (
+                                {!eventsLoading &&
+                                !eventsError &&
+                                events.length === 0 ? (
                                     <p className='text-center py-8 text-gray-400 dark:text-gray-600 text-sm'>
                                         {t("hijri.events_empty")}
                                     </p>

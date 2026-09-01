@@ -148,7 +148,8 @@ export function TokohListContent({ className = "" }) {
                     className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4'
                     onClick={() => setSelected(null)}
                 >
-                    <div {...modalA11y}
+                    <div
+                        {...modalA11y}
                         className='bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-xl'
                         onClick={(e) => e.stopPropagation()}
                     >

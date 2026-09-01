@@ -317,7 +317,9 @@ export default function MushafPageReader() {
                                             <span
                                                 className={`${fontCls} text-[2rem] leading-loose`}
                                                 dangerouslySetInnerHTML={{
-                                                    __html: sanitizeHtml(getArabic(ayah)),
+                                                    __html: sanitizeHtml(
+                                                        getArabic(ayah),
+                                                    ),
                                                 }}
                                             />
                                         )}

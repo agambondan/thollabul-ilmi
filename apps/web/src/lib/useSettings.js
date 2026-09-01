@@ -83,7 +83,10 @@ const sanitizeSettings = (raw) => {
     if (!next.quranFontId && next.quranFont) {
         next.quranFontId = LEGACY_FONT_NAME_MAP[next.quranFont] ?? "lpmq";
     }
-    if (!Number.isFinite(next.quranArabicSize) && Number.isFinite(next.readerSize)) {
+    if (
+        !Number.isFinite(next.quranArabicSize) &&
+        Number.isFinite(next.readerSize)
+    ) {
         next.quranArabicSize = next.readerSize;
     }
     delete next.quranFont;
@@ -113,7 +116,8 @@ const readLegacyFontKeys = () => {
             localStorage.getItem(LEGACY_FONT_KEYS.quranTranslationSize) ?? "",
             10,
         );
-        if (Number.isFinite(translation)) out.quranTranslationSize = translation;
+        if (Number.isFinite(translation))
+            out.quranTranslationSize = translation;
     } catch {}
     return out;
 };
@@ -235,20 +239,21 @@ export const SettingsProvider = ({ children }) => {
 
     const syncWithBackend = () => syncSettingsWithBackend(settings);
 
+    const perPrayerLead = settings?.adzanReminderLeadByPrayer;
+    const globalLead = settings?.adzanReminderLead;
+
     const getLeadForPrayer = useCallback(
         (key) => {
-            const perPrayer = settings?.adzanReminderLeadByPrayer;
             if (
-                perPrayer &&
-                Object.prototype.hasOwnProperty.call(perPrayer, key)
+                perPrayerLead &&
+                Object.prototype.hasOwnProperty.call(perPrayerLead, key)
             ) {
-                const v = perPrayer[key];
+                const v = perPrayerLead[key];
                 if (REMINDER_LEAD_KEYS.includes(v)) return v;
             }
-            const g = settings?.adzanReminderLead;
-            return REMINDER_LEAD_KEYS.includes(g) ? g : 10;
+            return REMINDER_LEAD_KEYS.includes(globalLead) ? globalLead : 10;
         },
-        [settings?.adzanReminderLead, settings?.adzanReminderLeadByPrayer],
+        [globalLead, perPrayerLead],
     );
 
     return (

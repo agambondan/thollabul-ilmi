@@ -123,7 +123,10 @@ export function ZakatContent({ basePath = "/zakat" }) {
 
     const InputField = ({ label, value, onChange, placeholder, hint }) => (
         <div>
-            <label htmlFor='page-field-1' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+            <label
+                htmlFor='page-field-1'
+                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+            >
                 {label}
             </label>
             <input
@@ -295,10 +298,17 @@ export function ZakatContent({ basePath = "/zakat" }) {
                         onChange={(v) => setRicePrice(parseFloat(v) || 0)}
                     />
                     <div>
-                        <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+                        <p
+                            id='zakat-family-count-label'
+                            className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                        >
                             {t("zakat.family_count")}
-                        </label>
-                        <div className='flex items-center gap-4'>
+                        </p>
+                        <div
+                            role='group'
+                            aria-labelledby='zakat-family-count-label'
+                            className='flex items-center gap-4'
+                        >
                             <button
                                 onClick={() =>
                                     setFamilyCount(Math.max(1, familyCount - 1))

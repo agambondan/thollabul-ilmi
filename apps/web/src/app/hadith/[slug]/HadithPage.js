@@ -26,6 +26,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 function SanadPanel({ hadithId }) {
     const { t } = useLocale();
     const [data, setData] = useState(null);
+    const [failed, setFailed] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -34,11 +35,19 @@ function SanadPanel({ hadithId }) {
             .then((d) =>
                 setData(Array.isArray(d?.items ?? d) ? (d?.items ?? d) : []),
             )
-            .catch(() => setData([]))
+            .catch(() => setFailed(true))
             .finally(() => setLoading(false));
     }, [hadithId]);
 
     if (loading) return <p className='text-xs text-gray-400 py-2'>...</p>;
+    // Distinguish "no sanad recorded" from "the request failed" — for hadith
+    // provenance the difference matters.
+    if (failed)
+        return (
+            <p className='text-xs text-red-500 py-2'>
+                {t("common.load_error")}
+            </p>
+        );
     if (!data?.length)
         return (
             <p className='text-xs text-gray-400 py-2'>
@@ -89,6 +98,7 @@ function SanadPanel({ hadithId }) {
 function TakhrijPanel({ hadithId }) {
     const { t, lang } = useLocale();
     const [data, setData] = useState(null);
+    const [failed, setFailed] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -97,7 +107,7 @@ function TakhrijPanel({ hadithId }) {
             .then((d) =>
                 setData(Array.isArray(d?.items ?? d) ? (d?.items ?? d) : []),
             )
-            .catch(() => setData([]))
+            .catch(() => setFailed(true))
             .finally(() => setLoading(false));
     }, [hadithId]);
 

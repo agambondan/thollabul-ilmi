@@ -41,9 +41,7 @@ export const DoaContent = ({ initialItems = [] }) => {
     const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
     const [doas, setDoas] = useState(initialItems);
-    const [isLoading, setIsLoading] = useState(
-        initialItems.length === 0,
-    );
+    const [isLoading, setIsLoading] = useState(initialItems.length === 0);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(false);
     const [page, setPage] = useState(0);
@@ -367,4 +365,3 @@ export const DoaContent = ({ initialItems = [] }) => {
         </>
     );
 };
-

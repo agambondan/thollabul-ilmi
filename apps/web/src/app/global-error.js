@@ -36,7 +36,8 @@ export default function GlobalError({ error, reset }) {
                         Muat ulang halaman ini. Jika masih gagal, coba lagi
                         beberapa saat lagi.
                         <br />
-                        Reload this page. If it keeps failing, try again shortly.
+                        Reload this page. If it keeps failing, try again
+                        shortly.
                     </p>
                     <button
                         type='button'

@@ -136,7 +136,9 @@ self.addEventListener("activate", (event) => {
             .keys()
             .then((names) =>
                 Promise.all(
-                    names.filter((n) => !keep.has(n)).map((n) => caches.delete(n)),
+                    names
+                        .filter((n) => !keep.has(n))
+                        .map((n) => caches.delete(n)),
                 ),
             )
             .then(() => clients.claim()),

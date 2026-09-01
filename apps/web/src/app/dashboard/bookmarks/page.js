@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BsBookmark, BsBookmarkFill, BsTrash } from "react-icons/bs";
+import InlineError from "@/components/InlineError";
 
 const REF_LABEL_KEY = {
     ayah: "bookmarks.type_quran",
@@ -87,6 +88,7 @@ const BookmarksPage = () => {
     const { isAuthenticated } = useAuth();
     const [bookmarks, setBookmarks] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadFailed, setLoadFailed] = useState(false);
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -97,7 +99,7 @@ const BookmarksPage = () => {
             .list()
             .then((r) => r.json())
             .then((data) => setBookmarks(data?.items ?? data ?? []))
-            .catch(() => setBookmarks([]))
+            .catch(() => setLoadFailed(true))
             .finally(() => setLoading(false));
     }, [isAuthenticated]);
 
@@ -150,7 +152,8 @@ const BookmarksPage = () => {
                 </div>
             )}
 
-            {!loading && bookmarks.length === 0 && (
+            {loadFailed && !loading && <InlineError />}
+            {!loading && !loadFailed && bookmarks.length === 0 && (
                 <div className='text-center py-16'>
                     <BsBookmark className='mx-auto text-4xl text-gray-300 dark:text-slate-600 mb-3' />
                     <p className='text-gray-500 dark:text-gray-400 text-sm'>

@@ -213,7 +213,10 @@ export default function QuizPage() {
 
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-            <ContentWidth compact='max-w-lg' className='flex-1 px-4 pt-navbar pb-8'>
+            <ContentWidth
+                compact='max-w-lg'
+                className='flex-1 px-4 pt-navbar pb-8'
+            >
                 {/* Progress */}
                 <div className='flex items-center justify-between mb-2'>
                     <span className='text-sm font-semibold text-gray-500 dark:text-gray-400'>

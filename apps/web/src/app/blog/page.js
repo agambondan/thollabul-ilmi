@@ -77,6 +77,7 @@ export const BlogContent = ({ basePath = "/blog" }) => {
                 const items = data?.items ?? data?.data ?? data ?? [];
                 setCategories(Array.isArray(items) ? items : []);
             })
+            // Leave the filter row hidden rather than implying there are none.
             .catch(() => setCategories([]));
 
         fetchPage(0, false);

@@ -27,6 +27,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 function SanadPanel({ hadithId, t }) {
     const [sanads, setSanads] = useState(null);
+    const [sanadFailed, setSanadFailed] = useState(false);
 
     useEffect(() => {
         fetch(`${API_URL}/api/v1/hadiths/${hadithId}/sanad`)
@@ -34,14 +35,19 @@ function SanadPanel({ hadithId, t }) {
             .then((d) =>
                 setSanads(Array.isArray(d?.items ?? d) ? (d?.items ?? d) : []),
             )
-            .catch(() => setSanads([]));
+            .catch(() => setSanadFailed(true));
     }, [hadithId]);
 
+    if (sanadFailed) {
+        return (
+            <p className='text-xs text-red-500 py-1'>
+                {t("common.load_error")}
+            </p>
+        );
+    }
     if (sanads === null) {
         return (
-            <p className='text-xs text-gray-400 py-1'>
-                {t("common.loading") ?? "Memuat..."}
-            </p>
+            <p className='text-xs text-gray-400 py-1'>{t("common.loading")}</p>
         );
     }
     if (sanads.length === 0) {
@@ -104,6 +110,7 @@ function SanadPanel({ hadithId, t }) {
 
 function TakhrijPanel({ hadithId, t }) {
     const [takhrijList, setTakhrijList] = useState(null);
+    const [takhrijFailed, setTakhrijFailed] = useState(false);
 
     useEffect(() => {
         fetch(`${API_URL}/api/v1/hadiths/${hadithId}/takhrij`)
@@ -113,9 +120,16 @@ function TakhrijPanel({ hadithId, t }) {
                     Array.isArray(d?.items ?? d) ? (d?.items ?? d) : [],
                 ),
             )
-            .catch(() => setTakhrijList([]));
+            .catch(() => setTakhrijFailed(true));
     }, [hadithId]);
 
+    if (takhrijFailed) {
+        return (
+            <p className='text-xs text-red-500 py-1'>
+                {t("common.load_error")}
+            </p>
+        );
+    }
     if (takhrijList === null) {
         return (
             <p className='text-xs text-gray-400 py-1'>

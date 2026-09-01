@@ -17,6 +17,7 @@ import {
 } from "react-icons/bs";
 import { GiOpenBook } from "react-icons/gi";
 import { useModalA11y } from "@/lib/useModalA11y";
+import InlineError from "@/components/InlineError";
 
 const EMPTY_FORM = {
     title: "",
@@ -34,6 +35,7 @@ export function WiridCustomContent() {
     const { t } = useLocale();
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadFailed, setLoadFailed] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
@@ -60,7 +62,7 @@ export function WiridCustomContent() {
                         : [],
                 ),
             )
-            .catch(() => setItems([]))
+            .catch(() => setLoadFailed(true))
             .finally(() => setLoading(false));
     };
 
@@ -173,6 +175,7 @@ export function WiridCustomContent() {
                 </button>
             </div>
 
+            {loadFailed && !loading ? <InlineError onRetry={load} /> : null}
             {loading ? (
                 <div className='flex items-center justify-center py-16'>
                     <div className='w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin' />
@@ -301,7 +304,10 @@ export function WiridCustomContent() {
                         e.target === e.currentTarget && setShowModal(false)
                     }
                 >
-                    <div {...modalA11y} className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto'>
+                    <div
+                        {...modalA11y}
+                        className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto'
+                    >
                         <div className='flex items-center justify-between mb-4'>
                             <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
                                 {editId
@@ -454,7 +460,10 @@ function Field({
 }) {
     return (
         <div>
-            <label htmlFor='page-field-1' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+            <label
+                htmlFor='page-field-1'
+                className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+            >
                 {label}
                 {required && <span className='text-red-500 ml-0.5'>*</span>}
             </label>

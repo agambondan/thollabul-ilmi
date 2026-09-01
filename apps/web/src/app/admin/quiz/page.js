@@ -270,153 +270,153 @@ const AdminQuizPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
                 >
-                        <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
-                            <h2 className='font-bold text-gray-900 dark:text-white'>
-                                {editId
-                                    ? t("admin.quiz.edit_question")
-                                    : t("admin.quiz.add_question")}
-                            </h2>
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                    <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
+                        <h2 className='font-bold text-gray-900 dark:text-white'>
+                            {editId
+                                ? t("admin.quiz.edit_question")
+                                : t("admin.quiz.add_question")}
+                        </h2>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                        >
+                            <BsX className='text-xl' />
+                        </button>
+                    </div>
+                    <div className='p-5 space-y-4'>
+                        <div>
+                            <label
+                                htmlFor='page-question'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
-                                <BsX className='text-xl' />
-                            </button>
-                        </div>
-                        <div className='p-5 space-y-4'>
-                            <div>
-                                <label
-                                    htmlFor='page-question'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                >
-                                    {t("admin.quiz.question")}
-                                </label>
-                                <textarea
-                                    id='page-question'
-                                    value={form.question}
-                                    onChange={(e) =>
-                                        setForm({
-                                            ...form,
-                                            question: e.target.value,
-                                        })
-                                    }
-                                    rows={2}
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                />
-                            </div>
-                            {OPTION_KEYS.map((key, idx) => (
-                                <div key={key}>
-                                    <label htmlFor='page-field-1' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
-                                        {t("admin.quiz.option")}{" "}
-                                        {OPTION_LABELS[idx]}
-                                    </label>
-                                    <input
-                                        id='page-field-1'
-                                        type='text'
-                                        value={form[key]}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                [key]: e.target.value,
-                                            })
-                                        }
-                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                    />
-                                </div>
-                            ))}
-                            <div className='grid grid-cols-2 gap-4'>
-                                <div>
-                                    <label
-                                        htmlFor='page-correct-answer'
-                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                    >
-                                        {t("admin.quiz.correct_answer")}
-                                    </label>
-                                    <select
-                                        id='page-correct-answer'
-                                        value={form.answer}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                answer: e.target.value,
-                                            })
-                                        }
-                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                    >
-                                        {OPTION_LABELS.map((label, idx) => (
-                                            <option
-                                                key={idx}
-                                                value={String(idx)}
-                                            >
-                                                {t("admin.quiz.option")} {label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor='page-category'
-                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                    >
-                                        {t("admin.field.category")}
-                                    </label>
-                                    <select
-                                        id='page-category'
-                                        value={form.category}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                category: e.target.value,
-                                            })
-                                        }
-                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                    >
-                                        {CATEGORIES.map((c) => (
-                                            <option key={c} value={c}>
-                                                {c}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor='page-explanation-optional'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                >
-                                    {t("admin.quiz.explanation_optional")}
-                                </label>
-                                <textarea
-                                    id='page-explanation-optional'
-                                    value={form.explanation}
-                                    onChange={(e) =>
-                                        setForm({
-                                            ...form,
-                                            explanation: e.target.value,
-                                        })
-                                    }
-                                    rows={2}
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                />
-                            </div>
-                        </div>
-                        <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
-                            >
-                                {t("common.cancel")}
-                            </button>
-                            <button
-                                onClick={save}
-                                disabled={
-                                    saving || !form.question || !form.option_a
+                                {t("admin.quiz.question")}
+                            </label>
+                            <textarea
+                                id='page-question'
+                                value={form.question}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        question: e.target.value,
+                                    })
                                 }
-                                className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
-                            >
-                                {saving ? t("common.saving") : t("common.save")}
-                            </button>
+                                rows={2}
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                            />
                         </div>
+                        {OPTION_KEYS.map((key, idx) => (
+                            <div key={key}>
+                                <label
+                                    htmlFor='page-field-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
+                                    {t("admin.quiz.option")}{" "}
+                                    {OPTION_LABELS[idx]}
+                                </label>
+                                <input
+                                    id='page-field-1'
+                                    type='text'
+                                    value={form[key]}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            [key]: e.target.value,
+                                        })
+                                    }
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                />
+                            </div>
+                        ))}
+                        <div className='grid grid-cols-2 gap-4'>
+                            <div>
+                                <label
+                                    htmlFor='page-correct-answer'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
+                                    {t("admin.quiz.correct_answer")}
+                                </label>
+                                <select
+                                    id='page-correct-answer'
+                                    value={form.answer}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            answer: e.target.value,
+                                        })
+                                    }
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                >
+                                    {OPTION_LABELS.map((label, idx) => (
+                                        <option key={idx} value={String(idx)}>
+                                            {t("admin.quiz.option")} {label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor='page-category'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
+                                    {t("admin.field.category")}
+                                </label>
+                                <select
+                                    id='page-category'
+                                    value={form.category}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            category: e.target.value,
+                                        })
+                                    }
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                >
+                                    {CATEGORIES.map((c) => (
+                                        <option key={c} value={c}>
+                                            {c}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                htmlFor='page-explanation-optional'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                            >
+                                {t("admin.quiz.explanation_optional")}
+                            </label>
+                            <textarea
+                                id='page-explanation-optional'
+                                value={form.explanation}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        explanation: e.target.value,
+                                    })
+                                }
+                                rows={2}
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                            />
+                        </div>
+                    </div>
+                    <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
+                        >
+                            {t("common.cancel")}
+                        </button>
+                        <button
+                            onClick={save}
+                            disabled={
+                                saving || !form.question || !form.option_a
+                            }
+                            className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
+                        >
+                            {saving ? t("common.saving") : t("common.save")}
+                        </button>
+                    </div>
                 </ModalShell>
             )}
 
@@ -426,29 +426,29 @@ const AdminQuizPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
                 >
-                        <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
-                            {t("admin.crud.delete_title").replace(
-                                "{item}",
-                                t("admin.quiz.question"),
-                            )}
-                        </h2>
-                        <p className='text-sm text-gray-500 dark:text-gray-400 mb-5'>
-                            {t("admin.crud.delete_body")}
-                        </p>
-                        <div className='flex gap-3'>
-                            <button
-                                onClick={() => setDeleteId(null)}
-                                className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium'
-                            >
-                                {t("common.cancel")}
-                            </button>
-                            <button
-                                onClick={confirmDelete}
-                                className='flex-1 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-medium'
-                            >
-                                {t("common.delete")}
-                            </button>
-                        </div>
+                    <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
+                        {t("admin.crud.delete_title").replace(
+                            "{item}",
+                            t("admin.quiz.question"),
+                        )}
+                    </h2>
+                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-5'>
+                        {t("admin.crud.delete_body")}
+                    </p>
+                    <div className='flex gap-3'>
+                        <button
+                            onClick={() => setDeleteId(null)}
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium'
+                        >
+                            {t("common.cancel")}
+                        </button>
+                        <button
+                            onClick={confirmDelete}
+                            className='flex-1 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-medium'
+                        >
+                            {t("common.delete")}
+                        </button>
+                    </div>
                 </ModalShell>
             )}
         </div>

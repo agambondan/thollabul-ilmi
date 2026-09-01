@@ -32,8 +32,14 @@ const ALLOWED_ATTRS = new Set(["class", "dir", "lang"]);
 const stripDangerous = (html) =>
     String(html)
         // whole elements whose content is executable or fetches remotely
-        .replace(/<\s*(script|style|iframe|object|embed|link|meta)\b[\s\S]*?<\s*\/\s*\1\s*>/gi, "")
-        .replace(/<\s*(script|style|iframe|object|embed|link|meta)\b[^>]*\/?>/gi, "");
+        .replace(
+            /<\s*(script|style|iframe|object|embed|link|meta)\b[\s\S]*?<\s*\/\s*\1\s*>/gi,
+            "",
+        )
+        .replace(
+            /<\s*(script|style|iframe|object|embed|link|meta)\b[^>]*\/?>/gi,
+            "",
+        );
 
 /**
  * Runs on the server (regex pass only) and in the browser (regex pass plus a

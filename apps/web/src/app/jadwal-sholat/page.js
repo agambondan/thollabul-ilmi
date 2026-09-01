@@ -307,7 +307,10 @@ export default function JadwalSholatPage() {
 
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
-            <ContentWidth compact='max-w-lg' className='flex-1 px-4 pt-navbar pb-8'>
+            <ContentWidth
+                compact='max-w-lg'
+                className='flex-1 px-4 pt-navbar pb-8'
+            >
                 {/* Header */}
                 <div className='mb-6 text-center'>
                     <div className='inline-flex items-center justify-center w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl mb-4'>

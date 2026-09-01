@@ -293,10 +293,10 @@ export default function SettingsPage() {
                         {t("settings.section_reading")}
                     </h2>
                     {/*
-                      * These write through useQuranFont, which every reader
-                      * reads from — the options here used to be a separate,
-                      * inert set that named faces the readers do not offer.
-                      */}
+                     * These write through useQuranFont, which every reader
+                     * reads from — the options here used to be a separate,
+                     * inert set that named faces the readers do not offer.
+                     */}
                     <SettingRow label={t("settings.quran_font")}>
                         <select
                             value={fontId}

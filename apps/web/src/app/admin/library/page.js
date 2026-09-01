@@ -370,396 +370,380 @@ const AdminLibraryPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white dark:bg-slate-800'
                 >
-                        <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700'>
-                            <h2 className='font-bold text-gray-900 dark:text-white'>
-                                {editId
-                                    ? t("admin.library.edit_book")
-                                    : t("admin.library.add_book")}
-                            </h2>
-                            <button
-                                className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
-                                onClick={() => setShowModal(false)}
-                            >
-                                <BsX className='text-xl' />
-                            </button>
+                    <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700'>
+                        <h2 className='font-bold text-gray-900 dark:text-white'>
+                            {editId
+                                ? t("admin.library.edit_book")
+                                : t("admin.library.add_book")}
+                        </h2>
+                        <button
+                            className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                            onClick={() => setShowModal(false)}
+                        >
+                            <BsX className='text-xl' />
+                        </button>
+                    </div>
+                    <div className='space-y-4 p-5'>
+                        <div className='grid gap-4 md:grid-cols-2'>
+                            <Field label={t("admin.field.title")}>
+                                <input
+                                    className={inputClass}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            title: e.target.value,
+                                        })
+                                    }
+                                    value={form.title}
+                                />
+                            </Field>
+                            <Field label={t("admin.field.slug")}>
+                                <input
+                                    className={inputClass}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            slug: e.target.value,
+                                        })
+                                    }
+                                    placeholder={t("admin.library.auto_slug")}
+                                    value={form.slug}
+                                />
+                            </Field>
                         </div>
-                        <div className='space-y-4 p-5'>
-                            <div className='grid gap-4 md:grid-cols-2'>
-                                <Field label={t("admin.field.title")}>
-                                    <input
-                                        className={inputClass}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                title: e.target.value,
-                                            })
-                                        }
-                                        value={form.title}
-                                    />
-                                </Field>
-                                <Field label={t("admin.field.slug")}>
-                                    <input
-                                        className={inputClass}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                slug: e.target.value,
-                                            })
-                                        }
-                                        placeholder={t(
-                                            "admin.library.auto_slug",
-                                        )}
-                                        value={form.slug}
-                                    />
-                                </Field>
-                            </div>
-                            <div className='grid gap-4 md:grid-cols-3'>
-                                <Field label={t("admin.library.author")}>
-                                    <input
-                                        className={inputClass}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                author: e.target.value,
-                                            })
-                                        }
-                                        value={form.author}
-                                    />
-                                </Field>
-                                <Field label={t("admin.field.category")}>
-                                    <input
-                                        className={inputClass}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                category: e.target.value,
-                                            })
-                                        }
-                                        placeholder={t(
-                                            "admin.library.category_placeholder",
-                                        )}
-                                        value={form.category}
-                                    />
-                                </Field>
-                                <Field label={t("admin.library.level")}>
-                                    <input
-                                        className={inputClass}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                level: e.target.value,
-                                            })
-                                        }
-                                        value={form.level}
-                                    />
-                                </Field>
-                            </div>
-                            <div className='grid gap-4 md:grid-cols-4'>
-                                <Field label={t("admin.library.language")}>
-                                    <input
-                                        className={inputClass}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                language: e.target.value,
-                                            })
-                                        }
-                                        value={form.language}
-                                    />
-                                </Field>
-                                <Field label={t("admin.library.format")}>
-                                    <select
-                                        className={inputClass}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                format: e.target.value,
-                                            })
-                                        }
-                                        value={form.format}
-                                    >
-                                        {FORMATS.map((format) => (
-                                            <option key={format} value={format}>
-                                                {format}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </Field>
-                                <Field label={t("admin.library.status")}>
-                                    <select
-                                        className={inputClass}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                status: e.target.value,
-                                            })
-                                        }
-                                        value={form.status}
-                                    >
-                                        {STATUSES.map((status) => (
-                                            <option key={status} value={status}>
-                                                {status}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </Field>
-                                <Field label={t("admin.library.pages")}>
-                                    <input
-                                        className={inputClass}
-                                        min='0'
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                pages: e.target.value,
-                                            })
-                                        }
-                                        type='number'
-                                        value={form.pages}
-                                    />
-                                </Field>
-                            </div>
-                            <div className='grid gap-4 md:grid-cols-3'>
-                                <Field label={t("admin.library.source_type")}>
-                                    <select
-                                        className={inputClass}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                source_type: e.target.value,
-                                            })
-                                        }
-                                        value={form.source_type}
-                                    >
-                                        {SOURCE_TYPES.map((type) => (
-                                            <option key={type} value={type}>
-                                                {type}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </Field>
-                                <Field
-                                    label={t("admin.library.license_status")}
+                        <div className='grid gap-4 md:grid-cols-3'>
+                            <Field label={t("admin.library.author")}>
+                                <input
+                                    className={inputClass}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            author: e.target.value,
+                                        })
+                                    }
+                                    value={form.author}
+                                />
+                            </Field>
+                            <Field label={t("admin.field.category")}>
+                                <input
+                                    className={inputClass}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            category: e.target.value,
+                                        })
+                                    }
+                                    placeholder={t(
+                                        "admin.library.category_placeholder",
+                                    )}
+                                    value={form.category}
+                                />
+                            </Field>
+                            <Field label={t("admin.library.level")}>
+                                <input
+                                    className={inputClass}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            level: e.target.value,
+                                        })
+                                    }
+                                    value={form.level}
+                                />
+                            </Field>
+                        </div>
+                        <div className='grid gap-4 md:grid-cols-4'>
+                            <Field label={t("admin.library.language")}>
+                                <input
+                                    className={inputClass}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            language: e.target.value,
+                                        })
+                                    }
+                                    value={form.language}
+                                />
+                            </Field>
+                            <Field label={t("admin.library.format")}>
+                                <select
+                                    className={inputClass}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            format: e.target.value,
+                                        })
+                                    }
+                                    value={form.format}
                                 >
-                                    <select
-                                        className={inputClass}
+                                    {FORMATS.map((format) => (
+                                        <option key={format} value={format}>
+                                            {format}
+                                        </option>
+                                    ))}
+                                </select>
+                            </Field>
+                            <Field label={t("admin.library.status")}>
+                                <select
+                                    className={inputClass}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            status: e.target.value,
+                                        })
+                                    }
+                                    value={form.status}
+                                >
+                                    {STATUSES.map((status) => (
+                                        <option key={status} value={status}>
+                                            {status}
+                                        </option>
+                                    ))}
+                                </select>
+                            </Field>
+                            <Field label={t("admin.library.pages")}>
+                                <input
+                                    className={inputClass}
+                                    min='0'
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            pages: e.target.value,
+                                        })
+                                    }
+                                    type='number'
+                                    value={form.pages}
+                                />
+                            </Field>
+                        </div>
+                        <div className='grid gap-4 md:grid-cols-3'>
+                            <Field label={t("admin.library.source_type")}>
+                                <select
+                                    className={inputClass}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            source_type: e.target.value,
+                                        })
+                                    }
+                                    value={form.source_type}
+                                >
+                                    {SOURCE_TYPES.map((type) => (
+                                        <option key={type} value={type}>
+                                            {type}
+                                        </option>
+                                    ))}
+                                </select>
+                            </Field>
+                            <Field label={t("admin.library.license_status")}>
+                                <select
+                                    className={inputClass}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            license_status: e.target.value,
+                                        })
+                                    }
+                                    value={form.license_status}
+                                >
+                                    {LICENSE_STATUSES.map((status) => (
+                                        <option key={status} value={status}>
+                                            {status}
+                                        </option>
+                                    ))}
+                                </select>
+                            </Field>
+                            <Field label={t("admin.library.source_verified")}>
+                                <label className='flex min-h-[38px] items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-slate-600 dark:bg-slate-700 dark:text-white'>
+                                    <input
+                                        checked={form.is_source_verified}
                                         onChange={(e) =>
                                             setForm({
                                                 ...form,
-                                                license_status: e.target.value,
+                                                is_source_verified:
+                                                    e.target.checked,
                                             })
                                         }
-                                        value={form.license_status}
-                                    >
-                                        {LICENSE_STATUSES.map((status) => (
-                                            <option key={status} value={status}>
-                                                {status}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </Field>
-                                <Field
-                                    label={t("admin.library.source_verified")}
-                                >
-                                    <label className='flex min-h-[38px] items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-slate-600 dark:bg-slate-700 dark:text-white'>
+                                        type='checkbox'
+                                    />
+                                    {t("admin.library.source_verified_hint")}
+                                </label>
+                            </Field>
+                        </div>
+                        <Field label={t("admin.library.source_url")}>
+                            <input
+                                className={inputClass}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        source_url: e.target.value,
+                                    })
+                                }
+                                placeholder={t("admin.library.url_placeholder")}
+                                type='url'
+                                value={form.source_url}
+                            />
+                        </Field>
+                        <Field label={t("admin.library.resource_file")}>
+                            <div className='rounded-lg border border-dashed border-gray-300 p-3 dark:border-slate-600'>
+                                {editId ? (
+                                    <div className='space-y-2'>
                                         <input
-                                            checked={form.is_source_verified}
+                                            accept='.pdf,.epub,.html,.htm,application/pdf,application/epub+zip,text/html'
+                                            className='block w-full text-sm text-gray-600 file:mr-3 file:rounded-md file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-emerald-800 hover:file:bg-emerald-100 dark:text-gray-300 dark:file:bg-slate-700 dark:file:text-emerald-200'
                                             onChange={(e) =>
-                                                setForm({
-                                                    ...form,
-                                                    is_source_verified:
-                                                        e.target.checked,
-                                                })
+                                                setResourceFile(
+                                                    e.target.files?.[0] ?? null,
+                                                )
                                             }
-                                            type='checkbox'
+                                            type='file'
                                         />
-                                        {t(
-                                            "admin.library.source_verified_hint",
-                                        )}
-                                    </label>
-                                </Field>
-                            </div>
-                            <Field label={t("admin.library.source_url")}>
-                                <input
-                                    className={inputClass}
-                                    onChange={(e) =>
-                                        setForm({
-                                            ...form,
-                                            source_url: e.target.value,
-                                        })
-                                    }
-                                    placeholder={t(
-                                        "admin.library.url_placeholder",
-                                    )}
-                                    type='url'
-                                    value={form.source_url}
-                                />
-                            </Field>
-                            <Field label={t("admin.library.resource_file")}>
-                                <div className='rounded-lg border border-dashed border-gray-300 p-3 dark:border-slate-600'>
-                                    {editId ? (
-                                        <div className='space-y-2'>
-                                            <input
-                                                accept='.pdf,.epub,.html,.htm,application/pdf,application/epub+zip,text/html'
-                                                className='block w-full text-sm text-gray-600 file:mr-3 file:rounded-md file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-emerald-800 hover:file:bg-emerald-100 dark:text-gray-300 dark:file:bg-slate-700 dark:file:text-emerald-200'
-                                                onChange={(e) =>
-                                                    setResourceFile(
-                                                        e.target.files?.[0] ??
-                                                            null,
-                                                    )
+                                        <div className='flex flex-wrap items-center gap-2'>
+                                            <button
+                                                className='rounded-lg bg-emerald-700 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-600 disabled:opacity-50'
+                                                disabled={
+                                                    !resourceFile ||
+                                                    uploadingResource
                                                 }
-                                                type='file'
-                                            />
-                                            <div className='flex flex-wrap items-center gap-2'>
-                                                <button
-                                                    className='rounded-lg bg-emerald-700 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-600 disabled:opacity-50'
-                                                    disabled={
-                                                        !resourceFile ||
-                                                        uploadingResource
-                                                    }
-                                                    onClick={uploadResource}
-                                                    type='button'
-                                                >
-                                                    {uploadingResource
-                                                        ? `${t("admin.library.uploading_resource")} ${resourceUploadProgress}%`
-                                                        : t(
-                                                              "admin.library.upload_resource",
-                                                          )}
-                                                </button>
-                                                {uploadingResource &&
-                                                    resourceUploadProgress >
-                                                        0 && (
-                                                        <div className='w-full bg-gray-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden'>
-                                                            <div
-                                                                className='bg-emerald-600 h-1.5 rounded-full transition-all duration-200'
-                                                                style={{
-                                                                    width: `${resourceUploadProgress}%`,
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                {form.file_name ? (
-                                                    <>
-                                                        <span className='text-xs text-gray-500 dark:text-gray-400'>
-                                                            {form.file_name}{" "}
-                                                            {form.file_size_bytes
-                                                                ? `· ${Math.round(Number(form.file_size_bytes) / 1024)} KB`
-                                                                : ""}
-                                                        </span>
-                                                        <button
-                                                            className='rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50 dark:border-red-900/60 dark:text-red-300 dark:hover:bg-red-950/30'
-                                                            disabled={
-                                                                clearingResource
-                                                            }
-                                                            onClick={
-                                                                clearResource
-                                                            }
-                                                            type='button'
-                                                        >
-                                                            {clearingResource
-                                                                ? t(
-                                                                      "admin.library.clearing_resource",
-                                                                  )
-                                                                : t(
-                                                                      "admin.library.clear_resource",
-                                                                  )}
-                                                        </button>
-                                                    </>
-                                                ) : null}
-                                            </div>
+                                                onClick={uploadResource}
+                                                type='button'
+                                            >
+                                                {uploadingResource
+                                                    ? `${t("admin.library.uploading_resource")} ${resourceUploadProgress}%`
+                                                    : t(
+                                                          "admin.library.upload_resource",
+                                                      )}
+                                            </button>
+                                            {uploadingResource &&
+                                                resourceUploadProgress > 0 && (
+                                                    <div className='w-full bg-gray-200 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden'>
+                                                        <div
+                                                            className='bg-emerald-600 h-1.5 rounded-full transition-all duration-200'
+                                                            style={{
+                                                                width: `${resourceUploadProgress}%`,
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                            {form.file_name ? (
+                                                <>
+                                                    <span className='text-xs text-gray-500 dark:text-gray-400'>
+                                                        {form.file_name}{" "}
+                                                        {form.file_size_bytes
+                                                            ? `· ${Math.round(Number(form.file_size_bytes) / 1024)} KB`
+                                                            : ""}
+                                                    </span>
+                                                    <button
+                                                        className='rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50 dark:border-red-900/60 dark:text-red-300 dark:hover:bg-red-950/30'
+                                                        disabled={
+                                                            clearingResource
+                                                        }
+                                                        onClick={clearResource}
+                                                        type='button'
+                                                    >
+                                                        {clearingResource
+                                                            ? t(
+                                                                  "admin.library.clearing_resource",
+                                                              )
+                                                            : t(
+                                                                  "admin.library.clear_resource",
+                                                              )}
+                                                    </button>
+                                                </>
+                                            ) : null}
                                         </div>
-                                    ) : (
-                                        <p className='text-xs text-gray-500 dark:text-gray-400'>
-                                            {t(
-                                                "admin.library.resource_file_save_first",
-                                            )}
-                                        </p>
-                                    )}
-                                </div>
-                            </Field>
-                            <Field label={t("admin.library.cover_url")}>
+                                    </div>
+                                ) : (
+                                    <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                        {t(
+                                            "admin.library.resource_file_save_first",
+                                        )}
+                                    </p>
+                                )}
+                            </div>
+                        </Field>
+                        <Field label={t("admin.library.cover_url")}>
+                            <input
+                                className={inputClass}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        cover_url: e.target.value,
+                                    })
+                                }
+                                placeholder={t("admin.library.url_placeholder")}
+                                type='url'
+                                value={form.cover_url}
+                            />
+                        </Field>
+                        <Field label={t("admin.field.description")}>
+                            <textarea
+                                className={inputClass}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        description: e.target.value,
+                                    })
+                                }
+                                rows={3}
+                                value={form.description}
+                            />
+                        </Field>
+                        <div className='grid gap-4 md:grid-cols-2'>
+                            <Field label={t("admin.library.tags")}>
                                 <input
                                     className={inputClass}
                                     onChange={(e) =>
                                         setForm({
                                             ...form,
-                                            cover_url: e.target.value,
+                                            tags: e.target.value,
                                         })
                                     }
-                                    placeholder={t(
-                                        "admin.library.url_placeholder",
-                                    )}
-                                    type='url'
-                                    value={form.cover_url}
+                                    value={form.tags}
                                 />
                             </Field>
-                            <Field label={t("admin.field.description")}>
-                                <textarea
+                            <Field label={t("admin.library.license")}>
+                                <input
                                     className={inputClass}
                                     onChange={(e) =>
                                         setForm({
                                             ...form,
-                                            description: e.target.value,
+                                            license: e.target.value,
                                         })
                                     }
-                                    rows={3}
-                                    value={form.description}
-                                />
-                            </Field>
-                            <div className='grid gap-4 md:grid-cols-2'>
-                                <Field label={t("admin.library.tags")}>
-                                    <input
-                                        className={inputClass}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                tags: e.target.value,
-                                            })
-                                        }
-                                        value={form.tags}
-                                    />
-                                </Field>
-                                <Field label={t("admin.library.license")}>
-                                    <input
-                                        className={inputClass}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                license: e.target.value,
-                                            })
-                                        }
-                                        value={form.license}
-                                    />
-                                </Field>
-                            </div>
-                            <Field label={t("admin.library.source_note")}>
-                                <textarea
-                                    className={inputClass}
-                                    onChange={(e) =>
-                                        setForm({
-                                            ...form,
-                                            source_note: e.target.value,
-                                        })
-                                    }
-                                    rows={2}
-                                    value={form.source_note}
+                                    value={form.license}
                                 />
                             </Field>
                         </div>
-                        <div className='flex gap-3 border-t border-gray-100 p-5 dark:border-slate-700'>
-                            <button
-                                className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-700'
-                                onClick={() => setShowModal(false)}
-                            >
-                                {t("common.cancel")}
-                            </button>
-                            <button
-                                className='flex-1 rounded-lg bg-emerald-700 py-2 text-sm font-medium text-white hover:bg-emerald-600 disabled:opacity-50'
-                                disabled={saving || !form.title}
-                                onClick={save}
-                            >
-                                {saving ? t("common.saving") : t("common.save")}
-                            </button>
-                        </div>
+                        <Field label={t("admin.library.source_note")}>
+                            <textarea
+                                className={inputClass}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        source_note: e.target.value,
+                                    })
+                                }
+                                rows={2}
+                                value={form.source_note}
+                            />
+                        </Field>
+                    </div>
+                    <div className='flex gap-3 border-t border-gray-100 p-5 dark:border-slate-700'>
+                        <button
+                            className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-700'
+                            onClick={() => setShowModal(false)}
+                        >
+                            {t("common.cancel")}
+                        </button>
+                        <button
+                            className='flex-1 rounded-lg bg-emerald-700 py-2 text-sm font-medium text-white hover:bg-emerald-600 disabled:opacity-50'
+                            disabled={saving || !form.title}
+                            onClick={save}
+                        >
+                            {saving ? t("common.saving") : t("common.save")}
+                        </button>
+                    </div>
                 </ModalShell>
             )}
 
@@ -769,28 +753,28 @@ const AdminLibraryPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='w-full max-w-sm rounded-2xl bg-white p-6 dark:bg-slate-800'
                 >
-                        <h2 className='mb-2 font-bold text-gray-900 dark:text-white'>
-                            {t("admin.crud.delete_title", {
-                                item: t("admin.library.book"),
-                            })}
-                        </h2>
-                        <p className='mb-5 text-sm text-gray-500 dark:text-gray-400'>
-                            {t("admin.crud.delete_body")}
-                        </p>
-                        <div className='flex gap-3'>
-                            <button
-                                className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 dark:border-slate-600 dark:text-gray-300'
-                                onClick={() => setDeleteId(null)}
-                            >
-                                {t("common.cancel")}
-                            </button>
-                            <button
-                                className='flex-1 rounded-lg bg-red-600 py-2 text-sm font-medium text-white hover:bg-red-500'
-                                onClick={confirmDelete}
-                            >
-                                {t("common.delete")}
-                            </button>
-                        </div>
+                    <h2 className='mb-2 font-bold text-gray-900 dark:text-white'>
+                        {t("admin.crud.delete_title", {
+                            item: t("admin.library.book"),
+                        })}
+                    </h2>
+                    <p className='mb-5 text-sm text-gray-500 dark:text-gray-400'>
+                        {t("admin.crud.delete_body")}
+                    </p>
+                    <div className='flex gap-3'>
+                        <button
+                            className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 dark:border-slate-600 dark:text-gray-300'
+                            onClick={() => setDeleteId(null)}
+                        >
+                            {t("common.cancel")}
+                        </button>
+                        <button
+                            className='flex-1 rounded-lg bg-red-600 py-2 text-sm font-medium text-white hover:bg-red-500'
+                            onClick={confirmDelete}
+                        >
+                            {t("common.delete")}
+                        </button>
+                    </div>
                 </ModalShell>
             )}
         </div>
@@ -802,10 +786,14 @@ const inputClass =
 
 const Field = ({ children, label }) => (
     <div>
+        {/*
+         * The control is passed in as children, so the label is bound by
+         * wrapping rather than htmlFor — clicking the text still focuses it.
+         */}
         <label className='mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300'>
-            {label}
+            <span className='mb-1 block'>{label}</span>
+            {children}
         </label>
-        {children}
     </div>
 );
 

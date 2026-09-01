@@ -318,222 +318,222 @@ const AdminAsbabunNuzulPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
                 >
-                        <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
-                            <h2 className='font-bold text-gray-900 dark:text-white'>
-                                {editId
-                                    ? `${t("common.edit")} ${t("admin.nav.asbabun")}`
-                                    : `${t("admin.crud.add")} ${t("admin.nav.asbabun")}`}
-                            </h2>
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
-                            >
-                                <BsX className='text-xl' />
-                            </button>
-                        </div>
-                        <div className='p-5 space-y-4'>
-                            <div className='grid grid-cols-3 gap-4'>
-                                <div>
-                                    <label
-                                        htmlFor='page-surah-number'
-                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                    >
-                                        {t("admin.asbabun.surah_number")}
-                                    </label>
-                                    <input
-                                        id='page-surah-number'
-                                        type='number'
-                                        value={form.surah_number}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                surah_number: e.target.value,
-                                            })
-                                        }
-                                        min={1}
-                                        max={114}
-                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor='page-ayat-awal'
-                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                    >
-                                        Ayat awal
-                                    </label>
-                                    <input
-                                        id='page-ayat-awal'
-                                        type='number'
-                                        value={form.ayah_number}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                ayah_number: e.target.value,
-                                            })
-                                        }
-                                        min={1}
-                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor='page-ayat-akhir'
-                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                    >
-                                        Ayat akhir
-                                    </label>
-                                    <input
-                                        id='page-ayat-akhir'
-                                        type='number'
-                                        value={form.ayah_end}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                ayah_end: e.target.value,
-                                            })
-                                        }
-                                        min={1}
-                                        placeholder={t(
-                                            "admin.asbabun_nuzul.optional",
-                                        )}
-                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                    />
-                                </div>
-                            </div>
+                    <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
+                        <h2 className='font-bold text-gray-900 dark:text-white'>
+                            {editId
+                                ? `${t("common.edit")} ${t("admin.nav.asbabun")}`
+                                : `${t("admin.crud.add")} ${t("admin.nav.asbabun")}`}
+                        </h2>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                        >
+                            <BsX className='text-xl' />
+                        </button>
+                    </div>
+                    <div className='p-5 space-y-4'>
+                        <div className='grid grid-cols-3 gap-4'>
                             <div>
                                 <label
-                                    htmlFor='page-title'
+                                    htmlFor='page-surah-number'
                                     className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
-                                    {t("admin.field.title")}
+                                    {t("admin.asbabun.surah_number")}
                                 </label>
                                 <input
-                                    id='page-title'
-                                    type='text'
-                                    value={form.title}
+                                    id='page-surah-number'
+                                    type='number'
+                                    value={form.surah_number}
                                     onChange={(e) =>
                                         setForm({
                                             ...form,
-                                            title: e.target.value,
+                                            surah_number: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                />
-                            </div>
-                            <div className='grid grid-cols-2 gap-4'>
-                                <div>
-                                    <label
-                                        htmlFor='page-perawi'
-                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                    >
-                                        Perawi
-                                    </label>
-                                    <input
-                                        id='page-perawi'
-                                        type='text'
-                                        value={form.narrator}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                narrator: e.target.value,
-                                            })
-                                        }
-                                        placeholder={t(
-                                            "admin.asbabun_nuzul.scholar_placeholder",
-                                        )}
-                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                    />
-                                </div>
-                                <div>
-                                    <label
-                                        htmlFor='page-referensi-tampil'
-                                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                    >
-                                        Referensi tampil
-                                    </label>
-                                    <input
-                                        id='page-referensi-tampil'
-                                        type='text'
-                                        value={form.display_ref}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                display_ref: e.target.value,
-                                            })
-                                        }
-                                        placeholder={t(
-                                            "admin.asbabun_nuzul.verse_placeholder",
-                                        )}
-                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                    />
-                                </div>
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor='page-content'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
-                                >
-                                    {t("admin.field.content")}
-                                </label>
-                                <textarea
-                                    id='page-content'
-                                    value={form.content}
-                                    onChange={(e) =>
-                                        setForm({
-                                            ...form,
-                                            content: e.target.value,
-                                        })
-                                    }
-                                    rows={5}
+                                    min={1}
+                                    max={114}
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
                             <div>
                                 <label
-                                    htmlFor='page-source'
+                                    htmlFor='page-ayat-awal'
                                     className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
-                                    {t("common.source")}
+                                    Ayat awal
                                 </label>
                                 <input
-                                    id='page-source'
-                                    type='text'
-                                    value={form.source}
+                                    id='page-ayat-awal'
+                                    type='number'
+                                    value={form.ayah_number}
                                     onChange={(e) =>
                                         setForm({
                                             ...form,
-                                            source: e.target.value,
+                                            ayah_number: e.target.value,
                                         })
                                     }
+                                    min={1}
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor='page-ayat-akhir'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
+                                    Ayat akhir
+                                </label>
+                                <input
+                                    id='page-ayat-akhir'
+                                    type='number'
+                                    value={form.ayah_end}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            ayah_end: e.target.value,
+                                        })
+                                    }
+                                    min={1}
                                     placeholder={t(
-                                        "admin.asbabun_nuzul.source_placeholder",
+                                        "admin.asbabun_nuzul.optional",
                                     )}
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
                         </div>
-                        <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
+                        <div>
+                            <label
+                                htmlFor='page-title'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
-                                {t("common.cancel")}
-                            </button>
-                            <button
-                                onClick={save}
-                                disabled={
-                                    saving ||
-                                    !form.title ||
-                                    !form.content ||
-                                    !form.surah_number ||
-                                    !form.ayah_number
+                                {t("admin.field.title")}
+                            </label>
+                            <input
+                                id='page-title'
+                                type='text'
+                                value={form.title}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        title: e.target.value,
+                                    })
                                 }
-                                className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
-                            >
-                                {saving ? t("common.saving") : t("common.save")}
-                            </button>
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                            />
                         </div>
+                        <div className='grid grid-cols-2 gap-4'>
+                            <div>
+                                <label
+                                    htmlFor='page-perawi'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
+                                    Perawi
+                                </label>
+                                <input
+                                    id='page-perawi'
+                                    type='text'
+                                    value={form.narrator}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            narrator: e.target.value,
+                                        })
+                                    }
+                                    placeholder={t(
+                                        "admin.asbabun_nuzul.scholar_placeholder",
+                                    )}
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor='page-referensi-tampil'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
+                                    Referensi tampil
+                                </label>
+                                <input
+                                    id='page-referensi-tampil'
+                                    type='text'
+                                    value={form.display_ref}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            display_ref: e.target.value,
+                                        })
+                                    }
+                                    placeholder={t(
+                                        "admin.asbabun_nuzul.verse_placeholder",
+                                    )}
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                htmlFor='page-content'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                            >
+                                {t("admin.field.content")}
+                            </label>
+                            <textarea
+                                id='page-content'
+                                value={form.content}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        content: e.target.value,
+                                    })
+                                }
+                                rows={5}
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                            />
+                        </div>
+                        <div>
+                            <label
+                                htmlFor='page-source'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                            >
+                                {t("common.source")}
+                            </label>
+                            <input
+                                id='page-source'
+                                type='text'
+                                value={form.source}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        source: e.target.value,
+                                    })
+                                }
+                                placeholder={t(
+                                    "admin.asbabun_nuzul.source_placeholder",
+                                )}
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                            />
+                        </div>
+                    </div>
+                    <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
+                        >
+                            {t("common.cancel")}
+                        </button>
+                        <button
+                            onClick={save}
+                            disabled={
+                                saving ||
+                                !form.title ||
+                                !form.content ||
+                                !form.surah_number ||
+                                !form.ayah_number
+                            }
+                            className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
+                        >
+                            {saving ? t("common.saving") : t("common.save")}
+                        </button>
+                    </div>
                 </ModalShell>
             )}
 
@@ -543,29 +543,29 @@ const AdminAsbabunNuzulPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
                 >
-                        <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
-                            {t("admin.crud.delete_title").replace(
-                                "{item}",
-                                t("admin.nav.asbabun"),
-                            )}
-                        </h2>
-                        <p className='text-sm text-gray-500 dark:text-gray-400 mb-5'>
-                            {t("admin.crud.delete_body")}
-                        </p>
-                        <div className='flex gap-3'>
-                            <button
-                                onClick={() => setDeleteId(null)}
-                                className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium'
-                            >
-                                {t("common.cancel")}
-                            </button>
-                            <button
-                                onClick={confirmDelete}
-                                className='flex-1 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-medium'
-                            >
-                                {t("common.delete")}
-                            </button>
-                        </div>
+                    <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
+                        {t("admin.crud.delete_title").replace(
+                            "{item}",
+                            t("admin.nav.asbabun"),
+                        )}
+                    </h2>
+                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-5'>
+                        {t("admin.crud.delete_body")}
+                    </p>
+                    <div className='flex gap-3'>
+                        <button
+                            onClick={() => setDeleteId(null)}
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium'
+                        >
+                            {t("common.cancel")}
+                        </button>
+                        <button
+                            onClick={confirmDelete}
+                            className='flex-1 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-medium'
+                        >
+                            {t("common.delete")}
+                        </button>
+                    </div>
                 </ModalShell>
             )}
         </div>

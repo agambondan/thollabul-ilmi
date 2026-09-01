@@ -254,164 +254,164 @@ const AdminRemindersPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white dark:bg-slate-800'
                 >
-                        <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700'>
-                            <h2 className='font-bold text-gray-900 dark:text-white'>
-                                {editId ? "Edit Reminder" : "Tambah Reminder"}
-                            </h2>
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
-                            >
-                                <BsX className='text-xl' />
-                            </button>
-                        </div>
+                    <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700'>
+                        <h2 className='font-bold text-gray-900 dark:text-white'>
+                            {editId ? "Edit Reminder" : "Tambah Reminder"}
+                        </h2>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                        >
+                            <BsX className='text-xl' />
+                        </button>
+                    </div>
 
-                        <div className='space-y-4 p-5'>
-                            <div className='grid gap-4 md:grid-cols-2'>
-                                <Field label='Judul'>
-                                    <input
-                                        type='text'
-                                        value={form.title}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                title: e.target.value,
-                                            })
-                                        }
-                                        className={INPUT_CLASS}
-                                    />
-                                </Field>
-                                <Field label='Tipe'>
-                                    <select
-                                        value={form.type}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                type: e.target.value,
-                                            })
-                                        }
-                                        className={INPUT_CLASS}
-                                    >
-                                        {TYPES.map((type) => (
-                                            <option
-                                                key={type.value}
-                                                value={type.value}
-                                            >
-                                                {type.label}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </Field>
-                            </div>
-
-                            <Field label='Isi pengingat'>
-                                <textarea
-                                    value={form.text}
+                    <div className='space-y-4 p-5'>
+                        <div className='grid gap-4 md:grid-cols-2'>
+                            <Field label='Judul'>
+                                <input
+                                    type='text'
+                                    value={form.title}
                                     onChange={(e) =>
                                         setForm({
                                             ...form,
-                                            text: e.target.value,
+                                            title: e.target.value,
                                         })
                                     }
-                                    rows={5}
                                     className={INPUT_CLASS}
                                 />
                             </Field>
-
-                            <div className='grid gap-4 md:grid-cols-2'>
-                                <Field label='Nama ulama / author'>
-                                    <input
-                                        type='text'
-                                        value={form.author}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                author: e.target.value,
-                                            })
-                                        }
-                                        className={INPUT_CLASS}
-                                    />
-                                </Field>
-                                <Field label='Sumber'>
-                                    <input
-                                        type='text'
-                                        value={form.source}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                source: e.target.value,
-                                            })
-                                        }
-                                        placeholder={t(
-                                            "admin.reminders.source_placeholder",
-                                        )}
-                                        className={INPUT_CLASS}
-                                    />
-                                </Field>
-                            </div>
-
-                            <div className='grid gap-4 md:grid-cols-3'>
-                                <Field label='Bahasa'>
-                                    <select
-                                        value={form.lang}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                lang: e.target.value,
-                                            })
-                                        }
-                                        className={INPUT_CLASS}
-                                    >
-                                        <option value='idn'>Indonesia</option>
-                                        <option value='en'>English</option>
-                                        <option value='ar'>Arab</option>
-                                    </select>
-                                </Field>
-                                <Field label='Urutan'>
-                                    <input
-                                        type='number'
-                                        value={form.display_order}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                display_order: e.target.value,
-                                            })
-                                        }
-                                        className={INPUT_CLASS}
-                                    />
-                                </Field>
-                                <label className='flex items-center gap-2 pt-7 text-sm text-gray-700 dark:text-gray-300'>
-                                    <input
-                                        type='checkbox'
-                                        checked={form.is_active}
-                                        onChange={(e) =>
-                                            setForm({
-                                                ...form,
-                                                is_active: e.target.checked,
-                                            })
-                                        }
-                                        className='h-4 w-4 rounded border-gray-300 text-emerald-600'
-                                    />
-                                    Aktif ditampilkan
-                                </label>
-                            </div>
+                            <Field label='Tipe'>
+                                <select
+                                    value={form.type}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            type: e.target.value,
+                                        })
+                                    }
+                                    className={INPUT_CLASS}
+                                >
+                                    {TYPES.map((type) => (
+                                        <option
+                                            key={type.value}
+                                            value={type.value}
+                                        >
+                                            {type.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </Field>
                         </div>
 
-                        <div className='flex gap-3 border-t border-gray-100 p-5 dark:border-slate-700'>
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-700'
-                            >
-                                {t("common.cancel")}
-                            </button>
-                            <button
-                                onClick={save}
-                                disabled={saving || !form.title || !form.text}
-                                className='flex-1 rounded-lg bg-emerald-700 py-2 text-sm font-medium text-white hover:bg-emerald-600 disabled:opacity-50'
-                            >
-                                {saving ? t("common.saving") : t("common.save")}
-                            </button>
+                        <Field label='Isi pengingat'>
+                            <textarea
+                                value={form.text}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        text: e.target.value,
+                                    })
+                                }
+                                rows={5}
+                                className={INPUT_CLASS}
+                            />
+                        </Field>
+
+                        <div className='grid gap-4 md:grid-cols-2'>
+                            <Field label='Nama ulama / author'>
+                                <input
+                                    type='text'
+                                    value={form.author}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            author: e.target.value,
+                                        })
+                                    }
+                                    className={INPUT_CLASS}
+                                />
+                            </Field>
+                            <Field label='Sumber'>
+                                <input
+                                    type='text'
+                                    value={form.source}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            source: e.target.value,
+                                        })
+                                    }
+                                    placeholder={t(
+                                        "admin.reminders.source_placeholder",
+                                    )}
+                                    className={INPUT_CLASS}
+                                />
+                            </Field>
                         </div>
+
+                        <div className='grid gap-4 md:grid-cols-3'>
+                            <Field label='Bahasa'>
+                                <select
+                                    value={form.lang}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            lang: e.target.value,
+                                        })
+                                    }
+                                    className={INPUT_CLASS}
+                                >
+                                    <option value='idn'>Indonesia</option>
+                                    <option value='en'>English</option>
+                                    <option value='ar'>Arab</option>
+                                </select>
+                            </Field>
+                            <Field label='Urutan'>
+                                <input
+                                    type='number'
+                                    value={form.display_order}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            display_order: e.target.value,
+                                        })
+                                    }
+                                    className={INPUT_CLASS}
+                                />
+                            </Field>
+                            <label className='flex items-center gap-2 pt-7 text-sm text-gray-700 dark:text-gray-300'>
+                                <input
+                                    type='checkbox'
+                                    checked={form.is_active}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            is_active: e.target.checked,
+                                        })
+                                    }
+                                    className='h-4 w-4 rounded border-gray-300 text-emerald-600'
+                                />
+                                Aktif ditampilkan
+                            </label>
+                        </div>
+                    </div>
+
+                    <div className='flex gap-3 border-t border-gray-100 p-5 dark:border-slate-700'>
+                        <button
+                            onClick={() => setShowModal(false)}
+                            className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-700'
+                        >
+                            {t("common.cancel")}
+                        </button>
+                        <button
+                            onClick={save}
+                            disabled={saving || !form.title || !form.text}
+                            className='flex-1 rounded-lg bg-emerald-700 py-2 text-sm font-medium text-white hover:bg-emerald-600 disabled:opacity-50'
+                        >
+                            {saving ? t("common.saving") : t("common.save")}
+                        </button>
+                    </div>
                 </ModalShell>
             )}
 
@@ -421,26 +421,26 @@ const AdminRemindersPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='w-full max-w-sm rounded-2xl bg-white p-6 dark:bg-slate-800'
                 >
-                        <h2 className='mb-2 font-bold text-gray-900 dark:text-white'>
-                            Hapus Reminder
-                        </h2>
-                        <p className='mb-5 text-sm text-gray-500 dark:text-gray-400'>
-                            Data yang dihapus tidak bisa dikembalikan.
-                        </p>
-                        <div className='flex gap-3'>
-                            <button
-                                onClick={() => setDeleteId(null)}
-                                className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 dark:border-slate-600 dark:text-gray-300'
-                            >
-                                {t("common.cancel")}
-                            </button>
-                            <button
-                                onClick={confirmDelete}
-                                className='flex-1 rounded-lg bg-red-600 py-2 text-sm font-medium text-white hover:bg-red-500'
-                            >
-                                {t("common.delete")}
-                            </button>
-                        </div>
+                    <h2 className='mb-2 font-bold text-gray-900 dark:text-white'>
+                        Hapus Reminder
+                    </h2>
+                    <p className='mb-5 text-sm text-gray-500 dark:text-gray-400'>
+                        Data yang dihapus tidak bisa dikembalikan.
+                    </p>
+                    <div className='flex gap-3'>
+                        <button
+                            onClick={() => setDeleteId(null)}
+                            className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 dark:border-slate-600 dark:text-gray-300'
+                        >
+                            {t("common.cancel")}
+                        </button>
+                        <button
+                            onClick={confirmDelete}
+                            className='flex-1 rounded-lg bg-red-600 py-2 text-sm font-medium text-white hover:bg-red-500'
+                        >
+                            {t("common.delete")}
+                        </button>
+                    </div>
                 </ModalShell>
             )}
         </div>

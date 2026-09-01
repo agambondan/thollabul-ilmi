@@ -213,7 +213,6 @@ const AdminLayout = ({ children }) => {
         setMobileNavOpen(false);
     }, [pathname]);
 
-
     const toggleDark = toggleTheme;
 
     const toggleSidebar = () => {

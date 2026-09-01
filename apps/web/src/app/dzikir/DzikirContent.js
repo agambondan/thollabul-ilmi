@@ -39,9 +39,7 @@ export const DzikirContent = ({ initialItems = [] }) => {
     const { isWide } = useLayoutMode();
     const { isAuthenticated } = useAuth();
     const [dzikirList, setDzikirList] = useState(initialItems);
-    const [isLoading, setIsLoading] = useState(
-        initialItems.length === 0,
-    );
+    const [isLoading, setIsLoading] = useState(initialItems.length === 0);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(false);
     const [page, setPage] = useState(0);
@@ -111,7 +109,7 @@ export const DzikirContent = ({ initialItems = [] }) => {
         }
         hasServerDataRef.current = false;
         fetchPage(category, 0, false);
-    }, [category]); // eslint-disable-line react-hooks/exhaustive-deps // eslint-disable-line react-hooks/exhaustive-deps
+    }, [category]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (page === 0) return;
@@ -461,4 +459,3 @@ export const DzikirContent = ({ initialItems = [] }) => {
         </div>
     );
 };
-

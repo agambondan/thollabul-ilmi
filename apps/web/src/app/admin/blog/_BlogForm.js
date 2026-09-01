@@ -103,7 +103,10 @@ const BlogForm = ({ initialData = null, postId = null }) => {
             )}
 
             <div>
-                <label htmlFor='blogform-field-1' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label
+                    htmlFor='blogform-field-1'
+                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                >
                     {t("admin.field.title")}{" "}
                     <span className='text-red-500'>*</span>
                 </label>
@@ -157,7 +160,10 @@ const BlogForm = ({ initialData = null, postId = null }) => {
             </div>
 
             <div>
-                <label htmlFor='blogform-field-2' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label
+                    htmlFor='blogform-field-2'
+                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                >
                     {t("admin.field.content")}{" "}
                     <span className='text-red-500'>*</span>
                 </label>
@@ -250,10 +256,17 @@ const BlogForm = ({ initialData = null, postId = null }) => {
 
             {tags.length > 0 && (
                 <div>
-                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+                    <p
+                        id='blogform-tags-label'
+                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                    >
                         {t("admin.field.tag")}
-                    </label>
-                    <div className='flex flex-wrap gap-2'>
+                    </p>
+                    <div
+                        role='group'
+                        aria-labelledby='blogform-tags-label'
+                        className='flex flex-wrap gap-2'
+                    >
                         {tags.map((tag) => (
                             <button
                                 key={tag.id}

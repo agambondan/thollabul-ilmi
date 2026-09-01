@@ -320,7 +320,10 @@ const NotesPage = () => {
                         e.target === e.currentTarget && setShowModal(false)
                     }
                 >
-                    <div {...modalA11y} className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'>
+                    <div
+                        {...modalA11y}
+                        className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'
+                    >
                         <div className='flex items-center justify-between mb-4'>
                             <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
                                 {editNote ? t("notes.edit") : t("notes.add")}

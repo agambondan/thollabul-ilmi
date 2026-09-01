@@ -5,9 +5,10 @@ import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { getLocalizedTranslation } from "@/lib/translation";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { MdOutlineAutoStories } from "react-icons/md";
+import InlineError from "@/components/InlineError";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -17,17 +18,25 @@ export const TafsirIndexContent = ({ tafsirBasePath = "/tafsir" }) => {
     const [surahs, setSurahs] = useState([]);
     const [search, setSearch] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState(false);
 
-    useEffect(() => {
+    const loadSurahs = useCallback(() => {
+        setIsLoading(true);
+        setLoadError(false);
         fetch(`${API_URL}/api/v1/surah?size=114&sort=number`)
             .then((r) => r.json())
             .then((data) => {
                 const list = data?.surahs ?? data?.items ?? data ?? [];
                 setSurahs(list);
             })
-            .catch(() => setSurahs([]))
+            // An empty list would read as "no surah exist"; say the load failed.
+            .catch(() => setLoadError(true))
             .finally(() => setIsLoading(false));
     }, []);
+
+    useEffect(() => {
+        loadSurahs();
+    }, [loadSurahs]);
 
     const filtered = surahs.filter((s) => {
         if (!search) return true;
@@ -83,6 +92,9 @@ export const TafsirIndexContent = ({ tafsirBasePath = "/tafsir" }) => {
             </div>
 
             {/* Grid */}
+            {loadError && !isLoading ? (
+                <InlineError onRetry={loadSurahs} />
+            ) : null}
             {isLoading ? (
                 <div className='grid grid-cols-2 sm:grid-cols-3 gap-2'>
                     {Array.from({ length: 12 }).map((_, i) => (

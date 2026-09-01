@@ -7,10 +7,8 @@ import { SettingsProvider } from "@/lib/useSettings";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
 import ServiceWorkerRegistrar from "@/components/ServiceWorkerRegistrar";
 import MobileTabBar from "@/components/MobileTabBar";
-import {
-    PublicFooter,
-    PublicNavbar,
-} from "@/components/PublicChrome";
+import SkipToContent from "@/components/SkipToContent";
+import { PublicFooter, PublicNavbar } from "@/components/PublicChrome";
 import { Toaster } from "react-hot-toast";
 import InAppNotification from "@/components/InAppNotification";
 import NotificationPermissionPrompt from "@/components/NotificationPermissionPrompt";
@@ -111,8 +109,11 @@ export default function RootLayout({ children }) {
                         <SettingsProvider>
                             <AnalyticsTracker />
                             <ServiceWorkerRegistrar />
+                            <SkipToContent />
                             <PublicNavbar />
-                            {children}
+                            <div id='main-content' tabIndex={-1}>
+                                {children}
+                            </div>
                             <PublicFooter />
                             <MobileTabBar />
                             <SettingButton />

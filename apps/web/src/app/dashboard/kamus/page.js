@@ -4,6 +4,7 @@ import { useLocale } from "@/context/Locale";
 import { getLocalizedTranslation } from "@/lib/translation";
 import { useEffect, useRef, useState } from "react";
 import { BsSearch } from "react-icons/bs";
+import InlineError from "@/components/InlineError";
 
 const toStr = (v) => {
     if (!v) return "";
@@ -16,6 +17,7 @@ export default function DashboardKamusPage() {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [searchFailed, setSearchFailed] = useState(false);
     const timerRef = useRef(null);
 
     useEffect(() => {
@@ -37,7 +39,7 @@ export default function DashboardKamusPage() {
                     const arr = d?.items ?? d ?? [];
                     setResults(Array.isArray(arr) ? arr : []);
                 })
-                .catch(() => setResults([]))
+                .catch(() => setSearchFailed(true))
                 .finally(() => setLoading(false));
         }, 400);
 
@@ -86,11 +88,15 @@ export default function DashboardKamusPage() {
             )}
 
             {/* No results */}
-            {!loading && query.trim().length >= 2 && results.length === 0 && (
-                <p className='text-center py-10 text-gray-400 text-sm'>
-                    {t("common.no_results")} &quot;{query}&quot;
-                </p>
-            )}
+            {searchFailed && !loading && <InlineError />}
+            {!loading &&
+                !searchFailed &&
+                query.trim().length >= 2 &&
+                results.length === 0 && (
+                    <p className='text-center py-10 text-gray-400 text-sm'>
+                        {t("common.no_results")} &quot;{query}&quot;
+                    </p>
+                )}
 
             {/* Results table */}
             {!loading && results.length > 0 && (

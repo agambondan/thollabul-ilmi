@@ -43,7 +43,6 @@ export const NavbarTailwindCss = () => {
     const toggleSmallDropdown = () =>
         setIsSmallDropdownOpen(!isSmallDropdownOpen);
 
-
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (

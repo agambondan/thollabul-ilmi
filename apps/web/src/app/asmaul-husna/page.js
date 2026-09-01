@@ -84,13 +84,10 @@ export const AsmaulHusnaContent = () => {
     };
 
     const modalA11y = useModalA11y({
-
         open: !!selected,
 
         onClose: () => closeModal(),
-
     });
-
 
     const closeModal = () => {
         stopAudio();
