@@ -225,10 +225,11 @@ const MuhasabahPage = () => {
 
                         <div className='space-y-4'>
                             <div>
-                                <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label htmlFor='page-label-date' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                     {t("muhasabah.label_date")}
                                 </label>
                                 <input
+                                    id='page-label-date'
                                     type='date'
                                     value={form.date}
                                     onChange={(e) =>
@@ -242,10 +243,11 @@ const MuhasabahPage = () => {
                             </div>
 
                             <div>
-                                <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label htmlFor='page-label-mood' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                     {t("muhasabah.label_mood")}
                                 </label>
                                 <select
+                                    id='page-label-mood'
                                     value={form.mood}
                                     onChange={(e) =>
                                         setForm((f) => ({
@@ -264,10 +266,11 @@ const MuhasabahPage = () => {
                             </div>
 
                             <div>
-                                <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label htmlFor='page-label-notes' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                     {t("muhasabah.label_notes")}
                                 </label>
                                 <textarea
+                                    id='page-label-notes'
                                     ref={textRef}
                                     value={form.content}
                                     onChange={(e) =>

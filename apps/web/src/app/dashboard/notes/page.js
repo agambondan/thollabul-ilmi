@@ -328,10 +328,11 @@ const NotesPage = () => {
 
                         <div className='space-y-3'>
                             <div>
-                                <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label htmlFor='page-label-title' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                     {t("notes.label_title")}
                                 </label>
                                 <input
+                                    id='page-label-title'
                                     type='text'
                                     value={form.title}
                                     onChange={(e) =>
@@ -345,10 +346,11 @@ const NotesPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label htmlFor='page-label-content' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                     {t("notes.label_content")}
                                 </label>
                                 <textarea
+                                    id='page-label-content'
                                     value={form.content}
                                     onChange={(e) =>
                                         setForm((f) => ({
@@ -362,10 +364,11 @@ const NotesPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label htmlFor='page-label-tags' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                     {t("notes.label_tags")}
                                 </label>
                                 <input
+                                    id='page-label-tags'
                                     type='text'
                                     value={form.tags}
                                     onChange={(e) =>

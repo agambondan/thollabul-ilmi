@@ -325,10 +325,11 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                             {isAuthenticated ? (
                                 <div className='grid gap-3 md:grid-cols-[160px_1fr]'>
                                     <div>
-                                        <label className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'>
+                                        <label htmlFor='page-status' className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'>
                                             Status
                                         </label>
                                         <select
+                                            id='page-status'
                                             className='w-full rounded-lg border border-emerald-100 bg-white px-3 py-2 text-sm text-gray-800 outline-none dark:border-slate-600 dark:bg-slate-900 dark:text-gray-100'
                                             onChange={(event) =>
                                                 setProgressForm((current) => ({
@@ -349,10 +350,11 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'>
+                                        <label htmlFor='page-halaman-terakhir' className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'>
                                             Halaman terakhir
                                         </label>
                                         <input
+                                            id='page-halaman-terakhir'
                                             className='w-full rounded-lg border border-emerald-100 bg-white px-3 py-2 text-sm text-gray-800 outline-none dark:border-slate-600 dark:bg-slate-900 dark:text-gray-100'
                                             min='0'
                                             onChange={(event) =>
@@ -372,10 +374,11 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                         />
                                     </div>
                                     <div className='md:col-span-2'>
-                                        <label className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'>
+                                        <label htmlFor='page-catatan-ringkas' className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'>
                                             Catatan ringkas
                                         </label>
                                         <textarea
+                                            id='page-catatan-ringkas'
                                             className='w-full rounded-lg border border-emerald-100 bg-white px-3 py-2 text-sm text-gray-800 outline-none dark:border-slate-600 dark:bg-slate-900 dark:text-gray-100'
                                             onChange={(event) =>
                                                 setProgressForm((current) => ({

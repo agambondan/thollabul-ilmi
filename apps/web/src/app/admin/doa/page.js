@@ -238,10 +238,11 @@ const AdminPrayersPage = () => {
                         </div>
                         <div className='p-5 space-y-4'>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-title' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.title")}
                                 </label>
                                 <input
+                                    id='page-title'
                                     type='text'
                                     value={form.title}
                                     onChange={(e) =>
@@ -254,10 +255,11 @@ const AdminPrayersPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-arabic' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.arabic")}
                                 </label>
                                 <textarea
+                                    id='page-arabic'
                                     value={form.arabic}
                                     onChange={(e) =>
                                         setForm({
@@ -271,10 +273,11 @@ const AdminPrayersPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-latin' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.latin")}
                                 </label>
                                 <textarea
+                                    id='page-latin'
                                     value={form.transliteration}
                                     onChange={(e) =>
                                         setForm({
@@ -287,10 +290,11 @@ const AdminPrayersPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-translation' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("common.translation")}
                                 </label>
                                 <textarea
+                                    id='page-translation'
                                     value={form.translation}
                                     onChange={(e) =>
                                         setForm({
@@ -303,10 +307,11 @@ const AdminPrayersPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.category")}
                                 </label>
                                 <select
+                                    id='page-category'
                                     value={form.category}
                                     onChange={(e) =>
                                         setForm({
@@ -324,10 +329,11 @@ const AdminPrayersPage = () => {
                                 </select>
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-source' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("common.source")}
                                 </label>
                                 <input
+                                    id='page-source'
                                     type='text'
                                     value={form.source}
                                     onChange={(e) =>

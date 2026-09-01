@@ -5,8 +5,8 @@ self.addEventListener("message", (event) => {
                 event.data.title || "Thollabul Ilmi",
                 {
                     body: event.data.body || "",
-                    icon: "/icon.png",
-                    badge: "/icon.png",
+                    icon: "/icon.svg",
+                    badge: "/icon.svg",
                     vibrate: [200, 100, 200],
                     data: { url: event.data.url || "/", type: "adzan" },
                 },
@@ -26,8 +26,8 @@ self.addEventListener("push", (event) => {
     const title = data.title || "Thollabul Ilmi";
     const options = {
         body: data.body || "",
-        icon: data.icon || "/icon.png",
-        badge: data.badge || "/icon.png",
+        icon: data.icon || "/icon.svg",
+        badge: data.badge || "/icon.svg",
         vibrate: [200, 100, 200],
         data: {
             url: data.url || "/",

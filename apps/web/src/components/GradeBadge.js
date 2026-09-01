@@ -49,10 +49,29 @@ const GRADE_CONFIG = {
     },
 };
 
+const UNVERIFIED_COLOR =
+    "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400";
+
+/**
+ * A hadith with no recorded grade must not look the same as one that was never
+ * graded at all — silence reads as endorsement. When `grade` is missing or
+ * unrecognised we say so explicitly instead of rendering nothing.
+ */
 export default function GradeBadge({ grade }) {
-    if (!grade) return null;
-    const cfg = GRADE_CONFIG[grade];
-    if (!cfg) return null;
+    const { t } = useLocale();
+    const cfg = grade ? GRADE_CONFIG[grade] : null;
+
+    if (!cfg) {
+        return (
+            <span
+                className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium italic ${UNVERIFIED_COLOR}`}
+                title={t("hadith.grade_unverified_hint")}
+            >
+                {t("hadith.grade_unverified")}
+            </span>
+        );
+    }
+
     return (
         <span
             className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${cfg.color}`}
@@ -64,13 +83,11 @@ export default function GradeBadge({ grade }) {
 
 export function HadithAuthenticity({ hadith }) {
     const { t } = useLocale();
-    const hasAny =
-        hadith.grade ||
+    const hasDetail =
         hadith.shahih_by ||
         hadith.dhaif_by ||
         hadith.grade_notes ||
         hadith.sanad;
-    if (!hasAny) return null;
 
     return (
         <div className='rounded-xl border border-neutral-200 dark:border-neutral-700 overflow-hidden text-sm'>
@@ -81,6 +98,11 @@ export function HadithAuthenticity({ hadith }) {
                 <GradeBadge grade={hadith.grade} />
             </div>
             <div className='px-4 py-3 space-y-2'>
+                {!hasDetail && (
+                    <p className='text-neutral-500 dark:text-neutral-400'>
+                        {t("hadith.grade_unverified_hint")}
+                    </p>
+                )}
                 {hadith.shahih_by && (
                     <div>
                         <span className='font-medium text-green-700 dark:text-green-400'>

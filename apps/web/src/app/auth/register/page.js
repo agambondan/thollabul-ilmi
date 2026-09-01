@@ -80,10 +80,11 @@ const RegisterPage = () => {
 
                     <form onSubmit={handleSubmit} className='space-y-4'>
                         <div>
-                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                            <label htmlFor='page-name' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                 {t("auth.name")}
                             </label>
                             <input
+                                id='page-name'
                                 type='text'
                                 required
                                 value={name}
@@ -93,10 +94,11 @@ const RegisterPage = () => {
                             />
                         </div>
                         <div>
-                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                            <label htmlFor='page-email' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                 {t("auth.email")}
                             </label>
                             <input
+                                id='page-email'
                                 type='email'
                                 required
                                 value={email}
@@ -106,11 +108,12 @@ const RegisterPage = () => {
                             />
                         </div>
                         <div>
-                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                            <label htmlFor='page-password' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                 {t("auth.password")}
                             </label>
                             <div className='relative'>
                                 <input
+                                    id='page-password'
                                     type={showPassword ? "text" : "password"}
                                     required
                                     minLength={8}

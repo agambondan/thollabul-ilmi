@@ -27,26 +27,40 @@ describe("GradeBadge", () => {
         expect(span.className).toContain("inline-flex");
     });
 
-    test("returns null for falsy grade", () => {
-        const { container } = render(<GradeBadge grade={null} />);
-        expect(container.innerHTML).toBe("");
+    // A missing grade must be stated, not omitted: an absent badge would be
+    // indistinguishable from an authenticated hadith.
+    test("labels a falsy grade as unverified", () => {
+        render(<GradeBadge grade={null} />);
+        expect(
+            screen.getByText("hadith.grade_unverified"),
+        ).toBeInTheDocument();
     });
 
-    test("returns null for undefined grade", () => {
-        const { container } = render(<GradeBadge />);
-        expect(container.innerHTML).toBe("");
+    test("labels an undefined grade as unverified", () => {
+        render(<GradeBadge />);
+        expect(
+            screen.getByText("hadith.grade_unverified"),
+        ).toBeInTheDocument();
     });
 
-    test("returns null for unknown grade", () => {
-        const { container } = render(<GradeBadge grade='unknown_grade' />);
-        expect(container.innerHTML).toBe("");
+    test("labels an unknown grade as unverified", () => {
+        render(<GradeBadge grade='unknown_grade' />);
+        expect(
+            screen.getByText("hadith.grade_unverified"),
+        ).toBeInTheDocument();
     });
 });
 
 describe("HadithAuthenticity", () => {
-    test("renders nothing when no authenticity fields", () => {
-        const { container } = render(<HadithAuthenticity hadith={{}} />);
-        expect(container.innerHTML).toBe("");
+    test("states the grade is unverified when no authenticity fields", () => {
+        render(<HadithAuthenticity hadith={{}} />);
+        expect(screen.getByText("hadith.authenticity")).toBeInTheDocument();
+        expect(
+            screen.getByText("hadith.grade_unverified"),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText("hadith.grade_unverified_hint"),
+        ).toBeInTheDocument();
     });
 
     test("renders grade badge and fields", () => {

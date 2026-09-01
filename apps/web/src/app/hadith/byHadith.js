@@ -133,10 +133,11 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                 <div className='grid gap-3 md:grid-cols-[1fr_auto] md:items-end'>
                     <div className='grid gap-3 sm:grid-cols-2'>
                         <div>
-                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+                            <label htmlFor='byhadith-select-book' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
                                 {t("hadith.select_book")}
                             </label>
                             <select
+                                id='byhadith-select-book'
                                 value={selectedBookSlug}
                                 onChange={(e) =>
                                     setSelectedBookSlug(e.target.value)
@@ -155,10 +156,11 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                         </div>
 
                         <div>
-                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+                            <label htmlFor='byhadith-search-label' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
                                 {t("hadith.search_label")}
                             </label>
                             <input
+                                id='byhadith-search-label'
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 placeholder={t("hadith.search_example")}

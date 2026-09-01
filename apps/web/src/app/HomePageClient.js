@@ -112,9 +112,46 @@ const TIME_FORMAT_OPTIONS = {
     hour12: false,
 };
 
+/*
+ * The hero shows a live clock. This used to snapshot Date.now() once at module
+ * scope and never notify, so the time froze at first load and the date never
+ * rolled over at midnight — and a client-side return to the home page still
+ * showed the original timestamp.
+ *
+ * The store ticks to the top of each minute (the display has minute
+ * resolution, so a per-second interval would re-render 60x for nothing) and is
+ * shared by every subscriber.
+ */
 let homeDateSnapshot = null;
+let homeDateTimer = null;
+const homeDateListeners = new Set();
 
-const subscribeHomeDateSnapshot = () => () => {};
+const emitHomeDate = () => {
+    homeDateSnapshot = Date.now();
+    homeDateListeners.forEach((listener) => listener());
+};
+
+const scheduleHomeDateTick = () => {
+    const msToNextMinute = 60_000 - (Date.now() % 60_000);
+    homeDateTimer = setTimeout(() => {
+        emitHomeDate();
+        scheduleHomeDateTick();
+    }, msToNextMinute + 20);
+};
+
+const subscribeHomeDateSnapshot = (listener) => {
+    homeDateListeners.add(listener);
+    if (homeDateListeners.size === 1) scheduleHomeDateTick();
+
+    return () => {
+        homeDateListeners.delete(listener);
+        if (homeDateListeners.size === 0) {
+            clearTimeout(homeDateTimer);
+            homeDateTimer = null;
+        }
+    };
+};
+
 const getServerHomeDateSnapshot = () => null;
 const getClientHomeDateSnapshot = () => {
     if (!homeDateSnapshot) {
@@ -181,7 +218,12 @@ export default function Home() {
         isAuthenticated ? href : buildRegisterHref(href);
 
     const STATS = [
-        { labelKey: "home.stat.ayah", value: "6.236" },
+        {
+            labelKey: "home.stat.ayah",
+            value: new Intl.NumberFormat(
+                lang === "EN" ? "en-US" : "id-ID",
+            ).format(6236),
+        },
         { labelKey: "home.stat.kitab", value: "9" },
         { labelKey: "home.stat.asma", value: "99" },
         { labelKey: "home.stat.fitur", value: "50+" },

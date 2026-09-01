@@ -5,6 +5,12 @@ import ContentWidth from "@/components/layout/ContentWidth";
 import { NavbarTailwindCss } from "@/components/Navbar";
 import { useLocale } from "@/context/Locale";
 import { toLocalISODate } from "@/lib/date";
+import {
+    buildSholatTimesUrl,
+    PRAYER_MADHABS,
+    PRAYER_METHODS,
+    useLocalDateKey,
+} from "@/lib/prayerTimes";
 import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
 import { requestAndStoreUserLocation } from "@/lib/userLocation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -46,22 +52,6 @@ const CITIES = [
     { name: "Manado", lat: 1.4748, lng: 124.8421 },
 ];
 
-const METHODS = [
-    { value: "kemenag", label: "Kemenag (Indonesia)" },
-    { value: "adhango", label: "AdhanGo (MWL)" },
-    { value: "jakim", label: "JAKIM (Malaysia)" },
-    { value: "mwl", label: "MWL" },
-    { value: "isna", label: "ISNA (Amerika)" },
-    { value: "egypt", label: "Egypt" },
-    { value: "makkah", label: "Umm Al-Qura" },
-    { value: "karachi", label: "Karachi" },
-];
-
-const MADHABS = [
-    { value: "shafi", label: "Syafi'i / Mayoritas" },
-    { value: "hanafi", label: "Hanafi" },
-];
-
 const REMINDER_LEAD_OPTIONS = [0, 5, 10, 15, 30];
 const PRAYER_KEYS_FOR_REMINDER = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
 
@@ -82,14 +72,17 @@ const parseTimeStr = (str) => {
 export default function JadwalSholatPage() {
     const { lang, t } = useLocale();
     const { settings, updateSetting } = useSettings();
+    const dateKey = useLocalDateKey();
+    const method = settings.prayerMethod;
+    const madhab = settings.prayerMadhab;
+    const setMethod = (value) => updateSetting("prayerMethod", value);
+    const setMadhab = (value) => updateSetting("prayerMadhab", value);
     const [city, setCity] = useState(CITIES[0]);
     const [prayers, setPrayers] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [now, setNow] = useState(new Date());
     const [geoLabel, setGeoLabel] = useState("");
-    const [method, setMethod] = useState("kemenag");
-    const [madhab, setMadhab] = useState("shafi");
     const [showSettings, setShowSettings] = useState(false);
     const [gpsStatus, setGpsStatus] = useState("idle");
     const [countdown, setCountdown] = useState("");
@@ -130,9 +123,8 @@ export default function JadwalSholatPage() {
     const fetchByCoords = (lat, lng, label) => {
         setLoading(true);
         setError("");
-        const today = toLocalISODate();
         fetch(
-            `${API_URL}/api/v1/sholat-times?lat=${lat}&lng=${lng}&method=${method}&madhab=${madhab}&date=${today}`,
+            buildSholatTimesUrl({ lat, lng, method, madhab, date: dateKey }),
         )
             .then((r) => r.json())
             .then((d) => {
@@ -277,7 +269,7 @@ export default function JadwalSholatPage() {
         Promise.resolve().then(() =>
             fetchByCoords(city.lat, city.lng, city.name),
         );
-    }, [city, method, madhab]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [city, method, madhab, dateKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleGeo = () => {
         if (!navigator.geolocation) {
@@ -394,16 +386,17 @@ export default function JadwalSholatPage() {
                     {showSettings && (
                         <div className='mt-3 grid grid-cols-2 gap-3'>
                             <div>
-                                <label className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'>
+                                <label htmlFor='page-method' className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'>
                                     {t("prayer_schedule.method") ??
                                         "Metode Hisab"}
                                 </label>
                                 <select
+                                    id='page-method'
                                     value={method}
                                     onChange={(e) => setMethod(e.target.value)}
                                     className='w-full border border-gray-200 dark:border-slate-600 rounded-lg px-2 py-1.5 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
                                 >
-                                    {METHODS.map((m) => (
+                                    {PRAYER_METHODS.map((m) => (
                                         <option key={m.value} value={m.value}>
                                             {m.label}
                                         </option>
@@ -411,18 +404,19 @@ export default function JadwalSholatPage() {
                                 </select>
                             </div>
                             <div>
-                                <label className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'>
+                                <label htmlFor='page-madhab' className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'>
                                     {t("prayer_schedule.madhab") ??
                                         "Madhab Asar"}
                                 </label>
                                 <select
+                                    id='page-madhab'
                                     value={madhab}
                                     onChange={(e) => setMadhab(e.target.value)}
                                     className='w-full border border-gray-200 dark:border-slate-600 rounded-lg px-2 py-1.5 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
                                 >
-                                    {MADHABS.map((m) => (
+                                    {PRAYER_MADHABS.map((m) => (
                                         <option key={m.value} value={m.value}>
-                                            {m.label}
+                                            {t(m.labelKey)}
                                         </option>
                                     ))}
                                 </select>
@@ -668,7 +662,7 @@ export default function JadwalSholatPage() {
 
                 <p className='text-center text-xs text-gray-400 mt-6'>
                     {t("prayer_schedule.source_note_be") ??
-                        `Metode: ${METHODS.find((m) => m.value === method)?.label} · Madhab: ${MADHABS.find((m) => m.value === madhab)?.label}`}
+                        `${PRAYER_METHODS.find((m) => m.value === method)?.label} · ${t(PRAYER_MADHABS.find((m) => m.value === madhab)?.labelKey)}`}
                 </p>
             </ContentWidth>
             <Footer />

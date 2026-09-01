@@ -87,10 +87,16 @@ const LoginPage = () => {
 
                     <form onSubmit={handleSubmit} className='space-y-4'>
                         <div>
-                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                            <label
+                                htmlFor='login-email'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                            >
                                 {t("auth.email")}
                             </label>
                             <input
+                                id='login-email'
+                                name='email'
+                                autoComplete='email'
                                 type='email'
                                 required
                                 value={email}
@@ -100,11 +106,17 @@ const LoginPage = () => {
                             />
                         </div>
                         <div>
-                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                            <label
+                                htmlFor='login-password'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                            >
                                 {t("auth.password")}
                             </label>
                             <div className='relative'>
                                 <input
+                                    id='login-password'
+                                    name='password'
+                                    autoComplete='current-password'
                                     type={showPassword ? "text" : "password"}
                                     required
                                     value={password}

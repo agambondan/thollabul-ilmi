@@ -90,10 +90,11 @@ export function ForumAskContent({
                 className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6 space-y-4'
             >
                 <div>
-                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                    <label htmlFor='page-label-title' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                         {t("forum.label_title") ?? "Judul"}
                     </label>
                     <input
+                        id='page-label-title'
                         type='text'
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
@@ -105,10 +106,11 @@ export function ForumAskContent({
                     />
                 </div>
                 <div>
-                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                    <label htmlFor='page-label-body' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                         {t("forum.label_body") ?? "Isi Pertanyaan"}
                     </label>
                     <textarea
+                        id='page-label-body'
                         value={body}
                         onChange={(e) => setBody(e.target.value)}
                         rows={8}
@@ -120,10 +122,11 @@ export function ForumAskContent({
                     />
                 </div>
                 <div>
-                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                    <label htmlFor='page-label-tags' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                         {t("forum.label_tags") ?? "Tag (pisahkan dengan koma)"}
                     </label>
                     <input
+                        id='page-label-tags'
                         type='text'
                         value={tags}
                         onChange={(e) => setTags(e.target.value)}

@@ -52,10 +52,11 @@ const ByChapter = ({ basePath = "/hadith" }) => {
     return (
         <div className='space-y-4'>
             <ContentWidth compact='max-w-4xl' className='px-4'>
-                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+                <label htmlFor='bychapter-select-book' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
                     {t("hadith.select_book")}
                 </label>
                 <select
+                    id='bychapter-select-book'
                     value={selectedBookSlug}
                     onChange={(e) => setSelectedBookSlug(e.target.value)}
                     className='w-full px-3 py-2.5 text-sm rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'

@@ -365,10 +365,11 @@ const GoalsPage = () => {
 
                         <div className='space-y-3'>
                             <div>
-                                <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label htmlFor='page-label-title' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                     {t("goals.label_title")}
                                 </label>
                                 <input
+                                    id='page-label-title'
                                     type='text'
                                     value={form.title}
                                     onChange={(e) =>
@@ -384,10 +385,11 @@ const GoalsPage = () => {
 
                             <div className='grid grid-cols-2 gap-3'>
                                 <div>
-                                    <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label htmlFor='page-label-target' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                         {t("goals.label_target")}
                                     </label>
                                     <input
+                                        id='page-label-target'
                                         type='number'
                                         min='1'
                                         value={form.target}
@@ -402,10 +404,11 @@ const GoalsPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label htmlFor='page-label-unit' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                         {t("goals.label_unit")}
                                     </label>
                                     <select
+                                        id='page-label-unit'
                                         value={form.unit}
                                         onChange={(e) =>
                                             setForm((f) => ({
@@ -426,10 +429,11 @@ const GoalsPage = () => {
 
                             {editGoal && (
                                 <div>
-                                    <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label htmlFor='page-label-current' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                         {t("goals.label_current")}
                                     </label>
                                     <input
+                                        id='page-label-current'
                                         type='number'
                                         min='0'
                                         value={form.current}
@@ -446,10 +450,11 @@ const GoalsPage = () => {
 
                             <div className='grid grid-cols-2 gap-3'>
                                 <div>
-                                    <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label htmlFor='page-label-category' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                         {t("goals.label_category")}
                                     </label>
                                     <select
+                                        id='page-label-category'
                                         value={form.category}
                                         onChange={(e) =>
                                             setForm((f) => ({
@@ -467,10 +472,11 @@ const GoalsPage = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label htmlFor='page-label-deadline' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                         {t("goals.label_deadline")}
                                     </label>
                                     <input
+                                        id='page-label-deadline'
                                         type='date'
                                         value={form.deadline}
                                         onChange={(e) =>

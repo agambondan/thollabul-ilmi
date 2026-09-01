@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "@/context/Locale";
 import { adzanSoundApi, uploadWithProgress } from "@/lib/api";
 import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
+import { PRAYER_MADHABS, PRAYER_METHODS } from "@/lib/prayerTimes";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import SettingRow from "./_components/SettingRow";
 import { toast } from "react-hot-toast";
@@ -319,6 +320,46 @@ export default function SettingsPage() {
                             {settings.readerSize}px
                         </span>
                     </SettingRow>
+                </section>
+
+                {/* Waktu Sholat */}
+                <section className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
+                    <h2 className='text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider'>
+                        {t("settings.section_prayer")}
+                    </h2>
+                    <SettingRow label={t("prayer_schedule.method")}>
+                        <select
+                            value={settings.prayerMethod}
+                            onChange={(e) =>
+                                updateSetting("prayerMethod", e.target.value)
+                            }
+                            className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                        >
+                            {PRAYER_METHODS.map((m) => (
+                                <option key={m.value} value={m.value}>
+                                    {m.label}
+                                </option>
+                            ))}
+                        </select>
+                    </SettingRow>
+                    <SettingRow label={t("prayer_schedule.madhab")}>
+                        <select
+                            value={settings.prayerMadhab}
+                            onChange={(e) =>
+                                updateSetting("prayerMadhab", e.target.value)
+                            }
+                            className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                        >
+                            {PRAYER_MADHABS.map((m) => (
+                                <option key={m.value} value={m.value}>
+                                    {t(m.labelKey)}
+                                </option>
+                            ))}
+                        </select>
+                    </SettingRow>
+                    <p className='mt-2 text-xs text-gray-400'>
+                        {t("settings.prayer_scope")}
+                    </p>
                 </section>
 
                 {/* Notifikasi */}

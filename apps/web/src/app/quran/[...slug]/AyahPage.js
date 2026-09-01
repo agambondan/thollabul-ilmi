@@ -10,6 +10,8 @@ import { NumberToArabic } from "@/lib/converter";
 import { CopyImageToClipboard, CopyToClipboard } from "@/lib/copy";
 import { getLocalizedTranslation } from "@/lib/translation";
 import { useActionPosition } from "@/lib/useActionPosition";
+import { useAsyncResource } from "@/lib/useAsyncResource";
+import PanelStatus from "@/components/PanelStatus";
 import { useQuranFont } from "@/lib/useQuranFont";
 import classNames from "classnames";
 import { useEffect, useRef, useState } from "react";
@@ -49,16 +51,13 @@ const AyahPage = ({
     const [shareImagePopUp, SetShareImagePopUp] = useState(false);
 
     const [tafsirOpen, setTafsirOpen] = useState(false);
-    const [tafsir, setTafsir] = useState(null);
-    const [tafsirLoading, setTafsirLoading] = useState(false);
+    const tafsirRes = useAsyncResource(() => tafsirApi.byAyah(ayah.id));
 
     const [mufrodatOpen, setMufrodatOpen] = useState(false);
-    const [mufrodat, setMufrodat] = useState(null);
-    const [mufrodatLoading, setMufrodatLoading] = useState(false);
+    const mufrodatRes = useAsyncResource(() => mufrodatApi.byAyah(ayah.id));
 
     const [munasabahOpen, setMunasabahOpen] = useState(false);
-    const [munasabah, setMunasabah] = useState(null);
-    const [munasabahLoading, setMunasabahLoading] = useState(false);
+    const munasabahRes = useAsyncResource(() => munasabahApi.byAyah(ayah.id));
 
     const [audioUrls, setAudioUrls] = useState([]);
     const [audioError, setAudioError] = useState("");
@@ -119,41 +118,17 @@ const AyahPage = ({
     }, []);
 
     const toggleTafsir = () => {
-        if (!tafsirOpen && !tafsir) {
-            setTafsirLoading(true);
-            tafsirApi
-                .byAyah(ayah.id)
-                .then((r) => r.json())
-                .then((data) => setTafsir(data?.items ?? data ?? []))
-                .catch(() => setTafsir([]))
-                .finally(() => setTafsirLoading(false));
-        }
+        if (!tafsirOpen) tafsirRes.load();
         setTafsirOpen((v) => !v);
     };
 
     const toggleMufrodat = () => {
-        if (!mufrodatOpen && !mufrodat) {
-            setMufrodatLoading(true);
-            mufrodatApi
-                .byAyah(ayah.id)
-                .then((r) => r.json())
-                .then((data) => setMufrodat(data?.items ?? data ?? []))
-                .catch(() => setMufrodat([]))
-                .finally(() => setMufrodatLoading(false));
-        }
+        if (!mufrodatOpen) mufrodatRes.load();
         setMufrodatOpen((v) => !v);
     };
 
     const toggleMunasabah = () => {
-        if (!munasabahOpen && !munasabah) {
-            setMunasabahLoading(true);
-            munasabahApi
-                .byAyah(ayah.id)
-                .then((r) => r.json())
-                .then((data) => setMunasabah(data?.items ?? []))
-                .catch(() => setMunasabah([]))
-                .finally(() => setMunasabahLoading(false));
-        }
+        if (!munasabahOpen) munasabahRes.load();
         setMunasabahOpen((v) => !v);
     };
 
@@ -670,21 +645,17 @@ const AyahPage = ({
                             onClose={() => setTafsirOpen(false)}
                         />
                     </div>
-                    {tafsirLoading && (
-                        <p className='text-sm text-gray-400'>
-                            {t("ayah.loading_tafsir")}
-                        </p>
-                    )}
-                    {!tafsirLoading &&
-                        Array.isArray(tafsir) &&
-                        tafsir.length === 0 && (
-                            <p className='text-sm text-gray-500 dark:text-gray-400 italic'>
-                                {t("ayah.tafsir_empty")}
-                            </p>
-                        )}
-                    {!tafsirLoading &&
-                        Array.isArray(tafsir) &&
-                        tafsir.map((entry, i) => (
+                    <PanelStatus
+                        isLoading={tafsirRes.isLoading}
+                        error={tafsirRes.error}
+                        isEmpty={tafsirRes.data?.length === 0}
+                        loadingText={t("ayah.loading_tafsir")}
+                        emptyText={t("ayah.tafsir_empty")}
+                        onRetry={tafsirRes.retry}
+                    />
+                    {!tafsirRes.isLoading &&
+                        Array.isArray(tafsirRes.data) &&
+                        tafsirRes.data.map((entry, i) => (
                             <div key={i} className='mb-4 last:mb-0'>
                                 {entry.source && (
                                     <p className='text-xs font-medium text-amber-600 dark:text-amber-400 mb-1'>
@@ -710,24 +681,20 @@ const AyahPage = ({
                             onClose={() => setMufrodatOpen(false)}
                         />
                     </div>
-                    {mufrodatLoading && (
-                        <p className='text-sm text-gray-400'>
-                            {t("ayah.loading_mufrodat")}
-                        </p>
-                    )}
-                    {!mufrodatLoading &&
-                        Array.isArray(mufrodat) &&
-                        mufrodat.length === 0 && (
-                            <p className='text-sm text-gray-500 dark:text-gray-400 italic'>
-                                {t("ayah.mufrodat_empty")}
-                            </p>
-                        )}
-                    {!mufrodatLoading && Array.isArray(mufrodat) && (
+                    <PanelStatus
+                        isLoading={mufrodatRes.isLoading}
+                        error={mufrodatRes.error}
+                        isEmpty={mufrodatRes.data?.length === 0}
+                        loadingText={t("ayah.loading_mufrodat")}
+                        emptyText={t("ayah.mufrodat_empty")}
+                        onRetry={mufrodatRes.retry}
+                    />
+                    {!mufrodatRes.isLoading && Array.isArray(mufrodatRes.data) && (
                         <div
                             className='flex flex-wrap gap-2'
                             style={{ direction: "rtl" }}
                         >
-                            {mufrodat.map((word, i) => (
+                            {mufrodatRes.data.map((word, i) => (
                                 <div
                                     key={i}
                                     className='text-center bg-white dark:bg-slate-800 rounded-lg border border-sky-100 dark:border-slate-700 px-3 py-2 min-w-[60px]'
@@ -769,22 +736,17 @@ const AyahPage = ({
                             onClose={() => setMunasabahOpen(false)}
                         />
                     </div>
-                    {munasabahLoading && (
-                        <p className='text-sm text-gray-400'>
-                            {t("ayah.loading_tafsir") ?? "Memuat..."}
-                        </p>
-                    )}
-                    {!munasabahLoading &&
-                        Array.isArray(munasabah) &&
-                        munasabah.length === 0 && (
-                            <p className='text-sm text-gray-500 dark:text-gray-400 italic'>
-                                {t("munasabah.empty") ??
-                                    "Belum ada ayat terkait."}
-                            </p>
-                        )}
-                    {!munasabahLoading &&
-                        Array.isArray(munasabah) &&
-                        munasabah.map((m, i) => (
+                    <PanelStatus
+                        isLoading={munasabahRes.isLoading}
+                        error={munasabahRes.error}
+                        isEmpty={munasabahRes.data?.length === 0}
+                        loadingText={t("ayah.loading_tafsir")}
+                        emptyText={t("munasabah.empty")}
+                        onRetry={munasabahRes.retry}
+                    />
+                    {!munasabahRes.isLoading &&
+                        Array.isArray(munasabahRes.data) &&
+                        munasabahRes.data.map((m, i) => (
                             <div
                                 key={i}
                                 className='mb-3 last:mb-0 bg-white dark:bg-slate-800 rounded-lg p-3'

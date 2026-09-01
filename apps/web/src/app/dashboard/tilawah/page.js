@@ -287,10 +287,11 @@ const TilawahPage = () => {
 
                         <div className='space-y-3'>
                             <div>
-                                <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label htmlFor='page-label-surah' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                     {t("tilawah.label_surah")}
                                 </label>
                                 <input
+                                    id='page-label-surah'
                                     type='text'
                                     value={form.surah}
                                     onChange={(e) =>
@@ -305,10 +306,11 @@ const TilawahPage = () => {
                             </div>
                             <div className='grid grid-cols-2 gap-3'>
                                 <div>
-                                    <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label htmlFor='page-label-ayah-from' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                         {t("tilawah.label_ayah_from")}
                                     </label>
                                     <input
+                                        id='page-label-ayah-from'
                                         type='number'
                                         min='1'
                                         value={form.ayahFrom}
@@ -323,10 +325,11 @@ const TilawahPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                    <label htmlFor='page-label-ayah-to' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                         {t("tilawah.label_ayah_to")}
                                     </label>
                                     <input
+                                        id='page-label-ayah-to'
                                         type='number'
                                         min='1'
                                         value={form.ayahTo}
@@ -342,10 +345,11 @@ const TilawahPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label htmlFor='page-label-pages' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                     {t("tilawah.label_pages")}
                                 </label>
                                 <input
+                                    id='page-label-pages'
                                     type='number'
                                     min='0'
                                     value={form.pages}
@@ -360,10 +364,11 @@ const TilawahPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                <label htmlFor='page-label-notes' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                     {t("tilawah.label_notes")}
                                 </label>
                                 <input
+                                    id='page-label-notes'
                                     type='text'
                                     value={form.notes}
                                     onChange={(e) =>

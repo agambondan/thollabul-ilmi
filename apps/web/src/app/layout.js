@@ -85,9 +85,14 @@ export default function RootLayout({ children }) {
     return (
         <html lang='id' suppressHydrationWarning>
             <body>
+                {/*
+                  * Runs before hydration so dark-mode users do not get a flash
+                  * of the light theme on every page load. Navbar, the dashboard
+                  * and admin layouts all read the same `theme` key afterwards.
+                  */}
                 <script
                     dangerouslySetInnerHTML={{
-                        __html: "(function(){try{var lang=(localStorage.getItem('lang')||'ID').toUpperCase()==='EN'?'en':'id';document.documentElement.lang=lang;}catch(e){}})();",
+                        __html: "(function(){try{var lang=(localStorage.getItem('lang')||'ID').toUpperCase()==='EN'?'en':'id';document.documentElement.lang=lang;var stored=localStorage.getItem('theme');var dark=stored?stored==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',dark);}catch(e){}})();",
                     }}
                 />
                 <script
@@ -107,15 +112,17 @@ export default function RootLayout({ children }) {
                                 position='top-right'
                                 toastOptions={{
                                     duration: 5000,
+                                    // Tokens defined in globals.css so the
+                                    // toast follows the .dark class like every
+                                    // other surface. react-hot-toast has no
+                                    // `dark` option — the previous one was
+                                    // silently ignored.
+                                    className: "app-toast",
                                     style: {
                                         borderRadius: "12px",
-                                        background: "#fff",
-                                        color: "#1e293b",
-                                        boxShadow: "0 4px 24px rgba(0,0,0,0.1)",
-                                    },
-                                    dark: {
-                                        background: "#1e293b",
-                                        color: "#f1f5f9",
+                                        background: "var(--toast-bg)",
+                                        color: "var(--toast-fg)",
+                                        boxShadow: "0 4px 24px rgba(0,0,0,0.16)",
                                     },
                                 }}
                             />

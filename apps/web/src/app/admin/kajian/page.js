@@ -290,10 +290,11 @@ const AdminStudiesPage = () => {
                         </div>
                         <div className='p-5 space-y-4'>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-title' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.title")}
                                 </label>
                                 <input
+                                    id='page-title'
                                     type='text'
                                     value={form.title}
                                     onChange={(e) =>
@@ -307,10 +308,11 @@ const AdminStudiesPage = () => {
                             </div>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-ustadz' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         Ustadz
                                     </label>
                                     <input
+                                        id='page-ustadz'
                                         type='text'
                                         value={form.speaker}
                                         onChange={(e) =>
@@ -323,10 +325,11 @@ const AdminStudiesPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-duration' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.kajian.duration")}
                                     </label>
                                     <input
+                                        id='page-duration'
                                         type='text'
                                         value={form.duration_seconds}
                                         onChange={(e) =>
@@ -343,10 +346,11 @@ const AdminStudiesPage = () => {
                             </div>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-tipe' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         Tipe
                                     </label>
                                     <select
+                                        id='page-tipe'
                                         value={form.type}
                                         onChange={(e) =>
                                             setForm({
@@ -364,10 +368,11 @@ const AdminStudiesPage = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.field.category")}
                                     </label>
                                     <select
+                                        id='page-category'
                                         value={form.topic}
                                         onChange={(e) =>
                                             setForm({
@@ -386,10 +391,11 @@ const AdminStudiesPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-url' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     URL
                                 </label>
                                 <input
+                                    id='page-url'
                                     type='url'
                                     value={form.url}
                                     onChange={(e) =>
@@ -403,10 +409,11 @@ const AdminStudiesPage = () => {
                             />
                         </div>
                         <div>
-                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                            <label htmlFor='page-thumbnail-url' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                 {t("admin.kajian.thumbnail_url")}
                             </label>
                             <input
+                                id='page-thumbnail-url'
                                 type='url'
                                 value={form.thumbnail_url}
                                 onChange={(e) =>
@@ -420,10 +427,11 @@ const AdminStudiesPage = () => {
                             />
                         </div>
                         <div>
-                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                            <label htmlFor='page-description' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                 {t("admin.field.description")}
                             </label>
                                 <textarea
+                                    id='page-description'
                                     value={form.description}
                                     onChange={(e) =>
                                         setForm({

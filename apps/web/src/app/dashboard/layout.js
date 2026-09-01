@@ -408,7 +408,43 @@ const DashboardLayout = ({ children }) => {
         }
     }, [isLoading, isAuthenticated, router, pathname]);
 
-    if (isLoading || !isAuthenticated) return null;
+    // A blank page while /auth/me resolves reads as a broken app on a slow
+    // connection, so hold the shell's shape until we know either way.
+    if (isLoading || !isAuthenticated) {
+        return (
+            <div
+                className='min-h-screen bg-gray-50 dark:bg-slate-950'
+                role='status'
+                aria-live='polite'
+                aria-busy='true'
+            >
+                <span className='sr-only'>{t("common.loading")}</span>
+                <div className='flex'>
+                    <div className='hidden lg:flex w-64 shrink-0 flex-col gap-3 border-r border-gray-100 bg-white p-4 dark:border-slate-800 dark:bg-slate-900'>
+                        <div className='h-9 w-40 animate-pulse rounded-lg bg-gray-100 dark:bg-slate-800' />
+                        <div className='h-px bg-gray-100 dark:bg-slate-800' />
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <div
+                                key={i}
+                                className='h-7 animate-pulse rounded-lg bg-gray-100 dark:bg-slate-800'
+                            />
+                        ))}
+                    </div>
+                    <div className='flex-1 p-4 sm:p-6'>
+                        <div className='h-10 w-full max-w-sm animate-pulse rounded-xl bg-gray-100 dark:bg-slate-800' />
+                        <div className='mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3'>
+                            {Array.from({ length: 6 }).map((_, i) => (
+                                <div
+                                    key={i}
+                                    className='h-32 animate-pulse rounded-2xl bg-gray-100 dark:bg-slate-800'
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     const sidebarWidth = isCollapsed ? "w-16" : "w-60";
     const mainOffset = isCollapsed ? "md:ml-16" : "md:ml-60";

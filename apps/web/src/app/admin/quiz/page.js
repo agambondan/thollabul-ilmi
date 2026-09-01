@@ -279,10 +279,11 @@ const AdminQuizPage = () => {
                         </div>
                         <div className='p-5 space-y-4'>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-question' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.quiz.question")}
                                 </label>
                                 <textarea
+                                    id='page-question'
                                     value={form.question}
                                     onChange={(e) =>
                                         setForm({
@@ -315,10 +316,11 @@ const AdminQuizPage = () => {
                             ))}
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-correct-answer' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.quiz.correct_answer")}
                                     </label>
                                     <select
+                                        id='page-correct-answer'
                                         value={form.answer}
                                         onChange={(e) =>
                                             setForm({
@@ -339,10 +341,11 @@ const AdminQuizPage = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.field.category")}
                                     </label>
                                     <select
+                                        id='page-category'
                                         value={form.category}
                                         onChange={(e) =>
                                             setForm({
@@ -361,10 +364,11 @@ const AdminQuizPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-explanation-optional' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.quiz.explanation_optional")}
                                 </label>
                                 <textarea
+                                    id='page-explanation-optional'
                                     value={form.explanation}
                                     onChange={(e) =>
                                         setForm({

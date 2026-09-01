@@ -249,10 +249,11 @@ const AdminManasikPage = () => {
                         <div className='p-5 space-y-4'>
                             <div className='grid grid-cols-3 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-type' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.manasik.type")}
                                     </label>
                                     <select
+                                        id='page-type'
                                         value={form.type}
                                         onChange={(e) =>
                                             setForm({
@@ -270,10 +271,11 @@ const AdminManasikPage = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-step' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.manasik.step")}
                                     </label>
                                     <input
+                                        id='page-step'
                                         type='number'
                                         value={form.step}
                                         onChange={(e) =>
@@ -289,10 +291,11 @@ const AdminManasikPage = () => {
                                 <div className='col-span-1' />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-title' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.title")}
                                 </label>
                                 <input
+                                    id='page-title'
                                     type='text'
                                     value={form.title}
                                     onChange={(e) =>
@@ -323,10 +326,11 @@ const AdminManasikPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-latin' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.latin")}
                                 </label>
                                 <textarea
+                                    id='page-latin'
                                     value={form.latin}
                                     onChange={(e) =>
                                         setForm({
@@ -339,10 +343,11 @@ const AdminManasikPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-translation' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("common.translation")}
                                 </label>
                                 <textarea
+                                    id='page-translation'
                                     value={form.translation}
                                     onChange={(e) =>
                                         setForm({
@@ -355,10 +360,11 @@ const AdminManasikPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-description' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.description")}
                                 </label>
                                 <textarea
+                                    id='page-description'
                                     value={form.description}
                                     onChange={(e) =>
                                         setForm({
@@ -371,10 +377,11 @@ const AdminManasikPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-notes' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("common.notes")}
                                 </label>
                                 <textarea
+                                    id='page-notes'
                                     value={form.notes}
                                     onChange={(e) =>
                                         setForm({

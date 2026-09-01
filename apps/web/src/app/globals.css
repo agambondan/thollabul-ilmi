@@ -1,7 +1,10 @@
-@import url(//fonts.googleapis.com/earlyaccess/amiri.css);
-@import url(//fonts.googleapis.com/earlyaccess/droidarabickufi.css);
-@import url(//fonts.googleapis.com/earlyaccess/droidarabicnaskh.css);
-@import url(//fonts.googleapis.com/earlyaccess/thabit.css);
+/*
+ * Amiri is the only Google-hosted face still in use (.font-amiri and a few
+ * inline styles). Droid Arabic Kufi, Droid Arabic Naskh and Thabit were
+ * imported here too but no rule or component ever referenced them — three
+ * render-blocking requests on every page for nothing.
+ */
+@import url(https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap);
 
 @tailwind base;
 @tailwind components;
@@ -10,18 +13,41 @@
 @layer base {
     :root {
         --navbar-height: 4.5rem;
+        --toast-bg: #ffffff;
+        --toast-fg: #1e293b;
+        /* What pages actually reserve above content (Tailwind pt-24). */
+        --navbar-offset: 6rem;
         --font-arabic-body:
-            "Kitab", "Uthmani", "Othmani", "NooreHidayah", "Naskh",
-            "Scheherazade", "Amiri", serif;
+            "Kitab", "NooreHidayah", "Scheherazade", "Amiri", serif;
         --font-arabic-display:
-            "NooreHidayah", "Kitab", "Uthmani", "Othmani", "Naskh",
-            "Scheherazade", "Amiri", serif;
+            "NooreHidayah", "Kitab", "Scheherazade", "Amiri", serif;
+    }
+
+    .dark {
+        --toast-bg: #1e293b;
+        --toast-fg: #f1f5f9;
     }
 
     html,
     body {
         max-width: 100%;
         overflow-x: clip;
+    }
+
+    /*
+     * The public navbar is fixed, so an #ayah-N target (shared ayah links,
+     * tafsir cross-references, the mushaf index) would otherwise land behind
+     * it. scroll-padding covers browser-driven jumps; scroll-margin covers
+     * scrollIntoView calls.
+     */
+    html {
+        scroll-padding-top: var(--navbar-offset);
+    }
+
+    :target,
+    [id^="ayah-"],
+    [id^="hadith-"] {
+        scroll-margin-top: var(--navbar-offset);
     }
 }
 
@@ -189,27 +215,66 @@ tajweed.idgh_mus:hover {
     background-color: #d7d7d7;
 }
 
-@font-face {
-    font-family: "MeQuran";
-    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
+/*
+ * Dark mode overrides. The light palette is tuned for parchment; on slate-900
+ * the blues (#000ebc, #2144c1) and the greys (#aaaaaa) fall below readable
+ * contrast, so each hue is lifted to its light-on-dark counterpart.
+ */
+.dark tajweed.ghn {
+    color: #ffa657;
 }
 
-.font-mequran {
-    font-family: "MeQuran";
+.dark tajweed.qlq {
+    color: #ff8080;
 }
 
-@font-face {
-    font-family: "MeQuran2";
-    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
+.dark tajweed.idgh_ghn,
+.dark tajweed.idgh_w_ghn {
+    color: #6cd662;
 }
 
-.font-mequran2 {
-    font-family: "MeQuran2";
+.dark tajweed.iqlb {
+    color: #6fd3ff;
+}
+
+.dark tajweed.ikhf {
+    color: #d68cf0;
+}
+
+.dark tajweed.ikhf_shfw {
+    color: #f58ce4;
+}
+
+.dark tajweed.idghm_shfw {
+    color: #9ada5c;
+}
+
+.dark tajweed.slnt,
+.dark tajweed.ham_wasl,
+.dark tajweed.idgh_mus {
+    color: #9aa4ae;
+}
+
+.dark tajweed.madda_necessary {
+    color: #93a9ff;
+}
+
+.dark tajweed.madda_obligatory {
+    color: #9db4ff;
+}
+
+.dark tajweed.madda_permissible {
+    color: #a8b8ff;
+}
+
+.dark tajweed.madda_normal {
+    color: #b6c6ff;
 }
 
 @font-face {
     font-family: "NooreHidayah";
     src: url("/fonts/noorehidayat.ttf");
+    font-display: swap;
 }
 
 .font-nh {
@@ -220,35 +285,9 @@ tajweed.idgh_mus:hover {
 }
 
 @font-face {
-    font-family: "Othmani";
-    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
-}
-
-.font-othmani {
-    font-family: "Othmani";
-}
-
-@font-face {
-    font-family: "Quran";
-    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
-}
-
-.font-quran {
-    font-family: "Quran";
-}
-
-@font-face {
-    font-family: "Uthmani";
-    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
-}
-
-.font-uthmani {
-    font-family: "Uthmani", serif;
-}
-
-@font-face {
     font-family: "Scheherazade";
     src: url("/fonts/Scheherazade-webfont.ttf");
+    font-display: swap;
 }
 
 .font-scheherazade {
@@ -256,30 +295,13 @@ tajweed.idgh_mus:hover {
 }
 
 @font-face {
-    font-family: "Naskh";
-    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
-}
-
-.font-naskh {
-    font-family: "Naskh";
-}
-
-@font-face {
     font-family: "Kitab";
     src: url("/fonts/Kitab-Regular.ttf");
+    font-display: swap;
 }
 
 .font-kitab {
     font-family: "Kitab";
-}
-
-@font-face {
-    font-family: "Kitab Bold";
-    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
-}
-
-.font-kitab-bold {
-    font-family: "Kitab Bold";
 }
 
 @font-face {
@@ -296,18 +318,6 @@ tajweed.idgh_mus:hover {
 
 .font-amiri {
     font-family: "Amiri", serif;
-}
-
-.font-droid-arabic-kufi {
-    font-family: "Droid Arabic Kufi", serif;
-}
-
-.font-droid-arabic-naskh {
-    font-family: "Droid Arabic Naskh", serif;
-}
-
-.font-thabit {
-    font-family: "Thabit", serif;
 }
 
 /* ─── Global Arabic Font Contract ──────────────────────────────── */

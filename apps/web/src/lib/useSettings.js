@@ -11,6 +11,12 @@ import {
 
 import { authFetch } from "./api";
 import { useAuth } from "@/context/Auth";
+import {
+    DEFAULT_PRAYER_MADHAB,
+    DEFAULT_PRAYER_METHOD,
+    normalizePrayerMadhab,
+    normalizePrayerMethod,
+} from "./prayerTimes";
 
 const SETTINGS_KEY = "tholabul_app_settings";
 
@@ -46,6 +52,8 @@ const sanitizeSettings = (raw) => {
     } else {
         next.adzanReminderLeadByPrayer = {};
     }
+    next.prayerMethod = normalizePrayerMethod(next.prayerMethod);
+    next.prayerMadhab = normalizePrayerMadhab(next.prayerMadhab);
     return next;
 };
 
@@ -62,6 +70,8 @@ const DEFAULT_SETTINGS = {
     adzanReminderLead: 10,
     adzanReminderLeadByPrayer: {},
     notifKajian: true,
+    prayerMethod: DEFAULT_PRAYER_METHOD,
+    prayerMadhab: DEFAULT_PRAYER_MADHAB,
     highContrast: false,
     reduceMotion: false,
     autoSync: false,
@@ -80,7 +90,7 @@ const readStoredSettings = () => {
     try {
         const raw = localStorage.getItem(SETTINGS_KEY);
         return raw
-            ? { ...DEFAULT_SETTINGS, ...JSON.parse(raw) }
+            ? { ...DEFAULT_SETTINGS, ...sanitizeSettings(JSON.parse(raw)) }
             : DEFAULT_SETTINGS;
     } catch {
         return DEFAULT_SETTINGS;

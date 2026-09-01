@@ -239,10 +239,11 @@ const AdminAsmaulHusnaPage = () => {
                         <div className='p-5 space-y-4'>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-number' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.field.number")}
                                     </label>
                                     <input
+                                        id='page-number'
                                         type='number'
                                         value={form.number}
                                         onChange={(e) =>
@@ -257,10 +258,11 @@ const AdminAsmaulHusnaPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-arabic' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.field.arabic")}
                                     </label>
                                     <input
+                                        id='page-arabic'
                                         type='text'
                                         value={form.arabic}
                                         onChange={(e) =>
@@ -275,10 +277,11 @@ const AdminAsmaulHusnaPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-latin' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.latin")}
                                 </label>
                                 <input
+                                    id='page-latin'
                                     type='text'
                                     value={form.transliteration}
                                     onChange={(e) =>
@@ -292,10 +295,11 @@ const AdminAsmaulHusnaPage = () => {
                             </div>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-meaning-id' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.asmaul.meaning_id")}
                                     </label>
                                     <input
+                                        id='page-meaning-id'
                                         type='text'
                                         value={form.indonesian}
                                         onChange={(e) =>
@@ -308,10 +312,11 @@ const AdminAsmaulHusnaPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-meaning-en' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.asmaul.meaning_en")}
                                     </label>
                                     <input
+                                        id='page-meaning-en'
                                         type='text'
                                         value={form.english}
                                         onChange={(e) =>
@@ -325,10 +330,11 @@ const AdminAsmaulHusnaPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-notes' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.asmaul.notes")}
                                 </label>
                                 <textarea
+                                    id='page-notes'
                                     value={form.description}
                                     onChange={(e) =>
                                         setForm({

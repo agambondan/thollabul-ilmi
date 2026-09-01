@@ -8,6 +8,7 @@ export default function robots() {
                 allow: "/",
                 disallow: [
                     "/admin/",
+                    "/dashboard/",
                     "/auth/",
                     "/profile/",
                     "/stats/",

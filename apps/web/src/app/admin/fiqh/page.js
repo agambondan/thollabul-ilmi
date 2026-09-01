@@ -264,10 +264,11 @@ const AdminFiqhPage = () => {
                         <div className='p-5 space-y-4'>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.field.category")}
                                     </label>
                                     <select
+                                        id='page-category'
                                         value={form.category}
                                         onChange={(e) =>
                                             setForm({
@@ -285,10 +286,11 @@ const AdminFiqhPage = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-title' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.field.title")}
                                     </label>
                                     <input
+                                        id='page-title'
                                         type='text'
                                         value={form.title}
                                         onChange={(e) => {
@@ -309,10 +311,11 @@ const AdminFiqhPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-slug' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.slug")}
                                 </label>
                                 <input
+                                    id='page-slug'
                                     type='text'
                                     value={form.slug}
                                     onChange={(e) =>
@@ -326,10 +329,11 @@ const AdminFiqhPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-content' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.content")}
                                 </label>
                                 <textarea
+                                    id='page-content'
                                     value={form.content}
                                     onChange={(e) =>
                                         setForm({
@@ -342,10 +346,11 @@ const AdminFiqhPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-dalil' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     Dalil
                                 </label>
                                 <textarea
+                                    id='page-dalil'
                                     value={form.dalil}
                                     onChange={(e) =>
                                         setForm({
@@ -360,10 +365,11 @@ const AdminFiqhPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-source' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("common.source")}
                                 </label>
                                 <input
+                                    id='page-source'
                                     type='text'
                                     value={form.source}
                                     onChange={(e) =>

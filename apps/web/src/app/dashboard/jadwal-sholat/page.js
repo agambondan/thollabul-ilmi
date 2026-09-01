@@ -8,6 +8,12 @@ import { useLayoutMode } from "@/lib/useLayoutMode";
 import AdzanQuickControl from "@/components/AdzanQuickControl";
 import { toLocalISODate } from "@/lib/date";
 import {
+    buildSholatTimesUrl,
+    extractPrayers,
+    PRAYER_METHODS,
+    useLocalDateKey,
+} from "@/lib/prayerTimes";
+import {
     DEFAULT_PRAYER_LOCATION,
     readStoredUserLocation,
     USER_LOCATION_EVENT,
@@ -16,13 +22,13 @@ import {
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 const PRAYER_MAP = [
-    { key: "imsak", label: "Imsak", icon: "🌙", info: true },
-    { key: "fajr", label: "Subuh", icon: "🌙" },
-    { key: "sunrise", label: "Syuruq", icon: "🌅", info: true },
-    { key: "dhuhr", label: "Dzuhur", icon: "☀️" },
-    { key: "asr", label: "Ashar", icon: "🌤️" },
-    { key: "maghrib", label: "Maghrib", icon: "🌇" },
-    { key: "isha", label: "Isya", icon: "🌃" },
+    { key: "imsak", labelKey: "prayer.imsak", icon: "🌙", info: true },
+    { key: "fajr", labelKey: "prayer.fajr", icon: "🌙" },
+    { key: "sunrise", labelKey: "prayer.sunrise", icon: "🌅", info: true },
+    { key: "dhuhr", labelKey: "prayer.dhuhr", icon: "☀️" },
+    { key: "asr", labelKey: "prayer.asr", icon: "🌤️" },
+    { key: "maghrib", labelKey: "prayer.maghrib", icon: "🌇" },
+    { key: "isha", labelKey: "prayer.isha", icon: "🌃" },
 ];
 
 const REMINDER_LEAD_OPTIONS = [0, 5, 10, 15, 30];
@@ -57,6 +63,7 @@ const JadwalSholatPage = () => {
     const { t } = useLocale();
     const { isWide } = useLayoutMode();
     const { settings, updateSetting, getLeadForPrayer } = useSettings();
+    const dateKey = useLocalDateKey();
     const [prayers, setPrayers] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -93,19 +100,32 @@ const JadwalSholatPage = () => {
             setLoading(true);
             setError(false);
             try {
-                const today = toLocalISODate();
                 const res = await fetch(
-                    `${API_URL}/api/v1/sholat-times?lat=${location.lat}&lng=${location.lng}&method=kemenag&madhab=shafi&date=${today}`,
+                    buildSholatTimesUrl({
+                        lat: location.lat,
+                        lng: location.lng,
+                        method: settings.prayerMethod,
+                        madhab: settings.prayerMadhab,
+                        date: dateKey,
+                    }),
                 );
                 const data = await res.json();
-                setPrayers(data?.data?.prayers ?? data?.prayers ?? null);
+                const next = extractPrayers(data);
+                setPrayers(next);
+                setError(!next);
             } catch {
                 setError(true);
             }
             setLoading(false);
         };
         fetchSchedule();
-    }, [location?.lat, location?.lng]);
+    }, [
+        location?.lat,
+        location?.lng,
+        settings.prayerMethod,
+        settings.prayerMadhab,
+        dateKey,
+    ]);
 
     useEffect(() => {
         const tick = () => {
@@ -138,11 +158,12 @@ const JadwalSholatPage = () => {
                     audioRef.current.play().catch(() => {});
                 }
 
-                const nTitle = `Waktu ${p.label}`;
+                const prayerName = t(p.labelKey);
+                const nTitle = `${t("prayer_schedule.adzan")} ${prayerName}`;
                 const nBody =
                     lead === 0
-                        ? `Sudah masuk waktu ${p.label}`
-                        : `${lead} menit lagi masuk waktu ${p.label}`;
+                        ? `${t("prayer_schedule.adzan_body")} ${prayerName}`
+                        : `${t("prayer_schedule.reminder_body")} ${lead} ${t("prayer_schedule.minutes")} — ${prayerName}`;
                 fireAdzanNotification(
                     nTitle,
                     nBody,
@@ -208,7 +229,10 @@ const JadwalSholatPage = () => {
                 })}
             </p>
             <p className='text-xs text-gray-400 mb-1'>
-                {(location || DEFAULT_PRAYER_LOCATION).label} · Metode Kemenag
+                {(location || DEFAULT_PRAYER_LOCATION).label} ·{" "}
+                {t("prayer_schedule.method")}:{" "}
+                {PRAYER_METHODS.find((m) => m.value === settings.prayerMethod)
+                    ?.label ?? settings.prayerMethod}
             </p>
             <p className='text-xs text-gray-400 mb-6'>
                 Adzan{" "}
@@ -245,7 +269,7 @@ const JadwalSholatPage = () => {
                                                 : "text-gray-700 dark:text-gray-300"
                                         }`}
                                     >
-                                        {row.label}
+                                        {t(row.labelKey)}
                                     </span>
                                     {isCurrent && (
                                         <span className='text-[10px] px-1.5 py-0.5 bg-emerald-500 text-white rounded-full font-medium'>

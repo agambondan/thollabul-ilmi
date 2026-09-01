@@ -4,7 +4,7 @@ import { useLocale } from "@/context/Locale";
 import { CopyToClipboard } from "@/lib/copy";
 import { getLocalizedField } from "@/lib/translation";
 import { useState } from "react";
-import { BsX } from "react-icons/bs";
+import Dialog from "@/components/Dialog";
 
 const buildShareUrls = ({ text, url, title }) => {
     const encodedText = encodeURIComponent(text);
@@ -55,27 +55,13 @@ export function ShareDoaModal({ isOpen, onClose, doa }) {
     const openShareWindow = (url) => window.open(url, "_blank", "noopener,noreferrer");
 
     return (
-        <div className='fixed inset-0 z-50 flex items-center justify-center p-4'>
-            <div
-                className='absolute inset-0 bg-black/50'
-                onClick={onClose}
-                aria-hidden='true'
-            />
-            <div className='relative w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-6'>
-                <div className='flex items-center justify-between mb-4'>
-                    <h2 className='text-lg font-semibold text-gray-900 dark:text-white'>
-                        {t("doa.share_modal_title") ?? "Bagikan Doa"}
-                    </h2>
-                    <button
-                        type='button'
-                        onClick={onClose}
-                        className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1'
-                        aria-label={t("common.close")}
-                    >
-                        <BsX size={20} />
-                    </button>
-                </div>
-
+        <Dialog
+            open={isOpen}
+            onClose={onClose}
+            title={t("doa.share_modal_title")}
+            size='sm'
+        >
+            <>
                 <div className='space-y-3 text-sm text-gray-700 dark:text-gray-300 mb-4'>
                     <p className='font-medium text-gray-900 dark:text-white'>
                         {title}
@@ -111,7 +97,7 @@ export function ShareDoaModal({ isOpen, onClose, doa }) {
                             }}
                             className='rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300'
                         >
-                            Share Sheet
+                            {t("common.share_sheet")}
                         </button>
                     )}
                     {buildShareUrls({ text: shareText, url: shareUrl, title }).map(
@@ -131,10 +117,10 @@ export function ShareDoaModal({ isOpen, onClose, doa }) {
                         onClick={copyShareText}
                         className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
                     >
-                        {copied ? t("common.copied") : "Copy Text"}
+                        {copied ? t("common.copied") : t("common.copy_text")}
                     </button>
                 </div>
-            </div>
-        </div>
+            </>
+        </Dialog>
     );
 }

@@ -94,10 +94,11 @@ const ChangePasswordCard = ({ className = "" }) => {
                         </p>
                     )}
                     <div>
-                        <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                        <label htmlFor='changepasswordcard-old-password' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                             {t("profile.old_password")}
                         </label>
                         <input
+                            id='changepasswordcard-old-password'
                             type='password'
                             value={oldPwd}
                             onChange={(e) => setOldPwd(e.target.value)}
@@ -107,10 +108,11 @@ const ChangePasswordCard = ({ className = "" }) => {
                         />
                     </div>
                     <div>
-                        <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                        <label htmlFor='changepasswordcard-new-password' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                             {t("profile.new_password")}
                         </label>
                         <input
+                            id='changepasswordcard-new-password'
                             type='password'
                             value={newPwd}
                             onChange={(e) => setNewPwd(e.target.value)}
@@ -121,10 +123,11 @@ const ChangePasswordCard = ({ className = "" }) => {
                         />
                     </div>
                     <div>
-                        <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                        <label htmlFor='changepasswordcard-confirm-new-password' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                             {t("profile.confirm_new_password")}
                         </label>
                         <input
+                            id='changepasswordcard-confirm-new-password'
                             type='password'
                             value={confirmPwd}
                             onChange={(e) => setConfirmPwd(e.target.value)}

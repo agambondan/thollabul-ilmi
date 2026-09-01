@@ -180,10 +180,11 @@ export function KhatamContent({ basePath = "/quran" }) {
                 </h2>
                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3'>
                     <div>
-                        <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                        <label htmlFor='page-target-date' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                             {t("khatam.target_date") ?? "Tanggal Target"}
                         </label>
                         <input
+                            id='page-target-date'
                             type='date'
                             value={targetDate}
                             onChange={(e) => saveTarget(e.target.value)}

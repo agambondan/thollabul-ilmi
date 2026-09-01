@@ -257,10 +257,11 @@ const AdminHistoryPage = () => {
                         <div className='p-5 space-y-4'>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-year-hijri' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.history.year_hijri")}
                                     </label>
                                     <input
+                                        id='page-year-hijri'
                                         type='number'
                                         value={form.year_hijri}
                                         onChange={(e) =>
@@ -274,10 +275,11 @@ const AdminHistoryPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-tahun-masehi' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         Tahun Masehi
                                     </label>
                                     <input
+                                        id='page-tahun-masehi'
                                         type='number'
                                         value={form.year_miladi}
                                         onChange={(e) =>
@@ -293,10 +295,11 @@ const AdminHistoryPage = () => {
                             </div>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.field.category")}
                                     </label>
                                     <select
+                                        id='page-category'
                                         value={form.category}
                                         onChange={(e) =>
                                             setForm({
@@ -314,10 +317,11 @@ const AdminHistoryPage = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-slug' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.field.slug")}
                                     </label>
                                     <input
+                                        id='page-slug'
                                         type='text'
                                         value={form.slug}
                                         onChange={(e) =>
@@ -332,10 +336,11 @@ const AdminHistoryPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-event-title' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.history.event_title")}
                                 </label>
                                 <input
+                                    id='page-event-title'
                                     type='text'
                                     value={form.title}
                                     onChange={(e) => {
@@ -355,10 +360,11 @@ const AdminHistoryPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-description' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.description")}
                                 </label>
                                 <textarea
+                                    id='page-description'
                                     value={form.description}
                                     onChange={(e) =>
                                         setForm({

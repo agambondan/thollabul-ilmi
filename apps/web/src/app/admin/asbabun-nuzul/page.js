@@ -330,10 +330,11 @@ const AdminAsbabunNuzulPage = () => {
                         <div className='p-5 space-y-4'>
                             <div className='grid grid-cols-3 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-surah-number' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.asbabun.surah_number")}
                                     </label>
                                     <input
+                                        id='page-surah-number'
                                         type='number'
                                         value={form.surah_number}
                                         onChange={(e) =>
@@ -348,10 +349,11 @@ const AdminAsbabunNuzulPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-ayat-awal' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         Ayat awal
                                     </label>
                                     <input
+                                        id='page-ayat-awal'
                                         type='number'
                                         value={form.ayah_number}
                                         onChange={(e) =>
@@ -365,10 +367,11 @@ const AdminAsbabunNuzulPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-ayat-akhir' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         Ayat akhir
                                     </label>
                                     <input
+                                        id='page-ayat-akhir'
                                         type='number'
                                         value={form.ayah_end}
                                         onChange={(e) =>
@@ -384,10 +387,11 @@ const AdminAsbabunNuzulPage = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-title' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.title")}
                                 </label>
                                 <input
+                                    id='page-title'
                                     type='text'
                                     value={form.title}
                                     onChange={(e) =>
@@ -401,10 +405,11 @@ const AdminAsbabunNuzulPage = () => {
                             </div>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-perawi' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         Perawi
                                     </label>
                                     <input
+                                        id='page-perawi'
                                         type='text'
                                         value={form.narrator}
                                         onChange={(e) =>
@@ -418,10 +423,11 @@ const AdminAsbabunNuzulPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-referensi-tampil' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         Referensi tampil
                                     </label>
                                     <input
+                                        id='page-referensi-tampil'
                                         type='text'
                                         value={form.display_ref}
                                         onChange={(e) =>
@@ -436,10 +442,11 @@ const AdminAsbabunNuzulPage = () => {
                                </div>
                            </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-content' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.content")}
                                </label>
                                 <textarea
+                                    id='page-content'
                                     value={form.content}
                                     onChange={(e) =>
                                         setForm({
@@ -452,10 +459,11 @@ const AdminAsbabunNuzulPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-source' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("common.source")}
                                 </label>
                                 <input
+                                    id='page-source'
                                     type='text'
                                     value={form.source}
                                     onChange={(e) =>

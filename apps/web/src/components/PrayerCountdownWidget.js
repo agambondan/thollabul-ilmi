@@ -1,7 +1,12 @@
 "use client";
 
 import { useLocale } from "@/context/Locale";
-import { toLocalISODate } from "@/lib/date";
+import {
+    buildSholatTimesUrl,
+    extractPrayers,
+    useLocalDateKey,
+} from "@/lib/prayerTimes";
+import { useSettings } from "@/lib/useSettings";
 import {
     DEFAULT_PRAYER_LOCATION,
     readStoredUserLocation,
@@ -17,23 +22,21 @@ import {
     MdWbSunny,
 } from "react-icons/md";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
-
 const PRAYER_KEYS = [
-    { key: "fajr", label: "Subuh", icon: MdNightsStay },
-    { key: "dhuhr", label: "Dzuhur", icon: MdWbSunny },
-    { key: "asr", label: "Ashar", icon: MdOutlineWbSunny },
-    { key: "maghrib", label: "Maghrib", icon: MdOutlineWbSunny },
-    { key: "isha", label: "Isya", icon: MdNightsStay },
+    { key: "fajr", labelKey: "prayer.fajr", icon: MdNightsStay },
+    { key: "dhuhr", labelKey: "prayer.dhuhr", icon: MdWbSunny },
+    { key: "asr", labelKey: "prayer.asr", icon: MdOutlineWbSunny },
+    { key: "maghrib", labelKey: "prayer.maghrib", icon: MdOutlineWbSunny },
+    { key: "isha", labelKey: "prayer.isha", icon: MdNightsStay },
 ];
 
 const DISPLAY_PRAYERS = [
-    { key: "fajr", label: "Subuh", icon: MdNightsStay },
-    { key: "sunrise", label: "Terbit", icon: MdOutlineWbSunny },
-    { key: "dhuhr", label: "Dzuhur", icon: MdWbSunny },
-    { key: "asr", label: "Ashar", icon: MdOutlineWbSunny },
-    { key: "maghrib", label: "Maghrib", icon: MdOutlineWbSunny },
-    { key: "isha", label: "Isya", icon: MdNightsStay },
+    { key: "fajr", labelKey: "prayer.fajr", icon: MdNightsStay },
+    { key: "sunrise", labelKey: "prayer.sunrise", icon: MdOutlineWbSunny },
+    { key: "dhuhr", labelKey: "prayer.dhuhr", icon: MdWbSunny },
+    { key: "asr", labelKey: "prayer.asr", icon: MdOutlineWbSunny },
+    { key: "maghrib", labelKey: "prayer.maghrib", icon: MdOutlineWbSunny },
+    { key: "isha", labelKey: "prayer.isha", icon: MdNightsStay },
 ];
 
 const parseMinutes = (str) => {
@@ -57,17 +60,23 @@ const fmtCountdown = (secs) => {
     return [h, m, s].map((v) => String(v).padStart(2, "0")).join(":");
 };
 
-const fmtRemainingText = (secs, label) => {
-    if (secs < 0) return `${label} sudah lewat`;
+const fmtRemainingText = (t, secs, prayer) => {
+    if (secs < 0) return t("prayer_countdown.passed", { prayer });
     const h = Math.floor(secs / 3600);
     const m = Math.floor((secs % 3600) / 60);
-    if (h <= 0) return `${label} dalam ${Math.max(1, m)} menit`;
-    return `${label} dalam ${h} jam ${m} menit`;
+    if (h <= 0) {
+        return t("prayer_countdown.remaining_m", {
+            prayer,
+            m: Math.max(1, m),
+        });
+    }
+    return t("prayer_countdown.remaining_hm", { prayer, h, m });
 };
 
-const formatHijriDate = (date) => {
+const formatHijriDate = (date, lang) => {
+    const locale = lang === "EN" ? "en-US" : "id-ID";
     try {
-        return new Intl.DateTimeFormat("id-ID-u-ca-islamic-civil", {
+        return new Intl.DateTimeFormat(`${locale}-u-ca-islamic-civil`, {
             weekday: "long",
             day: "numeric",
             month: "long",
@@ -81,9 +90,12 @@ const formatHijriDate = (date) => {
 };
 
 export default function PrayerCountdownWidget({ basePath = "/jadwal-sholat" }) {
-    const { t } = useLocale();
+    const { t, lang } = useLocale();
+    const { settings } = useSettings();
+    const dateKey = useLocalDateKey();
     const [location, setLocation] = useState(null);
     const [prayers, setPrayers] = useState(null);
+    const [loadFailed, setLoadFailed] = useState(false);
     const [now, setNow] = useState(new Date());
 
     useEffect(() => {
@@ -108,21 +120,59 @@ export default function PrayerCountdownWidget({ basePath = "/jadwal-sholat" }) {
         ) {
             return;
         }
-        const today = toLocalISODate();
+
+        let cancelled = false;
+        setLoadFailed(false);
         fetch(
-            `${API_URL}/api/v1/sholat-times?lat=${location.lat}&lng=${location.lng}&method=kemenag&madhab=shafi&date=${today}`,
+            buildSholatTimesUrl({
+                lat: location.lat,
+                lng: location.lng,
+                method: settings.prayerMethod,
+                madhab: settings.prayerMadhab,
+                date: dateKey,
+            }),
         )
             .then((r) => r.json())
-            .then((d) => setPrayers(d?.data?.prayers ?? d?.prayers ?? null))
-            .catch((e) => console.error(e));
-    }, [location?.lat, location?.lng]);
+            .then((d) => {
+                if (cancelled) return;
+                const next = extractPrayers(d);
+                setPrayers(next);
+                setLoadFailed(!next);
+            })
+            .catch(() => {
+                if (!cancelled) setLoadFailed(true);
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [
+        location?.lat,
+        location?.lng,
+        settings.prayerMethod,
+        settings.prayerMadhab,
+        dateKey,
+    ]);
 
     useEffect(() => {
+        if (!prayers) return undefined;
         const iv = setInterval(() => setNow(new Date()), 1000);
         return () => clearInterval(iv);
-    }, []);
+    }, [prayers]);
 
-    if (!prayers) return null;
+    if (!prayers) {
+        return (
+            <div
+                className='rounded-2xl border border-emerald-100 bg-white px-4 py-6 text-center text-sm text-slate-500 dark:border-emerald-900/30 dark:bg-slate-900 dark:text-slate-400'
+                role='status'
+                aria-live='polite'
+            >
+                {loadFailed
+                    ? t("prayer_countdown.error")
+                    : t("prayer_countdown.loading")}
+            </div>
+        );
+    }
 
     const nowMins = now.getHours() * 60 + now.getMinutes();
 
@@ -145,7 +195,8 @@ export default function PrayerCountdownWidget({ basePath = "/jadwal-sholat" }) {
 
     const secsLeft =
         nextMins !== null ? (nextMins - nowMins) * 60 - now.getSeconds() : null;
-    const hijriDate = formatHijriDate(now);
+    const hijriDate = formatHijriDate(now, lang);
+    const nextPrayerLabel = t(nextPrayer.labelKey);
 
     return (
         <Link
@@ -170,14 +221,14 @@ export default function PrayerCountdownWidget({ basePath = "/jadwal-sholat" }) {
 
             <div className='py-7 text-center'>
                 <p className='text-xs font-extrabold uppercase tracking-wide text-emerald-700 dark:text-emerald-300'>
-                    Menuju {nextPrayer.label}
+                    {t("prayer_schedule.towards")} {nextPrayerLabel}
                 </p>
                 <p className='mt-2 text-5xl font-extrabold leading-none text-slate-950 tabular-nums dark:text-white'>
                     {formatTime(prayers[nextPrayer.key])}
                 </p>
                 <p className='mt-3 text-sm font-semibold text-slate-500 dark:text-slate-400'>
                     {secsLeft !== null
-                        ? fmtRemainingText(secsLeft, nextPrayer.label)
+                        ? fmtRemainingText(t, secsLeft, nextPrayerLabel)
                         : ""}
                 </p>
                 <div className='mt-4 inline-flex items-center gap-1.5 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-sm font-extrabold text-emerald-800 shadow-sm dark:border-emerald-900/40 dark:bg-emerald-900/20 dark:text-emerald-200'>
@@ -206,7 +257,7 @@ export default function PrayerCountdownWidget({ basePath = "/jadwal-sholat" }) {
                                 }`}
                             >
                                 <span className='text-[11px] font-extrabold leading-tight'>
-                                    {prayer.label}
+                                    {t(prayer.labelKey)}
                                 </span>
                                 <Icon
                                     className={`text-2xl ${
@@ -218,7 +269,7 @@ export default function PrayerCountdownWidget({ basePath = "/jadwal-sholat" }) {
                                 />
                                 <span className='text-[11px] font-extrabold tabular-nums leading-tight'>
                                     {isActive
-                                        ? "Berikutnya"
+                                        ? t("prayer_countdown.next")
                                         : formatTime(prayers[prayer.key])}
                                 </span>
                             </div>
@@ -226,7 +277,7 @@ export default function PrayerCountdownWidget({ basePath = "/jadwal-sholat" }) {
                     })}
                 </div>
                 <p className='sr-only'>
-                    {t("prayer_schedule.next")}: {nextPrayer.label}{" "}
+                    {t("prayer_schedule.next")}: {nextPrayerLabel}{" "}
                     {formatTime(prayers[nextPrayer.key])}
                     {secsLeft !== null ? `, ${fmtCountdown(secsLeft)}` : ""}
                 </p>

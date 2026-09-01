@@ -39,10 +39,14 @@ describe("PrayerCountdownWidget", () => {
         jest.useRealTimers();
     });
 
-    test("renders null when prayers not loaded (fetch fails)", () => {
+    // A failed schedule fetch must say so; silently rendering nothing leaves a
+    // hole on the dashboard with no explanation.
+    test("surfaces an error when the schedule fetch fails", async () => {
         mockFetch.mockRejectedValue(new Error("fail"));
-        const { container } = render(<PrayerCountdownWidget />);
-        expect(container.innerHTML).toBe("");
+        render(<PrayerCountdownWidget />);
+        expect(
+            await screen.findByText("prayer_countdown.error"),
+        ).toBeInTheDocument();
     });
 
     test("renders next prayer name and countdown", async () => {
@@ -55,9 +59,11 @@ describe("PrayerCountdownWidget", () => {
 
         render(<PrayerCountdownWidget />);
         expect(await screen.findByText("Jakarta")).toBeInTheDocument();
-        expect(screen.getByText("Menuju Subuh")).toBeInTheDocument();
+        expect(
+            screen.getByText("prayer_schedule.towards prayer.fajr"),
+        ).toBeInTheDocument();
         expect(screen.getAllByText("04:30").length).toBeGreaterThan(0);
-        expect(screen.getByText("Terbit")).toBeInTheDocument();
+        expect(screen.getByText("prayer.sunrise")).toBeInTheDocument();
     });
 
     test("countdown shows remaining time format", async () => {
@@ -69,8 +75,24 @@ describe("PrayerCountdownWidget", () => {
         });
 
         render(<PrayerCountdownWidget />);
-        expect(await screen.findByText("Menuju Subuh")).toBeInTheDocument();
-        expect(screen.getByText(/Subuh dalam/)).toBeInTheDocument();
+        expect(
+            await screen.findByText("prayer_schedule.towards prayer.fajr"),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(/prayer_countdown.remaining_/),
+        ).toBeInTheDocument();
+    });
+
+    test("builds the request from the saved method and madhab", async () => {
+        mockFetch.mockResolvedValue({
+            json: async () => ({ data: { prayers: mockPrayers } }),
+        });
+
+        render(<PrayerCountdownWidget />);
+        await screen.findByText("Jakarta");
+        const url = mockFetch.mock.calls[0][0];
+        expect(url).toContain("method=kemenag");
+        expect(url).toContain("madhab=shafi");
     });
 
     test("links to schedule page", async () => {

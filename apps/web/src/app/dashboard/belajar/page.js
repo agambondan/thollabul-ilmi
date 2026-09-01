@@ -9,7 +9,12 @@ import { BsBook, BsJournalCheck, BsSearch, BsPlayFill, BsAward } from 'react-ico
 import { FaBrain } from 'react-icons/fa';
 import { MdMenuBook, MdOutlinePlayLesson, MdTimeline, MdOutlineAutoStories, MdExplore, MdOutlineDirectionsWalk } from 'react-icons/md';
 
-export default function BelajarPage() {
+/**
+ * Also rendered by the public /belajar route. `basePath` keeps an anonymous
+ * visitor on public URLs instead of bouncing them into the auth-gated
+ * dashboard tree.
+ */
+export default function BelajarPage({ basePath = '/dashboard' }) {
     const { t } = useLocale();
     const { isWide } = useLayoutMode();
     const [recent, setRecent] = useState([]);
@@ -19,16 +24,19 @@ export default function BelajarPage() {
         setRecent(getRecentBelajar());
     }, []);
 
+    const root = basePath === '/dashboard' ? '/dashboard' : '';
+    const lessonsHref = `${root}/belajar/lessons`;
+
     const MODULES = [
-        { label: 'Modul Pelajaran (Step-by-step)', href: '/dashboard/belajar/lessons', icon: <BsPlayFill className='text-xl text-emerald-600' />, desc: 'Belajar interaktif terstruktur per tema dan surah.' },
-        { label: 'Kajian Islam', href: '/dashboard/kajian', icon: <MdOutlinePlayLesson className='text-xl text-blue-500' />, desc: 'Video ceramah pilihan dan rekaman audio ulama.' },
-        { label: 'Fiqh Ringkas', href: '/dashboard/fiqh', icon: <MdMenuBook className='text-xl text-amber-500' />, desc: 'Ringkasan hukum fiqh ibadah praktis.' },
-        { label: 'Siroh Nabawiyah', href: '/dashboard/siroh', icon: <MdOutlineAutoStories className='text-xl text-rose-500' />, desc: 'Kisah perjalanan Nabi Muhammad ﷺ per bab.' },
-        { label: 'Sejarah Islam', href: '/dashboard/sejarah', icon: <MdTimeline className='text-xl text-indigo-500' />, desc: 'Garis waktu peristiwa penting peradaban Islam.' },
-        { label: 'Kamus Arab', href: '/dashboard/kamus', icon: <BsBook className='text-xl text-teal-500' />, desc: 'Mufrodat dan arti kosa kata Al-Quran.' },
-        { label: 'Kuis Evaluasi', href: '/dashboard/quiz', icon: <FaBrain className='text-xl text-purple-500' />, desc: 'Uji pemahaman wawasan Islam secara acak.' },
-        { label: 'Perpustakaan Digital', href: '/dashboard/library', icon: <BsBook className='text-xl text-emerald-500' />, desc: 'Koleksi ebook & kitab referensi rujukan.' },
-    ];
+        { labelKey: 'belajar.mod.lessons', href: lessonsHref, icon: <BsPlayFill className='text-xl text-emerald-600' />, descKey: 'belajar.mod.lessons_d' },
+        { labelKey: 'belajar.mod.kajian', href: `${root}/kajian`, icon: <MdOutlinePlayLesson className='text-xl text-blue-500' />, descKey: 'belajar.mod.kajian_d' },
+        { labelKey: 'belajar.mod.fiqh', href: `${root}/fiqh`, icon: <MdMenuBook className='text-xl text-amber-500' />, descKey: 'belajar.mod.fiqh_d' },
+        { labelKey: 'belajar.mod.siroh', href: `${root}/siroh`, icon: <MdOutlineAutoStories className='text-xl text-rose-500' />, descKey: 'belajar.mod.siroh_d' },
+        { labelKey: 'belajar.mod.sejarah', href: `${root}/sejarah`, icon: <MdTimeline className='text-xl text-indigo-500' />, descKey: 'belajar.mod.sejarah_d' },
+        { labelKey: 'belajar.mod.kamus', href: `${root}/kamus`, icon: <BsBook className='text-xl text-teal-500' />, descKey: 'belajar.mod.kamus_d' },
+        { labelKey: 'belajar.mod.quiz', href: `${root}/quiz`, icon: <FaBrain className='text-xl text-purple-500' />, descKey: 'belajar.mod.quiz_d' },
+        { labelKey: 'belajar.mod.library', href: `${root}/library`, icon: <BsBook className='text-xl text-emerald-500' />, descKey: 'belajar.mod.library_d' },
+    ].map((m) => ({ ...m, label: t(m.labelKey), desc: t(m.descKey) }));
 
     const filtered = MODULES.filter(m => m.label.toLowerCase().includes(search.toLowerCase()) || m.desc.toLowerCase().includes(search.toLowerCase()));
 
@@ -39,7 +47,7 @@ export default function BelajarPage() {
                     {t('belajar.title')}
                 </h1>
                 <Link 
-                    href='/dashboard/belajar/lessons'
+                    href={lessonsHref}
                     className='text-xs font-semibold px-3 py-1.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300 rounded-lg hover:bg-emerald-200'
                 >
                     {t('belajar.lessons_start')} &rarr;
@@ -71,7 +79,7 @@ export default function BelajarPage() {
                                 className='shrink-0 w-48 p-3 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl hover:shadow-sm'
                             >
                                 <p className='text-xs font-bold text-gray-900 dark:text-white truncate'>{item.title}</p>
-                                <p className='text-[10px] text-gray-400 mt-1 truncate'>{item.meta || 'Lanjutkan'}</p>
+                                <p className='text-[10px] text-gray-400 mt-1 truncate'>{item.meta || t('belajar.continue')}</p>
                             </Link>
                         ))}
                     </div>

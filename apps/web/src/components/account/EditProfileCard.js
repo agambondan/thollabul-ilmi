@@ -78,10 +78,11 @@ const EditProfileCard = ({ user, refetchUser, className = "" }) => {
                         </p>
                     )}
                     <div>
-                        <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                        <label htmlFor='editprofilecard-name' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                             {t("auth.name")}
                         </label>
                         <input
+                            id='editprofilecard-name'
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required

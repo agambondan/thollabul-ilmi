@@ -117,10 +117,11 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                 </div>
 
                 <div>
-                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                    <label htmlFor='sirohform-order' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                         {t("admin.field.order")}
                     </label>
                     <input
+                        id='sirohform-order'
                         type='number'
                         value={order}
                         onChange={(e) => setOrder(e.target.value)}
@@ -146,10 +147,11 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             </div>
 
             <div>
-                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label htmlFor='sirohform-slug' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                     {t("admin.field.slug")}
                 </label>
                 <input
+                    id='sirohform-slug'
                     value={slug}
                     onChange={(e) => {
                         setSlugEdited(true);

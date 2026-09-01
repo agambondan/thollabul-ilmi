@@ -240,10 +240,11 @@ const AdminDictionaryPage = () => {
                         </div>
                         <div className='p-5 space-y-4'>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-istilah' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     Istilah
                                 </label>
                                 <input
+                                    id='page-istilah'
                                     type='text'
                                     value={form.term}
                                     onChange={(e) =>
@@ -256,10 +257,11 @@ const AdminDictionaryPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-category' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.category")}
                                 </label>
                                 <select
+                                    id='page-category'
                                     value={form.category}
                                     onChange={(e) =>
                                         setForm({
@@ -277,10 +279,11 @@ const AdminDictionaryPage = () => {
                                 </select>
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-definisi' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     Definisi
                                 </label>
                                 <textarea
+                                    id='page-definisi'
                                     value={form.definition}
                                     onChange={(e) =>
                                         setForm({

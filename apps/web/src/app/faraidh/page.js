@@ -308,11 +308,12 @@ export function FaraidhContent() {
                     </h2>
                     <div className='space-y-3'>
                         <div>
-                            <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                            <label htmlFor='page-total-wealth' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                 {t("faraidh.total_wealth") ??
                                     "Total Harta (Rp)"}
                             </label>
                             <input
+                                id='page-total-wealth'
                                 type='number'
                                 min='0'
                                 value={wealth}
@@ -322,10 +323,11 @@ export function FaraidhContent() {
                             />
                         </div>
                         <div>
-                            <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                            <label htmlFor='page-debt' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                 {t("faraidh.debt") ?? "Hutang Almarhum (Rp)"}
                             </label>
                             <input
+                                id='page-debt'
                                 type='number'
                                 min='0'
                                 value={debt}
@@ -335,10 +337,11 @@ export function FaraidhContent() {
                             />
                         </div>
                         <div>
-                            <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                            <label htmlFor='page-funeral' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                 {t("faraidh.funeral") ?? "Biaya Pemakaman (Rp)"}
                             </label>
                             <input
+                                id='page-funeral'
                                 type='number'
                                 min='0'
                                 value={funeral}
@@ -348,10 +351,11 @@ export function FaraidhContent() {
                             />
                         </div>
                         <div>
-                            <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                            <label htmlFor='page-will' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                 {t("faraidh.will") ?? "Wasiat (Rp, maks 1/3)"}
                             </label>
                             <input
+                                id='page-will'
                                 type='number'
                                 min='0'
                                 value={will}
