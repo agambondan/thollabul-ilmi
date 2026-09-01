@@ -1,14 +1,16 @@
 self.addEventListener("message", (event) => {
     if (event.data?.type === "ADZAN_NOTIFICATION") {
-        self.registration.showNotification(
-            event.data.title || "Thollabul Ilmi",
-            {
-                body: event.data.body || "",
-                icon: "/icon.png",
-                badge: "/icon.png",
-                vibrate: [200, 100, 200],
-                data: { url: event.data.url || "/", type: "adzan" },
-            },
+        event.waitUntil(
+            self.registration.showNotification(
+                event.data.title || "Thollabul Ilmi",
+                {
+                    body: event.data.body || "",
+                    icon: "/icon.png",
+                    badge: "/icon.png",
+                    vibrate: [200, 100, 200],
+                    data: { url: event.data.url || "/", type: "adzan" },
+                },
+            ),
         );
     }
 });

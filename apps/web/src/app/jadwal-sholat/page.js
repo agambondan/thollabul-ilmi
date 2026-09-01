@@ -7,7 +7,7 @@ import { useLocale } from "@/context/Locale";
 import { toLocalISODate } from "@/lib/date";
 import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
 import { requestAndStoreUserLocation } from "@/lib/userLocation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BsBell, BsBellFill, BsGeoAlt } from "react-icons/bs";
 import { MdAccessTime, MdTimer } from "react-icons/md";
 
@@ -62,6 +62,9 @@ const MADHABS = [
     { value: "hanafi", label: "Hanafi" },
 ];
 
+const REMINDER_LEAD_OPTIONS = [0, 5, 10, 15, 30];
+const PRAYER_KEYS_FOR_REMINDER = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
+
 const parseTimeStr = (str) => {
     if (!str) return null;
     const m = str.match(/(\d+):(\d+)/);
@@ -99,21 +102,19 @@ export default function JadwalSholatPage() {
     const audioRef = useRef(null);
     const lastNotifRef = useRef("");
     const lastReminderRef = useRef("");
-    const REMINDER_LEAD_OPTIONS = [0, 5, 10, 15, 30];
-    const PRAYER_KEYS_FOR_REMINDER = [
-        "fajr",
-        "dhuhr",
-        "asr",
-        "maghrib",
-        "isha",
-    ];
-    const getLeadForPrayer = (key) => {
-        const perPrayer = settings.adzanReminderLeadByPrayer?.[key];
-        if (REMINDER_LEAD_OPTIONS.includes(perPrayer)) return perPrayer;
-        return REMINDER_LEAD_OPTIONS.includes(settings.adzanReminderLead)
-            ? settings.adzanReminderLead
-            : 10;
-    };
+    const getLeadForPrayer = useCallback(
+        (key) => {
+            const perPrayer = settings.adzanReminderLeadByPrayer?.[key];
+            if (REMINDER_LEAD_OPTIONS.includes(perPrayer)) return perPrayer;
+            return REMINDER_LEAD_OPTIONS.includes(settings.adzanReminderLead)
+                ? settings.adzanReminderLead
+                : 10;
+        },
+        [
+            settings.adzanReminderLead,
+            settings.adzanReminderLeadByPrayer,
+        ],
+    );
     const adzanOptions =
         settings.adzanSound?.startsWith("custom:") && settings.adzanSoundUrl
             ? [
@@ -200,8 +201,8 @@ export default function JadwalSholatPage() {
                                 });
                             });
                         }
-                        const nTitle = `${t("prayer_schedule.adzan") ?? "Waktu"} ${t(p.labelKey)}`;
-                        const nBody = `${t("prayer_schedule.adzan_body") ?? "Sudah masuk waktu"} ${t(p.labelKey)}`;
+                        const nTitle = `${t("prayer_schedule.adzan")} ${t(p.labelKey)}`;
+                        const nBody = `${t("prayer_schedule.adzan_body")} ${t(p.labelKey)}`;
                         if (notifGranted) {
                             new Notification(nTitle, {
                                 body: nBody,
@@ -269,10 +270,13 @@ export default function JadwalSholatPage() {
         settings.adzanReminderLeadByPrayer,
         notifGranted,
         t,
+        getLeadForPrayer,
     ]);
 
     useEffect(() => {
-        fetchByCoords(city.lat, city.lng, city.name);
+        Promise.resolve().then(() =>
+            fetchByCoords(city.lat, city.lng, city.name),
+        );
     }, [city, method, madhab]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleGeo = () => {

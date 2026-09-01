@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/context/Locale";
+import { fireAdzanNotification } from "@/lib/adzanNotification";
 import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import AdzanQuickControl from "@/components/AdzanQuickControl";
@@ -120,26 +121,11 @@ const JadwalSholatPage = () => {
 
                         const nTitle = `Waktu ${p.label}`;
                         const nBody = `Sudah masuk waktu ${p.label}`;
-                        if (
-                            typeof Notification !== "undefined" &&
-                            Notification.permission === "granted"
-                        ) {
-                            new Notification(nTitle, {
-                                body: nBody,
-                                icon: "/icon.png",
-                            });
-                        }
-                        if (
-                            "serviceWorker" in navigator &&
-                            navigator.serviceWorker.controller
-                        ) {
-                            navigator.serviceWorker.controller.postMessage({
-                                type: "ADZAN_NOTIFICATION",
-                                title: nTitle,
-                                body: nBody,
-                                url: "/dashboard/jadwal-sholat",
-                            });
-                        }
+                        fireAdzanNotification(
+                            nTitle,
+                            nBody,
+                            "/dashboard/jadwal-sholat",
+                        );
                     }
                     break;
                 }
