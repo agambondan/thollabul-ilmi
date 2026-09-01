@@ -239,8 +239,7 @@ tajweed.idgh_mus:hover {
 
 @font-face {
     font-family: "Uthmani";
-    src: url("//cdn.alquran.cloud/public/fonts/uthman_tn09.otf")
-        format("opentype");
+    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
 }
 
 .font-uthmani {
