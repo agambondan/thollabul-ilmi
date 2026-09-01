@@ -259,7 +259,6 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
         [isProcessing, text],
     );
 
-    // Truncate text for WhatsApp/Telegram if too long
     const getTruncatedText = useCallback(
         (maxLen) => {
             if (shareText.length <= maxLen) return shareText;
