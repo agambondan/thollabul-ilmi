@@ -3,7 +3,9 @@
 import Footer from "@/components/Footer";
 import { NavbarTailwindCss } from "@/components/Navbar";
 import Section from "@/components/Section";
+import { ShareDoaModal } from "@/components/ShareDoaModal";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
+import SourceBadges from "@/components/SourceBadges";
 import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { doaApi } from "@/lib/api";
@@ -16,9 +18,6 @@ import {
     BsShare,
     BsVolumeUpFill,
 } from "react-icons/bs";
-import SourceBadges from "@/components/SourceBadges";
-import { CopyToClipboard } from "@/lib/copy";
-import { ShareDoaModal } from "@/components/ShareDoaModal";
 
 const CATEGORIES = [
     { value: "", labelKey: "common.all" },
@@ -52,24 +51,6 @@ export const DoaContent = () => {
     const [shareDoa, setShareDoa] = useState(null);
     const audioRef = useRef(null);
     const sentinelRef = useRef(null);
-
-    const copyShareText = () => {
-        if (!shareDoa) return;
-        const title = getLocalizedField(shareDoa, "title", lang, ["name"]);
-        const desc = getLocalizedField(shareDoa, "description", lang, ["meaning", "translation"]);
-        const arabic = shareDoa.translation?.ar || "";
-        const latin = shareDoa.translation?.latin_idn || "";
-        
-        let shareText = `${t("doa.share_title", { title })}\n`;
-        if (arabic) shareText += `${arabic}\n`;
-        if (latin) shareText += `${latin}\n`;
-        shareText += `${desc}\n`;
-        shareText += `\n${t("doa.via")} ${window.location.origin}/doa`;
-        
-        CopyToClipboard(shareText);
-        setSharePopUp(false);
-        setShareDoa(null);
-    };
 
     const openShare = (doa) => {
         setShareDoa(doa);
@@ -124,7 +105,7 @@ export const DoaContent = () => {
     useEffect(() => {
         setPage(0);
         fetchPage(category, 0, false);
-    }, [category]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [category]);
 
     useEffect(() => {
         if (page === 0) return;

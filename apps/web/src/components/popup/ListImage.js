@@ -3,11 +3,20 @@
 
 import { useLocale } from "@/context/Locale";
 import { CopyImageToClipboard, CopyToClipboard } from "@/lib/copy";
+import { renderShareImage } from "@/lib/shareImage";
 import { useCallback, useState } from "react";
 import { IoClose } from "react-icons/io5";
 
-const MAX_WHATSAPP_LENGTH = 4096;
-const MAX_TELEGRAM_LENGTH = 4096;
+const MAX_SHARE_LENGTH = 4096;
+
+const loadImage = (src) =>
+    new Promise((resolve, reject) => {
+        const image = new Image();
+        image.crossOrigin = "anonymous";
+        image.onload = () => resolve(image);
+        image.onerror = reject;
+        image.src = src;
+    });
 
 export const ShareAyah = ({ images, isCopiedCallback, text }) => {
     const { t } = useLocale();
@@ -57,203 +66,57 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
     }, [shareText]);
 
     const copyImageToClipboard = useCallback(
-        (src) => {
+        async (src) => {
             if (isProcessing) return;
             SetIsProcessing(true);
             setError("");
 
-            const fontKitab = new FontFace(
-                "Kitab",
-                'url("/fonts/Kitab-Regular.ttf")',
-            );
+            let hasKitab = false;
+            try {
+                const fontKitab = new FontFace(
+                    "Kitab",
+                    'url("/fonts/Kitab-Regular.ttf")',
+                );
+                const loadedFace = await fontKitab.load();
+                document.fonts.add(loadedFace);
+                hasKitab = true;
+            } catch {
+                hasKitab = false;
+            }
 
-            fontKitab
-                .load()
-                .then((loadedFace) => {
-                    document.fonts.add(loadedFace);
-                    processImageWithFont(src, loadedFace);
-                })
-                .catch(() => {
-                    processImageWithFont(src, null);
-                });
+            let image;
+            try {
+                image = await loadImage(src);
+            } catch {
+                SetIsProcessing(false);
+                setError("Gagal memuat gambar background.");
+                setTimeout(() => setError(""), 3000);
+                return;
+            }
 
-            function processImageWithFont(src, fontFace) {
-                const img = new Image();
-                img.crossOrigin = "anonymous";
-                img.onload = () => {
-                    const newLines = text.split("\n");
-                    const canvas = document.createElement("canvas");
-                    const maxWidth = img.width - 80;
+            let canvas;
+            try {
+                canvas = renderShareImage({ image, text, hasKitab });
+            } catch {
+                SetIsProcessing(false);
+                setError(
+                    "Gagal memproses gambar (CORS). Coba background lain.",
+                );
+                setTimeout(() => setError(""), 4000);
+                return;
+            }
 
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-
-                    const context = canvas.getContext("2d");
-                    context.globalAlpha = 0.85;
-                    try {
-                        context.drawImage(img, 0, 0);
-                    } catch (e) {
-                        SetIsProcessing(false);
-                        setError(
-                            "Gagal memproses gambar (CORS). Coba background lain.",
-                        );
-                        setTimeout(() => setError(""), 4000);
-                        return;
-                    }
-
-                    let contextFont = "";
-                    let contextFontKitab = "";
-                    let lineHeight = 25;
-
-                    let x = canvas.width / 2;
-                    let y =
-                        canvas.height / 2 - (newLines.length / 2) * lineHeight;
-
-                    context.fillStyle = "rgb(255, 255, 255)";
-                    if (canvas.width >= 1080 && canvas.width < 1920) {
-                        contextFont = "24px Arial";
-                        contextFontKitab = fontFace
-                            ? "36px Kitab"
-                            : "36px Arial";
-                        lineHeight = 50;
-                        context.fillRect(
-                            30,
-                            30,
-                            img.width - 60,
-                            img.height - 60,
-                        );
-                    } else if (canvas.width >= 1920 && canvas.width < 2048) {
-                        contextFont = "30px Arial";
-                        contextFontKitab = fontFace
-                            ? "50px Kitab"
-                            : "50px Arial";
-                        lineHeight = 75;
-                        context.fillRect(
-                            40,
-                            40,
-                            img.width - 80,
-                            img.height - 80,
-                        );
-                    } else if (canvas.width >= 2048 && canvas.width < 3840) {
-                        contextFont = "40px Arial";
-                        contextFontKitab = fontFace
-                            ? "60px Kitab"
-                            : "60px Arial";
-                        lineHeight = 90;
-                        context.fillRect(
-                            40,
-                            40,
-                            img.width - 80,
-                            img.height - 80,
-                        );
-                    } else if (canvas.width >= 3840) {
-                        contextFont = "55px Arial";
-                        contextFontKitab = fontFace
-                            ? "80px Kitab"
-                            : "80px Arial";
-                        lineHeight = 110;
-                        context.fillRect(
-                            40,
-                            40,
-                            img.width - 80,
-                            img.height - 80,
-                        );
-                    } else {
-                        contextFont = "20px Arial";
-                        contextFontKitab = fontFace
-                            ? "28px Kitab"
-                            : "28px Arial";
-                        lineHeight = 30;
-                        context.fillRect(
-                            20,
-                            20,
-                            img.width - 40,
-                            img.height - 40,
-                        );
-                    }
-
-                    let calculationHeight = 0;
-                    newLines.forEach((newLine, index) => {
-                        let words = newLine.split(" ");
-                        let line = "";
-                        for (let n = 0; n < words.length; n++) {
-                            let testLine = line + words[n] + " ";
-                            let metrics = context.measureText(testLine);
-                            let testWidth = metrics.width;
-                            if (testWidth > maxWidth && n > 0) {
-                                line = words[n] + " ";
-                                y += lineHeight;
-                                calculationHeight += y;
-                            } else {
-                                line = testLine;
-                            }
-                        }
-                        calculationHeight += index * lineHeight;
-                    });
-
-                    context.fillStyle = "black";
-                    context.textAlign = "center";
-                    context.textBaseline = "middle";
-                    newLines.forEach((newLine, index) => {
-                        if (index === 1) {
-                            y += lineHeight / 4;
-                            context.direction = "rtl";
-                            context.font = contextFontKitab;
-                        } else {
-                            context.direction = "ltr";
-                            context.font = contextFont;
-                        }
-                        if (index === 5) {
-                            y -= lineHeight / 4;
-                        }
-                        y += lineHeight / 4;
-                        let words = newLine.split(" ");
-                        let line = "";
-                        for (let n = 0; n < words.length; n++) {
-                            let testLine = line + words[n] + " ";
-                            let metrics = context.measureText(testLine);
-                            let testWidth = metrics.width;
-                            if (testWidth > maxWidth && n > 0) {
-                                context.fillText(
-                                    line,
-                                    x,
-                                    y + index * lineHeight,
-                                );
-                                line = words[n] + " ";
-                                if (index === 1) {
-                                    y += lineHeight * 2;
-                                } else {
-                                    y += lineHeight;
-                                }
-                            } else {
-                                line = testLine;
-                            }
-                        }
-                        context.fillText(line, x, y + index * lineHeight);
-                    });
-
-                    CopyImageToClipboard(canvas)
-                        .then(() => {
-                            SetIsCopied(true);
-                            SetIsProcessing(false);
-                            setTimeout(() => {
-                                SetIsCopied(false);
-                            }, 2000);
-                        })
-                        .catch(() => {
-                            SetIsProcessing(false);
-                            setError(
-                                "Gambar disimpan sebagai file (clipboard tidak didukung).",
-                            );
-                            setTimeout(() => setError(""), 3000);
-                        });
-                };
-                img.onerror = () => {
-                    SetIsProcessing(false);
-                    setError("Gagal memuat gambar background.");
-                    setTimeout(() => setError(""), 3000);
-                };
-                img.src = src;
+            try {
+                await CopyImageToClipboard(canvas);
+                SetIsCopied(true);
+                setTimeout(() => SetIsCopied(false), 2000);
+            } catch {
+                setError(
+                    "Gambar disimpan sebagai file (clipboard tidak didukung).",
+                );
+                setTimeout(() => setError(""), 3000);
+            } finally {
+                SetIsProcessing(false);
             }
         },
         [isProcessing, text],
@@ -267,10 +130,9 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
         [shareText],
     );
 
-    const whatsAppText = getTruncatedText(MAX_WHATSAPP_LENGTH);
-    const telegramText = getTruncatedText(MAX_TELEGRAM_LENGTH);
-    const encodedWhatsApp = encodeURIComponent(whatsAppText);
-    const encodedTelegram = encodeURIComponent(telegramText);
+    const shortText = getTruncatedText(MAX_SHARE_LENGTH);
+    const encodedText = encodeURIComponent(shortText);
+    const combinedText = encodeURIComponent(`${shortText}\n${shareUrl}`);
 
     return (
         <>
@@ -314,7 +176,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                         type='button'
                         onClick={() =>
                             openShareWindow(
-                                `https://wa.me/?text=${encodedWhatsApp}`,
+                                `https://wa.me/?text=${encodedText}`,
                             )
                         }
                         className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
@@ -325,12 +187,45 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                         type='button'
                         onClick={() =>
                             openShareWindow(
-                                `https://t.me/share/url?url=${encodedUrl}&text=${encodedTelegram}`,
+                                `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
                             )
                         }
                         className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
                     >
                         Telegram
+                    </button>
+                    <button
+                        type='button'
+                        onClick={() =>
+                            openShareWindow(
+                                `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+                            )
+                        }
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
+                    >
+                        Facebook
+                    </button>
+                    <button
+                        type='button'
+                        onClick={() =>
+                            openShareWindow(
+                                `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`,
+                            )
+                        }
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
+                    >
+                        X
+                    </button>
+                    <button
+                        type='button'
+                        onClick={() =>
+                            openShareWindow(
+                                `https://www.threads.net/intent/post?text=${combinedText}`,
+                            )
+                        }
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
+                    >
+                        Threads
                     </button>
                     <button
                         type='button'
@@ -342,6 +237,17 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                         className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
                     >
                         LinkedIn
+                    </button>
+                    <button
+                        type='button'
+                        onClick={() =>
+                            openShareWindow(
+                                `mailto:?subject=Thullaabul%20'Ilmi&body=${encodedText}`,
+                            )
+                        }
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
+                    >
+                        Email
                     </button>
                     <button
                         type='button'
