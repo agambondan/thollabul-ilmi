@@ -92,6 +92,7 @@ export const translations = {
         // Auth pages
         "auth.sign_in_title": "Masuk ke Akun",
         "auth.email": "Email",
+        "auth.email_placeholder": "nama@email.com",
         "auth.password": "Password",
         "auth.login_btn": "Masuk",
         "auth.processing": "Memproses...",
@@ -2279,6 +2280,7 @@ export const translations = {
         // Auth pages
         "auth.sign_in_title": "Sign in to Account",
         "auth.email": "Email",
+        "auth.email_placeholder": "name@example.com",
         "auth.password": "Password",
         "auth.login_btn": "Sign In",
         "auth.processing": "Processing...",
