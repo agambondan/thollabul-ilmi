@@ -13,9 +13,12 @@ import {
     BsPauseFill,
     BsPlayFill,
     BsSearch,
+    BsShare,
     BsVolumeUpFill,
 } from "react-icons/bs";
 import SourceBadges from "@/components/SourceBadges";
+import { CopyToClipboard } from "@/lib/copy";
+import { ShareDoaModal } from "@/components/ShareDoaModal";
 
 const CATEGORIES = [
     { value: "", labelKey: "common.all" },
@@ -45,8 +48,38 @@ export const DoaContent = () => {
     const [search, setSearch] = useState("");
     const [expanded, setExpanded] = useState(null);
     const [playing, setPlaying] = useState(null);
+    const [sharePopUp, setSharePopUp] = useState(false);
+    const [shareDoa, setShareDoa] = useState(null);
     const audioRef = useRef(null);
     const sentinelRef = useRef(null);
+
+    const copyShareText = () => {
+        if (!shareDoa) return;
+        const title = getLocalizedField(shareDoa, "title", lang, ["name"]);
+        const desc = getLocalizedField(shareDoa, "description", lang, ["meaning", "translation"]);
+        const arabic = shareDoa.translation?.ar || "";
+        const latin = shareDoa.translation?.latin_idn || "";
+        
+        let shareText = `${t("doa.share_title", { title })}\n`;
+        if (arabic) shareText += `${arabic}\n`;
+        if (latin) shareText += `${latin}\n`;
+        shareText += `${desc}\n`;
+        shareText += `\n${t("doa.via")} ${window.location.origin}/doa`;
+        
+        CopyToClipboard(shareText);
+        setSharePopUp(false);
+        setShareDoa(null);
+    };
+
+    const openShare = (doa) => {
+        setShareDoa(doa);
+        setSharePopUp(true);
+    };
+
+    const closeShare = () => {
+        setSharePopUp(false);
+        setShareDoa(null);
+    };
 
     const playAudio = (url) => {
         if (audioRef.current) {
@@ -138,12 +171,13 @@ export const DoaContent = () => {
     });
 
     return (
-        <div
-            className={
-                isWide ? "w-full px-4" : "container mx-auto px-4 max-w-3xl"
-            }
-        >
-            <div className='text-center mb-8'>
+        <>
+            <div
+                className={
+                    isWide ? "w-full px-4" : "container mx-auto px-4 max-w-3xl"
+                }
+            >
+                <div className='text-center mb-8'>
                 <p
                     className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'
                     style={{ fontFamily: "Amiri, serif" }}
@@ -297,6 +331,16 @@ export const DoaContent = () => {
                                 {doa.source && (
                                     <SourceBadges source={doa.source} />
                                 )}
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        openShare(doa);
+                                    }}
+                                    className='flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
+                                >
+                                    <BsShare className='text-sm' />
+                                    {t("common.share")}
+                                </button>
                             </div>
                         )}
                     </div>
@@ -314,9 +358,16 @@ export const DoaContent = () => {
             {!hasMore && doas.length > 0 && !isLoading && (
                 <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
                     {t("doa.all_shown")}
-                </p>
+               </p>
             )}
-        </div>
+       </div>
+
+        <ShareDoaModal
+            isOpen={sharePopUp}
+            onClose={closeShare}
+            doa={shareDoa}
+        />
+        </>
     );
 };
 
