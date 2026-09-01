@@ -378,7 +378,7 @@ const AdminAsbabunNuzulPage = () => {
                                             })
                                         }
                                         min={1}
-                                        placeholder='Opsional'
+                                        placeholder={t("admin.asbabun_nuzul.optional")}
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
                                 </div>
@@ -413,7 +413,7 @@ const AdminAsbabunNuzulPage = () => {
                                                 narrator: e.target.value,
                                             })
                                         }
-                                        placeholder='e.g. Ibnu Abbas'
+                                        placeholder={t("admin.asbabun_nuzul.scholar_placeholder")}
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
                                 </div>
@@ -430,15 +430,15 @@ const AdminAsbabunNuzulPage = () => {
                                                 display_ref: e.target.value,
                                             })
                                         }
-                                        placeholder='QS 2:6-16'
+                                        placeholder={t("admin.asbabun_nuzul.verse_placeholder")}
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
-                                </div>
-                            </div>
+                               </div>
+                           </div>
                             <div>
                                 <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.content")}
-                                </label>
+                               </label>
                                 <textarea
                                     value={form.content}
                                     onChange={(e) =>
@@ -464,7 +464,7 @@ const AdminAsbabunNuzulPage = () => {
                                             source: e.target.value,
                                         })
                                     }
-                                    placeholder='e.g. HR. Bukhari, Tafsir Ibnu Katsir'
+                                    placeholder={t("admin.asbabun_nuzul.source_placeholder")}
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>

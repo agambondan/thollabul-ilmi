@@ -336,7 +336,7 @@ const AdminRemindersPage = () => {
                                                 source: e.target.value,
                                             })
                                         }
-                                        placeholder="Al-Fawa'id, Riyadhus Shalihin, dll"
+                                        placeholder={t("admin.reminders.source_placeholder")}
                                         className={INPUT_CLASS}
                                     />
                                 </Field>

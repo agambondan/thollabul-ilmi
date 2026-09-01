@@ -215,14 +215,14 @@ export default function AdminLessonsPage() {
                                             </div>
                                             <input
                                                 type='text'
-                                                placeholder='Judul langkah'
+                                                placeholder={t("admin.lessons.step_title_placeholder")}
                                                 value={s.title}
                                                 onChange={(e) => updateStep(idx, 'title', e.target.value)}
                                                 className='w-full px-3 py-1.5 mb-2 text-sm border rounded-lg dark:bg-slate-800 dark:border-slate-700'
                                                 required
                                             />
                                             <textarea
-                                                placeholder='Penjelasan detail'
+                                                placeholder={t("admin.lessons.step_desc_placeholder")}
                                                 value={s.body}
                                                 onChange={(e) => updateStep(idx, 'body', e.target.value)}
                                                 className='w-full px-3 py-1.5 text-sm border rounded-lg dark:bg-slate-800 dark:border-slate-700'

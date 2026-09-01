@@ -125,7 +125,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                         value={order}
                         onChange={(e) => setOrder(e.target.value)}
                         className={inputCls}
-                        placeholder='0'
+                        placeholder={t("admin.sirah.year_placeholder")}
                         min='0'
                     />
                 </div>
@@ -156,7 +156,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                         setSlug(e.target.value);
                     }}
                     className={inputCls}
-                    placeholder='url-friendly-slug'
+                    placeholder={t("admin.sirah.slug_placeholder")}
                 />
                 <p className='text-xs text-gray-400 mt-1'>
                     /siroh/{slug || "..."}

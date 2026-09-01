@@ -127,7 +127,7 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                         setSlug(e.target.value);
                     }}
                     className={inputCls}
-                    placeholder='url-friendly-slug'
+                    placeholder={t("admin.blog.slug_placeholder")}
                 />
                 <p className='text-xs text-gray-400 mt-1'>
                     /blog/{slug || "..."}
@@ -173,7 +173,7 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                     value={coverImage}
                     onChange={(e) => setCoverImage(e.target.value)}
                     className={inputCls}
-                    placeholder='https://...'
+                    placeholder={t("admin.blog.cover_image_placeholder")}
                 />
                 {coverImage && (
                     <img

@@ -402,7 +402,7 @@ const AdminLibraryPage = () => {
                                                 slug: e.target.value,
                                             })
                                         }
-                                        placeholder='auto dari judul'
+                                        placeholder={t("admin.library.auto_slug")}
                                         value={form.slug}
                                     />
                                 </Field>
@@ -429,7 +429,7 @@ const AdminLibraryPage = () => {
                                                 category: e.target.value,
                                             })
                                         }
-                                        placeholder='Hadis, Fikih, Bahasa Arab'
+                                        placeholder={t("admin.library.category_placeholder")}
                                         value={form.category}
                                     />
                                 </Field>
@@ -579,7 +579,7 @@ const AdminLibraryPage = () => {
                                             source_url: e.target.value,
                                         })
                                     }
-                                    placeholder='https://...'
+                                    placeholder={t("admin.library.url_placeholder")}
                                     type='url'
                                     value={form.source_url}
                                 />
@@ -675,9 +675,9 @@ const AdminLibraryPage = () => {
                                             cover_url: e.target.value,
                                         })
                                     }
-                                    placeholder='https://...'
-                                    type='url'
-                                    value={form.cover_url}
+                                placeholder={t("admin.library.url_placeholder")}
+                                type='url'
+                                value={form.cover_url}
                                 />
                             </Field>
                             <Field label={t("admin.field.description")}>

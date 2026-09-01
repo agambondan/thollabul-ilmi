@@ -329,7 +329,7 @@ const AdminDhikrPage = () => {
                                                 count: e.target.value,
                                             })
                                         }
-                                        placeholder='e.g. 3'
+                                        placeholder={t("admin.dzikir.count_placeholder")}
                                         className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
                                 </div>
@@ -347,7 +347,7 @@ const AdminDhikrPage = () => {
                                             source: e.target.value,
                                         })
                                     }
-                                    placeholder='e.g. HR. Muslim No. 2691'
+                                    placeholder={t("admin.dzikir.source_placeholder")}
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>

@@ -336,8 +336,8 @@ const AdminStudiesPage = () => {
                                                     e.target.value,
                                             })
                                         }
-                                        placeholder='3600 atau 01:00:00'
-                                        className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                    placeholder={t("admin.kajian.duration_placeholder")}
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                     />
                                 </div>
                             </div>
@@ -398,31 +398,31 @@ const AdminStudiesPage = () => {
                                             url: e.target.value,
                                         })
                                     }
-                                    placeholder='https://...'
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                />
-                            </div>
-                            <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
-                                    {t("admin.kajian.thumbnail_url")}
-                                </label>
-                                <input
-                                    type='url'
-                                    value={form.thumbnail_url}
-                                    onChange={(e) =>
-                                        setForm({
-                                            ...form,
+                                placeholder={t("admin.kajian.url_placeholder")}
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                            />
+                        </div>
+                        <div>
+                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                {t("admin.kajian.thumbnail_url")}
+                            </label>
+                            <input
+                                type='url'
+                                value={form.thumbnail_url}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
                                             thumbnail_url: e.target.value,
                                         })
                                     }
-                                    placeholder='https://...'
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                />
-                            </div>
-                            <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
-                                    {t("admin.field.description")}
-                                </label>
+                                placeholder={t("admin.kajian.url_placeholder")}
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                            />
+                        </div>
+                        <div>
+                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                {t("admin.field.description")}
+                            </label>
                                 <textarea
                                     value={form.description}
                                     onChange={(e) =>
