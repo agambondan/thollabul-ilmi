@@ -7,7 +7,7 @@ Monorepo Islamic app: Go backend (Fiber + GORM + PostgreSQL + Redis), Expo mobil
 ```
 services/api/      ← Go backend (~230 endpoints)
 apps/mobile/       ← Expo React Native (9 screens, ~530 tests)
-apps/web/          ← Next.js 13 web app (~60 pages, ~535 tests + 152 E2E)
+apps/web/          ← Next.js 16 web app (~60 pages, ~535 tests + 152 E2E)
 ```
 
 ---
@@ -240,7 +240,7 @@ act -j go-test -j web-test -j mobile-test -j go-lint -j web-lint
 
 - **Go 1.26** — `services/api/`
 - **Expo SDK 54** — `apps/mobile/`
-- **Next.js 13.5.6** — `apps/web/`
+- **Next.js 16.2.6** + **React 19.2.6** — `apps/web/`
 - **PostgreSQL 18** + **Redis 8** — main datastores
 - **Docker Compose** — local dev at root `docker-compose.yaml`
 

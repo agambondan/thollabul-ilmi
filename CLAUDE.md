@@ -21,7 +21,7 @@ Baca ini sebelum mulai task supaya tidak salah acuan.
 ## Monorepo Layout
 
 ```
-apps/web/           # Next.js 13 frontend (App Router)
+apps/web/           # Next.js 16 frontend (App Router)
 apps/mobile/        # React Native / Expo mobile app
 services/api/       # Go/Fiber API service
 docs/               # Dokumentasi setup dan roadmap
@@ -35,13 +35,13 @@ docs/               # Dokumentasi setup dan roadmap
 
 ## Tech Stack
 
-| Layer       | Stack                                                |
-| ----------- | ---------------------------------------------------- |
-| API Service | Go 1.26 + Fiber v2, GORM, PostgreSQL, Redis          |
-| Web App     | Next.js 13.5, React 18, Tailwind CSS, TanStack Query |
-| Auth        | JWT (golang-jwt/jwt v5)                              |
-| Docs        | Swagger (gofiber/swagger)                            |
-| Infra       | Docker Compose                                       |
+| Layer       | Stack                                                    |
+| ----------- | -------------------------------------------------------- |
+| API Service | Go 1.26 + Fiber v2, GORM, PostgreSQL, Redis              |
+| Web App     | Next.js 16.2, React 19, Tailwind CSS 3, TanStack Query 5 |
+| Auth        | JWT (golang-jwt/jwt v5)                                  |
+| Docs        | Swagger (gofiber/swagger)                                |
+| Infra       | Docker Compose                                           |
 
 ## API Service (`services/api/`)
 
@@ -75,21 +75,27 @@ src/
 make docker-up
 
 # API service only
-make run-local           # default env
-make run-dev             # development env
+make run-local           # sama dengan run-dev, keduanya `go run main.go`
+make run-dev             # (tidak ada perbedaan env; nama saja yang beda)
 
 # Web app only
 make web-dev
 ```
 
-Default ports:
+Port berbeda tergantung cara menjalankan — Compose memetakan ke host
+(`29900:9900`, `23000:3000`), sedangkan `make web-dev` / `make run-local`
+memakai port aslinya:
 
-| Service    | Port                   |
-| ---------- | ---------------------- |
-| API        | http://localhost:29900 |
-| Web        | http://localhost:23000 |
-| PostgreSQL | localhost:54320        |
-| Redis      | localhost:63790        |
+| Service    | `make docker-up`       | Dijalankan langsung   |
+| ---------- | ---------------------- | --------------------- |
+| API        | http://localhost:29900 | http://localhost:9900 |
+| Web        | http://localhost:23000 | http://localhost:3000 |
+| PostgreSQL | localhost:54320        | —                     |
+| Redis      | localhost:63790        | —                     |
+| MinIO      | localhost:9020 / 9021  | —                     |
+
+`make web-dev` menjalankan `next dev` tanpa flag port, jadi 3000. Port API
+lokal diambil dari `PORT=9900` di `services/api/.env`.
 
 ## Formatting
 
