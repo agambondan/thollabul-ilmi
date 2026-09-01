@@ -5,6 +5,7 @@ export default defineConfig([
     {
         ignores: [
             ".next/**",
+            "**/.next/**",
             "node_modules/**",
             "**/node_modules/**",
             "next-env.d.ts",
@@ -18,6 +19,19 @@ export default defineConfig([
             "react-hooks/set-state-in-effect": "off",
             "react-hooks/static-components": "off",
             "react-hooks/immutability": "off",
+        },
+    },
+    {
+        files: ["**/__tests__/**", "**/*.test.js"],
+        rules: {
+            "react/display-name": "off",
+            "react-hooks/exhaustive-deps": "off",
+        },
+    },
+    {
+        files: ["**/components/**", "**/app/**"],
+        rules: {
+            "react-hooks/exhaustive-deps": "warn",
         },
     },
 ]);

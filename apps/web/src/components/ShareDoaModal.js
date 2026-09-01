@@ -7,10 +7,10 @@ import { BsShare, BsX } from "react-icons/bs";
 import { useState } from "react";
 
 export function ShareDoaModal({ isOpen, onClose, doa }) {
-    if (!isOpen || !doa) return null;
-
     const { t, lang } = useLocale();
     const [copied, setCopied] = useState(false);
+
+    if (!isOpen || !doa) return null;
 
     const shareUrl = typeof window !== "undefined" ? window.location.href : "";
     const title = getLocalizedField(doa, "title", lang, ["name"]);
