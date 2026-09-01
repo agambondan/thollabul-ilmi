@@ -191,7 +191,7 @@ tajweed.idgh_mus:hover {
 
 @font-face {
     font-family: "MeQuran";
-    src: url("//cdn.alquran.cloud/public/fonts/me_quran-webfont.otf");
+    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
 }
 
 .font-mequran {
@@ -200,7 +200,7 @@ tajweed.idgh_mus:hover {
 
 @font-face {
     font-family: "MeQuran2";
-    src: url("//cdn.alquran.cloud/public/fonts/me_quran_2.ttf");
+    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
 }
 
 .font-mequran2 {
@@ -221,7 +221,7 @@ tajweed.idgh_mus:hover {
 
 @font-face {
     font-family: "Othmani";
-    src: url("//cdn.alquran.cloud/public/fonts/ar-Othmani.ttf");
+    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
 }
 
 .font-othmani {
@@ -230,7 +230,7 @@ tajweed.idgh_mus:hover {
 
 @font-face {
     font-family: "Quran";
-    src: url("//cdn.alquran.cloud/public/fonts/QUR_STD.TTF");
+    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
 }
 
 .font-quran {
@@ -257,7 +257,7 @@ tajweed.idgh_mus:hover {
 
 @font-face {
     font-family: "Naskh";
-    src: url("//cdn.alquran.cloud/public/fonts/kfc_naskh-webfont.ttf");
+    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
 }
 
 .font-naskh {
@@ -275,7 +275,7 @@ tajweed.idgh_mus:hover {
 
 @font-face {
     font-family: "Kitab Bold";
-    src: url("//cdn.alquran.cloud/public/fonts/Kitab-Bold.ttf");
+    src: url("/fonts/Kitab-Regular.ttf") format("truetype");
 }
 
 .font-kitab-bold {
