@@ -289,7 +289,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                             `${t("hadith.citation", {
                                 slug,
                                 number: h.number,
-                            })}\n${t("hadith.via")}`,
+                            })}\n${t("hadith.via")} ${getCardUrl()}`,
                         )}
                 />
             )}
@@ -516,7 +516,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                             className={actionMenuButtonClass}
                                             onClick={() => {
                                                 copyText(
-                                                    `${arabicText}\n\n${hadithText}\n\n${t("hadith.citation", { slug, number: h.number })}\n${t("hadith.via")}`,
+                                                    `${arabicText}\n\n${hadithText}\n\n${t("hadith.citation", { slug, number: h.number })}\n${t("hadith.via")} ${getCardUrl()}`,
                                                 );
                                                 setSettingPopUp(false);
                                             }}
