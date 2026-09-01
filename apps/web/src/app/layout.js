@@ -97,8 +97,8 @@ export default function RootLayout({ children }) {
                     }}
                 />
                 <LocaleProvider>
-                    <SettingsProvider>
-                        <AuthProvider>
+                    <AuthProvider>
+                        <SettingsProvider>
                             <AnalyticsTracker />
                             {children}
                             <SettingButton />
@@ -120,8 +120,8 @@ export default function RootLayout({ children }) {
                                 }}
                             />
                             <InAppNotification />
-                        </AuthProvider>
-                    </SettingsProvider>
+                        </SettingsProvider>
+                    </AuthProvider>
                 </LocaleProvider>
             </body>
         </html>

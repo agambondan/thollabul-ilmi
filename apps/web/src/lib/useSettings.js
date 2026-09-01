@@ -1,8 +1,16 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 
 import { authFetch } from "./api";
+import { useAuth } from "@/context/Auth";
 
 const SETTINGS_KEY = "tholabul_app_settings";
 
@@ -14,6 +22,32 @@ export const ADZAN_SOUNDS = [
         src: "https://www.islamcan.com/audio/adzan/azan1.mp3",
     },
 ];
+
+const REMINDER_LEAD_KEYS = [0, 5, 10, 15, 30];
+const REMINDER_PRAYER_KEYS = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
+
+const sanitizeSettings = (raw) => {
+    if (!raw || typeof raw !== "object") return {};
+    const next = { ...raw };
+    if (!REMINDER_LEAD_KEYS.includes(next.adzanReminderLead)) {
+        next.adzanReminderLead = 10;
+    }
+    if (
+        next.adzanReminderLeadByPrayer &&
+        typeof next.adzanReminderLeadByPrayer === "object"
+    ) {
+        next.adzanReminderLeadByPrayer = Object.fromEntries(
+            Object.entries(next.adzanReminderLeadByPrayer).filter(
+                ([key, value]) =>
+                    REMINDER_PRAYER_KEYS.includes(key) &&
+                    REMINDER_LEAD_KEYS.includes(value),
+            ),
+        );
+    } else {
+        next.adzanReminderLeadByPrayer = {};
+    }
+    return next;
+};
 
 const DEFAULT_SETTINGS = {
     theme: "system",
@@ -38,6 +72,7 @@ const SettingsContext = createContext({
     updateSetting: () => {},
     saveAll: () => {},
     syncWithBackend: async () => {},
+    getLeadForPrayer: () => 10,
 });
 
 const readStoredSettings = () => {
@@ -52,15 +87,66 @@ const readStoredSettings = () => {
     }
 };
 
+const writeStoredSettings = (next) => {
+    if (typeof window === "undefined") return;
+    try {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(next));
+    } catch {}
+};
+
 export const SettingsProvider = ({ children }) => {
+    const { isAuthenticated } = useAuth();
     const [settings, setSettings] = useState(readStoredSettings);
+    const hasHydratedRemoteRef = useRef(false);
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            hasHydratedRemoteRef.current = false;
+            return;
+        }
+
+        if (hasHydratedRemoteRef.current) return;
+
+        let cancelled = false;
+        (async () => {
+            try {
+                const res = await authFetch("/api/v1/settings");
+                if (!res.ok || cancelled) return;
+                const data = await res.json();
+                const raw = data?.data?.settings ?? data?.settings;
+                if (typeof raw !== "string" || !raw) return;
+                const parsed = JSON.parse(raw);
+                if (cancelled) return;
+                setSettings((prev) => {
+                    const next = { ...prev, ...sanitizeSettings(parsed) };
+                    writeStoredSettings(next);
+                    return next;
+                });
+            } catch {
+            } finally {
+                if (!cancelled) hasHydratedRemoteRef.current = true;
+            }
+        })();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [isAuthenticated]);
+
+    const syncSettingsWithBackend = async (nextSettings) => {
+        const res = await authFetch("/api/v1/settings", {
+            method: "PUT",
+            body: JSON.stringify({ settings: JSON.stringify(nextSettings) }),
+        });
+        if (!res.ok) throw new Error("Settings sync failed");
+        return res.json();
+    };
 
     const updateSetting = (key, value) => {
         setSettings((prev) => {
             const next = { ...prev, [key]: value };
-            try {
-                localStorage.setItem(SETTINGS_KEY, JSON.stringify(next));
-            } catch {}
+            writeStoredSettings(next);
+            if (isAuthenticated) syncSettingsWithBackend(next).catch(() => {});
             return next;
         });
     };
@@ -68,31 +154,36 @@ export const SettingsProvider = ({ children }) => {
     const saveAll = (newSettings) => {
         const next = { ...settings, ...newSettings };
         setSettings(next);
-        try {
-            localStorage.setItem(SETTINGS_KEY, JSON.stringify(next));
-        } catch {}
+        writeStoredSettings(next);
     };
 
-    const syncWithBackend = async () => {
-        try {
-            const res = await authFetch("/api/v1/settings", {
-                method: "PUT",
-                body: JSON.stringify({ settings: JSON.stringify(settings) }),
-            });
-            if (res.ok) {
-                // sync success
-                const data = await res.json();
-                return data;
+    const syncWithBackend = () => syncSettingsWithBackend(settings);
+
+    const getLeadForPrayer = useCallback(
+        (key) => {
+            const perPrayer = settings?.adzanReminderLeadByPrayer;
+            if (
+                perPrayer &&
+                Object.prototype.hasOwnProperty.call(perPrayer, key)
+            ) {
+                const v = perPrayer[key];
+                if (REMINDER_LEAD_KEYS.includes(v)) return v;
             }
-        } catch (e) {
-            console.error("Settings sync failed", e);
-            throw e;
-        }
-    };
+            const g = settings?.adzanReminderLead;
+            return REMINDER_LEAD_KEYS.includes(g) ? g : 10;
+        },
+        [settings?.adzanReminderLead, settings?.adzanReminderLeadByPrayer],
+    );
 
     return (
         <SettingsContext.Provider
-            value={{ settings, updateSetting, saveAll, syncWithBackend }}
+            value={{
+                settings,
+                updateSetting,
+                saveAll,
+                syncWithBackend,
+                getLeadForPrayer,
+            }}
         >
             {children}
         </SettingsContext.Provider>

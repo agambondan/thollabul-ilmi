@@ -532,6 +532,37 @@ export async function setupApiMocks(page, options = {}) {
             });
         }
 
+        if (path.match(/\/adzan-sounds$/) && method === "GET") {
+            return route.fulfill({
+                status: 200,
+                contentType: "application/json",
+                body: JSON.stringify({ data: [] }),
+            });
+        }
+
+        if (path.match(/\/settings$/) && method === "GET") {
+            return route.fulfill({
+                status: 200,
+                contentType: "application/json",
+                body: JSON.stringify({
+                    data: {
+                        settings: JSON.stringify({
+                            adzanReminderLead: 15,
+                            adzanReminderLeadByPrayer: { fajr: 5 },
+                        }),
+                    },
+                }),
+            });
+        }
+
+        if (path.match(/\/settings$/) && method === "PUT") {
+            return route.fulfill({
+                status: 200,
+                contentType: "application/json",
+                body: JSON.stringify({ message: "ok" }),
+            });
+        }
+
         if (path.match(/\/sholat\/today/)) {
             return route.fulfill({
                 status: 200,

@@ -25,6 +25,15 @@ const PRAYER_MAP = [
     { key: "isha", label: "Isya", icon: "🌃" },
 ];
 
+const REMINDER_LEAD_OPTIONS = [0, 5, 10, 15, 30];
+const PRAYER_REMINDER_ROWS = [
+    ["fajr", "prayer.fajr"],
+    ["dhuhr", "prayer.dhuhr"],
+    ["asr", "prayer.asr"],
+    ["maghrib", "prayer.maghrib"],
+    ["isha", "prayer.isha"],
+];
+
 const parseHour = (timeStr) => {
     if (!timeStr || timeStr === "-") return null;
     const [h, m] = timeStr.split(":").map(Number);
@@ -47,7 +56,7 @@ const parsePrayerDate = (timeStr) => {
 const JadwalSholatPage = () => {
     const { t } = useLocale();
     const { isWide } = useLayoutMode();
-    const { settings } = useSettings();
+    const { settings, updateSetting, getLeadForPrayer } = useSettings();
     const [prayers, setPrayers] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -106,29 +115,40 @@ const JadwalSholatPage = () => {
 
             for (const p of PRAYER_MAP.filter((x) => !x.info)) {
                 const pt = parsePrayerDate(prayers[p.key]);
-                if (pt && n >= pt && n - pt < 10000) {
-                    const todayKey = `${toLocalISODate()}-${p.key}`;
-                    if (lastNotifRef.current !== todayKey) {
-                        lastNotifRef.current = todayKey;
-                        const soundSrc =
-                            settings.adzanSoundUrl ||
-                            ADZAN_SOUNDS.find(
-                                (s) => s.value === settings.adzanSound,
-                            )?.src ||
-                            ADZAN_SOUNDS[0].src;
-                        audioRef.current = new Audio(soundSrc);
-                        audioRef.current.play().catch(() => {});
+                if (!pt) continue;
 
-                        const nTitle = `Waktu ${p.label}`;
-                        const nBody = `Sudah masuk waktu ${p.label}`;
-                        fireAdzanNotification(
-                            nTitle,
-                            nBody,
-                            "/dashboard/jadwal-sholat",
-                        );
-                    }
-                    break;
+                const lead = getLeadForPrayer(p.key);
+                const at = pt.getTime() - lead * 60_000;
+                const diff = n.getTime() - at;
+
+                if (diff < 0 || diff > 10_000) continue;
+
+                const notifKey = `${toLocalISODate()}-${p.key}-${lead}`;
+                if (lastNotifRef.current === notifKey) break;
+                lastNotifRef.current = notifKey;
+
+                if (lead === 0 && n >= pt) {
+                    const soundSrc =
+                        settings.adzanSoundUrl ||
+                        ADZAN_SOUNDS.find(
+                            (s) => s.value === settings.adzanSound,
+                        )?.src ||
+                        ADZAN_SOUNDS[0].src;
+                    audioRef.current = new Audio(soundSrc);
+                    audioRef.current.play().catch(() => {});
                 }
+
+                const nTitle = `Waktu ${p.label}`;
+                const nBody =
+                    lead === 0
+                        ? `Sudah masuk waktu ${p.label}`
+                        : `${lead} menit lagi masuk waktu ${p.label}`;
+                fireAdzanNotification(
+                    nTitle,
+                    nBody,
+                    "/dashboard/jadwal-sholat",
+                );
+                break;
             }
         };
         const iv = setInterval(tick, 1000);
@@ -138,7 +158,20 @@ const JadwalSholatPage = () => {
         settings.notifAdzan,
         settings.adzanSound,
         settings.adzanSoundUrl,
+        settings.adzanReminderLead,
+        settings.adzanReminderLeadByPrayer,
+        getLeadForPrayer,
     ]);
+
+    const updateAdzanReminderLead = (value) =>
+        updateSetting("adzanReminderLead", Number(value));
+
+    const updateAdzanReminderLeadForPrayer = (key, value) => {
+        const next = { ...(settings.adzanReminderLeadByPrayer || {}) };
+        if (value === "global") delete next[key];
+        else next[key] = Number(value);
+        updateSetting("adzanReminderLeadByPrayer", next);
+    };
 
     const nowMinutes = now.getHours() * 60 + now.getMinutes();
 
@@ -241,7 +274,85 @@ const JadwalSholatPage = () => {
                 </p>
             )}
 
-            <div className='mt-6'>
+            <div className='mt-6 space-y-3'>
+                <section className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
+                    <h2 className='text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider'>
+                        {t("settings.section_notifications")}
+                    </h2>
+                    <div className='flex items-center justify-between gap-3 py-2'>
+                        <span className='text-sm text-gray-700 dark:text-gray-300'>
+                            {t("settings.adzan_reminder_lead")}
+                        </span>
+                        <select
+                            value={settings.adzanReminderLead ?? 10}
+                            onChange={(e) =>
+                                updateAdzanReminderLead(e.target.value)
+                            }
+                            className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                            aria-label={t("prayer.reminder_lead")}
+                        >
+                            {REMINDER_LEAD_OPTIONS.map((m) => (
+                                <option key={m} value={m}>
+                                    {m === 0
+                                        ? t("settings.adzan_at_time")
+                                        : `${m} ${t("settings.minutes_before")}`}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className='pt-3 border-t border-gray-100 dark:border-slate-700'>
+                        <div className='flex items-center justify-between mb-2'>
+                            <span className='text-sm text-gray-700 dark:text-gray-300'>
+                                {t("settings.adzan_reminder_per_prayer")}
+                            </span>
+                        </div>
+                        <div className='grid grid-cols-1 sm:grid-cols-2 gap-2'>
+                            {PRAYER_REMINDER_ROWS.map(([key, labelKey]) => (
+                                <label
+                                    key={key}
+                                    className='flex items-center justify-between gap-2 bg-gray-50 dark:bg-slate-700/50 rounded-lg px-3 py-2'
+                                >
+                                    <span className='text-xs font-medium text-gray-700 dark:text-gray-300'>
+                                        {t(labelKey)}
+                                    </span>
+                                    <select
+                                        value={
+                                            settings.adzanReminderLeadByPrayer?.[
+                                                key
+                                            ] ?? "global"
+                                        }
+                                        onChange={(e) =>
+                                            updateAdzanReminderLeadForPrayer(
+                                                key,
+                                                e.target.value,
+                                            )
+                                        }
+                                        className='bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-md px-2 py-1 focus:ring-emerald-500'
+                                        aria-label={t(
+                                            "prayer.reminder_lead_prayer",
+                                            { prayer: key },
+                                        )}
+                                    >
+                                        <option value='global'>
+                                            {t("settings.global")}
+                                        </option>
+                                        {REMINDER_LEAD_OPTIONS.map((m) => (
+                                            <option key={m} value={m}>
+                                                {m === 0
+                                                    ? t(
+                                                          "settings.adzan_at_time",
+                                                      )
+                                                    : `${m} ${t(
+                                                          "settings.minutes_before",
+                                                      )}`}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                </section>
                 <AdzanQuickControl compact />
             </div>
         </div>

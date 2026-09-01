@@ -339,6 +339,7 @@ export default function SettingsPage() {
                             value={settings.adzanReminderLead ?? 10}
                             onChange={(e) => updateAdzanReminderLead(e.target.value)}
                             className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                            aria-label={t("prayer.reminder_lead")}
                         >
                             {REMINDER_LEAD_OPTIONS.map((m) => (
                                 <option key={m} value={m}>
@@ -366,6 +367,9 @@ export default function SettingsPage() {
                                         )
                                     }
                                     className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
+                                    aria-label={t("prayer.reminder_lead_prayer", {
+                                        prayer: key,
+                                    })}
                                 >
                                     <option value='global'>
                                         {t(labelKey)} {t("settings.global")}

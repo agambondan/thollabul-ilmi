@@ -1,4 +1,4 @@
-import { openGraphFor } from "@/lib/site";
+import { openGraphFor, SITE_URL } from "@/lib/site";
 
 export const metadata = {
     alternates: { canonical: "/siroh" },
@@ -7,6 +7,31 @@ export const metadata = {
     description:
         "Read the biography of Prophet Muhammad ﷺ in clear, chapter-based lessons.",
 };
+
+const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Prophet's Biography (Sirah)",
+    url: `${SITE_URL}/siroh`,
+    description:
+        "Biography of Prophet Muhammad ﷺ in clear, chapter-based lessons.",
+    isPartOf: {
+        "@type": "WebSite",
+        name: "Thullaabul 'Ilmi",
+        url: SITE_URL,
+    },
+};
+
 export default function SirohLayout({ children }) {
-    return children;
+    return (
+        <>
+            <script
+                type='application/ld+json'
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(collectionJsonLd),
+                }}
+            />
+            {children}
+        </>
+    );
 }

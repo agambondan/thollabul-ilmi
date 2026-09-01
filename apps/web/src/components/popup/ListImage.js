@@ -1,28 +1,35 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import { CopyImageToClipboard, CopyToClipboard } from "@/lib/copy";
 import { useLocale } from "@/context/Locale";
-import { useState } from "react";
+import { CopyImageToClipboard, CopyToClipboard } from "@/lib/copy";
+import { useCallback, useState } from "react";
 import { IoClose } from "react-icons/io5";
+
+const MAX_WHATSAPP_LENGTH = 4096;
+const MAX_TELEGRAM_LENGTH = 4096;
 
 export const ShareAyah = ({ images, isCopiedCallback, text }) => {
     const { t } = useLocale();
     const [isCopied, SetIsCopied] = useState(false);
     const [isProcessing, SetIsProcessing] = useState(false);
     const [status, setStatus] = useState("");
+    const [error, setError] = useState("");
 
     const shareUrl = typeof window !== "undefined" ? window.location.href : "";
     const shareText = text || shareUrl;
-    const encodedText = encodeURIComponent(shareText);
     const encodedUrl = encodeURIComponent(shareUrl);
 
-    const openShareWindow = (url) => {
+    const openShareWindow = useCallback((url) => {
         window.open(url, "_blank", "noopener,noreferrer");
-    };
+    }, []);
 
-    const nativeShare = async () => {
-        if (!navigator?.share) return;
+    const nativeShare = useCallback(async () => {
+        if (!navigator?.share) {
+            setError("Share sheet tidak tersedia di browser ini.");
+            setTimeout(() => setError(""), 3000);
+            return;
+        }
         try {
             await navigator.share({
                 title: "Thullaabul 'Ilmi",
@@ -30,150 +37,241 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                 url: shareUrl,
             });
             isCopiedCallback();
-        } catch {
-            // Browser share sheet can be cancelled by the user.
+        } catch (err) {
+            if (err.name !== "AbortError") {
+                setError("Gagal membuka share sheet.");
+                setTimeout(() => setError(""), 3000);
+            }
         }
-    };
+    }, [shareText, shareUrl, isCopiedCallback]);
 
-    const copyShareText = async () => {
-        await CopyToClipboard(shareText);
-        setStatus("Teks siap dibagikan sudah disalin.");
-        setTimeout(() => setStatus(""), 2200);
-    };
+    const copyShareText = useCallback(async () => {
+        try {
+            await CopyToClipboard(shareText);
+            setStatus("Teks siap dibagikan sudah disalin.");
+            setTimeout(() => setStatus(""), 2200);
+        } catch {
+            setError("Gagal menyalin teks.");
+            setTimeout(() => setError(""), 3000);
+        }
+    }, [shareText]);
 
-    const copyImageToClipboard = (src) => {
-        if (isProcessing) return;
-        SetIsProcessing(true);
+    const copyImageToClipboard = useCallback(
+        (src) => {
+            if (isProcessing) return;
+            SetIsProcessing(true);
+            setError("");
 
-        const fontKitab = new FontFace(
-            "Kitab",
-            'url("/fonts/Kitab-Regular.ttf")',
-        );
+            const fontKitab = new FontFace(
+                "Kitab",
+                'url("/fonts/Kitab-Regular.ttf")',
+            );
 
-        fontKitab.load().then((loadedFace) => {
-            document.fonts.add(loadedFace);
-
-            const img = new Image();
-            img.onload = () => {
-                const newLines = text.split("\n");
-                const canvas = document.createElement("canvas");
-                const maxWidth = img.width - 80;
-
-                canvas.width = img.width;
-                canvas.height = img.height;
-
-                const context = canvas.getContext("2d");
-                context.globalAlpha = 0.85;
-                context.drawImage(img, 0, 0);
-
-                let contextFont = "";
-                let contextFontKitab = "";
-                let lineHeight = 25;
-
-                let x = canvas.width / 2;
-                let y = canvas.height / 2 - (newLines.length / 2) * lineHeight;
-
-                context.fillStyle = "rgb(255, 255, 255)";
-                if (canvas.width >= 1080 && canvas.width < 1920) {
-                    contextFont = "24px Arial";
-                    contextFontKitab = "36px Kitab";
-                    lineHeight = 50;
-                    context.fillRect(30, 30, img.width - 60, img.height - 60);
-                } else if (canvas.width >= 1920 && canvas.width < 2048) {
-                    contextFont = "30px Arial";
-                    contextFontKitab = "50px Kitab";
-                    lineHeight = 75;
-                    context.fillRect(40, 40, img.width - 80, img.height - 80);
-                } else if (canvas.width >= 2048 && canvas.width < 3840) {
-                    contextFont = "40px Arial";
-                    contextFontKitab = "60px Kitab";
-                    lineHeight = 90;
-                    context.fillRect(40, 40, img.width - 80, img.height - 80);
-                } else if (canvas.width >= 3840) {
-                    contextFont = "55px Arial";
-                    contextFontKitab = "80px Kitab";
-                    lineHeight = 110;
-                    context.fillRect(40, 40, img.width - 80, img.height - 80);
-                } else {
-                    contextFont = "20px Arial";
-                    contextFontKitab = "28px Kitab";
-                    context.fillRect(20, 20, img.width - 40, img.height - 40);
-                }
-
-                let calculationHeight = 0;
-                newLines.forEach((newLine, index) => {
-                    let words = newLine.split(" ");
-                    let line = "";
-                    for (let n = 0; n < words.length; n++) {
-                        let testLine = line + words[n] + " ";
-                        let metrics = context.measureText(testLine);
-                        let testWidth = metrics.width;
-                        if (testWidth > maxWidth && n > 0) {
-                            line = words[n] + " ";
-                            y += lineHeight;
-                            calculationHeight += y;
-                        } else {
-                            line = testLine;
-                        }
-                    }
-                    calculationHeight += index * lineHeight;
+            fontKitab
+                .load()
+                .then((loadedFace) => {
+                    document.fonts.add(loadedFace);
+                    processImageWithFont(src, loadedFace);
+                })
+                .catch(() => {
+                    processImageWithFont(src, null);
                 });
 
-                context.fillStyle = "black";
-                context.textAlign = "center";
-                context.textBaseline = "middle";
-                newLines.forEach((newLine, index) => {
-                    if (index === 1) {
-                        y += lineHeight / 4;
-                        context.direction = "rtl";
-                        context.font = contextFontKitab;
+            function processImageWithFont(src, fontFace) {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = () => {
+                    const newLines = text.split("\n");
+                    const canvas = document.createElement("canvas");
+                    const maxWidth = img.width - 80;
+
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+
+                    const context = canvas.getContext("2d");
+                    context.globalAlpha = 0.85;
+                    try {
+                        context.drawImage(img, 0, 0);
+                    } catch (e) {
+                        SetIsProcessing(false);
+                        setError(
+                            "Gagal memproses gambar (CORS). Coba background lain.",
+                        );
+                        setTimeout(() => setError(""), 4000);
+                        return;
+                    }
+
+                    let contextFont = "";
+                    let contextFontKitab = "";
+                    let lineHeight = 25;
+
+                    let x = canvas.width / 2;
+                    let y =
+                        canvas.height / 2 - (newLines.length / 2) * lineHeight;
+
+                    context.fillStyle = "rgb(255, 255, 255)";
+                    if (canvas.width >= 1080 && canvas.width < 1920) {
+                        contextFont = "24px Arial";
+                        contextFontKitab = fontFace
+                            ? "36px Kitab"
+                            : "36px Arial";
+                        lineHeight = 50;
+                        context.fillRect(
+                            30,
+                            30,
+                            img.width - 60,
+                            img.height - 60,
+                        );
+                    } else if (canvas.width >= 1920 && canvas.width < 2048) {
+                        contextFont = "30px Arial";
+                        contextFontKitab = fontFace
+                            ? "50px Kitab"
+                            : "50px Arial";
+                        lineHeight = 75;
+                        context.fillRect(
+                            40,
+                            40,
+                            img.width - 80,
+                            img.height - 80,
+                        );
+                    } else if (canvas.width >= 2048 && canvas.width < 3840) {
+                        contextFont = "40px Arial";
+                        contextFontKitab = fontFace
+                            ? "60px Kitab"
+                            : "60px Arial";
+                        lineHeight = 90;
+                        context.fillRect(
+                            40,
+                            40,
+                            img.width - 80,
+                            img.height - 80,
+                        );
+                    } else if (canvas.width >= 3840) {
+                        contextFont = "55px Arial";
+                        contextFontKitab = fontFace
+                            ? "80px Kitab"
+                            : "80px Arial";
+                        lineHeight = 110;
+                        context.fillRect(
+                            40,
+                            40,
+                            img.width - 80,
+                            img.height - 80,
+                        );
                     } else {
-                        context.direction = "ltr";
-                        context.font = contextFont;
+                        contextFont = "20px Arial";
+                        contextFontKitab = fontFace
+                            ? "28px Kitab"
+                            : "28px Arial";
+                        lineHeight = 30;
+                        context.fillRect(
+                            20,
+                            20,
+                            img.width - 40,
+                            img.height - 40,
+                        );
                     }
-                    if (index === 5) {
-                        y -= lineHeight / 4;
-                    }
-                    y += lineHeight / 4;
-                    let words = newLine.split(" ");
-                    let line = "";
-                    for (let n = 0; n < words.length; n++) {
-                        let testLine = line + words[n] + " ";
-                        let metrics = context.measureText(testLine);
-                        let testWidth = metrics.width;
-                        if (testWidth > maxWidth && n > 0) {
-                            context.fillText(line, x, y + index * lineHeight);
-                            line = words[n] + " ";
-                            if (index === 1) {
-                                y += lineHeight * 2;
-                            } else {
-                                y += lineHeight;
-                            }
-                        } else {
-                            line = testLine;
-                        }
-                    }
-                    context.fillText(line, x, y + index * lineHeight);
-                });
 
-                CopyImageToClipboard(canvas)
-                    .then(() => {
-                        SetIsCopied(true);
-                        SetIsProcessing(false);
-                        setTimeout(() => {
-                            SetIsCopied(false);
-                        }, 2000);
-                    })
-                    .catch(() => {
-                        SetIsProcessing(false);
-                        setStatus("Gambar belum bisa disalin di browser ini.");
-                        setTimeout(() => setStatus(""), 2200);
+                    let calculationHeight = 0;
+                    newLines.forEach((newLine, index) => {
+                        let words = newLine.split(" ");
+                        let line = "";
+                        for (let n = 0; n < words.length; n++) {
+                            let testLine = line + words[n] + " ";
+                            let metrics = context.measureText(testLine);
+                            let testWidth = metrics.width;
+                            if (testWidth > maxWidth && n > 0) {
+                                line = words[n] + " ";
+                                y += lineHeight;
+                                calculationHeight += y;
+                            } else {
+                                line = testLine;
+                            }
+                        }
+                        calculationHeight += index * lineHeight;
                     });
-            };
-            img.onerror = () => SetIsProcessing(false);
-            img.src = src;
-        });
-    };
+
+                    context.fillStyle = "black";
+                    context.textAlign = "center";
+                    context.textBaseline = "middle";
+                    newLines.forEach((newLine, index) => {
+                        if (index === 1) {
+                            y += lineHeight / 4;
+                            context.direction = "rtl";
+                            context.font = contextFontKitab;
+                        } else {
+                            context.direction = "ltr";
+                            context.font = contextFont;
+                        }
+                        if (index === 5) {
+                            y -= lineHeight / 4;
+                        }
+                        y += lineHeight / 4;
+                        let words = newLine.split(" ");
+                        let line = "";
+                        for (let n = 0; n < words.length; n++) {
+                            let testLine = line + words[n] + " ";
+                            let metrics = context.measureText(testLine);
+                            let testWidth = metrics.width;
+                            if (testWidth > maxWidth && n > 0) {
+                                context.fillText(
+                                    line,
+                                    x,
+                                    y + index * lineHeight,
+                                );
+                                line = words[n] + " ";
+                                if (index === 1) {
+                                    y += lineHeight * 2;
+                                } else {
+                                    y += lineHeight;
+                                }
+                            } else {
+                                line = testLine;
+                            }
+                        }
+                        context.fillText(line, x, y + index * lineHeight);
+                    });
+
+                    CopyImageToClipboard(canvas)
+                        .then(() => {
+                            SetIsCopied(true);
+                            SetIsProcessing(false);
+                            setTimeout(() => {
+                                SetIsCopied(false);
+                            }, 2000);
+                        })
+                        .catch(() => {
+                            SetIsProcessing(false);
+                            setError(
+                                "Gambar disimpan sebagai file (clipboard tidak didukung).",
+                            );
+                            setTimeout(() => setError(""), 3000);
+                        });
+                };
+                img.onerror = () => {
+                    SetIsProcessing(false);
+                    setError("Gagal memuat gambar background.");
+                    setTimeout(() => setError(""), 3000);
+                };
+                img.src = src;
+            }
+        },
+        [isProcessing, text],
+    );
+
+    // Truncate text for WhatsApp/Telegram if too long
+    const getTruncatedText = useCallback(
+        (maxLen) => {
+            if (shareText.length <= maxLen) return shareText;
+            return shareText.slice(0, maxLen - 30) + "\n... (dipotong)";
+        },
+        [shareText],
+    );
+
+    const whatsAppText = getTruncatedText(MAX_WHATSAPP_LENGTH);
+    const telegramText = getTruncatedText(MAX_TELEGRAM_LENGTH);
+    const encodedWhatsApp = encodeURIComponent(whatsAppText);
+    const encodedTelegram = encodeURIComponent(telegramText);
 
     return (
         <>
@@ -183,7 +281,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
             />
             <div
                 id='PlaceTextToImage'
-                className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl w-[90vw] max-w-lg'
+                className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl w-[90vw] max-w-lg max-h-[90vh] overflow-y-auto'
             >
                 <div className='flex items-center justify-between mb-3'>
                     <h3 className='text-sm font-semibold text-emerald-900 dark:text-white'>
@@ -196,7 +294,14 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                         <IoClose size={20} />
                     </button>
                 </div>
-                <div className='grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4'>
+
+                {error && (
+                    <div className='mb-3 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-xs'>
+                        {error}
+                    </div>
+                )}
+
+                <div className='grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4'>
                     {typeof navigator !== "undefined" && navigator.share && (
                         <button
                             type='button'
@@ -210,7 +315,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                         type='button'
                         onClick={() =>
                             openShareWindow(
-                                `https://wa.me/?text=${encodedText}`,
+                                `https://wa.me/?text=${encodedWhatsApp}`,
                             )
                         }
                         className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
@@ -221,7 +326,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                         type='button'
                         onClick={() =>
                             openShareWindow(
-                                `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
+                                `https://t.me/share/url?url=${encodedUrl}&text=${encodedTelegram}`,
                             )
                         }
                         className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'

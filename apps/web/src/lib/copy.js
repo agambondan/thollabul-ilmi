@@ -1,7 +1,7 @@
 export const CopyImageToClipboard = (canvas) => {
     return new Promise((resolve, reject) => {
         try {
-            if (navigator.clipboard && navigator.clipboard.write) {
+            if (navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
                 canvas.toBlob(async (blob) => {
                     try {
                         const item = new ClipboardItem({ "image/png": blob });
@@ -11,15 +11,25 @@ export const CopyImageToClipboard = (canvas) => {
                         console.error("Error copying image to clipboard:", err);
                         reject(err);
                     }
-                });
+                }, "image/png");
             } else {
-                // Clipboard API not supported — silent no-op
-                console.warn("Clipboard write API not supported");
+                const link = document.createElement("a");
+                link.download = "share-image.png";
+                link.href = canvas.toDataURL("image/png");
+                link.click();
                 resolve();
             }
         } catch (error) {
             console.error("Error copying image to clipboard:", error);
-            reject(error);
+            try {
+                const link = document.createElement("a");
+                link.download = "share-image.png";
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+                resolve();
+            } catch {
+                reject(error);
+            }
         }
     });
 };

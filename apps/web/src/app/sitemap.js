@@ -19,6 +19,7 @@ const staticRoutes = [
     url("/doa", 0.8, "weekly"),
     url("/dzikir", 0.8, "weekly"),
     url("/asmaul-husna", 0.8, "weekly"),
+    url("/asmaul-husna/wirid", 0.7, "weekly"),
     url("/siroh", 0.8, "weekly"),
     url("/blog", 0.8, "daily"),
     url("/tafsir", 0.7, "weekly"),
@@ -34,9 +35,45 @@ const staticRoutes = [
     url("/panduan-sholat", 0.7, "weekly"),
     url("/wirid", 0.7, "weekly"),
     url("/zakat", 0.7, "weekly"),
+    url("/belajar", 0.7, "weekly"),
+    url("/faraidh", 0.6, "monthly"),
+    url("/forum", 0.6, "daily"),
+    url("/hadits", 0.7, "weekly"),
+    url("/imsakiyah", 0.6, "daily"),
+    url("/khatam", 0.6, "weekly"),
+    url("/komunitas", 0.6, "weekly"),
+    url("/library", 0.7, "weekly"),
+    url("/manasik", 0.7, "monthly"),
+    url("/perawi", 0.6, "weekly"),
+    url("/peta", 0.6, "weekly"),
+    url("/sejarah", 0.7, "weekly"),
+    url("/tasbih", 0.6, "weekly"),
+    url("/tokoh", 0.6, "weekly"),
     url("/contact", 0.5, "monthly"),
     url("/search", 0.5, "weekly"),
 ];
+
+const privateRoutes = [
+    "/admin/",
+    "/auth/",
+    "/dashboard/",
+    "/profile/",
+    "/stats/",
+    "/bookmarks/",
+    "/notes/",
+    "/notifications/",
+    "/goals/",
+    "/muhasabah/",
+    "/sholat-tracker/",
+    "/tilawah/",
+    "/hafalan/",
+    "/amalan/",
+    "/dev/",
+];
+
+const publicStaticRoutes = staticRoutes.filter(
+    (route) => !privateRoutes.some((path) => route.url.startsWith(`${SITE_URL}${path}`)),
+);
 
 async function getSurahRoutes() {
     try {
@@ -120,7 +157,7 @@ export default async function sitemap() {
         ]);
 
     return [
-        ...staticRoutes,
+        ...publicStaticRoutes,
         ...surahRoutes,
         ...hadithRoutes,
         ...sirohRoutes,
