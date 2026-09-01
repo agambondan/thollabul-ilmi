@@ -161,7 +161,7 @@ export default function ImsakiyahPage() {
                             {t("imsakiyah.schedule_label")}
                         </span>
                     </div>
-                    <h1 className='text-2xl font-bold mb-1'>Imsakiyah</h1>
+                    <h1 className='text-2xl font-bold mb-1'>{t("imsakiyah.title")}</h1>
                     <p className='text-sm text-emerald-200'>
                         {t("imsakiyah.subtitle")} — {cityName},{" "}
                         {monthNames[month - 1]} {year}

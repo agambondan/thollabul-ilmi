@@ -248,7 +248,7 @@ export default function SettingsPage() {
                 {/* Tampilan */}
                 <section className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
                     <h2 className='text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider'>
-                        Tampilan & Aksesibilitas
+                        {t("settings.section_appearance")}
                     </h2>
                     <SettingRow label={t("settings.theme")}>
                         <select
@@ -285,7 +285,7 @@ export default function SettingsPage() {
                 {/* Bacaan */}
                 <section className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
                     <h2 className='text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider'>
-                        Preferensi Bacaan
+                        {t("settings.section_reading")}
                     </h2>
                     <SettingRow label={t("settings.quran_font")}>
                         <select
@@ -295,9 +295,9 @@ export default function SettingsPage() {
                             }
                             className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                         >
-                            <option value='LPMQ'>LPMQ Isep Misbah</option>
-                            <option value='Amiri'>Amiri Quran</option>
-                            <option value='Scheherazade'>Scheherazade</option>
+                            <option value='LPMQ'>{t("settings.font_lpmq")}</option>
+                            <option value='Amiri'>{t("settings.font_amiri")}</option>
+                            <option value='Scheherazade'>{t("settings.font_scheherazade")}</option>
                         </select>
                     </SettingRow>
                     <SettingRow label={t("settings.reader_size")}>
@@ -324,7 +324,7 @@ export default function SettingsPage() {
                 {/* Notifikasi */}
                 <section className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
                     <h2 className='text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider'>
-                        Notifikasi
+                        {t("settings.section_notifications")}
                     </h2>
                     <SettingRow label={t("settings.notif_adzan")}>
                         <input
