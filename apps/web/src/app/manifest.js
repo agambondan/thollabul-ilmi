@@ -1,7 +1,7 @@
 export default function manifest() {
     return {
-        name: "Thullaabul 'Ilmi",
-        short_name: "TI",
+        name: "Thollabul Ilmi",
+        short_name: "Thollabul Ilmi",
         description:
             "Islamic knowledge portal for Al-Quran, Hadith, duas, dhikr, memorization, and more.",
         start_url: "/",
