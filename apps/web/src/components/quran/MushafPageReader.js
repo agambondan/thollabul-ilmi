@@ -9,6 +9,25 @@ const MIN_PAGE = 1;
 const MAX_PAGE = 604;
 
 const clampPage = (page) => Math.max(MIN_PAGE, Math.min(MAX_PAGE, page || 1));
+const readInitialPage = () => {
+    if (typeof window === "undefined") return 1;
+    return clampPage(Number(new URLSearchParams(window.location.search).get("page")));
+};
+const syncPageUrl = (page) => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    url.searchParams.set("page", String(page));
+    window.history.replaceState(
+        window.history.state,
+        "",
+        `${url.pathname}?${url.searchParams}${url.hash}`,
+    );
+};
+const toArabicNumber = (n) =>
+    String(n)
+        .split("")
+        .map((d) => ("٠١٢٣٤٥٦٧٨٩"[Number(d)] ?? d))
+        .join("");
 const getItems = (data) =>
     Array.isArray(data) ? data : (data?.items ?? data?.data?.items ?? []);
 const getArabic = (ayah) => ayah?.translation?.ar_html || ayah?.translation?.ar || "";
@@ -41,7 +60,7 @@ const pageMeta = (ayahs, lang, page, fallback) => {
 export default function MushafPageReader() {
     const { t, lang } = useLocale();
     const { fontCls, fontId, setFont, arabicFontSize, setArabicFontSize } = useQuranFont();
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(readInitialPage);
     const inputRef = useRef(null);
     const [ayahs, setAyahs] = useState([]);
     const [words, setWords] = useState([]);
@@ -90,6 +109,16 @@ export default function MushafPageReader() {
         setPage(clampPage(nextPage));
     }, []);
     const goInputPage = () => goToPage(clampPage(Number(inputRef.current?.value)));
+
+    useEffect(() => {
+        syncPageUrl(page);
+    }, [page]);
+
+    useEffect(() => {
+        const onPop = () => setPage(readInitialPage());
+        window.addEventListener("popstate", onPop);
+        return () => window.removeEventListener("popstate", onPop);
+    }, []);
 
     useEffect(() => {
         const handler = (e) => {
@@ -176,25 +205,29 @@ export default function MushafPageReader() {
             </div>
 
             <div
-                className='mx-auto max-w-[430px] select-none bg-[#fff9dc] text-slate-950 rounded-[1.6rem] border-4 border-emerald-500 shadow-xl overflow-hidden'
+                className='mx-auto max-w-[430px] select-none bg-[#fff9dc] text-slate-950 rounded-[1.6rem] border-[6px] border-emerald-500 shadow-xl overflow-hidden ring-2 ring-amber-300'
                 onTouchStart={(e) => {
                     touchX.current = e.touches[0].clientX;
                 }}
                 onTouchEnd={handleTouchEnd}
             >
-                <div className='grid grid-cols-3 gap-2 bg-[#fff4bf] px-3 py-2 text-[11px] font-bold text-center border-b-2 border-emerald-500'>
-                    <div className='rounded-full bg-white border border-emerald-500 py-1'>
-                        {t("mushaf.juz")} {meta.juz}
+                <div className='h-3 bg-[repeating-linear-gradient(90deg,#0f766e_0_10px,#f59e0b_10px_16px,#14b8a6_16px_26px,#fef3c7_26px_30px)]' />
+                <div className='grid grid-cols-3 gap-2 bg-[#fff4bf] px-3 py-2 text-[11px] font-bold text-center border-y-2 border-emerald-500'>
+                    <div>
+                        <p className='text-[9px] tracking-widest text-amber-700 uppercase'>{t("mushaf.juz")}</p>
+                        <p className='rounded-full bg-white border border-emerald-500 py-0.5'>{meta.juz}</p>
                     </div>
-                    <div className='rounded-full bg-white border border-emerald-500 py-1'>
-                        {meta.page}
+                    <div>
+                        <p className='text-[9px] tracking-widest text-amber-700 uppercase'>{t("mushaf.page")}</p>
+                        <p className='rounded-full bg-white border border-emerald-500 py-0.5'>{meta.page}</p>
                     </div>
-                    <div className='rounded-full bg-white border border-emerald-500 py-1 truncate'>
-                        {meta.surah}
+                    <div>
+                        <p className='text-[9px] tracking-widest text-amber-700 uppercase'>{t("mushaf.surah")}</p>
+                        <p className='rounded-full bg-white border border-emerald-500 py-0.5 truncate'>{meta.surah}</p>
                     </div>
                 </div>
 
-                <div className='min-h-[720px] p-3 space-y-3'>
+                <div className='min-h-[720px] bg-[linear-gradient(180deg,rgba(16,185,129,0.08)_0,rgba(16,185,129,0)_56px)] p-3 space-y-2'>
                     {loading && (
                         <div className='text-center py-24 text-sm text-gray-500'>{t("common.loading")}</div>
                     )}
@@ -202,10 +235,10 @@ export default function MushafPageReader() {
                         const wordList = wordsByAyah.get(ayah.id) ?? [];
                         const translation = getTranslation(ayah, lang);
                         return (
-                            <section key={ayah.id} className='border-b border-dashed border-emerald-200 pb-2 last:border-b-0'>
-                                <div className='flex flex-row-reverse flex-wrap justify-start gap-x-1 gap-y-2 text-right' dir='rtl'>
+                            <section key={ayah.id} className='border-b border-dashed border-emerald-200 pb-1.5 last:border-b-0'>
+                                <div className='flex flex-row-reverse flex-wrap justify-start gap-x-0.5 gap-y-1.5 text-right' dir='rtl'>
                                     {wordList.length ? wordList.map((word) => (
-                                        <span key={word.id} className='inline-flex min-w-[3.5rem] flex-col items-center border-l border-rose-200 px-1' dir='rtl'>
+                                        <span key={word.id} className='inline-flex min-w-[3.25rem] flex-col items-center border-l border-rose-200 px-0.5' dir='rtl'>
                                             <span
                                                 className={`${fontCls} leading-tight text-slate-950`}
                                                 style={{ fontSize: `${Math.max(24, arabicFontSize - 8)}px` }}
@@ -225,12 +258,12 @@ export default function MushafPageReader() {
                                             dangerouslySetInnerHTML={{ __html: getArabic(ayah) }}
                                         />
                                     )}
-                                    <span className='inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-amber-500 bg-white text-sm font-bold text-rose-700' dir='ltr'>
-                                        {ayah.number}
+                                    <span className='inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-amber-500 bg-white text-base font-bold text-rose-700' dir='ltr'>
+                                        {toArabicNumber(ayah.number)}
                                     </span>
                                 </div>
                                 {showTranslation && translation && (
-                                    <p className='mt-2 text-xs leading-relaxed text-slate-700'>
+                                    <p className='mt-1.5 text-xs leading-relaxed text-slate-700'>
                                         <span className='font-semibold'>{ayah.number}. </span>{translation}
                                     </p>
                                 )}
@@ -238,6 +271,7 @@ export default function MushafPageReader() {
                         );
                     })}
                 </div>
+                <div className='h-3 bg-[repeating-linear-gradient(90deg,#fef3c7_0_4px,#14b8a6_4px_14px,#f59e0b_14px_20px,#0f766e_20px_30px)]' />
             </div>
 
             <div className='sticky bottom-4 z-10 mx-auto flex max-w-[430px] items-center justify-between gap-2 rounded-full bg-white/90 dark:bg-slate-800/90 p-1 shadow-lg border border-gray-200 dark:border-slate-700'>
