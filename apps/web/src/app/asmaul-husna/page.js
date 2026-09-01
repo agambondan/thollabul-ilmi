@@ -16,6 +16,7 @@ import {
 } from "react-icons/bs";
 import { GiPrayerBeads } from "react-icons/gi";
 import { MdOutlineFlipCameraAndroid } from "react-icons/md";
+import { useModalA11y } from "@/lib/useModalA11y";
 
 export const AsmaulHusnaContent = () => {
     const { t, lang } = useLocale();
@@ -81,6 +82,15 @@ export const AsmaulHusnaContent = () => {
         }
         setPlaying(false);
     };
+
+    const modalA11y = useModalA11y({
+
+        open: !!selected,
+
+        onClose: () => closeModal(),
+
+    });
+
 
     const closeModal = () => {
         stopAudio();
@@ -230,7 +240,8 @@ export const AsmaulHusnaContent = () => {
                     onClick={closeModal}
                 >
                     <div
-                        className='bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-md w-full shadow-xl border border-gray-100 dark:border-slate-700'
+                        {...modalA11y}
+                        className='bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-md w-full shadow-xl border border-gray-100 dark:border-slate-700 outline-none'
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className='text-center mb-4'>

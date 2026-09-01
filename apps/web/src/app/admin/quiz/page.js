@@ -306,11 +306,12 @@ const AdminQuizPage = () => {
                             </div>
                             {OPTION_KEYS.map((key, idx) => (
                                 <div key={key}>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-field-1' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("admin.quiz.option")}{" "}
                                         {OPTION_LABELS[idx]}
                                     </label>
                                     <input
+                                        id='page-field-1'
                                         type='text'
                                         value={form[key]}
                                         onChange={(e) =>

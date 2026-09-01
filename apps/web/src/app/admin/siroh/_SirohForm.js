@@ -86,11 +86,12 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
 
             <div className='grid sm:grid-cols-2 gap-4'>
                 <div>
-                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                    <label htmlFor='sirohform-field-1' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                         {t("admin.field.category")}{" "}
                         <span className='text-red-500'>*</span>
                     </label>
                     <select
+                        id='sirohform-field-1'
                         value={categoryId}
                         onChange={(e) => setCategoryId(e.target.value)}
                         className={inputCls}
@@ -136,11 +137,12 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             </div>
 
             <div>
-                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label htmlFor='sirohform-field-2' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                     {t("admin.field.title")}{" "}
                     <span className='text-red-500'>*</span>
                 </label>
                 <input
+                    id='sirohform-field-2'
                     required
                     value={title}
                     onChange={(e) => handleTitleChange(e.target.value)}
@@ -172,11 +174,12 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             </div>
 
             <div>
-                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label htmlFor='sirohform-field-3' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                     {t("admin.field.content")}{" "}
                     <span className='text-red-500'>*</span>
                 </label>
                 <textarea
+                    id='sirohform-field-3'
                     required
                     value={content}
                     onChange={(e) => setContent(e.target.value)}

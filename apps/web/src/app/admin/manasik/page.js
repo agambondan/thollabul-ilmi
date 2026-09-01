@@ -323,11 +323,12 @@ const AdminManasikPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-field-1' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     {t("admin.field.arabic")} (
                                     {t("common.optional")})
                                 </label>
                                 <textarea
+                                    id='page-field-1'
                                     value={form.arabic}
                                     onChange={(e) =>
                                         setForm({

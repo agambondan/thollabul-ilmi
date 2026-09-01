@@ -5,6 +5,8 @@ import SettingButton from "@/components/popup/SettingButton";
 import { LocaleProvider } from "@/context/Locale";
 import { SettingsProvider } from "@/lib/useSettings";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
+import ServiceWorkerRegistrar from "@/components/ServiceWorkerRegistrar";
+import MobileTabBar from "@/components/MobileTabBar";
 import {
     PublicFooter,
     PublicNavbar,
@@ -108,9 +110,11 @@ export default function RootLayout({ children }) {
                     <AuthProvider>
                         <SettingsProvider>
                             <AnalyticsTracker />
+                            <ServiceWorkerRegistrar />
                             <PublicNavbar />
                             {children}
                             <PublicFooter />
+                            <MobileTabBar />
                             <SettingButton />
                             <NotificationPermissionPrompt />
                             <Toaster

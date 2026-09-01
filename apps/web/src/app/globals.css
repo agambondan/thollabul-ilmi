@@ -34,6 +34,13 @@
         overflow-x: clip;
     }
 
+    /* Room for the mobile tab bar; it is hidden from `lg` upward. */
+    @media (max-width: 1023px) {
+        body {
+            padding-bottom: calc(3.75rem + env(safe-area-inset-bottom));
+        }
+    }
+
     /*
      * The public navbar is fixed, so an #ayah-N target (shared ayah links,
      * tafsir cross-references, the mushaf index) would otherwise land behind

@@ -447,10 +447,11 @@ export function FaraidhContent() {
                                     <div className='grid grid-cols-2 gap-x-3 gap-y-3'>
                                         {fields.map((field) => (
                                             <div key={field.key}>
-                                                <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+                                                <label htmlFor='page-field-1' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                                                     {heirLabel(field.key, lang)}
                                                 </label>
                                                 <input
+                                                    id='page-field-1'
                                                     type='number'
                                                     min='0'
                                                     max={field.max}

@@ -213,10 +213,11 @@ export default function AdminLessonsPage() {
                         <form onSubmit={handleSave} className='space-y-4'>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label className='block text-xs font-semibold mb-1'>
+                                    <label htmlFor='page-field-1' className='block text-xs font-semibold mb-1'>
                                         Judul
                                     </label>
                                     <input
+                                        id='page-field-1'
                                         type='text'
                                         required
                                         value={form.title}
@@ -230,10 +231,11 @@ export default function AdminLessonsPage() {
                                     />
                                 </div>
                                 <div>
-                                    <label className='block text-xs font-semibold mb-1'>
+                                    <label htmlFor='page-field-2' className='block text-xs font-semibold mb-1'>
                                         Slug
                                     </label>
                                     <input
+                                        id='page-field-2'
                                         type='text'
                                         required
                                         value={form.slug}
@@ -248,10 +250,11 @@ export default function AdminLessonsPage() {
                                 </div>
                             </div>
                             <div>
-                                <label className='block text-xs font-semibold mb-1'>
+                                <label htmlFor='page-field-3' className='block text-xs font-semibold mb-1'>
                                     Deskripsi
                                 </label>
                                 <textarea
+                                    id='page-field-3'
                                     value={form.description}
                                     onChange={(e) =>
                                         setForm({

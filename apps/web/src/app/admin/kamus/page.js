@@ -306,10 +306,11 @@ const AdminDictionaryPage = () => {
                                 />
                             </div>
                             <div>
-                                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                <label htmlFor='page-field-1' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                     Contoh ({t("common.optional")})
                                 </label>
                                 <textarea
+                                    id='page-field-1'
                                     value={form.example}
                                     onChange={(e) =>
                                         setForm({
@@ -323,10 +324,11 @@ const AdminDictionaryPage = () => {
                             </div>
                             <div className='grid grid-cols-2 gap-4'>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-field-2' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         Asal ({t("common.optional")})
                                     </label>
                                     <input
+                                        id='page-field-2'
                                         type='text'
                                         value={form.origin}
                                         onChange={(e) =>
@@ -339,11 +341,12 @@ const AdminDictionaryPage = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                    <label htmlFor='page-field-3' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                                         {t("common.source")} (
                                         {t("common.optional")})
                                     </label>
                                     <input
+                                        id='page-field-3'
                                         type='text'
                                         value={form.source}
                                         onChange={(e) =>

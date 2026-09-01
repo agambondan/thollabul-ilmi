@@ -1,6 +1,6 @@
 "use client";
 
-import { DzikirContent } from "@/app/dzikir/page";
+import { DzikirContent } from "@/app/dzikir/DzikirContent";
 
 export default function DashboardDzikirPage() {
     return (

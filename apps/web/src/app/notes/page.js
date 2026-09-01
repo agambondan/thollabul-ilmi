@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { BsPencil, BsPlus, BsSearch, BsTrash, BsX } from "react-icons/bs";
 import { MdOutlineStickyNote2 } from "react-icons/md";
+import { useModalA11y } from "@/lib/useModalA11y";
 
 const LOCAL_KEY = "tholabul_notes";
 
@@ -44,6 +45,10 @@ export default function NotesPage() {
     const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState(null);
     const [backendAvail, setBackendAvail] = useState(true);
+    const modalA11y = useModalA11y({
+        open: !!editing,
+        onClose: () => setEditing(null),
+    });
     const bodyRef = useRef(null);
 
     const isNew = editing?.id === "__new__";
@@ -314,7 +319,10 @@ export default function NotesPage() {
             {/* Edit modal */}
             {editing && (
                 <div className='fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 px-4 py-6'>
-                    <div className='w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-6'>
+                    <div
+                        {...modalA11y}
+                        className='w-full max-w-lg bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-6 outline-none'
+                    >
                         <div className='flex items-center justify-between mb-4'>
                             <h2 className='font-extrabold text-gray-900 dark:text-white'>
                                 {isNew ? t("notes.new") : t("notes.edit")}

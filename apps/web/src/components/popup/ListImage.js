@@ -6,6 +6,7 @@ import { CopyImageToClipboard, CopyToClipboard } from "@/lib/copy";
 import { renderShareImage } from "@/lib/shareImage";
 import { useCallback, useState } from "react";
 import { IoClose } from "react-icons/io5";
+import { useModalA11y } from "@/lib/useModalA11y";
 
 const MAX_SHARE_LENGTH = 4096;
 
@@ -24,6 +25,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
     const [isProcessing, SetIsProcessing] = useState(false);
     const [status, setStatus] = useState("");
     const [error, setError] = useState("");
+    const modalA11y = useModalA11y({ onClose: isCopiedCallback });
 
     const shareUrl = typeof window !== "undefined" ? window.location.href : "";
     const shareText = text || shareUrl;
@@ -141,12 +143,13 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                 onClick={isCopiedCallback}
             />
             <div
+                {...modalA11y}
                 id='PlaceTextToImage'
-                className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl w-[90vw] max-w-lg max-h-[90vh] overflow-y-auto'
+                className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl w-[90vw] max-w-lg max-h-[90vh] overflow-y-auto outline-none'
             >
                 <div className='flex items-center justify-between mb-3'>
                     <h3 className='text-sm font-semibold text-emerald-900 dark:text-white'>
-                        Bagikan Ayat
+                        {t("ayah.share_title")}
                     </h3>
                     <button
                         onClick={isCopiedCallback}

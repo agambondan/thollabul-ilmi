@@ -1,6 +1,6 @@
 "use client";
 
-import { DoaContent } from "@/app/doa/page";
+import { DoaContent } from "@/app/doa/DoaContent";
 
 export default function DashboardDoaPage() {
     return (

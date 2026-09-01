@@ -573,7 +573,7 @@ export default function Home() {
         <main className='bg-parchment-50 dark:bg-slate-900'>
 
             {/* ── Hero ─────────────────────────────────────────────── */}
-            <section className='relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800'>
+            <section className='relative flex min-h-[78svh] items-center justify-center overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800'>
                 <div
                     className='absolute inset-0 opacity-5'
                     style={{
@@ -585,7 +585,7 @@ export default function Home() {
                 <div className='absolute top-16 right-16 w-80 h-80 rounded-full bg-emerald-700 opacity-25 blur-3xl pointer-events-none' />
                 <div className='absolute bottom-32 left-10 w-96 h-96 rounded-full bg-gold-600 opacity-10 blur-3xl pointer-events-none' />
 
-                <div className='relative z-10 text-center text-white px-6 max-w-3xl mx-auto py-28'>
+                <div className='relative z-10 mx-auto max-w-3xl px-6 py-20 text-center text-white'>
                     <p
                         className='text-4xl md:text-5xl text-gold-300 mb-6 leading-loose'
                         style={{ fontFamily: "Amiri, serif", direction: "rtl" }}

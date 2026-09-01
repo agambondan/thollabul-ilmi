@@ -454,12 +454,13 @@ function Field({
 }) {
     return (
         <div>
-            <label className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
+            <label htmlFor='page-field-1' className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'>
                 {label}
                 {required && <span className='text-red-500 ml-0.5'>*</span>}
             </label>
             {multiline ? (
                 <textarea
+                    id='page-field-1'
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     rows={3}

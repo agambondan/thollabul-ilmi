@@ -5,6 +5,7 @@ import { Spinner3 } from "@/components/spinner/Spinner";
 import AdminMutationToast from "@/components/admin/AdminMutationToast";
 import { useLocale } from "@/context/Locale";
 import { useTheme } from "@/lib/useTheme";
+import { useModalA11y } from "@/lib/useModalA11y";
 import { ConvertFLagLanguage } from "@/lib/converter";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -154,6 +155,11 @@ const AdminLayout = ({ children }) => {
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [mobileNavOpen, setMobileNavOpen] = useState(false);
+    const mobileNavA11y = useModalA11y({
+        open: mobileNavOpen,
+        onClose: () => setMobileNavOpen(false),
+        label: t("nav.menu"),
+    });
     const [isMobile, setIsMobile] = useState(false);
     const [accountOpen, setAccountOpen] = useState(false);
     const accountRef = useRef(null);
@@ -278,6 +284,7 @@ const AdminLayout = ({ children }) => {
                 />
             )}
             <aside
+                {...(mobileNavOpen ? mobileNavA11y : {})}
                 className={`${sidebarWidth} max-w-[85vw] shrink-0 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col fixed inset-y-0 left-0 z-50 md:z-40 transform transition-transform duration-200 md:transform-none md:transition-[width] ${
                     mobileNavOpen ? "translate-x-0" : "-translate-x-full"
                 } md:translate-x-0`}

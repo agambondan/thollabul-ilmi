@@ -103,11 +103,12 @@ const BlogForm = ({ initialData = null, postId = null }) => {
             )}
 
             <div>
-                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label htmlFor='blogform-field-1' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                     {t("admin.field.title")}{" "}
                     <span className='text-red-500'>*</span>
                 </label>
                 <input
+                    id='blogform-field-1'
                     required
                     value={title}
                     onChange={(e) => handleTitleChange(e.target.value)}
@@ -156,11 +157,12 @@ const BlogForm = ({ initialData = null, postId = null }) => {
             </div>
 
             <div>
-                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                <label htmlFor='blogform-field-2' className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
                     {t("admin.field.content")}{" "}
                     <span className='text-red-500'>*</span>
                 </label>
                 <textarea
+                    id='blogform-field-2'
                     required
                     value={content}
                     onChange={(e) => setContent(e.target.value)}

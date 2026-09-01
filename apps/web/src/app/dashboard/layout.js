@@ -4,6 +4,7 @@ import AdminMutationToast from "@/components/admin/AdminMutationToast";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { useTheme } from "@/lib/useTheme";
+import { useModalA11y } from "@/lib/useModalA11y";
 import { ConvertFLagLanguage } from "@/lib/converter";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -70,6 +71,11 @@ const DashboardLayout = ({ children }) => {
     const [accountOpen, setAccountOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const accountRef = useRef(null);
+    const mobileMenuA11y = useModalA11y({
+        open: mobileMenuOpen,
+        onClose: () => setMobileMenuOpen(false),
+        label: t("nav.menu"),
+    });
 
     useEffect(() => {
         const handler = (e) => {
@@ -790,7 +796,10 @@ const DashboardLayout = ({ children }) => {
                             className='absolute inset-0 bg-slate-950/50'
                             onClick={() => setMobileMenuOpen(false)}
                         />
-                        <div className='absolute inset-x-0 bottom-0 max-h-[78vh] overflow-y-auto rounded-t-2xl bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 shadow-2xl'>
+                        <div
+                            {...mobileMenuA11y}
+                            className='absolute inset-x-0 bottom-0 max-h-[78vh] overflow-y-auto rounded-t-2xl bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 shadow-2xl outline-none'
+                        >
                             <div className='sticky top-0 z-10 bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 px-4 py-3 flex items-center justify-between'>
                                 <div>
                                     <p className='text-sm font-semibold text-gray-900 dark:text-white'>

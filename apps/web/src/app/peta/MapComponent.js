@@ -19,23 +19,24 @@ L.Icon.Default.mergeOptions({
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
 const CATEGORIES = [
-    { value: "", label: "Semua" },
-    { value: "kota", label: "Kota" },
-    { value: "masjid", label: "Masjid" },
-    { value: "situs", label: "Situs" },
-    { value: "universitas", label: "Universitas" },
+    { value: "", labelKey: "peta.cat.all" },
+    { value: "kota", labelKey: "peta.cat.city" },
+    { value: "masjid", labelKey: "peta.cat.mosque" },
+    { value: "situs", labelKey: "peta.cat.site" },
+    { value: "universitas", labelKey: "peta.cat.university" },
 ];
 
+// Dynasty names stay untranslated: they are proper nouns in both languages.
 const ERAS = [
-    { value: "", label: "Semua Masa" },
-    { value: "pra-islam", label: "Pra-Islam" },
-    { value: "khulafa", label: "Khulafa & Sahabat" },
+    { value: "", labelKey: "peta.era.all" },
+    { value: "pra-islam", labelKey: "peta.era.pre_islam" },
+    { value: "khulafa", labelKey: "peta.era.khulafa" },
     { value: "umayyah", label: "Umayyah" },
     { value: "abbasiyah", label: "Abbasiyah" },
     { value: "fatimiyah", label: "Fatimiyah" },
-    { value: "andallus", label: "Andalusia" },
+    { value: "andallus", labelKey: "peta.era.andalusia" },
     { value: "utsmaniyah", label: "Utsmaniyah" },
-    { value: "klasik", label: "Klasik" },
+    { value: "klasik", labelKey: "peta.era.classical" },
 ];
 
 const hasValidCoordinate = (loc) =>
@@ -84,7 +85,7 @@ export default function MapComponent() {
                 >
                     {CATEGORIES.map((c) => (
                         <option key={c.value} value={c.value}>
-                            {c.label}
+                            {c.labelKey ? t(c.labelKey) : c.label}
                         </option>
                     ))}
                 </select>
@@ -95,7 +96,7 @@ export default function MapComponent() {
                 >
                     {ERAS.map((e) => (
                         <option key={e.value} value={e.value}>
-                            {e.label}
+                            {e.labelKey ? t(e.labelKey) : e.label}
                         </option>
                     ))}
                 </select>
