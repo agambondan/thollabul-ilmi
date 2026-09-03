@@ -98,8 +98,11 @@ export const sanitizeBlogHtml = (html) => {
                 }
             }
             if (tag === "a") {
-                child.setAttribute("target", "_blank");
-                child.setAttribute("rel", "noopener noreferrer");
+                const href = child.getAttribute("href") || "";
+                if (href.startsWith("http://") || href.startsWith("https://")) {
+                    child.setAttribute("target", "_blank");
+                    child.setAttribute("rel", "noopener noreferrer");
+                }
             }
             walk(child);
         }

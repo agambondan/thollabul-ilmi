@@ -24,14 +24,14 @@ Sholat Dhuha adalah salah satu sholat sunnah muakkadah yang sangat ditekankan ol
 Dalam sebuah hadits shahih riwayat Imam Muslim, Rasulullah ﷺ bersabda:
 
 > "Setiap pagi, setiap ruas anggota badan kalian wajib dikeluarkan sedekahnya. Setiap tasbih adalah sedekah, setiap tahmid adalah sedekah, setiap tahlil adalah sedekah, setiap takbir adalah sedekah, menyuruh kepada kebaikan adalah sedekah, dan melarang dari kemungkaran adalah sedekah. Semua itu cukup digantikan dengan dua rakaat yang dikerjakan pada waktu Dhuha."
-> *([HR. Muslim no. 720](https://sunnah.com/muslim:720))*
+> *([HR. Muslim no. 720](/hadith/muslim#720))*
 
 ## Waktu Pelaksanaan Sholat Dhuha
 
 Waktu sholat Dhuha terbentang cukup panjang:
 
 - **Waktu Awal:** Dimulai sekitar 15–20 menit setelah matahari terbit (waktu *Syuruq*), yaitu ketika matahari telah naik setinggi satu tombak (sekitar pukul 06.30 pagi untuk wilayah Indonesia bagian barat).
-- **Waktu Terbaik (*Afdhal*):** Saat matahari mulai terasa panas dan terik, sebagaimana sabda Nabi ﷺ bahwa sholat orang-orang awwabin (yang taat) adalah ketika anak unta merasa kepanasan kakinya (*sa'at tarmadhul fihal*), sekitar pukul 09.00 hingga 10.30 pagi *([HR. Muslim no. 748](https://sunnah.com/muslim:748))*.
+- **Waktu Terbaik (*Afdhal*):** Saat matahari mulai terasa panas dan terik, sebagaimana sabda Nabi ﷺ bahwa sholat orang-orang awwabin (yang taat) adalah ketika anak unta merasa kepanasan kakinya (*sa'at tarmadhul fihal*), sekitar pukul 09.00 hingga 10.30 pagi *([HR. Muslim no. 748](/hadith/muslim#748))*.
 - **Waktu Akhir:** Menjelang masuk waktu Dzuhur, kurang lebih 10–15 menit sebelum adzan Dzuhur berkumandang (waktu *istiwa'* saat matahari tepat di atas kepala).
 
 ## Jumlah Rakaat Sholat Dhuha
@@ -39,7 +39,7 @@ Waktu sholat Dhuha terbentang cukup panjang:
 Para ulama menjelaskan batasan rakaat sholat Dhuha sebagai berikut:
 
 1. **Minimal:** 2 rakaat.
-2. **Pertengahan:** 4 atau 8 rakaat (Rasulullah ﷺ pernah sholat Dhuha 8 rakaat pada peristiwa Pembebasan Kota Makkah / *Fathu Makkah* sebagaimana diriwayatkan dalam *[HR. Bukhari no. 357](https://sunnah.com/bukhari:357)* dan *[HR. Muslim no. 336](https://sunnah.com/muslim:336)*).
+2. **Pertengahan:** 4 atau 8 rakaat (Rasulullah ﷺ pernah sholat Dhuha 8 rakaat pada peristiwa Pembebasan Kota Makkah / *Fathu Makkah* sebagaimana diriwayatkan dalam *[HR. Bukhari no. 357](/hadith/bukhari#357)* dan *[HR. Muslim no. 336](/hadith/muslim#336)*).
 3. **Maksimal:** Sebagian ulama membatasi hingga 12 rakaat, sementara ulama lainnya berpendapat tidak ada batasan maksimal selama dikerjakan dua rakaat salam dua rakaat salam.
 
 ## Tata Cara Pelaksanaan
@@ -67,25 +67,25 @@ Dua kalimat syahadat merupakan gerbang utama seseorang masuk ke dalam Islam seka
 Rasulullah ﷺ bersabda:
 
 > "Islam dibangun di atas lima perkara: bersaksi bahwa tidak ada sesembahan yang berhak disembah selain Allah dan Muhammad adalah utusan Allah, mendirikan sholat, menunaikan zakat, menunaikan haji ke Baitullah, dan berpuasa di bulan Ramadan."
-> *([HR. Bukhari no. 8](https://sunnah.com/bukhari:8) & [HR. Muslim no. 16](https://sunnah.com/muslim:16))*
+> *([HR. Bukhari no. 8](/hadith/bukhari#8) & [HR. Muslim no. 16](/hadith/muslim#16))*
 
 ## Rukun Syahadat "Laa Ilaha Illallah"
 
 Kalimat tauhid memiliki dua rukun yang tidak boleh dipisahkan:
 
-1. **An-Nafyu (Penafian):** Kata *Laa ilaha* bermakna meniadakan segala bentuk peribadatan dan sesembahan selain Allah Ta'ala (seperti berhala, kuburan orang shalih, jimat, bintang, maupun hawa nafsu) sebagaimana ditegaskan dalam *[QS. Al-Baqarah: 256](https://quran.com/2/256)*.
+1. **An-Nafyu (Penafian):** Kata *Laa ilaha* bermakna meniadakan segala bentuk peribadatan dan sesembahan selain Allah Ta'ala (seperti berhala, kuburan orang shalih, jimat, bintang, maupun hawa nafsu) sebagaimana ditegaskan dalam *[QS. Al-Baqarah: 256](/quran/2#256)*.
 2. **Al-Itsbat (Penetapan):** Kata *Illallah* bermakna menetapkan peribadatan hanya untuk Allah semata, tanpa ada sekutu bagi-Nya dalam rububiyyah, uluhiyyah, dan asma' wa shifat-Nya.
 
 ## 7 Syarat Sah Syahadat
 
 Para ulama merumuskan tujuh syarat diterimanya kalimat tauhid:
 
-- **Al-'Ilmu (Berilmu):** Memahami maknanya, bukan sekadar melafalkan di lisan *([QS. Muhammad: 19](https://quran.com/47/19))*.
-- **Al-Yaqin (Yakin):** Keyakinan yang kokoh tanpa ada keraguan sedikit pun *([QS. Al-Hujurat: 15](https://quran.com/49/15))*.
+- **Al-'Ilmu (Berilmu):** Memahami maknanya, bukan sekadar melafalkan di lisan *([QS. Muhammad: 19](/quran/47#19))*.
+- **Al-Yaqin (Yakin):** Keyakinan yang kokoh tanpa ada keraguan sedikit pun *([QS. Al-Hujurat: 15](/quran/49#15))*.
 - **Al-Qabul (Menerima):** Menerima konsekuensi hukum dan syariat dengan lapang dada.
-- **Al-Inqiyad (Tunduk):** Berserah diri dan patuh menjalankan perintah Allah *([QS. Luqman: 22](https://quran.com/31/22))*.
-- **Ash-Shidqu (Jujur):** Mengucapkannya dengan kejujuran hati, bukan kemunafikan *([HR. Bukhari no. 128](https://sunnah.com/bukhari:128))*.
-- **Al-Ikhlash (Ikhlas):** Membersihkan niat dari segala bentuk kesyirikan dan riya' *([QS. Al-Bayyinah: 5](https://quran.com/98/5))*.
+- **Al-Inqiyad (Tunduk):** Berserah diri dan patuh menjalankan perintah Allah *([QS. Luqman: 22](/quran/31#22))*.
+- **Ash-Shidqu (Jujur):** Mengucapkannya dengan kejujuran hati, bukan kemunafikan *([HR. Bukhari no. 128](/hadith/bukhari#128))*.
+- **Al-Ikhlash (Ikhlas):** Membersihkan niat dari segala bentuk kesyirikan dan riya' *([QS. Al-Bayyinah: 5](/quran/98#5))*.
 - **Al-Mahabbah (Cinta):** Mencintai kalimat tauhid, orang-orang yang mengamalkannya, dan membenci segala yang menyelisihinya.
 
 ## Konsekuensi Syahadat "Muhammad Rasulullah"
@@ -93,9 +93,9 @@ Para ulama merumuskan tujuh syarat diterimanya kalimat tauhid:
 Mengakui Nabi Muhammad ﷺ sebagai utusan Allah menuntut empat hal pokok:
 
 1. Membenarkan semua berita yang beliau sampaikan.
-2. Mentaati semua perintah yang beliau perintahkan *([QS. An-Nur: 54](https://quran.com/24/54))*.
+2. Mentaati semua perintah yang beliau perintahkan *([QS. An-Nur: 54](/quran/24#54))*.
 3. Menjauhi segala larangan yang beliau peringatkan.
-4. Tidak beribadah kepada Allah kecuali dengan syariat yang beliau contohkan *([HR. Muslim no. 1718](https://sunnah.com/muslim:1718))*.`,
+4. Tidak beribadah kepada Allah kecuali dengan syariat yang beliau contohkan *([HR. Muslim no. 1718](/hadith/muslim#1718))*.`,
 		},
 		{
 			CategorySlug: "akhlak-adab",
@@ -117,7 +117,7 @@ Ilmu tanpa adab ibarat api tanpa kayu bakar atau jasad tanpa ruh. Orang yang ber
 Berikut adalah adab-adab esensial yang wajib dihiasi oleh setiap muslim penuntut ilmu:
 
 ### 1. Mengikhlaskan Niat Karena Allah Ta'ala
-Tujuan mencari ilmu syar'i adalah untuk mengangkat kebodohan dari diri sendiri, kemudian dari orang lain, serta mengharap ridha Allah di akhirat. Rasulullah ﷺ memperingatkan ancaman keras bagi yang menuntut ilmu demi tujuan duniawi dalam *[HR. Abu Dawud no. 3664](https://sunnah.com/abudawud:3664)*.
+Tujuan mencari ilmu syar'i adalah untuk mengangkat kebodohan dari diri sendiri, kemudian dari orang lain, serta mengharap ridha Allah di akhirat. Rasulullah ﷺ memperingatkan ancaman keras bagi yang menuntut ilmu demi tujuan duniawi dalam *[HR. Abu Dawud no. 3664](/hadith/abu-daud#3664)*.
 
 ### 2. Bersegera Mengamalkan Ilmu yang Didapat
 Ilmu akan menetap dan membawa berkah manakala diamalkan. Sufyan Ats-Tsauri rahimahullah berkata: *"Ilmu itu memanggil amalan. Jika amalan menyambutnya, ilmu akan tinggal. Namun jika tidak, ilmu akan pergi berlalu."*
@@ -126,10 +126,10 @@ Ilmu akan menetap dan membawa berkah manakala diamalkan. Sufyan Ats-Tsauri rahim
 - Duduk dengan tenang dan tertib saat kajian berlangsung.
 - Mendengarkan penjelasan guru tanpa memotong pembicaraan.
 - Tidak berbisik-bisik atau bermain gawai di tengah majelis.
-- Mendoakan kebaikan bagi guru yang telah mengajarkan ilmu, sebagaimana pesan Nabi ﷺ dalam *[HR. Abu Dawud no. 1672](https://sunnah.com/abudawud:1672)*.
+- Mendoakan kebaikan bagi guru yang telah mengajarkan ilmu, sebagaimana pesan Nabi ﷺ dalam *[HR. Abu Dawud no. 1672](/hadith/abu-daud#1672)*.
 
 ### 4. Menjauhi Perdebatan (*Jidal*) yang Sia-Sia
-Penuntut ilmu sejati menjauhi debat kusir yang hanya mengotori hati dan memicu permusuhan. Rasulullah ﷺ menjanjikan rumah di pinggir surga bagi orang yang meninggalkan debat meskipun ia berada di pihak yang benar *([HR. Abu Dawud no. 4800](https://sunnah.com/abudawud:4800))*.
+Penuntut ilmu sejati menjauhi debat kusir yang hanya mengotori hati dan memicu permusuhan. Rasulullah ﷺ menjanjikan rumah di pinggir surga bagi orang yang meninggalkan debat meskipun ia berada di pihak yang benar *([HR. Abu Dawud no. 4800](/hadith/abu-daud#4800))*.
 
 ### 5. Menjaga Adab terhadap Kitab dan Catatan
 Ulama salaf sangat memuliakan kitab-kitab mereka: tidak meletakkan benda sembarangan di atas kitab hadits atau mushaf Al-Qur'an, serta menulis faedah dengan rapi dan teliti.`,
@@ -147,16 +147,16 @@ Hari Jumat adalah *Sayyidul Ayyam* (pemimpin hari-hari) dalam Islam. Di antara a
 Rasulullah ﷺ bersabda:
 
 > "Barangsiapa yang membaca surat Al-Kahfi pada hari Jumat, dia akan disinari cahaya di antara dua Jumat."
-> *([HR. Al-Hakim no. 3392](https://sunnah.com) dan Al-Baihaqi no. 5996, dishahihkan oleh Syaikh Al-Albani dalam Shahihut Targhib no. 736)*
+> *(HR. Al-Hakim no. 3392 dan Al-Baihaqi no. 5996, dishahihkan oleh Syaikh Al-Albani dalam Shahihut Targhib no. 736)*
 
 Dalam riwayat lain yang dikeluarkan oleh Imam Muslim, sepuluh ayat pertama dari surat ini juga menjadi pelindung dari fitnah terbesar umat manusia:
 
 > "Barangsiapa menghafal sepuluh ayat pertama dari surat Al-Kahfi, ia akan terlindungi dari fitnah Dajjal."
-> *([HR. Muslim no. 809](https://sunnah.com/muslim:809))*
+> *([HR. Muslim no. 809](/hadith/muslim#809))*
 
 ## Kapan Waktu Membacanya?
 
-Waktu membaca Surat Al-Kahfi dimulai sejak **terbenamnya matahari pada hari Kamis sore** (malam Jumat) hingga **terbenamnya matahari pada hari Jumat petang**. Rentang waktu lebih dari 24 jam ini memudahkan setiap muslim untuk menyelesaikan 110 ayatnya, baik dalam satu kali duduk maupun dicicil setelah sholat fardhu. Simak dan baca langsung di *[Al-Qur'an Surat Al-Kahfi](https://quran.com/18)*.
+Waktu membaca Surat Al-Kahfi dimulai sejak **terbenamnya matahari pada hari Kamis sore** (malam Jumat) hingga **terbenamnya matahari pada hari Jumat petang**. Rentang waktu lebih dari 24 jam ini memudahkan setiap muslim untuk menyelesaikan 110 ayatnya, baik dalam satu kali duduk maupun dicicil setelah sholat fardhu. Simak dan baca langsung di *[Al-Qur'an Surat Al-Kahfi](/quran/18)*.
 
 ## 4 Ujian Besar dalam Surat Al-Kahfi
 
@@ -180,7 +180,7 @@ Membaca dan merenungi Surat Al-Kahfi setiap pekan akan memperbaharui kompas hidu
 Dari Amirul Mukminin Abu Hafsh Umar bin Al-Khattab radhiyallahu 'anhu, ia berkata: Aku mendengar Rasulullah ﷺ bersabda:
 
 > "Sesungguhnya setiap amalan tergantung pada niatnya, dan setiap orang hanya akan mendapatkan apa yang ia niatkan. Barangsiapa yang hijrahnya karena Allah dan Rasul-Nya, maka hijrahnya kepada Allah dan Rasul-Nya. Dan barangsiapa yang hijrahnya karena dunia yang ingin diraihnya atau karena wanita yang ingin dinikahinya, maka hijrahnya kepada apa yang ia tuju."
-> *([HR. Bukhari no. 1](https://sunnah.com/bukhari:1) dan [HR. Muslim no. 1907](https://sunnah.com/muslim:1907))*
+> *([HR. Bukhari no. 1](/hadith/bukhari#1) dan [HR. Muslim no. 1907](/hadith/muslim#1907))*
 
 ## Kedudukan Agung Hadits Ini
 
@@ -197,7 +197,7 @@ Dalam tinjauan fiqih dan tasawuf syar'i, niat memiliki dua fungsi krusial:
 Niat berfungsi membedakan perbuatan yang bernilai ibadah dengan perbuatan biasa. Contoh: mandi untuk menyegarkan badan adalah kebiasaan, sedangkan mandi dengan niat bersuci dari hadats besar adalah ibadah yang sah.
 
 ### 2. Tamyizul Maqshud bil 'Amal (Membedakan Tujuan Pengabdian)
-Niat memastikan apakah suatu amal dikerjakan murni karena Allah (Ikhlas) atau demi pujian manusia (Riya' / Sum'ah). Amal yang tercemar riya' tidak hanya tertolak, tetapi mendatangkan dosa besar bagi pelakunya, sebagaimana dijelaskan dalam hadits qudsi riwayat *[HR. Muslim no. 2985](https://sunnah.com/muslim:2985)*.
+Niat memastikan apakah suatu amal dikerjakan murni karena Allah (Ikhlas) atau demi pujian manusia (Riya' / Sum'ah). Amal yang tercemar riya' tidak hanya tertolak, tetapi mendatangkan dosa besar bagi pelakunya, sebagaimana dijelaskan dalam hadits qudsi riwayat *[HR. Muslim no. 2985](/hadith/muslim#2985)*.
 
 ## Mengubah Kebiasaan Menjadi Pahala
 
@@ -218,7 +218,7 @@ Anak adalah karunia sekaligus amanah terberat bagi setiap orang tua muslim. Mena
 Rasulullah ﷺ meletakkan panduan tahapan usia yang jelas:
 
 > "Perintahkanlah anak-anak kalian untuk mendirikan sholat ketika mereka berumur tujuh tahun, dan pukullah mereka (dengan pukulan mendidik yang tidak melukai) jika meninggalkannya ketika mereka berumur sepuluh tahun, serta pisahkanlah tempat tidur mereka."
-> *([HR. Abu Dawud no. 495](https://sunnah.com/abudawud:495), dishahihkan oleh Syaikh Al-Albani)*
+> *([HR. Abu Dawud no. 495](/hadith/abu-daud#495), dishahihkan oleh Syaikh Al-Albani)*
 
 Rentang waktu dari usia 7 hingga 10 tahun (3 tahun) setara dengan lebih dari 5.000 waktu sholat. Ini menunjukkan bahwa mendidik sholat membutuhkan kesabaran, keteladanan, dan proses pembiasaan ribuan kali.
 
@@ -239,7 +239,7 @@ Jangan hanya memerintah. Ceritakan dengan bahasa sederhana bahwa sholat adalah t
 Lisan orang tua memiliki doa yang mustajab. Amalkan doa Nabi Ibrahim 'alaihissalam dalam Al-Qur'an:
 
 > *Robbij'alni muqiimash-sholaati wa min dzurriyyati, Robbanaa wa taqobbal du'aa'.*
-> "Ya Tuhanku, jadikanlah aku dan anak cucuku orang-orang yang tetap mendirikan sholat, ya Tuhan kami, perkenankanlah doaku." *([QS. Ibrahim: 40](https://quran.com/14/40))*`,
+> "Ya Tuhanku, jadikanlah aku dan anak cucuku orang-orang yang tetap mendirikan sholat, ya Tuhan kami, perkenankanlah doaku." *([QS. Ibrahim: 40](/quran/14#40))*`,
 		},
 		{
 			CategorySlug: "inspirasi-motivasi",
@@ -254,24 +254,24 @@ Banyak orang mengira istighfar hanya diucapkan ketika seseorang baru saja berbua
 Nabi Muhammad ﷺ yang telah diampuni seluruh dosanya yang lalu dan yang akan datang pun tetap beristighfar setiap hari:
 
 > "Demi Allah, sesungguhnya aku beristighfar kepada Allah dan bertaubat kepada-Nya dalam sehari lebih dari tujuh puluh kali."
-> *([HR. Bukhari no. 6307](https://sunnah.com/bukhari:6307))*
+> *([HR. Bukhari no. 6307](/hadith/bukhari#6307))*
 
 ## Janji Allah bagi Orang yang Beristighfar
 
 Dalam Surat Nuh ayat 10-12, Allah Ta'ala mengisahkan seruan Nabi Nuh kepada kaumnya tentang buah manis istighfar:
 
 > "Maka aku berkata kepada mereka: 'Mohonlah ampun kepada Tuhanmu, sesungguhnya Dia adalah Maha Pengampun. Niscaya Dia akan mengirimkan hujan yang lebat kepadamu, membanyakkan harta dan anak-anakmu, dan mengadakan untukmu kebun-kebun serta mengadakan (pula di dalamnya) untukmu sungai-sungai.'"
-> *([QS. Nuh: 10–12](https://quran.com/71/10-12))*
+> *([QS. Nuh: 10–12](/quran/71#10))*
 
 Ayat agung ini menegaskan bahwa istighfar bukan hanya menghapus dosa, tetapi menjadi kunci datangnya rezeki materi, keturunan yang shalih, dan kesuburan hidup.
 
 ## 3 Manfaat Nyata dalam Keseharian
 
-- **Jalan Keluar dari Kesulitan:** Rasulullah ﷺ bersabda bahwa siapa yang merutinkan istighfar, Allah jadikan baginya kelapangan dari setiap kesedihan dan jalan keluar dari setiap kesempitan *([HR. Abu Dawud no. 1518](https://sunnah.com/abudawud:1518))*.
-- **Ketenangan Jiwa:** Hati yang berlumur maksiat akan terasa berat dan gelisah. Istighfar membersihkan noda hitam pada hati sehingga ketenangan kembali bersemi *([HR. Tirmidzi no. 3334](https://sunnah.com/tirmidzi:3334))*.
-- **Menolak Azab dan Bencana:** Allah tidak akan mengazab suatu kaum selama mereka masih memohon ampunan kepada-Nya *([QS. Al-Anfal: 33](https://quran.com/8/33))*.
+- **Jalan Keluar dari Kesulitan:** Rasulullah ﷺ bersabda bahwa siapa yang merutinkan istighfar, Allah jadikan baginya kelapangan dari setiap kesedihan dan jalan keluar dari setiap kesempitan *([HR. Abu Dawud no. 1518](/hadith/abu-daud#1518))*.
+- **Ketenangan Jiwa:** Hati yang berlumur maksiat akan terasa berat dan gelisah. Istighfar membersihkan noda hitam pada hati sehingga ketenangan kembali bersemi *([HR. Tirmidzi no. 3334](/hadith/tirmidzi#3334))*.
+- **Menolak Azab dan Bencana:** Allah tidak akan mengazab suatu kaum selama mereka masih memohon ampunan kepada-Nya *([QS. Al-Anfal: 33](/quran/8#33))*.
 
-Jadikanlah lisan kita basah dengan minimal 100 kali *Astaghfirullah wa atuubu ilaih* setiap hari, terutama di waktu sahur menjelang Subuh *([HR. Muslim no. 2702](https://sunnah.com/muslim:2702))*.`,
+Jadikanlah lisan kita basah dengan minimal 100 kali *Astaghfirullah wa atuubu ilaih* setiap hari, terutama di waktu sahur menjelang Subuh *([HR. Muslim no. 2702](/hadith/muslim#2702))*.`,
 		},
 		{
 			CategorySlug: "fiqh-hukum",
@@ -286,12 +286,12 @@ Di antara amalan sunnah mingguan yang senantiasa dijaga oleh Nabi Muhammad ﷺ a
 Ketika ditanya mengenai puasa pada hari Senin, Rasulullah ﷺ menjawab:
 
 > "Itu adalah hari aku dilahirkan dan hari aku diutus atau diturunkannya wahyu kepadaku."
-> *([HR. Muslim no. 1162](https://sunnah.com/muslim:1162))*
+> *([HR. Muslim no. 1162](/hadith/muslim#1162))*
 
 Sedangkan mengenai hari Kamis, beliau ﷺ menjelaskan:
 
 > "Amal-amal kebajikan diperlihatkan (kepada Allah) pada hari Senin dan Kamis, maka aku menyukai amalku diperlihatkan dalam keadaan aku sedang berpuasa."
-> *([HR. Tirmidzi no. 747](https://sunnah.com/tirmidzi:747), dinilai hasan shahih)*
+> *([HR. Tirmidzi no. 747](/hadith/tirmidzi#747), dinilai hasan shahih)*
 
 ## Hikmah dan Manfaat Puasa Senin Kamis
 
@@ -301,11 +301,11 @@ Sedangkan mengenai hari Kamis, beliau ﷺ menjelaskan:
 
 ## Ketentuan Fiqih Puasa Sunnah
 
-- **Kelenturan Niat:** Berbeda dengan puasa wajib Ramadan yang mengharuskan niat sebelum terbit fajar (*tabyitun niyah*), niat puasa sunnah boleh dipasang di pagi atau siang hari selama belum memakan/meminum sesuatu dan belum melakukan hal yang membatalkan puasa *([HR. Muslim no. 1154](https://sunnah.com/muslim:1154))*.
+- **Kelenturan Niat:** Berbeda dengan puasa wajib Ramadan yang mengharuskan niat sebelum terbit fajar (*tabyitun niyah*), niat puasa sunnah boleh dipasang di pagi atau siang hari selama belum memakan/meminum sesuatu dan belum melakukan hal yang membatalkan puasa *([HR. Muslim no. 1154](/hadith/muslim#1154))*.
 - **Pahala Buka Puasa:** Bersegeralah berbuka saat adzan Maghrib berkumandang, diawali dengan kurma basah (*ruthab*), kurma kering (*tamr*), atau seteguk air putih.
 - **Doa Berbuka yang Shahih:**
   > *Dzahabazh-zhoma'u wabtallatil-'uruuqu wa tsabatal-ajru insyaa Allah.*
-  > "Telah hilang rasa dahaga, dan telah basah tenggorokan, dan telah tetap pahala insya Allah." *([HR. Abu Dawud no. 2357](https://sunnah.com/abudawud:2357))*`,
+  > "Telah hilang rasa dahaga, dan telah basah tenggorokan, dan telah tetap pahala insya Allah." *([HR. Abu Dawud no. 2357](/hadith/abu-daud#2357))*`,
 		},
 		{
 			CategorySlug: "fiqh-hukum",
@@ -320,20 +320,20 @@ Zakat merupakan rukun Islam ketiga yang memiliki dimensi ibadah vertikal sekalig
 Allah Ta'ala berfirman:
 
 > "Ambillah zakat dari sebagian harta mereka, dengan zakat itu kamu membersihkan dan mensucikan mereka..."
-> *([QS. At-Taubah: 103](https://quran.com/9/103))*
+> *([QS. At-Taubah: 103](/quran/9#103))*
 
 ## 2 Syarat Pokok Kewajiban Zakat Mal
 
 Harta simpanan (tabungan, emas, perak, aset lancar) wajib dizakati apabila memenuhi dua parameter syar'i:
 
-1. **Mencapai Nisab:** Batas minimal kepemilikan harta. Untuk zakat mal simpanan/uang, nisabnya disetarakan dengan **85 gram emas murni (24 karat)** sebagaimana dirujuk dari hadits riwayat *[HR. Abu Dawud no. 1573](https://sunnah.com/abudawud:1573)*.
-2. **Mencapai Haul:** Harta tersebut telah mengendap dan dimiliki selama **1 tahun hijriah** (sekitar 354 hari) tanpa berkurang di bawah angka nisab *([HR. Tirmidzi no. 631](https://sunnah.com/tirmidzi:631))*.
+1. **Mencapai Nisab:** Batas minimal kepemilikan harta. Untuk zakat mal simpanan/uang, nisabnya disetarakan dengan **85 gram emas murni (24 karat)** sebagaimana dirujuk dari hadits riwayat *[HR. Abu Dawud no. 1573](/hadith/abu-daud#1573)*.
+2. **Mencapai Haul:** Harta tersebut telah mengendap dan dimiliki selama **1 tahun hijriah** (sekitar 354 hari) tanpa berkurang di bawah angka nisab *([HR. Tirmidzi no. 631](/hadith/tirmidzi#631))*.
 
 ## Rumus Praktis Perhitungan
 
 Jika harga emas saat ini adalah Rp 1.400.000 / gram:
 - Nisab = 85 gram x Rp 1.400.000 = **Rp 119.000.000**
-- Apabila total saldo tabungan, deposito, dan emas cair Anda selama setahun bertahan di atas Rp 119.000.000, maka wajib dikeluarkan sebesar **2,5%**.
+- Apabila total saldo tabungan, deposito, dan emas cair Anda selama setahun bertahan di atas Rp 119.000.000, maka wajib dikeluarkan sebesar **2,5%**. Anda juga bisa menghitungnya langsung di *[Kalkulator Zakat](/zakat)*.
 
 > **Zakat Wajib = (Total Harta Simpanan – Hutang Jatuh Tempo) × 2,5%**
 
@@ -342,7 +342,7 @@ Zakat yang wajib dibayarkan = Rp 140.000.000 × 2,5% = **Rp 3.500.000**.
 
 ## 8 Golongan Penerima Zakat (*Asnaf*)
 
-Berdasarkan firman Allah dalam *[QS. At-Taubah: 60](https://quran.com/9/60)*, zakat hanya boleh disalurkan kepada delapan golongan:
+Berdasarkan firman Allah dalam *[QS. At-Taubah: 60](/quran/9#60)*, zakat hanya boleh disalurkan kepada delapan golongan:
 
 - Fakir (orang yang hampir tidak memiliki penghasilan)
 - Miskin (orang yang memiliki penghasilan namun tidak mencukupi kebutuhan pokok)
@@ -373,7 +373,7 @@ Setibanya di Madinah, Rasulullah ﷺ tidak langsung membangun benteng militer at
 Masjid difungsikan bukan hanya sebagai tempat sholat, tetapi juga pusat pendidikan, parlemen musyawarah, baitul mal, hingga pusat kegiatan sosial kemasyarakatan.
 
 ### 2. Mempersaudarakan Kaum Muhajirin dan Anshar
-Ikatan aqidah mengalahkan ikatan darah dan kesukuan. Kaum Anshar dengan penuh kerelaan membagi rumah, tanah, dan harta mereka kepada saudara-saudara Muhajirin yang datang tanpa membawa apa-apa dari Makkah sebagaimana dipuji Allah dalam *[QS. Al-Hasyr: 9](https://quran.com/59/9)*.
+Ikatan aqidah mengalahkan ikatan darah dan kesukuan. Kaum Anshar dengan penuh kerelaan membagi rumah, tanah, dan harta mereka kepada saudara-saudara Muhajirin yang datang tanpa membawa apa-apa dari Makkah sebagaimana dipuji Allah dalam *[QS. Al-Hasyr: 9](/quran/59#9)*.
 
 ### 3. Merumuskan Piagam Madinah (*Mitsaq al-Madinah*)
 Dokumen konstitusi tertulis pertama di dunia yang menjamin hak-hak asasi, kebebasan beragama, dan kewajiban bersama seluruh penduduk Madinah (termasuk kabilah Yahudi) untuk menjaga keamanan kota.
@@ -390,14 +390,14 @@ Dalam perjalanan hijrah, Rasulullah ﷺ memberikan teladan nyata tentang perpadu
 Namun ketika kaum kafir Quraisy telah berdiri tepat di bibir gua, kepasrahan tawakkal beliau terpancar indah kepada Abu Bakar ra:
 
 > "Janganlah engkau bersedih, sesungguhnya Allah bersama kita."
-> *([QS. At-Taubah: 40](https://quran.com/9/40))*
+> *([QS. At-Taubah: 40](/quran/9#40))*
 
 ## Makna Hijrah di Masa Kini
 
 Di zaman modern, pintu hijrah fisik memang telah usai setelah pembebasan Kota Makkah, namun esensi hijrah ruhiyah tetap terbuka hingga akhir zaman:
 
 > "Seorang muslim adalah orang yang menyelamatkan sesama muslim dari lisan dan tangannya. Dan orang yang berhijrah (*muhajir*) adalah orang yang meninggalkan apa yang dilarang oleh Allah."
-> *([HR. Bukhari no. 10](https://sunnah.com/bukhari:10))*`,
+> *([HR. Bukhari no. 10](/hadith/bukhari#10))*`,
 		},
 	}
 }
