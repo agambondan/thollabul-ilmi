@@ -182,6 +182,7 @@ const JadwalSholatPage = () => {
         settings.adzanReminderLead,
         settings.adzanReminderLeadByPrayer,
         getLeadForPrayer,
+        t,
     ]);
 
     const updateAdzanReminderLead = (value) =>

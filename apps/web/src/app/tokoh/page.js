@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import ContentWidth from "@/components/layout/ContentWidth";
 import Section from "@/components/Section";

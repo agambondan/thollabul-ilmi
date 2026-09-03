@@ -6,7 +6,7 @@ import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { forumApi } from "@/lib/api";
 import Link from "next/link";
-import { useEffect, useState, use } from "react";
+import { useCallback, useEffect, useState, use } from "react";
 import {
     BsArrowUp,
     BsCheckCircle,
@@ -29,7 +29,7 @@ export const ForumDetailContent = ({
     const [answerBody, setAnswerBody] = useState("");
     const [answering, setAnswering] = useState(false);
 
-    const fetchQuestion = () => {
+    const fetchQuestion = useCallback(() => {
         setLoading(true);
         forumApi
             .get(slug)
@@ -37,11 +37,11 @@ export const ForumDetailContent = ({
             .then((d) => setQuestion(d))
             .catch(() => setQuestion(null))
             .finally(() => setLoading(false));
-    };
+    }, [slug]);
 
     useEffect(() => {
         fetchQuestion();
-    }, [slug]);
+    }, [fetchQuestion]);
 
     const formatDate = (v) => {
         if (!v) return "";

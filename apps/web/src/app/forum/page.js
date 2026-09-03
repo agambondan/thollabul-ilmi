@@ -5,7 +5,7 @@ import Section from "@/components/Section";
 import { useLocale } from "@/context/Locale";
 import { forumApi } from "@/lib/api";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BsChatDots, BsPlusLg, BsSearch } from "react-icons/bs";
 import { MdQuestionAnswer } from "react-icons/md";
 
@@ -18,22 +18,25 @@ export function ForumListContent({ basePath = "/forum" }) {
     const [loading, setLoading] = useState(true);
     const size = 20;
 
-    const fetchQuestions = (p) => {
-        setLoading(true);
-        forumApi
-            .list({ page: String(p), size: String(size), q: search })
-            .then((r) => r.json())
-            .then((d) => {
-                setQuestions(d?.items ?? []);
-                setTotal(d?.total ?? 0);
-            })
-            .catch((e) => console.error(e))
-            .finally(() => setLoading(false));
-    };
+    const fetchQuestions = useCallback(
+        (p) => {
+            setLoading(true);
+            forumApi
+                .list({ page: String(p), size: String(size), q: search })
+                .then((r) => r.json())
+                .then((d) => {
+                    setQuestions(d?.items ?? []);
+                    setTotal(d?.total ?? 0);
+                })
+                .catch((e) => console.error(e))
+                .finally(() => setLoading(false));
+        },
+        [search],
+    );
 
     useEffect(() => {
         fetchQuestions(page);
-    }, [page]);
+    }, [page, fetchQuestions]);
 
     const totalPages = Math.ceil(total / size);
 

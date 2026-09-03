@@ -130,7 +130,7 @@ export default function ImsakiyahPage() {
             }
         };
         load();
-    }, [year, month, cityIndex, useGps, gpsCoords]);
+    }, [year, month, cityIndex, useGps, gpsCoords, t]);
 
     const prevMonth = () => {
         if (month === 1) {

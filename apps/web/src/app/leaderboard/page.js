@@ -64,7 +64,7 @@ const LeaderboardPage = () => {
             }
         };
         load();
-    }, [isAuthenticated]);
+    }, [isAuthenticated, t]);
 
     const currentData = tab === "streak" ? streakData : hafalanData;
     const searchQuery = search.trim().toLowerCase();

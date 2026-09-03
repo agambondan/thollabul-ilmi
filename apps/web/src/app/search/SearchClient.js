@@ -299,6 +299,7 @@ export default function SearchClient({
         ) {
             inputRef.current?.focus();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Mirror the search into the querystring: without it a result set could

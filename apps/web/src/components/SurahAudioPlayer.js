@@ -1,5 +1,5 @@
 "use client";
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @next/next/no-img-element */
 
 import { useLocale } from "@/context/Locale";
 import { audioApi, quranApi } from "@/lib/api";

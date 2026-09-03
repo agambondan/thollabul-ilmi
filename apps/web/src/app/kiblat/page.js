@@ -2,7 +2,7 @@
 
 import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BsGeoAlt } from "react-icons/bs";
 
 // Kaaba coordinates
@@ -46,7 +46,7 @@ export function KiblatContent() {
     const orientationRef = useRef(null);
     const [orientationSupported, setOrientationSupported] = useState(true);
 
-    const getLocation = () => {
+    const getLocation = useCallback(() => {
         if (!navigator.geolocation) {
             setError(t("geo.unsupported"));
             return;
@@ -74,11 +74,11 @@ export function KiblatContent() {
                 setLoading(false);
             },
         );
-    };
+    }, [t]);
 
     useEffect(() => {
         getLocation();
-    }, []);
+    }, [getLocation]);
 
     useEffect(() => {
         if (!coords) return;

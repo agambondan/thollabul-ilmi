@@ -1,6 +1,6 @@
 "use client";
 
-import { AsmaulHusnaContent } from "@/app/asmaul-husna/page";
+import { AsmaulHusnaContent } from "@/app/asmaul-husna/AsmaulHusnaClient";
 
 export default function DashboardAsmaulHusnaPage() {
     return (

@@ -111,7 +111,7 @@ const HijriPage = () => {
             }
         };
         load();
-    }, []);
+    }, [t]);
 
     const handleConvert = async (e) => {
         e.preventDefault();
