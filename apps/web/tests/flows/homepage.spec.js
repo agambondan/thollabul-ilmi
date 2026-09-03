@@ -10,8 +10,11 @@ test.describe("Homepage Journey", () => {
         await page.goto("/");
         await page.waitForLoadState("networkidle");
 
+        // The bottom mobile tab bar is also a <nav>, so this must not assert
+        // on "the one nav" — .first() checks that a top-level nav/header
+        // landmark exists without caring how many there are.
         await expect(
-            page.locator("nav").or(page.locator("header")),
+            page.locator("nav").or(page.locator("header")).first(),
         ).toBeVisible();
 
         const footer = page.locator("footer");

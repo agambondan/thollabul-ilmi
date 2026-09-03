@@ -148,7 +148,10 @@ export default function NotificationPermissionPrompt() {
 
     return (
         <div
-            className={`fixed inset-x-3 z-[70] mx-auto max-w-md rounded-2xl border border-emerald-100 bg-white p-4 shadow-2xl shadow-slate-900/15 dark:border-emerald-900/40 dark:bg-slate-900 ${
+            // z-[45]: above persistent chrome (bottom nav / docked sidebar sit at
+            // z-40) but below every modal (z-50+) — a dismissible nag must never be
+            // able to sit on top of, and block clicks on, an open dialog.
+            className={`fixed inset-x-3 z-[45] mx-auto max-w-md rounded-2xl border border-emerald-100 bg-white p-4 shadow-2xl shadow-slate-900/15 dark:border-emerald-900/40 dark:bg-slate-900 ${
                 isDashboard ? "bottom-24 sm:bottom-28" : "bottom-20 sm:bottom-5"
             }`}
         >
