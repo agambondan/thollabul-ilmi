@@ -21,6 +21,7 @@ const EMPTY_FORM = {
     indonesian: "",
     english: "",
     description: "",
+    source: "",
 };
 
 const AdminAsmaulHusnaPage = () => {
@@ -70,6 +71,7 @@ const AdminAsmaulHusnaPage = () => {
             english: item.english ?? "",
             description:
                 item.meaning ?? item.translation?.description_idn ?? "",
+            source: item.source ?? "",
         });
         setShowModal(true);
     };
@@ -363,6 +365,27 @@ const AdminAsmaulHusnaPage = () => {
                                     })
                                 }
                                 rows={3}
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                            />
+                        </div>
+                        <div>
+                            <label
+                                htmlFor='page-source'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                            >
+                                {t("admin.field.source")}
+                            </label>
+                            <input
+                                id='page-source'
+                                type='text'
+                                value={form.source}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        source: e.target.value,
+                                    })
+                                }
+                                placeholder='HR. Bukhari No. 2736; HR. Muslim No. 2677'
                                 className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>

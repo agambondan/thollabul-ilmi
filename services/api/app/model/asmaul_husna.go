@@ -11,6 +11,7 @@ type AsmaUlHusna struct {
 	Indonesian      string       `json:"indonesian" gorm:"type:varchar(256);not null"`
 	English         string       `json:"english" gorm:"type:varchar(256);not null"`
 	Meaning         string       `json:"meaning" gorm:"type:text"`
+	Source          string       `json:"source,omitempty" gorm:"type:varchar(256)"`
 	AudioURL        string       `json:"audio_url,omitempty" gorm:"type:varchar(512)"`
 	TranslationID   *int         `json:"translation_id,omitempty" gorm:"index"`
 	Translation     *Translation `json:"translation,omitempty" gorm:"foreignKey:TranslationID;-:migration"`

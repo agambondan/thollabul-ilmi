@@ -28,6 +28,7 @@ type asmaulHusnaAdminRequest struct {
 	Indonesian      string `json:"indonesian" validate:"required"`
 	English         string `json:"english" validate:"required"`
 	Description     string `json:"description"`
+	Source          string `json:"source"`
 	AudioURL        string `json:"audio_url"`
 }
 
@@ -132,6 +133,7 @@ func asmaulFromAdminRequest(req *asmaulHusnaAdminRequest) *model.AsmaUlHusna {
 		Indonesian:      req.Indonesian,
 		English:         req.English,
 		Meaning:         req.Description,
+		Source:          req.Source,
 		AudioURL:        req.AudioURL,
 	}
 }

@@ -78,6 +78,7 @@ func (r *asmaUlHusnaRepo) Update(id int, a *model.AsmaUlHusna) (*model.AsmaUlHus
 		"indonesian":      a.Indonesian,
 		"english":         a.English,
 		"meaning":         a.Meaning,
+		"source":          a.Source,
 		"audio_url":       a.AudioURL,
 		"translation_id":  trID,
 	}).Error; err != nil {

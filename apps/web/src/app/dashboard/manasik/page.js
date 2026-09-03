@@ -4,6 +4,7 @@ import { useLocale } from "@/context/Locale";
 import { getLocalizedField, getLocalizedTranslation } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import SourceBadges from "@/components/SourceBadges";
 
 const toStr = (v) => {
     if (!v) return "";
@@ -138,6 +139,9 @@ export default function DashboardManasikPage() {
                                                 lang,
                                             )}
                                         </p>
+                                    )}
+                                    {item.source && (
+                                        <SourceBadges source={item.source} />
                                     )}
                                     {(item.wajib !== undefined ||
                                         item.is_required !== undefined) && (

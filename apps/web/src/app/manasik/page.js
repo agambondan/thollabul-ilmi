@@ -9,6 +9,7 @@ import { useLayoutMode } from "@/lib/useLayoutMode";
 import { useEffect, useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { MdOutlineDirectionsWalk } from "react-icons/md";
+import SourceBadges from "@/components/SourceBadges";
 
 const ManasikPage = () => {
     const { t, lang } = useLocale();
@@ -232,6 +233,13 @@ const ManasikPage = () => {
                                                             📝 {step.notes}
                                                         </p>
                                                     </div>
+                                                )}
+
+                                                {/* Source */}
+                                                {step.source && (
+                                                    <SourceBadges
+                                                        source={step.source}
+                                                    />
                                                 )}
 
                                                 {/* Badge */}

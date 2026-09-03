@@ -187,6 +187,7 @@ const enAdmin = {
     "admin.error.load_data": "Failed to load data.",
     "admin.field.title": "Title",
     "admin.field.category": "Category",
+    "admin.field.source": "Source (dalil)",
     "admin.field.tag": "Tag",
     "admin.field.slug": "Slug",
     "admin.field.summary": "Summary",

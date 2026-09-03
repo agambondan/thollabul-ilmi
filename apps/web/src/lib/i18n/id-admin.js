@@ -189,6 +189,7 @@ const idAdmin = {
     "admin.error.load_data": "Gagal memuat data.",
     "admin.field.title": "Judul",
     "admin.field.category": "Kategori",
+    "admin.field.source": "Sumber (dalil)",
     "admin.field.tag": "Tag",
     "admin.field.slug": "Slug",
     "admin.field.summary": "Ringkasan",

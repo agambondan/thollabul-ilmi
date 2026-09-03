@@ -17,6 +17,7 @@ import {
 import { GiPrayerBeads } from "react-icons/gi";
 import { MdOutlineFlipCameraAndroid } from "react-icons/md";
 import { useModalA11y } from "@/lib/useModalA11y";
+import SourceBadges from "@/components/SourceBadges";
 
 export const AsmaulHusnaContent = () => {
     const { t, lang } = useLocale();
@@ -114,6 +115,11 @@ export const AsmaulHusnaContent = () => {
                     <p className='text-sm text-gray-500 dark:text-gray-400'>
                         {t("asmaul.subtitle")}
                     </p>
+                    {names[0]?.source && (
+                        <div className='mt-2 flex justify-center'>
+                            <SourceBadges source={names[0].source} />
+                        </div>
+                    )}
                 </div>
 
                 {/* Flashcard shortcut */}

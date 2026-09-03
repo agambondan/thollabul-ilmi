@@ -77,6 +77,7 @@ func (r *manasikRepository) Update(id int, step *model.ManasikStep) (*model.Mana
 		"transliteration": step.Transliteration,
 		"translation":     step.TranslationText,
 		"notes":           step.Notes,
+		"source":          step.Source,
 		"is_wajib":        step.IsWajib,
 		"translation_id":  trID,
 	}

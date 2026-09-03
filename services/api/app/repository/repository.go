@@ -275,6 +275,9 @@ func (s *Repositories) Seeder() error {
 	if err := migrations.BackfillTranslations(s.db); err != nil {
 		return err
 	}
+	if err := migrations.BackfillSources(s.db); err != nil {
+		return err
+	}
 	// File-based seeds: baca dari data/ jika belum ada di DB
 	migrations.SeedQuranFromFile(s.db)
 	migrations.SeedTafsirFromFiles(s.db)

@@ -25,6 +25,7 @@ const EMPTY_FORM = {
     translation: "",
     description: "",
     notes: "",
+    source: "",
     is_wajib: false,
 };
 
@@ -80,6 +81,7 @@ const AdminManasikPage = () => {
             translation: item.translation ?? "",
             description: item.description ?? "",
             notes: item.notes ?? "",
+            source: item.source ?? "",
             is_wajib: item.is_wajib ?? false,
         });
         setShowModal(true);
@@ -421,6 +423,27 @@ const AdminManasikPage = () => {
                                     })
                                 }
                                 rows={2}
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                            />
+                        </div>
+                        <div>
+                            <label
+                                htmlFor='page-source'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                            >
+                                {t("admin.field.source")}
+                            </label>
+                            <input
+                                id='page-source'
+                                type='text'
+                                value={form.source}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        source: e.target.value,
+                                    })
+                                }
+                                placeholder='QS. Al-Baqarah: 125 / HR. Bukhari No. 1751'
                                 className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>

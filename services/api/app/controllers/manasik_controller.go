@@ -32,6 +32,7 @@ type manasikAdminRequest struct {
 	Translation     string `json:"translation" validate:"required"`
 	Description     string `json:"description"`
 	Notes           string `json:"notes"`
+	Source          string `json:"source"`
 	IsWajib         bool   `json:"is_wajib"`
 }
 
@@ -47,6 +48,7 @@ type manasikAdminResponse struct {
 	Translation     string `json:"translation"`
 	Description     string `json:"description"`
 	Notes           string `json:"notes"`
+	Source          string `json:"source"`
 	IsWajib         bool   `json:"is_wajib"`
 }
 
@@ -263,6 +265,7 @@ func manasikFromAdminRequest(req *manasikAdminRequest) *model.ManasikStep {
 		Transliteration: latin,
 		TranslationText: req.Translation,
 		Notes:           req.Notes,
+		Source:          req.Source,
 		IsWajib:         req.IsWajib,
 	}
 }
@@ -280,6 +283,7 @@ func manasikToAdminResponse(step *model.ManasikStep) manasikAdminResponse {
 		Translation:     step.TranslationText,
 		Description:     step.Description,
 		Notes:           step.Notes,
+		Source:          step.Source,
 		IsWajib:         step.IsWajib,
 	}
 }
