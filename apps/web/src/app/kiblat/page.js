@@ -251,7 +251,7 @@ export function KiblatContent() {
                                         }}
                                     >
                                         <span
-                                            className='absolute left-1/2 -translate-x-1/2 top-3 text-xs font-extrabold text-gray-500 dark:text-gray-400'
+                                            className='absolute left-1/2 -translate-x-1/2 top-3 text-xs leading-none font-extrabold text-gray-500 dark:text-gray-400'
                                             style={{
                                                 transform: `rotate(${-(angle + ringRotationDeg)}deg)`,
                                             }}
@@ -301,7 +301,7 @@ export function KiblatContent() {
                                 sama dengan needleAngle 0/isPointing) supaya jarum terlihat
                                 mengarah ke sini persis saat sudah menghadap kiblat */}
                             <div
-                                className={`absolute -top-5 left-1/2 -translate-x-1/2 z-20 flex items-center justify-center w-11 h-11 rounded-full bg-white dark:bg-slate-800 border-2 shadow-md transition-colors duration-200 pointer-events-none ${
+                                className={`absolute -top-5 left-1/2 -translate-x-1/2 z-20 flex items-center justify-center w-12 h-12 rounded-full bg-white dark:bg-slate-800 border-2 shadow-md transition-colors duration-200 pointer-events-none ${
                                     isPointing
                                         ? "border-emerald-500 shadow-emerald-300/60 dark:shadow-emerald-900/40"
                                         : "border-emerald-200 dark:border-emerald-800"
