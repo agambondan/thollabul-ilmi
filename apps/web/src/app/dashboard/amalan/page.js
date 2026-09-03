@@ -5,6 +5,7 @@ import { useLocale } from "@/context/Locale";
 import { amalanApi, streakApi } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { BsCheckCircleFill, BsCircle } from "react-icons/bs";
+import SourceBadges from "@/components/SourceBadges";
 
 const FALLBACK_KEYS = [
     "amalan.item.subuh_jamaah",
@@ -71,6 +72,7 @@ const AmalanPage = () => {
                                 done: !!item.is_checked,
                                 serverId: item.id,
                                 isKey: false,
+                                source: item.source ?? "",
                             })),
                         );
                         setLoaded(true);
@@ -162,14 +164,19 @@ const AmalanPage = () => {
                                     ) : (
                                         <BsCircle className='text-gray-300 dark:text-slate-600 text-xl shrink-0' />
                                     )}
-                                    <span
-                                        className={`text-sm font-medium ${
-                                            done
-                                                ? "text-emerald-700 dark:text-emerald-400 line-through"
-                                                : "text-gray-700 dark:text-gray-300"
-                                        }`}
-                                    >
-                                        {label}
+                                    <span className='min-w-0'>
+                                        <span
+                                            className={`block text-sm font-medium ${
+                                                done
+                                                    ? "text-emerald-700 dark:text-emerald-400 line-through"
+                                                    : "text-gray-700 dark:text-gray-300"
+                                            }`}
+                                        >
+                                            {label}
+                                        </span>
+                                        {item.source && (
+                                            <SourceBadges source={item.source} />
+                                        )}
                                     </span>
                                 </button>
                             </li>

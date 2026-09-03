@@ -2,8 +2,16 @@
 
 import { adminBlogApi, blogApi } from "@/lib/api";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
-import { BsPencil, BsPlus, BsTrash, BsX } from "react-icons/bs";
+import { useCallback, useEffect, useState, useMemo } from "react";
+import {
+    BsPencil,
+    BsPlus,
+    BsTrash,
+    BsX,
+    BsSearch,
+    BsFilter,
+    BsEye,
+} from "react-icons/bs";
 import { Spinner3 } from "@/components/spinner/Spinner";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
@@ -11,15 +19,15 @@ import { getLocalizedField } from "@/lib/translation";
 const STATUS_LABELS = {
     draft: {
         labelKey: "admin.status.draft",
-        cls: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400",
+        cls: "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-900/60",
     },
     published: {
         labelKey: "admin.status.published",
-        cls: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400",
+        cls: "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-900/60",
     },
     archived: {
         labelKey: "admin.status.archived",
-        cls: "bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400",
+        cls: "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-slate-700",
     },
 };
 
@@ -31,6 +39,10 @@ const AdminBlogPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const [actionError, setActionError] = useState("");
+
+    const [searchQuery, setSearchQuery] = useState("");
+    const [statusFilter, setStatusFilter] = useState("all");
+    const [categoryFilter, setCategoryFilter] = useState("all");
 
     const [newCatName, setNewCatName] = useState("");
     const [newTagName, setNewTagName] = useState("");
@@ -145,11 +157,37 @@ const AdminBlogPage = () => {
         }
     };
 
+    const filteredPosts = useMemo(() => {
+        return posts.filter((post) => {
+            const matchSearch =
+                !searchQuery ||
+                (post.title &&
+                    post.title
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase())) ||
+                (post.slug &&
+                    post.slug
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase()));
+
+            const matchStatus =
+                statusFilter === "all" || post.status === statusFilter;
+
+            const matchCategory =
+                categoryFilter === "all" ||
+                String(post.category_id ?? post.category?.id) ===
+                    String(categoryFilter);
+
+            return matchSearch && matchStatus && matchCategory;
+        });
+    }, [posts, searchQuery, statusFilter, categoryFilter]);
+
     if (isLoading) return <Spinner3 />;
 
     return (
-        <div className='p-8'>
-            <div className='flex items-center justify-between mb-8'>
+        <div className='p-6 md:p-8 max-w-7xl mx-auto'>
+            {/* Header */}
+            <div className='flex flex-wrap items-center justify-between gap-4 mb-8'>
                 <div>
                     <h1 className='text-2xl font-bold text-gray-900 dark:text-white'>
                         {t("admin.nav.blog")}
@@ -160,9 +198,9 @@ const AdminBlogPage = () => {
                 </div>
                 <Link
                     href='/admin/blog/new'
-                    className='flex items-center gap-2 px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-sm font-medium transition-colors'
+                    className='flex items-center gap-2 px-5 py-2.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-sm font-semibold shadow-md shadow-emerald-700/20 transition-all'
                 >
-                    <BsPlus className='text-lg' />
+                    <BsPlus className='text-xl' />
                     {t("admin.blog.new_article")}
                 </Link>
             </div>
@@ -178,34 +216,83 @@ const AdminBlogPage = () => {
                 </p>
             )}
 
+            {/* Filter Bar */}
+            <div className='flex flex-wrap gap-3 mb-6'>
+                <div className='flex-1 min-w-[220px] relative'>
+                    <BsSearch className='absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs' />
+                    <input
+                        type='text'
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder='Cari judul atau slug artikel...'
+                        className='w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                    />
+                </div>
+
+                <div className='flex items-center gap-2'>
+                    <div className='flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-gray-500'>
+                        <BsFilter />
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className='bg-transparent text-gray-900 dark:text-white focus:outline-none'
+                        >
+                            <option value='all'>Semua Status</option>
+                            <option value='published'>Published</option>
+                            <option value='draft'>Draft</option>
+                            <option value='archived'>Archived</option>
+                        </select>
+                    </div>
+
+                    <div className='flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-gray-500'>
+                        <select
+                            value={categoryFilter}
+                            onChange={(e) => setCategoryFilter(e.target.value)}
+                            className='bg-transparent text-gray-900 dark:text-white focus:outline-none'
+                        >
+                            <option value='all'>Semua Kategori</option>
+                            {categories.map((c) => (
+                                <option key={c.id} value={c.id}>
+                                    {c.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             {/* Post list */}
-            <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden mb-8'>
-                {posts.length === 0 ? (
-                    <div className='p-8 text-center text-gray-400 text-sm'>
-                        {t("admin.blog.empty_articles")}
+            <div className='bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden mb-10'>
+                {filteredPosts.length === 0 ? (
+                    <div className='p-12 text-center text-gray-400 text-sm'>
+                        {posts.length === 0
+                            ? t("admin.blog.empty_articles")
+                            : "Tidak ada artikel yang sesuai filter."}
                     </div>
                 ) : (
                     <div className='overflow-x-auto'>
                         <table className='w-full text-sm min-w-[640px]'>
-                            <thead className='bg-gray-50 dark:bg-slate-900 text-left'>
+                            <thead className='bg-gray-50/80 dark:bg-slate-900/60 text-left border-b border-gray-100 dark:border-slate-700'>
                                 <tr>
-                                    <th className='px-5 py-3 font-semibold text-gray-600 dark:text-gray-300'>
+                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
                                         {t("admin.field.title")}
                                     </th>
-                                    <th className='px-5 py-3 font-semibold text-gray-600 dark:text-gray-300 hidden md:table-cell'>
+                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell'>
                                         {t("admin.field.category")}
                                     </th>
-                                    <th className='px-5 py-3 font-semibold text-gray-600 dark:text-gray-300'>
+                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
                                         {t("common.status")}
                                     </th>
-                                    <th className='px-5 py-3 font-semibold text-gray-600 dark:text-gray-300 hidden sm:table-cell'>
+                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell'>
                                         {t("common.date")}
                                     </th>
-                                    <th className='px-5 py-3'></th>
+                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right'>
+                                        Aksi
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody className='divide-y divide-gray-100 dark:divide-slate-700'>
-                                {posts.map((post) => {
+                                {filteredPosts.map((post) => {
                                     const badge =
                                         STATUS_LABELS[post.status] ??
                                         STATUS_LABELS.draft;
@@ -217,10 +304,10 @@ const AdminBlogPage = () => {
                                     return (
                                         <tr
                                             key={post.id}
-                                            className='hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors'
+                                            className='hover:bg-gray-50/50 dark:hover:bg-slate-750 transition-colors'
                                         >
-                                            <td className='px-5 py-3'>
-                                                <p className='font-medium text-gray-900 dark:text-white line-clamp-1'>
+                                            <td className='px-6 py-4'>
+                                                <p className='font-semibold text-gray-900 dark:text-white line-clamp-1'>
                                                     {title}
                                                 </p>
                                                 {getLocalizedField(
@@ -236,18 +323,27 @@ const AdminBlogPage = () => {
                                                         )}
                                                     </p>
                                                 )}
+                                                <p className='text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5 truncate'>
+                                                    /blog/{post.slug}
+                                                </p>
                                             </td>
-                                            <td className='px-5 py-3 text-gray-500 dark:text-gray-400 hidden md:table-cell'>
-                                                {post.category?.name ?? "—"}
+                                            <td className='px-6 py-4 text-gray-500 dark:text-gray-400 text-xs hidden md:table-cell'>
+                                                {post.category?.name ? (
+                                                    <span className='px-2.5 py-1 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300'>
+                                                        {post.category.name}
+                                                    </span>
+                                                ) : (
+                                                    "—"
+                                                )}
                                             </td>
-                                            <td className='px-5 py-3'>
+                                            <td className='px-6 py-4'>
                                                 <span
-                                                    className={`px-2 py-0.5 rounded-full text-xs font-medium ${badge.cls}`}
+                                                    className={`px-2.5 py-1 rounded-full text-xs font-semibold ${badge.cls}`}
                                                 >
                                                     {t(badge.labelKey)}
                                                 </span>
                                             </td>
-                                            <td className='px-5 py-3 text-gray-400 text-xs hidden sm:table-cell'>
+                                            <td className='px-6 py-4 text-gray-400 text-xs hidden sm:table-cell'>
                                                 {post.published_at
                                                     ? new Date(
                                                           post.published_at,
@@ -264,13 +360,22 @@ const AdminBlogPage = () => {
                                                               : "id-ID",
                                                       )}
                                             </td>
-                                            <td className='px-5 py-3'>
-                                                <div className='flex items-center gap-1 justify-end'>
+                                            <td className='px-6 py-4'>
+                                                <div className='flex items-center gap-1.5 justify-end'>
+                                                    <Link
+                                                        href={`/blog/${post.slug}`}
+                                                        target='_blank'
+                                                        aria-label={`Lihat ${title}`}
+                                                        title={`Lihat ${title}`}
+                                                        className='p-2 rounded-xl text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
+                                                    >
+                                                        <BsEye />
+                                                    </Link>
                                                     <Link
                                                         href={`/admin/blog/${post.id}/edit`}
                                                         aria-label={`${t("common.edit")} ${title}`}
                                                         title={`${t("common.edit")} ${title}`}
-                                                        className='p-2 rounded-lg text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
+                                                        className='p-2 rounded-xl text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                                                     >
                                                         <BsPencil />
                                                     </Link>
@@ -282,7 +387,7 @@ const AdminBlogPage = () => {
                                                         }
                                                         aria-label={`${t("common.delete")} ${title}`}
                                                         title={`${t("common.delete")} ${title}`}
-                                                        className='p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
+                                                        className='p-2 rounded-xl text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/40 transition-colors'
                                                     >
                                                         <BsTrash />
                                                     </button>
@@ -297,11 +402,11 @@ const AdminBlogPage = () => {
                 )}
             </div>
 
-            {/* Categories & Tags */}
+            {/* Categories & Tags Management */}
             <div className='grid md:grid-cols-2 gap-6'>
                 {/* Categories */}
-                <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                    <h2 className='text-base font-bold text-gray-900 dark:text-white mb-4'>
+                <div className='bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 p-6 shadow-sm'>
+                    <h2 className='text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-white mb-4'>
                         {t("admin.field.category")}
                     </h2>
                     <form
@@ -314,25 +419,25 @@ const AdminBlogPage = () => {
                             placeholder={t(
                                 "admin.blog.new_category_placeholder",
                             )}
-                            className='flex-1 px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                            className='flex-1 px-3.5 py-2 text-xs rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                         />
                         <button
                             type='submit'
                             disabled={catLoading}
                             aria-label={`${t("admin.crud.add")} ${t("admin.field.category")}`}
                             title={`${t("admin.crud.add")} ${t("admin.field.category")}`}
-                            className='px-3 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-60 text-white rounded-lg text-sm transition-colors'
+                            className='px-4 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-60 text-white rounded-xl text-xs font-semibold transition-colors'
                         >
-                            <BsPlus className='text-lg' />
+                            <BsPlus className='text-base' />
                         </button>
                     </form>
-                    <div className='space-y-2'>
+                    <div className='space-y-2 max-h-60 overflow-y-auto pr-1'>
                         {categories.map((cat) => (
                             <div
                                 key={cat.id}
-                                className='flex items-center justify-between px-3 py-2 rounded-lg bg-gray-50 dark:bg-slate-700'
+                                className='flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-gray-50 dark:bg-slate-700/50'
                             >
-                                <span className='text-sm text-gray-700 dark:text-gray-200'>
+                                <span className='text-xs font-medium text-gray-700 dark:text-gray-200'>
                                     {cat.name}
                                 </span>
                                 <button
@@ -341,7 +446,7 @@ const AdminBlogPage = () => {
                                     title={`${t("common.delete")} ${cat.name}`}
                                     className='text-gray-400 hover:text-red-500 transition-colors p-1'
                                 >
-                                    <BsX />
+                                    <BsX className='text-base' />
                                 </button>
                             </div>
                         ))}
@@ -354,8 +459,8 @@ const AdminBlogPage = () => {
                 </div>
 
                 {/* Tags */}
-                <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                    <h2 className='text-base font-bold text-gray-900 dark:text-white mb-4'>
+                <div className='bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 p-6 shadow-sm'>
+                    <h2 className='text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-white mb-4'>
                         {t("admin.field.tag")}
                     </h2>
                     <form
@@ -366,23 +471,23 @@ const AdminBlogPage = () => {
                             value={newTagName}
                             onChange={(e) => setNewTagName(e.target.value)}
                             placeholder={t("admin.blog.new_tag_placeholder")}
-                            className='flex-1 px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                            className='flex-1 px-3.5 py-2 text-xs rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                         />
                         <button
                             type='submit'
                             disabled={tagLoading}
                             aria-label={`${t("admin.crud.add")} ${t("admin.field.tag")}`}
                             title={`${t("admin.crud.add")} ${t("admin.field.tag")}`}
-                            className='px-3 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-60 text-white rounded-lg text-sm transition-colors'
+                            className='px-4 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-60 text-white rounded-xl text-xs font-semibold transition-colors'
                         >
-                            <BsPlus className='text-lg' />
+                            <BsPlus className='text-base' />
                         </button>
                     </form>
-                    <div className='flex flex-wrap gap-2'>
+                    <div className='flex flex-wrap gap-2 max-h-60 overflow-y-auto pr-1'>
                         {tags.map((tag) => (
                             <span
                                 key={tag.id}
-                                className='flex items-center gap-1.5 px-3 py-1 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 rounded-full text-xs'
+                                className='flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-slate-700/60 text-gray-600 dark:text-gray-300 rounded-full text-xs font-medium border border-gray-200/60 dark:border-slate-600'
                             >
                                 #{tag.name}
                                 <button
@@ -391,7 +496,7 @@ const AdminBlogPage = () => {
                                     title={`${t("common.delete")} ${tag.name}`}
                                     className='text-gray-400 hover:text-red-500 transition-colors'
                                 >
-                                    <BsX />
+                                    <BsX className='text-sm' />
                                 </button>
                             </span>
                         ))}
