@@ -227,7 +227,7 @@ export function KiblatContent() {
                 <>
                     {/* Compass */}
                     <div className='flex flex-col items-center mb-8'>
-                        <div className='relative w-72 h-72'>
+                        <div className='relative w-72 h-72 mt-6'>
                             {/* Compass ring */}
                             <div className='absolute inset-0 rounded-full border-4 border-emerald-200 dark:border-emerald-800 bg-white dark:bg-slate-800 shadow-xl'>
                                 {/* Cardinal points */}
@@ -297,9 +297,17 @@ export function KiblatContent() {
                                 </div>
                             </div>
 
-                            {/* Ka'bah icon at center */}
-                            <div className='absolute inset-0 flex items-center justify-center pointer-events-none'>
-                                <span className='text-2xl z-20 mt-1'>🕋</span>
+                            {/* Ka'bah target -- di luar cincin, di posisi 12 (arah yang
+                                sama dengan needleAngle 0/isPointing) supaya jarum terlihat
+                                mengarah ke sini persis saat sudah menghadap kiblat */}
+                            <div
+                                className={`absolute -top-5 left-1/2 -translate-x-1/2 z-20 flex items-center justify-center w-11 h-11 rounded-full bg-white dark:bg-slate-800 border-2 shadow-md transition-colors duration-200 pointer-events-none ${
+                                    isPointing
+                                        ? "border-emerald-500 shadow-emerald-300/60 dark:shadow-emerald-900/40"
+                                        : "border-emerald-200 dark:border-emerald-800"
+                                }`}
+                            >
+                                <span className='text-xl'>🕋</span>
                             </div>
                         </div>
 
