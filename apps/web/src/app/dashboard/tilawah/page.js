@@ -3,6 +3,7 @@
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { streakApi, tilawahApi } from "@/lib/api";
+import { SURAH_LIST } from "@/lib/surahList";
 import { useEffect, useState } from "react";
 import { BsJournalCheck, BsX } from "react-icons/bs";
 import { useModalA11y } from "@/lib/useModalA11y";
@@ -31,9 +32,9 @@ const isSameMonth = (dateStr) => {
 
 const emptyForm = () => ({
     surah: "",
-    ayahFrom: "",
+    ayahFrom: "1",
     ayahTo: "",
-    pages: "",
+    pages: "1",
     notes: "",
 });
 
@@ -301,19 +302,34 @@ const TilawahPage = () => {
                                 >
                                     {t("tilawah.label_surah")}
                                 </label>
-                                <input
+                                <select
                                     id='page-label-surah'
-                                    type='text'
                                     value={form.surah}
-                                    onChange={(e) =>
+                                    onChange={(e) => {
+                                        const selectedName = e.target.value;
+                                        const found = SURAH_LIST.find(
+                                            (s) => s.name === selectedName,
+                                        );
                                         setForm((f) => ({
                                             ...f,
-                                            surah: e.target.value,
-                                        }))
-                                    }
-                                    placeholder={t("tilawah.surah_placeholder")}
+                                            surah: selectedName,
+                                            ayahFrom: found ? "1" : f.ayahFrom,
+                                            ayahTo: found
+                                                ? String(found.ayat)
+                                                : f.ayahTo,
+                                        }));
+                                    }}
                                     className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
-                                />
+                                >
+                                    <option value=''>
+                                        -- {t("tilawah.select_surah_placeholder")} --
+                                    </option>
+                                    {SURAH_LIST.map((s) => (
+                                        <option key={s.number} value={s.name}>
+                                            {s.number}. {s.name} ({s.ayat} ayat)
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className='grid grid-cols-2 gap-3'>
                                 <div>
