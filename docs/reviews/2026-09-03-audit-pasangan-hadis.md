@@ -2,7 +2,7 @@
 
 Tanggal: `2026-09-03`
 Scope: seluruh data hadis di API produksi (9 kitab, 61.125 baris)
-Status: `PENYEBAB DITEMUKAN — PERBAIKAN SIAP, MENUNGGU PERSETUJUAN`
+Status: `SUDAH DITERAPKAN DI PRODUKSI 2026-09-03`
 Branch: `master @ b13d228`
 
 Audit ini berangkat dari satu keluhan konkret: gambar share hadis menampilkan
@@ -227,9 +227,44 @@ di terjemahannya.
 - Gerbang ini memeriksa **sanad**, bukan matan. Pasangan yang sanadnya benar tapi
   matannya tertukar tidak akan tertangkap.
 
-### Menjalankan
+### Hasil setelah diterapkan
 
-Berkas SQL sudah dihasilkan tapi **belum dijalankan**. Lihat
+Diterapkan ke database produksi 2026-09-03, tujuh kitab, 3.631 UPDATE.
+Dump database diambil lebih dulu (`/works/me/backups/`, 35 MB, integritas gzip
+diuji), dan setiap kitab punya berkas rollback.
+
+Angka sebelum dan sesudah di bawah diukur dengan **matcher versi yang sama**.
+Perbandingan mentah antar-waktu tidak sahih karena matcher-nya ikut diperbaiki
+di tengah pengerjaan; Ahmad dan Darimi yang tidak disentuh dipakai sebagai
+kontrol dan keduanya bergerak 0,0% — itu yang menjadikan angka ini bisa
+dipercaya.
+
+| Kitab     | Sebelum  | Sesudah  | Turun    |
+| --------- | -------- | -------- | -------- |
+| muslim    | 24,0%    | 3,3%     | 20,7%    |
+| abudaud   | 13,6%    | 1,9%     | 11,7%    |
+| malik     | 13,3%    | 3,6%     | 9,7%     |
+| tirmidzi  | 9,9%     | 1,6%     | 8,4%     |
+| bukhari   | 9,0%     | 1,7%     | 7,3%     |
+| nasai     | 4,6%     | 0,6%     | 3,9%     |
+| ibnumajah | 0,9%     | 0,4%     | 0,5%     |
+| ahmad \*  | 1,7%     | 1,7%     | 0,0%     |
+| darimi \* | 0,5%     | 0,5%     | 0,0%     |
+| **TOTAL** | **9,4%** | **1,7%** | **7,7%** |
+
+\* kontrol, tidak disentuh
+
+Baris yang ditandai beda: **3.581 → 642**.
+
+Pemeriksaan regresi baris per baris: **3.609 baris membaik, 0 baris memburuk.**
+
+Sisa 642 baris sebagian besar adalah baris yang sengaja dikarantina — teks Arab
+penggantinya pun tidak lolos uji, jadi dibiarkan apa adanya alih-alih ditukar
+dengan yang belum pasti. Baris-baris itu masih menunggu pembacaan manusia.
+
+### Menjalankan ulang
+
+Lihat
 [`services/api/scripts/repair_hadith_pairing/README.md`](../../services/api/scripts/repair_hadith_pairing/README.md).
 Ambil dump database dulu sebelum apply; tiap `apply_*.sql` punya pasangan
 `rollback_*.sql`.
