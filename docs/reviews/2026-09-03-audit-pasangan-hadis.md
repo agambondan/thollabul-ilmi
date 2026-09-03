@@ -268,3 +268,64 @@ Lihat
 [`services/api/scripts/repair_hadith_pairing/README.md`](../../services/api/scripts/repair_hadith_pairing/README.md).
 Ambil dump database dulu sebelum apply; tiap `apply_*.sql` punya pasangan
 `rollback_*.sql`.
+
+---
+
+## Sisa Lubang: Apa yang Sudah Dicoba dan Kenapa Gagal (2026-09-03)
+
+Ketiga sisa lubang dicoba ditambal lewat scraping dan sumber lain. Ketiganya
+buntu, dan alasannya dicatat di sini supaya tidak diulang.
+
+### hadits.in sudah tidak menyajikan teks Arab
+
+Situsnya masih hidup dan terjemahannya masih ada, tapi `#arabic_container`
+kosong di semua halaman yang diuji — nol huruf Arab, baik di HTML mentah maupun
+setelah JavaScript selesai jalan. Situsnya juga sudah dipasangi Cloudflare bot
+protection. `scripts/scrape_arabic_gaps.py` berhasil dulu, sekarang tidak akan.
+
+### hadits.in menyajikan hadis nomor 1 untuk nomor yang tidak ada
+
+Ini jebakan yang paling berbahaya. Untuk nomor di luar jangkauannya, hadits.in
+**tidak** mengembalikan 404 — ia menyajikan terjemahan Bukhari nomor 1
+("Semua perbuatan tergantung niatnya..."). Dari 30 sampel acak baris tanpa
+terjemahan, 15 mengembalikan teks itu.
+
+Scraping massal tanpa memeriksa hal ini akan mengisi ribuan baris dengan hadis
+yang salah — persis kerusakan yang baru saja diperbaiki.
+
+Dari 1.422 baris tanpa terjemahan, **1.063 nomornya di luar jangkauan
+hadits.in** (nomor di database kita campuran dua skema: hadits.in dan
+fawazahmed0 yang penomorannya lebih panjang). Sisanya 359 memang ada, tapi
+terjemahan yang disajikan tidak menyertakan nama perawi dalam kurung siku
+sehingga gerbang mutu tidak bisa menilai pasangannya, sementara teks Arab baris
+itu belum pernah ikut diperbaiki.
+
+### Tidak ada sumber Arab untuk Musnad Ahmad
+
+| Sumber                 | Cakupan Ahmad       |
+| ---------------------- | ------------------- |
+| hadits.in              | Arab sudah dicabut  |
+| fawazahmed0/hadith-api | tidak punya Ahmad   |
+| AhmedBaset/hadith-json | 1.374 dari ~27.000  |
+| gadingnst/hadith-api   | 4.305 (sudah masuk) |
+
+### Mencari teks Arab lewat kemiripan sanad tidak aman
+
+Untuk 642 baris karantina, dicoba mencarikan teks Arab dari korpus lain dengan
+mencocokkan nama perawi. Hasilnya: **tidak satu pun baris menghasilkan kandidat
+tunggal.** Bukhari 2–102 kandidat per baris, satu baris Muslim sampai 1.276.
+
+Sanad dipakai bersama banyak hadis — satu rantai perawi meriwayatkan puluhan
+matan berbeda. Memilih salah satunya sama dengan menebak isi hadis, dan itu
+tidak boleh.
+
+### Kesimpulan
+
+Sisa lubang tidak bisa ditambal otomatis dari sumber yang dapat diakses. Yang
+dibutuhkan adalah sumber yang menyediakan **Arab dan terjemahan sekaligus dalam
+satu record** untuk Musnad Ahmad dan untuk baris-baris karantina — misalnya
+lisensi data dari penerbit Ensiklopedi Hadits, atau pengetikan/penyelarasan
+manual oleh orang yang paham hadis.
+
+Sampai itu ada, membiarkan baris kosong lebih benar daripada mengisinya dengan
+tebakan.
