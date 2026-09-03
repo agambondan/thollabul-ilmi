@@ -296,16 +296,25 @@ func backfillBlogTags(db *gorm.DB) error {
 
 func backfillBlogPosts(db *gorm.DB) error {
 	var rows []model.BlogPost
-	if err := db.Where("translation_id IS NULL").Find(&rows).Error; err != nil {
+	if err := db.Find(&rows).Error; err != nil {
 		return err
 	}
 	for _, row := range rows {
-		tr := &model.Translation{
-			Idn:            stringPtr(row.Title),
-			DescriptionIdn: stringPtr(row.Content),
-		}
-		if err := linkTranslation(db, "blog_post", "id", row.ID, tr); err != nil {
-			return err
+		if row.TranslationID == nil {
+			tr := &model.Translation{
+				Idn:            stringPtr(row.Title),
+				DescriptionIdn: stringPtr(row.Content),
+			}
+			if err := linkTranslation(db, "blog_post", "id", row.ID, tr); err != nil {
+				return err
+			}
+		} else {
+			db.Model(&model.Translation{}).
+				Where("id = ?", *row.TranslationID).
+				Updates(map[string]interface{}{
+					"idn":             row.Title,
+					"description_idn": row.Content,
+				})
 		}
 	}
 	return nil
