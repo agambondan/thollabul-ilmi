@@ -43,6 +43,7 @@ import {
     schedulePrayerReminders,
     showPrayerTimeNotification,
 } from "../utils/prayerNotifications";
+import { ADZAN_SOUNDS, getAdzanSound } from "../utils/adzanSounds";
 
 const scheduleRows = [
     ["imsak", "prayer.name.imsak"],
@@ -170,6 +171,7 @@ export function PrayerScreen({ isActive, navigation }) {
     const [adjustments, setAdjustments] = useState(defaultAdjustments);
     const [reminderEnabled, setReminderEnabled] = useState(false);
     const [adzanAudioEnabled, setAdzanAudioEnabled] = useState(false);
+    const [adzanSound, setAdzanSound] = useState("default");
     const [reminderLeadMinutes, setReminderLeadMinutes] = useState(10);
     const [reminderPrayers, setReminderPrayers] = useState(
         defaultReminderPrayers,
@@ -469,8 +471,8 @@ export function PrayerScreen({ isActive, navigation }) {
                     playsInSilentMode: true,
                     shouldPlayInBackground: true,
                 });
-                const fileName = prayerKey === "fajr" ? "subuh" : "standard";
-                const url = `https://raw.githubusercontent.com/syamilmj/Adzan/refs/heads/master/adzan/${fileName}.mp3`;
+                const sound = getAdzanSound(adzanSound);
+                const url = sound.src;
                 if (!playerRef.current) {
                     playerRef.current = createAudioPlayer(url, {
                         downloadFirst: true,
@@ -484,7 +486,7 @@ export function PrayerScreen({ isActive, navigation }) {
                 adzanTimerRef.current = setTimeout(() => stopAdzan(), 30000);
             } catch {}
         },
-        [adzanAudioEnabled],
+        [adzanAudioEnabled, adzanSound],
     );
 
     const stopAdzan = useCallback(() => {
@@ -620,6 +622,11 @@ export function PrayerScreen({ isActive, navigation }) {
         setMessage(t(next ? "prayer.adzan.enabled" : "prayer.adzan.disabled"));
     };
 
+    const selectAdzanSound = async (value) => {
+        setAdzanSound(value);
+        await writePreference(preferenceKeys.prayerAdzanSound, value);
+    };
+
     const toggleReminderPrayer = async (key) => {
         const exists = reminderPrayers.includes(key);
         const next = exists
@@ -746,6 +753,7 @@ export function PrayerScreen({ isActive, navigation }) {
                 defaultAdjustments,
             ),
             readPreference(preferenceKeys.prayerAdzanAudioEnabled, false),
+            readPreference(preferenceKeys.prayerAdzanSound, "default"),
             readPreference(preferenceKeys.prayerReminderEnabled, false),
             readPreference(preferenceKeys.prayerReminderLeadMinutes, 10),
             readPreference(
@@ -759,6 +767,7 @@ export function PrayerScreen({ isActive, navigation }) {
                 savedMadhab,
                 savedAdjustments,
                 savedAdzanAudioEnabled,
+                savedAdzanSound,
                 savedReminderEnabled,
                 savedLeadMinutes,
                 savedReminderPrayers,
@@ -778,6 +787,12 @@ export function PrayerScreen({ isActive, navigation }) {
                         : {}),
                 });
                 setAdzanAudioEnabled(Boolean(savedAdzanAudioEnabled));
+                if (
+                    typeof savedAdzanSound === "string" &&
+                    ADZAN_SOUNDS.some((s) => s.value === savedAdzanSound)
+                ) {
+                    setAdzanSound(savedAdzanSound);
+                }
                 setReminderEnabled(Boolean(savedReminderEnabled));
                 if (reminderLeadOptions.includes(savedLeadMinutes)) {
                     setReminderLeadMinutes(savedLeadMinutes);
@@ -1180,8 +1195,51 @@ export function PrayerScreen({ isActive, navigation }) {
                                         >
                                             +1
                                         </Text>
-                                    </Pressable>
-                                </View>
+                        </Pressable>
+                    </View>
+
+                    {adzanAudioEnabled && (
+                        <>
+                            <Text style={styles.settingsLabel}>
+                                {t("prayer.reminder.audio_choice") ?? "Pilihan Muadzin / Suara Adzan"}
+                            </Text>
+                            <View style={styles.adzanSoundList}>
+                                {ADZAN_SOUNDS.map((sound) => {
+                                    const isSelected = adzanSound === sound.value;
+                                    return (
+                                        <Pressable
+                                            accessibilityRole='button'
+                                            key={sound.value}
+                                            onPress={() => selectAdzanSound(sound.value)}
+                                            style={[
+                                                styles.adzanSoundItem,
+                                                isSelected ? styles.adzanSoundItemActive : null,
+                                            ]}
+                                        >
+                                            <View style={styles.adzanSoundInfo}>
+                                                <Text
+                                                    style={[
+                                                        styles.adzanSoundLabel,
+                                                        isSelected ? styles.adzanSoundLabelActive : null,
+                                                    ]}
+                                                >
+                                                    {sound.label}
+                                                </Text>
+                                                <Text style={styles.adzanSoundQari}>
+                                                    {sound.qari} • {sound.region}
+                                                </Text>
+                                            </View>
+                                            {isSelected && (
+                                                <View style={styles.adzanSoundBadge}>
+                                                    <Text style={styles.adzanSoundBadgeText}>Dipilih</Text>
+                                                </View>
+                                            )}
+                                        </Pressable>
+                                    );
+                                })}
+                            </View>
+                        </>
+                    )}
                             </View>
                         ))}
                         <Pressable
@@ -1306,6 +1364,49 @@ export function PrayerScreen({ isActive, navigation }) {
                                 </Text>
                             </Pressable>
                         </View>
+
+                        {adzanAudioEnabled && (
+                            <>
+                                <Text style={styles.webAppSettingsLabel}>
+                                    {t("prayer.reminder.audio_choice") ?? "Pilihan Muadzin / Suara Adzan"}
+                                </Text>
+                                <View style={styles.adzanSoundList}>
+                                    {ADZAN_SOUNDS.map((sound) => {
+                                        const isSelected = adzanSound === sound.value;
+                                        return (
+                                            <Pressable
+                                                accessibilityRole='button'
+                                                key={sound.value}
+                                                onPress={() => selectAdzanSound(sound.value)}
+                                                style={[
+                                                    styles.adzanSoundItem,
+                                                    isSelected ? styles.adzanSoundItemActive : null,
+                                                ]}
+                                            >
+                                                <View style={styles.adzanSoundInfo}>
+                                                    <Text
+                                                        style={[
+                                                            styles.adzanSoundLabel,
+                                                            isSelected ? styles.adzanSoundLabelActive : null,
+                                                        ]}
+                                                    >
+                                                        {sound.label}
+                                                    </Text>
+                                                    <Text style={styles.adzanSoundQari}>
+                                                        {sound.qari} • {sound.region}
+                                                    </Text>
+                                                </View>
+                                                {isSelected && (
+                                                    <View style={styles.adzanSoundBadge}>
+                                                        <Text style={styles.adzanSoundBadgeText}>Dipilih</Text>
+                                                    </View>
+                                                )}
+                                            </Pressable>
+                                        );
+                                    })}
+                                </View>
+                            </>
+                        )}
 
                         <Text style={styles.webAppSettingsLabel}>
                             {t("prayer.reminder.lead")}
@@ -1737,6 +1838,49 @@ export function PrayerScreen({ isActive, navigation }) {
                             </Text>
                         </Pressable>
                     </View>
+
+                    {adzanAudioEnabled && (
+                        <>
+                            <Text style={styles.settingsLabel}>
+                                {t("prayer.reminder.audio_choice") ?? "Pilihan Muadzin / Suara Adzan"}
+                            </Text>
+                            <View style={styles.adzanSoundList}>
+                                {ADZAN_SOUNDS.map((sound) => {
+                                    const isSelected = adzanSound === sound.value;
+                                    return (
+                                        <Pressable
+                                            accessibilityRole='button'
+                                            key={sound.value}
+                                            onPress={() => selectAdzanSound(sound.value)}
+                                            style={[
+                                                styles.adzanSoundItem,
+                                                isSelected ? styles.adzanSoundItemActive : null,
+                                            ]}
+                                        >
+                                            <View style={styles.adzanSoundInfo}>
+                                                <Text
+                                                    style={[
+                                                        styles.adzanSoundLabel,
+                                                        isSelected ? styles.adzanSoundLabelActive : null,
+                                                    ]}
+                                                >
+                                                    {sound.label}
+                                                </Text>
+                                                <Text style={styles.adzanSoundQari}>
+                                                    {sound.qari} • {sound.region}
+                                                </Text>
+                                            </View>
+                                            {isSelected && (
+                                                <View style={styles.adzanSoundBadge}>
+                                                    <Text style={styles.adzanSoundBadgeText}>Dipilih</Text>
+                                                </View>
+                                            )}
+                                        </Pressable>
+                                    );
+                                })}
+                            </View>
+                        </>
+                    )}
 
                     <Text style={styles.settingsLabel}>
                         {t("prayer.reminder.lead")}
@@ -2941,5 +3085,51 @@ const styles = StyleSheet.create({
         height: 48,
         justifyContent: "center",
         width: 48,
+    },
+    adzanSoundList: {
+        gap: spacing.xs,
+        marginTop: spacing.xs,
+    },
+    adzanSoundItem: {
+        alignItems: "center",
+        backgroundColor: colors.bg,
+        borderColor: colors.faint,
+        borderRadius: radius.md,
+        borderWidth: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingHorizontal: spacing.sm,
+        paddingVertical: spacing.xs,
+    },
+    adzanSoundItemActive: {
+        backgroundColor: `${colors.primary}12`,
+        borderColor: colors.primary,
+    },
+    adzanSoundInfo: {
+        flex: 1,
+    },
+    adzanSoundLabel: {
+        color: colors.ink,
+        fontSize: 13,
+        fontWeight: "700",
+    },
+    adzanSoundLabelActive: {
+        color: colors.primary,
+    },
+    adzanSoundQari: {
+        color: colors.muted,
+        fontSize: 11,
+        marginTop: 1,
+    },
+    adzanSoundBadge: {
+        backgroundColor: colors.primary,
+        borderRadius: radius.sm,
+        paddingHorizontal: spacing.xs,
+        paddingVertical: 2,
+    },
+    adzanSoundBadgeText: {
+        color: "#ffffff",
+        fontSize: 10,
+        fontWeight: "800",
     },
 });

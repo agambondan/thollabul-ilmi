@@ -104,6 +104,7 @@ jest.mock("../storage/preferences", () => ({
         prayerMadhab: "prayer-madhab",
         prayerAdjustments: "prayer-adjustments",
         prayerAdzanAudioEnabled: "prayer-adzan-audio-enabled",
+        prayerAdzanSound: "prayer-adzan-sound",
         prayerReminderEnabled: "prayer-reminder-enabled",
         prayerReminderLeadMinutes: "prayer-reminder-lead-minutes",
         prayerReminderPrayers: "prayer-reminder-prayers",
@@ -445,7 +446,7 @@ describe("PrayerScreen", () => {
         });
     });
 
-    test("adzan audio toggle persists preference", async () => {
+    test("adzan audio toggle persists preference and allows sound selection", async () => {
         getPrayerTimes.mockResolvedValue(mockPrayerTimes);
         getPrayerOfflineOverview.mockResolvedValue({
             supported: false,
@@ -470,6 +471,19 @@ describe("PrayerScreen", () => {
             expect(writePreference).toHaveBeenCalledWith(
                 "prayer-adzan-audio-enabled",
                 true,
+            );
+        });
+
+        await waitFor(() => {
+            expect(getByText("Mishary Rashid Al-Afasy")).toBeTruthy();
+        });
+
+        fireEvent.press(getByText("Mishary Rashid Al-Afasy"));
+
+        await waitFor(() => {
+            expect(writePreference).toHaveBeenCalledWith(
+                "prayer-adzan-sound",
+                "mishary-alafasy",
             );
         });
     });

@@ -13,6 +13,7 @@ describe("preferenceKeys", () => {
     test("has expected constants", () => {
         expect(preferenceKeys.homeLastLocation).toBe("home-last-location");
         expect(preferenceKeys.prayerAdjustments).toBe("prayer-adjustments");
+        expect(preferenceKeys.prayerAdzanSound).toBe("prayer-adzan-sound");
         expect(preferenceKeys.appLayoutMode).toBe("app-layout-mode");
         expect(preferenceKeys.quranArabicFont).toBe("quran-arabic-font");
         expect(preferenceKeys.quranDisplayMode).toBe("quran-display-mode");
