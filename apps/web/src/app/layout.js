@@ -1,5 +1,6 @@
 import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
+import { cookies } from "next/headers";
 import { AuthProvider } from "@/context/Auth";
 import SettingButton from "@/components/popup/SettingButton";
 import { LocaleProvider } from "@/context/Locale";
@@ -84,9 +85,16 @@ export const metadata = {
     },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+    const cookieStore = await cookies();
+    const langCookie = cookieStore.get("lang")?.value?.toUpperCase();
+    const initialLang = langCookie === "EN" ? "EN" : "ID";
+
     return (
-        <html lang='id' suppressHydrationWarning>
+        <html
+            lang={initialLang === "EN" ? "en" : "id"}
+            suppressHydrationWarning
+        >
             <body>
                 {/*
                  * Runs before hydration so dark-mode users do not get a flash
@@ -104,7 +112,7 @@ export default function RootLayout({ children }) {
                         __html: JSON.stringify(websiteJsonLd),
                     }}
                 />
-                <LocaleProvider>
+                <LocaleProvider initialLang={initialLang}>
                     <AuthProvider>
                         <SettingsProvider>
                             <AnalyticsTracker />

@@ -34,14 +34,12 @@ import {
     writeLocalPrayerLog,
 } from "@/lib/personalSync";
 import { useEffect, useState } from "react";
-import {
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    Tooltip,
-    ResponsiveContainer,
-} from "recharts";
+import dynamic from "next/dynamic";
+
+const StatsActivityChart = dynamic(
+    () => import("./_components/StatsActivityChart"),
+    { ssr: false },
+);
 
 const isSameWeek = (dateStr) => {
     const d = new Date(dateStr + "T00:00:00");
@@ -392,28 +390,12 @@ const StatsPage = () => {
                     <p className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4'>
                         {t("stats.weekly_activity") ?? "Aktivitas Mingguan"}
                     </p>
-                    <ResponsiveContainer width='100%' height={200}>
-                        <LineChart
-                            data={last7.map((r) => ({
-                                date: r.date.slice(5),
-                                count: r.count,
-                            }))}
-                        >
-                            <XAxis dataKey='date' tick={{ fontSize: 11 }} />
-                            <YAxis
-                                allowDecimals={false}
-                                tick={{ fontSize: 11 }}
-                            />
-                            <Tooltip />
-                            <Line
-                                type='monotone'
-                                dataKey='count'
-                                stroke='#10b981'
-                                strokeWidth={2}
-                                dot={{ fill: "#10b981" }}
-                            />
-                        </LineChart>
-                    </ResponsiveContainer>
+                    <StatsActivityChart
+                        data={last7.map((r) => ({
+                            date: r.date.slice(5),
+                            count: r.count,
+                        }))}
+                    />
                 </div>
             )}
         </div>

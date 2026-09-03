@@ -2,7 +2,6 @@
 
 import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
-import { toLocalISODate } from "@/lib/date";
 import {
     buildSholatTimesUrl,
     PRAYER_MADHABS,
