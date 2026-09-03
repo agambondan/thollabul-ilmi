@@ -489,36 +489,46 @@ export default function SettingsPage() {
                         </div>
                     </SettingRow>
                     <SettingRow label={t("settings.adzan_sound")}>
-                        <div className='flex flex-col sm:flex-row sm:items-center gap-2 w-full'>
-                            <select
-                                value={settings.adzanSound}
-                                onChange={(e) => {
-                                    const next = adzanOptions.find(
-                                        (s) => s.value === e.target.value,
-                                    );
-                                    if (next) updateAdzanSound(next);
-                                }}
-                                className='w-full sm:flex-1 sm:min-w-0 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
-                            >
-                                {adzanOptions.map((s) => (
-                                    <option key={s.value} value={s.value}>
-                                        {s.label}
-                                    </option>
-                                ))}
-                            </select>
-                            <button
-                                type='button'
-                                onClick={playAdzanPreview}
-                                className={`shrink-0 px-3 py-1.5 text-xs rounded-lg border transition-colors ${
-                                    isPlayingPreview
-                                        ? "border-amber-500 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 font-semibold"
-                                        : "border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30"
-                                }`}
-                            >
-                                {isPlayingPreview
-                                    ? "Stop"
-                                    : t("settings.test_sound")}
-                            </button>
+                        <div className='flex flex-col gap-1.5 w-full'>
+                            <div className='flex flex-col sm:flex-row sm:items-center gap-2 w-full'>
+                                <select
+                                    value={settings.adzanSound}
+                                    onChange={(e) => {
+                                        const next = adzanOptions.find(
+                                            (s) => s.value === e.target.value,
+                                        );
+                                        if (next) updateAdzanSound(next);
+                                    }}
+                                    className='w-full sm:flex-1 sm:min-w-0 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                                >
+                                    {adzanOptions.map((s) => (
+                                        <option key={s.value} value={s.value}>
+                                            {s.label}
+                                            {s.qari ? ` · ${s.qari}` : ""}
+                                            {s.region ? ` (${s.region})` : ""}
+                                        </option>
+                                    ))}
+                                </select>
+                                <button
+                                    type='button'
+                                    onClick={playAdzanPreview}
+                                    className={`shrink-0 px-3 py-1.5 text-xs rounded-lg border transition-colors ${
+                                        isPlayingPreview
+                                            ? "border-amber-500 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 font-semibold"
+                                            : "border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30"
+                                    }`}
+                                >
+                                    {isPlayingPreview
+                                        ? "Stop"
+                                        : t("settings.test_sound")}
+                                </button>
+                            </div>
+                            {selectedAdzan?.qari && (
+                                <p className='text-xs text-emerald-700 dark:text-emerald-400'>
+                                    Muadzin/Qari: <span className='font-medium'>{selectedAdzan.qari}</span>
+                                    {selectedAdzan.region && ` • ${selectedAdzan.region}`}
+                                </p>
+                            )}
                         </div>
                     </SettingRow>
                     <div className='mt-3 flex flex-col gap-2'>

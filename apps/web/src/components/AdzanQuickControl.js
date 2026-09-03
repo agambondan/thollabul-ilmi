@@ -189,6 +189,8 @@ export default function AdzanQuickControl({
                     {adzanOptions.map((s) => (
                         <option key={s.value} value={s.value}>
                             {s.label}
+                            {s.qari ? ` · ${s.qari}` : ""}
+                            {s.region ? ` (${s.region})` : ""}
                         </option>
                     ))}
                 </select>

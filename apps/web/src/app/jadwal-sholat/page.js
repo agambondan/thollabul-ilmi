@@ -484,6 +484,7 @@ export default function JadwalSholatPage() {
                                 {adzanOptions.map((s) => (
                                     <option key={s.value} value={s.value}>
                                         {s.label}
+                                        {s.qari ? ` · ${s.qari}` : ""}
                                     </option>
                                 ))}
                             </select>

@@ -39,11 +39,25 @@ beforeEach(() => {
 });
 
 describe("useSettings", () => {
-    test("ADZAN_SOUNDS exposes the default and IslamCan entries", () => {
+    test("ADZAN_SOUNDS exposes the default plus muadzin playlist with qari info", () => {
         expect(ADZAN_SOUNDS.map((s) => s.value)).toEqual([
             "default",
-            "islamcan",
+            "mishary-alafasy",
+            "mansour-al-zahrani",
+            "nasser-al-qatami",
+            "abdul-basit",
+            "islam-sobhi",
+            "makkah-haram",
+            "madinah",
+            "al-aqsa",
         ]);
+        expect(ADZAN_SOUNDS[1]).toEqual(
+            expect.objectContaining({
+                qari: expect.any(String),
+                region: expect.any(String),
+                src: expect.stringContaining("mishary-alafasy"),
+            }),
+        );
     });
 
     test("updateSetting persists to localStorage and syncs when authenticated", async () => {
@@ -59,7 +73,7 @@ describe("useSettings", () => {
         rerender(
             <SettingsProvider>
                 <Setter />
-            </SettingsProvider>,
+           </SettingsProvider>,
         );
 
         fireEvent.click(view.getByText("set"));
@@ -67,7 +81,7 @@ describe("useSettings", () => {
         const stored = JSON.parse(
             localStorage.getItem("tholabul_app_settings"),
         );
-        expect(stored.adzanSound).toBe("islamcan");
+        expect(stored.adzanSound).toBe("mishary-alafasy");
         await waitFor(() =>
             expect(mockAuthFetch).toHaveBeenCalledWith(
                 "/api/v1/settings",
@@ -126,7 +140,7 @@ describe("useSettings", () => {
 const Setter = () => {
     const { updateSetting } = useSettings();
     return (
-        <button onClick={() => updateSetting("adzanSound", "islamcan")}>
+        <button onClick={() => updateSetting("adzanSound", "mishary-alafasy")}>
             set
         </button>
     );
