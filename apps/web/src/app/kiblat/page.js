@@ -83,21 +83,57 @@ export function KiblatContent() {
     useEffect(() => {
         if (!coords) return;
 
+        let receivedTrustedHeading = false;
+
         const handleOrientation = (e) => {
             let heading = null;
             if (e.webkitCompassHeading !== undefined) {
+                // iOS Safari: nilai ini sudah dikalibrasi magnetometer ke
+                // Utara asli, jadi selalu bisa dipercaya.
                 heading = e.webkitCompassHeading;
-            } else if (e.alpha !== null) {
+            } else if (e.absolute === true && e.alpha !== null) {
+                // Selain iOS, alpha hanya valid sebagai heading kalau browser
+                // menandainya absolute (terikat Utara asli/magnetik). Tanpa
+                // cek ini, banyak Android mengirim alpha yang cuma relatif ke
+                // orientasi HP saat halaman dimuat -- jarum tetap bergerak
+                // tapi arahnya salah dibanding kompas sungguhan.
                 heading = (360 - e.alpha + 360) % 360;
             }
-            if (heading !== null) setCompassHeading(heading);
+            if (heading !== null) {
+                receivedTrustedHeading = true;
+                setCompassHeading(heading);
+            }
+        };
+
+        // 'deviceorientationabsolute' selalu membawa alpha yang terikat Utara
+        // asli di browser yang mendukungnya (Chrome/Android). Utamakan itu
+        // daripada 'deviceorientation' polos yang keandalannya berbeda-beda
+        // antar perangkat.
+        const eventName =
+            typeof window !== "undefined" &&
+            "ondeviceorientationabsolute" in window
+                ? "deviceorientationabsolute"
+                : "deviceorientation";
+
+        let fallbackTimer = null;
+        const attach = () => {
+            window.addEventListener(eventName, handleOrientation);
+            orientationRef.current = { eventName, handleOrientation };
+            // Kalau dalam beberapa detik belum ada pembacaan yang bisa
+            // dipercaya, browser ini kemungkinan tidak menyediakan heading
+            // yang valid -- tampilkan sudut statis daripada diam-diam pakai
+            // alpha relatif yang menyesatkan.
+            fallbackTimer = setTimeout(() => {
+                if (!receivedTrustedHeading) setOrientationSupported(false);
+            }, 4000);
         };
 
         if (typeof DeviceOrientationEvent !== "undefined") {
             if (
                 typeof DeviceOrientationEvent.requestPermission === "function"
             ) {
-                // iOS 13+
+                // iOS 13+: webkitCompassHeading selalu bisa dipercaya, jadi
+                // tidak perlu event absolute maupun fallback timer.
                 DeviceOrientationEvent.requestPermission()
                     .then((perm) => {
                         if (perm === "granted") {
@@ -105,25 +141,28 @@ export function KiblatContent() {
                                 "deviceorientation",
                                 handleOrientation,
                             );
-                            orientationRef.current = handleOrientation;
+                            orientationRef.current = {
+                                eventName: "deviceorientation",
+                                handleOrientation,
+                            };
                         } else {
                             setOrientationSupported(false);
                         }
                     })
                     .catch(() => setOrientationSupported(false));
             } else {
-                window.addEventListener("deviceorientation", handleOrientation);
-                orientationRef.current = handleOrientation;
+                attach();
             }
         } else {
             setOrientationSupported(false);
         }
 
         return () => {
+            if (fallbackTimer) clearTimeout(fallbackTimer);
             if (orientationRef.current) {
                 window.removeEventListener(
-                    "deviceorientation",
-                    orientationRef.current,
+                    orientationRef.current.eventName,
+                    orientationRef.current.handleOrientation,
                 );
             }
         };
