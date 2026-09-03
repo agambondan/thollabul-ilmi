@@ -102,12 +102,22 @@ Seluruh 40 temuan sudah dikerjakan. Verifikasi akhir: `next build` exit 0,
 ### Catatan #9 — batas nyata atribusi sumber
 
 `SourceBadges` sekarang dipakai di doa, dzikir, panduan-sholat, fiqh,
-asbabun-nuzul, dan siroh. Tiga halaman sisanya **tidak bisa diselesaikan dari
-frontend**: `manasik`, `amalan`, dan `asmaul_husna` tidak punya field sumber
-sama sekali di model API (`services/api/app/model/`). Menambahkannya butuh
-migrasi kolom plus seeding sumber yang terverifikasi — dan sesuai aturan
-project, sumber tidak boleh dikarang. Ini pekerjaan backend + data, dicatat
-sebagai follow-up terpisah.
+asbabun-nuzul, dan siroh.
+
+✅ **Manasik dan Asmaul Husna selesai 2026-09-03** — field `source` ditambah
+di API (`services/api/app/model/`), diisi HANYA dari kutipan yang sudah bisa
+diverifikasi: manasik mengangkat kutipan yang sudah ada sebagai teks bebas di
+`Notes` (7 dari 17 langkah — sisanya memang tidak punya kutipan di sumber
+aslinya, dibiarkan kosong), asmaul husna memakai hadis 99 nama yang sudah
+dipakai proyek ini sendiri di soal kuis. Lihat commit `1174221` dan
+`docs/features/done/` untuk detail dan batasannya.
+
+❌ **Amalan masih kosong, disengaja.** 13 item (Sholat Tahajud, Puasa Senin,
+dst) masing-masing butuh dalil sendiri. Menyebut nomor hadis dari ingatan
+tanpa verifikasi silang berisiko salah kutip — proyek ini pernah kena masalah
+serupa (lihat memory `project_hadith_data_misalignment`). Perlu salah satu:
+(a) riset per-item dengan verifikasi silang ke sumber primer, atau (b) arahan
+eksplisit dari pemilik project soal referensi/madzhab yang dipakai.
 
 ### Follow-up yang tersisa (di luar 40 temuan)
 
