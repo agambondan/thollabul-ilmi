@@ -174,6 +174,12 @@ export function KiblatContent() {
             ? (qiblaAngle - compassHeading + 360) % 360
             : (qiblaAngle ?? 0);
 
+    // Cincin N/E/S/W diputar balik -compassHeading (sama pola dengan
+    // ringRotation di QiblaScreen.js mobile) supaya label N selalu
+    // menunjuk Utara geografis yang sebenarnya saat HP diputar. Kalau
+    // compassHeading belum ada, cincin diam di posisi Utara-di-atas.
+    const ringRotationDeg = compassHeading !== null ? -compassHeading : 0;
+
     const isPointing =
         qiblaAngle !== null &&
         compassHeading !== null &&
@@ -239,15 +245,15 @@ export function KiblatContent() {
                                 ].map(({ label, angle }) => (
                                     <div
                                         key={label}
-                                        className='absolute w-full h-full'
+                                        className='absolute w-full h-full transition-transform duration-200'
                                         style={{
-                                            transform: `rotate(${angle}deg)`,
+                                            transform: `rotate(${angle + ringRotationDeg}deg)`,
                                         }}
                                     >
                                         <span
                                             className='absolute left-1/2 -translate-x-1/2 top-3 text-xs font-extrabold text-gray-500 dark:text-gray-400'
                                             style={{
-                                                transform: `rotate(-${angle}deg)`,
+                                                transform: `rotate(${-(angle + ringRotationDeg)}deg)`,
                                             }}
                                         >
                                             {label}
