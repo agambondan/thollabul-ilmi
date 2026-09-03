@@ -5,6 +5,7 @@ import Section from "@/components/Section";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { kalkulasiZakatApi } from "@/lib/api";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BsTrash } from "react-icons/bs";
 import { FaCalculator } from "react-icons/fa";
@@ -119,10 +120,17 @@ export function ZakatHistoryContent() {
             ) : items.length === 0 ? (
                 <div className='text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                     <p className='text-4xl mb-3'>📋</p>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
                         {t("zakat.history_empty") ??
                             "Belum ada riwayat kalkulasi zakat."}
                     </p>
+                    <Link
+                        href='/dashboard/zakat'
+                        className='inline-flex items-center gap-2 px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-medium rounded-xl transition-colors'
+                    >
+                        <FaCalculator className='text-xs' />
+                        {t("zakat.calc_now") ?? "Hitung Zakat Sekarang"}
+                    </Link>
                 </div>
             ) : (
                 <div className='space-y-3'>

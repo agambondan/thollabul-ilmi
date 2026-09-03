@@ -11,6 +11,7 @@ import {
 import { adminAsbabunNuzulApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
+import { SURAH_LIST } from "@/lib/surahList";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
@@ -340,9 +341,8 @@ const AdminAsbabunNuzulPage = () => {
                                 >
                                     {t("admin.asbabun.surah_number")}
                                 </label>
-                                <input
+                                <select
                                     id='page-surah-number'
-                                    type='number'
                                     value={form.surah_number}
                                     onChange={(e) =>
                                         setForm({
@@ -350,10 +350,15 @@ const AdminAsbabunNuzulPage = () => {
                                             surah_number: e.target.value,
                                         })
                                     }
-                                    min={1}
-                                    max={114}
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
-                                />
+                                >
+                                    <option value=''>-- Pilih Surah --</option>
+                                    {SURAH_LIST.map((s) => (
+                                        <option key={s.number} value={s.number}>
+                                            {s.number}. {s.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div>
                                 <label

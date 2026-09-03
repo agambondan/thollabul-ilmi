@@ -22,7 +22,7 @@ const CATEGORIES = ["Quran", "Hadith", "Ibadah", "Ilmu", "Lainnya"];
 
 const emptyForm = () => ({
     title: "",
-    target: "",
+    target: "30",
     current: "",
     unit: "kali",
     deadline: "",

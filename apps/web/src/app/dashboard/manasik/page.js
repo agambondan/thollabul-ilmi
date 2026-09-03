@@ -73,6 +73,14 @@ export default function DashboardManasikPage() {
             </div>
 
             {/* Steps */}
+            {activeItems.length === 0 ? (
+                <div className='text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
+                    <p className='text-4xl mb-3'>🕋</p>
+                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                        {t("manasik.empty") ?? "Belum ada langkah untuk kategori ini."}
+                   </p>
+               </div>
+            ) : (
             <div className='space-y-2'>
                 {activeItems.map((item) => {
                     const id =
@@ -169,6 +177,7 @@ export default function DashboardManasikPage() {
                     );
                 })}
             </div>
+            )}
         </div>
     );
 }

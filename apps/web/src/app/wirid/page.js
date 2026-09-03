@@ -211,6 +211,13 @@ export const WiridContent = () => {
                         {t("wirid.backend_hint")}
                     </p>
                 </div>
+            ) : items.length === 0 ? (
+                <div className='flex flex-col items-center justify-center min-h-[30vh] text-center bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-8'>
+                    <p className='text-4xl mb-3'>📿</p>
+                    <p className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                        {t("wirid.empty") ?? "Belum ada bacaan wirid untuk kategori ini."}
+                    </p>
+                </div>
             ) : (
                 <div className='space-y-2'>
                     {items.map((item, idx) => (

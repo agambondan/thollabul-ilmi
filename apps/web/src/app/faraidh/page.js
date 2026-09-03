@@ -100,7 +100,7 @@ const fmtFrac = (f) => (f ? `${f.num}/${f.den}` : "—");
 export function FaraidhContent() {
     const { t, lang } = useLocale();
     const { isAuthenticated } = useAuth();
-    const [wealth, setWealth] = useState("");
+    const [wealth, setWealth] = useState("100000000");
     const [debt, setDebt] = useState("");
     const [funeral, setFuneral] = useState("");
     const [will, setWill] = useState("");

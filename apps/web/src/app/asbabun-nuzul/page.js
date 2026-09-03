@@ -3,6 +3,7 @@
 import Section from "@/components/Section";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { asbabunNuzulApi } from "@/lib/api";
+import { SURAH_LIST } from "@/lib/surahList";
 import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { getLocalizedField } from "@/lib/translation";
@@ -106,19 +107,24 @@ export const AsbabunNuzulContent = ({ quranBasePath = "/quran" }) => {
             >
                 <div className='flex-1 flex items-center gap-2 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
                     <BsSearch className='text-gray-400 shrink-0' />
-                    <input
-                        type='number'
-                        min='1'
-                        max='114'
+                    <select
                         value={surahNumber}
                         onChange={(e) => setSurahNumber(e.target.value)}
-                        placeholder={t("asbabun.placeholder")}
-                        className='flex-1 bg-transparent text-sm text-gray-700 dark:text-gray-200 outline-none'
-                    />
+                        className='flex-1 bg-transparent text-sm text-gray-700 dark:text-gray-200 outline-none cursor-pointer'
+                    >
+                        <option value=''>
+                            -- {t("asbabun.placeholder") ?? "Pilih Surah (1-114)..."} --
+                        </option>
+                        {SURAH_LIST.map((s) => (
+                            <option key={s.number} value={s.number}>
+                                {s.number}. {s.name} ({s.ayat} ayat)
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <button
                     type='submit'
-                    disabled={isLoading}
+                    disabled={isLoading || !surahNumber}
                     className='px-5 py-2.5 rounded-xl bg-emerald-700 text-white text-sm font-medium hover:bg-emerald-800 disabled:opacity-50 transition-colors'
                 >
                     {isLoading ? "..." : t("asbabun.search_btn")}
