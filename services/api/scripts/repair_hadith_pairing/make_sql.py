@@ -19,7 +19,7 @@ def q(text):
     return "'" + (text or "").replace("'", "''") + "'"
 
 
-def statements(fixes, field):
+def statements(fixes, field, column="ar"):
     for row in fixes:
         hid = row.get("hadith_id")
         if hid is None:
@@ -28,9 +28,9 @@ def statements(fixes, field):
         # kolom aslinya NULL, bukan string kosong -- rollback harus mengembalikan NULL
         value = q(text) if text else "NULL"
         yield (
-            "UPDATE translation SET ar = {} "
+            "UPDATE translation SET {} = {} "
             "WHERE id = (SELECT translation_id FROM hadith WHERE id = {});"
-        ).format(value, int(hid))
+        ).format(column, value, int(hid))
 
 
 def write(path, header, body):
@@ -71,6 +71,33 @@ def main():
               statements(fixes, "ar_lama"))
         print(f"{book:<12}{len(fixes):>6} pernyataan")
         total += len(fixes)
+
+    # Pengisian translation.idn yang kosong, dari scraping hadits.in
+    for path in sorted(glob.glob(os.path.join(args.out, "translationfill_*.json"))):
+        book = os.path.basename(path)[:-5]
+        fills = json.load(open(path, encoding="utf-8"))
+        if not fills:
+            continue
+
+        head = (
+            f"-- Pengisian terjemahan Indonesia yang kosong: {book}\n"
+            f"-- {len(fills)} baris. Hanya kolom translation.idn yang disentuh, dan\n"
+            f"-- hanya baris yang sebelumnya NULL. Nomor hadis dan teks Arab tidak\n"
+            f"-- berubah. Setiap baris sudah lolos dua gerbang: window.imam/noHadits\n"
+            f"-- di halaman sumber cocok dengan yang diminta (menolak jebakan hadits.in\n"
+            f"-- yang menyajikan hadis nomor 1 untuk nomor di luar jangkauan), dan skor\n"
+            f"-- keselarasan dengan teks Arab yang sudah ada di database >= 0,70.\n"
+            f"-- Jalankan rollback_{book}.sql untuk membatalkan.\n\n"
+        )
+        for row in fills:
+            row["idn_baru"] = row["idn"]
+        write(os.path.join(args.out, f"apply_{book}.sql"), head,
+              statements(fills, "idn_baru", column="idn"))
+        write(os.path.join(args.out, f"rollback_{book}.sql"),
+              f"-- Kembalikan terjemahan {book} ke NULL (kondisi sebelum pengisian).\n\n",
+              statements([{**r, "idn_kosong": ""} for r in fills], "idn_kosong", column="idn"))
+        print(f"{book:<12}{len(fills):>6} pernyataan")
+        total += len(fills)
 
     print(f"\nTotal {total} UPDATE. Belum ada yang dijalankan.")
 
