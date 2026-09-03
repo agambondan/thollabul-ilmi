@@ -23,20 +23,22 @@ export default function SettingRow({ label, children }) {
     });
 
     return (
-        <div className='flex items-center justify-between py-3 border-b border-gray-50 dark:border-slate-700/50 last:border-0'>
+        <div className='flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-3 sm:gap-y-1.5 py-3 border-b border-gray-50 dark:border-slate-700/50 last:border-0'>
             {controlId ? (
                 <label
                     htmlFor={controlId}
-                    className='text-sm text-gray-700 dark:text-gray-300 font-medium'
+                    className='text-sm text-gray-700 dark:text-gray-300 font-medium sm:flex-shrink-0'
                 >
                     {label}
                 </label>
             ) : (
-                <span className='text-sm text-gray-700 dark:text-gray-300 font-medium'>
+                <span className='text-sm text-gray-700 dark:text-gray-300 font-medium sm:flex-shrink-0'>
                     {label}
                 </span>
             )}
-            <div className='flex items-center'>{boundChildren}</div>
+            <div className='flex flex-col gap-2 w-full sm:flex-row sm:items-center sm:w-auto sm:flex-1 sm:justify-end sm:min-w-0'>
+                {boundChildren}
+            </div>
         </div>
     );
 }
