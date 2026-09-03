@@ -20,7 +20,7 @@ func newBackfillSourcesTestDB(t *testing.T) *gorm.DB {
 	if err != nil {
 		t.Fatalf("open sqlite: %v", err)
 	}
-	if err := db.AutoMigrate(&model.ManasikStep{}, &model.AsmaUlHusna{}); err != nil {
+	if err := db.AutoMigrate(&model.ManasikStep{}, &model.AsmaUlHusna{}, &model.AmalanItem{}); err != nil {
 		t.Fatalf("auto migrate: %v", err)
 	}
 	return db
@@ -137,5 +137,41 @@ func TestBackfillSourcesIsIdempotent(t *testing.T) {
 	}
 	if got.Source != "QS. Al-Baqarah: 125" {
 		t.Fatalf("source drifted after re-running backfill: %q", got.Source)
+	}
+}
+
+func TestBackfillSourcesFillsAmalanCitations(t *testing.T) {
+	db := newBackfillSourcesTestDB(t)
+
+	items := []model.AmalanItem{
+		{Category: model.AmalanSholat, Name: "Sholat Tahajud"},
+		{Category: model.AmalanPuasa, Name: "Puasa Senin"},
+		// Item without verified citation — must stay empty
+		{Category: model.AmalanDzikir, Name: "Sholawat 100x"},
+	}
+	for i := range items {
+		if err := db.Create(&items[i]).Error; err != nil {
+			t.Fatalf("seed amalan item: %v", err)
+		}
+	}
+
+	if err := BackfillSources(db); err != nil {
+		t.Fatalf("BackfillSources: %v", err)
+	}
+
+	var tahajud model.AmalanItem
+	if err := db.Where("name = ?", "Sholat Tahajud").First(&tahajud).Error; err != nil {
+		t.Fatalf("query tahajud: %v", err)
+	}
+	if tahajud.Source != "QS. Al-Isra: 79; HR. Muslim No. 1163" {
+		t.Fatalf("tahajud source = %q, want %q", tahajud.Source, "QS. Al-Isra: 79; HR. Muslim No. 1163")
+	}
+
+	var sholawat model.AmalanItem
+	if err := db.Where("name = ?", "Sholawat 100x").First(&sholawat).Error; err != nil {
+		t.Fatalf("query sholawat: %v", err)
+	}
+	if sholawat.Source != "" {
+		t.Fatalf("sholawat 100x has no verified citation but got source = %q", sholawat.Source)
 	}
 }

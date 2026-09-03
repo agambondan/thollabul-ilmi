@@ -157,13 +157,6 @@ func seedBlogPosts(db *gorm.DB) {
 
 	adminID := uuid.MustParse("00000000-0000-0000-0000-000000000001")
 
-	// Ensure we have categories
-	var quranCat model.BlogCategory
-	db.Where("slug = ?", "quran-tafsir").First(&quranCat)
-
-	var hadithCat model.BlogCategory
-	db.Where("slug = ?", "hadith-sunnah").First(&hadithCat)
-
 	now := time.Now()
 	categoryID := func(cat model.BlogCategory) *int {
 		if cat.ID == nil {
@@ -173,31 +166,38 @@ func seedBlogPosts(db *gorm.DB) {
 	}
 	posts := []model.BlogPost{
 		{
-			BaseUUID:    model.BaseUUID{ID: uuid.New()},
-			AuthorID:    adminID,
-			CategoryID:  categoryID(quranCat),
-			Title:       "Keutamaan Membaca Al-Quran Setiap Hari",
-			Slug:        "keutamaan-membaca-al-quran",
-			Excerpt:     "Membaca Al-Quran adalah ibadah yang sangat mulia dengan pahala yang berlipat ganda.",
-			Content:     "<p>Al-Quran adalah kalamullah yang diturunkan kepada Nabi Muhammad SAW sebagai petunjuk bagi umat manusia. Membacanya bukan sekadar rutinitas, melainkan sarana komunikasi dengan Sang Pencipta. Rasulullah SAW bersabda bahwa setiap huruf yang dibaca akan mendapatkan satu kebaikan, dan satu kebaikan dilipatgandakan menjadi sepuluh.</p><p>Selain pahala, Al-Quran juga akan menjadi syafaat (penolong) bagi pembacanya di hari kiamat kelak. Mari luangkan waktu minimal 15-30 menit setiap hari untuk berinteraksi dengan wahyu ilahi ini.</p>",
-			Status:      model.BlogStatusPublished,
+			BaseUUID:   model.BaseUUID{ID: uuid.New()},
+			AuthorID:   adminID,
+			CategoryID: categoryID(lookupCategory(db, "quran-tafsir")),
+			Title:      "Keutamaan Membaca Al-Quran Setiap Hari",
+			Slug:       "keutamaan-membaca-al-quran",
+			Excerpt:    "Membaca Al-Quran adalah ibadah yang sangat mulia dengan pahala yang berlipat ganda.",
+			Content:    "<p>Al-Quran adalah kalamullah yang diturunkan kepada Nabi Muhammad SAW sebagai petunjuk bagi umat manusia. Membacanya bukan sekadar rutinitas, melainkan sarana komunikasi dengan Sang Pencipta. Rasulullah SAW bersabda bahwa setiap huruf yang dibaca akan mendapatkan satu kebaikan, dan satu kebaikan dilipatgandakan menjadi sepuluh.</p><p>Selain pahala, Al-Quran juga akan menjadi syafaat (penolong) bagi pembacanya di hari kiamat kelak. Mari luangkan waktu minimal 15-30 menit setiap hari untuk berinteraksi dengan wahyu ilahi ini.</p>",
+			Status:     model.BlogStatusPublished,
 			PublishedAt: &now,
 		},
 		{
-			BaseUUID:    model.BaseUUID{ID: uuid.New()},
-			AuthorID:    adminID,
-			CategoryID:  categoryID(hadithCat),
-			Title:       "Mengenal Kitab Arbain Nawawi",
-			Slug:        "mengenal-arbain-nawawi",
-			Excerpt:     "Kitab legendaris yang memuat 42 hadis pokok dalam ajaran Islam.",
-			Content:     "<p>Kitab Al-Arba'in An-Nawawiyah karya Imam An-Nawawi adalah salah satu kitab hadis paling populer di dunia Islam. Meskipun judulnya 'Arbain' (Empat Puluh), sebenarnya kitab ini memuat 42 hadis yang dianggap sebagai pondasi atau poros agama Islam.</p><p>Hadis-hadis di dalamnya mencakup berbagai aspek: niat, rukun Islam, iman, ihsan, takdir, hingga adab dan akhlak. Mempelajari kitab ini sangat direkomendasikan bagi setiap muslim sebagai langkah awal memahami sunnah Nabi SAW secara komprehensif.</p>",
-			Status:      model.BlogStatusPublished,
+			BaseUUID:   model.BaseUUID{ID: uuid.New()},
+			AuthorID:   adminID,
+			CategoryID: categoryID(lookupCategory(db, "hadith-sunnah")),
+			Title:      "Mengenal Kitab Arbain Nawawi",
+			Slug:       "mengenal-arbain-nawawi",
+			Excerpt:    "Kitab legendaris yang memuat 42 hadis pokok dalam ajaran Islam.",
+			Content:    "<p>Kitab Al-Arba'in An-Nawawiyah karya Imam An-Nawawi adalah salah satu kitab hadis paling populer di dunia Islam. Meskipun judulnya 'Arbain' (Empat Puluh), sebenarnya kitab ini memuat 42 hadis yang dianggap sebagai pondasi atau poros agama Islam.</p><p>Hadis-hadis di dalamnya mencakup berbagai aspek: niat, rukun Islam, iman, ihsan, takdir, hingga adab dan akhlak. Mempelajari kitab ini sangat direkomendasikan bagi setiap muslim sebagai langkah awal memahami sunnah Nabi SAW secara komprehensif.</p>",
+			Status:     model.BlogStatusPublished,
 			PublishedAt: &now,
 		},
 	}
 	postTags := map[string][]string{
 		"keutamaan-membaca-al-quran": {"quran", "tilawah", "hafalan"},
 		"mengenal-arbain-nawawi":     {"hadith", "fiqh", "akhlak"},
+	}
+
+	// Seed extended articles (konten tambahan)
+	extendedPosts, extendedTags := seedExtendedBlogPosts(db, adminID, now)
+	posts = append(posts, extendedPosts...)
+	for slug, slugs := range extendedTags {
+		postTags[slug] = slugs
 	}
 
 	for _, p := range posts {
@@ -230,6 +230,49 @@ func seedBlogPosts(db *gorm.DB) {
 			fmt.Printf("Warning: replace blog tags for %s: %v\n", p.Slug, err)
 		}
 	}
+}
+
+// helper: lookupCategory returns the BlogCategory row matching the given slug.
+// We call this from within the loop below — defined at package level so the
+// inline closure inside seedBlogPosts can use it.
+func lookupCategory(db *gorm.DB, slug string) model.BlogCategory {
+	var cat model.BlogCategory
+	db.Where("slug = ?", slug).First(&cat)
+	return cat
+}
+
+func seedExtendedBlogPosts(
+	db *gorm.DB,
+	authorID uuid.UUID,
+	now time.Time,
+) ([]model.BlogPost, map[string][]string) {
+	entries := getExtendedBlogSeedEntries()
+	posts := make([]model.BlogPost, 0, len(entries))
+	tags := make(map[string][]string, len(entries))
+
+	for _, e := range entries {
+		cat := lookupCategory(db, e.CategorySlug)
+		posts = append(posts, model.BlogPost{
+			BaseUUID:    model.BaseUUID{ID: uuid.New()},
+			AuthorID:    authorID,
+			CategoryID:  ptrIntOrNil(cat),
+			Title:       e.Title,
+			Slug:        e.Slug,
+			Excerpt:     e.Excerpt,
+			Content:     e.Content,
+			Status:      model.BlogStatusPublished,
+			PublishedAt: &now,
+		})
+		tags[e.Slug] = e.Tags
+	}
+	return posts, tags
+}
+
+func ptrIntOrNil(cat model.BlogCategory) *int {
+	if cat.ID == nil {
+		return nil
+	}
+	return ptrInt(*cat.ID)
 }
 
 func seedUserWird(db *gorm.DB) {
