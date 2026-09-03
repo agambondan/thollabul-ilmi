@@ -4,6 +4,23 @@
 // - fawazahmed0/hadith-api (CDN): 7 kitab → Arabic + Indonesia (penuh) + English + section names
 // - gadingnst/hadith-api (GitHub raw): Ahmad + Darimi → Arabic + Indonesia
 //
+// PERINGATAN — jangan jalankan ulang untuk 7 kitab fawazahmed0 tanpa membaca ini.
+//
+// Jalur fawazahmed0 mengunduh edisi ara/ind/eng sebagai TIGA berkas terpisah,
+// lalu menjahitnya berdasarkan nomor hadits (lihat scrapeFawaz di bawah).
+// Penomoran ketiga edisi itu ternyata tidak identik, jadi sebagian baris
+// memasangkan teks Arab satu hadits dengan terjemahan hadits lain. Audit
+// 2026-09-03 menemukan ~3.800 baris rusak karena ini; Shahih Muslim ~23%.
+//
+// Menjalankan ulang perintah ini akan menimpa data/hadits_*.json dan
+// memasukkan kembali kerusakan yang sama. Sebelum memakainya lagi, ganti
+// penjahitan-per-nomor dengan sumber yang menyimpan Arab dan terjemahan dalam
+// SATU record (gadingnst sudah begitu untuk kesembilan kitab).
+//
+// Perbaikan data yang sudah terlanjur masuk: scripts/repair_hadith_pairing/
+// Alat ukurnya: scripts/audit-hadith-pairing/
+// Laporan: docs/reviews/2026-09-03-audit-pasangan-hadis.md
+//
 // Usage:
 //
 //	go run scripts/scrape_all.go

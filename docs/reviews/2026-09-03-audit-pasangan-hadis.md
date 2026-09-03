@@ -2,7 +2,7 @@
 
 Tanggal: `2026-09-03`
 Scope: seluruh data hadis di API produksi (9 kitab, 61.125 baris)
-Status: `TEMUAN_DATA — BELUM DIPERBAIKI`
+Status: `PENYEBAB DITEMUKAN — PERBAIKAN SIAP, MENUNGGU PERSETUJUAN`
 Branch: `master @ b13d228`
 
 Audit ini berangkat dari satu keluhan konkret: gambar share hadis menampilkan
@@ -162,3 +162,74 @@ Ketelitian penanda diukur dengan mengambil 12 baris bertanda "beda" dan 12
 bertanda "cocok" secara acak (seed 2026) lintas 6 kitab, lalu membacanya satu
 per satu: 11 dari 12 yang ditandai beda memang beda, dan 12 dari 12 yang
 dinyatakan cocok memang cocok.
+
+---
+
+## Penyebab dan Perbaikan (ditambahkan 2026-09-03)
+
+### Penyebabnya: tiga berkas dijahit berdasarkan nomor
+
+[`scripts/scrape_all.go`](../../services/api/scripts/scrape_all.go) mengunduh
+edisi Arab, Indonesia, dan Inggris dari fawazahmed0 sebagai **tiga berkas
+terpisah**, lalu menjahitnya berdasarkan nomor hadis. Penomoran ketiga edisi itu
+tidak identik, jadi sebagian baris memasangkan sanad Arab satu hadis dengan
+terjemahan hadis lain.
+
+Bukti pendukungnya ada di data sendiri: dua kitab yang **tidak** lewat jalur itu
+— Ahmad dan Darimi, keduanya dari gadingnst yang menyimpan `arab` dan `id` dalam
+satu record — justru paling bersih.
+
+### Perbaikannya: dijodohkan lewat isi terjemahan, bukan nomor
+
+Penomoran gadingnst berbeda dengan database (hanya ~9% nomor bukhari sejajar),
+dan mengganti nomor akan memutus bookmark, progres baca, hafalan, serta URL yang
+sudah dibagikan pengguna. Karena terjemahan di kedua sisi berasal dari terjemahan
+yang sama, penjodohan dilakukan lewat **isi teks terjemahan**.
+
+Hasil penjodohan: **31.391 dari 31.391** baris bertemu pasangannya, tanpa satu
+pun kandidat ambigu.
+
+| Hasil                                  | Jumlah    |
+| -------------------------------------- | --------- |
+| Sudah benar, tidak disentuh            | 26.379    |
+| **Diperbaiki**                         | **3.631** |
+| Karantina — terjemahan kosong          | 1.422     |
+| Karantina — usulan pun tidak lolos uji | 1.381     |
+| Gagal berjodoh                         | 0         |
+
+Yang diganti hanya kolom `translation.ar` pada baris yang gagal uji. Nomor
+hadis, terjemahan, dan id record tidak berubah.
+
+Contoh, bukhari 6896 — kasus yang memicu audit ini:
+
+|                      | Teks                                                                                    |
+| -------------------- | --------------------------------------------------------------------------------------- |
+| Arab lama (skor 1/7) | `وقال لي ابن بشار حدثنا يحيى، عن عبيد الله، عن نافع، عن ابن عمر`                        |
+| Arab baru (skor 6/7) | `حدثنا حفص بن عمر حدثنا هشام عن قتادة عن أنس رضي الله عنه`                              |
+| Terjemahan (tetap)   | `Telah menceritakan kepada kami [Hafsh bin Umar] ... [Hisyam] ... [Qatadah] ... [Anas]` |
+
+### Gerbang mutu
+
+Ambang lolos 0,70 pada skor keselarasan sanad. Dipilih dari data berlabel
+manual: pasangan yang salah tidak pernah melewati 0,60. Yang tidak lolos tidak
+ditulis ke berkas perbaikan, melainkan dikarantina untuk ditinjau manusia.
+
+Dua belas baris hasil perbaikan diambil acak lintas empat kitab dan dibaca satu
+per satu — dua belas-duanya benar, sanad Arab barunya cocok dengan rantai perawi
+di terjemahannya.
+
+### Yang masih harus dikerjakan manusia
+
+- **1.381 baris karantina** perlu dibaca orang yang paham hadis.
+- **1.422 baris tanpa terjemahan** perlu diisi dari sumber terjemahan.
+- **Musnad Ahmad**: 21.588 baris tanpa teks Arab; gadingnst hanya punya 4.305
+  baris sehingga tidak bisa ditambal dari sana.
+- Gerbang ini memeriksa **sanad**, bukan matan. Pasangan yang sanadnya benar tapi
+  matannya tertukar tidak akan tertangkap.
+
+### Menjalankan
+
+Berkas SQL sudah dihasilkan tapi **belum dijalankan**. Lihat
+[`services/api/scripts/repair_hadith_pairing/README.md`](../../services/api/scripts/repair_hadith_pairing/README.md).
+Ambil dump database dulu sebelum apply; tiap `apply_*.sql` punya pasangan
+`rollback_*.sql`.

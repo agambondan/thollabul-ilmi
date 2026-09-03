@@ -1,6 +1,6 @@
 import json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from translit import ar_skeleton, latin_skeleton, similar, HARAKAT, ARABIC_WORD
+from translit import ar_skeleton, latin_skeletons, similar, HARAKAT, ARABIC_WORD
 
 CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cache")
 
@@ -28,10 +28,8 @@ def check(ar, idn, n_ar=4, n_lat=3):
     hw = head_words(ar, n_ar)
     if not lt or not hw:
         return None
-    ls = [latin_skeleton(t) for t in lt]
-    as_ = [ar_skeleton(w) for w in hw]
-    ls = [x for x in ls if len(x) >= 2]
-    as_ = [x for x in as_ if len(x) >= 2]
+    ls = [x for t in lt for x in latin_skeletons(t) if len(x) >= 2]
+    as_ = [x for x in (ar_skeleton(w) for w in hw) if len(x) >= 2]
     if not ls or not as_:
         return None
     return any(similar(a, b) for a in as_ for b in ls)
