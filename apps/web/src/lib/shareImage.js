@@ -155,7 +155,7 @@ const clipRows = (rows, availableHeight) => {
     for (const row of rows) {
         if (used + row.lineHeight > availableHeight) break;
         kept.push(row);
-        used += row.lineHeight;
+        used += row.lineHeight + row.gapAfter;
     }
 
     if (kept.length && kept.length < rows.length) {
