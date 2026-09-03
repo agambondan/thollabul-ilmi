@@ -280,7 +280,6 @@ export function ExploreScreen({
     const [zakatGoldPrice, setZakatGoldPrice] = useState("1050000");
     const [zakatRicePrice, setZakatRicePrice] = useState("16000");
     const [zakatFamilyCount, setZakatFamilyCount] = useState(1);
-    const [zakatMonthlyIncome, setZakatMonthlyIncome] = useState("");
     const [zakatTradeCapital, setZakatTradeCapital] = useState("");
     const [zakatTradeStock, setZakatTradeStock] = useState("");
     const [zakatTradeReceivable, setZakatTradeReceivable] = useState("");
@@ -1211,7 +1210,7 @@ export function ExploreScreen({
     }, [loadBookmarks]);
 
     useEffect(() => {
-        if (activeFeature?.type === "zakat" && zakatTab === 6)
+        if (activeFeature?.type === "zakat" && zakatTab === 5)
             loadZakatHistory();
     }, [activeFeature?.type, loadZakatHistory, zakatTab]);
 
@@ -1565,7 +1564,6 @@ export function ExploreScreen({
         setZakatHarvestIrrigated,
         setZakatHarvestWeight,
         setZakatHaul,
-        setZakatMonthlyIncome,
         setZakatRiceKgPrice,
         setZakatRicePrice,
         setZakatSilverGrams,
@@ -1597,7 +1595,6 @@ export function ExploreScreen({
         zakatHarvestWeight,
         zakatHaul,
         zakatHistory,
-        zakatMonthlyIncome,
         zakatRiceKgPrice,
         zakatRicePrice,
         zakatSavedMsg,
@@ -1751,8 +1748,7 @@ export function ExploreScreen({
             setZakatHarvestWeight,
             setZakatHaul,
             setZakatHistory,
-            setZakatMonthlyIncome,
-            setZakatRiceKgPrice,
+                setZakatRiceKgPrice,
             setZakatRicePrice,
             setZakatSavedMsg,
             setZakatSaving,
@@ -1795,7 +1791,6 @@ export function ExploreScreen({
             zakatHarvestWeight,
             zakatHaul,
             zakatHistory,
-            zakatMonthlyIncome,
             zakatRiceKgPrice,
             zakatRicePrice,
             zakatSavedMsg,

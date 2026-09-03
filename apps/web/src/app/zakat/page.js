@@ -13,7 +13,6 @@ import { MdInfo } from "react-icons/md";
 const TABS = [
     "zakat.maal",
     "zakat.fitrah",
-    "zakat.profession",
     "zakat.trade",
     "zakat.agriculture",
     "zakat.gold",
@@ -31,30 +30,26 @@ export function ZakatContent({ basePath = "/zakat" }) {
     const [haul, setHaul] = useState(true);
     const [ricePrice, setRicePrice] = useState(16000);
     const [familyCount, setFamilyCount] = useState(1);
-    const [monthlyIncome, setMonthlyIncome] = useState("");
-    // Tab 3 — Perdagangan
+    // Tab 2 — Perdagangan
     const [tradeCapital, setTradeCapital] = useState("");
     const [tradeStock, setTradeStock] = useState("");
     const [tradeReceivable, setTradeReceivable] = useState("");
     const [tradeDebt, setTradeDebt] = useState("");
     const [tradeHaul, setTradeHaul] = useState(true);
-    // Tab 4 — Pertanian
+    // Tab 3 — Pertanian
     const [harvestWeight, setHarvestWeight] = useState("");
     const [harvestIrrigated, setHarvestIrrigated] = useState(false);
     const [riceKgPrice, setRiceKgPrice] = useState(16000);
-    // Tab 5 — Emas & Perak
+    // Tab 4 — Emas & Perak
     const [goldGrams, setGoldGrams] = useState("");
     const [silverGrams, setSilverGrams] = useState("");
     const [silverPrice, setSilverPrice] = useState(14000);
     const [goldHaul, setGoldHaul] = useState(true);
 
     const nisab = NISAB_GRAM * goldPrice;
-    const nisabMonthly = nisab / 12;
     const wealth = parseFloat(totalWealth) || 0;
-    const income = parseFloat(monthlyIncome) || 0;
     const zakatMaal = wealth >= nisab && haul ? wealth * 0.025 : 0;
     const zakatFitrah = 2.5 * ricePrice * familyCount;
-    const zakatProfesi = income >= nisabMonthly ? income * 0.025 : 0;
     // Perdagangan
     const tradeNet =
         (parseFloat(tradeCapital) || 0) +
@@ -363,65 +358,8 @@ export function ZakatContent({ basePath = "/zakat" }) {
                 </div>
             )}
 
-            {/* Zakat Profesi */}
-            {tab === 2 && (
-                <div className='bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 space-y-5'>
-                    <div className='flex items-start gap-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-sm text-blue-800 dark:text-blue-300'>
-                        <MdInfo className='text-lg flex-shrink-0 mt-0.5' />
-                        <span>
-                            {t("zakat.profession_info_prefix")}{" "}
-                            <strong>2,5%</strong>{" "}
-                            {t("zakat.profession_info_suffix")}
-                        </span>
-                    </div>
-                    <InputField
-                        label={t("zakat.gold_price")}
-                        value={goldPrice}
-                        onChange={(v) => setGoldPrice(parseFloat(v) || 0)}
-                        hint={`${t("zakat.monthly_nisab")}: ${fmt(nisabMonthly)}`}
-                    />
-                    <InputField
-                        label={t("zakat.monthly_income")}
-                        value={monthlyIncome}
-                        onChange={setMonthlyIncome}
-                        placeholder={t("zakat.monthly_income_placeholder")}
-                    />
-                    {income > 0 && income < nisabMonthly && (
-                        <p className='text-sm text-center text-blue-600 dark:text-blue-400'>
-                            {t("zakat.income_below_nisab")} ({fmt(nisabMonthly)}
-                            )
-                        </p>
-                    )}
-                    <ResultCard
-                        amount={zakatProfesi}
-                        color='blue'
-                        label={t("zakat.profession_result")}
-                    />
-                    {isAuthenticated && zakatProfesi > 0 && (
-                        <button
-                            onClick={() =>
-                                handleSave(
-                                    "profesi",
-                                    t("zakat.profession") ?? "Zakat Profesi",
-                                    zakatProfesi,
-                                    income,
-                                    nisabMonthly,
-                                )
-                            }
-                            disabled={saving}
-                            className='w-full mt-3 flex items-center justify-center gap-2 py-2 border border-blue-300 dark:border-blue-700 text-blue-700 dark:text-blue-400 rounded-xl text-sm font-medium hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors disabled:opacity-50'
-                        >
-                            <BsBookmarkPlus />
-                            {saving
-                                ? (t("common.saving") ?? "Menyimpan...")
-                                : (t("zakat.save") ?? "Simpan")}
-                        </button>
-                    )}
-                </div>
-            )}
-
             {/* Zakat Perdagangan */}
-            {tab === 3 && (
+            {tab === 2 && (
                 <div className='bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 space-y-5'>
                     <div className='flex items-start gap-2 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-xl text-sm text-purple-800 dark:text-purple-300'>
                         <MdInfo className='text-lg flex-shrink-0 mt-0.5' />
@@ -517,7 +455,7 @@ export function ZakatContent({ basePath = "/zakat" }) {
             )}
 
             {/* Zakat Pertanian */}
-            {tab === 4 && (
+            {tab === 3 && (
                 <div className='bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 space-y-5'>
                     <div className='flex items-start gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-xl text-sm text-green-800 dark:text-green-300'>
                         <MdInfo className='text-lg flex-shrink-0 mt-0.5' />
@@ -601,7 +539,7 @@ export function ZakatContent({ basePath = "/zakat" }) {
             )}
 
             {/* Zakat Emas & Perak */}
-            {tab === 5 && (
+            {tab === 4 && (
                 <div className='bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 space-y-5'>
                     <div className='flex items-start gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl text-sm text-yellow-800 dark:text-yellow-300'>
                         <MdInfo className='text-lg flex-shrink-0 mt-0.5' />

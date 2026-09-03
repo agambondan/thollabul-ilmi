@@ -232,7 +232,6 @@ export function renderExploreWebAppRoute(context) {
         setZakatHarvestWeight,
         setZakatHaul,
         setZakatHistory,
-        setZakatMonthlyIncome,
         setZakatRiceKgPrice,
         setZakatRicePrice,
         setZakatSavedMsg,
@@ -269,7 +268,6 @@ export function renderExploreWebAppRoute(context) {
         zakatHarvestWeight,
         zakatHaul,
         zakatHistory,
-        zakatMonthlyIncome,
         zakatRiceKgPrice,
         zakatRicePrice,
         zakatSavedMsg,
@@ -2274,7 +2272,6 @@ export function renderExploreWebAppRoute(context) {
                 setZakatHarvestWeight={setZakatHarvestWeight}
                 setZakatHaul={setZakatHaul}
                 setZakatHistory={setZakatHistory}
-                setZakatMonthlyIncome={setZakatMonthlyIncome}
                 setZakatRiceKgPrice={setZakatRiceKgPrice}
                 setZakatRicePrice={setZakatRicePrice}
                 setZakatSavedMsg={setZakatSavedMsg}
@@ -2297,7 +2294,6 @@ export function renderExploreWebAppRoute(context) {
                 zakatHarvestWeight={zakatHarvestWeight}
                 zakatHaul={zakatHaul}
                 zakatHistory={zakatHistory}
-                zakatMonthlyIncome={zakatMonthlyIncome}
                 zakatRiceKgPrice={zakatRiceKgPrice}
                 zakatRicePrice={zakatRicePrice}
                 zakatSavedMsg={zakatSavedMsg}

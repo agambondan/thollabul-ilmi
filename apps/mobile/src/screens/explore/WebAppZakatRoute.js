@@ -37,11 +37,6 @@ const ZAKAT_TABS = [
         testID: "pill-Fitrah",
     },
     {
-        key: "profesi",
-        labelKey: "explore.zakat.tab.profesi",
-        testID: "pill-Profesi",
-    },
-    {
         key: "dagang",
         labelKey: "explore.zakat.tab.dagang",
         testID: "pill-Dagang",
@@ -191,7 +186,6 @@ export function WebAppZakatRoute({
     setZakatHarvestWeight = () => {},
     setZakatHaul = () => {},
     setZakatHistory = () => {},
-    setZakatMonthlyIncome = () => {},
     setZakatRiceKgPrice = () => {},
     setZakatRicePrice = () => {},
     setZakatSavedMsg = () => {},
@@ -214,7 +208,6 @@ export function WebAppZakatRoute({
     zakatHarvestWeight = "",
     zakatHaul = true,
     zakatHistory = [],
-    zakatMonthlyIncome = "",
     zakatRiceKgPrice = "16000",
     zakatRicePrice = "16000",
     zakatSavedMsg = "",
@@ -232,15 +225,12 @@ export function WebAppZakatRoute({
     const { t } = useMobileLocale();
     const goldPrice = parseNumericInput(zakatGoldPrice) || 1050000;
     const nisab = NISAB_GRAM * goldPrice;
-    const nisabMonthly = nisab / 12;
     const assets = parseNumericInput(zakat.assets);
     const debts = parseNumericInput(zakat.debts);
     const net = Math.max(0, assets - debts);
     const zakatMaal = net >= nisab && zakatHaul ? net * 0.025 : 0;
     const ricePrice = parseNumericInput(zakatRicePrice) || 16000;
     const zakatFitrah = 2.5 * ricePrice * zakatFamilyCount;
-    const income = parseNumericInput(zakatMonthlyIncome) || 0;
-    const zakatProfesi = income >= nisabMonthly ? income * 0.025 : 0;
     const tradeNet =
         (parseNumericInput(zakatTradeCapital) || 0) +
         (parseNumericInput(zakatTradeStock) || 0) +
@@ -329,7 +319,7 @@ export function WebAppZakatRoute({
         }
     };
 
-    if (zakatTab === 6) {
+    if (zakatTab === 5) {
         return (
             <ScrollView
                 contentContainerStyle={styles.content}
@@ -547,54 +537,6 @@ export function WebAppZakatRoute({
 
                 {zakatTab === 2 ? (
                     <>
-                        <InfoBox
-                            color='blue'
-                            text={t("explore.zakat.info.profesi")}
-                        />
-                        <Field
-                            hint={t("explore.zakat.monthlyNisabHint", {
-                                amount: formatCurrency(nisabMonthly),
-                            })}
-                            label={t("explore.zakat.field.goldPrice")}
-                            onChangeText={setZakatGoldPrice}
-                            value={zakatGoldPrice}
-                        />
-                        <Field
-                            label={t("explore.zakat.field.monthlyIncome")}
-                            onChangeText={setZakatMonthlyIncome}
-                            value={zakatMonthlyIncome}
-                        />
-                        {income > 0 && income < nisabMonthly ? (
-                            <Text style={styles.warning}>
-                                {t("explore.zakat.warning.incomeBelowNisab")}
-                            </Text>
-                        ) : null}
-                        <ResultCard
-                            amount={zakatProfesi}
-                            color='blue'
-                            label={t("explore.zakat.result.profesi")}
-                        />
-                        {zakatProfesi > 0 ? (
-                            <SaveButton
-                                disabled={zakatSaving}
-                                onPress={() =>
-                                    handleSave(
-                                        "profesi",
-                                        "Zakat Profesi",
-                                        zakatProfesi,
-                                        income,
-                                        nisabMonthly,
-                                    )
-                                }
-                                saving={zakatSaving}
-                                t={t}
-                            />
-                        ) : null}
-                    </>
-                ) : null}
-
-                {zakatTab === 3 ? (
-                    <>
                         <InfoBox text={t("explore.zakat.info.dagang")} />
                         <Field
                             hint={t("explore.zakat.nisabHint", {
@@ -661,7 +603,7 @@ export function WebAppZakatRoute({
                     </>
                 ) : null}
 
-                {zakatTab === 4 ? (
+                {zakatTab === 3 ? (
                     <>
                         <InfoBox
                             text={t("explore.zakat.info.tani", {
@@ -725,7 +667,7 @@ export function WebAppZakatRoute({
                     </>
                 ) : null}
 
-                {zakatTab === 5 ? (
+                {zakatTab === 4 ? (
                     <>
                         <InfoBox
                             color='amber'
@@ -804,7 +746,7 @@ export function WebAppZakatRoute({
             ) : null}
             <Pressable
                 accessibilityRole='button'
-                onPress={() => setZakatTab(6)}
+                onPress={() => setZakatTab(5)}
                 style={styles.historyLink}
                 testID='web-app-zakat-history-link'
             >

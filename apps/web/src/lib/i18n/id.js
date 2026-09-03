@@ -635,7 +635,7 @@ const id = {
     "faraidh.history": "Riwayat Perhitungan",
     "faraidh.heir_unit": "ahli waris",
     "zakat.title": "Kalkulator Zakat",
-    "zakat.subtitle": "Hitung zakat maal, fitrah, dan profesi sesuai syariat",
+    "zakat.subtitle": "Hitung zakat maal, fitrah, dan lainnya sesuai syariat",
     "zakat.maal": "Zakat Maal",
     "zakat.fitrah": "Zakat Fitrah",
     "zakat.profession": "Zakat Profesi",
@@ -655,15 +655,6 @@ const id = {
     "zakat.family_count": "Jumlah Jiwa yang Ditanggung",
     "zakat.person_unit": "jiwa",
     "zakat.fitrah_result": "Total Zakat Fitrah",
-    "zakat.profession_info_prefix": "Kadar",
-    "zakat.profession_info_suffix":
-        "dari penghasilan bersih per bulan jika mencapai nisab bulanan (nisab tahunan / 12).",
-    "zakat.monthly_nisab": "Nisab bulanan",
-    "zakat.monthly_income": "Penghasilan Bersih per Bulan (Rp)",
-    "zakat.monthly_income_placeholder":
-        "Gaji setelah dikurangi kebutuhan pokok",
-    "zakat.income_below_nisab": "Penghasilan belum mencapai nisab bulanan",
-    "zakat.profession_result": "Zakat Profesi per Bulan",
     "zakat.disclaimer":
         "Kalkulator bersifat estimasi. Konsultasikan dengan ulama atau lembaga zakat terpercaya.",
     "zakat.save": "Simpan Kalkulasi",

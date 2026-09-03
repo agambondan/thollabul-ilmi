@@ -237,7 +237,6 @@ export function createExploreClassicRenderers(context) {
         setZakatHarvestIrrigated,
         setZakatHarvestWeight,
         setZakatHaul,
-        setZakatMonthlyIncome,
         setZakatRiceKgPrice,
         setZakatRicePrice,
         setZakatSilverGrams,
@@ -269,7 +268,6 @@ export function createExploreClassicRenderers(context) {
         zakatHarvestWeight,
         zakatHaul,
         zakatHistory,
-        zakatMonthlyIncome,
         zakatRiceKgPrice,
         zakatRicePrice,
         zakatSavedMsg,
@@ -1830,15 +1828,12 @@ export function createExploreClassicRenderers(context) {
             const NISAB_HARVEST_KG = 653;
             const goldPrice = parseNumericInput(zakatGoldPrice) || 1050000;
             const nisab = NISAB_GRAM * goldPrice;
-            const nisabMonthly = nisab / 12;
             const assets = parseNumericInput(zakat.assets);
             const debts = parseNumericInput(zakat.debts);
             const net = Math.max(0, assets - debts);
             const zakatMaal = net >= nisab && zakatHaul ? net * 0.025 : 0;
             const ricePrice = parseNumericInput(zakatRicePrice) || 16000;
             const zakatFitrah = 2.5 * ricePrice * zakatFamilyCount;
-            const income = parseNumericInput(zakatMonthlyIncome) || 0;
-            const zakatProfesi = income >= nisabMonthly ? income * 0.025 : 0;
             const tradeNet =
                 (parseNumericInput(zakatTradeCapital) || 0) +
                 (parseNumericInput(zakatTradeStock) || 0) +
@@ -1869,7 +1864,6 @@ export function createExploreClassicRenderers(context) {
             const ZAKAT_TABS = [
                 { key: "maal", label: "Maal" },
                 { key: "fitrah", label: "Fitrah" },
-                { key: "profesi", label: "Profesi" },
                 { key: "dagang", label: "Dagang" },
                 { key: "tani", label: "Tani" },
                 { key: "emas", label: "Emas" },
@@ -1973,7 +1967,7 @@ export function createExploreClassicRenderers(context) {
                 </View>
             );
 
-            if (isWebAppLayout && zakatTab === 6) {
+            if (isWebAppLayout && zakatTab === 5) {
                 return (
                     <WebAppZakatHistoryRoute
                         formatCurrency={formatCurrency}
@@ -2213,84 +2207,8 @@ export function createExploreClassicRenderers(context) {
                     )}
 
                     {/* Zakat Profesi */}
-                    {zakatTab === 2 && (
-                        <>
-                            <Text style={styles.body}>
-                                Zakat profesi 2,5% dari penghasilan bulanan jika
-                                mencapai nisab per bulan.
-                            </Text>
-                            <Text
-                                style={[
-                                    styles.body,
-                                    {
-                                        fontSize: 12,
-                                        color: colors.muted,
-                                        marginBottom: spacing.sm,
-                                    },
-                                ]}
-                            >
-                                Nisab bulanan: {formatCurrency(nisabMonthly)}
-                            </Text>
-                            {renderCurrencyInput({
-                                label: "Penghasilan per bulan",
-                                value: zakatMonthlyIncome,
-                                placeholder: "0",
-                                onChangeText: setZakatMonthlyIncome,
-                            })}
-                            {income > 0 && income < nisabMonthly && (
-                                <Text
-                                    style={[
-                                        styles.statusNote,
-                                        {
-                                            color: "#D97706",
-                                            marginBottom: spacing.sm,
-                                        },
-                                    ]}
-                                >
-                                    Penghasilan belum mencapai nisab bulanan.
-                                </Text>
-                            )}
-                            {renderZakatResult(
-                                zakatProfesi,
-                                "Zakat Profesi",
-                                "blue",
-                            )}
-                            {session?.token && zakatProfesi > 0 && (
-                                <Pressable
-                                    accessibilityRole='button'
-                                    accessibilityState={{
-                                        disabled: zakatSaving,
-                                    }}
-                                    disabled={zakatSaving}
-                                    onPress={() =>
-                                        handleZakatSave(
-                                            "profesi",
-                                            "Zakat Profesi",
-                                            zakatProfesi,
-                                            income,
-                                            nisabMonthly,
-                                        )
-                                    }
-                                    style={[
-                                        styles.answerButton,
-                                        {
-                                            marginTop: spacing.sm,
-                                            alignSelf: "stretch",
-                                        },
-                                    ]}
-                                >
-                                    <Text style={styles.answerText}>
-                                        {zakatSaving
-                                            ? "Menyimpan..."
-                                            : "Simpan"}
-                                    </Text>
-                                </Pressable>
-                            )}
-                        </>
-                    )}
-
                     {/* Zakat Perdagangan */}
-                    {zakatTab === 3 && (
+                    {zakatTab === 2 && (
                         <>
                             <Text style={styles.body}>
                                 Zakat perdagangan 2,5% dari (modal + stok +
@@ -2388,7 +2306,7 @@ export function createExploreClassicRenderers(context) {
                     )}
 
                     {/* Zakat Pertanian */}
-                    {zakatTab === 4 && (
+                    {zakatTab === 3 && (
                         <>
                             <Text style={styles.body}>
                                 Nisab 5 wasq ({NISAB_HARVEST_KG} kg). Irigasi:
@@ -2472,7 +2390,7 @@ export function createExploreClassicRenderers(context) {
                     )}
 
                     {/* Zakat Emas & Perak */}
-                    {zakatTab === 5 && (
+                    {zakatTab === 4 && (
                         <>
                             <Text style={styles.body}>
                                 Nisab emas 85g, perak 595g. Wajib setelah 1
@@ -2556,7 +2474,7 @@ export function createExploreClassicRenderers(context) {
                     )}
 
                     {/* Riwayat */}
-                    {zakatTab === 6 && (
+                    {zakatTab === 5 && (
                         <>
                             <Text style={styles.body}>
                                 Riwayat kalkulasi zakat tersimpan.

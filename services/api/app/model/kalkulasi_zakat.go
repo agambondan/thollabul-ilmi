@@ -7,10 +7,14 @@ type ZakatJenis string
 const (
 	ZakatMaal        ZakatJenis = "maal"
 	ZakatFitrah      ZakatJenis = "fitrah"
-	ZakatProfesi     ZakatJenis = "profesi"
 	ZakatPerdagangan ZakatJenis = "perdagangan"
 	ZakatPertanian   ZakatJenis = "pertanian"
 	ZakatEmasPerak   ZakatJenis = "emas_perak"
+	// "profesi" intentionally has no constant: the calculator no longer
+	// offers it (zakat on salaried income is a modern ijtihad, not one of
+	// the classical categories this app calculates). The string value can
+	// still appear on rows saved before this change — nothing here
+	// enforces a whitelist, so old history rows keep reading back fine.
 )
 
 type KalkulasiZakat struct {

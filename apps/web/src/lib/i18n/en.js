@@ -645,7 +645,7 @@ const en = {
     "faraidh.heir_unit": "heirs",
     "zakat.title": "Zakat Calculator",
     "zakat.subtitle":
-        "Calculate maal, fitrah, and income zakat according to syariah",
+        "Calculate maal, fitrah, and other zakat according to syariah",
     "zakat.maal": "Zakat Maal",
     "zakat.fitrah": "Zakat Fitrah",
     "zakat.profession": "Income Zakat",
@@ -665,14 +665,6 @@ const en = {
     "zakat.family_count": "Number of Dependents",
     "zakat.person_unit": "people",
     "zakat.fitrah_result": "Total Zakat Fitrah",
-    "zakat.profession_info_prefix": "Rate:",
-    "zakat.profession_info_suffix":
-        "of monthly net income when it reaches the monthly nisab (annual nisab / 12).",
-    "zakat.monthly_nisab": "Monthly nisab",
-    "zakat.monthly_income": "Monthly Net Income (Rp)",
-    "zakat.monthly_income_placeholder": "Salary after basic living expenses",
-    "zakat.income_below_nisab": "Income has not reached the monthly nisab",
-    "zakat.profession_result": "Monthly Income Zakat",
     "zakat.disclaimer":
         "This calculator is an estimate. Consult a scholar or trusted zakat institution.",
     "zakat.save": "Save Calculation",

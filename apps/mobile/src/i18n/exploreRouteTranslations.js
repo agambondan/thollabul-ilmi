@@ -272,7 +272,6 @@ export const exploreRouteTranslations = {
         "explore.zakat.field.harvestWeight": "Hasil panen (kg)",
         "explore.zakat.field.haul": "Sudah haul (1 tahun)",
         "explore.zakat.field.irrigated": "Pakai irigasi (tarif 5%)",
-        "explore.zakat.field.monthlyIncome": "Penghasilan per bulan",
         "explore.zakat.field.riceKgPrice": "Harga gabah/kg",
         "explore.zakat.field.ricePrice": "Harga beras/kg",
         "explore.zakat.field.silverPrice": "Harga perak/gram",
@@ -290,11 +289,8 @@ export const exploreRouteTranslations = {
             "Zakat fitrah 1 sha' atau sekitar 2,5 kg makanan pokok per jiwa.",
         "explore.zakat.info.maal":
             "Zakat 2,5% dari harta bersih yang sudah mencapai nisab dan haul.",
-        "explore.zakat.info.profesi":
-            "Zakat profesi 2,5% dari penghasilan bulanan jika mencapai nisab per bulan.",
         "explore.zakat.info.tani":
             "Nisab 5 wasq ({kg} kg). Irigasi 5%, tadah hujan 10%.",
-        "explore.zakat.monthlyNisabHint": "Nisab bulanan: {amount}",
         "explore.zakat.netAssets": "Aset bersih: {amount}",
         "explore.zakat.nisabHint": "Nisab: {amount}",
         "explore.zakat.note.emas": "2,5% x {amount}",
@@ -305,7 +301,6 @@ export const exploreRouteTranslations = {
         "explore.zakat.result.emas": "Zakat Emas & Perak",
         "explore.zakat.result.fitrah": "Zakat Fitrah",
         "explore.zakat.result.maal": "Zakat Maal",
-        "explore.zakat.result.profesi": "Zakat Profesi",
         "explore.zakat.result.tani": "Zakat Pertanian",
         "explore.zakat.save": "Simpan",
         "explore.zakat.saveError": "Gagal menyimpan",
@@ -314,12 +309,11 @@ export const exploreRouteTranslations = {
         "explore.zakat.saving": "Menyimpan...",
         "explore.zakat.silverNisabHint": "Nisab perak: {amount}",
         "explore.zakat.subtitle":
-            "Hitung zakat maal, fitrah, profesi, dagang, tani, dan emas.",
+            "Hitung zakat maal, fitrah, dagang, tani, dan emas.",
         "explore.zakat.tab.dagang": "Dagang",
         "explore.zakat.tab.emas": "Emas",
         "explore.zakat.tab.fitrah": "Fitrah",
         "explore.zakat.tab.maal": "Maal",
-        "explore.zakat.tab.profesi": "Profesi",
         "explore.zakat.tab.riwayat": "Riwayat",
         "explore.zakat.tab.tani": "Tani",
         "explore.zakat.title": "Kalkulator Zakat",
@@ -328,8 +322,6 @@ export const exploreRouteTranslations = {
             "Harta belum mencapai nisab ({amount}).",
         "explore.zakat.warning.harvestBelowNisab":
             "Panen kurang dari nisab ({kg} kg), belum wajib zakat.",
-        "explore.zakat.warning.incomeBelowNisab":
-            "Penghasilan belum mencapai nisab bulanan.",
         "explore.zakat.warning.noHaul": "Belum wajib zakat karena belum haul.",
         "explore.zakatHistory.back": "Kembali ke Kalkulator",
         "explore.zakatHistory.dateUnavailable": "Tanggal belum tersedia",
@@ -629,7 +621,6 @@ export const exploreRouteTranslations = {
         "explore.zakat.field.harvestWeight": "Harvest yield (kg)",
         "explore.zakat.field.haul": "Haul complete (1 year)",
         "explore.zakat.field.irrigated": "Use irrigation (5% rate)",
-        "explore.zakat.field.monthlyIncome": "Monthly income",
         "explore.zakat.field.riceKgPrice": "Grain price/kg",
         "explore.zakat.field.ricePrice": "Rice price/kg",
         "explore.zakat.field.silverPrice": "Silver price/gram",
@@ -647,11 +638,8 @@ export const exploreRouteTranslations = {
             "Zakat fitrah is 1 sha' or about 2.5 kg of staple food per person.",
         "explore.zakat.info.maal":
             "Zakat is 2.5% of net wealth that has reached nisab and haul.",
-        "explore.zakat.info.profesi":
-            "Income zakat is 2.5% of monthly income if it reaches the monthly nisab.",
         "explore.zakat.info.tani":
             "Nisab is 5 wasq ({kg} kg). Irrigation is 5%, rain-fed is 10%.",
-        "explore.zakat.monthlyNisabHint": "Monthly nisab: {amount}",
         "explore.zakat.netAssets": "Net assets: {amount}",
         "explore.zakat.nisabHint": "Nisab: {amount}",
         "explore.zakat.note.emas": "2.5% x {amount}",
@@ -662,7 +650,6 @@ export const exploreRouteTranslations = {
         "explore.zakat.result.emas": "Gold & Silver Zakat",
         "explore.zakat.result.fitrah": "Fitrah Zakat",
         "explore.zakat.result.maal": "Maal Zakat",
-        "explore.zakat.result.profesi": "Income Zakat",
         "explore.zakat.result.tani": "Agriculture Zakat",
         "explore.zakat.save": "Save",
         "explore.zakat.saveError": "Could not save",
@@ -671,12 +658,11 @@ export const exploreRouteTranslations = {
         "explore.zakat.saving": "Saving...",
         "explore.zakat.silverNisabHint": "Silver nisab: {amount}",
         "explore.zakat.subtitle":
-            "Calculate maal, fitrah, income, trade, agriculture, and gold zakat.",
+            "Calculate maal, fitrah, trade, agriculture, and gold zakat.",
         "explore.zakat.tab.dagang": "Trade",
         "explore.zakat.tab.emas": "Gold",
         "explore.zakat.tab.fitrah": "Fitrah",
         "explore.zakat.tab.maal": "Maal",
-        "explore.zakat.tab.profesi": "Income",
         "explore.zakat.tab.riwayat": "History",
         "explore.zakat.tab.tani": "Harvest",
         "explore.zakat.title": "Zakat Calculator",
@@ -685,8 +671,6 @@ export const exploreRouteTranslations = {
             "Assets have not reached nisab ({amount}).",
         "explore.zakat.warning.harvestBelowNisab":
             "Harvest is below nisab ({kg} kg), so zakat is not due yet.",
-        "explore.zakat.warning.incomeBelowNisab":
-            "Income has not reached the monthly nisab.",
         "explore.zakat.warning.noHaul":
             "Zakat is not due yet because haul is incomplete.",
         "explore.zakatHistory.back": "Back to Calculator",

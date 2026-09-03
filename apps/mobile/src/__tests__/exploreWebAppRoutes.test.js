@@ -208,7 +208,6 @@ const baseContext = (activeFeature, overrides = {}) => ({
     setZakatHarvestWeight: jest.fn(),
     setZakatHaul: jest.fn(),
     setZakatHistory: jest.fn(),
-    setZakatMonthlyIncome: jest.fn(),
     setZakatRiceKgPrice: jest.fn(),
     setZakatRicePrice: jest.fn(),
     setZakatSavedMsg: jest.fn(),
@@ -252,7 +251,6 @@ const baseContext = (activeFeature, overrides = {}) => ({
     zakatHarvestWeight: "",
     zakatHaul: true,
     zakatHistory: [],
-    zakatMonthlyIncome: "",
     zakatRiceKgPrice: "16000",
     zakatRicePrice: "16000",
     zakatSavedMsg: "",
@@ -957,7 +955,7 @@ describe("Explore web app reference list routes", () => {
         expect(getByText("Rp 2.250.000")).toBeTruthy();
 
         fireEvent.press(getByTestId("web-app-zakat-history-link"));
-        expect(setZakatTab).toHaveBeenCalledWith(6);
+        expect(setZakatTab).toHaveBeenCalledWith(5);
     });
 
     test("renders Zakat history route through dedicated dashboard history surface", () => {
@@ -975,7 +973,7 @@ describe("Explore web app reference list routes", () => {
                             nama_jenis: "Zakat Maal",
                         },
                     ],
-                    zakatTab: 6,
+                    zakatTab: 5,
                 },
             ),
         );
