@@ -7,7 +7,12 @@ import {
     Text,
     View,
 } from "react-native";
-import { CheckCircle2, ChevronLeft, ChevronRight, Play } from "lucide-react-native";
+import {
+    CheckCircle2,
+    ChevronLeft,
+    ChevronRight,
+    Play,
+} from "lucide-react-native";
 import { Card } from "../../components/Card";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { colors, radius, spacing } from "../../theme";
@@ -101,7 +106,7 @@ export function WebAppLessonsRoute({
         return (
             <View
                 style={localStyles.center}
-                testID="explore-web-app-lessons-surface"
+                testID='explore-web-app-lessons-surface'
             >
                 <ActivityIndicator
                     color={isDarkTheme ? "#34d399" : colors.primary}
@@ -114,7 +119,7 @@ export function WebAppLessonsRoute({
         return (
             <View
                 style={localStyles.center}
-                testID="explore-web-app-lessons-surface"
+                testID='explore-web-app-lessons-surface'
             >
                 <Text
                     style={[
@@ -129,7 +134,11 @@ export function WebAppLessonsRoute({
     }
 
     return (
-        <ScrollView style={localStyles.container} contentContainerStyle={localStyles.content} testID="explore-web-app-lessons-surface">
+        <ScrollView
+            style={localStyles.container}
+            contentContainerStyle={localStyles.content}
+            testID='explore-web-app-lessons-surface'
+        >
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
@@ -140,6 +149,7 @@ export function WebAppLessonsRoute({
                     const isSelected = (m.slug || m.id) === activeModuleId;
                     return (
                         <Pressable
+                            accessibilityRole='button'
                             key={m.id || m.slug}
                             onPress={() => {
                                 setActiveModuleId(m.slug || m.id);
@@ -158,9 +168,12 @@ export function WebAppLessonsRoute({
                             <Text
                                 style={[
                                     localStyles.moduleTabText,
-                                    isSelected && localStyles.moduleTabTextActive,
+                                    isSelected &&
+                                        localStyles.moduleTabTextActive,
                                     isDarkTheme && {
-                                        color: isSelected ? "#a7f3d0" : "#d1d5db",
+                                        color: isSelected
+                                            ? "#a7f3d0"
+                                            : "#d1d5db",
                                     },
                                 ]}
                             >
@@ -172,7 +185,15 @@ export function WebAppLessonsRoute({
             </ScrollView>
 
             {activeModule && (
-                <Card style={[localStyles.stepCard, isDarkTheme && { backgroundColor: "#111827", borderColor: "#374151" }]}>
+                <Card
+                    style={[
+                        localStyles.stepCard,
+                        isDarkTheme && {
+                            backgroundColor: "#111827",
+                            borderColor: "#374151",
+                        },
+                    ]}
+                >
                     <View style={localStyles.headerRow}>
                         <Text
                             style={[
@@ -185,9 +206,9 @@ export function WebAppLessonsRoute({
                         >
                             Langkah {activeStepIdx + 1} dari {totalSteps}
                         </Text>
-                        {completed[`${activeModuleId}_${activeStepIdx + 1}`] && (
-                            <CheckCircle2 size={16} color="#10b981" />
-                        )}
+                        {completed[
+                            `${activeModuleId}_${activeStepIdx + 1}`
+                        ] && <CheckCircle2 size={16} color='#10b981' />}
                     </View>
 
                     <Text
@@ -234,11 +255,16 @@ export function WebAppLessonsRoute({
 
                     <View style={localStyles.navRow}>
                         <Pressable
+                            accessibilityRole='button'
                             onPress={handlePrev}
+                            accessibilityState={{
+                                disabled: activeStepIdx === 0,
+                            }}
                             disabled={activeStepIdx === 0}
                             style={[
                                 localStyles.navButton,
-                                activeStepIdx === 0 && localStyles.navButtonDisabled,
+                                activeStepIdx === 0 &&
+                                    localStyles.navButtonDisabled,
                                 isDarkTheme && { backgroundColor: "#1f2937" },
                             ]}
                         >
@@ -248,8 +274,8 @@ export function WebAppLessonsRoute({
                                     activeStepIdx === 0
                                         ? "#9ca3af"
                                         : isDarkTheme
-                                        ? "#f3f4f6"
-                                        : colors.textPrimary
+                                          ? "#f3f4f6"
+                                          : colors.textPrimary
                                 }
                             />
                             <Text
@@ -265,6 +291,7 @@ export function WebAppLessonsRoute({
                         </Pressable>
 
                         <Pressable
+                            accessibilityRole='button'
                             onPress={handleNext}
                             style={[
                                 localStyles.navButton,
@@ -277,7 +304,7 @@ export function WebAppLessonsRoute({
                                     ? "Selesai"
                                     : "Lanjut"}
                             </Text>
-                            <ChevronRight size={18} color="#ffffff" />
+                            <ChevronRight size={18} color='#ffffff' />
                         </Pressable>
                     </View>
                 </Card>

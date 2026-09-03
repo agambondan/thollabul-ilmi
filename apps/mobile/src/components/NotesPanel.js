@@ -143,6 +143,7 @@ export function NotesPanel({ refType, refId }) {
             <View style={styles.actions}>
                 {editingId ? (
                     <Pressable
+                        accessibilityRole='button'
                         onPress={resetForm}
                         style={styles.secondaryButton}
                     >
@@ -152,6 +153,10 @@ export function NotesPanel({ refType, refId }) {
                     </Pressable>
                 ) : null}
                 <Pressable
+                    accessibilityRole='button'
+                    accessibilityState={{
+                        disabled: loading || !content.trim(),
+                    }}
                     disabled={loading || !content.trim()}
                     onPress={submit}
                     style={styles.primaryButton}
@@ -176,6 +181,7 @@ export function NotesPanel({ refType, refId }) {
                     <Text style={styles.noteText}>{item.content}</Text>
                     <View style={styles.noteActions}>
                         <Pressable
+                            accessibilityRole='button'
                             onPress={() => startEdit(item)}
                             style={styles.noteButton}
                         >
@@ -184,6 +190,7 @@ export function NotesPanel({ refType, refId }) {
                             </Text>
                         </Pressable>
                         <Pressable
+                            accessibilityRole='button'
                             onPress={() => remove(item.id)}
                             style={styles.noteButton}
                         >
@@ -196,6 +203,8 @@ export function NotesPanel({ refType, refId }) {
             ))}
             {items.length > PREVIEW_COUNT ? (
                 <Pressable
+                    accessibilityRole='button'
+                    accessibilityState={{ expanded: showAll }}
                     onPress={() => setShowAll((prev) => !prev)}
                     style={styles.showAllButton}
                 >

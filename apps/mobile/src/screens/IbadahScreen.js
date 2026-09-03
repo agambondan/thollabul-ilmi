@@ -299,6 +299,7 @@ function IbadahHub({ navigation, onOpenTab }) {
 
                                 return (
                                     <Pressable
+                                        accessibilityRole='button'
                                         android_ripple={{
                                             color: "#1f2937",
                                             borderless: false,

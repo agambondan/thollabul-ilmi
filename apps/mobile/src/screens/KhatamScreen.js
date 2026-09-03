@@ -280,6 +280,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                             {t("khatam.guest.webApp")}
                         </Text>
                         <Pressable
+                            accessibilityRole='button'
                             onPress={() => onOpenTab?.("profile")}
                             style={styles.webAppPrimaryButton}
                         >
@@ -348,6 +349,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                             {t("khatam.empty.description")}
                         </Text>
                         <Pressable
+                            accessibilityRole='button'
                             onPress={() =>
                                 navigation?.closeAndOpen?.("ibadah", "quran")
                             }
@@ -472,6 +474,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                                     const selected = option.days === targetDays;
                                     return (
                                         <Pressable
+                                            accessibilityRole='button'
                                             key={option.days}
                                             onPress={() =>
                                                 selectTargetDays(option.days)
@@ -700,6 +703,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                                 </Text>
                             </View>
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={continueReading}
                                 style={styles.webAppPrimaryButton}
                             >
@@ -764,6 +768,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                     description={t("khatam.empty.description")}
                     action={
                         <Pressable
+                            accessibilityRole='button'
                             onPress={() =>
                                 navigation?.closeAndOpen?.("ibadah", "quran")
                             }
@@ -819,6 +824,7 @@ export function KhatamScreen({ isActive, navigation, onOpenTab }) {
                             })}
                         </Text>
                         <Pressable
+                            accessibilityRole='button'
                             onPress={continueReading}
                             style={styles.primaryButton}
                         >

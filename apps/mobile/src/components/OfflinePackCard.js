@@ -360,6 +360,11 @@ export function OfflinePackCard() {
 
             <View style={styles.selectorSection}>
                 <Pressable
+                    accessibilityRole='checkbox'
+                    accessibilityState={{
+                        checked: includeQuran,
+                        disabled: busy || !isSupported,
+                    }}
                     disabled={busy || !isSupported}
                     onPress={() => setIncludeQuran((value) => !value)}
                     style={({ pressed }) => [
@@ -415,6 +420,10 @@ export function OfflinePackCard() {
                     </View>
                     <View style={styles.selectionActions}>
                         <Pressable
+                            accessibilityRole='button'
+                            accessibilityState={{
+                                disabled: busy || !books.length,
+                            }}
                             disabled={busy || !books.length}
                             onPress={selectAllBooks}
                             style={styles.linkButton}
@@ -430,6 +439,8 @@ export function OfflinePackCard() {
                             </Text>
                         </Pressable>
                         <Pressable
+                            accessibilityRole='button'
+                            accessibilityState={{ disabled: busy }}
                             disabled={busy}
                             onPress={clearBookSelection}
                             style={styles.linkButton}
@@ -465,6 +476,11 @@ export function OfflinePackCard() {
                             const status = bookStatus(book);
                             return (
                                 <Pressable
+                                    accessibilityRole='checkbox'
+                                    accessibilityState={{
+                                        checked: selected,
+                                        disabled: busy || !isSupported,
+                                    }}
                                     disabled={busy || !isSupported}
                                     key={book.slug}
                                     onPress={() => toggleBook(book.slug)}
@@ -601,6 +617,10 @@ export function OfflinePackCard() {
 
             <View style={styles.actions}>
                 <Pressable
+                    accessibilityRole='button'
+                    accessibilityState={{
+                        disabled: busy || !isSupported || !hasSelection,
+                    }}
                     disabled={busy || !isSupported || !hasSelection}
                     onPress={
                         everythingComplete ? checkUpdates : confirmDownload
@@ -636,6 +656,8 @@ export function OfflinePackCard() {
                     )}
                 </Pressable>
                 <Pressable
+                    accessibilityRole='button'
+                    accessibilityState={{ disabled: busy || !isSupported }}
                     disabled={busy || !isSupported}
                     onPress={confirmClear}
                     style={({ pressed }) => [

@@ -292,9 +292,12 @@ function PaperHomeHeader({
     navigation,
     onOpenTab,
 }) {
+    const { t } = useMobileLocale();
+
     return (
         <View style={styles.header} testID='home-classic-header'>
             <Pressable
+                accessibilityRole='button'
                 android_ripple={{
                     color: "rgba(91, 110, 91, 0.12)",
                     borderless: false,
@@ -312,6 +315,8 @@ function PaperHomeHeader({
             </Pressable>
             <View style={styles.headerActions}>
                 <Pressable
+                    accessibilityLabel={t("a11y.openSearch")}
+                    accessibilityRole='button'
                     android_ripple={{
                         color: "rgba(91, 110, 91, 0.16)",
                         borderless: true,
@@ -330,6 +335,8 @@ function PaperHomeHeader({
                     <Search color={colors.muted} size={18} strokeWidth={2.2} />
                 </Pressable>
                 <Pressable
+                    accessibilityLabel={t("a11y.openNotifications")}
+                    accessibilityRole='button'
                     android_ripple={{
                         color: "rgba(91, 110, 91, 0.16)",
                         borderless: true,
@@ -417,6 +424,7 @@ function DashboardContent({
             {menuItems.map(
                 ({ Icon, featureKey, internalView, key, labelKey, params }) => (
                     <Pressable
+                        accessibilityRole='button'
                         android_ripple={{
                             color: "rgba(91, 110, 91, 0.14)",
                             borderless: false,
@@ -665,6 +673,7 @@ function DashboardContent({
                         <Text style={styles.dailyMeta}>Quran & Hadis</Text>
                     </View>
                     <Pressable
+                        accessibilityRole='button'
                         android_ripple={{
                             color: "rgba(91, 110, 91, 0.12)",
                             borderless: false,
@@ -697,6 +706,7 @@ function DashboardContent({
                         </View>
                     </Pressable>
                     <Pressable
+                        accessibilityRole='button'
                         android_ripple={{
                             color: "rgba(91, 110, 91, 0.12)",
                             borderless: false,
@@ -1051,6 +1061,7 @@ function ContextShortcutsCard({
             <View style={styles.contextRow}>
                 {items.map(({ Icon, featureKey, label, params, sub, tab }) => (
                     <Pressable
+                        accessibilityRole='button'
                         android_ripple={{
                             color: "rgba(91, 110, 91, 0.12)",
                             borderless: false,

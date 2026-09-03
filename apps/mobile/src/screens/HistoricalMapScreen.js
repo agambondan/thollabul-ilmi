@@ -153,6 +153,7 @@ export function HistoricalMapContent() {
     const renderViewToggle = () => (
         <View style={styles.viewToggle}>
             <Pressable
+                accessibilityRole='button'
                 onPress={() => setViewMode("map")}
                 style={[
                     styles.toggleBtn,
@@ -186,6 +187,7 @@ export function HistoricalMapContent() {
                 </Text>
             </Pressable>
             <Pressable
+                accessibilityRole='button'
                 onPress={() => setViewMode("list")}
                 style={[
                     styles.toggleBtn,
@@ -230,6 +232,7 @@ export function HistoricalMapContent() {
             >
                 {categories.map((item) => (
                     <Pressable
+                        accessibilityRole='button'
                         key={item.value}
                         onPress={() =>
                             setCategory(
@@ -274,6 +277,7 @@ export function HistoricalMapContent() {
             >
                 {eras.map((item) => (
                     <Pressable
+                        accessibilityRole='button'
                         key={item.value}
                         onPress={() =>
                             setEra(item.value === era ? "" : item.value)
@@ -350,6 +354,7 @@ export function HistoricalMapContent() {
             </Text>
             {filtered.map((loc) => (
                 <Pressable
+                    accessibilityRole='button'
                     key={loc.id || getLocationName(loc, locationFallback)}
                     android_ripple={{
                         color: "rgba(16, 185, 129, 0.12)",

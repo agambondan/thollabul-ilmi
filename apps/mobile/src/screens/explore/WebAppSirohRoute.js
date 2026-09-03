@@ -57,6 +57,7 @@ function SirohCard({ index, item, onOpen, t }) {
 
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={() => onOpen(item)}
             style={styles.card}
             testID='web-app-siroh-card'
@@ -200,6 +201,10 @@ export function WebAppSirohRoute({
             {pagination?.hasMore && !loading && !error ? (
                 <View style={styles.loadMoreWrap}>
                     <Pressable
+                        accessibilityRole='button'
+                        accessibilityState={{
+                            disabled: pagination.loadingMore,
+                        }}
                         disabled={pagination.loadingMore}
                         onPress={onLoadMore}
                         style={[

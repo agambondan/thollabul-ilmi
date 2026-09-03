@@ -47,6 +47,7 @@ export function ClassicZakatHistoryItem({ formatCurrency, item, onDelete }) {
                 </Text>
             </View>
             <Pressable
+                accessibilityRole='button'
                 onPress={() => onDelete(item)}
                 style={[styles.heirButton, { borderColor: colors.danger }]}
             >
@@ -93,6 +94,7 @@ function WebAppZakatHistoryItem({
                     </View>
                 </View>
                 <Pressable
+                    accessibilityRole='button'
                     accessibilityLabel={t(
                         "explore.zakatHistory.deleteAccessibility",
                         {
@@ -172,6 +174,7 @@ export function WebAppZakatHistoryRoute({
             testID='explore-web-app-zakat-history-surface'
         >
             <Pressable
+                accessibilityRole='button'
                 onPress={onBack}
                 style={styles.webAppZakatHistoryBack}
                 testID='web-app-zakat-history-back'

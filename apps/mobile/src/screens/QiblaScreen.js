@@ -566,6 +566,10 @@ export function QiblaScreen({ onBack, onOpenTab }) {
                         />
                     </View>
                     <Pressable
+                        accessibilityRole='button'
+                        accessibilityState={{
+                            disabled: !manualLatInput || !manualLngInput,
+                        }}
                         disabled={!manualLatInput || !manualLngInput}
                         onPress={applyManualLocation}
                         style={[

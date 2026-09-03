@@ -36,6 +36,7 @@ function KajianCard({
 
     return (
         <Pressable
+            accessibilityRole='button'
             key={`${getItemKey(item)}-${index}`}
             onPress={() => {
                 if (url) {
@@ -160,6 +161,7 @@ export function WebAppKajianRoute({
 
             <View style={styles.categories}>
                 <Pressable
+                    accessibilityRole='button'
                     onPress={() => onSelectCategory("")}
                     style={[
                         styles.category,
@@ -178,6 +180,7 @@ export function WebAppKajianRoute({
                 </Pressable>
                 {categories.map((category) => (
                     <Pressable
+                        accessibilityRole='button'
                         key={category}
                         onPress={() =>
                             onSelectCategory(

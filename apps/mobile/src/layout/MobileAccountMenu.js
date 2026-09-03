@@ -350,6 +350,7 @@ export function MobileAccountMenu({
                                 color: isDarkTheme ? "#334155" : "#fee2e2",
                                 borderless: false,
                             }}
+                            accessibilityState={{ disabled: loading }}
                             disabled={loading}
                             onPress={handleSignOut}
                             style={styles.signOutRow}

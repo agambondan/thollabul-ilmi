@@ -15,9 +15,15 @@ export function ActionSheetRow({
     titleStyle,
     subtitleStyle,
     children,
+    accessibilityLabel,
+    accessibilityHint,
 }) {
     return (
         <Pressable
+            // Title is the name, subtitle is the hint. Left implicit, a screen
+            // reader ran them together as one long label.
+            accessibilityHint={accessibilityHint ?? subtitle}
+            accessibilityLabel={accessibilityLabel ?? title}
             accessibilityRole='button'
             accessibilityState={{ disabled, selected: active }}
             android_ripple={{

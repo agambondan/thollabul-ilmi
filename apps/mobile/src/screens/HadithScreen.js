@@ -569,6 +569,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             <>
                 {visible.map((item) => (
                     <Pressable
+                        accessibilityRole='button'
                         key={item.id}
                         onPress={() => openPerawi(item)}
                         style={styles.perawiChip}
@@ -582,6 +583,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                 ))}
                 {items.length > 6 ? (
                     <Pressable
+                        accessibilityRole='button'
                         android_ripple={{
                             color: "rgba(91, 110, 91, 0.12)",
                             borderless: false,
@@ -754,6 +756,8 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
             <View style={styles.webAppHadithTabs}>
                 {WEB_APP_HADITH_TABS.map((tab) => (
                     <Pressable
+                        accessibilityRole='tab'
+                        accessibilityState={{ selected: activeTab === tab.key }}
                         key={tab.key}
                         onPress={() => {
                             if (tab.key === "book") {
@@ -868,6 +872,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                         {count ? `${count} Hadith` : "Koleksi Hadith"}
                     </Text>
                     <Pressable
+                        accessibilityRole='button'
                         onPress={() => selectBook(book.slug)}
                         style={styles.webAppBookAction}
                         testID={`hadith-web-app-book-${book.slug}`}
@@ -971,6 +976,8 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                     </View>
                     {hasMoreHadiths ? (
                         <Pressable
+                            accessibilityRole='button'
+                            accessibilityState={{ disabled: loadingMore }}
                             disabled={loadingMore}
                             onPress={loadMoreHadiths}
                             style={[
@@ -1024,6 +1031,8 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
         >
             {HADITH_DETAIL_TABS.map((tab) => (
                 <Pressable
+                    accessibilityRole='tab'
+                    accessibilityState={{ selected: detailTab === tab.key }}
                     key={tab.key}
                     onPress={() => setDetailTab(tab.key)}
                     style={[
@@ -1202,6 +1211,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                         testID='hadith-web-app-detail-hero'
                     >
                         <Pressable
+                            accessibilityRole='button'
                             onPress={() => setSelectedHadith(null)}
                             style={styles.webAppDetailBackLink}
                         >
@@ -1395,6 +1405,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                                     {(path.mata_sanad ?? []).map(
                                         (mata, mataIndex) => (
                                             <Pressable
+                                                accessibilityRole='button'
                                                 key={`${mata.id}-${mataIndex}`}
                                                 onPress={() =>
                                                     openPerawi(mata.perawi)
@@ -1468,6 +1479,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                             <View style={styles.chipWrap}>
                                 {sanadPerawi.map((perawi) => (
                                     <Pressable
+                                        accessibilityRole='button'
                                         key={perawi.id}
                                         onPress={() => openPerawi(perawi)}
                                         style={styles.perawiChip}
@@ -1822,6 +1834,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                     contentContainerStyle={styles.bookFilterRow}
                 >
                     <Pressable
+                        accessibilityRole='button'
                         onPress={() => selectBook(null)}
                         style={[
                             styles.bookChip,
@@ -1843,6 +1856,7 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                     </Pressable>
                     {books.map((book) => (
                         <Pressable
+                            accessibilityRole='button'
                             key={book.slug}
                             onPress={() => selectBook(book.slug)}
                             style={[
@@ -1917,10 +1931,12 @@ export function HadithScreen({ deepLinkTarget, isActive, navigation }) {
                     </Card>
                     {hasMoreHadiths ? (
                         <Pressable
+                            accessibilityRole='button'
                             android_ripple={{
                                 color: "rgba(91, 110, 91, 0.12)",
                                 borderless: false,
                             }}
+                            accessibilityState={{ disabled: loadingMore }}
                             disabled={loadingMore}
                             onPress={loadMoreHadiths}
                             style={styles.loadMoreButton}

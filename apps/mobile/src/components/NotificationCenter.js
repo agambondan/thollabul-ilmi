@@ -681,6 +681,8 @@ export function NotificationCenter({ variant = "classic" }) {
             <View style={[styles.tabs, isWebApp ? styles.webAppTabs : null]}>
                 {visibleTabs.map((tab) => (
                     <Pressable
+                        accessibilityRole='tab'
+                        accessibilityState={{ selected: activeTab === tab.key }}
                         android_ripple={{
                             color: "rgba(91, 110, 91, 0.12)",
                             borderless: false,
@@ -802,6 +804,7 @@ export function NotificationCenter({ variant = "classic" }) {
                             </Text>
                         </View>
                         <Pressable
+                            accessibilityRole='button'
                             android_ripple={{
                                 color: "rgba(91, 110, 91, 0.12)",
                                 borderless: false,
@@ -847,6 +850,7 @@ export function NotificationCenter({ variant = "classic" }) {
                     </View>
                     <View style={styles.pushActions}>
                         <Pressable
+                            accessibilityRole='button'
                             android_ripple={{
                                 color: "rgba(91, 110, 91, 0.12)",
                                 borderless: false,
@@ -923,6 +927,7 @@ export function NotificationCenter({ variant = "classic" }) {
                             </Text>
                         </View>
                         <Pressable
+                            accessibilityRole='button'
                             android_ripple={{
                                 color: "rgba(91, 110, 91, 0.12)",
                                 borderless: false,
@@ -989,6 +994,7 @@ export function NotificationCenter({ variant = "classic" }) {
                             ) : (
                                 <>
                                     <Pressable
+                                        accessibilityRole='button'
                                         android_ripple={{
                                             color: "rgba(91, 110, 91, 0.12)",
                                             borderless: false,
@@ -1009,6 +1015,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                         sampai
                                     </Text>
                                     <Pressable
+                                        accessibilityRole='button'
                                         android_ripple={{
                                             color: "rgba(91, 110, 91, 0.12)",
                                             borderless: false,
@@ -1081,6 +1088,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                 />
                             ) : (
                                 <Pressable
+                                    accessibilityRole='button'
                                     android_ripple={{
                                         color: "rgba(91, 110, 91, 0.12)",
                                         borderless: false,
@@ -1108,6 +1116,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                 </Pressable>
                             )}
                             <Pressable
+                                accessibilityRole='button'
                                 android_ripple={{
                                     color: "rgba(91, 110, 91, 0.12)",
                                     borderless: false,
@@ -1204,10 +1213,12 @@ export function NotificationCenter({ variant = "classic" }) {
                         </View>
                     )}
                     <Pressable
+                        accessibilityRole='button'
                         android_ripple={{
                             color: "rgba(255, 255, 255, 0.12)",
                             borderless: false,
                         }}
+                        accessibilityState={{ disabled: saving }}
                         disabled={saving}
                         onPress={saveSettings}
                         style={[
@@ -1230,9 +1241,13 @@ export function NotificationCenter({ variant = "classic" }) {
                                 Pengingat lokal tetap aktif.
                             </Text>
                             <Pressable
+                                accessibilityRole='button'
                                 android_ripple={{
                                     color: "rgba(91, 110, 91, 0.12)",
                                     borderless: false,
+                                }}
+                                accessibilityState={{
+                                    disabled: saving || !hasSession,
                                 }}
                                 disabled={saving || !hasSession}
                                 onPress={retryPendingSync}
@@ -1275,6 +1290,7 @@ export function NotificationCenter({ variant = "classic" }) {
                             />
                             {Platform.OS === "ios" ? (
                                 <Pressable
+                                    accessibilityRole='button'
                                     android_ripple={{
                                         color: "rgba(91, 110, 91, 0.12)",
                                         borderless: false,
@@ -1393,6 +1409,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                         <View style={styles.inboxActions}>
                                             {!item.is_read ? (
                                                 <Pressable
+                                                    accessibilityRole='button'
                                                     android_ripple={{
                                                         color: "rgba(91, 110, 91, 0.12)",
                                                         borderless: false,
@@ -1420,6 +1437,7 @@ export function NotificationCenter({ variant = "classic" }) {
                                                 </Pressable>
                                             ) : null}
                                             <Pressable
+                                                accessibilityRole='button'
                                                 android_ripple={{
                                                     color: "rgba(190, 18, 60, 0.12)",
                                                     borderless: false,
@@ -1468,6 +1486,7 @@ export function NotificationCenter({ variant = "classic" }) {
                     })}
                     {inbox.length ? (
                         <Pressable
+                            accessibilityRole='button'
                             android_ripple={{
                                 color: "rgba(91, 110, 91, 0.12)",
                                 borderless: false,

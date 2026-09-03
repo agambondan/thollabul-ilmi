@@ -91,6 +91,7 @@ const getCategories = (items) => {
 function CategoryPill({ active, label, onPress, testID }) {
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={onPress}
             style={[styles.categoryPill, active && styles.categoryPillActive]}
             testID={testID}
@@ -112,6 +113,7 @@ function FiqhCard({ item, onOpen, t }) {
 
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={() => onOpen(item)}
             style={styles.card}
             testID='web-app-fiqh-card'
@@ -263,6 +265,10 @@ export function WebAppFiqhRoute({
             {pagination?.hasMore && !loading && !error ? (
                 <View style={styles.loadMoreWrap}>
                     <Pressable
+                        accessibilityRole='button'
+                        accessibilityState={{
+                            disabled: pagination.loadingMore,
+                        }}
                         disabled={pagination.loadingMore}
                         onPress={onLoadMore}
                         style={[

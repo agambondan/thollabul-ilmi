@@ -141,6 +141,7 @@ export function TokohTarikhContent() {
         >
             {ERA_FILTERS.map((f) => (
                 <Pressable
+                    accessibilityRole='button'
                     key={f.value}
                     onPress={() => setEra(f.value === era ? "" : f.value)}
                     style={[
@@ -247,6 +248,7 @@ export function TokohTarikhContent() {
 
         return (
             <Pressable
+                accessibilityRole='button'
                 key={tokoh.id ?? title}
                 android_ripple={{
                     color: "rgba(79, 70, 229, 0.12)",
@@ -362,10 +364,12 @@ export function TokohTarikhContent() {
                 onRequestClose={() => setSelected(null)}
             >
                 <Pressable
+                    accessibilityRole='button'
                     style={styles.modalOverlay}
                     onPress={() => setSelected(null)}
                 >
                     <Pressable
+                        accessibilityRole='button'
                         style={[
                             styles.modalContent,
                             isWebAppLayout && {
@@ -377,6 +381,7 @@ export function TokohTarikhContent() {
                         {selected && (
                             <ScrollView showsVerticalScrollIndicator={false}>
                                 <Pressable
+                                    accessibilityRole='button'
                                     style={styles.modalClose}
                                     onPress={() => setSelected(null)}
                                 >

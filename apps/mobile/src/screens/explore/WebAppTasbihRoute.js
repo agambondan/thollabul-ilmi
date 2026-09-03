@@ -80,6 +80,7 @@ function StatTile({ color, label, value }) {
 function TargetChip({ active, label, onPress }) {
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={onPress}
             style={[styles.targetChip, active && styles.targetChipActive]}
         >
@@ -98,6 +99,7 @@ function TargetChip({ active, label, onPress }) {
 function PresetCard({ active, onPress, preset, t }) {
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={onPress}
             style={[styles.presetCard, active && styles.presetCardActive]}
             testID='web-app-tasbih-preset'
@@ -232,6 +234,7 @@ export function WebAppTasbihRoute({
 
                 <View style={styles.actionRow}>
                     <Pressable onPress={reset} style={styles.neutralButton}>
+                        accessibilityRole='button'
                         <RotateCcw
                             color='#374151'
                             size={15}
@@ -242,6 +245,7 @@ export function WebAppTasbihRoute({
                         </Text>
                     </Pressable>
                     <Pressable onPress={resetAll} style={styles.dangerButton}>
+                        accessibilityRole='button'
                         <RefreshCcw
                             color='#dc2626'
                             size={15}
@@ -252,6 +256,8 @@ export function WebAppTasbihRoute({
                         </Text>
                     </Pressable>
                     <Pressable
+                        accessibilityRole='checkbox'
+                        accessibilityState={{ checked: vibrate }}
                         onPress={() => setVibrate((current) => !current)}
                         style={[
                             styles.vibrateButton,

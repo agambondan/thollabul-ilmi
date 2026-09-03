@@ -59,6 +59,7 @@ const getHeatTextStyle = (entry) => {
 function PrayerRow({ done, item, onPress }) {
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={() => onPress(item.key)}
             style={[styles.prayerRow, done && styles.prayerRowDone]}
             testID='web-app-sholat-prayer-row'

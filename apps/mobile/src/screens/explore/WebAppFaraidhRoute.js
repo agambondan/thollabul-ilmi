@@ -127,6 +127,8 @@ function HeirStepper({ count, field, onChange, t }) {
             <Text style={styles.heirCount}>{count}</Text>
             <View style={styles.heirActions}>
                 <Pressable
+                    accessibilityRole='button'
+                    accessibilityState={{ disabled: count === 0 }}
                     disabled={count === 0}
                     onPress={() => onChange(field.key, -1)}
                     style={[
@@ -138,6 +140,9 @@ function HeirStepper({ count, field, onChange, t }) {
                     <Text style={styles.stepperText}>-</Text>
                 </Pressable>
                 <Pressable
+                    accessibilityLabel={t("a11y.addHeir")}
+                    accessibilityRole='button'
+                    accessibilityState={{ disabled: count >= field.max }}
                     disabled={count >= field.max}
                     onPress={() => onChange(field.key, 1)}
                     style={[
@@ -242,6 +247,7 @@ function HistoryCard({ item, language, onDelete, t }) {
                     </Text>
                 </View>
                 <Pressable
+                    accessibilityRole='button'
                     accessibilityLabel={t(
                         "explore.faraidh.deleteHistoryAccessibility",
                     )}
@@ -383,6 +389,7 @@ export function WebAppFaraidhRoute({ context }) {
                 <View testID='explore-web-app-faraidh-surface' />
                 <View testID='explore-web-app-faraidh-history-surface' />
                 <Pressable
+                    accessibilityRole='button'
                     onPress={() => setShowFaraidhHistory(false)}
                     style={styles.backButton}
                     testID='web-app-faraidh-history-back'
@@ -495,16 +502,53 @@ export function WebAppFaraidhRoute({ context }) {
                     </Text>
                 </View>
                 {[
-                    { key: "spouse", label: t("explore.faraidh.group_spouse") ?? "Pasangan" },
-                    { key: "children", label: t("explore.faraidh.group_children") ?? "Anak" },
-                    { key: "grandchildren", label: t("explore.faraidh.group_grandchildren") ?? "Cucu (dari anak laki-laki)" },
-                    { key: "parents", label: t("explore.faraidh.group_parents") ?? "Orang Tua" },
-                    { key: "grandparents", label: t("explore.faraidh.group_grandparents") ?? "Kakek/Nenek" },
-                    { key: "siblings", label: t("explore.faraidh.group_siblings") ?? "Saudara Kandung" },
-                    { key: "half_siblings", label: t("explore.faraidh.group_half_siblings") ?? "Saudara Seayah" },
-                    { key: "maternal_siblings", label: t("explore.faraidh.group_maternal_siblings") ?? "Saudara Seibu" },
+                    {
+                        key: "spouse",
+                        label: t("explore.faraidh.group_spouse") ?? "Pasangan",
+                    },
+                    {
+                        key: "children",
+                        label: t("explore.faraidh.group_children") ?? "Anak",
+                    },
+                    {
+                        key: "grandchildren",
+                        label:
+                            t("explore.faraidh.group_grandchildren") ??
+                            "Cucu (dari anak laki-laki)",
+                    },
+                    {
+                        key: "parents",
+                        label:
+                            t("explore.faraidh.group_parents") ?? "Orang Tua",
+                    },
+                    {
+                        key: "grandparents",
+                        label:
+                            t("explore.faraidh.group_grandparents") ??
+                            "Kakek/Nenek",
+                    },
+                    {
+                        key: "siblings",
+                        label:
+                            t("explore.faraidh.group_siblings") ??
+                            "Saudara Kandung",
+                    },
+                    {
+                        key: "half_siblings",
+                        label:
+                            t("explore.faraidh.group_half_siblings") ??
+                            "Saudara Seayah",
+                    },
+                    {
+                        key: "maternal_siblings",
+                        label:
+                            t("explore.faraidh.group_maternal_siblings") ??
+                            "Saudara Seibu",
+                    },
                 ].map((group) => {
-                    const fields = HEIR_FIELDS.filter((f) => f.group === group.key);
+                    const fields = HEIR_FIELDS.filter(
+                        (f) => f.group === group.key,
+                    );
                     if (fields.length === 0) return null;
                     return (
                         <View key={group.key} style={styles.heirGroup}>
@@ -591,6 +635,10 @@ export function WebAppFaraidhRoute({ context }) {
 
                 <View style={styles.actions}>
                     <Pressable
+                        accessibilityRole='button'
+                        accessibilityState={{
+                            disabled: savingFaraidh || distributable <= 0,
+                        }}
                         disabled={savingFaraidh || distributable <= 0}
                         onPress={handleSave}
                         style={[
@@ -608,6 +656,7 @@ export function WebAppFaraidhRoute({ context }) {
                         </Text>
                     </Pressable>
                     <Pressable
+                        accessibilityRole='button'
                         onPress={handleLoadHistory}
                         style={styles.secondaryButton}
                         testID='web-app-faraidh-history-link'

@@ -39,6 +39,7 @@ function ForumStat({ label, value }) {
 function QuestionCard({ item, onOpen, t }) {
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={() => onOpen(item)}
             style={styles.questionCard}
             testID='web-app-forum-question-card'
@@ -316,6 +317,7 @@ export function WebAppForumRoute({
                     />
                 </View>
                 <Pressable
+                    accessibilityRole='button'
                     onPress={() => {
                         setForumView("ask");
                         setForumAskTitle("");
@@ -361,6 +363,8 @@ export function WebAppForumRoute({
             ) : null}
             {forumHasMore ? (
                 <Pressable
+                    accessibilityRole='button'
+                    accessibilityState={{ disabled: forumLoading }}
                     disabled={forumLoading}
                     onPress={loadMore}
                     style={styles.loadMore}
@@ -378,6 +382,7 @@ export function WebAppForumRoute({
     const renderAsk = () => (
         <View style={styles.panel}>
             <Pressable
+                accessibilityRole='button'
                 onPress={() => {
                     setForumView("list");
                     setForumError("");
@@ -414,6 +419,7 @@ export function WebAppForumRoute({
                 value={forumAskTags}
             />
             <Pressable
+                accessibilityRole='button'
                 disabled={
                     forumSaving ||
                     forumAskTitle.length < 10 ||
@@ -440,6 +446,7 @@ export function WebAppForumRoute({
     const renderDetail = () => (
         <View style={styles.panel}>
             <Pressable
+                accessibilityRole='button'
                 onPress={() => {
                     setForumView("list");
                     setForumDetail(null);
@@ -484,6 +491,11 @@ export function WebAppForumRoute({
                     </View>
                     <View style={styles.voteRow}>
                         <Pressable
+                            accessibilityRole='button'
+                            accessibilityState={{
+                                disabled:
+                                    forumVotingId === `${forumDetail.id}-1`,
+                            }}
                             disabled={forumVotingId === `${forumDetail.id}-1`}
                             onPress={() => voteQuestion(1)}
                             style={styles.voteButton}
@@ -498,6 +510,11 @@ export function WebAppForumRoute({
                             </Text>
                         </Pressable>
                         <Pressable
+                            accessibilityRole='button'
+                            accessibilityState={{
+                                disabled:
+                                    forumVotingId === `${forumDetail.id}--1`,
+                            }}
                             disabled={forumVotingId === `${forumDetail.id}--1`}
                             onPress={() => voteQuestion(-1)}
                             style={styles.voteButton}
@@ -542,6 +559,7 @@ export function WebAppForumRoute({
                                 <View style={styles.voteRow}>
                                     {[1, -1].map((value) => (
                                         <Pressable
+                                            accessibilityRole='button'
                                             disabled={
                                                 forumVotingId ===
                                                 `${answer.id}-${value}`
@@ -563,6 +581,7 @@ export function WebAppForumRoute({
                                     ))}
                                     {session?.token && !answer.isAccepted ? (
                                         <Pressable
+                                            accessibilityRole='button'
                                             disabled={
                                                 forumVotingId ===
                                                 `accept-${answer.id}`
@@ -599,6 +618,7 @@ export function WebAppForumRoute({
                                 value={forumAnswerDraft}
                             />
                             <Pressable
+                                accessibilityRole='button'
                                 disabled={
                                     forumSaving ||
                                     forumAnswerDraft.trim().length < 10

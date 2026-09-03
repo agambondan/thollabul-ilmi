@@ -8,6 +8,7 @@ dipecah menjadi task implementasi.
 
 | Dokumen                                                                                                          | Fokus                                                                                                              |
 | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| [2026-09-01-mobile-accessibility-review.md](./2026-09-01-mobile-accessibility-review.md)                         | Sweep aksesibilitas mobile: role, state, label ikon, semantik modal — plus koreksi angka awal yang salah hitung    |
 | [2026-09-01-web-frontend-deep-review.md](./2026-09-01-web-frontend-deep-review.md)                               | Deep review frontend web: UI, UX, aksesibilitas, performa, kebenaran data konten, dan SEO — 40 temuan berukur      |
 | [2026-05-23-web-mobile-feature-parity-deep-review.md](./2026-05-23-web-mobile-feature-parity-deep-review.md)     | Deep review parity fitur web ke mobile dan mobile ke web, termasuk stub, intentional exclusions, dan gap kedalaman |
 | [2026-05-17-web-mobile-performance-sync-deep-review.md](./2026-05-17-web-mobile-performance-sync-deep-review.md) | Deep review sync web/mobile/backend, CTA parity, dan performance risk lintas platform                              |

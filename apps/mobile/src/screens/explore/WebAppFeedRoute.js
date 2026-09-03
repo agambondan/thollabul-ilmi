@@ -74,8 +74,10 @@ function FeedCard({
             ) : null}
             <View style={styles.actions}>
                 <Pressable
+                    accessibilityRole='button'
                     accessibilityLabel={t("explore.feed.likeAccessibility")}
                     android_ripple={{ color: "#fee2e2", borderless: false }}
+                    accessibilityState={{ disabled: isLiking }}
                     disabled={isLiking}
                     onPress={() => onLike(item)}
                     style={styles.action}
@@ -85,6 +87,7 @@ function FeedCard({
                     </Text>
                 </Pressable>
                 <Pressable
+                    accessibilityRole='button'
                     accessibilityLabel={t("explore.feed.commentAccessibility")}
                     android_ripple={{ color: "#dbeafe", borderless: false }}
                     onPress={() => onOpenComments(item)}
@@ -97,6 +100,7 @@ function FeedCard({
                 {isLoggedIn ? (
                     <>
                         <Pressable
+                            accessibilityRole='button'
                             accessibilityLabel={t(
                                 "explore.feed.hideAccessibility",
                             )}
@@ -114,6 +118,7 @@ function FeedCard({
                             />
                         </Pressable>
                         <Pressable
+                            accessibilityRole='button'
                             accessibilityLabel={t(
                                 "explore.feed.reportAccessibility",
                             )}

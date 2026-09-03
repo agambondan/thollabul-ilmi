@@ -247,6 +247,7 @@ const ResultSection = ({ children, count, title }) => {
 
 const SeeAllButton = ({ count, filter, label, onPress }) => (
     <Pressable
+        accessibilityRole='button'
         android_ripple={{ color: "rgba(91, 110, 91, 0.12)", borderless: false }}
         onPress={() => onPress(filter)}
         style={styles.seeAllButton}
@@ -974,6 +975,7 @@ export function GlobalSearchScreen({
                           return (
                               <View style={styles.loadMoreWrap}>
                                   <Pressable
+                                      accessibilityRole='button'
                                       android_ripple={{
                                           color: "rgba(91, 110, 91, 0.12)",
                                           borderless: false,
@@ -1063,6 +1065,7 @@ export function GlobalSearchScreen({
                         />
                     </View>
                     <Pressable
+                        accessibilityRole='button'
                         onPress={Keyboard.dismiss}
                         style={[
                             styles.webAppSearchButton,
@@ -1093,6 +1096,7 @@ export function GlobalSearchScreen({
                                   : label;
                         return (
                             <Pressable
+                                accessibilityRole='button'
                                 key={filter.key}
                                 onPress={() => setActiveFilter(filter.key)}
                                 style={[
@@ -1162,6 +1166,7 @@ export function GlobalSearchScreen({
                                     : baseLabel;
                             return (
                                 <Pressable
+                                    accessibilityRole='button'
                                     android_ripple={{
                                         color: "rgba(91, 110, 91, 0.12)",
                                         borderless: false,
@@ -1191,6 +1196,7 @@ export function GlobalSearchScreen({
                             <View style={styles.quickChips}>
                                 {searchChips.slice(0, 6).map((item) => (
                                     <Pressable
+                                        accessibilityRole='button'
                                         android_ripple={{
                                             color: "rgba(91, 110, 91, 0.12)",
                                             borderless: false,

@@ -293,6 +293,7 @@ export function renderExploreWebAppRoute(context) {
 
         return (
             <Pressable
+                accessibilityRole='button'
                 android_ripple={{
                     color: "rgba(52, 211, 153, 0.12)",
                     borderless: false,
@@ -335,6 +336,7 @@ export function renderExploreWebAppRoute(context) {
                             Ketuk untuk detail
                         </Text>
                         <Pressable
+                            accessibilityRole='button'
                             hitSlop={10}
                             onPress={() =>
                                 setItemActionSheet({ visible: true, item })
@@ -372,6 +374,7 @@ export function renderExploreWebAppRoute(context) {
                 <View testID='explore-web-app-bookmarks-surface' />
                 <View style={styles.webAppBookmarksHeader}>
                     <Pressable
+                        accessibilityRole='button'
                         accessibilityLabel='Kembali ke Belajar'
                         onPress={clearFeature}
                         style={styles.webAppBookmarksBack}
@@ -470,6 +473,7 @@ export function renderExploreWebAppRoute(context) {
 
         return (
             <Pressable
+                accessibilityRole='button'
                 android_ripple={{
                     color: "rgba(52, 211, 153, 0.12)",
                     borderless: false,
@@ -519,6 +523,7 @@ export function renderExploreWebAppRoute(context) {
                             Ketuk untuk membaca
                         </Text>
                         <Pressable
+                            accessibilityRole='button'
                             hitSlop={10}
                             onPress={() =>
                                 setItemActionSheet({ visible: true, item })
@@ -557,6 +562,7 @@ export function renderExploreWebAppRoute(context) {
                 <View testID='explore-web-app-notes-surface' />
                 <View style={styles.webAppBookmarksHeader}>
                     <Pressable
+                        accessibilityRole='button'
                         accessibilityLabel='Kembali ke Belajar'
                         onPress={clearFeature}
                         style={styles.webAppBookmarksBack}
@@ -651,6 +657,7 @@ export function renderExploreWebAppRoute(context) {
 
         return (
             <Pressable
+                accessibilityRole='button'
                 android_ripple={{
                     color: "rgba(52, 211, 153, 0.12)",
                     borderless: false,
@@ -722,6 +729,7 @@ export function renderExploreWebAppRoute(context) {
                         {progress}% progres
                     </Text>
                     <Pressable
+                        accessibilityRole='button'
                         hitSlop={10}
                         onPress={() =>
                             setItemActionSheet({ visible: true, item })
@@ -754,6 +762,7 @@ export function renderExploreWebAppRoute(context) {
                 <View testID='explore-web-app-goals-surface' />
                 <View style={styles.webAppBookmarksHeader}>
                     <Pressable
+                        accessibilityRole='button'
                         accessibilityLabel='Kembali ke Belajar'
                         onPress={clearFeature}
                         style={styles.webAppBookmarksBack}
@@ -849,6 +858,7 @@ export function renderExploreWebAppRoute(context) {
 
         return (
             <Pressable
+                accessibilityRole='button'
                 android_ripple={{
                     color: "rgba(52, 211, 153, 0.12)",
                     borderless: false,
@@ -888,6 +898,7 @@ export function renderExploreWebAppRoute(context) {
                         Ketuk untuk membaca
                     </Text>
                     <Pressable
+                        accessibilityRole='button'
                         hitSlop={10}
                         onPress={() =>
                             setItemActionSheet({ visible: true, item })
@@ -921,6 +932,7 @@ export function renderExploreWebAppRoute(context) {
                 <View testID='explore-web-app-muhasabah-surface' />
                 <View style={styles.webAppBookmarksHeader}>
                     <Pressable
+                        accessibilityRole='button'
                         accessibilityLabel='Kembali ke Belajar'
                         onPress={clearFeature}
                         style={styles.webAppBookmarksBack}
@@ -1021,6 +1033,7 @@ export function renderExploreWebAppRoute(context) {
 
         return (
             <Pressable
+                accessibilityRole='button'
                 android_ripple={{
                     color: "rgba(52, 211, 153, 0.12)",
                     borderless: false,
@@ -1096,6 +1109,7 @@ export function renderExploreWebAppRoute(context) {
                         {progress}% hafalan
                     </Text>
                     <Pressable
+                        accessibilityRole='button'
                         hitSlop={10}
                         onPress={() =>
                             setItemActionSheet({ visible: true, item })
@@ -1129,6 +1143,7 @@ export function renderExploreWebAppRoute(context) {
                 <View testID='explore-web-app-hafalan-surface' />
                 <View style={styles.webAppBookmarksHeader}>
                     <Pressable
+                        accessibilityRole='button'
                         accessibilityLabel='Kembali ke Belajar'
                         onPress={clearFeature}
                         style={styles.webAppBookmarksBack}
@@ -1242,6 +1257,7 @@ export function renderExploreWebAppRoute(context) {
 
         return (
             <Pressable
+                accessibilityRole='button'
                 android_ripple={{
                     color: "rgba(52, 211, 153, 0.12)",
                     borderless: false,
@@ -1312,6 +1328,7 @@ export function renderExploreWebAppRoute(context) {
                             : "Prioritas murajaah"}
                     </Text>
                     <Pressable
+                        accessibilityRole='button'
                         hitSlop={10}
                         onPress={() =>
                             setItemActionSheet({ visible: true, item })
@@ -1341,6 +1358,7 @@ export function renderExploreWebAppRoute(context) {
                 <View testID='explore-web-app-murojaah-surface' />
                 <View style={styles.webAppBookmarksHeader}>
                     <Pressable
+                        accessibilityRole='button'
                         accessibilityLabel='Kembali ke Belajar'
                         onPress={clearFeature}
                         style={styles.webAppBookmarksBack}
@@ -1447,6 +1465,7 @@ export function renderExploreWebAppRoute(context) {
 
         return (
             <Pressable
+                accessibilityRole='button'
                 android_ripple={{
                     color: "rgba(52, 211, 153, 0.12)",
                     borderless: false,
@@ -1498,6 +1517,7 @@ export function renderExploreWebAppRoute(context) {
                         Ketuk untuk detail
                     </Text>
                     <Pressable
+                        accessibilityRole='button'
                         hitSlop={10}
                         onPress={() =>
                             setItemActionSheet({ visible: true, item })
@@ -1531,6 +1551,7 @@ export function renderExploreWebAppRoute(context) {
                 <View testID='explore-web-app-tilawah-surface' />
                 <View style={styles.webAppBookmarksHeader}>
                     <Pressable
+                        accessibilityRole='button'
                         accessibilityLabel='Kembali ke Belajar'
                         onPress={clearFeature}
                         style={styles.webAppBookmarksBack}
@@ -1703,6 +1724,7 @@ export function renderExploreWebAppRoute(context) {
                 <View testID='explore-web-app-stats-surface' />
                 <View style={styles.webAppBookmarksHeader}>
                     <Pressable
+                        accessibilityRole='button'
                         accessibilityLabel='Kembali ke Belajar'
                         onPress={clearFeature}
                         style={styles.webAppBookmarksBack}
@@ -1944,6 +1966,7 @@ export function renderExploreWebAppRoute(context) {
             <View testID='explore-web-app-notifications-surface' />
             <View style={styles.webAppBookmarksHeader}>
                 <Pressable
+                    accessibilityRole='button'
                     accessibilityLabel='Kembali ke Belajar'
                     onPress={clearFeature}
                     style={styles.webAppBookmarksBack}
@@ -2575,7 +2598,10 @@ export function renderExploreWebAppRoute(context) {
         );
     }
 
-    if (activeFeature?.key === "komunitas" || activeFeature?.type === "komunitas") {
+    if (
+        activeFeature?.key === "komunitas" ||
+        activeFeature?.type === "komunitas"
+    ) {
         return (
             <WebAppKomunitasRoute
                 feature={activeFeature}

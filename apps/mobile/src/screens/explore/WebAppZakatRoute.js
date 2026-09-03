@@ -164,6 +164,8 @@ function ResultCard({ amount, color = "emerald", label, note }) {
 function SaveButton({ disabled, onPress, saving, t }) {
     return (
         <Pressable
+            accessibilityRole='button'
+            accessibilityState={{ disabled: disabled }}
             disabled={disabled}
             onPress={onPress}
             style={[styles.saveButton, disabled && styles.disabledButton]}
@@ -372,6 +374,10 @@ export function WebAppZakatRoute({
                 <View style={styles.tabs}>
                     {ZAKAT_TABS.map((tab, index) => (
                         <Pressable
+                            accessibilityRole='tab'
+                            accessibilityState={{
+                                selected: zakatTab === index,
+                            }}
                             key={tab.key}
                             onPress={() => setZakatTab(index)}
                             style={[
@@ -480,6 +486,7 @@ export function WebAppZakatRoute({
                         />
                         <View style={styles.counterRow}>
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={() =>
                                     setZakatFamilyCount(
                                         Math.max(1, zakatFamilyCount - 1),
@@ -498,6 +505,7 @@ export function WebAppZakatRoute({
                                 </Text>
                             </View>
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={() =>
                                     setZakatFamilyCount(zakatFamilyCount + 1)
                                 }
@@ -795,6 +803,7 @@ export function WebAppZakatRoute({
                 <Text style={styles.savedText}>{zakatSavedMsg}</Text>
             ) : null}
             <Pressable
+                accessibilityRole='button'
                 onPress={() => setZakatTab(6)}
                 style={styles.historyLink}
                 testID='web-app-zakat-history-link'

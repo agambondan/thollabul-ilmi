@@ -77,6 +77,7 @@ const uniqueTabaqah = (items) =>
 function TabaqahPill({ active, label, onPress, testID }) {
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={onPress}
             style={[styles.tabaqahPill, active && styles.tabaqahPillActive]}
             testID={testID}
@@ -115,6 +116,7 @@ function PerawiCard({ item, onOpen, t }) {
 
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={() => onOpen(item)}
             style={styles.card}
             testID='web-app-perawi-card'
@@ -276,6 +278,10 @@ export function WebAppPerawiRoute({
             {pagination?.hasMore && !loading && !error ? (
                 <View style={styles.loadMoreWrap}>
                     <Pressable
+                        accessibilityRole='button'
+                        accessibilityState={{
+                            disabled: pagination.loadingMore,
+                        }}
                         disabled={pagination.loadingMore}
                         onPress={onLoadMore}
                         style={[

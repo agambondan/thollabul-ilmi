@@ -12,11 +12,7 @@ import { MessageCircle, Send, Trash2, Users } from "lucide-react-native";
 import { Card } from "../../components/Card";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { colors, radius, spacing } from "../../theme";
-import {
-    deleteJson,
-    postJson,
-    requestJson,
-} from "../../api/client";
+import { deleteJson, postJson, requestJson } from "../../api/client";
 
 export function WebAppKomunitasRoute({
     feature,
@@ -32,10 +28,9 @@ export function WebAppKomunitasRoute({
 
     const fetchChat = async () => {
         try {
-            const data = await requestJson(
-                "/api/v1/komunitas/chat?limit=50",
-                { auth: true },
-            );
+            const data = await requestJson("/api/v1/komunitas/chat?limit=50", {
+                auth: true,
+            });
             setMessages(data?.data?.items || data?.items || []);
         } catch {
         } finally {
@@ -78,7 +73,10 @@ export function WebAppKomunitasRoute({
     };
 
     return (
-        <View style={localStyles.container} testID="explore-web-app-komunitas-surface">
+        <View
+            style={localStyles.container}
+            testID='explore-web-app-komunitas-surface'
+        >
             <View
                 style={[
                     localStyles.header,
@@ -171,6 +169,10 @@ export function WebAppKomunitasRoute({
                                         </Text>
                                         {isMe && (
                                             <Pressable
+                                                accessibilityLabel={t(
+                                                    "a11y.deleteMessage",
+                                                )}
+                                                accessibilityRole='button'
                                                 onPress={() =>
                                                     handleDelete(item.id)
                                                 }
@@ -250,7 +252,7 @@ export function WebAppKomunitasRoute({
                                     color: "#f9fafb",
                                 },
                             ]}
-                            placeholder="Ketik pesan..."
+                            placeholder='Ketik pesan...'
                             placeholderTextColor={
                                 isDarkTheme ? "#6b7280" : "#9ca3af"
                             }
@@ -258,6 +260,11 @@ export function WebAppKomunitasRoute({
                             onChangeText={setInputText}
                         />
                         <Pressable
+                            accessibilityLabel={t("a11y.sendMessage")}
+                            accessibilityRole='button'
+                            accessibilityState={{
+                                disabled: sending || !inputText.trim(),
+                            }}
                             onPress={handleSend}
                             disabled={sending || !inputText.trim()}
                             style={[
@@ -268,9 +275,9 @@ export function WebAppKomunitasRoute({
                             ]}
                         >
                             {sending ? (
-                                <ActivityIndicator size="small" color="#fff" />
+                                <ActivityIndicator size='small' color='#fff' />
                             ) : (
-                                <Send size={18} color="#fff" />
+                                <Send size={18} color='#fff' />
                             )}
                         </Pressable>
                     </View>

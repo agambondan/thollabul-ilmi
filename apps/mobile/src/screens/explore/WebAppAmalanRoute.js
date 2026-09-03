@@ -101,6 +101,7 @@ export function WebAppAmalanRoute({
                         const done = isDone(item);
                         return (
                             <Pressable
+                                accessibilityRole='button'
                                 key={`${getRaw(item).id ?? item?.id ?? index}-${index}`}
                                 onPress={() => onToggleItem?.(item)}
                                 style={[styles.row, done && styles.rowDone]}

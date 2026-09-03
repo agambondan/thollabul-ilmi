@@ -1,6 +1,8 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
+    AccessibilityInfo,
     Animated,
+    findNodeHandle,
     Modal,
     PanResponder,
     Pressable,
@@ -84,6 +86,22 @@ function ModalSheetInner({
 }) {
     const panY = useRef(new Animated.Value(0)).current;
     const isDragging = useRef(false);
+    const headerRef = useRef(null);
+
+    /*
+     * Move the screen reader into the sheet when it opens. Without this the
+     * cursor stays on whatever opened it, so a TalkBack/VoiceOver user hears
+     * nothing change and keeps reading the screen behind — which
+     * accessibilityViewIsModal has just hidden from them.
+     */
+    useEffect(() => {
+        if (!visible) return undefined;
+        const timer = setTimeout(() => {
+            const node = findNodeHandle(headerRef.current);
+            if (node) AccessibilityInfo.setAccessibilityFocus(node);
+        }, 250);
+        return () => clearTimeout(timer);
+    }, [visible]);
 
     const panResponder = useRef(
         PanResponder.create({
@@ -134,22 +152,36 @@ function ModalSheetInner({
         >
             <Pressable
                 accessibilityLabel={closeLabel}
+                accessibilityRole='button'
                 onPress={onClose}
                 style={styles.overlay}
             />
             <Animated.View
+                accessibilityLabel={title}
+                accessibilityViewIsModal
+                accessibilityRole={undefined}
+                importantForAccessibility='yes'
                 style={[
                     styles.sheet,
                     { maxHeight, transform: [{ translateY: panY }] },
                     sheetStyle,
                 ]}
             >
-                <View {...panResponder.panHandlers}>
+                <View
+                    {...panResponder.panHandlers}
+                    importantForAccessibility='no-hide-descendants'
+                >
                     <View style={styles.handle} />
                 </View>
                 <View style={[styles.header, headerStyle]}>
                     <View style={styles.headerCopy}>
-                        <Text style={[styles.title, titleStyle]}>{title}</Text>
+                        <Text
+                            accessibilityRole='header'
+                            ref={headerRef}
+                            style={[styles.title, titleStyle]}
+                        >
+                            {title}
+                        </Text>
                         {subtitle ? (
                             <Text
                                 numberOfLines={2}

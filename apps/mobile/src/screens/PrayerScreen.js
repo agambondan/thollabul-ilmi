@@ -906,6 +906,10 @@ export function PrayerScreen({ isActive, navigation }) {
                 />
             </View>
             <Pressable
+                accessibilityRole='button'
+                accessibilityState={{
+                    disabled: !manualLatInput || !manualLngInput,
+                }}
                 disabled={!manualLatInput || !manualLngInput}
                 onPress={applyManualLocation}
                 style={[
@@ -1013,6 +1017,7 @@ export function PrayerScreen({ isActive, navigation }) {
                         <View style={styles.methodGrid}>
                             {methods.map(([key, label]) => (
                                 <Pressable
+                                    accessibilityRole='button'
                                     key={key}
                                     onPress={() => selectMethod(key)}
                                     style={[
@@ -1054,6 +1059,7 @@ export function PrayerScreen({ isActive, navigation }) {
                         <View style={styles.methodGrid}>
                             {madhabs.map(([key, label]) => (
                                 <Pressable
+                                    accessibilityRole='button'
                                     key={key}
                                     onPress={() => selectMadhab(key)}
                                     style={[
@@ -1125,6 +1131,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                 </Text>
                                 <View style={styles.correctionButtons}>
                                     <Pressable
+                                        accessibilityRole='button'
                                         onPress={() => adjustPrayer(key, -1)}
                                         style={[
                                             styles.correctionButton,
@@ -1154,6 +1161,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                         {adjustments[key] ?? 0}
                                     </Text>
                                     <Pressable
+                                        accessibilityRole='button'
                                         onPress={() => adjustPrayer(key, 1)}
                                         style={[
                                             styles.correctionButton,
@@ -1177,6 +1185,7 @@ export function PrayerScreen({ isActive, navigation }) {
                             </View>
                         ))}
                         <Pressable
+                            accessibilityRole='button'
                             onPress={resetAdjustments}
                             style={[
                                 styles.webAppSecondaryButton,
@@ -1228,6 +1237,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                 </Text>
                             </View>
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={toggleReminder}
                                 style={[
                                     styles.toggleButton,
@@ -1269,6 +1279,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                 </Text>
                             </View>
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={toggleAdzanAudio}
                                 style={[
                                     styles.toggleButton,
@@ -1302,6 +1313,7 @@ export function PrayerScreen({ isActive, navigation }) {
                         <View style={styles.methodGrid}>
                             {reminderLeadOptions.map((minutes) => (
                                 <Pressable
+                                    accessibilityRole='button'
                                     key={minutes}
                                     onPress={() => selectReminderLead(minutes)}
                                     style={[
@@ -1335,6 +1347,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                 const selected = reminderPrayers.includes(key);
                                 return (
                                     <Pressable
+                                        accessibilityRole='button'
                                         key={key}
                                         onPress={() =>
                                             toggleReminderPrayer(key)
@@ -1364,6 +1377,7 @@ export function PrayerScreen({ isActive, navigation }) {
                         </View>
 
                         <Pressable
+                            accessibilityRole='button'
                             onPress={() => syncPrayerReminders()}
                             style={styles.webAppSecondaryButton}
                         >
@@ -1414,6 +1428,7 @@ export function PrayerScreen({ isActive, navigation }) {
                         </Text>
                         <View style={styles.offlineActions}>
                             <Pressable
+                                accessibilityRole='button'
                                 disabled={
                                     offlineBusy ||
                                     prayerOffline?.supported === false
@@ -1440,6 +1455,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                 )}
                             </Pressable>
                             <Pressable
+                                accessibilityRole='button'
                                 disabled={
                                     offlineBusy ||
                                     prayerOffline?.supported === false
@@ -1464,6 +1480,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                 </Text>
                             </Pressable>
                             <Pressable
+                                accessibilityRole='button'
                                 disabled={
                                     offlineBusy ||
                                     prayerOffline?.supported === false
@@ -1527,6 +1544,7 @@ export function PrayerScreen({ isActive, navigation }) {
                     <View style={styles.methodGrid}>
                         {methods.map(([key, label]) => (
                             <Pressable
+                                accessibilityRole='button'
                                 key={key}
                                 onPress={() => selectMethod(key)}
                                 style={[
@@ -1556,6 +1574,7 @@ export function PrayerScreen({ isActive, navigation }) {
                     <View style={styles.methodGrid}>
                         {madhabs.map(([key, label]) => (
                             <Pressable
+                                accessibilityRole='button'
                                 key={key}
                                 onPress={() => selectMadhab(key)}
                                 style={[
@@ -1592,6 +1611,7 @@ export function PrayerScreen({ isActive, navigation }) {
                             <Text style={styles.prayerLabel}>{label}</Text>
                             <View style={styles.correctionButtons}>
                                 <Pressable
+                                    accessibilityRole='button'
                                     onPress={() => adjustPrayer(key, -1)}
                                     style={styles.correctionButton}
                                 >
@@ -1604,6 +1624,7 @@ export function PrayerScreen({ isActive, navigation }) {
                                     {adjustments[key] ?? 0}
                                 </Text>
                                 <Pressable
+                                    accessibilityRole='button'
                                     onPress={() => adjustPrayer(key, 1)}
                                     style={styles.correctionButton}
                                 >
@@ -1615,6 +1636,7 @@ export function PrayerScreen({ isActive, navigation }) {
                         </View>
                     ))}
                     <Pressable
+                        accessibilityRole='button'
                         onPress={resetAdjustments}
                         style={styles.secondaryButton}
                     >
@@ -1650,6 +1672,7 @@ export function PrayerScreen({ isActive, navigation }) {
                             </Text>
                         </View>
                         <Pressable
+                            accessibilityRole='button'
                             onPress={toggleReminder}
                             style={[
                                 styles.toggleButton,
@@ -1689,6 +1712,7 @@ export function PrayerScreen({ isActive, navigation }) {
                             </Text>
                         </View>
                         <Pressable
+                            accessibilityRole='button'
                             onPress={toggleAdzanAudio}
                             style={[
                                 styles.toggleButton,
@@ -1720,6 +1744,7 @@ export function PrayerScreen({ isActive, navigation }) {
                     <View style={styles.methodGrid}>
                         {reminderLeadOptions.map((minutes) => (
                             <Pressable
+                                accessibilityRole='button'
                                 key={minutes}
                                 onPress={() => selectReminderLead(minutes)}
                                 style={[
@@ -1751,6 +1776,7 @@ export function PrayerScreen({ isActive, navigation }) {
                             const selected = reminderPrayers.includes(key);
                             return (
                                 <Pressable
+                                    accessibilityRole='button'
                                     key={key}
                                     onPress={() => toggleReminderPrayer(key)}
                                     style={[
@@ -1776,6 +1802,7 @@ export function PrayerScreen({ isActive, navigation }) {
                     </View>
 
                     <Pressable
+                        accessibilityRole='button'
                         onPress={() => syncPrayerReminders()}
                         style={styles.secondaryButton}
                     >
@@ -1809,6 +1836,7 @@ export function PrayerScreen({ isActive, navigation }) {
                     <Text style={styles.originalTime}>{offlineMessage}</Text>
                     <View style={styles.offlineActions}>
                         <Pressable
+                            accessibilityRole='button'
                             disabled={
                                 offlineBusy ||
                                 prayerOffline?.supported === false
@@ -1835,6 +1863,7 @@ export function PrayerScreen({ isActive, navigation }) {
                             )}
                         </Pressable>
                         <Pressable
+                            accessibilityRole='button'
                             disabled={
                                 offlineBusy ||
                                 prayerOffline?.supported === false
@@ -1853,6 +1882,7 @@ export function PrayerScreen({ isActive, navigation }) {
                             </Text>
                         </Pressable>
                         <Pressable
+                            accessibilityRole='button'
                             disabled={
                                 offlineBusy ||
                                 prayerOffline?.supported === false
@@ -1999,6 +2029,7 @@ export function PrayerScreen({ isActive, navigation }) {
                             </Text>
                             {adzanPlaying ? (
                                 <Pressable
+                                    accessibilityRole='button'
                                     onPress={stopAdzan}
                                     style={styles.webAppAdzanStopBtn}
                                 >
@@ -2230,6 +2261,7 @@ export function PrayerScreen({ isActive, navigation }) {
                         </View>
                         {adzanPlaying ? (
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={stopAdzan}
                                 style={styles.adzanStopBtn}
                             >

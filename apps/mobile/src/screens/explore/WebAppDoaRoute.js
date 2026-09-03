@@ -92,6 +92,7 @@ function DoaCard({ item, onOpen, t }) {
 
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={() => onOpen(item)}
             style={styles.card}
             testID='web-app-doa-card'
@@ -200,6 +201,7 @@ export function WebAppDoaRoute({
             <View style={styles.categoryRow}>
                 {categories.map((item) => (
                     <Pressable
+                        accessibilityRole='button'
                         key={item.value || "all"}
                         onPress={() => setCategory(item.value)}
                         style={[
@@ -226,6 +228,7 @@ export function WebAppDoaRoute({
                 <Text style={styles.countText}>{countText}</Text>
                 {query ? (
                     <Pressable
+                        accessibilityRole='button'
                         onPress={() => setQuery("")}
                         testID='web-app-doa-reset-search'
                     >
@@ -273,6 +276,8 @@ export function WebAppDoaRoute({
 
             {!loading && pagination?.hasMore ? (
                 <Pressable
+                    accessibilityRole='button'
+                    accessibilityState={{ disabled: pagination.loadingMore }}
                     disabled={pagination.loadingMore}
                     onPress={onLoadMore}
                     style={[

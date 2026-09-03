@@ -210,6 +210,7 @@ function SubScreen({ title, onBack, children }) {
         >
             <View style={styles.subHeader}>
                 <Pressable
+                    accessibilityRole='button'
                     accessibilityLabel={t("common.back")}
                     android_ripple={{ color: colors.faint, borderless: true }}
                     hitSlop={12}
@@ -247,6 +248,7 @@ function SubScreen({ title, onBack, children }) {
 function MenuRow({ Icon, label, meta, danger, onPress }) {
     return (
         <Pressable
+            accessibilityRole='button'
             android_ripple={{
                 color: "rgba(91, 110, 91, 0.12)",
                 borderless: false,
@@ -725,6 +727,7 @@ function SecuritySettings({ onDeleteAccount, onSignOut, user }) {
                     </View>
                 ) : null}
                 <Pressable
+                    accessibilityRole='button'
                     android_ripple={{
                         color: "rgba(185, 28, 28, 0.12)",
                         borderless: false,
@@ -1395,10 +1398,12 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                 <SessionCard />
                 {user ? (
                     <Pressable
+                        accessibilityRole='button'
                         android_ripple={{
                             color: "rgba(185, 28, 28, 0.12)",
                             borderless: false,
                         }}
+                        accessibilityState={{ disabled: sessionLoading }}
                         disabled={sessionLoading}
                         onPress={signOut}
                         style={styles.signOutButton}
@@ -1573,6 +1578,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                         {user?.email || t("profile.guestEmail")}
                     </Text>
                     <Pressable
+                        accessibilityRole='button'
                         accessibilityLabel={t("profile.settings.open")}
                         android_ripple={{
                             color: webAppProfileTheme.ripple,
@@ -1661,6 +1667,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                         <View style={styles.webAppProgressGrid}>
                             {stats.hafalanCount !== null ? (
                                 <Pressable
+                                    accessibilityRole='button'
                                     onPress={() =>
                                         onOpenTab("quran", { tab: "hafalan" })
                                     }
@@ -1699,6 +1706,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                             ) : null}
                             {stats.sholatWeekly !== null ? (
                                 <Pressable
+                                    accessibilityRole='button'
                                     onPress={() => onOpenTab("ibadah")}
                                     style={[
                                         styles.webAppProgressTile,
@@ -1735,6 +1743,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                             ) : null}
                             {stats.tilawahPages !== null ? (
                                 <Pressable
+                                    accessibilityRole='button'
                                     onPress={() => onOpenTab("quran")}
                                     style={[
                                         styles.webAppProgressTile,
@@ -1790,6 +1799,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                             />
                         ) : null}
                         <Pressable
+                            accessibilityRole='button'
                             accessibilityLabel={t(
                                 "profile.achievements.seeAllAccessibility",
                             )}
@@ -1830,6 +1840,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                     <View style={styles.webAppBadgeGrid}>
                         {achievements.slice(0, 6).map((badge) => (
                             <Pressable
+                                accessibilityRole='button'
                                 android_ripple={{
                                     color: webAppProfileTheme.ripple,
                                     borderless: false,
@@ -1896,6 +1907,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                                   };
                             return (
                                 <Pressable
+                                    accessibilityRole='button'
                                     android_ripple={{
                                         color: webAppProfileTheme.ripple,
                                         borderless: false,
@@ -1992,6 +2004,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                     </Text>
                 </View>
                 <Pressable
+                    accessibilityRole='button'
                     accessibilityLabel={t("profile.settings.open")}
                     android_ripple={{ color: colors.faint, borderless: true }}
                     hitSlop={12}
@@ -2032,6 +2045,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                     <View style={styles.progressGrid}>
                         {stats.hafalanCount !== null ? (
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={() =>
                                     onOpenTab("quran", { tab: "hafalan" })
                                 }
@@ -2052,6 +2066,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                         ) : null}
                         {stats.sholatWeekly !== null ? (
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={() => onOpenTab("ibadah")}
                                 style={styles.progressCard}
                             >
@@ -2070,6 +2085,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                         ) : null}
                         {stats.tilawahPages !== null ? (
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={() => onOpenTab("quran")}
                                 style={styles.progressCard}
                             >
@@ -2103,6 +2119,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                             />
                         ) : null}
                         <Pressable
+                            accessibilityRole='button'
                             accessibilityLabel={t(
                                 "profile.achievements.seeAllAccessibility",
                             )}
@@ -2132,6 +2149,7 @@ export function ProfileScreen({ isActive, navigation, onOpenTab }) {
                 <View style={styles.badgeGrid}>
                     {achievements.slice(0, 6).map((badge) => (
                         <Pressable
+                            accessibilityRole='button'
                             key={badge.code ?? badge.label}
                             android_ripple={{
                                 color: "rgba(91, 110, 91, 0.12)",

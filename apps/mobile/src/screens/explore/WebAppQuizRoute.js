@@ -125,6 +125,8 @@ function OptionButton({ disabled, index, item, onPress, option, selected }) {
 
     return (
         <Pressable
+            accessibilityRole='button'
+            accessibilityState={{ disabled: disabled }}
             disabled={disabled}
             onPress={onPress}
             style={[styles.optionButton, stateStyle]}
@@ -261,6 +263,7 @@ export function WebAppQuizRoute({
                         {error || t("explore.quiz.emptyText")}
                     </Text>
                     <Pressable onPress={restart} style={styles.primaryButton}>
+                        accessibilityRole='button'
                         <Text style={styles.primaryButtonText}>
                             {t("explore.quiz.retry")}
                         </Text>
@@ -356,6 +359,7 @@ export function WebAppQuizRoute({
 
                     {selected ? (
                         <Pressable
+                            accessibilityRole='button'
                             onPress={goNext}
                             style={styles.primaryButton}
                         >
@@ -410,6 +414,7 @@ export function WebAppQuizRoute({
                         ))}
                     </View>
                     <Pressable onPress={restart} style={styles.primaryButton}>
+                        accessibilityRole='button'
                         <RotateCcw
                             color='#ffffff'
                             size={16}

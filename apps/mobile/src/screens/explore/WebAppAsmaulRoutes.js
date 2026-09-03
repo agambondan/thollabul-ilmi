@@ -56,6 +56,7 @@ function IconButton({ disabled, Icon, label, onPress, variant = "neutral" }) {
         <Pressable
             accessibilityLabel={label}
             accessibilityRole='button'
+            accessibilityState={{ disabled: disabled }}
             disabled={disabled}
             onPress={onPress}
             style={[
@@ -165,6 +166,7 @@ export function WebAppAsmaulFlashcardRoute({
                         </Text>
                         <View style={styles.toolbarActions}>
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={shuffle}
                                 style={[
                                     styles.smallAction,
@@ -188,6 +190,7 @@ export function WebAppAsmaulFlashcardRoute({
                             </Pressable>
                             {shuffled ? (
                                 <Pressable
+                                    accessibilityRole='button'
                                     onPress={resetOrder}
                                     style={styles.smallAction}
                                 >
@@ -248,6 +251,7 @@ export function WebAppAsmaulFlashcardRoute({
                             onPress={() => move(-1)}
                         />
                         <Pressable
+                            accessibilityRole='button'
                             onPress={toggleReveal}
                             style={styles.primaryAction}
                         >
@@ -403,6 +407,7 @@ export function WebAppAsmaulWiridRoute({
 
                         <View style={styles.actionRow}>
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={() => updateCount(0)}
                                 style={styles.neutralButton}
                             >
@@ -416,6 +421,7 @@ export function WebAppAsmaulWiridRoute({
                                 </Text>
                             </Pressable>
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={() => {
                                     setAsmaulCounts({});
                                     setAsmaulWiridCount({}, nameId, 0).catch(
@@ -434,6 +440,7 @@ export function WebAppAsmaulWiridRoute({
                                 </Text>
                             </Pressable>
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={() =>
                                     setVibrate((current) => !current)
                                 }

@@ -64,6 +64,7 @@ const uniqueValues = (items, resolver) =>
 function FilterPill({ active, label, onPress, testID }) {
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={onPress}
             style={[styles.filterPill, active && styles.filterPillActive]}
             testID={testID}
@@ -181,6 +182,7 @@ function LibraryCard({ index, item, onOpen, progress, t }) {
 
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={() => onOpen(item)}
             style={styles.card}
             testID='web-app-library-card'
@@ -477,6 +479,10 @@ export function WebAppLibraryRoute({
             {pagination?.hasMore && !loading && !error ? (
                 <View style={styles.loadMoreWrap}>
                     <Pressable
+                        accessibilityRole='button'
+                        accessibilityState={{
+                            disabled: pagination.loadingMore,
+                        }}
                         disabled={pagination.loadingMore}
                         onPress={onLoadMore}
                         style={[

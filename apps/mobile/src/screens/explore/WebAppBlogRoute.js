@@ -37,6 +37,7 @@ function BlogCard({
 
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={() => onOpen(item)}
             style={styles.card}
             testID='web-app-blog-card'
@@ -129,6 +130,7 @@ export function WebAppBlogRoute({
             {categories.length ? (
                 <View style={styles.categories}>
                     <Pressable
+                        accessibilityRole='button'
                         onPress={() => onSelectCategory("")}
                         style={[
                             styles.categoryPill,
@@ -147,6 +149,7 @@ export function WebAppBlogRoute({
                     </Pressable>
                     {categories.map((category) => (
                         <Pressable
+                            accessibilityRole='button'
                             key={category.value}
                             onPress={() => onSelectCategory(category.value)}
                             style={[

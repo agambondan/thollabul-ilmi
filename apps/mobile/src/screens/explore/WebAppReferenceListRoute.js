@@ -275,6 +275,7 @@ const getLeadingLabel = (item, index, leading, t) => {
 function CategoryPill({ active, label, onPress, testID }) {
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={onPress}
             style={[styles.categoryPill, active && styles.categoryPillActive]}
             testID={testID}
@@ -299,6 +300,7 @@ function ReferenceCard({ config, index, item, onOpen, t }) {
 
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={() => onOpen(item)}
             style={styles.card}
             testID='web-app-reference-card'
@@ -422,6 +424,7 @@ export function WebAppReferenceListRoute({
                 </Text>
                 {search ? (
                     <Pressable
+                        accessibilityRole='button'
                         onPress={() => setSearch("")}
                         testID={`web-app-${key}-reset-search`}
                     >
@@ -498,6 +501,10 @@ export function WebAppReferenceListRoute({
             {pagination?.hasMore && !loading && !error ? (
                 <View style={styles.loadMoreWrap}>
                     <Pressable
+                        accessibilityRole='button'
+                        accessibilityState={{
+                            disabled: pagination.loadingMore,
+                        }}
                         disabled={pagination.loadingMore}
                         onPress={onLoadMore}
                         style={[

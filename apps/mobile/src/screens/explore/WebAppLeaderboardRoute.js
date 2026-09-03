@@ -97,6 +97,8 @@ export function WebAppLeaderboardRoute({
             <View style={styles.tabs}>
                 {tabs.map((tab) => (
                     <Pressable
+                        accessibilityRole='tab'
+                        accessibilityState={{ selected: activeTab === tab.key }}
                         key={tab.key}
                         onPress={() => onSelectTab(tab.key)}
                         style={[

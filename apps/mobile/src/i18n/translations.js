@@ -16,6 +16,14 @@ export const defaultMobileLanguage = mobileLanguages.idn;
 
 const dictionaries = {
     idn: {
+        "a11y.addHeir": "Tambah jumlah ahli waris",
+        "a11y.decreaseArabicFont": "Perkecil ukuran teks Arab",
+        "a11y.deleteMessage": "Hapus pesan",
+        "a11y.increaseArabicFont": "Perbesar ukuran teks Arab",
+        "a11y.openNotifications": "Buka notifikasi",
+        "a11y.openSearch": "Buka pencarian",
+        "a11y.sendMessage": "Kirim pesan",
+        "a11y.toggleRangeAudio": "Putar atau hentikan audio rentang ayat",
         ...exploreRouteTranslations.idn,
         "account.bookmarks": "Bookmark",
         "account.closeMenu": "Tutup menu akun",
@@ -1156,6 +1164,14 @@ const dictionaries = {
         "theme.system.meta": "Gunakan preferensi perangkat sebagai default.",
     },
     en: {
+        "a11y.addHeir": "Add heir count",
+        "a11y.decreaseArabicFont": "Decrease Arabic text size",
+        "a11y.deleteMessage": "Delete message",
+        "a11y.increaseArabicFont": "Increase Arabic text size",
+        "a11y.openNotifications": "Open notifications",
+        "a11y.openSearch": "Open search",
+        "a11y.sendMessage": "Send message",
+        "a11y.toggleRangeAudio": "Play or stop the ayah range audio",
         ...exploreRouteTranslations.en,
         "account.bookmarks": "Bookmarks",
         "account.closeMenu": "Close account menu",

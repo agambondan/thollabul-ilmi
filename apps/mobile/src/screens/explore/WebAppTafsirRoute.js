@@ -56,6 +56,7 @@ const getAsbabunContent = (item) =>
 function SurahCard({ active, onPress, surah, t, testID }) {
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={onPress}
             style={[styles.surahCard, active && styles.surahCardActive]}
             testID={testID}
@@ -88,6 +89,7 @@ function SurahCard({ active, onPress, surah, t, testID }) {
 function TafsirResultCard({ item, onOpen, t, testID }) {
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={() => onOpen(item)}
             style={styles.resultCard}
             testID={testID}
@@ -132,6 +134,7 @@ function AsbabunResultCard({ item, onOpen, t, testID }) {
 
     return (
         <Pressable
+            accessibilityRole='button'
             onPress={() => onOpen(item)}
             style={styles.resultCard}
             testID={testID}
@@ -289,6 +292,10 @@ export function WebAppTafsirRoute({
                 </View>
                 {isAsbabun ? (
                     <Pressable
+                        accessibilityRole='button'
+                        accessibilityState={{
+                            disabled: !canSubmitAsbabun || loading,
+                        }}
                         disabled={!canSubmitAsbabun || loading}
                         onPress={handleSubmitAsbabun}
                         style={[
@@ -313,6 +320,7 @@ export function WebAppTafsirRoute({
                     <View style={styles.quickList}>
                         {ASBABUN_QUICK_SURAHS.map((number) => (
                             <Pressable
+                                accessibilityRole='button'
                                 key={number}
                                 onPress={() => {
                                     onSearchSurah(String(number));

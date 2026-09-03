@@ -49,6 +49,9 @@ export function renderQuranAudioRangePanel({
         return (
             <View style={styles.audioMiniPanel} testID='audio-range-mini'>
                 <Pressable
+                    accessibilityLabel={translate("a11y.toggleRangeAudio")}
+                    accessibilityRole='button'
+                    accessibilityState={{ disabled: audioRange.loading }}
                     disabled={audioRange.loading}
                     onPress={isPlaying ? stopRangeAudio : startRangeAudio}
                     style={[
@@ -72,6 +75,7 @@ export function renderQuranAudioRangePanel({
                     )}
                 </Pressable>
                 <Pressable
+                    accessibilityRole='button'
                     onPress={() => setAudioRangeCollapsed(false)}
                     style={styles.audioMiniCopy}
                     testID='audio-range-expand'
@@ -88,6 +92,7 @@ export function renderQuranAudioRangePanel({
                     </Text>
                 </Pressable>
                 <Pressable
+                    accessibilityRole='button'
                     accessibilityLabel={translate(
                         "quran.audioRange.expandLabel",
                     )}
@@ -101,6 +106,7 @@ export function renderQuranAudioRangePanel({
                     />
                 </Pressable>
                 <Pressable
+                    accessibilityRole='button'
                     accessibilityLabel={translate(
                         "quran.audioRange.closeLabel",
                     )}
@@ -133,6 +139,7 @@ export function renderQuranAudioRangePanel({
                 </View>
                 <View style={styles.audioPanelHeaderActions}>
                     <Pressable
+                        accessibilityRole='button'
                         accessibilityLabel={translate(
                             "quran.audioRange.minimizeLabel",
                         )}
@@ -147,10 +154,12 @@ export function renderQuranAudioRangePanel({
                         />
                     </Pressable>
                     <Pressable
+                        accessibilityRole='button'
                         android_ripple={{
                             color: "rgba(255,255,255,0.18)",
                             borderless: false,
                         }}
+                        accessibilityState={{ disabled: audioRange.loading }}
                         disabled={audioRange.loading}
                         onPress={isPlaying ? stopRangeAudio : startRangeAudio}
                         style={[
@@ -236,9 +245,13 @@ export function renderQuranAudioRangePanel({
 
             <View style={styles.audioTransportRow}>
                 <Pressable
+                    accessibilityRole='button'
                     accessibilityLabel={translate(
                         "quran.audioRange.previousAyah",
                     )}
+                    accessibilityState={{
+                        disabled: !canSkipBackward || audioRange.loading,
+                    }}
                     disabled={!canSkipBackward || audioRange.loading}
                     onPress={() => skipRangeAudio(-1)}
                     style={[
@@ -257,7 +270,11 @@ export function renderQuranAudioRangePanel({
                         : translate("quran.audioRange.emptyQueue")}
                 </Text>
                 <Pressable
+                    accessibilityRole='button'
                     accessibilityLabel={translate("quran.audioRange.nextAyah")}
+                    accessibilityState={{
+                        disabled: !canSkipForward || audioRange.loading,
+                    }}
                     disabled={!canSkipForward || audioRange.loading}
                     onPress={() => skipRangeAudio(1)}
                     style={[
@@ -284,6 +301,7 @@ export function renderQuranAudioRangePanel({
                     const isActive = audioState.qariSlug === qari.qari_slug;
                     return (
                         <Pressable
+                            accessibilityRole='button'
                             key={qari.qari_slug}
                             onPress={() => selectQari(null, qari.qari_slug)}
                             style={[
@@ -316,6 +334,7 @@ export function renderQuranAudioRangePanel({
                             const isActive = audioRange.speed === speed;
                             return (
                                 <Pressable
+                                    accessibilityRole='button'
                                     key={speed}
                                     onPress={() => selectAudioSpeed(speed)}
                                     style={[
@@ -341,6 +360,7 @@ export function renderQuranAudioRangePanel({
                     </View>
                 </View>
                 <Pressable
+                    accessibilityRole='button'
                     onPress={toggleAudioRepeat}
                     style={[
                         styles.audioRepeatButton,

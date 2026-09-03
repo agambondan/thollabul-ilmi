@@ -205,6 +205,7 @@ export function createQuranScreenRenderers(context) {
             <View style={styles.qariGrid}>
                 {sources.map((source) => (
                     <Pressable
+                        accessibilityRole='button'
                         key={`${ayah.id}-${source.qari_slug}`}
                         onPress={() => selectQari(ayah.id, source.qari_slug)}
                         style={[
@@ -320,6 +321,7 @@ export function createQuranScreenRenderers(context) {
                 ) : null}
                 {hasHiddenContent && !isLine ? (
                     <Pressable
+                        accessibilityRole='button'
                         onPress={() =>
                             setRevealedAyahs((current) => ({
                                 ...current,
@@ -954,6 +956,7 @@ export function createQuranScreenRenderers(context) {
                         ]}
                     >
                         <Pressable
+                            accessibilityRole='button'
                             accessibilityLabel={
                                 previousSurah
                                     ? `Buka ${previousSurah.name}`
@@ -962,6 +965,9 @@ export function createQuranScreenRenderers(context) {
                             android_ripple={{
                                 color: "rgba(91, 110, 91, 0.12)",
                                 borderless: false,
+                            }}
+                            accessibilityState={{
+                                disabled: !hasPreviousSurah || readerLoading,
                             }}
                             disabled={!hasPreviousSurah || readerLoading}
                             onPress={() => triggerAdjacentSurah(-1)}
@@ -1005,6 +1011,7 @@ export function createQuranScreenRenderers(context) {
                             </Text>
                         </Pressable>
                         <Pressable
+                            accessibilityRole='button'
                             accessibilityLabel={
                                 nextSurah
                                     ? `Buka ${nextSurah.name}`
@@ -1013,6 +1020,9 @@ export function createQuranScreenRenderers(context) {
                             android_ripple={{
                                 color: "rgba(91, 110, 91, 0.12)",
                                 borderless: false,
+                            }}
+                            accessibilityState={{
+                                disabled: !hasNextSurah || readerLoading,
                             }}
                             disabled={!hasNextSurah || readerLoading}
                             onPress={() => triggerAdjacentSurah(1)}
@@ -1075,6 +1085,7 @@ export function createQuranScreenRenderers(context) {
                         </Text>
                         {displayMode === "mushaf" ? null : (
                             <Pressable
+                                accessibilityRole='button'
                                 android_ripple={{
                                     color: "rgba(91, 110, 91, 0.12)",
                                     borderless: false,
@@ -1152,6 +1163,11 @@ export function createQuranScreenRenderers(context) {
             <Text style={styles.settingLabel}>Ukuran Teks Arab</Text>
             <View style={styles.fontSizeRow}>
                 <Pressable
+                    accessibilityLabel={t("a11y.decreaseArabicFont")}
+                    accessibilityRole='button'
+                    accessibilityState={{
+                        disabled: fontSize <= MIN_ARABIC_FONT_SIZE,
+                    }}
                     disabled={fontSize <= MIN_ARABIC_FONT_SIZE}
                     onPress={() => updateFontSize(fontSize - 2)}
                     style={[
@@ -1165,6 +1181,11 @@ export function createQuranScreenRenderers(context) {
                 </Pressable>
                 <Text style={styles.fontSizeValue}>{fontSize}px</Text>
                 <Pressable
+                    accessibilityLabel={t("a11y.increaseArabicFont")}
+                    accessibilityRole='button'
+                    accessibilityState={{
+                        disabled: fontSize >= MAX_ARABIC_FONT_SIZE,
+                    }}
                     disabled={fontSize >= MAX_ARABIC_FONT_SIZE}
                     onPress={() => updateFontSize(fontSize + 2)}
                     style={[
@@ -1181,6 +1202,8 @@ export function createQuranScreenRenderers(context) {
             <Text style={styles.settingLabel}>Ukuran Teks Terjemahan</Text>
             <View style={styles.fontSizeRow}>
                 <Pressable
+                    accessibilityRole='button'
+                    accessibilityState={{ disabled: translationFontSize <= 12 }}
                     disabled={translationFontSize <= 12}
                     onPress={() =>
                         updateTranslationFontSize(translationFontSize - 2)
@@ -1197,6 +1220,8 @@ export function createQuranScreenRenderers(context) {
                     {translationFontSize}px
                 </Text>
                 <Pressable
+                    accessibilityRole='button'
+                    accessibilityState={{ disabled: translationFontSize >= 28 }}
                     disabled={translationFontSize >= 28}
                     onPress={() =>
                         updateTranslationFontSize(translationFontSize + 2)
@@ -1215,6 +1240,7 @@ export function createQuranScreenRenderers(context) {
             <View style={styles.settingChips}>
                 {ARABIC_FONTS.map((font) => (
                     <Pressable
+                        accessibilityRole='button'
                         key={font.key}
                         onPress={() => updateArabicFont(font.key)}
                         style={[
@@ -1248,6 +1274,7 @@ export function createQuranScreenRenderers(context) {
             <View style={styles.displayModeStack}>
                 {DISPLAY_MODES.map((mode) => (
                     <Pressable
+                        accessibilityRole='button'
                         key={mode.key}
                         onPress={() => updateDisplayMode(mode.key)}
                         style={[
@@ -1301,6 +1328,7 @@ export function createQuranScreenRenderers(context) {
             <View style={styles.settingChips}>
                 {MEMORIZATION_MODES.map((mode) => (
                     <Pressable
+                        accessibilityRole='button'
                         key={mode.key}
                         onPress={() => updateMemorizationMode(mode.key)}
                         style={[
@@ -1325,6 +1353,7 @@ export function createQuranScreenRenderers(context) {
             </View>
 
             <Pressable
+                accessibilityRole='button'
                 onPress={() => {
                     setSettingsVisible(false);
                     setTajweedVisible(true);
@@ -1385,6 +1414,7 @@ export function createQuranScreenRenderers(context) {
                         <View style={styles.tafsirModeRow}>
                             {TAFSIR_MODES.map((mode) => (
                                 <Pressable
+                                    accessibilityRole='button'
                                     key={mode.key}
                                     onPress={() => setTafsirMode(mode.key)}
                                     style={[
@@ -1561,6 +1591,7 @@ export function createQuranScreenRenderers(context) {
                             color: "rgba(91, 110, 91, 0.08)",
                             borderless: false,
                         }}
+                        accessibilityState={{ disabled: !item.hadith?.id }}
                         disabled={!item.hadith?.id}
                         key={item.id}
                         onPress={() => openRelatedHadith(item)}
@@ -1973,6 +2004,7 @@ export function createQuranScreenRenderers(context) {
         if (isWebAppLayout) {
             return (
                 <Pressable
+                    accessibilityRole='button'
                     onPress={() => openSurah(surah)}
                     style={[
                         styles.webAppSurahRow,
@@ -2037,6 +2069,7 @@ export function createQuranScreenRenderers(context) {
 
         return (
             <Pressable onPress={() => openSurah(surah)} style={styles.surahRow}>
+                accessibilityRole='button'
                 <View style={styles.surahLeft}>
                     <View style={styles.surahNumberWrap}>
                         <View style={styles.surahNumberDiamond}>
@@ -2116,6 +2149,7 @@ export function createQuranScreenRenderers(context) {
                 />
             </View>
             <Pressable
+                accessibilityRole='button'
                 onPress={() => openPage(pageInput)}
                 style={[
                     styles.webAppMushafCta,
@@ -2176,6 +2210,10 @@ export function createQuranScreenRenderers(context) {
                 <View style={styles.quranTabs}>
                     {QURAN_TABS.map((tab) => (
                         <Pressable
+                            accessibilityRole='tab'
+                            accessibilityState={{
+                                selected: quranTab === tab.key,
+                            }}
                             key={tab.key}
                             onPress={() => setQuranTab(tab.key)}
                             style={[
@@ -2208,6 +2246,7 @@ export function createQuranScreenRenderers(context) {
             <View style={styles.navigatorTabs}>
                 {["page", "hizb"].map((mode) => (
                     <Pressable
+                        accessibilityRole='button'
                         key={mode}
                         onPress={() => setNavigatorMode(mode)}
                         style={[
@@ -2241,6 +2280,7 @@ export function createQuranScreenRenderers(context) {
                         value={hizbInput}
                     />
                     <Pressable
+                        accessibilityRole='button'
                         onPress={() => openHizb()}
                         style={styles.compactPrimaryButton}
                     >
@@ -2258,6 +2298,7 @@ export function createQuranScreenRenderers(context) {
                         value={pageInput}
                     />
                     <Pressable
+                        accessibilityRole='button'
                         onPress={() => openPage()}
                         style={styles.compactPrimaryButton}
                     >
@@ -2370,6 +2411,7 @@ export function createQuranScreenRenderers(context) {
                         const status = entry?.status ?? "not_started";
                         return (
                             <Pressable
+                                accessibilityRole='button'
                                 android_ripple={{
                                     color: "rgba(91, 110, 91, 0.12)",
                                     borderless: false,
@@ -2463,6 +2505,7 @@ export function createQuranScreenRenderers(context) {
                             <View style={styles.murojaahSurahGrid}>
                                 {memorizedSurahs.map((surah) => (
                                     <Pressable
+                                        accessibilityRole='button'
                                         android_ripple={{
                                             color: "rgba(91, 110, 91, 0.12)",
                                             borderless: false,
@@ -2504,6 +2547,7 @@ export function createQuranScreenRenderers(context) {
                             <View style={styles.scoreRow}>
                                 {[60, 70, 80, 90, 100].map((score) => (
                                     <Pressable
+                                        accessibilityRole='button'
                                         android_ripple={{
                                             color: "rgba(91, 110, 91, 0.12)",
                                             borderless: false,
@@ -2554,6 +2598,7 @@ export function createQuranScreenRenderers(context) {
                                 value={murojaahForm.note}
                             />
                             <Pressable
+                                accessibilityRole='button'
                                 android_ripple={{
                                     color: "rgba(255, 255, 255, 0.12)",
                                     borderless: false,

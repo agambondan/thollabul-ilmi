@@ -71,6 +71,7 @@ function LoginPrompt({ onOpenProfile, t }) {
                 {t("explore.userWird.loginText")}
             </Text>
             <Pressable onPress={onOpenProfile} style={styles.primaryButton}>
+                accessibilityRole='button'
                 <Text style={styles.primaryButtonText}>
                     {t("explore.userWird.login")}
                 </Text>
@@ -106,6 +107,7 @@ function WirdCard({ item, onEdit, onRemove, t }) {
                 </View>
                 <View style={styles.cardActions}>
                     <Pressable
+                        accessibilityRole='button'
                         accessibilityLabel={t(
                             "explore.userWird.editAccessibility",
                         )}
@@ -116,6 +118,7 @@ function WirdCard({ item, onEdit, onRemove, t }) {
                         <Pencil color='#047857' size={16} strokeWidth={2.2} />
                     </Pressable>
                     <Pressable
+                        accessibilityRole='button'
                         accessibilityLabel={t(
                             "explore.userWird.deleteAccessibility",
                         )}
@@ -202,6 +205,7 @@ export function WebAppUserWirdRoute({
                 </View>
                 {hasSession ? (
                     <Pressable
+                        accessibilityRole='button'
                         onPress={openCreate}
                         style={styles.addButton}
                         testID='web-app-user-wird-add'
@@ -268,6 +272,7 @@ export function WebAppUserWirdRoute({
                                 {t("explore.userWird.emptyTitle")}
                             </Text>
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={openCreate}
                                 style={styles.linkButton}
                             >
@@ -307,6 +312,7 @@ export function WebAppUserWirdRoute({
                                     : t("explore.userWird.createTitle")}
                             </Text>
                             <Pressable
+                                accessibilityRole='button'
                                 accessibilityLabel={t(
                                     "explore.userWird.closeFormAccessibility",
                                 )}
@@ -419,6 +425,7 @@ export function WebAppUserWirdRoute({
                         </ScrollView>
                         <View style={styles.modalActions}>
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={closeForm}
                                 style={styles.cancelButton}
                             >
@@ -427,6 +434,7 @@ export function WebAppUserWirdRoute({
                                 </Text>
                             </Pressable>
                             <Pressable
+                                accessibilityRole='button'
                                 disabled={
                                     savingUserWird ||
                                     !userWirdForm.title?.trim()

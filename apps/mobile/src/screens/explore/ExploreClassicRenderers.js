@@ -564,6 +564,7 @@ export function createExploreClassicRenderers(context) {
                     <View style={styles.answerRow}>
                         {getQuizChoices(item).map((option) => (
                             <Pressable
+                                accessibilityRole='button'
                                 android_ripple={{
                                     color: "rgba(91, 110, 91, 0.14)",
                                     borderless: false,
@@ -718,6 +719,9 @@ export function createExploreClassicRenderers(context) {
                         android_ripple={{
                             color: "rgba(255,255,255,0.16)",
                             borderless: false,
+                        }}
+                        accessibilityState={{
+                            disabled: !commentDraft.trim() || commentSaving,
                         }}
                         disabled={!commentDraft.trim() || commentSaving}
                         onPress={submitFeedComment}
@@ -987,6 +991,9 @@ export function createExploreClassicRenderers(context) {
                             <Pressable
                                 accessibilityLabel='Simpan progress belajar'
                                 accessibilityRole='button'
+                                accessibilityState={{
+                                    disabled: libraryProgressSaving,
+                                }}
                                 disabled={libraryProgressSaving}
                                 onPress={submitLibraryProgress}
                                 style={[
@@ -1170,6 +1177,7 @@ export function createExploreClassicRenderers(context) {
                     <View testID='explore-web-app-detail' />
                     <View style={styles.webAppDetailHeader}>
                         <Pressable
+                            accessibilityRole='button'
                             accessibilityLabel='Kembali ke daftar'
                             onPress={closeDetailView}
                             style={styles.webAppDetailBack}
@@ -1330,6 +1338,7 @@ export function createExploreClassicRenderers(context) {
                                 color: "rgba(255,255,255,0.16)",
                                 borderless: false,
                             }}
+                            accessibilityState={{ disabled: savingUserWird }}
                             disabled={savingUserWird}
                             onPress={submitUserWird}
                             style={[
@@ -1386,6 +1395,7 @@ export function createExploreClassicRenderers(context) {
                             value={dictionaryQuery}
                         />
                         <Pressable
+                            accessibilityRole='button'
                             onPress={runDictionarySearch}
                             style={styles.primaryButton}
                         >
@@ -1407,6 +1417,7 @@ export function createExploreClassicRenderers(context) {
                         {activeFeature.title}
                     </CardTitle>
                     <Pressable
+                        accessibilityRole='button'
                         onPress={() => {
                             hapticTap();
                             setTasbih((current) => ({
@@ -1424,6 +1435,7 @@ export function createExploreClassicRenderers(context) {
                     <View style={styles.answerRow}>
                         {[33, 99, 100].map((target) => (
                             <Pressable
+                                accessibilityRole='button'
                                 key={target}
                                 onPress={() => setTasbih({ count: 0, target })}
                                 style={[
@@ -1444,6 +1456,7 @@ export function createExploreClassicRenderers(context) {
                             </Pressable>
                         ))}
                         <Pressable
+                            accessibilityRole='button'
                             onPress={() =>
                                 setTasbih((current) => ({
                                     ...current,
@@ -1509,6 +1522,10 @@ export function createExploreClassicRenderers(context) {
                         <>
                             <View style={styles.asmaulHeader}>
                                 <Pressable
+                                    accessibilityRole='button'
+                                    accessibilityState={{
+                                        disabled: asmaulIndex === 0,
+                                    }}
                                     disabled={asmaulIndex === 0}
                                     onPress={() =>
                                         setAsmaulIndex((i) =>
@@ -1541,6 +1558,7 @@ export function createExploreClassicRenderers(context) {
                                     </Text>
                                 </View>
                                 <Pressable
+                                    accessibilityRole='button'
                                     disabled={
                                         asmaulIndex >= asmaulNames.length - 1
                                     }
@@ -1581,6 +1599,7 @@ export function createExploreClassicRenderers(context) {
                                 />
                             </View>
                             <Pressable
+                                accessibilityRole='button'
                                 onPress={incrementName}
                                 style={styles.counter}
                                 testID='asmaul-wirid-counter'
@@ -1596,6 +1615,7 @@ export function createExploreClassicRenderers(context) {
                             </Pressable>
                             <View style={styles.answerRow}>
                                 <Pressable
+                                    accessibilityRole='button'
                                     onPress={resetName}
                                     style={styles.answerButton}
                                 >
@@ -1678,6 +1698,10 @@ export function createExploreClassicRenderers(context) {
                             </Pressable>
                             <View style={styles.answerRow}>
                                 <Pressable
+                                    accessibilityRole='button'
+                                    accessibilityState={{
+                                        disabled: !canGoPrev,
+                                    }}
                                     disabled={!canGoPrev}
                                     onPress={() => moveFlashcard(-1)}
                                     style={[
@@ -1690,6 +1714,7 @@ export function createExploreClassicRenderers(context) {
                                     </Text>
                                 </Pressable>
                                 <Pressable
+                                    accessibilityRole='button'
                                     onPress={() =>
                                         setAsmaulFlashcardRevealed(
                                             (value) => !value,
@@ -1704,6 +1729,10 @@ export function createExploreClassicRenderers(context) {
                                     </Text>
                                 </Pressable>
                                 <Pressable
+                                    accessibilityRole='button'
+                                    accessibilityState={{
+                                        disabled: !canGoNext,
+                                    }}
                                     disabled={!canGoNext}
                                     onPress={() => moveFlashcard(1)}
                                     style={[
@@ -1752,6 +1781,7 @@ export function createExploreClassicRenderers(context) {
                     <View style={styles.surahSelector}>
                         {visibleSurahOptions.map((surah) => (
                             <Pressable
+                                accessibilityRole='button'
                                 android_ripple={{
                                     color: "rgba(91, 110, 91, 0.12)",
                                     borderless: false,
@@ -2053,6 +2083,10 @@ export function createExploreClassicRenderers(context) {
                             </View>
                             {session?.token && zakatMaal > 0 && (
                                 <Pressable
+                                    accessibilityRole='button'
+                                    accessibilityState={{
+                                        disabled: zakatSaving,
+                                    }}
                                     disabled={zakatSaving}
                                     onPress={() =>
                                         handleZakatSave(
@@ -2096,6 +2130,7 @@ export function createExploreClassicRenderers(context) {
                             })}
                             <View style={styles.heirGrid}>
                                 <Pressable
+                                    accessibilityRole='button'
                                     onPress={() =>
                                         setZakatFamilyCount(
                                             Math.max(1, zakatFamilyCount - 1),
@@ -2129,6 +2164,7 @@ export function createExploreClassicRenderers(context) {
                                     </Text>
                                 </View>
                                 <Pressable
+                                    accessibilityRole='button'
                                     onPress={() =>
                                         setZakatFamilyCount(
                                             zakatFamilyCount + 1,
@@ -2146,6 +2182,10 @@ export function createExploreClassicRenderers(context) {
                             )}
                             {session?.token && zakatFitrah > 0 && (
                                 <Pressable
+                                    accessibilityRole='button'
+                                    accessibilityState={{
+                                        disabled: zakatSaving,
+                                    }}
                                     disabled={zakatSaving}
                                     onPress={() =>
                                         handleZakatSave(
@@ -2217,6 +2257,10 @@ export function createExploreClassicRenderers(context) {
                             )}
                             {session?.token && zakatProfesi > 0 && (
                                 <Pressable
+                                    accessibilityRole='button'
+                                    accessibilityState={{
+                                        disabled: zakatSaving,
+                                    }}
                                     disabled={zakatSaving}
                                     onPress={() =>
                                         handleZakatSave(
@@ -2311,6 +2355,10 @@ export function createExploreClassicRenderers(context) {
                             </View>
                             {session?.token && zakatTrade > 0 && (
                                 <Pressable
+                                    accessibilityRole='button'
+                                    accessibilityState={{
+                                        disabled: zakatSaving,
+                                    }}
                                     disabled={zakatSaving}
                                     onPress={() =>
                                         handleZakatSave(
@@ -2393,6 +2441,10 @@ export function createExploreClassicRenderers(context) {
                             )}
                             {session?.token && zakatAgriculture > 0 && (
                                 <Pressable
+                                    accessibilityRole='button'
+                                    accessibilityState={{
+                                        disabled: zakatSaving,
+                                    }}
                                     disabled={zakatSaving}
                                     onPress={() =>
                                         handleZakatSave(
@@ -2471,6 +2523,10 @@ export function createExploreClassicRenderers(context) {
                             )}
                             {session?.token && zakatGold > 0 && (
                                 <Pressable
+                                    accessibilityRole='button'
+                                    accessibilityState={{
+                                        disabled: zakatSaving,
+                                    }}
                                     disabled={zakatSaving}
                                     onPress={() =>
                                         handleZakatSave(
@@ -2717,6 +2773,7 @@ export function createExploreClassicRenderers(context) {
                                         </Text>
                                     </View>
                                     <Pressable
+                                        accessibilityRole='button'
                                         android_ripple={{
                                             color: "rgba(220, 80, 80, 0.12)",
                                             borderless: false,
@@ -2798,9 +2855,13 @@ export function createExploreClassicRenderers(context) {
                                     </Text>
                                     <View style={styles.heirActions}>
                                         <Pressable
+                                            accessibilityRole='button'
                                             onPress={() =>
                                                 setHeir(field.key, -1)
                                             }
+                                            accessibilityState={{
+                                                disabled: count === 0,
+                                            }}
                                             disabled={count === 0}
                                             style={[
                                                 styles.heirButton,
@@ -2813,9 +2874,13 @@ export function createExploreClassicRenderers(context) {
                                             </Text>
                                         </Pressable>
                                         <Pressable
+                                            accessibilityRole='button'
                                             onPress={() =>
                                                 setHeir(field.key, 1)
                                             }
+                                            accessibilityState={{
+                                                disabled: count >= field.max,
+                                            }}
                                             disabled={count >= field.max}
                                             style={[
                                                 styles.heirButton,
@@ -2960,6 +3025,9 @@ export function createExploreClassicRenderers(context) {
                                 color: "rgba(255,255,255,0.16)",
                                 borderless: false,
                             }}
+                            accessibilityState={{
+                                disabled: savingFaraidh || distributable <= 0,
+                            }}
                             disabled={savingFaraidh || distributable <= 0}
                             onPress={handleSaveFaraidh}
                             style={[
@@ -3044,6 +3112,7 @@ export function createExploreClassicRenderers(context) {
                             </Text>
                         ) : null}
                         <Pressable
+                            accessibilityRole='button'
                             android_ripple={{
                                 color: "rgba(255,255,255,0.16)",
                                 borderless: false,
@@ -3187,6 +3256,7 @@ export function createExploreClassicRenderers(context) {
                                         { label: "▼ Pertanyaan", value: -1 },
                                     ].map((action) => (
                                         <Pressable
+                                            accessibilityRole='button'
                                             key={action.label}
                                             android_ripple={{
                                                 color: "rgba(91, 110, 91, 0.12)",
@@ -3302,6 +3372,7 @@ export function createExploreClassicRenderers(context) {
                                             >
                                                 {[1, -1].map((value) => (
                                                     <Pressable
+                                                        accessibilityRole='button'
                                                         key={value}
                                                         android_ripple={{
                                                             color: "rgba(91, 110, 91, 0.12)",
@@ -3385,6 +3456,7 @@ export function createExploreClassicRenderers(context) {
                                                 {session?.token &&
                                                 !answer.isAccepted ? (
                                                     <Pressable
+                                                        accessibilityRole='button'
                                                         android_ripple={{
                                                             color: "rgba(91, 110, 91, 0.12)",
                                                             borderless: false,
@@ -3457,6 +3529,7 @@ export function createExploreClassicRenderers(context) {
                                             value={forumAnswerDraft}
                                         />
                                         <Pressable
+                                            accessibilityRole='button'
                                             android_ripple={{
                                                 color: "rgba(255,255,255,0.16)",
                                                 borderless: false,
@@ -3586,6 +3659,7 @@ export function createExploreClassicRenderers(context) {
                     ) : (
                         forumQuestions.map((q) => (
                             <Pressable
+                                accessibilityRole='button'
                                 key={q.id}
                                 android_ripple={{
                                     color: "rgba(91, 110, 91, 0.12)",
@@ -3714,6 +3788,7 @@ export function createExploreClassicRenderers(context) {
                     )}
                     {forumHasMore ? (
                         <Pressable
+                            accessibilityRole='button'
                             android_ripple={{
                                 color: "rgba(91, 110, 91, 0.12)",
                                 borderless: false,
@@ -3748,6 +3823,7 @@ export function createExploreClassicRenderers(context) {
                     ) : null}
                     <View style={{ marginTop: spacing.md }}>
                         <Pressable
+                            accessibilityRole='button'
                             android_ripple={{
                                 color: "rgba(255,255,255,0.16)",
                                 borderless: false,
@@ -3785,6 +3861,7 @@ export function createExploreClassicRenderers(context) {
                     <View style={styles.trackerList}>
                         {PRAYER_ITEMS.map((p) => (
                             <Pressable
+                                accessibilityRole='button'
                                 android_ripple={{
                                     color: "rgba(91, 110, 91, 0.12)",
                                     borderless: false,

@@ -124,6 +124,7 @@ export function WebAppKamusRoute({
                     />
                 </View>
                 <Pressable
+                    accessibilityRole='button'
                     onPress={onSearch}
                     style={styles.searchButton}
                     testID='web-app-kamus-submit'
