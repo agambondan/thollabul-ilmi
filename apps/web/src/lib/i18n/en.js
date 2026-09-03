@@ -1716,6 +1716,12 @@ const en = {
     "settings.upload_adzan_success": "Adzan sound saved",
     "settings.delete_adzan": "Delete",
     "settings.notif_denied": "Browser notification permission denied",
+    "adzan.test_notif_btn": "Test Notification",
+    "adzan.test_notif_title": "Test Notification — Thollabul Ilmi",
+    "adzan.test_notif_body": "Adzan reminders & prayer schedule are working properly.",
+    "adzan.test_notif_sent": "Test notification sent. Check your system banner or notification bar.",
+    "adzan.test_notif_unsupported": "This browser/device does not support Web Notifications.",
+    "adzan.test_notif_error": "Failed to send test notification.",
     "settings.sound_blocked":
         "Audio blocked by browser. Click Test Sound again.",
     "settings.notif_kajian": "Kajian Info",

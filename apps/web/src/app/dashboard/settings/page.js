@@ -8,6 +8,7 @@ import {
     resolveAdzanSoundSrc,
     useSettings,
 } from "@/lib/useSettings";
+import { fireAdzanNotification } from "@/lib/adzanNotification";
 import { PRAYER_MADHABS, PRAYER_METHODS } from "@/lib/prayerTimes";
 import { useTheme } from "@/lib/useTheme";
 import { QURAN_FONTS, useQuranFont } from "@/lib/useQuranFont";
@@ -106,6 +107,7 @@ export default function SettingsPage() {
     };
 
     const [isPlayingPreview, setIsPlayingPreview] = useState(false);
+    const [testNotifResult, setTestNotifResult] = useState(null);
 
     const updateAdzanReminderLead = (value) =>
         updateSetting("adzanReminderLead", Number(value));
@@ -177,6 +179,46 @@ export default function SettingsPage() {
         } catch (err) {
             setIsPlayingPreview(false);
             toast.error("Audio player error");
+        }
+    };
+
+    const handleTestNotification = async () => {
+        setTestNotifResult(null);
+        if (
+            typeof window === "undefined" ||
+            typeof Notification === "undefined"
+        ) {
+            toast.error(t("adzan.test_notif_unsupported"));
+            return;
+        }
+        if (Notification.permission === "denied") {
+            toast.error(t("settings.notif_denied"));
+            return;
+        }
+        if (Notification.permission === "default") {
+            const perm = await Notification.requestPermission();
+            if (perm !== "granted") {
+                toast.error(t("settings.notif_denied"));
+                return;
+            }
+        }
+        try {
+            await fireAdzanNotification(
+                t("adzan.test_notif_title", "Tes Notifikasi Thollabul"),
+                t(
+                    "adzan.test_notif_body",
+                    "Kalau notif ini muncul, pengingat adzan siap dipakai.",
+                ),
+                "/dashboard/jadwal-sholat",
+            );
+            toast.success(
+                t(
+                    "adzan.test_notif_sent",
+                    "Notifikasi tes terkirim. Cek banner sistem atau bar notifikasi.",
+                ),
+            );
+        } catch (err) {
+            toast.error(t("adzan.test_notif_error", "Gagal mengirim notifikasi tes."));
         }
     };
 
@@ -419,12 +461,21 @@ export default function SettingsPage() {
                         {t("settings.section_notifications")}
                     </h2>
                     <SettingRow label={t("settings.notif_adzan")}>
-                        <input
-                            type='checkbox'
-                            checked={settings.notifAdzan}
-                            onChange={handleAdzanToggle}
-                            className='w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 dark:focus:ring-emerald-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-                        />
+                        <div className='flex items-center gap-3'>
+                            <input
+                                type='checkbox'
+                                checked={settings.notifAdzan}
+                                onChange={handleAdzanToggle}
+                                className='w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 dark:focus:ring-emerald-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+                            />
+                            <button
+                                type='button'
+                                onClick={handleTestNotification}
+                                className='px-2.5 py-1 text-xs rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors'
+                            >
+                                🔔 {t("adzan.test_notif_btn", "Tes Notifikasi")}
+                            </button>
+                        </div>
                     </SettingRow>
                     <SettingRow label={t("settings.adzan_reminder_lead")}>
                         <select

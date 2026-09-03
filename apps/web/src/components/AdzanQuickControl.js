@@ -7,6 +7,7 @@ import {
     resolveAdzanSoundSrc,
     useSettings,
 } from "@/lib/useSettings";
+import { fireAdzanNotification } from "@/lib/adzanNotification";
 
 export default function AdzanQuickControl({
     i18n = {},
@@ -26,6 +27,7 @@ export default function AdzanQuickControl({
             typeof Notification !== "undefined" &&
             Notification.permission === "granted",
     );
+    const [testResult, setTestResult] = useState(null);
     const audioRef = useRef(null);
 
     const adzanOptions = useMemo(
@@ -131,6 +133,90 @@ export default function AdzanQuickControl({
         }
     };
 
+    const testNotification = async () => {
+        setTestResult(null);
+        if (
+            typeof window === "undefined" ||
+            typeof Notification === "undefined"
+        ) {
+            setTestResult("unsupported");
+            return;
+        }
+        if (
+            "serviceWorker" in navigator &&
+            navigator.serviceWorker.controller
+        ) {
+            try {
+                await fireAdzanNotification(
+                    t(
+                        "adzan.test_notif_title",
+                        "Tes Notifikasi Thollabul",
+                    ),
+                    t(
+                        "adzan.test_notif_body",
+                        "Kalau notif ini muncul, pengingat adzan siap dipakai.",
+                    ),
+                    "/dashboard/jadwal-sholat",
+                );
+                setTestResult("sent");
+                return;
+            } catch {
+                setTestResult("error");
+                return;
+            }
+        }
+        if (Notification.permission === "granted") {
+            try {
+                new Notification(
+                    t(
+                        "adzan.test_notif_title",
+                        "Tes Notifikasi Thollabul",
+                    ),
+                    {
+                        body: t(
+                            "adzan.test_notif_body",
+                            "Kalau notif ini muncul, pengingat adzan siap dipakai.",
+                        ),
+                        icon: "/icon.png",
+                    },
+                );
+                setTestResult("sent");
+                return;
+            } catch {
+                setTestResult("error");
+                return;
+            }
+        }
+        if (Notification.permission === "denied") {
+            setTestResult("denied");
+            return;
+        }
+        try {
+            const perm = await Notification.requestPermission();
+            if (perm === "granted") {
+                setNotifChecked(true);
+                new Notification(
+                    t(
+                        "adzan.test_notif_title",
+                        "Tes Notifikasi Thollabul",
+                    ),
+                    {
+                        body: t(
+                            "adzan.test_notif_body",
+                            "Kalau notif ini muncul, pengingat adzan siap dipakai.",
+                        ),
+                        icon: "/icon.png",
+                    },
+                );
+                setTestResult("sent");
+            } else {
+                setTestResult("denied");
+            }
+        } catch {
+            setTestResult("error");
+        }
+    };
+
     const onUpload = (e) => {
         const file = e.target.files?.[0];
         e.target.value = "";
@@ -212,6 +298,13 @@ export default function AdzanQuickControl({
                         ? t("adzan.quick_stop", "Stop")
                         : t("adzan.quick_test", "Tes")}
                 </button>
+                <button
+                    type='button'
+                    onClick={testNotification}
+                    className='px-3 py-1.5 text-xs rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors'
+                >
+                    🔔 {t("adzan.test_notif_btn", "Tes Notifikasi")}
+                </button>
                 <label
                     className={`px-3 py-1.5 text-xs rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 cursor-pointer ${
                         uploading > 0 || customSounds.length >= maxCustom
@@ -259,6 +352,37 @@ export default function AdzanQuickControl({
                         </li>
                     ))}
                 </ul>
+            )}
+
+            {testResult && (
+                <p
+                    className={`mt-2 text-xs ${
+                        testResult === "sent"
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : "text-amber-600 dark:text-amber-400"
+                    }`}
+                >
+                    {testResult === "sent" &&
+                        t(
+                            "adzan.test_notif_sent",
+                            "Notifikasi tes terkirim. Cek banner sistem atau bar notifikasi.",
+                        )}
+                    {testResult === "denied" &&
+                        t(
+                            "settings.notif_denied",
+                            "Izin notifikasi ditolak oleh browser/perangkat.",
+                        )}
+                    {testResult === "unsupported" &&
+                        t(
+                            "adzan.test_notif_unsupported",
+                            "Notifikasi tidak didukung di browser ini.",
+                        )}
+                    {testResult === "error" &&
+                        t(
+                            "adzan.test_notif_error",
+                            "Gagal mengirim notifikasi tes.",
+                        )}
+                </p>
             )}
 
             <p className='mt-2 text-[11px] text-gray-400'>
