@@ -3,7 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "@/context/Locale";
 import { fireAdzanNotification } from "@/lib/adzanNotification";
-import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
+import {
+    ADZAN_SOUNDS,
+    resolveAdzanSoundSrc,
+    useSettings,
+} from "@/lib/useSettings";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import AdzanQuickControl from "@/components/AdzanQuickControl";
 import { toLocalISODate } from "@/lib/date";
@@ -148,12 +152,10 @@ const JadwalSholatPage = () => {
                 lastNotifRef.current = notifKey;
 
                 if (lead === 0 && n >= pt) {
-                    const soundSrc =
-                        settings.adzanSoundUrl ||
-                        ADZAN_SOUNDS.find(
-                            (s) => s.value === settings.adzanSound,
-                        )?.src ||
-                        ADZAN_SOUNDS[0].src;
+                    const soundSrc = resolveAdzanSoundSrc(
+                        settings.adzanSound,
+                        settings.adzanSoundUrl,
+                    );
                     audioRef.current = new Audio(soundSrc);
                     audioRef.current.play().catch(() => {});
                 }

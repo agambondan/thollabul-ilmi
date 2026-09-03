@@ -8,7 +8,11 @@ import {
     PRAYER_METHODS,
     useLocalDateKey,
 } from "@/lib/prayerTimes";
-import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
+import {
+    ADZAN_SOUNDS,
+    resolveAdzanSoundSrc,
+    useSettings,
+} from "@/lib/useSettings";
 import { requestAndStoreUserLocation } from "@/lib/userLocation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BsBell, BsBellFill, BsGeoAlt } from "react-icons/bs";
@@ -678,13 +682,10 @@ export default function JadwalSholatPage() {
             {settings.notifAdzan && (
                 <audio
                     ref={audioRef}
-                    src={
-                        settings.adzanSoundUrl ||
-                        ADZAN_SOUNDS.find(
-                            (s) => s.value === settings.adzanSound,
-                        )?.src ||
-                        ADZAN_SOUNDS[0].src
-                    }
+                    src={resolveAdzanSoundSrc(
+                        settings.adzanSound,
+                        settings.adzanSoundUrl,
+                    )}
                     preload='auto'
                 />
             )}

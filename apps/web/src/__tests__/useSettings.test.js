@@ -117,6 +117,34 @@ describe("useSettings", () => {
         });
     });
 
+    test("migrates legacy islamcan sound and overrides stored URL", async () => {
+        mockUseAuth.isAuthenticated = true;
+        mockAuthFetch.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                data: {
+                    settings: JSON.stringify({
+                        adzanSound: "islamcan",
+                        adzanSoundUrl: "https://www.islamcan.com/audio/adzan/azan1.mp3",
+                        adzanSoundLabel: "IslamCan Azan 1",
+                    }),
+                },
+            }),
+        });
+
+        const view = renderProvider();
+
+        await waitFor(() => {
+            const raw = view
+                .getByTestId("settings")
+                .getAttribute("data-settings");
+            const parsed = JSON.parse(raw);
+            expect(parsed.adzanSound).toBe("mishary-alafasy");
+            expect(parsed.adzanSoundUrl).toContain("mishary-alafasy");
+            expect(parsed.adzanSoundLabel).toBe("Mishary Rashid Al-Afasy");
+        });
+    });
+
     test("falls back to defaults when backend response is malformed", async () => {
         mockUseAuth.isAuthenticated = true;
         mockAuthFetch.mockResolvedValueOnce({

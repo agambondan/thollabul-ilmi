@@ -3,7 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale } from "@/context/Locale";
 import { adzanSoundApi, uploadWithProgress } from "@/lib/api";
-import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
+import {
+    ADZAN_SOUNDS,
+    resolveAdzanSoundSrc,
+    useSettings,
+} from "@/lib/useSettings";
 import { PRAYER_MADHABS, PRAYER_METHODS } from "@/lib/prayerTimes";
 import { useTheme } from "@/lib/useTheme";
 import { QURAN_FONTS, useQuranFont } from "@/lib/useQuranFont";
@@ -129,7 +133,8 @@ export default function SettingsPage() {
     };
 
     const playAdzanPreview = () => {
-        if (!selectedAdzan || !selectedAdzan.src) {
+        const src = resolveAdzanSoundSrc(settings.adzanSound, settings.adzanSoundUrl);
+        if (!src) {
             toast.error("Sumber audio tidak valid");
             return;
         }
@@ -143,7 +148,7 @@ export default function SettingsPage() {
             if (previewAudioRef.current) {
                 previewAudioRef.current.pause();
             }
-            const audio = new Audio(selectedAdzan.src);
+            const audio = new Audio(src);
             previewAudioRef.current = audio;
             setIsPlayingPreview(true);
 

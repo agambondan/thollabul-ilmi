@@ -2,7 +2,11 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { adzanSoundApi, uploadWithProgress } from "@/lib/api";
-import { ADZAN_SOUNDS, useSettings } from "@/lib/useSettings";
+import {
+    ADZAN_SOUNDS,
+    resolveAdzanSoundSrc,
+    useSettings,
+} from "@/lib/useSettings";
 
 export default function AdzanQuickControl({
     i18n = {},
@@ -106,13 +110,14 @@ export default function AdzanQuickControl({
     };
 
     const play = () => {
-        if (!selected || !selected.src) return;
+        const src = resolveAdzanSoundSrc(settings.adzanSound, settings.adzanSoundUrl);
+        if (!src) return;
         if (isPlaying) {
             stop();
             return;
         }
         try {
-            const a = new Audio(selected.src);
+            const a = new Audio(src);
             audioRef.current = a;
             setIsPlaying(true);
             a.onended = () => setIsPlaying(false);

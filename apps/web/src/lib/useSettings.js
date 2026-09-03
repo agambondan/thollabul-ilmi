@@ -89,6 +89,17 @@ export const ADZAN_SOUNDS = [
     },
 ];
 
+export const getAdzanSound = (value) =>
+    ADZAN_SOUNDS.find((s) => s.value === value) || ADZAN_SOUNDS[0];
+
+export const resolveAdzanSoundSrc = (adzanSound, customUrl) => {
+    if (adzanSound?.startsWith("custom:") && customUrl) {
+        return customUrl;
+    }
+    const found = getAdzanSound(adzanSound);
+    return found.src || ADZAN_SOUNDS[0].src;
+};
+
 /*
  * Reading preferences live here (and therefore sync to the account) rather
  * than in useQuranFont's private localStorage keys. The old split meant the
@@ -137,6 +148,20 @@ const sanitizeSettings = (raw) => {
     }
     next.prayerMethod = normalizePrayerMethod(next.prayerMethod);
     next.prayerMadhab = normalizePrayerMadhab(next.prayerMadhab);
+
+    // Sanitize legacy adzan sound & stale broken URLs
+    if (next.adzanSound === "islamcan") {
+        next.adzanSound = "mishary-alafasy";
+        next.adzanSoundUrl = getAdzanSound("mishary-alafasy").src;
+        next.adzanSoundLabel = getAdzanSound("mishary-alafasy").label;
+    } else if (next.adzanSound?.startsWith("custom:")) {
+        // Keep custom sound URL as-is
+    } else {
+        const found = getAdzanSound(next.adzanSound);
+        next.adzanSound = found.value;
+        next.adzanSoundUrl = found.src;
+        next.adzanSoundLabel = found.label;
+    }
 
     // Fold the pre-split font settings forward so a returning user keeps the
     // face and size they had picked.
