@@ -14,6 +14,8 @@ const LocaleContext = createContext({
     setLang: () => {},
     t: (k, fallbackOrVars) =>
         typeof fallbackOrVars === "string" ? fallbackOrVars : undefined,
+    preloadAdminDictionary: () => Promise.resolve(),
+    isAdminDictionaryReady: false,
 });
 
 const readStoredLang = () => {
@@ -45,18 +47,57 @@ const loadEnglish = () => {
     return englishRequest;
 };
 
-export function LocaleProvider({ children }) {
+/*
+ * Admin strings (~330 keys, one per every CRUD screen in /admin) are their
+ * own chunk for the same reason: nobody outside the admin panel ever needs
+ * them, so they should not sit in every public and dashboard page's bundle.
+ * `t()` below checks these dictionaries after the main ones, so a lookup
+ * before this has loaded just falls through — see `preloadAdminDictionary`.
+ */
+const adminDictionaries = {};
+let adminIndonesianRequest = null;
+let adminEnglishRequest = null;
+
+const loadAdminIndonesian = () => {
+    adminIndonesianRequest =
+        adminIndonesianRequest ??
+        import("@/lib/i18n/id-admin").then((mod) => {
+            adminDictionaries.ID = mod.default;
+            return mod.default;
+        });
+    return adminIndonesianRequest;
+};
+
+const loadAdminEnglish = () => {
+    adminEnglishRequest =
+        adminEnglishRequest ??
+        import("@/lib/i18n/en-admin").then((mod) => {
+            adminDictionaries.EN = mod.default;
+            return mod.default;
+        });
+    return adminEnglishRequest;
+};
+
+export function LocaleProvider({ children, initialLang }) {
     // Stays "ID" for the first render on purpose: the server prerenders in
     // Indonesian, so seeding from localStorage here would be a hydration
     // mismatch. Removing the brief flash for English readers needs the
     // language to reach the server (a cookie), which is a separate change.
-    const [lang, setLangState] = useState("ID");
+    const [lang, setLangState] = useState(() =>
+        initialLang === "EN" ? "EN" : "ID",
+    );
     const [, setDictVersion] = useState(0);
+    const [isAdminDictionaryReady, setIsAdminDictionaryReady] = useState(false);
 
     useEffect(() => {
+        if (initialLang && initialLang !== lang) {
+            setLangState(initialLang === "EN" ? "EN" : "ID");
+            return;
+        }
         const stored = readStoredLang();
-        if (stored !== "ID") setLangState(stored);
-    }, []);
+        if (stored !== lang) setLangState(stored);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [initialLang]);
 
     useEffect(() => {
         if (lang !== "EN" || dictionaries.EN) return;
@@ -79,6 +120,33 @@ export function LocaleProvider({ children }) {
         if (typeof document !== "undefined") {
             document.documentElement.lang = upper === "EN" ? "en" : "id";
         }
+        // Mirror the choice to a cookie so subsequent server renders match the
+        // language choice without a flash. Best-effort.
+        try {
+            fetch("/api/locale", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ lang: upper }),
+            });
+        } catch {}
+    }, []);
+
+    // Called once from app/admin/layout.js. Both languages are fetched
+    // together (rather than only the active one, as the main EN split does)
+    // because the admin panel already gates its first paint on an auth check
+    // — piggybacking the dictionary load onto that existing spinner means a
+    // language switch inside admin never has to show a second loading state.
+    const preloadAdminDictionary = useCallback(() => {
+        if (adminDictionaries.ID && adminDictionaries.EN) {
+            setIsAdminDictionaryReady(true);
+            return Promise.resolve();
+        }
+        return Promise.all([loadAdminIndonesian(), loadAdminEnglish()]).then(
+            () => {
+                setIsAdminDictionaryReady(true);
+                setDictVersion((v) => v + 1);
+            },
+        );
     }, []);
 
     const t = useCallback(
@@ -87,7 +155,9 @@ export function LocaleProvider({ children }) {
             const vars = hasFallback ? maybeVars : fallbackOrVars;
             const text =
                 dictionaries[lang]?.[key] ??
+                adminDictionaries[lang]?.[key] ??
                 dictionaries.ID[key] ??
+                adminDictionaries.ID?.[key] ??
                 (hasFallback ? fallbackOrVars : undefined);
             if (!vars || typeof text !== "string") return text;
 
@@ -97,13 +167,22 @@ export function LocaleProvider({ children }) {
                 text,
             );
         },
-        // `dictionaries.EN` is filled in asynchronously; setDictVersion above
-        // is what re-runs this once the English chunk lands.
+        // `dictionaries.EN` / `adminDictionaries.*` are filled in
+        // asynchronously; setDictVersion above is what re-runs this once a
+        // chunk lands.
         [lang],
     );
 
     return (
-        <LocaleContext.Provider value={{ lang, setLang, t }}>
+        <LocaleContext.Provider
+            value={{
+                lang,
+                setLang,
+                t,
+                preloadAdminDictionary,
+                isAdminDictionaryReady,
+            }}
+        >
             {children}
         </LocaleContext.Provider>
     );

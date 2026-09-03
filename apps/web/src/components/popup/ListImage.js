@@ -77,7 +77,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
             try {
                 const fontKitab = new FontFace(
                     "Kitab",
-                    'url("/fonts/Kitab-Regular.ttf")',
+                    'url("/fonts/Kitab-Regular.woff2") format("woff2")',
                 );
                 const loadedFace = await fontKitab.load();
                 document.fonts.add(loadedFace);

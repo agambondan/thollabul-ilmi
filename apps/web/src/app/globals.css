@@ -349,7 +349,7 @@ tajweed.idgh_mus:hover {
 
 @font-face {
     font-family: "NooreHidayah";
-    src: url("/fonts/noorehidayat.ttf");
+    src: url("/fonts/noorehidayat.woff2") format("woff2");
     font-display: swap;
 }
 
@@ -362,7 +362,7 @@ tajweed.idgh_mus:hover {
 
 @font-face {
     font-family: "Scheherazade";
-    src: url("/fonts/Scheherazade-webfont.ttf");
+    src: url("/fonts/Scheherazade-webfont.woff2") format("woff2");
     font-display: swap;
 }
 
@@ -372,7 +372,7 @@ tajweed.idgh_mus:hover {
 
 @font-face {
     font-family: "Kitab";
-    src: url("/fonts/Kitab-Regular.ttf");
+    src: url("/fonts/Kitab-Regular.woff2") format("woff2");
     font-display: swap;
 }
 

@@ -149,7 +149,8 @@ const SIDEBAR_STORAGE_KEY = "tholabul_admin_sidebar_collapsed";
 
 const AdminLayout = ({ children }) => {
     const { user, isAuthenticated, isLoading, logout, refetchUser } = useAuth();
-    const { t, lang, setLang } = useLocale();
+    const { t, lang, setLang, preloadAdminDictionary, isAdminDictionaryReady } =
+        useLocale();
     const { isDark: isDarkMode, toggleTheme } = useTheme();
     const router = useRouter();
     const pathname = usePathname();
@@ -173,6 +174,14 @@ const AdminLayout = ({ children }) => {
     // is briefly true on every fresh load. Render the spinner first, or the
     // error screen flashes up during a perfectly normal startup.
     const profileUnavailable = isAuthenticated && !user;
+
+    // Admin strings are a separate chunk (see context/Locale.js) so they are
+    // not shipped to every public and dashboard page. Kicked off immediately
+    // on mount and gated behind the same spinner as the auth check below, so
+    // there is no flash of missing text once the panel actually renders.
+    useEffect(() => {
+        preloadAdminDictionary();
+    }, [preloadAdminDictionary]);
 
     useEffect(() => {
         if (isLoading || profileUnavailable) return;
@@ -234,7 +243,7 @@ const AdminLayout = ({ children }) => {
               .toUpperCase()
         : "?";
 
-    if (isLoading) {
+    if (isLoading || !isAdminDictionaryReady) {
         return <Spinner3 />;
     }
 
