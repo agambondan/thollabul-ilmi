@@ -53,7 +53,8 @@ dan menandainya daripada menayangkan yang belum bisa dipastikan.
 ```bash
 cd services/api/scripts/repair_hadith_pairing
 
-python3 build_fix.py          # susun perbaikan + karantina (tidak menyentuh DB)
+python3 build_fix.py          # perbaiki pasangan yang tertukar
+python3 fill_gaps.py          # isi teks Arab yang kosong + selamatkan karantina
 python3 make_sql.py           # ubah jadi SQL yang bisa ditinjau
 
 less out/apply_bukhari.sql    # BACA DULU
@@ -76,15 +77,47 @@ rollback berbasis berkas hanya menolong kalau berkasnya masih utuh.
 | `out/rollback_<kitab>.sql`    | pembatalannya                                 |
 | `out/report.json`             | ringkasan angka                               |
 
+## Mengisi lubang: `fill_gaps.py`
+
+Skrip kedua, untuk baris yang teks Arabnya kosong dan baris karantina.
+
+Sumbernya [Open-Hadith-Data](https://github.com/mhashim6/Open-Hadith-Data) —
+sisi Arab dari Ensiklopedi Hadits Kitab 9 Imam, edisi yang sama dengan asal
+terjemahan di database ini. Jumlah hadis per kitab **persis sama** dengan skema
+hadits.in untuk kesembilan kitab, jadi penomorannya satu skema.
+
+Bukti keselarasan yang dikumpulkan sebelum dipakai:
+
+| Uji                                             | Hasil                 |
+| ----------------------------------------------- | --------------------- |
+| Jumlah hadis 9 kitab vs skema hadits.in         | sama persis, 9 dari 9 |
+| Sepakat dgn Arab Ahmad yang sudah terverifikasi | 4.275 / 4.275 (100%)  |
+| Nama di matan cocok, per blok 4.000 nomor       | 26–36%                |
+| — pembanding: pasangan yang sudah pasti benar   | 25,8%                 |
+| — pembanding: pasangan acak                     | 0,5–4,3%              |
+
+Uji ketiga penting karena verifikasi langsung hanya tersedia di rentang nomor
+14.000 ke atas. Metrik matan lemah (pasangan yang pasti benar pun cuma 25,8%),
+tapi ia tetap memisahkan dengan tajam dari pasangan acak, dan hasilnya rata di
+**semua** blok nomor — termasuk blok yang tidak punya verifikasi langsung sama
+sekali.
+
+Yang **tidak** dilakukan skrip ini: menimpa baris yang teks Arabnya sudah lolos
+uji. Saat diadu pada 218 baris yang kedua sumbernya berbeda, teks hasil
+penjodohan-lewat-terjemahan menang **218 lawan 0**, karena penomoran database
+ini campuran dua skema. Jadi sumber ini hanya untuk mengisi yang kosong dan
+menyelamatkan yang dikarantina.
+
+Skrip berhenti dengan galat kalau jumlah hadis di berkas sumber tidak sama
+dengan yang diharapkan — penjaga supaya perubahan di hulu tidak lewat diam-diam.
+
 ## Batasnya
 
-- Ahmad dan Darimi tidak ikut: keduanya sudah dari gadingnst dan penomorannya
-  sudah sejajar. Masalah Ahmad berbeda — 21.588 barisnya tidak punya teks Arab
-  sama sekali, dan gadingnst hanya punya 4.305 baris, jadi tidak bisa ditambal
-  dari sini.
-- 1.422 baris dikarantina karena terjemahannya kosong; tidak ada yang bisa
-  dijadikan pegangan untuk menguji.
-- 1.381 baris dikarantina karena teks Arab penggantinya pun tidak lolos uji.
+- 65 baris Muslim dan 1 baris Malik nomornya di luar jangkauan sumber mana pun
+  (penomoran fawazahmed0 lebih panjang daripada edisi Ensiklopedi).
+- Baris yang terjemahannya kosong tidak bisa diuji sama sekali; tidak disentuh.
+- Baris karantina yang teks Arab penggantinya pun tidak lolos uji tetap
+  dibiarkan apa adanya.
 - Gerbang ini memeriksa **sanad**, bukan matan. Pasangan yang sanadnya benar
   tapi matannya tertukar tidak akan tertangkap. Untuk kepastian penuh tetap
   perlu pembacaan oleh orang yang paham hadis.

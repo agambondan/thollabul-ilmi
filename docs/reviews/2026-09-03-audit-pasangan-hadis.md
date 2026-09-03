@@ -319,9 +319,9 @@ Sanad dipakai bersama banyak hadis — satu rantai perawi meriwayatkan puluhan
 matan berbeda. Memilih salah satunya sama dengan menebak isi hadis, dan itu
 tidak boleh.
 
-### Kesimpulan
+### Kesimpulan sementara (kemudian terbantah, lihat bagian berikutnya)
 
-Sisa lubang tidak bisa ditambal otomatis dari sumber yang dapat diakses. Yang
+Saat itu disimpulkan sisa lubang tidak bisa ditambal otomatis. Yang
 dibutuhkan adalah sumber yang menyediakan **Arab dan terjemahan sekaligus dalam
 satu record** untuk Musnad Ahmad dan untuk baris-baris karantina — misalnya
 lisensi data dari penerbit Ensiklopedi Hadits, atau pengetikan/penyelarasan
@@ -329,3 +329,64 @@ manual oleh orang yang paham hadis.
 
 Sampai itu ada, membiarkan baris kosong lebih benar daripada mengisinya dengan
 tebakan.
+
+---
+
+## Sumber yang Akhirnya Ketemu: Open-Hadith-Data (2026-09-03)
+
+Pencarian dilanjutkan dan menemukan
+[Open-Hadith-Data](https://github.com/mhashim6/Open-Hadith-Data) — sisi **Arab**
+dari Ensiklopedi Hadits Kitab 9 Imam, yaitu edisi yang sama dengan asal
+terjemahan di database ini. Data aslinya dari `ceefour/hadith-islamware`.
+
+Yang membuatnya cocok: jumlah hadis per kitab **persis sama** dengan skema
+hadits.in untuk kesembilan kitab — 7008, 5362, 4590, 3891, 5662, 4332, 1594,
+3367, dan 26363. Penomorannya satu skema dengan database ini.
+
+### Bukti sebelum dipakai
+
+| Uji                                             | Hasil                 |
+| ----------------------------------------------- | --------------------- |
+| Jumlah hadis 9 kitab vs skema hadits.in         | sama persis, 9 dari 9 |
+| Sepakat dgn Arab Ahmad yang sudah terverifikasi | 4.275 / 4.275 (100%)  |
+| Nama di matan cocok, per blok 4.000 nomor       | 26–36%                |
+| — pembanding: pasangan yang sudah pasti benar   | 25,8%                 |
+| — pembanding: pasangan acak                     | 0,5–4,3%              |
+
+Uji ketiga dibutuhkan karena verifikasi langsung ternyata **tidak merata**:
+4.275 baris Ahmad yang sudah punya Arab menumpuk di nomor 14.000 ke atas, dua
+blok bahkan nol. Metrik matan memang lemah — pasangan yang pasti benar pun hanya
+25,8% — tapi ia memisahkan tajam dari pasangan acak, dan hasilnya rata di semua
+blok nomor termasuk yang tanpa verifikasi langsung.
+
+### Sumber ini tidak menimpa hasil sebelumnya
+
+Pada 218 baris yang kedua sumbernya berbeda, teks mana yang lebih cocok dengan
+terjemahannya diadu: **perbaikan lewat penjodohan terjemahan menang 218 lawan 0.** Penomoran database ini campuran dua skema (hadits.in dan fawazahmed0), jadi
+pencarian lewat nomor bisa mendarat di hadis lain. Sumber baru hanya dipakai
+untuk mengisi yang kosong dan menyelamatkan yang dikarantina.
+
+Ini sekaligus verifikasi silang independen: pada 3.537 baris yang bisa
+dibandingkan, kedua sumber sepakat 93,8%.
+
+### Hasil
+
+Diterapkan ke produksi 2026-09-03 setelah dump database baru diambil.
+
+|                              | Sebelum | Sesudah                     |
+| ---------------------------- | ------- | --------------------------- |
+| Baris tanpa teks Arab        | 21.742  | **65**                      |
+| Musnad Ahmad tanpa teks Arab | 22.058  | **0** (26.363 terisi penuh) |
+| Baris karantina diselamatkan | —       | 111                         |
+
+Sisa 65 baris (64 Muslim, 1 Malik) nomornya di luar jangkauan sumber mana pun
+karena memakai penomoran fawazahmed0 yang lebih panjang dari edisi Ensiklopedi.
+
+### Yang masih tersisa
+
+- 65 baris tanpa teks Arab.
+- 1.422 baris tanpa terjemahan Indonesia. hadits.in punya 359 di antaranya, tapi
+  1.063 sisanya di luar jangkauannya — dan situs itu menyajikan hadis nomor 1
+  untuk nomor yang tidak ada, jadi mengambilnya butuh penjaga khusus.
+- ~640 baris yang pasangannya masih gagal uji.
+- Gerbang mutu memeriksa sanad, bukan matan.

@@ -24,10 +24,13 @@ def statements(fixes, field):
         hid = row.get("hadith_id")
         if hid is None:
             continue
+        text = row.get(field) or ""
+        # kolom aslinya NULL, bukan string kosong -- rollback harus mengembalikan NULL
+        value = q(text) if text else "NULL"
         yield (
             "UPDATE translation SET ar = {} "
             "WHERE id = (SELECT translation_id FROM hadith WHERE id = {});"
-        ).format(q(row[field]), int(hid))
+        ).format(value, int(hid))
 
 
 def write(path, header, body):
@@ -46,8 +49,10 @@ def main():
     args = ap.parse_args()
 
     total = 0
-    for path in sorted(glob.glob(os.path.join(args.out, "fix_*.json"))):
-        book = os.path.basename(path)[4:-5]
+    pola = ["fix_*.json", "gapfill_*.json", "rescue_*.json"]
+    berkas = [p for pat in pola for p in sorted(glob.glob(os.path.join(args.out, pat)))]
+    for path in berkas:
+        book = os.path.basename(path)[:-5]
         fixes = json.load(open(path, encoding="utf-8"))
         if not fixes:
             continue
