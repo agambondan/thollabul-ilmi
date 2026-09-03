@@ -42,8 +42,15 @@ python3 offset.py bukhari muslim         # uji hipotesis geseran nomor
 ```
 
 `validate.py` adalah pengamannya. Labelnya hasil baca manusia, bukan keluaran
-matcher. Jalankan setiap kali `translit.py` atau `rowcheck.py` diubah — kalau
-akurasinya turun, perubahan itu merusak.
+matcher. Jalankan setiap kali `translit.py`, `rowcheck.py`, atau
+`pairing_score.py` diubah — kalau akurasinya turun, perubahan itu merusak.
+
+Teks ujinya dibekukan di `labeled_rows.json`, tidak ditarik dari API. Sebagian
+baris di sana menyimpan teks Arab **sebelum** perbaikan 2026-09-03, karena itu
+contoh pasangan salah yang harus tetap bisa dikenali. Kalau fixture-nya ikut
+data hidup, contoh-contoh itu lenyap begitu datanya diperbaiki dan gerbang mutu
+ini berubah jadi lampu hijau palsu — persis yang sempat terjadi saat perbaikan
+diterapkan.
 
 ## Batas alat ini
 
