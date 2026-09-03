@@ -111,9 +111,18 @@ sebagai follow-up terpisah.
 
 ### Follow-up yang tersisa (di luar 40 temuan)
 
-- Konversi `Kitab-Regular.ttf` (220 KB) dan `Scheherazade-webfont.ttf` (331 KB)
-  ke woff2 — pekerjaan aset, bukan kode.
-- Pecah i18n lebih jauh per namespace route untuk menurunkan 278 KB lebih jauh.
+- ✅ **Selesai 2026-09-03** — Konversi `Kitab-Regular.ttf`, `noorehidayat.ttf`,
+  `Scheherazade-webfont.ttf` ke woff2: 551 KB → 260 KB (−53%). Lihat
+  `git log --oneline -1 16c5005`.
+- ✅ **Selesai 2026-09-03** — Split `admin.*` (330 dari 1940 kunci) ke
+  `i18n/id-admin.js` + `i18n/en-admin.js`, dimuat lazy oleh
+  `app/admin/layout.js` dan digate di belakang spinner auth yang sudah ada
+  (tidak ada flash teks hilang). 3 kunci yang dipakai bersama di luar
+  `/admin` (`admin.error.save`, `admin.crud.save_success`/`delete_success`)
+  sengaja tetap di kamus dasar.
+- Pecah i18n lebih jauh per namespace route lain (di luar admin) untuk
+  menurunkan 274 KB lebih jauh — belum dikerjakan, ROI makin kecil setelah
+  dua split di atas.
 - Lanjutkan konversi client → server component di luar `/doa` dan `/dzikir`.
 - Tambah field sumber untuk manasik, amalan, dan asmaul husna di API.
 
