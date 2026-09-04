@@ -227,6 +227,10 @@ const NotificationsPage = () => {
                     const lat = storedLoc?.lat ? Number(storedLoc.lat) : -6.2088;
                     const lng = storedLoc?.lng ? Number(storedLoc.lng) : 106.8456;
                     const cityName = storedLoc?.label || "Jakarta";
+                    const userTimezone =
+                        Intl.DateTimeFormat().resolvedOptions().timeZone ||
+                        "Asia/Jakarta";
+                    const tzOffsetMinutes = -new Date().getTimezoneOffset();
                     await notificationApi.registerPushToken({
                         token: sub.endpoint,
                         platform: "web",
@@ -237,6 +241,8 @@ const NotificationsPage = () => {
                         latitude: lat,
                         longitude: lng,
                         city_name: cityName,
+                        timezone: userTimezone,
+                        tz_offset_minutes: tzOffsetMinutes,
                     });
                 } catch {}
             }

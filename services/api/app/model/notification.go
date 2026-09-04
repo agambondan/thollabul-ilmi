@@ -38,31 +38,35 @@ type NotificationSettingsUpsertRequest struct {
 
 type PushToken struct {
 	BaseID
-	UserID     uuid.UUID `json:"user_id" gorm:"type:uuid;not null;uniqueIndex:idx_push_user_token"`
-	Token      string    `json:"token" gorm:"type:varchar(512);not null;uniqueIndex:idx_push_user_token"`
-	Platform   string    `json:"platform" gorm:"type:varchar(24);not null"`
-	Provider   string    `json:"provider" gorm:"type:varchar(24);not null;default:'expo'"`
-	DeviceID   string    `json:"device_id,omitempty" gorm:"type:varchar(128);index"`
-	KeyP256DH  string    `json:"key_p256dh,omitempty" gorm:"type:varchar(256)"`
-	KeyAuth    string    `json:"key_auth,omitempty" gorm:"type:varchar(256)"`
-	Latitude   *float64  `json:"latitude,omitempty" gorm:"type:decimal(10,7)"`
-	Longitude  *float64  `json:"longitude,omitempty" gorm:"type:decimal(10,7)"`
-	CityName   string    `json:"city_name,omitempty" gorm:"type:varchar(100)"`
-	IsActive   bool      `json:"is_active" gorm:"default:true"`
-	LastSeenAt time.Time `json:"last_seen_at"`
-	User       *User     `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
+	UserID          uuid.UUID `json:"user_id" gorm:"type:uuid;not null;uniqueIndex:idx_push_user_token"`
+	Token           string    `json:"token" gorm:"type:varchar(512);not null;uniqueIndex:idx_push_user_token"`
+	Platform        string    `json:"platform" gorm:"type:varchar(24);not null"`
+	Provider        string    `json:"provider" gorm:"type:varchar(24);not null;default:'expo'"`
+	DeviceID        string    `json:"device_id,omitempty" gorm:"type:varchar(128);index"`
+	KeyP256DH       string    `json:"key_p256dh,omitempty" gorm:"type:varchar(256)"`
+	KeyAuth         string    `json:"key_auth,omitempty" gorm:"type:varchar(256)"`
+	Latitude        *float64  `json:"latitude,omitempty" gorm:"type:decimal(10,7)"`
+	Longitude       *float64  `json:"longitude,omitempty" gorm:"type:decimal(10,7)"`
+	CityName        string    `json:"city_name,omitempty" gorm:"type:varchar(100)"`
+	Timezone        string    `json:"timezone,omitempty" gorm:"type:varchar(64)"`
+	TzOffsetMinutes *int      `json:"tz_offset_minutes,omitempty"`
+	IsActive        bool      `json:"is_active" gorm:"default:true"`
+	LastSeenAt      time.Time `json:"last_seen_at"`
+	User            *User     `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
 }
 
 type PushTokenRegisterRequest struct {
-	Token     string   `json:"token" validate:"required"`
-	Platform  string   `json:"platform" validate:"required"`
-	Provider  string   `json:"provider"`
-	DeviceID  string   `json:"device_id"`
-	KeyP256DH string   `json:"key_p256dh"`
-	KeyAuth   string   `json:"key_auth"`
-	Latitude  *float64 `json:"latitude,omitempty"`
-	Longitude *float64 `json:"longitude,omitempty"`
-	CityName  string   `json:"city_name,omitempty"`
+	Token           string   `json:"token" validate:"required"`
+	Platform        string   `json:"platform" validate:"required"`
+	Provider        string   `json:"provider"`
+	DeviceID        string   `json:"device_id"`
+	KeyP256DH       string   `json:"key_p256dh"`
+	KeyAuth         string   `json:"key_auth"`
+	Latitude        *float64 `json:"latitude,omitempty"`
+	Longitude       *float64 `json:"longitude,omitempty"`
+	CityName        string   `json:"city_name,omitempty"`
+	Timezone        string   `json:"timezone,omitempty"`
+	TzOffsetMinutes *int     `json:"tz_offset_minutes,omitempty"`
 }
 
 type PushTokenStatus struct {

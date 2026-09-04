@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"math"
 	"strings"
 	"time"
 
@@ -113,13 +114,18 @@ func (s *notificationService) RegisterPushToken(userID uuid.UUID, req *model.Pus
 	}
 
 	return s.repo.UpsertPushToken(model.PushToken{
-		UserID:    userID,
-		Token:     token,
-		Platform:  platform,
-		Provider:  provider,
-		DeviceID:  strings.TrimSpace(req.DeviceID),
-		KeyP256DH: strings.TrimSpace(req.KeyP256DH),
-		KeyAuth:   strings.TrimSpace(req.KeyAuth),
+		UserID:          userID,
+		Token:           token,
+		Platform:        platform,
+		Provider:        provider,
+		DeviceID:        strings.TrimSpace(req.DeviceID),
+		KeyP256DH:       strings.TrimSpace(req.KeyP256DH),
+		KeyAuth:         strings.TrimSpace(req.KeyAuth),
+		Latitude:        req.Latitude,
+		Longitude:       req.Longitude,
+		CityName:        strings.TrimSpace(req.CityName),
+		Timezone:        strings.TrimSpace(req.Timezone),
+		TzOffsetMinutes: req.TzOffsetMinutes,
 	})
 }
 
@@ -288,13 +294,7 @@ func (s *notificationService) DispatchDueAdzanPush(now time.Time) (int, error) {
 			lng = *token.Longitude
 		}
 
-		tz := 7 // Default WIB
-		if lng >= 120.0 && lng < 135.0 {
-			tz = 8 // WITA
-		} else if lng >= 135.0 {
-			tz = 9 // WIT
-		}
-		loc := time.FixedZone(fmt.Sprintf("UTC+%d", tz), tz*3600)
+		loc := resolveTokenTimeLocation(token)
 		localNow := now.In(loc)
 		currentTimeStr := localNow.Format("15:04")
 
@@ -373,6 +373,36 @@ func (s *notificationService) StartReminderScheduler(ctx context.Context, interv
 			}
 		}
 	}()
+}
+
+func resolveTokenTimeLocation(token model.PushToken) *time.Location {
+	if token.Timezone != "" {
+		if loc, err := time.LoadLocation(token.Timezone); err == nil && loc != nil {
+			return loc
+		}
+	}
+
+	if token.TzOffsetMinutes != nil {
+		offsetSeconds := *token.TzOffsetMinutes * 60
+		return time.FixedZone(fmt.Sprintf("UTC%+d", *token.TzOffsetMinutes/60), offsetSeconds)
+	}
+
+	// Fallback based on longitude
+	lng := 106.8456
+	if token.Longitude != nil {
+		lng = *token.Longitude
+	}
+
+	tzHours := 7 // WIB
+	if lng >= 120.0 && lng < 135.0 {
+		tzHours = 8 // WITA
+	} else if lng >= 135.0 {
+		tzHours = 9 // WIT
+	} else if lng < 95.0 {
+		tzHours = int(math.Round(lng / 15.0))
+	}
+
+	return time.FixedZone(fmt.Sprintf("UTC%+d", tzHours), tzHours*3600)
 }
 
 func normalizeReminderTime(value string) (string, error) {
