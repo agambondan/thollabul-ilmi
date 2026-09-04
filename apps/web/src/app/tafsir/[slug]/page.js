@@ -137,7 +137,7 @@ export const TafsirSurahContent = ({
             <div className='flex items-center gap-3 mb-6'>
                 <Link
                     href={tafsirBasePath}
-                    className='p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors text-gray-500 dark:text-gray-400'
+                    className='p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors text-gray-500 dark:text-gray-300 dark:text-gray-400'
                 >
                     <BsChevronLeft />
                 </Link>
@@ -146,13 +146,13 @@ export const TafsirSurahContent = ({
                         <MdOutlineAutoStories className='text-xl text-emerald-700 dark:text-emerald-400' />
                     </div>
                     <div>
-                        <h1 className='text-xl font-bold text-emerald-900 dark:text-white'>
+                        <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                             {surah
                                 ? `${surah.translation?.latin_en ?? decodedSlug} — Tafsir`
                                 : t("tafsir.surah_title")}
                         </h1>
                         {surah && (
-                            <p className='text-xs text-gray-500 dark:text-gray-400'>
+                            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {t("tafsir.surah_number_prefix")}
                                 {surah.number} ·{" "}
                                 {surah.number_of_ayahs ?? ayahs.length}{" "}
@@ -180,7 +180,7 @@ export const TafsirSurahContent = ({
                 <select
                     value={kitabFilter}
                     onChange={(e) => setKitabFilter(e.target.value)}
-                    className='px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
+                    className='px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 dark:border-slate-700 text-gray-700 dark:text-gray-200 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
                 >
                     <option value='all'>
                         {t("tafsir.kitab_all") ?? "Semua Tafsir"}
@@ -214,7 +214,7 @@ export const TafsirSurahContent = ({
                 </div>
             </div>
 
-            <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+            <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
                 <BsSearch className='text-gray-400 shrink-0' />
                 <input
                     type='text'
@@ -277,8 +277,8 @@ export const TafsirSurahContent = ({
             {/* Error state */}
             {!isLoading && !showLoadError && ayahs.length === 0 && (
                 <div className='text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
-                    <MdOutlineAutoStories className='text-5xl text-gray-200 dark:text-slate-600 mx-auto mb-3' />
-                    <p className='text-gray-500 dark:text-gray-400 mb-1'>
+                    <MdOutlineAutoStories className='text-5xl text-gray-200 dark:text-slate-600 dark:text-slate-300 mx-auto mb-3' />
+                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-1'>
                         {t("quran.not_found")}
                     </p>
                     <Link
@@ -315,7 +315,7 @@ export const TafsirSurahContent = ({
                                     <div className='flex-1 min-w-0'>
                                         <p
                                             dir='rtl'
-                                            className='text-base font-arabic text-gray-900 dark:text-white text-right leading-relaxed line-clamp-1'
+                                            className='text-base font-arabic text-gray-900 dark:text-gray-100 dark:text-white text-right leading-relaxed line-clamp-1'
                                         >
                                             {ayah.translation?.ar ??
                                                 ayah.text ??
@@ -335,7 +335,7 @@ export const TafsirSurahContent = ({
                                         {/* Arabic */}
                                         <p
                                             dir='rtl'
-                                            className='text-2xl leading-loose font-arabic text-gray-900 dark:text-white text-right'
+                                            className='text-2xl leading-loose font-arabic text-gray-900 dark:text-gray-100 dark:text-white text-right'
                                         >
                                             {ayah.translation?.ar ??
                                                 ayah.text ??
@@ -378,7 +378,7 @@ export const TafsirSurahContent = ({
                                                             ) ??
                                                                 "Tafsir Kemenag"}
                                                         </p>
-                                                        <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
+                                                        <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
                                                             {primaryTafsir}
                                                         </p>
                                                     </div>
@@ -389,7 +389,7 @@ export const TafsirSurahContent = ({
                                                             ) ??
                                                                 "Tafsir Al-Mishbah"}
                                                         </p>
-                                                        <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
+                                                        <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
                                                             {secondaryTafsir}
                                                         </p>
                                                     </div>
@@ -406,7 +406,7 @@ export const TafsirSurahContent = ({
                                                                 ) ??
                                                                     "Tafsir Kemenag"}
                                                             </p>
-                                                            <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
+                                                            <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
                                                                 {primaryTafsir}
                                                             </p>
                                                         </div>
@@ -421,7 +421,7 @@ export const TafsirSurahContent = ({
                                                                 ) ??
                                                                     "Tafsir Al-Mishbah"}
                                                             </p>
-                                                            <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
+                                                            <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
                                                                 {
                                                                     secondaryTafsir
                                                                 }
@@ -455,8 +455,8 @@ export const TafsirSurahContent = ({
 
             {!isLoading && ayahs.length > 0 && visibleAyahs.length === 0 && (
                 <div className='text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
-                    <BsSearch className='text-5xl text-gray-200 dark:text-slate-600 mx-auto mb-3' />
-                    <p className='text-gray-500 dark:text-gray-400 mb-1'>
+                    <BsSearch className='text-5xl text-gray-200 dark:text-slate-600 dark:text-slate-300 mx-auto mb-3' />
+                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-1'>
                         {t("tafsir.no_search_match")}
                     </p>
                     <button

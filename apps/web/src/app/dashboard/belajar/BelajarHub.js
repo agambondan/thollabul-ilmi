@@ -212,7 +212,7 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
                 </div>
 
                 <div className='mt-5 flex flex-wrap gap-2'>
-                    <Link href={lessonsHref} className='inline-flex items-center gap-2 rounded-full bg-white text-emerald-800 text-sm font-bold px-4 py-2 shadow hover:bg-emerald-50'>
+                    <Link href={lessonsHref} className='inline-flex items-center gap-2 rounded-full bg-white text-emerald-800 dark:text-emerald-300 text-sm font-bold px-4 py-2 shadow hover:bg-emerald-50'>
                         <BsPlayFill /> {t("belajar.lessons_start")}
                     </Link>
                     <Link href={`${root}/quiz`} className='inline-flex items-center gap-2 rounded-full bg-white/15 text-white text-sm font-semibold px-4 py-2 hover:bg-white/25'>
@@ -228,7 +228,7 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder={t("belajar.search_placeholder")}
-                    className='w-full pl-9 pr-4 py-2 text-sm bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                    className='w-full pl-9 pr-4 py-2 text-sm bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500'
                 />
             </div>
 
@@ -246,7 +246,7 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
 
             {recent.length > 0 && !search && (
                 <div className='mt-5'>
-                    <h2 className='text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3'>{t("belajar.recent")}</h2>
+                    <h2 className='text-xs font-bold text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wider mb-3'>{t("belajar.recent")}</h2>
                     <div className='flex gap-3 overflow-x-auto pb-2 scrollbar-none'>
                         {recent.map((item, idx) => (
                             <Link
@@ -254,7 +254,7 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
                                 href={item.href}
                                 className='shrink-0 w-52 p-3 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl hover:shadow-sm'
                             >
-                                <p className='text-xs font-bold text-gray-900 dark:text-white truncate'>{item.title}</p>
+                                <p className='text-xs font-bold text-gray-900 dark:text-gray-100 dark:text-white truncate'>{item.title}</p>
                                 <p className='text-[10px] text-gray-400 mt-1 truncate'>{item.meta || t("belajar.continue")}</p>
                             </Link>
                         ))}
@@ -273,11 +273,11 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
                                 <div className='flex items-end justify-between mb-3'>
                                     <div>
                                         <p className='text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-600'>{t("belajar.track.label", { name: track.key })}</p>
-                                        <h3 className='text-lg font-extrabold text-gray-900 dark:text-white'>{t(track.titleKey)}</h3>
-                                        <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>{t(track.descKey)}</p>
+                                        <h3 className='text-lg font-extrabold text-gray-900 dark:text-gray-100 dark:text-white'>{t(track.titleKey)}</h3>
+                                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1'>{t(track.descKey)}</p>
                                     </div>
                                     <div className='text-right'>
-                                        <p className='text-xs font-bold text-emerald-700 dark:text-emerald-300'>{percent}%</p>
+                                        <p className='text-xs font-bold text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>{percent}%</p>
                                         <p className='text-[10px] text-gray-400'>{t("belajar.track.done", { count: trackMods.filter((m) => moduleDoneCount(m) === (m.steps?.length || 0)).length, total: trackMods.length })}</p>
                                     </div>
                                 </div>
@@ -306,10 +306,10 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
                                                         {ICON_BY_SLUG[mod.slug] || <BsBook className='text-xl text-emerald-500' />}
                                                     </div>
                                                     <div className='flex-1 min-w-0'>
-                                                        <p className='text-sm font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 transition-colors'>{mod.title}</p>
-                                                        <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2'>{mod.description}</p>
-                                                        <div className='flex flex-wrap items-center gap-2 mt-2 text-[10px] font-semibold text-gray-500'>
-                                                            {mod.level && <span className='rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-2 py-0.5'>{mod.level}</span>}
+                                                        <p className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white group-hover:text-emerald-600 transition-colors'>{mod.title}</p>
+                                                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1 line-clamp-2'>{mod.description}</p>
+                                                        <div className='flex flex-wrap items-center gap-2 mt-2 text-[10px] font-semibold text-gray-500 dark:text-gray-300'>
+                                                            {mod.level && <span className='rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 px-2 py-0.5'>{mod.level}</span>}
                                                             {!!mod.estimated_minutes && (
                                                                 <span className='inline-flex items-center gap-1'>
                                                                     <BsClock /> {mod.estimated_minutes} mnt
@@ -339,7 +339,7 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
             )}
 
             <section className='mt-8'>
-                <h3 className='text-xs font-bold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 mb-3'>{t("belajar.references")}</h3>
+                <h3 className='text-xs font-bold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-3'>{t("belajar.references")}</h3>
                 <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
                     {TOOLS.map((tool) => (
                         <Link
@@ -349,8 +349,8 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
                         >
                             <div className='p-2.5 bg-gray-50 dark:bg-slate-700/50 rounded-xl shrink-0 group-hover:scale-105 transition-transform'>{tool.icon}</div>
                             <div>
-                                <p className='text-sm font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 transition-colors'>{t(tool.titleKey)}</p>
-                                <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2'>{t(tool.descKey)}</p>
+                                <p className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white group-hover:text-emerald-600 transition-colors'>{t(tool.titleKey)}</p>
+                                <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1 line-clamp-2'>{t(tool.descKey)}</p>
                             </div>
                         </Link>
                     ))}

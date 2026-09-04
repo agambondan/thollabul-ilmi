@@ -12,7 +12,7 @@ const DashboardProfilePage = () => {
 
     return (
         <div className='px-4 py-6'>
-            <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-6'>
+            <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-6'>
                 {t("profile.title")}
             </h1>
             <ProfileContent />

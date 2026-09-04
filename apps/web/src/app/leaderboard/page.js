@@ -95,10 +95,10 @@ const LeaderboardPage = () => {
                 >
                     <div className='text-center mb-8'>
                         <BsTrophyFill className='text-4xl text-yellow-500 mx-auto mb-2' />
-                        <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                        <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                             Leaderboard
                         </h1>
-                        <p className='text-sm text-gray-500 dark:text-gray-400'>
+                        <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("leaderboard.subtitle")}
                         </p>
                     </div>
@@ -109,7 +109,7 @@ const LeaderboardPage = () => {
                                 <p className='text-xs text-emerald-600 dark:text-emerald-400 font-medium'>
                                     {t("leaderboard.your_rank")}
                                 </p>
-                                <p className='text-sm font-bold text-emerald-900 dark:text-white mt-0.5'>
+                                <p className='text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mt-0.5'>
                                     #{myRank.streak_rank ?? "—"}{" "}
                                     {t("leaderboard.streak_tab")} · #
                                     {myRank.hafalan_rank ?? "—"}{" "}
@@ -117,11 +117,11 @@ const LeaderboardPage = () => {
                                 </p>
                             </div>
                             <div className='text-right'>
-                                <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {myRank.streak ?? 0}{" "}
                                     {t("leaderboard.days_unit")} streak
                                 </p>
-                                <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {myRank.hafalan_count ?? 0}{" "}
                                     {t("stats.surah_unit")}{" "}
                                     {t("hafalan.memorized").toLowerCase()}
@@ -147,7 +147,7 @@ const LeaderboardPage = () => {
                         ))}
                     </div>
 
-                    <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+                    <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
                         <BsSearch className='text-gray-400 shrink-0' />
                         <input
                             type='text'
@@ -195,7 +195,7 @@ const LeaderboardPage = () => {
                     {isLoading ? (
                         <SkeletonInline rows={5} />
                     ) : visibleData.length === 0 ? (
-                        <div className='text-center py-16 text-gray-400 dark:text-gray-600 text-sm'>
+                        <div className='text-center py-16 text-gray-400 dark:text-gray-600 dark:text-gray-300 text-sm'>
                             {currentData.length === 0
                                 ? t("leaderboard.empty")
                                 : t("leaderboard.no_match")}
@@ -239,7 +239,7 @@ const LeaderboardPage = () => {
                                     )}
 
                                     <div className='flex-1 min-w-0'>
-                                        <p className='text-sm font-medium text-gray-800 dark:text-white truncate'>
+                                        <p className='text-sm font-medium text-gray-800 dark:text-gray-200 dark:text-white truncate'>
                                             {entry.name ??
                                                 t("common.anonymous")}
                                         </p>

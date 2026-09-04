@@ -61,14 +61,14 @@ export default function DailyHadithWidget({ basePath = "/hadith" }) {
             {arab && (
                 <p
                     dir='rtl'
-                    className='font-arabic text-xl text-gray-800 dark:text-gray-100 leading-loose mb-3 line-clamp-3'
+                    className='font-arabic text-xl text-gray-800 dark:text-gray-200 dark:text-gray-100 leading-loose mb-3 line-clamp-3'
                 >
                     {arab}
                 </p>
             )}
 
             {trans && (
-                <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-3 line-clamp-4'>
+                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed mb-3 line-clamp-4'>
                     &ldquo;{trans}&rdquo;
                 </p>
             )}

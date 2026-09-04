@@ -261,13 +261,13 @@ export default function DailyReminderCarousel({
             {active.arabic ? (
                 <p
                     dir='rtl'
-                    className='mb-3 line-clamp-3 font-kitab text-2xl leading-loose text-gray-800 dark:text-gray-100'
+                    className='mb-3 line-clamp-3 font-kitab text-2xl leading-loose text-gray-800 dark:text-gray-200 dark:text-gray-100'
                 >
                     {active.arabic}
                 </p>
             ) : null}
 
-            <p className='mb-3 line-clamp-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300'>
+            <p className='mb-3 line-clamp-4 text-sm leading-relaxed text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                 &ldquo;{active.text}&rdquo;
             </p>
 

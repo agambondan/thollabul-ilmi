@@ -62,16 +62,16 @@ export function ForumListContent({ basePath = "/forum" }) {
                 <div className='inline-flex items-center justify-center w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl mb-4'>
                     <MdQuestionAnswer className='text-3xl text-emerald-700 dark:text-emerald-400' />
                 </div>
-                <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-1'>
                     {t("forum.title") ?? "Forum Diskusi"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("forum.subtitle") ?? "Tanya jawab seputar Islam"}
                 </p>
             </div>
 
             <div className='flex items-center gap-2 mb-4'>
-                <div className='flex-1 flex items-center gap-2 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+                <div className='flex-1 flex items-center gap-2 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
                     <BsSearch className='text-gray-400 shrink-0' />
                     <input
                         type='text'
@@ -111,8 +111,8 @@ export function ForumListContent({ basePath = "/forum" }) {
                 </div>
             ) : questions.length === 0 ? (
                 <div className='text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
-                    <BsChatDots className='text-5xl text-gray-200 dark:text-slate-600 mx-auto mb-3' />
-                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-3'>
+                    <BsChatDots className='text-5xl text-gray-200 dark:text-slate-600 dark:text-slate-300 mx-auto mb-3' />
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-3'>
                         {t("forum.empty") ?? "Belum ada pertanyaan."}
                     </p>
                     <Link
@@ -131,10 +131,10 @@ export function ForumListContent({ basePath = "/forum" }) {
                             href={`${basePath}/${q.slug}`}
                             className='block bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 hover:border-emerald-200 dark:hover:border-emerald-800 transition-colors'
                         >
-                            <h3 className='text-base font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2'>
+                            <h3 className='text-base font-semibold text-gray-900 dark:text-gray-100 dark:text-white mb-2 line-clamp-2'>
                                 {q.title}
                             </h3>
-                            <p className='text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-3'>
+                            <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 line-clamp-2 mb-3'>
                                 {q.body}
                             </p>
                             <div className='flex items-center gap-4 text-xs text-gray-400'>
@@ -162,11 +162,11 @@ export function ForumListContent({ basePath = "/forum" }) {
                     <button
                         onClick={() => setPage((p) => Math.max(1, p - 1))}
                         disabled={page === 1}
-                        className='px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-sm disabled:opacity-40'
+                        className='px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 dark:border-slate-700 text-sm disabled:opacity-40'
                     >
                         ← {t("common.prev") ?? "Prev"}
                     </button>
-                    <span className='text-sm text-gray-500 dark:text-gray-400'>
+                    <span className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {page} / {totalPages}
                     </span>
                     <button
@@ -174,7 +174,7 @@ export function ForumListContent({ basePath = "/forum" }) {
                             setPage((p) => Math.min(totalPages, p + 1))
                         }
                         disabled={page >= totalPages}
-                        className='px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-sm disabled:opacity-40'
+                        className='px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 dark:border-slate-700 text-sm disabled:opacity-40'
                     >
                         {t("common.next") ?? "Next"} →
                     </button>

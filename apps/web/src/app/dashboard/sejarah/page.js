@@ -75,10 +75,10 @@ export default function SejarahDashboardPage() {
 
     return (
         <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
-            <h1 className='text-2xl font-bold text-gray-800 dark:text-white mb-1'>
+            <h1 className='text-2xl font-bold text-gray-800 dark:text-gray-200 dark:text-white mb-1'>
                 {t("sejarah.title")}
             </h1>
-            <p className='text-gray-500 dark:text-gray-400 mb-4'>
+            <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-4'>
                 {t("sejarah.subtitle")}
             </p>
 
@@ -92,7 +92,7 @@ export default function SejarahDashboardPage() {
                     }
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className='w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                    className='w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-xl text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500'
                 />
             </div>
 
@@ -153,19 +153,19 @@ export default function SejarahDashboardPage() {
                                 {/* Timeline dot */}
                                 <div className='relative z-10 flex-shrink-0 w-[4.5rem] flex flex-col items-center pt-3'>
                                     <div className='w-3 h-3 rounded-full bg-emerald-500 border-2 border-white shadow' />
-                                    <span className='text-xs text-emerald-700 font-semibold mt-1 text-center leading-tight'>
+                                    <span className='text-xs text-emerald-700 dark:text-emerald-400 font-semibold mt-1 text-center leading-tight'>
                                         {formatYear(item)}
                                     </span>
                                 </div>
 
                                 {/* Card */}
-                                <div className='flex-1 border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 shadow-sm overflow-hidden'>
+                                <div className='flex-1 border border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 shadow-sm overflow-hidden'>
                                     <button
                                         onClick={() => toggle(id)}
                                         className='w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
                                     >
                                         <div className='flex items-center gap-2 flex-wrap'>
-                                            <span className='font-semibold text-gray-800 dark:text-white text-sm'>
+                                            <span className='font-semibold text-gray-800 dark:text-gray-200 dark:text-white text-sm'>
                                                 {getLocalizedField(
                                                     item,
                                                     "title",
@@ -187,7 +187,7 @@ export default function SejarahDashboardPage() {
 
                                     {isOpen && (
                                         <div className='px-4 pb-4 border-t border-gray-100 dark:border-slate-700 pt-3'>
-                                            <p className='text-sm text-gray-700 dark:text-gray-300'>
+                                            <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                                 {getLocalizedField(
                                                     item,
                                                     "description",

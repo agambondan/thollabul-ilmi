@@ -121,12 +121,12 @@ const MurojaahPage = () => {
     if (!loading && hafalan.length === 0) {
         return (
             <div className='px-4 py-6'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-6'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-6'>
                     {t("muroja.title")}
                 </h1>
                 <div className='text-center py-16'>
                     <p className='text-4xl mb-3'>📖</p>
-                    <p className='text-gray-500 dark:text-gray-400 text-sm mb-4'>
+                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm mb-4'>
                         {t("muroja.no_hafalan")}
                     </p>
                     <Link
@@ -144,11 +144,11 @@ const MurojaahPage = () => {
         <div className='px-4 py-6'>
             <div className='flex items-center gap-2 mb-2'>
                 <MdRefresh className='text-xl text-emerald-600 dark:text-emerald-400' />
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {t("muroja.title")}
                 </h1>
             </div>
-            <p className='text-sm text-gray-500 dark:text-gray-400 mb-5'>
+            <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-5'>
                 {hafalan.length} {t("muroja.surah_count")}
             </p>
 
@@ -179,7 +179,7 @@ const MurojaahPage = () => {
                             <p className={`text-2xl font-bold ${s.color}`}>
                                 {s.value}
                             </p>
-                            <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                                 {s.label}
                             </p>
                         </div>
@@ -219,7 +219,7 @@ const MurojaahPage = () => {
 
             {/* Empty filter state */}
             {!loading && sorted.length === 0 && hafalan.length > 0 && (
-                <div className='text-center py-8 text-gray-500 dark:text-gray-400 text-sm'>
+                <div className='text-center py-8 text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm'>
                     {t("murojaah.no_filter")}
                 </div>
             )}
@@ -246,7 +246,7 @@ const MurojaahPage = () => {
                                             {s.num}
                                         </span>
                                         <div>
-                                            <p className='text-sm font-semibold text-gray-800 dark:text-white'>
+                                            <p className='text-sm font-semibold text-gray-800 dark:text-gray-200 dark:text-white'>
                                                 {s.surah_name ??
                                                     s.name_latin ??
                                                     s.name}

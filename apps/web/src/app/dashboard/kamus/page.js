@@ -49,10 +49,10 @@ export default function DashboardKamusPage() {
     return (
         <div className='p-6'>
             <div className='mb-6'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {t("kamus.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400 mt-0.5'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                     {t("kamus.search_placeholder")}
                 </p>
             </div>
@@ -65,7 +65,7 @@ export default function DashboardKamusPage() {
                     placeholder={t("kamus.search_placeholder")}
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className='w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-300 dark:focus:ring-emerald-700'
+                    className='w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-xl text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-300 dark:focus:ring-emerald-700'
                 />
             </div>
 
@@ -104,16 +104,16 @@ export default function DashboardKamusPage() {
                     <table className='w-full text-sm'>
                         <thead>
                             <tr className='bg-gray-50 dark:bg-slate-800 text-left'>
-                                <th className='px-4 py-2.5 font-semibold text-gray-600 dark:text-gray-400 text-right'>
+                                <th className='px-4 py-2.5 font-semibold text-gray-600 dark:text-gray-300 dark:text-gray-400 text-right'>
                                     {t("kamus.col_arabic")}
                                 </th>
-                                <th className='px-4 py-2.5 font-semibold text-gray-600 dark:text-gray-400'>
+                                <th className='px-4 py-2.5 font-semibold text-gray-600 dark:text-gray-300 dark:text-gray-400'>
                                     {t("kamus.col_latin")}
                                 </th>
-                                <th className='px-4 py-2.5 font-semibold text-gray-600 dark:text-gray-400'>
+                                <th className='px-4 py-2.5 font-semibold text-gray-600 dark:text-gray-300 dark:text-gray-400'>
                                     {t("kamus.col_meaning")}
                                 </th>
-                                <th className='px-4 py-2.5 font-semibold text-gray-600 dark:text-gray-400'>
+                                <th className='px-4 py-2.5 font-semibold text-gray-600 dark:text-gray-300 dark:text-gray-400'>
                                     {t("kamus.col_root")}
                                 </th>
                             </tr>
@@ -135,13 +135,13 @@ export default function DashboardKamusPage() {
                                                 item.term ??
                                                 "—"}
                                         </td>
-                                        <td className='px-4 py-3 italic text-gray-500 dark:text-gray-400'>
+                                        <td className='px-4 py-3 italic text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                             {item.latin ??
                                                 item.transliteration ??
                                                 item.term ??
                                                 "—"}
                                         </td>
-                                        <td className='px-4 py-3 text-gray-700 dark:text-gray-300'>
+                                        <td className='px-4 py-3 text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                             {getLocalizedTranslation(
                                                 item.meaning ?? item.definition,
                                                 lang,

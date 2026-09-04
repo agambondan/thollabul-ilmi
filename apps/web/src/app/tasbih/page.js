@@ -158,10 +158,10 @@ export function TasbihContent() {
                 >
                     تَسْبِيحٌ
                 </p>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                     {t("tasbih.title") ?? "Tasbih Digital"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("tasbih.subtitle") ??
                         "Hitung dzikir dengan target dan riwayat harian"}
                 </p>
@@ -174,7 +174,7 @@ export function TasbihContent() {
                 >
                     {active.arabic}
                 </p>
-                <p className='text-sm italic text-center text-gray-500 dark:text-gray-400 mb-5'>
+                <p className='text-sm italic text-center text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-5'>
                     {active.latin}
                 </p>
 
@@ -198,7 +198,7 @@ export function TasbihContent() {
                                   "Tap untuk hitung")}
                         </span>
                         {reachedTarget && (
-                            <span className='absolute -top-2 -right-2 bg-amber-400 text-emerald-900 rounded-full w-9 h-9 flex items-center justify-center shadow'>
+                            <span className='absolute -top-2 -right-2 bg-amber-400 text-emerald-900 dark:text-emerald-300 rounded-full w-9 h-9 flex items-center justify-center shadow'>
                                 <BsCheckCircleFill className='text-xl' />
                             </span>
                         )}
@@ -255,7 +255,7 @@ export function TasbihContent() {
                     <p className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
                         {count}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("tasbih.current") ?? "Hitungan"}
                     </p>
                 </div>
@@ -263,7 +263,7 @@ export function TasbihContent() {
                     <p className='text-2xl font-bold text-amber-600 dark:text-amber-400'>
                         {target || "∞"}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("tasbih.target") ?? "Target"}
                     </p>
                 </div>
@@ -271,7 +271,7 @@ export function TasbihContent() {
                     <p className='text-2xl font-bold text-blue-600 dark:text-blue-400'>
                         {totalToday}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("tasbih.total_today") ?? "Total Hari Ini"}
                     </p>
                 </div>
@@ -279,7 +279,7 @@ export function TasbihContent() {
 
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 mb-5'>
                 <div className='flex items-center justify-between mb-3'>
-                    <p className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                    <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                         {t("tasbih.target_label") ?? "Atur Target"}
                     </p>
                     <input
@@ -289,7 +289,7 @@ export function TasbihContent() {
                         onChange={(e) =>
                             setTarget(Math.max(0, Number(e.target.value) || 0))
                         }
-                        className='w-24 px-3 py-1.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-right focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                        className='w-24 px-3 py-1.5 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white text-right focus:outline-none focus:ring-2 focus:ring-emerald-500'
                     />
                 </div>
                 <div className='flex flex-wrap gap-2'>
@@ -320,7 +320,7 @@ export function TasbihContent() {
             </div>
 
             <div>
-                <p className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
+                <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-3'>
                     {t("tasbih.preset_title") ?? "Pilihan Dzikir"}
                 </p>
                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
@@ -340,7 +340,7 @@ export function TasbihContent() {
                             >
                                 {preset.arabic}
                             </p>
-                            <p className='text-xs italic text-gray-500 dark:text-gray-400'>
+                            <p className='text-xs italic text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {preset.latin}
                             </p>
                             <p className='text-xs text-emerald-600 dark:text-emerald-400 mt-1 font-medium'>

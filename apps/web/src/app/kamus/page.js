@@ -108,10 +108,10 @@ export default function KamusPage() {
                     <div className='inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/40 rounded-2xl mb-4'>
                         <BsBook className='text-3xl text-blue-600 dark:text-blue-400' />
                     </div>
-                    <h1 className='text-3xl font-extrabold text-emerald-900 dark:text-emerald-100 mb-2'>
+                    <h1 className='text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-100 mb-2'>
                         {t("kamus.title")}
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("kamus.subtitle")}
                     </p>
                 </div>
@@ -131,7 +131,7 @@ export default function KamusPage() {
                                 e.key === "Enter" && handleSearch()
                             }
                             placeholder={t("kamus.search_placeholder")}
-                            className='w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
+                            className='w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
                         />
                     </div>
                     <button
@@ -167,7 +167,7 @@ export default function KamusPage() {
                                         <div className='flex items-center justify-between px-5 py-4'>
                                             <div className='flex items-center gap-4'>
                                                 <p
-                                                    className='text-2xl text-gray-900 dark:text-white font-bold'
+                                                    className='text-2xl text-gray-900 dark:text-gray-100 dark:text-white font-bold'
                                                     style={{
                                                         fontFamily:
                                                             "Amiri, serif",
@@ -186,7 +186,7 @@ export default function KamusPage() {
                                                 </div>
                                             </div>
                                             {wordRoot(word) && (
-                                                <span className='text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded-lg font-medium flex-shrink-0'>
+                                                <span className='text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 dark:text-blue-300 px-2 py-1 rounded-lg font-medium flex-shrink-0'>
                                                     {wordRoot(word)}
                                                 </span>
                                             )}
@@ -203,7 +203,7 @@ export default function KamusPage() {
                                                             :
                                                         </span>
                                                         <span
-                                                            className='font-bold text-gray-800 dark:text-white'
+                                                            className='font-bold text-gray-800 dark:text-gray-200 dark:text-white'
                                                             style={{
                                                                 fontFamily:
                                                                     "Amiri, serif",
@@ -226,7 +226,7 @@ export default function KamusPage() {
                         </div>
 
                         {displayResults.length === 0 && query && (
-                            <div className='text-center py-12 text-gray-500 dark:text-gray-400'>
+                            <div className='text-center py-12 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 <BsBook className='text-4xl mx-auto mb-3 opacity-30' />
                                 <p className='font-semibold mb-1'>
                                     {t("kamus.not_found_word")}

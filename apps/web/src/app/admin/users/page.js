@@ -115,7 +115,7 @@ const AdminUsersPage = () => {
 
     if (isLoading) {
         return (
-            <div className='p-8 text-center text-gray-500 dark:text-gray-400'>
+            <div className='p-8 text-center text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                 {t("common.loading")}
             </div>
         );
@@ -124,10 +124,10 @@ const AdminUsersPage = () => {
     return (
         <PanelPage>
             <div className='mb-6'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {t("admin.users.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1'>
                     {t("admin.users.subtitle")}
                 </p>
             </div>
@@ -140,9 +140,9 @@ const AdminUsersPage = () => {
                     return (
                         <div
                             key={r.value}
-                            className='bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 px-4 py-3 text-center'
+                            className='bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-gray-800 px-4 py-3 text-center'
                         >
-                            <p className='text-xl font-bold text-gray-800 dark:text-white'>
+                            <p className='text-xl font-bold text-gray-800 dark:text-gray-200 dark:text-white'>
                                 {count}
                             </p>
                             <RoleBadge role={r.value} t={t} />
@@ -178,7 +178,7 @@ const AdminUsersPage = () => {
                     <Tr>
                         <Td
                             colSpan={5}
-                            className='px-4 py-8 text-center text-gray-400 dark:text-gray-600'
+                            className='px-4 py-8 text-center text-gray-400 dark:text-gray-600 dark:text-gray-300'
                         >
                             {t("admin.users.empty")}
                         </Td>
@@ -191,7 +191,7 @@ const AdminUsersPage = () => {
                             key={u.id}
                             className='hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors'
                         >
-                            <Td className='text-gray-900 dark:text-white font-medium'>
+                            <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium'>
                                 {u.name}
                                 {isSelf && (
                                     <span className='ml-2 text-xs text-emerald-600 dark:text-emerald-400'>
@@ -199,7 +199,7 @@ const AdminUsersPage = () => {
                                     </span>
                                 )}
                             </Td>
-                            <Td className='text-gray-600 dark:text-gray-400'>
+                            <Td className='text-gray-600 dark:text-gray-300 dark:text-gray-400'>
                                 {u.email}
                             </Td>
                             <Td>
@@ -212,7 +212,7 @@ const AdminUsersPage = () => {
                                         handleChangeRole(u, e.target.value)
                                     }
                                     disabled={isSelf || changingId === u.id}
-                                    className='text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed'
+                                    className='text-xs px-2 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed'
                                 >
                                     {ROLES.map((r) => (
                                         <option key={r.value} value={r.value}>

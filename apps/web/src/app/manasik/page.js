@@ -71,10 +71,10 @@ const ManasikPage = () => {
                             <MdOutlineDirectionsWalk className='text-xl text-emerald-700 dark:text-emerald-400' />
                         </div>
                         <div>
-                            <h1 className='text-xl font-bold text-emerald-900 dark:text-white'>
+                            <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                                 {t("manasik.title")}
                             </h1>
-                            <p className='text-xs text-gray-500 dark:text-gray-400'>
+                            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {t("manasik.step_subtitle")}
                             </p>
                         </div>
@@ -117,7 +117,7 @@ const ManasikPage = () => {
                     </div>
 
                     {/* Legend */}
-                    <div className='flex items-center gap-4 mb-5 text-xs text-gray-500 dark:text-gray-400'>
+                    <div className='flex items-center gap-4 mb-5 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         <span className='flex items-center gap-1.5'>
                             <span className='inline-block w-2 h-2 rounded-full bg-emerald-600' />
                             {t("manasik.required")}
@@ -162,7 +162,7 @@ const ManasikPage = () => {
                                                 {step.step_order}
                                             </div>
                                             <div className='flex-1 min-w-0'>
-                                                <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                                <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                                     {title}
                                                 </p>
                                                 {!isOpen && arabic && (
@@ -193,7 +193,7 @@ const ManasikPage = () => {
                                                 {arabic && (
                                                     <p
                                                         dir='rtl'
-                                                        className='text-xl leading-loose text-gray-900 dark:text-white text-right'
+                                                        className='text-xl leading-loose text-gray-900 dark:text-gray-100 dark:text-white text-right'
                                                         style={{
                                                             fontFamily:
                                                                 "Amiri, serif",
@@ -220,7 +220,7 @@ const ManasikPage = () => {
                                                 {/* Step description */}
                                                 {step.description && (
                                                     <div className='bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3'>
-                                                        <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
+                                                        <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
                                                             {step.description}
                                                         </p>
                                                     </div>

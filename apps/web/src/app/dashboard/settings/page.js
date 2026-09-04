@@ -292,21 +292,21 @@ export default function SettingsPage() {
 
     return (
         <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
-            <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-6'>
+            <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-6'>
                 {t("settings.title")}
             </h1>
 
             <div className='space-y-6'>
                 {/* Tampilan */}
                 <section className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                    <h2 className='text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider'>
+                    <h2 className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4 uppercase tracking-wider'>
                         {t("settings.section_appearance")}
                     </h2>
                     <SettingRow label={t("settings.theme")}>
                         <select
                             value={settings.theme}
                             onChange={(e) => handleThemeChange(e.target.value)}
-                            className='w-full sm:w-auto sm:min-w-[10rem] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                            className='w-full sm:w-auto sm:min-w-[10rem] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm text-gray-900 dark:text-gray-100 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                         >
                             <option value='system'>
                                 {t("settings.theme_system")}
@@ -326,7 +326,7 @@ export default function SettingsPage() {
                                 setLang(e.target.value);
                                 updateSetting("lang", e.target.value);
                             }}
-                            className='w-full sm:w-auto sm:min-w-[10rem] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                            className='w-full sm:w-auto sm:min-w-[10rem] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm text-gray-900 dark:text-gray-100 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                         >
                             <option value='ID'>{t("settings.lang_id")}</option>
                             <option value='EN'>{t("settings.lang_en")}</option>
@@ -336,7 +336,7 @@ export default function SettingsPage() {
 
                 {/* Bacaan */}
                 <section className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                    <h2 className='text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider'>
+                    <h2 className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4 uppercase tracking-wider'>
                         {t("settings.section_reading")}
                     </h2>
                     {/*
@@ -348,7 +348,7 @@ export default function SettingsPage() {
                         <select
                             value={fontId}
                             onChange={(e) => setFont(e.target.value)}
-                            className='w-full sm:w-auto sm:min-w-[10rem] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                            className='w-full sm:w-auto sm:min-w-[10rem] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm text-gray-900 dark:text-gray-100 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                         >
                             {QURAN_FONTS.map((font) => (
                                 <option key={font.id} value={font.id}>
@@ -417,7 +417,7 @@ export default function SettingsPage() {
 
                 {/* Waktu Sholat */}
                 <section className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                    <h2 className='text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider'>
+                    <h2 className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4 uppercase tracking-wider'>
                         {t("settings.section_prayer")}
                     </h2>
                     <SettingRow label={t("prayer_schedule.method")}>
@@ -426,7 +426,7 @@ export default function SettingsPage() {
                             onChange={(e) =>
                                 updateSetting("prayerMethod", e.target.value)
                             }
-                            className='w-full sm:w-auto sm:min-w-[12rem] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                            className='w-full sm:w-auto sm:min-w-[12rem] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm text-gray-900 dark:text-gray-100 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                         >
                             {PRAYER_METHODS.map((m) => (
                                 <option key={m.value} value={m.value}>
@@ -441,7 +441,7 @@ export default function SettingsPage() {
                             onChange={(e) =>
                                 updateSetting("prayerMadhab", e.target.value)
                             }
-                            className='w-full sm:w-auto sm:min-w-[12rem] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                            className='w-full sm:w-auto sm:min-w-[12rem] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm text-gray-900 dark:text-gray-100 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                         >
                             {PRAYER_MADHABS.map((m) => (
                                 <option key={m.value} value={m.value}>
@@ -457,7 +457,7 @@ export default function SettingsPage() {
 
                 {/* Notifikasi */}
                 <section className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                    <h2 className='text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider'>
+                    <h2 className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4 uppercase tracking-wider'>
                         {t("settings.section_notifications")}
                     </h2>
                     <SettingRow label={t("settings.notif_adzan")}>
@@ -471,7 +471,7 @@ export default function SettingsPage() {
                             <button
                                 type='button'
                                 onClick={handleTestNotification}
-                                className='px-2.5 py-1 text-xs rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors'
+                                className='px-2.5 py-1 text-xs rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors'
                             >
                                 🔔 {t("adzan.test_notif_btn", "Tes Notifikasi")}
                             </button>
@@ -483,7 +483,7 @@ export default function SettingsPage() {
                             onChange={(e) =>
                                 updateAdzanReminderLead(e.target.value)
                             }
-                            className='w-full sm:w-auto sm:min-w-[12rem] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                            className='w-full sm:w-auto sm:min-w-[12rem] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm text-gray-900 dark:text-gray-100 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                             aria-label={t("prayer.reminder_lead")}
                         >
                             {REMINDER_LEAD_OPTIONS.map((m) => (
@@ -502,7 +502,7 @@ export default function SettingsPage() {
                                     key={key}
                                     className='flex items-center justify-between gap-2 bg-gray-50 dark:bg-slate-700/50 rounded-lg px-3 py-2'
                                 >
-                                    <span className='text-xs font-medium text-gray-700 dark:text-gray-300 shrink-0'>
+                                    <span className='text-xs font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 shrink-0'>
                                         {t(labelKey)}
                                     </span>
                                     <select
@@ -517,7 +517,7 @@ export default function SettingsPage() {
                                                 e.target.value,
                                             )
                                         }
-                                        className='min-w-0 flex-1 sm:flex-initial sm:w-32 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-md px-2 py-1 focus:ring-emerald-500'
+                                        className='min-w-0 flex-1 sm:flex-initial sm:w-32 bg-white dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-xs text-gray-900 dark:text-gray-100 dark:text-white rounded-md px-2 py-1 focus:ring-emerald-500'
                                         aria-label={t(
                                             "prayer.reminder_lead_prayer",
                                             {
@@ -555,7 +555,7 @@ export default function SettingsPage() {
                                         );
                                         if (next) updateAdzanSound(next);
                                     }}
-                                    className='w-full sm:flex-1 sm:min-w-0 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                                    className='w-full sm:flex-1 sm:min-w-0 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm text-gray-900 dark:text-gray-100 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                                 >
                                     {adzanOptions.map((s) => (
                                         <option key={s.value} value={s.value}>
@@ -588,7 +588,7 @@ export default function SettingsPage() {
                         </div>
                     </SettingRow>
                     <div className='mt-3 flex flex-col gap-2'>
-                        <p className='text-xs text-gray-500 dark:text-gray-400'>
+                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("settings.upload_adzan_limit")} (
                             {customSounds.length}/3)
                         </p>
@@ -598,7 +598,7 @@ export default function SettingsPage() {
                                 value={uploadName}
                                 onChange={(e) => setUploadName(e.target.value)}
                                 placeholder={t("settings.upload_adzan_name")}
-                                className='w-full sm:flex-1 sm:min-w-0 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                                className='w-full sm:flex-1 sm:min-w-0 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm text-gray-900 dark:text-gray-100 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                             />
                             <label
                                 className={`shrink-0 px-3 py-1.5 text-xs rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 cursor-pointer text-center ${uploadProgress > 0 || customSounds.length >= 3 ? "opacity-50 pointer-events-none" : ""}`}
@@ -628,7 +628,7 @@ export default function SettingsPage() {
                                 {customSounds.map((s) => (
                                     <li
                                         key={s.id}
-                                        className='flex items-center justify-between text-xs text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-slate-700/40 rounded-lg px-3 py-1.5'
+                                        className='flex items-center justify-between text-xs text-gray-700 dark:text-gray-200 dark:text-gray-300 bg-gray-50 dark:bg-slate-700/40 rounded-lg px-3 py-1.5'
                                     >
                                         <span className='truncate'>
                                             {s.name}

@@ -198,7 +198,7 @@ const BookmarkButton = ({
             </button>
 
             {showMenu && (
-                <div className='absolute z-30 mt-1 left-0 top-full w-56 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl shadow-lg p-3'>
+                <div className='absolute z-30 mt-1 left-0 top-full w-56 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-xl shadow-lg p-3'>
                     <div className='flex items-center justify-between mb-2'>
                         <p className='text-xs font-semibold text-gray-700 dark:text-gray-200'>
                             {t("bookmarks.color") ?? "Warna"}
@@ -206,7 +206,7 @@ const BookmarkButton = ({
                         <button
                             type='button'
                             onClick={() => setShowMenu(false)}
-                            className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                            className='text-gray-400 hover:text-gray-600 hover:dark:text-gray-300 dark:hover:text-gray-200'
                         >
                             <BsX />
                         </button>
@@ -239,7 +239,7 @@ const BookmarkButton = ({
                             "tadabbur, hafalan..."
                         }
                         maxLength={40}
-                        className='w-full text-xs px-2 py-1.5 border border-gray-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 mb-2'
+                        className='w-full text-xs px-2 py-1.5 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 mb-2'
                     />
                     <div className='flex gap-1.5'>
                         <button

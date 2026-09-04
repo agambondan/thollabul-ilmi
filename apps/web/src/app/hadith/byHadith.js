@@ -137,7 +137,7 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                         <div>
                             <label
                                 htmlFor='byhadith-select-book'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-2'
                             >
                                 {t("hadith.select_book")}
                             </label>
@@ -147,7 +147,7 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                                 onChange={(e) =>
                                     setSelectedBookSlug(e.target.value)
                                 }
-                                className='w-full px-3 py-2.5 text-sm rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                className='w-full px-3 py-2.5 text-sm rounded-xl border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                             >
                                 {bookList.map((book) => (
                                     <option key={book.slug} value={book.slug}>
@@ -163,7 +163,7 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                         <div>
                             <label
                                 htmlFor='byhadith-search-label'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-2'
                             >
                                 {t("hadith.search_label")}
                             </label>
@@ -172,7 +172,7 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 placeholder={t("hadith.search_example")}
-                                className='w-full px-3 py-2.5 text-sm rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                className='w-full px-3 py-2.5 text-sm rounded-xl border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                             />
                         </div>
                     </div>
@@ -190,7 +190,7 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                             type='button'
                             onClick={jumpToHadith}
                             disabled={!canJump}
-                            className='inline-flex items-center justify-center px-4 py-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-sm font-medium hover:bg-emerald-50 dark:hover:bg-emerald-900/20 disabled:opacity-40 disabled:pointer-events-none transition-colors'
+                            className='inline-flex items-center justify-center px-4 py-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 text-sm font-medium hover:bg-emerald-50 dark:hover:bg-emerald-900/20 disabled:opacity-40 disabled:pointer-events-none transition-colors'
                         >
                             {t("hadith.jump")}
                         </button>
@@ -203,16 +203,16 @@ const ByHadith = ({ basePath = "/hadith" }) => {
             ) : isError ? (
                 <div className='flex flex-col items-center justify-center min-h-[40vh] text-center px-4'>
                     <p className='text-4xl mb-3'>⚠️</p>
-                    <h2 className='text-lg font-bold text-emerald-900 dark:text-white mb-2'>
+                    <h2 className='text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-2'>
                         {t("hadith.load_error_title")}
                     </h2>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("hadith.load_error_desc")}
                     </p>
                 </div>
             ) : (
                 <>
-                    <div className='flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 px-1'>
+                    <div className='flex items-center justify-between text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 px-1'>
                         <p>
                             {t("common.showing")} {hadiths.length}{" "}
                             {t("common.of")} {total} {t("hadith.unit")}
@@ -227,12 +227,12 @@ const ByHadith = ({ basePath = "/hadith" }) => {
 
                     {hadiths.length === 0 ? (
                         <div className='flex flex-col items-center justify-center min-h-[36vh] text-center px-4'>
-                            <h2 className='text-xl font-bold text-emerald-900 dark:text-white mb-2'>
+                            <h2 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-2'>
                                 {isSearching
                                     ? t("hadith.not_found_title")
                                     : t("hadith.not_found_title")}
                             </h2>
-                            <p className='text-gray-500 dark:text-gray-400 max-w-sm text-sm leading-relaxed'>
+                            <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 max-w-sm text-sm leading-relaxed'>
                                 {isSearching
                                     ? `Tidak ditemukan hadis untuk "${query}"`
                                     : t("hadith.not_found_hint")}
@@ -259,13 +259,13 @@ const ByHadith = ({ basePath = "/hadith" }) => {
                                             </p>
                                             <GradeBadge grade={hadith.grade} />
                                         </div>
-                                        <span className='rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 text-xs font-semibold px-2.5 py-1'>
+                                        <span className='rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 text-xs font-semibold px-2.5 py-1'>
                                             {t("common.open")}
                                         </span>
                                     </div>
 
                                     <p
-                                        className='text-right text-2xl leading-[2.2] text-emerald-900 dark:text-white font-kitab'
+                                        className='text-right text-2xl leading-[2.2] text-emerald-900 dark:text-emerald-300 dark:text-white font-kitab'
                                         style={{ direction: "rtl" }}
                                     >
                                         {hadith?.translation?.ar ?? "—"}

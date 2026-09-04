@@ -138,10 +138,10 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
                 >
                     وِرْدُ الْأَسْمَاءِ
                 </p>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                     {t("asmaul.wirid_title") ?? "Wirid Asmaul Husna"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("asmaul.wirid_subtitle") ??
                         "Hitung wirid dengan 99 nama Allah"}
                 </p>
@@ -163,14 +163,14 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
                             <button
                                 onClick={prevName}
                                 disabled={activeIndex === 0}
-                                className='w-8 h-8 rounded-lg bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-gray-500 dark:text-gray-400 disabled:opacity-30 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors'
+                                className='w-8 h-8 rounded-lg bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-gray-500 dark:text-gray-300 dark:text-gray-400 disabled:opacity-30 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors'
                             >
                                 <BsChevronLeft />
                             </button>
                             <button
                                 onClick={nextName}
                                 disabled={activeIndex >= names.length - 1}
-                                className='w-8 h-8 rounded-lg bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-gray-500 dark:text-gray-400 disabled:opacity-30 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors'
+                                className='w-8 h-8 rounded-lg bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-gray-500 dark:text-gray-300 dark:text-gray-400 disabled:opacity-30 hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors'
                             >
                                 <BsChevronRight />
                             </button>
@@ -183,7 +183,7 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
                     >
                         {active.arabic}
                     </p>
-                    <p className='text-sm italic text-center text-gray-500 dark:text-gray-400 mb-1'>
+                    <p className='text-sm italic text-center text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-1'>
                         {active.transliteration}
                     </p>
                     <p className='text-base font-semibold text-center text-emerald-800 dark:text-emerald-300 mb-5'>
@@ -207,7 +207,7 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
                                 / {TOTAL_NAMES}
                             </span>
                             {reachedTarget && (
-                                <span className='absolute -top-2 -right-2 bg-amber-400 text-emerald-900 rounded-full w-9 h-9 flex items-center justify-center shadow'>
+                                <span className='absolute -top-2 -right-2 bg-amber-400 text-emerald-900 dark:text-emerald-300 rounded-full w-9 h-9 flex items-center justify-center shadow'>
                                     ✓
                                 </span>
                             )}
@@ -263,7 +263,7 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
                     <p className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
                         {count}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("tasbih.current") ?? "Hitungan"}
                     </p>
                 </div>
@@ -271,7 +271,7 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
                     <p className='text-2xl font-bold text-amber-600 dark:text-amber-400'>
                         {TOTAL_NAMES}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("tasbih.target") ?? "Target"}
                     </p>
                 </div>
@@ -279,14 +279,14 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
                     <p className='text-2xl font-bold text-blue-600 dark:text-blue-400'>
                         {totalToday}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("tasbih.total_today") ?? "Total Hari Ini"}
                     </p>
                 </div>
             </div>
 
             {!isLoading && names.length === 0 && (
-                <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
+                <p className='text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 py-4'>
                     {t("asmaul.flashcard_empty") ??
                         "Data Asmaul Husna belum tersedia."}
                 </p>

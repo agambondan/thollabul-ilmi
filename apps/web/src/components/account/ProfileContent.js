@@ -250,7 +250,7 @@ const ProfileContent = () => {
     return (
         <>
             {syncError ? (
-                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300'>
+                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 dark:text-amber-400 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300'>
                     {syncError}
                 </div>
             ) : null}
@@ -262,7 +262,7 @@ const ProfileContent = () => {
                         {initials}
                     </span>
                 </div>
-                <p className='text-lg font-bold text-gray-900 dark:text-white'>
+                <p className='text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {user?.name ?? t("common.anonymous")}
                 </p>
                 <p className='text-sm text-gray-400 mt-0.5'>
@@ -286,7 +286,7 @@ const ProfileContent = () => {
                     <p className='text-2xl font-bold text-orange-600 dark:text-orange-400'>
                         {streak}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("profile.streak_label")}
                     </p>
                 </Link>
@@ -297,7 +297,7 @@ const ProfileContent = () => {
                     <p className='text-2xl font-bold text-purple-600 dark:text-purple-400'>
                         {muhasabahCount}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("muhasabah.title")}
                     </p>
                 </Link>
@@ -308,7 +308,7 @@ const ProfileContent = () => {
                     <p className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
                         {hafalCount}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("profile.hafal_label")}
                     </p>
                 </Link>
@@ -328,16 +328,16 @@ const ProfileContent = () => {
                         >
                             <div className='flex items-center gap-2 mb-2'>
                                 <BsBook className='text-emerald-600 dark:text-emerald-400' />
-                                <span className='text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase'>
+                                <span className='text-xs font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase'>
                                     {t("profile.last_quran")}
                                 </span>
                             </div>
-                            <p className='text-sm font-bold text-emerald-900 dark:text-white'>
+                            <p className='text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                                 {quranProgress.surah_latin ??
                                     t("profile.not_started")}
                             </p>
                             {quranProgress.ayah_number && (
-                                <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("profile.ayah")}{" "}
                                     {quranProgress.ayah_number}
                                 </p>
@@ -355,16 +355,16 @@ const ProfileContent = () => {
                         >
                             <div className='flex items-center gap-2 mb-2'>
                                 <BsBook className='text-emerald-600 dark:text-emerald-400' />
-                                <span className='text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase'>
+                                <span className='text-xs font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase'>
                                     {t("profile.last_hadith")}
                                 </span>
                             </div>
-                            <p className='text-sm font-bold text-emerald-900 dark:text-white'>
+                            <p className='text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                                 {hadithProgress.book_slug ??
                                     t("profile.not_started")}
                             </p>
                             {hadithProgress.hadith_id && (
-                                <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     Hadith #{hadithProgress.hadith_id}
                                 </p>
                             )}
@@ -380,7 +380,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <BsBookmark className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.bookmarks")}
                     </span>
                 </Link>
@@ -390,11 +390,11 @@ const ProfileContent = () => {
                 >
                     <BsCheckCircle className='text-emerald-600 dark:text-emerald-400 text-xl' />
                     <div>
-                        <span className='text-sm font-medium text-emerald-900 dark:text-white block'>
+                        <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white block'>
                             {t("link.memorization")}
                         </span>
                         {hafalanSummary && (
-                            <span className='text-xs text-gray-500 dark:text-gray-400'>
+                            <span className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {hafalanSummary.memorized ?? 0}{" "}
                                 {t("hafalan.memorized").toLowerCase()}
                             </span>
@@ -406,7 +406,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <BsJournalCheck className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.recitation")}
                     </span>
                 </Link>
@@ -415,7 +415,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <MdFormatListBulleted className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.deeds")}
                     </span>
                 </Link>
@@ -424,7 +424,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <MdRefresh className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.review")}
                     </span>
                 </Link>
@@ -433,7 +433,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <BsStickyFill className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.notes")}
                     </span>
                 </Link>
@@ -442,7 +442,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <MdAccessTime className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.prayer_schedule")}
                     </span>
                 </Link>
@@ -451,7 +451,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <FaCalculator className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.zakat")}
                     </span>
                 </Link>
@@ -460,7 +460,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <GiCompass className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.qibla")}
                     </span>
                 </Link>
@@ -469,7 +469,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <BsBook className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.arabic_dict")}
                     </span>
                 </Link>
@@ -478,7 +478,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <MdMosque className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.sholat_tracker")}
                     </span>
                 </Link>
@@ -487,7 +487,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <MdSelfImprovement className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.muhasabah")}
                     </span>
                 </Link>
@@ -496,7 +496,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <MdFlag className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.goals")}
                     </span>
                 </Link>
@@ -505,7 +505,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <MdOutlinePlayLesson className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.kajian")}
                     </span>
                 </Link>
@@ -514,7 +514,7 @@ const ProfileContent = () => {
                     className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                 >
                     <BsBell className='text-emerald-600 dark:text-emerald-400 text-xl' />
-                    <span className='text-sm font-medium text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.notifications")}
                     </span>
                 </Link>
@@ -533,7 +533,7 @@ const ProfileContent = () => {
                         setLangOpen((v) => !v);
                         setLangMsg({ type: "", text: "" });
                     }}
-                    className='w-full flex items-center justify-between px-5 py-4 text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors'
+                    className='w-full flex items-center justify-between px-5 py-4 text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors'
                 >
                     <span className='flex items-center gap-2'>
                         <BsTranslate className='text-emerald-600 dark:text-emerald-400' />
@@ -550,7 +550,7 @@ const ProfileContent = () => {
                                 {langMsg.text}
                             </p>
                         )}
-                        <p className='text-xs text-gray-500 dark:text-gray-400'>
+                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("profile.translation_language_desc")}
                         </p>
                         <div className='flex gap-2'>
@@ -582,10 +582,10 @@ const ProfileContent = () => {
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 mb-3 p-5'>
                 <div className='flex items-center justify-between gap-3'>
                     <div>
-                        <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                        <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                             Sesi Aktif
                         </p>
-                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             Daftar sesi login yang masih aktif di akun ini.
                         </p>
                     </div>
@@ -593,7 +593,7 @@ const ProfileContent = () => {
                         <InlineError />
                     ) : null}
                     {sessionsLoading ? (
-                        <span className='text-xs font-semibold text-emerald-700 dark:text-emerald-300'>
+                        <span className='text-xs font-semibold text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
                             Memuat...
                         </span>
                     ) : null}
@@ -606,12 +606,12 @@ const ProfileContent = () => {
                                 className='flex items-center justify-between gap-3 rounded-lg border border-gray-100 bg-gray-50 px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900/40'
                             >
                                 <div className='min-w-0'>
-                                    <p className='font-semibold text-gray-800 dark:text-gray-100'>
+                                    <p className='font-semibold text-gray-800 dark:text-gray-200 dark:text-gray-100'>
                                         {sessionItem.current
                                             ? "Perangkat ini"
                                             : "Sesi login"}
                                     </p>
-                                    <p className='mt-0.5 text-gray-500 dark:text-gray-400'>
+                                    <p className='mt-0.5 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                         Aktif sejak{" "}
                                         {new Date(
                                             sessionItem.created_at,
@@ -619,7 +619,7 @@ const ProfileContent = () => {
                                     </p>
                                 </div>
                                 {sessionItem.current ? (
-                                    <span className='rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'>
+                                    <span className='rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 dark:bg-emerald-900/40 dark:text-emerald-300'>
                                         Aktif
                                     </span>
                                 ) : (
@@ -642,7 +642,7 @@ const ProfileContent = () => {
                         ))}
                     </div>
                 ) : !sessionsLoading ? (
-                    <p className='mt-3 text-xs text-gray-500 dark:text-gray-400'>
+                    <p className='mt-3 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         Riwayat sesi aktif belum tersedia.
                     </p>
                 ) : null}
@@ -660,7 +660,7 @@ const ProfileContent = () => {
             </div>
 
             <div className='bg-red-50 dark:bg-red-950/20 rounded-2xl border border-red-100 dark:border-red-900/50 p-5'>
-                <p className='text-sm font-semibold text-red-700 dark:text-red-300'>
+                <p className='text-sm font-semibold text-red-700 dark:text-red-400 dark:text-red-300'>
                     Hapus Akun
                 </p>
                 <p className='mt-1 text-xs text-red-600/80 dark:text-red-200/80'>
@@ -676,7 +676,7 @@ const ProfileContent = () => {
                     type='button'
                     disabled={deleteLoading}
                     onClick={handleDeleteAccount}
-                    className='mt-4 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-700 transition-colors hover:bg-red-100 disabled:opacity-60 dark:border-red-900/60 dark:bg-slate-900 dark:text-red-300 dark:hover:bg-red-950/40'
+                    className='mt-4 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-semibold text-red-700 dark:text-red-400 transition-colors hover:bg-red-100 disabled:opacity-60 dark:border-red-900/60 dark:bg-slate-900 dark:text-red-300 dark:hover:bg-red-950/40'
                 >
                     {deleteLoading ? t("common.saving") : "Hapus Akun"}
                 </button>

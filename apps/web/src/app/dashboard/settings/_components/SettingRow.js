@@ -27,12 +27,12 @@ export default function SettingRow({ label, children }) {
             {controlId ? (
                 <label
                     htmlFor={controlId}
-                    className='text-sm text-gray-700 dark:text-gray-300 font-medium sm:flex-shrink-0'
+                    className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 font-medium sm:flex-shrink-0'
                 >
                     {label}
                 </label>
             ) : (
-                <span className='text-sm text-gray-700 dark:text-gray-300 font-medium sm:flex-shrink-0'>
+                <span className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 font-medium sm:flex-shrink-0'>
                     {label}
                 </span>
             )}

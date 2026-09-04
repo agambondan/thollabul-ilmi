@@ -176,15 +176,15 @@ export const DoaContent = ({ initialItems = [] }) => {
                     >
                         الدُّعَاء
                     </p>
-                    <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                    <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                         {t("doa.title")}
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("doa.subtitle")}
                     </p>
                 </div>
 
-                <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+                <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
                     <BsSearch className='text-gray-400 shrink-0' />
                     <input
                         type='text'
@@ -231,7 +231,7 @@ export const DoaContent = ({ initialItems = [] }) => {
 
                 {!isLoading && filtered.length === 0 && (
                     <div className='text-center py-16'>
-                        <p className='text-gray-500 dark:text-gray-400'>
+                        <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {doas.length === 0
                                 ? t("doa.empty_unavailable")
                                 : t("doa.no_match")}
@@ -254,7 +254,7 @@ export const DoaContent = ({ initialItems = [] }) => {
                                 }
                             >
                                 <div className='flex items-center gap-2 flex-wrap min-w-0'>
-                                    <span className='text-sm font-semibold text-emerald-900 dark:text-white'>
+                                    <span className='text-sm font-semibold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                                         {getLocalizedField(doa, "title", lang, [
                                             "name",
                                         ])}
@@ -282,7 +282,7 @@ export const DoaContent = ({ initialItems = [] }) => {
                             {expanded === doa.id && (
                                 <div className='px-4 pb-4 border-t border-gray-50 dark:border-slate-700 pt-3 space-y-3'>
                                     <p
-                                        className='text-2xl leading-[2.2] text-right font-kitab text-emerald-900 dark:text-white'
+                                        className='text-2xl leading-[2.2] text-right font-kitab text-emerald-900 dark:text-emerald-300 dark:text-white'
                                         style={{
                                             direction: "rtl",
                                             fontFamily: "Amiri, serif",
@@ -291,11 +291,11 @@ export const DoaContent = ({ initialItems = [] }) => {
                                         {doa.translation?.ar}
                                     </p>
                                     {doa.translation?.latin_idn && (
-                                        <p className='text-sm italic text-gray-500 dark:text-gray-400'>
+                                        <p className='text-sm italic text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                             {doa.translation.latin_idn}
                                         </p>
                                     )}
-                                    <p className='text-sm text-gray-700 dark:text-gray-300'>
+                                    <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                         {getLocalizedField(
                                             doa,
                                             "description",
@@ -351,7 +351,7 @@ export const DoaContent = ({ initialItems = [] }) => {
                 <div ref={sentinelRef} className='h-1' />
 
                 {!hasMore && doas.length > 0 && !isLoading && (
-                    <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
+                    <p className='text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 py-4'>
                         {t("doa.all_shown")}
                     </p>
                 )}

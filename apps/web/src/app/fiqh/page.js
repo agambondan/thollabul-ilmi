@@ -166,15 +166,15 @@ export default function FiqhPage() {
                     <div className='inline-flex items-center justify-center w-16 h-16 bg-teal-100 dark:bg-teal-900/40 rounded-2xl mb-4'>
                         <MdOutlineAutoStories className='text-3xl text-teal-600 dark:text-teal-400' />
                     </div>
-                    <h1 className='text-3xl font-extrabold text-emerald-900 dark:text-emerald-100 mb-2'>
+                    <h1 className='text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-100 mb-2'>
                         {t("fiqh.title")}
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("fiqh.subtitle")}
                     </p>
                 </div>
 
-                <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+                <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
                     <BsSearch className='text-gray-400 shrink-0' />
                     <input
                         type='text'
@@ -237,7 +237,7 @@ export default function FiqhPage() {
                                                     {slugIcon(cat.slug)}
                                                 </span>
                                                 <div className='text-left'>
-                                                    <p className='font-bold text-gray-900 dark:text-white'>
+                                                    <p className='font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                                                         {getLocalizedField(
                                                             cat,
                                                             "name",
@@ -313,7 +313,7 @@ export default function FiqhPage() {
                                                                     </button>
                                                                     {isOpen && (
                                                                         <div className='px-5 pb-4 space-y-2'>
-                                                                            <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line'>
+                                                                            <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed whitespace-pre-line'>
                                                                                 {getLocalizedField(
                                                                                     item,
                                                                                     "content",

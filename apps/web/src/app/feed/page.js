@@ -94,10 +94,10 @@ function CommentSection({ postId, lang, t }) {
                                 </span>
                             </div>
                             <div className='flex-1 min-w-0'>
-                                <p className='text-xs font-medium text-gray-700 dark:text-gray-300'>
+                                <p className='text-xs font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                     {c.author ?? c.username ?? "User"}
                                 </p>
-                                <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {c.content}
                                 </p>
                             </div>
@@ -114,7 +114,7 @@ function CommentSection({ postId, lang, t }) {
                         placeholder={
                             t("feed.comment_placeholder") ?? "Tulis komentar..."
                         }
-                        className='flex-1 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-emerald-400'
+                        className='flex-1 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-emerald-400'
                     />
                     <button
                         onClick={submitComment}
@@ -232,10 +232,10 @@ export function FeedContent({ basePath = "/feed" }) {
                 <div className='inline-flex items-center justify-center w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl mb-4'>
                     <BsGlobe className='text-3xl text-emerald-600 dark:text-emerald-400' />
                 </div>
-                <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-1'>
                     {t("feed.title") ?? "Feed Komunitas"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("feed.subtitle") ??
                         "Bagikan dan temukan konten dari pengguna lain"}
                 </p>
@@ -245,7 +245,7 @@ export function FeedContent({ basePath = "/feed" }) {
                 {token ? (
                     <button
                         onClick={() => setShowCreate(!showCreate)}
-                        className='w-full py-3 px-4 bg-white dark:bg-slate-800 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl text-sm text-gray-400 hover:border-emerald-300 hover:text-emerald-600 transition-colors'
+                        className='w-full py-3 px-4 bg-white dark:bg-slate-800 border-2 border-dashed border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-2xl text-sm text-gray-400 hover:border-emerald-300 hover:text-emerald-600 transition-colors'
                     >
                         {showCreate
                             ? "—"
@@ -254,7 +254,7 @@ export function FeedContent({ basePath = "/feed" }) {
                 ) : (
                     <Link
                         href={`/auth/login?next=${basePath}`}
-                        className='block text-center py-3 px-4 bg-white dark:bg-slate-800 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-2xl text-sm text-gray-400 hover:border-emerald-300 hover:text-emerald-700 transition-colors'
+                        className='block text-center py-3 px-4 bg-white dark:bg-slate-800 border-2 border-dashed border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-2xl text-sm text-gray-400 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 transition-colors'
                     >
                         {t("feed.login_to_create") ??
                             "Login untuk membuat postingan."}
@@ -263,7 +263,7 @@ export function FeedContent({ basePath = "/feed" }) {
             </div>
 
             {showCreate && (
-                <div className='mb-6 p-4 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700'>
+                <div className='mb-6 p-4 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-gray-700 dark:border-slate-700'>
                     <textarea
                         value={caption}
                         onChange={(e) => setCaption(e.target.value)}
@@ -277,7 +277,7 @@ export function FeedContent({ basePath = "/feed" }) {
                         <select
                             value={refType}
                             onChange={(e) => setRefType(e.target.value)}
-                            className='text-xs bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg px-2 py-1.5 outline-none'
+                            className='text-xs bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg px-2 py-1.5 outline-none'
                         >
                             <option value=''>
                                 {t("feed.ref_type") ?? "Tipe Rujukan"}
@@ -292,7 +292,7 @@ export function FeedContent({ basePath = "/feed" }) {
                         <div className='flex-1' />
                         <button
                             onClick={() => setShowCreate(false)}
-                            className='px-4 py-1.5 text-xs text-gray-500 hover:text-gray-700'
+                            className='px-4 py-1.5 text-xs text-gray-500 dark:text-gray-300 hover:text-gray-700 hover:dark:text-gray-200'
                         >
                             {t("common.cancel") ?? "Batal"}
                         </button>
@@ -325,8 +325,8 @@ export function FeedContent({ basePath = "/feed" }) {
                 </div>
             ) : posts.length === 0 ? (
                 <div className='text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
-                    <BsGlobe className='text-5xl text-gray-200 dark:text-slate-600 mx-auto mb-3' />
-                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
+                    <BsGlobe className='text-5xl text-gray-200 dark:text-slate-600 dark:text-slate-300 mx-auto mb-3' />
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-4'>
                         {t("feed.empty") ??
                             "Belum ada postingan. Jadilah yang pertama!"}
                     </p>
@@ -367,7 +367,7 @@ export function FeedContent({ basePath = "/feed" }) {
                                         </span>
                                     </div>
                                     <div>
-                                        <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                        <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                             {authorName}
                                         </p>
                                         <p className='text-xs text-gray-400'>
@@ -375,7 +375,7 @@ export function FeedContent({ basePath = "/feed" }) {
                                         </p>
                                     </div>
                                 </div>
-                                <p className='text-sm text-gray-700 dark:text-gray-300 mb-3 whitespace-pre-wrap'>
+                                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-3 whitespace-pre-wrap'>
                                     {post.caption ?? post.body ?? ""}
                                 </p>
                                 {refLabel && (
@@ -394,7 +394,7 @@ export function FeedContent({ basePath = "/feed" }) {
                                     <button
                                         onClick={() => handleLike(post)}
                                         disabled={!token}
-                                        className='flex items-center gap-1 text-xs text-gray-500 hover:text-red-500 disabled:opacity-40'
+                                        className='flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300 hover:text-red-500 disabled:opacity-40'
                                     >
                                         {likes > 0 ? (
                                             <BsHeartFill className='text-red-500' />
@@ -411,7 +411,7 @@ export function FeedContent({ basePath = "/feed" }) {
                                                     : post.id,
                                             )
                                         }
-                                        className='flex items-center gap-1 text-xs text-gray-500 hover:text-emerald-600'
+                                        className='flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300 hover:text-emerald-600'
                                     >
                                         <BsChatDots />{" "}
                                         {t("feed.comment") ?? "Komentar"}
@@ -420,7 +420,7 @@ export function FeedContent({ basePath = "/feed" }) {
                                         <>
                                             <button
                                                 onClick={() => handleHide(post)}
-                                                className='flex items-center gap-1 text-xs text-gray-500 hover:text-amber-500'
+                                                className='flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300 hover:text-amber-500'
                                                 title={
                                                     t("feed.hide") ??
                                                     "Sembunyikan"
@@ -432,7 +432,7 @@ export function FeedContent({ basePath = "/feed" }) {
                                                 onClick={() =>
                                                     handleReport(post)
                                                 }
-                                                className='flex items-center gap-1 text-xs text-gray-500 hover:text-red-500'
+                                                className='flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300 hover:text-red-500'
                                                 title={
                                                     t("feed.report") ??
                                                     "Laporkan"
@@ -445,7 +445,7 @@ export function FeedContent({ basePath = "/feed" }) {
                                                     onClick={() =>
                                                         handleDelete(post)
                                                     }
-                                                    className='flex items-center gap-1 text-xs text-gray-500 hover:text-red-700'
+                                                    className='flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300 hover:text-red-700 hover:dark:text-red-400'
                                                     title={
                                                         t("feed.delete") ??
                                                         "Hapus"
@@ -475,11 +475,11 @@ export function FeedContent({ basePath = "/feed" }) {
                     <button
                         onClick={() => setPage((p) => Math.max(1, p - 1))}
                         disabled={page === 1}
-                        className='px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-sm disabled:opacity-40'
+                        className='px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 dark:border-slate-700 text-sm disabled:opacity-40'
                     >
                         ← {t("common.prev") ?? "Prev"}
                     </button>
-                    <span className='text-sm text-gray-500 dark:text-gray-400'>
+                    <span className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {page} / {totalPages}
                     </span>
                     <button
@@ -487,7 +487,7 @@ export function FeedContent({ basePath = "/feed" }) {
                             setPage((p) => Math.min(totalPages, p + 1))
                         }
                         disabled={page >= totalPages}
-                        className='px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-sm disabled:opacity-40'
+                        className='px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 dark:border-slate-700 text-sm disabled:opacity-40'
                     >
                         {t("common.next") ?? "Next"} →
                     </button>

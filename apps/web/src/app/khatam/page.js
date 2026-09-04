@@ -93,11 +93,11 @@ export function KhatamContent({ basePath = "/quran" }) {
                 compact='max-w-2xl'
                 className='px-4 py-10 text-center'
             >
-                <FaQuran className='mx-auto text-5xl text-emerald-300 dark:text-emerald-700 mb-4' />
-                <h1 className='text-xl font-bold text-emerald-900 dark:text-white mb-2'>
+                <FaQuran className='mx-auto text-5xl text-emerald-300 dark:text-emerald-700 dark:text-emerald-400 mb-4' />
+                <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-2'>
                     {t("khatam.title") ?? "Khatam Tracker"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-4'>
                     {t("khatam.login_required") ??
                         "Login untuk melihat progress khatam Quran-mu."}
                 </p>
@@ -123,10 +123,10 @@ export function KhatamContent({ basePath = "/quran" }) {
         <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
             <div className='text-center mb-6'>
                 <FaQuran className='mx-auto text-3xl text-emerald-600 dark:text-emerald-400 mb-2' />
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                     {t("khatam.title") ?? "Khatam Tracker"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("khatam.subtitle") ??
                         "Pantau progress khatam Al-Quran kamu"}
                 </p>
@@ -172,7 +172,7 @@ export function KhatamContent({ basePath = "/quran" }) {
 
             {/* Target & daily */}
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 mb-5'>
-                <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2'>
+                <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-3 flex items-center gap-2'>
                     <BsFlag className='text-amber-500' />
                     {t("khatam.target_section") ?? "Target Khatam"}
                 </h2>
@@ -180,7 +180,7 @@ export function KhatamContent({ basePath = "/quran" }) {
                     <div>
                         <label
                             htmlFor='page-target-date'
-                            className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                            className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                         >
                             {t("khatam.target_date") ?? "Tanggal Target"}
                         </label>
@@ -189,7 +189,7 @@ export function KhatamContent({ basePath = "/quran" }) {
                             type='date'
                             value={targetDate}
                             onChange={(e) => saveTarget(e.target.value)}
-                            className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                            className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                         />
                     </div>
                     <div className='flex flex-wrap gap-1.5 items-end'>
@@ -217,7 +217,7 @@ export function KhatamContent({ basePath = "/quran" }) {
                         <p className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
                             {daysLeft}
                         </p>
-                        <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                             {t("khatam.days_left") ?? "Hari tersisa"}
                         </p>
                     </div>
@@ -225,7 +225,7 @@ export function KhatamContent({ basePath = "/quran" }) {
                         <p className='text-2xl font-bold text-amber-600 dark:text-amber-400'>
                             {ayahsPerDay}
                         </p>
-                        <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                             {t("khatam.ayahs_per_day") ?? "Ayat/hari"}
                         </p>
                     </div>
@@ -233,7 +233,7 @@ export function KhatamContent({ basePath = "/quran" }) {
                         <p className='text-2xl font-bold text-blue-600 dark:text-blue-400'>
                             {Math.ceil(ayahsPerDay / 15)}
                         </p>
-                        <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                             ~ {t("khatam.minutes") ?? "menit/hari"}
                         </p>
                     </div>
@@ -242,7 +242,7 @@ export function KhatamContent({ basePath = "/quran" }) {
 
             {/* Per-juz visualization */}
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
+                <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-3'>
                     {t("khatam.juz_progress") ?? "Progress per Juz"}
                 </h2>
                 <div className='grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-1.5'>
@@ -275,19 +275,19 @@ export function KhatamContent({ basePath = "/quran" }) {
                     })}
                 </div>
                 <div className='flex flex-wrap gap-3 mt-4 text-xs'>
-                    <span className='flex items-center gap-1.5 text-gray-500 dark:text-gray-400'>
+                    <span className='flex items-center gap-1.5 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         <span className='inline-block w-3 h-3 rounded bg-emerald-500' />
                         {t("khatam.juz_done") ?? "Selesai"}
                     </span>
-                    <span className='flex items-center gap-1.5 text-gray-500 dark:text-gray-400'>
+                    <span className='flex items-center gap-1.5 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         <span className='inline-block w-3 h-3 rounded bg-emerald-100 dark:bg-emerald-900/30' />
                         {t("khatam.juz_partial") ?? "Sebagian"}
                     </span>
-                    <span className='flex items-center gap-1.5 text-gray-500 dark:text-gray-400'>
+                    <span className='flex items-center gap-1.5 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         <span className='inline-block w-3 h-3 rounded bg-gray-100 dark:bg-slate-700' />
                         {t("khatam.juz_untouched") ?? "Belum dibaca"}
                     </span>
-                    <span className='flex items-center gap-1.5 text-gray-500 dark:text-gray-400'>
+                    <span className='flex items-center gap-1.5 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         <span className='inline-block w-3 h-3 rounded bg-white dark:bg-slate-800 ring-2 ring-amber-400' />
                         {t("khatam.juz_current") ?? "Saat ini"}
                     </span>

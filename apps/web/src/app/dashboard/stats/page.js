@@ -198,11 +198,11 @@ const StatsPage = () => {
 
     return (
         <div className='px-4 py-6'>
-            <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-6'>
+            <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-6'>
                 {t("stats.title")}
             </h1>
             {syncError ? (
-                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300'>
+                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 dark:text-amber-400 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300'>
                     {syncError}
                 </div>
             ) : null}
@@ -213,7 +213,7 @@ const StatsPage = () => {
                     <p className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
                         {prayerCount}/5
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("stats.today_prayers")}
                     </p>
                 </div>
@@ -221,7 +221,7 @@ const StatsPage = () => {
                     <p className='text-2xl font-bold text-purple-600 dark:text-purple-400'>
                         {muhasabahCount}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("stats.total_muhasabah")}
                     </p>
                 </div>
@@ -229,7 +229,7 @@ const StatsPage = () => {
                     <p className='text-2xl font-bold text-blue-600 dark:text-blue-400'>
                         {activeGoals}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("stats.active_goals")}
                     </p>
                 </div>
@@ -237,7 +237,7 @@ const StatsPage = () => {
                     <p className='text-2xl font-bold text-amber-600 dark:text-amber-400'>
                         {bookmarkCount}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("stats.total_bookmarks")}
                     </p>
                 </div>
@@ -248,7 +248,7 @@ const StatsPage = () => {
                         </p>
                         <span className='text-xl'>🔥</span>
                     </div>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                         {t("stats.prayer_streak")}
                     </p>
                 </div>
@@ -269,7 +269,7 @@ const StatsPage = () => {
 
             {/* Hafalan summary */}
             <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 mb-6'>
-                <p className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'>
                     {t("stats.hafalan_title")}
                 </p>
                 <p className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
@@ -282,7 +282,7 @@ const StatsPage = () => {
 
             {/* Tilawah summary */}
             <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 mb-6'>
-                <p className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
+                <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-3'>
                     {t("stats.tilawah_title")}
                 </p>
                 <div className='flex gap-6'>
@@ -314,7 +314,7 @@ const StatsPage = () => {
             {/* Achievement badges */}
             {isAuthenticated && achievements.length > 0 && (
                 <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 mb-6'>
-                    <p className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
+                    <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-3'>
                         {t("stats.achievements")} ({achievements.length})
                     </p>
                     <div className='grid grid-cols-3 gap-2'>
@@ -343,7 +343,7 @@ const StatsPage = () => {
 
             {/* Prayer bar chart */}
             <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-5'>
-                <p className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4'>
+                <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-4'>
                     {t("stats.prayer_chart_title")}
                 </p>
                 <div className='flex items-end justify-between gap-2 h-28'>
@@ -387,7 +387,7 @@ const StatsPage = () => {
             {/* Streak line chart */}
             {last7.length > 0 && (
                 <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-5 mt-6'>
-                    <p className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4'>
+                    <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-4'>
                         {t("stats.weekly_activity") ?? "Aktivitas Mingguan"}
                     </p>
                     <StatsActivityChart

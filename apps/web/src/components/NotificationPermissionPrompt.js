@@ -158,20 +158,20 @@ export default function NotificationPermissionPrompt() {
             <button
                 type='button'
                 onClick={handleDismiss}
-                className='absolute right-3 top-3 rounded-full p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200'
+                className='absolute right-3 top-3 rounded-full p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 hover:dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-slate-200'
                 aria-label={t("notification.close")}
             >
                 <BsX className='text-lg' />
             </button>
             <div className='flex items-start gap-3 pr-7'>
-                <span className='inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
+                <span className='inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 dark:text-emerald-400 dark:bg-emerald-900/30 dark:text-emerald-300'>
                     <BsBellFill />
                 </span>
                 <div className='min-w-0 flex-1'>
-                    <p className='text-sm font-bold text-slate-900 dark:text-white'>
+                    <p className='text-sm font-bold text-slate-900 dark:text-slate-100 dark:text-white'>
                         Aktifkan lokasi & notifikasi
                     </p>
-                    <p className='mt-1 text-xs leading-5 text-slate-500 dark:text-slate-400'>
+                    <p className='mt-1 text-xs leading-5 text-slate-500 dark:text-slate-300 dark:text-slate-400'>
                         Izinkan lokasi untuk jadwal sholat akurat dan notifikasi
                         untuk pengingat adzan, bacaan harian, serta reminder
                         ibadah.

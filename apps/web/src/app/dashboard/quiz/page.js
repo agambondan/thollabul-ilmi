@@ -153,7 +153,7 @@ const QuizPage = () => {
                 }
             >
                 <p className='text-5xl mb-4'>📚</p>
-                <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-4'>
                     {t("quiz.empty")}
                 </p>
                 <button
@@ -176,17 +176,17 @@ const QuizPage = () => {
                         : "px-3 sm:px-4 py-6 max-w-md mx-auto"
                 }
             >
-                <h1 className='text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6'>
+                <h1 className='text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4 sm:mb-6'>
                     {t("quiz.title")}
                 </h1>
                 <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 sm:p-8 text-center mb-5'>
                     <p className='text-4xl sm:text-5xl mb-3 sm:mb-4'>
                         {pct >= 80 ? "🌟" : pct >= 50 ? "👍" : "💪"}
                     </p>
-                    <p className='text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1'>
+                    <p className='text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-1'>
                         {t("quiz.score")}: {score}/{questions.length}
                     </p>
-                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-5 sm:mb-6'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-5 sm:mb-6'>
                         {pct}% {t("quiz.correct_pct")}
                     </p>
                     <button
@@ -199,7 +199,7 @@ const QuizPage = () => {
 
                 {history.length > 1 && (
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                        <p className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
+                        <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-3'>
                             {t("quiz.history")}
                         </p>
                         <ul className='space-y-2'>
@@ -247,13 +247,13 @@ const QuizPage = () => {
 
     return (
         <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
-            <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-4'>
+            <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4'>
                 {t("quiz.title")}
             </h1>
 
             {/* Progress */}
             <div className='mb-4'>
-                <div className='flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1.5'>
+                <div className='flex items-center justify-between text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-1.5'>
                     <span>
                         {t("quiz.question_label")} {current + 1}/{total}
                     </span>
@@ -276,7 +276,7 @@ const QuizPage = () => {
 
             {/* Question */}
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 mb-4'>
-                <p className='text-base font-semibold text-gray-800 dark:text-white leading-relaxed'>
+                <p className='text-base font-semibold text-gray-800 dark:text-gray-200 dark:text-white leading-relaxed'>
                     {getLocalizedField(q, "question", lang, [
                         "question_text",
                         "text",

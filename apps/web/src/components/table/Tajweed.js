@@ -14,7 +14,7 @@ export default function TajweedTable() {
                 {listTajweed.map((tajweed) => (
                     <div
                         key={tajweed.Type}
-                        className='flex items-start gap-4 bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-slate-600 hover:shadow-md hover:border-gray-200 dark:hover:border-slate-500 transition-all'
+                        className='flex items-start gap-4 bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-slate-600 hover:shadow-md hover:border-gray-200 dark:border-gray-700 dark:hover:border-slate-500 transition-all'
                     >
                         {/* Color swatch */}
                         <div
@@ -42,7 +42,7 @@ export default function TajweedTable() {
                                     : (tajweed.TitleId ?? tajweed.Description)}
                             </p>
                             {/* Localized description */}
-                            <p className='text-xs text-gray-500 dark:text-gray-400 leading-snug'>
+                            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 leading-snug'>
                                 {lang === "EN"
                                     ? tajweed.DescriptionEn
                                     : tajweed.DescriptionId}

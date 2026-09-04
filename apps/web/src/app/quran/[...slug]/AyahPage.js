@@ -266,7 +266,7 @@ const AyahPage = ({
                         className='flex flex-row flex-wrap items-center w-full gap-0.5 pb-1 md:flex-col md:flex-nowrap md:w-auto md:gap-1 md:p-2 md:pb-2'
                         style={{ direction: "ltr" }}
                     >
-                        <li className='flex justify-center text-sm font-medium text-gray-500 dark:text-gray-400 mr-auto md:mr-0 md:pb-1'>
+                        <li className='flex justify-center text-sm font-medium text-gray-500 dark:text-gray-300 dark:text-gray-400 mr-auto md:mr-0 md:pb-1'>
                             {surah.number}:{ayah.number}
                         </li>
                         <li
@@ -385,7 +385,7 @@ const AyahPage = ({
                             </button>
                             {settingPopUp && (
                                 <div className='absolute right-0 top-9 z-20 md:right-auto md:left-9 md:top-0'>
-                                    <div className='flex flex-col bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-56 p-1 shadow-lg text-emerald-900 dark:text-white'>
+                                    <div className='flex flex-col bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-56 p-1 shadow-lg text-emerald-900 dark:text-emerald-300 dark:text-white'>
                                         {actionsMenu && (
                                             <div className='border-b border-emerald-50 dark:border-slate-700 pb-1 mb-1'>
                                                 <button
@@ -634,7 +634,7 @@ const AyahPage = ({
 
             {audioUrls.length > 1 && (
                 <div className='border-b border-gray-100 dark:border-slate-800 px-4 py-2 flex items-center gap-2 flex-wrap text-xs'>
-                    <span className='text-gray-500 dark:text-gray-400'>
+                    <span className='text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("ayah.qari") ?? "Qari"}:
                     </span>
                     {audioUrls.map((u) => (
@@ -683,7 +683,7 @@ const AyahPage = ({
                                         {entry.source}
                                     </p>
                                 )}
-                                <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
+                                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
                                     {entry.text ?? entry.content}
                                 </p>
                             </div>
@@ -722,7 +722,7 @@ const AyahPage = ({
                                         className='text-center bg-white dark:bg-slate-800 rounded-lg border border-sky-100 dark:border-slate-700 px-3 py-2 min-w-[60px]'
                                     >
                                         <p
-                                            className='text-lg font-bold text-emerald-900 dark:text-white mb-0.5'
+                                            className='text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-0.5'
                                             style={{
                                                 fontFamily: "Amiri, serif",
                                             }}
@@ -783,7 +783,7 @@ const AyahPage = ({
                                     {m.ayah_to?.surah?.translation?.latin_en ??
                                         `QS ${m.ayah_to?.surah?.number}:${m.ayah_to?.number}`}
                                 </p>
-                                <p className='text-sm text-gray-700 dark:text-gray-300'>
+                                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                     {m.description}
                                 </p>
                             </div>

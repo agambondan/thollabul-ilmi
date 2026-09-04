@@ -50,7 +50,7 @@ const LeaderboardPage = () => {
         <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
             <div className='flex items-center gap-2 mb-6'>
                 <BsTrophyFill className='text-amber-500 text-xl' />
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {t("leaderboard.title")}
                 </h1>
             </div>
@@ -80,7 +80,7 @@ const LeaderboardPage = () => {
                 </div>
             ) : activeList.length === 0 ? (
                 <div className='text-center py-16'>
-                    <BsTrophyFill className='mx-auto text-4xl text-gray-200 dark:text-slate-700 mb-3' />
+                    <BsTrophyFill className='mx-auto text-4xl text-gray-200 dark:text-slate-700 dark:text-slate-200 mb-3' />
                     <p className='text-gray-400 text-sm'>
                         {t("leaderboard.empty") ??
                             "Belum ada data leaderboard."}

@@ -141,10 +141,10 @@ export function PanduanSholatContent() {
                 <div className='inline-flex items-center justify-center w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl mb-4'>
                     <MdOutlineMenuBook className='text-3xl text-emerald-600 dark:text-emerald-400' />
                 </div>
-                <h1 className='text-3xl font-extrabold text-emerald-900 dark:text-emerald-100 mb-2'>
+                <h1 className='text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-100 mb-2'>
                     {t("link.prayer_guide")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("prayer_guide.subtitle")}
                 </p>
             </div>
@@ -187,16 +187,16 @@ export function PanduanSholatContent() {
                         <div className='bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700 mb-4'>
                             <div className='flex items-start justify-between gap-4'>
                                 <div>
-                                    <h2 className='text-xl font-extrabold text-gray-900 dark:text-white mb-1'>
+                                    <h2 className='text-xl font-extrabold text-gray-900 dark:text-gray-100 dark:text-white mb-1'>
                                         {getLocalizedField(p, "name", lang)}
                                     </h2>
                                     <p
-                                        className='text-lg text-gray-600 dark:text-gray-400 mb-2'
+                                        className='text-lg text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-2'
                                         style={{ fontFamily: "Amiri, serif" }}
                                     >
                                         {p.arabic}
                                     </p>
-                                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                         {getLocalizedField(p, "time", lang)}
                                     </p>
                                 </div>
@@ -234,10 +234,10 @@ export function PanduanSholatContent() {
                                         className='w-full flex items-center justify-between px-5 py-4 text-left'
                                     >
                                         <div className='flex items-center gap-3'>
-                                            <span className='w-7 h-7 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-extrabold flex items-center justify-center flex-shrink-0'>
+                                            <span className='w-7 h-7 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 text-xs font-extrabold flex items-center justify-center flex-shrink-0'>
                                                 {si + 1}
                                             </span>
-                                            <span className='font-semibold text-gray-800 dark:text-gray-100 text-sm'>
+                                            <span className='font-semibold text-gray-800 dark:text-gray-200 dark:text-gray-100 text-sm'>
                                                 {getLocalizedField(
                                                     s,
                                                     "title",
@@ -254,7 +254,7 @@ export function PanduanSholatContent() {
                                         <div className='px-5 pb-5 space-y-3 border-t border-gray-50 dark:border-slate-700'>
                                             {s.arabic && (
                                                 <p
-                                                    className='text-right text-xl leading-loose text-gray-900 dark:text-white pt-3'
+                                                    className='text-right text-xl leading-loose text-gray-900 dark:text-gray-100 dark:text-white pt-3'
                                                     style={{
                                                         fontFamily:
                                                             "Amiri, serif",

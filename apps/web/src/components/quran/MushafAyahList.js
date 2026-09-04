@@ -80,7 +80,7 @@ export default function MushafAyahList({
 
     return (
         <div className='space-y-3'>
-            <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-2'>
                 {ayahs.length} {t("mushaf.ayah_unit")}
             </p>
             {ayahs.map((ayah) => {

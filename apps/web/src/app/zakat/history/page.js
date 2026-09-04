@@ -81,7 +81,7 @@ export function ZakatHistoryContent() {
     if (!isAuthenticated) {
         return (
             <div className='text-center py-16'>
-                <p className='text-gray-500 dark:text-gray-400 text-sm'>
+                <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm'>
                     {t("zakat.login_to_view") ??
                         "Login untuk melihat riwayat zakat."}
                 </p>
@@ -95,10 +95,10 @@ export function ZakatHistoryContent() {
                 <div className='inline-flex items-center justify-center w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl mb-4'>
                     <FaCalculator className='text-3xl text-emerald-600 dark:text-emerald-400' />
                 </div>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                     {t("zakat.history_title") ?? "Riwayat Zakat"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("zakat.history_subtitle") ??
                         "Kalkulasi zakat yang telah disimpan"}
                 </p>
@@ -120,7 +120,7 @@ export function ZakatHistoryContent() {
             ) : items.length === 0 ? (
                 <div className='text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                     <p className='text-4xl mb-3'>📋</p>
-                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-4'>
                         {t("zakat.history_empty") ??
                             "Belum ada riwayat kalkulasi zakat."}
                     </p>
@@ -145,7 +145,7 @@ export function ZakatHistoryContent() {
                                         {JENIS_ICON[item.jenis] ?? "💰"}
                                     </span>
                                     <div>
-                                        <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                        <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                             {item.nama_jenis ||
                                                 t(
                                                     JENIS_LABEL[item.jenis] ??
@@ -165,7 +165,7 @@ export function ZakatHistoryContent() {
                                 </button>
                             </div>
                             <div className='flex items-end justify-between'>
-                                <div className='text-xs text-gray-500 dark:text-gray-400 space-y-0.5'>
+                                <div className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 space-y-0.5'>
                                     {item.nilai_harta > 0 && (
                                         <p>
                                             {t("zakat.total_wealth") ??
@@ -185,7 +185,7 @@ export function ZakatHistoryContent() {
                                     )}
                                 </div>
                                 <div className='text-right'>
-                                    <p className='text-xl font-extrabold text-emerald-700 dark:text-emerald-300'>
+                                    <p className='text-xl font-extrabold text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
                                         {fmt(item.jumlah_zakat)}
                                     </p>
                                     <div className='flex items-center gap-2 mt-1 justify-end'>

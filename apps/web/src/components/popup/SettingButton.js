@@ -116,14 +116,14 @@ const SettingButton = () => {
             </button>
 
             {showPopup && (
-                <div className='absolute right-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-60 max-h-[calc(100vh-7rem)] overflow-y-auto p-3 shadow-lg text-sm text-emerald-900 dark:text-white'>
-                    <p className='font-semibold mb-3 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide'>
+                <div className='absolute right-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-60 max-h-[calc(100vh-7rem)] overflow-y-auto p-3 shadow-lg text-sm text-emerald-900 dark:text-emerald-300 dark:text-white'>
+                    <p className='font-semibold mb-3 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wide'>
                         {t("settings.title")}
                     </p>
 
                     {/* Layout toggle */}
                     <div className='hidden md:block mb-3'>
-                        <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-2'>
                             {t("settings.ayah_layout")}
                         </p>
                         <div className='flex gap-2'>
@@ -164,7 +164,7 @@ const SettingButton = () => {
 
                     {/* Action layout */}
                     <div className='mb-3'>
-                        <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-2'>
                             {label(
                                 "settings.action_position",
                                 "Aksi Ayat/Hadith",
@@ -233,7 +233,7 @@ const SettingButton = () => {
 
                     {/* Arabic font size */}
                     <div className='mb-3'>
-                        <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-2'>
                             {label(
                                 "settings.arabic_size",
                                 "Ukuran Arab (Quran/Hadis)",
@@ -243,7 +243,7 @@ const SettingButton = () => {
                             <button
                                 type='button'
                                 onClick={decreaseArabicFontSize}
-                                className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                className='h-9 w-10 rounded-lg border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
                                 aria-label={t("settings.decrease_arabic_size")}
                             >
                                 A-
@@ -251,14 +251,14 @@ const SettingButton = () => {
                             <button
                                 type='button'
                                 onClick={resetArabicFontSize}
-                                className='h-9 flex-1 rounded-lg border border-gray-200 dark:border-slate-600 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                className='h-9 flex-1 rounded-lg border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
                             >
                                 {arabicFontSize}px
                             </button>
                             <button
                                 type='button'
                                 onClick={increaseArabicFontSize}
-                                className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                className='h-9 w-10 rounded-lg border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
                                 aria-label={t("settings.increase_arabic_size")}
                             >
                                 A+
@@ -268,7 +268,7 @@ const SettingButton = () => {
 
                     {/* Translation font size */}
                     <div className='mb-3'>
-                        <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-2'>
                             {label(
                                 "settings.translation_size",
                                 "Ukuran Terjemahan",
@@ -278,7 +278,7 @@ const SettingButton = () => {
                             <button
                                 type='button'
                                 onClick={decreaseTranslationFontSize}
-                                className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                className='h-9 w-10 rounded-lg border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
                                 aria-label={t(
                                     "settings.decrease_translation_size",
                                 )}
@@ -288,14 +288,14 @@ const SettingButton = () => {
                             <button
                                 type='button'
                                 onClick={resetTranslationFontSize}
-                                className='h-9 flex-1 rounded-lg border border-gray-200 dark:border-slate-600 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                className='h-9 flex-1 rounded-lg border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
                             >
                                 {translationFontSize}px
                             </button>
                             <button
                                 type='button'
                                 onClick={increaseTranslationFontSize}
-                                className='h-9 w-10 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
+                                className='h-9 w-10 rounded-lg border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm font-bold text-gray-600 dark:text-gray-300 hover:border-emerald-400 hover:text-emerald-600 transition-colors'
                                 aria-label={t(
                                     "settings.increase_translation_size",
                                 )}
@@ -307,7 +307,7 @@ const SettingButton = () => {
 
                     {/* Arabic font selector */}
                     <div>
-                        <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-2'>
                             {t("settings.arabic_font")}
                         </p>
                         <div className='flex flex-col gap-1'>

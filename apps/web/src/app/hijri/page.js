@@ -163,10 +163,10 @@ const HijriPage = () => {
                 >
                     <div className='text-center mb-8'>
                         <BsCalendar3 className='text-4xl text-emerald-600 dark:text-emerald-400 mx-auto mb-2' />
-                        <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                        <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                             {t("hijri.title")}
                         </h1>
-                        <p className='text-sm text-gray-500 dark:text-gray-400'>
+                        <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("hijri.subtitle")}
                         </p>
                     </div>
@@ -224,14 +224,14 @@ const HijriPage = () => {
                                 </div>
                             ) : (
                                 !error && (
-                                    <div className='bg-gray-100 dark:bg-slate-800 rounded-2xl p-6 text-center mb-6 text-gray-500'>
+                                    <div className='bg-gray-100 dark:bg-slate-800 rounded-2xl p-6 text-center mb-6 text-gray-500 dark:text-gray-300'>
                                         {t("hijri.empty_today")}
                                     </div>
                                 )
                             )}
 
-                            <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5 mb-6'>
-                                <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4'>
+                            <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 p-5 mb-6'>
+                                <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-4'>
                                     {t("hijri.convert_title")}
                                 </h2>
                                 <form
@@ -245,7 +245,7 @@ const HijriPage = () => {
                                             onChange={(e) =>
                                                 setConvertDate(e.target.value)
                                             }
-                                            className='w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                            className='w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                         />
                                     </div>
                                     <button
@@ -265,7 +265,7 @@ const HijriPage = () => {
                                                 {convertResult.error}
                                             </p>
                                         ) : (
-                                            <p className='text-emerald-700 dark:text-emerald-300 font-medium'>
+                                            <p className='text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 font-medium'>
                                                 {convertResult.hijri_day}{" "}
                                                 {months[
                                                     convertResult.hijri_month -
@@ -280,7 +280,7 @@ const HijriPage = () => {
 
                             <div>
                                 <div className='flex items-center justify-between gap-3 mb-3'>
-                                    <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                                    <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                         {t("hijri.events_title")}
                                     </h2>
                                     {!eventsLoading && events.length > 0 && (
@@ -301,7 +301,7 @@ const HijriPage = () => {
                                 ) : (
                                     events.length > 0 && (
                                         <>
-                                            <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+                                            <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
                                                 <BsSearch className='text-gray-400 shrink-0' />
                                                 <input
                                                     type='text'
@@ -384,12 +384,12 @@ const HijriPage = () => {
                                 {!eventsLoading &&
                                 !eventsError &&
                                 events.length === 0 ? (
-                                    <p className='text-center py-8 text-gray-400 dark:text-gray-600 text-sm'>
+                                    <p className='text-center py-8 text-gray-400 dark:text-gray-600 dark:text-gray-300 text-sm'>
                                         {t("hijri.events_empty")}
                                     </p>
                                 ) : !eventsLoading &&
                                   visibleEvents.length === 0 ? (
-                                    <p className='text-center py-8 text-gray-400 dark:text-gray-600 text-sm'>
+                                    <p className='text-center py-8 text-gray-400 dark:text-gray-600 dark:text-gray-300 text-sm'>
                                         {t("hijri.events_no_match")}
                                     </p>
                                 ) : (
@@ -405,14 +405,14 @@ const HijriPage = () => {
                                                     </span>
                                                 </div>
                                                 <div className='flex-1 min-w-0'>
-                                                    <p className='text-sm font-medium text-gray-800 dark:text-white'>
+                                                    <p className='text-sm font-medium text-gray-800 dark:text-gray-200 dark:text-white'>
                                                         {getLocalizedField(
                                                             ev,
                                                             "name",
                                                             lang,
                                                         )}
                                                     </p>
-                                                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                                                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                                                         {months[
                                                             ev.hijri_month - 1
                                                         ] ?? ""}

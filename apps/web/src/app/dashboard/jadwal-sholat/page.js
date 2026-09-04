@@ -220,10 +220,10 @@ const JadwalSholatPage = () => {
 
     return (
         <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
-            <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-1'>
+            <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-1'>
                 {t("jadwal.title")}
             </h1>
-            <p className='text-sm text-gray-500 dark:text-gray-400 mb-1'>
+            <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-1'>
                 {now.toLocaleDateString("id-ID", {
                     weekday: "long",
                     day: "numeric",
@@ -303,11 +303,11 @@ const JadwalSholatPage = () => {
 
             <div className='mt-6 space-y-3'>
                 <section className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                    <h2 className='text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider'>
+                    <h2 className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4 uppercase tracking-wider'>
                         {t("settings.section_notifications")}
                     </h2>
                     <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-2'>
-                        <span className='text-sm text-gray-700 dark:text-gray-300'>
+                        <span className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                             {t("settings.adzan_reminder_lead")}
                         </span>
                         <select
@@ -315,7 +315,7 @@ const JadwalSholatPage = () => {
                             onChange={(e) =>
                                 updateAdzanReminderLead(e.target.value)
                             }
-                            className='w-full sm:w-auto bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                            className='w-full sm:w-auto bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm text-gray-900 dark:text-gray-100 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                             aria-label={t("prayer.reminder_lead")}
                         >
                             {REMINDER_LEAD_OPTIONS.map((m) => (
@@ -329,7 +329,7 @@ const JadwalSholatPage = () => {
                     </div>
                     <div className='pt-3 border-t border-gray-100 dark:border-slate-700'>
                         <div className='flex items-center justify-between mb-2'>
-                            <span className='text-sm text-gray-700 dark:text-gray-300'>
+                            <span className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                 {t("settings.adzan_reminder_per_prayer")}
                             </span>
                         </div>
@@ -339,7 +339,7 @@ const JadwalSholatPage = () => {
                                     key={key}
                                     className='flex items-center justify-between gap-2 bg-gray-50 dark:bg-slate-700/50 rounded-lg px-3 py-2'
                                 >
-                                    <span className='text-xs font-medium text-gray-700 dark:text-gray-300'>
+                                    <span className='text-xs font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                         {t(labelKey)}
                                     </span>
                                     <select
@@ -355,7 +355,7 @@ const JadwalSholatPage = () => {
                                                 e.target.value,
                                             )
                                         }
-                                        className='bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-md px-2 py-1 focus:ring-emerald-500'
+                                        className='bg-white dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-xs text-gray-900 dark:text-gray-100 dark:text-white rounded-md px-2 py-1 focus:ring-emerald-500'
                                         aria-label={t(
                                             "prayer.reminder_lead_prayer",
                                             { prayer: key },

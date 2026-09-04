@@ -281,10 +281,10 @@ export function FaraidhContent() {
                 >
                     الْفَرَائِض
                 </p>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                     {t("faraidh.title") ?? "Kalkulator Waris (Faraidh)"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("faraidh.subtitle") ??
                         "Perhitungan pembagian harta warisan sesuai Ashabul Furudh"}
                 </p>
@@ -300,7 +300,7 @@ export function FaraidhContent() {
 
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6'>
                 <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                    <h2 className='text-base font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2'>
+                    <h2 className='text-base font-semibold text-gray-800 dark:text-gray-200 dark:text-white mb-4 flex items-center gap-2'>
                         <BsCalculator className='text-emerald-600' />
                         {t("faraidh.wealth_section") ?? "Harta dan Pengurang"}
                     </h2>
@@ -308,7 +308,7 @@ export function FaraidhContent() {
                         <div>
                             <label
                                 htmlFor='page-total-wealth'
-                                className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                             >
                                 {t("faraidh.total_wealth") ??
                                     "Total Harta (Rp)"}
@@ -320,13 +320,13 @@ export function FaraidhContent() {
                                 value={wealth}
                                 onChange={(e) => setWealth(e.target.value)}
                                 placeholder='100000000'
-                                className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                             />
                         </div>
                         <div>
                             <label
                                 htmlFor='page-debt'
-                                className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                             >
                                 {t("faraidh.debt") ?? "Hutang Almarhum (Rp)"}
                             </label>
@@ -337,13 +337,13 @@ export function FaraidhContent() {
                                 value={debt}
                                 onChange={(e) => setDebt(e.target.value)}
                                 placeholder='0'
-                                className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                             />
                         </div>
                         <div>
                             <label
                                 htmlFor='page-funeral'
-                                className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                             >
                                 {t("faraidh.funeral") ?? "Biaya Pemakaman (Rp)"}
                             </label>
@@ -354,13 +354,13 @@ export function FaraidhContent() {
                                 value={funeral}
                                 onChange={(e) => setFuneral(e.target.value)}
                                 placeholder='0'
-                                className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                             />
                         </div>
                         <div>
                             <label
                                 htmlFor='page-will'
-                                className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                             >
                                 {t("faraidh.will") ?? "Wasiat (Rp, maks 1/3)"}
                             </label>
@@ -371,7 +371,7 @@ export function FaraidhContent() {
                                 value={will}
                                 onChange={(e) => setWill(e.target.value)}
                                 placeholder='0'
-                                className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                             />
                             <p className='text-xs text-gray-400 mt-1'>
                                 {t("faraidh.will_cap_label") ??
@@ -383,7 +383,7 @@ export function FaraidhContent() {
                 </div>
 
                 <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                    <h2 className='text-base font-semibold text-gray-800 dark:text-white mb-4'>
+                    <h2 className='text-base font-semibold text-gray-800 dark:text-gray-200 dark:text-white mb-4'>
                         {t("faraidh.heirs_section") ?? "Ahli Waris"}
                     </h2>
                     <div className='space-y-4'>
@@ -441,7 +441,7 @@ export function FaraidhContent() {
                                     key={group.key}
                                     className='border border-gray-100 dark:border-slate-700 rounded-xl p-3 bg-gray-50 dark:bg-slate-800/50'
                                 >
-                                    <h3 className='text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2'>
+                                    <h3 className='text-xs font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wider mb-2'>
                                         {group.label}
                                     </h3>
                                     <div className='grid grid-cols-2 gap-x-3 gap-y-3'>
@@ -449,7 +449,7 @@ export function FaraidhContent() {
                                             <div key={field.key}>
                                                 <label
                                                     htmlFor='page-field-1'
-                                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                                    className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                                                 >
                                                     {heirLabel(field.key, lang)}
                                                 </label>
@@ -465,7 +465,7 @@ export function FaraidhContent() {
                                                             e.target.value,
                                                         )
                                                     }
-                                                    className='w-full px-3 py-1.5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                                    className='w-full px-3 py-1.5 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                                 />
                                             </div>
                                         ))}
@@ -483,7 +483,7 @@ export function FaraidhContent() {
 
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
                 <div className='flex items-center justify-between mb-4 gap-2'>
-                    <h2 className='text-base font-semibold text-gray-800 dark:text-white'>
+                    <h2 className='text-base font-semibold text-gray-800 dark:text-gray-200 dark:text-white'>
                         {t("faraidh.result") ?? "Hasil Perhitungan"}
                     </h2>
                     <div className='flex items-center gap-2'>
@@ -494,7 +494,7 @@ export function FaraidhContent() {
                         {history.length > 0 && (
                             <button
                                 onClick={() => setShowHistory((v) => !v)}
-                                className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-600 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                                className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-xs text-gray-600 dark:text-gray-300 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
                             >
                                 <BsClockHistory />
                                 {t("faraidh.history") ?? "Riwayat"} (
@@ -522,7 +522,7 @@ export function FaraidhContent() {
                         {totalHeirs > 0 && result.rows.length > 0 && (
                             <button
                                 onClick={handlePrint}
-                                className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-600 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                                className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-xs text-gray-600 dark:text-gray-300 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
                             >
                                 <BsPrinter />
                                 {t("faraidh.print") ?? "Cetak"}
@@ -574,7 +574,7 @@ export function FaraidhContent() {
                                             key={idx}
                                             className='border-b border-gray-50 dark:border-slate-700/50 last:border-0'
                                         >
-                                            <td className='px-3 py-2.5 text-gray-700 dark:text-gray-300'>
+                                            <td className='px-3 py-2.5 text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                                 {heirRowLabel(row.key, lang)}
                                                 {row.isAshabah && (
                                                     <span className='ml-2 px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-[10px] font-medium'>
@@ -583,7 +583,7 @@ export function FaraidhContent() {
                                                     </span>
                                                 )}
                                             </td>
-                                            <td className='px-3 py-2.5 text-center text-gray-500 dark:text-gray-400'>
+                                            <td className='px-3 py-2.5 text-center text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                                 {row.count}
                                             </td>
                                             <td className='px-3 py-2.5 text-center text-emerald-700 dark:text-emerald-400 font-medium'>
@@ -599,20 +599,20 @@ export function FaraidhContent() {
                                     ))}
                                 </tbody>
                                 <tfoot>
-                                    <tr className='border-t-2 border-gray-200 dark:border-slate-600'>
+                                    <tr className='border-t-2 border-gray-200 dark:border-gray-700 dark:border-slate-600'>
                                         <td
                                             colSpan={3}
-                                            className='px-3 py-2.5 text-right text-xs text-gray-500 dark:text-gray-400'
+                                            className='px-3 py-2.5 text-right text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'
                                         >
                                             {t("common.total") ?? "Total"}
                                         </td>
-                                        <td className='px-3 py-2.5 text-right text-sm font-bold text-gray-800 dark:text-white'>
+                                        <td className='px-3 py-2.5 text-right text-sm font-bold text-gray-800 dark:text-gray-200 dark:text-white'>
                                             {(result.totalShare * 100).toFixed(
                                                 2,
                                             )}
                                             %
                                         </td>
-                                        <td className='px-3 py-2.5 text-right text-sm font-bold text-gray-800 dark:text-white'>
+                                        <td className='px-3 py-2.5 text-right text-sm font-bold text-gray-800 dark:text-gray-200 dark:text-white'>
                                             {fmtNumber(
                                                 totalNet * result.totalShare,
                                                 lang,
@@ -690,7 +690,7 @@ export function FaraidhContent() {
             {/* History panel */}
             {showHistory && history.length > 0 && (
                 <div className='mt-5 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                    <h2 className='text-base font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2'>
+                    <h2 className='text-base font-semibold text-gray-800 dark:text-gray-200 dark:text-white mb-4 flex items-center gap-2'>
                         <BsClockHistory className='text-emerald-600' />
                         {t("faraidh.history") ?? "Riwayat Perhitungan"}
                     </h2>
@@ -719,7 +719,7 @@ export function FaraidhContent() {
                                         onClick={() => loadHistory(entry)}
                                         className='flex-1 text-left'
                                     >
-                                        <p className='text-sm font-medium text-gray-800 dark:text-white'>
+                                        <p className='text-sm font-medium text-gray-800 dark:text-gray-200 dark:text-white'>
                                             {fmtNumber(net, lang)}{" "}
                                             <span className='text-xs font-normal text-gray-400'>
                                                 — {heirCount}{" "}
@@ -744,7 +744,7 @@ export function FaraidhContent() {
                                     </button>
                                     <button
                                         onClick={() => deleteHistory(entry.id)}
-                                        className='text-gray-300 dark:text-slate-600 hover:text-red-500 transition-colors'
+                                        className='text-gray-300 dark:text-slate-600 dark:text-slate-300 hover:text-red-500 transition-colors'
                                     >
                                         <BsTrash />
                                     </button>

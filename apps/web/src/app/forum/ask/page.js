@@ -27,7 +27,7 @@ export function ForumAskContent({
     if (!isAuthenticated) {
         return (
             <div className='text-center py-16'>
-                <p className='text-gray-500 dark:text-gray-400 text-sm mb-3'>
+                <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm mb-3'>
                     {t("forum.login_required") ??
                         "Login untuk mengajukan pertanyaan."}
                 </p>
@@ -74,10 +74,10 @@ export function ForumAskContent({
                 <div className='inline-flex items-center justify-center w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl mb-4'>
                     <MdQuestionAnswer className='text-3xl text-emerald-700 dark:text-emerald-400' />
                 </div>
-                <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-1'>
                     {t("forum.ask_title") ?? "Ajukan Pertanyaan"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("forum.ask_subtitle") ??
                         "Tanyakan sesuatu tentang Islam"}
                 </p>
@@ -90,7 +90,7 @@ export function ForumAskContent({
                 <div>
                     <label
                         htmlFor='page-label-title'
-                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                        className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                     >
                         {t("forum.label_title") ?? "Judul"}
                     </label>
@@ -103,13 +103,13 @@ export function ForumAskContent({
                             t("forum.title_placeholder") ??
                             "Tulis judul pertanyaan yang jelas..."
                         }
-                        className='w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                        className='w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                     />
                 </div>
                 <div>
                     <label
                         htmlFor='page-label-body'
-                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                        className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                     >
                         {t("forum.label_body") ?? "Isi Pertanyaan"}
                     </label>
@@ -122,13 +122,13 @@ export function ForumAskContent({
                             t("forum.body_placeholder") ??
                             "Jelaskan pertanyaan kamu secara detail..."
                         }
-                        className='w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none'
+                        className='w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none'
                     />
                 </div>
                 <div>
                     <label
                         htmlFor='page-label-tags'
-                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                        className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                     >
                         {t("forum.label_tags") ?? "Tag (pisahkan dengan koma)"}
                     </label>
@@ -138,7 +138,7 @@ export function ForumAskContent({
                         value={tags}
                         onChange={(e) => setTags(e.target.value)}
                         placeholder={t("forum.tag_example")}
-                        className='w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                        className='w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                     />
                 </div>
 

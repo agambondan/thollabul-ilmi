@@ -80,14 +80,14 @@ export default function DailyAyahWidget({
             {arabic && (
                 <p
                     dir='rtl'
-                    className='font-kitab text-2xl text-gray-800 dark:text-gray-100 leading-loose mb-3 line-clamp-3'
+                    className='font-kitab text-2xl text-gray-800 dark:text-gray-200 dark:text-gray-100 leading-loose mb-3 line-clamp-3'
                 >
                     {arabic}
                 </p>
             )}
 
             {meaning && (
-                <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-3 line-clamp-3'>
+                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed mb-3 line-clamp-3'>
                     &ldquo;{meaning}&rdquo;
                 </p>
             )}

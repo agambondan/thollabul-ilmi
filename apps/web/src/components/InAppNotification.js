@@ -40,10 +40,10 @@ export default function InAppNotification() {
                             </span>
                         </div>
                         <div className='flex-1 min-w-0'>
-                            <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                            <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                 {title}
                             </p>
-                            <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2'>
+                            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5 line-clamp-2'>
                                 {body}
                             </p>
                         </div>
@@ -54,7 +54,7 @@ export default function InAppNotification() {
                                     router.push(url);
                                 }
                             }}
-                            className='shrink-0 inline-flex items-center rounded bg-emerald-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:text-emerald-950 transition-colors'
+                            className='shrink-0 inline-flex items-center rounded bg-emerald-600 px-2.5 py-1 text-xs font-semibold text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:text-emerald-950 dark:text-emerald-300 transition-colors'
                         >
                             Buka
                         </button>

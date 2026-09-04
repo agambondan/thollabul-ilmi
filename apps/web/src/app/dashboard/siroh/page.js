@@ -33,10 +33,10 @@ export default function SirohDashboardPage() {
 
     return (
         <div className='p-6'>
-            <h1 className='text-2xl font-bold text-gray-800 dark:text-white mb-1'>
+            <h1 className='text-2xl font-bold text-gray-800 dark:text-gray-200 dark:text-white mb-1'>
                 {t("siroh.title")}
             </h1>
-            <p className='text-gray-500 dark:text-gray-400 mb-4'>
+            <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-4'>
                 {t("siroh.subtitle")}
             </p>
 
@@ -50,7 +50,7 @@ export default function SirohDashboardPage() {
                     }
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className='w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-slate-700 rounded-xl text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400'
+                    className='w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-xl text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400'
                 />
             </div>
 
@@ -85,7 +85,7 @@ export default function SirohDashboardPage() {
                             <Link
                                 key={id}
                                 href={`/dashboard/siroh/${item.slug ?? id}`}
-                                className='block border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 shadow-sm p-4 hover:shadow-md hover:border-blue-200 dark:hover:border-blue-700 transition-all'
+                                className='block border border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 shadow-sm p-4 hover:shadow-md hover:border-blue-200 dark:hover:border-blue-700 transition-all'
                             >
                                 <div className='flex items-start gap-3'>
                                     <div className='flex-1 min-w-0'>
@@ -96,7 +96,7 @@ export default function SirohDashboardPage() {
                                                 </span>
                                             )}
                                         </div>
-                                        <h3 className='font-bold text-gray-800 dark:text-white text-sm mb-1'>
+                                        <h3 className='font-bold text-gray-800 dark:text-gray-200 dark:text-white text-sm mb-1'>
                                             {getLocalizedField(
                                                 item,
                                                 "title",
@@ -108,7 +108,7 @@ export default function SirohDashboardPage() {
                                             "excerpt",
                                             lang,
                                         ) && (
-                                            <p className='text-xs text-gray-500 dark:text-gray-400 line-clamp-2'>
+                                            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 line-clamp-2'>
                                                 {getLocalizedField(
                                                     item,
                                                     "excerpt",

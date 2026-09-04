@@ -133,7 +133,7 @@ export default function AdminLessonsPage() {
     return (
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     Kelola Modul Belajar
                 </h1>
                 <button
@@ -182,11 +182,11 @@ export default function AdminLessonsPage() {
                             className='hover:bg-gray-50 dark:hover:bg-slate-700/30'
                         >
                             <Td className='font-bold'>{m.order}</Td>
-                            <Td className='font-semibold text-gray-900 dark:text-white'>
+                            <Td className='font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                 {m.title}
                             </Td>
-                            <Td className='text-gray-500'>{m.slug}</Td>
-                            <Td className='text-gray-500'>
+                            <Td className='text-gray-500 dark:text-gray-300'>{m.slug}</Td>
+                            <Td className='text-gray-500 dark:text-gray-300'>
                                 {m.steps?.length || 0} langkah
                             </Td>
                             <Td className='text-right space-x-2'>
@@ -215,7 +215,7 @@ export default function AdminLessonsPage() {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 shadow-xl'
                 >
-                    <h2 className='text-lg font-bold text-gray-900 dark:text-white mb-4'>
+                    <h2 className='text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4'>
                         {editing ? "Edit Modul" : "Tambah Modul"}
                     </h2>
                     <form onSubmit={handleSave} className='space-y-4'>
@@ -305,7 +305,7 @@ export default function AdminLessonsPage() {
                                         className='p-3 border rounded-xl dark:border-slate-700 bg-gray-50 dark:bg-slate-900/40 relative'
                                     >
                                         <div className='flex items-center justify-between mb-2'>
-                                            <span className='text-xs font-bold text-gray-500'>
+                                            <span className='text-xs font-bold text-gray-500 dark:text-gray-300'>
                                                 Langkah {idx + 1}
                                             </span>
                                             {form.steps.length > 1 && (

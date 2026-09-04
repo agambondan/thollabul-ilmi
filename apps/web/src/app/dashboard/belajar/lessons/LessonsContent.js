@@ -145,18 +145,18 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
     };
 
     if (loading) {
-        return <div className='p-8 text-center text-gray-500'>{t("belajar.loading_modules")}</div>;
+        return <div className='p-8 text-center text-gray-500 dark:text-gray-300'>{t("belajar.loading_modules")}</div>;
     }
 
     if (error || !activeModule || !step) {
-        return <div className='p-8 text-center text-gray-500'>{t("belajar.lessons_empty")}</div>;
+        return <div className='p-8 text-center text-gray-500 dark:text-gray-300'>{t("belajar.lessons_empty")}</div>;
     }
 
     const currentDone = completed[stepKey(activeModule.slug, stepNumber(step, activeStepIdx))];
 
     return (
         <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
-            <Link href={backHref} className='inline-flex items-center text-sm text-gray-500 hover:text-emerald-600 mb-4'>
+            <Link href={backHref} className='inline-flex items-center text-sm text-gray-500 dark:text-gray-300 hover:text-emerald-600 mb-4'>
                 <BsChevronLeft />
                 <span className='ml-1'>{t("belajar.back_to_learn")}</span>
             </Link>
@@ -180,7 +180,7 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
                 <div className='space-y-3'>
                     {/* Selector Modul (Dropdown List) */}
                     <div className='bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 space-y-3 shadow-sm'>
-                        <label htmlFor='lesson-module-select' className='block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+                        <label htmlFor='lesson-module-select' className='block text-xs font-bold text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wider'>
                             {t("belajar.select_module") || "Materi Belajar"}
                         </label>
                         <div className='relative'>
@@ -192,7 +192,7 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
                                     setActiveStepIdx(0);
                                     setFinishedSlug(null);
                                 }}
-                                className='w-full appearance-none bg-emerald-50/50 dark:bg-slate-900 border border-emerald-200 dark:border-slate-700 text-gray-900 dark:text-white text-sm font-semibold rounded-xl px-3.5 py-2.5 pr-8 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer'
+                                className='w-full appearance-none bg-emerald-50/50 dark:bg-slate-900 border border-emerald-200 dark:border-slate-700 text-gray-900 dark:text-gray-100 dark:text-white text-sm font-semibold rounded-xl px-3.5 py-2.5 pr-8 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer'
                             >
                                 {modules.map((m) => {
                                     const done = (m.steps || []).filter((item, index) => completed[stepKey(m.slug, stepNumber(item, index))]).length;
@@ -204,7 +204,7 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
                                     );
                                 })}
                             </select>
-                            <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 dark:text-gray-400'>
+                            <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 <BsChevronRight className='rotate-90 text-xs' />
                             </div>
                         </div>
@@ -212,13 +212,13 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
                         {/* Progress Materi Aktif */}
                         <div className='pt-2 border-t border-gray-100 dark:border-slate-700/60'>
                             <div className='flex items-center justify-between mb-1.5'>
-                                <span className='text-xs font-medium text-gray-500 dark:text-gray-400'>Progres Materi</span>
+                                <span className='text-xs font-medium text-gray-500 dark:text-gray-300 dark:text-gray-400'>Progres Materi</span>
                                 <span className='text-xs font-bold text-emerald-600 dark:text-emerald-400'>{moduleProgress}%</span>
                             </div>
                             <div className='h-2 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden'>
                                 <div className='h-full bg-emerald-600 rounded-full transition-all duration-300' style={{ width: `${moduleProgress}%` }} />
                             </div>
-                            <p className='mt-1.5 text-[11px] text-gray-400 dark:text-gray-500'>{moduleDone} dari {totalSteps} langkah selesai</p>
+                            <p className='mt-1.5 text-[11px] text-gray-400 dark:text-gray-500 dark:text-gray-300'>{moduleDone} dari {totalSteps} langkah selesai</p>
                         </div>
                     </div>
                 </div>
@@ -252,16 +252,16 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
                                 <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold uppercase ${kindClass(step.kind)}`}>
                                     {step.kind || "teori"}
                                 </span>
-                                <h2 className='text-xl font-extrabold text-gray-900 dark:text-white mt-3'>{step.title}</h2>
+                                <h2 className='text-xl font-extrabold text-gray-900 dark:text-gray-100 dark:text-white mt-3'>{step.title}</h2>
                             </div>
                             {currentDone && <BsCheckCircle className='text-2xl text-emerald-500' />}
                         </div>
 
-                        <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line'>{step.body}</p>
+                        <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed whitespace-pre-line'>{step.body}</p>
 
                         {step.arabic && (
                             <div className='rounded-2xl bg-parchment-50 dark:bg-slate-900 border border-emerald-100 dark:border-slate-700 p-4 text-right'>
-                                <p className='text-3xl leading-loose text-gray-950 dark:text-white' dir='rtl' style={{ fontFamily: "Kitab, Amiri, serif" }}>
+                                <p className='text-3xl leading-loose text-gray-950 dark:text-gray-100 dark:text-white' dir='rtl' style={{ fontFamily: "Kitab, Amiri, serif" }}>
                                     {step.arabic}
                                 </p>
                             </div>
@@ -270,28 +270,28 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
                         {step.latin && (
                             <div>
                                 <p className='text-xs font-bold text-gray-400 uppercase mb-1'>Latin</p>
-                                <p className='text-sm italic text-emerald-700 dark:text-emerald-300 leading-relaxed'>{step.latin}</p>
+                                <p className='text-sm italic text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 leading-relaxed'>{step.latin}</p>
                             </div>
                         )}
 
                         {step.translation && (
                             <div>
                                 <p className='text-xs font-bold text-gray-400 uppercase mb-1'>Arti</p>
-                                <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>{step.translation}</p>
+                                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>{step.translation}</p>
                             </div>
                         )}
 
                         {step.dalil && (
                             <div className='rounded-2xl border-l-4 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 px-4 py-3'>
-                                <p className='text-xs font-bold text-emerald-700 dark:text-emerald-300 uppercase mb-1'>Dalil</p>
-                                <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>{step.dalil}</p>
+                                <p className='text-xs font-bold text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 uppercase mb-1'>Dalil</p>
+                                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>{step.dalil}</p>
                             </div>
                         )}
 
                         {step.tip && (
                             <div className='rounded-2xl bg-amber-50 dark:bg-amber-900/20 px-4 py-3'>
-                                <p className='text-xs font-bold text-amber-700 dark:text-amber-300 uppercase mb-1'>Catatan praktik</p>
-                                <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>{step.tip}</p>
+                                <p className='text-xs font-bold text-amber-700 dark:text-amber-400 dark:text-amber-300 uppercase mb-1'>Catatan praktik</p>
+                                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>{step.tip}</p>
                             </div>
                         )}
 
@@ -307,8 +307,8 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
 
                     {finishedSlug === activeModule.slug && (
                         <div className='mt-4 rounded-3xl border border-emerald-200 bg-emerald-50 dark:bg-emerald-900/20 dark:border-emerald-800 p-5'>
-                            <p className='text-lg font-extrabold text-emerald-900 dark:text-emerald-100'>Modul selesai</p>
-                            <p className='text-sm text-emerald-700 dark:text-emerald-300 mt-1'>Ulangi ringkasan, lalu lanjut ke modul berikutnya agar ilmu makin kuat.</p>
+                            <p className='text-lg font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-100'>Modul selesai</p>
+                            <p className='text-sm text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 mt-1'>Ulangi ringkasan, lalu lanjut ke modul berikutnya agar ilmu makin kuat.</p>
                         </div>
                     )}
 
@@ -316,7 +316,7 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
                         <button
                             onClick={() => setActiveStepIdx(Math.max(0, activeStepIdx - 1))}
                             disabled={activeStepIdx === 0}
-                            className='px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-slate-700 disabled:opacity-30 flex items-center gap-1'
+                            className='px-4 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-700 dark:border-slate-700 disabled:opacity-30 flex items-center gap-1'
                         >
                             <BsChevronLeft /> Kembali
                         </button>

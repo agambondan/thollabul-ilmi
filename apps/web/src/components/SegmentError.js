@@ -23,10 +23,10 @@ export default function SegmentError({ error, reset }) {
             aria-live='assertive'
         >
             <p className='mb-3 text-4xl'>⚠️</p>
-            <h2 className='mb-2 text-lg font-bold text-gray-900 dark:text-white'>
+            <h2 className='mb-2 text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                 {t("global_error.title")}
             </h2>
-            <p className='mb-6 text-sm leading-relaxed text-gray-500 dark:text-gray-400'>
+            <p className='mb-6 text-sm leading-relaxed text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                 {error?.message?.includes("fetch")
                     ? t("global_error.api_unreachable")
                     : t("global_error.unexpected")}

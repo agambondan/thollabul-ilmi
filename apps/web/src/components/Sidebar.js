@@ -220,14 +220,14 @@ const Sidebar = ({ onClose }) => {
                     <div className='w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center'>
                         <FaQuran className='text-white text-xs' />
                     </div>
-                    <span className='text-sm font-bold text-emerald-900 dark:text-white'>
+                    <span className='text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         Thullaabul Ilmi
                     </span>
                 </div>
                 {onClose && (
                     <button
                         onClick={onClose}
-                        className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                        className='p-1 text-gray-400 hover:text-gray-600 hover:dark:text-gray-300 dark:hover:text-gray-200'
                         aria-label={t("nav.close_sidebar")}
                     >
                         <BsX className='text-xl' />
@@ -238,7 +238,7 @@ const Sidebar = ({ onClose }) => {
             {/* User info */}
             {isAuthenticated && user && (
                 <div className='px-4 py-3 border-b border-gray-100 dark:border-slate-700/50 flex-shrink-0'>
-                    <p className='text-xs font-semibold text-gray-900 dark:text-white truncate'>
+                    <p className='text-xs font-semibold text-gray-900 dark:text-gray-100 dark:text-white truncate'>
                         {user.name ?? user.username ?? t("common.user")}
                     </p>
                     <p className='text-[11px] text-gray-400 truncate'>

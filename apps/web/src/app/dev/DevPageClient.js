@@ -1229,15 +1229,15 @@ export default function DevPageClient() {
                 >
                     وَاجِهَةُ الْبَرْمَجَة
                 </p>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                     {t("dev.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-4'>
                     {t("dev.subtitle")}
                 </p>
 
                 <div className='flex items-center gap-3 bg-slate-900 dark:bg-slate-950 rounded-xl px-4 py-3 font-mono text-sm overflow-x-auto'>
-                    <span className='text-slate-500 shrink-0'>
+                    <span className='text-slate-500 dark:text-slate-300 shrink-0'>
                         {t("dev.base_url")}
                     </span>
                     <span className='text-emerald-400 font-semibold'>
@@ -1246,7 +1246,7 @@ export default function DevPageClient() {
                 </div>
             </div>
 
-            <div className='mb-8 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl px-4 py-3 text-sm text-emerald-800 dark:text-emerald-200'>
+            <div className='mb-8 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl px-4 py-3 text-sm text-emerald-800 dark:text-emerald-300 dark:text-emerald-200'>
                 {t("dev.public_get_prefix")}{" "}
                 <span className='font-mono bg-white dark:bg-slate-800 px-1 rounded'>
                     GET
@@ -1254,7 +1254,7 @@ export default function DevPageClient() {
                 {t("dev.public_get_suffix")}
             </div>
 
-            <div className='mb-6 flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-400'>
+            <div className='mb-6 flex flex-wrap items-center gap-3 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                 <span className='font-mono px-2 py-1 rounded bg-gray-100 dark:bg-slate-800'>
                     {totalEndpoints} endpoints
                 </span>
@@ -1300,10 +1300,10 @@ export default function DevPageClient() {
                                         >
                                             {ep.method}
                                         </span>
-                                        <code className='text-sm text-slate-700 dark:text-slate-300 font-mono break-all'>
+                                        <code className='text-sm text-slate-700 dark:text-slate-200 dark:text-slate-300 font-mono break-all'>
                                             {ep.path}
                                         </code>
-                                        <span className='sm:ml-auto text-xs text-gray-500 dark:text-gray-400 sm:text-right shrink-0 max-w-xs'>
+                                        <span className='sm:ml-auto text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 sm:text-right shrink-0 max-w-xs'>
                                             {ep.desc}
                                         </span>
                                     </div>
@@ -1316,11 +1316,11 @@ export default function DevPageClient() {
 
             <div className='mt-8 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden'>
                 <div className='px-4 py-3 bg-slate-50 dark:bg-slate-800/60'>
-                    <h2 className='font-semibold text-sm text-slate-700 dark:text-slate-300'>
+                    <h2 className='font-semibold text-sm text-slate-700 dark:text-slate-200 dark:text-slate-300'>
                         {t("dev.auth_title")}
                     </h2>
                 </div>
-                <div className='px-4 py-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed'>
+                <div className='px-4 py-4 text-sm text-gray-600 dark:text-gray-300 dark:text-gray-400 leading-relaxed'>
                     {t("dev.auth_intro")}
                     <pre className='mt-3 bg-slate-900 dark:bg-slate-950 text-emerald-400 rounded-xl px-4 py-3 font-mono text-xs overflow-x-auto'>
                         {`Authorization: Bearer <token>`}
@@ -1329,7 +1329,7 @@ export default function DevPageClient() {
                 </div>
             </div>
 
-            <p className='mt-8 text-center text-xs text-gray-400 dark:text-gray-600'>
+            <p className='mt-8 text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300'>
                 {t("dev.full_docs_soon")}
             </p>
         </div>

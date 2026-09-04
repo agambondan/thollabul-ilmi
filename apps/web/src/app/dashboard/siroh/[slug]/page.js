@@ -54,7 +54,7 @@ export default function SirohDetailPage(props) {
         return (
             <div className='p-6 text-center'>
                 <p className='text-4xl mb-3'>⚠️</p>
-                <p className='text-gray-500 dark:text-gray-400 text-sm'>
+                <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm'>
                     {t("siroh.not_found")}
                 </p>
                 <Link
@@ -82,17 +82,17 @@ export default function SirohDetailPage(props) {
                 </span>
             )}
 
-            <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-2'>
+            <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-2'>
                 {getLocalizedField(content, "title", lang)}
             </h1>
 
             {getLocalizedField(content, "subtitle", lang) && (
-                <p className='text-gray-500 dark:text-gray-400 mb-6'>
+                <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-6'>
                     {getLocalizedField(content, "subtitle", lang)}
                 </p>
             )}
 
-            <div className='text-gray-700 dark:text-gray-300 leading-relaxed space-y-4'>
+            <div className='text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed space-y-4'>
                 {String(
                     (getLocalizedField(content, "content", lang) ||
                         content.content) ??

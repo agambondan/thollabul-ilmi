@@ -81,12 +81,12 @@ export default function MapComponent() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder={t("peta.search_placeholder")}
-                    className='flex-1 min-w-[200px] rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                    className='flex-1 min-w-[200px] rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-600 bg-white dark:bg-slate-800 px-4 py-2 text-sm text-gray-900 dark:text-gray-100 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500'
                 />
                 <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className='rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                    className='rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500'
                 >
                     {CATEGORIES.map((c) => (
                         <option key={c.value} value={c.value}>
@@ -97,7 +97,7 @@ export default function MapComponent() {
                 <select
                     value={era}
                     onChange={(e) => setEra(e.target.value)}
-                    className='rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                    className='rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500'
                 >
                     {ERAS.map((e) => (
                         <option key={e.value} value={e.value}>
@@ -146,17 +146,17 @@ export default function MapComponent() {
                                     <strong className='text-sm'>
                                         {loc.name}
                                     </strong>
-                                    <p className='text-xs text-gray-500 mt-1'>
+                                    <p className='text-xs text-gray-500 dark:text-gray-300 mt-1'>
                                         {loc.description}
                                     </p>
                                     <div className='flex gap-2 mt-2'>
                                         {loc.category && (
-                                            <span className='inline-block rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-300'>
+                                            <span className='inline-block rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
                                                 {loc.category}
                                             </span>
                                         )}
                                         {loc.era && (
-                                            <span className='inline-block rounded-full bg-blue-100 dark:bg-blue-900/30 px-2 py-0.5 text-[10px] font-medium text-blue-700 dark:text-blue-300'>
+                                            <span className='inline-block rounded-full bg-blue-100 dark:bg-blue-900/30 px-2 py-0.5 text-[10px] font-medium text-blue-700 dark:text-blue-400 dark:text-blue-300'>
                                                 {loc.era}
                                             </span>
                                         )}

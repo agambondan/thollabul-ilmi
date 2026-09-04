@@ -80,16 +80,16 @@ export default function KajianClient({ kajian: initialKajian = [] }) {
                     <MdOutlinePlayLesson className='text-xl text-emerald-700 dark:text-emerald-400' />
                 </div>
                 <div>
-                    <h1 className='text-xl font-bold text-emerald-900 dark:text-white'>
+                    <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("kajian.public_title")}
                     </h1>
-                    <p className='text-xs text-gray-500 dark:text-gray-400'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("kajian.public_subtitle")}
                     </p>
                 </div>
             </div>
 
-            <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+            <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
                 <BsSearch className='text-gray-400 shrink-0' />
                 <input
                     type='text'
@@ -208,7 +208,7 @@ export default function KajianClient({ kajian: initialKajian = [] }) {
                                 </div>
                             )}
                             <div>
-                                <p className='font-semibold text-gray-800 dark:text-gray-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-1'>
+                                <p className='font-semibold text-gray-800 dark:text-gray-200 dark:text-gray-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-1'>
                                     {k.title}
                                 </p>
                                 <p className='text-xs text-gray-400'>
@@ -220,7 +220,7 @@ export default function KajianClient({ kajian: initialKajian = [] }) {
                             </div>
 
                             <div className='flex-1'>
-                                <h3 className='text-sm font-semibold text-gray-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors leading-snug'>
+                                <h3 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white group-hover:text-emerald-700 hover:dark:text-emerald-400 dark:group-hover:text-emerald-400 transition-colors leading-snug'>
                                     {getLocalizedField(k, "title", lang)}
                                 </h3>
                                 <p className='text-xs text-emerald-600 dark:text-emerald-400 mt-0.5'>
@@ -228,7 +228,7 @@ export default function KajianClient({ kajian: initialKajian = [] }) {
                                 </p>
                             </div>
 
-                            <p className='text-xs text-gray-500 dark:text-gray-400 line-clamp-2'>
+                            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 line-clamp-2'>
                                 {getLocalizedField(k, "description", lang)}
                             </p>
 

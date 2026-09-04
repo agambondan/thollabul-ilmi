@@ -72,7 +72,7 @@ const ChangePasswordCard = ({ className = "" }) => {
                     setOpen((v) => !v);
                     setMsg({ type: "", text: "" });
                 }}
-                className='w-full flex items-center justify-between px-5 py-4 text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors'
+                className='w-full flex items-center justify-between px-5 py-4 text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors'
             >
                 <span className='flex items-center gap-2'>
                     <BsLock className='text-emerald-600 dark:text-emerald-400' />
@@ -96,7 +96,7 @@ const ChangePasswordCard = ({ className = "" }) => {
                     <div>
                         <label
                             htmlFor='changepasswordcard-old-password'
-                            className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                            className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                         >
                             {t("profile.old_password")}
                         </label>
@@ -113,7 +113,7 @@ const ChangePasswordCard = ({ className = "" }) => {
                     <div>
                         <label
                             htmlFor='changepasswordcard-new-password'
-                            className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                            className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                         >
                             {t("profile.new_password")}
                         </label>
@@ -131,7 +131,7 @@ const ChangePasswordCard = ({ className = "" }) => {
                     <div>
                         <label
                             htmlFor='changepasswordcard-confirm-new-password'
-                            className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                            className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                         >
                             {t("profile.confirm_new_password")}
                         </label>

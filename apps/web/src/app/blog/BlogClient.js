@@ -161,15 +161,15 @@ export default function BlogClient({
             }
         >
             <div className='mb-8'>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                     {t("blog.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("blog.subtitle")}
                 </p>
             </div>
 
-            <div className='flex items-center gap-2 mb-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+            <div className='flex items-center gap-2 mb-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
                 <BsSearch className='text-gray-400 shrink-0' />
                 <input
                     type='text'
@@ -230,12 +230,12 @@ export default function BlogClient({
             {!error && !isLoading && posts.length === 0 && (
                 <div className='text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                     <p
-                        className='text-4xl text-emerald-300 dark:text-emerald-700 mb-3'
+                        className='text-4xl text-emerald-300 dark:text-emerald-700 dark:text-emerald-400 mb-3'
                         style={{ fontFamily: "Amiri, serif" }}
                     >
                         كِتَابَةً
                     </p>
-                    <p className='text-gray-500 dark:text-gray-400 font-medium mb-1'>
+                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 font-medium mb-1'>
                         {t("blog.empty_title")}
                     </p>
                     <p className='text-sm text-gray-400'>
@@ -249,7 +249,7 @@ export default function BlogClient({
                 posts.length > 0 &&
                 filteredPosts.length === 0 && (
                     <div className='text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
-                        <p className='text-gray-500 dark:text-gray-400 font-medium mb-1'>
+                        <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 font-medium mb-1'>
                             {t("blog.no_match_title")}
                         </p>
                         <p className='text-sm text-gray-400'>
@@ -288,11 +288,11 @@ export default function BlogClient({
                                     {getCategoryLabel(post.category, lang)}
                                 </span>
                             )}
-                            <h2 className='font-bold text-emerald-900 dark:text-white mb-1 line-clamp-2'>
+                            <h2 className='font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1 line-clamp-2'>
                                 {getLocalizedField(post, "title", lang)}
                             </h2>
                             {getPostExcerpt(post, lang) && (
-                                <p className='text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3'>
+                                <p className='text-sm text-gray-600 dark:text-gray-300 dark:text-gray-400 line-clamp-2 mb-3'>
                                     {getPostExcerpt(post, lang)}
                                 </p>
                             )}
@@ -326,13 +326,13 @@ export default function BlogClient({
             <div ref={sentinelRef} className='h-1' />
 
             {!hasMore && posts.length > 0 && !isLoading && (
-                <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
+                <p className='text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 py-4'>
                     {t("blog.all_shown")}
                 </p>
             )}
 
             {!isLoading && filteredPosts.length === 0 && posts.length > 0 && (
-                <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
+                <p className='text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 py-4'>
                     {t("blog.no_search")}
                 </p>
             )}

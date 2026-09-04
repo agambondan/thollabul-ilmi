@@ -69,10 +69,10 @@ export default function KajianDashboardPage() {
 
     return (
         <div className='p-6'>
-            <h1 className='text-2xl font-bold text-gray-800 dark:text-white mb-1'>
+            <h1 className='text-2xl font-bold text-gray-800 dark:text-gray-200 dark:text-white mb-1'>
                 {t("kajian.title")}
             </h1>
-            <p className='text-gray-500 dark:text-gray-400 mb-4'>
+            <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-4'>
                 {t("kajian.subtitle")}
             </p>
 
@@ -112,7 +112,7 @@ export default function KajianDashboardPage() {
                     placeholder={t("kajian.search_placeholder")}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className='w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300 dark:bg-slate-800 dark:text-white'
+                    className='w-full pl-9 pr-4 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300 dark:bg-slate-800 dark:text-white'
                 />
             </div>
 
@@ -165,7 +165,7 @@ export default function KajianDashboardPage() {
                         "bg-gray-100 text-gray-600";
 
                     const CardContent = (
-                        <div className='border border-gray-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 shadow-sm p-4 h-full hover:shadow-md transition-shadow'>
+                        <div className='border border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 shadow-sm p-4 h-full hover:shadow-md transition-shadow'>
                             <div className='flex items-start justify-between mb-2'>
                                 <div className='flex gap-2 flex-wrap'>
                                     {item.type && (
@@ -185,7 +185,7 @@ export default function KajianDashboardPage() {
                                     <BsBoxArrowUpRight className='text-gray-400 flex-shrink-0 text-sm mt-0.5' />
                                 )}
                             </div>
-                            <h3 className='font-semibold text-gray-800 dark:text-white text-sm mb-1 line-clamp-2'>
+                            <h3 className='font-semibold text-gray-800 dark:text-gray-200 dark:text-white text-sm mb-1 line-clamp-2'>
                                 {getLocalizedField(item, "title", lang)}
                             </h3>
                             <p className='text-xs text-emerald-700 dark:text-emerald-400 font-medium mb-1'>
@@ -197,7 +197,7 @@ export default function KajianDashboardPage() {
                                 </p>
                             ) : null}
                             {getLocalizedField(item, "description", lang) && (
-                                <p className='text-xs text-gray-500 dark:text-gray-400 line-clamp-2'>
+                                <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 line-clamp-2'>
                                     {getLocalizedField(
                                         item,
                                         "description",

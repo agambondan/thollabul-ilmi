@@ -212,15 +212,15 @@ export const DzikirContent = ({ initialItems = [] }) => {
                 >
                     الذِّكْر
                 </p>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                     {t("dzikir.public_title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("dzikir.public_subtitle")}
                 </p>
             </div>
 
-            <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+            <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
                 <BsSearch className='text-gray-400 shrink-0' />
                 <input
                     type='text'
@@ -273,7 +273,7 @@ export const DzikirContent = ({ initialItems = [] }) => {
 
             {!isLoading && filtered.length === 0 && !error && (
                 <div className='text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
-                    <p className='text-gray-500 dark:text-gray-400'>
+                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {dzikirList.length === 0
                             ? t("dzikir.unavailable")
                             : t("dzikir.no_match")}
@@ -305,7 +305,7 @@ export const DzikirContent = ({ initialItems = [] }) => {
                                     }
                                 >
                                     <div className='min-w-0'>
-                                        <span className='text-sm font-semibold text-emerald-900 dark:text-white'>
+                                        <span className='text-sm font-semibold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                                             {getLocalizedField(
                                                 dzikir,
                                                 "title",
@@ -329,7 +329,7 @@ export const DzikirContent = ({ initialItems = [] }) => {
                                             </span>
                                         )}
                                         {dzikir.count && dzikir.count > 1 && (
-                                            <span className='ml-2 text-xs px-2 py-0.5 bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400 rounded-full'>
+                                            <span className='ml-2 text-xs px-2 py-0.5 bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300 dark:text-gray-400 rounded-full'>
                                                 ×{dzikir.count}
                                             </span>
                                         )}
@@ -370,7 +370,7 @@ export const DzikirContent = ({ initialItems = [] }) => {
                             {expanded === dzikir.id && (
                                 <div className='px-4 pb-4 border-t border-gray-50 dark:border-slate-700 pt-3 space-y-3'>
                                     <p
-                                        className='text-2xl leading-[2.2] text-right font-kitab text-emerald-900 dark:text-white'
+                                        className='text-2xl leading-[2.2] text-right font-kitab text-emerald-900 dark:text-emerald-300 dark:text-white'
                                         style={{
                                             direction: "rtl",
                                             fontFamily: "Amiri, serif",
@@ -379,11 +379,11 @@ export const DzikirContent = ({ initialItems = [] }) => {
                                         {dzikir.translation?.ar}
                                     </p>
                                     {dzikir.translation?.latin_idn && (
-                                        <p className='text-sm italic text-gray-500 dark:text-gray-400'>
+                                        <p className='text-sm italic text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                             {dzikir.translation.latin_idn}
                                         </p>
                                     )}
-                                    <p className='text-sm text-gray-700 dark:text-gray-300'>
+                                    <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                         {getLocalizedField(
                                             dzikir,
                                             "description",
@@ -452,7 +452,7 @@ export const DzikirContent = ({ initialItems = [] }) => {
             <div ref={sentinelRef} className='h-1' />
 
             {!hasMore && dzikirList.length > 0 && !isLoading && (
-                <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
+                <p className='text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 py-4'>
                     {t("dzikir.all_displayed")}
                 </p>
             )}

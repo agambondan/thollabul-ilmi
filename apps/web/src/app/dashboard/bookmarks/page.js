@@ -138,7 +138,7 @@ const BookmarksPage = () => {
     return (
         <div className='px-4 py-6'>
             <div className='flex items-center justify-between mb-6'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {t("bookmarks.title")}
                 </h1>
                 <span className='text-xs text-gray-400'>
@@ -155,8 +155,8 @@ const BookmarksPage = () => {
             {loadFailed && !loading && <InlineError />}
             {!loading && !loadFailed && bookmarks.length === 0 && (
                 <div className='text-center py-16'>
-                    <BsBookmark className='mx-auto text-4xl text-gray-300 dark:text-slate-600 mb-3' />
-                    <p className='text-gray-500 dark:text-gray-400 text-sm'>
+                    <BsBookmark className='mx-auto text-4xl text-gray-300 dark:text-slate-600 dark:text-slate-300 mb-3' />
+                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm'>
                         {t("bookmarks.empty")}
                     </p>
                     <p className='text-xs text-gray-400 mt-1'>
@@ -173,7 +173,7 @@ const BookmarksPage = () => {
                                 <span className='text-lg'>
                                     {typeIcon(type)}
                                 </span>
-                                <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                                <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                     {typeLabel(type)}
                                 </h2>
                                 <span className='text-xs text-gray-400'>
@@ -213,7 +213,7 @@ const BookmarksPage = () => {
                                                     <div className='min-w-0'>
                                                         <Link
                                                             href={href}
-                                                            className='text-sm font-semibold text-gray-800 dark:text-white hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors truncate block'
+                                                            className='text-sm font-semibold text-gray-800 dark:text-gray-200 dark:text-white hover:text-emerald-700 hover:dark:text-emerald-400 dark:hover:text-emerald-400 transition-colors truncate block'
                                                         >
                                                             {b.title ||
                                                                 `${typeLabel(normalizedType)} #${b.ref_id}`}
@@ -233,7 +233,7 @@ const BookmarksPage = () => {
                                                             </p>
                                                         ) : null}
                                                         {b.note && (
-                                                            <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 italic'>
+                                                            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1 italic'>
                                                                 {b.note}
                                                             </p>
                                                         )}
@@ -244,7 +244,7 @@ const BookmarksPage = () => {
                                                     aria-label={t(
                                                         "bookmarks.delete",
                                                     )}
-                                                    className='text-gray-300 dark:text-slate-600 hover:text-red-500 dark:hover:text-red-400 transition-colors shrink-0 mt-0.5'
+                                                    className='text-gray-300 dark:text-slate-600 dark:text-slate-300 hover:text-red-500 dark:hover:text-red-400 transition-colors shrink-0 mt-0.5'
                                                 >
                                                     <BsTrash />
                                                 </button>

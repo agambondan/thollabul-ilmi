@@ -62,10 +62,10 @@ export const TafsirIndexContent = ({ tafsirBasePath = "/tafsir" }) => {
                     <MdOutlineAutoStories className='text-xl text-emerald-700 dark:text-emerald-400' />
                 </div>
                 <div>
-                    <h1 className='text-xl font-bold text-emerald-900 dark:text-white'>
+                    <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("tafsir.title")}
                     </h1>
-                    <p className='text-xs text-gray-500 dark:text-gray-400'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("tafsir.pick_surah")}
                     </p>
                 </div>
@@ -87,7 +87,7 @@ export const TafsirIndexContent = ({ tafsirBasePath = "/tafsir" }) => {
                     placeholder={t("tafsir.search_placeholder")}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className='w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                    className='w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                 />
             </div>
 
@@ -121,7 +121,7 @@ export const TafsirIndexContent = ({ tafsirBasePath = "/tafsir" }) => {
                                 {s.number}
                             </span>
                             <div className='min-w-0'>
-                                <p className='text-sm font-semibold text-gray-900 dark:text-white truncate group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors'>
+                                <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white truncate group-hover:text-emerald-700 hover:dark:text-emerald-400 dark:group-hover:text-emerald-400 transition-colors'>
                                     {s.translation?.latin_en ??
                                         `Surah ${s.number}`}
                                 </p>

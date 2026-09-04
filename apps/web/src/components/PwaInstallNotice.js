@@ -39,9 +39,9 @@ export default function PwaInstallNotice() {
     };
 
     return (
-        <div className='mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-200'>
+        <div className='mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:text-emerald-300 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-200'>
             <p className='font-semibold'>{t("pwa.install_title")}</p>
-            <p className='mt-1 text-xs text-emerald-700 dark:text-emerald-300'>
+            <p className='mt-1 text-xs text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
                 {t("pwa.install_android")}
             </p>
             {prompt && (

@@ -161,7 +161,7 @@ const Dialog = ({
                             {title && (
                                 <h2
                                     id={headingId}
-                                    className='truncate text-base font-bold text-gray-900 dark:text-white'
+                                    className='truncate text-base font-bold text-gray-900 dark:text-gray-100 dark:text-white'
                                 >
                                     {title}
                                 </h2>
@@ -169,7 +169,7 @@ const Dialog = ({
                             {description && (
                                 <p
                                     id={descriptionId}
-                                    className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'
+                                    className='mt-0.5 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'
                                 >
                                     {description}
                                 </p>
@@ -180,7 +180,7 @@ const Dialog = ({
                                 type='button'
                                 onClick={handleClose}
                                 aria-label={t("common.close")}
-                                className='-mr-1 shrink-0 rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:hover:bg-slate-800 dark:hover:text-gray-200'
+                                className='-mr-1 shrink-0 rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 hover:dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:hover:bg-slate-800 dark:hover:text-gray-200'
                             >
                                 <MdClose
                                     className='text-xl'

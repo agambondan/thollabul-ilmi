@@ -16,7 +16,7 @@ const NewSirahPage = () => {
                 >
                     &larr; {t("admin.sirah.back_to_list")}
                 </Link>
-                <h1 className='text-2xl font-bold text-gray-900 dark:text-white mt-3'>
+                <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mt-3'>
                     {t("admin.sirah.new_content")}
                 </h1>
             </div>

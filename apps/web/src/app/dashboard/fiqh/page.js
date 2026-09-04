@@ -64,10 +64,10 @@ export default function DashboardFiqhPage() {
     return (
         <div className='p-6'>
             <div className='mb-6'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {t("fiqh.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400 mt-0.5'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                     {items.length} {t("fiqh.material_unit")}
                 </p>
             </div>
@@ -81,7 +81,7 @@ export default function DashboardFiqhPage() {
                         placeholder={t("fiqh.search_placeholder")}
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className='pl-8 pr-3 py-1.5 border border-gray-200 dark:border-slate-700 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white w-44'
+                        className='pl-8 pr-3 py-1.5 border border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white w-44'
                     />
                 </div>
                 {["", ...categories].map((c) => (
@@ -123,7 +123,7 @@ export default function DashboardFiqhPage() {
                                     <span className='px-2 py-0.5 bg-lime-100 dark:bg-lime-900/20 text-lime-700 dark:text-lime-400 rounded text-xs capitalize shrink-0'>
                                         {getFiqhDisplayCategory(item)}
                                     </span>
-                                    <span className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                    <span className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                         {getLocalizedField(item, "title", lang)}
                                     </span>
                                 </div>
@@ -135,7 +135,7 @@ export default function DashboardFiqhPage() {
                             </button>
                             {open && (
                                 <div className='px-4 pb-4 border-t border-gray-50 dark:border-slate-700 pt-3 space-y-2'>
-                                    <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
+                                    <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
                                         {getLocalizedField(
                                             item,
                                             "content",
@@ -145,7 +145,7 @@ export default function DashboardFiqhPage() {
                                     {item.dalil && (
                                         <p
                                             dir='rtl'
-                                            className='text-base text-gray-600 dark:text-gray-400 font-arabic leading-loose text-right'
+                                            className='text-base text-gray-600 dark:text-gray-300 dark:text-gray-400 font-arabic leading-loose text-right'
                                         >
                                             {toStr(item.dalil)}
                                         </p>

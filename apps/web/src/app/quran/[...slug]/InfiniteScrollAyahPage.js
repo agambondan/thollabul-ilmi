@@ -273,10 +273,10 @@ const InfiniteScrollAyahPage = ({
         return (
             <div className='flex flex-col items-center justify-center min-h-[40vh] text-center px-4'>
                 <p className='text-4xl mb-3'>⚠️</p>
-                <h2 className='text-lg font-bold text-emerald-900 dark:text-white mb-2'>
+                <h2 className='text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-2'>
                     {t("quran.error_title")}
                 </h2>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {error}
                 </p>
             </div>
@@ -307,10 +307,10 @@ const InfiniteScrollAyahPage = ({
                             />
                         </div>
                     )}
-                    <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-0.5'>
+                    <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-0.5'>
                         {surahTitle}
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-4'>
                         {getLocalizedTranslation(surah?.translation, lang)}{" "}
                         &middot; {surah?.number_of_ayahs ?? ayahs.length}{" "}
                         {t("common.verse")} &middot;{" "}
@@ -412,7 +412,7 @@ const InfiniteScrollAyahPage = ({
                         <button
                             type='button'
                             onClick={() => setShowMushafTranslation((v) => !v)}
-                            className='px-2.5 py-1 rounded-full font-medium bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
+                            className='px-2.5 py-1 rounded-full font-medium bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 dark:border-slate-700 hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
                         >
                             {showMushafTranslation
                                 ? t("mushaf.translation_off")
@@ -521,7 +521,7 @@ const InfiniteScrollAyahPage = ({
 
             {!hasMore &&
                 ayahs.length >= (surah?.number_of_ayahs ?? ayahs.length) && (
-                    <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
+                    <p className='text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 py-4'>
                         {t("quran.all_displayed")}
                     </p>
                 )}

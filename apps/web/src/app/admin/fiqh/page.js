@@ -150,10 +150,10 @@ const AdminFiqhPage = () => {
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
                 <div>
-                    <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                    <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                         Fiqh
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {items.length} {t("admin.fiqh.materials_unit")}
                     </p>
                 </div>
@@ -172,12 +172,12 @@ const AdminFiqhPage = () => {
                     placeholder={t("admin.crud.search_title_content")}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
+                    className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white'
                 />
                 <select
                     value={catFilter}
                     onChange={(e) => setCatFilter(e.target.value)}
-                    className='px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
+                    className='px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white'
                 >
                     <option value=''>{t("admin.crud.all_categories")}</option>
                     {CATEGORIES.map((c) => (
@@ -189,7 +189,7 @@ const AdminFiqhPage = () => {
             </div>
 
             {loading ? (
-                <p className='text-sm text-gray-500'>{t("common.loading")}</p>
+                <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
             ) : (
                 <PanelTable
                     head={
@@ -205,7 +205,7 @@ const AdminFiqhPage = () => {
                 >
                     {filtered.map((item) => (
                         <Tr key={item.id ?? item._id}>
-                            <Td className='text-gray-900 dark:text-white font-medium max-w-xs truncate'>
+                            <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium max-w-xs truncate'>
                                 {getLocalizedField(item, "title", lang)}
                             </Td>
                             <Td>
@@ -255,14 +255,14 @@ const AdminFiqhPage = () => {
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
                 >
                     <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
-                        <h2 className='font-bold text-gray-900 dark:text-white'>
+                        <h2 className='font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                             {editId
                                 ? t("admin.fiqh.edit_material")
                                 : t("admin.fiqh.add_material")}
                         </h2>
                         <button
                             onClick={() => setShowModal(false)}
-                            className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                            className='p-1 text-gray-400 hover:text-gray-600 hover:dark:text-gray-300 dark:hover:text-gray-200'
                         >
                             <BsX className='text-xl' />
                         </button>
@@ -272,7 +272,7 @@ const AdminFiqhPage = () => {
                             <div>
                                 <label
                                     htmlFor='page-category'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                                 >
                                     {t("admin.field.category")}
                                 </label>
@@ -285,7 +285,7 @@ const AdminFiqhPage = () => {
                                             category: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                                 >
                                     {CATEGORIES.map((c) => (
                                         <option key={c} value={c}>
@@ -297,7 +297,7 @@ const AdminFiqhPage = () => {
                             <div>
                                 <label
                                     htmlFor='page-title'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                                 >
                                     {t("admin.field.title")}
                                 </label>
@@ -318,14 +318,14 @@ const AdminFiqhPage = () => {
                                                     : form.slug,
                                         });
                                     }}
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                                 />
                             </div>
                         </div>
                         <div>
                             <label
                                 htmlFor='page-slug'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                             >
                                 {t("admin.field.slug")}
                             </label>
@@ -340,13 +340,13 @@ const AdminFiqhPage = () => {
                                     })
                                 }
                                 placeholder={t("admin.fiqh.auto_slug")}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                             />
                         </div>
                         <div>
                             <label
                                 htmlFor='page-content'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                             >
                                 {t("admin.field.content")}
                             </label>
@@ -360,13 +360,13 @@ const AdminFiqhPage = () => {
                                     })
                                 }
                                 rows={5}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                             />
                         </div>
                         <div>
                             <label
                                 htmlFor='page-dalil'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                             >
                                 Dalil
                             </label>
@@ -384,13 +384,13 @@ const AdminFiqhPage = () => {
                                 placeholder={t(
                                     "admin.fiqh.evidence_placeholder",
                                 )}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white font-arabic text-base leading-loose'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white font-arabic text-base leading-loose'
                             />
                         </div>
                         <div>
                             <label
                                 htmlFor='page-source'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                             >
                                 {t("common.source")}
                             </label>
@@ -405,14 +405,14 @@ const AdminFiqhPage = () => {
                                     })
                                 }
                                 placeholder={t("admin.fiqh.source_placeholder")}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                             />
                         </div>
                     </div>
                     <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
                         <button
                             onClick={() => setShowModal(false)}
-                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
+                            className='flex-1 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 text-gray-700 dark:text-gray-200 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
                         >
                             {t("common.cancel")}
                         </button>
@@ -433,19 +433,19 @@ const AdminFiqhPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
                 >
-                    <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
+                    <h2 className='font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-2'>
                         {t("admin.crud.delete_title").replace(
                             "{item}",
                             t("admin.fiqh.material"),
                         )}
                     </h2>
-                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-5'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-5'>
                         {t("admin.crud.delete_body")}
                     </p>
                     <div className='flex gap-3'>
                         <button
                             onClick={() => setDeleteId(null)}
-                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium'
+                            className='flex-1 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 text-gray-700 dark:text-gray-200 dark:text-gray-300 rounded-lg text-sm font-medium'
                         >
                             {t("common.cancel")}
                         </button>

@@ -163,7 +163,7 @@ export default function PrayerCountdownWidget({ basePath = "/jadwal-sholat" }) {
     if (!prayers) {
         return (
             <div
-                className='rounded-2xl border border-emerald-100 bg-white px-4 py-6 text-center text-sm text-slate-500 dark:border-emerald-900/30 dark:bg-slate-900 dark:text-slate-400'
+                className='rounded-2xl border border-emerald-100 bg-white px-4 py-6 text-center text-sm text-slate-500 dark:text-slate-300 dark:border-emerald-900/30 dark:bg-slate-900 dark:text-slate-400'
                 role='status'
                 aria-live='polite'
             >
@@ -211,7 +211,7 @@ export default function PrayerCountdownWidget({ basePath = "/jadwal-sholat" }) {
                 </div>
                 <div className='text-right text-xs font-bold text-slate-700 dark:text-slate-200'>
                     {hijriDate ? (
-                        <p className='flex items-center justify-end gap-1 text-emerald-700 dark:text-emerald-300'>
+                        <p className='flex items-center justify-end gap-1 text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
                             <MdCalendarToday className='text-sm' />
                             {hijriDate}
                         </p>
@@ -220,19 +220,19 @@ export default function PrayerCountdownWidget({ basePath = "/jadwal-sholat" }) {
             </div>
 
             <div className='py-7 text-center'>
-                <p className='text-xs font-extrabold uppercase tracking-wide text-emerald-700 dark:text-emerald-300'>
+                <p className='text-xs font-extrabold uppercase tracking-wide text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
                     {t("prayer_schedule.towards")} {nextPrayerLabel}
                 </p>
-                <p className='mt-2 text-5xl font-extrabold leading-none text-slate-950 tabular-nums dark:text-white'>
+                <p className='mt-2 text-5xl font-extrabold leading-none text-slate-950 dark:text-slate-100 tabular-nums dark:text-white'>
                     {formatTime(prayers[nextPrayer.key])}
                 </p>
-                <p className='mt-3 text-sm font-semibold text-slate-500 dark:text-slate-400'>
+                <p className='mt-3 text-sm font-semibold text-slate-500 dark:text-slate-300 dark:text-slate-400'>
                     {secsLeft !== null
                         ? fmtRemainingText(t, secsLeft, nextPrayerLabel)
                         : ""}
                 </p>
-                <div className='mt-4 inline-flex items-center gap-1.5 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-sm font-extrabold text-emerald-800 shadow-sm dark:border-emerald-900/40 dark:bg-emerald-900/20 dark:text-emerald-200'>
-                    <MdAccessTime className='text-emerald-700 dark:text-emerald-300' />
+                <div className='mt-4 inline-flex items-center gap-1.5 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-sm font-extrabold text-emerald-800 dark:text-emerald-300 shadow-sm dark:border-emerald-900/40 dark:bg-emerald-900/20 dark:text-emerald-200'>
+                    <MdAccessTime className='text-emerald-700 dark:text-emerald-400 dark:text-emerald-300' />
                     <span className='tabular-nums'>
                         {secsLeft !== null
                             ? fmtCountdown(secsLeft)

@@ -64,7 +64,7 @@ function SanadPanel({ hadithId, t }) {
             {sanads.map((sanad, sIdx) => (
                 <div key={sanad.id ?? sIdx}>
                     {sanads.length > 1 && (
-                        <p className='text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5'>
+                        <p className='text-xs font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-1.5'>
                             Jalur {sanad.nomor_jalur ?? sIdx + 1}
                             {sanad.jenis ? ` — ${sanad.jenis}` : ""}
                         </p>
@@ -80,7 +80,7 @@ function SanadPanel({ hadithId, t }) {
                                     className='flex items-center gap-1'
                                 >
                                     <span className='inline-flex flex-col items-center'>
-                                        <span className='px-2 py-1 bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-300 rounded-lg font-medium max-w-[120px] text-center leading-tight'>
+                                        <span className='px-2 py-1 bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-400 dark:text-teal-300 rounded-lg font-medium max-w-[120px] text-center leading-tight'>
                                             {m.perawi?.nama_latin ??
                                                 `Perawi ${m.urutan}`}
                                         </span>
@@ -309,7 +309,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
             <div className='flex items-center justify-between mb-4 pb-3 border-b border-amber-200/70 dark:border-amber-900/40'>
                 <div className='flex items-center gap-3'>
                     <span
-                        className='font-serif italic text-amber-800 dark:text-amber-400 text-lg leading-none shrink-0'
+                        className='font-serif italic text-amber-800 dark:text-amber-300 dark:text-amber-400 text-lg leading-none shrink-0'
                         title={t("hadith.hadith_number_title")}
                     >
                         №
@@ -448,7 +448,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                     BookmarkButton membawa p-2 dan text-lg sendiri, jadi keduanya
                                                     dinetralkan agar sebaris rapi dengan ikon saudaranya. */}
                                                 {h.id && (
-                                                    <div className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-gray-700 dark:text-gray-300'>
+                                                    <div className='flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                                         <BookmarkButton
                                                             refType='hadith'
                                                             refId={h.id}
@@ -553,14 +553,14 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
             )}
             {hadithText && (
                 <p
-                    className='text-amber-950 dark:text-amber-100 leading-relaxed text-justify [text-justify:inter-word] first-letter:font-semibold'
+                    className='text-amber-950 dark:text-amber-300 dark:text-amber-100 leading-relaxed text-justify [text-justify:inter-word] first-letter:font-semibold'
                     style={{ fontSize: `${translationFontSize}px` }}
                 >
                     {hadithText}
                 </p>
             )}
             {h.perawi && (
-                <p className='text-xs italic text-amber-800 dark:text-amber-400 mt-4 font-medium'>
+                <p className='text-xs italic text-amber-800 dark:text-amber-300 dark:text-amber-400 mt-4 font-medium'>
                     — {toStr(h.perawi)}
                 </p>
             )}
@@ -821,7 +821,7 @@ export function HadithDetailContent({
                 ← {t("common.back")}
             </Link>
 
-            <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-4'>
+            <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4'>
                 {bookName || BOOK_NAMES[slug] || slug}
             </h1>
 

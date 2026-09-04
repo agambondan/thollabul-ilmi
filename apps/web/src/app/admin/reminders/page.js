@@ -136,10 +136,10 @@ const AdminRemindersPage = () => {
         <div className='p-6'>
             <div className='mb-6 flex items-center justify-between gap-4'>
                 <div>
-                    <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                    <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                         Reminder Carousel
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {items.length} konten pengingat
                     </p>
                 </div>
@@ -158,12 +158,12 @@ const AdminRemindersPage = () => {
                     placeholder={t("reminders.title_source_example")}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className='w-full max-w-sm rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
+                    className='w-full max-w-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white px-3 py-2 text-sm text-gray-900 dark:text-gray-100 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
                 />
             </div>
 
             {loading ? (
-                <p className='text-sm text-gray-500'>{t("common.loading")}</p>
+                <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
             ) : (
                 <PanelTable
                     head={
@@ -187,10 +187,10 @@ const AdminRemindersPage = () => {
                     {filtered.map((item) => (
                         <Tr key={item.id ?? item._id}>
                             <Td>
-                                <p className='font-medium text-gray-900 dark:text-white'>
+                                <p className='font-medium text-gray-900 dark:text-gray-100 dark:text-white'>
                                     {item.title}
                                 </p>
-                                <p className='mt-1 line-clamp-1 text-xs text-gray-500 dark:text-gray-400'>
+                                <p className='mt-1 line-clamp-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {item.text}
                                 </p>
                             </Td>
@@ -201,7 +201,7 @@ const AdminRemindersPage = () => {
                                 </p>
                             </Td>
                             <Td>
-                                <span className='rounded bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
+                                <span className='rounded bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 dark:text-emerald-400 dark:bg-emerald-900/30 dark:text-emerald-300'>
                                     {item.type}
                                 </span>
                             </Td>
@@ -255,12 +255,12 @@ const AdminRemindersPage = () => {
                     panelClassName='max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white dark:bg-slate-800'
                 >
                     <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700'>
-                        <h2 className='font-bold text-gray-900 dark:text-white'>
+                        <h2 className='font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                             {editId ? "Edit Reminder" : "Tambah Reminder"}
                         </h2>
                         <button
                             onClick={() => setShowModal(false)}
-                            className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                            className='p-1 text-gray-400 hover:text-gray-600 hover:dark:text-gray-300 dark:hover:text-gray-200'
                         >
                             <BsX className='text-xl' />
                         </button>
@@ -380,7 +380,7 @@ const AdminRemindersPage = () => {
                                     className={INPUT_CLASS}
                                 />
                             </Field>
-                            <label className='flex items-center gap-2 pt-7 text-sm text-gray-700 dark:text-gray-300'>
+                            <label className='flex items-center gap-2 pt-7 text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                 <input
                                     type='checkbox'
                                     checked={form.is_active}
@@ -390,7 +390,7 @@ const AdminRemindersPage = () => {
                                             is_active: e.target.checked,
                                         })
                                     }
-                                    className='h-4 w-4 rounded border-gray-300 text-emerald-600'
+                                    className='h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-emerald-600'
                                 />
                                 Aktif ditampilkan
                             </label>
@@ -400,7 +400,7 @@ const AdminRemindersPage = () => {
                     <div className='flex gap-3 border-t border-gray-100 p-5 dark:border-slate-700'>
                         <button
                             onClick={() => setShowModal(false)}
-                            className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-700'
+                            className='flex-1 rounded-lg border border-gray-300 dark:border-gray-600 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-700'
                         >
                             {t("common.cancel")}
                         </button>
@@ -421,16 +421,16 @@ const AdminRemindersPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='w-full max-w-sm rounded-2xl bg-white p-6 dark:bg-slate-800'
                 >
-                    <h2 className='mb-2 font-bold text-gray-900 dark:text-white'>
+                    <h2 className='mb-2 font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                         Hapus Reminder
                     </h2>
-                    <p className='mb-5 text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='mb-5 text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         Data yang dihapus tidak bisa dikembalikan.
                     </p>
                     <div className='flex gap-3'>
                         <button
                             onClick={() => setDeleteId(null)}
-                            className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 dark:border-slate-600 dark:text-gray-300'
+                            className='flex-1 rounded-lg border border-gray-300 dark:border-gray-600 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 dark:border-slate-600 dark:text-gray-300'
                         >
                             {t("common.cancel")}
                         </button>
@@ -449,7 +449,7 @@ const AdminRemindersPage = () => {
 
 const Field = ({ label, children }) => (
     <label className='block'>
-        <span className='mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+        <span className='mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300'>
             {label}
         </span>
         {children}

@@ -10,7 +10,12 @@ const tryRegistrationNotify = async (title, body, url) => {
             body,
             icon: ICON,
             badge: ICON,
-            vibrate: [200, 100, 200],
+            vibrate: [500, 250, 500, 250, 500],
+            tag: "adzan-alert",
+            renotify: true,
+            requireInteraction: true,
+            silent: false,
+            urgency: "high",
             data: { url, type: "adzan" },
         });
         return true;
@@ -34,7 +39,15 @@ const tryPageNotification = (title, body) => {
     if (typeof Notification === "undefined") return false;
     if (Notification.permission !== "granted") return false;
     try {
-        new Notification(title, { body, icon: ICON });
+        new Notification(title, {
+            body,
+            icon: ICON,
+            vibrate: [500, 250, 500, 250, 500],
+            tag: "adzan-alert",
+            renotify: true,
+            requireInteraction: true,
+            silent: false,
+        });
         return true;
     } catch {
         return false;

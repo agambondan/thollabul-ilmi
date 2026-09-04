@@ -113,17 +113,17 @@ const SejarahPage = () => {
                             <MdTimeline className='text-xl text-emerald-700 dark:text-emerald-400' />
                         </div>
                         <div>
-                            <h1 className='text-xl font-bold text-emerald-900 dark:text-white'>
+                            <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                                 {t("history.title")}
                             </h1>
-                            <p className='text-xs text-gray-500 dark:text-gray-400'>
+                            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {t("history.subtitle")}
                             </p>
                         </div>
                     </div>
 
                     {/* Search */}
-                    <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+                    <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
                         <BsSearch className='text-gray-400 shrink-0' />
                         <input
                             type='text'
@@ -185,7 +185,7 @@ const SejarahPage = () => {
                     {/* Timeline */}
                     {!isLoading && !error && filtered.length === 0 ? (
                         <div className='text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
-                            <p className='text-gray-500 dark:text-gray-400 text-sm'>
+                            <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm'>
                                 {t("history.no_match")}
                             </p>
                         </div>
@@ -270,7 +270,7 @@ const SejarahPage = () => {
                                                                     )}
                                                                 </span>
                                                             </div>
-                                                            <p className='text-sm font-semibold text-gray-900 dark:text-white leading-snug'>
+                                                            <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white leading-snug'>
                                                                 {getLocalizedField(
                                                                     ev,
                                                                     "title",

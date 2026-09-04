@@ -161,11 +161,11 @@ const SholatTrackerPage = () => {
 
     return (
         <div className='px-4 py-6'>
-            <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-6'>
+            <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-6'>
                 {t("sholat.title")}
             </h1>
             {syncError ? (
-                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-300'>
+                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:text-amber-400 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-300'>
                     {syncError}
                 </div>
             ) : null}
@@ -173,7 +173,7 @@ const SholatTrackerPage = () => {
             {/* Progress card */}
             <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-5 mb-6'>
                 <div className='flex items-center justify-between mb-2'>
-                    <span className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                    <span className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                         {t("sholat.today")}
                     </span>
                     <span className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
@@ -208,7 +208,7 @@ const SholatTrackerPage = () => {
                             {done ? (
                                 <BsCheckCircleFill className='text-emerald-500 text-2xl shrink-0' />
                             ) : (
-                                <BsCircle className='text-gray-300 dark:text-slate-600 text-2xl shrink-0' />
+                                <BsCircle className='text-gray-300 dark:text-slate-600 dark:text-slate-300 text-2xl shrink-0' />
                             )}
                             <span
                                 className={`text-base font-medium ${
@@ -227,7 +227,7 @@ const SholatTrackerPage = () => {
             {/* Last 7 days table */}
             <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 overflow-hidden mb-6'>
                 <div className='px-5 py-3 border-b border-gray-100 dark:border-slate-700'>
-                    <p className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                    <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                         {t("sholat.last_7_days")}
                     </p>
                 </div>
@@ -252,7 +252,7 @@ const SholatTrackerPage = () => {
                                         : ""
                                 }`}
                             >
-                                <td className='px-5 py-2.5 text-gray-700 dark:text-gray-300'>
+                                <td className='px-5 py-2.5 text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                     {new Date(
                                         row.date + "T00:00:00",
                                     ).toLocaleDateString(
@@ -287,7 +287,7 @@ const SholatTrackerPage = () => {
             {monthDays.length > 0 && (
                 <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-5'>
                     <div className='flex items-center justify-between mb-3'>
-                        <p className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                        <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                             {t("sholat.monthly_title")}
                         </p>
                         <span className='text-xs text-gray-400'>

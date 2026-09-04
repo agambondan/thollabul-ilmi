@@ -188,7 +188,7 @@ export default function MushafPageReader() {
                         max={MAX_PAGE}
                         defaultValue={page}
                         key={page}
-                        className='min-w-0 flex-1 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-gray-200 outline-none focus:border-emerald-500'
+                        className='min-w-0 flex-1 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-gray-200 outline-none focus:border-emerald-500'
                         aria-label={t("mushaf.go_to_page")}
                     />
                     <button
@@ -231,7 +231,7 @@ export default function MushafPageReader() {
             </div>
 
             <div
-                className='mx-auto max-w-[430px] select-none bg-[#fff9dc] text-slate-950 rounded-[1.6rem] border-[6px] border-emerald-500 shadow-xl overflow-hidden ring-2 ring-amber-300'
+                className='mx-auto max-w-[430px] select-none bg-[#fff9dc] text-slate-950 dark:text-slate-100 rounded-[1.6rem] border-[6px] border-emerald-500 shadow-xl overflow-hidden ring-2 ring-amber-300'
                 onTouchStart={(e) => {
                     touchX.current = e.touches[0].clientX;
                 }}
@@ -240,7 +240,7 @@ export default function MushafPageReader() {
                 <div className='h-3 bg-[repeating-linear-gradient(90deg,#0f766e_0_10px,#f59e0b_10px_16px,#14b8a6_16px_26px,#fef3c7_26px_30px)]' />
                 <div className='grid grid-cols-3 gap-2 bg-[#fff4bf] px-3 py-2 text-[11px] font-bold text-center border-y-2 border-emerald-500'>
                     <div>
-                        <p className='text-[9px] tracking-widest text-amber-700 uppercase'>
+                        <p className='text-[9px] tracking-widest text-amber-700 dark:text-amber-400 uppercase'>
                             {t("mushaf.juz")}
                         </p>
                         <p className='rounded-full bg-white border border-emerald-500 py-0.5'>
@@ -248,7 +248,7 @@ export default function MushafPageReader() {
                         </p>
                     </div>
                     <div>
-                        <p className='text-[9px] tracking-widest text-amber-700 uppercase'>
+                        <p className='text-[9px] tracking-widest text-amber-700 dark:text-amber-400 uppercase'>
                             {t("mushaf.page")}
                         </p>
                         <p className='rounded-full bg-white border border-emerald-500 py-0.5'>
@@ -256,7 +256,7 @@ export default function MushafPageReader() {
                         </p>
                     </div>
                     <div>
-                        <p className='text-[9px] tracking-widest text-amber-700 uppercase'>
+                        <p className='text-[9px] tracking-widest text-amber-700 dark:text-amber-400 uppercase'>
                             {t("mushaf.surah")}
                         </p>
                         <p className='rounded-full bg-white border border-emerald-500 py-0.5 truncate'>
@@ -267,7 +267,7 @@ export default function MushafPageReader() {
 
                 <div className='min-h-[720px] bg-[linear-gradient(180deg,rgba(16,185,129,0.08)_0,rgba(16,185,129,0)_56px)] p-3 space-y-2'>
                     {loading && (
-                        <div className='text-center py-24 text-sm text-gray-500'>
+                        <div className='text-center py-24 text-sm text-gray-500 dark:text-gray-300'>
                             {t("common.loading")}
                         </div>
                     )}
@@ -306,7 +306,7 @@ export default function MushafPageReader() {
                                                         {word.transliteration}
                                                     </span>
                                                     <span
-                                                        className='text-[10px] leading-tight text-slate-700'
+                                                        className='text-[10px] leading-tight text-slate-700 dark:text-slate-200'
                                                         dir='ltr'
                                                     >
                                                         {word.indonesian}
@@ -324,14 +324,14 @@ export default function MushafPageReader() {
                                             />
                                         )}
                                         <span
-                                            className='inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-amber-500 bg-white text-base font-bold text-rose-700'
+                                            className='inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-amber-500 bg-white text-base font-bold text-rose-700 dark:text-rose-400'
                                             dir='ltr'
                                         >
                                             {toArabicNumber(ayah.number)}
                                         </span>
                                     </div>
                                     {showTranslation && translation && (
-                                        <p className='mt-1.5 text-xs leading-relaxed text-slate-700'>
+                                        <p className='mt-1.5 text-xs leading-relaxed text-slate-700 dark:text-slate-200'>
                                             <span className='font-semibold'>
                                                 {ayah.number}.{" "}
                                             </span>
@@ -345,7 +345,7 @@ export default function MushafPageReader() {
                 <div className='h-3 bg-[repeating-linear-gradient(90deg,#fef3c7_0_4px,#14b8a6_4px_14px,#f59e0b_14px_20px,#0f766e_20px_30px)]' />
             </div>
 
-            <div className='sticky bottom-4 z-10 mx-auto flex max-w-[430px] items-center justify-between gap-2 rounded-full bg-white/90 dark:bg-slate-800/90 p-1 shadow-lg border border-gray-200 dark:border-slate-700'>
+            <div className='sticky bottom-4 z-10 mx-auto flex max-w-[430px] items-center justify-between gap-2 rounded-full bg-white/90 dark:bg-slate-800/90 p-1 shadow-lg border border-gray-200 dark:border-gray-700 dark:border-slate-700'>
                 <button
                     type='button'
                     onClick={() => goToPage(page - 1)}
@@ -357,7 +357,7 @@ export default function MushafPageReader() {
                 <button
                     type='button'
                     onClick={() => setArabicFontSize(arabicFontSize - 4)}
-                    className='h-9 w-9 rounded-full text-lg font-bold text-emerald-700'
+                    className='h-9 w-9 rounded-full text-lg font-bold text-emerald-700 dark:text-emerald-400'
                     aria-label={t("mushaf.zoom_out")}
                 >
                     −
@@ -365,7 +365,7 @@ export default function MushafPageReader() {
                 <button
                     type='button'
                     onClick={() => setArabicFontSize(arabicFontSize + 4)}
-                    className='h-9 w-9 rounded-full text-lg font-bold text-emerald-700'
+                    className='h-9 w-9 rounded-full text-lg font-bold text-emerald-700 dark:text-emerald-400'
                     aria-label={t("mushaf.zoom_in")}
                 >
                     +

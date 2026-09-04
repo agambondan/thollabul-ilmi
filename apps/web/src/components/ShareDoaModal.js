@@ -78,8 +78,8 @@ export function ShareDoaModal({ isOpen, onClose, doa }) {
             size='sm'
         >
             <>
-                <div className='space-y-3 text-sm text-gray-700 dark:text-gray-300 mb-4'>
-                    <p className='font-medium text-gray-900 dark:text-white'>
+                <div className='space-y-3 text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-4'>
+                    <p className='font-medium text-gray-900 dark:text-gray-100 dark:text-white'>
                         {title}
                     </p>
                     {arabic && (
@@ -88,7 +88,7 @@ export function ShareDoaModal({ isOpen, onClose, doa }) {
                         </p>
                     )}
                     {latin && (
-                        <p className='italic text-gray-600 dark:text-gray-400'>
+                        <p className='italic text-gray-600 dark:text-gray-300 dark:text-gray-400'>
                             {latin}
                         </p>
                     )}
@@ -112,7 +112,7 @@ export function ShareDoaModal({ isOpen, onClose, doa }) {
                                         copyShareText();
                                 }
                             }}
-                            className='rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300'
+                            className='rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300'
                         >
                             {t("common.share_sheet")}
                         </button>
@@ -126,7 +126,7 @@ export function ShareDoaModal({ isOpen, onClose, doa }) {
                             key={label}
                             type='button'
                             onClick={() => openShareWindow(url)}
-                            className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
+                            className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
                         >
                             {label}
                         </button>
@@ -134,7 +134,7 @@ export function ShareDoaModal({ isOpen, onClose, doa }) {
                     <button
                         type='button'
                         onClick={copyShareText}
-                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300'
+                        className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
                     >
                         {copied ? t("common.copied") : t("common.copy_text")}
                     </button>

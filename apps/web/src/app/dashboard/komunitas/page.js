@@ -118,10 +118,10 @@ export default function KomunitasPage({ basePath = "/dashboard" }) {
     return (
         <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
             <div className='mb-6'>
-                <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-2'>
+                <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-2'>
                     {t("komunitas.title")}
                 </h1>
-                <p className='text-sm text-gray-600 dark:text-gray-400'>
+                <p className='text-sm text-gray-600 dark:text-gray-300 dark:text-gray-400'>
                     {t("komunitas.desc")}
                 </p>
             </div>
@@ -139,7 +139,7 @@ export default function KomunitasPage({ basePath = "/dashboard" }) {
                         <div className='flex flex-wrap gap-2'>
                             <Link
                                 href={`${root}/forum/ask`}
-                                className='inline-block px-4 py-2 bg-white text-emerald-800 text-xs font-bold rounded-lg hover:bg-emerald-50 transition-colors'
+                                className='inline-block px-4 py-2 bg-white text-emerald-800 dark:text-emerald-300 text-xs font-bold rounded-lg hover:bg-emerald-50 transition-colors'
                             >
                                 {t("komunitas.ask_question")}
                             </Link>
@@ -157,11 +157,11 @@ export default function KomunitasPage({ basePath = "/dashboard" }) {
 
                 <div className='space-y-6'>
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                        <h3 className='text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2'>
+                        <h3 className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4 flex items-center gap-2'>
                             <BsStarFill className='text-amber-500' />{" "}
                             {t("komunitas.hall_of_fame")}
                         </h3>
-                        <p className='text-xs text-gray-500 mb-3'>
+                        <p className='text-xs text-gray-500 dark:text-gray-300 mb-3'>
                             {t("komunitas.weekly_top")}
                         </p>
                         {hallOfFame.length === 0 ? (
@@ -174,7 +174,7 @@ export default function KomunitasPage({ basePath = "/dashboard" }) {
                                         className='flex items-center justify-between p-2 rounded-lg bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700'
                                     >
                                         <div className='flex items-center gap-2 min-w-0'>
-                                            <div className='w-6 h-6 shrink-0 rounded bg-emerald-100 text-emerald-700 font-bold text-[10px] flex items-center justify-center'>
+                                            <div className='w-6 h-6 shrink-0 rounded bg-emerald-100 text-emerald-700 dark:text-emerald-400 font-bold text-[10px] flex items-center justify-center'>
                                                 {i + 1}
                                             </div>
                                             <span className='text-sm font-medium text-gray-800 dark:text-gray-200 truncate'>
@@ -204,7 +204,7 @@ export default function KomunitasPage({ basePath = "/dashboard" }) {
                     </div>
 
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                        <h3 className='text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2'>
+                        <h3 className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4 flex items-center gap-2'>
                             <BsChatLeftDots className='text-rose-500' />{" "}
                             {t("komunitas.hot_forum")}
                         </h3>
@@ -221,7 +221,7 @@ export default function KomunitasPage({ basePath = "/dashboard" }) {
                                         <p className='text-sm font-bold text-gray-800 dark:text-gray-200 group-hover:text-emerald-600 transition-colors line-clamp-2'>
                                             {q.title}
                                         </p>
-                                        <p className='text-xs text-gray-500 mt-1 flex items-center gap-2'>
+                                        <p className='text-xs text-gray-500 dark:text-gray-300 mt-1 flex items-center gap-2'>
                                             <span>▲ {q.vote_count || 0}</span>
                                             <span>•</span>
                                             <span>
@@ -235,7 +235,7 @@ export default function KomunitasPage({ basePath = "/dashboard" }) {
                     </div>
 
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                        <h3 className='text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2'>
+                        <h3 className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4 flex items-center gap-2'>
                             <BsNewspaper className='text-blue-500' />{" "}
                             {t("komunitas.highlight")}
                         </h3>
@@ -252,7 +252,7 @@ export default function KomunitasPage({ basePath = "/dashboard" }) {
                                         <p className='text-sm font-bold text-gray-800 dark:text-gray-200 group-hover:text-emerald-600 transition-colors line-clamp-2'>
                                             {p.title}
                                         </p>
-                                        <p className='text-xs text-gray-500 mt-1 flex items-center gap-2'>
+                                        <p className='text-xs text-gray-500 dark:text-gray-300 mt-1 flex items-center gap-2'>
                                             <span>
                                                 Oleh{" "}
                                                 {getAuthorName(p.author) ||

@@ -532,10 +532,10 @@ const AdminDashboard = () => {
     return (
         <div className='px-4 py-6'>
             <div className='mb-6'>
-                <h1 className='text-xl font-bold text-emerald-900 dark:text-white'>
+                <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                     {t("admin.nav.dashboard")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1'>
                     {t("admin.dashboard.subtitle")}
                 </p>
             </div>
@@ -543,15 +543,15 @@ const AdminDashboard = () => {
             <section className='mb-8'>
                 <div className='mb-3 flex items-end justify-between gap-4'>
                     <div>
-                        <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                        <h2 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                             {t("admin.metrics.title")}
                         </h2>
-                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("admin.metrics.subtitle")}
                         </p>
                     </div>
                     {overview.failed > 0 && !overview.loading ? (
-                        <span className='rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 dark:bg-amber-900/20 dark:text-amber-300'>
+                        <span className='rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 dark:text-amber-400 dark:bg-amber-900/20 dark:text-amber-300'>
                             {t("admin.metrics.partial_data")}
                         </span>
                     ) : null}
@@ -571,15 +571,15 @@ const AdminDashboard = () => {
                                 >
                                     {metric.icon}
                                 </span>
-                                <BsBarChart className='text-gray-300 dark:text-gray-600' />
+                                <BsBarChart className='text-gray-300 dark:text-gray-600 dark:text-gray-300' />
                             </div>
-                            <p className='text-xs font-medium text-gray-500 dark:text-gray-400'>
+                            <p className='text-xs font-medium text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {metric.label}
                             </p>
-                            <p className='mt-1 text-2xl font-bold text-gray-900 dark:text-white'>
+                            <p className='mt-1 text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                                 {metric.value}
                             </p>
-                            <p className='mt-2 text-xs leading-5 text-gray-500 dark:text-gray-400'>
+                            <p className='mt-2 text-xs leading-5 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {metric.desc}
                             </p>
                             {metric.trend !== undefined && !overview.loading ? (
@@ -598,10 +598,10 @@ const AdminDashboard = () => {
             <section className='mb-8'>
                 <div className='mb-3 flex items-end justify-between gap-4'>
                     <div>
-                        <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                        <h2 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                             {t("admin.metrics.recent_activity")}
                         </h2>
-                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("admin.metrics.recent_activity_desc")}
                         </p>
                     </div>
@@ -610,22 +610,22 @@ const AdminDashboard = () => {
                     <table className='w-full text-xs'>
                         <thead>
                             <tr className='border-b border-gray-100 dark:border-slate-700'>
-                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("admin.table.identity")}
                                 </th>
-                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("admin.table.path")}
                                 </th>
-                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("admin.table.referrer")}
                                 </th>
-                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("admin.table.user_agent")}
                                 </th>
-                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("admin.table.source")}
                                 </th>
-                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("admin.table.seen_at")}
                                 </th>
                             </tr>
@@ -645,7 +645,7 @@ const AdminDashboard = () => {
                                     >
                                         <td className='max-w-[160px] px-4 py-2.5'>
                                             <div
-                                                className='truncate font-medium text-gray-900 dark:text-white'
+                                                className='truncate font-medium text-gray-900 dark:text-gray-100 dark:text-white'
                                                 title={identity}
                                             >
                                                 {identity}
@@ -663,19 +663,19 @@ const AdminDashboard = () => {
                                             </div>
                                         </td>
                                         <td
-                                            className='max-w-[220px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-400'
+                                            className='max-w-[220px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-300 dark:text-gray-400'
                                             title={activity.path}
                                         >
                                             {activity.path}
                                         </td>
                                         <td
-                                            className='max-w-[180px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-400'
+                                            className='max-w-[180px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-300 dark:text-gray-400'
                                             title={activity.referrer}
                                         >
                                             {activity.referrer || "-"}
                                         </td>
                                         <td
-                                            className='max-w-[260px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-400'
+                                            className='max-w-[260px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-300 dark:text-gray-400'
                                             title={activity.user_agent}
                                         >
                                             {activity.user_agent || "-"}
@@ -687,7 +687,7 @@ const AdminDashboard = () => {
                                                 )}
                                             </span>
                                         </td>
-                                        <td className='whitespace-nowrap px-4 py-2.5 text-gray-500 dark:text-gray-400'>
+                                        <td className='whitespace-nowrap px-4 py-2.5 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                             {activity.seen_at}
                                         </td>
                                     </tr>
@@ -712,10 +712,10 @@ const AdminDashboard = () => {
             <section className='mb-8'>
                 <div className='mb-3 flex items-end justify-between gap-4'>
                     <div>
-                        <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                        <h2 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                             {t("admin.traffic.title")}
                         </h2>
-                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("admin.traffic.subtitle", {
                                 days: analyticsDays,
                             })}
@@ -754,10 +754,10 @@ const AdminDashboard = () => {
                                 </p>
                                 <BsActivity className='text-emerald-600 dark:text-emerald-400' />
                             </div>
-                            <p className='text-2xl font-bold text-gray-900 dark:text-white'>
+                            <p className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                                 {overview.loading ? "..." : item.value}
                             </p>
-                            <p className='mt-1 truncate text-xs font-medium text-emerald-700 dark:text-emerald-300'>
+                            <p className='mt-1 truncate text-xs font-medium text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
                                 {overview.loading ? "..." : item.hint}
                             </p>
                             {item.trend !== undefined && !overview.loading ? (
@@ -767,7 +767,7 @@ const AdminDashboard = () => {
                                     {formatTrend(item.trend)} {item.trendLabel}
                                 </p>
                             ) : null}
-                            <p className='mt-2 text-xs leading-5 text-gray-500 dark:text-gray-400'>
+                            <p className='mt-2 text-xs leading-5 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {t(item.descKey)}
                             </p>
                         </div>
@@ -779,10 +779,10 @@ const AdminDashboard = () => {
                 <div className='min-w-0 rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
                     <div className='mb-4 flex items-start justify-between gap-4'>
                         <div>
-                            <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                            <h2 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                 {t("admin.queue.title")}
                             </h2>
-                            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                            <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {t("admin.queue.subtitle")}
                             </p>
                         </div>
@@ -797,10 +797,10 @@ const AdminDashboard = () => {
                             >
                                 <div className='flex items-start justify-between gap-3'>
                                     <div className='min-w-0'>
-                                        <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                        <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                             {t(item.labelKey)}
                                         </p>
-                                        <p className='mt-1 text-xs leading-5 text-gray-500 dark:text-gray-400'>
+                                        <p className='mt-1 text-xs leading-5 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                             {t(item.descKey)}
                                         </p>
                                     </div>
@@ -817,7 +817,7 @@ const AdminDashboard = () => {
                                               )}
                                     </span>
                                 </div>
-                                <div className='mt-3 flex items-center justify-between text-xs font-medium text-emerald-700 opacity-0 transition-opacity group-hover:opacity-100 dark:text-emerald-300'>
+                                <div className='mt-3 flex items-center justify-between text-xs font-medium text-emerald-700 dark:text-emerald-400 opacity-0 transition-opacity group-hover:opacity-100 dark:text-emerald-300'>
                                     <span>{t("admin.queue.open_module")}</span>
                                     <BsArrowRight />
                                 </div>
@@ -829,10 +829,10 @@ const AdminDashboard = () => {
                 <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
                     <div className='mb-4 flex items-start justify-between gap-4'>
                         <div>
-                            <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                            <h2 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                 {t("admin.health.title")}
                             </h2>
-                            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                            <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {t("admin.health.subtitle")}
                             </p>
                         </div>
@@ -855,10 +855,10 @@ const AdminDashboard = () => {
                                 >
                                     <div className='mb-2 flex items-start justify-between gap-3'>
                                         <div>
-                                            <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                            <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                                 {t(item.labelKey)}
                                             </p>
-                                            <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
+                                            <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                                 {t(item.descKey)}
                                             </p>
                                         </div>
@@ -894,10 +894,10 @@ const AdminDashboard = () => {
             <section className='mb-8'>
                 <div className='mb-3 flex items-end justify-between gap-4'>
                     <div>
-                        <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                        <h2 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                             {t("admin.metrics.active_users")}
                         </h2>
-                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("admin.metrics.active_users_desc")}
                         </p>
                     </div>
@@ -906,22 +906,22 @@ const AdminDashboard = () => {
                     <table className='w-full text-xs'>
                         <thead>
                             <tr className='border-b border-gray-100 dark:border-slate-700'>
-                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("admin.metric.users")}
                                 </th>
-                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("admin.table.email")}
                                 </th>
-                                <th className='px-4 py-3 text-right font-semibold text-gray-500 dark:text-gray-400'>
+                                <th className='px-4 py-3 text-right font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("admin.table.views")}
                                 </th>
-                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("admin.table.last_seen")}
                                 </th>
-                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("admin.table.last_route")}
                                 </th>
-                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-400'>
+                                <th className='px-4 py-3 text-left font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("admin.table.source")}
                                 </th>
                             </tr>
@@ -933,25 +933,25 @@ const AdminDashboard = () => {
                                     className='border-b border-gray-50 last:border-0 dark:border-slate-700/50'
                                 >
                                     <td
-                                        className='max-w-[120px] truncate px-4 py-2.5 font-medium text-gray-900 dark:text-white'
+                                        className='max-w-[120px] truncate px-4 py-2.5 font-medium text-gray-900 dark:text-gray-100 dark:text-white'
                                         title={user.name}
                                     >
                                         {user.name}
                                     </td>
                                     <td
-                                        className='max-w-[160px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-400'
+                                        className='max-w-[160px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-300 dark:text-gray-400'
                                         title={user.email}
                                     >
                                         {user.email}
                                     </td>
-                                    <td className='px-4 py-2.5 text-right font-semibold text-gray-900 dark:text-white'>
+                                    <td className='px-4 py-2.5 text-right font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                         {user.total_views}
                                     </td>
-                                    <td className='whitespace-nowrap px-4 py-2.5 text-gray-500 dark:text-gray-400'>
+                                    <td className='whitespace-nowrap px-4 py-2.5 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                         {user.last_seen}
                                     </td>
                                     <td
-                                        className='max-w-[140px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-400'
+                                        className='max-w-[140px] truncate px-4 py-2.5 text-gray-500 dark:text-gray-300 dark:text-gray-400'
                                         title={user.last_path}
                                     >
                                         {user.last_path}
@@ -982,10 +982,10 @@ const AdminDashboard = () => {
             <section className='mb-8'>
                 <div className='mb-3 flex items-end justify-between gap-4'>
                     <div>
-                        <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                        <h2 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                             {t("admin.quick.title")}
                         </h2>
-                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("admin.quick.subtitle")}
                         </p>
                     </div>

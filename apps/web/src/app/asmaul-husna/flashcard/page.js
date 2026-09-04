@@ -93,7 +93,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
 
     if (!current) {
         return (
-            <div className='text-center py-20 text-sm text-gray-500 dark:text-gray-400'>
+            <div className='text-center py-20 text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                 {t("asmaul.flashcard_empty") ?? "Tidak ada data Asmaul Husna."}
             </div>
         );
@@ -108,16 +108,16 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                 >
                     ← {t("asmaul.back_to_list") ?? "Kembali ke Daftar"}
                 </Link>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mt-2'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mt-2'>
                     {t("asmaul.flashcard_title") ?? "Flashcard Asmaul Husna"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1'>
                     {t("asmaul.flashcard_subtitle") ??
                         "Uji hafalan 99 nama Allah"}
                 </p>
             </div>
 
-            <div className='flex items-center justify-between mb-4 text-xs text-gray-500 dark:text-gray-400'>
+            <div className='flex items-center justify-between mb-4 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                 <span>
                     {idx + 1} / {order.length}
                 </span>
@@ -169,7 +169,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
 
                 {revealed ? (
                     <>
-                        <p className='text-xl font-semibold text-gray-800 dark:text-white text-center'>
+                        <p className='text-xl font-semibold text-gray-800 dark:text-gray-200 dark:text-white text-center'>
                             {current.latin ?? current.translation?.latin_idn}
                         </p>
                         <p className='text-base text-emerald-700 dark:text-emerald-400 text-center mt-2 font-medium'>
@@ -179,7 +179,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                             ) ?? current.meaning}
                         </p>
                         {current.description && (
-                            <p className='text-sm text-gray-500 dark:text-gray-400 text-center mt-3 leading-relaxed'>
+                            <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 text-center mt-3 leading-relaxed'>
                                 {getLocalizedTranslation(
                                     {
                                         idn: current.description,
@@ -197,12 +197,12 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                                     {extra.dalilRef && (
                                         <div className='p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-800/40'>
                                             <p className='font-bold text-emerald-800 dark:text-emerald-300'>
-                                                📖 {extra.dalilRef}
+                                                {extra.dalilRef}
                                             </p>
                                             {extra.dalilText && (
                                                 <p
                                                     dir='rtl'
-                                                    className='font-arabic text-sm text-right text-emerald-900 dark:text-emerald-200 my-1'
+                                                    className='font-arabic text-sm text-right text-emerald-900 dark:text-emerald-300 dark:text-emerald-200 my-1'
                                                 >
                                                     {extra.dalilText}
                                                 </p>
@@ -215,9 +215,9 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                                     {extra.ulamaQuote && (
                                         <div className='p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-800/30 text-amber-900 dark:text-amber-300'>
                                             <p className='font-semibold'>
-                                                💬 {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
+                                                {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
                                             </p>
-                                            <p className='text-gray-700 dark:text-gray-300 mt-0.5'>
+                                            <p className='text-gray-700 dark:text-gray-200 dark:text-gray-300 mt-0.5'>
                                                 {extra.ulamaQuote}
                                             </p>
                                         </div>
@@ -274,7 +274,6 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                 </button>
             </div>
 
-            {/* Quick Links to Internal Project Resources */}
             <div className='mt-8 pt-6 border-t border-gray-100 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-3'>
                 <Link
                     href={basePath}
@@ -292,7 +291,6 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                 </Link>
             </div>
 
-            {/* General Dalil of 99 Names */}
             <div className='mt-4 p-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-xs text-gray-600 dark:text-gray-300 space-y-3'>
                 <div className='flex items-center justify-between'>
                     <span className='font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide text-[11px]'>
@@ -304,9 +302,9 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                 </div>
                 <div className='p-2.5 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-800/30'>
                     <p className='font-semibold text-emerald-900 dark:text-emerald-300'>
-                        📜 {asmaulHusnaGeneralDalil.hadith.ref}
+                        {asmaulHusnaGeneralDalil.hadith.ref}
                     </p>
-                    <p dir='rtl' className='font-arabic text-sm text-right text-emerald-950 dark:text-emerald-200 my-1'>
+                    <p dir='rtl' className='font-arabic text-sm text-right text-emerald-950 dark:text-emerald-300 dark:text-emerald-200 my-1'>
                         {asmaulHusnaGeneralDalil.hadith.arabic}
                     </p>
                     <p className='italic text-gray-600 dark:text-gray-300'>
@@ -323,9 +321,9 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                 </div>
                 <div className='p-2.5 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-800/30'>
                     <p className='font-semibold text-emerald-900 dark:text-emerald-300'>
-                        📖 {asmaulHusnaGeneralDalil.quran.ref}
+                        {asmaulHusnaGeneralDalil.quran.ref}
                     </p>
-                    <p dir='rtl' className='font-arabic text-sm text-right text-emerald-950 dark:text-emerald-200 my-1'>
+                    <p dir='rtl' className='font-arabic text-sm text-right text-emerald-950 dark:text-emerald-300 dark:text-emerald-200 my-1'>
                         {asmaulHusnaGeneralDalil.quran.arabic}
                     </p>
                     <p className='italic text-gray-600 dark:text-gray-300'>

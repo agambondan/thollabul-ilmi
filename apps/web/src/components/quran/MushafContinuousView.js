@@ -154,7 +154,7 @@ export default function MushafContinuousView({
                                         return (
                                             <p
                                                 key={ayah.id ?? num}
-                                                className='text-gray-700 dark:text-gray-300'
+                                                className='text-gray-700 dark:text-gray-200 dark:text-gray-300'
                                                 style={{
                                                     fontSize: `${translationFontSize}px`,
                                                     lineHeight: "1.75",
@@ -175,7 +175,7 @@ export default function MushafContinuousView({
             })}
 
             <div className='sticky bottom-4 flex justify-center'>
-                <div className='bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-full shadow-lg border border-gray-200 dark:border-slate-700 flex items-center gap-1 p-1'>
+                <div className='bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-full shadow-lg border border-gray-200 dark:border-gray-700 dark:border-slate-700 flex items-center gap-1 p-1'>
                     <button
                         type='button'
                         onClick={() => setArabicFontSize(arabicFontSize - 4)}

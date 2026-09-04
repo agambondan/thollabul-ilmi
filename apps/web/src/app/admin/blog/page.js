@@ -189,10 +189,10 @@ const AdminBlogPage = () => {
             {/* Header */}
             <div className='flex flex-wrap items-center justify-between gap-4 mb-8'>
                 <div>
-                    <h1 className='text-2xl font-bold text-gray-900 dark:text-white'>
+                    <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                         {t("admin.nav.blog")}
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1'>
                         {posts.length} {t("admin.blog.articles_unit")}
                     </p>
                 </div>
@@ -225,17 +225,17 @@ const AdminBlogPage = () => {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder='Cari judul atau slug artikel...'
-                        className='w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                        className='w-full pl-9 pr-4 py-2 text-xs rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                     />
                 </div>
 
                 <div className='flex items-center gap-2'>
-                    <div className='flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-gray-500'>
+                    <div className='flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-gray-500 dark:text-gray-300'>
                         <BsFilter />
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className='bg-transparent text-gray-900 dark:text-white focus:outline-none'
+                            className='bg-transparent text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none'
                         >
                             <option value='all'>Semua Status</option>
                             <option value='published'>Published</option>
@@ -244,11 +244,11 @@ const AdminBlogPage = () => {
                         </select>
                     </div>
 
-                    <div className='flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-gray-500'>
+                    <div className='flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs text-gray-500 dark:text-gray-300'>
                         <select
                             value={categoryFilter}
                             onChange={(e) => setCategoryFilter(e.target.value)}
-                            className='bg-transparent text-gray-900 dark:text-white focus:outline-none'
+                            className='bg-transparent text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none'
                         >
                             <option value='all'>Semua Kategori</option>
                             {categories.map((c) => (
@@ -274,19 +274,19 @@ const AdminBlogPage = () => {
                         <table className='w-full text-sm min-w-[640px]'>
                             <thead className='bg-gray-50/80 dark:bg-slate-900/60 text-left border-b border-gray-100 dark:border-slate-700'>
                                 <tr>
-                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wider'>
                                         {t("admin.field.title")}
                                     </th>
-                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell'>
+                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell'>
                                         {t("admin.field.category")}
                                     </th>
-                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wider'>
                                         {t("common.status")}
                                     </th>
-                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell'>
+                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell'>
                                         {t("common.date")}
                                     </th>
-                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-right'>
+                                    <th className='px-6 py-3.5 text-xs font-bold text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wider text-right'>
                                         Aksi
                                     </th>
                                 </tr>
@@ -307,7 +307,7 @@ const AdminBlogPage = () => {
                                             className='hover:bg-gray-50/50 dark:hover:bg-slate-750 transition-colors'
                                         >
                                             <td className='px-6 py-4'>
-                                                <p className='font-semibold text-gray-900 dark:text-white line-clamp-1'>
+                                                <p className='font-semibold text-gray-900 dark:text-gray-100 dark:text-white line-clamp-1'>
                                                     {title}
                                                 </p>
                                                 {getLocalizedField(
@@ -327,9 +327,9 @@ const AdminBlogPage = () => {
                                                     /blog/{post.slug}
                                                 </p>
                                             </td>
-                                            <td className='px-6 py-4 text-gray-500 dark:text-gray-400 text-xs hidden md:table-cell'>
+                                            <td className='px-6 py-4 text-gray-500 dark:text-gray-300 dark:text-gray-400 text-xs hidden md:table-cell'>
                                                 {post.category?.name ? (
-                                                    <span className='px-2.5 py-1 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300'>
+                                                    <span className='px-2.5 py-1 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                                         {post.category.name}
                                                     </span>
                                                 ) : (
@@ -406,7 +406,7 @@ const AdminBlogPage = () => {
             <div className='grid md:grid-cols-2 gap-6'>
                 {/* Categories */}
                 <div className='bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 p-6 shadow-sm'>
-                    <h2 className='text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-white mb-4'>
+                    <h2 className='text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100 dark:text-white mb-4'>
                         {t("admin.field.category")}
                     </h2>
                     <form
@@ -419,7 +419,7 @@ const AdminBlogPage = () => {
                             placeholder={t(
                                 "admin.blog.new_category_placeholder",
                             )}
-                            className='flex-1 px-3.5 py-2 text-xs rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                            className='flex-1 px-3.5 py-2 text-xs rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                         />
                         <button
                             type='submit'
@@ -460,7 +460,7 @@ const AdminBlogPage = () => {
 
                 {/* Tags */}
                 <div className='bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 p-6 shadow-sm'>
-                    <h2 className='text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-white mb-4'>
+                    <h2 className='text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100 dark:text-white mb-4'>
                         {t("admin.field.tag")}
                     </h2>
                     <form
@@ -471,7 +471,7 @@ const AdminBlogPage = () => {
                             value={newTagName}
                             onChange={(e) => setNewTagName(e.target.value)}
                             placeholder={t("admin.blog.new_tag_placeholder")}
-                            className='flex-1 px-3.5 py-2 text-xs rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                            className='flex-1 px-3.5 py-2 text-xs rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                         />
                         <button
                             type='submit'
@@ -487,7 +487,7 @@ const AdminBlogPage = () => {
                         {tags.map((tag) => (
                             <span
                                 key={tag.id}
-                                className='flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-slate-700/60 text-gray-600 dark:text-gray-300 rounded-full text-xs font-medium border border-gray-200/60 dark:border-slate-600'
+                                className='flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-slate-700/60 text-gray-600 dark:text-gray-300 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-700/60 dark:border-slate-600'
                             >
                                 #{tag.name}
                                 <button

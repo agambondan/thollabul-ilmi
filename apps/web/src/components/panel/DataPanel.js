@@ -25,11 +25,11 @@ export const PanelHeader = ({ title, subtitle, actions, className }) => (
         )}
     >
         <div className='min-w-0'>
-            <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+            <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                 {title}
             </h1>
             {subtitle ? (
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {subtitle}
                 </p>
             ) : null}
@@ -152,7 +152,7 @@ export const PanelPagination = ({
 
     return (
         <div className='flex items-center justify-between gap-3 mt-4'>
-            <p className='text-xs text-gray-500 dark:text-gray-400'>
+            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                 {page} / {pageCount}
                 {typeof total === "number" ? ` · ${total}` : null}
             </p>

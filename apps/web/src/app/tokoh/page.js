@@ -52,17 +52,17 @@ export function TokohListContent({ className = "" }) {
                 <div className='inline-flex items-center justify-center w-16 h-16 bg-indigo-100 dark:bg-indigo-900/40 rounded-2xl mb-4'>
                     <BsPeopleFill className='text-3xl text-indigo-600 dark:text-indigo-400' />
                 </div>
-                <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-1'>
                     {t("tokoh.title") ?? "Tokoh Tarikh"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("tokoh.subtitle") ??
                         "Biografi ulama, ilmuwan, dan tokoh Islam"}
                 </p>
             </div>
 
             <div className='flex items-center gap-2 mb-4 flex-wrap'>
-                <div className='flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+                <div className='flex-1 min-w-[200px] flex items-center gap-2 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
                     <BsSearch className='text-gray-400 shrink-0' />
                     <input
                         type='text'
@@ -75,7 +75,7 @@ export function TokohListContent({ className = "" }) {
                 <select
                     value={era}
                     onChange={(e) => setEra(e.target.value)}
-                    className='px-3 py-2 rounded-xl text-sm bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300'
+                    className='px-3 py-2 rounded-xl text-sm bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 dark:border-slate-700 text-gray-700 dark:text-gray-200 dark:text-gray-300'
                 >
                     {ERA_FILTERS.map((f) => (
                         <option key={f.value} value={f.value}>
@@ -125,10 +125,10 @@ export function TokohListContent({ className = "" }) {
                                     )}
                                 </div>
                                 <div className='min-w-0 flex-1'>
-                                    <p className='font-semibold text-gray-900 dark:text-white'>
+                                    <p className='font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                         {item.nama}
                                     </p>
-                                    <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                         {item.era || item.kategori}
                                     </p>
                                     {item.tahun_lahir && (
@@ -167,10 +167,10 @@ export function TokohListContent({ className = "" }) {
                                 )}
                             </div>
                             <div>
-                                <h2 className='text-lg font-bold text-gray-900 dark:text-white'>
+                                <h2 className='text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                                     {selected.nama}
                                 </h2>
-                                <p className='text-xs text-gray-500'>
+                                <p className='text-xs text-gray-500 dark:text-gray-300'>
                                     {selected.era || selected.kategori}
                                     {selected.tahun_lahir
                                         ? ` · ${selected.tahun_lahir} – ${selected.tahun_wafat || "..."}`

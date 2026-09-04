@@ -83,7 +83,7 @@ const HijriPage = () => {
 
     return (
         <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
-            <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-6'>
+            <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-6'>
                 {t("hijri.title")}
             </h1>
 
@@ -117,7 +117,7 @@ const HijriPage = () => {
 
             {/* Converter */}
             <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                <p className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3'>
+                <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-3'>
                     {t("hijri.converter_title")}
                 </p>
                 <div className='flex gap-2'>
@@ -125,7 +125,7 @@ const HijriPage = () => {
                         type='date'
                         value={inputDate}
                         onChange={(e) => setInputDate(e.target.value)}
-                        className='flex-1 px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                        className='flex-1 px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                     />
                     <button
                         onClick={handleConvert}
@@ -139,12 +139,12 @@ const HijriPage = () => {
                 {result && (
                     <div className='mt-4 p-4 bg-gray-50 dark:bg-slate-700/50 rounded-xl text-center'>
                         <p
-                            className='text-xl font-bold text-gray-800 dark:text-white arabic-text mb-1'
+                            className='text-xl font-bold text-gray-800 dark:text-gray-200 dark:text-white arabic-text mb-1'
                             dir='rtl'
                         >
                             {result.day} {result.monthAr} {result.year} هـ
                         </p>
-                        <p className='text-sm text-gray-600 dark:text-gray-400'>
+                        <p className='text-sm text-gray-600 dark:text-gray-300 dark:text-gray-400'>
                             {result.day} {result.monthEn} {result.year} H
                         </p>
                     </div>

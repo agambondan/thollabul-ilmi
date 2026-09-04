@@ -137,10 +137,10 @@ export const WiridContent = () => {
                     <GiOpenBook className='text-xl text-emerald-700 dark:text-emerald-400' />
                 </div>
                 <div>
-                    <h1 className='text-xl font-bold text-emerald-900 dark:text-white'>
+                    <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("wirid.title")}
                     </h1>
-                    <p className='text-xs text-gray-500 dark:text-gray-400'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("wirid.subtitle")}
                     </p>
                 </div>
@@ -204,17 +204,17 @@ export const WiridContent = () => {
             ) : isError ? (
                 <div className='flex flex-col items-center justify-center min-h-[30vh] text-center'>
                     <p className='text-3xl mb-2'>⚠️</p>
-                    <p className='text-sm font-semibold text-emerald-900 dark:text-white'>
+                    <p className='text-sm font-semibold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("wirid.load_error")}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1'>
                         {t("wirid.backend_hint")}
                     </p>
                 </div>
             ) : items.length === 0 ? (
                 <div className='flex flex-col items-center justify-center min-h-[30vh] text-center bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-8'>
                     <p className='text-4xl mb-3'>📿</p>
-                    <p className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                    <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                         {t("wirid.empty") ?? "Belum ada bacaan wirid untuk kategori ini."}
                     </p>
                 </div>
@@ -233,7 +233,7 @@ export const WiridContent = () => {
                                     {idx + 1}
                                 </span>
                                 <div className='flex-1'>
-                                    <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                    <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                         {getLocalizedField(
                                             item,
                                             "title",
@@ -256,7 +256,7 @@ export const WiridContent = () => {
                                 <div className='border-t border-gray-100 dark:border-slate-700 px-4 py-4 space-y-3'>
                                     <p
                                         dir='rtl'
-                                        className='text-xl leading-loose font-arabic text-gray-900 dark:text-white text-right'
+                                        className='text-xl leading-loose font-arabic text-gray-900 dark:text-gray-100 dark:text-white text-right'
                                     >
                                         {item.arabic}
                                     </p>

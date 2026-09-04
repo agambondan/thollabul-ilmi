@@ -82,10 +82,10 @@ const ImsakiyahPage = () => {
     return (
         <div className='p-6'>
             <div className='mb-5'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {t("imsakiyah.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400 mt-0.5'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                     {t("imsakiyah.subtitle")}
                 </p>
             </div>
@@ -98,7 +98,7 @@ const ImsakiyahPage = () => {
                 >
                     ←
                 </button>
-                <span className='text-sm font-semibold text-gray-800 dark:text-white min-w-[140px] text-center'>
+                <span className='text-sm font-semibold text-gray-800 dark:text-gray-200 dark:text-white min-w-[140px] text-center'>
                     {MONTHS[month - 1]} {year}
                 </span>
                 <button

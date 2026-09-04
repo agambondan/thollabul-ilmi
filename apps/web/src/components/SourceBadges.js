@@ -66,7 +66,7 @@ export default function SourceBadges({ source }) {
                         href={ref.url}
                         target='_blank'
                         rel='noopener noreferrer'
-                        className='text-xs text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300'
+                        className='text-xs text-blue-600 dark:text-blue-400 underline hover:text-blue-800 hover:dark:text-blue-300 dark:hover:text-blue-300'
                     >
                         {ref.text}
                     </a>
@@ -74,7 +74,7 @@ export default function SourceBadges({ source }) {
                     <Link
                         key={i}
                         href={ref.url}
-                        className='text-xs text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300'
+                        className='text-xs text-blue-600 dark:text-blue-400 underline hover:text-blue-800 hover:dark:text-blue-300 dark:hover:text-blue-300'
                     >
                         {ref.text}
                     </Link>

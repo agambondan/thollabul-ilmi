@@ -129,7 +129,7 @@ const MuhasabahPage = () => {
     return (
         <div className='px-4 py-6'>
             <div className='flex items-center justify-between mb-6'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {t("muhasabah.title")}
                 </h1>
                 <button
@@ -141,7 +141,7 @@ const MuhasabahPage = () => {
                 </button>
             </div>
             {syncError ? (
-                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300'>
+                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 dark:text-amber-400 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300'>
                     {syncError}
                 </div>
             ) : null}
@@ -149,7 +149,7 @@ const MuhasabahPage = () => {
             {list.length === 0 ? (
                 <div className='text-center py-16'>
                     <p className='text-4xl mb-3'>🤲</p>
-                    <p className='text-gray-500 dark:text-gray-400 text-sm'>
+                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm'>
                         {t("muhasabah.empty")}
                     </p>
                     <button
@@ -192,12 +192,12 @@ const MuhasabahPage = () => {
                                 <button
                                     onClick={() => remove(entry.id)}
                                     aria-label={t("muhasabah.delete")}
-                                    className='text-gray-300 dark:text-slate-600 hover:text-red-500 transition-colors shrink-0'
+                                    className='text-gray-300 dark:text-slate-600 dark:text-slate-300 hover:text-red-500 transition-colors shrink-0'
                                 >
                                     <BsTrash />
                                 </button>
                             </div>
-                            <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
+                            <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
                                 {entry.content.length > 100
                                     ? entry.content.slice(0, 100) + "..."
                                     : entry.content}
@@ -220,12 +220,12 @@ const MuhasabahPage = () => {
                         className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'
                     >
                         <div className='flex items-center justify-between mb-4'>
-                            <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
+                            <h2 className='text-base font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                 {t("muhasabah.write_btn")}
                             </h2>
                             <button
                                 onClick={() => setShowModal(false)}
-                                className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                                className='text-gray-400 hover:text-gray-600 hover:dark:text-gray-300 dark:hover:text-gray-200'
                             >
                                 <BsX className='text-xl' />
                             </button>
@@ -235,7 +235,7 @@ const MuhasabahPage = () => {
                             <div>
                                 <label
                                     htmlFor='page-label-date'
-                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                                 >
                                     {t("muhasabah.label_date")}
                                 </label>
@@ -249,14 +249,14 @@ const MuhasabahPage = () => {
                                             date: e.target.value,
                                         }))
                                     }
-                                    className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                    className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 />
                             </div>
 
                             <div>
                                 <label
                                     htmlFor='page-label-mood'
-                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                                 >
                                     {t("muhasabah.label_mood")}
                                 </label>
@@ -269,7 +269,7 @@ const MuhasabahPage = () => {
                                             mood: e.target.value,
                                         }))
                                     }
-                                    className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                    className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 >
                                     {MOODS.map((m) => (
                                         <option key={m.value} value={m.value}>
@@ -282,7 +282,7 @@ const MuhasabahPage = () => {
                             <div>
                                 <label
                                     htmlFor='page-label-notes'
-                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                                 >
                                     {t("muhasabah.label_notes")}
                                 </label>
@@ -298,7 +298,7 @@ const MuhasabahPage = () => {
                                     }
                                     rows={5}
                                     placeholder={t("muhasabah.placeholder")}
-                                    className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none'
+                                    className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none'
                                 />
                             </div>
                         </div>
@@ -306,7 +306,7 @@ const MuhasabahPage = () => {
                         <div className='flex justify-end gap-2 mt-5'>
                             <button
                                 onClick={() => setShowModal(false)}
-                                className='px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors'
+                                className='px-4 py-2 text-sm text-gray-600 dark:text-gray-300 dark:text-gray-400 hover:text-gray-800 hover:dark:text-gray-200 dark:hover:text-white transition-colors'
                             >
                                 {t("common.cancel")}
                             </button>

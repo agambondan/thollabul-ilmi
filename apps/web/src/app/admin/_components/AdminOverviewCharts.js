@@ -39,10 +39,10 @@ export default function AdminOverviewCharts({
             <div className='rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800 lg:col-span-2'>
                 <div className='mb-4 flex items-start justify-between gap-4'>
                     <div>
-                        <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                        <h2 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                             {t("admin.metrics.content_chart")}
                         </h2>
-                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                        <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("admin.metrics.content_chart_desc")}
                         </p>
                     </div>
@@ -103,10 +103,10 @@ export default function AdminOverviewCharts({
                     <div className='min-w-0'>
                         <div className='flex items-center justify-between gap-4'>
                             <div>
-                                <p className='text-xs font-semibold text-gray-900 dark:text-white'>
+                                <p className='text-xs font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                     {t("admin.metrics.status_chart")}
                                 </p>
-                                <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
+                                <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {t("admin.metrics.status_chart_desc")}
                                 </p>
                             </div>
@@ -153,10 +153,10 @@ export default function AdminOverviewCharts({
                 <div className='mt-5 grid min-w-0 grid-cols-1 gap-5 border-t border-gray-100 pt-5 dark:border-slate-700 lg:grid-cols-2'>
                     <div className='min-w-0'>
                         <div className='mb-3'>
-                            <p className='text-xs font-semibold text-gray-900 dark:text-white'>
+                            <p className='text-xs font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                 {t("admin.metrics.content_health_chart")}
                             </p>
-                            <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
+                            <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {t("admin.metrics.content_health_chart_desc")}
                             </p>
                         </div>
@@ -223,10 +223,10 @@ export default function AdminOverviewCharts({
                     </div>
                     <div className='min-w-0'>
                         <div className='mb-3'>
-                            <p className='text-xs font-semibold text-gray-900 dark:text-white'>
+                            <p className='text-xs font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                 {t("admin.metrics.review_queue_chart")}
                             </p>
-                            <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
+                            <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {t("admin.metrics.review_queue_chart_desc")}
                             </p>
                         </div>
@@ -294,10 +294,10 @@ export default function AdminOverviewCharts({
 
             <div className='grid min-w-0 grid-cols-1 gap-4'>
                 <div className='min-w-0 rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
-                    <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                    <h2 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                         {t("admin.metrics.role_chart")}
                     </h2>
-                    <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                    <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("admin.metrics.role_chart_desc")}
                     </p>
                     <div className='mt-4 h-44 min-w-0 w-full'>
@@ -344,7 +344,7 @@ export default function AdminOverviewCharts({
                         {overview.roles.map((role, index) => (
                             <div
                                 key={role.role}
-                                className='flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400'
+                                className='flex items-center gap-2 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'
                             >
                                 <span
                                     className='h-2.5 w-2.5 rounded-full'
@@ -367,10 +367,10 @@ export default function AdminOverviewCharts({
                 <div className='min-w-0 rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
                     <div className='mb-4 flex items-start justify-between gap-4'>
                         <div>
-                            <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                            <h2 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                 {t("admin.metrics.source_chart")}
                             </h2>
-                            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                            <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {t("admin.metrics.source_chart_desc")}
                             </p>
                         </div>
@@ -422,7 +422,7 @@ export default function AdminOverviewCharts({
                         {overview.sourceBreakdown.map((item, index) => (
                             <div
                                 key={item.source}
-                                className='flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400'
+                                className='flex items-center gap-2 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'
                             >
                                 <span
                                     className='h-2.5 w-2.5 rounded-full'
@@ -449,10 +449,10 @@ export default function AdminOverviewCharts({
                 </div>
 
                 <div className='min-w-0 rounded-xl border border-gray-100 bg-white p-5 dark:border-slate-700 dark:bg-slate-800'>
-                    <h2 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                    <h2 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                         {t("admin.metrics.visitor_chart")}
                     </h2>
-                    <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                    <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("admin.metrics.visitor_chart_desc")}
                     </p>
                     <div className='mt-4 h-40 min-w-0 w-full'>
@@ -501,7 +501,7 @@ export default function AdminOverviewCharts({
                         </ResponsiveContainer>
                     </div>
                     <div className='mt-4 border-t border-gray-100 pt-3 dark:border-slate-700'>
-                        <p className='mb-0.5 text-xs font-semibold text-gray-700 dark:text-gray-300'>
+                        <p className='mb-0.5 text-xs font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                             {t("admin.metrics.top_pages_source")}
                         </p>
                         <p className='mb-3 text-xs text-gray-400'>
@@ -532,7 +532,7 @@ export default function AdminOverviewCharts({
                                                         .map((page) => (
                                                             <div
                                                                 key={`${source}-${page.path}`}
-                                                                className='flex items-center justify-between text-[11px] text-gray-500 dark:text-gray-400'
+                                                                className='flex items-center justify-between text-[11px] text-gray-500 dark:text-gray-300 dark:text-gray-400'
                                                             >
                                                                 <span
                                                                     className='truncate max-w-[120px]'
@@ -542,7 +542,7 @@ export default function AdminOverviewCharts({
                                                                 >
                                                                     {page.path}
                                                                 </span>
-                                                                <span className='font-medium text-gray-700 dark:text-gray-300'>
+                                                                <span className='font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                                                     {
                                                                         page.visitors
                                                                     }

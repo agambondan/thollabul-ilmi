@@ -1,9 +1,3 @@
-/**
- * Asmaul Husna Reference Data: 99 Names of Allah
- * Lengkap dengan dalil Al-Qur'an & Hadits, makna syar'i, penjelasan para ulama,
- * dan tautan referensi internal ke Al-Qur'an dan Hadits di Thollabul Ilmi.
- */
-
 export const asmaulHusnaData = {
     1: {
         number: 1,
@@ -1594,9 +1588,6 @@ export const asmaulHusnaData = {
     },
 };
 
-/**
- * General Dalil tentang 99 Asmaul Husna
- */
 export const asmaulHusnaGeneralDalil = {
     hadith: {
         ref: "HR. Bukhari No. 2736 & Muslim No. 2677",

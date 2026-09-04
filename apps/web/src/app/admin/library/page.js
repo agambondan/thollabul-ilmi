@@ -232,10 +232,10 @@ const AdminLibraryPage = () => {
         <div className='p-6'>
             <div className='mb-6 flex items-center justify-between'>
                 <div>
-                    <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                    <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                         {t("admin.nav.library")}
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {items.length} {t("admin.library.books_unit")}
                     </p>
                 </div>
@@ -250,7 +250,7 @@ const AdminLibraryPage = () => {
 
             <div className='mb-4'>
                 <input
-                    className='w-full max-w-xs rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
+                    className='w-full max-w-xs rounded-lg border border-gray-300 dark:border-gray-600 bg-white px-3 py-2 text-sm text-gray-900 dark:text-gray-100 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
                     onChange={(event) => setSearch(event.target.value)}
                     placeholder={t("admin.library.search_placeholder")}
                     type='text'
@@ -259,7 +259,7 @@ const AdminLibraryPage = () => {
             </div>
 
             {loading ? (
-                <p className='text-sm text-gray-500'>{t("common.loading")}</p>
+                <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
             ) : (
                 <PanelTable
                     head={
@@ -288,20 +288,20 @@ const AdminLibraryPage = () => {
                 >
                     {filtered.map((item) => (
                         <Tr key={item.id ?? item.slug}>
-                            <Td className='max-w-xs truncate font-medium text-gray-900 dark:text-white'>
+                            <Td className='max-w-xs truncate font-medium text-gray-900 dark:text-gray-100 dark:text-white'>
                                 {item.title}
                                 <p className='text-xs font-normal text-gray-400'>
                                     {item.slug}
                                 </p>
                             </Td>
-                            <Td className='hidden text-gray-500 dark:text-gray-400 md:table-cell'>
+                            <Td className='hidden text-gray-500 dark:text-gray-300 dark:text-gray-400 md:table-cell'>
                                 {item.author || "-"}
                             </Td>
-                            <Td className='hidden text-gray-500 dark:text-gray-400 lg:table-cell'>
+                            <Td className='hidden text-gray-500 dark:text-gray-300 dark:text-gray-400 lg:table-cell'>
                                 {item.category || "-"}
                             </Td>
                             <Td>
-                                <span className='rounded bg-emerald-100 px-2 py-0.5 text-xs uppercase text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
+                                <span className='rounded bg-emerald-100 px-2 py-0.5 text-xs uppercase text-emerald-700 dark:text-emerald-400 dark:bg-emerald-900/30 dark:text-emerald-300'>
                                     {item.format || "link"}
                                 </span>
                             </Td>
@@ -324,14 +324,14 @@ const AdminLibraryPage = () => {
                                     </p>
                                 ) : null}
                             </Td>
-                            <Td className='hidden text-gray-500 dark:text-gray-400 md:table-cell'>
+                            <Td className='hidden text-gray-500 dark:text-gray-300 dark:text-gray-400 md:table-cell'>
                                 {item.status || "published"}
                             </Td>
                             <Td>
                                 <div className='flex items-center justify-end gap-1.5'>
                                     {item.source_url && (
                                         <a
-                                            className='rounded p-1.5 text-gray-400 hover:text-gray-600'
+                                            className='rounded p-1.5 text-gray-400 hover:text-gray-600 hover:dark:text-gray-300'
                                             href={item.source_url}
                                             rel='noreferrer'
                                             target='_blank'
@@ -384,13 +384,13 @@ const AdminLibraryPage = () => {
                     panelClassName='max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white dark:bg-slate-800'
                 >
                     <div className='flex items-center justify-between border-b border-gray-100 p-5 dark:border-slate-700'>
-                        <h2 className='font-bold text-gray-900 dark:text-white'>
+                        <h2 className='font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                             {editId
                                 ? t("admin.library.edit_book")
                                 : t("admin.library.add_book")}
                         </h2>
                         <button
-                            className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                            className='p-1 text-gray-400 hover:text-gray-600 hover:dark:text-gray-300 dark:hover:text-gray-200'
                             onClick={() => setShowModal(false)}
                         >
                             <BsX className='text-xl' />
@@ -585,7 +585,7 @@ const AdminLibraryPage = () => {
                                 </select>
                             </Field>
                             <Field label={t("admin.library.source_verified")}>
-                                <label className='flex min-h-[38px] items-center gap-2 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-slate-600 dark:bg-slate-700 dark:text-white'>
+                                <label className='flex min-h-[38px] items-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white px-3 py-2 text-sm text-gray-700 dark:text-gray-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white'>
                                     <input
                                         checked={form.is_source_verified}
                                         onChange={(e) =>
@@ -616,12 +616,12 @@ const AdminLibraryPage = () => {
                             />
                         </Field>
                         <Field label={t("admin.library.resource_file")}>
-                            <div className='rounded-lg border border-dashed border-gray-300 p-3 dark:border-slate-600'>
+                            <div className='rounded-lg border border-dashed border-gray-300 dark:border-gray-600 p-3 dark:border-slate-600'>
                                 {editId ? (
                                     <div className='space-y-2'>
                                         <input
                                             accept='.pdf,.epub,.html,.htm,application/pdf,application/epub+zip,text/html'
-                                            className='block w-full text-sm text-gray-600 file:mr-3 file:rounded-md file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-emerald-800 hover:file:bg-emerald-100 dark:text-gray-300 dark:file:bg-slate-700 dark:file:text-emerald-200'
+                                            className='block w-full text-sm text-gray-600 file:mr-3 file:rounded-md file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-emerald-800 dark:text-emerald-300 hover:file:bg-emerald-100 dark:text-gray-300 dark:file:bg-slate-700 dark:file:text-emerald-200'
                                             onChange={(e) =>
                                                 setResourceFile(
                                                     e.target.files?.[0] ?? null,
@@ -658,14 +658,14 @@ const AdminLibraryPage = () => {
                                                 )}
                                             {form.file_name ? (
                                                 <>
-                                                    <span className='text-xs text-gray-500 dark:text-gray-400'>
+                                                    <span className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                                         {form.file_name}{" "}
                                                         {form.file_size_bytes
                                                             ? `· ${Math.round(Number(form.file_size_bytes) / 1024)} KB`
                                                             : ""}
                                                     </span>
                                                     <button
-                                                        className='rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50 dark:border-red-900/60 dark:text-red-300 dark:hover:bg-red-950/30'
+                                                        className='rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-700 dark:text-red-400 hover:bg-red-50 disabled:opacity-50 dark:border-red-900/60 dark:text-red-300 dark:hover:bg-red-950/30'
                                                         disabled={
                                                             clearingResource
                                                         }
@@ -685,7 +685,7 @@ const AdminLibraryPage = () => {
                                         </div>
                                     </div>
                                 ) : (
-                                    <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                         {t(
                                             "admin.library.resource_file_save_first",
                                         )}
@@ -762,7 +762,7 @@ const AdminLibraryPage = () => {
                     </div>
                     <div className='flex gap-3 border-t border-gray-100 p-5 dark:border-slate-700'>
                         <button
-                            className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-700'
+                            className='flex-1 rounded-lg border border-gray-300 dark:border-gray-600 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:border-slate-600 dark:text-gray-300 dark:hover:bg-slate-700'
                             onClick={() => setShowModal(false)}
                         >
                             {t("common.cancel")}
@@ -784,17 +784,17 @@ const AdminLibraryPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='w-full max-w-sm rounded-2xl bg-white p-6 dark:bg-slate-800'
                 >
-                    <h2 className='mb-2 font-bold text-gray-900 dark:text-white'>
+                    <h2 className='mb-2 font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                         {t("admin.crud.delete_title", {
                             item: t("admin.library.book"),
                         })}
                     </h2>
-                    <p className='mb-5 text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='mb-5 text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("admin.crud.delete_body")}
                     </p>
                     <div className='flex gap-3'>
                         <button
-                            className='flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium text-gray-700 dark:border-slate-600 dark:text-gray-300'
+                            className='flex-1 rounded-lg border border-gray-300 dark:border-gray-600 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 dark:border-slate-600 dark:text-gray-300'
                             onClick={() => setDeleteId(null)}
                         >
                             {t("common.cancel")}
@@ -821,7 +821,7 @@ const Field = ({ children, label }) => (
          * The control is passed in as children, so the label is bound by
          * wrapping rather than htmlFor — clicking the text still focuses it.
          */}
-        <label className='mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+        <label className='mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300'>
             <span className='mb-1 block'>{label}</span>
             {children}
         </label>

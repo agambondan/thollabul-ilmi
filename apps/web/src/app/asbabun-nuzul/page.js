@@ -93,10 +93,10 @@ export const AsbabunNuzulContent = ({ quranBasePath = "/quran" }) => {
                 >
                     أَسْبَابُ النُّزُول
                 </p>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                     {t("asbabun.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("asbabun.subtitle")}
                 </p>
             </div>
@@ -105,7 +105,7 @@ export const AsbabunNuzulContent = ({ quranBasePath = "/quran" }) => {
                 onSubmit={handleSearch}
                 className='flex items-center gap-3 mb-8'
             >
-                <div className='flex-1 flex items-center gap-2 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
+                <div className='flex-1 flex items-center gap-2 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
                     <BsSearch className='text-gray-400 shrink-0' />
                     <select
                         value={surahNumber}
@@ -158,7 +158,7 @@ export const AsbabunNuzulContent = ({ quranBasePath = "/quran" }) => {
             {isLoading && <SkeletonInline rows={4} />}
 
             {!isLoading && searched && results.length === 0 && !error && (
-                <div className='text-center py-16 text-gray-400 dark:text-gray-600 text-sm bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
+                <div className='text-center py-16 text-gray-400 dark:text-gray-600 dark:text-gray-300 text-sm bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                     <p className='mb-2'>{t("asbabun.no_data_title")}</p>
                     <p className='text-xs'>{t("asbabun.no_data_hint")}</p>
                 </div>
@@ -166,10 +166,10 @@ export const AsbabunNuzulContent = ({ quranBasePath = "/quran" }) => {
 
             {!isLoading && !searched && (
                 <div className='text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
-                    <p className='text-gray-400 dark:text-gray-600 text-sm mb-6'>
+                    <p className='text-gray-400 dark:text-gray-600 dark:text-gray-300 text-sm mb-6'>
                         {t("asbabun.enter_surah")}
                     </p>
-                    <p className='text-xs text-gray-400 dark:text-gray-600'>
+                    <p className='text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300'>
                         {t("asbabun.source")}
                     </p>
                 </div>
@@ -196,7 +196,7 @@ export const AsbabunNuzulContent = ({ quranBasePath = "/quran" }) => {
                                 <SourceBadges source={item.source} />
                             )}
                         </div>
-                        <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
+                        <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
                             {getLocalizedField(item, "content", lang, [
                                 "description",
                                 "text",

@@ -317,7 +317,7 @@ export const NavbarTailwindCss = () => {
                                 {languages.map((lang) => (
                                     <button
                                         key={lang}
-                                        className='flex items-center gap-3 w-full px-4 py-2.5 text-sm hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-emerald-900 dark:text-white'
+                                        className='flex items-center gap-3 w-full px-4 py-2.5 text-sm hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-emerald-900 dark:text-emerald-300 dark:text-white'
                                         onClick={() => {
                                             setLanguage(lang);
                                             toggleSmallDropdown();
@@ -357,7 +357,7 @@ export const NavbarTailwindCss = () => {
                                     </span>
                                 </button>
                                 {isProfileMenuOpen && (
-                                    <div className='absolute right-0 top-full mt-1 w-44 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-lg py-1 z-50 text-emerald-900 dark:text-white'>
+                                    <div className='absolute right-0 top-full mt-1 w-44 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-lg py-1 z-50 text-emerald-900 dark:text-emerald-300 dark:text-white'>
                                         <Link
                                             href='/dashboard'
                                             onClick={() =>
@@ -601,7 +601,7 @@ export const NavbarTailwindCss = () => {
                                             }}
                                         >
                                             {ConvertFLagLanguage(lang)}
-                                            <span className='text-xs text-gray-500'>
+                                            <span className='text-xs text-gray-500 dark:text-gray-300'>
                                                 {lang === "ID"
                                                     ? "Indonesia"
                                                     : "English"}
@@ -736,7 +736,7 @@ export const NavbarTailwindCss = () => {
                             <Link
                                 href={`/auth/login?next=${encodeURIComponent(currentPath || "/")}`}
                                 onClick={() => setMobileMenuOpen(false)}
-                                className='mt-4 flex items-center justify-center gap-2 rounded-2xl bg-gold-500 px-4 py-3 text-sm font-semibold text-emerald-950 transition-colors hover:bg-gold-400'
+                                className='mt-4 flex items-center justify-center gap-2 rounded-2xl bg-gold-500 px-4 py-3 text-sm font-semibold text-emerald-950 dark:text-emerald-300 transition-colors hover:bg-gold-400'
                             >
                                 <BsPerson />
                                 {t("nav.login_account")}

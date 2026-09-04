@@ -173,10 +173,10 @@ const AdminStudiesPage = () => {
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
                 <div>
-                    <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                    <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                         {t("admin.nav.studies")}
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {items.length} {t("admin.kajian.studies_unit")}
                     </p>
                 </div>
@@ -195,12 +195,12 @@ const AdminStudiesPage = () => {
                     placeholder={t("admin.kajian.search_placeholder")}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
+                    className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white'
                 />
             </div>
 
             {loading ? (
-                <p className='text-sm text-gray-500'>{t("common.loading")}</p>
+                <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
             ) : (
                 <PanelTable
                     head={
@@ -217,10 +217,10 @@ const AdminStudiesPage = () => {
                 >
                     {filtered.map((item) => (
                         <Tr key={item.id ?? item._id}>
-                            <Td className='text-gray-900 dark:text-white font-medium max-w-xs truncate'>
+                            <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium max-w-xs truncate'>
                                 {getLocalizedField(item, "title", lang)}
                             </Td>
-                            <Td className='text-gray-500 dark:text-gray-400 hidden md:table-cell'>
+                            <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 hidden md:table-cell'>
                                 {item.speaker ?? "-"}
                             </Td>
                             <Td>
@@ -228,7 +228,7 @@ const AdminStudiesPage = () => {
                                     {item.type ?? "-"}
                                 </span>
                             </Td>
-                            <Td className='text-gray-500 dark:text-gray-400 hidden lg:table-cell capitalize'>
+                            <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 hidden lg:table-cell capitalize'>
                                 {item.topic}
                             </Td>
                             <Td>
@@ -238,7 +238,7 @@ const AdminStudiesPage = () => {
                                             href={item.url}
                                             target='_blank'
                                             rel='noreferrer'
-                                            className='p-1.5 text-gray-400 hover:text-gray-600 rounded'
+                                            className='p-1.5 text-gray-400 hover:text-gray-600 hover:dark:text-gray-300 rounded'
                                         >
                                             <BsBoxArrowUpRight />
                                         </a>
@@ -280,14 +280,14 @@ const AdminStudiesPage = () => {
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
                 >
                     <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
-                        <h2 className='font-bold text-gray-900 dark:text-white'>
+                        <h2 className='font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                             {editId
                                 ? t("admin.kajian.edit_study")
                                 : t("admin.kajian.add_study")}
                         </h2>
                         <button
                             onClick={() => setShowModal(false)}
-                            className='p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                            className='p-1 text-gray-400 hover:text-gray-600 hover:dark:text-gray-300 dark:hover:text-gray-200'
                         >
                             <BsX className='text-xl' />
                         </button>
@@ -296,7 +296,7 @@ const AdminStudiesPage = () => {
                         <div>
                             <label
                                 htmlFor='page-title'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                             >
                                 {t("admin.field.title")}
                             </label>
@@ -310,14 +310,14 @@ const AdminStudiesPage = () => {
                                         title: e.target.value,
                                     })
                                 }
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                             />
                         </div>
                         <div className='grid grid-cols-2 gap-4'>
                             <div>
                                 <label
                                     htmlFor='page-ustadz'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                                 >
                                     Ustadz
                                 </label>
@@ -331,13 +331,13 @@ const AdminStudiesPage = () => {
                                             speaker: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor='page-duration'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                                 >
                                     {t("admin.kajian.duration")}
                                 </label>
@@ -354,7 +354,7 @@ const AdminStudiesPage = () => {
                                     placeholder={t(
                                         "admin.kajian.duration_placeholder",
                                     )}
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                                 />
                             </div>
                         </div>
@@ -362,7 +362,7 @@ const AdminStudiesPage = () => {
                             <div>
                                 <label
                                     htmlFor='page-tipe'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                                 >
                                     Tipe
                                 </label>
@@ -375,7 +375,7 @@ const AdminStudiesPage = () => {
                                             type: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                                 >
                                     {TYPES.map((p) => (
                                         <option key={p} value={p}>
@@ -387,7 +387,7 @@ const AdminStudiesPage = () => {
                             <div>
                                 <label
                                     htmlFor='page-category'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                                 >
                                     {t("admin.field.category")}
                                 </label>
@@ -400,7 +400,7 @@ const AdminStudiesPage = () => {
                                             topic: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                                 >
                                     {CATEGORIES.map((c) => (
                                         <option key={c} value={c}>
@@ -413,7 +413,7 @@ const AdminStudiesPage = () => {
                         <div>
                             <label
                                 htmlFor='page-url'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                             >
                                 URL
                             </label>
@@ -428,13 +428,13 @@ const AdminStudiesPage = () => {
                                     })
                                 }
                                 placeholder={t("admin.kajian.url_placeholder")}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                             />
                         </div>
                         <div>
                             <label
                                 htmlFor='page-thumbnail-url'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                             >
                                 {t("admin.kajian.thumbnail_url")}
                             </label>
@@ -449,13 +449,13 @@ const AdminStudiesPage = () => {
                                     })
                                 }
                                 placeholder={t("admin.kajian.url_placeholder")}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                             />
                         </div>
                         <div>
                             <label
                                 htmlFor='page-description'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                             >
                                 {t("admin.field.description")}
                             </label>
@@ -469,14 +469,14 @@ const AdminStudiesPage = () => {
                                     })
                                 }
                                 rows={2}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                             />
                         </div>
                     </div>
                     <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
                         <button
                             onClick={() => setShowModal(false)}
-                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
+                            className='flex-1 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 text-gray-700 dark:text-gray-200 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
                         >
                             {t("common.cancel")}
                         </button>
@@ -497,18 +497,18 @@ const AdminStudiesPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
                 >
-                    <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
+                    <h2 className='font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-2'>
                         {t("admin.crud.delete_title", {
                             item: t("admin.kajian.study"),
                         })}
                     </h2>
-                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-5'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-5'>
                         {t("admin.crud.delete_body")}
                     </p>
                     <div className='flex gap-3'>
                         <button
                             onClick={() => setDeleteId(null)}
-                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium'
+                            className='flex-1 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 text-gray-700 dark:text-gray-200 dark:text-gray-300 rounded-lg text-sm font-medium'
                         >
                             {t("common.cancel")}
                         </button>

@@ -336,14 +336,14 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
         >
             <Link
                 href={basePath}
-                className='inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors mb-6'
+                className='inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 hover:dark:text-emerald-400 dark:hover:text-emerald-300 transition-colors mb-6'
             >
                 ← {t("blog.back_to_articles")}
             </Link>
 
             {error && (
                 <div className='text-center py-16 bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 shadow-sm'>
-                    <p className='text-base text-gray-500 dark:text-gray-400'>
+                    <p className='text-base text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("blog.detail_not_found")}
                     </p>
                 </div>
@@ -368,7 +368,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                             <div className='p-6 md:p-10'>
                                 <div className='flex flex-wrap items-center gap-2.5 mb-4'>
                                     {postCategoryLabel && (
-                                        <span className='px-3 py-1 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 rounded-full text-xs font-semibold uppercase tracking-wider'>
+                                        <span className='px-3 py-1 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 rounded-full text-xs font-semibold uppercase tracking-wider'>
                                             {postCategoryLabel}
                                         </span>
                                     )}
@@ -386,16 +386,16 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                     )}
                                 </div>
 
-                                <h1 className='text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 leading-tight tracking-tight'>
+                                <h1 className='text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-gray-100 dark:text-white mb-4 leading-tight tracking-tight'>
                                     {postTitle}
                                 </h1>
 
-                                <div className='flex flex-wrap items-center justify-between gap-4 pb-6 mb-8 border-b border-gray-100 dark:border-slate-800 text-xs text-gray-500 dark:text-gray-400'>
+                                <div className='flex flex-wrap items-center justify-between gap-4 pb-6 mb-8 border-b border-gray-100 dark:border-slate-800 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     <div className='flex flex-wrap items-center gap-3'>
                                         {postAuthorName && (
-                                            <span className='font-medium text-gray-700 dark:text-gray-300'>
+                                            <span className='font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                                 {t("blog.by_author")}{" "}
-                                                <strong className='text-gray-900 dark:text-white'>
+                                                <strong className='text-gray-900 dark:text-gray-100 dark:text-white'>
                                                     {postAuthorName}
                                                 </strong>
                                             </span>
@@ -452,7 +452,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                             {post.tags && post.tags.length > 0 && (
                                 <div className='px-6 md:px-10 py-5 border-t border-gray-100 dark:border-slate-800 bg-gray-50/50 dark:bg-slate-800/30'>
                                     <div className='flex items-center gap-2 flex-wrap'>
-                                        <span className='text-xs font-medium text-gray-500 dark:text-gray-400 mr-1'>
+                                        <span className='text-xs font-medium text-gray-500 dark:text-gray-300 dark:text-gray-400 mr-1'>
                                             {t("blog.tags_label")}:
                                         </span>
                                         {post.tags.map((tag) => {
@@ -460,7 +460,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                             return (
                                                 <span
                                                     key={getTagValue(tag, lang)}
-                                                    className='px-3 py-1 bg-white dark:bg-slate-800 border border-gray-200/80 dark:border-slate-700 text-gray-600 dark:text-gray-300 rounded-full text-xs font-medium hover:border-emerald-400 dark:hover:border-emerald-600 transition-colors'
+                                                    className='px-3 py-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700/80 dark:border-slate-700 text-gray-600 dark:text-gray-300 rounded-full text-xs font-medium hover:border-emerald-400 dark:hover:border-emerald-600 transition-colors'
                                                 >
                                                     #{tagLabel}
                                                 </span>
@@ -480,7 +480,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                             <p className='text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide'>
                                                 {t("blog.related_articles")}
                                             </p>
-                                            <h2 className='text-lg font-bold text-gray-900 dark:text-white mt-1'>
+                                            <h2 className='text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-white mt-1'>
                                                 {t("blog.keep_reading")}
                                             </h2>
                                         </div>
@@ -503,7 +503,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                                             )}
                                                         </p>
                                                     )}
-                                                    <h3 className='font-bold text-gray-900 dark:text-white line-clamp-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-2'>
+                                                    <h3 className='font-bold text-gray-900 dark:text-gray-100 dark:text-white line-clamp-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-2'>
                                                         {getLocalizedField(
                                                             item,
                                                             "title",
@@ -515,7 +515,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                                         "excerpt",
                                                         lang,
                                                     ) && (
-                                                        <p className='text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed'>
+                                                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 line-clamp-2 leading-relaxed'>
                                                             {getLocalizedField(
                                                                 item,
                                                                 "excerpt",
@@ -531,7 +531,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
 
                                 {popularPosts.length > 0 && (
                                     <section>
-                                        <p className='text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-3'>
+                                        <p className='text-xs font-semibold text-gray-400 dark:text-gray-500 dark:text-gray-300 uppercase tracking-wide mb-3'>
                                             {t("blog.popular_articles")}
                                         </p>
                                         <div className='space-y-2.5'>
@@ -542,7 +542,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                                     className='group flex items-center justify-between gap-4 rounded-xl border border-gray-100 dark:border-slate-800 bg-gray-50/70 dark:bg-slate-800/40 px-4 py-3 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
                                                 >
                                                     <div className='min-w-0'>
-                                                        <h3 className='font-medium text-sm text-gray-900 dark:text-white line-clamp-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors'>
+                                                        <h3 className='font-medium text-sm text-gray-900 dark:text-gray-100 dark:text-white line-clamp-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors'>
                                                             {getLocalizedField(
                                                                 item,
                                                                 "title",
@@ -580,7 +580,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                 <button
                                     type='button'
                                     onClick={() => setTocOpen((v) => !v)}
-                                    className='w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors'
+                                    className='w-full flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-300 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors'
                                 >
                                     <span className='flex items-center gap-2'>
                                         <BsListUl className='text-sm text-emerald-600 dark:text-emerald-400' />
@@ -614,8 +614,8 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                         )}
 
                         {/* Article Info Card */}
-                        <div className='bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 p-5 shadow-sm space-y-3.5 text-xs text-gray-600 dark:text-gray-400'>
-                            <div className='text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400'>
+                        <div className='bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 p-5 shadow-sm space-y-3.5 text-xs text-gray-600 dark:text-gray-300 dark:text-gray-400'>
+                            <div className='text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {t("blog.published_on")}
                             </div>
                             <div className='space-y-2.5 pt-1'>
@@ -656,7 +656,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
 
                         {/* Share Article Card */}
                         <div className='bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 p-5 shadow-sm'>
-                            <div className='flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3.5'>
+                            <div className='flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-3.5'>
                                 <BsShare className='text-emerald-600 dark:text-emerald-400' />
                                 {t("blog.share")}
                             </div>
@@ -664,7 +664,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                             <button
                                 type='button'
                                 onClick={handleCopyLink}
-                                className='w-full mb-3 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors'
+                                className='w-full mb-3 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors'
                             >
                                 {copied ? (
                                     <>
@@ -685,7 +685,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                 <button
                                     type='button'
                                     onClick={() => shareToWhatsApp(shareUrl)}
-                                    className='flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-medium hover:bg-emerald-100 dark:hover:bg-emerald-950/70 transition-colors'
+                                    className='flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 font-medium hover:bg-emerald-100 dark:hover:bg-emerald-950/70 transition-colors'
                                 >
                                     <BsWhatsapp className='text-emerald-600' />
                                     {t("blog.share_whatsapp")}
@@ -709,7 +709,7 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                 <button
                                     type='button'
                                     onClick={() => shareToFacebook(shareUrl)}
-                                    className='flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-medium hover:bg-blue-100 dark:hover:bg-blue-950/70 transition-colors'
+                                    className='flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 dark:text-blue-300 font-medium hover:bg-blue-100 dark:hover:bg-blue-950/70 transition-colors'
                                 >
                                     <BsEnvelope />
                                     {t("blog.share_email")}

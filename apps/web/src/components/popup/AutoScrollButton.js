@@ -169,10 +169,10 @@ const AutoScrollButton = () => {
             className={`fixed left-2 z-10 transition-all duration-200 ${bottomClass} ${visibilityClass}`}
         >
             {showPanel && (
-                <div className='absolute left-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-52 p-3 shadow-lg text-sm text-emerald-900 dark:text-white mb-1'>
+                <div className='absolute left-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-52 p-3 shadow-lg text-sm text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                     <div className='flex items-center gap-1.5 mb-3'>
                         <MdSpeed size={14} className='text-gray-400' />
-                        <p className='font-semibold text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide'>
+                        <p className='font-semibold text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wide'>
                             {t("auto_scroll.speed")}
                         </p>
                     </div>

@@ -120,7 +120,7 @@ export function ZakatContent({ basePath = "/zakat" }) {
         <div>
             <label
                 htmlFor='page-field-1'
-                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
             >
                 {label}
             </label>
@@ -130,7 +130,7 @@ export function ZakatContent({ basePath = "/zakat" }) {
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
-                className='w-full border border-gray-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-400'
+                className='w-full border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-400'
             />
             {hint && <p className='text-xs text-gray-400 mt-1'>{hint}</p>}
         </div>
@@ -146,7 +146,7 @@ export function ZakatContent({ basePath = "/zakat" }) {
                       : "bg-emerald-50 dark:bg-emerald-900/20"
             }`}
         >
-            <p className='text-xs text-gray-500 dark:text-gray-400 mb-1'>
+            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-1'>
                 {label}
             </p>
             <p
@@ -161,7 +161,7 @@ export function ZakatContent({ basePath = "/zakat" }) {
                 {fmt(amount)}
             </p>
             {note && (
-                <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
+                <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1'>
                     {note}
                 </p>
             )}
@@ -174,10 +174,10 @@ export function ZakatContent({ basePath = "/zakat" }) {
                 <div className='inline-flex items-center justify-center w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl mb-4'>
                     <FaCalculator className='text-3xl text-emerald-600 dark:text-emerald-400' />
                 </div>
-                <h1 className='text-3xl font-extrabold text-emerald-900 dark:text-emerald-100 mb-2'>
+                <h1 className='text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-100 mb-2'>
                     {t("zakat.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("zakat.subtitle")}
                 </p>
             </div>
@@ -232,7 +232,7 @@ export function ZakatContent({ basePath = "/zakat" }) {
                         />
                         <label
                             htmlFor='haul'
-                            className='text-sm text-gray-700 dark:text-gray-300'
+                            className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'
                         >
                             {t("zakat.haul_label")}
                         </label>
@@ -295,7 +295,7 @@ export function ZakatContent({ basePath = "/zakat" }) {
                     <div>
                         <p
                             id='zakat-family-count-label'
-                            className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                            className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-2'
                         >
                             {t("zakat.family_count")}
                         </p>
@@ -308,20 +308,20 @@ export function ZakatContent({ basePath = "/zakat" }) {
                                 onClick={() =>
                                     setFamilyCount(Math.max(1, familyCount - 1))
                                 }
-                                className='w-10 h-10 rounded-xl bg-gray-100 dark:bg-slate-700 font-bold text-xl hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors text-gray-700 dark:text-gray-300'
+                                className='w-10 h-10 rounded-xl bg-gray-100 dark:bg-slate-700 font-bold text-xl hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors text-gray-700 dark:text-gray-200 dark:text-gray-300'
                             >
                                 −
                             </button>
-                            <span className='text-2xl font-extrabold text-amber-700 dark:text-amber-300 w-8 text-center'>
+                            <span className='text-2xl font-extrabold text-amber-700 dark:text-amber-400 dark:text-amber-300 w-8 text-center'>
                                 {familyCount}
                             </span>
                             <button
                                 onClick={() => setFamilyCount(familyCount + 1)}
-                                className='w-10 h-10 rounded-xl bg-gray-100 dark:bg-slate-700 font-bold text-xl hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors text-gray-700 dark:text-gray-300'
+                                className='w-10 h-10 rounded-xl bg-gray-100 dark:bg-slate-700 font-bold text-xl hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors text-gray-700 dark:text-gray-200 dark:text-gray-300'
                             >
                                 +
                             </button>
-                            <span className='text-sm text-gray-500 dark:text-gray-400'>
+                            <span className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {t("zakat.person_unit")}
                             </span>
                         </div>
@@ -413,13 +413,13 @@ export function ZakatContent({ basePath = "/zakat" }) {
                         />
                         <label
                             htmlFor='trade-haul'
-                            className='text-sm text-gray-700 dark:text-gray-300'
+                            className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'
                         >
                             {t("zakat.haul_label")}
                         </label>
                     </div>
                     {tradeNet > 0 && (
-                        <p className='text-sm text-center text-gray-500 dark:text-gray-400'>
+                        <p className='text-sm text-center text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("zakat.net_assets") ?? "Aset bersih"}:{" "}
                             {fmt(tradeNet)}
                         </p>
@@ -490,7 +490,7 @@ export function ZakatContent({ basePath = "/zakat" }) {
                         />
                         <label
                             htmlFor='irrigated'
-                            className='text-sm text-gray-700 dark:text-gray-300'
+                            className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'
                         >
                             {t("zakat.uses_irrigation") ??
                                 "Menggunakan irigasi/biaya pengairan (tarif 5%)"}
@@ -594,7 +594,7 @@ export function ZakatContent({ basePath = "/zakat" }) {
                         />
                         <label
                             htmlFor='gold-haul'
-                            className='text-sm text-gray-700 dark:text-gray-300'
+                            className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'
                         >
                             {t("zakat.haul_label")}
                         </label>

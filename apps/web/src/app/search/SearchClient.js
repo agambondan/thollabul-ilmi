@@ -160,11 +160,11 @@ const GenericCard = ({ item, title, excerpt, href }) => (
         href={href}
         className='block p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
     >
-        <p className='text-sm font-medium text-emerald-700 dark:text-emerald-300'>
+        <p className='text-sm font-medium text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
             {title}
         </p>
         {excerpt && (
-            <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2'>
+            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1 line-clamp-2'>
                 {excerpt}
             </p>
         )}
@@ -345,7 +345,7 @@ export default function SearchClient({
                 isWide ? "w-full px-4" : "container mx-auto px-4 max-w-3xl"
             }
         >
-            <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-6'>
+            <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-6'>
                 {t("search.title")}
             </h1>
 
@@ -356,7 +356,7 @@ export default function SearchClient({
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={t("search.placeholder")}
-                    className='flex-1 px-4 py-2.5 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                    className='flex-1 px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500'
                 />
                 <button
                     type='submit'
@@ -679,7 +679,7 @@ export default function SearchClient({
 
                     {!results.total && (
                         <div className='text-center py-12'>
-                            <p className='text-gray-500 dark:text-gray-400 text-sm'>
+                            <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm'>
                                 {t("common.no_results")} &quot;{query}&quot;
                             </p>
                         </div>

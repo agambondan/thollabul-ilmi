@@ -88,7 +88,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                 <div>
                     <label
                         htmlFor='sirohform-field-1'
-                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                        className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                     >
                         {t("admin.field.category")}{" "}
                         <span className='text-red-500'>*</span>
@@ -123,7 +123,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                 <div>
                     <label
                         htmlFor='sirohform-order'
-                        className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                        className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                     >
                         {t("admin.field.order")}
                     </label>
@@ -142,7 +142,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             <div>
                 <label
                     htmlFor='sirohform-field-2'
-                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                 >
                     {t("admin.field.title")}{" "}
                     <span className='text-red-500'>*</span>
@@ -160,7 +160,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             <div>
                 <label
                     htmlFor='sirohform-slug'
-                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                 >
                     {t("admin.field.slug")}
                 </label>
@@ -182,7 +182,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             <div>
                 <label
                     htmlFor='sirohform-field-3'
-                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
                 >
                     {t("admin.field.content")}{" "}
                     <span className='text-red-500'>*</span>

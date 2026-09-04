@@ -62,10 +62,10 @@ export function AchievementContent() {
                 <div className='inline-flex items-center justify-center w-16 h-16 bg-amber-100 dark:bg-amber-900/40 rounded-2xl mb-4'>
                     <BsTrophy className='text-3xl text-amber-600 dark:text-amber-400' />
                 </div>
-                <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-1'>
                     {t("stats.achievements") ?? "Pencapaian"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("achievements.subtitle") ??
                         "Kumpulkan badge dengan menyelesaikan aktivitas"}
                 </p>
@@ -90,7 +90,7 @@ export function AchievementContent() {
             {!isAuthenticated && (
                 <div className='text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                     <p className='text-4xl mb-3'>🏅</p>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("achievements.login_hint") ??
                             "Login untuk melihat pencapaian kamu."}
                     </p>
@@ -140,14 +140,14 @@ export function AchievementContent() {
                                 </div>
                                 <div className='flex-1 min-w-0'>
                                     <div className='flex items-center gap-2'>
-                                        <p className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                        <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                             {a.name}
                                         </p>
                                         {earned && (
                                             <BsCheckCircle className='text-emerald-500 shrink-0' />
                                         )}
                                     </div>
-                                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                                         {a.description}
                                     </p>
                                 </div>
@@ -172,8 +172,8 @@ export function AchievementContent() {
 
             {!loading && achievements.length === 0 && (
                 <div className='text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
-                    <BsAward className='text-4xl text-gray-300 dark:text-gray-600 mx-auto mb-3' />
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <BsAward className='text-4xl text-gray-300 dark:text-gray-600 dark:text-gray-300 mx-auto mb-3' />
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("achievements.empty") ??
                             "Belum ada pencapaian yang tersedia."}
                     </p>

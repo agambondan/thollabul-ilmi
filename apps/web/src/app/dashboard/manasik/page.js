@@ -44,10 +44,10 @@ export default function DashboardManasikPage() {
     return (
         <div className='p-6'>
             <div className='mb-6'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {t("manasik.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400 mt-0.5'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
                     {t("manasik.subtitle")}
                 </p>
             </div>
@@ -76,7 +76,7 @@ export default function DashboardManasikPage() {
             {activeItems.length === 0 ? (
                 <div className='text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                     <p className='text-4xl mb-3'>🕋</p>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("manasik.empty") ?? "Belum ada langkah untuk kategori ini."}
                    </p>
                </div>
@@ -99,7 +99,7 @@ export default function DashboardManasikPage() {
                                     <span className='w-7 h-7 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-bold flex items-center justify-center shrink-0'>
                                         {item.step}
                                     </span>
-                                    <span className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                    <span className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                         {getLocalizedField(item, "title", lang)}
                                     </span>
                                 </div>
@@ -116,7 +116,7 @@ export default function DashboardManasikPage() {
                                         "description",
                                         lang,
                                     ) && (
-                                        <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
+                                        <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
                                             {getLocalizedField(
                                                 item,
                                                 "description",
@@ -133,7 +133,7 @@ export default function DashboardManasikPage() {
                                         </p>
                                     )}
                                     {item.latin && (
-                                        <p className='text-sm italic text-gray-500 dark:text-gray-400'>
+                                        <p className='text-sm italic text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                             {item.latin}
                                         </p>
                                     )}
@@ -141,7 +141,7 @@ export default function DashboardManasikPage() {
                                         item.translation,
                                         lang,
                                     ) && (
-                                        <p className='text-sm text-gray-700 dark:text-gray-300'>
+                                        <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                             {getLocalizedTranslation(
                                                 item.translation,
                                                 lang,

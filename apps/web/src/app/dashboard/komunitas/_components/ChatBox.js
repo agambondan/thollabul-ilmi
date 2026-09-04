@@ -64,7 +64,7 @@ export default function ChatBox() {
 
     return (
         <div className='flex flex-col h-96 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl overflow-hidden'>
-            <div className='p-3 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700 font-bold text-sm text-gray-900 dark:text-white flex items-center justify-between'>
+            <div className='p-3 bg-white dark:bg-slate-800 border-b border-gray-100 dark:border-slate-700 font-bold text-sm text-gray-900 dark:text-gray-100 dark:text-white flex items-center justify-between'>
                 <div className='flex items-center gap-2'>
                     <span className='w-2 h-2 rounded-full bg-emerald-500 animate-pulse'></span>
                     {t("komunitas.chat")}
@@ -125,7 +125,7 @@ export default function ChatBox() {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             placeholder={t("komunitas.chat_placeholder")}
-                            className='flex-1 px-4 py-2 text-sm bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                            className='flex-1 px-4 py-2 text-sm bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500'
                         />
                         <button
                             type='submit'
@@ -136,7 +136,7 @@ export default function ChatBox() {
                         </button>
                     </form>
                 ) : (
-                    <p className='text-xs text-center text-gray-500'>
+                    <p className='text-xs text-center text-gray-500 dark:text-gray-300'>
                         {t("feed.login_required")}{" "}
                         <Link
                             href='/auth/login'

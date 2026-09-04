@@ -143,10 +143,10 @@ const DeveloperKeyManager = () => {
                         <BsKey className='text-xl' />
                     </div>
                     <div className='flex-1'>
-                        <h2 className='text-lg font-semibold text-gray-900 dark:text-white'>
+                        <h2 className='text-lg font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                             {t("dev.keys.guest_title")}
                         </h2>
-                        <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+                        <p className='mt-1 text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("dev.keys.guest_desc")}
                         </p>
                         <Link
@@ -167,14 +167,14 @@ const DeveloperKeyManager = () => {
             <div className={`${cardCls} p-6`}>
                 <div className='flex items-start justify-between gap-4'>
                     <div>
-                        <div className='inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300'>
+                        <div className='inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400 dark:bg-emerald-900/20 dark:text-emerald-300'>
                             <BsKey />
                             Developer Access
                         </div>
-                        <h2 className='mt-3 text-xl font-bold text-gray-900 dark:text-white'>
+                        <h2 className='mt-3 text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                             {t("dev.keys.title")}
                         </h2>
-                        <p className='mt-2 max-w-2xl text-sm leading-6 text-gray-500 dark:text-gray-400'>
+                        <p className='mt-2 max-w-2xl text-sm leading-6 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("dev.keys.desc")}
                         </p>
                     </div>
@@ -205,7 +205,7 @@ const DeveloperKeyManager = () => {
                             <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300'>
                                 {t("dev.keys.created_title")}
                             </p>
-                            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                            <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                 {t("dev.keys.created_desc")}
                             </p>
                             <div className='mt-3 flex flex-col gap-3 sm:flex-row sm:items-center'>
@@ -222,7 +222,7 @@ const DeveloperKeyManager = () => {
                                 </button>
                             </div>
                             {copyMessage && (
-                                <p className='mt-2 text-xs text-gray-500 dark:text-gray-400'>
+                                <p className='mt-2 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {copyMessage}
                                 </p>
                             )}
@@ -240,7 +240,7 @@ const DeveloperKeyManager = () => {
                         value={createName}
                         onChange={(e) => setCreateName(e.target.value)}
                         placeholder={t("dev.keys.name_placeholder")}
-                        className='flex-1 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-700 dark:text-white'
+                        className='flex-1 rounded-xl border border-gray-300 dark:border-gray-600 bg-white px-4 py-3 text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-700 dark:text-white'
                     />
                     <button
                         type='submit'
@@ -256,14 +256,14 @@ const DeveloperKeyManager = () => {
             </div>
 
             {error && (
-                <div className='rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-300'>
+                <div className='rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:text-red-400 dark:border-red-900/40 dark:bg-red-900/20 dark:text-red-300'>
                     {error}
                 </div>
             )}
 
             <div className={`${cardCls} overflow-hidden`}>
                 <div className='border-b border-gray-100 px-5 py-4 dark:border-slate-700'>
-                    <h3 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                    <h3 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                         {t("dev.keys.active_title")}
                     </h3>
                 </div>
@@ -278,7 +278,7 @@ const DeveloperKeyManager = () => {
                         ))}
                     </div>
                 ) : keys.length === 0 ? (
-                    <div className='p-6 text-center text-sm text-gray-500 dark:text-gray-400'>
+                    <div className='p-6 text-center text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("dev.keys.empty")}
                     </div>
                 ) : (
@@ -290,7 +290,7 @@ const DeveloperKeyManager = () => {
                             >
                                 <div className='space-y-2'>
                                     <div className='flex flex-wrap items-center gap-2'>
-                                        <h4 className='text-sm font-semibold text-gray-900 dark:text-white'>
+                                        <h4 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                             {item.name}
                                         </h4>
                                         <span
@@ -305,13 +305,13 @@ const DeveloperKeyManager = () => {
                                                 : t("common.inactive")}
                                         </span>
                                     </div>
-                                    <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                         Prefix:{" "}
                                         <span className='font-mono'>
                                             {item.key_prefix}
                                         </span>
                                     </p>
-                                    <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                         {t("dev.keys.request_count")}:{" "}
                                         {item.request_count ?? 0} ·{" "}
                                         {t("dev.keys.last_used")}:{" "}

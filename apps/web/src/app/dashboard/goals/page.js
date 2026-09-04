@@ -211,7 +211,7 @@ const GoalsPage = () => {
     return (
         <div className='px-4 py-6'>
             <div className='flex items-center justify-between mb-6'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {t("goals.title")}
                 </h1>
                 <button
@@ -223,7 +223,7 @@ const GoalsPage = () => {
                 </button>
             </div>
             {syncError ? (
-                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300'>
+                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 dark:text-amber-400 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300'>
                     {syncError}
                 </div>
             ) : null}
@@ -250,7 +250,7 @@ const GoalsPage = () => {
             {filtered.length === 0 ? (
                 <div className='text-center py-16'>
                     <p className='text-4xl mb-3'>🎯</p>
-                    <p className='text-gray-500 dark:text-gray-400 text-sm'>
+                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm'>
                         {tab === "aktif"
                             ? t("goals.empty_active")
                             : t("goals.empty_done")}
@@ -282,7 +282,7 @@ const GoalsPage = () => {
                             >
                                 <div className='flex items-start justify-between gap-2 mb-2'>
                                     <div>
-                                        <p className='text-sm font-semibold text-gray-800 dark:text-white'>
+                                        <p className='text-sm font-semibold text-gray-800 dark:text-gray-200 dark:text-white'>
                                             {goal.title}
                                         </p>
                                         <p className='text-xs text-gray-400 mt-0.5'>
@@ -301,7 +301,7 @@ const GoalsPage = () => {
                                                     onClick={() =>
                                                         openEdit(goal)
                                                     }
-                                                    className='text-xs px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors'
+                                                    className='text-xs px-2.5 py-1 rounded-lg bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-700 hover:dark:text-emerald-400 dark:hover:text-emerald-400 transition-colors'
                                                 >
                                                     {t("goals.update_short")}
                                                 </button>
@@ -312,7 +312,7 @@ const GoalsPage = () => {
                                                     aria-label={t(
                                                         "goals.mark_done",
                                                     )}
-                                                    className='text-emerald-500 hover:text-emerald-700 transition-colors'
+                                                    className='text-emerald-500 hover:text-emerald-700 hover:dark:text-emerald-400 transition-colors'
                                                     title={t("goals.mark_done")}
                                                 >
                                                     <BsCheckCircleFill />
@@ -322,7 +322,7 @@ const GoalsPage = () => {
                                         <button
                                             onClick={() => remove(goal.id)}
                                             aria-label={t("goals.delete")}
-                                            className='text-gray-300 dark:text-slate-600 hover:text-red-500 transition-colors'
+                                            className='text-gray-300 dark:text-slate-600 dark:text-slate-300 hover:text-red-500 transition-colors'
                                         >
                                             <BsTrash />
                                         </button>
@@ -360,12 +360,12 @@ const GoalsPage = () => {
                         className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'
                     >
                         <div className='flex items-center justify-between mb-4'>
-                            <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
+                            <h2 className='text-base font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                 {editGoal ? t("goals.update") : t("goals.add")}
                             </h2>
                             <button
                                 onClick={() => setShowModal(false)}
-                                className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-200'
+                                className='text-gray-400 hover:text-gray-600 hover:dark:text-gray-300 dark:hover:text-gray-200'
                             >
                                 <BsX className='text-xl' />
                             </button>
@@ -375,7 +375,7 @@ const GoalsPage = () => {
                             <div>
                                 <label
                                     htmlFor='page-label-title'
-                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                                 >
                                     {t("goals.label_title")}
                                 </label>
@@ -390,7 +390,7 @@ const GoalsPage = () => {
                                         }))
                                     }
                                     placeholder={t("goals.title_placeholder")}
-                                    className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                    className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 />
                             </div>
 
@@ -398,7 +398,7 @@ const GoalsPage = () => {
                                 <div>
                                     <label
                                         htmlFor='page-label-target'
-                                        className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                        className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                                     >
                                         {t("goals.label_target")}
                                     </label>
@@ -414,13 +414,13 @@ const GoalsPage = () => {
                                             }))
                                         }
                                         placeholder='30'
-                                        className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                        className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                     />
                                 </div>
                                 <div>
                                     <label
                                         htmlFor='page-label-unit'
-                                        className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                        className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                                     >
                                         {t("goals.label_unit")}
                                     </label>
@@ -433,7 +433,7 @@ const GoalsPage = () => {
                                                 unit: e.target.value,
                                             }))
                                         }
-                                        className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                        className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                     >
                                         {UNITS.map((u) => (
                                             <option key={u} value={u}>
@@ -448,7 +448,7 @@ const GoalsPage = () => {
                                 <div>
                                     <label
                                         htmlFor='page-label-current'
-                                        className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                        className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                                     >
                                         {t("goals.label_current")}
                                     </label>
@@ -463,7 +463,7 @@ const GoalsPage = () => {
                                                 current: e.target.value,
                                             }))
                                         }
-                                        className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                        className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                     />
                                 </div>
                             )}
@@ -472,7 +472,7 @@ const GoalsPage = () => {
                                 <div>
                                     <label
                                         htmlFor='page-label-category'
-                                        className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                        className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                                     >
                                         {t("goals.label_category")}
                                     </label>
@@ -485,7 +485,7 @@ const GoalsPage = () => {
                                                 category: e.target.value,
                                             }))
                                         }
-                                        className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                        className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                     >
                                         {CATEGORIES.map((c) => (
                                             <option key={c} value={c}>
@@ -497,7 +497,7 @@ const GoalsPage = () => {
                                 <div>
                                     <label
                                         htmlFor='page-label-deadline'
-                                        className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                                        className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                                     >
                                         {t("goals.label_deadline")}
                                     </label>
@@ -511,7 +511,7 @@ const GoalsPage = () => {
                                                 deadline: e.target.value,
                                             }))
                                         }
-                                        className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                        className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                     />
                                 </div>
                             </div>
@@ -520,7 +520,7 @@ const GoalsPage = () => {
                         <div className='flex justify-end gap-2 mt-5'>
                             <button
                                 onClick={() => setShowModal(false)}
-                                className='px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors'
+                                className='px-4 py-2 text-sm text-gray-600 dark:text-gray-300 dark:text-gray-400 hover:text-gray-800 hover:dark:text-gray-200 dark:hover:text-white transition-colors'
                             >
                                 {t("common.cancel")}
                             </button>

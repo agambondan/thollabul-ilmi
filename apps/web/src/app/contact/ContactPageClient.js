@@ -119,10 +119,10 @@ export default function ContactPageClient() {
                 >
                     تَوَاصَلْ مَعَنَا
                 </p>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                     {t("contact.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("contact.subtitle")}
                 </p>
             </div>
@@ -136,11 +136,11 @@ export default function ContactPageClient() {
                             href.startsWith("mailto") ? undefined : "_blank"
                         }
                         rel='noopener noreferrer'
-                        className='group flex items-start gap-4 p-4 rounded-2xl border border-gray-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all'
+                        className='group flex items-start gap-4 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all'
                     >
                         <div className='w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center shrink-0 group-hover:bg-emerald-200 dark:group-hover:bg-emerald-800/60 transition-colors'>
                             <Icon
-                                className='text-emerald-700 dark:text-emerald-300'
+                                className='text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'
                                 size={18}
                             />
                         </div>
@@ -148,10 +148,10 @@ export default function ContactPageClient() {
                             <p className='text-xs font-semibold text-emerald-700 dark:text-emerald-400 mb-0.5'>
                                 {label}
                             </p>
-                            <p className='text-sm font-medium text-emerald-900 dark:text-white truncate'>
+                            <p className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white truncate'>
                                 {value}
                             </p>
-                            <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-snug'>
+                            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5 leading-snug'>
                                 {desc}
                             </p>
                         </div>
@@ -160,7 +160,7 @@ export default function ContactPageClient() {
             </div>
 
             <div>
-                <h2 className='text-base font-bold text-emerald-900 dark:text-white mb-4'>
+                <h2 className='text-base font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-4'>
                     {t("contact.faq_title")}
                 </h2>
                 <div className='flex flex-col gap-3'>
@@ -169,10 +169,10 @@ export default function ContactPageClient() {
                             key={q}
                             className='border border-gray-100 dark:border-slate-700 rounded-2xl px-4 py-4'
                         >
-                            <p className='text-sm font-semibold text-emerald-900 dark:text-white mb-1'>
+                            <p className='text-sm font-semibold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                                 {q}
                             </p>
-                            <p className='text-sm text-gray-500 dark:text-gray-400 leading-relaxed'>
+                            <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 leading-relaxed'>
                                 {a}
                             </p>
                         </div>
@@ -180,7 +180,7 @@ export default function ContactPageClient() {
                 </div>
             </div>
 
-            <p className='mt-10 text-center text-xs text-gray-400 dark:text-gray-600'>
+            <p className='mt-10 text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300'>
                 {t("contact.response_time")}
             </p>
         </div>

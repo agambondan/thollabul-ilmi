@@ -192,10 +192,10 @@ const InfiniteScrollHadithPage = ({
         return (
             <div className='flex flex-col items-center justify-center min-h-[40vh] text-center px-4'>
                 <p className='text-4xl mb-3'>⚠️</p>
-                <h2 className='text-lg font-bold text-emerald-900 dark:text-white mb-2'>
+                <h2 className='text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-2'>
                     {t("hadith.load_error_title")}
                 </h2>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("hadith.load_error_desc")}
                 </p>
             </div>
@@ -211,11 +211,11 @@ const InfiniteScrollHadithPage = ({
                     >
                         الْحَدِيث
                     </p>
-                    <h1 className='text-xl font-bold text-emerald-900 dark:text-white mb-0.5'>
+                    <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-0.5'>
                         {getLocalizedTranslation(book?.translation, lang) ||
                             params.slug}
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("hadith.collection_from")}{" "}
                         {getLocalizedTranslation(book?.translation, lang) ||
                             params.slug}

@@ -192,10 +192,10 @@ export function KiblatContent() {
                 <div className='inline-flex items-center justify-center w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl mb-4'>
                     <span className='text-3xl'>🕋</span>
                 </div>
-                <h1 className='text-3xl font-extrabold text-emerald-900 dark:text-emerald-100 mb-2'>
+                <h1 className='text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-100 mb-2'>
                     {t("qibla.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("qibla.subtitle")}
                 </p>
             </div>
@@ -203,7 +203,7 @@ export function KiblatContent() {
             {loading && (
                 <div className='text-center py-12'>
                     <div className='w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-3' />
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("qibla.detecting")}
                     </p>
                 </div>
@@ -251,7 +251,7 @@ export function KiblatContent() {
                                         }}
                                     >
                                         <span
-                                            className='absolute left-1/2 -translate-x-1/2 top-3 text-xs leading-none font-extrabold text-gray-500 dark:text-gray-400'
+                                            className='absolute left-1/2 -translate-x-1/2 top-3 text-xs leading-none font-extrabold text-gray-500 dark:text-gray-300 dark:text-gray-400'
                                             style={{
                                                 transform: `rotate(${-(angle + ringRotationDeg)}deg)`,
                                             }}
@@ -312,7 +312,7 @@ export function KiblatContent() {
                         </div>
 
                         {isPointing && (
-                            <div className='mt-4 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200 px-4 py-2 rounded-xl text-sm font-bold'>
+                            <div className='mt-4 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 dark:text-emerald-200 px-4 py-2 rounded-xl text-sm font-bold'>
                                 ✅ {t("qibla.facing_qibla")}
                             </div>
                         )}
@@ -324,7 +324,7 @@ export function KiblatContent() {
                             <p className='text-xs text-gray-400 mb-1'>
                                 {t("qibla.angle")}
                             </p>
-                            <p className='text-2xl font-extrabold text-emerald-700 dark:text-emerald-300'>
+                            <p className='text-2xl font-extrabold text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
                                 {Math.round(qiblaAngle)}°
                             </p>
                             <p className='text-xs text-gray-400'>
@@ -335,7 +335,7 @@ export function KiblatContent() {
                             <p className='text-xs text-gray-400 mb-1'>
                                 {t("qibla.distance_to_kaaba")}
                             </p>
-                            <p className='text-2xl font-extrabold text-emerald-700 dark:text-emerald-300'>
+                            <p className='text-2xl font-extrabold text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
                                 {distance?.toLocaleString(
                                     lang === "EN" ? "en-US" : "id-ID",
                                 )}
@@ -346,10 +346,10 @@ export function KiblatContent() {
 
                     {coords && (
                         <div className='bg-white dark:bg-slate-800 rounded-2xl p-4 border border-gray-100 dark:border-slate-700 shadow-sm mb-4'>
-                            <p className='text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2 flex items-center gap-1'>
+                            <p className='text-xs font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wide mb-2 flex items-center gap-1'>
                                 <BsGeoAlt /> {t("geo.your_location")}
                             </p>
-                            <p className='text-sm text-gray-700 dark:text-gray-300'>
+                            <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                 {coords.lat.toFixed(4)}° LU,{" "}
                                 {coords.lng.toFixed(4)}° BT
                             </p>

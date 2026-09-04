@@ -39,10 +39,10 @@ const ByChapter = ({ basePath = "/hadith" }) => {
         return (
             <div className='flex flex-col items-center justify-center min-h-[40vh] text-center px-4'>
                 <p className='text-4xl mb-3'>⚠️</p>
-                <h2 className='text-lg font-bold text-emerald-900 dark:text-white mb-2'>
+                <h2 className='text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-2'>
                     {t("hadith.load_error_title")}
                 </h2>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("hadith.load_error_desc")}
                 </p>
             </div>
@@ -54,7 +54,7 @@ const ByChapter = ({ basePath = "/hadith" }) => {
             <ContentWidth compact='max-w-4xl' className='px-4'>
                 <label
                     htmlFor='bychapter-select-book'
-                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'
+                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-2'
                 >
                     {t("hadith.select_book")}
                 </label>
@@ -62,7 +62,7 @@ const ByChapter = ({ basePath = "/hadith" }) => {
                     id='bychapter-select-book'
                     value={selectedBookSlug}
                     onChange={(e) => setSelectedBookSlug(e.target.value)}
-                    className='w-full px-3 py-2.5 text-sm rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                    className='w-full px-3 py-2.5 text-sm rounded-xl border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                 >
                     {books.map((book) => (
                         <option key={book.slug} value={book.slug}>

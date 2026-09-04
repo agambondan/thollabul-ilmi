@@ -55,7 +55,7 @@ const GoogleCallbackContent = () => {
     return (
         <main className='min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center px-4'>
             <div className='w-full max-w-md text-center bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 p-8'>
-                <h1 className='text-xl font-bold text-emerald-900 dark:text-white mb-2'>
+                <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-2'>
                     Login dengan Google
                 </h1>
                 {status && (

@@ -29,10 +29,10 @@ const CardHorizontal = ({
 
                 {/* Name + detail */}
                 <div className='flex-1 min-w-0'>
-                    <p className='font-semibold text-gray-900 dark:text-white text-sm truncate group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors'>
+                    <p className='font-semibold text-gray-900 dark:text-gray-100 dark:text-white text-sm truncate group-hover:text-emerald-700 hover:dark:text-emerald-400 dark:group-hover:text-emerald-400 transition-colors'>
                         {surat.translation.latin_en}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate'>
+                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5 truncate'>
                         {getRevelationType(surat.revelation_type, t)} &middot;{" "}
                         {getLocalizedTranslation(surat.translation, lang)}{" "}
                         &middot; {surat.number_of_ayahs} {ayahUnit}
@@ -41,7 +41,7 @@ const CardHorizontal = ({
 
                 {/* Arabic name */}
                 <span
-                    className='flex-shrink-0 text-xl text-gray-500 dark:text-gray-400'
+                    className='flex-shrink-0 text-xl text-gray-500 dark:text-gray-300 dark:text-gray-400'
                     style={{ fontFamily: "Uthmani, serif", direction: "rtl" }}
                 >
                     {arabicName}

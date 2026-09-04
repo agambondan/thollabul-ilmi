@@ -56,7 +56,7 @@ const EditProfileCard = ({ user, refetchUser, className = "" }) => {
                     setOpen((v) => !v);
                     setMsg({ type: "", text: "" });
                 }}
-                className='w-full flex items-center justify-between px-5 py-4 text-sm font-semibold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors'
+                className='w-full flex items-center justify-between px-5 py-4 text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors'
             >
                 <span className='flex items-center gap-2'>
                     <BsPersonGear className='text-emerald-600 dark:text-emerald-400' />
@@ -80,7 +80,7 @@ const EditProfileCard = ({ user, refetchUser, className = "" }) => {
                     <div>
                         <label
                             htmlFor='editprofilecard-name'
-                            className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                            className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                         >
                             {t("auth.name")}
                         </label>
@@ -95,7 +95,7 @@ const EditProfileCard = ({ user, refetchUser, className = "" }) => {
                     <div>
                         <label
                             htmlFor='editprofilecard-email'
-                            className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
+                            className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
                         >
                             Email
                         </label>
@@ -123,7 +123,7 @@ const EditProfileCard = ({ user, refetchUser, className = "" }) => {
                                 setName(user?.name ?? "");
                                 setMsg({ type: "", text: "" });
                             }}
-                            className='px-4 py-2 rounded-lg border border-gray-200 dark:border-slate-600 text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors hover:bg-gray-50 dark:hover:bg-slate-700'
+                            className='px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors hover:bg-gray-50 dark:hover:bg-slate-700'
                         >
                             {t("common.cancel")}
                         </button>

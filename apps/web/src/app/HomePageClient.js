@@ -645,7 +645,7 @@ export default function Home() {
 
                                     <div className='relative h-32 min-w-40 overflow-hidden rounded-lg bg-emerald-900/30'>
                                         <FaMoon className='absolute right-8 top-4 text-3xl text-gold-300' />
-                                        <div className='absolute bottom-0 right-3 flex h-24 w-32 items-center justify-center rounded-lg bg-gold-400 text-emerald-950 shadow-xl shadow-emerald-950/30'>
+                                        <div className='absolute bottom-0 right-3 flex h-24 w-32 items-center justify-center rounded-lg bg-gold-400 text-emerald-950 dark:text-emerald-300 shadow-xl shadow-emerald-950/30'>
                                             <FaMosque className='text-6xl' />
                                         </div>
                                         <div className='absolute bottom-0 left-0 h-12 w-28 rounded-tr-lg bg-emerald-700/80' />
@@ -653,9 +653,9 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            <div className='relative grid gap-3 bg-emerald-100 p-4 text-emerald-950 sm:grid-cols-2'>
+                            <div className='relative grid gap-3 bg-emerald-100 p-4 text-emerald-950 dark:text-emerald-300 sm:grid-cols-2'>
                                 <div className='rounded-lg bg-white px-4 py-3 shadow-sm'>
-                                    <div className='flex items-center gap-2 text-xs font-semibold uppercase text-emerald-700'>
+                                    <div className='flex items-center gap-2 text-xs font-semibold uppercase text-emerald-700 dark:text-emerald-400'>
                                         <FaMoon className='text-gold-600' />
                                         {t("home.date_hijri")}
                                     </div>
@@ -664,7 +664,7 @@ export default function Home() {
                                     </p>
                                 </div>
                                 <div className='rounded-lg bg-white px-4 py-3 shadow-sm'>
-                                    <div className='flex items-center gap-2 text-xs font-semibold uppercase text-emerald-700'>
+                                    <div className='flex items-center gap-2 text-xs font-semibold uppercase text-emerald-700 dark:text-emerald-400'>
                                         <BsCalendar3 className='text-gold-600' />
                                         {t("home.date_gregorian")}
                                     </div>
@@ -679,7 +679,7 @@ export default function Home() {
                     <div className='flex gap-4 justify-center flex-wrap mb-12'>
                         <Link
                             href={personalHref("/dashboard")}
-                            className='bg-gold-500 hover:bg-gold-400 text-emerald-950 px-8 py-3 rounded-full font-bold text-base transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 inline-flex items-center gap-2'
+                            className='bg-gold-500 hover:bg-gold-400 text-emerald-950 dark:text-emerald-300 px-8 py-3 rounded-full font-bold text-base transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 inline-flex items-center gap-2'
                         >
                             <FaQuran />
                             {isAuthenticated
@@ -688,7 +688,7 @@ export default function Home() {
                         </Link>
                         <Link
                             href='/quran'
-                            className='border-2 border-emerald-300 text-emerald-100 hover:bg-emerald-300 hover:text-emerald-950 px-8 py-3 rounded-full font-bold text-base transition-all inline-flex items-center gap-2'
+                            className='border-2 border-emerald-300 text-emerald-100 hover:bg-emerald-300 hover:text-emerald-950 hover:dark:text-emerald-300 px-8 py-3 rounded-full font-bold text-base transition-all inline-flex items-center gap-2'
                         >
                             <FaQuran />
                             {t("home.hero_read_quran")}
@@ -726,7 +726,7 @@ export default function Home() {
                         <h2 className='text-3xl font-bold text-emerald-900 dark:text-emerald-300 mb-4'>
                             {t("home.features_heading")}
                         </h2>
-                        <p className='text-gray-500 dark:text-gray-400 max-w-lg mx-auto text-sm'>
+                        <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 max-w-lg mx-auto text-sm'>
                             {t("home.features_subheading")}
                         </p>
                         <div className='flex items-center justify-center gap-3 mt-4'>
@@ -770,7 +770,7 @@ export default function Home() {
                                                     {feat.icon}
                                                 </span>
                                                 <div className='min-w-0'>
-                                                    <p className='text-sm font-semibold text-gray-800 dark:text-white leading-tight'>
+                                                    <p className='text-sm font-semibold text-gray-800 dark:text-gray-200 dark:text-white leading-tight'>
                                                         {t(feat.labelKey)}
                                                     </p>
                                                     <span
@@ -788,7 +788,7 @@ export default function Home() {
                                                                   "home.feature_public",
                                                               )}
                                                     </span>
-                                                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed'>
+                                                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1 leading-relaxed'>
                                                         {t(feat.descKey)}
                                                     </p>
                                                 </div>
@@ -809,7 +809,7 @@ export default function Home() {
                         <h2 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 mb-2'>
                             {t("home.tajweed_heading")}
                         </h2>
-                        <p className='text-sm text-gray-500 dark:text-gray-400'>
+                        <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("home.tajweed_desc")}
                         </p>
                     </div>
@@ -834,7 +834,7 @@ export default function Home() {
                     <div className='flex gap-4 justify-center flex-wrap'>
                         <Link
                             href={personalHref("/dashboard")}
-                            className='bg-gold-500 hover:bg-gold-400 text-emerald-950 px-8 py-3 rounded-full font-bold text-sm transition-all shadow-lg hover:-translate-y-0.5'
+                            className='bg-gold-500 hover:bg-gold-400 text-emerald-950 dark:text-emerald-300 px-8 py-3 rounded-full font-bold text-sm transition-all shadow-lg hover:-translate-y-0.5'
                         >
                             {isAuthenticated
                                 ? t("link.dashboard")

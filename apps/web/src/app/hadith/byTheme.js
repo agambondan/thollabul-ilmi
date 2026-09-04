@@ -41,10 +41,10 @@ const ByTheme = ({ themeBasePath = "/hadith/theme" }) => {
         return (
             <div className='flex flex-col items-center justify-center min-h-[40vh] text-center px-4'>
                 <p className='text-4xl mb-3'>⚠️</p>
-                <h2 className='text-lg font-bold text-emerald-900 dark:text-white mb-2'>
+                <h2 className='text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-2'>
                     {t("hadith.load_error_title")}
                 </h2>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("hadith.load_error_desc")}
                 </p>
             </div>
@@ -85,10 +85,10 @@ const ByTheme = ({ themeBasePath = "/hadith/theme" }) => {
                     >
                         <div className='flex flex-col justify-between p-4 flex-1'>
                             <div>
-                                <h5 className='text-base font-bold text-emerald-900 dark:text-white mb-1'>
+                                <h5 className='text-base font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                                     {themeLabel}
                                 </h5>
-                                <p className='text-sm text-gray-500 dark:text-gray-400 mb-2'>
+                                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-2'>
                                     {theme.total_hadith ?? 0} {t("hadith.unit")}
                                 </p>
                             </div>

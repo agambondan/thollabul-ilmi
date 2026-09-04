@@ -106,10 +106,10 @@ export default function QuizPage() {
                     <div className='inline-flex items-center justify-center w-20 h-20 bg-purple-100 dark:bg-purple-900/40 rounded-3xl mb-6'>
                         <FaBrain className='text-4xl text-purple-600 dark:text-purple-400' />
                     </div>
-                    <h1 className='text-4xl font-extrabold text-emerald-900 dark:text-emerald-100 mb-3'>
+                    <h1 className='text-4xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-100 mb-3'>
                         {t("quiz.title")}
                     </h1>
-                    <p className='text-gray-500 dark:text-gray-400 mb-3 text-sm max-w-sm mx-auto'>
+                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-3 text-sm max-w-sm mx-auto'>
                         {t("quiz.intro_desc_prefix")} {QUESTIONS_PER_ROUND}{" "}
                         {t("quiz.intro_desc_suffix")}
                     </p>
@@ -144,15 +144,15 @@ export default function QuizPage() {
                     <div className='text-5xl sm:text-7xl mb-3 sm:mb-4'>
                         {emoji}
                     </div>
-                    <h2 className='text-2xl sm:text-3xl font-extrabold text-emerald-900 dark:text-emerald-100 mb-2'>
+                    <h2 className='text-2xl sm:text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-100 mb-2'>
                         {t("quiz.finished")}
                     </h2>
-                    <p className='text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-5 sm:mb-6'>
+                    <p className='text-sm sm:text-base text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-5 sm:mb-6'>
                         {msg}
                     </p>
 
                     <div className='bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-sm border border-gray-100 dark:border-slate-700 mb-5 sm:mb-6'>
-                        <p className='inline-flex items-end justify-center gap-1 text-5xl sm:text-7xl font-extrabold text-emerald-700 dark:text-emerald-300 mb-2'>
+                        <p className='inline-flex items-end justify-center gap-1 text-5xl sm:text-7xl font-extrabold text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 mb-2'>
                             <span>{score}</span>
                             <span className='text-xl sm:text-3xl text-gray-400 mb-1'>
                                 /{questions.length}
@@ -164,7 +164,7 @@ export default function QuizPage() {
                                 style={{ width: `${pct}%` }}
                             />
                         </div>
-                        <p className='text-gray-500 dark:text-gray-400 text-sm'>
+                        <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm'>
                             {pct}% {t("quiz.correct")}
                         </p>
                     </div>
@@ -219,7 +219,7 @@ export default function QuizPage() {
             >
                 {/* Progress */}
                 <div className='flex items-center justify-between mb-2'>
-                    <span className='text-sm font-semibold text-gray-500 dark:text-gray-400'>
+                    <span className='text-sm font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                         {t("quiz.question")} {current + 1} / {questions.length}
                     </span>
                     <span className='text-sm font-semibold text-emerald-600 dark:text-emerald-400'>
@@ -238,7 +238,7 @@ export default function QuizPage() {
 
                 {/* Question */}
                 <div className='bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-700 mb-5'>
-                    <p className='text-lg font-bold text-gray-900 dark:text-white leading-snug'>
+                    <p className='text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-white leading-snug'>
                         {getLocalizedField(q.raw, "question", lang, [
                             "question_text",
                             "text",
@@ -271,7 +271,7 @@ export default function QuizPage() {
                                 className={cls}
                                 onClick={() => handleAnswer(i)}
                             >
-                                <span className='inline-block w-6 h-6 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400 text-xs font-extrabold text-center leading-6 mr-3'>
+                                <span className='inline-block w-6 h-6 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300 dark:text-gray-400 text-xs font-extrabold text-center leading-6 mr-3'>
                                     {String.fromCharCode(65 + i)}
                                 </span>
                                 {getLocalizedOption(opt, lang)}
