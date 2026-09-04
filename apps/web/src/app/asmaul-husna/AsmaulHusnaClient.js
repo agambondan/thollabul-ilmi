@@ -2,11 +2,16 @@
 
 import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
+import {
+    asmaulHusnaData,
+    asmaulHusnaGeneralDalil,
+} from "@/lib/asmaulHusnaData";
 import { getLocalizedField, getLocalizedText } from "@/lib/translation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
 import {
+    BsLink45Deg,
     BsPauseFill,
     BsPlayFill,
     BsSearch,
@@ -243,7 +248,7 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                             )}
                         </p>
                         {getLocalizedField(selected, "description", lang) && (
-                            <p className='text-sm text-gray-600 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3'>
+                            <p className='text-sm text-gray-600 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3 mb-3'>
                                 {getLocalizedField(
                                     selected,
                                     "description",
@@ -251,6 +256,52 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                                 )}
                             </p>
                         )}
+                        {(() => {
+                            const extra = asmaulHusnaData[selected.number];
+                            if (!extra) return null;
+                            return (
+                                <div className='space-y-2 text-xs text-left mb-3'>
+                                    {extra.dalilRef && (
+                                        <div className='p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-800/40'>
+                                            <p className='font-bold text-emerald-800 dark:text-emerald-300'>
+                                                📖 {extra.dalilRef}
+                                            </p>
+                                            {extra.dalilText && (
+                                                <p
+                                                    dir='rtl'
+                                                    className='font-arabic text-sm text-right text-emerald-950 dark:text-emerald-200 my-1'
+                                                >
+                                                    {extra.dalilText}
+                                                </p>
+                                            )}
+                                            <p className='text-gray-600 dark:text-gray-300 italic'>
+                                                &ldquo;{extra.dalilTrans}&rdquo;
+                                            </p>
+                                        </div>
+                                    )}
+                                    {extra.ulamaQuote && (
+                                        <div className='p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-800/30 text-amber-900 dark:text-amber-300'>
+                                            <p className='font-semibold'>
+                                                💬 {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
+                                            </p>
+                                            <p className='text-gray-700 dark:text-gray-300 mt-0.5'>
+                                                {extra.ulamaQuote}
+                                            </p>
+                                        </div>
+                                    )}
+                                    {extra.internalLink && (
+                                        <div className='pt-1'>
+                                            <Link
+                                                href={extra.internalLink}
+                                                className='inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-medium hover:underline'
+                                            >
+                                                <BsLink45Deg /> {extra.linkLabel ?? "Buka di Al-Qur'an"} &rarr;
+                                            </Link>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })()}
                         {selected.audio_url && (
                             <button
                                 type='button'

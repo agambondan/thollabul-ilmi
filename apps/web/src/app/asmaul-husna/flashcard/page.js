@@ -4,7 +4,10 @@ import ContentWidth from "@/components/layout/ContentWidth";
 import Section from "@/components/Section";
 import { useLocale } from "@/context/Locale";
 import { asmaulHusnaApi } from "@/lib/api";
-import { asmaulHusnaData } from "@/lib/asmaulHusnaData";
+import {
+    asmaulHusnaData,
+    asmaulHusnaGeneralDalil,
+} from "@/lib/asmaulHusnaData";
 import { getLocalizedTranslation } from "@/lib/translation";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -12,8 +15,11 @@ import {
     BsArrowCounterclockwise,
     BsArrowLeft,
     BsArrowRight,
+    BsBook,
+    BsLink45Deg,
     BsShuffle,
 } from "react-icons/bs";
+import { GiPrayerBeads } from "react-icons/gi";
 
 const shuffleArray = (arr) => {
     const a = [...arr];
@@ -266,6 +272,74 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                     {t("common.next") ?? "Selanjutnya"}
                     <BsArrowRight />
                 </button>
+            </div>
+
+            {/* Quick Links to Internal Project Resources */}
+            <div className='mt-8 pt-6 border-t border-gray-100 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-3'>
+                <Link
+                    href={basePath}
+                    className='flex items-center gap-2.5 p-3 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-800/40 text-emerald-800 dark:text-emerald-300 text-xs font-medium hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors'
+                >
+                    <BsBook className='text-base shrink-0 text-emerald-600 dark:text-emerald-400' />
+                    <span>Lihat Daftar Lengkap 99 Asmaul Husna</span>
+                </Link>
+                <Link
+                    href={basePath.startsWith("/dashboard") ? "/dashboard/asmaul-husna/wirid" : "/asmaul-husna/wirid"}
+                    className='flex items-center gap-2.5 p-3 rounded-xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 text-amber-800 dark:text-amber-300 text-xs font-medium hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors'
+                >
+                    <GiPrayerBeads className='text-base shrink-0 text-amber-600 dark:text-amber-400' />
+                    <span>Latih Dzikir & Wirid Asmaul Husna</span>
+                </Link>
+            </div>
+
+            {/* General Dalil of 99 Names */}
+            <div className='mt-4 p-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-xs text-gray-600 dark:text-gray-300 space-y-3'>
+                <div className='flex items-center justify-between'>
+                    <span className='font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide text-[11px]'>
+                        {t("asmaul.general_dalil_title") ?? "Dalil 99 Asmaul Husna"}
+                    </span>
+                    <span className='text-[10px] text-gray-400'>
+                        Shahih Bukhari & Muslim
+                    </span>
+                </div>
+                <div className='p-2.5 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-800/30'>
+                    <p className='font-semibold text-emerald-900 dark:text-emerald-300'>
+                        📜 {asmaulHusnaGeneralDalil.hadith.ref}
+                    </p>
+                    <p dir='rtl' className='font-arabic text-sm text-right text-emerald-950 dark:text-emerald-200 my-1'>
+                        {asmaulHusnaGeneralDalil.hadith.arabic}
+                    </p>
+                    <p className='italic text-gray-600 dark:text-gray-300'>
+                        &ldquo;{asmaulHusnaGeneralDalil.hadith.trans}&rdquo;
+                    </p>
+                    <div className='mt-1.5'>
+                        <Link
+                            href={asmaulHusnaGeneralDalil.hadith.link}
+                            className='inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-medium hover:underline text-[11px]'
+                        >
+                            <BsLink45Deg /> Buka Hadits di Aplikasi &rarr;
+                        </Link>
+                    </div>
+                </div>
+                <div className='p-2.5 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-800/30'>
+                    <p className='font-semibold text-emerald-900 dark:text-emerald-300'>
+                        📖 {asmaulHusnaGeneralDalil.quran.ref}
+                    </p>
+                    <p dir='rtl' className='font-arabic text-sm text-right text-emerald-950 dark:text-emerald-200 my-1'>
+                        {asmaulHusnaGeneralDalil.quran.arabic}
+                    </p>
+                    <p className='italic text-gray-600 dark:text-gray-300'>
+                        &ldquo;{asmaulHusnaGeneralDalil.quran.trans}&rdquo;
+                    </p>
+                    <div className='mt-1.5'>
+                        <Link
+                            href={asmaulHusnaGeneralDalil.quran.link}
+                            className='inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-medium hover:underline text-[11px]'
+                        >
+                            <BsLink45Deg /> Buka QS. Al-A&apos;raf: 180 di Quran &rarr;
+                        </Link>
+                    </div>
+                </div>
             </div>
         </ContentWidth>
     );
