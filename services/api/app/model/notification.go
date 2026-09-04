@@ -45,18 +45,24 @@ type PushToken struct {
 	DeviceID   string    `json:"device_id,omitempty" gorm:"type:varchar(128);index"`
 	KeyP256DH  string    `json:"key_p256dh,omitempty" gorm:"type:varchar(256)"`
 	KeyAuth    string    `json:"key_auth,omitempty" gorm:"type:varchar(256)"`
+	Latitude   *float64  `json:"latitude,omitempty" gorm:"type:decimal(10,7)"`
+	Longitude  *float64  `json:"longitude,omitempty" gorm:"type:decimal(10,7)"`
+	CityName   string    `json:"city_name,omitempty" gorm:"type:varchar(100)"`
 	IsActive   bool      `json:"is_active" gorm:"default:true"`
 	LastSeenAt time.Time `json:"last_seen_at"`
 	User       *User     `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
 }
 
 type PushTokenRegisterRequest struct {
-	Token     string `json:"token" validate:"required"`
-	Platform  string `json:"platform" validate:"required"`
-	Provider  string `json:"provider"`
-	DeviceID  string `json:"device_id"`
-	KeyP256DH string `json:"key_p256dh"`
-	KeyAuth   string `json:"key_auth"`
+	Token     string   `json:"token" validate:"required"`
+	Platform  string   `json:"platform" validate:"required"`
+	Provider  string   `json:"provider"`
+	DeviceID  string   `json:"device_id"`
+	KeyP256DH string   `json:"key_p256dh"`
+	KeyAuth   string   `json:"key_auth"`
+	Latitude  *float64 `json:"latitude,omitempty"`
+	Longitude *float64 `json:"longitude,omitempty"`
+	CityName  string   `json:"city_name,omitempty"`
 }
 
 type PushTokenStatus struct {

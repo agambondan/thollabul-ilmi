@@ -99,6 +99,7 @@ func NewServices(repo *repository.Repositories) *Services {
 	dailyReminderSvc := NewDailyReminderServiceWithCache(repo.DailyReminder, cache)
 	dzikirSvc := NewDzikirServiceWithCache(repo.Dzikir, cache)
 	asmaulHusnaSvc := NewAsmaUlHusnaServiceWithCache(repo.AsmaUlHusna, cache)
+	prayerTimesSvc := NewPrayerTimesService()
 	svc := &Services{
 		User:                 NewUserService(repo.User),
 		Ayah:                 NewAyahServiceWithCache(repo.Ayah, cache),
@@ -115,7 +116,7 @@ func NewServices(repo *repository.Repositories) *Services {
 		Streak:               streak,
 		Search:               NewSearchServiceWithCache(repo.Search, cache),
 		Mufrodat:             NewMufrodatService(repo.Mufrodat),
-		Notification:         NewNotificationService(repo.Notification, repo.NotificationInbox),
+		Notification:         NewNotificationService(repo.Notification, repo.NotificationInbox, prayerTimesSvc),
 		NotificationInbox:    NewNotificationInboxService(repo.NotificationInbox),
 		Feed:                 NewFeedService(repo.Feed, repo.SocialModeration, NewAyahService(repo.Ayah), NewHadithService(repo.Hadith)),
 		Tafsir:               NewTafsirServiceWithCache(repo.Tafsir, cache),
@@ -153,7 +154,7 @@ func NewServices(repo *repository.Repositories) *Services {
 		Hijri:                NewHijriService(repo.IslamicEvent),
 		AsbabunNuzul:         NewAsbabunNuzulServiceWithCache(repo.AsbabunNuzul, cache),
 		Kiblat:               NewKiblatService(),
-		PrayerTimes:          NewPrayerTimesService(),
+		PrayerTimes:          prayerTimesSvc,
 		History:              NewHistoryServiceWithCache(repo.History, cache),
 		Manasik:              NewManasikServiceWithCache(repo.Manasik, cache),
 		Quiz:                 NewQuizService(repo.Quiz),

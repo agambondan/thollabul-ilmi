@@ -22,16 +22,18 @@ type NotificationService interface {
 	SendTestPush(userID uuid.UUID) (model.PushTestResponse, error)
 	BroadcastPush(adminID uuid.UUID, req *model.BroadcastPushRequest) (model.BroadcastPushResponse, error)
 	DispatchDueReminders(now time.Time) (int, error)
+	DispatchDueAdzanPush(now time.Time) (int, error)
 	StartReminderScheduler(ctx context.Context, interval time.Duration)
 }
 
 type notificationService struct {
-	inboxRepo repository.NotificationInboxRepository
-	repo      repository.NotificationRepository
+	inboxRepo       repository.NotificationInboxRepository
+	repo            repository.NotificationRepository
+	prayerTimesSvc  PrayerTimesService
 }
 
-func NewNotificationService(repo repository.NotificationRepository, inboxRepo repository.NotificationInboxRepository) NotificationService {
-	return &notificationService{repo: repo, inboxRepo: inboxRepo}
+func NewNotificationService(repo repository.NotificationRepository, inboxRepo repository.NotificationInboxRepository, prayerTimesSvc PrayerTimesService) NotificationService {
+	return &notificationService{repo: repo, inboxRepo: inboxRepo, prayerTimesSvc: prayerTimesSvc}
 }
 
 func (s *notificationService) FindSettings(userID uuid.UUID) ([]model.NotificationSetting, error) {
@@ -258,6 +260,98 @@ func (s *notificationService) DispatchDueReminders(now time.Time) (int, error) {
 	return sent, nil
 }
 
+func (s *notificationService) DispatchDueAdzanPush(now time.Time) (int, error) {
+	if s.prayerTimesSvc == nil || s.repo == nil {
+		return 0, nil
+	}
+
+	tokens, err := s.repo.FindAllActivePushTokens()
+	if err != nil {
+		return 0, err
+	}
+
+	sent := 0
+	type prayerMatch struct {
+		Name string
+		Key  string
+	}
+
+	for _, token := range tokens {
+		if !token.IsActive {
+			continue
+		}
+
+		lat := -6.2088
+		lng := 106.8456
+		if token.Latitude != nil && token.Longitude != nil {
+			lat = *token.Latitude
+			lng = *token.Longitude
+		}
+
+		tz := 7 // Default WIB
+		if lng >= 120.0 && lng < 135.0 {
+			tz = 8 // WITA
+		} else if lng >= 135.0 {
+			tz = 9 // WIT
+		}
+		loc := time.FixedZone(fmt.Sprintf("UTC+%d", tz), tz*3600)
+		localNow := now.In(loc)
+		currentTimeStr := localNow.Format("15:04")
+
+		ptResp, err := s.prayerTimesSvc.GetByDate(lat, lng, localNow, "kemenag", "shafi")
+		if err != nil || ptResp == nil {
+			continue
+		}
+
+		prayers := ptResp.Prayers
+		var match *prayerMatch
+
+		switch currentTimeStr {
+		case prayers.Fajr:
+			match = &prayerMatch{Name: "Subuh", Key: "fajr"}
+		case prayers.Dhuhr:
+			match = &prayerMatch{Name: "Dzuhur", Key: "dhuhr"}
+		case prayers.Asr:
+			match = &prayerMatch{Name: "Ashar", Key: "asr"}
+		case prayers.Maghrib:
+			match = &prayerMatch{Name: "Maghrib", Key: "maghrib"}
+		case prayers.Isha:
+			match = &prayerMatch{Name: "Isya", Key: "isha"}
+		}
+
+		if match == nil {
+			continue
+		}
+
+		cityName := token.CityName
+		if cityName == "" {
+			cityName = "wilayah Anda"
+		}
+
+		title := fmt.Sprintf("Waktunya Sholat %s", match.Name)
+		body := fmt.Sprintf("Telah masuk waktu sholat %s untuk %s dan sekitarnya.", match.Name, cityName)
+
+		switch strings.ToLower(token.Provider) {
+		case "web":
+			if token.KeyP256DH == "" || token.KeyAuth == "" {
+				continue
+			}
+			if err := s.sendWebPushCustom(token, title, body, "/jadwal-sholat", model.NotificationTypeAdzan); err == nil {
+				sent++
+			}
+		case "expo":
+			if isDeliverableExpoPushToken(token) {
+				content := reminderContent{Title: title, Description: body}
+				if n, err := s.sendPushToUser(token.UserID, model.NotificationTypeAdzan, content); err == nil && n > 0 {
+					sent += n
+				}
+			}
+		}
+	}
+
+	return sent, nil
+}
+
 func (s *notificationService) StartReminderScheduler(ctx context.Context, interval time.Duration) {
 	if interval <= 0 {
 		interval = time.Minute
@@ -268,6 +362,9 @@ func (s *notificationService) StartReminderScheduler(ctx context.Context, interv
 		for {
 			if _, err := s.DispatchDueReminders(time.Now()); err != nil {
 				slog.Error("notification scheduler error", "err", err)
+			}
+			if _, err := s.DispatchDueAdzanPush(time.Now()); err != nil {
+				slog.Error("adzan push scheduler error", "err", err)
 			}
 			select {
 			case <-ctx.Done():

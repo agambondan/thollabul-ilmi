@@ -53,6 +53,10 @@ export default function NotificationPermissionPrompt() {
         if (isAuthenticated) {
             const sub = subscriptionToPlainObject(result.subscription);
             if (sub) {
+                const storedLoc = readStoredUserLocation();
+                const lat = storedLoc?.lat ? Number(storedLoc.lat) : -6.2088;
+                const lng = storedLoc?.lng ? Number(storedLoc.lng) : 106.8456;
+                const cityName = storedLoc?.label || "Jakarta";
                 await notificationApi.registerPushToken({
                     token: sub.endpoint,
                     platform: "web",
@@ -60,6 +64,9 @@ export default function NotificationPermissionPrompt() {
                     device_id: `web:${navigator.userAgent?.slice(0, 40) ?? "unknown"}`,
                     key_p256dh: sub.keys?.p256dh ?? "",
                     key_auth: sub.keys?.auth ?? "",
+                    latitude: lat,
+                    longitude: lng,
+                    city_name: cityName,
                 });
             }
         }

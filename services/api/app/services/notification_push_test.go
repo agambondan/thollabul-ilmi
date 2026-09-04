@@ -128,7 +128,7 @@ func TestNotificationDispatchSendsExpoPushAndInbox(t *testing.T) {
 	viper.Set("EXPO_PUSH_ENDPOINT", server.URL)
 	viper.Set("EXPO_PUSH_ACCESS_TOKEN", "secret-token")
 
-	svc := NewNotificationService(repo, inboxRepo)
+	svc := NewNotificationService(repo, inboxRepo, NewPrayerTimesService())
 	sent, err := svc.DispatchDueReminders(time.Now())
 	if err != nil {
 		t.Fatalf("dispatch reminders: %v", err)
