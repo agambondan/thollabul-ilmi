@@ -5,13 +5,16 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { BsDownload, BsX } from "react-icons/bs";
 
-const DISMISS_KEY = "tholabul_pwa_prompt_dismissed";
-const DISMISS_TTL_MS = 14 * 24 * 60 * 60 * 1000;
+const DISMISS_SESSION_KEY = "tholabul_pwa_dismissed_session";
 
 const isDismissed = () => {
     if (typeof window === "undefined") return false;
-    const value = Number(localStorage.getItem(DISMISS_KEY));
-    return Number.isFinite(value) && Date.now() - value < DISMISS_TTL_MS;
+    try {
+        localStorage.removeItem("tholabul_pwa_prompt_dismissed");
+        return sessionStorage.getItem(DISMISS_SESSION_KEY) === "1";
+    } catch {
+        return false;
+    }
 };
 
 const isMobileDevice = () => {
@@ -63,7 +66,9 @@ export default function PwaInstallNotice() {
     }, []);
 
     const dismiss = () => {
-        localStorage.setItem(DISMISS_KEY, String(Date.now()));
+        try {
+            sessionStorage.setItem(DISMISS_SESSION_KEY, "1");
+        } catch {}
         setHidden(true);
     };
 

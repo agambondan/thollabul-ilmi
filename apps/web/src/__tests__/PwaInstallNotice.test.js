@@ -27,6 +27,7 @@ const setStandalone = (value) => {
 describe("PwaInstallNotice", () => {
     beforeEach(() => {
         localStorage.clear();
+        sessionStorage.clear();
         setUserAgent(
             "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
         );
@@ -62,16 +63,13 @@ describe("PwaInstallNotice", () => {
         expect(screen.queryByText("pwa.install_title")).not.toBeInTheDocument();
     });
 
-    test("does not render when previously dismissed within TTL", () => {
-        localStorage.setItem(
-            "tholabul_pwa_prompt_dismissed",
-            String(Date.now() - 1000),
-        );
+    test("does not render when dismissed in current session", () => {
+        sessionStorage.setItem("tholabul_pwa_dismissed_session", "1");
         render(<PwaInstallNotice />);
         expect(screen.queryByText("pwa.install_title")).not.toBeInTheDocument();
     });
 
-    test("dismiss button hides the notice and persists timestamp", () => {
+    test("dismiss button hides the notice and persists in sessionStorage", () => {
         render(<PwaInstallNotice />);
         return waitFor(() =>
             expect(screen.getByText("pwa.install_title")).toBeInTheDocument(),
@@ -80,11 +78,9 @@ describe("PwaInstallNotice", () => {
             expect(
                 screen.queryByText("pwa.install_title"),
             ).not.toBeInTheDocument();
-            const stored = localStorage.getItem(
-                "tholabul_pwa_prompt_dismissed",
-            );
-            expect(stored).not.toBeNull();
-            expect(Date.now() - Number(stored)).toBeLessThan(5000);
+            expect(
+                sessionStorage.getItem("tholabul_pwa_dismissed_session"),
+            ).toBe("1");
         });
     });
 });
