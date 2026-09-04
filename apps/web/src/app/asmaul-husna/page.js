@@ -11,7 +11,7 @@ const API_URL =
 
 async function getInitialItems() {
     try {
-        const res = await fetch(`${API_URL}/api/v1/asmaul-husna`, {
+        const res = await fetch(`${API_URL}/api/v1/asmaul-husna?limit=99`, {
             next: { revalidate: 86400 },
         });
         if (!res.ok) return [];

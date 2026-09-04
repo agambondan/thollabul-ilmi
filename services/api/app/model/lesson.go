@@ -27,6 +27,7 @@ type LessonStep struct {
 	Translation string `json:"translation" gorm:"type:text"`
 	Dalil      string `json:"dalil" gorm:"type:text"`
 	Tip        string `json:"tip" gorm:"type:text"`
+	AudioURL   string `json:"audio_url" gorm:"type:varchar(255)"`
 }
 
 type UserLessonProgress struct {

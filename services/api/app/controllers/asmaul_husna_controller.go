@@ -48,6 +48,9 @@ func NewAsmaUlHusnaController(services *service.Services) AsmaUlHusnaController 
 // @Router /asmaul-husna [get]
 func (c *asmaUlHusnaController) FindAll(ctx *fiber.Ctx) error {
 	limit, offset := lib.GetLimitOffset(ctx)
+	if ctx.Query("limit") == "" && ctx.Query("size") == "" {
+		limit = 99
+	}
 	if limit > 99 {
 		limit = 99
 	}

@@ -4,6 +4,7 @@ import ContentWidth from "@/components/layout/ContentWidth";
 import Section from "@/components/Section";
 import { useLocale } from "@/context/Locale";
 import { asmaulHusnaApi } from "@/lib/api";
+import { asmaulHusnaData } from "@/lib/asmaulHusnaData";
 import { getLocalizedTranslation } from "@/lib/translation";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -182,6 +183,53 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                                 ) ?? current.description}
                             </p>
                         )}
+                        {(() => {
+                            const extra = asmaulHusnaData[current.number];
+                            if (!extra) return null;
+                            return (
+                                <div className='mt-4 pt-4 border-t border-emerald-100 dark:border-slate-700 w-full text-left space-y-2 text-xs'>
+                                    {extra.dalilRef && (
+                                        <div className='p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-800/40'>
+                                            <p className='font-bold text-emerald-800 dark:text-emerald-300'>
+                                                📖 {extra.dalilRef}
+                                            </p>
+                                            {extra.dalilText && (
+                                                <p
+                                                    dir='rtl'
+                                                    className='font-arabic text-sm text-right text-emerald-900 dark:text-emerald-200 my-1'
+                                                >
+                                                    {extra.dalilText}
+                                                </p>
+                                            )}
+                                            <p className='text-gray-600 dark:text-gray-300 italic'>
+                                                &ldquo;{extra.dalilTrans}&rdquo;
+                                            </p>
+                                        </div>
+                                    )}
+                                    {extra.ulamaQuote && (
+                                        <div className='p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-800/30 text-amber-900 dark:text-amber-300'>
+                                            <p className='font-semibold'>
+                                                💬 {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
+                                            </p>
+                                            <p className='text-gray-700 dark:text-gray-300 mt-0.5'>
+                                                {extra.ulamaQuote}
+                                            </p>
+                                        </div>
+                                    )}
+                                    {extra.internalLink && (
+                                        <div className='text-center pt-1'>
+                                            <Link
+                                                href={extra.internalLink}
+                                                onClick={(e) => e.stopPropagation()}
+                                                className='inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 hover:underline font-medium'
+                                            >
+                                                {extra.linkLabel ?? "Lihat di Al-Qur'an"} &rarr;
+                                            </Link>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })()}
                     </>
                 ) : (
                     <p className='text-sm italic text-gray-400 mt-4'>

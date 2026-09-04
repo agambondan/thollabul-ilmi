@@ -294,6 +294,15 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
                                 <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>{step.tip}</p>
                             </div>
                         )}
+
+                        {step.audio_url && (
+                            <div className='rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 p-4'>
+                                <p className='text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase mb-2'>Audio Pelafalan</p>
+                                <audio controls className='w-full' src={step.audio_url} preload='none'>
+                                    Browser Anda tidak mendukung audio player.
+                                </audio>
+                            </div>
+                        )}
                     </article>
 
                     {finishedSlug === activeModule.slug && (

@@ -250,7 +250,7 @@ export const doaApi = {
 };
 
 export const asmaulHusnaApi = {
-    list: () => fetch(`${API_URL}/api/v1/asmaul-husna`),
+    list: () => fetch(`${API_URL}/api/v1/asmaul-husna?limit=99`),
     detail: (number) => fetch(`${API_URL}/api/v1/asmaul-husna/${number}`),
 };
 
@@ -751,7 +751,7 @@ export const adminDzikirApi = {
 };
 
 export const adminAsmaulHusnaApi = {
-    list: () => authFetch("/api/v1/asmaul-husna"),
+    list: () => authFetch("/api/v1/asmaul-husna?limit=99"),
     create: (data) =>
         authFetch("/api/v1/asmaul-husna", {
             method: "POST",
