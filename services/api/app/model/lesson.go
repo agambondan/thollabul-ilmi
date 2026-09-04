@@ -4,20 +4,29 @@ import "github.com/google/uuid"
 
 type LessonModule struct {
 	BaseID
-	Slug        string       `json:"slug" gorm:"type:varchar(100);uniqueIndex;not null"`
-	Title       string       `json:"title" gorm:"type:varchar(256);not null"`
-	Description string       `json:"description" gorm:"type:text"`
-	Icon        string       `json:"icon" gorm:"type:varchar(50)"`
-	Order       int          `json:"order" gorm:"default:0"`
-	Steps       []LessonStep `json:"steps" gorm:"foreignKey:ModuleID"`
+	Slug             string       `json:"slug" gorm:"type:varchar(100);uniqueIndex;not null"`
+	Title            string       `json:"title" gorm:"type:varchar(256);not null"`
+	Description      string       `json:"description" gorm:"type:text"`
+	Category         string       `json:"category" gorm:"type:varchar(50);index"`
+	Level            string       `json:"level" gorm:"type:varchar(20);index"`
+	EstimatedMinutes int          `json:"estimated_minutes" gorm:"default:0"`
+	Icon             string       `json:"icon" gorm:"type:varchar(50)"`
+	Order            int          `json:"order" gorm:"default:0"`
+	Steps            []LessonStep `json:"steps" gorm:"foreignKey:ModuleID"`
 }
 
 type LessonStep struct {
 	BaseID
-	ModuleID  int    `json:"module_id" gorm:"not null;index"`
-	StepOrder int    `json:"step_order" gorm:"not null"`
-	Title     string `json:"title" gorm:"type:varchar(256);not null"`
-	Body      string `json:"body" gorm:"type:text;not null"`
+	ModuleID   int    `json:"module_id" gorm:"not null;index"`
+	StepOrder  int    `json:"step_order" gorm:"not null"`
+	Kind       string `json:"kind" gorm:"type:varchar(20);default:'theory'"`
+	Title      string `json:"title" gorm:"type:varchar(256);not null"`
+	Body       string `json:"body" gorm:"type:text;not null"`
+	Arabic     string `json:"arabic" gorm:"type:text"`
+	Latin      string `json:"latin" gorm:"type:text"`
+	Translation string `json:"translation" gorm:"type:text"`
+	Dalil      string `json:"dalil" gorm:"type:text"`
+	Tip        string `json:"tip" gorm:"type:text"`
 }
 
 type UserLessonProgress struct {

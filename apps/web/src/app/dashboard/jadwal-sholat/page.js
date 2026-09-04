@@ -306,7 +306,7 @@ const JadwalSholatPage = () => {
                     <h2 className='text-sm font-bold text-gray-900 dark:text-white mb-4 uppercase tracking-wider'>
                         {t("settings.section_notifications")}
                     </h2>
-                    <div className='flex items-center justify-between gap-3 py-2'>
+                    <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-2'>
                         <span className='text-sm text-gray-700 dark:text-gray-300'>
                             {t("settings.adzan_reminder_lead")}
                         </span>
@@ -315,7 +315,7 @@ const JadwalSholatPage = () => {
                             onChange={(e) =>
                                 updateAdzanReminderLead(e.target.value)
                             }
-                            className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                            className='w-full sm:w-auto bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                             aria-label={t("prayer.reminder_lead")}
                         >
                             {REMINDER_LEAD_OPTIONS.map((m) => (

@@ -112,12 +112,11 @@ aslinya, dibiarkan kosong), asmaul husna memakai hadis 99 nama yang sudah
 dipakai proyek ini sendiri di soal kuis. Lihat commit `1174221` dan
 `docs/features/done/` untuk detail dan batasannya.
 
-❌ **Amalan masih kosong, disengaja.** 13 item (Sholat Tahajud, Puasa Senin,
-dst) masing-masing butuh dalil sendiri. Menyebut nomor hadis dari ingatan
-tanpa verifikasi silang berisiko salah kutip — proyek ini pernah kena masalah
-serupa (lihat memory `project_hadith_data_misalignment`). Perlu salah satu:
-(a) riset per-item dengan verifikasi silang ke sumber primer, atau (b) arahan
-eksplisit dari pemilik project soal referensi/madzhab yang dipakai.
+✅ **Amalan selesai 2026-09-03** — 12 dari 13 item (Sholat Tahajud, Puasa Senin,
+Dzikir Pagi/Petang, Istighfar 100x, dsb.) telah di-backfill dengan dalil Al-Qur'an
+dan Hadis shahih/hasan yang diverifikasi (QS. Al-Isra: 79, HR. Muslim 1163/720/728/1162/2702/1009,
+HR. Tirmidzi 747/761/2910, dsb.). 1 item ("Sholawat 100x") sengaja dibiarkan kosong
+karena tidak ditemukan riwayat sahih dengan lafadz spesifik 100 kali. Lihat commit `cfe88e1`.
 
 ### Follow-up yang tersisa (di luar 40 temuan)
 
@@ -130,11 +129,11 @@ eksplisit dari pemilik project soal referensi/madzhab yang dipakai.
   (tidak ada flash teks hilang). 3 kunci yang dipakai bersama di luar
   `/admin` (`admin.error.save`, `admin.crud.save_success`/`delete_success`)
   sengaja tetap di kamus dasar.
+- ✅ **Selesai 2026-09-03** — Tambah field sumber untuk manasik, amalan, dan asmaul husna di API (commit `1174221` & `cfe88e1`).
+- ✅ **Selesai 2026-09-03** — RSC konversi dilanjutkan untuk `/kajian`, `/siroh`, `/asmaul-husna`, `/blog` (commit `8e77ecd` & `0a10e60`).
 - Pecah i18n lebih jauh per namespace route lain (di luar admin) untuk
   menurunkan 274 KB lebih jauh — belum dikerjakan, ROI makin kecil setelah
   dua split di atas.
-- Lanjutkan konversi client → server component di luar `/doa` dan `/dzikir`.
-- Tambah field sumber untuk manasik, amalan, dan asmaul husna di API.
 
 ### Perubahan yang perlu diketahui saat lanjut kerja
 
