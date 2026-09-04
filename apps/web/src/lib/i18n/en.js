@@ -160,9 +160,13 @@ const en = {
     "auth.show_password": "Show password",
     "auth.hide_password": "Hide password",
     "pwa.install_title": "Install Thullaabul 'Ilmi app",
+    "pwa.install_desc": "Quick access to Quran, Hadith, and prayer times from your phone",
     "pwa.install_android":
         "Android: open the browser menu, then choose Add to Home screen.",
+    "pwa.install_ios":
+        "iOS Safari: tap Share, then choose 'Add to Home Screen'.",
     "pwa.install_now": "Install Now",
+    "pwa.install_guide": "Guide",
     "sidebar.main_reading": "Main Reading",
     "sidebar.worship_tracker": "Worship & Tracker",
     "sidebar.islamic_content": "Islamic Content",

@@ -2,7 +2,6 @@
 
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
-import PwaInstallNotice from "@/components/PwaInstallNotice";
 import { buildRegisterHref, getSafeNextPath } from "@/lib/authRedirect";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -70,8 +69,6 @@ const LoginPage = () => {
                     <h2 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-6'>
                         {t("auth.sign_in_title")}
                     </h2>
-
-                    <PwaInstallNotice />
 
                     {registered && (
                         <div className='mb-4 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg text-sm text-emerald-700 dark:text-emerald-400'>

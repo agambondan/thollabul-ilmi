@@ -151,9 +151,13 @@ const id = {
     "auth.show_password": "Lihat password",
     "auth.hide_password": "Sembunyikan password",
     "pwa.install_title": "Install aplikasi Thullaabul 'Ilmi",
+    "pwa.install_desc": "Akses cepat Quran, Hadits, & jadwal sholat dari layar HP",
     "pwa.install_android":
         "Android: buka menu browser, lalu pilih Tambahkan ke layar utama.",
+    "pwa.install_ios":
+        "iOS Safari: tap tombol Bagikan (Share) lalu pilih 'Tambah ke Layar Utama'.",
     "pwa.install_now": "Install Sekarang",
+    "pwa.install_guide": "Petunjuk",
     "sidebar.main_reading": "Bacaan Utama",
     "sidebar.worship_tracker": "Ibadah & Tracker",
     "sidebar.islamic_content": "Konten Islam",

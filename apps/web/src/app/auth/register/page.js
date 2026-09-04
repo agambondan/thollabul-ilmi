@@ -2,7 +2,6 @@
 
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
-import PwaInstallNotice from "@/components/PwaInstallNotice";
 import { buildLoginHref, getSafeNextPath } from "@/lib/authRedirect";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -69,8 +68,6 @@ const RegisterPage = () => {
                     <h2 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-6'>
                         {t("auth.register_title")}
                     </h2>
-
-                    <PwaInstallNotice />
 
                     {error && (
                         <div className='mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400'>

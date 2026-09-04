@@ -13,6 +13,7 @@ import { PublicFooter, PublicNavbar } from "@/components/PublicChrome";
 import { Toaster } from "react-hot-toast";
 import InAppNotification from "@/components/InAppNotification";
 import NotificationPermissionPrompt from "@/components/NotificationPermissionPrompt";
+import PwaInstallNotice from "@/components/PwaInstallNotice";
 
 const websiteJsonLd = {
     "@context": "https://schema.org",
@@ -125,6 +126,7 @@ export default async function RootLayout({ children }) {
                             <PublicFooter />
                             <MobileTabBar />
                             <SettingButton />
+                            <PwaInstallNotice />
                             <NotificationPermissionPrompt />
                             <Toaster
                                 position='top-right'
