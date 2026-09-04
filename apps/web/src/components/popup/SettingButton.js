@@ -4,6 +4,7 @@ import { useLocale } from "@/context/Locale";
 import { useActionPosition } from "@/lib/useActionPosition";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { QURAN_FONTS, useQuranFont } from "@/lib/useQuranFont";
+import { useSettings } from "@/lib/useSettings";
 import classNames from "classnames";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -20,9 +21,6 @@ const SettingButton = () => {
     const { t } = useLocale();
     const pathname = usePathname();
     const [showPopup, setShowPopup] = useState(false);
-    const [navBarVisible, setNavBarVisible] = useState(false);
-    const [isCompactViewport, setIsCompactViewport] = useState(false);
-    const [mobileControlsVisible, setMobileControlsVisible] = useState(false);
     const { isWide, setLayout } = useLayoutMode();
     const { isMenu, position, setPosition } = useActionPosition();
     const {
@@ -37,17 +35,13 @@ const SettingButton = () => {
         setFont,
         translationFontSize,
     } = useQuranFont();
+    const { settings, updateSetting } = useSettings();
+    const hafalanMode = settings.quranHafalanMode ?? "off";
+    const readerMode = settings.quranReaderMode ?? "ayah";
+    const showMushafTranslation =
+        settings.quranMushafTranslation ?? true;
     const popupRef = useRef(null);
-    const mobileControlsTimeoutRef = useRef(null);
     const label = (key, fallback) => t(key) || fallback;
-
-    useEffect(() => {
-        const media = window.matchMedia("(max-width: 767px)");
-        const updateViewport = () => setIsCompactViewport(media.matches);
-        updateViewport();
-        media.addEventListener("change", updateViewport);
-        return () => media.removeEventListener("change", updateViewport);
-    }, []);
 
     useEffect(() => {
         if (!showPopup) return;
@@ -60,49 +54,18 @@ const SettingButton = () => {
         return () => document.removeEventListener("mousedown", handler);
     }, [showPopup]);
 
-    useEffect(() => {
-        let tid;
-        const handler = () => {
-            setNavBarVisible(true);
-            setMobileControlsVisible(true);
-            clearTimeout(tid);
-            clearTimeout(mobileControlsTimeoutRef.current);
-            tid = setTimeout(() => setNavBarVisible(false), 2000);
-            mobileControlsTimeoutRef.current = setTimeout(() => {
-                setMobileControlsVisible(false);
-            }, 2200);
-        };
-        window.addEventListener("scroll", handler);
-        document.addEventListener("scroll", handler, true);
-        window.addEventListener("touchmove", handler, { passive: true });
-        return () => {
-            window.removeEventListener("scroll", handler);
-            document.removeEventListener("scroll", handler, true);
-            window.removeEventListener("touchmove", handler);
-            clearTimeout(tid);
-            clearTimeout(mobileControlsTimeoutRef.current);
-        };
-    }, []);
-
     const isDashboard = pathname?.startsWith("/dashboard");
+    const isQuranRoute =
+        pathname === "/quran" || pathname?.startsWith("/quran/");
     const bottomClass = isDashboard
-        ? navBarVisible
-            ? "bottom-[84px] md:bottom-[52px]"
-            : "bottom-[72px] md:bottom-2"
-        : navBarVisible
-          ? "bottom-[52px]"
-          : "bottom-2";
-    const shouldShowMobileControls =
-        !isCompactViewport || mobileControlsVisible || showPopup;
-    const visibilityClass = shouldShowMobileControls
-        ? "translate-y-0 opacity-100 pointer-events-auto"
-        : "translate-y-2 opacity-0 pointer-events-none";
+        ? "bottom-[84px] md:bottom-4"
+        : "bottom-[68px] md:bottom-4";
 
     return (
         <div
             ref={popupRef}
             data-testid='global-setting-control'
-            className={`fixed right-2 z-10 transition-all duration-200 ${bottomClass} ${visibilityClass}`}
+            className={`fixed right-2 z-30 transition-opacity duration-200 ${bottomClass} opacity-90 hover:opacity-100`}
         >
             <button
                 type='button'
@@ -116,10 +79,157 @@ const SettingButton = () => {
             </button>
 
             {showPopup && (
-                <div className='absolute right-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-60 max-h-[calc(100vh-7rem)] overflow-y-auto p-3 shadow-lg text-sm text-emerald-900 dark:text-emerald-300 dark:text-white'>
+                <div className='absolute right-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-64 sm:w-72 max-h-[calc(100vh-8rem)] overflow-y-auto p-3 shadow-lg text-sm text-emerald-900 dark:text-emerald-300 dark:text-white'>
                     <p className='font-semibold mb-3 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wide'>
                         {t("settings.title")}
                     </p>
+
+                    {isQuranRoute && (
+                        <>
+                            {/* Mode Hafalan */}
+                            <div className='mb-3'>
+                                <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-2'>
+                                    {label(
+                                        "hafalan.mode_label",
+                                        "Mode Hafalan",
+                                    )}
+                                </p>
+                                <div className='grid grid-cols-2 gap-1.5'>
+                                    {[
+                                        {
+                                            value: "off",
+                                            label: label(
+                                                "hafalan.mode_off",
+                                                "Mati",
+                                            ),
+                                        },
+                                        {
+                                            value: "hide_arabic",
+                                            label: label(
+                                                "hafalan.mode_hide_arabic",
+                                                "Sembunyikan Arab",
+                                            ),
+                                        },
+                                        {
+                                            value: "hide_translation",
+                                            label: label(
+                                                "hafalan.mode_hide_translation",
+                                                "Sembunyikan Terjemahan",
+                                            ),
+                                        },
+                                        {
+                                            value: "hide_all",
+                                            label: label(
+                                                "hafalan.mode_hide_all",
+                                                "Sembunyikan Semua",
+                                            ),
+                                        },
+                                    ].map((m) => (
+                                        <button
+                                            key={m.value}
+                                            type='button'
+                                            onClick={() =>
+                                                updateSetting(
+                                                    "quranHafalanMode",
+                                                    m.value,
+                                                )
+                                            }
+                                            className={classNames(
+                                                "py-1.5 px-2 rounded-lg border text-[11px] sm:text-xs leading-snug text-center transition-all",
+                                                {
+                                                    "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
+                                                        hafalanMode === m.value,
+                                                    "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
+                                                        hafalanMode !== m.value,
+                                                },
+                                            )}
+                                        >
+                                            {m.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Tampilan (Daftar / Alur Mushaf) */}
+                            <div className='mb-3'>
+                                <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-2'>
+                                    {label("mushaf.view", "Tampilan")}
+                                </p>
+                                <div className='flex gap-2'>
+                                    {[
+                                        {
+                                            value: "ayah",
+                                            label: label(
+                                                "mushaf.list",
+                                                "Daftar",
+                                            ),
+                                        },
+                                        {
+                                            value: "mushaf",
+                                            label: label(
+                                                "mushaf.continuous",
+                                                "Alur (Mushaf)",
+                                            ),
+                                        },
+                                    ].map((m) => (
+                                        <button
+                                            key={m.value}
+                                            type='button'
+                                            onClick={() =>
+                                                updateSetting(
+                                                    "quranReaderMode",
+                                                    m.value,
+                                                )
+                                            }
+                                            className={classNames(
+                                                "flex-1 py-1.5 px-2 rounded-lg border text-xs text-center transition-all",
+                                                {
+                                                    "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
+                                                        readerMode === m.value,
+                                                    "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
+                                                        readerMode !== m.value,
+                                                },
+                                            )}
+                                        >
+                                            {m.label}
+                                        </button>
+                                    ))}
+                                </div>
+                                {readerMode === "mushaf" && (
+                                    <button
+                                        type='button'
+                                        onClick={() =>
+                                            updateSetting(
+                                                "quranMushafTranslation",
+                                                !showMushafTranslation,
+                                            )
+                                        }
+                                        className={classNames(
+                                            "mt-1.5 w-full py-1.5 px-2 rounded-lg border text-xs text-center transition-all",
+                                            {
+                                                "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
+                                                    showMushafTranslation,
+                                                "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
+                                                    !showMushafTranslation,
+                                            },
+                                        )}
+                                    >
+                                        {showMushafTranslation
+                                            ? label(
+                                                  "mushaf.translation_off",
+                                                  "Sembunyikan Terjemahan",
+                                              )
+                                            : label(
+                                                  "mushaf.translation_on",
+                                                  "Tampilkan Terjemahan",
+                                              )}
+                                    </button>
+                                )}
+                            </div>
+
+                            <div className='my-3 border-t border-gray-100 dark:border-slate-700' />
+                        </>
+                    )}
 
                     {/* Layout toggle */}
                     <div className='hidden md:block mb-3'>

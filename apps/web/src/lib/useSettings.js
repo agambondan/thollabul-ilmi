@@ -126,9 +126,25 @@ const LEGACY_FONT_NAME_MAP = {
 const REMINDER_LEAD_KEYS = [0, 5, 10, 15, 30];
 const REMINDER_PRAYER_KEYS = ["fajr", "dhuhr", "asr", "maghrib", "isha"];
 
+const VALID_HAFALAN_MODES = [
+    "off",
+    "hide_arabic",
+    "hide_translation",
+    "hide_all",
+];
+
 const sanitizeSettings = (raw) => {
     if (!raw || typeof raw !== "object") return {};
     const next = { ...raw };
+    if (!VALID_HAFALAN_MODES.includes(next.quranHafalanMode)) {
+        next.quranHafalanMode = "off";
+    }
+    if (!["ayah", "mushaf"].includes(next.quranReaderMode)) {
+        next.quranReaderMode = "ayah";
+    }
+    if (typeof next.quranMushafTranslation !== "boolean") {
+        next.quranMushafTranslation = true;
+    }
     if (!REMINDER_LEAD_KEYS.includes(next.adzanReminderLead)) {
         next.adzanReminderLead = 10;
     }
@@ -213,6 +229,9 @@ const DEFAULT_SETTINGS = {
     quranFontId: "lpmq",
     quranArabicSize: 40,
     quranTranslationSize: 16,
+    quranHafalanMode: "off",
+    quranReaderMode: "ayah",
+    quranMushafTranslation: true,
     notifAdzan: true,
     adzanSound: "default",
     adzanSoundUrl: "",

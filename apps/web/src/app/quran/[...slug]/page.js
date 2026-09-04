@@ -18,7 +18,7 @@ const SuratPage = (props) => {
                     <InfiniteScrollAyahPage
                         params={params}
                         searchParams={searchParams}
-                        basePath='/quran'
+                        basePath={basePath}
                     />
                 </div>
             </Section>

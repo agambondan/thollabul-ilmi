@@ -161,6 +161,22 @@ describe("useSettings", () => {
             const parsed = JSON.parse(raw);
             expect(parsed.adzanReminderLead).toBe(10);
             expect(parsed.adzanReminderLeadByPrayer).toEqual({});
+            expect(parsed.quranHafalanMode).toBe("off");
+            expect(parsed.quranReaderMode).toBe("ayah");
+            expect(parsed.quranMushafTranslation).toBe(true);
+        });
+    });
+
+    test("persists quran hafalan mode and reader mode correctly", async () => {
+        const view = renderProvider();
+
+        await waitFor(() => {
+            const raw = view
+                .getByTestId("settings")
+                .getAttribute("data-settings");
+            const parsed = JSON.parse(raw);
+            expect(parsed.quranHafalanMode).toBe("off");
+            expect(parsed.quranReaderMode).toBe("ayah");
         });
     });
 });

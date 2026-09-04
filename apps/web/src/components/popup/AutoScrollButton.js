@@ -151,22 +151,13 @@ const AutoScrollButton = () => {
     };
     const isDashboard = pathname?.startsWith("/dashboard");
     const bottomClass = isDashboard
-        ? navBarVisible
-            ? "bottom-[84px] md:bottom-[52px]"
-            : "bottom-[72px] md:bottom-2"
-        : navBarVisible
-          ? "bottom-[52px]"
-          : "bottom-2";
-    const shouldShowMobileControls =
-        !isCompactViewport || mobileControlsVisible || isPlaying || showPanel;
-    const visibilityClass = shouldShowMobileControls
-        ? "translate-y-0 opacity-100 pointer-events-auto"
-        : "translate-y-2 opacity-0 pointer-events-none";
+        ? "bottom-[84px] md:bottom-4"
+        : "bottom-[68px] md:bottom-4";
 
     return (
         <div
             id='auto-scroll-panel'
-            className={`fixed left-2 z-10 transition-all duration-200 ${bottomClass} ${visibilityClass}`}
+            className={`fixed left-2 z-20 transition-opacity duration-200 ${bottomClass} opacity-90 hover:opacity-100`}
         >
             {showPanel && (
                 <div className='absolute left-0 bottom-16 bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-52 p-3 shadow-lg text-sm text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>

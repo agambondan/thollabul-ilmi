@@ -3,7 +3,6 @@
 
 import AyahPage from "@/app/quran/[...slug]/AyahPage";
 import AutoScrollButton from "@/components/popup/AutoScrollButton";
-import ScrollableComponent from "@/components/popup/ScrollableButton";
 import MushafContinuousView from "@/components/quran/MushafContinuousView";
 import { SkeletonReader } from "@/components/skeleton/Skeleton";
 import SurahAudioPlayer from "@/components/SurahAudioPlayer";
@@ -12,10 +11,10 @@ import { progressApi, streakApi } from "@/lib/api";
 import { getLocalizedTranslation } from "@/lib/translation";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { useQuranFont } from "@/lib/useQuranFont";
+import { useSettings } from "@/lib/useSettings";
 import classNames from "classnames";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { TbPlayerTrackNext, TbPlayerTrackPrev } from "react-icons/tb";
 
 const PAGE_SIZE = 10;
@@ -41,6 +40,11 @@ const InfiniteScrollAyahPage = ({
     const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
     const { fontCls } = useQuranFont();
+    const { settings } = useSettings();
+    const hafalanMode = settings.quranHafalanMode ?? "off";
+    const readerMode = settings.quranReaderMode ?? "ayah";
+    const showMushafTranslation =
+        settings.quranMushafTranslation ?? true;
     const [surah, setSurah] = useState(null);
     const [ayahs, setAyahs] = useState([]);
     const [pageRequest, setPageRequest] = useState(null);
@@ -49,9 +53,6 @@ const InfiniteScrollAyahPage = ({
     const [isFetchingMushaf, setIsFetchingMushaf] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [error, setError] = useState("");
-    const [hafalanMode, setHafalanMode] = useState("off");
-    const [readerMode, setReaderMode] = useState("ayah");
-    const [showMushafTranslation, setShowMushafTranslation] = useState(true);
     const [selectedQari, setSelectedQari] = useState("");
     const [openActionMenuAyahId, setOpenActionMenuAyahId] = useState(null);
     const loadMoreSentinelRef = useRef(null);
@@ -268,6 +269,12 @@ const InfiniteScrollAyahPage = ({
         }
     }, [isInitialLoading, ayahs.length]);
 
+    useEffect(() => {
+        if (readerMode === "mushaf" && surah && !isFetchingMushaf) {
+            openMushafMode();
+        }
+    }, [readerMode, surah, isFetchingMushaf, openMushafMode]);
+
     if (isInitialLoading) return <SkeletonReader />;
     if (error)
         return (
@@ -339,125 +346,6 @@ const InfiniteScrollAyahPage = ({
                     )}
                 </div>
 
-                <div className='flex flex-wrap items-center gap-2 px-4 py-2 text-xs border-b border-gray-100 dark:border-slate-800 bg-emerald-50/40 dark:bg-emerald-900/10'>
-                    <span className='flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-medium'>
-                        {hafalanMode === "off" ? <BsEye /> : <BsEyeSlash />}
-                        {t("hafalan.mode_label") ?? "Mode Hafalan"}:
-                    </span>
-                    {[
-                        { value: "off", labelKey: "hafalan.mode_off" },
-                        {
-                            value: "hide_arabic",
-                            labelKey: "hafalan.mode_hide_arabic",
-                        },
-                        {
-                            value: "hide_translation",
-                            labelKey: "hafalan.mode_hide_translation",
-                        },
-                        {
-                            value: "hide_all",
-                            labelKey: "hafalan.mode_hide_all",
-                        },
-                    ].map((m) => (
-                        <button
-                            key={m.value}
-                            type='button'
-                            onClick={() => setHafalanMode(m.value)}
-                            className={`px-2.5 py-1 rounded-full font-medium transition-colors ${
-                                hafalanMode === m.value
-                                    ? "bg-emerald-500 text-white"
-                                    : "bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:bg-emerald-100 dark:hover:bg-slate-700"
-                            }`}
-                        >
-                            {t(m.labelKey) ??
-                                (m.value === "off"
-                                    ? "Off"
-                                    : m.value === "hide_arabic"
-                                      ? "Sembunyikan Arab"
-                                      : m.value === "hide_translation"
-                                        ? "Sembunyikan Terjemahan"
-                                        : "Sembunyikan Semua")}
-                        </button>
-                    ))}
-                </div>
-
-                <div className='flex flex-wrap items-center gap-2 px-4 py-2 text-xs border-b border-gray-100 dark:border-slate-800 bg-gray-50/70 dark:bg-slate-800/40'>
-                    <span className='text-emerald-700 dark:text-emerald-400 font-medium'>
-                        {t("mushaf.view")}:
-                    </span>
-                    {[
-                        { value: "ayah", label: t("mushaf.list") },
-                        { value: "mushaf", label: t("mushaf.continuous") },
-                    ].map((m) => (
-                        <button
-                            key={m.value}
-                            type='button'
-                            onClick={() =>
-                                m.value === "mushaf"
-                                    ? openMushafMode()
-                                    : setReaderMode(m.value)
-                            }
-                            disabled={m.value === "mushaf" && isFetchingMushaf}
-                            aria-pressed={readerMode === m.value}
-                            className={`px-2.5 py-1 rounded-full font-medium transition-colors ${
-                                readerMode === m.value
-                                    ? "bg-emerald-500 text-white"
-                                    : "bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-slate-700 hover:bg-emerald-100 dark:hover:bg-slate-700"
-                            }`}
-                        >
-                            {m.label}
-                        </button>
-                    ))}
-                    {readerMode === "mushaf" && (
-                        <button
-                            type='button'
-                            onClick={() => setShowMushafTranslation((v) => !v)}
-                            className='px-2.5 py-1 rounded-full font-medium bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 dark:border-slate-700 hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
-                        >
-                            {showMushafTranslation
-                                ? t("mushaf.translation_off")
-                                : t("mushaf.translation_on")}
-                        </button>
-                    )}
-                </div>
-
-                <div className='flex justify-between items-center px-4 py-3 text-sm border-b border-gray-100 dark:border-slate-800 bg-gray-50/70 dark:bg-slate-800/40'>
-                    <div
-                        className={classNames({
-                            "flex items-center": true,
-                            "opacity-30 pointer-events-none": !prevHref,
-                        })}
-                    >
-                        <Link
-                            className='flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors'
-                            href={prevHref}
-                        >
-                            <TbPlayerTrackPrev size={14} />
-                            <span className='hidden sm:inline'>
-                                {t("quran.prev_surah")}
-                            </span>
-                            <span className='sm:hidden'>{t("quran.prev")}</span>
-                        </Link>
-                    </div>
-                    <div
-                        className={classNames({
-                            "flex items-center": true,
-                            "opacity-30 pointer-events-none": !nextHref,
-                        })}
-                    >
-                        <Link
-                            className='flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors'
-                            href={nextHref}
-                        >
-                            <span className='hidden sm:inline'>
-                                {t("quran.next_surah")}
-                            </span>
-                            <span className='sm:hidden'>{t("quran.next")}</span>
-                            <TbPlayerTrackNext size={14} />
-                        </Link>
-                    </div>
-                </div>
-
                 {readerMode === "mushaf" ? (
                     <div className='p-4 bg-gray-50 dark:bg-slate-950'>
                         {isFetchingMushaf ? (
@@ -526,44 +414,58 @@ const InfiniteScrollAyahPage = ({
                     </p>
                 )}
 
-            <ScrollableComponent>
-                <div className='flex justify-between items-center text-sm max-w-4xl mx-auto'>
-                    <div
-                        className={classNames({
-                            "flex items-center": true,
-                            "opacity-30 pointer-events-none": !prevHref,
-                        })}
-                    >
+            {(prevHref || nextHref) && (
+                <div
+                    data-testid='floating-surah-navigation'
+                    className='fixed bottom-[68px] md:bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md shadow-lg border border-emerald-100 dark:border-slate-700 rounded-full px-2 py-1 text-xs font-semibold text-gray-700 dark:text-gray-200'
+                >
+                    {prevHref ? (
                         <Link
-                            className='flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors'
                             href={prevHref}
+                            title={
+                                surah?.prev_surah?.translation?.latin_en ??
+                                t("quran.prev_surah")
+                            }
+                            className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                         >
-                            <TbPlayerTrackPrev size={14} />
-                            <span className='hidden sm:inline'>
-                                {t("quran.prev_surah")}
+                            <TbPlayerTrackPrev size={13} />
+                            <span className='max-w-[75px] sm:max-w-[120px] truncate'>
+                                {surah?.prev_surah?.translation?.latin_en ??
+                                    t("quran.prev")}
                             </span>
-                            <span className='sm:hidden'>{t("quran.prev")}</span>
                         </Link>
-                    </div>
-                    <div
-                        className={classNames({
-                            "flex items-center": true,
-                            "opacity-30 pointer-events-none": !nextHref,
-                        })}
-                    >
+                    ) : (
+                        <span className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-gray-300 dark:text-slate-600 cursor-not-allowed'>
+                            <TbPlayerTrackPrev size={13} />
+                            <span>{t("quran.prev")}</span>
+                        </span>
+                    )}
+
+                    <span className='w-px h-3.5 bg-gray-200 dark:bg-slate-700' />
+
+                    {nextHref ? (
                         <Link
-                            className='flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors'
                             href={nextHref}
+                            title={
+                                surah?.next_surah?.translation?.latin_en ??
+                                t("quran.next_surah")
+                            }
+                            className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                         >
-                            <span className='hidden sm:inline'>
-                                {t("quran.next_surah")}
+                            <span className='max-w-[75px] sm:max-w-[120px] truncate'>
+                                {surah?.next_surah?.translation?.latin_en ??
+                                    t("quran.next")}
                             </span>
-                            <span className='sm:hidden'>{t("quran.next")}</span>
-                            <TbPlayerTrackNext size={14} />
+                            <TbPlayerTrackNext size={13} />
                         </Link>
-                    </div>
+                    ) : (
+                        <span className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-gray-300 dark:text-slate-600 cursor-not-allowed'>
+                            <span>{t("quran.next")}</span>
+                            <TbPlayerTrackNext size={13} />
+                        </span>
+                    )}
                 </div>
-            </ScrollableComponent>
+            )}
             <AutoScrollButton />
         </div>
     );
