@@ -18,6 +18,11 @@ coverage/
 
 # Firecrawl scrape cache (transient, not version-controlled)
 .firecrawl/
+
+# Browser-saved reports
+PageSpeed Insights.html
+PageSpeed Insights_files/
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
