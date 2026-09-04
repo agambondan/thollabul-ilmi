@@ -550,6 +550,7 @@ const id = {
     "asmaul.dalil_title": "Dalil Al-Qur'an / Hadits",
     "asmaul.ulama_explanation": "Penjelasan Ulama",
     "asmaul.ref_link": "Referensi Terkait di Project",
+    "asmaul.open_quran": "Buka di Al-Qur'an",
     "asmaul.general_dalil_title": "Dalil 99 Asmaul Husna",
     "hadith.daily_label": "Hadis Hari Ini",
     "quran.daily_ayah_label": "Ayat Hari Ini",

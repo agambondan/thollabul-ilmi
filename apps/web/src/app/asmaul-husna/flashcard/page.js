@@ -8,7 +8,6 @@ import {
     asmaulHusnaData,
     asmaulHusnaGeneralDalil,
 } from "@/lib/asmaulHusnaData";
-import { getLocalizedTranslation } from "@/lib/translation";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -40,8 +39,9 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(true);
         asmaulHusnaApi
-            .list()
+            .list(lang)
             .then((r) => r.json())
             .then((data) => {
                 const arr = data?.items ?? data ?? [];
@@ -55,7 +55,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
             })
             .catch((e) => console.error(e))
             .finally(() => setLoading(false));
-    }, []);
+    }, [lang]);
 
     const current = useMemo(() => {
         if (items.length === 0 || order.length === 0) return null;
@@ -173,25 +173,26 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                             {current.latin ?? current.translation?.latin_idn}
                         </p>
                         <p className='text-base text-emerald-700 dark:text-emerald-400 text-center mt-2 font-medium'>
-                            {getLocalizedTranslation(
-                                current.translation,
-                                lang,
-                            ) ?? current.meaning}
+                            {lang === "EN"
+                                ? (current.translation?.en || current.english || current.meaning_en || current.meaning)
+                                : (current.translation?.idn || current.indonesian || current.meaning_idn || current.meaning)}
                         </p>
-                        {current.description && (
-                            <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 text-center mt-3 leading-relaxed'>
-                                {getLocalizedTranslation(
-                                    {
-                                        idn: current.description,
-                                        en: current.description_en,
-                                    },
-                                    lang,
-                                ) ?? current.description}
-                            </p>
-                        )}
+                        {(() => {
+                            const extra = asmaulHusnaData[current.number];
+                            const description =
+                                lang === "EN"
+                                    ? current.description_en || extra?.meaning_en || current.english
+                                    : current.description || current.meaning || extra?.explanation;
+                            return description ? (
+                                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 text-center mt-3 leading-relaxed'>
+                                    {description}
+                                </p>
+                            ) : null;
+                        })()}
                         {(() => {
                             const extra = asmaulHusnaData[current.number];
                             if (!extra) return null;
+                            const isIdn = lang === "ID";
                             return (
                                 <div className='mt-4 pt-4 border-t border-emerald-100 dark:border-slate-700 w-full text-left space-y-2 text-xs'>
                                     {extra.dalilRef && (
@@ -207,15 +208,17 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                                                     {extra.dalilText}
                                                 </p>
                                             )}
-                                            <p className='text-gray-600 dark:text-gray-300 italic'>
-                                                &ldquo;{extra.dalilTrans}&rdquo;
-                                            </p>
+                                            {isIdn && extra.dalilTrans && (
+                                                <p className='text-gray-600 dark:text-gray-300 italic'>
+                                                    &ldquo;{extra.dalilTrans}&rdquo;
+                                                </p>
+                                            )}
                                         </div>
                                     )}
-                                    {extra.ulamaQuote && (
+                                    {isIdn && extra.ulamaQuote && (
                                         <div className='p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-800/30 text-amber-900 dark:text-amber-300'>
                                             <p className='font-semibold'>
-                                                {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
+                                                💬 {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
                                             </p>
                                             <p className='text-gray-700 dark:text-gray-200 dark:text-gray-300 mt-0.5'>
                                                 {extra.ulamaQuote}
@@ -229,7 +232,7 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                                                 onClick={(e) => e.stopPropagation()}
                                                 className='inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 hover:underline font-medium'
                                             >
-                                                {extra.linkLabel ?? "Lihat di Al-Qur'an"} &rarr;
+                                                {t("asmaul.open_quran") ?? "Lihat di Al-Qur'an"} &rarr;
                                             </Link>
                                         </div>
                                     )}

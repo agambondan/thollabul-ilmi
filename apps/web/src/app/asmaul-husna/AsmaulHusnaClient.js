@@ -6,7 +6,7 @@ import {
     asmaulHusnaData,
     asmaulHusnaGeneralDalil,
 } from "@/lib/asmaulHusnaData";
-import { getLocalizedField, getLocalizedText } from "@/lib/translation";
+import { getLocalizedText } from "@/lib/translation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRef, useState } from "react";
@@ -229,36 +229,22 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                         <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 italic text-center mb-1'>
                             {selected.transliteration}
                         </p>
-                        <p className='text-base font-semibold text-emerald-800 dark:text-emerald-300 text-center mb-2'>
-                            {getLocalizedText(
-                                {
-                                    idn: selected.indonesian,
-                                    en: selected.english,
-                                },
-                                lang,
-                            )}
+                        <p className='text-base font-semibold text-emerald-800 dark:text-emerald-300 text-center mb-4'>
+                            {lang === "EN" ? selected.english : selected.indonesian}
                         </p>
-                        <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 text-center mb-4'>
-                            {getLocalizedText(
-                                {
-                                    idn: selected.indonesian,
-                                    en: selected.english,
-                                },
-                                lang === "EN" ? "ID" : "EN",
-                            )}
-                        </p>
-                        {getLocalizedField(selected, "description", lang) && (
+                        {(lang === "EN"
+                            ? selected.description_en
+                            : selected.description) && (
                             <p className='text-sm text-gray-600 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3 mb-3'>
-                                {getLocalizedField(
-                                    selected,
-                                    "description",
-                                    lang,
-                                )}
+                                {lang === "EN"
+                                    ? selected.description_en
+                                    : selected.description}
                             </p>
                         )}
                         {(() => {
                             const extra = asmaulHusnaData[selected.number];
                             if (!extra) return null;
+                            const isIdn = lang === "ID";
                             return (
                                 <div className='space-y-2 text-xs text-left mb-3'>
                                     {extra.dalilRef && (
@@ -274,15 +260,17 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                                                     {extra.dalilText}
                                                 </p>
                                             )}
-                                            <p className='text-gray-600 dark:text-gray-300 italic'>
-                                                &ldquo;{extra.dalilTrans}&rdquo;
-                                            </p>
+                                            {isIdn && extra.dalilTrans && (
+                                                <p className='text-gray-600 dark:text-gray-300 italic'>
+                                                    &ldquo;{extra.dalilTrans}&rdquo;
+                                                </p>
+                                            )}
                                         </div>
                                     )}
-                                    {extra.ulamaQuote && (
+                                    {isIdn && extra.ulamaQuote && (
                                         <div className='p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-800/30 text-amber-900 dark:text-amber-300'>
                                             <p className='font-semibold'>
-                                                {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
+                                                💬 {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
                                             </p>
                                             <p className='text-gray-700 dark:text-gray-200 dark:text-gray-300 mt-0.5'>
                                                 {extra.ulamaQuote}
@@ -295,7 +283,7 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                                                 href={extra.internalLink}
                                                 className='inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-medium hover:underline'
                                             >
-                                                <BsLink45Deg /> {extra.linkLabel ?? "Buka di Al-Qur'an"} &rarr;
+                                                <BsLink45Deg /> {t("asmaul.open_quran") ?? "Buka di Al-Qur'an"} &rarr;
                                             </Link>
                                         </div>
                                     )}

@@ -559,6 +559,7 @@ const en = {
     "asmaul.dalil_title": "Qur'an & Hadith Evidence",
     "asmaul.ulama_explanation": "Scholars' Explanation",
     "asmaul.ref_link": "Related Project References",
+    "asmaul.open_quran": "Open in Qur'an",
     "asmaul.general_dalil_title": "Evidence of the 99 Names",
     "hadith.daily_label": "Hadith of the Day",
     "quran.daily_ayah_label": "Verse of the Day",
