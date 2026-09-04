@@ -23,9 +23,17 @@ describe("fireAdzanNotification", () => {
         });
         global.navigator.serviceWorker = {};
         await fireAdzanNotification("T", "B", "/x");
-        expect(global.Notification).toHaveBeenCalledWith("T", {
-            body: "B",
-            icon: "/icon.png",
-        });
+        expect(global.Notification).toHaveBeenCalledWith(
+            "T",
+            expect.objectContaining({
+                body: "B",
+                icon: "/icon.png",
+                tag: "adzan-alert",
+                renotify: true,
+                requireInteraction: true,
+                silent: false,
+                vibrate: [500, 250, 500, 250, 500],
+            }),
+        );
     });
 });

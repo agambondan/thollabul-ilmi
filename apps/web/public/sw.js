@@ -33,7 +33,12 @@ self.addEventListener("push", (event) => {
         body: data.body || "",
         icon: data.icon || "/icon.svg",
         badge: data.badge || "/icon.svg",
-        vibrate: [200, 100, 200],
+        vibrate: [500, 250, 500, 250, 500],
+        tag: data.tag || "adzan-alert",
+        renotify: true,
+        requireInteraction: true,
+        silent: false,
+        urgency: "high",
         data: {
             url: data.url || "/",
             type: data.type || "",
