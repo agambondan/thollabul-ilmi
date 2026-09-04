@@ -20,7 +20,7 @@ export default function KamusPage() {
     useEffect(() => {
         let cancelled = false;
         kamusApi
-            .list()
+            .list(lang)
             .then((r) => r.json())
             .then((data) => {
                 if (cancelled) return;
@@ -33,7 +33,7 @@ export default function KamusPage() {
         return () => {
             cancelled = true;
         };
-    }, []);
+    }, [lang]);
 
     const wordMeaning = (word) => {
         if (lang === "EN") {
@@ -65,7 +65,7 @@ export default function KamusPage() {
         setLoading(true);
         setSelected(null);
         kamusApi
-            .search(q)
+            .search(q, lang)
             .then((r) => r.json())
             .then((data) => {
                 setResults(data?.items ?? data ?? []);

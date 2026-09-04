@@ -21,9 +21,10 @@ const ManasikPage = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(true);
         Promise.all([
-            manasikApi.byType("umrah").then((r) => r.json()),
-            manasikApi.byType("haji").then((r) => r.json()),
+            manasikApi.byType("umrah", lang).then((r) => r.json()),
+            manasikApi.byType("haji", lang).then((r) => r.json()),
         ])
             .then(([umrah, haji]) => {
                 setUmrahSteps(Array.isArray(umrah) ? umrah : []);
@@ -34,7 +35,7 @@ const ManasikPage = () => {
                 setHajiSteps([]);
             })
             .finally(() => setLoading(false));
-    }, []);
+    }, [lang]);
 
     const steps = activeTab === "umrah" ? umrahSteps : hajiSteps;
 

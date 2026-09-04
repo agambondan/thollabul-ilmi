@@ -192,7 +192,6 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                         {(() => {
                             const extra = asmaulHusnaData[current.number];
                             if (!extra) return null;
-                            const isIdn = lang === "ID";
                             return (
                                 <div className='mt-4 pt-4 border-t border-emerald-100 dark:border-slate-700 w-full text-left space-y-2 text-xs'>
                                     {extra.dalilRef && (
@@ -208,17 +207,17 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                                                     {extra.dalilText}
                                                 </p>
                                             )}
-                                            {isIdn && extra.dalilTrans && (
+                                            {extra.dalilTrans && (
                                                 <p className='text-gray-600 dark:text-gray-300 italic'>
                                                     &ldquo;{extra.dalilTrans}&rdquo;
                                                 </p>
                                             )}
                                         </div>
                                     )}
-                                    {isIdn && extra.ulamaQuote && (
+                                    {extra.ulamaQuote && (
                                         <div className='p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-800/30 text-amber-900 dark:text-amber-300'>
                                             <p className='font-semibold'>
-                                                💬 {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
+                                                {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
                                             </p>
                                             <p className='text-gray-700 dark:text-gray-200 dark:text-gray-300 mt-0.5'>
                                                 {extra.ulamaQuote}

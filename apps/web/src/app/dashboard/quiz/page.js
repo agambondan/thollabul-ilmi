@@ -62,9 +62,7 @@ const QuizPage = () => {
     const loadQuestions = async () => {
         setLoading(true);
         try {
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/v1/quiz/session?count=10`,
-            );
+            const res = await quizApi.session({ count: 10, lang });
             const data = await res.json();
             const items =
                 data?.data ?? data?.items ?? (Array.isArray(data) ? data : []);
@@ -80,7 +78,7 @@ const QuizPage = () => {
 
     useEffect(() => {
         loadQuestions();
-    }, []);
+    }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const restart = () => {
         setCurrent(0);

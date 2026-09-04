@@ -47,7 +47,7 @@ export default function QuizPage() {
         setFetchError(false);
         try {
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/v1/quiz/session?count=${QUESTIONS_PER_ROUND}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/api/v1/quiz/session?count=${QUESTIONS_PER_ROUND}${lang ? `&lang=${encodeURIComponent(lang)}` : ""}`,
             );
             const data = await res.json();
             const items = data?.items ?? data ?? [];

@@ -14,8 +14,9 @@ export default function DailyHadithWidget({ basePath = "/hadith" }) {
     const [error, setError] = useState(false);
 
     useEffect(() => {
+        setLoading(true);
         hadithApi
-            .daily()
+            .daily(lang)
             .then((r) => {
                 if (!r.ok) throw new Error("not ok");
                 return r.json();
@@ -26,7 +27,7 @@ export default function DailyHadithWidget({ basePath = "/hadith" }) {
             })
             .catch(() => setError(true))
             .finally(() => setLoading(false));
-    }, []);
+    }, [lang]);
 
     if (loading) {
         return (
@@ -41,7 +42,7 @@ export default function DailyHadithWidget({ basePath = "/hadith" }) {
     const arab = hadith.translation?.ar ?? hadith.arab ?? "";
     const trans =
         getLocalizedTranslation(hadith.translation, lang) ||
-        hadith.translation?.idn ||
+        (lang === "EN" ? hadith.translation?.en : hadith.translation?.idn) ||
         "";
     const bookName = hadith.book?.translation
         ? getLocalizedTranslation(hadith.book.translation, lang)

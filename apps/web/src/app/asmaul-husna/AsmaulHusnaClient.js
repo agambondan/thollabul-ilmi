@@ -2,10 +2,7 @@
 
 import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
-import {
-    asmaulHusnaData,
-    asmaulHusnaGeneralDalil,
-} from "@/lib/asmaulHusnaData";
+import { asmaulHusnaData } from "@/lib/asmaulHusnaData";
 import { getLocalizedText } from "@/lib/translation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -232,19 +229,21 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                         <p className='text-base font-semibold text-emerald-800 dark:text-emerald-300 text-center mb-4'>
                             {lang === "EN" ? selected.english : selected.indonesian}
                         </p>
-                        {(lang === "EN"
-                            ? selected.description_en
-                            : selected.description) && (
-                            <p className='text-sm text-gray-600 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3 mb-3'>
-                                {lang === "EN"
-                                    ? selected.description_en
-                                    : selected.description}
-                            </p>
-                        )}
+                        {(() => {
+                            const extra = asmaulHusnaData[selected.number];
+                            const desc =
+                                lang === "EN"
+                                    ? selected.description_en || extra?.meaning_en || selected.english
+                                    : selected.description || selected.meaning || extra?.explanation;
+                            return desc ? (
+                                <p className='text-sm text-gray-600 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3 mb-3'>
+                                    {desc}
+                                </p>
+                            ) : null;
+                        })()}
                         {(() => {
                             const extra = asmaulHusnaData[selected.number];
                             if (!extra) return null;
-                            const isIdn = lang === "ID";
                             return (
                                 <div className='space-y-2 text-xs text-left mb-3'>
                                     {extra.dalilRef && (
@@ -260,17 +259,17 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                                                     {extra.dalilText}
                                                 </p>
                                             )}
-                                            {isIdn && extra.dalilTrans && (
+                                            {extra.dalilTrans && (
                                                 <p className='text-gray-600 dark:text-gray-300 italic'>
                                                     &ldquo;{extra.dalilTrans}&rdquo;
                                                 </p>
                                             )}
                                         </div>
                                     )}
-                                    {isIdn && extra.ulamaQuote && (
+                                    {extra.ulamaQuote && (
                                         <div className='p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-800/30 text-amber-900 dark:text-amber-300'>
                                             <p className='font-semibold'>
-                                                💬 {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
+                                                {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
                                             </p>
                                             <p className='text-gray-700 dark:text-gray-200 dark:text-gray-300 mt-0.5'>
                                                 {extra.ulamaQuote}

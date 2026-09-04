@@ -87,8 +87,8 @@ export const DoaContent = ({ initialItems = [] }) => {
         if (append) setIsLoadingMore(true);
         else setIsLoading(true);
         const req = cat
-            ? doaApi.byCategory(cat, pageNum, PAGE_SIZE)
-            : doaApi.list(pageNum, PAGE_SIZE);
+            ? doaApi.byCategory(cat, pageNum, PAGE_SIZE, lang)
+            : doaApi.list(pageNum, PAGE_SIZE, lang);
         req.then((r) => r.json())
             .then((data) => {
                 const items = data?.items ?? data ?? [];
@@ -108,15 +108,15 @@ export const DoaContent = ({ initialItems = [] }) => {
 
     useEffect(() => {
         setPage(0);
-        // Skip the duplicate request for the page the server already rendered.
-        if (hasServerDataRef.current && !category) {
+        // Skip the duplicate request for the page the server already rendered (only on default initial language).
+        if (hasServerDataRef.current && !category && lang === "ID") {
             hasServerDataRef.current = false;
             setHasMore(initialItems.length >= PAGE_SIZE);
             return;
         }
         hasServerDataRef.current = false;
         fetchPage(category, 0, false);
-    }, [category]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [category, lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (page === 0) return;

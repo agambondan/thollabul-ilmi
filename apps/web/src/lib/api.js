@@ -240,13 +240,18 @@ export const searchApi = {
 };
 
 export const doaApi = {
-    list: (page = 0, size = 20) =>
-        fetch(`${API_URL}/api/v1/doa?page=${page}&size=${size}`),
-    byCategory: (category, page = 0, size = 20) =>
+    list: (page = 0, size = 20, lang = "") =>
         fetch(
-            `${API_URL}/api/v1/doa/category/${encodeURIComponent(category)}?page=${page}&size=${size}`,
+            `${API_URL}/api/v1/doa?page=${page}&size=${size}${lang ? `&lang=${encodeURIComponent(lang)}` : ""}`,
         ),
-    detail: (id) => fetch(`${API_URL}/api/v1/doa/${id}`),
+    byCategory: (category, page = 0, size = 20, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/doa/category/${encodeURIComponent(category)}?page=${page}&size=${size}${lang ? `&lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    detail: (id, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/doa/${id}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
 };
 
 export const asmaulHusnaApi = {
@@ -276,7 +281,10 @@ export const tokohTarikhApi = {
         const qs = new URLSearchParams(params).toString();
         return fetch(`${API_URL}/api/v1/tokoh-tarikh${qs ? "?" + qs : ""}`);
     },
-    detail: (id) => fetch(`${API_URL}/api/v1/tokoh-tarikh/${id}`),
+    detail: (id, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/tokoh-tarikh/${id}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
 };
 
 export const mufrodatApi = {
@@ -292,16 +300,29 @@ export const audioApi = {
 };
 
 export const sirohApi = {
-    listCategories: () => fetch(`${API_URL}/api/v1/siroh/categories`),
-    list: (page = 0, size = 20) =>
-        fetch(`${API_URL}/api/v1/siroh/contents?page=${page}&size=${size}`),
-    detail: (slug) => fetch(`${API_URL}/api/v1/siroh/contents/${slug}`),
+    listCategories: (lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/siroh/categories${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    list: (page = 0, size = 20, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/siroh/contents?page=${page}&size=${size}${lang ? `&lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    detail: (slug, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/siroh/contents/${encodeURIComponent(slug)}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
 };
 
 export const blogApi = {
-    list: (page = 0, size = 10) =>
-        fetch(`${API_URL}/api/v1/blog/posts?page=${page}&size=${size}`),
-    detail: (slug) => fetch(`${API_URL}/api/v1/blog/posts/${slug}`),
+    list: (page = 0, size = 10, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/blog/posts?page=${page}&size=${size}${lang ? `&lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    detail: (slug, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/blog/posts/${encodeURIComponent(slug)}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
     listCategories: () => fetch(`${API_URL}/api/v1/blog/categories`),
     listTags: () => fetch(`${API_URL}/api/v1/blog/tags`),
 };
@@ -450,23 +471,39 @@ export const hijriApi = {
         const params = new URLSearchParams({ year, month, day });
         return fetch(`${API_URL}/api/v1/hijri/convert?${params.toString()}`);
     },
-    events: () => fetch(`${API_URL}/api/v1/hijri/events`),
-    eventsByMonth: (month) => fetch(`${API_URL}/api/v1/hijri/events/${month}`),
+    events: (lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/hijri/events${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    eventsByMonth: (month, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/hijri/events/${month}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
 };
 
 export const asbabunNuzulApi = {
-    byAyah: (ayahId) => fetch(`${API_URL}/api/v1/asbabun-nuzul/ayah/${ayahId}`),
-    bySurah: (number) =>
-        fetch(`${API_URL}/api/v1/asbabun-nuzul/surah/${number}`),
+    byAyah: (ayahId, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/asbabun-nuzul/ayah/${ayahId}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    bySurah: (number, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/asbabun-nuzul/surah/${number}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
 };
 
 export const dzikirApi = {
-    list: (page = 0, size = 20) =>
-        fetch(`${API_URL}/api/v1/dzikir?page=${page}&size=${size}`),
-    detail: (id) => fetch(`${API_URL}/api/v1/dzikir/${id}`),
-    byCategory: (category, page = 0, size = 20) =>
+    list: (page = 0, size = 20, lang = "") =>
         fetch(
-            `${API_URL}/api/v1/dzikir/category/${encodeURIComponent(category)}?page=${page}&size=${size}`,
+            `${API_URL}/api/v1/dzikir?page=${page}&size=${size}${lang ? `&lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    detail: (id, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/dzikir/${id}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    byCategory: (category, page = 0, size = 20, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/dzikir/category/${encodeURIComponent(category)}?page=${page}&size=${size}${lang ? `&lang=${encodeURIComponent(lang)}` : ""}`,
         ),
 };
 
@@ -551,22 +588,34 @@ export const notesApi = {
 };
 
 export const kamusApi = {
-    list: () => fetch(`${API_URL}/api/v1/dictionary`),
-    search: (q) =>
-        fetch(`${API_URL}/api/v1/dictionary?q=${encodeURIComponent(q)}`),
-    detail: (term) =>
-        fetch(`${API_URL}/api/v1/dictionary/${encodeURIComponent(term)}`),
+    list: (lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/dictionary${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    search: (q, lang = "") => {
+        const params = new URLSearchParams({ q });
+        if (lang) params.set("lang", lang);
+        return fetch(`${API_URL}/api/v1/dictionary?${params.toString()}`);
+    },
+    detail: (term, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/dictionary/${encodeURIComponent(term)}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
 };
 
 export const manasikApi = {
-    byType: (type) => fetch(`${API_URL}/api/v1/manasik/${type}`),
+    byType: (type, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/manasik/${encodeURIComponent(type)}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
 };
 
 export const quizApi = {
-    session: ({ count = 10, type = "" } = {}) => {
+    session: ({ count = 10, type = "", lang = "" } = {}) => {
         const params = new URLSearchParams();
         if (count) params.set("count", count);
         if (type) params.set("type", type);
+        if (lang) params.set("lang", lang);
         const qs = params.toString();
         return fetch(`${API_URL}/api/v1/quiz/session${qs ? `?${qs}` : ""}`);
     },
@@ -677,26 +726,39 @@ export const wiridApi = {
 };
 
 export const fiqhApi = {
-    listCategories: () => fetch(`${API_URL}/api/v1/fiqh`),
-    listItems: (size = 500) =>
-        fetch(`${API_URL}/api/v1/fiqh/items?size=${size}`),
-    categoryBySlug: (slug) =>
-        fetch(`${API_URL}/api/v1/fiqh/${encodeURIComponent(slug)}`),
-    itemBySlug: (slug) =>
-        fetch(`${API_URL}/api/v1/fiqh/item/${encodeURIComponent(slug)}`),
+    listCategories: (lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/fiqh${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    listItems: (size = 500, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/fiqh/items?size=${size}${lang ? `&lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    categoryBySlug: (slug, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/fiqh/${encodeURIComponent(slug)}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    itemBySlug: (slug, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/fiqh/item/${encodeURIComponent(slug)}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
 };
 
 export const historyApi = {
-    list: (params = {}) => {
+    list: (params = {}, lang = "") => {
         const q = new URLSearchParams();
         if (params.category) q.set("category", params.category);
         if (params.yearFrom) q.set("year_from", String(params.yearFrom));
         if (params.yearTo) q.set("year_to", String(params.yearTo));
+        const effectiveLang = lang || params.lang;
+        if (effectiveLang) q.set("lang", effectiveLang);
         const qs = q.toString();
         return fetch(`${API_URL}/api/v1/history${qs ? `?${qs}` : ""}`);
     },
-    bySlug: (slug) =>
-        fetch(`${API_URL}/api/v1/history/${encodeURIComponent(slug)}`),
+    bySlug: (slug, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/history/${encodeURIComponent(slug)}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
 };
 
 export const imsakiyahApi = {
@@ -959,15 +1021,25 @@ export const bookImageSrc = (slug) => `/assets/images/kitab/hadith/${slug}.png`;
 export const bookHref = (slug) => `/hadith/${slug}`;
 
 export const hadithApi = {
-    daily: () => fetch(`${API_URL}/api/v1/hadiths/daily`),
-    detail: (id) => fetch(`${API_URL}/api/v1/hadiths/${id}`),
-    detailByBookNumber: (bookSlug, number) =>
-        fetch(`${API_URL}/api/v1/hadiths/book/${bookSlug}/number/${number}`),
+    daily: (lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/hadiths/daily${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    detail: (id, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/hadiths/${id}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    detailByBookNumber: (bookSlug, number, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/hadiths/book/${bookSlug}/number/${number}${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
 };
 
 export const remindersApi = {
-    list: (params = {}) => {
-        const qs = new URLSearchParams(params).toString();
+    list: (params = {}, lang = "") => {
+        const effective = { ...params };
+        if (lang) effective.lang = lang;
+        const qs = new URLSearchParams(effective).toString();
         return fetch(`${API_URL}/api/v1/reminders${qs ? `?${qs}` : ""}`);
     },
     detail: (id) => fetch(`${API_URL}/api/v1/reminders/${id}`),

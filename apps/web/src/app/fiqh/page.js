@@ -44,7 +44,7 @@ export default function FiqhPage() {
         setIsLoading(true);
         setError(false);
         fiqhApi
-            .listCategories()
+            .listCategories(lang)
             .then((res) => res.json())
             .then((data) => {
                 if (cancelled) return;
@@ -62,7 +62,7 @@ export default function FiqhPage() {
         return () => {
             cancelled = true;
         };
-    }, []);
+    }, [lang]);
 
     // Load every item up front. The counts under each category and the search
     // box both read from itemsByCategory, so loading only on expand meant every
@@ -70,8 +70,9 @@ export default function FiqhPage() {
     // not already opened. It is one request for ~27 rows.
     useEffect(() => {
         let cancelled = false;
+        setItemsByCategory({});
         fiqhApi
-            .listItems()
+            .listItems(500, lang)
             .then((res) => res.json())
             .then((data) => {
                 if (cancelled) return;
@@ -83,7 +84,7 @@ export default function FiqhPage() {
                     if (!slug) continue;
                     (grouped[slug] ??= []).push(item);
                 }
-                setItemsByCategory((prev) => ({ ...grouped, ...prev }));
+                setItemsByCategory(grouped);
             })
             .catch(() => {
                 // Categories still expand one at a time via loadCategoryItems.
@@ -91,12 +92,12 @@ export default function FiqhPage() {
         return () => {
             cancelled = true;
         };
-    }, []);
+    }, [lang]);
 
     const loadCategoryItems = async (slug) => {
         if (itemsByCategory[slug]) return;
         try {
-            const res = await fiqhApi.categoryBySlug(slug);
+            const res = await fiqhApi.categoryBySlug(slug, lang);
             const data = await res.json();
             setItemsByCategory((prev) => ({
                 ...prev,

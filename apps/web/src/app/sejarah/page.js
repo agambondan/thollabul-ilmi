@@ -57,7 +57,7 @@ const SejarahPage = () => {
         const params =
             activeCategory === "semua" ? {} : { category: activeCategory };
         historyApi
-            .list(params)
+            .list(params, lang)
             .then((res) => res.json())
             .then((data) => {
                 if (cancelled) return;
@@ -75,7 +75,7 @@ const SejarahPage = () => {
         return () => {
             cancelled = true;
         };
-    }, [activeCategory]);
+    }, [activeCategory, lang]);
 
     const filtered = useMemo(() => {
         const q = search.trim().toLowerCase();

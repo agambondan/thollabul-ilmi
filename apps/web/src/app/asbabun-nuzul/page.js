@@ -68,7 +68,7 @@ export const AsbabunNuzulContent = ({ quranBasePath = "/quran" }) => {
         setError("");
         setSearched(true);
         try {
-            const res = await asbabunNuzulApi.bySurah(num);
+            const res = await asbabunNuzulApi.bySurah(num, lang);
             if (!res.ok) throw new Error("fetch failed");
             const d = await res.json();
             setResults(Array.isArray(d) ? d : (d.data ?? []));

@@ -77,8 +77,8 @@ export const DzikirContent = ({ initialItems = [] }) => {
             setError("");
         }
         const req = cat
-            ? dzikirApi.byCategory(cat, pageNum, PAGE_SIZE)
-            : dzikirApi.list(pageNum, PAGE_SIZE);
+            ? dzikirApi.byCategory(cat, pageNum, PAGE_SIZE, lang)
+            : dzikirApi.list(pageNum, PAGE_SIZE, lang);
         req.then((r) => {
             if (!r.ok) throw new Error(t("common.network_error"));
             return r.json();
@@ -101,15 +101,15 @@ export const DzikirContent = ({ initialItems = [] }) => {
 
     useEffect(() => {
         setPage(0);
-        // Skip the duplicate request for the page the server already rendered.
-        if (hasServerDataRef.current && !category) {
+        // Skip the duplicate request for the page the server already rendered (only on default initial language).
+        if (hasServerDataRef.current && !category && lang === "ID") {
             hasServerDataRef.current = false;
             setHasMore(initialItems.length >= PAGE_SIZE);
             return;
         }
         hasServerDataRef.current = false;
         fetchPage(category, 0, false);
-    }, [category]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [category, lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (page === 0) return;

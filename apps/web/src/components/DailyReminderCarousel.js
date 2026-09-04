@@ -58,19 +58,20 @@ const THEMES = {
 
 const unwrapPayload = (payload) => payload?.data ?? payload;
 
-const normalizeAyah = (payload, lang, ayahBasePath) => {
+const normalizeAyah = (payload, lang, ayahBasePath, t) => {
     const ayah = unwrapPayload(payload);
     if (!ayah || Array.isArray(ayah)) return null;
 
     const arabic = ayah.translation?.ar ?? ayah.ar ?? "";
     const text =
         getLocalizedTranslation(ayah.translation, lang) ||
-        ayah.translation?.idn ||
-        ayah.translation?.en ||
+        (lang === "EN" ? ayah.translation?.en : ayah.translation?.idn) ||
         "";
     const surahName =
         getLocalizedTranslation(ayah.surah?.translation, lang) ||
-        ayah.surah?.translation?.latin_en ||
+        (lang === "EN"
+            ? ayah.surah?.translation?.latin_en
+            : ayah.surah?.translation?.latin_idn) ||
         ayah.surah?.identifier ||
         "";
     const ayahNum = ayah.number ?? "";
@@ -87,7 +88,7 @@ const normalizeAyah = (payload, lang, ayahBasePath) => {
     return {
         type: "Al-Quran",
         icon: FaQuran,
-        title: "Ayat Hari Ini",
+        title: t?.("quran.daily_ayah_label") || "Ayat Hari Ini",
         arabic,
         text,
         source: `${surahName}${ayahNum ? `: ${ayahNum}` : ""}`,
@@ -95,15 +96,14 @@ const normalizeAyah = (payload, lang, ayahBasePath) => {
     };
 };
 
-const normalizeHadith = (payload, lang, basePath) => {
+const normalizeHadith = (payload, lang, basePath, t) => {
     const hadith = unwrapPayload(payload);
     if (!hadith || Array.isArray(hadith)) return null;
 
     const arabic = hadith.translation?.ar ?? hadith.arab ?? "";
     const text =
         getLocalizedTranslation(hadith.translation, lang) ||
-        hadith.translation?.idn ||
-        hadith.translation?.en ||
+        (lang === "EN" ? hadith.translation?.en : hadith.translation?.idn) ||
         "";
     const bookName = hadith.book?.translation
         ? getLocalizedTranslation(hadith.book.translation, lang)
@@ -121,7 +121,7 @@ const normalizeHadith = (payload, lang, basePath) => {
     return {
         type: "Hadis",
         icon: ImBook,
-        title: "Hadis Hari Ini",
+        title: t?.("hadith.daily_label") || "Hadis Hari Ini",
         arabic,
         text,
         source: `HR. ${bookName}${number ? ` No. ${number}` : ""}`,
@@ -136,8 +136,9 @@ const unwrapListPayload = (payload) => {
     return [];
 };
 
-const normalizeReminder = (item) => {
-    if (!item?.text) return null;
+const normalizeReminder = (item, lang) => {
+    const text = getLocalizedField(item, "text", lang, ["body", "content"]);
+    if (!text) return null;
     const source = [item.author, item.source].filter(Boolean).join(" · ");
     const title =
         item.type === "ulama"
@@ -148,7 +149,7 @@ const normalizeReminder = (item) => {
         type: "Nasihat Ulama",
         icon: MdFormatQuote,
         title,
-        text: item.text,
+        text,
         source: source || "Pengingat harian",
     };
 };
@@ -165,16 +166,21 @@ export default function DailyReminderCarousel({
         let ignore = false;
 
         Promise.allSettled([
-            fetch(`${API_URL}/api/v1/ayah/daily`).then((r) => {
+            fetch(
+                `${API_URL}/api/v1/ayah/daily${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+            ).then((r) => {
                 if (!r.ok) throw new Error("ayah failed");
                 return r.json();
             }),
-            hadithApi.daily().then((r) => {
+            hadithApi.daily(lang).then((r) => {
                 if (!r.ok) throw new Error("hadith failed");
                 return r.json();
             }),
             remindersApi
-                .list({ active: "true", limit: "20", lang: "idn" })
+                .list(
+                    { active: "true", limit: "20" },
+                    lang === "EN" ? "en" : "idn",
+                )
                 .then((r) => {
                     if (!r.ok) throw new Error("reminders failed");
                     return r.json();
@@ -184,13 +190,14 @@ export default function DailyReminderCarousel({
 
             const nextSlides = [
                 results[0].status === "fulfilled"
-                    ? normalizeAyah(results[0].value, lang, ayahBasePath)
+                    ? normalizeAyah(results[0].value, lang, ayahBasePath, t)
                     : null,
                 results[1].status === "fulfilled"
-                    ? normalizeHadith(results[1].value, lang, hadithBasePath)
+                    ? normalizeHadith(results[1].value, lang, hadithBasePath, t)
                     : null,
                 ...(results[2].status === "fulfilled"
-                    ? unwrapListPayload(results[2].value).map(normalizeReminder)
+                    ? unwrapListPayload(results[2].value)
+                          .map((item) => normalizeReminder(item, lang))
                     : []),
             ].filter(Boolean);
 
@@ -201,7 +208,7 @@ export default function DailyReminderCarousel({
         return () => {
             ignore = true;
         };
-    }, [ayahBasePath, hadithBasePath, lang]);
+    }, [ayahBasePath, hadithBasePath, lang, t]);
 
     const slides = useMemo(() => {
         return [...dynamicSlides, ...STATIC_REMINDERS];

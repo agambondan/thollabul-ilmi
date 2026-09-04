@@ -26,7 +26,8 @@ export default function DailyAyahWidget({
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch(`${API_URL}/api/v1/ayah/daily`)
+        setLoading(true);
+        fetch(`${API_URL}/api/v1/ayah/daily${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`)
             .then((r) => {
                 if (!r.ok) throw new Error("not ok");
                 return r.json();
@@ -45,7 +46,7 @@ export default function DailyAyahWidget({
             })
             .catch(() => setAyah(null))
             .finally(() => setLoading(false));
-    }, []);
+    }, [lang]);
 
     if (loading) {
         return (
@@ -58,11 +59,15 @@ export default function DailyAyahWidget({
     const arabic = ayah.translation?.ar ?? ayah.ar ?? "";
     const meaning =
         getLocalizedTranslation(ayah.translation, lang) ||
-        ayah.translation?.idn ||
+        (lang === "EN"
+            ? ayah.translation?.en || ayah.translation?.latin_en
+            : ayah.translation?.idn) ||
         "";
     const surahName =
         getLocalizedTranslation(ayah.surah?.translation, lang) ||
-        ayah.surah?.translation?.latin_en ||
+        (lang === "EN"
+            ? ayah.surah?.translation?.latin_en
+            : ayah.surah?.translation?.latin_idn) ||
         "";
     const ayahNum = ayah.number ?? "";
     const surahSlug = ayah.surah?.translation?.latin_en?.toLowerCase() ?? "";

@@ -26,7 +26,7 @@ export default function SirohClient({ initialChapters = [] }) {
         if (append) setIsLoadingMore(true);
         else setIsLoading(true);
         sirohApi
-            .list(pageNum, PAGE_SIZE)
+            .list(pageNum, PAGE_SIZE, lang)
             .then((r) => r.json())
             .then((data) => {
                 const items = data?.items ?? data ?? [];
@@ -43,10 +43,22 @@ export default function SirohClient({ initialChapters = [] }) {
             });
     };
 
+    const hasServerDataRef = useRef(initialChapters.length > 0);
+
+    useEffect(() => {
+        if (hasServerDataRef.current && lang === "ID") {
+            hasServerDataRef.current = false;
+            return;
+        }
+        hasServerDataRef.current = false;
+        setPage(0);
+        fetchPage(0, false);
+    }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
+
     useEffect(() => {
         if (page === 0) return;
         fetchPage(page, true);
-    }, [page]);
+    }, [page]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         const el = sentinelRef.current;

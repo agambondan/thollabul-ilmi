@@ -4,6 +4,7 @@ import ContentWidth from "@/components/layout/ContentWidth";
 import Section from "@/components/Section";
 import { useLocale } from "@/context/Locale";
 import { asmaulHusnaApi } from "@/lib/api";
+import { getLocalizedText } from "@/lib/translation";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -27,7 +28,7 @@ const safeParse = (raw, fallback) => {
 };
 
 export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
-    const { t } = useLocale();
+    const { t, lang } = useLocale();
     const [names, setNames] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -42,8 +43,9 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
     };
 
     useEffect(() => {
+        setIsLoading(true);
         asmaulHusnaApi
-            .list()
+            .list(lang)
             .then((r) => r.json())
             .then((data) => {
                 const items = (data?.items ?? data ?? []).sort(
@@ -53,7 +55,7 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
             })
             .catch((e) => console.error(e))
             .finally(() => setIsLoading(false));
-    }, []);
+    }, [lang]);
 
     useEffect(() => {
         const stored = safeParse(localStorage.getItem(STORAGE_KEY), null);
@@ -187,7 +189,13 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
                         {active.transliteration}
                     </p>
                     <p className='text-base font-semibold text-center text-emerald-800 dark:text-emerald-300 mb-5'>
-                        {active.indonesian}
+                        {getLocalizedText(
+                            {
+                                idn: active.indonesian,
+                                en: active.english,
+                            },
+                            lang,
+                        )}
                     </p>
 
                     <div className='relative flex items-center justify-center mb-5'>

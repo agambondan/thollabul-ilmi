@@ -35,7 +35,7 @@ export function TokohListContent({ className = "" }) {
 
     useEffect(() => {
         setLoading(true);
-        const params = { page: "1", size: "100" };
+        const params = { page: "1", size: "100", lang };
         if (search) params.q = search;
         if (era) params.era = era;
         tokohTarikhApi
@@ -44,7 +44,7 @@ export function TokohListContent({ className = "" }) {
             .then((d) => setItems(d?.items ?? []))
             .catch((e) => console.error(e))
             .finally(() => setLoading(false));
-    }, [search, era]);
+    }, [search, era, lang]);
 
     return (
         <ContentWidth compact='max-w-4xl' className={`px-4 py-6 ${className}`}>

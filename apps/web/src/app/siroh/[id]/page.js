@@ -20,7 +20,7 @@ const SirohDetailPage = (props) => {
 
     useEffect(() => {
         sirohApi
-            .detail(params.id)
+            .detail(params.id, lang)
             // A 404 still parses as JSON, so checking res.ok is what separates
             // "not found" from a real payload — without it the error body was
             // stored as content and the article rendered blank.
@@ -34,7 +34,7 @@ const SirohDetailPage = (props) => {
             })
             .catch(() => setError(true))
             .finally(() => setIsLoading(false));
-    }, [params.id]);
+    }, [params.id, lang]);
 
     if (isLoading) return <SkeletonList title={false} rows={5} />;
 
