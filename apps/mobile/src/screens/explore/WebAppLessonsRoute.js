@@ -18,6 +18,7 @@ import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { colors, radius, spacing } from "../../theme";
 import { putJson, requestJson } from "../../api/client";
 import { getFeatureItemPage } from "../../api/explore";
+import { playAudioUrl, stopAudio } from "../../utils/audioPlayer";
 
 export function WebAppLessonsRoute({
     feature,
@@ -326,6 +327,35 @@ export function WebAppLessonsRoute({
                         </View>
                     ) : null}
 
+                    {step?.audio_url ? (
+                        <Pressable
+                            accessibilityRole='button'
+                            onPress={() => {
+                                const target = step.audio_url.startsWith("http")
+                                    ? step.audio_url
+                                    : `https://thollabul.jangkauin.site${step.audio_url}`;
+                                playAudioUrl(target).catch(() => {});
+                            }}
+                            style={[
+                                localStyles.audioButton,
+                                isDarkTheme && {
+                                    backgroundColor: "#064e3b",
+                                    borderColor: "#059669",
+                                },
+                            ]}
+                        >
+                            <Play size={16} color={isDarkTheme ? "#6ee7b7" : colors.primary} />
+                            <Text
+                                style={[
+                                    localStyles.audioButtonText,
+                                    isDarkTheme && { color: "#6ee7b7" },
+                                ]}
+                            >
+                                Putar Audio Pelafalan
+                            </Text>
+                        </Pressable>
+                    ) : null}
+
                     <View style={localStyles.navRow}>
                         <Pressable
                             accessibilityRole='button'
@@ -500,6 +530,24 @@ const localStyles = StyleSheet.create({
         fontSize: 12,
         color: "#92400e",
         lineHeight: 18,
+    },
+    audioButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+        paddingVertical: spacing.sm,
+        paddingHorizontal: spacing.md,
+        borderRadius: radius.md,
+        backgroundColor: colors.primaryLight || "#ecfdf5",
+        borderWidth: 1,
+        borderColor: "#a7f3d0",
+        marginTop: spacing.xs,
+    },
+    audioButtonText: {
+        fontSize: 13,
+        fontWeight: "600",
+        color: colors.primary,
     },
     navRow: {
         flexDirection: "row",
