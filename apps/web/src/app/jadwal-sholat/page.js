@@ -332,10 +332,10 @@ export default function JadwalSholatPage() {
                     <p className='text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3'>
                         {t("prayer_schedule.pick_city")}
                     </p>
-                    <div className='flex gap-2'>
+                    <div className='flex flex-col sm:flex-row gap-2'>
                         <button
                             onClick={handleGeo}
-                            className='flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors whitespace-nowrap'
+                            className='flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors whitespace-nowrap'
                         >
                             <BsGeoAlt />
                             {t("geo.my_location")}
@@ -351,7 +351,7 @@ export default function JadwalSholatPage() {
                                     setCity(found);
                                 }
                             }}
-                            className='flex-1 border border-gray-200 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
+                            className='flex-1 w-full sm:w-auto border border-gray-200 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
                         >
                             {CITIES.map((c) => (
                                 <option key={c.name} value={c.name}>
