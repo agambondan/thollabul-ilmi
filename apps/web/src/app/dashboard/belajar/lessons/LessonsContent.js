@@ -7,12 +7,10 @@ import { useLayoutMode } from "@/lib/useLayoutMode";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
-    BsBook,
     BsCheckCircle,
     BsChevronLeft,
     BsChevronRight,
     BsClock,
-    BsPlayFill,
 } from "react-icons/bs";
 
 const STORAGE_KEY = "tholabul_lesson_progress_v2";
@@ -180,43 +178,48 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
 
             <div className='grid grid-cols-1 lg:grid-cols-[18rem_1fr] gap-4'>
                 <div className='space-y-3'>
-                    <div className='bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4'>
-                        <div className='flex items-center justify-between mb-2'>
-                            <span className='text-xs font-bold text-gray-500 uppercase'>Progress</span>
-                            <span className='text-xs font-bold text-emerald-600'>{moduleProgress}%</span>
+                    {/* Selector Modul (Dropdown List) */}
+                    <div className='bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 space-y-3 shadow-sm'>
+                        <label htmlFor='lesson-module-select' className='block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+                            {t("belajar.select_module") || "Materi Belajar"}
+                        </label>
+                        <div className='relative'>
+                            <select
+                                id='lesson-module-select'
+                                value={activeModuleId || ""}
+                                onChange={(e) => {
+                                    setActiveModuleId(e.target.value);
+                                    setActiveStepIdx(0);
+                                    setFinishedSlug(null);
+                                }}
+                                className='w-full appearance-none bg-emerald-50/50 dark:bg-slate-900 border border-emerald-200 dark:border-slate-700 text-gray-900 dark:text-white text-sm font-semibold rounded-xl px-3.5 py-2.5 pr-8 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer'
+                            >
+                                {modules.map((m) => {
+                                    const done = (m.steps || []).filter((item, index) => completed[stepKey(m.slug, stepNumber(item, index))]).length;
+                                    const percent = m.steps?.length ? Math.round((done / m.steps.length) * 100) : 0;
+                                    return (
+                                        <option key={m.slug} value={m.slug}>
+                                            {m.title} ({percent}%)
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                            <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 dark:text-gray-400'>
+                                <BsChevronRight className='rotate-90 text-xs' />
+                            </div>
                         </div>
-                        <div className='h-2 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden'>
-                            <div className='h-full bg-emerald-600 rounded-full transition-all' style={{ width: `${moduleProgress}%` }} />
-                        </div>
-                        <p className='mt-2 text-xs text-gray-500'>{moduleDone}/{totalSteps} langkah selesai</p>
-                    </div>
 
-                    <div className='space-y-2'>
-                        {modules.map((m) => {
-                            const done = (m.steps || []).filter((item, index) => completed[stepKey(m.slug, stepNumber(item, index))]).length;
-                            const percent = m.steps?.length ? Math.round((done / m.steps.length) * 100) : 0;
-                            return (
-                                <button
-                                    key={m.slug}
-                                    onClick={() => {
-                                        setActiveModuleId(m.slug);
-                                        setActiveStepIdx(0);
-                                        setFinishedSlug(null);
-                                    }}
-                                    className={`w-full text-left p-3 rounded-xl border transition-colors ${
-                                        activeModuleId === m.slug
-                                            ? "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700"
-                                            : "bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:border-emerald-200"
-                                    }`}
-                                >
-                                    <p className='text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2'>
-                                        {activeModuleId === m.slug ? <BsPlayFill className='text-emerald-500' /> : <BsBook className='text-gray-400' />}
-                                        {m.title}
-                                    </p>
-                                    <p className='text-xs text-gray-500 mt-1'>{m.level || "Pemula"} · {m.steps?.length || 0} langkah · {percent}%</p>
-                                </button>
-                            );
-                        })}
+                        {/* Progress Materi Aktif */}
+                        <div className='pt-2 border-t border-gray-100 dark:border-slate-700/60'>
+                            <div className='flex items-center justify-between mb-1.5'>
+                                <span className='text-xs font-medium text-gray-500 dark:text-gray-400'>Progres Materi</span>
+                                <span className='text-xs font-bold text-emerald-600 dark:text-emerald-400'>{moduleProgress}%</span>
+                            </div>
+                            <div className='h-2 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden'>
+                                <div className='h-full bg-emerald-600 rounded-full transition-all duration-300' style={{ width: `${moduleProgress}%` }} />
+                            </div>
+                            <p className='mt-1.5 text-[11px] text-gray-400 dark:text-gray-500'>{moduleDone} dari {totalSteps} langkah selesai</p>
+                        </div>
                     </div>
                 </div>
 

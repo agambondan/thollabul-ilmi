@@ -195,17 +195,37 @@ export function WebAppLessonsRoute({
                     ]}
                 >
                     <View style={localStyles.headerRow}>
-                        <Text
-                            style={[
-                                localStyles.stepBadge,
-                                isDarkTheme && {
-                                    backgroundColor: "#064e3b",
-                                    color: "#6ee7b7",
-                                },
-                            ]}
-                        >
-                            Langkah {activeStepIdx + 1} dari {totalSteps}
-                        </Text>
+                        <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
+                            <Text
+                                style={[
+                                    localStyles.stepBadge,
+                                    isDarkTheme && {
+                                        backgroundColor: "#064e3b",
+                                        color: "#6ee7b7",
+                                    },
+                                ]}
+                            >
+                                Langkah {activeStepIdx + 1} dari {totalSteps}
+                            </Text>
+                            {step?.kind && (
+                                <Text
+                                    style={[
+                                        localStyles.stepBadge,
+                                        step.kind === "rukun"
+                                            ? { backgroundColor: "#fee2e2", color: "#b91c1c" }
+                                            : step.kind === "sunnah"
+                                              ? { backgroundColor: "#fef3c7", color: "#b45309" }
+                                              : { backgroundColor: "#e0f2fe", color: "#0369a1" },
+                                        isDarkTheme && {
+                                            backgroundColor: "#1e293b",
+                                            color: "#93c5fd",
+                                        },
+                                    ]}
+                                >
+                                    {step.kind.toUpperCase()}
+                                </Text>
+                            )}
+                        </View>
                         {completed[
                             `${activeModuleId}_${activeStepIdx + 1}`
                         ] && <CheckCircle2 size={16} color='#10b981' />}
@@ -220,14 +240,14 @@ export function WebAppLessonsRoute({
                         {step?.title || activeModule.title}
                     </Text>
 
-                    {step?.content ? (
+                    {(step?.body || step?.content) ? (
                         <Text
                             style={[
                                 localStyles.stepBody,
                                 isDarkTheme && { color: "#d1d5db" },
                             ]}
                         >
-                            {step.content}
+                            {step?.body || step?.content}
                         </Text>
                     ) : null}
 
@@ -242,6 +262,17 @@ export function WebAppLessonsRoute({
                         </Text>
                     ) : null}
 
+                    {step?.latin ? (
+                        <Text
+                            style={[
+                                localStyles.stepLatin,
+                                isDarkTheme && { color: "#6ee7b7" },
+                            ]}
+                        >
+                            {step.latin}
+                        </Text>
+                    ) : null}
+
                     {step?.translation ? (
                         <Text
                             style={[
@@ -251,6 +282,48 @@ export function WebAppLessonsRoute({
                         >
                             {step.translation}
                         </Text>
+                    ) : null}
+
+                    {step?.dalil ? (
+                        <View
+                            style={[
+                                localStyles.stepDalilBox,
+                                isDarkTheme && {
+                                    backgroundColor: "rgba(6, 95, 70, 0.2)",
+                                    borderLeftColor: "#10b981",
+                                },
+                            ]}
+                        >
+                            <Text
+                                style={[
+                                    localStyles.stepDalilText,
+                                    isDarkTheme && { color: "#d1d5db" },
+                                ]}
+                            >
+                                {step.dalil}
+                            </Text>
+                        </View>
+                    ) : null}
+
+                    {step?.tip ? (
+                        <View
+                            style={[
+                                localStyles.stepTipBox,
+                                isDarkTheme && {
+                                    backgroundColor: "rgba(180, 83, 9, 0.2)",
+                                    borderLeftColor: "#f59e0b",
+                                },
+                            ]}
+                        >
+                            <Text
+                                style={[
+                                    localStyles.stepTipText,
+                                    isDarkTheme && { color: "#fde68a" },
+                                ]}
+                            >
+                                {step.tip}
+                            </Text>
+                        </View>
                     ) : null}
 
                     <View style={localStyles.navRow}>
@@ -397,6 +470,36 @@ const localStyles = StyleSheet.create({
         fontSize: 13,
         fontStyle: "italic",
         color: colors.textSecondary,
+    },
+    stepLatin: {
+        fontSize: 13,
+        fontStyle: "italic",
+        color: colors.primaryDark || "#047857",
+        lineHeight: 20,
+    },
+    stepDalilBox: {
+        borderLeftWidth: 3,
+        borderLeftColor: colors.primary,
+        backgroundColor: "#ecfdf5",
+        padding: spacing.sm,
+        borderRadius: radius.sm,
+    },
+    stepDalilText: {
+        fontSize: 12,
+        color: colors.textPrimary,
+        lineHeight: 18,
+    },
+    stepTipBox: {
+        borderLeftWidth: 3,
+        borderLeftColor: "#f59e0b",
+        backgroundColor: "#fffbeb",
+        padding: spacing.sm,
+        borderRadius: radius.sm,
+    },
+    stepTipText: {
+        fontSize: 12,
+        color: "#92400e",
+        lineHeight: 18,
     },
     navRow: {
         flexDirection: "row",

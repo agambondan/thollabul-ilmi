@@ -106,6 +106,8 @@ const en = {
     "common.loading": "Loading...",
     "belajar.loading_modules": "Loading lesson modules...",
     "belajar.back_to_learn": "Back to Learn",
+    "belajar.select_module": "Choose a Lesson",
+    "belajar.module_progress": "Lesson Progress",
     "komunitas.qa_title": "Islamic Q&A",
     "komunitas.qa_desc":
         "Discuss fiqh, aqidah, and daily life with the community.",

@@ -105,6 +105,8 @@ const id = {
     "common.loading": "Memuat...",
     "belajar.loading_modules": "Memuat modul pelajaran...",
     "belajar.back_to_learn": "Kembali ke Belajar",
+    "belajar.select_module": "Pilih Materi Belajar",
+    "belajar.module_progress": "Progres Materi",
     "library.all_categories": "Semua kategori",
     "library.all_levels": "Semua level",
     "library.all_progress": "Semua progress",
