@@ -119,11 +119,11 @@ const Footer = () => {
 
                 <div className='flex items-center gap-3 mb-4'>
                     <div className='h-px bg-emerald-800 flex-1' />
-                    <span className='text-emerald-600 text-sm'>✦</span>
+                    <span className='text-emerald-400 text-sm'>✦</span>
                     <div className='h-px bg-emerald-800 flex-1' />
                 </div>
 
-                <p className='text-xs text-emerald-600 text-center'>
+                <p className='text-xs text-emerald-300 text-center'>
                     &copy; {new Date().getFullYear()} Thullaabul &apos;Ilmi
                     &middot; {t("footer.tagline")}
                 </p>

@@ -1,10 +1,9 @@
-/*
- * Amiri is the only Google-hosted face still in use (.font-amiri and a few
- * inline styles). Droid Arabic Kufi, Droid Arabic Naskh and Thabit were
- * imported here too but no rule or component ever referenced them — three
- * render-blocking requests on every page for nothing.
- */
-@import url(https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap);
+@font-face {
+    font-family: "Amiri";
+    src: url("/fonts/Kitab-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+}
 
 @tailwind base;
 @tailwind components;

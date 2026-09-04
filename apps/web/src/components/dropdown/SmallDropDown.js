@@ -13,6 +13,9 @@ const SmallDropdown = ({
                 className='flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-sm text-emerald-100 hover:bg-emerald-800 hover:text-white transition-all'
                 type='button'
                 onClick={toggleSmallDropdown}
+                aria-label='Pilih bahasa'
+                aria-haspopup='menu'
+                aria-expanded={isSmallDropdownOpen}
             >
                 <span className='inline-flex rounded-sm overflow-hidden ring-1 ring-white/30 leading-none'>
                     {flag}

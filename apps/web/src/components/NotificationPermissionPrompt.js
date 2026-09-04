@@ -124,11 +124,6 @@ export default function NotificationPermissionPrompt() {
             if (isPromptDismissed()) return;
 
             if (!cancelled) setVisible(true);
-
-            if (canAskLocation && !locationRequestedRef.current) {
-                locationRequestedRef.current = true;
-                requestAndStoreUserLocation().catch(() => {});
-            }
         };
 
         boot();
