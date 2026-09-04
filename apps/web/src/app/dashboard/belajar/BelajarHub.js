@@ -376,7 +376,4 @@ function FilterChip({ label, active, onClick }) {
     );
 }
 
-ICON_BY_TRACK.quran = ICON_BY_TRACK.quran;
-ICON_BY_TRACK.dasar = ICON_BY_TRACK.dasar;
-ICON_BY_TRACK.sejarah = ICON_BY_TRACK.sejarah;
-ICON_BY_TRACK.adab = ICON_BY_TRACK.adab;
+
