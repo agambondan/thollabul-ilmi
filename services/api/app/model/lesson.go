@@ -31,9 +31,9 @@ type LessonStep struct {
 
 type UserLessonProgress struct {
 	BaseUUID
-	UserID   uuid.UUID `json:"user_id" gorm:"type:uuid;not null;uniqueIndex:idx_user_lesson"`
-	ModuleID int       `json:"module_id" gorm:"not null;uniqueIndex:idx_user_lesson"`
-	StepNum  int       `json:"step" gorm:"column:step_num;default:1"`
+	UserID   uuid.UUID `json:"user_id" gorm:"type:uuid;not null;uniqueIndex:idx_user_lesson_step"`
+	ModuleID int       `json:"module_id" gorm:"not null;uniqueIndex:idx_user_lesson_step"`
+	StepNum  int       `json:"step" gorm:"column:step_num;default:1;uniqueIndex:idx_user_lesson_step"`
 	Done     bool      `json:"done" gorm:"default:false"`
 }
 
