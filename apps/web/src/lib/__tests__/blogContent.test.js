@@ -3,6 +3,7 @@ import {
     extractHeadings,
     calculateReadStats,
     slugifyHeading,
+    sanitizeBlogHtml,
 } from "../blogContent";
 
 describe("blogContent utility", () => {
@@ -67,5 +68,21 @@ console.log("hello");
         expect(html).not.toContain("<script>");
         expect(html).not.toContain("javascript:");
         expect(html).toContain("Safe");
+    });
+
+    test("all rendered anchors open in new tab", () => {
+        const md =
+            "Lihat [HR. Bukhari 1981](/hadith/bukhari/1981) dan [quran 2:256](/quran/2#256).";
+        const html = renderBlogContent(md);
+        expect(html).toContain('target="_blank"');
+        expect(html).toContain('rel="noopener noreferrer"');
+    });
+
+    test("sanitizeBlogHtml applies target=_blank to every anchor in server fallback", () => {
+        const html = sanitizeBlogHtml(
+            '<a href="/hadith/bukhari/1981">Bukhari</a><a href="https://example.com">ext</a>',
+        );
+        expect(html.match(/target="_blank"/g)).toHaveLength(2);
+        expect(html.match(/rel="noopener noreferrer"/g)).toHaveLength(2);
     });
 });

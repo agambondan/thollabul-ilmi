@@ -66,7 +66,8 @@ export const sanitizeBlogHtml = (html) => {
     if (typeof window === "undefined" || typeof DOMParser === "undefined") {
         return stripped
             .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
-            .replace(/(href|src)\s*=\s*("|')?\s*javascript:[^"'>]*/gi, "");
+            .replace(/(href|src)\s*=\s*("|')?\s*javascript:[^"'>]*/gi, "")
+            .replace(/<a\s+(?![^>]*\btarget=)([^>]*href="[^"]*"[^>]*)>/gi, '<a target="_blank" rel="noopener noreferrer" $1>');
     }
 
     const doc = new DOMParser().parseFromString(
@@ -98,11 +99,8 @@ export const sanitizeBlogHtml = (html) => {
                 }
             }
             if (tag === "a") {
-                const href = child.getAttribute("href") || "";
-                if (href.startsWith("http://") || href.startsWith("https://")) {
-                    child.setAttribute("target", "_blank");
-                    child.setAttribute("rel", "noopener noreferrer");
-                }
+                child.setAttribute("target", "_blank");
+                child.setAttribute("rel", "noopener noreferrer");
             }
             walk(child);
         }
@@ -155,7 +153,10 @@ export const renderBlogContent = (raw) => {
                 /!\[([^\]]*)\]\(([^)]+)\)/g,
                 '<img src="$2" alt="$1" loading="lazy" />',
             )
-            .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+            .replace(
+                /\[([^\]]+)\]\(([^)]+)\)/g,
+                '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>',
+            );
     };
 
     for (let i = 0; i < lines.length; i++) {

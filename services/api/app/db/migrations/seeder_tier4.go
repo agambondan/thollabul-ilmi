@@ -191,7 +191,7 @@ Kemurahan Allah melimpah ruah bagi para pembaca Kitab-Nya. Pahala tidak dihitung
 Rasulullah ﷺ bersabda:
 
 > "Barangsiapa yang membaca satu huruf dari Kitabullah (Al-Quran), maka baginya satu kebaikan. Dan satu kebaikan itu dilipatgandakan menjadi sepuluh kebaikan semisal. Aku tidak mengatakan *Alif Lam Mim* itu satu huruf, akan tetapi *Alif* satu huruf, *Lam* satu huruf, dan *Mim* satu huruf."
-> *([HR. At-Tirmidzi no. 2910](/hadith/tirmidzi#2910), dishahihkan oleh Syaikh Al-Albani)*
+> *([HR. At-Tirmidzi no. 2910](/hadith/tirmidzi/2910), dishahihkan oleh Syaikh Al-Albani)*
 
 Bayangkan jika seorang muslim membaca satu halaman mushaf standar Madinah yang rata-rata memuat sekitar 600–700 huruf, maka dalam satu halaman tersebut terdapat setidaknya 6.000 hingga 7.000 kebaikan yang tersimpan di lembaran amalannya.
 
@@ -201,7 +201,7 @@ Ketika manusia berada di padang mahsyar dalam keadaan ketakutan dan membutuhkan 
 Dari Abu Umamah Al-Bahili radhiyallahu 'anhu, Rasulullah ﷺ bersabda:
 
 > "Bacalah Al-Quran, karena sesungguhnya ia akan datang pada hari kiamat sebagai pemberi syafaat bagi para pembacanya."
-> *([HR. Muslim no. 804](/hadith/muslim#804))*
+> *([HR. Muslim no. 804](/hadith/muslim/804))*
 
 ### 3. Bersama Para Malaikat yang Mulia
 Keutamaan ini berlaku bagi siapa saja, baik yang telah mahir membaca maupun yang masih terbata-bata dalam mengeja tajwid.
@@ -209,7 +209,7 @@ Keutamaan ini berlaku bagi siapa saja, baik yang telah mahir membaca maupun yang
 Aisyah radhiyallahu 'anha meriwayatkan sabda Rasulullah ﷺ:
 
 > "Orang yang mahir membaca Al-Quran akan bersama para malaikat yang mulia lagi taat. Sedangkan orang yang membaca Al-Quran dengan terbata-bata dan merasa kesulitan, maka baginya dua pahala (pahala membaca dan pahala atas kesungguhannya berusaha)."
-> *([HR. Bukhari no. 4937](/hadith/bukhari#4937) dan [HR. Muslim no. 798](/hadith/muslim#798))*
+> *([HR. Bukhari no. 4937](/hadith/bukhari/4937) dan [HR. Muslim no. 798](/hadith/muslim/798))*
 
 Maka jangan pernah merasa minder atau putus asa jika lidah masih kaku dalam melafalkan makharijul huruf; setiap tetes perjuangan kita dihargai ganda oleh Allah Yang Maha Pemurah.
 
@@ -217,7 +217,7 @@ Maka jangan pernah merasa minder atau putus asa jika lidah masih kaku dalam mela
 Tingkatan surga seseorang berbanding lurus dengan banyaknya hafalan dan tilawah yang dilakukannya dengan tartil.
 
 > "Akan dikatakan kepada pembaca Al-Quran (pada hari kiamat): 'Bacalah, naiklah, dan tartilkanlah sebagaimana engkau mentartilkannya sewaktu di dunia. Karena kedudukanmu berada pada akhir ayat yang engkau baca.'"
-> *([HR. Abu Dawud no. 1464](/hadith/abu-daud#1464) dan [HR. At-Tirmidzi no. 2914](/hadith/tirmidzi#2914))*
+> *([HR. Abu Dawud no. 1464](/hadith/abu-daud/1464) dan [HR. At-Tirmidzi no. 2914](/hadith/tirmidzi/2914))*
 
 ### 5. Menjadi Rumah yang Bercahaya dan Dipenuhi Ketenangan
 Rumah yang di dalamnya dibacakan kalam ilahi akan dikunjungi para malaikat, dijauhi setan, dilapangkan bagi penghuninya, dan dipenuhi keberkahan. Sebaliknya, rumah yang sunyi dari bacaan Al-Quran ibarat kuburan yang gelap gulita.
@@ -262,7 +262,7 @@ Dalam mukadimah kitabnya, Imam An-Nawawi rahimahullah menjelaskan kriteria pemil
 
 Hadits-hadits dalam Arbain Nawawi tersusun secara tematik yang saling melengkapi:
 
-1. **Pondasi Niat dan Landasan Ibadah:** Dibuka dengan hadits pertama tentang niat *([HR. Bukhari no. 1](/hadith/bukhari#1))* dan hadits kedua tentang rukun Islam, Iman, dan Ihsan (Hadits Jibril).
+1. **Pondasi Niat dan Landasan Ibadah:** Dibuka dengan hadits pertama tentang niat *([HR. Bukhari no. 1](/hadith/bukhari/1))* dan hadits kedua tentang rukun Islam, Iman, dan Ihsan (Hadits Jibril).
 2. **Kemurnian Syariat:** Menjaga keabsahan amal dengan menjauhi perkara bid'ah dan syubhat (Hadits ke-5 dan ke-6).
 3. **Nasihat dan Kebaikan Bersama:** Pentingnya agama sebagai nasihat dan larangan menumpahkan darah sesama muslim (Hadits ke-7 dan ke-14).
 4. **Pengendalian Diri dan Akhlak:** Larangan marah, menjaga lisan, memuliakan tetangga dan tamu, serta meninggalkan perkara yang tidak bermanfaat (Hadits ke-12, ke-15, ke-16).

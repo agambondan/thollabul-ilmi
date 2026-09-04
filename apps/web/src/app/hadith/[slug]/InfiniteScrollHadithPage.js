@@ -31,6 +31,14 @@ const InfiniteScrollHadithPage = ({
 
     const [pageHadith, setPageHadith] = useState(0);
     const [isLoadingMoreHadith, setIsLoadingMoreHadith] = useState(false);
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const hash = window.location.hash.replace("#", "").trim();
+        if (/^\d+$/.test(hash)) {
+            router.replace(`${basePath}/${params.slug}/${hash}`);
+        }
+    }, [basePath, params.slug, router]);
     const loadMoreHadith = useCallback(() => {
         setPageHadith((prev) => prev + 1);
     }, []);

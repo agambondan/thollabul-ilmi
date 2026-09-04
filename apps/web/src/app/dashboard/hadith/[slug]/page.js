@@ -12,6 +12,7 @@ import { useActionPosition } from "@/lib/useActionPosition";
 import { useQuranFont } from "@/lib/useQuranFont";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, use } from "react";
+import { useRouter } from "next/navigation";
 import {
     BsFileEarmarkPlay,
     BsPauseFill,
@@ -652,6 +653,15 @@ export function HadithDetailContent({
 }) {
     const { slug } = params;
     const { t, lang } = useLocale();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const hash = window.location.hash.replace("#", "").trim();
+        if (/^\d+$/.test(hash)) {
+            router.replace(`${basePath}/${slug}/${hash}`);
+        }
+    }, [basePath, slug, router]);
 
     const [themes, setThemes] = useState([]);
     const [chapters, setChapters] = useState([]);
