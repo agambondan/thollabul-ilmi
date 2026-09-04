@@ -1,4 +1,4 @@
-const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
+const STATIC_VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
 
 function urlBase64ToUint8Array(base64String) {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -35,7 +35,21 @@ export async function registerServiceWorker() {
     }
 }
 
-export async function subscribeToPush(registration) {
+async function resolveVapidPublicKey(fetcher) {
+    if (STATIC_VAPID_PUBLIC_KEY) return STATIC_VAPID_PUBLIC_KEY;
+    if (typeof window === "undefined" || !fetcher) return "";
+    try {
+        const res = await fetcher();
+        if (!res || !res.ok) return "";
+        const json = await res.json();
+        const data = json?.data ?? json ?? {};
+        return data.publicKey || data.vapid_public_key || "";
+    } catch {
+        return "";
+    }
+}
+
+export async function subscribeToPush(registration, options = {}) {
     if (!registration || !registration.pushManager) {
         return { success: false, reason: "no_registration" };
     }
@@ -53,12 +67,13 @@ export async function subscribeToPush(registration) {
         };
     }
 
-    if (!VAPID_PUBLIC_KEY) {
+    const vapidKey = await resolveVapidPublicKey(options.vapidKeyFetcher);
+    if (!vapidKey) {
         return { success: false, reason: "vapid_not_configured" };
     }
 
     try {
-        const applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+        const applicationServerKey = urlBase64ToUint8Array(vapidKey);
         const subscription = await registration.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey,

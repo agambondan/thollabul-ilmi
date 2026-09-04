@@ -11,6 +11,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
+    BsBellFill,
     BsBook,
     BsBookHalf,
     BsBookmark,
@@ -138,6 +139,11 @@ const NAV_GROUPS = [
                 href: "/admin/users",
                 labelKey: "admin.nav.users",
                 icon: <BsPeople />,
+            },
+            {
+                href: "/admin/push",
+                label: "Push Notification",
+                icon: <BsBellFill />,
             },
             { href: "/", labelKey: "admin.back_to_app", icon: <BsGrid /> },
         ],

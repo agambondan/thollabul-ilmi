@@ -80,6 +80,18 @@ type PushTestResponse struct {
 	Sent    int    `json:"sent"`
 }
 
+type BroadcastPushRequest struct {
+	Body  string `json:"body" validate:"required"`
+	Title string `json:"title" validate:"required"`
+	URL   string `json:"url"`
+}
+
+type BroadcastPushResponse struct {
+	Message string `json:"message"`
+	Sent    int    `json:"sent"`
+	Tokens  int    `json:"tokens"`
+}
+
 // UserNotification — persisted inbox message per user
 type UserNotification struct {
 	BaseUUID

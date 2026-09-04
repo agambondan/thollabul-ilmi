@@ -5,6 +5,7 @@ import (
 	"github.com/agambondan/islamic-explorer/app/model"
 	service "github.com/agambondan/islamic-explorer/app/services"
 	"github.com/gofiber/fiber/v2"
+	"github.com/spf13/viper"
 )
 
 type NotificationController interface {
@@ -12,6 +13,8 @@ type NotificationController interface {
 	FindPushTokens(ctx *fiber.Ctx) error
 	RegisterPushToken(ctx *fiber.Ctx) error
 	SendTestPush(ctx *fiber.Ctx) error
+	BroadcastPush(ctx *fiber.Ctx) error
+	GetVapidPublicKey(ctx *fiber.Ctx) error
 	UpsertSettings(ctx *fiber.Ctx) error
 }
 
@@ -114,6 +117,27 @@ func (c *notificationController) SendTestPush(ctx *fiber.Ctx) error {
 // @Failure 400 {object} lib.Response
 // @Failure 401 {object} lib.Response
 // @Router /notifications/settings [put]
+func (c *notificationController) GetVapidPublicKey(ctx *fiber.Ctx) error {
+	key := viper.GetString("VAPID_PUBLIC_KEY")
+	return lib.OK(ctx, fiber.Map{"publicKey": key})
+}
+
+func (c *notificationController) BroadcastPush(ctx *fiber.Ctx) error {
+	adminID, err := extractUserID(ctx)
+	if err != nil {
+		return lib.ErrorUnauthorized(ctx)
+	}
+	req := new(model.BroadcastPushRequest)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	result, err := c.svc.BroadcastPush(adminID, req)
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	return lib.OK(ctx, result)
+}
+
 func (c *notificationController) UpsertSettings(ctx *fiber.Ctx) error {
 	userID, err := extractUserID(ctx)
 	if err != nil {

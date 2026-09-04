@@ -250,8 +250,14 @@ export const doaApi = {
 };
 
 export const asmaulHusnaApi = {
-    list: () => fetch(`${API_URL}/api/v1/asmaul-husna?limit=99`),
-    detail: (number) => fetch(`${API_URL}/api/v1/asmaul-husna/${number}`),
+    list: (lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/asmaul-husna?limit=99${lang ? `&lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
+    detail: (number, lang = "") =>
+        fetch(
+            `${API_URL}/api/v1/asmaul-husna/${number}${lang ? `&lang=${encodeURIComponent(lang)}` : ""}`,
+        ),
 };
 
 export const tafsirApi = {
@@ -513,6 +519,12 @@ export const notificationApi = {
     sendTestPush: () =>
         authFetch("/api/v1/notifications/push-test", {
             method: "POST",
+        }),
+    getVapidPublicKey: () => authFetch("/api/v1/notifications/vapid-public-key"),
+    broadcastPush: (data) =>
+        authFetch("/api/v1/notifications/admin/broadcast", {
+            method: "POST",
+            body: JSON.stringify(data),
         }),
 };
 

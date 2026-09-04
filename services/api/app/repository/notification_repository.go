@@ -14,6 +14,7 @@ type NotificationRepository interface {
 	UpsertMany(settings []model.NotificationSetting) ([]model.NotificationSetting, error)
 	UpsertPushToken(token model.PushToken) (model.PushToken, error)
 	FindActivePushTokens(userID uuid.UUID) ([]model.PushToken, error)
+	FindAllActivePushTokens() ([]model.PushToken, error)
 	FindPushTokensByUser(userID uuid.UUID) ([]model.PushToken, error)
 	DeactivatePushToken(id int) error
 	FindDue(now time.Time) ([]model.NotificationSetting, error)
@@ -77,6 +78,16 @@ func (r *notificationRepository) FindActivePushTokens(userID uuid.UUID) ([]model
 		Where("user_id = ? AND is_active = true", userID).
 		Order("last_seen_at DESC").
 		Limit(20).
+		Find(&items).Error
+	return items, err
+}
+
+func (r *notificationRepository) FindAllActivePushTokens() ([]model.PushToken, error) {
+	var items []model.PushToken
+	err := r.db.
+		Where("is_active = true").
+		Order("last_seen_at DESC").
+		Limit(1000).
 		Find(&items).Error
 	return items, err
 }

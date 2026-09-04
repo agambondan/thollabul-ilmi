@@ -35,6 +35,10 @@ func (f *fakeNotificationRepo) FindActivePushTokens(userID uuid.UUID) ([]model.P
 	return f.tokens, nil
 }
 
+func (f *fakeNotificationRepo) FindAllActivePushTokens() ([]model.PushToken, error) {
+	return f.tokens, nil
+}
+
 func (f *fakeNotificationRepo) FindPushTokensByUser(userID uuid.UUID) ([]model.PushToken, error) {
 	return f.tokens, nil
 }

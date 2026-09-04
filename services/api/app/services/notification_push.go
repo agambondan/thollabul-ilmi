@@ -126,6 +126,10 @@ func isDeliverableExpoPushToken(token model.PushToken) bool {
 }
 
 func (s *notificationService) sendWebPush(token model.PushToken, title, body string, notificationType model.NotificationType) error {
+	return s.sendWebPushCustom(token, title, body, "/", notificationType)
+}
+
+func (s *notificationService) sendWebPushCustom(token model.PushToken, title, body, notifURL string, notificationType model.NotificationType) error {
 	vapidPublicKey := strings.TrimSpace(viper.GetString("VAPID_PUBLIC_KEY"))
 	vapidPrivateKey := strings.TrimSpace(viper.GetString("VAPID_PRIVATE_KEY"))
 	vapidSubject := strings.TrimSpace(viper.GetString("VAPID_SUBJECT"))
@@ -135,14 +139,18 @@ func (s *notificationService) sendWebPush(token model.PushToken, title, body str
 	if vapidSubject == "" {
 		vapidSubject = "mailto:notifications@thollabul-ilmi.app"
 	}
+	if notifURL == "" {
+		notifURL = "/"
+	}
 
 	payload, err := json.Marshal(map[string]interface{}{
 		"title": title,
 		"body":  body,
-		"url":   "/",
+		"url":   notifURL,
 		"data": map[string]interface{}{
-			"type":              "daily_reminder",
+			"type":              "broadcast",
 			"notification_type": notificationType,
+			"url":               notifURL,
 		},
 	})
 	if err != nil {
@@ -162,6 +170,7 @@ func (s *notificationService) sendWebPush(token model.PushToken, title, body str
 		VAPIDPublicKey:  vapidPublicKey,
 		VAPIDPrivateKey: vapidPrivateKey,
 		TTL:             86400,
+		Urgency:         webpush.UrgencyHigh,
 	})
 	if err != nil {
 		return err

@@ -334,11 +334,13 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Delete("/users/:id", admin, newUserController.DeleteById)
 
 	// Notifications / Reminder
+	master.Get("/notifications/vapid-public-key", newNotificationController.GetVapidPublicKey)
 	master.Get("/notifications/settings", jwt, newNotificationController.FindSettings)
 	master.Put("/notifications/settings", jwt, newNotificationController.UpsertSettings)
 	master.Get("/notifications/push-tokens", jwt, newNotificationController.FindPushTokens)
 	master.Put("/notifications/push-token", jwt, newNotificationController.RegisterPushToken)
 	master.Post("/notifications/push-test", jwt, newNotificationController.SendTestPush)
+	master.Post("/notifications/admin/broadcast", admin, newNotificationController.BroadcastPush)
 	// Notification inbox
 	master.Get("/notifications/inbox", jwt, newNotificationInboxController.List)
 	master.Put("/notifications/inbox/read-all", jwt, newNotificationInboxController.MarkAllRead)

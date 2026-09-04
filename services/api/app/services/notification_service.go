@@ -20,6 +20,7 @@ type NotificationService interface {
 	UpsertSettings(userID uuid.UUID, req *model.NotificationSettingsUpsertRequest) ([]model.NotificationSetting, error)
 	RegisterPushToken(userID uuid.UUID, req *model.PushTokenRegisterRequest) (model.PushToken, error)
 	SendTestPush(userID uuid.UUID) (model.PushTestResponse, error)
+	BroadcastPush(adminID uuid.UUID, req *model.BroadcastPushRequest) (model.BroadcastPushResponse, error)
 	DispatchDueReminders(now time.Time) (int, error)
 	StartReminderScheduler(ctx context.Context, interval time.Duration)
 }
@@ -143,6 +144,64 @@ func (s *notificationService) SendTestPush(userID uuid.UUID) (model.PushTestResp
 		})
 	}
 	return model.PushTestResponse{Message: "test push sent", Sent: sent}, nil
+}
+
+func (s *notificationService) BroadcastPush(adminID uuid.UUID, req *model.BroadcastPushRequest) (model.BroadcastPushResponse, error) {
+	title := strings.TrimSpace(req.Title)
+	body := strings.TrimSpace(req.Body)
+	if title == "" || body == "" {
+		return model.BroadcastPushResponse{}, fmt.Errorf("title and body are required")
+	}
+	notifURL := strings.TrimSpace(req.URL)
+	if notifURL == "" {
+		notifURL = "/"
+	}
+	tokens, err := s.repo.FindAllActivePushTokens()
+	if err != nil {
+		return model.BroadcastPushResponse{}, err
+	}
+	sent := 0
+	seenUsers := map[uuid.UUID]bool{}
+	for _, token := range tokens {
+		if !token.IsActive {
+			continue
+		}
+		switch strings.ToLower(token.Provider) {
+		case "web":
+			if token.KeyP256DH == "" || token.KeyAuth == "" {
+				continue
+			}
+			if err := s.sendWebPushCustom(token, title, body, notifURL, model.NotificationTypeDoa); err != nil {
+				slog.Warn("web push broadcast failed", "admin_id", adminID, "user_id", token.UserID, "err", err)
+				continue
+			}
+			sent++
+			seenUsers[token.UserID] = true
+		case "expo":
+			if !isDeliverableExpoPushToken(token) {
+				continue
+			}
+			content := reminderContent{Title: title, Description: body}
+			if sentOne, err := s.sendPushToUser(token.UserID, model.NotificationTypeDoa, content); err != nil {
+				slog.Warn("expo push broadcast failed", "admin_id", adminID, "user_id", token.UserID, "err", err)
+			} else if sentOne > 0 {
+				sent += sentOne
+				seenUsers[token.UserID] = true
+			}
+		}
+	}
+	if s.inboxRepo != nil {
+		for userID := range seenUsers {
+			_, _ = s.inboxRepo.Create(model.UserNotification{
+				UserID: userID,
+				Title:  title,
+				Body:   body,
+				Type:   model.NotificationTypeDoa,
+				RefID:  "admin-broadcast",
+			})
+		}
+	}
+	return model.BroadcastPushResponse{Message: "broadcast push sent", Sent: sent, Tokens: len(tokens)}, nil
 }
 
 func (s *notificationService) DispatchDueReminders(now time.Time) (int, error) {

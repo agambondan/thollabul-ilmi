@@ -45,7 +45,9 @@ export default function NotificationPermissionPrompt() {
         const { supported, registration } = await registerServiceWorker();
         if (!supported || !registration) return false;
 
-        const result = await subscribeToPush(registration);
+        const result = await subscribeToPush(registration, {
+            vapidKeyFetcher: notificationApi.getVapidPublicKey,
+        });
         if (!result.success) return false;
 
         if (isAuthenticated) {

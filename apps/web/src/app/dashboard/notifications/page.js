@@ -215,7 +215,9 @@ const NotificationsPage = () => {
         const { supported, registration } = await registerServiceWorker();
         if (!supported || !registration) return;
 
-        const result = await subscribeToPush(registration);
+        const result = await subscribeToPush(registration, {
+            vapidKeyFetcher: notificationApi.getVapidPublicKey,
+        });
         if (result.success && isAuthenticated) {
             const sub = subscriptionToPlainObject(result.subscription);
             if (sub) {
