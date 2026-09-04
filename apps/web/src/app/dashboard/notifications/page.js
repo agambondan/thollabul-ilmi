@@ -671,9 +671,15 @@ const NotificationsPage = () => {
             {notifs.length === 0 ? (
                 <div className='text-center py-16'>
                     <BsBell className='mx-auto text-4xl text-gray-300 dark:text-slate-600 mb-3' />
-                    <p className='text-gray-500 dark:text-gray-400 text-sm'>
+                    <p className='text-gray-500 dark:text-gray-400 text-sm mb-4'>
                         {t("notif.empty")}
                     </p>
+                    <Link
+                        href='/dashboard/settings'
+                        className='inline-flex items-center px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-sm font-medium transition-colors'
+                    >
+                        {t("notif.preferences_cta") ?? "Atur Preferensi Notifikasi"}
+                    </Link>
                 </div>
             ) : (
                 <ul className='space-y-2'>

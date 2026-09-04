@@ -326,10 +326,16 @@ export function FeedContent({ basePath = "/feed" }) {
             ) : posts.length === 0 ? (
                 <div className='text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                     <BsGlobe className='text-5xl text-gray-200 dark:text-slate-600 mx-auto mb-3' />
-                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
                         {t("feed.empty") ??
                             "Belum ada postingan. Jadilah yang pertama!"}
                     </p>
+                    <button
+                        onClick={() => setShowCreate(true)}
+                        className='inline-flex items-center px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-sm font-medium transition-colors'
+                    >
+                        {t("feed.create") ?? "Tulis Postingan"}
+                    </button>
                 </div>
             ) : (
                 <div className='space-y-4'>

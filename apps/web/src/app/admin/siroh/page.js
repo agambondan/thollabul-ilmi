@@ -299,9 +299,18 @@ const AdminSirahPage = () => {
                     </h2>
                     <div className='space-y-2'>
                         {contents.length === 0 && (
-                            <p className='text-sm text-gray-400'>
-                                {t("admin.sirah.empty_content")}
-                            </p>
+                            <div className='p-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 text-center'>
+                                <p className='text-sm text-gray-400 mb-3'>
+                                    {t("admin.sirah.empty_content")}
+                                </p>
+                                <Link
+                                    href='/admin/siroh/new'
+                                    className='inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-medium transition-colors'
+                                >
+                                    <BsPlus className='text-base' />
+                                    {t("admin.sirah.add_content") ?? "Tambah Konten"}
+                                </Link>
+                            </div>
                         )}
                         {contents.map((item) => {
                             const title = getLocalizedField(

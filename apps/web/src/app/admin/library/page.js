@@ -16,6 +16,19 @@ import ModalShell from "@/components/ModalShell";
 const FORMATS = ["link", "pdf", "epub", "html"];
 const STATUSES = ["published", "draft"];
 const SOURCE_TYPES = ["external", "uploaded"];
+const LEVELS = ["Pemula", "Menengah", "Lanjutan"];
+const LANGUAGES = ["Indonesia", "Arab", "Inggris"];
+const CATEGORIES = [
+    "Aqidah",
+    "Akhlak",
+    "Bahasa Arab",
+    "Fiqh",
+    "Hadith",
+    "Quran",
+    "Sirah",
+    "Tafsir",
+    "Umum",
+];
 const LICENSE_STATUSES = [
     "unverified",
     "needs_review",
@@ -427,6 +440,7 @@ const AdminLibraryPage = () => {
                             <Field label={t("admin.field.category")}>
                                 <input
                                     className={inputClass}
+                                    list='library-category-options'
                                     onChange={(e) =>
                                         setForm({
                                             ...form,
@@ -438,9 +452,14 @@ const AdminLibraryPage = () => {
                                     )}
                                     value={form.category}
                                 />
+                                <datalist id='library-category-options'>
+                                    {CATEGORIES.map((cat) => (
+                                        <option key={cat} value={cat} />
+                                    ))}
+                                </datalist>
                             </Field>
                             <Field label={t("admin.library.level")}>
-                                <input
+                                <select
                                     className={inputClass}
                                     onChange={(e) =>
                                         setForm({
@@ -449,12 +468,18 @@ const AdminLibraryPage = () => {
                                         })
                                     }
                                     value={form.level}
-                                />
+                                >
+                                    {LEVELS.map((lvl) => (
+                                        <option key={lvl} value={lvl}>
+                                            {lvl}
+                                        </option>
+                                    ))}
+                                </select>
                             </Field>
                         </div>
                         <div className='grid gap-4 md:grid-cols-4'>
                             <Field label={t("admin.library.language")}>
-                                <input
+                                <select
                                     className={inputClass}
                                     onChange={(e) =>
                                         setForm({
@@ -463,7 +488,13 @@ const AdminLibraryPage = () => {
                                         })
                                     }
                                     value={form.language}
-                                />
+                                >
+                                    {LANGUAGES.map((langOpt) => (
+                                        <option key={langOpt} value={langOpt}>
+                                            {langOpt}
+                                        </option>
+                                    ))}
+                                </select>
                             </Field>
                             <Field label={t("admin.library.format")}>
                                 <select

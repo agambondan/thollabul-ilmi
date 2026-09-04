@@ -164,7 +164,15 @@ export default function AdminLessonsPage() {
                 ) : modules.length === 0 ? (
                     <Tr>
                         <Td colSpan={5} className='text-center text-gray-400'>
-                            Belum ada modul
+                            <div className='py-6'>
+                                <p className='mb-3'>Belum ada modul</p>
+                                <button
+                                    onClick={() => handleOpen()}
+                                    className='inline-flex items-center px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-medium transition-colors'
+                                >
+                                    Tambah Modul
+                                </button>
+                            </div>
                         </Td>
                     </Tr>
                 ) : (
