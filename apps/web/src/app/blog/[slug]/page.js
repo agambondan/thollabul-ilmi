@@ -295,7 +295,19 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
     // Calculate reading stats & compiled HTML content
     const rawContent = useMemo(() => {
         if (!post) return "";
-        return getLocalizedField(post, "content", lang) || "";
+        const translation = post.translation ?? {};
+        return (
+            (lang === "EN" &&
+                (translation.description_en || translation.descriptionEnglish)) ||
+            translation.description_idn ||
+            translation.descriptionIdn ||
+            post.description_idn ||
+            post.descriptionIdn ||
+            post.content ||
+            post.body ||
+            post.excerpt ||
+            ""
+        );
     }, [post, lang]);
 
     const htmlContent = useMemo(() => {

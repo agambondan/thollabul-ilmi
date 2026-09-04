@@ -50,8 +50,8 @@ func (r *lessonRepository) UpsertProgress(p *model.UserLessonProgress) (*model.U
 		p.ID = uuid.New()
 	}
 	err := r.db.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "user_id"}, {Name: "module_id"}},
-		DoUpdates: clause.AssignmentColumns([]string{"step_num", "done", "updated_at"}),
+		Columns:   []clause.Column{{Name: "user_id"}, {Name: "module_id"}, {Name: "step_num"}},
+		DoUpdates: clause.AssignmentColumns([]string{"done", "updated_at"}),
 	}).Create(p).Error
 	return p, err
 }

@@ -33,6 +33,24 @@ const getAuthorName = (author) => {
     return author.name ?? author.email ?? "";
 };
 
+const getPostExcerpt = (post, lang) => {
+    const translation = post?.translation ?? {};
+    const text =
+        getLocalizedField(post, "excerpt", lang) ||
+        (lang === "EN" &&
+            (translation.description_en || translation.descriptionEnglish)) ||
+        translation.description_idn ||
+        translation.descriptionIdn ||
+        post?.description_idn ||
+        post?.descriptionIdn ||
+        "";
+    return text
+        .replace(/<[^>]*>/g, " ")
+        .replace(/[#>*_`\[\]()]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+};
+
 export default function BlogClient({
     initialPosts = [],
     initialCategories = [],
@@ -113,7 +131,7 @@ export default function BlogClient({
     const filteredPosts = posts.filter((post) => {
         const query = search.trim().toLowerCase();
         const title = getLocalizedField(post, "title", lang);
-        const excerpt = getLocalizedField(post, "excerpt", lang);
+        const excerpt = getPostExcerpt(post, lang);
         const authorName = getAuthorName(post.author);
         const categoryLabel =
             getCategoryLabel(post.category, lang) ||
@@ -273,9 +291,9 @@ export default function BlogClient({
                             <h2 className='font-bold text-emerald-900 dark:text-white mb-1 line-clamp-2'>
                                 {getLocalizedField(post, "title", lang)}
                             </h2>
-                            {getLocalizedField(post, "excerpt", lang) && (
+                            {getPostExcerpt(post, lang) && (
                                 <p className='text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3'>
-                                    {getLocalizedField(post, "excerpt", lang)}
+                                    {getPostExcerpt(post, lang)}
                                 </p>
                             )}
                             <div className='flex items-center justify-between text-xs text-gray-400'>

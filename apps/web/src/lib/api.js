@@ -639,6 +639,17 @@ export const goalsApi = {
     delete: (id) => authFetch(`/api/v1/goals/${id}`, { method: "DELETE" }),
 };
 
+export const lessonsApi = {
+    list: () => fetch(`${API_URL}/api/v1/lessons`),
+    bySlug: (slug) => fetch(`${API_URL}/api/v1/lessons/${encodeURIComponent(slug)}`),
+    myProgress: () => authFetch("/api/v1/lessons/progress"),
+    saveProgress: (moduleId, step, done) =>
+        authFetch("/api/v1/lessons/progress", {
+            method: "PUT",
+            body: JSON.stringify({ module_id: moduleId, step, done }),
+        }),
+};
+
 export const kajianApi = {
     list: (params = "") =>
         fetch(`${API_URL}/api/v1/kajian${params ? `?${params}` : ""}`),
