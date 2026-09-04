@@ -427,7 +427,21 @@ export const listMasjidImage = [
         src: "/assets/images/masjid/Nabawi6.jpg",
         alt: "Masjid Nabawi",
     },
-    // { label: 'Masjid Nabawi', src: '/assets/images/masjid/Nabawi7.jpg', alt:'Masjid Nabawi' },
+    {
+        label: "Night Silhouette",
+        src: "/assets/images/masjid/NightMosque.svg",
+        alt: "Night Silhouette Mosque",
+    },
+    {
+        label: "Sunrise Dome",
+        src: "/assets/images/masjid/SunriseMasjid.svg",
+        alt: "Sunrise Mosque",
+    },
+    {
+        label: "Cosmic Quran",
+        src: "/assets/images/masjid/QuranCosmic.svg",
+        alt: "Cosmic Quran",
+    },
 ];
 
 export const hadithTabList = [

@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Thullaabul 'Ilmi Board",
+  "short_name": "Thullaabul Ilmi",
+  "version": "1.1.0",
+  "description": "Muslim Dashboard New Tab: Jadwal Sholat, Kalender Hijriyah, Doa, dan Sinkronisasi Akun Web.",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "action": {
+    "default_title": "Thullaabul 'Ilmi Board"
+  },
+  "permissions": [
+    "storage",
+    "geolocation",
+    "cookies"
+  ],
+  "host_permissions": [
+    "*://thollabul.jangkauin.site/*",
+    "*://localhost/*",
+    "*://127.0.0.1/*"
+  ],
+  "icons": {
+    "128": "icons/icon.svg"
+  }
+}

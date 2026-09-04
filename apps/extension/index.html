@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Thullaabul 'Ilmi Board</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="bg-cover" id="bg-cover"></div>
+        <div class="bg-overlay"></div>
+
+        <div class="top-nav">
+            <div id="auth-status-container">
+                <button id="btn-login-modal" class="btn-auth">
+                    Masuk / Sinkronkan Akun
+                </button>
+                <div id="user-profile" class="hidden">
+                    <span id="user-greeting">Halo, Hamba Allah</span>
+                    <button id="btn-logout" class="btn-text">Keluar</button>
+                </div>
+            </div>
+        </div>
+
+        <main class="dashboard">
+            <!-- Header / Time & Hijri -->
+            <header class="header">
+                <div class="hijri-date" id="hijri-date">Memuat tanggal...</div>
+                <div class="clock" id="clock">00:00:00</div>
+                <div class="countdown" id="prayer-countdown">
+                    Menghitung waktu sholat...
+                </div>
+                <div class="gregorian-date" id="gregorian-date"></div>
+            </header>
+
+            <!-- Center Card: Quote / Ayah -->
+            <section class="card quote-card">
+                <blockquote id="quote-text">
+                    "Menuntut ilmu itu wajib atas setiap muslim."
+                </blockquote>
+                <cite id="quote-source">HR. Ibnu Majah no. 224</cite>
+                <div class="quote-actions">
+                    <button id="btn-copy-quote-img" class="btn-action-small">
+                        📋 Salin Gambar ke Clipboard
+                    </button>
+                    <span id="quote-copied-status" class="status-tip hidden"
+                        >Tersalin!</span
+                    >
+                </div>
+            </section>
+
+            <!-- Prayer Times Bar -->
+            <section class="card prayer-card">
+                <div class="prayer-header">
+                    <span class="location" id="location-name"
+                        >📍 Jakarta (Default)</span
+                    >
+                    <button id="btn-detect-loc" title="Deteksi Lokasi">
+                        📍 Update Lokasi
+                    </button>
+                </div>
+                <div class="prayer-times" id="prayer-times">
+                    <div class="prayer-item" data-prayer="fajr">
+                        <span class="p-name">Subuh</span
+                        ><span class="p-time" id="time-fajr">--:--</span>
+                    </div>
+                    <div class="prayer-item" data-prayer="dhuhr">
+                        <span class="p-name">Dzuhur</span
+                        ><span class="p-time" id="time-dhuhr">--:--</span>
+                    </div>
+                    <div class="prayer-item" data-prayer="asr">
+                        <span class="p-name">Ashar</span
+                        ><span class="p-time" id="time-asr">--:--</span>
+                    </div>
+                    <div class="prayer-item" data-prayer="maghrib">
+                        <span class="p-name">Maghrib</span
+                        ><span class="p-time" id="time-maghrib">--:--</span>
+                    </div>
+                    <div class="prayer-item" data-prayer="isha">
+                        <span class="p-name">Isya</span
+                        ><span class="p-time" id="time-isha">--:--</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sholat Checklist Tracker Card -->
+            <section class="card tracker-card">
+                <div class="tracker-header">
+                    <span class="tracker-title"
+                        >✅ Sholat 5 Waktu Hari Ini</span
+                    >
+                    <span class="tracker-status" id="tracker-counter"
+                        >0 / 5</span
+                    >
+                </div>
+                <div class="tracker-items">
+                    <label class="check-item"
+                        ><input type="checkbox" id="chk-fajr" data-key="fajr" />
+                        <span>Subuh</span></label
+                    >
+                    <label class="check-item"
+                        ><input
+                            type="checkbox"
+                            id="chk-dhuhr"
+                            data-key="dhuhr"
+                        />
+                        <span>Dzuhur</span></label
+                    >
+                    <label class="check-item"
+                        ><input type="checkbox" id="chk-asr" data-key="asr" />
+                        <span>Ashar</span></label
+                    >
+                    <label class="check-item"
+                        ><input
+                            type="checkbox"
+                            id="chk-maghrib"
+                            data-key="maghrib"
+                        />
+                        <span>Maghrib</span></label
+                    >
+                    <label class="check-item"
+                        ><input type="checkbox" id="chk-isha" data-key="isha" />
+                        <span>Isya</span></label
+                    >
+                </div>
+            </section>
+
+            <!-- Quick Links / Web app shortcuts -->
+            <footer class="footer-links">
+                <a
+                    href="https://thollabul.jangkauin.site"
+                    target="_blank"
+                    rel="noopener"
+                    >🌐 Buka Web Portal</a
+                >
+                <a
+                    href="https://thollabul.jangkauin.site/jadwal-sholat"
+                    target="_blank"
+                    rel="noopener"
+                    >🕌 Jadwal Lengkap</a
+                >
+                <a
+                    href="https://thollabul.jangkauin.site/quran"
+                    target="_blank"
+                    rel="noopener"
+                    >📖 Al-Qur'an</a
+                >
+                <a
+                    href="https://thollabul.jangkauin.site/hadith"
+                    target="_blank"
+                    rel="noopener"
+                    >📚 Hadits</a
+                >
+                <a
+                    href="https://thollabul.jangkauin.site/dashboard"
+                    target="_blank"
+                    rel="noopener"
+                    >📊 Dashboard</a
+                >
+            </footer>
+        </main>
+
+        <!-- Login Modal -->
+        <div id="login-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Masuk ke Thullaabul 'Ilmi</h3>
+                    <button id="btn-close-modal" class="btn-close">
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-info">
+                        Hubungkan akun Anda untuk sinkronisasi bookmark,
+                        tilawah, dan tracker sholat.
+                    </p>
+
+                    <button id="btn-sync-cookie" class="btn-sync">
+                        🔄 Sinkron Otomatis dari Web
+                    </button>
+                    <div class="divider"><span>atau login manual</span></div>
+
+                    <form id="form-login">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                required
+                                placeholder="nama@email.com"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input
+                                type="password"
+                                id="password"
+                                required
+                                placeholder="••••••••"
+                            />
+                        </div>
+                        <div id="login-error" class="error-msg hidden"></div>
+                        <button
+                            type="submit"
+                            id="btn-submit-login"
+                            class="btn-submit"
+                        >
+                            Masuk
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>

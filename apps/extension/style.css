@@ -1,0 +1,508 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+        sans-serif;
+    min-height: 100vh;
+    background-color: #064e3b;
+    color: #f0fdf4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Background image & overlay */
+.bg-cover {
+    position: fixed;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+    transition: opacity 0.8s ease-in-out;
+    opacity: 0.85;
+}
+
+.bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(
+        circle at 50% 30%,
+        rgba(6, 95, 70, 0.75) 0%,
+        rgba(2, 44, 34, 0.92) 100%
+    );
+    z-index: 1;
+}
+
+.top-nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 1rem 1.5rem;
+    z-index: 50;
+}
+
+.btn-auth {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    backdrop-filter: blur(8px);
+    transition: background 0.2s;
+}
+
+.btn-auth:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+#user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 6px 8px 6px 14px;
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+#user-profile.hidden,
+#login-modal.hidden,
+.error-msg.hidden {
+    display: none;
+}
+
+#user-greeting {
+    font-size: 0.85rem;
+    color: #a7f3d0;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    color: #fca5a5;
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+}
+
+.btn-text:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.dashboard {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 800px;
+    padding: 4.5rem 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    text-align: center;
+    align-items: center;
+}
+
+.header .clock {
+    font-size: 3.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    line-height: 1.1;
+    margin: 0.25rem 0;
+}
+
+.header .hijri-date {
+    font-size: 1.1rem;
+    color: #a7f3d0;
+    font-weight: 500;
+}
+
+.header .countdown {
+    font-size: 0.95rem;
+    color: #fbbf24;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.35);
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 12px;
+    margin-bottom: 0.25rem;
+    border: 1px solid rgba(251, 191, 36, 0.25);
+}
+
+.header .gregorian-date {
+    font-size: 0.85rem;
+    color: #d1fae5;
+    opacity: 0.85;
+}
+
+.card {
+    background: rgba(6, 95, 70, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    width: 100%;
+}
+
+.quote-card blockquote {
+    font-size: 1.15rem;
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: 0.4rem;
+    color: #ffffff;
+}
+
+.quote-card cite {
+    font-size: 0.85rem;
+    color: #6ee7b7;
+    font-style: normal;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.quote-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.btn-action-small {
+    background: rgba(255, 255, 255, 0.12);
+    color: #d1fae5;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+}
+
+.btn-action-small:hover {
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+}
+
+.status-tip {
+    font-size: 0.75rem;
+    color: #34d399;
+    font-weight: 500;
+}
+
+.status-tip.hidden {
+    display: none;
+}
+
+.prayer-card .prayer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    color: #a7f3d0;
+}
+
+.prayer-header button {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: background 0.2s;
+}
+
+.prayer-header button:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.prayer-times {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.prayer-item {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 0.65rem 0.5rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.prayer-item.active-next {
+    background: rgba(245, 158, 11, 0.2);
+    border: 1px solid rgba(245, 158, 11, 0.5);
+}
+
+.prayer-item .p-name {
+    font-size: 0.8rem;
+    color: #a7f3d0;
+}
+
+.prayer-item .p-time {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+/* Tracker Card */
+.tracker-card {
+    padding: 1rem 1.5rem;
+}
+
+.tracker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #a7f3d0;
+}
+
+.tracker-status {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    color: #6ee7b7;
+}
+
+.tracker-items {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.check-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.6rem 0.4rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #d1fae5;
+    user-select: none;
+    transition: all 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.check-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.check-item input[type="checkbox"] {
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    accent-color: #10b981;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
+}
+
+.footer-links a {
+    color: #a7f3d0;
+    text-decoration: none;
+    font-size: 0.8rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.2s;
+}
+
+.footer-links a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 1rem;
+}
+
+.modal-content {
+    background: #064e3b;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
+    padding: 1.5rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    color: #f0fdf4;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.modal-header h3 {
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    color: #a7f3d0;
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+}
+
+.btn-close:hover {
+    color: #fff;
+}
+
+.modal-info {
+    font-size: 0.85rem;
+    color: #a7f3d0;
+    margin-bottom: 1rem;
+}
+
+.btn-sync {
+    width: 100%;
+    background: rgba(110, 231, 183, 0.2);
+    color: #fff;
+    border: 1px solid rgba(110, 231, 183, 0.4);
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.btn-sync:hover {
+    background: rgba(110, 231, 183, 0.3);
+}
+
+.divider {
+    text-align: center;
+    margin: 1rem 0;
+    position: relative;
+    color: #6ee7b7;
+    font-size: 0.8rem;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.divider::before {
+    left: 0;
+}
+.divider::after {
+    right: 0;
+}
+
+.form-group {
+    margin-bottom: 0.85rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.8rem;
+    color: #a7f3d0;
+    margin-bottom: 0.25rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 9px 12px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.form-group input:focus {
+    border-color: #6ee7b7;
+}
+
+.btn-submit {
+    width: 100%;
+    background: #065f46;
+    color: #fff;
+    border: 1px solid #047857;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: background 0.2s;
+    margin-top: 0.5rem;
+}
+
+.btn-submit:hover {
+    background: #047857;
+}
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.error-msg {
+    background: rgba(252, 165, 165, 0.15);
+    border: 1px solid rgba(252, 165, 165, 0.3);
+    color: #fca5a5;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}

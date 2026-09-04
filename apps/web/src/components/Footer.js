@@ -54,6 +54,7 @@ const Footer = () => {
                 { label: t("link.notes"), href: "/dashboard/notes" },
                 { label: t("link.bookmarks"), href: "/dashboard/bookmarks" },
                 { label: t("link.search"), href: "/search" },
+                { label: "Browser Extension", href: "/extension" },
                 {
                     label: t("link.notifications"),
                     href: "/dashboard/notifications",

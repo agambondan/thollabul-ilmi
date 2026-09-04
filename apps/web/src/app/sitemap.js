@@ -50,6 +50,7 @@ const staticRoutes = [
     url("/tasbih", 0.6, "weekly"),
     url("/tokoh", 0.6, "weekly"),
     url("/contact", 0.5, "monthly"),
+    url("/extension", 0.7, "monthly"),
     url("/search", 0.5, "weekly"),
 ];
 

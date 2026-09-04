@@ -13,7 +13,9 @@ const MAX_SHARE_LENGTH = 4096;
 const loadImage = (src) =>
     new Promise((resolve, reject) => {
         const image = new Image();
-        image.crossOrigin = "anonymous";
+        // crossOrigin hanya untuk image raster via CORS; SVG self-host tidak butuh
+        // dan menambahkan CORS dapat bikin canvas tainting. Skip kalau src SVG.
+        if (!/\.svg($|\?)/i.test(src)) image.crossOrigin = "anonymous";
         image.onload = () => resolve(image);
         image.onerror = reject;
         image.src = src;
