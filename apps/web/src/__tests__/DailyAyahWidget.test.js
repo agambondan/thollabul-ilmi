@@ -25,7 +25,12 @@ const mockAyah = {
         id: "Dengan nama Allah",
         idn: "Dengan nama Allah Yang Maha Pengasih",
     },
-    surah: { translation: { latin_en: "Al-Fatihah" } },
+    surah: {
+        translation: {
+            latin_en: "Al-Fatihah",
+            latin_idn: "Al-Fatihah",
+        },
+    },
 };
 
 describe("DailyAyahWidget", () => {

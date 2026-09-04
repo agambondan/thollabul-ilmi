@@ -3,7 +3,7 @@
 import { useLocale } from "@/context/Locale";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { BsDownload, BsInfoCircle, BsX } from "react-icons/bs";
+import { BsDownload, BsX } from "react-icons/bs";
 
 const DISMISS_KEY = "tholabul_pwa_prompt_dismissed";
 const DISMISS_TTL_MS = 14 * 24 * 60 * 60 * 1000;
@@ -36,7 +36,7 @@ export default function PwaInstallNotice() {
     const { t } = useLocale();
     const [prompt, setPrompt] = useState(null);
     const [isIos, setIsIos] = useState(false);
-    const [showIosGuide, setShowIosGuide] = useState(false);
+    const [showGuide, setShowGuide] = useState(false);
     const [hidden, setHidden] = useState(true);
 
     useEffect(() => {
@@ -47,26 +47,19 @@ export default function PwaInstallNotice() {
             window.navigator.standalone === true;
 
         if (isStandalone || isDismissed()) return;
+        if (!isMobileDevice()) return;
 
-        const mobile = isMobileDevice();
-        if (!mobile) return;
-
-        const ios = isIosDevice();
-        setIsIos(ios);
-
-        if (ios) {
-            setHidden(false);
-            return;
-        }
+        setIsIos(isIosDevice());
+        setHidden(false);
 
         const handler = (event) => {
             event.preventDefault();
             setPrompt(event);
-            setHidden(false);
         };
 
         window.addEventListener("beforeinstallprompt", handler);
-        return () => window.removeEventListener("beforeinstallprompt", handler);
+        return () =>
+            window.removeEventListener("beforeinstallprompt", handler);
     }, []);
 
     const dismiss = () => {
@@ -74,38 +67,36 @@ export default function PwaInstallNotice() {
         setHidden(true);
     };
 
-    const install = async () => {
-        if (isIos) {
-            setShowIosGuide((prev) => !prev);
+    const handleInstall = async () => {
+        if (prompt) {
+            prompt.prompt();
+            const choice = await prompt.userChoice;
+            if (choice?.outcome === "accepted") {
+                setHidden(true);
+            } else {
+                dismiss();
+            }
             return;
         }
 
-        if (!prompt) {
-            dismiss();
-            return;
-        }
-
-        prompt.prompt();
-        const choice = await prompt.userChoice;
-        if (choice?.outcome === "accepted") {
-            setPrompt(null);
-            setHidden(true);
-        } else {
-            dismiss();
-        }
+        setShowGuide((prev) => !prev);
     };
 
     if (hidden) return null;
+
+    const guideText = isIos
+        ? t("pwa.install_ios")
+        : t("pwa.install_android");
 
     return (
         <aside
             role='region'
             aria-label={t("pwa.install_title")}
-            className='fixed inset-x-3 bottom-16 z-[44] mx-auto max-w-md rounded-2xl border border-emerald-200 bg-white/95 p-3.5 shadow-xl shadow-emerald-950/10 backdrop-blur transition-all md:hidden dark:border-emerald-800/80 dark:bg-slate-900/95'
+            className='fixed inset-x-3 bottom-20 z-[44] mx-auto max-w-md rounded-2xl border border-emerald-200 bg-white/95 p-3.5 shadow-xl shadow-emerald-950/10 backdrop-blur transition-all md:hidden dark:border-emerald-800/80 dark:bg-slate-900/95'
         >
             <div className='flex items-center gap-3'>
                 <Image
-                    src='/icon'
+                    src='/icon-192.png'
                     alt="Thullaabul 'Ilmi"
                     width={40}
                     height={40}
@@ -122,19 +113,11 @@ export default function PwaInstallNotice() {
                 <div className='flex items-center gap-1'>
                     <button
                         type='button'
-                        onClick={install}
+                        onClick={handleInstall}
                         className='inline-flex items-center gap-1 rounded-xl bg-emerald-700 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-800 active:scale-95'
                     >
-                        {isIos ? (
-                            <BsInfoCircle className='text-xs' />
-                        ) : (
-                            <BsDownload className='text-xs' />
-                        )}
-                        <span>
-                            {isIos
-                                ? t("pwa.install_guide")
-                                : t("pwa.install_now")}
-                        </span>
+                        <BsDownload className='text-xs' />
+                        <span>{t("pwa.install_now")}</span>
                     </button>
                     <button
                         type='button'
@@ -147,9 +130,9 @@ export default function PwaInstallNotice() {
                 </div>
             </div>
 
-            {showIosGuide && (
+            {showGuide && (
                 <div className='mt-2.5 rounded-xl border border-emerald-100 bg-emerald-50/80 p-2.5 text-[11px] leading-relaxed text-emerald-900 dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-200'>
-                    {t("pwa.install_ios")}
+                    {guideText}
                 </div>
             )}
         </aside>

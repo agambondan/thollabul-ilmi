@@ -10,7 +10,7 @@ jest.mock("next/image", () => ({
     default: (props) => <span aria-label={props.alt} data-src={props.src} />,
 }));
 
-const setIosUserAgent = (ua) => {
+const setUserAgent = (ua) => {
     Object.defineProperty(window.navigator, "userAgent", {
         value: ua,
         configurable: true,
@@ -27,31 +27,39 @@ const setStandalone = (value) => {
 describe("PwaInstallNotice", () => {
     beforeEach(() => {
         localStorage.clear();
-        setIosUserAgent(
+        setUserAgent(
             "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
         );
         setStandalone(false);
     });
 
-    test("renders iOS guide prompt on iPhone Safari", async () => {
+    test("renders mobile install bar on mobile user agent", async () => {
         render(<PwaInstallNotice />);
         await waitFor(() =>
             expect(screen.getByText("pwa.install_title")).toBeInTheDocument(),
         );
         expect(screen.getByText("pwa.install_desc")).toBeInTheDocument();
-        expect(screen.getByText("pwa.install_guide")).toBeInTheDocument();
+        expect(screen.getByText("pwa.install_now")).toBeInTheDocument();
     });
 
-    test("clicking guide toggles iOS instructions on iOS", async () => {
+    test("clicking install toggles guide when no native prompt", async () => {
         render(<PwaInstallNotice />);
         await waitFor(() =>
-            expect(screen.getByText("pwa.install_guide")).toBeInTheDocument(),
+            expect(screen.getByText("pwa.install_now")).toBeInTheDocument(),
         );
         expect(screen.queryByText("pwa.install_ios")).not.toBeInTheDocument();
-        fireEvent.click(screen.getByText("pwa.install_guide"));
+        fireEvent.click(screen.getByText("pwa.install_now"));
         expect(screen.getByText("pwa.install_ios")).toBeInTheDocument();
-        fireEvent.click(screen.getByText("pwa.install_guide"));
+        fireEvent.click(screen.getByText("pwa.install_now"));
         expect(screen.queryByText("pwa.install_ios")).not.toBeInTheDocument();
+    });
+
+    test("does not render on desktop browser", () => {
+        setUserAgent(
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        );
+        render(<PwaInstallNotice />);
+        expect(screen.queryByText("pwa.install_title")).not.toBeInTheDocument();
     });
 
     test("does not render when previously dismissed within TTL", () => {
