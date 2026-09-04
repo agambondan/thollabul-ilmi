@@ -376,197 +376,203 @@ export default function JadwalSholatPage() {
                     <button
                         type='button'
                         onClick={() => setShowSettings((s) => !s)}
-                        className='mt-3 text-xs text-emerald-600 dark:text-emerald-400 hover:underline'
+                        className='mt-3 text-xs text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1'
                     >
                         {t("prayer_schedule.settings") ?? "Pengaturan metode"}{" "}
-                        {showSettings ? "▲" : "▼"}
+                        <span>{showSettings ? "▲" : "▼"}</span>
                     </button>
                     {showSettings && (
-                        <div className='mt-3 grid grid-cols-2 gap-3'>
-                            <div>
-                                <label
-                                    htmlFor='page-method'
-                                    className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'
+                        <div className='mt-3 pt-3 border-t border-gray-100 dark:border-slate-700/60 space-y-3'>
+                            <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+                                <div>
+                                    <label
+                                        htmlFor='page-method'
+                                        className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'
+                                    >
+                                        {t("prayer_schedule.method") ??
+                                            "Metode Hisab"}
+                                    </label>
+                                    <select
+                                        id='page-method'
+                                        value={method}
+                                        onChange={(e) => setMethod(e.target.value)}
+                                        className='w-full border border-gray-200 dark:border-slate-600 rounded-lg px-2.5 py-1.5 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
+                                    >
+                                        {PRAYER_METHODS.map((m) => (
+                                            <option key={m.value} value={m.value}>
+                                                {m.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label
+                                        htmlFor='page-madhab'
+                                        className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'
+                                    >
+                                        {t("prayer_schedule.madhab") ??
+                                            "Madhab Asar"}
+                                    </label>
+                                    <select
+                                        id='page-madhab'
+                                        value={madhab}
+                                        onChange={(e) => setMadhab(e.target.value)}
+                                        className='w-full border border-gray-200 dark:border-slate-600 rounded-lg px-2.5 py-1.5 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
+                                    >
+                                        {PRAYER_MADHABS.map((m) => (
+                                            <option key={m.value} value={m.value}>
+                                                {t(m.labelKey)}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Notifikasi & Suara Adzan */}
+                            <div className='flex flex-col sm:flex-row sm:items-center gap-2'>
+                                {!notifGranted &&
+                                    typeof Notification !== "undefined" &&
+                                    Notification.permission !== "denied" && (
+                                        <button
+                                            onClick={() =>
+                                                Notification.requestPermission().then(
+                                                    (p) => {
+                                                        if (p === "granted")
+                                                            setNotifGranted(true);
+                                                    },
+                                                )
+                                            }
+                                            className='flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-medium'
+                                        >
+                                            <BsBell />{" "}
+                                            {t("prayer_schedule.enable_notif") ??
+                                                "Aktifkan Notifikasi"}
+                                        </button>
+                                    )}
+                                <button
+                                    onClick={() =>
+                                        updateSetting(
+                                            "notifAdzan",
+                                            !settings.notifAdzan,
+                                        )
+                                    }
+                                    className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shrink-0 ${settings.notifAdzan ? "bg-emerald-700 text-white" : "bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300"}`}
                                 >
-                                    {t("prayer_schedule.method") ??
-                                        "Metode Hisab"}
-                                </label>
+                                    {settings.notifAdzan ? (
+                                        <BsBellFill />
+                                    ) : (
+                                        <BsBell />
+                                    )}
+                                    {settings.notifAdzan
+                                        ? (t("prayer_schedule.adzan_on") ??
+                                          "Adzan On")
+                                        : (t("prayer_schedule.adzan_off") ??
+                                          "Adzan Off")}
+                                </button>
                                 <select
-                                    id='page-method'
-                                    value={method}
-                                    onChange={(e) => setMethod(e.target.value)}
-                                    className='w-full border border-gray-200 dark:border-slate-600 rounded-lg px-2 py-1.5 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
+                                    value={settings.adzanSound}
+                                    onChange={(e) => {
+                                        const next = adzanOptions.find(
+                                            (s) => s.value === e.target.value,
+                                        );
+                                        if (!next) return;
+                                        updateSetting("adzanSound", next.value);
+                                        updateSetting("adzanSoundUrl", next.src);
+                                        updateSetting(
+                                            "adzanSoundLabel",
+                                            next.label,
+                                        );
+                                    }}
+                                    className='w-full sm:flex-1 min-w-0 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2.5 py-1.5 focus:ring-emerald-500'
+                                    aria-label={t("prayer.adhan_sound")}
                                 >
-                                    {PRAYER_METHODS.map((m) => (
-                                        <option key={m.value} value={m.value}>
-                                            {m.label}
+                                    {adzanOptions.map((s) => (
+                                        <option key={s.value} value={s.value}>
+                                            {s.label}
+                                            {s.qari ? ` · ${s.qari}` : ""}
                                         </option>
                                     ))}
                                 </select>
                             </div>
-                            <div>
-                                <label
-                                    htmlFor='page-madhab'
-                                    className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'
-                                >
-                                    {t("prayer_schedule.madhab") ??
-                                        "Madhab Asar"}
-                                </label>
-                                <select
-                                    id='page-madhab'
-                                    value={madhab}
-                                    onChange={(e) => setMadhab(e.target.value)}
-                                    className='w-full border border-gray-200 dark:border-slate-600 rounded-lg px-2 py-1.5 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
-                                >
-                                    {PRAYER_MADHABS.map((m) => (
-                                        <option key={m.value} value={m.value}>
-                                            {t(m.labelKey)}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-                    )}
-                    {showSettings && (
-                        <div className='mt-3 flex items-center gap-3'>
-                            {!notifGranted &&
-                                typeof Notification !== "undefined" &&
-                                Notification.permission !== "denied" && (
-                                    <button
-                                        onClick={() =>
-                                            Notification.requestPermission().then(
-                                                (p) => {
-                                                    if (p === "granted")
-                                                        setNotifGranted(true);
-                                                },
+
+                            {/* Jeda Pengingat Global & Per Waktu */}
+                            <div className='pt-2 border-t border-gray-100 dark:border-slate-700/50 space-y-2'>
+                                <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-2'>
+                                    <span className='text-xs font-medium text-gray-600 dark:text-gray-300'>
+                                        {t("prayer_schedule.reminder_lead")}
+                                    </span>
+                                    <select
+                                        value={settings.adzanReminderLead ?? 10}
+                                        onChange={(e) =>
+                                            updateSetting(
+                                                "adzanReminderLead",
+                                                Number(e.target.value),
                                             )
                                         }
-                                        className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-medium'
+                                        className='w-full sm:w-auto bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2.5 py-1.5 focus:ring-emerald-500'
+                                        aria-label={t("prayer.reminder_lead")}
                                     >
-                                        <BsBell />{" "}
-                                        {t("prayer_schedule.enable_notif") ??
-                                            "Aktifkan Notifikasi"}
-                                    </button>
-                                )}
-                            <button
-                                onClick={() =>
-                                    updateSetting(
-                                        "notifAdzan",
-                                        !settings.notifAdzan,
-                                    )
-                                }
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${settings.notifAdzan ? "bg-emerald-700 text-white" : "bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300"}`}
-                            >
-                                {settings.notifAdzan ? (
-                                    <BsBellFill />
-                                ) : (
-                                    <BsBell />
-                                )}
-                                {settings.notifAdzan
-                                    ? (t("prayer_schedule.adzan_on") ??
-                                      "Adzan On")
-                                    : (t("prayer_schedule.adzan_off") ??
-                                      "Adzan Off")}
-                            </button>
-                            <select
-                                value={settings.adzanSound}
-                                onChange={(e) => {
-                                    const next = adzanOptions.find(
-                                        (s) => s.value === e.target.value,
-                                    );
-                                    if (!next) return;
-                                    updateSetting("adzanSound", next.value);
-                                    updateSetting("adzanSoundUrl", next.src);
-                                    updateSetting(
-                                        "adzanSoundLabel",
-                                        next.label,
-                                    );
-                                }}
-                                className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
-                                aria-label={t("prayer.adhan_sound")}
-                            >
-                                {adzanOptions.map((s) => (
-                                    <option key={s.value} value={s.value}>
-                                        {s.label}
-                                        {s.qari ? ` · ${s.qari}` : ""}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
-                    {showSettings && (
-                        <div className='mt-3 flex items-center gap-3'>
-                            <span className='text-xs text-gray-500 dark:text-gray-400'>
-                                {t("prayer_schedule.reminder_lead")}
-                            </span>
-                            <select
-                                value={settings.adzanReminderLead ?? 10}
-                                onChange={(e) =>
-                                    updateSetting(
-                                        "adzanReminderLead",
-                                        Number(e.target.value),
-                                    )
-                                }
-                                className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
-                                aria-label={t("prayer.reminder_lead")}
-                            >
-                                {REMINDER_LEAD_OPTIONS.map((m) => (
-                                    <option key={m} value={m}>
-                                        {m === 0
-                                            ? t("prayer_schedule.at_time")
-                                            : `${m} ${t("prayer_schedule.minutes")}`}
-                                    </option>
-                                ))}
-                            </select>
-                            {PRAYER_KEYS_FOR_REMINDER.map((key) => {
-                                const row = PRAYERS.find((p) => p.key === key);
-                                const label = row ? t(row.labelKey) : key;
-                                const perPrayer =
-                                    settings.adzanReminderLeadByPrayer?.[key];
-                                return (
-                                    <select
-                                        key={key}
-                                        value={perPrayer ?? "global"}
-                                        onChange={(e) => {
-                                            const v = e.target.value;
-                                            const next = {
-                                                ...(settings.adzanReminderLeadByPrayer ||
-                                                    {}),
-                                            };
-                                            if (v === "global")
-                                                delete next[key];
-                                            else next[key] = Number(v);
-                                            updateSetting(
-                                                "adzanReminderLeadByPrayer",
-                                                next,
-                                            );
-                                        }}
-                                        className='bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2 py-1.5 focus:ring-emerald-500'
-                                        aria-label={t(
-                                            "prayer.reminder_lead_prayer",
-                                            { prayer: key },
-                                        )}
-                                    >
-                                        <option value='global'>
-                                            {label}{" "}
-                                            {t("prayer_schedule.global")}
-                                        </option>
                                         {REMINDER_LEAD_OPTIONS.map((m) => (
                                             <option key={m} value={m}>
-                                                {label}{" "}
                                                 {m === 0
-                                                    ? t(
-                                                          "prayer_schedule.at_time",
-                                                      )
+                                                    ? t("prayer_schedule.at_time")
                                                     : `${m} ${t("prayer_schedule.minutes")}`}
                                             </option>
                                         ))}
                                     </select>
-                                );
-                            })}
-                            <span className='sr-only'>
-                                Per-prayer reminder config
-                            </span>
+                                </div>
+
+                                <div className='grid grid-cols-1 sm:grid-cols-2 gap-1.5'>
+                                    {PRAYER_KEYS_FOR_REMINDER.map((key) => {
+                                        const row = PRAYERS.find((p) => p.key === key);
+                                        const label = row ? t(row.labelKey) : key;
+                                        const perPrayer =
+                                            settings.adzanReminderLeadByPrayer?.[key];
+                                        return (
+                                            <div
+                                                key={key}
+                                                className='flex items-center justify-between gap-2 bg-gray-50 dark:bg-slate-700/50 rounded-lg px-2.5 py-1.5'
+                                            >
+                                                <span className='text-xs font-medium text-gray-700 dark:text-gray-300 shrink-0'>
+                                                    {label}
+                                                </span>
+                                                <select
+                                                    value={perPrayer ?? "global"}
+                                                    onChange={(e) => {
+                                                        const v = e.target.value;
+                                                        const next = {
+                                                            ...(settings.adzanReminderLeadByPrayer || {}),
+                                                        };
+                                                        if (v === "global")
+                                                            delete next[key];
+                                                        else next[key] = Number(v);
+                                                        updateSetting(
+                                                            "adzanReminderLeadByPrayer",
+                                                            next,
+                                                        );
+                                                    }}
+                                                    className='min-w-0 flex-1 sm:flex-initial sm:w-28 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-[11px] text-gray-900 dark:text-white rounded-md px-2 py-1 focus:ring-emerald-500'
+                                                    aria-label={t(
+                                                        "prayer.reminder_lead_prayer",
+                                                        { prayer: key },
+                                                    )}
+                                                >
+                                                    <option value='global'>
+                                                        {t("prayer_schedule.global") ?? "Global"}
+                                                    </option>
+                                                    {REMINDER_LEAD_OPTIONS.map((m) => (
+                                                        <option key={m} value={m}>
+                                                            {m === 0
+                                                                ? t("prayer_schedule.at_time")
+                                                                : `${m} ${t("prayer_schedule.minutes")}`}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>
