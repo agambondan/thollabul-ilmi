@@ -319,7 +319,7 @@ export default function JadwalSholatPage() {
                     <div className='inline-flex items-center justify-center w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl mb-4'>
                         <MdAccessTime className='text-3xl text-emerald-600 dark:text-emerald-400' />
                     </div>
-                    <h1 className='text-3xl font-extrabold text-emerald-900 dark:text-emerald-300 dark:text-emerald-100 mb-1'>
+                    <h1 className='text-2xl sm:text-3xl font-extrabold text-emerald-900 dark:text-emerald-100 mb-1'>
                         {t("prayer_schedule.title")}
                     </h1>
                     <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
@@ -328,14 +328,14 @@ export default function JadwalSholatPage() {
                 </div>
 
                 {/* Location picker */}
-                <div className='bg-white dark:bg-slate-800 rounded-2xl p-4 mb-4 shadow-sm border border-gray-100 dark:border-slate-700'>
-                    <p className='text-xs font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wide mb-3'>
+                <div className='bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-5 mb-4 shadow-sm border border-gray-100 dark:border-slate-700'>
+                    <p className='text-xs sm:text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3'>
                         {t("prayer_schedule.pick_city")}
                     </p>
                     <div className='flex flex-col sm:flex-row gap-2'>
                         <button
                             onClick={handleGeo}
-                            className='flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors whitespace-nowrap'
+                            className='flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition-colors whitespace-nowrap'
                         >
                             <BsGeoAlt />
                             {t("geo.my_location")}
@@ -578,8 +578,8 @@ export default function JadwalSholatPage() {
                 </div>
 
                 {/* Current time display */}
-                <div className='text-center mb-4'>
-                    <span className='text-4xl font-extrabold text-emerald-800 dark:text-emerald-300 dark:text-emerald-200 tabular-nums'>
+                <div className='text-center my-6 sm:my-8'>
+                    <span className='text-5xl sm:text-6xl font-black text-emerald-800 dark:text-emerald-200 tabular-nums tracking-tight'>
                         {now.toLocaleTimeString(
                             lang === "EN" ? "en-US" : "id-ID",
                             {
@@ -589,22 +589,24 @@ export default function JadwalSholatPage() {
                         )}
                     </span>
                     {countdown && nextPrayer && (
-                        <div className='mt-2 flex items-center justify-center gap-2'>
-                            <MdTimer className='text-emerald-500 dark:text-emerald-400 text-lg' />
-                            <span className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                        <div className='mt-3 flex items-center justify-center gap-2'>
+                            <MdTimer className='text-emerald-500 dark:text-emerald-400 text-xl' />
+                            <span className='text-base sm:text-lg text-gray-600 dark:text-gray-300 font-medium'>
                                 {t("prayer_schedule.towards") ?? "Menuju"}{" "}
-                                {t(
-                                    PRAYERS.find((p) => p.key === nextPrayer)
-                                        ?.labelKey,
-                                )}{" "}
+                                <span className='font-bold text-gray-800 dark:text-white'>
+                                    {t(
+                                        PRAYERS.find((p) => p.key === nextPrayer)
+                                            ?.labelKey,
+                                    )}
+                                </span>
                             </span>
-                            <span className='text-lg font-bold text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 tabular-nums'>
+                            <span className='text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 tabular-nums bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-0.5 rounded-lg border border-emerald-200 dark:border-emerald-800'>
                                 {countdown}
                             </span>
                         </div>
                     )}
                     {!countdown && prayers && !nextPrayer && (
-                        <p className='mt-1 text-xs text-gray-400'>
+                        <p className='mt-2 text-sm text-gray-400'>
                             {t("prayer_schedule.all_passed") ??
                                 "Semua waktu sholat hari ini telah berlalu"}
                         </p>
@@ -651,12 +653,12 @@ export default function JadwalSholatPage() {
                                         )}
                                         <div>
                                             <p
-                                                className={`font-bold text-sm ${isNext ? "text-white" : "text-gray-800 dark:text-gray-100"}`}
+                                                className={`font-bold text-base sm:text-lg ${isNext ? "text-white" : "text-gray-900 dark:text-gray-100"}`}
                                             >
                                                 {t(p.labelKey)}
                                             </p>
                                             <p
-                                                className={`text-xs ${isNext ? "text-emerald-200" : "text-gray-400"}`}
+                                                className={`text-xs sm:text-sm ${isNext ? "text-emerald-100" : "text-gray-400"}`}
                                                 style={{
                                                     fontFamily: "Amiri, serif",
                                                 }}
@@ -666,10 +668,10 @@ export default function JadwalSholatPage() {
                                         </div>
                                     </div>
                                     <p
-                                        className={`text-xl font-extrabold tabular-nums ${
+                                        className={`text-2xl sm:text-3xl font-black tabular-nums ${
                                             isNext
                                                 ? "text-white"
-                                                : "text-emerald-700 dark:text-emerald-300"
+                                                : "text-emerald-700 dark:text-emerald-400"
                                         }`}
                                     >
                                         {time}
