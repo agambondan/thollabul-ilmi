@@ -1,8 +1,8 @@
 # Multilingual Content Wiring
 
-Status: `IN_PROGRESS`
+Status: `COMPLETED`
 Priority: `P1`
-Tanggal: `2026-05-13`
+Tanggal Selesai: `2026-09-05`
 
 ## Objective
 
