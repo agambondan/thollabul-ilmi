@@ -14,6 +14,7 @@ const (
 	NotificationTypeDoa         NotificationType = "doa"
 	NotificationTypeStreakRisk  NotificationType = "streak_risk"
 	NotificationTypeAdzan       NotificationType = "adzan"
+	NotificationTypeReport      NotificationType = "report"
 )
 
 type NotificationSetting struct {

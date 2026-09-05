@@ -18,7 +18,7 @@ func setupContentReportTestEnv(t *testing.T) (*gorm.DB, *service.Services) {
 	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
 	assert.NoError(t, err)
 
-	err = db.AutoMigrate(&model.User{}, &model.ContentReport{})
+	err = db.AutoMigrate(&model.User{}, &model.ContentReport{}, &model.UserNotification{})
 	assert.NoError(t, err)
 
 	repo, err := repository.NewRepositories(db, nil)
@@ -86,6 +86,13 @@ func TestContentReportServiceLifecycle(t *testing.T) {
 	assert.NotNil(t, reviewed.ReviewedBy)
 	assert.Equal(t, admin.ID, *reviewed.ReviewedBy)
 	assert.NotNil(t, reviewed.ReviewedAt)
+
+	// Check that notification was sent to user
+	notifs, err := svc.NotificationInbox.List(user.ID)
+	assert.NoError(t, err)
+	assert.Len(t, notifs, 1)
+	assert.Contains(t, notifs[0].Title, "QS. Al-Fatihah: 1")
+	assert.Contains(t, notifs[0].Body, "telah disetujui/diperbaiki")
 
 	// 5. Validation: invalid target
 	_, err = svc.ContentReport.Create(user.ID, &model.CreateContentReportRequest{

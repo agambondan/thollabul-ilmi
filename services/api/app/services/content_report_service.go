@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/agambondan/islamic-explorer/app/model"
@@ -18,11 +19,12 @@ type ContentReportService interface {
 }
 
 type contentReportService struct {
-	repo repository.ContentReportRepository
+	repo  repository.ContentReportRepository
+	inbox repository.NotificationInboxRepository
 }
 
-func NewContentReportService(repo repository.ContentReportRepository) ContentReportService {
-	return &contentReportService{repo: repo}
+func NewContentReportService(repo repository.ContentReportRepository, inbox repository.NotificationInboxRepository) ContentReportService {
+	return &contentReportService{repo: repo, inbox: inbox}
 }
 
 var validReportTarget = map[model.ContentReportTargetType]bool{
@@ -99,7 +101,41 @@ func (s *contentReportService) UpdateStatus(id string, reviewerID uuid.UUID, req
 	if req == nil || !validReportStatus[req.Status] {
 		return nil, errors.New("invalid status")
 	}
-	return s.repo.UpdateStatus(id, req.Status, strings.TrimSpace(req.AdminNote), reviewerID)
+	updated, err := s.repo.UpdateStatus(id, req.Status, strings.TrimSpace(req.AdminNote), reviewerID)
+	if err != nil {
+		return nil, err
+	}
+
+	if s.inbox != nil && updated != nil && updated.UserID != uuid.Nil {
+		statusText := map[model.ContentReportStatus]string{
+			model.ContentReportStatusReviewed: "sedang ditinjau",
+			model.ContentReportStatusResolved: "telah disetujui/diperbaiki",
+			model.ContentReportStatusRejected: "ditolak",
+		}[req.Status]
+		if statusText == "" {
+			statusText = string(req.Status)
+		}
+
+		title := fmt.Sprintf("Laporan Koreksi: %s", updated.TargetTitle)
+		if updated.TargetTitle == "" {
+			title = "Laporan Koreksi Konten"
+		}
+		body := fmt.Sprintf("Laporan koreksi Anda untuk %s %s oleh tim.", updated.TargetType, statusText)
+		if req.AdminNote != "" {
+			body += fmt.Sprintf(" Catatan admin: %s", req.AdminNote)
+		}
+
+		_, _ = s.inbox.Create(model.UserNotification{
+			UserID: updated.UserID,
+			Title:  title,
+			Body:   body,
+			Type:   model.NotificationTypeReport,
+			RefID:  updated.ID.String(),
+			IsRead: false,
+		})
+	}
+
+	return updated, nil
 }
 
 func (s *contentReportService) FindMine(userID uuid.UUID, page, limit int) ([]model.ContentReport, int64, error) {

@@ -171,7 +171,7 @@ func NewServices(repo *repository.Repositories) *Services {
 		Chat:                 NewChatService(repo.Chat),
 		Lesson:               NewLessonService(repo.Lesson),
 		AdzanSound:           NewAdzanSoundService(repo.AdzanSound),
-		ContentReport:        NewContentReportService(repo.ContentReport),
+		ContentReport:        NewContentReportService(repo.ContentReport, repo.NotificationInbox),
 		Sync:                 NewSyncService(db, cache, doaSvc, dzikirSvc, asmaulHusnaSvc),
 	}
 	svc.Dashboard = NewDashboardService(db, svc.Ayah, svc.Hadith, svc.Streak, svc.Sholat, svc.NotificationInbox, svc.Tilawah)
