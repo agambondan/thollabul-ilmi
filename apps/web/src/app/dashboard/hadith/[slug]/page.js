@@ -659,6 +659,7 @@ export function HadithDetailContent({
     params,
     basePath = "/dashboard/hadith",
     showSelectors = true,
+    initialHadiths = [],
 }) {
     const { slug } = params;
     const { t, lang } = useLocale();
@@ -674,7 +675,7 @@ export function HadithDetailContent({
 
     const [themes, setThemes] = useState([]);
     const [chapters, setChapters] = useState([]);
-    const [hadiths, setHadiths] = useState([]);
+    const [hadiths, setHadiths] = useState(initialHadiths);
     const [selectedTheme, setSelectedTheme] = useState(null);
     const [selectedChapter, setSelectedChapter] = useState(null);
     const [loading, setLoading] = useState(showSelectors);
@@ -682,6 +683,7 @@ export function HadithDetailContent({
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [bookName, setBookName] = useState("");
+    const hasServerDataRef = useRef(initialHadiths.length > 0);
 
     useEffect(() => {
         if (!showSelectors) return;

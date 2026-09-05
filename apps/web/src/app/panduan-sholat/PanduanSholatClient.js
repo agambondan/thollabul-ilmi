@@ -114,15 +114,18 @@ const normalizeStep = (s) => ({
     source: s.source ?? "",
 });
 
-export function PanduanSholatContent() {
+export function PanduanSholatContent({ initialSteps = [] }) {
     const { t, lang } = useLocale();
-    const [openPrayer, setOpenPrayer] = useState(0);
+    const [selectedPrayer, setSelectedPrayer] = useState(0);
     const [openStep, setOpenStep] = useState(null);
-    const [apiSteps, setApiSteps] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [apiSteps, setApiSteps] = useState(initialSteps);
+    const [isLoading, setIsLoading] = useState(initialSteps.length === 0);
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/panduan-sholat`)
+        if (initialSteps.length > 0) return;
+        fetch(
+            `${process.env.NEXT_PUBLIC_API_URL || "https://api-thollabul.jangkauin.site"}/api/v1/panduan-sholat`,
+        )
             .then((r) => r.json())
             .then((data) => {
                 const items = (data?.items ?? data ?? [])
@@ -132,7 +135,7 @@ export function PanduanSholatContent() {
             })
             .catch((e) => console.error(e))
             .finally(() => setIsLoading(false));
-    }, []);
+    }, [initialSteps]);
 
     return (
         <ContentWidth compact='max-w-2xl' className='flex-1 px-4 pt-6 pb-8'>
