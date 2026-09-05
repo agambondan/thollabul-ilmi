@@ -19,6 +19,14 @@ async function getSurah(slug) {
     }
 }
 
+export const revalidate = 86400;
+
+export async function generateStaticParams() {
+    return Array.from({ length: 114 }, (_, i) => ({
+        slug: String(i + 1),
+    }));
+}
+
 export async function generateMetadata(props) {
     const params = await props.params;
     const decodedSlug = decodeURIComponent(params.slug);

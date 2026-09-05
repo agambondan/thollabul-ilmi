@@ -200,14 +200,16 @@
 
 ### [F-10.1] Toggle kitab selector (S)
 
-- [ ] Di `renderDetailScreen()` untuk tafsir: tambah toggle/segmented control (All / Kemenag / Al-Mishbah)
-- [ ] Fetch data untuk 2 kitab sekaligus (existing API returns both)
+- [x] Di `renderDetailScreen()` untuk tafsir: tambah toggle/segmented control (All / Kemenag / Al-Mishbah)
+- [x] Fetch data untuk 2 kitab sekaligus (existing API returns both)
 
 ### [F-10.2] Side-by-side layout (M)
 
-- [ ] Mode "Bandingkan": render 2 column scroll — Kiri=Kemenag, Kanan=Al-Mishbah
-- [ ] Di mobile sempit, alternative: stacked accordion (expand Kemenag atau Al-Mishbah)
-- [ ] Test: toggle state, both kitab render
+- [x] Mode "Bandingkan": render 2 column scroll — Kiri=Kemenag, Kanan=Al-Mishbah
+- [x] Di mobile sempit, alternative: stacked accordion (expand Kemenag atau Al-Mishbah)
+- [x] Test: toggle state, both kitab render
+
+**Status 2026-05-17:** Selesai. Tafsir detail screen mendukung mode `all`, `kemenag`, `mishbah`, dan `side-by-side` (2 kolom Kemenag vs Al-Mishbah) dengan coverage di `exploreScreenTools.test.js`.
 
 ---
 

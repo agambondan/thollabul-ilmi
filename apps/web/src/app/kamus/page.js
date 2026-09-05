@@ -14,6 +14,7 @@ export default function KamusPage() {
     const [words, setWords] = useState([]);
     const [loading, setLoading] = useState(false);
     const [selected, setSelected] = useState(null);
+    const [visibleCount, setVisibleCount] = useState(20);
 
     // The browse list used to be a hardcoded array in this file; it now lives in
     // the dictionary table so it can be edited from the admin panel.
@@ -96,6 +97,12 @@ export default function KamusPage() {
         : words;
 
     const displayResults = results ?? filtered;
+    const visibleResults = displayResults.slice(0, visibleCount);
+    const hasMoreResults = displayResults.length > visibleCount;
+
+    useEffect(() => {
+        setVisibleCount(20);
+    }, [query, results]);
 
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
@@ -154,7 +161,7 @@ export default function KamusPage() {
                             {displayResults.length} {t("kamus.results_unit")}
                         </p>
                         <div className='space-y-2'>
-                            {displayResults.map((word, i) => {
+                            {visibleResults.map((word, i) => {
                                 const isOpen = selected === i;
                                 return (
                                     <div
@@ -224,6 +231,18 @@ export default function KamusPage() {
                                 );
                             })}
                         </div>
+
+                        {hasMoreResults && (
+                            <div className='text-center pt-4'>
+                                <button
+                                    type='button'
+                                    onClick={() => setVisibleCount((c) => c + 20)}
+                                    className='px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                                >
+                                    {t("common.load_more") ?? "Muat lebih banyak..."} ({displayResults.length - visibleCount} tersisa)
+                                </button>
+                            </div>
+                        )}
 
                         {displayResults.length === 0 && query && (
                             <div className='text-center py-12 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
