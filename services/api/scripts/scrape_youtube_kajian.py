@@ -121,29 +121,61 @@ class Snippet:
         self.start = start
         self.duration = duration
 
+def _dedupe_rolling_captions(segments):
+    result = []
+    prev_words = []
+    for seg in segments:
+        words = (seg.text or "").split()
+        if not words:
+            continue
+        max_overlap = 0
+        max_k = min(len(prev_words), len(words))
+        for k in range(max_k, 0, -1):
+            if prev_words[-k:] == words[:k]:
+                max_overlap = k
+                break
+        new_words = words[max_overlap:]
+        if new_words:
+            clean_str = " ".join(new_words)
+            result.append(Snippet(clean_str, seg.start, seg.duration))
+            prev_words = words
+    return result
+
 def fetch_transcript_vtt(video_id, cookies=""):
     cookie_args = ytdlp_cookie_args(cookies)
     with tempfile.TemporaryDirectory() as tmpdir:
-        out_tmpl = os.path.join(tmpdir, "%(id)s.%(ext)s")
-        cmd = [
+        stem = os.path.join(tmpdir, "caption_tmp")
+        base_cmd = [
             "yt-dlp",
             *cookie_args,
             "--skip-download",
-            "--write-sub",
-            "--write-auto-sub",
-            "--sub-lang", "id,en",
-            "--sub-format", "vtt",
+            "--sub-langs", "id.*,en.*,id,en",
+            "--sub-format", "vtt/best",
+            "--extractor-args", "youtube:player_client=android,ios,web",
             "--no-warnings",
-            "-o", out_tmpl,
+            "-o", stem,
             f"https://www.youtube.com/watch?v={video_id}"
         ]
-        subprocess.run(cmd, capture_output=True, timeout=45)
-        vtt_files = glob.glob(os.path.join(tmpdir, "*.vtt"))
+        
+        vtt_files = []
+        for mode in ("--write-subs", "--write-auto-subs"):
+            subprocess.run([base_cmd[0], mode, *base_cmd[1:]], capture_output=True, timeout=60)
+            vtt_files = sorted(glob.glob(os.path.join(tmpdir, "caption_tmp*.vtt")))
+            if vtt_files:
+                break
+
         if not vtt_files:
             return []
 
+        # Prefer id-orig or id if multiple
+        target_vtt = vtt_files[0]
+        for vf in vtt_files:
+            if "id" in os.path.basename(vf):
+                target_vtt = vf
+                break
+
         snippets = []
-        with open(vtt_files[0], "r", encoding="utf-8", errors="ignore") as f:
+        with open(target_vtt, "r", encoding="utf-8", errors="ignore") as f:
             lines = f.readlines()
 
         time_pattern = re.compile(r"(\d{2}):(\d{2}):(\d{2})\.(\d{3})\s*-->\s*(\d{2}):(\d{2}):(\d{2})\.(\d{3})")
@@ -151,7 +183,7 @@ def fetch_transcript_vtt(video_id, cookies=""):
         current_dur = 2.0
         for line in lines:
             line = line.strip()
-            if not line or line.startswith("WEBVTT") or line.startswith("NOTE"):
+            if not line or line.startswith("WEBVTT") or line.startswith("NOTE") or line.startswith("Kind:") or line.startswith("Language:"):
                 continue
             m = time_pattern.search(line)
             if m:
@@ -163,15 +195,22 @@ def fetch_transcript_vtt(video_id, cookies=""):
                 if clean_text:
                     snippets.append(Snippet(clean_text, current_start, current_dur))
                     current_start = None
-        return snippets
+
+        if snippets:
+            return _dedupe_rolling_captions(snippets)
+        return []
 
 def fetch_transcript(video_id, cookies=""):
+    # Always prioritize robust yt-dlp android/ios player extraction matching youtube-clipper
+    res = fetch_transcript_vtt(video_id, cookies=cookies)
+    if res:
+        return res
     try:
         from youtube_transcript_api import YouTubeTranscriptApi
         api = YouTubeTranscriptApi()
         return api.fetch(video_id, languages=['id', 'en'])
     except Exception:
-        return fetch_transcript_vtt(video_id, cookies=cookies)
+        return []
 
 def chunk_transcript(snippets, chunk_duration=60):
     chunks = []
@@ -210,7 +249,7 @@ def chunk_transcript(snippets, chunk_duration=60):
         })
     return chunks
 
-def scrape_channel(channel_url, speaker, topic, max_videos=50, cookies="", only_with_transcript=True):
+def scrape_channel(channel_url, speaker, topic, max_videos=50, cookies="", only_with_transcript=True, out_file=None, existing_map=None):
     print(f"\n[SCAN] {speaker} ({channel_url})...")
     videos = get_channel_videos(channel_url, max_videos=max_videos, cookies=cookies)
     print(f"       Ditemukan {len(videos)} video.")
@@ -218,14 +257,19 @@ def scrape_channel(channel_url, speaker, topic, max_videos=50, cookies="", only_
     results = []
     for idx, v in enumerate(videos, 1):
         vid = v["video_id"]
+        if existing_map and vid in existing_map and existing_map[vid].get("transcripts"):
+            print(f"       [{idx}/{len(videos)}] ↷ {v['title'][:45]}... (Sudah ada di database - skip)")
+            continue
+
         snippets = fetch_transcript(vid, cookies=cookies)
         chunks = chunk_transcript(snippets) if snippets else []
 
         if only_with_transcript and not chunks:
             print(f"       [{idx}/{len(videos)}] ✗ {v['title'][:45]}... (Tanpa transkrip - skip)")
+            time.sleep(1.0)
             continue
 
-        results.append({
+        item = {
             "title": v["title"],
             "speaker": speaker,
             "topic": topic,
@@ -237,9 +281,20 @@ def scrape_channel(channel_url, speaker, topic, max_videos=50, cookies="", only_
             "thumbnail_url": v["thumbnail_url"],
             "published_at": "2024-01-01",
             "transcripts": chunks
-        })
+        }
+        results.append(item)
         print(f"       [{idx}/{len(videos)}] ✓ {v['title'][:45]}... ({len(chunks)} chunks transkrip)")
-        time.sleep(0.3)
+
+        # Save checkpoint immediately
+        if out_file and existing_map is not None:
+            existing_map[vid] = item
+            try:
+                with open(out_file, "w", encoding="utf-8") as f:
+                    json.dump(list(existing_map.values()), f, ensure_ascii=False, indent=4)
+            except Exception:
+                pass
+
+        time.sleep(1.5)
 
     return results
 
@@ -289,7 +344,9 @@ def main():
             topic=", ".join(t["fokus_kajian"]),
             max_videos=args.max,
             cookies=args.cookies,
-            only_with_transcript=not args.allow_empty_transcript
+            only_with_transcript=not args.allow_empty_transcript,
+            out_file=out_file,
+            existing_map=existing_map
         )
         for it in items:
             key = it["video_id"]
