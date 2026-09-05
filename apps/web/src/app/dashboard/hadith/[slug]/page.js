@@ -1,8 +1,8 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import BookmarkButton from "@/components/BookmarkButton";
 import GradeBadge, { HadithAuthenticity } from "@/components/GradeBadge";
-import { PopUpIsCopied, ShareAyah } from "@/components/popup/ListImage";
 import Select, { SelectOptionWithLabel } from "@/components/select/Select";
 import { useLocale } from "@/context/Locale";
 import { listMasjidImage } from "@/lib/const";
@@ -21,6 +21,15 @@ import {
 } from "react-icons/bs";
 import { IoIosLink, IoMdCopy, IoMdImages } from "react-icons/io";
 import PanelCloseButton from "@/components/PanelCloseButton";
+
+const PopUpIsCopied = dynamic(
+    () => import("@/components/popup/ListImage").then((m) => m.PopUpIsCopied),
+    { ssr: false },
+);
+const ShareAyah = dynamic(
+    () => import("@/components/popup/ListImage").then((m) => m.ShareAyah),
+    { ssr: false },
+);
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
