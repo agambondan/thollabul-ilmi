@@ -54,9 +54,76 @@ CHANNELS = [
     }
 ]
 
-api = YouTubeTranscriptApi()
+class Snippet:
+    def __init__(self, text, start, duration):
+        self.text = text
+        self.start = start
+        self.duration = duration
 
-def get_channel_videos(channel_url, max_videos=20):
+
+def fetch_transcript_via_ytdlp(video_id, cookies=""):
+    import tempfile, glob, re
+    cookie_args = ytdlp_cookie_args(cookies)
+    with tempfile.TemporaryDirectory() as tmpdir:
+        out_tmpl = os.path.join(tmpdir, "%(id)s.%(ext)s")
+        cmd = [
+            "yt-dlp",
+            *cookie_args,
+            "--skip-download",
+            "--write-sub",
+            "--write-auto-sub",
+            "--sub-lang", "id,en",
+            "--sub-format", "vtt",
+            "--no-warnings",
+            "-o", out_tmpl,
+            f"https://www.youtube.com/watch?v={video_id}"
+        ]
+        subprocess.run(cmd, capture_output=True, timeout=60)
+        vtt_files = glob.glob(os.path.join(tmpdir, "*.vtt"))
+        if not vtt_files:
+            return []
+
+        # Read first vtt file found
+        snippets = []
+        with open(vtt_files[0], "r", encoding="utf-8", errors="ignore") as f:
+            lines = f.readlines()
+
+        time_pattern = re.compile(r"(\d{2}):(\d{2}):(\d{2})\.(\d{3})\s*-->\s*(\d{2}):(\d{2}):(\d{2})\.(\d{3})")
+        current_start = None
+        current_dur = 2.0
+        for line in lines:
+            line = line.strip()
+            if not line or line.startswith("WEBVTT") or line.startswith("NOTE"):
+                continue
+            m = time_pattern.search(line)
+            if m:
+                h, mi, s, ms = map(int, m.groups()[:4])
+                current_start = h * 3600 + mi * 60 + s + (ms / 1000.0)
+                continue
+            if current_start is not None and line:
+                clean_text = re.sub(r"<[^>]+>", "", line).strip()
+                if clean_text:
+                    snippets.append(Snippet(clean_text, current_start, current_dur))
+                    current_start = None
+        return snippets
+
+
+def fetch_transcript(video_id, cookies=""):
+    try:
+        return api.fetch(video_id, languages=['id', 'en'])
+    except Exception:
+        return fetch_transcript_via_ytdlp(video_id, cookies=cookies)
+
+def ytdlp_cookie_args(cookies):
+    if not cookies:
+        return []
+    if cookies in {"chrome", "firefox", "brave", "chromium", "edge"}:
+        return ["--cookies-from-browser", cookies]
+    return ["--cookies", cookies]
+
+
+def get_channel_videos(channel_url, max_videos=20, cookies=""):
+    cookie_args = ytdlp_cookie_args(cookies)
     candidates = [
         channel_url.rstrip('/') + '/videos',
         channel_url.rstrip('/') + '/streams',
@@ -65,10 +132,10 @@ def get_channel_videos(channel_url, max_videos=20):
     cmd = None
     for url in candidates:
         try:
-            test_cmd = ['yt-dlp', '--flat-playlist', '--no-warnings', '--dump-json', '--playlist-end', '1', url]
+            test_cmd = ['yt-dlp', *cookie_args, '--flat-playlist', '--no-warnings', '--dump-json', '--playlist-end', '1', url]
             res = subprocess.run(test_cmd, capture_output=True, text=True, timeout=30)
             if res.stdout.strip():
-                cmd = ['yt-dlp', '--flat-playlist', '--no-warnings', '--dump-json', '--playlist-end', str(max_videos), url]
+                cmd = ['yt-dlp', *cookie_args, '--flat-playlist', '--no-warnings', '--dump-json', '--playlist-end', str(max_videos), url]
                 break
         except Exception:
             continue
@@ -138,28 +205,42 @@ def chunk_transcript(snippets, chunk_duration=60):
     return chunks
 
 def main():
-    max_videos_per_channel = 10
-    if len(sys.argv) > 1:
-        max_videos_per_channel = int(sys.argv[1])
+    import argparse
+    parser = argparse.ArgumentParser(description="Scrape YouTube Kajian Transcripts")
+    parser.add_argument("--max", type=int, default=5, help="Max videos per channel")
+    parser.add_argument("--cookies", type=str, default="", help="Path to cookies.txt or browser name (e.g. chrome)")
+    args = parser.parse_args()
 
+    max_videos_per_channel = args.max
     output_dir = os.path.join(os.path.dirname(__file__), "../data/static/kajian_transcripts")
     os.makedirs(output_dir, exist_ok=True)
     out_file = os.path.join(output_dir, "scraped_kajian.json")
 
+    # Load existing if any so we can append/update incrementally
     all_data = []
+    if os.path.exists(out_file):
+        try:
+            with open(out_file, "r", encoding="utf-8") as f:
+                all_data = json.load(f)
+        except Exception:
+            all_data = []
+
+    existing_vids = {item.get("video_id") for item in all_data if item.get("video_id")}
 
     for c in CHANNELS:
         speaker = c["nama"]
         topic = ", ".join(c["fokus_kajian"])
         print(f"\n[SCAN] {speaker} ({c['channel_url']})...")
-        videos = get_channel_videos(c["channel_url"], max_videos=max_videos_per_channel)
+        videos = get_channel_videos(c["channel_url"], max_videos=max_videos_per_channel, cookies=args.cookies)
         print(f"       Ditemukan {len(videos)} video metadata.")
 
         valid_count = 0
         for v in videos:
             vid = v["video_id"]
+            if vid in existing_vids:
+                continue
             try:
-                snippets = api.fetch(vid, languages=['id', 'en'])
+                snippets = fetch_transcript(vid, cookies=args.cookies)
                 chunks = chunk_transcript(snippets)
                 if not chunks:
                     continue
@@ -179,12 +260,16 @@ def main():
                 all_data.append(video_entry)
                 valid_count += 1
                 print(f"       ✓ {v['title'][:45]}... ({len(chunks)} chunks)")
-            except Exception:
-                # Video tanpa transkrip
+            except Exception as e:
+                print(f"       ✗ {v['title'][:45]}... skip ({e})")
                 continue
             time.sleep(0.5)
 
         print(f"       -> {valid_count} video dengan transkrip.")
+
+    if not all_data:
+        print("\n[DONE] Tidak ada transkrip baru. File output tidak diubah.")
+        return
 
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(all_data, f, ensure_ascii=False, indent=2)

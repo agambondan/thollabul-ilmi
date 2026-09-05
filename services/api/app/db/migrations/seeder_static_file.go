@@ -448,38 +448,41 @@ func seedBlogTagsFromFile(db *gorm.DB) {
 // ── Kajian ────────────────────────────────────────────────────────────────────
 
 func seedKajianFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.Kajian{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
-		Title       string `json:"title"`
-		Speaker     string `json:"speaker"`
-		Topic       string `json:"topic"`
-		Type        string `json:"type"`
-		Description string `json:"description"`
-		Duration    int    `json:"duration"`
-		PublishedAt string `json:"published_at"`
+		Title        string `json:"title"`
+		Speaker      string `json:"speaker"`
+		Topic        string `json:"topic"`
+		Type         string `json:"type"`
+		URL          string `json:"url"`
+		Description  string `json:"description"`
+		Duration     int    `json:"duration"`
+		ThumbnailURL string `json:"thumbnail_url"`
+		PublishedAt  string `json:"published_at"`
 	}
 	var rows []row
 	if !readStaticJSON("kajian.json", &rows) {
 		return
 	}
 	log.Printf("[seeder] seedKajianFromFile: %d entri", len(rows))
+
+	// Clean up legacy rows that have no URL (link ngaco) so we don't duplicate.
+	db.Where("(url = '' OR url IS NULL)").Delete(&model.Kajian{})
+
 	for _, r := range rows {
 		item := model.Kajian{
-			Title:       r.Title,
-			Speaker:     r.Speaker,
-			Topic:       r.Topic,
-			Type:        model.KajianType(r.Type),
-			Description: r.Description,
-			Duration:    r.Duration,
-			PublishedAt: r.PublishedAt,
+			Title:        r.Title,
+			Speaker:      r.Speaker,
+			Topic:        r.Topic,
+			Type:         model.KajianType(r.Type),
+			URL:          r.URL,
+			Description:  r.Description,
+			Duration:     r.Duration,
+			ThumbnailURL: r.ThumbnailURL,
+			PublishedAt:  r.PublishedAt,
 		}
 		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "title"}, {Name: "speaker"}},
-			DoUpdates: clause.AssignmentColumns([]string{"description", "duration", "published_at"}),
+			Columns:   []clause.Column{{Name: "title"}, {Name: "speaker"}, {Name: "published_at"}},
+			DoUpdates: clause.AssignmentColumns([]string{"topic", "type", "url", "description", "duration", "thumbnail_url"}),
 		}).Create(&item)
 	}
 }

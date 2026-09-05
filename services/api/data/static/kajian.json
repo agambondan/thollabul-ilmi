@@ -1,74 +1,92 @@
 [
     {
-        "title": "Tafsir Surah Al-Fatihah",
-        "speaker": "Ust. Adi Hidayat",
-        "topic": "Quran \u0026 Tafsir",
+        "title": "Silsilah Tauhid & Mengenal Allah (Ushul Tsalatsah)",
+        "speaker": "Ust. Dr. Abdullah Roy, M.A.",
+        "topic": "Akidah",
         "type": "video",
-        "description": "Kajian mendalam tentang makna dan kandungan Surah Al-Fatihah sebagai induk Al-Quran.",
-        "duration": 3600,
-        "published_at": "2024-01-15T00:00:00Z"
-    },
-    {
-        "title": "Kitab Riyadhus Shalihin: Bab Ikhlas",
-        "speaker": "Ust. Khalid Basalamah",
-        "topic": "Hadith \u0026 Sunnah",
-        "type": "video",
-        "description": "Kajian kitab Riyadhus Shalihin karya Imam Nawawi tentang bab keikhlasan beramal.",
+        "url": "https://www.youtube.com/@AbdullahRoy",
+        "description": "Mengenal Allah, mengenal agama Islam, dan mengenal Nabi Muhammad ﷺ berdasarkan kitab Ushul Tsalatsah.",
         "duration": 2700,
-        "published_at": "2024-02-01T00:00:00Z"
+        "published_at": "2024-05-01"
     },
     {
-        "title": "Fiqh Sholat Lengkap",
-        "speaker": "Ust. Firanda Andirja",
-        "topic": "Fiqh",
+        "title": "Kunci Keharmonisan Rumah Tangga & Adab Terhadap Pasangan",
+        "speaker": "Ust. Dr. Syafiq Riza Basalamah, Lc., M.A.",
+        "topic": "Keharmonisan keluarga",
         "type": "video",
-        "description": "Pembahasan lengkap fiqh sholat mulai dari syarat, rukun, sunnah, hingga hal-hal yang membatalkan.",
-        "duration": 5400,
-        "published_at": "2024-02-20T00:00:00Z"
+        "url": "https://www.youtube.com/@SyafiqRizaBasalamahOfficial",
+        "description": "Tuntunan membangun rumah tangga harmonis di atas pondasi takwa dan akhlak mulia.",
+        "duration": 5111,
+        "published_at": "2024-02-14"
     },
     {
-        "title": "Mengenal Asmaul Husna",
-        "speaker": "Ust. Hanan Attaki",
-        "topic": "Aqidah \u0026 Tauhid",
+        "title": "Syarah Kitab Tauhid: Hakikat Syirik dan Bahayanya",
+        "speaker": "Ust. Dr. Firanda Andirja, Lc., M.A.",
+        "topic": "Akidah",
         "type": "video",
-        "description": "Kajian 99 nama-nama Allah yang indah dan cara mengamalkannya dalam kehidupan sehari-hari.",
-        "duration": 3000,
-        "published_at": "2024-03-05T00:00:00Z"
+        "url": "https://www.youtube.com/@FirandaAndirjaOfficial",
+        "description": "Penjelasan mendalam tentang syirik besar dan kecil beserta dampaknya bagi keimanan.",
+        "duration": 4500,
+        "published_at": "2024-03-01"
     },
     {
-        "title": "Sirah Nabawiyah: Hijrah ke Madinah",
-        "speaker": "Ust. Felix Siauw",
-        "topic": "Sejarah Islam",
+        "title": "Adab Menuntut Ilmu & Mengatasi Kegelisahan Pemuda",
+        "speaker": "Ust. Muhammad Nuzul Dzikri, Lc.",
+        "topic": "Penyucian jiwa",
         "type": "video",
-        "description": "Kisah hijrah Rasulullah ﷺ dari Makkah ke Madinah dan pelajaran yang dapat diambil.",
-        "duration": 4200,
-        "published_at": "2024-03-15T00:00:00Z"
+        "url": "https://www.youtube.com/@MuhammadNuzulDzikri",
+        "description": "Adab menuntut ilmu ala salaf dan solusi praktis mengatasi kegelisahan hidup pemuda.",
+        "duration": 3200,
+        "published_at": "2024-03-12"
     },
     {
-        "title": "Tadabbur Quran: Juz 30",
-        "speaker": "Ust. Budi Ashari",
-        "topic": "Quran \u0026 Tafsir",
-        "type": "audio",
-        "description": "Tadabbur ayat-ayat dalam Juz 30 Al-Quran dengan penjelasan makna yang mendalam.",
+        "title": "Hukum Riba, Pinjaman Online & Transaksi Muamalah",
+        "speaker": "Ust. Dr. Erwandi Tarmizi, Lc., M.A.",
+        "topic": "Fikih muamalah kontemporer",
+        "type": "video",
+        "url": "https://www.youtube.com/@AshiilTV",
+        "description": "Kaidah fikih muamalah kontemporer tentang pinjaman online, paylater, dan riba.",
+        "duration": 4100,
+        "published_at": "2024-03-20"
+    },
+    {
+        "title": "Panduan Fikih Jual Beli Dasar & Akad Bagi Hasil",
+        "speaker": "Ust. Ammi Nur Baits, S.T., B.A.",
+        "topic": "Fikih muamalah dasar",
+        "type": "video",
+        "url": "https://www.youtube.com/@anbchannel",
+        "description": "Rukun jual beli, jual beli yang terlarang, dan akad mudharabah/musyarakah.",
+        "duration": 3500,
+        "published_at": "2024-04-02"
+    },
+    {
+        "title": "Hadis Arba'in An-Nawawiyyah: Ikhlas Niat dan Sunnah",
+        "speaker": "Ust. Abu Yahya Badrusalam, Lc.",
+        "topic": "Hadis tematik",
+        "type": "video",
+        "url": "https://www.youtube.com/@rodjatv",
+        "description": "Syarah Hadis Arba'in Nawawi tentang ikhlas, ittiba', dan adab dakwah.",
+        "duration": 2900,
+        "published_at": "2024-04-15"
+    },
+    {
+        "title": "Sirah Nabawiyah: Akhlak dan Kesabaran Rasulullah ﷺ",
+        "speaker": "Ust. Dr. Khalid Basalamah, Lc., M.A.",
+        "topic": "Sirah Nabawiyah",
+        "type": "video",
+        "url": "https://www.youtube.com/@khalidbasalamah",
+        "description": "Pelajaran sirah Nabi ﷺ dalam menghadapi ujian, tazkiyatun nufus, dan adab.",
         "duration": 3600,
-        "published_at": "2024-04-01T00:00:00Z"
+        "published_at": "2024-01-10"
     },
     {
-        "title": "Panduan Lengkap Puasa Ramadan",
-        "speaker": "Ust. Abdul Somad",
-        "topic": "Fiqh",
+        "title": "Indahnya Hijrah: Memperbaiki Diri dan Lingkungan",
+        "speaker": "Ust. Subhan Bawazier, Lc.",
+        "topic": "Nasihat praktis hijrah",
         "type": "video",
-        "description": "Panduan fiqh puasa Ramadan: niat, hal yang membatalkan, fidyah, dan amalan sunnah di bulan Ramadan.",
-        "duration": 4800,
-        "published_at": "2024-03-10T00:00:00Z"
-    },
-    {
-        "title": "Adab Menuntut Ilmu",
-        "speaker": "Ust. Syafiq Riza Basalamah",
-        "topic": "Akhlak \u0026 Adab",
-        "type": "video",
-        "description": "Tuntunan adab bagi penuntut ilmu berdasarkan Al-Quran, hadith, dan kitab-kitab ulama salaf.",
-        "duration": 3300,
-        "published_at": "2024-04-20T00:00:00Z"
+        "url": "https://www.youtube.com/@AladzievieChannel",
+        "description": "Hakikat hijrah, pengaruh pergaulan, dan dakwah di komunitas pemuda.",
+        "duration": 3800,
+        "published_at": "2024-05-18"
     }
 ]

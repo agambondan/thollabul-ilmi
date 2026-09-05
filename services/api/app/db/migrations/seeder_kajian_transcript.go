@@ -40,7 +40,6 @@ type rawTranscriptChunk struct {
 // SeedKajianTranscriptsFromFile loads seed transcripts from data/static/kajian_transcripts/*.json
 func SeedKajianTranscriptsFromFile(db *gorm.DB) {
 	paths := []string{
-		"data/static/kajian_transcripts/kajian_transcripts_seed.json",
 		"data/static/kajian_transcripts/scraped_kajian.json",
 	}
 
