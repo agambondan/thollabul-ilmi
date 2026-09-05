@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
@@ -59,7 +60,14 @@ func (c *blogController) FindAllPosts(ctx *fiber.Ctx) error {
 	if v := ctx.QueryInt("tag_id", 0); v > 0 {
 		tagID = &v
 	}
-	page := c.svc.FindAllPosts(ctx, categoryID, tagID, ctx.Query("search"))
+	status := strings.ToLower(strings.TrimSpace(ctx.Query("status")))
+	if status != "" && status != "published" {
+		claims, _ := lib.ExtractToken(ctx)
+		if claims["role"] != string(model.RoleAdmin) {
+			return lib.ErrorUnauthorized(ctx)
+		}
+	}
+	page := c.svc.FindAllPosts(ctx, categoryID, tagID, ctx.Query("search"), status)
 	filterBlogPostsPage(ctx, page)
 	return lib.OK(ctx, page)
 }

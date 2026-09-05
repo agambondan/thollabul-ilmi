@@ -2,11 +2,19 @@
 
 import { Spinner3 } from "@/components/spinner/Spinner";
 import { useLocale } from "@/context/Locale";
-import { adminSirohApi } from "@/lib/api";
+import { adminSirohApi, parseApiError } from "@/lib/api";
 import { getLocalizedField } from "@/lib/translation";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { BsPencil, BsPlus, BsTrash, BsX } from "react-icons/bs";
+
+const slugify = (str) =>
+    str
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/[\s_-]+/g, "-")
+        .replace(/^-+|-+$/g, "");
 
 const AdminSirahPage = () => {
     const { t, lang } = useLocale();
@@ -50,11 +58,13 @@ const AdminSirahPage = () => {
         setCatLoading(true);
         setActionError("");
         try {
+            const title = newCatTitle.trim();
             const res = await adminSirohApi.createCategory({
-                title: newCatTitle.trim(),
+                title,
+                slug: slugify(title),
                 order: newCatOrder ? Number(newCatOrder) : 0,
             });
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             const data = await res.json();
             if (data?.id) {
                 setCategories((prev) => [...prev, data]);
@@ -75,7 +85,7 @@ const AdminSirahPage = () => {
         setActionError("");
         try {
             const res = await adminSirohApi.deleteCategory(id);
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
         } catch (err) {
             setCategories(prev);
             setActionError(err.message || t("admin.error.save"));
@@ -91,11 +101,13 @@ const AdminSirahPage = () => {
     const handleUpdateCategory = async (id) => {
         setActionError("");
         try {
+            const title = editCatTitle.trim();
             const res = await adminSirohApi.updateCategory(id, {
-                title: editCatTitle.trim(),
+                title,
+                slug: slugify(title),
                 order: Number(editCatOrder) || 0,
             });
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             const data = await res.json();
             if (data?.id) {
                 setCategories((prev) =>
@@ -115,7 +127,7 @@ const AdminSirahPage = () => {
         setActionError("");
         try {
             const res = await adminSirohApi.deleteContent(id);
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
         } catch (err) {
             setContents(prev);
             setActionError(err.message || t("admin.error.save"));

@@ -7,7 +7,7 @@ import {
     Th,
     Tr,
 } from "@/components/panel/DataPanel";
-import { adminWiridApi } from "@/lib/api";
+import { adminWiridApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
@@ -81,13 +81,14 @@ const AdminWirdPage = () => {
     const save = async () => {
         setSaving(true);
         try {
+            const payload = { ...form, count: Number(form.count) || 1 };
             let res;
             if (editId) {
-                res = await adminWiridApi.update(editId, form);
+                res = await adminWiridApi.update(editId, payload);
             } else {
-                res = await adminWiridApi.create(form);
+                res = await adminWiridApi.create(payload);
             }
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             setShowModal(false);
             load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -102,7 +103,7 @@ const AdminWirdPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminWiridApi.delete(deleteId);
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             setDeleteId(null);
             load();
             fb("admin:success", t("admin.crud.delete_success"));
@@ -372,7 +373,13 @@ const AdminWirdPage = () => {
                         </button>
                         <button
                             onClick={save}
-                            disabled={saving || !form.title}
+                            disabled={
+                                saving ||
+                                !form.title.trim() ||
+                                !form.arabic.trim() ||
+                                !form.translation.trim() ||
+                                !form.category
+                            }
                             className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
                         >
                             {saving ? t("common.saving") : t("common.save")}

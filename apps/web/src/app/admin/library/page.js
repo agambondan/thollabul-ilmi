@@ -2,7 +2,7 @@
 
 import { PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
 import { useLocale } from "@/context/Locale";
-import { adminLibraryApi, uploadWithProgress } from "@/lib/api";
+import { adminLibraryApi, uploadWithProgress, parseApiError } from "@/lib/api";
 import { useEffect, useState } from "react";
 import {
     BsBoxArrowUpRight,
@@ -149,7 +149,7 @@ const AdminLibraryPage = () => {
             } else {
                 res = await adminLibraryApi.create(toPayload(form));
             }
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             setShowModal(false);
             load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -164,7 +164,7 @@ const AdminLibraryPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminLibraryApi.delete(deleteId);
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             setDeleteId(null);
             load();
             fb("admin:success", t("admin.crud.delete_success"));
@@ -769,7 +769,7 @@ const AdminLibraryPage = () => {
                         </button>
                         <button
                             className='flex-1 rounded-lg bg-emerald-700 py-2 text-sm font-medium text-white hover:bg-emerald-600 disabled:opacity-50'
-                            disabled={saving || !form.title}
+                            disabled={saving || !form.title.trim()}
                             onClick={save}
                         >
                             {saving ? t("common.saving") : t("common.save")}

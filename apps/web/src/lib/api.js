@@ -151,6 +151,11 @@ export const adminUserApi = {
             method: "PUT",
             body: JSON.stringify(data),
         }),
+    updateRole: (id, role) =>
+        authFetch(`/api/v1/users/${id}/role`, {
+            method: "PUT",
+            body: JSON.stringify({ role }),
+        }),
     delete: (id) => authFetch(`/api/v1/users/${id}`, { method: "DELETE" }),
 };
 
@@ -917,7 +922,8 @@ export const adminQuizApi = {
 };
 
 export const adminSejarahApi = {
-    list: () => authFetch("/api/v1/history"),
+    list: (page = 0, size = 100) =>
+        authFetch(`/api/v1/history?page=${page}&size=${size}`),
     create: (data) =>
         authFetch("/api/v1/history", {
             method: "POST",
@@ -1218,4 +1224,14 @@ export const uploadWithProgress = (path, formData, onProgress) => {
         xhr.onerror = () => reject(new Error("Network error"));
         xhr.send(formData);
     });
+};
+
+export const parseApiError = async (res, fallback = "Gagal memproses data") => {
+    if (!res) return fallback;
+    try {
+        const data = await res.json();
+        return data?.message || data?.error || fallback;
+    } catch {
+        return fallback;
+    }
 };

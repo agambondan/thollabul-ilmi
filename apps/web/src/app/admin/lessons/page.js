@@ -2,7 +2,7 @@
 
 import { PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
 import { useLocale } from "@/context/Locale";
-import { authFetch } from "@/lib/api";
+import { authFetch, parseApiError } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { BsPlus, BsTrash, BsPencil } from "react-icons/bs";
 import toast from "react-hot-toast";
@@ -80,12 +80,12 @@ export default function AdminLessonsPage() {
                 method,
                 body: JSON.stringify(form),
             });
-            if (!res.ok) throw new Error("Gagal simpan");
+            if (!res.ok) throw new Error(await parseApiError(res, "Gagal simpan"));
             toast.success("Modul berhasil disimpan");
             setModalOpen(false);
             fetchModules();
-        } catch {
-            toast.error("Terjadi kesalahan saat menyimpan");
+        } catch (err) {
+            toast.error(err.message || "Terjadi kesalahan saat menyimpan");
         }
     };
 
@@ -95,11 +95,11 @@ export default function AdminLessonsPage() {
             const res = await authFetch(`/api/v1/lessons/${id}`, {
                 method: "DELETE",
             });
-            if (!res.ok) throw new Error("Gagal hapus");
+            if (!res.ok) throw new Error(await parseApiError(res, "Gagal hapus"));
             toast.success("Modul dihapus");
             fetchModules();
-        } catch {
-            toast.error("Gagal menghapus modul");
+        } catch (err) {
+            toast.error(err.message || "Gagal menghapus modul");
         }
     };
 

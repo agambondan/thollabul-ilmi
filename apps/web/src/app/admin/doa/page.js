@@ -7,7 +7,7 @@ import {
     Th,
     Tr,
 } from "@/components/panel/DataPanel";
-import { adminDoaApi } from "@/lib/api";
+import { adminDoaApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
@@ -100,7 +100,7 @@ const AdminPrayersPage = () => {
             } else {
                 res = await adminDoaApi.create(form);
             }
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             setShowModal(false);
             load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -115,7 +115,7 @@ const AdminPrayersPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminDoaApi.delete(deleteId);
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             setDeleteId(null);
             load();
             fb("admin:success", t("admin.crud.delete_success"));
@@ -382,7 +382,13 @@ const AdminPrayersPage = () => {
                         </button>
                         <button
                             onClick={save}
-                            disabled={saving || !form.title}
+                            disabled={
+                                saving ||
+                                !form.title.trim() ||
+                                !form.arabic.trim() ||
+                                !form.translation.trim() ||
+                                !form.category
+                            }
                             className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
                         >
                             {saving ? t("common.saving") : t("common.save")}

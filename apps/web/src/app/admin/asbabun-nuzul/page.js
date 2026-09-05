@@ -8,7 +8,7 @@ import {
     Th,
     Tr,
 } from "@/components/panel/DataPanel";
-import { adminAsbabunNuzulApi } from "@/lib/api";
+import { adminAsbabunNuzulApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { SURAH_LIST } from "@/lib/surahList";
@@ -158,7 +158,7 @@ const AdminAsbabunNuzulPage = () => {
             } else {
                 res = await adminAsbabunNuzulApi.create(payload);
             }
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             setShowModal(false);
             load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -173,7 +173,7 @@ const AdminAsbabunNuzulPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminAsbabunNuzulApi.delete(deleteId);
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             setDeleteId(null);
             load();
             fb("admin:success", t("admin.crud.delete_success"));

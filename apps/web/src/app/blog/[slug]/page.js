@@ -299,12 +299,12 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
         return (
             (lang === "EN" &&
                 (translation.description_en || translation.descriptionEnglish)) ||
+            post.content ||
+            post.body ||
             translation.description_idn ||
             translation.descriptionIdn ||
             post.description_idn ||
             post.descriptionIdn ||
-            post.content ||
-            post.body ||
             post.excerpt ||
             ""
         );

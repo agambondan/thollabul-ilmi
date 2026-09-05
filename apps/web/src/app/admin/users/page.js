@@ -84,7 +84,7 @@ const AdminUsersPage = () => {
         setActionError("");
         setChangingId(target.id);
         try {
-            const res = await adminUserApi.update(target.id, { role: newRole });
+            const res = await adminUserApi.updateRole(target.id, newRole);
             if (!res.ok) throw new Error(t("admin.users.change_role_error"));
         } catch (err) {
             setUsers(prev);

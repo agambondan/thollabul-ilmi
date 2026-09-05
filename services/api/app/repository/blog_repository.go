@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"strings"
+
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/morkid/paginate"
@@ -9,7 +11,7 @@ import (
 
 type BlogRepository interface {
 	// Posts
-	FindAllPosts(*fiber.Ctx, *int, *int, string) *paginate.Page
+	FindAllPosts(*fiber.Ctx, *int, *int, string, string) *paginate.Page
 	FindPostBySlug(string) (*model.BlogPost, error)
 	FindPostByID(string) (*model.BlogPost, error)
 	FindPostBySlugAny(string) (*model.BlogPost, error)
@@ -54,9 +56,16 @@ func (r *blogRepo) postBase() *gorm.DB {
 		Preload("Translation")
 }
 
-func (r *blogRepo) FindAllPosts(ctx *fiber.Ctx, categoryID *int, tagID *int, search string) *paginate.Page {
+func (r *blogRepo) FindAllPosts(ctx *fiber.Ctx, categoryID *int, tagID *int, search, status string) *paginate.Page {
 	var posts []model.BlogPost
-	mod := r.postBase().Where("blog_post.status = ?", model.BlogStatusPublished).Order("published_at desc, created_at desc")
+	mod := r.postBase().Order("published_at desc, created_at desc")
+	switch strings.ToLower(strings.TrimSpace(status)) {
+	case "":
+		mod = mod.Where("blog_post.status = ?", model.BlogStatusPublished)
+	case "all":
+	default:
+		mod = mod.Where("blog_post.status = ?", status)
+	}
 	if categoryID != nil {
 		mod = mod.Where("blog_post.category_id = ?", *categoryID)
 	}

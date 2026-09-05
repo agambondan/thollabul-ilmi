@@ -7,7 +7,7 @@ import {
     Th,
     Tr,
 } from "@/components/panel/DataPanel";
-import { adminQuizApi } from "@/lib/api";
+import { adminQuizApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
@@ -124,7 +124,7 @@ const AdminQuizPage = () => {
             } else {
                 res = await adminQuizApi.create(payload);
             }
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             setShowModal(false);
             load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -139,7 +139,7 @@ const AdminQuizPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminQuizApi.delete(deleteId);
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             setDeleteId(null);
             load();
             fb("admin:success", t("admin.crud.delete_success"));
@@ -410,7 +410,12 @@ const AdminQuizPage = () => {
                         <button
                             onClick={save}
                             disabled={
-                                saving || !form.question || !form.option_a
+                                saving ||
+                                !form.question.trim() ||
+                                !form.option_a.trim() ||
+                                !form.option_b.trim() ||
+                                !form.category ||
+                                !form.difficulty
                             }
                             className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
                         >

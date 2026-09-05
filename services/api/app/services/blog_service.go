@@ -15,7 +15,7 @@ import (
 )
 
 type BlogService interface {
-	FindAllPosts(ctx *fiber.Ctx, categoryID *int, tagID *int, search string) *paginate.Page
+	FindAllPosts(ctx *fiber.Ctx, categoryID *int, tagID *int, search, status string) *paginate.Page
 	FindPostBySlug(slug string) (*model.BlogPost, error)
 	FindRelatedPosts(slug string) ([]model.BlogPost, error)
 	FindPopularPosts(limit int) ([]model.BlogPost, error)
@@ -66,8 +66,8 @@ func (s *blogService) FindPostsByTagSlug(ctx *fiber.Ctx, slug string) *paginate.
 	return s.repo.FindPostsByTagSlug(ctx, slug)
 }
 
-func (s *blogService) FindAllPosts(ctx *fiber.Ctx, categoryID *int, tagID *int, search string) *paginate.Page {
-	return s.repo.FindAllPosts(ctx, categoryID, tagID, search)
+func (s *blogService) FindAllPosts(ctx *fiber.Ctx, categoryID *int, tagID *int, search, status string) *paginate.Page {
+	return s.repo.FindAllPosts(ctx, categoryID, tagID, search, status)
 }
 
 func (s *blogService) FindPostBySlug(slug string) (*model.BlogPost, error) {

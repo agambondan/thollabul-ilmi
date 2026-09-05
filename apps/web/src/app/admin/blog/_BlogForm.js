@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
-import { adminBlogApi, blogApi } from "@/lib/api";
+import { adminBlogApi, blogApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { renderBlogContent, calculateReadStats } from "@/lib/blogContent";
 import Link from "next/link";
@@ -37,10 +37,26 @@ const BlogForm = ({ initialData = null, postId = null }) => {
     const { t } = useLocale();
     const isEdit = !!postId;
 
-    const [title, setTitle] = useState(initialData?.title ?? "");
+    const [title, setTitle] = useState(
+        initialData?.title ||
+            initialData?.translation?.idn ||
+            initialData?.translation?.en ||
+            "",
+    );
     const [slug, setSlug] = useState(initialData?.slug ?? "");
-    const [excerpt, setExcerpt] = useState(initialData?.excerpt ?? "");
-    const [content, setContent] = useState(initialData?.content ?? "");
+    const [excerpt, setExcerpt] = useState(
+        initialData?.excerpt ||
+            initialData?.translation?.description_idn ||
+            initialData?.translation?.description_en ||
+            "",
+    );
+    const [content, setContent] = useState(
+        initialData?.content ||
+            initialData?.body ||
+            initialData?.translation?.description_idn ||
+            initialData?.translation?.description_en ||
+            "",
+    );
     const [coverImage, setCoverImage] = useState(
         initialData?.cover_image ?? "",
     );
@@ -165,7 +181,7 @@ const BlogForm = ({ initialData = null, postId = null }) => {
             const res = isEdit
                 ? await adminBlogApi.update(postId, payload)
                 : await adminBlogApi.create(payload);
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             router.push("/admin/blog");
         } catch (err) {
             setError(err.message || t("admin.error.save"));

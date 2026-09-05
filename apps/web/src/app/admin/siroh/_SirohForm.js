@@ -1,6 +1,6 @@
 "use client";
 
-import { adminSirohApi } from "@/lib/api";
+import { adminSirohApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -64,7 +64,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             const res = isEdit
                 ? await adminSirohApi.updateContent(contentId, payload)
                 : await adminSirohApi.createContent(payload);
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             router.push("/admin/siroh");
         } catch (err) {
             setError(err.message || t("admin.error.save"));

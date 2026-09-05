@@ -1,6 +1,6 @@
 "use client";
 
-import { adminBlogApi, blogApi } from "@/lib/api";
+import { adminBlogApi, blogApi, parseApiError } from "@/lib/api";
 import Link from "next/link";
 import { useCallback, useEffect, useState, useMemo } from "react";
 import {
@@ -15,6 +15,14 @@ import {
 import { Spinner3 } from "@/components/spinner/Spinner";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
+
+const slugify = (str) =>
+    str
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/[\s_-]+/g, "-")
+        .replace(/^-+|-+$/g, "");
 
 const STATUS_LABELS = {
     draft: {
@@ -78,7 +86,7 @@ const AdminBlogPage = () => {
         setActionError("");
         try {
             const res = await adminBlogApi.delete(id);
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
         } catch (err) {
             setPosts(prev);
             setActionError(err.message || t("admin.error.save"));
@@ -91,10 +99,12 @@ const AdminBlogPage = () => {
         setCatLoading(true);
         setActionError("");
         try {
+            const name = newCatName.trim();
             const res = await adminBlogApi.createCategory({
-                name: newCatName.trim(),
+                name,
+                slug: slugify(name),
             });
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             const data = await res.json();
             if (data?.id) {
                 setCategories((prev) => [...prev, data]);
@@ -114,7 +124,7 @@ const AdminBlogPage = () => {
         setActionError("");
         try {
             const res = await adminBlogApi.deleteCategory(id);
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
         } catch (err) {
             setCategories(prev);
             setActionError(err.message || t("admin.error.save"));
@@ -127,10 +137,12 @@ const AdminBlogPage = () => {
         setTagLoading(true);
         setActionError("");
         try {
+            const name = newTagName.trim();
             const res = await adminBlogApi.createTag({
-                name: newTagName.trim(),
+                name,
+                slug: slugify(name),
             });
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             const data = await res.json();
             if (data?.id) {
                 setTags((prev) => [...prev, data]);
@@ -150,7 +162,7 @@ const AdminBlogPage = () => {
         setActionError("");
         try {
             const res = await adminBlogApi.deleteTag(id);
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
         } catch (err) {
             setTags(prev);
             setActionError(err.message || t("admin.error.save"));

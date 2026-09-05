@@ -7,7 +7,7 @@ import {
     Th,
     Tr,
 } from "@/components/panel/DataPanel";
-import { adminKamusApi } from "@/lib/api";
+import { adminKamusApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
@@ -92,7 +92,7 @@ const AdminDictionaryPage = () => {
             } else {
                 res = await adminKamusApi.create(form);
             }
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             setShowModal(false);
             load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -107,7 +107,7 @@ const AdminDictionaryPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminKamusApi.delete(deleteId);
-            if (!res.ok) throw new Error(t("admin.error.save"));
+            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
             setDeleteId(null);
             load();
             fb("admin:success", t("admin.crud.delete_success"));
@@ -378,7 +378,7 @@ const AdminDictionaryPage = () => {
                         </button>
                         <button
                             onClick={save}
-                            disabled={saving || !form.term || !form.definition}
+                            disabled={saving || !form.term.trim() || !form.definition.trim()}
                             className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
                         >
                             {saving ? t("common.saving") : t("common.save")}

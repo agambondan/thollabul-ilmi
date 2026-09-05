@@ -7,7 +7,7 @@ import {
     Th,
     Tr,
 } from "@/components/panel/DataPanel";
-import { adminReminderApi } from "@/lib/api";
+import { adminReminderApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
@@ -101,7 +101,7 @@ const AdminRemindersPage = () => {
             const res = editId
                 ? await adminReminderApi.update(editId, payload)
                 : await adminReminderApi.create(payload);
-            if (!res.ok) throw new Error("Gagal menyimpan reminder.");
+            if (!res.ok) throw new Error(await parseApiError(res, "Gagal menyimpan reminder."));
             setShowModal(false);
             await load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -116,7 +116,7 @@ const AdminRemindersPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminReminderApi.delete(deleteId);
-            if (!res.ok) throw new Error("Gagal menghapus reminder.");
+            if (!res.ok) throw new Error(await parseApiError(res, "Gagal menghapus reminder."));
             setDeleteId(null);
             await load();
             fb("admin:success", t("admin.crud.delete_success"));
@@ -406,7 +406,7 @@ const AdminRemindersPage = () => {
                         </button>
                         <button
                             onClick={save}
-                            disabled={saving || !form.title || !form.text}
+                            disabled={saving || !form.title.trim() || !form.text.trim()}
                             className='flex-1 rounded-lg bg-emerald-700 py-2 text-sm font-medium text-white hover:bg-emerald-600 disabled:opacity-50'
                         >
                             {saving ? t("common.saving") : t("common.save")}
