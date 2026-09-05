@@ -495,6 +495,10 @@ func seedKajianFromFile(db *gorm.DB) {
 	}
 
 	for _, r := range rows {
+		published := r.PublishedAt
+		if published == "" {
+			published = "2024-01-01"
+		}
 		item := model.Kajian{
 			Title:        r.Title,
 			Speaker:      r.Speaker,
@@ -504,36 +508,49 @@ func seedKajianFromFile(db *gorm.DB) {
 			Description:  r.Description,
 			Duration:     r.Duration,
 			ThumbnailURL: r.ThumbnailURL,
-			PublishedAt:  r.PublishedAt,
+			PublishedAt:  published,
 		}
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "title"}, {Name: "speaker"}, {Name: "published_at"}},
-			DoUpdates: clause.AssignmentColumns([]string{"topic", "type", "url", "description", "duration", "thumbnail_url"}),
-		}).Create(&item)
 
-		// Resolve the resulting ID (existing or new) and seed transcript chunks.
-		var dbKajian model.Kajian
-		if err := db.Where("title = ? AND speaker = ? AND published_at = ?", r.Title, r.Speaker, r.PublishedAt).First(&dbKajian).Error; err != nil || dbKajian.ID == nil {
-			continue
-		}
-		if len(r.Transcripts) == 0 {
-			continue
-		}
-		// Wipe old chunks for this kajian to keep transcripts in sync with the static file.
-		db.Where("kajian_id = ?", *dbKajian.ID).Delete(&model.KajianTranscript{})
-		for _, chunk := range r.Transcripts {
-			tsURL := fmt.Sprintf("https://youtu.be/%s?t=%d", r.VideoID, chunk.StartSeconds)
-			if r.VideoID == "" {
-				tsURL = r.URL
+		var existing model.Kajian
+		res := db.Where("speaker = ? AND title = ?", r.Speaker, r.Title).First(&existing)
+		if res.Error != nil {
+			if err := db.Create(&item).Error; err != nil {
+				log.Printf("[seeder] Create kajian %s error: %v", r.Title, err)
+				continue
 			}
-			_ = db.Create(&model.KajianTranscript{
-				KajianID:     *dbKajian.ID,
-				VideoID:      r.VideoID,
-				StartSeconds: chunk.StartSeconds,
-				EndSeconds:   chunk.EndSeconds,
-				Text:         chunk.Text,
-				TimestampURL: tsURL,
-			}).Error
+			existing = item
+		} else {
+			db.Model(&existing).Updates(map[string]interface{}{
+				"topic":         r.Topic,
+				"type":          model.KajianType(r.Type),
+				"url":           r.URL,
+				"description":   r.Description,
+				"duration":      r.Duration,
+				"thumbnail_url": r.ThumbnailURL,
+				"published_at":  published,
+			})
+		}
+
+		if existing.ID == nil {
+			continue
+		}
+
+		if len(r.Transcripts) > 0 {
+			db.Where("kajian_id = ?", *existing.ID).Delete(&model.KajianTranscript{})
+			for _, chunk := range r.Transcripts {
+				tsURL := fmt.Sprintf("https://youtu.be/%s?t=%d", r.VideoID, chunk.StartSeconds)
+				if r.VideoID == "" {
+					tsURL = r.URL
+				}
+				_ = db.Create(&model.KajianTranscript{
+					KajianID:     *existing.ID,
+					VideoID:      r.VideoID,
+					StartSeconds: chunk.StartSeconds,
+					EndSeconds:   chunk.EndSeconds,
+					Text:         chunk.Text,
+					TimestampURL: tsURL,
+				}).Error
+			}
 		}
 	}
 }
