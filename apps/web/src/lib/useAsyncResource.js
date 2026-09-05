@@ -16,12 +16,9 @@ export const useAsyncResource = (loader) => {
     const [error, setError] = useState(false);
     const loaderRef = useRef(loader);
 
-    // Callers pass an inline arrow, so `loader` is a new function every
-    // render; syncing it in an effect (rather than during render) keeps the
-    // latest closure without making `load` a new callback each time.
     useEffect(() => {
         loaderRef.current = loader;
-    });
+    }, [loader]);
 
     const load = useCallback(
         async (force = false) => {
