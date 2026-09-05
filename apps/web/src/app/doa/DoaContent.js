@@ -1,7 +1,6 @@
 "use client";
 
-import { ShareDoaModal } from "@/components/ShareDoaModal";
-import ContentReportModal from "@/components/ContentReportModal";
+import dynamic from "next/dynamic";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import SourceBadges from "@/components/SourceBadges";
 import { useLocale } from "@/context/Locale";
@@ -17,6 +16,15 @@ import {
     BsVolumeUpFill,
     BsExclamationTriangleFill,
 } from "react-icons/bs";
+
+const ShareDoaModal = dynamic(
+    () => import("@/components/ShareDoaModal").then((mod) => mod.ShareDoaModal),
+    { ssr: false },
+);
+const ContentReportModal = dynamic(
+    () => import("@/components/ContentReportModal"),
+    { ssr: false },
+);
 
 const CATEGORIES = [
     { value: "", labelKey: "common.all" },

@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
@@ -16,8 +17,12 @@ import {
     BsVolumeUpFill,
 } from "react-icons/bs";
 import SourceBadges from "@/components/SourceBadges";
-import ContentReportModal from "@/components/ContentReportModal";
 import { BsExclamationTriangleFill } from "react-icons/bs";
+
+const ContentReportModal = dynamic(
+    () => import("@/components/ContentReportModal"),
+    { ssr: false },
+);
 
 const CATEGORIES = [
     { value: "", labelKey: "common.all" },

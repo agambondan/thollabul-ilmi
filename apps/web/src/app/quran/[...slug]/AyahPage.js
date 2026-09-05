@@ -1,8 +1,8 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import BookmarkButton from "@/components/BookmarkButton";
 import NoteButton from "@/components/NoteButton";
-import { PopUpIsCopied, ShareAyah } from "@/components/popup/ListImage";
 import { mufrodatApi, munasabahApi, tafsirApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { listMasjidImage } from "@/lib/const";
@@ -28,9 +28,21 @@ import {
 } from "react-icons/bs";
 import { IoIosLink, IoMdCopy, IoMdImages } from "react-icons/io";
 import PanelCloseButton from "@/components/PanelCloseButton";
-import ContentReportModal from "@/components/ContentReportModal";
 import { sanitizeHtml } from "@/lib/sanitizeHtml";
 import SourceBadges from "@/components/SourceBadges";
+
+const ContentReportModal = dynamic(
+    () => import("@/components/ContentReportModal"),
+    { ssr: false },
+);
+const ShareAyah = dynamic(
+    () => import("@/components/popup/ListImage").then((m) => m.ShareAyah),
+    { ssr: false },
+);
+const PopUpIsCopied = dynamic(
+    () => import("@/components/popup/ListImage").then((m) => m.PopUpIsCopied),
+    { ssr: false },
+);
 
 const AyahPage = ({
     surah,

@@ -192,7 +192,7 @@ export default function MushafPageReader() {
                         type='button'
                         onClick={goInputPage}
                         disabled={loading}
-                        className='px-5 py-2 bg-emerald-700 text-white rounded-lg text-sm font-medium disabled:opacity-50'
+                        className='px-5 py-2 min-w-[4.5rem] bg-emerald-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 text-center transition-all'
                     >
                         {loading ? t("common.loading") : t("mushaf.go")}
                     </button>
@@ -260,7 +260,7 @@ export default function MushafPageReader() {
                     </div>
                 </div>
 
-                <div className='min-h-[720px] bg-[linear-gradient(180deg,rgba(16,185,129,0.08)_0,rgba(16,185,129,0)_56px)] p-3 space-y-2'>
+                <div className='min-h-[820px] bg-[linear-gradient(180deg,rgba(16,185,129,0.08)_0,rgba(16,185,129,0)_56px)] p-3 space-y-2'>
                     {loading && (
                         <div className='space-y-4 py-4 animate-pulse' aria-busy='true'>
                             {Array.from({ length: 12 }).map((_, idx) => (
