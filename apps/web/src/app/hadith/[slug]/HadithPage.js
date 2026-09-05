@@ -18,12 +18,30 @@ import {
     BsShare,
     BsThreeDotsVertical,
 } from "react-icons/bs";
-import { IoIosLink, IoMdCopy, IoMdImages } from "react-icons/io";
+import { IoIosLink, IoMdCopy, IoMdImages, IoMdOpen } from "react-icons/io";
 import PanelCloseButton from "@/components/PanelCloseButton";
 import ContentReportModal from "@/components/ContentReportModal";
 import { BsExclamationTriangleFill } from "react-icons/bs";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+
+const SUNNAH_MAP = {
+    bukhari: "bukhari",
+    muslim: "muslim",
+    abudaud: "abudawud",
+    abudawud: "abudawud",
+    tirmidzi: "tirmidhi",
+    ibnumajah: "ibnmajah",
+    nasai: "nasai",
+    ahmad: "ahmad",
+    malik: "malik",
+    darimi: "darimi",
+};
+
+const getSunnahUrl = (slug, number) => {
+    const s = SUNNAH_MAP[slug?.toLowerCase()?.replace(/[^a-z]/g, "")];
+    return s && number ? `https://sunnah.com/${s}:${number}` : null;
+};
 
 function SanadPanel({ hadithId }) {
     const { t } = useLocale();
@@ -516,6 +534,24 @@ const HadithPage = ({
                                             <IoIosLink />
                                             {t("hadith.copy_link")}
                                         </button>
+                                        {(() => {
+                                            const sunnahUrl = getSunnahUrl(
+                                                hadith?.book?.slug ||
+                                                    params.slug,
+                                                hadith?.number,
+                                            );
+                                            return sunnahUrl ? (
+                                                <a
+                                                    href={sunnahUrl}
+                                                    target='_blank'
+                                                    rel='noopener noreferrer'
+                                                    className={actionMenuButtonClass}
+                                                >
+                                                    <IoMdOpen />
+                                                    sunnah.com
+                                                </a>
+                                            ) : null;
+                                        })()}
                                         <button
                                             className={actionMenuButtonClass}
                                             onClick={() => {

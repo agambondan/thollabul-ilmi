@@ -16,10 +16,8 @@
         --toast-fg: #1e293b;
         /* What pages actually reserve above content (Tailwind pt-24). */
         --navbar-offset: 6rem;
-        --font-arabic-body:
-            "Kitab", "NooreHidayah", "Scheherazade", "Amiri", serif;
-        --font-arabic-display:
-            "NooreHidayah", "Kitab", "Scheherazade", "Amiri", serif;
+        --font-arabic-body: "Kitab", "Amiri", serif;
+        --font-arabic-display: "Kitab", "Amiri", serif;
     }
 
     .dark {

@@ -36,6 +36,7 @@ func SeedRelated(db *gorm.DB) {
 	seedSirohContentsRelated(db)
 	seedMufrodatRelated(db)
 	SeedTier4(db)
+	SeedKajianTranscriptsFromFile(db)
 }
 
 func seedDoa() []model.Doa {

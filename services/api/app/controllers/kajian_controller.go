@@ -15,6 +15,8 @@ type KajianController interface {
 	Create(ctx *fiber.Ctx) error
 	Update(ctx *fiber.Ctx) error
 	Delete(ctx *fiber.Ctx) error
+	SearchTranscripts(ctx *fiber.Ctx) error
+	GetSpeakers(ctx *fiber.Ctx) error
 }
 
 type kajianController struct {
@@ -135,4 +137,62 @@ func (c *kajianController) Delete(ctx *fiber.Ctx) error {
 		return lib.ErrorNotFound(ctx)
 	}
 	return lib.OK(ctx)
+}
+
+// @Summary Search kajian transcripts (Exact, Semantic, Hybrid)
+// @Tags Belajar
+// @Accept json
+// @Produce json
+// @Param q query string false "Search query text"
+// @Param speaker query string false "Filter by ustadz/speaker name"
+// @Param mode query string false "Search mode: exact | semantic | hybrid (default: hybrid)"
+// @Param page query int false "Page number (default: 1)"
+// @Param limit query int false "Items per page (default: 20)"
+// @Success 200 {object} lib.Response
+// @Failure 500 {object} lib.Response
+// @Router /kajian/search [get]
+func (c *kajianController) SearchTranscripts(ctx *fiber.Ctx) error {
+	q := ctx.Query("q")
+	speaker := ctx.Query("speaker")
+	mode := ctx.Query("mode", "hybrid")
+	page, _ := strconv.Atoi(ctx.Query("page", "1"))
+	limit, _ := strconv.Atoi(ctx.Query("limit", "20"))
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 || limit > 100 {
+		limit = 20
+	}
+	offset := (page - 1) * limit
+
+	results, total, err := c.svc.SearchTranscripts(q, speaker, mode, limit, offset)
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+
+	return lib.OK(ctx, fiber.Map{
+		"items": results,
+		"meta": fiber.Map{
+			"page":  page,
+			"limit": limit,
+			"total": total,
+			"mode":  mode,
+			"query": q,
+		},
+	})
+}
+
+// @Summary Get distinct kajian speakers/ustadz list
+// @Tags Belajar
+// @Accept json
+// @Produce json
+// @Success 200 {object} lib.Response
+// @Failure 500 {object} lib.Response
+// @Router /kajian/speakers [get]
+func (c *kajianController) GetSpeakers(ctx *fiber.Ctx) error {
+	speakers, err := c.svc.GetSpeakers()
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, speakers)
 }

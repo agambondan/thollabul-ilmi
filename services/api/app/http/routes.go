@@ -183,10 +183,10 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	}
 
 	master := app.Group(viper.GetString("ENDPOINT"))
+	master.Use(cacheMw)
 	master.Use(timeout.NewWithContext(func(c *fiber.Ctx) error {
 		return c.Next()
 	}, 30*time.Second))
-	master.Use(cacheMw)
 	master.Get("/", controllers.GetAPIIndex)
 	master.Get("/info", controllers.GetAPIInfo)
 	if viper.GetString("ENVIRONMENT") != "production" {

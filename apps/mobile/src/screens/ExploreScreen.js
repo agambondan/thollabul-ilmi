@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { parseSourceMobile } from "../components/SourceBadges";
 import {
     ArrowLeft,
     BookOpen,
@@ -1111,17 +1112,27 @@ export function ExploreScreen({
 
             const refType = raw.ref_type;
             const refId = Number(raw.ref_id);
-            if (!onOpenTab || !refType || !Number.isFinite(refId)) return;
-            if (refType === "hadith") {
+            if (refType === "hadith" && Number.isFinite(refId) && onOpenTab) {
                 onOpenTab("hadith", { hadithId: refId });
                 return;
             }
-            if (refType === "ayah") {
+            if (refType === "ayah" && Number.isFinite(refId) && onOpenTab) {
                 try {
                     const ayah = await getAyahById(refId);
                     onOpenTab("quran", { surahNumber: ayah?.surahNumber ?? 1 });
                 } catch (err) {
                     setError(err?.message ?? t("explore.sourceOpenError"));
+                }
+                return;
+            }
+
+            const sourceText = raw.source || item?.source;
+            if (sourceText && onOpenTab) {
+                const parsed = parseSourceMobile(sourceText);
+                const firstNav = parsed.find((p) => p.tab);
+                if (firstNav) {
+                    onOpenTab(firstNav.tab, firstNav.params);
+                    return;
                 }
             }
         },

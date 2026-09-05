@@ -29,6 +29,24 @@ export const fetchHadithByBookNumber = async (slug, number, options = {}) => {
     return res.json();
 };
 
+const SUNNAH_SLUG_MAP = {
+    bukhari: "bukhari",
+    muslim: "muslim",
+    abudaud: "abudawud",
+    abudawud: "abudawud",
+    tirmidzi: "tirmidhi",
+    ibnumajah: "ibnmajah",
+    nasai: "nasai",
+    ahmad: "ahmad",
+    malik: "malik",
+    darimi: "darimi",
+};
+
+export const getSunnahComUrl = (slug, number) => {
+    const s = SUNNAH_SLUG_MAP[slug?.toLowerCase()?.replace(/[^a-z]/g, "")];
+    return s && number ? `https://sunnah.com/${s}:${number}` : null;
+};
+
 export const getHadithTitle = (hadith, slug, number) => {
     const bookName =
         getLocalizedTranslation(hadith?.book?.translation, "ID") ||
@@ -50,6 +68,7 @@ export default async function HadithNumberContent({
     }
 
     const book = hadith.book ?? { slug: params.slug };
+    const sunnahUrl = getSunnahComUrl(book.slug ?? params.slug, number);
 
     return (
         <div className='p-4'>
@@ -66,6 +85,16 @@ export default async function HadithNumberContent({
                 <h1 className='text-xl font-bold text-emerald-950 dark:text-emerald-300 dark:text-white mt-1'>
                     {getHadithTitle(hadith, params.slug, number)}
                 </h1>
+                {sunnahUrl ? (
+                    <a
+                        href={sunnahUrl}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='mt-2 inline-flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 underline hover:text-blue-800'
+                    >
+                        Buka di sunnah.com →
+                    </a>
+                ) : null}
             </div>
             <HadithPage
                 params={{ slug: params.slug }}

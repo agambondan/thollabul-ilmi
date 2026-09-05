@@ -45,7 +45,7 @@ func CacheByType(staticMaxAge, dynamicMaxAge int) fiber.Handler {
 		"/api/v1/manasik", "/api/v1/books", "/api/v1/themes", "/api/v1/chapters",
 		"/api/v1/hijri", "/api/v1/dictionary", "/api/v1/perawi", "/api/v1/tafsir",
 		"/api/v1/siroh", "/api/v1/kajian", "/api/v1/asbabun-nuzul", "/api/v1/history",
-		"/api/v1/tokoh-tarikh", "/api/v1/jarh-tadil",
+		"/api/v1/tokoh-tarikh", "/api/v1/jarh-tadil", "/api/v1/blog",
 	}
 	privatePrefixes := []string{
 		"/api/v1/auth", "/api/v1/users", "/api/v1/dashboard",

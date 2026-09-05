@@ -15,6 +15,8 @@ type KajianService interface {
 	Update(id int, req *model.CreateKajianRequest) (*model.Kajian, error)
 	Delete(id int) error
 	IncrementView(id int)
+	SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, int64, error)
+	GetSpeakers() ([]string, error)
 }
 
 type kajianService struct {
@@ -97,4 +99,12 @@ func (s *kajianService) Delete(id int) error {
 
 func (s *kajianService) IncrementView(id int) {
 	_ = s.repo.IncrementView(id)
+}
+
+func (s *kajianService) SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, int64, error) {
+	return s.repo.SearchTranscripts(query, speaker, mode, limit, offset)
+}
+
+func (s *kajianService) GetSpeakers() ([]string, error) {
+	return s.repo.GetSpeakers()
 }
