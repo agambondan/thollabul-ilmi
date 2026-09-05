@@ -271,6 +271,16 @@ export default function SurahAudioPlayer({
     }, [open, surahNumber, lang]);
 
     useEffect(() => {
+        if (!open || minimized || typeof document === "undefined")
+            return undefined;
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = previousOverflow;
+        };
+    }, [open, minimized]);
+
+    useEffect(() => {
         return () => {
             if (audioRef.current) {
                 audioRef.current.pause();
@@ -662,7 +672,9 @@ export default function SurahAudioPlayer({
         audioList.find((item) => item.qari_slug === selectedQari) ??
         audioList[0];
     const isDashboard = pathname?.startsWith("/dashboard");
-    const bottomClass = isDashboard ? "bottom-[84px] md:bottom-4" : "bottom-4";
+    const bottomClass = isDashboard
+        ? "bottom-[84px] md:bottom-4"
+        : "bottom-[72px] md:bottom-4";
     const canSkipBackward = queueLength > 0 && (repeat || queueIndex > 0);
     const canSkipForward =
         queueLength > 0 && (repeat || queueIndex < queueLength - 1);
@@ -743,21 +755,35 @@ export default function SurahAudioPlayer({
     }
 
     return (
-        <div
-            className={`fixed ${bottomClass} left-1/2 -translate-x-1/2 z-40 w-full max-w-lg px-3 transition-[bottom] duration-200`}
-        >
-            <div className='max-h-[calc(100vh-120px)] overflow-y-auto bg-white dark:bg-slate-800 rounded-2xl border border-emerald-100 dark:border-slate-700 shadow-xl p-3'>
-                <div className='flex items-center justify-between gap-2 mb-3'>
+        <div className='fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-0 md:items-center md:p-4'>
+            <div
+                className='absolute inset-0'
+                onClick={() => setMinimized(true)}
+                aria-hidden='true'
+            />
+            <div
+                role='dialog'
+                aria-modal='true'
+                aria-label={
+                    t("audio.dialog") ??
+                    label("audio.dialog", "Audio Player")
+                }
+                className='relative flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border border-emerald-100 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-800 md:rounded-2xl'
+            >
+                <div className='flex justify-center pt-2 pb-1 md:hidden'>
+                    <div className='h-1 w-10 rounded-full bg-gray-300 dark:bg-slate-600' />
+               </div>
+                <div className='flex items-center justify-between gap-2 border-b border-gray-100 dark:border-slate-700 px-4 py-3'>
                     <div className='min-w-0'>
-                        <p className='text-xs text-emerald-600 dark:text-emerald-400 font-semibold truncate'>
+                        <p className='truncate text-sm font-bold text-emerald-600 dark:text-emerald-400'>
                             {currentLabel ||
                                 surahName ||
                                 `Surah ${surahNumber}`}
-                        </p>
-                        <p className='text-[11px] text-gray-500 dark:text-gray-300 dark:text-gray-400 truncate'>
+                       </p>
+                        <p className='truncate text-[11px] text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {currentAudio?.qari_name ?? "Pilih qari"} · {speed}x
-                        </p>
-                    </div>
+                       </p>
+                   </div>
                     <div className='flex shrink-0 items-center gap-1'>
                         <button
                             type='button'
@@ -774,19 +800,19 @@ export default function SurahAudioPlayer({
                             className='flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 hover:dark:text-gray-300 dark:hover:bg-slate-700 dark:hover:text-gray-200'
                         >
                             <BsX className='text-lg' />
-                        </button>
-                    </div>
-                </div>
-
-                <div className='grid grid-cols-3 gap-2 mb-3'>
-                    {[
-                        ["startSurah", "Dari surat", `${surahNumber ?? ""}`],
-                        ["endSurah", "Sampai surat", `${surahNumber ?? ""}`],
-                        ["endAyah", "Sampai ayat", `${totalAyahs ?? ""}`],
-                    ].map(([field, label, placeholder]) => (
-                        <label key={field} className='block'>
-                            <span className='mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-300 dark:text-gray-400'>
-                                {label}
+                       </button>
+                   </div>
+               </div>
+                <div className='flex-1 overflow-y-auto overscroll-contain p-4 pb-8'>
+                    <div className='grid grid-cols-3 gap-2 mb-3'>
+                        {[
+                            ["startSurah", "Dari surat", `${surahNumber ?? ""}`],
+                            ["endSurah", "Sampai surat", `${surahNumber ?? ""}`],
+                            ["endAyah", "Sampai ayat", `${totalAyahs ?? ""}`],
+                        ].map(([field, label, placeholder]) => (
+                            <label key={field} className='block'>
+                                <span className='mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                    {label}
                             </span>
                             <input
                                 type='text'
@@ -991,6 +1017,7 @@ export default function SurahAudioPlayer({
                         Repeat
                     </label>
                 </div>
+            </div>
             </div>
         </div>
     );

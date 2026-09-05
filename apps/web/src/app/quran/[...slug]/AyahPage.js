@@ -16,7 +16,7 @@ import { useAsyncResource } from "@/lib/useAsyncResource";
 import PanelStatus from "@/components/PanelStatus";
 import { useQuranFont } from "@/lib/useQuranFont";
 import classNames from "classnames";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
     BsBook,
     BsFileEarmarkPlay,
@@ -52,6 +52,9 @@ const AyahPage = ({
     const [localSettingPopUp, setLocalSettingPopUp] = useState(false);
     const [clipboardPopUp, SetClipboardPopUp] = useState(false);
     const [shareImagePopUp, SetShareImagePopUp] = useState(false);
+    const [openUpwards, setOpenUpwards] = useState(false);
+    const menuButtonRef = useRef(null);
+    const menuContainerRef = useRef(null);
 
     const [tafsirOpen, setTafsirOpen] = useState(false);
     const tafsirRes = useAsyncResource(() => tafsirApi.byAyah(ayah.id));
@@ -70,17 +73,22 @@ const AyahPage = ({
         typeof isActionMenuOpen === "boolean"
             ? isActionMenuOpen
             : localSettingPopUp;
-    const SetSettingPopUp = (nextValue) => {
-        const next =
-            typeof nextValue === "function"
-                ? nextValue(settingPopUp)
-                : nextValue;
-        if (onActionMenuToggle) {
-            onActionMenuToggle(next);
-            return;
-        }
-        setLocalSettingPopUp(next);
-    };
+    const SetSettingPopUp = useCallback(
+        (nextValue) => {
+            if (onActionMenuToggle) {
+                const next =
+                    typeof nextValue === "function"
+                        ? nextValue(isActionMenuOpen)
+                        : nextValue;
+                onActionMenuToggle(next);
+                return;
+            }
+            setLocalSettingPopUp((prev) =>
+                typeof nextValue === "function" ? nextValue(prev) : nextValue,
+            );
+        },
+        [isActionMenuOpen, onActionMenuToggle],
+    );
 
     const hideArabic = hafalanMode === "hide_arabic" && !revealed;
     const hideTranslation = hafalanMode === "hide_translation" && !revealed;
@@ -95,6 +103,45 @@ const AyahPage = ({
 
     const actionMenuButtonClass =
         "flex w-full items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors text-left";
+
+    useEffect(() => {
+        if (!settingPopUp) return undefined;
+        const handleOutside = (event) => {
+            const target = event.target;
+            if (
+                menuContainerRef.current?.contains(target) ||
+                menuButtonRef.current?.contains(target)
+            ) {
+                return;
+            }
+            SetSettingPopUp(false);
+        };
+        const handleKey = (event) => {
+            if (event.key === "Escape") {
+                SetSettingPopUp(false);
+            }
+        };
+        document.addEventListener("mousedown", handleOutside);
+        document.addEventListener("touchstart", handleOutside);
+        document.addEventListener("keydown", handleKey);
+        return () => {
+            document.removeEventListener("mousedown", handleOutside);
+            document.removeEventListener("touchstart", handleOutside);
+            document.removeEventListener("keydown", handleKey);
+        };
+    }, [settingPopUp, SetSettingPopUp]);
+
+    const toggleSettingPopUp = () => {
+        if (!settingPopUp && menuButtonRef.current) {
+            const rect = menuButtonRef.current.getBoundingClientRect();
+            const spaceBelow = window.innerHeight - rect.bottom;
+            // If the toggle is close to the bottom of the viewport, open the
+            // menu upwards so its long list is never clipped by the card edge
+            // or the floating surah navigation at the bottom.
+            setOpenUpwards(spaceBelow < 360);
+        }
+        SetSettingPopUp(!settingPopUp);
+    };
 
     useEffect(() => {
         if (!cardRef?.current) return;
@@ -263,15 +310,23 @@ const AyahPage = ({
                         </li>
                         <li className='flex justify-center relative'>
                             <button
+                                ref={menuButtonRef}
                                 title={t("common.more")}
-                                onClick={() => SetSettingPopUp(!settingPopUp)}
+                                onClick={toggleSettingPopUp}
                                 className='p-2 rounded-lg text-lg hover:bg-emerald-100 dark:hover:bg-slate-700 transition-colors'
                             >
                                 <BsThreeDotsVertical />
                             </button>
                             {settingPopUp && (
-                                <div className='absolute right-0 top-9 z-20 md:right-auto md:left-9 md:top-0'>
-                                    <div className='flex flex-col bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-56 p-1 shadow-lg text-emerald-900 dark:text-emerald-300 dark:text-white'>
+                                <div
+                                    ref={menuContainerRef}
+                                    className={`absolute z-50 w-56 p-1 rounded-xl border border-emerald-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-2xl text-emerald-900 dark:text-emerald-300 dark:text-white max-h-[min(380px,calc(100vh-120px))] overflow-y-auto overscroll-contain ${
+                                        openUpwards
+                                            ? "bottom-9 md:bottom-0 top-auto right-0 md:right-auto md:left-9"
+                                            : "top-9 md:top-0 bottom-auto right-0 md:right-auto md:left-9"
+                                    }`}
+                                >
+                                    <div className='flex flex-col'>
                                         {actionsMenu && (
                                             <div className='border-b border-emerald-50 dark:border-slate-700 pb-1 mb-1'>
                                                 <button
