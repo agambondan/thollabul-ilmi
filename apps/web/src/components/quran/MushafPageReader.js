@@ -262,8 +262,17 @@ export default function MushafPageReader() {
 
                 <div className='min-h-[720px] bg-[linear-gradient(180deg,rgba(16,185,129,0.08)_0,rgba(16,185,129,0)_56px)] p-3 space-y-2'>
                     {loading && (
-                        <div className='text-center py-24 text-sm text-gray-500 dark:text-gray-300'>
-                            {t("common.loading")}
+                        <div className='space-y-4 py-4 animate-pulse' aria-busy='true'>
+                            {Array.from({ length: 12 }).map((_, idx) => (
+                                <div
+                                    key={idx}
+                                    className='h-9 bg-emerald-700/10 rounded-lg w-full'
+                                    style={{
+                                        width: `${85 + ((idx * 17) % 15)}%`,
+                                        marginLeft: "auto",
+                                    }}
+                                />
+                            ))}
                         </div>
                     )}
                     {!loading &&
