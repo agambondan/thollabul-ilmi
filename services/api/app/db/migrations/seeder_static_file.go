@@ -50,15 +50,36 @@ func SeedStaticFromFiles(db *gorm.DB) {
 // ── helpers ───────────────────────────────────────────────────────────────────
 
 func readStaticJSON(name string, dst interface{}) bool {
-	path := staticDataDir + "/" + name
-	f, err := os.Open(path)
+	candidatePaths := []string{
+		"data/static/" + name,
+		"/app/data/static/" + name,
+		"services/api/data/static/" + name,
+		"../data/static/" + name,
+		"../../data/static/" + name,
+		"../../../data/static/" + name,
+	}
+
+	var foundPath string
+	for _, p := range candidatePaths {
+		if _, err := os.Stat(p); err == nil {
+			foundPath = p
+			break
+		}
+	}
+
+	if foundPath == "" {
+		log.Printf("[seeder] %s tidak ditemukan di lokasi mana pun — skip", name)
+		return false
+	}
+
+	f, err := os.Open(foundPath)
 	if err != nil {
-		log.Printf("[seeder] %s tidak ditemukan — skip", path)
+		log.Printf("[seeder] %s gagal dibuka: %v", foundPath, err)
 		return false
 	}
 	defer f.Close()
 	if err := json.NewDecoder(f).Decode(dst); err != nil {
-		log.Printf("[seeder] parse %s gagal: %v", path, err)
+		log.Printf("[seeder] parse %s gagal: %v", foundPath, err)
 		return false
 	}
 	return true
