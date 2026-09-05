@@ -8,6 +8,7 @@ import { useLocale } from "@/context/Locale";
 import { listMasjidImage } from "@/lib/const";
 import { NumberToArabic } from "@/lib/converter";
 import { CopyImageToClipboard, CopyToClipboard } from "@/lib/copy";
+import { getSurahName } from "@/lib/surahList";
 import { getLocalizedTranslation } from "@/lib/translation";
 import { useActionPosition } from "@/lib/useActionPosition";
 import { useAsyncResource } from "@/lib/useAsyncResource";
@@ -24,9 +25,11 @@ import {
     BsShare,
     BsThreeDotsVertical,
     BsTranslate,
+    BsExclamationTriangleFill,
 } from "react-icons/bs";
 import { IoIosLink, IoMdCopy, IoMdImages } from "react-icons/io";
 import PanelCloseButton from "@/components/PanelCloseButton";
+import ContentReportModal from "@/components/ContentReportModal";
 import { sanitizeHtml } from "@/lib/sanitizeHtml";
 
 const AyahPage = ({
@@ -47,6 +50,7 @@ const AyahPage = ({
     const cardRef = useRef();
     const audioRef = useRef(null);
     const [isCopied, SetIsCopied] = useState(false);
+    const [reportOpen, setReportOpen] = useState(false);
     const [localSettingPopUp, setLocalSettingPopUp] = useState(false);
     const [clipboardPopUp, SetClipboardPopUp] = useState(false);
     const [shareImagePopUp, SetShareImagePopUp] = useState(false);
@@ -241,7 +245,7 @@ const AyahPage = ({
                         .concat(ayahLatin ? `${ayahLatin}\n` : "")
                         .concat(`${ayahTranslation}\n`)
                         .concat(
-                            `${t("ayah.citation", { latin: surah.translation.latin_en, number: surah.number, verse: t("common.verse"), ayah: ayah.number })}\n`.concat(
+                            `${t("ayah.citation", { latin: getSurahName(surah, lang) || surah.translation?.latin_en, number: surah.number, verse: t("common.verse"), ayah: ayah.number })}\n`.concat(
                                 `${t("ayah.via")} ${window.location.href.split("#")[0]}#ayah-${ayah.number}`,
                             ),
                         )}
@@ -544,6 +548,16 @@ const AyahPage = ({
                                         </button>
                                         <button
                                             className={actionMenuButtonClass}
+                                            onClick={() => {
+                                                setReportOpen(true);
+                                                SetSettingPopUp(false);
+                                            }}
+                                        >
+                                            <BsExclamationTriangleFill className="text-amber-500" />
+                                            {t("report.correction_btn") ?? "Laporkan Kesalahan"}
+                                        </button>
+                                        <button
+                                            className={actionMenuButtonClass}
                                             onClick={() =>
                                                 copyText(
                                                     `${t("ayah.allah_says")}\n\n`
@@ -559,7 +573,7 @@ const AyahPage = ({
                                                             `${ayahTranslation}\n\n`,
                                                         )
                                                         .concat(
-                                                            `${t("ayah.citation", { latin: surah.translation.latin_en, number: surah.number, verse: t("common.verse"), ayah: ayah.number })}\n`.concat(
+                                                            `${t("ayah.citation", { latin: getSurahName(surah, lang) || surah.translation?.latin_en, number: surah.number, verse: t("common.verse"), ayah: ayah.number })}\n`.concat(
                                                                 `${t("ayah.via")} ${window.location.href.split("#")[0]}#ayah-${ayah.number}`,
                                                             ),
                                                         ),
@@ -792,6 +806,16 @@ const AyahPage = ({
             )}
 
             {isCopied && <PopUpIsCopied />}
+            {reportOpen && (
+                <ContentReportModal
+                    isOpen={reportOpen}
+                    onClose={() => setReportOpen(false)}
+                    targetType="quran"
+                    targetId={`${surah?.number || ""}:${ayah?.number || ""}`}
+                    targetTitle={`QS. ${surah?.translation?.latin_en || surah?.number}:${ayah?.number}`}
+                    snippet={ayahTranslation || ayah?.translation?.ar}
+                />
+            )}
         </div>
     );
 };

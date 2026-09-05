@@ -1,4 +1,5 @@
 import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
+import { getSurahMeaning, getSurahName } from "@/lib/surahList";
 const API_URL =
     process.env.API_INTERNAL_URL ||
     process.env.API_PROXY_URL ||
@@ -24,10 +25,10 @@ export async function generateMetadata(props) {
     const surahSlug = decodeURIComponent(slugParts[1] ?? slugParts[0] ?? "");
     const surah = surahSlug ? await getSurah(surahSlug) : null;
 
-    const name = surah?.translation?.latin_en ?? surahSlug;
+    const name = getSurahName(surah, "ID") || surah?.translation?.latin_en || surahSlug;
     const arabicName = surah?.name ?? "";
     const surahNumber = surah?.number ?? "";
-    const meaning = surah?.translation?.idn ?? surah?.translation?.en ?? "";
+    const meaning = getSurahMeaning(surah, "ID") || surah?.translation?.idn || surah?.translation?.en || "";
 
     const title = surah
         ? `Surah ${name}${arabicName ? ` (${arabicName})` : ""} — Al-Quran`

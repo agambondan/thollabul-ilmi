@@ -2,6 +2,7 @@
 
 import { useQuranFont } from "@/lib/useQuranFont";
 import { useLocale } from "@/context/Locale";
+import { getSurahMeaning, getSurahName as getLocalizedSurahName } from "@/lib/surahList";
 import { useMemo } from "react";
 
 const toArabicNumber = (n) => {
@@ -15,23 +16,19 @@ const toArabicNumber = (n) => {
 const getSurahNumber = (ayah) =>
     ayah?.surah?.number || ayah?.surah_number || ayah?.surahNumber;
 
-const getSurahName = (ayah) => {
-    const s = ayah?.surah ?? {};
-    return (
-        s?.translation?.latin_en ||
-        s?.translation?.latin_idn ||
-        s?.slug ||
-        s?.identifier ||
-        ""
-    );
+const getSurahName = (ayah, lang = "ID") => {
+    const s = ayah?.surah ?? {
+        number: getSurahNumber(ayah),
+        slug: ayah?.slug || ayah?.identifier,
+    };
+    return getLocalizedSurahName(s, lang);
 };
 
-const getSurahTranslation = (ayah, lang) => {
-    const s = ayah?.surah ?? {};
-    const key = lang === "EN" ? "latin_en" : "latin_idn";
-    return (
-        s?.translation?.[key] || s?.translation?.en || s?.translation?.idn || ""
-    );
+const getSurahTranslation = (ayah, lang = "ID") => {
+    const s = ayah?.surah ?? {
+        number: getSurahNumber(ayah),
+    };
+    return getSurahMeaning(s, lang);
 };
 
 const getAyahArabic = (ayah) =>
@@ -90,7 +87,7 @@ export default function MushafContinuousView({
             if (!current || current.surahNumber !== surahNumber) {
                 current = {
                     surahNumber,
-                    surahName: getSurahName(ayah),
+                    surahName: getSurahName(ayah, lang),
                     surahTranslation: getSurahTranslation(ayah, lang),
                     ayahs: [],
                 };

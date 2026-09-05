@@ -2,6 +2,7 @@
 
 import { useLocale } from "@/context/Locale";
 import { hadithApi, remindersApi } from "@/lib/api";
+import { getSurahName } from "@/lib/surahList";
 import { getLocalizedTranslation } from "@/lib/translation";
 import { parseSource } from "@/components/SourceBadges";
 import Link from "next/link";
@@ -69,10 +70,8 @@ const normalizeAyah = (payload, lang, ayahBasePath, t) => {
         (lang === "EN" ? ayah.translation?.en : ayah.translation?.idn) ||
         "";
     const surahName =
+        getSurahName(ayah.surah, lang) ||
         getLocalizedTranslation(ayah.surah?.translation, lang) ||
-        (lang === "EN"
-            ? ayah.surah?.translation?.latin_en
-            : ayah.surah?.translation?.latin_idn) ||
         ayah.surah?.identifier ||
         "";
     const ayahNum = ayah.number ?? "";

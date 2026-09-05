@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale } from "@/context/Locale";
+import { getSurahName } from "@/lib/surahList";
 import { getLocalizedTranslation } from "@/lib/translation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -64,10 +65,8 @@ export default function DailyAyahWidget({
             : ayah.translation?.idn) ||
         "";
     const surahName =
+        getSurahName(ayah.surah, lang) ||
         getLocalizedTranslation(ayah.surah?.translation, lang) ||
-        (lang === "EN"
-            ? ayah.surah?.translation?.latin_en
-            : ayah.surah?.translation?.latin_idn) ||
         "";
     const ayahNum = ayah.number ?? "";
     const surahSlug = ayah.surah?.translation?.latin_en?.toLowerCase() ?? "";

@@ -1,6 +1,6 @@
 "use client";
 
-import { getLocalizedTranslation } from "@/lib/translation";
+import { getSurahMeaning, getSurahName } from "@/lib/surahList";
 
 const getRevelationType = (type, t) => {
     const lower = (type ?? "").toLowerCase();
@@ -15,7 +15,7 @@ const CardHorizontal = ({
     ayahUnit = "Ayat",
     t = (k) => k,
 }) => {
-    const arabicName = surat.translation.ar.replace("سُورَةُ", "").trim();
+    const arabicName = surat?.translation?.ar?.replace("سُورَةُ", "")?.trim() ?? "";
 
     return (
         <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-700 hover:shadow-sm transition-all p-4 group cursor-pointer'>
@@ -30,11 +30,11 @@ const CardHorizontal = ({
                 {/* Name + detail */}
                 <div className='flex-1 min-w-0'>
                     <p className='font-semibold text-gray-900 dark:text-gray-100 dark:text-white text-sm truncate group-hover:text-emerald-700 hover:dark:text-emerald-400 dark:group-hover:text-emerald-400 transition-colors'>
-                        {surat.translation.latin_en}
+                        {getSurahName(surat, lang)}
                     </p>
                     <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5 truncate'>
                         {getRevelationType(surat.revelation_type, t)} &middot;{" "}
-                        {getLocalizedTranslation(surat.translation, lang)}{" "}
+                        {getSurahMeaning(surat, lang)}{" "}
                         &middot; {surat.number_of_ayahs} {ayahUnit}
                     </p>
                 </div>

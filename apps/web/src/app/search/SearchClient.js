@@ -6,6 +6,7 @@ import { useLocale } from "@/context/Locale";
 import { usePathname, useRouter } from "next/navigation";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { searchApi } from "@/lib/api";
+import { getSurahName } from "@/lib/surahList";
 import { getLocalizedField, getLocalizedTranslation } from "@/lib/translation";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -79,6 +80,7 @@ const getItems = (data, key) => data?.[key] ?? data?.[`${key}s`] ?? [];
 
 const AyahCard = ({ item, lang, hrefBuilder }) => {
     const surahName =
+        getSurahName(item?.surah, lang) ||
         getLocalizedTranslation(item?.surah?.translation, lang) ||
         item?.surah?.translation?.latin_en ||
         "";

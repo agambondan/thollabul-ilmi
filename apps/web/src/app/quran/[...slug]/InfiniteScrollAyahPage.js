@@ -8,7 +8,7 @@ import { SkeletonReader } from "@/components/skeleton/Skeleton";
 import SurahAudioPlayer from "@/components/SurahAudioPlayer";
 import { useLocale } from "@/context/Locale";
 import { progressApi, streakApi } from "@/lib/api";
-import { getLocalizedTranslation } from "@/lib/translation";
+import { getSurahMeaning, getSurahName } from "@/lib/surahList";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { useQuranFont } from "@/lib/useQuranFont";
 import { useSettings } from "@/lib/useSettings";
@@ -289,7 +289,7 @@ const InfiniteScrollAyahPage = ({
             </div>
         );
 
-    const surahTitle = surah?.translation?.latin_en ?? "Al-Quran";
+    const surahTitle = getSurahName(surah, lang) || surah?.translation?.latin_en || "Al-Quran";
     const prevHref = surah?.prev_surah?.translation?.latin_en
         ? `${basePath}/${surah.prev_surah.translation.latin_en}`
         : "";
@@ -318,7 +318,7 @@ const InfiniteScrollAyahPage = ({
                         {surahTitle}
                     </h1>
                     <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-4'>
-                        {getLocalizedTranslation(surah?.translation, lang)}{" "}
+                        {getSurahMeaning(surah, lang)}{" "}
                         &middot; {surah?.number_of_ayahs ?? ayahs.length}{" "}
                         {t("common.verse")} &middot;{" "}
                         {surah?.revelation_type?.toLowerCase() === "meccan"
@@ -423,17 +423,17 @@ const InfiniteScrollAyahPage = ({
                         <Link
                             href={prevHref}
                             title={
-                                surah?.prev_surah?.translation?.latin_en ??
+                                getSurahName(surah?.prev_surah, lang) ??
                                 t("quran.prev_surah")
                             }
                             className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                         >
                             <TbPlayerTrackPrev size={13} />
                             <span className='max-w-[75px] sm:max-w-[120px] truncate'>
-                                {surah?.prev_surah?.translation?.latin_en ??
+                                {getSurahName(surah?.prev_surah, lang) ??
                                     t("quran.prev")}
-                            </span>
-                        </Link>
+                           </span>
+                       </Link>
                     ) : (
                         <span className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-gray-300 dark:text-slate-600 cursor-not-allowed'>
                             <TbPlayerTrackPrev size={13} />
@@ -447,13 +447,13 @@ const InfiniteScrollAyahPage = ({
                         <Link
                             href={nextHref}
                             title={
-                                surah?.next_surah?.translation?.latin_en ??
+                                getSurahName(surah?.next_surah, lang) ??
                                 t("quran.next_surah")
                             }
                             className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                         >
                             <span className='max-w-[75px] sm:max-w-[120px] truncate'>
-                                {surah?.next_surah?.translation?.latin_en ??
+                                {getSurahName(surah?.next_surah, lang) ??
                                     t("quran.next")}
                             </span>
                             <TbPlayerTrackNext size={13} />

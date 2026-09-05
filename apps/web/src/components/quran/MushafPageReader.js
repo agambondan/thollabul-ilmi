@@ -2,6 +2,7 @@
 
 import { useLocale } from "@/context/Locale";
 import { quranApi } from "@/lib/api";
+import { getSurahName as getLocalizedSurahName } from "@/lib/surahList";
 import { QURAN_FONTS, useQuranFont } from "@/lib/useQuranFont";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { sanitizeHtml } from "@/lib/sanitizeHtml";
@@ -46,15 +47,11 @@ const getTranslation = (ayah, lang) => {
 };
 const getSurahNumber = (ayah) => ayah?.surah?.number || ayah?.surah_id || "";
 const getSurahName = (ayah, lang) => {
-    const s = ayah?.surah ?? {};
-    const key = lang === "EN" ? "latin_en" : "latin_idn";
-    return (
-        s?.translation?.[key] ||
-        s?.translation?.latin_idn ||
-        s?.translation?.latin_en ||
-        s?.slug ||
-        ""
-    );
+    const s = ayah?.surah ?? {
+        number: getSurahNumber(ayah),
+        slug: ayah?.slug || ayah?.identifier,
+    };
+    return getLocalizedSurahName(s, lang);
 };
 const stripTags = (html) => (html || "").replace(/<[^>]+>/g, "");
 

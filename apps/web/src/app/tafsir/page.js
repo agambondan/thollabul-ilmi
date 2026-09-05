@@ -3,7 +3,7 @@
 import Section from "@/components/Section";
 import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
-import { getLocalizedTranslation } from "@/lib/translation";
+import { getSurahMeaning, getSurahName } from "@/lib/surahList";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
@@ -42,10 +42,9 @@ export const TafsirIndexContent = ({ tafsirBasePath = "/tafsir" }) => {
         if (!search) return true;
         const q = search.toLowerCase();
         return (
-            s.translation?.latin_en?.toLowerCase().includes(q) ||
-            getLocalizedTranslation(s.translation, lang)
-                .toLowerCase()
-                .includes(q) ||
+            getSurahName(s, lang).toLowerCase().includes(q) ||
+            getSurahMeaning(s, lang).toLowerCase().includes(q) ||
+            (s.translation?.latin_en ?? "").toLowerCase().includes(q) ||
             String(s.number).includes(q)
         );
     });
@@ -122,14 +121,11 @@ export const TafsirIndexContent = ({ tafsirBasePath = "/tafsir" }) => {
                             </span>
                             <div className='min-w-0'>
                                 <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white truncate group-hover:text-emerald-700 hover:dark:text-emerald-400 dark:group-hover:text-emerald-400 transition-colors'>
-                                    {s.translation?.latin_en ??
+                                    {getSurahName(s, lang) ||
                                         `Surah ${s.number}`}
                                 </p>
                                 <p className='text-xs text-gray-400 truncate'>
-                                    {getLocalizedTranslation(
-                                        s.translation,
-                                        lang,
-                                    )}
+                                    {getSurahMeaning(s, lang)}
                                 </p>
                             </div>
                         </Link>

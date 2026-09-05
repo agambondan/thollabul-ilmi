@@ -19,6 +19,7 @@ import {
 } from "react-icons/bs";
 import { MdOutlineAutoStories } from "react-icons/md";
 import InlineError from "@/components/InlineError";
+import { getSurahName } from "@/lib/surahList";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -27,7 +28,7 @@ export const TafsirSurahContent = ({
     tafsirBasePath = "/tafsir",
     quranBasePath = "/quran/surah",
 }) => {
-    const { t } = useLocale();
+    const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
     const decodedSlug = decodeURIComponent(slug);
 
@@ -148,7 +149,7 @@ export const TafsirSurahContent = ({
                     <div>
                         <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
                             {surah
-                                ? `${surah.translation?.latin_en ?? decodedSlug} — Tafsir`
+                                ? `${getSurahName(surah, lang) || surah.translation?.latin_en || decodedSlug} — Tafsir`
                                 : t("tafsir.surah_title")}
                         </h1>
                         {surah && (

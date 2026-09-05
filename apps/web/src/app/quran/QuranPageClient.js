@@ -2,14 +2,17 @@
 
 import CardHorizontal from "@/components/card/CardHorizontal";
 import { useLocale } from "@/context/Locale";
-import { getLocalizedTranslation } from "@/lib/translation";
+import { getSurahMeaning, getSurahName } from "@/lib/surahList";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import Link from "next/link";
 import { useState } from "react";
 import { BsBookHalf, BsSearch } from "react-icons/bs";
 
-const getLatinName = (surah) =>
-    surah.translation?.latin_en ?? surah.translation?.latin_idn ?? "";
+const getLatinSlug = (surah) =>
+    surah.translation?.latin_en ??
+    surah.translation?.latin_idn ??
+    surah.slug ??
+    (surah.number ? String(surah.number) : "");
 
 export default function QuranPageClient({
     items,
@@ -25,10 +28,9 @@ export default function QuranPageClient({
         const query = search.trim().toLowerCase();
         if (!query) return true;
         return (
-            getLatinName(surah).toLowerCase().includes(query) ||
-            getLocalizedTranslation(surah.translation, lang)
-                .toLowerCase()
-                .includes(query) ||
+            getSurahName(surah, lang).toLowerCase().includes(query) ||
+            getSurahMeaning(surah, lang).toLowerCase().includes(query) ||
+            getLatinSlug(surah).toLowerCase().includes(query) ||
             String(surah.number).includes(query)
         );
     });
@@ -102,7 +104,7 @@ export default function QuranPageClient({
                     <Link
                         key={surat.number}
                         prefetch={false}
-                        href={`${basePath}/${getLatinName(surat)}`}
+                        href={`${basePath}/${getLatinSlug(surat)}`}
                         className='cv-list-item'
                     >
                         <CardHorizontal

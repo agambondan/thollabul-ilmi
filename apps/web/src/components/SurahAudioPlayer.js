@@ -107,6 +107,8 @@ const toPositiveInt = (value) => {
     return Number.isFinite(numeric) && numeric > 0 ? numeric : null;
 };
 
+import { getSurahName } from "@/lib/surahList";
+
 const isValidSurahNumber = (value) =>
     Number.isInteger(value) &&
     value >= MIN_SURAH_NUMBER &&
@@ -118,12 +120,13 @@ const clampSpeed = (value) => {
     return Math.max(0.5, Math.min(2, numeric));
 };
 
-const normalizeAyah = (item, surahNumber) => ({
+const normalizeAyah = (item, surahNumber, lang = "ID") => ({
     id: item?.id,
     number: Number(item?.number ?? item?.ayah_number ?? item?.ayahNumber),
     surahName:
-        item?.surah?.translation?.latin_en ??
-        item?.surah_name ??
+        getSurahName(item?.surah, lang) ||
+        item?.surah?.translation?.latin_en ||
+        item?.surah_name ||
         item?.surahName,
     surahNumber: Number(
         item?.surah?.number ??
@@ -138,7 +141,7 @@ export default function SurahAudioPlayer({
     surahNumber,
     totalAyahs,
 }) {
-    const { t } = useLocale();
+    const { t, lang } = useLocale();
     const pathname = usePathname();
     const audioRef = useRef(null);
     const queueRef = useRef([]);
@@ -227,7 +230,7 @@ export default function SurahAudioPlayer({
             const ayahRes = await quranApi.bySurahPage(surahNumber, 0, 1);
             if (!ayahRes.ok) throw new Error("ayah");
             const firstAyah = normalizeItems(await ayahRes.json())
-                .map((item) => normalizeAyah(item, surahNumber))
+                .map((item) => normalizeAyah(item, surahNumber, lang))
                 .find((ayah) => ayah.id);
             if (!firstAyah?.id) throw new Error("ayah");
 
@@ -354,7 +357,7 @@ export default function SurahAudioPlayer({
             const res = await quranApi.bySurahPage(currentSurah, 0, 300);
             if (!res.ok) throw new Error("ayah");
             const ayahs = normalizeItems(await res.json())
-                .map((item) => normalizeAyah(item, currentSurah))
+                .map((item) => normalizeAyah(item, currentSurah, lang))
                 .filter((ayah) => ayah.id && Number.isFinite(ayah.number));
             const lastAyah =
                 currentSurah === endSurah && endAyah
