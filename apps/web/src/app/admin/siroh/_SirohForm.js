@@ -22,6 +22,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
     const [title, setTitle] = useState(initialData?.title ?? "");
     const [slug, setSlug] = useState(initialData?.slug ?? "");
     const [content, setContent] = useState(initialData?.content ?? "");
+    const [source, setSource] = useState(initialData?.source ?? "");
     const [categoryId, setCategoryId] = useState(
         initialData?.category_id ? String(initialData.category_id) : "",
     );
@@ -57,6 +58,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             title,
             slug,
             content,
+            source,
             category_id: Number(categoryId),
             order: Number(order) || 0,
         };
@@ -199,6 +201,25 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
                 <p className='text-xs text-gray-400 mt-1'>
                     {content.length.toLocaleString()}{" "}
                     {t("admin.form.characters")}
+                </p>
+            </div>
+
+            <div>
+                <label
+                    htmlFor='sirohform-source'
+                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                >
+                    {t("admin.field.source")}
+                </label>
+                <input
+                    id='sirohform-source'
+                    value={source}
+                    onChange={(e) => setSource(e.target.value)}
+                    className={inputCls}
+                    placeholder='Sirah Ibnu Hisyam; Ar-Raheeq Al-Makhtum (Shafiyyurrahman Al-Mubarakfuri); HR. Bukhari No. ...'
+                />
+                <p className='text-xs text-gray-400 mt-1'>
+                    {t("admin.sirah.source_hint")}
                 </p>
             </div>
 

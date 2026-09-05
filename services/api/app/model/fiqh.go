@@ -1,5 +1,7 @@
 package model
 
+import "gorm.io/gorm"
+
 type FiqhCategory struct {
 	BaseID
 	Name          string       `json:"name" gorm:"type:varchar(256);not null"`
@@ -22,6 +24,16 @@ type FiqhItem struct {
 	SortOrder     int           `json:"sort_order" gorm:"default:0"`
 	TranslationID *int          `json:"translation_id,omitempty" gorm:"index"`
 	Translation   *Translation  `json:"translation,omitempty" gorm:"foreignKey:TranslationID;-:migration"`
+}
+
+func (i *FiqhItem) AfterFind(tx *gorm.DB) error {
+	if i.Dalil == "" {
+		i.Dalil = i.Source
+	}
+	if i.Source == "" {
+		i.Source = i.Dalil
+	}
+	return nil
 }
 
 type CreateFiqhCategoryRequest struct {

@@ -13,6 +13,7 @@ import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
+import SourceBadges from "@/components/SourceBadges";
 
 const CATEGORIES = [
     "thaharah",
@@ -85,8 +86,8 @@ const AdminFiqhPage = () => {
             slug: item.slug ?? "",
             content:
                 getLocalizedField(item, "content", lang) || item.content || "",
-            source: item.source ?? "",
-            dalil: item.dalil ?? "",
+            source: item.source || item.dalil || "",
+            dalil: item.dalil || item.source || "",
         });
         setShowModal(true);
     };
@@ -104,6 +105,8 @@ const AdminFiqhPage = () => {
                 ...form,
                 title,
                 slug: form.slug.trim() || slugify(title),
+                source: form.source.trim() || form.dalil.trim(),
+                dalil: form.dalil.trim() || form.source.trim(),
             };
             let res;
             if (editId) {
@@ -214,7 +217,11 @@ const AdminFiqhPage = () => {
                                 </span>
                             </Td>
                             <Td className='text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
-                                {item.dalil ?? "-"}
+                                {item.source || item.dalil ? (
+                                    <SourceBadges source={item.source || item.dalil} />
+                                ) : (
+                                    "-"
+                                )}
                             </Td>
                             <Td>
                                 <div className='flex items-center gap-2 justify-end'>

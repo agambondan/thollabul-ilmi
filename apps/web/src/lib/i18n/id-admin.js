@@ -357,6 +357,7 @@ const idAdmin = {
     "admin.sirah.title_placeholder": "Judul bab sirah...",
     "admin.sirah.content_placeholder":
         "Tulis konten sirah di sini. Gunakan baris baru untuk memisahkan paragraf...",
+    "admin.sirah.source_hint": "Pisahkan banyak sumber dengan titik koma (;).",
     "admin.sirah.content_not_found": "Konten tidak ditemukan.",
     "admin.users.title": "Manajemen Pengguna",
     "admin.users.subtitle":

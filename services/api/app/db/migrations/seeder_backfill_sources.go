@@ -18,7 +18,10 @@ func BackfillSources(db *gorm.DB) error {
 	if err := backfillAsmaUlHusnaSources(db); err != nil {
 		return err
 	}
-	return backfillAmalanSources(db)
+	if err := backfillAmalanSources(db); err != nil {
+		return err
+	}
+	return backfillFiqhDalil(db)
 }
 
 // manasikSources holds the citations that were already present as free text
@@ -99,6 +102,30 @@ func backfillAmalanSources(db *gorm.DB) error {
 		if err := db.Model(&model.AmalanItem{}).
 			Where("category = ? AND name = ? AND (source IS NULL OR source = '')", entry.Category, entry.Name).
 			Update("source", entry.Source).Error; err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func backfillFiqhDalil(db *gorm.DB) error {
+	type row struct {
+		Slug   string `json:"slug"`
+		Source string `json:"source"`
+		Dalil  string `json:"dalil"`
+	}
+	var rows []row
+	if !readStaticJSON("fiqh_item.json", &rows) {
+		return nil
+	}
+	for _, entry := range rows {
+		dalil := entry.Dalil
+		if dalil == "" {
+			dalil = entry.Source
+		}
+		if err := db.Model(&model.FiqhItem{}).
+			Where("slug = ?", entry.Slug).
+			Updates(map[string]interface{}{"source": entry.Source, "dalil": dalil}).Error; err != nil {
 			return err
 		}
 	}

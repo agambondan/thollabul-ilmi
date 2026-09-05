@@ -15,6 +15,7 @@ import { SURAH_LIST } from "@/lib/surahList";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
+import SourceBadges from "@/components/SourceBadges";
 
 const PAGE_SIZE = 25;
 
@@ -267,7 +268,11 @@ const AdminAsbabunNuzulPage = () => {
                                     {getLocalizedField(item, "title", lang)}
                                 </Td>
                                 <Td className='text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
-                                    {item.source ?? "-"}
+                                    {item.source ? (
+                                        <SourceBadges source={item.source} />
+                                    ) : (
+                                        "-"
+                                    )}
                                 </Td>
                                 <Td>
                                     <div className='flex items-center gap-2 justify-end'>

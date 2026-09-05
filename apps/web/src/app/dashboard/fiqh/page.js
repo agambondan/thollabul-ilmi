@@ -1,5 +1,6 @@
 "use client";
 
+import SourceBadges from "@/components/SourceBadges";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
@@ -151,9 +152,7 @@ export default function DashboardFiqhPage() {
                                         </p>
                                     )}
                                     {item.source && (
-                                        <p className='text-xs text-gray-400'>
-                                            {item.source}
-                                        </p>
+                                        <SourceBadges source={item.source} />
                                     )}
                                 </div>
                             )}

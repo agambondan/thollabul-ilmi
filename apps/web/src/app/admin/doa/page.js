@@ -13,6 +13,7 @@ import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
+import SourceBadges from "@/components/SourceBadges";
 
 const CATEGORIES = [
     "pagi",
@@ -190,7 +191,11 @@ const AdminPrayersPage = () => {
                                 </span>
                             </Td>
                             <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 hidden md:table-cell'>
-                                {item.source ?? "-"}
+                                {item.source ? (
+                                    <SourceBadges source={item.source} />
+                                ) : (
+                                    "-"
+                                )}
                             </Td>
                             <Td>
                                 <div className='flex items-center gap-2 justify-end'>

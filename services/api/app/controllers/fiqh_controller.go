@@ -393,6 +393,14 @@ func fiqhItemToAdminResponse(item *model.FiqhItem) fiqhAdminItemResponse {
 	if item.Category != nil {
 		category = item.Category.Slug
 	}
+	dalil := item.Dalil
+	if dalil == "" {
+		dalil = item.Source
+	}
+	source := item.Source
+	if source == "" {
+		source = item.Dalil
+	}
 	return fiqhAdminItemResponse{
 		ID:          item.ID,
 		CategoryID:  item.CategoryID,
@@ -400,8 +408,8 @@ func fiqhItemToAdminResponse(item *model.FiqhItem) fiqhAdminItemResponse {
 		Title:       item.Title,
 		Slug:        item.Slug,
 		Content:     item.Content,
-		Source:      item.Source,
-		Dalil:       item.Dalil,
+		Source:      source,
+		Dalil:       dalil,
 		SortOrder:   item.SortOrder,
 		Translation: item.Translation,
 	}

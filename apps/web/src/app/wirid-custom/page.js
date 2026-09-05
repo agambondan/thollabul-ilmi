@@ -2,6 +2,7 @@
 
 import ContentWidth from "@/components/layout/ContentWidth";
 import Section from "@/components/Section";
+import SourceBadges from "@/components/SourceBadges";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { userWirdApi } from "@/lib/api";
@@ -280,9 +281,7 @@ export function WiridCustomContent() {
                                             </p>
                                         )}
                                         {item.source && (
-                                            <p className='text-xs text-emerald-600 dark:text-emerald-400 font-medium'>
-                                                {item.source}
-                                            </p>
+                                            <SourceBadges source={item.source} />
                                         )}
                                         {item.note && (
                                             <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 italic border-l-2 border-emerald-200 dark:border-emerald-700 pl-2'>

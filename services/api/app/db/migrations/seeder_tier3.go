@@ -8,7 +8,6 @@ import (
 
 func SeedTier3(db *gorm.DB) {
 	seedHistoryEvents(db)
-	seedManasikSteps(db)
 	seedIslamicEvents(db)
 	seedQuizQuestions(db)
 	SeedIlmuRijal(db)

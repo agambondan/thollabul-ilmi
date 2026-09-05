@@ -6,9 +6,9 @@
     "example": "Aqidah Ahlus Sunnah wal Jamaah menjadi landasan pemikiran Islam mayoritas.",
     "source": "Al-Aqidah Ath-Thahawiyyah",
     "origin": "Bahasa Arab: عقيدة (aqada = mengikat/menguatkan)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "عَقِيدَة",
+    "latin": "'Aqidah",
+    "root": "عقد"
   },
   {
     "term": "Bid'ah",
@@ -17,9 +17,9 @@
     "example": "Nabi ﷺ bersabda: 'Setiap bid'ah adalah sesat' (HR. Muslim).",
     "source": "HR. Muslim No. 867",
     "origin": "Bahasa Arab: بدع (bada'a = menciptakan sesuatu yang baru)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "بِدْعَة",
+    "latin": "Bid'ah",
+    "root": "بدع"
   },
   {
     "term": "Shirk",
@@ -28,9 +28,9 @@
     "example": "Berdoa kepada selain Allah adalah shirk akbar.",
     "source": "QS. An-Nisa: 48",
     "origin": "Bahasa Arab: شرك (syarika = bersekutu)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "شِرْك",
+    "latin": "Shirk",
+    "root": "شرك"
   },
   {
     "term": "Tauhid",
@@ -39,9 +39,9 @@
     "example": "Kalimat 'Laa ilaaha illallah' adalah inti dari Tauhid Uluhiyyah.",
     "source": "Kitab At-Tauhid, Muhammad bin Abdul Wahhab",
     "origin": "Bahasa Arab: وحّد (wahhada = mengesakan)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "تَوْحِيد",
+    "latin": "Tauhid",
+    "root": "وحد"
   },
   {
     "term": "Tawassul",
@@ -50,9 +50,9 @@
     "example": "Tawassul dengan amal sholih dilakukan para sahabat di Gua Tsur (HR. Bukhari No. 2272).",
     "source": "At-Tawassul, Ibnu Taimiyah",
     "origin": "Bahasa Arab: وسّل (wassala = menjadikan perantara)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "تَوَسُّل",
+    "latin": "Tawassul",
+    "root": "وسل"
   },
   {
     "term": "Fiqh",
@@ -61,9 +61,9 @@
     "example": "Fiqh mengatur masalah sholat, puasa, zakat, nikah, muamalah, dan pidana.",
     "source": "Al-Iqna', Al-Hajjawi",
     "origin": "Bahasa Arab: فقه (faqiha = memahami)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "فِقْه",
+    "latin": "Fiqh",
+    "root": "فقه"
   },
   {
     "term": "Halal",
@@ -94,9 +94,9 @@
     "example": "Ijma' ulama tentang wajibnya sholat 5 waktu adalah dalil yang kuat.",
     "source": "Al-Ihkam fi Ushul Al-Ahkam, Al-Amidi",
     "origin": "Bahasa Arab: أجمع (ajma'a = bersepakat)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "إِجْمَاع",
+    "latin": "Ijma'",
+    "root": "جمع"
   },
   {
     "term": "Ijtihad",
@@ -105,9 +105,9 @@
     "example": "Penetapan awal Ramadan melalui hisab atau ru'yat adalah hasil ijtihad ulama.",
     "source": "Al-Mustashfa, Al-Ghazali",
     "origin": "Bahasa Arab: جهد (jahada = bersungguh-sungguh)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "اجْتِهَاد",
+    "latin": "Ijtihad",
+    "root": "جهد"
   },
   {
     "term": "Makruh",
@@ -116,9 +116,9 @@
     "example": "Makan dengan tangan kiri, berwudhu sambil berbicara sia-sia adalah makruh.",
     "source": "Raudhah Ath-Thalibin, An-Nawawi",
     "origin": "Bahasa Arab: كره (kariha = tidak menyukai)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "مَكْرُوه",
+    "latin": "Makruh",
+    "root": "كره"
   },
   {
     "term": "Mubah",
@@ -127,9 +127,9 @@
     "example": "Makan nasi, tidur siang, berjalan-jalan adalah mubah.",
     "source": "Al-Asybah wan Nadhair, As-Suyuthi",
     "origin": "Bahasa Arab: أباح (abaaha = membolehkan)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "مُبَاح",
+    "latin": "Mubah",
+    "root": "بحح"
   },
   {
     "term": "Qiyas",
@@ -138,9 +138,9 @@
     "example": "Haramnya khamr (minuman memabukkan) diqiyaskan kepada semua minuman yang memabukkan karena 'illat-nya sama: memabukkan.",
     "source": "Ar-Risalah, Imam Syafi'i",
     "origin": "Bahasa Arab: قاس (qaasa = mengukur/menyamakan)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "قِيَاس",
+    "latin": "Qiyas",
+    "root": "قيس"
   },
   {
     "term": "Sunnah / Mustahab",
@@ -149,9 +149,9 @@
     "example": "Sholat rawatib, membaca basmalah sebelum makan, dan bersiwak adalah sunnah.",
     "source": "Al-Majmu', An-Nawawi",
     "origin": "Bahasa Arab: سنّ (sanna = menjalankan kebiasaan)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "سُنَّة / مُسْتَحَبّ",
+    "latin": "Sunnah / Mustahab",
+    "root": "سنن / حبب"
   },
   {
     "term": "Wajib / Fardhu",
@@ -160,9 +160,9 @@
     "example": "Sholat 5 waktu adalah fardhu ain. Sholat jenazah adalah fardhu kifayah.",
     "source": "Al-Ghayah wat Taqrib, Abu Syuja'",
     "origin": "Bahasa Arab: وجب (wajaba = menjadi wajib)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "وَاجِب / فَرْض",
+    "latin": "Wajib / Fardhu",
+    "root": "وجب / فرض"
   },
   {
     "term": "Ahad",
@@ -171,9 +171,9 @@
     "example": "Sebagian besar hadith dalam kitab Bukhari dan Muslim adalah hadith ahad shahih.",
     "source": "Nukhbah Al-Fikr, Ibnu Hajar Al-Asqalani",
     "origin": "Bahasa Arab: أحد (ahad = satu/seorang)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "آحَاد",
+    "latin": "Ahad",
+    "root": "حد"
   },
   {
     "term": "Dha'if",
@@ -182,9 +182,9 @@
     "example": "Hadith 'Cintai tanah airmu bagian dari iman' adalah hadith yang sangat dha'if.",
     "source": "Taqrib At-Tahdzib, Ibnu Hajar",
     "origin": "Bahasa Arab: ضعف (dha'ufa = lemah)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "ضَعِيف",
+    "latin": "Dha'if",
+    "root": "ضعف"
   },
   {
     "term": "Isnad / Sanad",
@@ -193,9 +193,9 @@
     "example": "Contoh sanad: 'Dari Al-Bukhari, dari Yahya bin Bukair, dari Al-Laits, dari 'Uqail, dari Ibnu Syihab, dari Salim, dari Abdullah bin Umar...'",
     "source": "Al-Kifayah fi Ilm Ar-Riwayah, Al-Khatib Al-Baghdadi",
     "origin": "Bahasa Arab: سند (sanada = bersandar)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "إِسْنَاد / سَنَد",
+    "latin": "Isnad / Sanad",
+    "root": "سند"
   },
   {
     "term": "Mutawatir",
@@ -204,9 +204,9 @@
     "example": "Hadith tentang jumlah rakaat sholat 5 waktu adalah mutawatir.",
     "source": "Nukhbah Al-Fikr, Ibnu Hajar Al-Asqalani",
     "origin": "Bahasa Arab: توتّر (tawatara = datang berurutan/bertubi-tubi)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "مُتَوَاتِر",
+    "latin": "Mutawatir",
+    "root": "تور"
   },
   {
     "term": "Shahih",
@@ -215,9 +215,9 @@
     "example": "Shahih Bukhari dan Shahih Muslim adalah koleksi hadith paling shahih.",
     "source": "Muqaddimah Ibnu Ash-Shalah",
     "origin": "Bahasa Arab: صحّ (shahha = sehat/benar)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "صَحِيح",
+    "latin": "Shahih",
+    "root": "صحح"
   },
   {
     "term": "Taubat",
@@ -226,9 +226,9 @@
     "example": "Taubat nasuha adalah taubat yang sungguh-sungguh dan tidak berulang (QS. At-Tahrim: 8).",
     "source": "QS. At-Tahrim: 8; HR. Tirmidzi No. 3539",
     "origin": "Bahasa Arab: تاب (taaba = kembali)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "تَوْبَة",
+    "latin": "Tawbah",
+    "root": "توب"
   },
   {
     "term": "Tawakkal",
@@ -237,9 +237,9 @@
     "example": "Tawakkal yang benar: berobat dulu, baru pasrahkan hasilnya kepada Allah.",
     "source": "HR. Tirmidzi No. 2517",
     "origin": "Bahasa Arab: وكّل (wakkala = mewakilkan/menyerahkan)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "تَوَكُّل",
+    "latin": "Tawakkal",
+    "root": "وكل"
   },
   {
     "term": "Tazkiyatun Nafs",
@@ -248,9 +248,9 @@
     "example": "Puasa mengajarkan tazkiyatun nafs karena memaksa jiwa menahan nafsu.",
     "source": "QS. Asy-Syams: 9; Ihya Ulumuddin, Al-Ghazali",
     "origin": "Bahasa Arab: زكّى (zakka = menyucikan)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "تَزْكِيَةُ النَّفْس",
+    "latin": "Tazkiyatun Nafs",
+    "root": "زكو / نفس"
   },
   {
     "term": "Wara'",
@@ -259,9 +259,9 @@
     "example": "Imam Ahmad menolak minum air dari sumber yang tidak jelas kehalalannya saat melewati suatu kota.",
     "source": "Ihya Ulumuddin, Al-Ghazali",
     "origin": "Bahasa Arab: ورع (wari'a = berhati-hati)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "وَرَع",
+    "latin": "Wara'",
+    "root": "ورع"
   },
   {
     "term": "Zuhud",
@@ -270,9 +270,9 @@
     "example": "Nabi ﷺ bersabda: 'Zuhud di dunia bukan berarti mengharamkan yang halal atau membuang harta, tapi (zuhud adalah) bahwa yang ada di tangan Allah lebih engkau percaya daripada yang ada di tanganmu.' (HR. Tirmidzi)",
     "source": "HR. Tirmidzi No. 2340",
     "origin": "Bahasa Arab: زهد (zahida = membenci/tidak menginginkan)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "زُهْد",
+    "latin": "Zuhud",
+    "root": "زهد"
   },
   {
     "term": "Asbabun Nuzul",
@@ -281,9 +281,9 @@
     "example": "Asbabun nuzul QS. Al-Lahab (111) adalah peristiwa ketika Abu Lahab menolak seruan Nabi ﷺ di bukit Shafa.",
     "source": "Asbabun Nuzul, Al-Wahidi; Lubab An-Nuqul, As-Suyuthi",
     "origin": "Bahasa Arab: نزل (nazala = turun)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "أَسْبَابُ النُّزُول",
+    "latin": "Asbabun Nuzul",
+    "root": "سبب / نزل"
   },
   {
     "term": "Muhkam",
@@ -292,9 +292,9 @@
     "example": "Ayat-ayat tentang hukum ibadah umumnya muhkam. QS. Ali Imran: 7 menyebutkan bahwa ayat muhkam adalah 'ummul kitab' (induk kitab).",
     "source": "Al-Burhan fi Ulum Al-Quran, Az-Zarkasyi",
     "origin": "Bahasa Arab: أحكم (ahkama = menguatkan/memperjelas)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "مُحْكَم",
+    "latin": "Muhkam",
+    "root": "حكم"
   },
   {
     "term": "Nasikh-Mansukh",
@@ -303,16 +303,16 @@
     "example": "Perintah puasa Asyura dimansukh (dihapus kewajibannya) oleh kewajiban puasa Ramadan.",
     "source": "Al-Ittiqan fi Ulum Al-Quran, As-Suyuthi",
     "origin": "Bahasa Arab: نسخ (nasakha = menghapus/menyalin)",
-    "arabic": "",
-    "latin": "",
-    "root": ""
+    "arabic": "نَاسِخ وَمَنْسُوخ",
+    "latin": "Nasikh wa Mansukh",
+    "root": "نسخ"
   },
   {
     "term": "Allah",
     "category": "kosakata",
     "definition": "Allah (nama Tuhan yang disembah)",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Ikhlas: 1-4; HR. Bukhari No. 7374; HR. Muslim No. 2656",
     "origin": "Bahasa Arab",
     "arabic": "الله",
     "latin": "Allah",
@@ -323,7 +323,7 @@
     "category": "kosakata",
     "definition": "Tuhan, Pemilik, Pengatur",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Fatihah: 2; QS. Al-Baqarah: 21; Tafsir Ibnu Katsir 1/93-95",
     "origin": "Bahasa Arab",
     "arabic": "رَبّ",
     "latin": "Rabb",
@@ -334,7 +334,7 @@
     "category": "kosakata",
     "definition": "Kasih sayang, Rahmat",
     "example": "",
-    "source": "",
+    "source": "QS. Al-A'raf: 156; HR. Muslim No. 2751; Tafsir Ibnu Katsir 5/415",
     "origin": "Bahasa Arab",
     "arabic": "رَحْمَة",
     "latin": "Rahmah",
@@ -345,7 +345,7 @@
     "category": "kosakata",
     "definition": "Ilmu, Pengetahuan",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Mujadilah: 11; QS. Thaha: 114; HR. Bukhari No. 71",
     "origin": "Bahasa Arab",
     "arabic": "عِلْم",
     "latin": "'Ilm",
@@ -356,7 +356,7 @@
     "category": "kosakata",
     "definition": "Kitab, Buku",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 2; QS. Al-Anbiya: 10; Tafsir Ibnu Katsir 1/57-60",
     "origin": "Bahasa Arab",
     "arabic": "كِتَاب",
     "latin": "Kitab",
@@ -367,7 +367,7 @@
     "category": "kosakata",
     "definition": "Bacaan, Al-Quran",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Anfal: 41; QS. Al-Qiyamah: 17; HR. Bukhari No. 5028",
     "origin": "Bahasa Arab",
     "arabic": "قُرْآن",
     "latin": "Quran",
@@ -378,7 +378,7 @@
     "category": "kosakata",
     "definition": "Keimanan, Kepercayaan",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 177; HR. Muslim No. 35; Tafsir Ibnu Katsir 1/292",
     "origin": "Bahasa Arab",
     "arabic": "إِيمَان",
     "latin": "Iman",
@@ -389,7 +389,7 @@
     "category": "kosakata",
     "definition": "Ketundukan, Agama Islam",
     "example": "",
-    "source": "",
+    "source": "QS. Ali Imran: 19; QS. Al-Hujurat: 14; HR. Bukhari No. 50; HR. Muslim No. 19",
     "origin": "Bahasa Arab",
     "arabic": "إِسْلَام",
     "latin": "Islam",
@@ -400,7 +400,7 @@
     "category": "kosakata",
     "definition": "Sholat, Doa",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 238-239; QS. Al-Isra: 78-79; HR. Bukhari No. 428; HR. Muslim No. 524",
     "origin": "Bahasa Arab",
     "arabic": "صَلَاة",
     "latin": "Shalah",
@@ -411,7 +411,7 @@
     "category": "kosakata",
     "definition": "Zakat, Kesucian",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 43, 110, 177; HR. Bukhari No. 1443; HR. Muslim No. 985",
     "origin": "Bahasa Arab",
     "arabic": "زَكَاة",
     "latin": "Zakah",
@@ -422,7 +422,7 @@
     "category": "kosakata",
     "definition": "Puasa",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 183-185; HR. Bukhari No. 1901; HR. Muslim No. 1153",
     "origin": "Bahasa Arab",
     "arabic": "صِيَام",
     "latin": "Shiyam",
@@ -433,7 +433,7 @@
     "category": "kosakata",
     "definition": "Haji, Ziarah ke Mekkah",
     "example": "",
-    "source": "",
+    "source": "QS. Ali Imran: 97; HR. Bukhari No. 1514; HR. Muslim No. 1218",
     "origin": "Bahasa Arab",
     "arabic": "حَجّ",
     "latin": "Hajj",
@@ -444,7 +444,7 @@
     "category": "kosakata",
     "definition": "Ketakwaan, Menjaga diri dari larangan Allah",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Hujurat: 13; QS. At-Talaq: 2; HR. Tirmidzi No. 2517",
     "origin": "Bahasa Arab",
     "arabic": "تَقْوَى",
     "latin": "Taqwa",
@@ -455,7 +455,7 @@
     "category": "kosakata",
     "definition": "Sabar, Ketabahan",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 153, 155; QS. Al-Baqarah: 45; HR. Bukhari No. 1469; HR. Muslim No. 926",
     "origin": "Bahasa Arab",
     "arabic": "صَبْر",
     "latin": "Shabr",
@@ -466,7 +466,7 @@
     "category": "kosakata",
     "definition": "Syukur, Terima kasih",
     "example": "",
-    "source": "",
+    "source": "QS. Ibrahim: 7; QS. An-Nahl: 18; QS. Luqman: 12; HR. Tirmidzi No. 2491",
     "origin": "Bahasa Arab",
     "arabic": "شُكْر",
     "latin": "Shukr",
@@ -477,7 +477,7 @@
     "category": "kosakata",
     "definition": "Taubat, Kembali kepada Allah",
     "example": "",
-    "source": "",
+    "source": "QS. At-Tahrim: 8; QS. Al-Zumar: 53; HR. Tirmidzi No. 3539; HR. Muslim No. 2750",
     "origin": "Bahasa Arab",
     "arabic": "تَوْبَة",
     "latin": "Tawbah",
@@ -488,7 +488,7 @@
     "category": "kosakata",
     "definition": "Doa, Permohonan",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 186; QS. Ghafir: 60; HR. Tirmidzi No. 3371; HR. Ahmad 4/67",
     "origin": "Bahasa Arab",
     "arabic": "دُعَاء",
     "latin": "Du'a",
@@ -499,7 +499,7 @@
     "category": "kosakata",
     "definition": "Dzikir, Mengingat Allah",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Ahzab: 41-42; QS. Al-Jumu'ah: 10; HR. Tirmidzi No. 3509",
     "origin": "Bahasa Arab",
     "arabic": "ذِكْر",
     "latin": "Dzikr",
@@ -510,7 +510,7 @@
     "category": "kosakata",
     "definition": "Masjid, Tempat sujud",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Jumu'ah: 9; QS. At-Taubah: 108; QS. Al-Baqarah: 144; Tafsir Ibnu Katsir 1/272",
     "origin": "Bahasa Arab",
     "arabic": "مَسْجِد",
     "latin": "Masjid",
@@ -521,7 +521,7 @@
     "category": "kosakata",
     "definition": "Sunnah, Kebiasaan Nabi",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Ahzab: 21; HR. Bukhari No. 1888; HR. Muslim No. 1919",
     "origin": "Bahasa Arab",
     "arabic": "سُنَّة",
     "latin": "Sunnah",
@@ -532,7 +532,7 @@
     "category": "kosakata",
     "definition": "Fardhu, Wajib",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 183; QS. Al-Ma'idah: 6; HR. Bukhari No. 8; HR. Muslim No. 16",
     "origin": "Bahasa Arab",
     "arabic": "فَرْض",
     "latin": "Fardh",
@@ -543,7 +543,7 @@
     "category": "kosakata",
     "definition": "Jiwa, Diri, Nafsu",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Imran: 145; QS. Yusuf: 53; QS. Asy-Syams: 7-10; HR. Bukhari No. 4779",
     "origin": "Bahasa Arab",
     "arabic": "نَفْس",
     "latin": "Nafs",
@@ -554,7 +554,7 @@
     "category": "kosakata",
     "definition": "Hati, Jantung",
     "example": "",
-    "source": "",
+    "source": "QS. Al-A'raf: 179; QS. Al-Hujurat: 14; HR. Bukhari No. 52; HR. Muslim No. 2750",
     "origin": "Bahasa Arab",
     "arabic": "قَلْب",
     "latin": "Qalb",
@@ -565,7 +565,7 @@
     "category": "kosakata",
     "definition": "Akal, Pikiran, Rasio",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 164, 169; QS. Al-An'am: 32; Tafsir Ibnu Katsir 3/269",
     "origin": "Bahasa Arab",
     "arabic": "عَقْل",
     "latin": "'Aql",
@@ -576,7 +576,7 @@
     "category": "kosakata",
     "definition": "Saudara (laki-laki)",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Hujurat: 10; QS. Asy-Syu'ara: 22; HR. Bukhari No. 2651; HR. Muslim No. 2564",
     "origin": "Bahasa Arab",
     "arabic": "أَخ",
     "latin": "Akh",
@@ -587,7 +587,7 @@
     "category": "kosakata",
     "definition": "Saudara (perempuan)",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 178; QS. An-Nisa: 12, 23; HR. Tirmidzi No. 2107",
     "origin": "Bahasa Arab",
     "arabic": "أُخْت",
     "latin": "Ukht",
@@ -598,7 +598,7 @@
     "category": "kosakata",
     "definition": "Umat, Komunitas Islam",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Anbiya: 92; QS. Al-Mu'minun: 52; HR. Muslim No. 4858",
     "origin": "Bahasa Arab",
     "arabic": "أُمَّة",
     "latin": "Ummah",
@@ -609,7 +609,7 @@
     "category": "kosakata",
     "definition": "Amanah, Kepercayaan",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Ahzab: 72; QS. Al-Mu'minun: 8; HR. Bukhari No. 2749; HR. Muslim No. 1826",
     "origin": "Bahasa Arab",
     "arabic": "أَمَانَة",
     "latin": "Amanah",
@@ -620,7 +620,7 @@
     "category": "kosakata",
     "definition": "Hikmah, Kebijaksanaan",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 269; QS. Luqman: 12; HR. Tirmidzi No. 2520; HR. Ahmad 4/79",
     "origin": "Bahasa Arab",
     "arabic": "حِكْمَة",
     "latin": "Hikmah",
@@ -631,7 +631,7 @@
     "category": "kosakata",
     "definition": "Rezeki, Karunia",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 60; QS. Adz-Dzariyat: 22; QS. Hud: 6; HR. Muslim No. 1015",
     "origin": "Bahasa Arab",
     "arabic": "رِزْق",
     "latin": "Rizq",
@@ -642,7 +642,7 @@
     "category": "kosakata",
     "definition": "Surga",
     "example": "",
-    "source": "",
+    "source": "QS. As-Sajdah: 17; QS. Al-Kahf: 31; HR. Bukhari No. 2829; HR. Muslim No. 188",
     "origin": "Bahasa Arab",
     "arabic": "جَنَّة",
     "latin": "Jannah",
@@ -653,7 +653,7 @@
     "category": "kosakata",
     "definition": "Neraka, Api",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 24; QS. Ali Imran: 16; QS. Al-Mulk: 5-7; HR. Bukhari No. 1402",
     "origin": "Bahasa Arab",
     "arabic": "نَار",
     "latin": "Nar",
@@ -664,7 +664,7 @@
     "category": "kosakata",
     "definition": "Malaikat",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 30-31, 98; QS. Al-Hijr: 7-8; HR. Muslim No. 2870",
     "origin": "Bahasa Arab",
     "arabic": "مَلَك",
     "latin": "Malak",
@@ -675,7 +675,7 @@
     "category": "kosakata",
     "definition": "Nabi, Pembawa berita",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Ahzab: 5-6, 40; QS. Al-Anbiya: 7; HR. Bukhari No. 3493",
     "origin": "Bahasa Arab",
     "arabic": "نَبِيّ",
     "latin": "Nabi",
@@ -686,7 +686,7 @@
     "category": "kosakata",
     "definition": "Rasul, Utusan",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Baqarah: 143; QS. An-Nisa: 64, 79; HR. Muslim No. 2278",
     "origin": "Bahasa Arab",
     "arabic": "رَسُول",
     "latin": "Rasul",
@@ -697,7 +697,7 @@
     "category": "kosakata",
     "definition": "Muslim, Orang yang berserah diri",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Hajj: 78; QS. Ali Imran: 102; HR. Muslim No. 38; HR. Tirmidzi No. 2618",
     "origin": "Bahasa Arab",
     "arabic": "مُسْلِم",
     "latin": "Muslim",
@@ -708,7 +708,7 @@
     "category": "kosakata",
     "definition": "Mukmin, Orang beriman",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Hujurat: 15; QS. At-Taubah: 71; HR. Muslim No. 50; HR. Bukhari No. 8",
     "origin": "Bahasa Arab",
     "arabic": "مُؤْمِن",
     "latin": "Mu'min",
@@ -719,7 +719,7 @@
     "category": "kosakata",
     "definition": "Dengan nama (basmalah)",
     "example": "",
-    "source": "",
+    "source": "QS. Al-Fatihah: 1; QS. An-Naml: 30; Tafsir Ibnu Katsir 7/263-264",
     "origin": "Bahasa Arab",
     "arabic": "بِسْم",
     "latin": "Bism",

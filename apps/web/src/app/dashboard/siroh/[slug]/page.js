@@ -4,6 +4,7 @@ import { sirohApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import Link from "next/link";
+import SourceBadges from "@/components/SourceBadges";
 import { useEffect, useState, use } from "react";
 
 const toStr = (v) => {
@@ -106,9 +107,10 @@ export default function SirohDetailPage(props) {
             </div>
 
             {content.source && (
-                <p className='text-xs text-gray-400 mt-8 border-t border-gray-100 dark:border-slate-700 pt-4'>
-                    {t("common.source")}: {content.source}
-                </p>
+                <div className='text-xs text-gray-400 mt-8 border-t border-gray-100 dark:border-slate-700 pt-4'>
+                    <span className='mr-1'>{t("common.source")}:</span>
+                    <SourceBadges source={content.source} />
+                </div>
             )}
         </div>
     );

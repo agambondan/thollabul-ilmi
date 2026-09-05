@@ -12,6 +12,7 @@ import { useLocale } from "@/context/Locale";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
+import SourceBadges from "@/components/SourceBadges";
 
 const TYPES = [
     { value: "ulama", label: "Nasihat Ulama" },
@@ -196,9 +197,11 @@ const AdminRemindersPage = () => {
                             </Td>
                             <Td className='hidden text-gray-600 dark:text-gray-300 md:table-cell'>
                                 <p>{item.author || "-"}</p>
-                                <p className='text-xs text-gray-400'>
-                                    {item.source || "-"}
-                                </p>
+                                {item.source ? (
+                                    <SourceBadges source={item.source} />
+                                ) : (
+                                    <p className='text-xs text-gray-400'>-</p>
+                                )}
                             </Td>
                             <Td>
                                 <span className='rounded bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 dark:text-emerald-400 dark:bg-emerald-900/30 dark:text-emerald-300'>

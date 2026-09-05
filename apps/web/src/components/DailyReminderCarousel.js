@@ -3,6 +3,7 @@
 import { useLocale } from "@/context/Locale";
 import { hadithApi, remindersApi } from "@/lib/api";
 import { getLocalizedTranslation } from "@/lib/translation";
+import { parseSource } from "@/components/SourceBadges";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { FaQuran } from "react-icons/fa";
@@ -145,12 +146,16 @@ const normalizeReminder = (item, lang) => {
             ? item.title || "Nasihat Ulama"
             : item.title || "Pengingat Harian";
 
+    const parsed = parseSource(item.source || "");
+    const firstUrl = parsed.find((p) => p.url)?.url;
+
     return {
         type: "Nasihat Ulama",
         icon: MdFormatQuote,
         title,
         text,
         source: source || "Pengingat harian",
+        href: firstUrl || "",
     };
 };
 
@@ -279,11 +284,20 @@ export default function DailyReminderCarousel({
             </p>
 
             <div className='flex items-center justify-between gap-3 text-xs'>
-                <span
-                    className={`min-w-0 truncate font-medium ${theme.source}`}
-                >
-                    {active.source}
-                </span>
+                {active.href ? (
+                    <Link
+                        href={active.href}
+                        className={`min-w-0 truncate font-medium hover:underline ${theme.source}`}
+                    >
+                        {active.source}
+                    </Link>
+                ) : (
+                    <span
+                        className={`min-w-0 truncate font-medium ${theme.source}`}
+                    >
+                        {active.source}
+                    </span>
+                )}
                 {active.href ? (
                     <Link
                         href={active.href}

@@ -354,6 +354,7 @@ const enAdmin = {
     "admin.sirah.title_placeholder": "Sirah chapter title...",
     "admin.sirah.content_placeholder":
         "Write sirah content here. Use new lines to separate paragraphs...",
+    "admin.sirah.source_hint": "Separate multiple sources with semicolons (;).",
     "admin.sirah.content_not_found": "Content not found.",
     "admin.users.title": "User Management",
     "admin.users.subtitle":

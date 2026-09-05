@@ -52,12 +52,12 @@
     {
         "category": "dzikir_umum",
         "title": "Membaca Surat Al-Kahfi di Hari Jumat",
-        "arabic": "",
-        "transliteration": "",
-        "translation_text": "Membaca Surat Al-Kahfi (QS. 18) setiap hari Jumat — boleh di siang atau malam Jumat",
+        "arabic": "مَنْ قَرَأَ سُورَةَ الْكَهْفِ فِي يَوْمِ الْجُمُعَةِ أَضَاءَ لَهُ مِنَ النُّورِ مَا بَيْنَ الْجُمُعَتَيْنِ",
+        "transliteration": "Man qara-a suuratal kahfi fii yaumil jumu'ati adhaa-a lahu minan nuuri maa bainal jumu'atain",
+        "translation_text": "Barangsiapa membaca Surat Al-Kahfi pada hari Jumat, niscaya akan memancar cahaya baginya di antara dua Jumat.",
         "count": 1,
         "fadhilah": "Nabi ﷺ bersabda: 'Barangsiapa membaca Surat Al-Kahfi pada hari Jumat, maka ia akan mendapat cahaya di antara dua Jumat.' (HR. Al-Hakim; Shahih menurut Al-Albani)",
-        "source": "HR. Al-Hakim No. 2/368; Shahihul Jami' No. 6470 (Al-Albani: Shahih)",
+        "source": "HR. Al-Hakim No. 2/368; HR. Al-Baihaqi 3/249; Shahih (Al-Albani)",
         "occasion": "jumat"
     },
     {
@@ -96,12 +96,12 @@
     {
         "category": "dzikir_umum",
         "title": "Qiyamul Lail 10 Malam Terakhir Ramadan",
-        "arabic": "",
-        "transliteration": "",
-        "translation_text": "Perbanyak sholat malam, tilawah Al-Quran, dzikir, dan doa pada 10 malam terakhir Ramadan. Nabi ﷺ lebih giat beribadah pada 10 malam terakhir dari malam-malam lainnya.",
+        "arabic": "مَنْ قَامَ لَيْلَةَ الْقَدْرِ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ",
+        "transliteration": "Man qaama lailatal qadri iimaanan wahtisaaban ghufira lahu maa taqaddama min dzanbih",
+        "translation_text": "Barangsiapa sholat pada malam Lailatul Qadar karena iman dan mengharap pahala, niscaya diampuni dosa-dosanya yang telah lalu.",
         "count": 1,
         "fadhilah": "Nabi ﷺ bersabda: 'Carilah Lailatul Qadar pada malam-malam ganjil dari 10 terakhir Ramadan.' (HR. Bukhari)",
-        "source": "HR. Bukhari No. 2017; HR. Muslim No. 1169",
+        "source": "HR. Bukhari No. 1901; HR. Muslim No. 760; Shahih (Muttafaq 'alaih)",
         "occasion": "lailatul_qadar"
     },
     {

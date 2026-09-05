@@ -168,11 +168,6 @@ func seedAmalanItemFromFile(db *gorm.DB) {
 // ── Dzikir ────────────────────────────────────────────────────────────────────
 
 func seedDzikirFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.Dzikir{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Category        string `json:"category"`
 		Title           string `json:"title"`
@@ -290,6 +285,7 @@ func seedFiqhItemsFromFile(db *gorm.DB) {
 		Slug         string `json:"slug"`
 		Content      string `json:"content"`
 		Source       string `json:"source"`
+		Dalil        string `json:"dalil"`
 		SortOrder    int    `json:"sort_order"`
 	}
 	var rows []row
@@ -310,17 +306,22 @@ func seedFiqhItemsFromFile(db *gorm.DB) {
 			catCache[r.CategorySlug] = catID
 		}
 		catIDPtr := catID
+		dalil := r.Dalil
+		if dalil == "" {
+			dalil = r.Source
+		}
 		item := model.FiqhItem{
 			CategoryID: &catIDPtr,
 			Title:      r.Title,
 			Slug:       r.Slug,
 			Content:    r.Content,
 			Source:     r.Source,
+			Dalil:      dalil,
 			SortOrder:  r.SortOrder,
 		}
 		db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "slug"}},
-			DoUpdates: clause.AssignmentColumns([]string{"title", "content", "source", "sort_order"}),
+			DoUpdates: clause.AssignmentColumns([]string{"title", "content", "source", "dalil", "sort_order"}),
 		}).Create(&item)
 	}
 }
@@ -355,16 +356,12 @@ func seedSirohCategoriesFromFile(db *gorm.DB) {
 // ── Siroh Content ─────────────────────────────────────────────────────────────
 
 func seedSirohContentsFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.SirohContent{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		CategorySlug string `json:"category_slug"`
 		Title        string `json:"title"`
 		Slug         string `json:"slug"`
 		Content      string `json:"content"`
+		Source       string `json:"source"`
 		Order        int    `json:"order"`
 	}
 	var rows []row
@@ -390,11 +387,12 @@ func seedSirohContentsFromFile(db *gorm.DB) {
 			Title:      r.Title,
 			Slug:       r.Slug,
 			Content:    r.Content,
+			Source:     r.Source,
 			Order:      r.Order,
 		}
 		db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "slug"}},
-			DoUpdates: clause.AssignmentColumns([]string{"title", "content", `"order"`}),
+			DoUpdates: clause.AssignmentColumns([]string{"title", "content", "source", `"order"`}),
 		}).Create(&item)
 	}
 }
@@ -662,11 +660,6 @@ func seedHistoryEventsFromFile(db *gorm.DB) {
 // ── Manasik Step ──────────────────────────────────────────────────────────────
 
 func seedManasikStepsFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.ManasikStep{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Type            string `json:"type"`
 		StepOrder       int    `json:"step_order"`
@@ -676,6 +669,7 @@ func seedManasikStepsFromFile(db *gorm.DB) {
 		Transliteration string `json:"transliteration"`
 		TranslationText string `json:"translation_text"`
 		Notes           string `json:"notes"`
+		Source          string `json:"source"`
 		IsWajib         bool   `json:"is_wajib"`
 	}
 	var rows []row
@@ -693,13 +687,66 @@ func seedManasikStepsFromFile(db *gorm.DB) {
 			Transliteration: r.Transliteration,
 			TranslationText: r.TranslationText,
 			Notes:           r.Notes,
+			Source:          r.Source,
 			IsWajib:         r.IsWajib,
 		}
 		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "type"}, {Name: "step_order"}},
-			DoUpdates: clause.AssignmentColumns([]string{"title", "description", "arabic", "transliteration", "translation", "notes", "is_wajib"}),
+			Columns: []clause.Column{{Name: "type"}, {Name: "step_order"}},
+			DoUpdates: clause.AssignmentColumns([]string{
+				"title", "description", "arabic", "transliteration", "translation",
+				"notes", "source", "is_wajib",
+			}),
 		}).Create(&item)
+
+		var existing model.ManasikStep
+		if err := db.Where("type = ? AND step_order = ?", item.Type, item.StepOrder).
+			First(&existing).Error; err != nil {
+			log.Printf("[seeder] manasik %s#%d lookup gagal: %v", item.Type, item.StepOrder, err)
+			continue
+		}
+		newTrID := upsertManasikTranslation(db, existing.TranslationID, item.Title, item.Arabic, item.Transliteration, item.TranslationText)
+		if newTrID != nil && (existing.TranslationID == nil || *existing.TranslationID != *newTrID) {
+			if err := db.Model(&model.ManasikStep{}).
+				Where("id = ?", existing.ID).
+				Update("translation_id", newTrID).Error; err != nil {
+				log.Printf("[seeder] manasik %s#%d translation_id update gagal: %v", item.Type, item.StepOrder, err)
+			}
+		}
 	}
+}
+
+func upsertManasikTranslation(db *gorm.DB, existingID *int, title, arabic, latin, description string) *int {
+	tr := &model.Translation{
+		Idn:            stringPtrOrNil(title),
+		Ar:             stringPtrOrNil(arabic),
+		LatinIdn:       stringPtrOrNil(latin),
+		DescriptionIdn: stringPtrOrNil(description),
+	}
+	if existingID != nil {
+		if err := db.Model(&model.Translation{}).
+			Where("id = ?", *existingID).
+			Updates(map[string]interface{}{
+				"idn":             tr.Idn,
+				"ar":              tr.Ar,
+				"latin_idn":       tr.LatinIdn,
+				"description_idn": tr.DescriptionIdn,
+			}).Error; err != nil {
+			log.Printf("[seeder] manasik translation update gagal: %v", err)
+		}
+		return existingID
+	}
+	if err := db.Create(tr).Error; err != nil {
+		log.Printf("[seeder] manasik translation create gagal: %v", err)
+		return nil
+	}
+	return tr.ID
+}
+
+func stringPtrOrNil(v string) *string {
+	if v == "" {
+		return nil
+	}
+	return &v
 }
 
 // ── Islamic Term ──────────────────────────────────────────────────────────────
@@ -720,17 +767,6 @@ func seedIslamicTermsFromFile(db *gorm.DB) {
 	if !readStaticJSON("islamic_term.json", &rows) {
 		return
 	}
-
-	// A plain "already has rows" guard would freeze existing deployments at
-	// whatever they were first seeded with, so entries added to the file later
-	// would never land. Re-run only while the database is missing some of them;
-	// once it has caught up this is a no-op and admin edits survive.
-	var count int64
-	db.Model(&model.IslamicTerm{}).Count(&count)
-	if count >= int64(len(rows)) {
-		return
-	}
-
 	log.Printf("[seeder] seedIslamicTermsFromFile: %d entri", len(rows))
 	for _, r := range rows {
 		item := model.IslamicTerm{

@@ -20,7 +20,7 @@ func newBackfillSourcesTestDB(t *testing.T) *gorm.DB {
 	if err != nil {
 		t.Fatalf("open sqlite: %v", err)
 	}
-	if err := db.AutoMigrate(&model.ManasikStep{}, &model.AsmaUlHusna{}, &model.AmalanItem{}); err != nil {
+	if err := db.AutoMigrate(&model.ManasikStep{}, &model.AsmaUlHusna{}, &model.AmalanItem{}, &model.FiqhItem{}); err != nil {
 		t.Fatalf("auto migrate: %v", err)
 	}
 	return db
