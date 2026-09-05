@@ -1,7 +1,7 @@
 import Section from "@/components/Section";
 import { DoaContent } from "./DoaContent";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 
 const API_URL =
     process.env.API_INTERNAL_URL ||

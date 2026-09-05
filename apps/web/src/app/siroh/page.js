@@ -1,7 +1,7 @@
 import Section from "@/components/Section";
 import SirohClient from "./SirohClient";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 
 const API_URL =
     process.env.API_INTERNAL_URL ||

@@ -1,7 +1,7 @@
 import Section from "@/components/Section";
 import BlogClient from "./BlogClient";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const API_URL =
     process.env.API_INTERNAL_URL ||

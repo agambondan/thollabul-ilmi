@@ -2,7 +2,6 @@ import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 import { cookies } from "next/headers";
 import { AuthProvider } from "@/context/Auth";
-import SettingButton from "@/components/popup/SettingButton";
 import { LocaleProvider } from "@/context/Locale";
 import { SettingsProvider } from "@/lib/useSettings";
 import AnalyticsTracker from "@/components/AnalyticsTracker";
@@ -10,10 +9,7 @@ import ServiceWorkerRegistrar from "@/components/ServiceWorkerRegistrar";
 import MobileTabBar from "@/components/MobileTabBar";
 import SkipToContent from "@/components/SkipToContent";
 import { PublicFooter, PublicNavbar } from "@/components/PublicChrome";
-import { Toaster } from "react-hot-toast";
-import InAppNotification from "@/components/InAppNotification";
-import NotificationPermissionPrompt from "@/components/NotificationPermissionPrompt";
-import PwaInstallNotice from "@/components/PwaInstallNotice";
+import FloatingOverlays from "@/components/FloatingOverlays";
 
 const websiteJsonLd = {
     "@context": "https://schema.org",
@@ -125,29 +121,7 @@ export default async function RootLayout({ children }) {
                             </div>
                             <PublicFooter />
                             <MobileTabBar />
-                            <SettingButton />
-                            <PwaInstallNotice />
-                            <NotificationPermissionPrompt />
-                            <Toaster
-                                position='top-right'
-                                toastOptions={{
-                                    duration: 5000,
-                                    // Tokens defined in globals.css so the
-                                    // toast follows the .dark class like every
-                                    // other surface. react-hot-toast has no
-                                    // `dark` option — the previous one was
-                                    // silently ignored.
-                                    className: "app-toast",
-                                    style: {
-                                        borderRadius: "12px",
-                                        background: "var(--toast-bg)",
-                                        color: "var(--toast-fg)",
-                                        boxShadow:
-                                            "0 4px 24px rgba(0,0,0,0.16)",
-                                    },
-                                }}
-                            />
-                            <InAppNotification />
+                            <FloatingOverlays />
                         </SettingsProvider>
                     </AuthProvider>
                 </LocaleProvider>
