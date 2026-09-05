@@ -114,8 +114,8 @@ export default function KajianClient({ kajian: initialKajian = [], initialTab = 
                 }
                 const data = await res.json();
                 if (cancelled) return;
-                const items = data?.data?.items || [];
-                const meta = data?.data?.meta || { total: 0, page: 1 };
+                const items = data?.items ?? data?.data?.items ?? (Array.isArray(data) ? data : []);
+                const meta = data?.meta ?? data?.data?.meta ?? { total: items.length, page: 1 };
                 setTranscriptResults(items);
                 setTranscriptMeta(meta);
             } catch (e) {
