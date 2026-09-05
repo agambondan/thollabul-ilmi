@@ -296,8 +296,8 @@ const AdminReportsPage = () => {
                     setAdminNote("");
                     setCorrectionText("");
                 }}
-                title='Review Report'
-                maxWidth='max-w-2xl'
+                label='Review Report'
+                panelClassName='bg-white dark:bg-slate-900 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-5 shadow-xl border border-gray-100 dark:border-slate-800'
             >
                 {active && (
                     <div className='space-y-4'>

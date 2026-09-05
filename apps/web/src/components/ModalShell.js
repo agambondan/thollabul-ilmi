@@ -25,6 +25,7 @@ let openModalCount = 0;
  * without redesigning 20-odd screens.
  */
 const ModalShell = ({
+    isOpen = true,
     onClose,
     children,
     panelClassName = "",
@@ -42,6 +43,7 @@ const ModalShell = ({
     }, [onClose]);
 
     useEffect(() => {
+        if (!isOpen) return;
         openModalCount += 1;
         const { body } = document;
         const previousOverflow = body.style.overflow;
@@ -93,7 +95,9 @@ const ModalShell = ({
             if (openModalCount === 0) body.style.overflow = previousOverflow;
             restoreFocusRef.current?.focus?.();
         };
-    }, [handleClose]);
+    }, [isOpen, handleClose]);
+
+    if (!isOpen) return null;
 
     return (
         <div className={overlayClassName}>
