@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import KajianClient from "@/app/kajian/KajianClient";
 import "@testing-library/jest-dom";
 
@@ -66,14 +66,19 @@ describe("KajianClient Search Transcript", () => {
 
         fireEvent.click(screen.getByText(/Cari di Transkrip/i));
 
-        expect(screen.getAllByText(/Hybrid/i).length).toBeGreaterThanOrEqual(1);
-        expect(screen.getAllByText(/Teks Persis/i).length).toBeGreaterThanOrEqual(1);
-        expect(screen.getAllByText(/Makna \/ Tema/i).length).toBeGreaterThanOrEqual(1);
+        await waitFor(() => {
+            expect(screen.getAllByText(/Hybrid/i).length).toBeGreaterThanOrEqual(1);
+            expect(screen.getAllByText(/Teks Persis/i).length).toBeGreaterThanOrEqual(1);
+            expect(screen.getAllByText(/Makna \/ Tema/i).length).toBeGreaterThanOrEqual(1);
+        });
     });
 
-    it("switches search modes when clicked", () => {
+    it("switches search modes when clicked", async () => {
         render(<KajianClient kajian={[]} />);
         fireEvent.click(screen.getByText(/Cari di Transkrip/i));
+        await waitFor(() => {
+            expect(screen.getAllByText(/Teks Persis/i).length).toBeGreaterThanOrEqual(1);
+        });
         const exactButton = screen.getAllByText(/Teks Persis/i)[0];
         fireEvent.click(exactButton);
         expect(exactButton).toBeInTheDocument();
