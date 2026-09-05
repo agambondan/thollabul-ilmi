@@ -50,6 +50,7 @@ const AdminReportsPage = () => {
     const [active, setActive] = useState(null);
     const [saving, setSaving] = useState(false);
     const [adminNote, setAdminNote] = useState("");
+    const [correctionText, setCorrectionText] = useState("");
 
     const fb = (type, msg) =>
         window.dispatchEvent(
@@ -100,6 +101,32 @@ const AdminReportsPage = () => {
             fb("admin:toast-success", `Status diperbarui: ${newStatus}`);
             setActive(null);
             setAdminNote("");
+            setCorrectionText("");
+            await load();
+        } catch (err) {
+            fb("admin:toast-error", err.message || "Error");
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const applyCorrection = async () => {
+        if (!active) return;
+        setSaving(true);
+        try {
+            const r = await contentReportApi.adminApply(active.id, {
+                correction_text: correctionText,
+                admin_note: adminNote,
+                field: "idn",
+            });
+            if (!r.ok) {
+                const data = await r.json().catch(() => ({}));
+                throw new Error(data?.message || "Gagal menerapkan koreksi");
+            }
+            fb("admin:toast-success", "Koreksi berhasil diterapkan ke database (+25 poin ke user)!");
+            setActive(null);
+            setAdminNote("");
+            setCorrectionText("");
             await load();
         } catch (err) {
             fb("admin:toast-error", err.message || "Error");
@@ -248,6 +275,7 @@ const AdminReportsPage = () => {
                                             onClick={() => {
                                                 setActive(it);
                                                 setAdminNote(it.admin_note || "");
+                                                setCorrectionText(it.correction || "");
                                             }}
                                             className='text-emerald-600 dark:text-emerald-400 hover:underline text-xs font-semibold'
                                         >
@@ -266,6 +294,7 @@ const AdminReportsPage = () => {
                 onClose={() => {
                     setActive(null);
                     setAdminNote("");
+                    setCorrectionText("");
                 }}
                 title='Review Report'
                 maxWidth='max-w-2xl'
@@ -330,6 +359,19 @@ const AdminReportsPage = () => {
 
                         <div>
                             <label className='text-xs font-semibold uppercase text-gray-500 dark:text-gray-400'>
+                                Teks Koreksi yang Diterapkan
+                            </label>
+                            <textarea
+                                rows={3}
+                                value={correctionText}
+                                onChange={(e) => setCorrectionText(e.target.value)}
+                                placeholder='Teks terjemahan/konten yang akan ditimpa ke database...'
+                                className='mt-1 w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 text-sm text-gray-800 dark:text-gray-200 focus:border-emerald-500 focus:outline-none'
+                            />
+                        </div>
+
+                        <div>
+                            <label className='text-xs font-semibold uppercase text-gray-500 dark:text-gray-400'>
                                 Admin Note (optional)
                             </label>
                             <textarea
@@ -362,9 +404,18 @@ const AdminReportsPage = () => {
                                 type='button'
                                 disabled={saving}
                                 onClick={() => updateStatus("resolved")}
-                                className='rounded-lg px-3 py-1.5 text-xs font-medium bg-emerald-600 hover:bg-emerald-700 text-white'
+                                className='rounded-lg px-3 py-1.5 text-xs font-medium bg-gray-600 hover:bg-gray-700 text-white'
                             >
-                                {saving ? "..." : "Resolve"}
+                                {saving ? "..." : "Mark Resolved Only"}
+                            </button>
+                            <button
+                                type='button'
+                                disabled={saving || !correctionText.trim()}
+                                onClick={applyCorrection}
+                                title='Terapkan teks koreksi langsung ke database konten dan berikan poin reward ke user'
+                                className='rounded-lg px-3.5 py-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm disabled:opacity-50'
+                            >
+                                {saving ? "..." : "⚡ Terapkan Koreksi (+25 Poin)"}
                             </button>
                         </div>
                     </div>

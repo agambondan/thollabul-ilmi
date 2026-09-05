@@ -1152,6 +1152,12 @@ export const contentReportApi = {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }),
+    adminApply: (id, data) =>
+        authFetch(`/api/v1/admin/reports/${id}/apply`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        }),
 };
 
 export const feedApi = {

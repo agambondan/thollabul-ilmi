@@ -34,6 +34,7 @@ import {
     BsJournalCheck,
     BsStickyFill,
     BsTranslate,
+    BsExclamationTriangle,
 } from "react-icons/bs";
 import { FaCalculator } from "react-icons/fa";
 import { GiCompass } from "react-icons/gi";
@@ -61,7 +62,7 @@ const inputCls =
  * count. The sections live here now; the pages supply nothing but the shell.
  */
 const ProfileContent = () => {
-    const { t } = useLocale();
+    const { t, lang } = useLocale();
     const {
         user,
         isAuthenticated,
@@ -516,6 +517,15 @@ const ProfileContent = () => {
                     <BsBell className='text-emerald-600 dark:text-emerald-400 text-xl' />
                     <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
                         {t("link.notifications")}
+                    </span>
+                </Link>
+                <Link
+                    href='/dashboard/reports'
+                    className='flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors'
+                >
+                    <BsExclamationTriangle className='text-amber-600 dark:text-amber-400 text-xl' />
+                    <span className='text-sm font-medium text-emerald-900 dark:text-emerald-300 dark:text-white'>
+                        {lang === "EN" ? "Content Reports" : "Laporan Koreksi"}
                     </span>
                 </Link>
             </div>
