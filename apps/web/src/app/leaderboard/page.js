@@ -122,21 +122,25 @@ const LeaderboardPage = () => {
                                     {t("leaderboard.your_rank")}
                                 </p>
                                 <p className='text-sm font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mt-0.5'>
-                                    #{myRank.streak_rank ?? "—"}{" "}
+                                    #{myRank.streak?.rank ?? "—"}{" "}
                                     {t("leaderboard.streak_tab")} · #
-                                    {myRank.hafalan_rank ?? "—"}{" "}
-                                    {t("leaderboard.hafalan")}
+                                    {myRank.hafalan?.rank ?? "—"}{" "}
+                                    {t("leaderboard.hafalan")} · #
+                                    {myRank.mushahhih?.rank ?? "—"} Mushahhih
                                 </p>
                             </div>
                             <div className='text-right'>
                                 <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
-                                    {myRank.streak ?? 0}{" "}
+                                    {myRank.streak?.score ?? 0}{" "}
                                     {t("leaderboard.days_unit")} streak
                                 </p>
                                 <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
-                                    {myRank.hafalan_count ?? 0}{" "}
+                                    {myRank.hafalan?.score ?? 0}{" "}
                                     {t("stats.surah_unit")}{" "}
                                     {t("hafalan.memorized").toLowerCase()}
+                                </p>
+                                <p className='text-xs text-sky-600 dark:text-sky-400'>
+                                    {myRank.mushahhih?.score ?? 0} koreksi disetujui
                                 </p>
                             </div>
                         </div>
@@ -261,17 +265,18 @@ const LeaderboardPage = () => {
                                         {tab === "streak" ? (
                                             <p className='text-sm font-bold text-orange-500 flex items-center gap-1'>
                                                 <BsFire />
-                                                {entry.streak ??
-                                                    entry.current_streak ??
-                                                    0}{" "}
+                                                {entry.score ?? entry.streak ?? entry.current_streak ?? 0}{" "}
                                                 {t("leaderboard.days_unit")}
                                             </p>
-                                        ) : (
+                                        ) : tab === "hafalan" ? (
                                             <p className='text-sm font-bold text-emerald-600 dark:text-emerald-400'>
-                                                {entry.hafalan_count ??
-                                                    entry.count ??
-                                                    0}{" "}
+                                                {entry.score ?? entry.hafalan_count ?? entry.count ?? 0}{" "}
                                                 {t("stats.surah_unit")}
+                                            </p>
+                                        ) : (
+                                            <p className='text-sm font-bold text-sky-600 dark:text-sky-400 flex items-center gap-1'>
+                                                <BsShieldCheck />
+                                                {entry.score ?? 0} koreksi
                                             </p>
                                         )}
                                     </div>

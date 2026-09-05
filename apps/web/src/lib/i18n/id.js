@@ -1293,6 +1293,7 @@ const id = {
     "leaderboard.title": "Leaderboard",
     "leaderboard.streak": "Streak",
     "leaderboard.hafalan": "Hafalan",
+    "leaderboard.mushahhih": "Mushahhih",
     "leaderboard.loading": "Memuat...",
     "leaderboard.streak_tab": "Streak Sholat",
     "leaderboard.you": "Kamu",

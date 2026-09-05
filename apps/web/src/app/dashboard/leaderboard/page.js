@@ -16,6 +16,7 @@ const LeaderboardPage = () => {
     const [tab, setTab] = useState("streak");
     const [streakList, setStreakList] = useState([]);
     const [hafalanList, setHafalanList] = useState([]);
+    const [mushahhihList, setMushahhihList] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -37,14 +38,31 @@ const LeaderboardPage = () => {
             } catch {
                 setHafalanList([]);
             }
+            try {
+                const mr = await leaderboardApi.mushahhih();
+                const mData = await mr.json();
+                const m = mData?.items ?? mData ?? [];
+                setMushahhihList(Array.isArray(m) ? m : []);
+            } catch {
+                setMushahhihList([]);
+            }
             setLoading(false);
         };
         load();
     }, []);
 
-    const activeList = tab === "streak" ? streakList : hafalanList;
+    const activeList =
+        tab === "streak"
+            ? streakList
+            : tab === "hafalan"
+              ? hafalanList
+              : mushahhihList;
     const scoreLabel =
-        tab === "streak" ? t("leaderboard.days_unit") : t("stats.surah_unit");
+        tab === "streak"
+            ? t("leaderboard.days_unit")
+            : tab === "hafalan"
+              ? t("stats.surah_unit")
+              : "Koreksi";
 
     return (
         <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
@@ -57,7 +75,7 @@ const LeaderboardPage = () => {
 
             {/* Tabs */}
             <div className='flex gap-1 mb-6 bg-gray-100 dark:bg-slate-800 rounded-lg p-1'>
-                {["streak", "hafalan"].map((tabKey) => (
+                {["streak", "hafalan", "mushahhih"].map((tabKey) => (
                     <button
                         key={tabKey}
                         onClick={() => setTab(tabKey)}
@@ -69,7 +87,9 @@ const LeaderboardPage = () => {
                     >
                         {tabKey === "streak"
                             ? t("leaderboard.streak_tab")
-                            : t("leaderboard.hafalan")}
+                            : tabKey === "hafalan"
+                              ? t("leaderboard.hafalan")
+                              : "Mushahhih"}
                     </button>
                 ))}
             </div>

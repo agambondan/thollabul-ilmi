@@ -1307,6 +1307,7 @@ const en = {
     "leaderboard.title": "Leaderboard",
     "leaderboard.streak": "Streak",
     "leaderboard.hafalan": "Memorization",
+    "leaderboard.mushahhih": "Reviewer (Mushahhih)",
     "leaderboard.loading": "Loading...",
     "leaderboard.streak_tab": "Prayer Streak",
     "leaderboard.you": "You",

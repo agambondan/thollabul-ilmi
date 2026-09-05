@@ -176,8 +176,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	})
 	app.Get("/metrics", middlewares.MetricsHandler())
 
-	cacheMw := middlewares.CacheByType(300, 30)
-	app.Use(cacheMw)
+	cacheMw := middlewares.CacheByType(3600, 60)
 
 	if repo != nil && repo.GetDB() != nil {
 		app.Use(middlewares.PoolProtection(repo.GetDB()))
@@ -187,6 +186,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Use(timeout.NewWithContext(func(c *fiber.Ctx) error {
 		return c.Next()
 	}, 30*time.Second))
+	master.Use(cacheMw)
 	master.Get("/", controllers.GetAPIIndex)
 	master.Get("/info", controllers.GetAPIInfo)
 	if viper.GetString("ENVIRONMENT") != "production" {
@@ -560,6 +560,8 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 
 	// Koleksi Kajian (public read, editor/admin write)
 	master.Get("/kajian", newKajianController.FindAll)
+	master.Get("/kajian/search", newKajianController.SearchTranscripts)
+	master.Get("/kajian/speakers", newKajianController.GetSpeakers)
 	master.Get("/kajian/:id", newKajianController.FindByID)
 	master.Post("/kajian", middlewares.EditorOrAdminMiddleware(), newKajianController.Create)
 	master.Put("/kajian/:id", middlewares.EditorOrAdminMiddleware(), newKajianController.Update)

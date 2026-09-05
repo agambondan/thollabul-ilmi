@@ -153,6 +153,11 @@ const NAV_GROUPS = [
                 label: "Laporan Koreksi",
                 icon: <BsQuestionCircle />,
             },
+            {
+                href: "/admin/audit-logs",
+                label: "Audit Log Dalil",
+                icon: <BsClock />,
+            },
             { href: "/", labelKey: "admin.back_to_app", icon: <BsGrid /> },
         ],
     },

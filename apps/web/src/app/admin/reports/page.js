@@ -3,7 +3,7 @@
 import { contentReportApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useMemo, useState } from "react";
-import { BsCheckCircle, BsXCircle, BsHourglassSplit } from "react-icons/bs";
+import { BsCheckCircle, BsXCircle, BsHourglassSplit, BsDownload, BsSearch } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 
 const STATUSES = [
@@ -45,6 +45,8 @@ const formatDate = (iso) => {
 const AdminReportsPage = () => {
     const { t, lang } = useLocale();
     const [status, setStatus] = useState("");
+    const [targetType, setTargetType] = useState("");
+    const [search, setSearch] = useState("");
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(false);
     const [active, setActive] = useState(null);
@@ -62,6 +64,7 @@ const AdminReportsPage = () => {
         try {
             const params = new URLSearchParams();
             if (status) params.set("status", status);
+            if (targetType) params.set("target_type", targetType);
             params.set("limit", "100");
             const r = await contentReportApi.adminList(params);
             const data = await r.json();
@@ -76,7 +79,48 @@ const AdminReportsPage = () => {
     useEffect(() => {
         load();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [status]);
+    }, [status, targetType]);
+
+    const handleExportCSV = async () => {
+        try {
+            const params = new URLSearchParams();
+            if (status) params.set("status", status);
+            if (targetType) params.set("target_type", targetType);
+            const r = await contentReportApi.adminExport(params);
+            if (!r.ok) throw new Error("Gagal mengekspor data");
+            const blob = await r.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `content-reports-${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+            fb("admin:toast-success", "Export CSV berhasil diunduh");
+        } catch (err) {
+            fb("admin:toast-error", err.message || "Gagal export CSV");
+        }
+    };
+
+    const filteredItems = useMemo(() => {
+        if (!search.trim()) return items;
+        const q = search.trim().toLowerCase();
+        return items.filter((it) => {
+            const haystack = [
+                it.target_title,
+                it.target_id,
+                it.description,
+                it.correction,
+                it.user?.name,
+                it.user?.email,
+            ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase();
+            return haystack.includes(q);
+        });
+    }, [items, search]);
 
     const stats = useMemo(() => {
         const counts = { pending: 0, reviewed: 0, resolved: 0, rejected: 0 };
@@ -174,21 +218,56 @@ const AdminReportsPage = () => {
                 ))}
             </div>
 
-            <div className='flex items-center gap-2 mb-4'>
-                {STATUSES.map((s) => (
-                    <button
-                        key={s.value}
-                        type='button'
-                        onClick={() => setStatus(s.value)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-                            status === s.value
-                                ? "bg-emerald-600 text-white border-emerald-600"
-                                : "bg-white dark:bg-slate-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800"
-                        }`}
+            <div className='flex flex-wrap items-center justify-between gap-3 mb-4'>
+                <div className='flex flex-wrap items-center gap-2'>
+                    {STATUSES.map((s) => (
+                        <button
+                            key={s.value}
+                            type='button'
+                            onClick={() => setStatus(s.value)}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+                                status === s.value
+                                    ? "bg-emerald-600 text-white border-emerald-600"
+                                    : "bg-white dark:bg-slate-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800"
+                            }`}
+                        >
+                            {s.label}
+                        </button>
+                    ))}
+                    <select
+                        value={targetType}
+                        onChange={(e) => setTargetType(e.target.value)}
+                        className='rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-1.5 text-xs text-gray-700 dark:text-gray-300 focus:border-emerald-500 focus:outline-none'
                     >
-                        {s.label}
+                        <option value=''>All Targets</option>
+                        {Object.entries(TARGET_LABELS).map(([k, v]) => (
+                            <option key={k} value={k}>
+                                {v}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className='flex items-center gap-2'>
+                    <div className='relative'>
+                        <BsSearch className='absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs' />
+                        <input
+                            type='text'
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder='Search reports...'
+                            className='pl-7 pr-3 py-1.5 text-xs rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-800 dark:text-gray-200 focus:border-emerald-500 focus:outline-none w-48'
+                        />
+                    </div>
+                    <button
+                        type='button'
+                        onClick={handleExportCSV}
+                        className='inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors'
+                    >
+                        <BsDownload className='text-xs' />
+                        Export CSV
                     </button>
-                ))}
+                </div>
             </div>
 
             <div className='rounded-xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden'>
@@ -215,7 +294,7 @@ const AdminReportsPage = () => {
                                     </td>
                                 </tr>
                             )}
-                            {!loading && items.length === 0 && (
+                            {!loading && filteredItems.length === 0 && (
                                 <tr>
                                     <td
                                         colSpan={6}
@@ -227,7 +306,7 @@ const AdminReportsPage = () => {
                                     </td>
                                 </tr>
                             )}
-                            {items.map((it) => (
+                            {filteredItems.map((it) => (
                                 <tr
                                     key={it.id}
                                     className='border-t border-gray-100 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800/50'
