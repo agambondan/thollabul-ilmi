@@ -3,7 +3,7 @@
 **Tanggal:** 5 September 2026  
 **Environment:** Mobile (Emulated Moto G4 / 4G Fast Throttling 150ms RTT, 1.6Mbps, CPU 4x Slowdown)  
 **Host:** `https://thollabul.jangkauin.site`  
-**Deploy Target:** `sumopod` (Commit `e2dc584`)
+**Deploy Target:** `sumopod` (Commit `b23d1f8`)
 
 ---
 
