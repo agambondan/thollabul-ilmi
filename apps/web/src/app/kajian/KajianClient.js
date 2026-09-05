@@ -47,7 +47,7 @@ const catColor = {
     hadith: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400",
 };
 
-export default function KajianClient({ kajian: initialKajian = [] }) {
+export default function KajianClient({ kajian: initialKajian = [], initialTab = "list" }) {
     const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
     const [kajian, setKajian] = useState(initialKajian);
@@ -55,7 +55,7 @@ export default function KajianClient({ kajian: initialKajian = [] }) {
     const [search, setSearch] = useState("");
 
     // Tab: 'list' = daftar kajian (default), 'transcript' = cari transkrip
-    const [tab, setTab] = useState("list");
+    const [tab, setTab] = useState(initialTab);
 
     // Transcript search state
     const [transcriptQuery, setTranscriptQuery] = useState("");
