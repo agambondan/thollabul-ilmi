@@ -82,6 +82,7 @@ export default function NotificationPermissionPrompt() {
 
     useEffect(() => {
         let cancelled = false;
+        let timer = null;
 
         const boot = async () => {
             if (typeof window === "undefined" || isLoading) return;
@@ -123,13 +124,16 @@ export default function NotificationPermissionPrompt() {
             if (!canAskNotification && !canAskLocation) return;
             if (isPromptDismissed()) return;
 
-            if (!cancelled) setVisible(true);
+            timer = setTimeout(() => {
+                if (!cancelled) setVisible(true);
+            }, 3500);
         };
 
         boot();
 
         return () => {
             cancelled = true;
+            if (timer) clearTimeout(timer);
         };
     }, [isAuthenticated, isLoading, registerPushToken]);
 

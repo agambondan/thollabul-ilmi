@@ -90,15 +90,20 @@ export default function JadwalSholatPage() {
     const [showSettings, setShowSettings] = useState(false);
     const [gpsStatus, setGpsStatus] = useState("idle");
     const [countdown, setCountdown] = useState("");
-    const [notifGranted, setNotifGranted] = useState(
-        () =>
-            typeof Notification !== "undefined" &&
-            Notification.permission === "granted",
-    );
+    const [notifGranted, setNotifGranted] = useState(false);
     const gpsTriedRef = useRef(false);
     const audioRef = useRef(null);
     const lastNotifRef = useRef("");
     const lastReminderRef = useRef("");
+
+    useEffect(() => {
+        if (
+            typeof Notification !== "undefined" &&
+            Notification.permission === "granted"
+        ) {
+            setNotifGranted(true);
+        }
+    }, []);
     const getLeadForPrayer = useCallback(
         (key) => {
             const perPrayer = settings.adzanReminderLeadByPrayer?.[key];
@@ -342,7 +347,10 @@ export default function JadwalSholatPage() {
                     <h1 className='text-2xl sm:text-3xl font-extrabold text-emerald-900 dark:text-emerald-100 mb-1'>
                         {t("prayer_schedule.title")}
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                    <p
+                        suppressHydrationWarning
+                        className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'
+                    >
                         {todayStr}
                     </p>
                 </div>
@@ -600,7 +608,10 @@ export default function JadwalSholatPage() {
 
                 {/* Current time display */}
                 <div className='text-center my-6 sm:my-8'>
-                    <span className='text-5xl sm:text-6xl font-black text-emerald-800 dark:text-emerald-200 tabular-nums tracking-tight'>
+                    <span
+                        suppressHydrationWarning
+                        className='text-5xl sm:text-6xl font-black text-emerald-800 dark:text-emerald-200 tabular-nums tracking-tight'
+                    >
                         {now.toLocaleTimeString(
                             lang === "EN" ? "en-US" : "id-ID",
                             {

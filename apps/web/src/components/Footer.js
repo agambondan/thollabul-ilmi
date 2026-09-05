@@ -98,9 +98,9 @@ const Footer = () => {
 
                     {NAV_COLUMNS.map((col) => (
                         <div key={col.title}>
-                            <h3 className='text-xs font-semibold uppercase tracking-widest text-emerald-400 mb-3'>
+                            <p className='text-xs font-semibold uppercase tracking-widest text-emerald-400 mb-3'>
                                 {col.title}
-                            </h3>
+                            </p>
                             <ul className='space-y-2'>
                                 {col.links.map((link) => (
                                     <li key={link.href}>
