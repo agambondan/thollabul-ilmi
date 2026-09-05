@@ -109,17 +109,62 @@ export default function ImsakiyahPage() {
             setLoading(true);
             setError("");
             try {
-                let url;
-                if (useGps && gpsCoords) {
-                    url = `https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=${gpsCoords.lat}&longitude=${gpsCoords.lng}&method=11`;
-                } else {
-                    const city = CITIES[cityIndex];
-                    url = `https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=${city.lat}&longitude=${city.lng}&method=11`;
+                const lat = useGps && gpsCoords ? gpsCoords.lat : CITIES[cityIndex].lat;
+                const lng = useGps && gpsCoords ? gpsCoords.lng : CITIES[cityIndex].lng;
+                const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
+                
+                let data = null;
+                try {
+                    const internalRes = await fetch(
+                        `${apiUrl}/api/v1/imsakiyah?lat=${lat}&lng=${lng}&year=${year}&month=${month}`,
+                    );
+                    if (internalRes.ok) {
+                        const json = await internalRes.json();
+                        if (json.data?.schedule) {
+                            data = json.data.schedule.map((day) => ({
+                                dateStr: day.date,
+                                imsak: day.prayers?.imsak || "-",
+                                fajr: day.prayers?.fajr || "-",
+                                sunrise: day.prayers?.sunrise || "-",
+                                dhuhr: day.prayers?.dhuhr || "-",
+                                asr: day.prayers?.asr || "-",
+                                maghrib: day.prayers?.maghrib || "-",
+                                isha: day.prayers?.isha || "-",
+                            }));
+                        }
+                    }
+                } catch {
+                    // Fallback to Aladhan if internal is unreachable
                 }
-                const res = await fetch(url);
-                const json = await res.json();
-                if (json.code === 200 && json.data) {
-                    setSchedule(json.data);
+
+                if (!data) {
+                    const aladhanUrl = `https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=${lat}&longitude=${lng}&method=11`;
+                    const res = await fetch(aladhanUrl);
+                    const json = await res.json();
+                    if (json.code === 200 && json.data) {
+                        data = json.data.map((day) => {
+                            const dStr = day.date?.gregorian?.date || "";
+                            const parts = dStr.split("-");
+                            const formatted =
+                                parts.length === 3
+                                    ? `${parts[2]}-${parts[1]}-${parts[0]}`
+                                    : dStr;
+                            return {
+                                dateStr: formatted,
+                                imsak: stripTz(day.timings?.Imsak),
+                                fajr: stripTz(day.timings?.Fajr),
+                                sunrise: stripTz(day.timings?.Sunrise),
+                                dhuhr: stripTz(day.timings?.Dhuhr),
+                                asr: stripTz(day.timings?.Asr),
+                                maghrib: stripTz(day.timings?.Maghrib),
+                                isha: stripTz(day.timings?.Isha),
+                            };
+                        });
+                    }
+                }
+
+                if (data) {
+                    setSchedule(data);
                 } else {
                     setError(t("imsakiyah.load_error"));
                 }
@@ -275,20 +320,19 @@ export default function ImsakiyahPage() {
                                 </thead>
                                 <tbody className='divide-y divide-gray-50 dark:divide-slate-700'>
                                     {schedule.map((day, idx) => {
-                                        const dateStr =
-                                            day.date?.gregorian?.date ?? "";
-                                        const parts = dateStr.split("-");
+                                        const dateParts = (day.dateStr || "").split("-");
                                         const dateObj =
-                                            parts.length === 3
+                                            dateParts.length === 3
                                                 ? new Date(
-                                                      `${parts[2]}-${parts[1]}-${parts[0]}`,
+                                                      Number(dateParts[0]),
+                                                      Number(dateParts[1]) - 1,
+                                                      Number(dateParts[2]),
                                                   )
                                                 : null;
                                         const dayName = dateObj
                                             ? dayNames[dateObj.getDay()]
                                             : "-";
-                                        const dayNum =
-                                            parts[0] ?? String(idx + 1);
+                                        const dayNum = dateParts[2] || String(idx + 1);
                                         const isJumat = dateObj?.getDay() === 5;
                                         const isToday =
                                             dateObj &&
@@ -301,7 +345,7 @@ export default function ImsakiyahPage() {
 
                                         return (
                                             <tr
-                                                key={idx}
+                                                key={day.dateStr || idx}
                                                 className={`transition-colors ${
                                                     isToday
                                                         ? "bg-emerald-50 dark:bg-emerald-900/20"
@@ -329,33 +373,25 @@ export default function ImsakiyahPage() {
                                                     {dayName}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center font-medium text-amber-700 dark:text-amber-400 whitespace-nowrap bg-amber-50/50 dark:bg-amber-900/10'>
-                                                    {stripTz(
-                                                        day.timings?.Imsak,
-                                                    )}
+                                                    {day.imsak}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center text-gray-700 dark:text-gray-200 whitespace-nowrap'>
-                                                    {stripTz(day.timings?.Fajr)}
+                                                    {day.fajr}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center text-gray-400 whitespace-nowrap'>
-                                                    {stripTz(
-                                                        day.timings?.Sunrise,
-                                                    )}
+                                                    {day.sunrise}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center text-gray-700 dark:text-gray-200 whitespace-nowrap'>
-                                                    {stripTz(
-                                                        day.timings?.Dhuhr,
-                                                    )}
+                                                    {day.dhuhr}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center text-gray-700 dark:text-gray-200 whitespace-nowrap'>
-                                                    {stripTz(day.timings?.Asr)}
+                                                    {day.asr}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center font-medium text-rose-700 dark:text-rose-400 whitespace-nowrap bg-rose-50/50 dark:bg-rose-900/10'>
-                                                    {stripTz(
-                                                        day.timings?.Maghrib,
-                                                    )}
+                                                    {day.maghrib}
                                                 </td>
                                                 <td className='px-3 py-2.5 text-center text-gray-700 dark:text-gray-200 whitespace-nowrap'>
-                                                    {stripTz(day.timings?.Isha)}
+                                                    {day.isha}
                                                 </td>
                                             </tr>
                                         );
