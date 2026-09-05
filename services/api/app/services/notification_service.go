@@ -25,6 +25,7 @@ type NotificationService interface {
 	DispatchDueReminders(now time.Time) (int, error)
 	DispatchDueAdzanPush(now time.Time) (int, error)
 	StartReminderScheduler(ctx context.Context, interval time.Duration)
+	SendPushToUser(userID uuid.UUID, title, body, notifURL string) (int, error)
 }
 
 type notificationService struct {

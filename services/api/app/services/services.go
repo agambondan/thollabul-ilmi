@@ -101,6 +101,7 @@ func NewServices(repo *repository.Repositories) *Services {
 	dzikirSvc := NewDzikirServiceWithCache(repo.Dzikir, cache)
 	asmaulHusnaSvc := NewAsmaUlHusnaServiceWithCache(repo.AsmaUlHusna, cache)
 	prayerTimesSvc := NewPrayerTimesService()
+	notificationSvc := NewNotificationService(repo.Notification, repo.NotificationInbox, prayerTimesSvc)
 	svc := &Services{
 		User:                 NewUserService(repo.User),
 		Ayah:                 NewAyahServiceWithCache(repo.Ayah, cache),
@@ -117,7 +118,7 @@ func NewServices(repo *repository.Repositories) *Services {
 		Streak:               streak,
 		Search:               NewSearchServiceWithCache(repo.Search, cache),
 		Mufrodat:             NewMufrodatService(repo.Mufrodat),
-		Notification:         NewNotificationService(repo.Notification, repo.NotificationInbox, prayerTimesSvc),
+		Notification:         notificationSvc,
 		NotificationInbox:    NewNotificationInboxService(repo.NotificationInbox),
 		Feed:                 NewFeedService(repo.Feed, repo.SocialModeration, NewAyahService(repo.Ayah), NewHadithService(repo.Hadith)),
 		Tafsir:               NewTafsirServiceWithCache(repo.Tafsir, cache),
@@ -171,7 +172,7 @@ func NewServices(repo *repository.Repositories) *Services {
 		Chat:                 NewChatService(repo.Chat),
 		Lesson:               NewLessonService(repo.Lesson),
 		AdzanSound:           NewAdzanSoundService(repo.AdzanSound),
-		ContentReport:        NewContentReportService(repo.ContentReport, repo.NotificationInbox),
+		ContentReport:        NewContentReportService(repo.ContentReport, repo.NotificationInbox, repo, notificationSvc),
 		Sync:                 NewSyncService(db, cache, doaSvc, dzikirSvc, asmaulHusnaSvc),
 	}
 	svc.Dashboard = NewDashboardService(db, svc.Ayah, svc.Hadith, svc.Streak, svc.Sholat, svc.NotificationInbox, svc.Tilawah)

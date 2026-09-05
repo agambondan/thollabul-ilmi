@@ -15,6 +15,7 @@ type ContentReportController interface {
 	FindByID(ctx *fiber.Ctx) error
 	UpdateStatus(ctx *fiber.Ctx) error
 	FindMine(ctx *fiber.Ctx) error
+	ApplyCorrection(ctx *fiber.Ctx) error
 }
 
 type contentReportController struct {
@@ -120,6 +121,34 @@ func (c *contentReportController) UpdateStatus(ctx *fiber.Ctx) error {
 		return lib.ErrorBadRequest(ctx, err)
 	}
 	report, err := c.svc.UpdateStatus(ctx.Params("id"), reviewerID, req)
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	return lib.OK(ctx, report)
+}
+
+// @Summary Apply a content correction report (admin one-click apply)
+// @Tags Admin
+// @Accept json
+// @Produce json
+// @Param id path string true "Report ID"
+// @Param body body model.ApplyContentReportRequest true "Apply payload"
+// @Success 200 {object} lib.Response
+// @Router /admin/reports/{id}/apply [post]
+func (c *contentReportController) ApplyCorrection(ctx *fiber.Ctx) error {
+	claims, err := lib.ExtractToken(ctx)
+	if err != nil || claims["role"] != string(model.RoleAdmin) {
+		return lib.ErrorForbidden(ctx)
+	}
+	reviewerID, err := extractUserID(ctx)
+	if err != nil {
+		return lib.ErrorUnauthorized(ctx)
+	}
+	req := new(model.ApplyContentReportRequest)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	report, err := c.svc.ApplyCorrection(ctx.Params("id"), reviewerID, req)
 	if err != nil {
 		return lib.ErrorBadRequest(ctx, err)
 	}

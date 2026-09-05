@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"errors"
+
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -63,18 +65,28 @@ func (r *achievementRepo) Award(ua *model.UserAchievement) error {
 
 func (r *achievementRepo) GetPoints(userID uuid.UUID) (*model.UserPoints, error) {
 	var p model.UserPoints
-	err := r.db.Where("user_id = ?", userID).FirstOrCreate(&p, model.UserPoints{
-		BaseUUID:    model.BaseUUID{ID: uuid.New()},
-		UserID:      userID,
-		TotalPoints: 0,
-	}).Error
+	err := r.db.Where("user_id = ?", userID).First(&p).Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			p = model.UserPoints{
+				BaseUUID:    model.BaseUUID{ID: uuid.New()},
+				UserID:      userID,
+				TotalPoints: 0,
+			}
+			if err := r.db.Create(&p).Error; err != nil {
+				return nil, err
+			}
+			return &p, nil
+		}
 		return nil, err
 	}
 	return &p, nil
 }
 
 func (r *achievementRepo) AddPoints(userID uuid.UUID, delta int) error {
+	if _, err := r.GetPoints(userID); err != nil {
+		return err
+	}
 	return r.db.Model(&model.UserPoints{}).
 		Where("user_id = ?", userID).
 		UpdateColumn("total_points", gorm.Expr("total_points + ?", delta)).Error

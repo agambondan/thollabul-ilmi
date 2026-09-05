@@ -46,6 +46,13 @@ type expoPushResponse struct {
 	Errors []expoPushError `json:"errors,omitempty"`
 }
 
+func (s *notificationService) SendPushToUser(userID uuid.UUID, title, body, notifURL string) (int, error) {
+	return s.sendPushToUser(userID, model.NotificationTypeReport, reminderContent{
+		Title:       title,
+		Description: body,
+	})
+}
+
 func (s *notificationService) sendPushReminder(setting model.NotificationSetting, content reminderContent) (int, error) {
 	return s.sendPushToUser(setting.UserID, setting.Type, content)
 }

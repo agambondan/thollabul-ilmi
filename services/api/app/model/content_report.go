@@ -67,3 +67,9 @@ type UpdateContentReportStatusRequest struct {
 	Status    ContentReportStatus `json:"status" validate:"required"`
 	AdminNote string              `json:"admin_note"`
 }
+
+type ApplyContentReportRequest struct {
+	CorrectionText string `json:"correction_text"`
+	Field          string `json:"field"`
+	AdminNote      string `json:"admin_note"`
+}

@@ -1,6 +1,7 @@
 package controllers_test
 
 import (
+	"strconv"
 	"testing"
 
 	"github.com/agambondan/islamic-explorer/app/model"
@@ -18,7 +19,7 @@ func setupContentReportTestEnv(t *testing.T) (*gorm.DB, *service.Services) {
 	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
 	assert.NoError(t, err)
 
-	err = db.AutoMigrate(&model.User{}, &model.ContentReport{}, &model.UserNotification{})
+	err = db.AutoMigrate(&model.User{}, &model.ContentReport{}, &model.UserNotification{}, &model.UserPoints{}, &model.Doa{}, &model.Translation{}, &model.PushToken{})
 	assert.NoError(t, err)
 
 	repo, err := repository.NewRepositories(db, nil)
@@ -126,6 +127,50 @@ func TestContentReportServiceLifecycle(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, int64(1), total)
 	assert.Len(t, items, 1)
+
+	// 9. Apply correction to Doa and assert points reward
+	tr := &model.Translation{Idn: stringPtr("Teks lama")}
+	db.Create(tr)
+	doa := &model.Doa{
+		Category:        model.DoaCategoryUmum,
+		Title:           "Doa Test",
+		Arabic:          "دُعَاء",
+		TranslationText: "Teks lama",
+		TranslationID:   tr.ID,
+	}
+	db.Create(doa)
+
+	doaReport, err := svc.ContentReport.Create(user.ID, &model.CreateContentReportRequest{
+		TargetType:  model.ContentReportTargetDoa,
+		TargetID:    stringPtrToStr(doa.ID),
+		TargetTitle: "Doa Test",
+		Category:    model.ContentReportCategoryTranslation,
+		Description: "Terjemahan keliru",
+		Correction:  "Teks baru hasil koreksi",
+	})
+	assert.NoError(t, err)
+
+	applied, err := svc.ContentReport.ApplyCorrection(doaReport.ID.String(), admin.ID, &model.ApplyContentReportRequest{
+		AdminNote: "Koreksi doa disetujui",
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, model.ContentReportStatusResolved, applied.Status)
+
+	// User points should be increased by 25
+	points, err := svc.Achievement.GetUserPoints(user.ID)
+	assert.NoError(t, err)
+	assert.Equal(t, 25, points.TotalPoints)
+}
+
+func stringPtr(s string) *string {
+	return &s
+}
+
+func stringPtrToStr(id *int) string {
+	if id == nil {
+		return ""
+	}
+	return strconv.Itoa(*id)
 }
 
 func TestContentReportServiceFindAllFilters(t *testing.T) {

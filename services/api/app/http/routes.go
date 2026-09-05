@@ -813,6 +813,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/admin/reports", admin, newContentReportController.FindAll)
 	master.Get("/admin/reports/:id", admin, newContentReportController.FindByID)
 	master.Patch("/admin/reports/:id/status", admin, newContentReportController.UpdateStatus)
+	master.Post("/admin/reports/:id/apply", admin, newContentReportController.ApplyCorrection)
 
 	if viper.GetString("ENVIRONMENT") != "production" {
 		pprofGroup := app.Group("/debug/pprof")
