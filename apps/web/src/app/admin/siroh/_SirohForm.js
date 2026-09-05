@@ -79,7 +79,7 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
         "w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500";
 
     return (
-        <form onSubmit={handleSubmit} className='max-w-3xl space-y-5'>
+        <form onSubmit={handleSubmit} className='w-full space-y-5'>
             {error && (
                 <div className='p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400'>
                     {error}

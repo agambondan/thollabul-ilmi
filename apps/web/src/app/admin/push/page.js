@@ -53,7 +53,7 @@ export default function AdminPushNotificationPage() {
     };
 
     return (
-        <div className='p-6 max-w-2xl'>
+        <div className='p-6 w-full'>
             <div className='mb-6'>
                 <h1 className='text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2'>
                     <BsBell className='text-emerald-600 dark:text-emerald-400' />

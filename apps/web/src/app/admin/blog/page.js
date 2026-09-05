@@ -197,7 +197,7 @@ const AdminBlogPage = () => {
     if (isLoading) return <Spinner3 />;
 
     return (
-        <div className='p-6 md:p-8 max-w-7xl mx-auto'>
+        <div className='p-6 md:p-8 w-full'>
             {/* Header */}
             <div className='flex flex-wrap items-center justify-between gap-4 mb-8'>
                 <div>

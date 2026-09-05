@@ -203,7 +203,7 @@ const BlogForm = ({ initialData = null, postId = null }) => {
         "w-full px-3.5 py-2.5 text-sm rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all";
 
     return (
-        <div className='max-w-7xl mx-auto'>
+        <div className='w-full'>
             {/* View Mode Switcher on Mobile/Desktop */}
             <div className='flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700 dark:border-slate-800'>
                 <div className='flex items-center gap-2'>

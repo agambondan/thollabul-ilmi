@@ -136,7 +136,7 @@ const AdminReportsPage = () => {
     };
 
     return (
-        <div className='p-4 md:p-8 max-w-7xl mx-auto'>
+        <div className='p-4 md:p-8 w-full'>
             <div className='mb-6'>
                 <h1 className='text-xl md:text-2xl font-bold text-gray-900 dark:text-white'>
                     {lang === "EN"
