@@ -1,92 +1,228 @@
 [
     {
-        "title": "Silsilah Tauhid & Mengenal Allah (Ushul Tsalatsah)",
-        "speaker": "Ust. Dr. Abdullah Roy, M.A.",
-        "topic": "Akidah",
-        "type": "video",
-        "url": "https://www.youtube.com/@AbdullahRoy",
-        "description": "Mengenal Allah, mengenal agama Islam, dan mengenal Nabi Muhammad ﷺ berdasarkan kitab Ushul Tsalatsah.",
-        "duration": 2700,
-        "published_at": "2024-05-01"
-    },
-    {
-        "title": "Kunci Keharmonisan Rumah Tangga & Adab Terhadap Pasangan",
-        "speaker": "Ust. Dr. Syafiq Riza Basalamah, Lc., M.A.",
-        "topic": "Keharmonisan keluarga",
-        "type": "video",
-        "url": "https://www.youtube.com/@SyafiqRizaBasalamahOfficial",
-        "description": "Tuntunan membangun rumah tangga harmonis di atas pondasi takwa dan akhlak mulia.",
-        "duration": 5111,
-        "published_at": "2024-02-14"
-    },
-    {
-        "title": "Syarah Kitab Tauhid: Hakikat Syirik dan Bahayanya",
-        "speaker": "Ust. Dr. Firanda Andirja, Lc., M.A.",
-        "topic": "Akidah",
-        "type": "video",
-        "url": "https://www.youtube.com/@FirandaAndirjaOfficial",
-        "description": "Penjelasan mendalam tentang syirik besar dan kecil beserta dampaknya bagi keimanan.",
-        "duration": 4500,
-        "published_at": "2024-03-01"
-    },
-    {
-        "title": "Adab Menuntut Ilmu & Mengatasi Kegelisahan Pemuda",
-        "speaker": "Ust. Muhammad Nuzul Dzikri, Lc.",
-        "topic": "Penyucian jiwa",
-        "type": "video",
-        "url": "https://www.youtube.com/@MuhammadNuzulDzikri",
-        "description": "Adab menuntut ilmu ala salaf dan solusi praktis mengatasi kegelisahan hidup pemuda.",
-        "duration": 3200,
-        "published_at": "2024-03-12"
-    },
-    {
-        "title": "Hukum Riba, Pinjaman Online & Transaksi Muamalah",
-        "speaker": "Ust. Dr. Erwandi Tarmizi, Lc., M.A.",
-        "topic": "Fikih muamalah kontemporer",
-        "type": "video",
-        "url": "https://www.youtube.com/@AshiilTV",
-        "description": "Kaidah fikih muamalah kontemporer tentang pinjaman online, paylater, dan riba.",
-        "duration": 4100,
-        "published_at": "2024-03-20"
-    },
-    {
-        "title": "Panduan Fikih Jual Beli Dasar & Akad Bagi Hasil",
-        "speaker": "Ust. Ammi Nur Baits, S.T., B.A.",
-        "topic": "Fikih muamalah dasar",
-        "type": "video",
-        "url": "https://www.youtube.com/@anbchannel",
-        "description": "Rukun jual beli, jual beli yang terlarang, dan akad mudharabah/musyarakah.",
-        "duration": 3500,
-        "published_at": "2024-04-02"
-    },
-    {
-        "title": "Hadis Arba'in An-Nawawiyyah: Ikhlas Niat dan Sunnah",
-        "speaker": "Ust. Abu Yahya Badrusalam, Lc.",
-        "topic": "Hadis tematik",
-        "type": "video",
-        "url": "https://www.youtube.com/@rodjatv",
-        "description": "Syarah Hadis Arba'in Nawawi tentang ikhlas, ittiba', dan adab dakwah.",
-        "duration": 2900,
-        "published_at": "2024-04-15"
-    },
-    {
-        "title": "Sirah Nabawiyah: Akhlak dan Kesabaran Rasulullah ﷺ",
+        "title": "Kajian Tematik: Etos Kerja Muslim",
         "speaker": "Ust. Dr. Khalid Basalamah, Lc., M.A.",
-        "topic": "Sirah Nabawiyah",
+        "topic": "Sirah Nabawiyah, Tazkiyatun nufus, Adab, Fikih praktis",
         "type": "video",
-        "url": "https://www.youtube.com/@khalidbasalamah",
-        "description": "Pelajaran sirah Nabi ﷺ dalam menghadapi ujian, tazkiyatun nufus, dan adab.",
-        "duration": 3600,
-        "published_at": "2024-01-10"
+        "url": "https://www.youtube.com/watch?v=VuJ31eoVmTg",
+        "video_id": "VuJ31eoVmTg",
+        "description": "Kajian tematik membahas prinsip kerja keras, kejujuran, dan profesionalisme seorang muslim.",
+        "duration": 4698,
+        "thumbnail_url": "https://i.ytimg.com/vi/VuJ31eoVmTg/hqdefault.jpg",
+        "published_at": "2024-01-10",
+        "transcripts": [
+            {
+                "start_seconds": 0,
+                "end_seconds": 60,
+                "text": "Alhamdulillah wash shalatu was salamu 'ala rasulillah. Bekerja mencari nafkah halal adalah bagian dari ibadah mulia yang diperintahkan dalam Islam."
+            },
+            {
+                "start_seconds": 61,
+                "end_seconds": 125,
+                "text": "Rasulullah shallallahu 'alaihi wa sallam bersabda: Tidaklah seseorang memakan makanan yang lebih baik daripada hasil usaha tangannya sendiri."
+            },
+            {
+                "start_seconds": 126,
+                "end_seconds": 190,
+                "text": "Menjaga amanah dalam pekerjaan, tidak berbuat curang, dan senantiasa mengharap ridha Allah azza wa jalla adalah kunci keberkahan rezeki."
+            }
+        ]
     },
     {
-        "title": "Indahnya Hijrah: Memperbaiki Diri dan Lingkungan",
-        "speaker": "Ust. Subhan Bawazier, Lc.",
-        "topic": "Nasihat praktis hijrah",
+        "title": "Menggenggam Dunia, Mengejar Akhirat",
+        "speaker": "Ust. Dr. Syafiq Riza Basalamah, Lc., M.A.",
+        "topic": "Keharmonisan keluarga, Pernikahan, Adab bermasyarakat, Akhlak keseharian",
         "type": "video",
-        "url": "https://www.youtube.com/@AladzievieChannel",
-        "description": "Hakikat hijrah, pengaruh pergaulan, dan dakwah di komunitas pemuda.",
-        "duration": 3800,
-        "published_at": "2024-05-18"
+        "url": "https://www.youtube.com/watch?v=a7mP-HEItwQ",
+        "video_id": "a7mP-HEItwQ",
+        "description": "Kajian mendalam tentang cara memposisikan dunia hanya di tangan dan menjadikan akhirat di dalam hati.",
+        "duration": 5111,
+        "thumbnail_url": "https://i.ytimg.com/vi/a7mP-HEItwQ/hqdefault.jpg",
+        "published_at": "2024-02-14",
+        "transcripts": [
+            {
+                "start_seconds": 0,
+                "end_seconds": 61,
+                "text": "Pertama, marilah kita panjatkan puji dan syukur ke hadirat Allah azza wa jalla atas limpahan rahmat, taufik, serta hidayah-Nya."
+            },
+            {
+                "start_seconds": 62,
+                "end_seconds": 124,
+                "text": "Majelis ilmu adalah salah satu taman surga di dunia. Semoga kehadiran kita di sini dicatat sebagai amal saleh yang ikhlas."
+            },
+            {
+                "start_seconds": 125,
+                "end_seconds": 185,
+                "text": "Dunia ini fana dan sementara. Jadikan harta dan waktu yang Allah berikan sebagai bekal perjalanan menuju negeri akhirat yang abadi."
+            }
+        ]
+    },
+    {
+        "title": "Lebih Cantik Tapi Terlaknat: Menjauhi Hal yang Dilarang",
+        "speaker": "Ust. Dr. Firanda Andirja, Lc., M.A.",
+        "topic": "Akidah, Syarah kitab ulama, Tafsir Al-Qur'an",
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=D-Cf6tGsAmk",
+        "video_id": "D-Cf6tGsAmk",
+        "description": "Kajian fiqih dan akhlak mengenai larangan merubah ciptaan Allah dan menjaga fitrah.",
+        "duration": 4149,
+        "thumbnail_url": "https://i.ytimg.com/vi/D-Cf6tGsAmk/hqdefault.jpg",
+        "published_at": "2024-03-01",
+        "transcripts": [
+            {
+                "start_seconds": 0,
+                "end_seconds": 60,
+                "text": "Bismillahir rahmanir rahim. Islam mengajarkan kebersihan dan keindahan, namun menetapkan batasan yang tidak boleh dilanggar."
+            },
+            {
+                "start_seconds": 61,
+                "end_seconds": 120,
+                "text": "Ketaatan kepada syariat mendatangkan ketenangan batin, sementara mengejar tren yang menyelisihi syariat hanya membawa kesia-siaan."
+            }
+        ]
+    },
+    {
+        "title": "Tadzkiratus Saami': Adab Penuntut Ilmu dan Guru",
+        "speaker": "Ust. Muhammad Nuzul Dzikri, Lc.",
+        "topic": "Penyucian jiwa, Adab penuntut ilmu, Isu kehidupan pemuda",
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=7xRlElvBqjc",
+        "video_id": "7xRlElvBqjc",
+        "description": "Pembahasan kitab Tadzkiratus Saami' karya Ibnu Jama'ah tentang adab santri dan pelajar ilmu agama.",
+        "duration": 5490,
+        "thumbnail_url": "https://i.ytimg.com/vi/7xRlElvBqjc/hqdefault.jpg",
+        "published_at": "2024-03-12",
+        "transcripts": [
+            {
+                "start_seconds": 0,
+                "end_seconds": 60,
+                "text": "Para ulama salaf mengajarkan bahwa sebelum mendalami cabang ilmu yang luas, wajib bagi kita memperbaiki niat dan adab."
+            },
+            {
+                "start_seconds": 61,
+                "end_seconds": 120,
+                "text": "Menuntut ilmu membutuhkan kesabaran, kerendahan hati di hadapan guru, dan keistiqomahan dalam mengamalkannya."
+            }
+        ]
+    },
+    {
+        "title": "Kewajiban Amar Ma'ruf Nahi Munkar",
+        "speaker": "Ust. Dr. Erwandi Tarmizi, Lc., M.A.",
+        "topic": "Fikih muamalah kontemporer, Hukum perbankan, Investasi dan bisnis syariah",
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=f5jy4djuElM",
+        "video_id": "f5jy4djuElM",
+        "description": "Penjelasan kaidah syariah dalam mengajak kepada kebaikan dan mencegah kemungkaran serta muamalah.",
+        "duration": 5133,
+        "thumbnail_url": "https://i.ytimg.com/vi/f5jy4djuElM/hqdefault.jpg",
+        "published_at": "2024-03-20",
+        "transcripts": [
+            {
+                "start_seconds": 0,
+                "end_seconds": 60,
+                "text": "Menjaga keutuhan umat dilakukan dengan saling menasihati dalam kebenaran dan kesabaran dengan cara yang hikmah."
+            },
+            {
+                "start_seconds": 61,
+                "end_seconds": 120,
+                "text": "Dalam aktivitas ekonomi dan bisnis, jauhi segala bentuk penipuan, riba, dan ketidakjelasan akad demi keselamatan harta."
+            }
+        ]
+    },
+    {
+        "title": "Istiqomah Ittiba' Rasul di Tengah Fitnah",
+        "speaker": "Ust. Ammi Nur Baits, S.T., B.A.",
+        "topic": "Fikih muamalah dasar, Fikih ibadah harian, Konsultasi syariah praktis",
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=qxaJIAppS7U",
+        "video_id": "qxaJIAppS7U",
+        "description": "Panduan berpegang teguh pada sunnah Nabi ﷺ dan menuntut ilmu fikih dasar dengan benar.",
+        "duration": 3500,
+        "thumbnail_url": "https://i.ytimg.com/vi/qxaJIAppS7U/hqdefault.jpg",
+        "published_at": "2024-04-02",
+        "transcripts": [
+            {
+                "start_seconds": 0,
+                "end_seconds": 60,
+                "text": "Kunci keselamatan seorang muslim adalah ittiba' yaitu mengikuti petunjuk Rasulullah shallallahu 'alaihi wa sallam dengan pemahaman para sahabat."
+            },
+            {
+                "start_seconds": 61,
+                "end_seconds": 120,
+                "text": "Jangan meremehkan amal-amal ketaatan kecil, dan senantiasa berdoa memohon keistiqomahan di atas jalan yang lurus."
+            }
+        ]
+    },
+    {
+        "title": "Tafsir Surah At-Takwir: Peringatan Hari Kiamat",
+        "speaker": "Ust. Abu Yahya Badrusalam, Lc.",
+        "topic": "Hadis tematik, Akidah, Dakwah media sunnah",
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=5x1Q83tXCrI",
+        "video_id": "5x1Q83tXCrI",
+        "description": "Tafsir mendalam tentang dahsyatnya hari kiamat dan persiapan iman menghadapinya.",
+        "duration": 2385,
+        "thumbnail_url": "https://i.ytimg.com/vi/5x1Q83tXCrI/hqdefault.jpg",
+        "published_at": "2024-04-15",
+        "transcripts": [
+            {
+                "start_seconds": 0,
+                "end_seconds": 60,
+                "text": "Surah At-Takwir menggambarkan peristiwa dahsyat ketika matahari digulung dan bintang-bintang berjatuhan."
+            },
+            {
+                "start_seconds": 61,
+                "end_seconds": 120,
+                "text": "Mengingat hari akhirat melembutkan hati yang keras dan mendorong kita untuk bersegera memperbanyak amal kebajikan."
+            }
+        ]
+    },
+    {
+        "title": "Kitab Az-Zuhd: Menata Hati dan Zuhud Terhadap Dunia",
+        "speaker": "Ust. Dr. Abdullah Roy, M.A.",
+        "topic": "Akidah dan tauhid terstruktur (HSI), Pembelajaran silsilah ilmiyyah",
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=DoqO9vxIHYE",
+        "video_id": "DoqO9vxIHYE",
+        "description": "Kajian Kitab Az-Zuhd dalam memahami arti hakiki zuhud tanpa meninggalkan ikhtiar duniawi.",
+        "duration": 4224,
+        "thumbnail_url": "https://i.ytimg.com/vi/DoqO9vxIHYE/hqdefault.jpg",
+        "published_at": "2024-05-01",
+        "transcripts": [
+            {
+                "start_seconds": 0,
+                "end_seconds": 60,
+                "text": "Zuhud bukanlah meninggalkan harta sepenuhnya, melainkan tidak menjadikan harta menguasai dan memperbudak hati kita."
+            },
+            {
+                "start_seconds": 61,
+                "end_seconds": 120,
+                "text": "Orang yang zuhud adalah yang lebih percaya pada apa yang ada di tangan Allah daripada apa yang ada di tangannya sendiri."
+            }
+        ]
+    },
+    {
+        "title": "Tak Ada Alasan: Nasihat Hijrah Pemuda",
+        "speaker": "Ust. Subhan Bawazier, Lc.",
+        "topic": "Kajian tematik sosial, Nasihat praktis hijrah, Binaan komunitas pemuda/otomotif",
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=TlYXJ6quAoE",
+        "video_id": "TlYXJ6quAoE",
+        "description": "Nasihat lugas untuk segera bertaubat dan memperbaiki diri tanpa menunda-nunda waktu.",
+        "duration": 4295,
+        "thumbnail_url": "https://i.ytimg.com/vi/TlYXJ6quAoE/hqdefault.jpg",
+        "published_at": "2024-05-18",
+        "transcripts": [
+            {
+                "start_seconds": 0,
+                "end_seconds": 60,
+                "text": "Jangan tunggu tua untuk bertaubat, karena ajal tidak pernah menunggu kita siap. Mulailah hijrah hari ini."
+            },
+            {
+                "start_seconds": 61,
+                "end_seconds": 120,
+                "text": "Pilihlah sahabat dan lingkungan yang mendekatkanmu kepada Allah, bukan yang menjerumuskan ke dalam kelalaian."
+            }
+        ]
     }
 ]

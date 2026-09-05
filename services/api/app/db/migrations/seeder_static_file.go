@@ -448,16 +448,23 @@ func seedBlogTagsFromFile(db *gorm.DB) {
 // ── Kajian ────────────────────────────────────────────────────────────────────
 
 func seedKajianFromFile(db *gorm.DB) {
+	type transcriptChunk struct {
+		StartSeconds int    `json:"start_seconds"`
+		EndSeconds   int    `json:"end_seconds"`
+		Text         string `json:"text"`
+	}
 	type row struct {
-		Title        string `json:"title"`
-		Speaker      string `json:"speaker"`
-		Topic        string `json:"topic"`
-		Type         string `json:"type"`
-		URL          string `json:"url"`
-		Description  string `json:"description"`
-		Duration     int    `json:"duration"`
-		ThumbnailURL string `json:"thumbnail_url"`
-		PublishedAt  string `json:"published_at"`
+		Title        string            `json:"title"`
+		Speaker      string            `json:"speaker"`
+		Topic        string            `json:"topic"`
+		Type         string            `json:"type"`
+		URL          string            `json:"url"`
+		VideoID      string            `json:"video_id"`
+		Description  string            `json:"description"`
+		Duration     int               `json:"duration"`
+		ThumbnailURL string            `json:"thumbnail_url"`
+		PublishedAt  string            `json:"published_at"`
+		Transcripts  []transcriptChunk `json:"transcripts"`
 	}
 	var rows []row
 	if !readStaticJSON("kajian.json", &rows) {
@@ -467,6 +474,25 @@ func seedKajianFromFile(db *gorm.DB) {
 
 	// Clean up legacy rows that have no URL (link ngaco) so we don't duplicate.
 	db.Where("(url = '' OR url IS NULL)").Delete(&model.Kajian{})
+
+	// Also drop any kajian rows that no longer match the static file's known set,
+	// so dead card entries (e.g. dummy fiktif seed lama) get cleared on first run.
+	staticKeys := make(map[string]struct{}, len(rows))
+	for _, r := range rows {
+		staticKeys[r.Speaker+"|"+r.Title] = struct{}{}
+	}
+	var existingKajians []model.Kajian
+	if err := db.Find(&existingKajians).Error; err == nil {
+		for _, ek := range existingKajians {
+			if ek.ID == nil {
+				continue
+			}
+			if _, keep := staticKeys[ek.Speaker+"|"+ek.Title]; !keep {
+				db.Where("kajian_id = ?", *ek.ID).Delete(&model.KajianTranscript{})
+				db.Delete(&model.Kajian{}, *ek.ID)
+			}
+		}
+	}
 
 	for _, r := range rows {
 		item := model.Kajian{
@@ -484,6 +510,31 @@ func seedKajianFromFile(db *gorm.DB) {
 			Columns:   []clause.Column{{Name: "title"}, {Name: "speaker"}, {Name: "published_at"}},
 			DoUpdates: clause.AssignmentColumns([]string{"topic", "type", "url", "description", "duration", "thumbnail_url"}),
 		}).Create(&item)
+
+		// Resolve the resulting ID (existing or new) and seed transcript chunks.
+		var dbKajian model.Kajian
+		if err := db.Where("title = ? AND speaker = ? AND published_at = ?", r.Title, r.Speaker, r.PublishedAt).First(&dbKajian).Error; err != nil || dbKajian.ID == nil {
+			continue
+		}
+		if len(r.Transcripts) == 0 {
+			continue
+		}
+		// Wipe old chunks for this kajian to keep transcripts in sync with the static file.
+		db.Where("kajian_id = ?", *dbKajian.ID).Delete(&model.KajianTranscript{})
+		for _, chunk := range r.Transcripts {
+			tsURL := fmt.Sprintf("https://youtu.be/%s?t=%d", r.VideoID, chunk.StartSeconds)
+			if r.VideoID == "" {
+				tsURL = r.URL
+			}
+			_ = db.Create(&model.KajianTranscript{
+				KajianID:     *dbKajian.ID,
+				VideoID:      r.VideoID,
+				StartSeconds: chunk.StartSeconds,
+				EndSeconds:   chunk.EndSeconds,
+				Text:         chunk.Text,
+				TimestampURL: tsURL,
+			}).Error
+		}
 	}
 }
 
