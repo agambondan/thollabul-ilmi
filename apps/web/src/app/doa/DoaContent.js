@@ -1,6 +1,7 @@
 "use client";
 
 import { ShareDoaModal } from "@/components/ShareDoaModal";
+import ContentReportModal from "@/components/ContentReportModal";
 import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import SourceBadges from "@/components/SourceBadges";
 import { useLocale } from "@/context/Locale";
@@ -14,6 +15,7 @@ import {
     BsSearch,
     BsShare,
     BsVolumeUpFill,
+    BsExclamationTriangleFill,
 } from "react-icons/bs";
 
 const CATEGORIES = [
@@ -51,6 +53,7 @@ export const DoaContent = ({ initialItems = [] }) => {
     const [playing, setPlaying] = useState(null);
     const [sharePopUp, setSharePopUp] = useState(false);
     const [shareDoa, setShareDoa] = useState(null);
+    const [reportDoa, setReportDoa] = useState(null);
     const audioRef = useRef(null);
     const sentinelRef = useRef(null);
 
@@ -326,16 +329,28 @@ export const DoaContent = ({ initialItems = [] }) => {
                                     {doa.source && (
                                         <SourceBadges source={doa.source} />
                                     )}
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            openShare(doa);
-                                        }}
-                                        className='flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
-                                    >
-                                        <BsShare className='text-sm' />
-                                        {t("common.share")}
-                                    </button>
+                                    <div className='flex items-center gap-2 flex-wrap'>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                openShare(doa);
+                                            }}
+                                            className='flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
+                                        >
+                                            <BsShare className='text-sm' />
+                                            {t("common.share")}
+                                        </button>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setReportDoa(doa);
+                                            }}
+                                            className='flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 rounded-lg text-sm font-medium hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors'
+                                        >
+                                            <BsExclamationTriangleFill className='text-xs' />
+                                            {t("report.correction_btn") ?? "Laporkan Kesalahan"}
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -362,6 +377,16 @@ export const DoaContent = ({ initialItems = [] }) => {
                 onClose={closeShare}
                 doa={shareDoa}
             />
+            {reportDoa && (
+                <ContentReportModal
+                    isOpen={!!reportDoa}
+                    onClose={() => setReportDoa(null)}
+                    targetType='doa'
+                    targetId={String(reportDoa.id)}
+                    targetTitle={getLocalizedField(reportDoa, "title", lang, ["name"]) || "Doa"}
+                    snippet={reportDoa.translation?.ar}
+                />
+            )}
         </>
     );
 };

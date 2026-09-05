@@ -16,6 +16,8 @@ import {
     BsVolumeUpFill,
 } from "react-icons/bs";
 import SourceBadges from "@/components/SourceBadges";
+import ContentReportModal from "@/components/ContentReportModal";
+import { BsExclamationTriangleFill } from "react-icons/bs";
 
 const CATEGORIES = [
     { value: "", labelKey: "common.all" },
@@ -47,6 +49,7 @@ export const DzikirContent = ({ initialItems = [] }) => {
     const [search, setSearch] = useState("");
     const [expanded, setExpanded] = useState(null);
     const [error, setError] = useState("");
+    const [reportDzikir, setReportDzikir] = useState(null);
     // logged: Map<dzikirId, logRecordId> for today
     const [logged, setLogged] = useState({});
     const [playing, setPlaying] = useState(null);
@@ -436,6 +439,19 @@ export const DzikirContent = ({ initialItems = [] }) => {
                                     {dzikir.source && (
                                         <SourceBadges source={dzikir.source} />
                                     )}
+                                    <div className='pt-2 flex justify-end'>
+                                        <button
+                                            type='button'
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setReportDzikir(dzikir);
+                                            }}
+                                            className='inline-flex items-center gap-1.5 px-2.5 py-1 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors'
+                                        >
+                                            <BsExclamationTriangleFill className='text-[10px]' />
+                                            {t("report.correction_btn") ?? "Laporkan Kesalahan"}
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -455,6 +471,17 @@ export const DzikirContent = ({ initialItems = [] }) => {
                 <p className='text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 py-4'>
                     {t("dzikir.all_displayed")}
                 </p>
+            )}
+
+            {reportDzikir && (
+                <ContentReportModal
+                    isOpen={!!reportDzikir}
+                    onClose={() => setReportDzikir(null)}
+                    targetType='dzikir'
+                    targetId={String(reportDzikir.id)}
+                    targetTitle={getLocalizedField(reportDzikir, "title", lang, ["name"]) || "Dzikir"}
+                    snippet={reportDzikir.translation?.ar}
+                />
             )}
         </div>
     );

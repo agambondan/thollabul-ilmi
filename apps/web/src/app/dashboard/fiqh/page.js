@@ -1,10 +1,11 @@
 "use client";
 
 import SourceBadges from "@/components/SourceBadges";
+import ContentReportModal from "@/components/ContentReportModal";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useState } from "react";
-import { BsChevronDown, BsChevronUp, BsSearch } from "react-icons/bs";
+import { BsChevronDown, BsChevronUp, BsSearch, BsExclamationTriangleFill } from "react-icons/bs";
 
 const toStr = (v) => {
     if (!v) return "";
@@ -26,6 +27,7 @@ export default function DashboardFiqhPage() {
     const [cat, setCat] = useState("");
     const [search, setSearch] = useState("");
     const [expanded, setExpanded] = useState(null);
+    const [reportItem, setReportItem] = useState(null);
 
     useEffect(() => {
         setLoading(true);
@@ -154,6 +156,19 @@ export default function DashboardFiqhPage() {
                                     {item.source && (
                                         <SourceBadges source={item.source} />
                                     )}
+                                    <div className='pt-2 flex justify-end'>
+                                        <button
+                                            type='button'
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setReportItem(item);
+                                            }}
+                                            className='inline-flex items-center gap-1.5 px-2.5 py-1 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors'
+                                        >
+                                            <BsExclamationTriangleFill className='text-[10px]' />
+                                            {t("report.correction_btn") ?? "Laporkan Kesalahan"}
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -165,6 +180,17 @@ export default function DashboardFiqhPage() {
                     </p>
                 )}
             </div>
+
+            {reportItem && (
+                <ContentReportModal
+                    isOpen={!!reportItem}
+                    onClose={() => setReportItem(null)}
+                    targetType='fiqh'
+                    targetId={String(reportItem.id ?? reportItem._id)}
+                    targetTitle={getLocalizedField(reportItem, "title", lang) || "Fiqh"}
+                    snippet={getLocalizedField(reportItem, "content", lang)}
+                />
+            )}
         </div>
     );
 }

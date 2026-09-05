@@ -5,6 +5,8 @@ import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
 import Link from "next/link";
 import SourceBadges from "@/components/SourceBadges";
+import ContentReportModal from "@/components/ContentReportModal";
+import { BsExclamationTriangleFill } from "react-icons/bs";
 import { useEffect, useState, use } from "react";
 
 const toStr = (v) => {
@@ -19,6 +21,7 @@ export default function SirohDetailPage(props) {
     const [content, setContent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [reportOpen, setReportOpen] = useState(false);
 
     useEffect(() => {
         sirohApi
@@ -111,6 +114,28 @@ export default function SirohDetailPage(props) {
                     <span className='mr-1'>{t("common.source")}:</span>
                     <SourceBadges source={content.source} />
                 </div>
+            )}
+
+            <div className='mt-6 flex justify-end'>
+                <button
+                    type='button'
+                    onClick={() => setReportOpen(true)}
+                    className='inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors'
+                >
+                    <BsExclamationTriangleFill className='text-[10px]' />
+                    {t("report.correction_btn") ?? "Laporkan Kesalahan"}
+                </button>
+            </div>
+
+            {content && reportOpen && (
+                <ContentReportModal
+                    isOpen={reportOpen}
+                    onClose={() => setReportOpen(false)}
+                    targetType='siroh'
+                    targetId={String(content.id ?? content.slug ?? params.slug)}
+                    targetTitle={getLocalizedField(content, "title", lang) || "Siroh"}
+                    snippet={getLocalizedField(content, "content", lang)}
+                />
             )}
         </div>
     );
