@@ -136,6 +136,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	newChatController := controllers.NewChatController(newServices)
 	newLessonController := controllers.NewLessonController(newServices)
 	newAdzanSoundController := controllers.NewAdzanSoundController(newServices)
+	newContentReportController := controllers.NewContentReportController(newServices)
 
 	app.Use(middlewares.MetricsMiddleware())
 	app.Get("/health", func(c *fiber.Ctx) error {
@@ -805,6 +806,13 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Post("/takhrij", middlewares.EditorOrAdminMiddleware(), newTakhrijController.Create)
 	master.Put("/takhrij/:id", middlewares.EditorOrAdminMiddleware(), newTakhrijController.UpdateByID)
 	master.Delete("/takhrij/:id", middlewares.EditorOrAdminMiddleware(), newTakhrijController.DeleteByID)
+
+	// Content correction reports (review user)
+	master.Post("/reports", jwt, newContentReportController.Create)
+	master.Get("/reports/mine", jwt, newContentReportController.FindMine)
+	master.Get("/admin/reports", admin, newContentReportController.FindAll)
+	master.Get("/admin/reports/:id", admin, newContentReportController.FindByID)
+	master.Patch("/admin/reports/:id/status", admin, newContentReportController.UpdateStatus)
 
 	if viper.GetString("ENVIRONMENT") != "production" {
 		pprofGroup := app.Group("/debug/pprof")

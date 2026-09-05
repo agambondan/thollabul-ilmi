@@ -690,50 +690,60 @@ func seedManasikStepsFromFile(db *gorm.DB) {
 			Source:          r.Source,
 			IsWajib:         r.IsWajib,
 		}
-		db.Clauses(clause.OnConflict{
-			Columns: []clause.Column{{Name: "type"}, {Name: "step_order"}},
-			DoUpdates: clause.AssignmentColumns([]string{
-				"title", "description", "arabic", "transliteration", "translation",
-				"notes", "source", "is_wajib",
-			}),
-		}).Create(&item)
 
 		var existing model.ManasikStep
-		if err := db.Where("type = ? AND step_order = ?", item.Type, item.StepOrder).
-			First(&existing).Error; err != nil {
-			log.Printf("[seeder] manasik %s#%d lookup gagal: %v", item.Type, item.StepOrder, err)
+		err := db.Where("type = ? AND step_order = ?", item.Type, item.StepOrder).First(&existing).Error
+		if err != nil {
+			// Row baru
+			newTrID := upsertManasikTranslation(db, nil, item.Title, item.Arabic, item.Transliteration, item.TranslationText)
+			item.TranslationID = newTrID
+			if err := db.Create(&item).Error; err != nil {
+				log.Printf("[seeder] manasik %s#%d create gagal: %v", item.Type, item.StepOrder, err)
+			}
 			continue
 		}
+
+		// Row sudah ada: update translations dan manasik_steps
 		newTrID := upsertManasikTranslation(db, existing.TranslationID, item.Title, item.Arabic, item.Transliteration, item.TranslationText)
+		updates := map[string]interface{}{
+			"title":           item.Title,
+			"description":     item.Description,
+			"arabic":          item.Arabic,
+			"transliteration": item.Transliteration,
+			"translation":     item.TranslationText,
+			"notes":           item.Notes,
+			"source":          item.Source,
+			"is_wajib":        item.IsWajib,
+		}
 		if newTrID != nil && (existing.TranslationID == nil || *existing.TranslationID != *newTrID) {
-			if err := db.Model(&model.ManasikStep{}).
-				Where("id = ?", existing.ID).
-				Update("translation_id", newTrID).Error; err != nil {
-				log.Printf("[seeder] manasik %s#%d translation_id update gagal: %v", item.Type, item.StepOrder, err)
-			}
+			updates["translation_id"] = newTrID
+		}
+		if err := db.Model(&model.ManasikStep{}).Where("id = ?", existing.ID).Updates(updates).Error; err != nil {
+			log.Printf("[seeder] manasik %s#%d update gagal: %v", item.Type, item.StepOrder, err)
 		}
 	}
 }
 
 func upsertManasikTranslation(db *gorm.DB, existingID *int, title, arabic, latin, description string) *int {
+	trUpdates := map[string]interface{}{
+		"idn":             stringPtrOrNil(title),
+		"ar":              stringPtrOrNil(arabic),
+		"latin_idn":       stringPtrOrNil(latin),
+		"description_idn": stringPtrOrNil(description),
+	}
+	if existingID != nil {
+		if err := db.Model(&model.Translation{}).
+			Where("id = ?", *existingID).
+			Updates(trUpdates).Error; err != nil {
+			log.Printf("[seeder] manasik translation update gagal: %v", err)
+		}
+		return existingID
+	}
 	tr := &model.Translation{
 		Idn:            stringPtrOrNil(title),
 		Ar:             stringPtrOrNil(arabic),
 		LatinIdn:       stringPtrOrNil(latin),
 		DescriptionIdn: stringPtrOrNil(description),
-	}
-	if existingID != nil {
-		if err := db.Model(&model.Translation{}).
-			Where("id = ?", *existingID).
-			Updates(map[string]interface{}{
-				"idn":             tr.Idn,
-				"ar":              tr.Ar,
-				"latin_idn":       tr.LatinIdn,
-				"description_idn": tr.DescriptionIdn,
-			}).Error; err != nil {
-			log.Printf("[seeder] manasik translation update gagal: %v", err)
-		}
-		return existingID
 	}
 	if err := db.Create(tr).Error; err != nil {
 		log.Printf("[seeder] manasik translation create gagal: %v", err)

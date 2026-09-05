@@ -82,6 +82,7 @@ type Repositories struct {
 	Chat                 ChatRepository
 	Lesson               LessonRepository
 	AdzanSound           AdzanSoundRepository
+	ContentReport        ContentReportRepository
 	db                   *gorm.DB
 	pg                   *paginate.Pagination
 	redis                *redis.Client
@@ -169,6 +170,7 @@ func NewRepositories(db *gorm.DB, client *redis.Client) (*Repositories, error) {
 		Chat:                 NewChatRepository(db),
 		Lesson:               NewLessonRepository(db),
 		AdzanSound:           NewAdzanSoundRepository(db),
+		ContentReport:        NewContentReportRepository(db),
 		db:                   db,
 		pg:                   pg,
 		redis:                client,

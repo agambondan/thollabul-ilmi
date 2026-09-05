@@ -72,13 +72,14 @@ const AdminManasikPage = () => {
 
     const openEdit = (item) => {
         setEditId(item.id ?? item._id);
+        const trObj = typeof item.translation === "object" && item.translation !== null ? item.translation : null;
         setForm({
             type: item.type ?? "haji",
-            step: item.step ?? "",
-            title: item.title ?? "",
-            arabic: item.arabic ?? "",
-            latin: item.latin ?? "",
-            translation: item.translation ?? "",
+            step: item.step ?? item.step_order ?? "",
+            title: item.title || trObj?.idn || "",
+            arabic: item.arabic || trObj?.ar || "",
+            latin: item.latin || item.transliteration || trObj?.latin_idn || "",
+            translation: (typeof item.translation === "string" ? item.translation : trObj?.description_idn) || item.translation_text || "",
             description: item.description ?? "",
             notes: item.notes ?? "",
             source: item.source ?? "",
@@ -194,7 +195,7 @@ const AdminManasikPage = () => {
                                 {item.step}
                             </Td>
                             <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium'>
-                                {getLocalizedField(item, "title", lang)}
+                                {item.title || item.translation?.idn || getLocalizedField(item, "title", lang) || "-"}
                             </Td>
                             <Td className='text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
                                 {getLocalizedField(

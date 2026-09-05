@@ -271,16 +271,34 @@ func manasikFromAdminRequest(req *manasikAdminRequest) *model.ManasikStep {
 }
 
 func manasikToAdminResponse(step *model.ManasikStep) manasikAdminResponse {
+	title := step.Title
+	arabic := step.Arabic
+	latin := step.Transliteration
+	translation := step.TranslationText
+	if step.Translation != nil {
+		if title == "" && step.Translation.Idn != nil {
+			title = *step.Translation.Idn
+		}
+		if arabic == "" && step.Translation.Ar != nil {
+			arabic = *step.Translation.Ar
+		}
+		if latin == "" && step.Translation.LatinIdn != nil {
+			latin = *step.Translation.LatinIdn
+		}
+		if translation == "" && step.Translation.DescriptionIdn != nil {
+			translation = *step.Translation.DescriptionIdn
+		}
+	}
 	return manasikAdminResponse{
 		ID:              step.ID,
 		Type:            string(step.Type),
 		Step:            step.StepOrder,
 		StepOrder:       step.StepOrder,
-		Title:           step.Title,
-		Arabic:          step.Arabic,
-		Latin:           step.Transliteration,
-		Transliteration: step.Transliteration,
-		Translation:     step.TranslationText,
+		Title:           title,
+		Arabic:          arabic,
+		Latin:           latin,
+		Transliteration: latin,
+		Translation:     translation,
 		Description:     step.Description,
 		Notes:           step.Notes,
 		Source:          step.Source,

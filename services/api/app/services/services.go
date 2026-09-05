@@ -78,6 +78,7 @@ type Services struct {
 	Chat                 ChatService
 	Lesson               LessonService
 	AdzanSound           AdzanSoundService
+	ContentReport        ContentReportService
 }
 
 func NewServices(repo *repository.Repositories) *Services {
@@ -170,6 +171,7 @@ func NewServices(repo *repository.Repositories) *Services {
 		Chat:                 NewChatService(repo.Chat),
 		Lesson:               NewLessonService(repo.Lesson),
 		AdzanSound:           NewAdzanSoundService(repo.AdzanSound),
+		ContentReport:        NewContentReportService(repo.ContentReport),
 		Sync:                 NewSyncService(db, cache, doaSvc, dzikirSvc, asmaulHusnaSvc),
 	}
 	svc.Dashboard = NewDashboardService(db, svc.Ayah, svc.Hadith, svc.Streak, svc.Sholat, svc.NotificationInbox, svc.Tilawah)

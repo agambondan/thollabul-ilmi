@@ -145,6 +145,11 @@ const NAV_GROUPS = [
                 label: "Push Notification",
                 icon: <BsBellFill />,
             },
+            {
+                href: "/admin/reports",
+                label: "Laporan Koreksi",
+                icon: <BsQuestionCircle />,
+            },
             { href: "/", labelKey: "admin.back_to_app", icon: <BsGrid /> },
         ],
     },

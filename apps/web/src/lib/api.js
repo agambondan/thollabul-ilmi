@@ -1126,6 +1126,34 @@ export const forumApi = {
         }),
 };
 
+export const contentReportApi = {
+    create: (data) =>
+        authFetch("/api/v1/reports", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        }),
+    listMine: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return authFetch(
+            `/api/v1/reports/mine${qs ? "?" + qs : ""}`,
+        );
+    },
+    adminList: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return authFetch(
+            `/api/v1/admin/reports${qs ? "?" + qs : ""}`,
+        );
+    },
+    adminGet: (id) => authFetch(`/api/v1/admin/reports/${id}`),
+    adminUpdateStatus: (id, data) =>
+        authFetch(`/api/v1/admin/reports/${id}/status`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        }),
+};
+
 export const feedApi = {
     list: (params = {}) => {
         const qs = new URLSearchParams(params).toString();

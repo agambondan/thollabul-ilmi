@@ -20,6 +20,8 @@ import {
 } from "react-icons/bs";
 import { IoIosLink, IoMdCopy, IoMdImages } from "react-icons/io";
 import PanelCloseButton from "@/components/PanelCloseButton";
+import ContentReportModal from "@/components/ContentReportModal";
+import { BsExclamationTriangleFill } from "react-icons/bs";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -169,6 +171,7 @@ const HadithPage = ({
     const [settingPopUp, SetSettingPopUp] = useState(false);
     const [clipboardPopUp, SetClipboardPopUp] = useState(false);
     const [shareImagePopUp, SetShareImagePopUp] = useState(false);
+    const [reportOpen, setReportOpen] = useState(false);
     const [isPlayingAudio, setIsPlayingAudio] = useState(false);
     const [audioLoading, setAudioLoading] = useState(false);
     const [statusMsg, SetStatusMsg] = useState("");
@@ -544,6 +547,16 @@ const HadithPage = ({
                                         <button
                                             className={actionMenuButtonClass}
                                             onClick={() => {
+                                                setReportOpen(true);
+                                                SetSettingPopUp(false);
+                                            }}
+                                        >
+                                            <BsExclamationTriangleFill className="text-amber-500" />
+                                            {t("report.correction_btn") ?? "Laporkan Kesalahan"}
+                                        </button>
+                                        <button
+                                            className={actionMenuButtonClass}
+                                            onClick={() => {
                                                 copyText(
                                                     `${hadith.translation.ar}\n`
                                                         .concat(
@@ -652,6 +665,20 @@ const HadithPage = ({
                 </div>
             )}
             {isCopied ? <PopUpIsCopied /> : <></>}
+            {reportOpen && (
+                <ContentReportModal
+                    isOpen={reportOpen}
+                    onClose={() => setReportOpen(false)}
+                    targetType="hadith"
+                    targetId={`${hadith?.book?.slug || params.slug}-${hadith?.number}`}
+                    targetTitle={`HR. ${hadith?.book?.translation?.latin_en || hadith?.book?.slug} No. ${hadith?.number}`}
+                    snippet={
+                        (hadith?.translation?.idn || hadith?.translation?.en || "")
+                            .replace(/<[^>]+>/g, "")
+                            .slice(0, 200)
+                    }
+                />
+            )}
         </>
     );
 };
