@@ -494,6 +494,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	// Leaderboard (public read, my-rank: protected)
 	master.Get("/leaderboard/streak", newLeaderboardController.TopStreak)
 	master.Get("/leaderboard/hafalan", newLeaderboardController.TopHafalan)
+	master.Get("/leaderboard/mushahhih", newLeaderboardController.TopMushahhih)
 	master.Get("/leaderboard/me", jwt, newLeaderboardController.MyRank)
 
 	// Achievements & Points (badges: public list; earned: protected)
@@ -814,6 +815,11 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/admin/reports/:id", admin, newContentReportController.FindByID)
 	master.Patch("/admin/reports/:id/status", admin, newContentReportController.UpdateStatus)
 	master.Post("/admin/reports/:id/apply", admin, newContentReportController.ApplyCorrection)
+	master.Get("/admin/reports/export", admin, newContentReportController.Export)
+
+	newContentAuditLogController := controllers.NewContentAuditLogController(repo)
+	master.Get("/admin/audit-logs", admin, newContentAuditLogController.FindAll)
+	master.Get("/admin/audit-logs/export", admin, newContentAuditLogController.Export)
 
 	if viper.GetString("ENVIRONMENT") != "production" {
 		pprofGroup := app.Group("/debug/pprof")

@@ -14,6 +14,9 @@ const nextConfig = {
     turbopack: {
         root: path.resolve(__dirname),
     },
+    images: {
+        formats: ["image/avif", "image/webp"],
+    },
     async redirects() {
         return [
             {
@@ -72,6 +75,15 @@ const nextConfig = {
         return [
             {
                 source: "/fonts/:path*",
+                headers: [
+                    {
+                        key: "Cache-Control",
+                        value: "public, max-age=31536000, immutable",
+                    },
+                ],
+            },
+            {
+                source: "/assets/:path*",
                 headers: [
                     {
                         key: "Cache-Control",

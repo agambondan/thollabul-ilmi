@@ -126,6 +126,19 @@
     padding-top: var(--navbar-offset);
 }
 
+/*
+ * Quran fullscreen mode: the public navbar, footer, and mobile tab bar are
+ * unmounted, and the content reflows edge-to-edge. The class is toggled by
+ * useQuranFullscreen so it only applies while reading a surah.
+ */
+body.quran-fullscreen {
+    padding-bottom: 0 !important;
+}
+
+body.quran-fullscreen .pt-navbar {
+    padding-top: 0.5rem !important;
+}
+
 /* ─── Custom Scrollbar ─────────────────────────────────────────── */
 ::-webkit-scrollbar {
     width: 8px;

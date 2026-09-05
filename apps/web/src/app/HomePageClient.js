@@ -1,12 +1,16 @@
 "use client";
 
 import ContentWidth from "@/components/layout/ContentWidth";
-import TajweedTable from "@/components/table/Tajweed";
+import dynamic from "next/dynamic";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { buildRegisterHref } from "@/lib/authRedirect";
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
+
+const TajweedTable = dynamic(() => import("@/components/table/Tajweed"), {
+    loading: () => <div className='h-48 rounded-xl bg-emerald-900/10 animate-pulse' />,
+});
 import {
     BsBarChart,
     BsBell,

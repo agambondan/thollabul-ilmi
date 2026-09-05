@@ -16,10 +16,10 @@ const BlogPage = async () => {
     try {
         const [postsRes, catRes] = await Promise.all([
             fetch(`${API_URL}/api/v1/blog/posts?page=0&size=10`, {
-                cache: "no-store",
+                next: { revalidate: 3600 },
             }),
             fetch(`${API_URL}/api/v1/blog/categories`, {
-                cache: "no-store",
+                next: { revalidate: 3600 },
             }),
         ]);
 

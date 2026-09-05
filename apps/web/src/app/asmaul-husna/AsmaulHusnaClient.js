@@ -30,6 +30,7 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
     const [selected, setSelected] = useState(null);
     const [search, setSearch] = useState("");
     const [playing, setPlaying] = useState(false);
+    const [visibleCount, setVisibleCount] = useState(12);
     const audioRef = useRef(null);
 
     const filteredNames = names.filter((name) => {
@@ -160,7 +161,7 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
             </div>
 
             <div className='grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3'>
-                {filteredNames.map((name) => (
+                {filteredNames.slice(0, visibleCount).map((name) => (
                     <button
                         key={name.number}
                         onClick={() => setSelected(name)}
@@ -169,20 +170,20 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                         <div className='flex items-start justify-between mb-2'>
                             <span className='text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 rounded-full w-6 h-6 flex items-center justify-center'>
                                 {name.number}
-                            </span>
+                           </span>
                             {name.audio_url && (
                                 <BsVolumeUpFill className='text-emerald-400 dark:text-emerald-600 text-sm' />
                             )}
-                        </div>
+                       </div>
                         <p
                             className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1 text-right'
                             style={{ fontFamily: "Amiri, serif" }}
                         >
                             {name.arabic}
-                        </p>
+                       </p>
                         <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 italic mb-0.5'>
                             {name.transliteration}
-                        </p>
+                       </p>
                         <p className='text-sm font-medium text-gray-700 dark:text-gray-200'>
                             {getLocalizedText(
                                 {
@@ -191,15 +192,31 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                                 },
                                 lang,
                             )}
-                        </p>
-                    </button>
+                       </p>
+                   </button>
                 ))}
-            </div>
+           </div>
+
+            {filteredNames.length > visibleCount && (
+                <div className='flex justify-center mt-6'>
+                    <button
+                        type='button'
+                        onClick={() => setVisibleCount((c) => c + 12)}
+                        className='px-5 py-2 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-sm font-medium hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors'
+                    >
+                        {t("common.load_more") ??
+                            `Muat ${Math.min(
+                                12,
+                                filteredNames.length - visibleCount,
+                            )} lagi`}
+                   </button>
+               </div>
+            )}
 
             {filteredNames.length === 0 && (
                 <p className='text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 py-4'>
                     {t("asmaul.not_found")}
-                </p>
+               </p>
             )}
 
             {selected && (

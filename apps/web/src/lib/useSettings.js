@@ -148,6 +148,9 @@ const sanitizeSettings = (raw) => {
     if (typeof next.quranMushafTranslation !== "boolean") {
         next.quranMushafTranslation = true;
     }
+    if (typeof next.quranFullscreen !== "boolean") {
+        next.quranFullscreen = false;
+    }
     if (!REMINDER_LEAD_KEYS.includes(next.adzanReminderLead)) {
         next.adzanReminderLead = 10;
     }
@@ -236,6 +239,7 @@ const DEFAULT_SETTINGS = {
     quranReaderMode: "ayah",
     quranShowTranslation: true,
     quranMushafTranslation: true,
+    quranFullscreen: false,
     notifAdzan: true,
     adzanSound: "default",
     adzanSoundUrl: "",

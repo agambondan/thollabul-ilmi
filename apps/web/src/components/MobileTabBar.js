@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { BsHouseDoor, BsJournalBookmark } from "react-icons/bs";
 import { FaGraduationCap, FaQuran } from "react-icons/fa";
 import { MdMosque } from "react-icons/md";
+import { useQuranFullscreen } from "@/lib/useQuranFullscreen";
 
 /*
  * Mirrors the five tabs the mobile app settled on
@@ -27,9 +28,11 @@ const HIDDEN_PREFIXES = ["/dashboard", "/admin", "/auth"];
 export default function MobileTabBar() {
     const pathname = usePathname();
     const { t } = useLocale();
+    const { isFullscreen } = useQuranFullscreen();
 
     if (
         !pathname ||
+        isFullscreen ||
         HIDDEN_PREFIXES.some(
             (p) => pathname === p || pathname.startsWith(`${p}/`),
         )

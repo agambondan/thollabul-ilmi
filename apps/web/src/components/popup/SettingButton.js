@@ -4,6 +4,7 @@ import { useLocale } from "@/context/Locale";
 import { useActionPosition } from "@/lib/useActionPosition";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { QURAN_FONTS, useQuranFont } from "@/lib/useQuranFont";
+import { useQuranFullscreen } from "@/lib/useQuranFullscreen";
 import { useSettings } from "@/lib/useSettings";
 import classNames from "classnames";
 import { usePathname } from "next/navigation";
@@ -14,6 +15,8 @@ import {
     BsLayoutTextSidebarReverse,
     BsMenuButtonWide,
     BsEyeSlash,
+    BsFullscreen,
+    BsFullscreenExit,
 } from "react-icons/bs";
 import { RiSettings3Fill } from "react-icons/ri";
 
@@ -43,8 +46,12 @@ const SettingButton = () => {
         settings.quranMushafTranslation ?? true;
     const currentShowTranslation =
         readerMode === "mushaf" ? showMushafTranslation : showAyahTranslation;
+    const { isFullscreen, toggle: toggleQuranFullscreen } = useQuranFullscreen();
     const popupRef = useRef(null);
-    const label = (key, fallback) => t(key) || fallback;
+    const label = (key, fallback) => {
+        const val = t(key);
+        return !val || val === key ? fallback : val;
+    };
 
     useEffect(() => {
         if (!showPopup) return;
@@ -63,9 +70,11 @@ const SettingButton = () => {
         pathname?.startsWith("/quran/") ||
         pathname === "/dashboard/quran" ||
         pathname?.startsWith("/dashboard/quran/");
-    const bottomClass = isDashboard
-        ? "bottom-[84px] md:bottom-4"
-        : "bottom-[68px] md:bottom-4";
+    const bottomClass = isFullscreen
+        ? "bottom-4"
+        : isDashboard
+          ? "bottom-[84px] md:bottom-4"
+          : "bottom-[68px] md:bottom-4";
 
     return (
         <div
@@ -230,8 +239,39 @@ const SettingButton = () => {
                                               "mushaf.translation_on",
                                               "Tampilkan Terjemahan",
                                           )}
-                                </button>
-                            </div>
+                               </button>
+                           </div>
+
+                            {/* Quran fullscreen toggle */}
+                            <button
+                                type='button'
+                                onClick={toggleQuranFullscreen}
+                                className={classNames(
+                                    "w-full flex items-center justify-center gap-2 py-1.5 px-2 rounded-lg border text-xs transition-all",
+                                    {
+                                        "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
+                                            isFullscreen,
+                                        "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
+                                            !isFullscreen,
+                                    },
+                                )}
+                            >
+                                {isFullscreen ? (
+                                    <BsFullscreenExit size={14} />
+                                ) : (
+                                    <BsFullscreen size={14} />
+                                )}
+                                {isFullscreen
+                                    ? label(
+                                          "quran.fullscreen_off",
+                                          "Keluar Layar Penuh",
+                                      )
+                                    : label(
+                                          "quran.fullscreen_on",
+                                          "Layar Penuh (Tanpa Navbar)",
+                                      )}
+                           </button>
+
 
                             <div className='my-3 border-t border-gray-100 dark:border-slate-700' />
                         </>

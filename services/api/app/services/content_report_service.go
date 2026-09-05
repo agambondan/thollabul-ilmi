@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/repository"
@@ -150,7 +151,12 @@ func (s *contentReportService) ApplyCorrection(id string, reviewerID uuid.UUID, 
 		return nil, errors.New("entity repository unavailable")
 	}
 
-	if err := s.applyToEntity(report.TargetType, report.TargetID, req.Field, correctionText); err != nil {
+	lang := resolveFieldLang(req.Field)
+	if lang == "" {
+		return nil, fmt.Errorf("unsupported field %q", req.Field)
+	}
+	oldValue, err := s.applyToEntity(report.TargetType, report.TargetID, lang, correctionText)
+	if err != nil {
 		return nil, err
 	}
 
@@ -159,21 +165,33 @@ func (s *contentReportService) ApplyCorrection(id string, reviewerID uuid.UUID, 
 		return nil, err
 	}
 
+	if s.repos.ContentAuditLog != nil {
+		reportID := updated.ID
+		_ = s.repos.ContentAuditLog.Create(&model.ContentAuditLog{
+			TargetType:  report.TargetType,
+			TargetID:    report.TargetID,
+			TargetTitle: report.TargetTitle,
+			Field:       lang,
+			OldValue:    oldValue,
+			NewValue:    correctionText,
+			ReportID:    &reportID,
+			ModifiedBy:  reviewerID,
+			Reason:      strings.TrimSpace(req.AdminNote),
+		})
+	}
+
 	if s.repos.Achievement != nil && updated.UserID != uuid.Nil {
 		_ = s.repos.Achievement.AddPoints(updated.UserID, rewardPointsPerAcceptedReport)
+		_ = s.evaluateMushahhihAchievements(updated.UserID)
 	}
 
 	s.notifyReporter(updated, model.ContentReportStatusResolved, req.AdminNote)
 	return updated, nil
 }
 
-func (s *contentReportService) applyToEntity(targetType model.ContentReportTargetType, targetID, field, text string) error {
+func (s *contentReportService) applyToEntity(targetType model.ContentReportTargetType, targetID, lang, text string) (string, error) {
 	if s.repos == nil {
-		return errors.New("repos unavailable")
-	}
-	lang := resolveFieldLang(field)
-	if lang == "" {
-		return fmt.Errorf("unsupported field %q (use: idn, en, latin_idn, description_idn, description_en, content, translation)", field)
+		return "", errors.New("repos unavailable")
 	}
 	db := s.repos.GetDB()
 
@@ -181,13 +199,13 @@ func (s *contentReportService) applyToEntity(targetType model.ContentReportTarge
 	case model.ContentReportTargetQuran:
 		ayahID, err := parseAyahID(targetID)
 		if err != nil {
-			return err
+			return "", err
 		}
 		return s.updateTranslationByAyahNumber(db, ayahID, lang, text)
 	case model.ContentReportTargetHadith:
 		bookSlug, number, err := parseHadithTarget(targetID)
 		if err != nil {
-			return err
+			return "", err
 		}
 		return s.updateTranslationByHadithSlugNumber(db, bookSlug, number, lang, text)
 	case model.ContentReportTargetDoa:
@@ -199,40 +217,40 @@ func (s *contentReportService) applyToEntity(targetType model.ContentReportTarge
 	case model.ContentReportTargetSiroh:
 		return s.updateSirohContent(db, targetID, lang, text)
 	default:
-		return fmt.Errorf("apply correction not supported for target_type %q", targetType)
+		return "", fmt.Errorf("apply correction not supported for target_type %q", targetType)
 	}
 }
 
-func (s *contentReportService) updateTranslationByAyahNumber(db *gorm.DB, ayahRef string, lang, text string) error {
+func (s *contentReportService) updateTranslationByAyahNumber(db *gorm.DB, ayahRef string, lang, text string) (string, error) {
 	if lang == "content" {
 		lang = "idn"
 	}
 	parts := strings.SplitN(ayahRef, ":", 2)
 	if len(parts) != 2 {
-		return fmt.Errorf("invalid quran target id %q (expected surah:ayah)", ayahRef)
+		return "", fmt.Errorf("invalid quran target id %q (expected surah:ayah)", ayahRef)
 	}
 	surahNumber, err := strconv.Atoi(parts[0])
 	if err != nil {
-		return fmt.Errorf("invalid surah number: %v", err)
+		return "", fmt.Errorf("invalid surah number: %v", err)
 	}
 	ayahNumber, err := strconv.Atoi(parts[1])
 	if err != nil {
-		return fmt.Errorf("invalid ayah number: %v", err)
+		return "", fmt.Errorf("invalid ayah number: %v", err)
 	}
 
 	var ayah model.Ayah
 	if err := db.Joins("JOIN surahs ON surahs.id = ayahs.surah_id").
 		Where("surahs.number = ? AND ayahs.number = ?", surahNumber, ayahNumber).
 		First(&ayah).Error; err != nil {
-		return fmt.Errorf("ayah not found: %v", err)
+		return "", fmt.Errorf("ayah not found: %v", err)
 	}
 	if ayah.TranslationID == nil {
-		return errors.New("ayah has no translation row")
+		return "", errors.New("ayah has no translation row")
 	}
 	return s.updateTranslationRow(db, *ayah.TranslationID, lang, text)
 }
 
-func (s *contentReportService) updateTranslationByHadithSlugNumber(db *gorm.DB, bookSlug string, number int, lang, text string) error {
+func (s *contentReportService) updateTranslationByHadithSlugNumber(db *gorm.DB, bookSlug string, number int, lang, text string) (string, error) {
 	if lang == "content" {
 		lang = "idn"
 	}
@@ -240,87 +258,171 @@ func (s *contentReportService) updateTranslationByHadithSlugNumber(db *gorm.DB, 
 	if err := db.Joins("JOIN books ON books.id = hadiths.book_id").
 		Where("books.slug = ? AND hadiths.number = ?", bookSlug, number).
 		First(&hadith).Error; err != nil {
-		return fmt.Errorf("hadith not found: %v", err)
+		return "", fmt.Errorf("hadith not found: %v", err)
 	}
 	if hadith.TranslationID == nil {
-		return errors.New("hadith has no translation row")
+		return "", errors.New("hadith has no translation row")
 	}
 	return s.updateTranslationRow(db, *hadith.TranslationID, lang, text)
 }
 
-func (s *contentReportService) updateDoaTranslation(db *gorm.DB, targetID, lang, text string) error {
+func (s *contentReportService) updateDoaTranslation(db *gorm.DB, targetID, lang, text string) (string, error) {
 	if lang == "content" {
 		lang = "idn"
 	}
 	var doa model.Doa
 	if err := db.Where("id = ?", targetID).First(&doa).Error; err != nil {
-		return fmt.Errorf("doa not found: %v", err)
+		return "", fmt.Errorf("doa not found: %v", err)
 	}
+	var oldVal string
 	if doa.TranslationID != nil {
-		_ = s.updateTranslationRow(db, *doa.TranslationID, lang, text)
+		oldVal, _ = s.updateTranslationRow(db, *doa.TranslationID, lang, text)
+	} else {
+		oldVal = doa.TranslationText
 	}
-	// Also sync legacy translation column
 	_ = db.Table("doas").Where("id = ?", targetID).Update("translation", text)
-	return nil
+	return oldVal, nil
 }
 
-func (s *contentReportService) updateDzikirTranslation(db *gorm.DB, targetID, lang, text string) error {
+func (s *contentReportService) updateDzikirTranslation(db *gorm.DB, targetID, lang, text string) (string, error) {
 	if lang == "content" {
 		lang = "idn"
 	}
 	var dzikir model.Dzikir
 	if err := db.Where("id = ?", targetID).First(&dzikir).Error; err != nil {
-		return fmt.Errorf("dzikir not found: %v", err)
+		return "", fmt.Errorf("dzikir not found: %v", err)
 	}
+	var oldVal string
 	if dzikir.TranslationID != nil {
-		_ = s.updateTranslationRow(db, *dzikir.TranslationID, lang, text)
+		oldVal, _ = s.updateTranslationRow(db, *dzikir.TranslationID, lang, text)
+	} else {
+		oldVal = dzikir.TranslationText
 	}
-	// Also sync legacy translation column
 	_ = db.Table("dzikirs").Where("id = ?", targetID).Update("translation", text)
-	return nil
+	return oldVal, nil
 }
 
-func (s *contentReportService) updateFiqhItemContent(db *gorm.DB, targetID, lang, text string) error {
+func (s *contentReportService) updateFiqhItemContent(db *gorm.DB, targetID, lang, text string) (string, error) {
 	var item model.FiqhItem
 	if err := db.Where("id = ?", targetID).First(&item).Error; err != nil {
-		return fmt.Errorf("fiqh item not found: %v", err)
+		return "", fmt.Errorf("fiqh item not found: %v", err)
 	}
+	oldVal := item.Content
 	if item.TranslationID != nil {
-		_ = s.updateTranslationRow(db, *item.TranslationID, lang, text)
+		_, _ = s.updateTranslationRow(db, *item.TranslationID, lang, text)
 	}
 	res := db.Table("fiqh_items").Where("id = ?", targetID).Update("content", text)
 	if res.Error != nil {
-		return res.Error
+		return "", res.Error
 	}
-	return nil
+	return oldVal, nil
 }
 
-func (s *contentReportService) updateSirohContent(db *gorm.DB, targetID, lang, text string) error {
+func (s *contentReportService) updateSirohContent(db *gorm.DB, targetID, lang, text string) (string, error) {
 	var item model.SirohContent
 	if err := db.Where("id = ?", targetID).First(&item).Error; err != nil {
-		return fmt.Errorf("siroh content not found: %v", err)
+		return "", fmt.Errorf("siroh content not found: %v", err)
 	}
+	oldVal := item.Content
 	if item.TranslationID != nil {
-		_ = s.updateTranslationRow(db, *item.TranslationID, lang, text)
+		_, _ = s.updateTranslationRow(db, *item.TranslationID, lang, text)
 	}
 	res := db.Table("siroh_contents").Where("id = ?", targetID).Update("content", text)
 	if res.Error != nil {
-		return res.Error
+		return "", res.Error
 	}
-	return nil
+	return oldVal, nil
 }
 
-func (s *contentReportService) updateTranslationRow(db *gorm.DB, translationID int, lang, text string) error {
+func (s *contentReportService) updateTranslationRow(db *gorm.DB, translationID int, lang, text string) (string, error) {
 	col := translationColumnForLang(lang)
 	if col == "" {
-		return fmt.Errorf("unsupported lang %q for translation update", lang)
+		return "", fmt.Errorf("unsupported lang %q for translation update", lang)
 	}
+	var current model.Translation
+	if err := db.Where("id = ?", translationID).First(&current).Error; err != nil {
+		return "", err
+	}
+
+	var oldVal string
+	switch col {
+	case "idn":
+		if current.Idn != nil {
+			oldVal = *current.Idn
+		}
+	case "en":
+		if current.En != nil {
+			oldVal = *current.En
+		}
+	case "latin_idn":
+		if current.LatinIdn != nil {
+			oldVal = *current.LatinIdn
+		}
+	case "description_idn":
+		if current.DescriptionIdn != nil {
+			oldVal = *current.DescriptionIdn
+		}
+	case "description_en":
+		if current.DescriptionEn != nil {
+			oldVal = *current.DescriptionEn
+		}
+	}
+
 	res := db.Table("translations").Where("id = ?", translationID).Update(col, text)
 	if res.Error != nil {
-		return res.Error
+		return "", res.Error
 	}
-	if res.RowsAffected == 0 {
-		return fmt.Errorf("translation row %d not found", translationID)
+	return oldVal, nil
+}
+
+func (s *contentReportService) evaluateMushahhihAchievements(userID uuid.UUID) error {
+	if s.repos == nil || s.repos.Achievement == nil {
+		return nil
+	}
+	db := s.repos.GetDB()
+	var count int64
+	db.Model(&model.ContentReport{}).Where("user_id = ? AND status = ?", userID, model.ContentReportStatusResolved).Count(&count)
+
+	badges := []struct {
+		code      string
+		name      string
+		nameEn    string
+		desc      string
+		descEn    string
+		icon      string
+		threshold int
+	}{
+		{"mushahhih_1", "Mushahhih Pemula", "Novice Reviewer", "1 laporan koreksi telah disetujui", "1 content correction approved", "✍️", 1},
+		{"mushahhih_5", "Mushahhih Teladan", "Exemplary Reviewer", "5 laporan koreksi telah disetujui", "5 content corrections approved", "🔍", 5},
+		{"mushahhih_10", "Khadimul Dalil", "Custodian of Texts", "10 laporan koreksi telah disetujui", "10 content corrections approved", "🛡️", 10},
+	}
+
+	for _, b := range badges {
+		if int(count) >= b.threshold {
+			ach, err := s.repos.Achievement.FindByCode(b.code)
+			if err != nil {
+				ach = &model.Achievement{
+					Code:        b.code,
+					Name:        b.name,
+					NameEn:      b.nameEn,
+					Description: b.desc,
+					DescEn:      b.descEn,
+					Icon:        b.icon,
+					Category:    "mushahhih",
+					Threshold:   b.threshold,
+				}
+				_ = db.Create(ach).Error
+			}
+			if ach != nil && ach.ID != nil && !s.repos.Achievement.HasEarned(userID, *ach.ID) {
+				ua := &model.UserAchievement{
+					BaseUUID:      model.BaseUUID{ID: uuid.New()},
+					UserID:        userID,
+					AchievementID: *ach.ID,
+					EarnedAt:      time.Now(),
+				}
+				_ = s.repos.Achievement.Award(ua)
+			}
+		}
 	}
 	return nil
 }

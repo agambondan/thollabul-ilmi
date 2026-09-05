@@ -515,6 +515,7 @@ export const dzikirApi = {
 export const leaderboardApi = {
     streak: () => fetch(`${API_URL}/api/v1/leaderboard/streak`),
     hafalan: () => fetch(`${API_URL}/api/v1/leaderboard/hafalan`),
+    mushahhih: () => fetch(`${API_URL}/api/v1/leaderboard/mushahhih`),
     me: () => authFetch("/api/v1/leaderboard/me"),
 };
 
@@ -1158,6 +1159,21 @@ export const contentReportApi = {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
         }),
+    adminExport: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return authFetch(`/api/v1/admin/reports/export${qs ? "?" + qs : ""}`);
+    },
+};
+
+export const contentAuditLogApi = {
+    list: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return authFetch(`/api/v1/admin/audit-logs${qs ? "?" + qs : ""}`);
+    },
+    export: (params = {}) => {
+        const qs = new URLSearchParams(params).toString();
+        return authFetch(`/api/v1/admin/audit-logs/export${qs ? "?" + qs : ""}`);
+    },
 };
 
 export const feedApi = {

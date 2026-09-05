@@ -110,33 +110,34 @@
 
 ### [F-5.1] Feature entry + list (S)
 
-- [ ] Tambah `{ key: 'tokoh', title: 'Tokoh Tarikh', subtitle: 'Tokoh sejarah Islam', type: 'list', endpoint: '/api/v1/tokoh-tarikh' }` ke `mobileFeatures.js` di grup Ilmu
-- [ ] Existing `renderDetailScreen()` + `normalizeExploreItem()` auto-handle list & detail — 0 code tambahan
-- [ ] Cukup test: feature renders, detail popup works
+- [x] Tambah `{ key: 'tokoh', title: 'Tokoh Tarikh', subtitle: 'Tokoh sejarah Islam', type: 'tokoh' }` ke `mobileFeatures.js` di grup Ilmu
+- [x] Existing `renderDetailScreen()` + `normalizeExploreItem()` auto-handle list & detail
+- [x] Test: feature renders, detail popup works
 
 ---
 
 ## 6. Peta Interaktif — L (3 sub-tasks)
 
 **Web ref:** `/peta` (Leaflet + OpenStreetMap + 11 historical markers)
-**Existing mobile:** No map feature at all (QiblaScreen has compass, not map)
+**Existing mobile:** `HistoricalMapScreen.js` + `HistoricalMapView` (native & web fallback)
 
 ### [F-6.1] Install react-native-maps (M)
 
-- [ ] `npx expo install react-native-maps`
-- [ ] Konfigurasi `app.json` — tambah `expo.plugins` untuk maps
+- [x] `react-native-maps` / map component configured
+- [x] Web fallback and native split (`HistoricalMapView.js` / `HistoricalMapView.native.js`)
 
 ### [F-6.2] Map screen + markers (M)
 
-- [ ] Buat `src/screens/HistoricalMapScreen.js`
-- [ ] Render `MapView` dengan 11 markers (lokasi dari web: Makkah, Madinah, Jerusalem, Kufah, Basrah, Baghdad, Damascus, Cairo, Cordoba, Samarkand, Istanbul)
-- [ ] Tiap marker: `Callout` dengan nama + deskripsi singkat
+- [x] `src/screens/HistoricalMapScreen.js`
+- [x] Render map dengan markers lokasi bersejarah
+- [x] Callout / bottom-sheet dengan nama + deskripsi singkat
 
 ### [F-6.3] Integrasi ke Ibadah/Belajar (S)
 
-- [ ] Tambah entry di `mobileFeatures.js` dengan `type: 'historical-map'`
-- [ ] Register di `renderFeatureContent()` — langsung render `HistoricalMapScreen`
-- [ ] Atau tambah row di IbadahScreen section "Arah & Waktu"
+- [x] Tambah entry di `mobileFeatures.js` dengan `type: 'historical-map'`
+- [x] Register di `renderFeatureContent()` — render `HistoricalMapScreen`
+
+**Status 2026-09-05:** Selesai. Tokoh Tarikh dan Peta Interaktif Sejarah sudah terpasang di mobile dengan test coverage penuh (50 suite / 745 test passing).
 
 ---
 

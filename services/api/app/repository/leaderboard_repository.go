@@ -9,8 +9,10 @@ import (
 type LeaderboardRepository interface {
 	TopStreak(limit int) ([]model.LeaderboardEntry, error)
 	TopHafalan(limit int) ([]model.LeaderboardEntry, error)
+	TopMushahhih(limit int) ([]model.LeaderboardEntry, error)
 	MyStreakRank(userID uuid.UUID) (*model.LeaderboardMyRank, error)
 	MyHafalanRank(userID uuid.UUID) (*model.LeaderboardMyRank, error)
+	MyMushahhihRank(userID uuid.UUID) (*model.LeaderboardMyRank, error)
 }
 
 type leaderboardRepository struct {
@@ -96,6 +98,37 @@ func (r *leaderboardRepository) MyHafalanRank(userID uuid.UUID) (*model.Leaderbo
 			SELECT user_id, score, RANK() OVER (ORDER BY score DESC) AS rank,
 				COUNT(*) OVER () AS total
 			FROM hafalan_counts
+		)
+		SELECT rank, score, total FROM ranked WHERE user_id = ?`, userID).Scan(&rank).Error
+	return &rank, err
+}
+
+func (r *leaderboardRepository) TopMushahhih(limit int) ([]model.LeaderboardEntry, error) {
+	var rows []model.LeaderboardEntry
+	err := r.db.Raw(`
+		SELECT ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS rank,
+			cr.user_id::text, u.name, u.avatar, COUNT(*) AS score
+		FROM content_reports cr
+		JOIN "user" u ON u.id = cr.user_id::text
+		WHERE cr.status = 'resolved' AND cr.deleted_at IS NULL AND u.deleted_at IS NULL
+		GROUP BY cr.user_id, u.name, u.avatar
+		ORDER BY score DESC
+		LIMIT ?`, limit).Scan(&rows).Error
+	return rows, err
+}
+
+func (r *leaderboardRepository) MyMushahhihRank(userID uuid.UUID) (*model.LeaderboardMyRank, error) {
+	var rank model.LeaderboardMyRank
+	err := r.db.Raw(`
+		WITH report_counts AS (
+			SELECT user_id, COUNT(*) AS score FROM content_reports
+			WHERE status = 'resolved' AND deleted_at IS NULL
+			GROUP BY user_id
+		),
+		ranked AS (
+			SELECT user_id, score, RANK() OVER (ORDER BY score DESC) AS rank,
+				COUNT(*) OVER () AS total
+			FROM report_counts
 		)
 		SELECT rank, score, total FROM ranked WHERE user_id = ?`, userID).Scan(&rank).Error
 	return &rank, err

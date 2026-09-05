@@ -4,6 +4,7 @@
 import { useLocale } from "@/context/Locale";
 import { audioApi, quranApi } from "@/lib/api";
 import { OPEN_SURAH_AUDIO_EVENT } from "@/lib/audioEvents";
+import { useQuranFullscreen } from "@/lib/useQuranFullscreen";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useCallback } from "react";
 import {
@@ -672,9 +673,12 @@ export default function SurahAudioPlayer({
         audioList.find((item) => item.qari_slug === selectedQari) ??
         audioList[0];
     const isDashboard = pathname?.startsWith("/dashboard");
-    const bottomClass = isDashboard
-        ? "bottom-[84px] md:bottom-4"
-        : "bottom-[72px] md:bottom-4";
+    const { isFullscreen } = useQuranFullscreen();
+    const bottomClass = isFullscreen
+        ? "bottom-4"
+        : isDashboard
+          ? "bottom-[84px] md:bottom-4"
+          : "bottom-[72px] md:bottom-4";
     const canSkipBackward = queueLength > 0 && (repeat || queueIndex > 0);
     const canSkipForward =
         queueLength > 0 && (repeat || queueIndex < queueLength - 1);

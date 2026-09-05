@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"math"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
@@ -32,10 +33,15 @@ type notificationService struct {
 	inboxRepo       repository.NotificationInboxRepository
 	repo            repository.NotificationRepository
 	prayerTimesSvc  PrayerTimesService
+	adzanSentMap    sync.Map
 }
 
 func NewNotificationService(repo repository.NotificationRepository, inboxRepo repository.NotificationInboxRepository, prayerTimesSvc PrayerTimesService) NotificationService {
-	return &notificationService{repo: repo, inboxRepo: inboxRepo, prayerTimesSvc: prayerTimesSvc}
+	return &notificationService{
+		repo:           repo,
+		inboxRepo:      inboxRepo,
+		prayerTimesSvc: prayerTimesSvc,
+	}
 }
 
 func (s *notificationService) FindSettings(userID uuid.UUID) ([]model.NotificationSetting, error) {
@@ -324,6 +330,15 @@ func (s *notificationService) DispatchDueAdzanPush(now time.Time) (int, error) {
 			continue
 		}
 
+		// Deduplicate: the scheduler runs every minute, and the prayer time
+		// string (e.g. "04:30") will match the same token for at least two
+		// consecutive ticks. Without this guard, every active token would get
+		// the adzan push twice.
+		dedupKey := fmt.Sprintf("%d:%s:%s", token.ID, localNow.Format("2006-01-02"), match.Key)
+		if _, alreadySent := s.adzanSentMap.Load(dedupKey); alreadySent {
+			continue
+		}
+
 		cityName := token.CityName
 		if cityName == "" {
 			cityName = "wilayah Anda"
@@ -332,21 +347,29 @@ func (s *notificationService) DispatchDueAdzanPush(now time.Time) (int, error) {
 		title := fmt.Sprintf("Waktunya Sholat %s", match.Name)
 		body := fmt.Sprintf("Telah masuk waktu sholat %s untuk %s dan sekitarnya.", match.Name, cityName)
 
+		delivered := false
 		switch strings.ToLower(token.Provider) {
 		case "web":
 			if token.KeyP256DH == "" || token.KeyAuth == "" {
 				continue
 			}
 			if err := s.sendWebPushCustom(token, title, body, "/jadwal-sholat", model.NotificationTypeAdzan); err == nil {
+				delivered = true
 				sent++
 			}
 		case "expo":
 			if isDeliverableExpoPushToken(token) {
 				content := reminderContent{Title: title, Description: body}
 				if n, err := s.sendPushToUser(token.UserID, model.NotificationTypeAdzan, content); err == nil && n > 0 {
+					delivered = true
 					sent += n
 				}
 			}
+		}
+
+		if delivered {
+			s.adzanSentMap.Store(dedupKey, localNow.Unix())
+			s.pruneAdzanSentMap()
 		}
 	}
 
@@ -374,6 +397,16 @@ func (s *notificationService) StartReminderScheduler(ctx context.Context, interv
 			}
 		}
 	}()
+}
+
+func (s *notificationService) pruneAdzanSentMap() {
+	cutoff := time.Now().Add(-24 * time.Hour).Unix()
+	s.adzanSentMap.Range(func(k, v any) bool {
+		if ts, ok := v.(int64); ok && ts < cutoff {
+			s.adzanSentMap.Delete(k)
+		}
+		return true
+	})
 }
 
 func resolveTokenTimeLocation(token model.PushToken) *time.Location {

@@ -8,12 +8,13 @@ import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { leaderboardApi } from "@/lib/api";
 import { useEffect, useState } from "react";
-import { BsFire, BsSearch, BsTrophyFill } from "react-icons/bs";
+import { BsFire, BsSearch, BsTrophyFill, BsShieldCheck } from "react-icons/bs";
 import { MdBookmark } from "react-icons/md";
 
 const TABS = [
     { key: "streak", labelKey: "leaderboard.streak_tab", icon: <BsFire /> },
     { key: "hafalan", labelKey: "leaderboard.hafalan", icon: <MdBookmark /> },
+    { key: "mushahhih", labelKey: "leaderboard.mushahhih", label: "Mushahhih", icon: <BsShieldCheck /> },
 ];
 
 const MEDAL = ["🥇", "🥈", "🥉"];
@@ -25,6 +26,7 @@ const LeaderboardPage = () => {
     const [tab, setTab] = useState("streak");
     const [streakData, setStreakData] = useState([]);
     const [hafalanData, setHafalanData] = useState([]);
+    const [mushahhihData, setMushahhihData] = useState([]);
     const [myRank, setMyRank] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
@@ -38,6 +40,7 @@ const LeaderboardPage = () => {
                 const reqs = [
                     leaderboardApi.streak(),
                     leaderboardApi.hafalan(),
+                    leaderboardApi.mushahhih(),
                 ];
                 if (isAuthenticated) reqs.push(leaderboardApi.me());
                 const results = await Promise.allSettled(reqs);
@@ -50,12 +53,16 @@ const LeaderboardPage = () => {
                     const d = await results[1].value.json();
                     setHafalanData(Array.isArray(d) ? d : (d.data ?? []));
                 }
+                if (results[2].status === "fulfilled" && results[2].value.ok) {
+                    const d = await results[2].value.json();
+                    setMushahhihData(Array.isArray(d) ? d : (d.data ?? []));
+                }
                 if (
-                    results[2] &&
-                    results[2].status === "fulfilled" &&
-                    results[2].value.ok
+                    results[3] &&
+                    results[3].status === "fulfilled" &&
+                    results[3].value.ok
                 ) {
-                    setMyRank(await results[2].value.json());
+                    setMyRank(await results[3].value.json());
                 }
             } catch {
                 setError(t("leaderboard.load_error"));
@@ -66,7 +73,12 @@ const LeaderboardPage = () => {
         load();
     }, [isAuthenticated, t]);
 
-    const currentData = tab === "streak" ? streakData : hafalanData;
+    const currentData =
+        tab === "streak"
+            ? streakData
+            : tab === "hafalan"
+              ? hafalanData
+              : mushahhihData;
     const searchQuery = search.trim().toLowerCase();
     const visibleData = currentData.filter((entry) => {
         if (!searchQuery) return true;

@@ -67,11 +67,6 @@ func readStaticJSON(name string, dst interface{}) bool {
 // ── Doa ───────────────────────────────────────────────────────────────────────
 
 func seedDoaFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.Doa{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Category        string `json:"category"`
 		Title           string `json:"title"`
@@ -533,11 +528,6 @@ func seedAchievementsFromFile(db *gorm.DB) {
 // ── Quiz ──────────────────────────────────────────────────────────────────────
 
 func seedQuizQuestionsFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.Quiz{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		Type          string `json:"type"`
 		Difficulty    string `json:"difficulty"`

@@ -11,6 +11,7 @@ import (
 type LeaderboardController interface {
 	TopStreak(ctx *fiber.Ctx) error
 	TopHafalan(ctx *fiber.Ctx) error
+	TopMushahhih(ctx *fiber.Ctx) error
 	MyRank(ctx *fiber.Ctx) error
 }
 
@@ -54,6 +55,25 @@ func (c *leaderboardController) TopHafalan(ctx *fiber.Ctx) error {
 		limit = 100
 	}
 	list, err := c.svc.TopHafalan(limit)
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, list)
+}
+
+// @Summary Get mushahhih leaderboard
+// @Tags Sosial
+// @Produce json
+// @Param limit query int false "Number of results (default 20, max 100)"
+// @Success 200 {object} lib.Response
+// @Failure 500 {object} lib.Response
+// @Router /leaderboard/mushahhih [get]
+func (c *leaderboardController) TopMushahhih(ctx *fiber.Ctx) error {
+	limit, _ := strconv.Atoi(ctx.Query("limit", "20"))
+	if limit > 100 {
+		limit = 100
+	}
+	list, err := c.svc.TopMushahhih(limit)
 	if err != nil {
 		return lib.ErrorInternal(ctx)
 	}

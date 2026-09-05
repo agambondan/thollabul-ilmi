@@ -8,20 +8,21 @@ import { getLocalizedTranslation } from "@/lib/translation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const ByBook = ({ basePath = "/hadith" }) => {
+const ByBook = ({ basePath = "/hadith", initialBooks = null }) => {
     const { t, lang } = useLocale();
-    const [isLoading, SetIsLoading] = useState(true);
+    const [isLoading, SetIsLoading] = useState(!initialBooks);
     const [isError, setIsError] = useState(false);
-    const [books, setBooks] = useState([]);
+    const [books, setBooks] = useState(initialBooks || []);
 
     const fetchBooks = async () => {
         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/v1/books`,
+            `${process.env.NEXT_PUBLIC_API_URL || "https://api-thollabul.jangkauin.site"}/api/v1/books`,
         );
         return await res.json();
     };
 
     useEffect(() => {
+        if (initialBooks && initialBooks.items?.length) return;
         fetchBooks()
             .then((res) => {
                 setBooks(res);
@@ -31,7 +32,7 @@ const ByBook = ({ basePath = "/hadith" }) => {
                 setIsError(true);
                 SetIsLoading(false);
             });
-    }, []);
+    }, [initialBooks]);
 
     if (isLoading) return <SkeletonInline rows={4} />;
     if (isError)

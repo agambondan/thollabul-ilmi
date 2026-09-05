@@ -92,6 +92,15 @@ export default async function RootLayout({ children }) {
             lang={initialLang === "EN" ? "en" : "id"}
             suppressHydrationWarning
         >
+            <head>
+                <link
+                    rel='preload'
+                    href='/fonts/Kitab-Regular.woff2'
+                    as='font'
+                    type='font/woff2'
+                    crossOrigin='anonymous'
+                />
+            </head>
             <body>
                 {/*
                  * Runs before hydration so dark-mode users do not get a flash

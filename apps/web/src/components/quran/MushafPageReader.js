@@ -70,21 +70,31 @@ const pageMeta = (ayahs, lang, page, fallback) => {
     };
 };
 
-export default function MushafPageReader() {
+export default function MushafPageReader({
+    initialPage = 1,
+    initialAyahs = [],
+    initialWords = [],
+}) {
     const { t, lang } = useLocale();
     const { fontCls, fontId, setFont, arabicFontSize, setArabicFontSize } =
         useQuranFont();
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(initialPage);
     const inputRef = useRef(null);
-    const [ayahs, setAyahs] = useState([]);
-    const [words, setWords] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [ayahs, setAyahs] = useState(initialAyahs);
+    const [words, setWords] = useState(initialWords);
+    const [loading, setLoading] = useState(
+        initialAyahs.length === 0 && initialWords.length === 0,
+    );
+    const isFirstMount = useRef(initialAyahs.length > 0);
     const [showTranslation, setShowTranslation] = useState(false);
     const touchX = useRef(null);
 
     useEffect(() => {
-        setPage(readInitialPage());
-    }, []);
+        const p = readInitialPage();
+        if (p !== initialPage) {
+            setPage(p);
+        }
+    }, [initialPage]);
 
     const fetchPageData = useCallback(async (nextPage) => {
         const [ayahRes, wordRes] = await Promise.all([
@@ -102,7 +112,12 @@ export default function MushafPageReader() {
     }, []);
 
     useEffect(() => {
+        if (isFirstMount.current) {
+            isFirstMount.current = false;
+            return;
+        }
         let active = true;
+        setLoading(true);
         fetchPageData(page)
             .then((data) => {
                 if (!active) return;

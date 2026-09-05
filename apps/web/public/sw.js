@@ -103,7 +103,7 @@ self.addEventListener("notificationclick", (event) => {
  * Writes (POST/PUT/DELETE) are never cached or replayed — a queued "mark
  * memorised" firing days later would corrupt the user's progress.
  */
-const VERSION = "v1";
+const VERSION = "v2";
 const SHELL_CACHE = `shell-${VERSION}`;
 const STATIC_CACHE = `static-${VERSION}`;
 const API_CACHE = `api-${VERSION}`;
@@ -117,8 +117,15 @@ const isStaticAsset = (url) =>
     url.pathname.startsWith("/audio/") ||
     url.pathname.startsWith("/assets/");
 
+const isApiOrigin = (url) =>
+    url.origin === self.location.origin ||
+    url.hostname.startsWith("api-") ||
+    url.hostname.includes("api");
+
 const isApiRead = (request, url) =>
-    request.method === "GET" && url.pathname.startsWith("/api/v1/");
+    request.method === "GET" &&
+    isApiOrigin(url) &&
+    url.pathname.startsWith("/api/v1/");
 
 const trimCache = async (name, maxEntries) => {
     const cache = await caches.open(name);
@@ -160,7 +167,10 @@ self.addEventListener("fetch", (event) => {
     if (request.method !== "GET") return;
 
     const url = new URL(request.url);
-    if (url.origin !== self.location.origin) return;
+    const isSameOrigin = url.origin === self.location.origin;
+    const isTargetApi = isApiRead(request, url);
+
+    if (!isSameOrigin && !isTargetApi) return;
 
     // Never cache auth or admin traffic.
     if (

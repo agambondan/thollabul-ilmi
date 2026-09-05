@@ -11,12 +11,12 @@ const API_URL =
 
 async function getInitialItems() {
     try {
-        const res = await fetch(`${API_URL}/api/v1/kajian`, {
+        const res = await fetch(`${API_URL}/api/v1/kajian?page=0&size=20`, {
             next: { revalidate: 3600 },
         });
         if (!res.ok) return [];
         const data = await res.json();
-        return Array.isArray(data) ? data : [];
+        return data?.items ?? (Array.isArray(data) ? data : []);
     } catch {
         return [];
     }

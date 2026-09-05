@@ -119,6 +119,14 @@
             "surface": "system",
             "purpose": "Search crawler sitemap route.",
             "status": "active"
+        },
+        {
+            "key": "extension",
+            "title": "Browser Extension Landing",
+            "route": "/extension",
+            "surface": "public",
+            "purpose": "Promotional and installation guide for Thullaabul 'Ilmi Board New Tab browser extension.",
+            "status": "active"
         }
     ],
     "features": [

@@ -3,6 +3,7 @@
 import Footer from "@/components/Footer";
 import { NavbarTailwindCss } from "@/components/Navbar";
 import { usePathname } from "next/navigation";
+import { useQuranFullscreen } from "@/lib/useQuranFullscreen";
 
 /*
  * Routes that bring their own chrome. /dashboard and /admin have full app
@@ -24,12 +25,14 @@ const hasOwnChrome = (pathname) =>
  */
 export function PublicNavbar() {
     const pathname = usePathname();
-    if (hasOwnChrome(pathname)) return null;
+    const { isFullscreen } = useQuranFullscreen();
+    if (hasOwnChrome(pathname) || isFullscreen) return null;
     return <NavbarTailwindCss />;
 }
 
 export function PublicFooter() {
     const pathname = usePathname();
-    if (hasOwnChrome(pathname)) return null;
+    const { isFullscreen } = useQuranFullscreen();
+    if (hasOwnChrome(pathname) || isFullscreen) return null;
     return <Footer />;
 }

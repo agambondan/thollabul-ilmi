@@ -16,6 +16,7 @@ type ContentReportController interface {
 	UpdateStatus(ctx *fiber.Ctx) error
 	FindMine(ctx *fiber.Ctx) error
 	ApplyCorrection(ctx *fiber.Ctx) error
+	Export(ctx *fiber.Ctx) error
 }
 
 type contentReportController struct {
@@ -179,4 +180,55 @@ func (c *contentReportController) FindMine(ctx *fiber.Ctx) error {
 		"page":  page,
 		"limit": limit,
 	})
+}
+
+// @Summary Export content reports as CSV (admin)
+// @Tags Admin
+// @Produce text/csv
+// @Param status query string false "Filter by status"
+// @Param target_type query string false "Filter by target_type"
+// @Success 200 {string} string "CSV"
+// @Router /admin/reports/export [get]
+func (c *contentReportController) Export(ctx *fiber.Ctx) error {
+	claims, err := lib.ExtractToken(ctx)
+	if err != nil || claims["role"] != string(model.RoleAdmin) {
+		return lib.ErrorForbidden(ctx)
+	}
+	status := model.ContentReportStatus(ctx.Query("status"))
+	targetType := model.ContentReportTargetType(ctx.Query("target_type"))
+	items, _, err := c.svc.FindAll(status, targetType, 1, 1000)
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	csv := "id,target_type,target_id,target_title,category,description,correction,status,admin_note,reporter_name,reporter_email,created_at\n"
+	for _, it := range items {
+		name, email := "", ""
+		if it.User != nil {
+			if it.User.Name != nil {
+				name = *it.User.Name
+			}
+			if it.User.Email != nil {
+				email = *it.User.Email
+			}
+		}
+		createdAt := ""
+		if it.CreatedAt != nil {
+			createdAt = it.CreatedAt.Format("2006-01-02 15:04:05")
+		}
+		csv += escapeCSV(it.ID.String()) + "," +
+			escapeCSV(string(it.TargetType)) + "," +
+			escapeCSV(it.TargetID) + "," +
+			escapeCSV(it.TargetTitle) + "," +
+			escapeCSV(string(it.Category)) + "," +
+			escapeCSV(it.Description) + "," +
+			escapeCSV(it.Correction) + "," +
+			escapeCSV(string(it.Status)) + "," +
+			escapeCSV(it.AdminNote) + "," +
+			escapeCSV(name) + "," +
+			escapeCSV(email) + "," +
+			escapeCSV(createdAt) + "\n"
+	}
+	ctx.Set("Content-Type", "text/csv")
+	ctx.Set("Content-Disposition", "attachment; filename=content-reports.csv")
+	return ctx.SendString(csv)
 }

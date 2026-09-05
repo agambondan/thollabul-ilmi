@@ -113,4 +113,26 @@ describe("SettingButton Quran-scoped controls", () => {
         );
         expect(stored.quranHafalanMode).toBe("hide_arabic");
     });
+
+    test("allows toggling quran fullscreen", () => {
+        usePathname.mockReturnValue("/quran/surah/Al-Faatiha");
+
+        render(
+            <SettingsProvider>
+                <SettingButton />
+            </SettingsProvider>,
+        );
+
+        fireEvent.click(screen.getByTestId("global-setting-button"));
+        const fsBtn = screen.getByText("Layar Penuh (Tanpa Navbar)");
+        expect(fsBtn).toBeInTheDocument();
+
+        fireEvent.click(fsBtn);
+
+        const stored = JSON.parse(
+            localStorage.getItem("tholabul_app_settings") ?? "{}",
+        );
+        expect(stored.quranFullscreen).toBe(true);
+        expect(document.body.classList.contains("quran-fullscreen")).toBe(true);
+    });
 });

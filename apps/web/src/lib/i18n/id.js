@@ -1334,6 +1334,8 @@ const id = {
     "mushaf.translation": "Terjemahan",
     "mushaf.translation_on": "Tampilkan Terjemahan",
     "mushaf.translation_off": "Sembunyikan Terjemahan",
+    "quran.fullscreen_on": "Layar Penuh (Tanpa Navbar)",
+    "quran.fullscreen_off": "Keluar Layar Penuh",
     "mushaf.next_page": "Halaman Berikutnya",
     "mushaf.prev_page": "Halaman Sebelumnya",
     "mushaf.juz": "Juz",

@@ -1348,6 +1348,8 @@ const en = {
     "mushaf.translation": "Translation",
     "mushaf.translation_on": "Show translation",
     "mushaf.translation_off": "Hide translation",
+    "quran.fullscreen_on": "Full Screen (Hide Navbar)",
+    "quran.fullscreen_off": "Exit Full Screen",
     "mushaf.next_page": "Next page",
     "mushaf.prev_page": "Previous page",
     "mushaf.juz": "Juz",

@@ -214,5 +214,69 @@
         "correct_answer": "Salman Al-Farisi ra.",
         "options": "[\"Abu Bakar Ash-Shiddiq\", \"Umar bin Khattab\", \"Salman Al-Farisi ra.\", \"Ali bin Abi Thalib\"]",
         "explanation": "Salman Al-Farisi ra., sahabat asal Persia, mengusulkan strategi menggali parit (khandaq) di utara Madinah — strategi yang tidak dikenal orang Arab. Ini menyelamatkan Madinah dari pengepungan 10.000 pasukan musuh."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "easy",
+        "question_text": "Siapakah khalifah pertama setelah Rasulullah ﷺ wafat?",
+        "correct_answer": "Abu Bakar Ash-Shiddiq ra.",
+        "options": "[\"Umar bin Khattab ra.\", \"Abu Bakar Ash-Shiddiq ra.\", \"Utsman bin Affan ra.\", \"Ali bin Abi Thalib ra.\"]",
+        "explanation": "Abu Bakar Ash-Shiddiq ra. dipilih menjadi khalifah pertama (11-13 H / 632-634 M) melalui musyawarah bani Saqifah. Beliau berjasa menyelamatkan keutuhan umat saat terjadi peristiwa Riddah (pembelotan sebagian kabilah)."
+    },
+    {
+        "type": "sirah",
+        "difficulty": "medium",
+        "question_text": "Apa peristiwa fathu Makkah (penaklukan kota Makkah)?",
+        "correct_answer": "Pembebasan kota Makkah oleh kaum Muslim pada 10 Ramadan 8 H",
+        "options": "[\"Perpindahan Nabi ke Madinah\", \"Pembebasan kota Makkah oleh kaum Muslim pada 10 Ramadan 8 H\", \"Kelahiran Nabi Muhammad ﷺ\", \"Isra Miraj Nabi ﷺ\"]",
+        "explanation": "Fathu Makkah (10 Ramadan 8 H / 630 M) adalah penaklukan kota Makkah oleh 10.000 pasukan Muslim tanpa pertumpahan darah. Nabi ﷺ memberikan amnesti umum kepada penduduk Quraisy (HR. Bukhari No. 4280)."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "easy",
+        "question_text": "Hadits tentang niat diriwayatkan oleh siapa?",
+        "correct_answer": "HR. Umar bin Khattab ra. (Bukhari No. 1; Muslim No. 1907)",
+        "options": "[\"HR. Abu Hurairah (Bukhari No. 1)\", \"HR. Umar bin Khattab ra. (Bukhari No. 1; Muslim No. 1907)\", \"HR. Aisyah (Bukhari No. 1)\", \"HR. Anas bin Malik (Bukhari No. 1)\"]",
+        "explanation": "Hadits tentang niat ('Innama al-a'malu binniyat...') diriwayatkan dari Umar bin Khattab ra. dan dicatat sebagai hadits pembuka Shahih Bukhari dan Shahih Muslim."
+    },
+    {
+        "type": "hadith",
+        "difficulty": "medium",
+        "question_text": "Hadits Jibril tentang rukun Islam diriwayatkan dari siapa?",
+        "correct_answer": "Abu Hurairah ra.",
+        "options": "[\"Abu Bakar Ash-Shiddiq ra.\", \"Umar bin Khattab ra.\", \"Abu Hurairah ra.\", \"Aisyah ra.\"]",
+        "explanation": "Hadits Jibril (HR. Muslim No. 8) yang menjelaskan Islam, Iman, dan Ihsan diriwayatkan dari Abu Hurairah ra. Beliau adalah sahabat yang paling banyak meriwayatkan hadits (lebih dari 5.000 hadits)."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "easy",
+        "question_text": "Rukun iman yang ke-6 adalah...",
+        "correct_answer": "Beriman kepada takdir (qada dan qadar)",
+        "options": "[\"Beriman kepada para malaikat\", \"Beriman kepada Kitab-kitab Allah\", \"Beriman kepada takdir (qada dan qadar)\", \"Beriman kepada hari akhir\"]",
+        "explanation": "Enam rukun iman: 1) Iman kepada Allah, 2) Malaikat, 3) Kitab-kitab, 4) Rasul-rasul, 5) Hari Akhir, 6) Qada dan Qadar. Dalil hadits Jibril (HR. Muslim No. 8)."
+    },
+    {
+        "type": "fiqh",
+        "difficulty": "medium",
+        "question_text": "Syarat wajib zakat fitrah adalah...",
+        "correct_answer": "Muslim yang memiliki kelebihan makanan pada malam dan hari Idul Fitri",
+        "options": "[\"Hanya yang sudah baligh\", \"Muslim yang memiliki kelebihan makanan pada malam dan hari Idul Fitri\", \"Hanya yang mampu secara ekonomi\", \"Yang sudah punya anak\"]",
+        "explanation": "Zakat fitrah wajib bagi setiap Muslim (laki-laki, perempuan, kecil, besar) yang memiliki kelebihan makanan untuk dirinya dan keluarganya pada malam dan hari Idul Fitri. Sebesar 1 sha' (±2,5 kg) makanan pokok (HR. Abu Dawud No. 1609)."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "medium",
+        "question_text": "Surat Al-Fatihah terdiri dari berapa ayat?",
+        "correct_answer": "7 ayat",
+        "options": "[\"5 ayat\", \"6 ayat\", \"7 ayat\", \"8 ayat\"]",
+        "explanation": "Surat Al-Fatihah (Pembukaan) terdiri dari 7 ayat. Dinamakan Ummul Kitab (induk Al-Quran) karena mengandung inti seluruh ajaran Al-Quran: pujian, permohonan petunjuk, dan tauhid."
+    },
+    {
+        "type": "hafalan",
+        "difficulty": "hard",
+        "question_text": "Ayat Kursi (QS. Al-Baqarah: 255) paling sedikit berapa kata?",
+        "correct_answer": "50 kata",
+        "options": "[\"10 kata\", \"25 kata\", \"50 kata\", \"100 kata\"]",
+        "explanation": "Ayat Kursi (QS. Al-Baqarah: 255) adalah ayat paling agung dalam Al-Quran. Dinukil oleh Anas bin Malik ra. bahwa Nabi ﷺ bersabda: 'Barangsiapa membacanya setelah setiap shalat fardhu, tidak ada yang menghalanginya masuk surga kecuali kematian' (HR. An-Nasai)."
     }
 ]
