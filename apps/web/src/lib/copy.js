@@ -38,6 +38,49 @@ export const CopyImageToClipboard = (canvas) => {
     });
 };
 
+export const shareCanvasWithText = (canvas, { title, text, url, filename = "share.png" } = {}) => {
+    return new Promise((resolve, reject) => {
+        const afterBlob = async (blob) => {
+            if (!blob) {
+                reject(new Error("Blob kosong"));
+                return;
+            }
+            const file = new File([blob], filename, { type: "image/png" });
+            const canFileShare =
+                typeof navigator !== "undefined" &&
+                navigator.canShare &&
+                navigator.canShare({ files: [file] }) &&
+                navigator.share;
+            if (!canFileShare) {
+                reject(new Error("UNSUPPORTED"));
+                return;
+            }
+            try {
+                await navigator.share({
+                    files: [file],
+                    title: title || "Thullaabul 'Ilmi",
+                    text: text || "",
+                    url: url || undefined,
+                });
+                resolve();
+            } catch (err) {
+                if (err && err.name === "AbortError") resolve();
+                else reject(err);
+            }
+        };
+        if (typeof canvas.toBlob === "function") {
+            canvas.toBlob(afterBlob, "image/png");
+        } else {
+            try {
+                const dataUrl = canvas.toDataURL("image/png");
+                fetch(dataUrl).then((r) => r.blob()).then(afterBlob).catch(reject);
+            } catch (err) {
+                reject(err);
+            }
+        }
+    });
+};
+
 export const CopyToClipboard = async (text) => {
     try {
         if (navigator.clipboard && navigator.clipboard.writeText) {

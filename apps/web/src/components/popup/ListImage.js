@@ -2,7 +2,11 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useLocale } from "@/context/Locale";
-import { CopyImageToClipboard, CopyToClipboard } from "@/lib/copy";
+import {
+    CopyImageToClipboard,
+    CopyToClipboard,
+    shareCanvasWithText,
+} from "@/lib/copy";
 import { renderShareImage } from "@/lib/shareImage";
 import { useCallback, useState } from "react";
 import { IoClose } from "react-icons/io5";
@@ -27,6 +31,9 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
     const [isProcessing, SetIsProcessing] = useState(false);
     const [status, setStatus] = useState("");
     const [error, setError] = useState("");
+    const [selectedImage, setSelectedImage] = useState(
+        images && images.length > 0 ? images[0].src : null,
+    );
     const modalA11y = useModalA11y({ onClose: isCopiedCallback });
 
     const shareUrl = typeof window !== "undefined" ? window.location.href : "";
@@ -69,12 +76,8 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
         }
     }, [shareText]);
 
-    const copyImageToClipboard = useCallback(
+    const buildImageCanvas = useCallback(
         async (src) => {
-            if (isProcessing) return;
-            SetIsProcessing(true);
-            setError("");
-
             let hasKitab = false;
             try {
                 const fontKitab = new FontFace(
@@ -87,43 +90,125 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
             } catch {
                 hasKitab = false;
             }
+            const image = await loadImage(src);
+            return renderShareImage({ image, text, hasKitab });
+        },
+        [text],
+    );
 
-            let image;
-            try {
-                image = await loadImage(src);
-            } catch {
-                SetIsProcessing(false);
-                setError("Gagal memuat gambar background.");
-                setTimeout(() => setError(""), 3000);
-                return;
-            }
+    const downloadCanvas = useCallback((canvas, filename) => {
+        const link = document.createElement("a");
+        link.download = filename;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    }, []);
+
+    const handleImageAction = useCallback(
+        async (src, mode = "share") => {
+            if (isProcessing) return;
+            SetIsProcessing(true);
+            setError("");
+            setSelectedImage(src);
 
             let canvas;
             try {
-                canvas = renderShareImage({ image, text, hasKitab });
-            } catch {
+                canvas = await buildImageCanvas(src);
+            } catch (err) {
                 SetIsProcessing(false);
-                setError(
-                    "Gagal memproses gambar (CORS). Coba background lain.",
-                );
+                const msg =
+                    err && err.name === "Error" && err.message
+                        ? "Gagal memproses gambar (CORS). Coba background lain."
+                        : "Gagal memuat gambar background.";
+                setError(msg);
                 setTimeout(() => setError(""), 4000);
                 return;
             }
 
+            if (mode === "download") {
+                try {
+                    downloadCanvas(canvas, "ayat.png");
+                    setStatus("Gambar berhasil diunduh.");
+                    setTimeout(() => setStatus(""), 2000);
+                } catch {
+                    setError("Gagal mengunduh gambar.");
+                    setTimeout(() => setError(""), 3000);
+                } finally {
+                    SetIsProcessing(false);
+                }
+                return;
+            }
+
+            if (mode === "copy") {
+                try {
+                    await CopyImageToClipboard(canvas);
+                    SetIsCopied(true);
+                    setStatus(t("share_image.copy_instruction"));
+                    setTimeout(() => SetIsCopied(false), 2000);
+                    setTimeout(() => setStatus(""), 3500);
+                } catch {
+                    try {
+                        downloadCanvas(canvas, "ayat.png");
+                        setError("Clipboard tidak didukung. Gambar diunduh.");
+                        setTimeout(() => setError(""), 3000);
+                    } catch {
+                        setError("Gagal menyalin gambar.");
+                        setTimeout(() => setError(""), 3000);
+                    }
+                } finally {
+                    SetIsProcessing(false);
+                }
+                return;
+            }
+
             try {
-                await CopyImageToClipboard(canvas);
-                SetIsCopied(true);
-                setTimeout(() => SetIsCopied(false), 2000);
-            } catch {
-                setError(
-                    "Gambar disimpan sebagai file (clipboard tidak didukung).",
-                );
+                await shareCanvasWithText(canvas, {
+                    title: "Thullaabul 'Ilmi",
+                    text: shareText,
+                    url: shareUrl,
+                    filename: "ayat.png",
+                });
+                isCopiedCallback();
+                return;
+            } catch (err) {
+                if (err && err.message === "UNSUPPORTED") {
+                    try {
+                        await CopyImageToClipboard(canvas);
+                        SetIsCopied(true);
+                        setStatus(t("share_image.copy_instruction"));
+                        setTimeout(() => SetIsCopied(false), 2000);
+                        setTimeout(() => setStatus(""), 3500);
+                        return;
+                    } catch {
+                        try {
+                            downloadCanvas(canvas, "ayat.png");
+                            setError(
+                                "Clipboard tidak didukung. Gambar diunduh.",
+                            );
+                            setTimeout(() => setError(""), 3000);
+                            return;
+                        } catch {
+                            setError("Gagal membagikan gambar.");
+                            setTimeout(() => setError(""), 3000);
+                            return;
+                        }
+                    }
+                }
+                if (err && err.name === "AbortError") return;
+                setError("Gagal membuka share sheet.");
                 setTimeout(() => setError(""), 3000);
             } finally {
                 SetIsProcessing(false);
             }
         },
-        [isProcessing, text],
+        [
+            isProcessing,
+            buildImageCanvas,
+            downloadCanvas,
+            t,
+            shareText,
+            shareUrl,
+            isCopiedCallback,
+        ],
     );
 
     const getTruncatedText = useCallback(
@@ -264,23 +349,72 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                 </div>
                 <p className='mb-2 text-xs font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("share_image.pick_background")}
-                </p>
+               </p>
                 <div className='grid grid-cols-3 md:grid-cols-4 gap-2'>
-                    {images.map((image, index) => (
+                    {images.map((image, index) => {
+                        const isSelected = image.src === selectedImage;
+                        return (
+                            <button
+                                key={index}
+                                disabled={isProcessing}
+                                aria-pressed={isSelected}
+                                className={`relative rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-wait transition-all ${
+                                    isSelected
+                                        ? "ring-4 ring-emerald-500 scale-95"
+                                        : ""
+                                }`}
+                                onClick={() =>
+                                    handleImageAction(image.src, "share")
+                                }
+                            >
+                                <img
+                                    className='h-20 w-full object-cover transition-transform duration-200 hover:scale-105'
+                                    src={image.src}
+                                    alt={image.alt}
+                                />
+                                {isSelected && (
+                                    <span className='absolute top-1 right-1 bg-emerald-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold'>
+                                        ✓
+                                   </span>
+                                )}
+                           </button>
+                        );
+                    })}
+               </div>
+                {selectedImage && (
+                    <div className='grid grid-cols-3 gap-2 mt-3'>
                         <button
-                            key={index}
+                            type='button'
                             disabled={isProcessing}
-                            className='relative rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-wait'
-                            onClick={() => copyImageToClipboard(image.src)}
+                            onClick={() =>
+                                handleImageAction(selectedImage, "share")
+                            }
+                            className='rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300 disabled:opacity-50'
                         >
-                            <img
-                                className='h-20 w-full object-cover transition-transform duration-200 hover:scale-105'
-                                src={image.src}
-                                alt={image.alt}
-                            />
-                        </button>
-                    ))}
-                </div>
+                            {t("share_image.share_btn")}
+                       </button>
+                        <button
+                            type='button'
+                            disabled={isProcessing}
+                            onClick={() =>
+                                handleImageAction(selectedImage, "copy")
+                            }
+                            className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300 disabled:opacity-50'
+                        >
+                            {t("share_image.copy_btn")}
+                       </button>
+                        <button
+                            type='button'
+                            disabled={isProcessing}
+                            onClick={() =>
+                                handleImageAction(selectedImage, "download")
+                            }
+                            className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300 disabled:opacity-50'
+                        >
+                            {t("share_image.download_btn")}
+                       </button>
+                   </div>
+                )}
                 {isProcessing && (
                     <p className='text-center text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-3'>
                         {t("share_image.processing")}
