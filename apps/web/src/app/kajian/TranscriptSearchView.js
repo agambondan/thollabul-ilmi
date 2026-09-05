@@ -1,7 +1,29 @@
 "use client";
 
+import { useLocale } from "@/context/Locale";
 import Image from "next/image";
 import { BsPlayCircle, BsSearch, BsYoutube } from "react-icons/bs";
+
+export const getSearchModes = (t) => [
+    {
+        key: "hybrid",
+        label: t?.("kajian.mode_hybrid_label") || "Hybrid (Semua)",
+        icon: "⚡",
+        desc: t?.("kajian.mode_hybrid_desc") || "Exact + Semantic",
+    },
+    {
+        key: "exact",
+        label: t?.("kajian.mode_exact_label") || "Teks Persis",
+        icon: "🔤",
+        desc: t?.("kajian.mode_exact_desc") || "Kata kunci sama",
+    },
+    {
+        key: "semantic",
+        label: t?.("kajian.mode_semantic_label") || "Makna / Tema",
+        icon: "🧠",
+        desc: t?.("kajian.mode_semantic_desc") || "Berdasarkan tema",
+    },
+];
 
 export const SEARCH_MODES = [
     { key: "hybrid", label: "Hybrid (Semua)", icon: "⚡", desc: "Exact + Semantic" },
@@ -50,6 +72,9 @@ export default function TranscriptSearchView({
     loading,
     meta,
 }) {
+    const { t } = useLocale();
+    const searchModes = getSearchModes(t);
+
     return (
         <div>
             {/* Search bar */}
@@ -57,7 +82,10 @@ export default function TranscriptSearchView({
                 <BsSearch className='text-emerald-500 shrink-0 text-lg' />
                 <input
                     type='text'
-                    placeholder='Cari tema kajian, contoh: "mengatasi stres", "hukum riba", "adab menuntut ilmu"'
+                    placeholder={
+                        t("kajian.transcript_placeholder") ||
+                        'Cari tema kajian, contoh: "mengatasi stres", "hukum riba", "adab menuntut ilmu"'
+                    }
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     className='flex-1 bg-transparent text-sm text-gray-700 dark:text-gray-200 outline-none placeholder:text-gray-400'
@@ -75,7 +103,7 @@ export default function TranscriptSearchView({
 
             {/* Search mode toggle */}
             <div className='grid grid-cols-3 gap-1.5 mb-3 bg-gray-50 dark:bg-slate-900/50 p-1 rounded-xl'>
-                {SEARCH_MODES.map((m) => (
+                {searchModes.map((m) => (
                     <button
                         key={m.key}
                         type='button'
@@ -105,7 +133,7 @@ export default function TranscriptSearchView({
             {speakers.length > 0 && (
                 <div className='mb-4'>
                     <p className='text-[10px] uppercase tracking-wide text-gray-400 mb-1.5'>
-                        Filter Ustadz
+                        {t("kajian.transcript_filter_speaker") || "Filter Ustadz"}
                     </p>
                     <div className='flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-hide'>
                         <button
@@ -116,7 +144,7 @@ export default function TranscriptSearchView({
                                 : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
                                 }`}
                         >
-                            Semua
+                            {t("kajian.transcript_all_speakers") || "Semua"}
                         </button>
                         {speakers.map((s) => (
                             <button
@@ -138,8 +166,8 @@ export default function TranscriptSearchView({
             {/* Results */}
             <div className='mb-3 text-xs text-gray-500 dark:text-gray-400'>
                 {loading
-                    ? "Mencari..."
-                    : `${meta.total || results.length} hasil • mode: ${SEARCH_MODES.find((m) => m.key === mode)?.label}`}
+                    ? t("kajian.transcript_searching") || "Mencari..."
+                    : `${meta.total || results.length} ${t("kajian.results_found") || "hasil"} ${t("kajian.transcript_match_mode_separator") || "•"} mode: ${searchModes.find((m) => m.key === mode)?.label}`}
             </div>
 
             {loading ? (
@@ -160,14 +188,16 @@ export default function TranscriptSearchView({
                     <BsSearch className='text-4xl mx-auto mb-3 opacity-50' />
                     <p className='text-sm'>
                         {query
-                            ? "Tidak ada hasil. Coba ubah kata kunci atau mode pencarian."
-                            : "Ketik kata kunci untuk mulai mencari di dalam transkrip video kajian."}
+                            ? t("kajian.transcript_no_results") ||
+                              "Tidak ada hasil. Coba ubah kata kunci atau mode pencarian."
+                            : t("kajian.transcript_empty") ||
+                              "Ketik kata kunci untuk mulai mencari di dalam transkrip video kajian."}
                     </p>
                 </div>
             ) : (
                 <div className='space-y-3'>
                     {results.map((r) => (
-                        <TranscriptResultCard key={r.id} result={r} query={query} />
+                        <TranscriptResultCard key={r.id} result={r} query={query} t={t} />
                     ))}
                 </div>
             )}
@@ -175,7 +205,7 @@ export default function TranscriptSearchView({
     );
 }
 
-function TranscriptResultCard({ result, query }) {
+function TranscriptResultCard({ result, query, t }) {
     const videoId = getYouTubeIdFromTimestampUrl(result.timestamp_url) || result.video_id;
 
     return (
@@ -253,7 +283,8 @@ function TranscriptResultCard({ result, query }) {
                         className='inline-flex items-center gap-1 mt-2 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 hover:underline'
                     >
                         <BsYoutube className='text-base' />
-                        Buka di YouTube @ {result.timestamp}
+                        {t?.("kajian.transcript_open_youtube") || "Buka di YouTube @"}{" "}
+                        {result.timestamp}
                     </a>
                 </div>
             </div>

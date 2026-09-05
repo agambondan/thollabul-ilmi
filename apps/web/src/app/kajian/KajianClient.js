@@ -184,7 +184,7 @@ export default function KajianClient({ kajian: initialKajian = [], initialTab = 
                         : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                         }`}
                 >
-                    🔍 Cari di Transkrip
+                    {t("kajian.tab_search") || "🔍 Cari di Transkrip"}
                 </button>
                 <button
                     type='button'
@@ -194,7 +194,7 @@ export default function KajianClient({ kajian: initialKajian = [], initialTab = 
                         : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                         }`}
                 >
-                    📚 Semua Kajian
+                    {t("kajian.tab_all") || "📚 Semua Kajian"}
                 </button>
             </div>
 

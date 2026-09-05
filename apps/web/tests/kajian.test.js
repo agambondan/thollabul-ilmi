@@ -2,10 +2,12 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import KajianClient from "@/app/kajian/KajianClient";
 import "@testing-library/jest-dom";
 
+import idDict from "@/lib/i18n/id";
+
 // Mock Locale
 jest.mock("@/context/Locale", () => ({
     useLocale: () => ({
-        t: (k) => k,
+        t: (k, fallback) => idDict[k] || fallback || k,
         lang: "ID",
     }),
 }));

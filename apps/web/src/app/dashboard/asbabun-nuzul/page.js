@@ -1,6 +1,6 @@
 "use client";
 
-import { AsbabunNuzulContent } from "@/app/asbabun-nuzul/page";
+import { AsbabunNuzulContent } from "@/app/asbabun-nuzul/AsbabunNuzulContent";
 
 export default function DashboardAsbabunNuzulPage() {
     return (
