@@ -42,9 +42,13 @@ func formatTimestamp(seconds int) string {
 
 func (r *kajianRepository) FindAll(ctx *fiber.Ctx, topic, kajianType string) *paginate.Page {
 	var list []model.Kajian
-	q := r.db.Model(&model.Kajian{}).Joins("Translation").Order("published_at DESC, id DESC")
+	q := r.db.Model(&model.Kajian{}).Preload("Translation").Order("published_at DESC, id DESC")
 	if topic != "" {
-		q = q.Where("topic ILIKE ?", "%"+topic+"%")
+		likeOp := "ILIKE"
+		if r.db.Dialector.Name() == "sqlite" {
+			likeOp = "LIKE"
+		}
+		q = q.Where(fmt.Sprintf("topic %s ?", likeOp), "%"+topic+"%")
 	}
 	if kajianType != "" {
 		q = q.Where("type = ?", kajianType)
@@ -55,7 +59,7 @@ func (r *kajianRepository) FindAll(ctx *fiber.Ctx, topic, kajianType string) *pa
 
 func (r *kajianRepository) FindByID(id int) (*model.Kajian, error) {
 	var k model.Kajian
-	err := r.db.Joins("Translation").Preload("Transcripts", func(db *gorm.DB) *gorm.DB {
+	err := r.db.Preload("Translation").Preload("Transcripts", func(db *gorm.DB) *gorm.DB {
 		return db.Order("start_seconds ASC")
 	}).First(&k, id).Error
 	return &k, err

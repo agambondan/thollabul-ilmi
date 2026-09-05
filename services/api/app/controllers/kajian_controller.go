@@ -44,7 +44,9 @@ func (c *kajianController) FindAll(ctx *fiber.Ctx) error {
 	page := c.svc.FindAll(ctx, topic, kajianType)
 	lang := lib.GetPreferredLang(ctx)
 	lib.ApplyToPageItems(page, func(k *model.Kajian) {
-		k.Translation.FilterByLang(lang)
+		if k.Translation != nil {
+			k.Translation.FilterByLang(lang)
+		}
 	})
 	return lib.OK(ctx, page)
 }
@@ -67,7 +69,9 @@ func (c *kajianController) FindByID(ctx *fiber.Ctx) error {
 	if err != nil {
 		return lib.ErrorNotFound(ctx)
 	}
-	k.Translation.FilterByLang(lib.GetPreferredLang(ctx))
+	if k.Translation != nil {
+		k.Translation.FilterByLang(lib.GetPreferredLang(ctx))
+	}
 	go c.svc.IncrementView(id)
 	return lib.OK(ctx, k)
 }
