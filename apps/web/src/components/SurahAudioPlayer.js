@@ -3,8 +3,9 @@
 
 import { useLocale } from "@/context/Locale";
 import { audioApi, quranApi } from "@/lib/api";
+import { OPEN_SURAH_AUDIO_EVENT } from "@/lib/audioEvents";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import {
     BsChevronDown,
     BsChevronUp,
@@ -267,7 +268,7 @@ export default function SurahAudioPlayer({
         return () => {
             active = false;
         };
-    }, [open, surahNumber]);
+    }, [open, surahNumber, lang]);
 
     useEffect(() => {
         return () => {
@@ -456,6 +457,79 @@ export default function SurahAudioPlayer({
             setIsPlaying(false);
         }
     };
+
+    const startFromAyah = async (targetAyahNumber) => {
+        const currentSurah = Number(surahNumber) || 1;
+        const normalizedRange = {
+            endAyah: totalAyahs ? `${totalAyahs}` : "",
+            endSurah: `${currentSurah}`,
+            startSurah: `${currentSurah}`,
+        };
+        setRange(normalizedRange);
+        persistPreferences({ range: normalizedRange });
+        setOpen(true);
+        setMinimized(false);
+        setLoading(true);
+        setError("");
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current = null;
+        }
+
+        const sessionId = sessionRef.current + 1;
+        sessionRef.current = sessionId;
+        try {
+            const queue = await fetchRangeQueue({
+                endAyah: totalAyahs ?? null,
+                endSurah: currentSurah,
+                startSurah: currentSurah,
+            });
+            if (sessionId !== sessionRef.current) return;
+            if (!queue.length) {
+                setError("Ayat untuk range audio belum tersedia.");
+                setLoading(false);
+                return;
+            }
+            queueRef.current = queue;
+            setQueueLength(queue.length);
+            const startIndex = queue.findIndex(
+                (item) => Number(item.number) === Number(targetAyahNumber),
+            );
+            const targetIndex = startIndex >= 0 ? startIndex : 0;
+            queueIndexRef.current = targetIndex;
+            setQueueIndex(targetIndex);
+            await playQueueItem(targetIndex, sessionId);
+        } catch {
+            if (sessionId !== sessionRef.current) return;
+            setError(
+                t("audio.queue_error") ??
+                    "Gagal menyiapkan antrean audio.",
+            );
+            setLoading(false);
+        }
+    };
+
+    const startFromAyahRef = useRef(startFromAyah);
+
+    useEffect(() => {
+        startFromAyahRef.current = startFromAyah;
+    });
+
+    useEffect(() => {
+        if (typeof window === "undefined") return undefined;
+        const handler = (event) => {
+            const detail = event.detail;
+            if (!detail) return;
+            const eventSurah = Number(detail.surahNumber);
+            if (eventSurah && eventSurah !== Number(surahNumber)) return;
+            const target = Number(detail.ayahNumber) || 1;
+            startFromAyahRef.current?.(target);
+        };
+        window.addEventListener(OPEN_SURAH_AUDIO_EVENT, handler);
+        return () => {
+            window.removeEventListener(OPEN_SURAH_AUDIO_EVENT, handler);
+        };
+    }, [surahNumber]);
 
     const startRangeAudio = async () => {
         const currentSurah = Number(surahNumber) || 1;

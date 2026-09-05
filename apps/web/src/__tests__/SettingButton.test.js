@@ -61,6 +61,25 @@ describe("SettingButton Quran-scoped controls", () => {
         expect(screen.getByText("Alur (Mushaf)")).toBeInTheDocument();
     });
 
+    test("shows Mode Hafalan and Tampilan options when pathname is /dashboard/quran/Al-Faatiha", () => {
+        usePathname.mockReturnValue("/dashboard/quran/Al-Faatiha");
+
+        render(
+            <SettingsProvider>
+                <SettingButton />
+            </SettingsProvider>,
+        );
+
+        const toggleBtn = screen.getByTestId("global-setting-button");
+        fireEvent.click(toggleBtn);
+
+        expect(screen.getByText("Mode Hafalan")).toBeInTheDocument();
+        expect(screen.getByText("Sembunyikan Arab")).toBeInTheDocument();
+        expect(screen.getAllByText("Sembunyikan Terjemahan").length).toBeGreaterThan(0);
+        expect(screen.getByText("Tampilan")).toBeInTheDocument();
+        expect(screen.getByText("Alur (Mushaf)")).toBeInTheDocument();
+    });
+
     test("hides Mode Hafalan and Tampilan when pathname is /hadith/bukhari", () => {
         usePathname.mockReturnValue("/hadith/bukhari");
 

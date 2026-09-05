@@ -3,11 +3,12 @@
 import BookmarkButton from "@/components/BookmarkButton";
 import NoteButton from "@/components/NoteButton";
 import { PopUpIsCopied, ShareAyah } from "@/components/popup/ListImage";
-import { audioApi, mufrodatApi, munasabahApi, tafsirApi } from "@/lib/api";
+import { mufrodatApi, munasabahApi, tafsirApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { listMasjidImage } from "@/lib/const";
 import { NumberToArabic } from "@/lib/converter";
 import { CopyImageToClipboard, CopyToClipboard } from "@/lib/copy";
+import { openSurahAudio } from "@/lib/audioEvents";
 import { getSurahName } from "@/lib/surahList";
 import { getLocalizedTranslation } from "@/lib/translation";
 import { useActionPosition } from "@/lib/useActionPosition";
@@ -20,8 +21,6 @@ import {
     BsBook,
     BsFileEarmarkPlay,
     BsLink45Deg,
-    BsPauseFill,
-    BsPlayFill,
     BsShare,
     BsThreeDotsVertical,
     BsTranslate,
@@ -40,8 +39,6 @@ const AyahPage = ({
     isLast,
     hafalanMode = "off",
     showTranslation = true,
-    selectedQari,
-    onQariChange,
     isActionMenuOpen,
     onActionMenuToggle,
 }) => {
@@ -50,7 +47,6 @@ const AyahPage = ({
     const { isHidden: actionsHidden, isMenu: actionsMenu } =
         useActionPosition();
     const cardRef = useRef();
-    const audioRef = useRef(null);
     const [isCopied, SetIsCopied] = useState(false);
     const [reportOpen, setReportOpen] = useState(false);
     const [localSettingPopUp, setLocalSettingPopUp] = useState(false);
@@ -66,11 +62,6 @@ const AyahPage = ({
     const [munasabahOpen, setMunasabahOpen] = useState(false);
     const munasabahRes = useAsyncResource(() => munasabahApi.byAyah(ayah.id));
 
-    const [audioUrls, setAudioUrls] = useState([]);
-    const [audioError, setAudioError] = useState("");
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [audioLoading, setAudioLoading] = useState(false);
-    const [showQariMenu, setShowQariMenu] = useState(false);
     const [revealed, setRevealed] = useState(false);
     const ayahTranslation = getLocalizedTranslation(ayah.translation, lang);
     const ayahLatin =
@@ -117,14 +108,6 @@ const AyahPage = ({
         return () => observer.disconnect();
     }, [isLast, newLimit]);
 
-    useEffect(() => {
-        return () => {
-            if (audioRef.current) {
-                audioRef.current.pause();
-            }
-        };
-    }, []);
-
     const toggleTafsir = () => {
         if (!tafsirOpen) tafsirRes.load();
         setTafsirOpen((v) => !v);
@@ -140,93 +123,10 @@ const AyahPage = ({
         setMunasabahOpen((v) => !v);
     };
 
-    const pickQariUrl = (urls) => {
-        if (!Array.isArray(urls) || urls.length === 0) return null;
-        if (selectedQari) {
-            const match = urls.find((u) => u.qari_slug === selectedQari);
-            if (match) return match;
-        }
-        return urls[0];
-    };
-
-    const handleAudio = async () => {
-        if (isPlaying) {
-            audioRef.current?.pause();
-            setIsPlaying(false);
-            return;
-        }
-
-        if (audioUrls.length === 0) {
-            setAudioLoading(true);
-            try {
-                const res = await audioApi.byAyah(ayah.id);
-                const data = await res.json();
-                const urls = data?.items ?? data ?? [];
-                setAudioUrls(urls);
-                await playFirstAvailableAudio(urls);
-            } catch {
-                setAudioError("Audio ayat belum bisa diputar.");
-            } finally {
-                setAudioLoading(false);
-            }
-        } else {
-            await playFirstAvailableAudio(audioUrls);
-        }
-    };
-
-    const switchQari = (slug) => {
-        if (onQariChange) onQariChange(slug);
-        setShowQariMenu(false);
-        if (audioRef.current && isPlaying) {
-            audioRef.current.pause();
-            setIsPlaying(false);
-        }
-    };
-
-    const playFirstAvailableAudio = async (urls) => {
-        const chosen = pickQariUrl(urls);
-        const candidates = [
-            ...(chosen ? [chosen] : []),
-            ...(urls ?? []).filter(
-                (item) =>
-                    item.audio_url && item.qari_slug !== chosen?.qari_slug,
-            ),
-        ];
-        for (const candidate of candidates) {
-            try {
-                await playAudio(candidate.audio_url);
-                setAudioError("");
-                return;
-            } catch {
-                // Try the next qari when the selected CDN URL is unavailable.
-            }
-        }
-        setAudioError("Audio qari ini belum tersedia.");
-    };
-
-    const playAudio = (url) => {
-        if (!url) return;
-        return new Promise((resolve, reject) => {
-            if (!audioRef.current) {
-                audioRef.current = new Audio(url);
-                audioRef.current.onended = () => setIsPlaying(false);
-            } else {
-                audioRef.current.src = url;
-            }
-            audioRef.current.onerror = () => {
-                setIsPlaying(false);
-                reject(new Error("audio"));
-            };
-            audioRef.current
-                .play()
-                .then(() => {
-                    setIsPlaying(true);
-                    resolve();
-                })
-                .catch((err) => {
-                    setIsPlaying(false);
-                    reject(err);
-                });
+    const handleAudio = () => {
+        openSurahAudio({
+            surahNumber: surah.number,
+            ayahNumber: ayah.number,
         });
     };
 
@@ -253,11 +153,6 @@ const AyahPage = ({
                         )}
                 />
             )}
-            {audioError && (
-                <div className='fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white text-sm font-medium px-4 py-2 rounded-full shadow-lg'>
-                    {audioError}
-                </div>
-            )}
 
             <ul
                 className={classNames({
@@ -281,26 +176,11 @@ const AyahPage = ({
                             }
                         >
                             <button
-                                title={
-                                    isPlaying
-                                        ? t("ayah.audio_pause")
-                                        : t("ayah.audio_play")
-                                }
+                                title={t("ayah.audio_play")}
                                 onClick={handleAudio}
-                                disabled={audioLoading}
-                                className={`p-2 rounded-lg text-lg transition-colors disabled:opacity-50 ${
-                                    isPlaying
-                                        ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20"
-                                        : "text-gray-400 hover:bg-emerald-100 dark:hover:bg-slate-700"
-                                }`}
+                                className='p-2 rounded-lg text-lg transition-colors text-gray-400 hover:bg-emerald-100 dark:hover:bg-slate-700'
                             >
-                                {audioLoading ? (
-                                    <span className='text-xs'>...</span>
-                                ) : isPlaying ? (
-                                    <BsPauseFill />
-                                ) : (
-                                    <BsFileEarmarkPlay />
-                                )}
+                                <BsFileEarmarkPlay />
                             </button>
                         </li>
                         <li
@@ -402,25 +282,10 @@ const AyahPage = ({
                                                         handleAudio();
                                                         SetSettingPopUp(false);
                                                     }}
-                                                    disabled={audioLoading}
                                                 >
-                                                    {isPlaying ? (
-                                                        <BsPauseFill />
-                                                    ) : (
-                                                        <BsFileEarmarkPlay />
-                                                    )}
-                                                    {audioLoading
-                                                        ? t(
-                                                              "ayah.audio_loading",
-                                                          )
-                                                        : isPlaying
-                                                          ? t(
-                                                                "ayah.audio_pause",
-                                                            )
-                                                          : t(
-                                                                "ayah.audio_play",
-                                                            )}
-                                                </button>
+                                                    <BsFileEarmarkPlay />
+                                                    {t("ayah.audio_play")}
+                                               </button>
                                                 <button
                                                     className={
                                                         actionMenuButtonClass
@@ -649,29 +514,6 @@ const AyahPage = ({
                     )}
                 </ul>
             </ul>
-
-            {audioUrls.length > 1 && (
-                <div className='border-b border-gray-100 dark:border-slate-800 px-4 py-2 flex items-center gap-2 flex-wrap text-xs'>
-                    <span className='text-gray-500 dark:text-gray-300 dark:text-gray-400'>
-                        {t("ayah.qari") ?? "Qari"}:
-                    </span>
-                    {audioUrls.map((u) => (
-                        <button
-                            key={u.qari_slug}
-                            type='button'
-                            onClick={() => switchQari(u.qari_slug)}
-                            className={`px-2.5 py-1 rounded-full font-medium transition-colors ${
-                                (selectedQari ?? audioUrls[0].qari_slug) ===
-                                u.qari_slug
-                                    ? "bg-emerald-500 text-white"
-                                    : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600"
-                            }`}
-                        >
-                            {u.qari_name}
-                        </button>
-                    ))}
-                </div>
-            )}
 
             {tafsirOpen && (
                 <div className='bg-amber-50 dark:bg-amber-900/10 border-b border-amber-100 dark:border-amber-900/30 px-4 py-4'>

@@ -59,7 +59,10 @@ const SettingButton = () => {
 
     const isDashboard = pathname?.startsWith("/dashboard");
     const isQuranRoute =
-        pathname === "/quran" || pathname?.startsWith("/quran/");
+        pathname === "/quran" ||
+        pathname?.startsWith("/quran/") ||
+        pathname === "/dashboard/quran" ||
+        pathname?.startsWith("/dashboard/quran/");
     const bottomClass = isDashboard
         ? "bottom-[84px] md:bottom-4"
         : "bottom-[68px] md:bottom-4";

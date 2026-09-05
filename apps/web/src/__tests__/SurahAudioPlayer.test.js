@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { OPEN_SURAH_AUDIO_EVENT } from "@/lib/audioEvents";
 
 const mockBySurah = jest.fn();
 const mockByAyah = jest.fn();
@@ -261,5 +262,33 @@ describe("SurahAudioPlayer", () => {
         ).toBeInTheDocument();
         expect(mockBySurahPage).not.toHaveBeenCalledWith(1, 0, 300);
         expect(global.Audio).not.toHaveBeenCalled();
+    });
+
+    test("opens player and starts playback when receiving OPEN_SURAH_AUDIO_EVENT", async () => {
+        render(
+            <SurahAudioPlayer
+                surahNumber={1}
+                surahName='Al-Fatihah'
+                totalAyahs={7}
+            />,
+        );
+
+        expect(screen.queryByLabelText("Sampai ayat")).not.toBeInTheDocument();
+
+        fireEvent(
+            window,
+            new CustomEvent(OPEN_SURAH_AUDIO_EVENT, {
+                detail: { surahNumber: 1, ayahNumber: 2 },
+            }),
+        );
+
+        await waitFor(() => {
+            expect(mockBySurahPage).toHaveBeenCalledWith(1, 0, 300);
+            expect(mockByAyah).toHaveBeenCalledWith(12);
+            expect(global.Audio).toHaveBeenCalledWith(
+                "https://example.com/alafasy-12.mp3",
+            );
+            expect(screen.getByText("Surah 1 · Ayat 2")).toBeInTheDocument();
+        });
     });
 });
