@@ -1,11 +1,10 @@
 "use client";
 /* eslint-disable react-hooks/exhaustive-deps */
 
+import dynamic from "next/dynamic";
 import AyahPage from "@/app/quran/[...slug]/AyahPage";
-import AutoScrollButton from "@/components/popup/AutoScrollButton";
 import MushafContinuousView from "@/components/quran/MushafContinuousView";
 import { SkeletonReader } from "@/components/skeleton/Skeleton";
-import SurahAudioPlayer from "@/components/SurahAudioPlayer";
 import { useLocale } from "@/context/Locale";
 import { progressApi, streakApi } from "@/lib/api";
 import { getSurahMeaning, getSurahName } from "@/lib/surahList";
@@ -16,6 +15,15 @@ import classNames from "classnames";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TbPlayerTrackNext, TbPlayerTrackPrev } from "react-icons/tb";
+
+const AutoScrollButton = dynamic(
+    () => import("@/components/popup/AutoScrollButton"),
+    { ssr: false },
+);
+const SurahAudioPlayer = dynamic(
+    () => import("@/components/SurahAudioPlayer"),
+    { ssr: false },
+);
 
 const PAGE_SIZE = 10;
 const BASMALAH_ARABIC = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
