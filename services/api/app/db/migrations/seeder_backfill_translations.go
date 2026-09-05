@@ -78,6 +78,9 @@ func BackfillTranslations(db *gorm.DB) error {
 	if err := backfillJarhTadil(db); err != nil {
 		return err
 	}
+	if err := BackfillSurahIndonesian(db); err != nil {
+		return err
+	}
 	return nil
 }
 

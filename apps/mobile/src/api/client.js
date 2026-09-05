@@ -1,4 +1,5 @@
 import { readSession } from "../storage/session";
+import { getSurahMeaning, getSurahName } from "../constants/surahList";
 import { NativeModules, Platform } from "react-native";
 
 const resolveApiUrl = () => {
@@ -98,10 +99,11 @@ export const normalizeAyah = (item) => ({
     juzNumber: item.juz_number ?? item.juzNumber,
     hizbQuarter: item.hizb_quarter ?? item.hizbQuarter,
     surahName:
-        item.surah?.translation?.latin_en ??
-        item.surah?.translation?.latin_idn ??
-        item.surah?.name ??
-        item.surah_name ??
+        getSurahName(item.surah, "ID") ||
+        item.surah?.translation?.latin_idn ||
+        item.surah?.translation?.latin_en ||
+        item.surah?.name ||
+        item.surah_name ||
         "",
     arabic: item.translation?.arab ?? item.translation?.ar ?? item.arabic ?? "",
     arabicHtml:
@@ -113,15 +115,15 @@ export const normalizeAyah = (item) => ({
         item.ar_tajweed ??
         "",
     latin:
-        item.translation?.latin_en ??
         item.translation?.latin_idn ??
+        item.translation?.latin_en ??
         item.latin ??
         "",
     translation:
-        item.translation?.text_en ??
-        item.translation?.en ??
         item.translation?.idn ??
         item.translation?.text ??
+        item.translation?.text_en ??
+        item.translation?.en ??
         item.translation ??
         "",
 });
@@ -146,23 +148,25 @@ export const normalizeSurah = (item) => ({
     id: item.id ?? item.number,
     number: item.number ?? item.nomor_surah ?? item.id,
     name:
-        item.translation?.latin_en ??
-        item.translation?.latin_idn ??
-        item.nama_latin ??
-        item.name ??
+        item.translation?.latin_idn ||
+        getSurahName(item, "ID") ||
+        item.translation?.latin_en ||
+        item.nama_latin ||
+        item.name ||
         `Surah ${item.number ?? item.id}`,
     arabic:
-        item.translation?.arab ??
-        item.translation?.ar ??
-        item.nama_arab ??
-        item.arabic ??
+        item.translation?.arab ||
+        item.translation?.ar ||
+        item.nama_arab ||
+        item.arabic ||
         "",
     meaning:
-        item.translation?.name_en ??
-        item.translation?.en ??
-        item.translation?.name_idn ??
-        item.translation?.idn ??
-        item.arti ??
+        item.translation?.name_en ||
+        item.translation?.name_idn ||
+        getSurahMeaning(item, "ID") ||
+        item.translation?.en ||
+        item.translation?.idn ||
+        item.arti ||
         "",
     ayahs:
         item.count_ayah ??
