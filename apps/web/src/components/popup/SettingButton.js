@@ -38,8 +38,11 @@ const SettingButton = () => {
     const { settings, updateSetting } = useSettings();
     const hafalanMode = settings.quranHafalanMode ?? "off";
     const readerMode = settings.quranReaderMode ?? "ayah";
+    const showAyahTranslation = settings.quranShowTranslation ?? true;
     const showMushafTranslation =
         settings.quranMushafTranslation ?? true;
+    const currentShowTranslation =
+        readerMode === "mushaf" ? showMushafTranslation : showAyahTranslation;
     const popupRef = useRef(null);
     const label = (key, fallback) => t(key) || fallback;
 
@@ -195,36 +198,36 @@ const SettingButton = () => {
                                         </button>
                                     ))}
                                 </div>
-                                {readerMode === "mushaf" && (
-                                    <button
-                                        type='button'
-                                        onClick={() =>
-                                            updateSetting(
-                                                "quranMushafTranslation",
-                                                !showMushafTranslation,
-                                            )
-                                        }
-                                        className={classNames(
-                                            "mt-1.5 w-full py-1.5 px-2 rounded-lg border text-xs text-center transition-all",
-                                            {
-                                                "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
-                                                    showMushafTranslation,
-                                                "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
-                                                    !showMushafTranslation,
-                                            },
-                                        )}
-                                    >
-                                        {showMushafTranslation
-                                            ? label(
-                                                  "mushaf.translation_off",
-                                                  "Sembunyikan Terjemahan",
-                                              )
-                                            : label(
-                                                  "mushaf.translation_on",
-                                                  "Tampilkan Terjemahan",
-                                              )}
-                                    </button>
-                                )}
+                                <button
+                                    type='button'
+                                    onClick={() =>
+                                        updateSetting(
+                                            readerMode === "mushaf"
+                                                ? "quranMushafTranslation"
+                                                : "quranShowTranslation",
+                                            !currentShowTranslation,
+                                        )
+                                    }
+                                    className={classNames(
+                                        "mt-1.5 w-full py-1.5 px-2 rounded-lg border text-xs text-center transition-all",
+                                        {
+                                            "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold":
+                                                currentShowTranslation,
+                                            "border-gray-200 dark:border-slate-600 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-slate-500":
+                                                !currentShowTranslation,
+                                        },
+                                    )}
+                                >
+                                    {currentShowTranslation
+                                        ? label(
+                                              "mushaf.translation_off",
+                                              "Sembunyikan Terjemahan",
+                                          )
+                                        : label(
+                                              "mushaf.translation_on",
+                                              "Tampilkan Terjemahan",
+                                          )}
+                                </button>
                             </div>
 
                             <div className='my-3 border-t border-gray-100 dark:border-slate-700' />

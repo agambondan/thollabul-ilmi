@@ -142,6 +142,9 @@ const sanitizeSettings = (raw) => {
     if (!["ayah", "mushaf"].includes(next.quranReaderMode)) {
         next.quranReaderMode = "ayah";
     }
+    if (typeof next.quranShowTranslation !== "boolean") {
+        next.quranShowTranslation = true;
+    }
     if (typeof next.quranMushafTranslation !== "boolean") {
         next.quranMushafTranslation = true;
     }
@@ -231,6 +234,7 @@ const DEFAULT_SETTINGS = {
     quranTranslationSize: 16,
     quranHafalanMode: "off",
     quranReaderMode: "ayah",
+    quranShowTranslation: true,
     quranMushafTranslation: true,
     notifAdzan: true,
     adzanSound: "default",

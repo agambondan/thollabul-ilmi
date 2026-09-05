@@ -1,6 +1,7 @@
 "use client";
 
 import { lessonsApi } from "@/lib/api";
+import SourceBadges from "@/components/SourceBadges";
 import { useLocale } from "@/context/Locale";
 import { pushRecentBelajar } from "@/lib/recent";
 import { useLayoutMode } from "@/lib/useLayoutMode";
@@ -284,7 +285,8 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
                         {step.dalil && (
                             <div className='rounded-2xl border-l-4 border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 px-4 py-3'>
                                 <p className='text-xs font-bold text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 uppercase mb-1'>Dalil</p>
-                                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>{step.dalil}</p>
+                                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed mb-1'>{step.dalil}</p>
+                                <SourceBadges source={step.dalil} />
                             </div>
                         )}
 

@@ -210,9 +210,7 @@ export default function MushafPageReader() {
                                     : "bg-gray-50 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
                             }`}
                         >
-                            {t(`mushaf.font_${f.id}`, {
-                                defaultValue: f.label,
-                            })}
+                            {t(`mushaf.font_${f.id}`, f.label)}
                         </button>
                     ))}
                     <button

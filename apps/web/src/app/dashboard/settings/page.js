@@ -393,6 +393,16 @@ export default function SettingsPage() {
                             </span>
                         </div>
                     </SettingRow>
+                    <SettingRow label={t("settings.show_translation", "Tampilkan Terjemahan")}>
+                        <input
+                            type='checkbox'
+                            checked={settings.quranShowTranslation ?? true}
+                            onChange={(e) =>
+                                updateSetting("quranShowTranslation", e.target.checked)
+                            }
+                            className='w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 dark:bg-gray-700 dark:border-gray-600'
+                        />
+                    </SettingRow>
                     <SettingRow label={t("settings.high_contrast")}>
                         <input
                             type='checkbox'

@@ -43,6 +43,7 @@ const InfiniteScrollAyahPage = ({
     const { settings } = useSettings();
     const hafalanMode = settings.quranHafalanMode ?? "off";
     const readerMode = settings.quranReaderMode ?? "ayah";
+    const showTranslation = settings.quranShowTranslation ?? true;
     const showMushafTranslation =
         settings.quranMushafTranslation ?? true;
     const [surah, setSurah] = useState(null);
@@ -379,6 +380,7 @@ const InfiniteScrollAyahPage = ({
                                     newLimit={loadMoreAyah}
                                     isLast={false}
                                     hafalanMode={hafalanMode}
+                                    showTranslation={showTranslation}
                                     selectedQari={selectedQari}
                                     onQariChange={setSelectedQari}
                                     isActionMenuOpen={

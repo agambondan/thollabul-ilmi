@@ -12,6 +12,7 @@ import { useLocale } from "@/context/Locale";
 import { useEffect, useState } from "react";
 import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
+import SourceBadges from "@/components/SourceBadges";
 
 const CATEGORIES = [
     "fiqh",
@@ -366,6 +367,14 @@ const AdminDictionaryPage = () => {
                                     }
                                     className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
                                 />
+                                {form.source && (
+                                    <div className='mt-1'>
+                                        <p className='text-[10px] text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-0.5'>
+                                            Preview
+                                        </p>
+                                        <SourceBadges source={form.source} />
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

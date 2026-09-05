@@ -31,6 +31,7 @@ import { IoIosLink, IoMdCopy, IoMdImages } from "react-icons/io";
 import PanelCloseButton from "@/components/PanelCloseButton";
 import ContentReportModal from "@/components/ContentReportModal";
 import { sanitizeHtml } from "@/lib/sanitizeHtml";
+import SourceBadges from "@/components/SourceBadges";
 
 const AyahPage = ({
     surah,
@@ -38,6 +39,7 @@ const AyahPage = ({
     newLimit,
     isLast,
     hafalanMode = "off",
+    showTranslation = true,
     selectedQari,
     onQariChange,
     isActionMenuOpen,
@@ -600,7 +602,7 @@ const AyahPage = ({
                             lineHeight: "2.10",
                         }}
                         className={
-                            hideArabic || hideAll ? "blur-sm select-none" : ""
+                            hideArabic || hideAll ? "hidden" : ""
                         }
                         dangerouslySetInnerHTML={{
                             __html: sanitizeHtml(arabicHtml).concat(
@@ -608,24 +610,26 @@ const AyahPage = ({
                             ),
                         }}
                     />
-                    {ayah.translation.latin_idn && (
+                    {showTranslation && ayah.translation.latin_idn && (
                         <li
-                            className={`text-left py-2 md:p-2 text-sm text-gray-500 dark:text-gray-400 italic ${hideTranslation || hideAll ? "blur-sm select-none" : ""}`}
+                            className={`text-left py-2 md:p-2 text-sm text-gray-500 dark:text-gray-400 italic ${hideTranslation || hideAll ? "hidden" : ""}`}
                             style={{ direction: "ltr" }}
                         >
                             {ayah.translation.latin_idn}
-                        </li>
+                       </li>
                     )}
-                    <li
-                        className={`text-left py-2 md:p-2 ${hideTranslation || hideAll ? "blur-sm select-none" : ""}`}
-                        style={{
-                            direction: "ltr",
-                            fontSize: `${translationFontSize}px`,
-                            lineHeight: "1.75",
-                        }}
-                    >
-                        {ayahTranslation}
-                    </li>
+                    {showTranslation && (
+                        <li
+                            className={`text-left py-2 md:p-2 ${hideTranslation || hideAll ? "hidden" : ""}`}
+                            style={{
+                                direction: "ltr",
+                                fontSize: `${translationFontSize}px`,
+                                lineHeight: "1.75",
+                            }}
+                        >
+                            {ayahTranslation}
+                       </li>
+                    )}
                     {hafalanMode !== "off" && (
                         <li
                             className='pb-2 md:px-2'
@@ -692,11 +696,7 @@ const AyahPage = ({
                         Array.isArray(tafsirRes.data) &&
                         tafsirRes.data.map((entry, i) => (
                             <div key={i} className='mb-4 last:mb-0'>
-                                {entry.source && (
-                                    <p className='text-xs font-medium text-amber-600 dark:text-amber-400 mb-1'>
-                                        {entry.source}
-                                    </p>
-                                )}
+                                {entry.source && <SourceBadges source={entry.source} />}
                                 <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
                                     {entry.text ?? entry.content}
                                 </p>

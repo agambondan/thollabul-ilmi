@@ -504,6 +504,7 @@ export const NavbarTailwindCss = () => {
             <div
                 className={`${isMobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"} lg:hidden absolute inset-x-0 top-full transition-all duration-200`}
                 aria-hidden={!isMobileMenuOpen}
+                inert={!isMobileMenuOpen ? "" : undefined}
             >
                 <button
                     type='button'

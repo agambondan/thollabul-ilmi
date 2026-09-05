@@ -197,6 +197,7 @@ export default function ImsakiyahPage() {
                     <div className='flex flex-wrap gap-2 items-center'>
                         <select
                             value={useGps ? -1 : cityIndex}
+                            aria-label='Pilih Kota Imsakiyah'
                             onChange={(e) => {
                                 const v = Number(e.target.value);
                                 if (v === -1) return;

@@ -56,7 +56,7 @@ describe("SettingButton Quran-scoped controls", () => {
 
         expect(screen.getByText("Mode Hafalan")).toBeInTheDocument();
         expect(screen.getByText("Sembunyikan Arab")).toBeInTheDocument();
-        expect(screen.getByText("Sembunyikan Terjemahan")).toBeInTheDocument();
+        expect(screen.getAllByText("Sembunyikan Terjemahan").length).toBeGreaterThan(0);
         expect(screen.getByText("Tampilan")).toBeInTheDocument();
         expect(screen.getByText("Alur (Mushaf)")).toBeInTheDocument();
     });

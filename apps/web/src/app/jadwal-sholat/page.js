@@ -13,7 +13,10 @@ import {
     resolveAdzanSoundSrc,
     useSettings,
 } from "@/lib/useSettings";
-import { requestAndStoreUserLocation } from "@/lib/userLocation";
+import {
+    getLocationPermissionState,
+    requestAndStoreUserLocation,
+} from "@/lib/userLocation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BsBell, BsBellFill, BsGeoAlt } from "react-icons/bs";
 import { MdAccessTime, MdTimer } from "react-icons/md";
@@ -143,23 +146,39 @@ export default function JadwalSholatPage() {
 
     useEffect(() => {
         if (gpsTriedRef.current || gpsStatus !== "idle") return;
-        if (!navigator.geolocation) return;
+        if (typeof navigator === "undefined" || !navigator.geolocation) return;
         gpsTriedRef.current = true;
-        queueMicrotask(() => setGpsStatus("detecting"));
-        requestAndStoreUserLocation({ fallbackLabel: t("geo.my_location") })
-            .then((result) => {
-                if (result.ok && result.location) {
-                    fetchByCoords(
-                        result.location.lat,
-                        result.location.lng,
-                        result.location.label,
-                    );
-                    setGpsStatus("done");
-                    return;
-                }
+
+        let cancelled = false;
+        (async () => {
+            const state = await getLocationPermissionState();
+            if (cancelled) return;
+            if (state !== "granted") {
+                setGpsStatus("skipped");
+                return;
+            }
+            queueMicrotask(() => {
+                if (!cancelled) setGpsStatus("detecting");
+            });
+            const result = await requestAndStoreUserLocation({
+                fallbackLabel: t("geo.my_location"),
+            }).catch(() => null);
+            if (cancelled) return;
+            if (result?.ok && result.location) {
+                fetchByCoords(
+                    result.location.lat,
+                    result.location.lng,
+                    result.location.label,
+                );
+                setGpsStatus("done");
+            } else {
                 setGpsStatus("error");
-            })
-            .catch(() => setGpsStatus("error"));
+            }
+        })();
+
+        return () => {
+            cancelled = true;
+        };
     }, [city.lat, city.lng]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
@@ -342,6 +361,7 @@ export default function JadwalSholatPage() {
                             {t("geo.my_location")}
                         </button>
                         <select
+                            aria-label={t("prayer_schedule.choose_city") || "Pilih Kota"}
                             value={city.name}
                             onChange={(e) => {
                                 const found = CITIES.find(

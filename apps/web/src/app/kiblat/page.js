@@ -4,6 +4,10 @@ import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BsGeoAlt } from "react-icons/bs";
+import {
+    getLocationPermissionState,
+    readStoredUserLocation,
+} from "@/lib/userLocation";
 
 // Kaaba coordinates
 const KAABA_LAT = 21.4225;
@@ -77,7 +81,36 @@ export function KiblatContent() {
     }, [t]);
 
     useEffect(() => {
-        getLocation();
+        let cancelled = false;
+        (async () => {
+            const stored = readStoredUserLocation();
+            if (stored?.lat && stored?.lng) {
+                if (cancelled) return;
+                setCoords({ lat: stored.lat, lng: stored.lng });
+                setQiblaAngle(calcQiblaAngle(stored.lat, stored.lng));
+                setDistance(
+                    Math.round(
+                        calcDistance(
+                            stored.lat,
+                            stored.lng,
+                            KAABA_LAT,
+                            KAABA_LNG,
+                        ),
+                    ),
+                );
+                return;
+            }
+
+            const state = await getLocationPermissionState();
+            if (cancelled) return;
+            if (state === "granted") {
+                getLocation();
+            }
+        })();
+
+        return () => {
+            cancelled = true;
+        };
     }, [getLocation]);
 
     useEffect(() => {
@@ -219,6 +252,22 @@ export function KiblatContent() {
                         className='bg-emerald-600 text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-emerald-700'
                     >
                         {t("common.try_again")}
+                    </button>
+                </div>
+            )}
+
+            {!loading && !error && qiblaAngle === null && (
+                <div className='text-center py-8 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl mb-4'>
+                    <p className='text-emerald-800 dark:text-emerald-200 text-sm mb-4'>
+                        {t("qibla.cta_description")}
+                    </p>
+                    <button
+                        type='button'
+                        onClick={getLocation}
+                        className='inline-flex items-center gap-2 bg-emerald-600 text-white px-6 py-2 rounded-xl text-sm font-bold hover:bg-emerald-700'
+                    >
+                        <BsGeoAlt />
+                        {t("qibla.detect_location")}
                     </button>
                 </div>
             )}

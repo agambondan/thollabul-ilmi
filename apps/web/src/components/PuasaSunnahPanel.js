@@ -5,6 +5,7 @@ import { hijriApi } from "@/lib/api";
 import { getPuasaSunnahForDate, PUASA_SUNNAH } from "@/lib/puasaSunnah";
 import { useEffect, useState } from "react";
 import { BsCalendarCheck, BsInfoCircle } from "react-icons/bs";
+import SourceBadges from "@/components/SourceBadges";
 
 const dayNamesId = [
     "Ahad",
@@ -124,9 +125,9 @@ export default function PuasaSunnahPanel() {
                                     {labelOf(m, lang)}
                                 </span>
                                 {m.dalil && (
-                                    <span className='block text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
-                                        {m.dalil}
-                                    </span>
+                                    <div className='mt-0.5'>
+                                        <SourceBadges source={m.dalil} />
+                                    </div>
                                 )}
                             </li>
                         ))}
@@ -196,9 +197,9 @@ export default function PuasaSunnahPanel() {
                                 {labelOf(p, lang)}
                             </p>
                             {p.dalil && (
-                                <p className='text-gray-500 dark:text-gray-300 dark:text-gray-500 dark:text-gray-300 mt-0.5'>
-                                    {p.dalil}
-                                </p>
+                                <div className='mt-0.5'>
+                                    <SourceBadges source={p.dalil} />
+                                </div>
                             )}
                         </li>
                     ))}
