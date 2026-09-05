@@ -36,6 +36,7 @@ const InfiniteScrollAyahPage = ({
     params,
     searchParams,
     basePath = "/quran/surah",
+    initialSurah = null,
 }) => {
     const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
@@ -46,19 +47,6 @@ const InfiniteScrollAyahPage = ({
     const showTranslation = settings.quranShowTranslation ?? true;
     const showMushafTranslation =
         settings.quranMushafTranslation ?? true;
-    const [surah, setSurah] = useState(null);
-    const [ayahs, setAyahs] = useState([]);
-    const [pageRequest, setPageRequest] = useState(null);
-    const [isInitialLoading, setIsInitialLoading] = useState(true);
-    const [isFetchingMore, setIsFetchingMore] = useState(false);
-    const [isFetchingMushaf, setIsFetchingMushaf] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
-    const [error, setError] = useState("");
-    const [selectedQari, setSelectedQari] = useState("");
-    const [openActionMenuAyahId, setOpenActionMenuAyahId] = useState(null);
-    const loadMoreSentinelRef = useRef(null);
-    const pendingPageRef = useRef(null);
-    const retryAfterRef = useRef(0);
 
     const rawSlug = params.slug;
     const slugPart = Array.isArray(rawSlug)
@@ -67,6 +55,31 @@ const InfiniteScrollAyahPage = ({
             : rawSlug[0]
         : rawSlug;
     const slug = decodeURIComponent(slugPart ?? "");
+    const initialAyahs = initialSurah ? normalizeAyahs(initialSurah) : [];
+    const initialMatchesSlug =
+        initialSurah &&
+        (initialSurah.slug === slug ||
+            String(initialSurah.number) === slug ||
+            initialSurah.identifier === slug);
+
+    const [surah, setSurah] = useState(initialMatchesSlug ? initialSurah : null);
+    const [ayahs, setAyahs] = useState(initialMatchesSlug ? initialAyahs : []);
+    const [pageRequest, setPageRequest] = useState(null);
+    const [isInitialLoading, setIsInitialLoading] = useState(!initialMatchesSlug);
+    const [isFetchingMore, setIsFetchingMore] = useState(false);
+    const [isFetchingMushaf, setIsFetchingMushaf] = useState(false);
+    const [hasMore, setHasMore] = useState(
+        initialMatchesSlug
+            ? initialAyahs.length <
+                  (initialSurah.number_of_ayahs ?? initialAyahs.length)
+            : true,
+    );
+    const [error, setError] = useState("");
+    const [selectedQari, setSelectedQari] = useState("");
+    const [openActionMenuAyahId, setOpenActionMenuAyahId] = useState(null);
+    const loadMoreSentinelRef = useRef(null);
+    const pendingPageRef = useRef(null);
+    const retryAfterRef = useRef(0);
 
     const loadMoreAyah = useCallback(() => {
         if (isInitialLoading || isFetchingMore || !hasMore) return;
@@ -132,6 +145,21 @@ const InfiniteScrollAyahPage = ({
     }, [ayahs.length, fetchSurah, surah, t]);
 
     useEffect(() => {
+        if (initialMatchesSlug && surah) {
+            if (surah.number && ayahs[0] && typeof window !== "undefined") {
+                progressApi
+                    .saveQuran(
+                        surah.number,
+                        ayahs[0].number,
+                        ayahs[0].id,
+                    )
+                    .catch((e) => console.error(e));
+                streakApi
+                    .logActivity("quran")
+                    .catch((e) => console.error(e));
+            }
+            return;
+        }
         let isActive = true;
         setIsInitialLoading(true);
         setError("");
@@ -177,7 +205,7 @@ const InfiniteScrollAyahPage = ({
         return () => {
             isActive = false;
         };
-    }, [fetchSurah]);
+    }, [fetchSurah, initialMatchesSlug, surah, ayahs, t]);
 
     useEffect(() => {
         if (!pageRequest || !surah) return;
