@@ -9,7 +9,7 @@ const QuranPage = async () => {
 
     try {
         const res = await fetch(
-            `${process.env.API_INTERNAL_URL || process.env.API_PROXY_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:29900"}/api/v1/surah?size=114&sort=number`,
+            `${process.env.API_INTERNAL_URL || process.env.API_PROXY_URL || process.env.NEXT_PUBLIC_API_URL || "https://api-thollabul.jangkauin.site"}/api/v1/surah?size=114&sort=number`,
         );
         const quran = await res.json();
         items = quran?.items ?? (Array.isArray(quran) ? quran : []);

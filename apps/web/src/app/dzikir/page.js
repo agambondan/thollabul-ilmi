@@ -7,7 +7,7 @@ const API_URL =
     process.env.API_INTERNAL_URL ||
     process.env.API_PROXY_URL ||
     process.env.NEXT_PUBLIC_API_URL ||
-    "http://localhost:29900";
+    "https://api-thollabul.jangkauin.site";
 
 // Rendered on the server so the list is in the HTML: this page was a client
 // component that fetched on mount, which meant crawlers (and the first paint)
