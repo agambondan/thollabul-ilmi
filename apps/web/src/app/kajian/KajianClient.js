@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import Image from "next/image";
 import { useLocale } from "@/context/Locale";
@@ -369,13 +370,18 @@ function ListView({
                                 <BsYoutube className='text-red-500 text-lg' />
                             )}
                             {getYouTubeId(k.url) && (
-                                <div className='aspect-video rounded-lg overflow-hidden bg-black'>
-                                    <iframe
-                                        src={`https://www.youtube.com/embed/${getYouTubeId(k.url)}`}
-                                        title={k.title}
-                                        className='w-full h-full'
-                                        allowFullScreen
+                                <div className='aspect-video rounded-lg overflow-hidden bg-black relative group/thumb'>
+                                    <img
+                                        src={`https://img.youtube.com/vi/${getYouTubeId(k.url)}/mqdefault.jpg`}
+                                        alt={k.title}
+                                        loading='lazy'
+                                        className='w-full h-full object-cover group-hover/thumb:scale-105 transition-transform duration-300'
                                     />
+                                    <div className='absolute inset-0 bg-black/20 flex items-center justify-center group-hover/thumb:bg-black/30 transition-colors'>
+                                        <div className='w-12 h-12 rounded-full bg-red-600/90 text-white flex items-center justify-center shadow-lg group-hover/thumb:scale-110 transition-transform'>
+                                            <BsPlayCircle className='text-2xl ml-0.5' />
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                             <div>
