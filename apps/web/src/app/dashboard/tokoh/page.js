@@ -1,9 +1,9 @@
-import { TokohListContent } from "@/app/tokoh/page";
+import TokohClient from "@/app/tokoh/TokohClient";
 
 export default function DashboardTokohPage() {
     return (
         <div className='py-2'>
-            <TokohListContent />
+            <TokohClient />
         </div>
     );
 }
