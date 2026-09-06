@@ -1,14 +1,7 @@
 "use client";
 
-import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useRef, useState } from "react";
-import {
-    BsArrowCounterclockwise,
-    BsCheckCircleFill,
-    BsHandIndexThumb,
-} from "react-icons/bs";
-import { MdRefresh } from "react-icons/md";
 
 export const PRESETS = [
     {
@@ -174,7 +167,7 @@ export function TasbihContent() {
         }));
 
     return (
-        <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
+        <div className='max-w-3xl mx-auto px-4 py-6'>
             <div className='text-center mb-6'>
                 <p
                     className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'
@@ -222,8 +215,8 @@ export function TasbihContent() {
                                   "Tap untuk hitung")}
                         </span>
                         {reachedTarget && (
-                            <span className='absolute -top-2 -right-2 bg-amber-400 text-emerald-900 dark:text-emerald-300 rounded-full w-9 h-9 flex items-center justify-center shadow'>
-                                <BsCheckCircleFill className='text-xl' />
+                            <span className='absolute -top-2 -right-2 bg-amber-400 text-emerald-900 dark:text-emerald-300 rounded-full w-9 h-9 flex items-center justify-center shadow font-bold text-lg'>
+                                ✓
                             </span>
                         )}
                     </button>
@@ -248,14 +241,14 @@ export function TasbihContent() {
                         onClick={reset}
                         className='flex items-center gap-1.5 px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-medium hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors'
                     >
-                        <BsArrowCounterclockwise />
+                        ↺
                         {t("tasbih.reset") ?? "Reset"}
                     </button>
                     <button
                         onClick={resetAll}
                         className='flex items-center gap-1.5 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors'
                     >
-                        <MdRefresh />
+                        ↻
                         {t("tasbih.reset_all") ?? "Reset Semua"}
                     </button>
                     <button
@@ -266,7 +259,7 @@ export function TasbihContent() {
                                 : "bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400"
                         }`}
                     >
-                        <BsHandIndexThumb />
+                        ☝
                         {vibrate
                             ? (t("tasbih.vibrate_on") ?? "Getar: On")
                             : (t("tasbih.vibrate_off") ?? "Getar: Off")}
@@ -379,7 +372,7 @@ export function TasbihContent() {
                     );
                 })}
             </div>
-        </ContentWidth>
+        </div>
     );
 }
 
