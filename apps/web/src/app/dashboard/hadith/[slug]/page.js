@@ -660,6 +660,8 @@ export function HadithDetailContent({
     basePath = "/dashboard/hadith",
     showSelectors = true,
     initialHadiths = [],
+    initialThemes = [],
+    initialChapters = [],
 }) {
     const { slug } = params;
     const { t, lang } = useLocale();
@@ -673,20 +675,27 @@ export function HadithDetailContent({
         }
     }, [basePath, slug, router]);
 
-    const [themes, setThemes] = useState([]);
-    const [chapters, setChapters] = useState([]);
+    const firstThemeId = initialThemes.length > 0 ? themeId(initialThemes[0]) : null;
+    const [themes, setThemes] = useState(initialThemes);
+    const [chapters, setChapters] = useState(initialChapters);
     const [hadiths, setHadiths] = useState(initialHadiths);
-    const [selectedTheme, setSelectedTheme] = useState(null);
-    const [selectedChapter, setSelectedChapter] = useState(null);
-    const [loading, setLoading] = useState(showSelectors);
+    const [selectedTheme, setSelectedTheme] = useState(firstThemeId);
+    const [selectedChapter, setSelectedChapter] = useState(
+        initialChapters.length > 0 ? initialChapters[0] : null,
+    );
+    const [loading, setLoading] = useState(showSelectors && initialThemes.length === 0);
     const [loadingHadith, setLoadingHadith] = useState(false);
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
-    const [bookName, setBookName] = useState("");
+    const [bookName, setBookName] = useState(
+        BOOK_NAMES[slug] ||
+            (initialThemes[0]?.book?.name) ||
+            slug,
+    );
     const hasServerDataRef = useRef(initialHadiths.length > 0);
 
     useEffect(() => {
-        if (!showSelectors) return;
+        if (!showSelectors || initialThemes.length > 0) return;
 
         fetch(`${API_URL}/api/v1/themes/book/${slug}`)
             .then((r) => r.json())
@@ -711,10 +720,11 @@ export function HadithDetailContent({
             })
             .catch((e) => console.error(e))
             .finally(() => setLoading(false));
-    }, [slug, lang, showSelectors]);
+    }, [slug, lang, showSelectors, initialThemes.length]);
 
     useEffect(() => {
         if (!selectedTheme) return;
+        if (initialChapters.length > 0 && selectedTheme === firstThemeId) return;
         fetch(
             `${API_URL}/api/v1/chapters/book/${slug}/theme/${selectedTheme}?size=100`,
         )
@@ -727,9 +737,13 @@ export function HadithDetailContent({
                 setSelectedChapter(list.length > 0 ? list[0] : null);
             })
             .catch((e) => console.error(e));
-    }, [selectedTheme, slug]);
+    }, [selectedTheme, slug, firstThemeId, initialChapters.length]);
 
     useEffect(() => {
+        if (hasServerDataRef.current) {
+            hasServerDataRef.current = false;
+            return;
+        }
         if (showSelectors) {
             if (!selectedTheme || !selectedChapter) return;
             loadHadiths(0, selectedTheme, selectedChapter.id, true);
