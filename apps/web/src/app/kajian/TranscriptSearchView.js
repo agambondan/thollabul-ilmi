@@ -2,7 +2,7 @@
 
 import { useLocale } from "@/context/Locale";
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { BsBoxArrowUpRight, BsPlayCircle, BsSearch, BsX, BsYoutube } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 
@@ -77,6 +77,17 @@ export default function TranscriptSearchView({
     const { t } = useLocale();
     const searchModes = getSearchModes(t);
     const [activeVideo, setActiveVideo] = useState(null);
+
+    // Defensive deduplication by (video_id/kajian_id + timestamp)
+    const uniqueResults = useMemo(() => {
+        const seen = new Set();
+        return (results || []).filter((r) => {
+            const key = `${r.kajian_id || r.video_id}-${r.start_seconds}-${r.end_seconds}`;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+    }, [results]);
 
     return (
         <div>
@@ -170,7 +181,7 @@ export default function TranscriptSearchView({
             <div className='mb-3 text-xs text-gray-500 dark:text-gray-400'>
                 {loading
                     ? (t("common.searching") || "Mencari...")
-                    : `${meta.total || results.length} ${t("kajian.results_found") || "hasil"} • mode: ${searchModes.find((m) => m.key === mode)?.label}`}
+                    : `${uniqueResults.length} ${t("kajian.results_found") || "hasil"} • mode: ${searchModes.find((m) => m.key === mode)?.label}`}
             </div>
 
             {loading ? (
@@ -186,7 +197,7 @@ export default function TranscriptSearchView({
                         </div>
                     ))}
                 </div>
-            ) : results.length === 0 ? (
+            ) : uniqueResults.length === 0 ? (
                 <div className='text-center py-12 text-gray-400'>
                     <BsSearch className='text-4xl mx-auto mb-3 opacity-50' />
                     <p className='text-sm'>
@@ -197,7 +208,7 @@ export default function TranscriptSearchView({
                 </div>
             ) : (
                 <div className='space-y-3'>
-                    {results.map((r) => (
+                    {uniqueResults.map((r) => (
                         <TranscriptResultCard
                             key={r.id}
                             result={r}

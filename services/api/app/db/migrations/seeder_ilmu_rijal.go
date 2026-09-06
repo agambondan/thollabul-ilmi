@@ -636,12 +636,6 @@ func seedJarhTadil(db *gorm.DB) {
 // jika hadith dengan nomor tersebut ada di database.
 
 func seedSanadHadith(db *gorm.DB) {
-	var count int64
-	db.Model(&model.Sanad{}).Count(&count)
-	if count > 0 {
-		return
-	}
-
 	getID := func(namaLatin string) *int {
 		var p model.Perawi
 		if err := db.Where("nama_latin = ?", namaLatin).First(&p).Error; err != nil {
@@ -651,10 +645,12 @@ func seedSanadHadith(db *gorm.DB) {
 	}
 
 	getHadith := func(bookSlug string, number int) (*model.Hadith, bool) {
+		var b model.Book
+		if err := db.Where("slug = ?", bookSlug).First(&b).Error; err != nil {
+			return nil, false
+		}
 		var h model.Hadith
-		if err := db.Joins("Book").
-			Where(`"Book".slug = ? AND hadith.number = ?`, bookSlug, number).
-			First(&h).Error; err != nil {
+		if err := db.Where("book_id = ? AND number = ?", b.ID, number).First(&h).Error; err != nil {
 			return nil, false
 		}
 		return &h, true
@@ -730,6 +726,11 @@ func buildSanad(db *gorm.DB, hadith *model.Hadith, getID func(string) *int, chai
 	}
 
 	jalur1 := 1
+	var existingSanad model.Sanad
+	if err := db.Where("hadith_id = ? AND nomor_jalur = ?", hadith.ID, jalur1).First(&existingSanad).Error; err == nil {
+		return // sudah ada sanad untuk jalur ini
+	}
+
 	sanad := model.Sanad{
 		HadithID:    hadith.ID,
 		NomorJalur:  &jalur1,

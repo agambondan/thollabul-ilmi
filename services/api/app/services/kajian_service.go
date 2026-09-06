@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/repository"
@@ -17,6 +19,7 @@ type KajianService interface {
 	IncrementView(id int)
 	SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, int64, error)
 	GetSpeakers() ([]string, error)
+	GetTranscriptsByKajianID(kajianID int) ([]model.KajianTranscript, error)
 }
 
 type kajianService struct {
@@ -102,9 +105,27 @@ func (s *kajianService) IncrementView(id int) {
 }
 
 func (s *kajianService) SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, int64, error) {
-	return s.repo.SearchTranscripts(query, speaker, mode, limit, offset)
+	results, total, err := s.repo.SearchTranscripts(query, speaker, mode, limit, offset)
+	if err != nil {
+		return nil, 0, err
+	}
+	seen := make(map[string]struct{}, len(results))
+	out := results[:0]
+	for _, r := range results {
+		key := fmt.Sprintf("%d-%d-%d", r.KajianID, r.StartSeconds, r.EndSeconds)
+		if _, ok := seen[key]; ok {
+			continue
+		}
+		seen[key] = struct{}{}
+		out = append(out, r)
+	}
+	return out, total, nil
 }
 
 func (s *kajianService) GetSpeakers() ([]string, error) {
 	return s.repo.GetSpeakers()
+}
+
+func (s *kajianService) GetTranscriptsByKajianID(kajianID int) ([]model.KajianTranscript, error) {
+	return s.repo.GetTranscriptsByKajianID(kajianID)
 }

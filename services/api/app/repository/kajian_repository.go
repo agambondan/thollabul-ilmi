@@ -19,6 +19,7 @@ type KajianRepository interface {
 	IncrementView(id int) error
 	SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, int64, error)
 	GetSpeakers() ([]string, error)
+	GetTranscriptsByKajianID(kajianID int) ([]model.KajianTranscript, error)
 }
 
 type kajianRepository struct {
@@ -221,5 +222,16 @@ func (r *kajianRepository) SearchTranscripts(query, speaker, mode string, limit,
 	}
 
 	return results, total, nil
+}
+
+func (r *kajianRepository) GetTranscriptsByKajianID(kajianID int) ([]model.KajianTranscript, error) {
+	var items []model.KajianTranscript
+	if err := r.db.
+		Where("kajian_id = ?", kajianID).
+		Order("start_seconds ASC").
+		Find(&items).Error; err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
