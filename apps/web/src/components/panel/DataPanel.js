@@ -145,17 +145,38 @@ export const PanelPagination = ({
     total,
     onChange,
     labels,
+    pageSize,
+    onPageSizeChange,
+    pageSizeOptions = [10, 20, 50],
 }) => {
-    if (pageCount <= 1) return null;
+    if (pageCount <= 1 && !onPageSizeChange) return null;
     const btn =
         "px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors disabled:opacity-40 disabled:cursor-not-allowed border-gray-200 dark:border-slate-600 text-gray-600 dark:text-gray-300 enabled:hover:bg-gray-50 dark:enabled:hover:bg-slate-700";
 
     return (
-        <div className='flex items-center justify-between gap-3 mt-4'>
-            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
-                {page} / {pageCount}
-                {typeof total === "number" ? ` · ${total}` : null}
-            </p>
+        <div className='flex flex-col sm:flex-row items-center justify-between gap-3 mt-4'>
+            <div className='flex items-center gap-3'>
+                <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                    {page} / {pageCount}
+                    {typeof total === "number" ? ` · Total: ${total}` : null}
+                </p>
+                {onPageSizeChange && (
+                    <div className='flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400'>
+                        <span>Baris:</span>
+                        <select
+                            value={pageSize}
+                            onChange={(e) => onPageSizeChange(Number(e.target.value))}
+                            className='px-2 py-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg text-xs text-gray-700 dark:text-gray-200 outline-none cursor-pointer'
+                        >
+                            {pageSizeOptions.map((opt) => (
+                                <option key={opt} value={opt}>
+                                    {opt}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                )}
+            </div>
             <div className='flex items-center gap-2'>
                 <button
                     type='button'

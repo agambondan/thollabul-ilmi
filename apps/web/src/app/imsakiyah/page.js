@@ -73,7 +73,7 @@ const MONTHS_EN = [
 
 const stripTz = (t) => (t ? t.split(" ")[0] : "-");
 
-export default function ImsakiyahPage() {
+export function ImsakiyahContent() {
     const { lang, t } = useLocale();
     const now = new Date();
     const [year, setYear] = useState(now.getFullYear());
@@ -196,7 +196,7 @@ export default function ImsakiyahPage() {
     const dayNames = lang === "EN" ? DAYS_EN : DAYS_ID;
 
     return (
-        <main className='min-h-screen bg-parchment-50 dark:bg-slate-900 pb-12'>
+        <div className='bg-parchment-50 dark:bg-slate-900 pb-12'>
             {/* Header */}
             <div className='bg-gradient-to-br from-emerald-900 to-emerald-800 text-white px-6 pt-28 pb-8'>
                 <ContentWidth compact='max-w-5xl'>
@@ -407,6 +407,14 @@ export default function ImsakiyahPage() {
                     </div>
                 ) : null}
             </ContentWidth>
+        </div>
+    );
+}
+
+export default function ImsakiyahPage() {
+    return (
+        <main className='min-h-screen flex flex-col'>
+            <ImsakiyahContent />
         </main>
     );
 }

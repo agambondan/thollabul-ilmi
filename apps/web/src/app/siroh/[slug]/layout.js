@@ -5,9 +5,9 @@ const API_URL =
     process.env.NEXT_PUBLIC_API_URL ||
     "http://localhost:29900";
 
-async function getSirohContent(id) {
+async function getSirohContent(slug) {
     try {
-        const res = await fetch(`${API_URL}/api/v1/siroh/contents/${id}`, {
+        const res = await fetch(`${API_URL}/api/v1/siroh/contents/${slug}`, {
             next: { revalidate: 86400 },
         });
         if (!res.ok) return null;
@@ -28,8 +28,8 @@ export async function generateStaticParams() {
         const data = await res.json();
         const items = data?.items ?? data?.data ?? (Array.isArray(data) ? data : []);
         return items
-            .map((it) => ({ id: String(it.id ?? it.slug ?? "") }))
-            .filter((it) => it.id);
+            .map((it) => ({ slug: String(it.slug ?? it.id ?? "") }))
+            .filter((it) => it.slug);
     } catch {
         return [];
     }
@@ -37,7 +37,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(props) {
     const params = await props.params;
-    const content = await getSirohContent(params.id);
+    const content = await getSirohContent(params.slug);
 
     const title = content?.title
         ? `${content.title} — Prophet's Biography`
@@ -47,7 +47,7 @@ export async function generateMetadata(props) {
         content?.excerpt ??
         `Read the biography of Prophet Muhammad ﷺ in clear, chapter-based lessons.`;
 
-    const canonicalUrl = `${SITE_URL}/siroh/${params.id}`;
+    const canonicalUrl = `${SITE_URL}/siroh/${params.slug}`;
 
     return {
         title,

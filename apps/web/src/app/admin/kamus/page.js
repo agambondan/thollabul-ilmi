@@ -46,6 +46,7 @@ const AdminDictionaryPage = () => {
     const [search, setSearch] = useState("");
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     const load = async () => {
         setLoading(true);
@@ -133,11 +134,11 @@ const AdminDictionaryPage = () => {
         );
     });
 
-    const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
     const currentPage = Math.min(page, pageCount);
     const visible = filtered.slice(
-        (currentPage - 1) * PAGE_SIZE,
-        currentPage * PAGE_SIZE,
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize,
     );
 
     return (
@@ -239,6 +240,12 @@ const AdminDictionaryPage = () => {
                         pageCount={pageCount}
                         total={filtered.length}
                         onChange={setPage}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newSize) => {
+                            setPageSize(newSize);
+                            setPage(1);
+                        }}
+                        pageSizeOptions={[10, 20, 50]}
                         labels={{
                             prev: t("common.prev"),
                             next: t("common.next"),

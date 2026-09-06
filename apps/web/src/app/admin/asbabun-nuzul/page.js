@@ -83,6 +83,7 @@ const AdminAsbabunNuzulPage = () => {
     const [search, setSearch] = useState("");
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     const load = async () => {
         setLoading(true);
@@ -199,11 +200,11 @@ const AdminAsbabunNuzulPage = () => {
 
     // 216 rows rendered at once produced a page ~11.700px tall. Search still
     // runs over everything; only the slice reaches the DOM.
-    const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
     const currentPage = Math.min(page, pageCount);
     const visible = filtered.slice(
-        (currentPage - 1) * PAGE_SIZE,
-        currentPage * PAGE_SIZE,
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize,
     );
 
     return (
@@ -310,6 +311,12 @@ const AdminAsbabunNuzulPage = () => {
                         pageCount={pageCount}
                         total={filtered.length}
                         onChange={setPage}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newSize) => {
+                            setPageSize(newSize);
+                            setPage(1);
+                        }}
+                        pageSizeOptions={[10, 20, 50]}
                         labels={{
                             prev: t("common.prev"),
                             next: t("common.next"),

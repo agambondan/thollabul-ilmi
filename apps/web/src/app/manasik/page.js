@@ -11,7 +11,7 @@ import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { MdOutlineDirectionsWalk } from "react-icons/md";
 import SourceBadges from "@/components/SourceBadges";
 
-const ManasikPage = () => {
+export function ManasikContent() {
     const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
     const [activeTab, setActiveTab] = useState("umrah");
@@ -57,16 +57,14 @@ const ManasikPage = () => {
     };
 
     return (
-        <main className='min-h-screen flex flex-col'>
-            <Section>
-                <div
-                    className={
-                        isWide
-                            ? "w-full px-4"
-                            : "container mx-auto px-4 max-w-2xl"
-                    }
-                >
-                    {/* Header */}
+        <div
+            className={
+                isWide
+                    ? "w-full px-4"
+                    : "container mx-auto px-4 max-w-2xl"
+            }
+        >
+            {/* Header */}
                     <div className='flex items-center gap-3 mb-6'>
                         <div className='w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center'>
                             <MdOutlineDirectionsWalk className='text-xl text-emerald-700 dark:text-emerald-400' />
@@ -275,9 +273,15 @@ const ManasikPage = () => {
                         </p>
                     </div>
                 </div>
+    );
+}
+
+export default function ManasikPage() {
+    return (
+        <main className='min-h-screen flex flex-col'>
+            <Section>
+                <ManasikContent />
             </Section>
         </main>
     );
-};
-
-export default ManasikPage;
+}

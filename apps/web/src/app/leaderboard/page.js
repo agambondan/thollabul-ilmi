@@ -19,7 +19,7 @@ const TABS = [
 
 const MEDAL = ["🥇", "🥈", "🥉"];
 
-const LeaderboardPage = () => {
+export const LeaderboardContent = () => {
     const { t } = useLocale();
     const { isWide } = useLayoutMode();
     const { isAuthenticated } = useAuth();
@@ -96,15 +96,13 @@ const LeaderboardPage = () => {
     });
 
     return (
-        <main className='min-h-screen flex flex-col'>
-            <Section>
-                <div
-                    className={
-                        isWide
-                            ? "w-full px-4"
-                            : "container mx-auto px-4 max-w-2xl"
-                    }
-                >
+        <div
+            className={
+                isWide
+                    ? "w-full px-4"
+                    : "container mx-auto px-4 max-w-2xl"
+            }
+        >
                     <div className='text-center mb-8'>
                         <BsTrophyFill className='text-4xl text-yellow-500 mx-auto mb-2' />
                         <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
@@ -285,9 +283,15 @@ const LeaderboardPage = () => {
                         </div>
                     )}
                 </div>
-            </Section>
-        </main>
     );
 };
 
-export default LeaderboardPage;
+export default function LeaderboardPage() {
+    return (
+        <main className='min-h-screen flex flex-col'>
+            <Section>
+                <LeaderboardContent />
+            </Section>
+        </main>
+    );
+}

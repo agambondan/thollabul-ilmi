@@ -11,7 +11,7 @@ import { BsSearch } from "react-icons/bs";
 
 const PAGE_SIZE = 20;
 
-export default function SirohClient({ initialChapters = [] }) {
+export default function SirohClient({ initialChapters = [], basePath = "/siroh" }) {
     const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
     const [chapters, setChapters] = useState(initialChapters);
@@ -151,7 +151,7 @@ export default function SirohClient({ initialChapters = [] }) {
                 {filteredChapters.map((chapter, index) => (
                     <Link
                         key={chapter.id}
-                        href={`/siroh/${chapter.slug ?? chapter.id}`}
+                        href={`${basePath}/${chapter.slug ?? chapter.id}`}
                         className='flex items-center gap-4 p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm transition-all'
                     >
                         <span className='w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-sm font-bold flex items-center justify-center shrink-0'>

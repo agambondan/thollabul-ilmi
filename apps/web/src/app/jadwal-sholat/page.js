@@ -73,7 +73,7 @@ const parseTimeStr = (str) => {
     );
 };
 
-export default function JadwalSholatPage() {
+export function JadwalSholatContent() {
     const { lang, t } = useLocale();
     const { settings, updateSetting } = useSettings();
     const dateKey = useLocalDateKey();
@@ -333,7 +333,7 @@ export default function JadwalSholatPage() {
     });
 
     return (
-        <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
+        <>
             <ContentWidth
                 compact='max-w-lg'
                 compactClassName='w-full sm:max-w-lg sm:mx-auto'
@@ -729,6 +729,14 @@ export default function JadwalSholatPage() {
                     preload='auto'
                 />
             )}
+        </>
+    );
+}
+
+export default function JadwalSholatPage() {
+    return (
+        <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
+            <JadwalSholatContent />
         </main>
     );
 }
