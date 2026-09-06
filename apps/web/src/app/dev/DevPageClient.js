@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale } from "@/context/Locale";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 import DeveloperKeyManager from "./DeveloperKeyManager";
 
 const BASE_URL = "https://api.tholabul-ilmi.com";
@@ -1214,6 +1215,7 @@ const methodBadge = {
 
 export default function DevPageClient() {
     const { lang, t } = useLocale();
+    const { isWide } = useLayoutMode();
     const groups = groupsByLang[lang] ?? groupsByLang.ID;
     const totalEndpoints = groups.reduce(
         (acc, g) => acc + g.endpoints.length,
@@ -1221,7 +1223,7 @@ export default function DevPageClient() {
     );
 
     return (
-        <div className='max-w-4xl mx-auto px-4 py-8'>
+        <div className={isWide ? "w-full px-4 py-8" : "max-w-4xl mx-auto px-4 py-8"}>
             <div className='mb-10'>
                 <p
                     className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'

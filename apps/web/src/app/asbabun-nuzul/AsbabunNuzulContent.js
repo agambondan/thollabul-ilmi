@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale } from "@/context/Locale";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 import AsbabunNuzulForm from "./AsbabunNuzulForm";
 
 export const AsbabunNuzulContent = ({
@@ -9,9 +10,10 @@ export const AsbabunNuzulContent = ({
     initialSurahNumber = "",
 }) => {
     const { t } = useLocale();
+    const { isWide } = useLayoutMode();
 
     return (
-        <div className='container mx-auto px-4 max-w-3xl'>
+        <div className={isWide ? "w-full px-4" : "container mx-auto px-4 max-w-3xl"}>
             <div className='text-center mb-8'>
                 <p
                     className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'

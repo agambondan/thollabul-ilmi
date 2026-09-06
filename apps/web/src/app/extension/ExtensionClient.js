@@ -1,15 +1,17 @@
 "use client";
 
 import { useLocale } from "@/context/Locale";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 import { BsCheckCircleFill, BsDownload } from "react-icons/bs";
 import { FaChrome, FaEdge } from "react-icons/fa";
 import { SiBrave } from "react-icons/si";
 
 export default function ExtensionClient() {
     const { t } = useLocale();
+    const { isWide } = useLayoutMode();
 
     return (
-        <div className='max-w-4xl mx-auto py-8 px-4 sm:px-6'>
+        <div className={isWide ? "w-full py-8 px-4 sm:px-6" : "max-w-4xl mx-auto py-8 px-4 sm:px-6"}>
             {/* Header Banner */}
             <div className='text-center mb-12'>
                 <span className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 mb-4'>

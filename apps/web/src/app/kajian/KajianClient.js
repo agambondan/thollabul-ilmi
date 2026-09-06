@@ -63,6 +63,7 @@ export default function KajianClient({
     );
     const [activeCategory, setActiveCategory] = useState("semua");
     const [search, setSearch] = useState("");
+    const [ustadzFilter, setUstadzFilter] = useState("");
 
     const loadMore = async () => {
         if (loadingMore || !hasMore) return;
@@ -175,6 +176,8 @@ export default function KajianClient({
     const filtered = kajian.filter((k) => {
         const matchCat =
             activeCategory === "semua" || k.category === activeCategory;
+        const matchSpeaker =
+            !ustadzFilter || k.speaker === ustadzFilter;
         const matchSearch =
             !search ||
             [
@@ -188,13 +191,20 @@ export default function KajianClient({
                 .join(" ")
                 .toLowerCase()
                 .includes(search.toLowerCase());
-        return matchCat && matchSearch;
+        return matchCat && matchSpeaker && matchSearch;
     });
 
     const youtubeCount = kajian.filter(
         (item) => item.platform === "youtube" || item.type === "video",
     ).length;
     const categoryCount = new Set(kajian.map((item) => item.category)).size;
+    const ustadzOptions = useMemo(
+        () =>
+            Array.from(
+                new Set(kajian.map((k) => k.speaker).filter(Boolean)),
+            ).sort(),
+        [kajian],
+    );
 
     return (
         <div className={isWide ? "w-full px-2 sm:px-4" : "w-full max-w-6xl mx-auto px-2 sm:px-4"}>
@@ -260,7 +270,10 @@ export default function KajianClient({
                     setSearch={setSearch}
                     activeCategory={activeCategory}
                     setActiveCategory={setActiveCategory}
-                    hasMore={hasMore && !search && activeCategory === "semua"}
+                    ustadzFilter={ustadzFilter}
+                    setUstadzFilter={setUstadzFilter}
+                    ustadzOptions={ustadzOptions}
+                    hasMore={hasMore && !search && activeCategory === "semua" && !ustadzFilter}
                     loadingMore={loadingMore}
                     onLoadMore={loadMore}
                     t={t}
@@ -284,6 +297,9 @@ function ListView({
     setSearch,
     activeCategory,
     setActiveCategory,
+    ustadzFilter,
+    setUstadzFilter,
+    ustadzOptions,
     hasMore,
     loadingMore,
     onLoadMore,
@@ -339,7 +355,7 @@ function ListView({
                 </div>
             </div>
 
-            <div className='flex gap-2 overflow-x-auto pb-2 mb-5 scrollbar-hide'>
+            <div className='flex gap-2 overflow-x-auto pb-2 mb-3 scrollbar-hide'>
                 {CATEGORIES.map((cat) => (
                     <button
                         key={cat.key}
@@ -353,6 +369,39 @@ function ListView({
                     </button>
                 ))}
             </div>
+
+            {ustadzOptions.length > 0 && (
+                <div className='mb-5'>
+                    <p className='text-[10px] uppercase tracking-wide text-gray-400 mb-1.5'>
+                        {t("kajian.transcript_filter_speaker") || "Filter Ustadz"}
+                    </p>
+                    <div className='flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-hide'>
+                        <button
+                            type='button'
+                            onClick={() => setUstadzFilter("")}
+                            className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${!ustadzFilter
+                                ? "bg-emerald-600 text-white"
+                                : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
+                                }`}
+                        >
+                            {t("kajian.transcript_all_speakers") || "Semua"}
+                        </button>
+                        {ustadzOptions.map((s) => (
+                            <button
+                                key={s}
+                                type='button'
+                                onClick={() => setUstadzFilter(s)}
+                                className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${ustadzFilter === s
+                                    ? "bg-emerald-600 text-white"
+                                    : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
+                                    }`}
+                            >
+                                {s.replace(/^Ust\.\s*Dr\.\s*/i, "Ust. ")}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             <div className='mb-4 flex items-center justify-between text-xs text-gray-400'>
                 <span>

@@ -3,6 +3,7 @@
 import { contentReportApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { useRequireAuth } from "@/lib/useRequireAuth";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BsExclamationTriangleFill, BsCheckCircleFill, BsHourglassSplit, BsXCircleFill } from "react-icons/bs";
@@ -37,6 +38,7 @@ const STATUS_BADGE = {
 export default function MyReportsPage() {
     const { lang } = useLocale();
     const { isAuthenticated, isLoading: authLoading } = useRequireAuth();
+    const { isWide } = useLayoutMode();
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -59,7 +61,7 @@ export default function MyReportsPage() {
     if (authLoading) return <div className='p-6'>Loading...</div>;
 
     return (
-        <div className='p-4 md:p-6 max-w-4xl mx-auto'>
+        <div className={isWide ? "p-4 md:p-6 w-full" : "p-4 md:p-6 max-w-4xl mx-auto w-full"}>
             <div className='mb-6'>
                 <Link
                     href='/dashboard/profile'

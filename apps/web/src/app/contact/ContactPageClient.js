@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale } from "@/context/Locale";
+import { useLayoutMode } from "@/lib/useLayoutMode";
 import { BsEnvelope, BsGithub, BsInstagram, BsTwitter } from "react-icons/bs";
 
 const contactsByLang = {
@@ -107,11 +108,12 @@ const faqsByLang = {
 
 export default function ContactPageClient() {
     const { lang, t } = useLocale();
+    const { isWide } = useLayoutMode();
     const contacts = contactsByLang[lang] ?? contactsByLang.ID;
     const faqs = faqsByLang[lang] ?? faqsByLang.ID;
 
     return (
-        <div className='max-w-3xl mx-auto px-4 py-8'>
+        <div className={isWide ? "w-full px-4 py-8" : "max-w-3xl mx-auto px-4 py-8"}>
             <div className='mb-10'>
                 <p
                     className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'
