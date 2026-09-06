@@ -11,7 +11,7 @@ const API_URL =
 
 async function getInitialPerawi() {
     try {
-        const res = await fetch(`${API_URL}/api/v1/perawi?page=0&size=20`, {
+        const res = await fetch(`${API_URL}/api/v1/perawi?page=0&size=10`, {
             next: { revalidate: 86400 },
         });
         if (!res.ok) return { items: [], total: 0 };
