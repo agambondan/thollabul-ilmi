@@ -115,4 +115,13 @@ func TestKajianSearchTranscriptsExactAndSemantic(t *testing.T) {
 	if len(speakers) == 0 || speakers[0] != k.Speaker {
 		t.Errorf("expected speaker %s, got %v", k.Speaker, speakers)
 	}
+
+	// 6. GetTranscriptsByKajianID
+	allTranscripts, err := repo.GetTranscriptsByKajianID(*k.ID)
+	if err != nil {
+		t.Fatalf("get transcripts by kajian id error: %v", err)
+	}
+	if len(allTranscripts) != 2 {
+		t.Errorf("expected 2 transcripts for kajian %d, got %d", *k.ID, len(allTranscripts))
+	}
 }

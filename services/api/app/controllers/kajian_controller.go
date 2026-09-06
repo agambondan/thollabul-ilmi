@@ -17,6 +17,7 @@ type KajianController interface {
 	Delete(ctx *fiber.Ctx) error
 	SearchTranscripts(ctx *fiber.Ctx) error
 	GetSpeakers(ctx *fiber.Ctx) error
+	GetTranscripts(ctx *fiber.Ctx) error
 }
 
 type kajianController struct {
@@ -201,4 +202,27 @@ func (c *kajianController) GetSpeakers(ctx *fiber.Ctx) error {
 		return lib.ErrorInternal(ctx)
 	}
 	return lib.OK(ctx, speakers)
+}
+
+// @Summary Get full transcripts for a specific kajian
+// @Tags Belajar
+// @Accept json
+// @Produce json
+// @Param id path int true "Kajian ID"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Failure 500 {object} lib.Response
+// @Router /kajian/{id}/transcripts [get]
+func (c *kajianController) GetTranscripts(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "Invalid ID")
+	}
+
+	transcripts, err := c.svc.GetTranscriptsByKajianID(id)
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+
+	return lib.OK(ctx, transcripts)
 }
