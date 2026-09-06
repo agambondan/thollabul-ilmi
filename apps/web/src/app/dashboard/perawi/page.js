@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
-import { BsSearch, BsPeopleFill } from "react-icons/bs";
 import { useLocale } from "@/context/Locale";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
@@ -105,7 +104,7 @@ export function PerawiContent({
         setPage(0);
         setHasMore(true);
         fetchPerawi(0, search, tabaqah, true);
-    }, [search, tabaqah, fetchPerawi, initialPerawi.length]);
+    }, [search, tabaqah, fetchPerawi, initialPerawi.length, initialTotal]);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -139,7 +138,9 @@ export function PerawiContent({
 
             {/* Search */}
             <form onSubmit={handleSearch} className='relative mb-4 max-w-lg'>
-                <BsSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
+                <span className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 select-none' aria-hidden='true'>
+                    ⌕
+                </span>
                 <input
                     type='text'
                     placeholder={t("perawi.search_placeholder")}
@@ -200,7 +201,7 @@ export function PerawiContent({
                             className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-600 hover:shadow-sm transition-all p-4 group flex gap-3'
                         >
                             <div className='w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0 text-lg group-hover:bg-teal-100 transition-colors'>
-                                <BsPeopleFill />
+                                ☉
                             </div>
                             <div className='min-w-0 flex-1'>
                                 <p
