@@ -57,6 +57,35 @@ CHANNELS = [
     }
 ]
 
+def default_channels_file():
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..", "list_ustad_sunnah.json"))
+
+def load_channels(path):
+    if not path or not os.path.exists(path):
+        return CHANNELS
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception:
+        return CHANNELS
+
+    channels = []
+    seen = set()
+    for item in data if isinstance(data, list) else []:
+        youtube = (item.get("media_sosial") or {}).get("youtube")
+        if not youtube:
+            continue
+        key = youtube.rstrip("/")
+        if key in seen:
+            continue
+        seen.add(key)
+        channels.append({
+            "nama": item.get("nama") or key,
+            "fokus_kajian": item.get("fokus_kajian") or ["Kajian Umum"],
+            "channel_url": youtube,
+        })
+    return channels or CHANNELS
+
 def ytdlp_cookie_args(cookies):
     if not cookies:
         return []
@@ -307,6 +336,7 @@ def main():
     parser.add_argument("--cookies", type=str, default="", help="Browser name (e.g. chrome, firefox) or path to cookies.txt")
     parser.add_argument("--allow-empty-transcript", action="store_true", help="Include videos even without transcript")
     parser.add_argument("--out", type=str, default="", help="Output JSON path (defaults to services/api/data/static/kajian.json)")
+    parser.add_argument("--channels-file", type=str, default=default_channels_file(), help="Ustadz/channel JSON file (defaults to repo list_ustad_sunnah.json)")
     args = parser.parse_args()
 
     default_out = os.path.join(os.path.dirname(__file__), "../data/static/kajian.json")
@@ -334,7 +364,7 @@ def main():
             "channel_url": args.channel
         })
     else:
-        targets = CHANNELS
+        targets = load_channels(args.channels_file)
 
     total_new = 0
     for t in targets:

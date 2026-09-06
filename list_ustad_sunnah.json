@@ -1,0 +1,905 @@
+[
+    {
+        "id": 1,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Dr. Khalid Basalamah, Lc., M.A.",
+        "lokasi_basis": "Jakarta",
+        "fokus_kajian": [
+            "Sirah Nabawiyah",
+            "Tazkiyatun nufus",
+            "Adab dan akhlak",
+            "Fikih praktis"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@khalidbasalamah",
+            "instagram": "https://www.instagram.com/khalidbasalamahofficial",
+            "website": "https://khbofficial.com"
+        }
+    },
+    {
+        "id": 2,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Dr. Syafiq Riza Basalamah, Lc., M.A.",
+        "lokasi_basis": "Jember, Jawa Timur",
+        "fokus_kajian": [
+            "Keharmonisan keluarga",
+            "Pernikahan & parenting",
+            "Adab bermasyarakat",
+            "Akhlak keseharian"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@SyafiqRizaBasalamahOfficial",
+            "instagram": "https://www.instagram.com/syafiqrizabasalamah_official",
+            "website": "https://syafiqrizabasalamah.com"
+        }
+    },
+    {
+        "id": 3,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Dr. Firanda Andirja, Lc., M.A.",
+        "lokasi_basis": "Jakarta",
+        "fokus_kajian": [
+            "Akidah dan tauhid",
+            "Syarah kitab ulama klasik",
+            "Tafsir Al-Qur'an mendalam"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@FirandaAndirjaOfficial",
+            "instagram": "https://www.instagram.com/firanda_andirja_official",
+            "website": "https://bekalislam.firanda.com"
+        }
+    },
+    {
+        "id": 4,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Muhammad Nuzul Dzikri, Lc.",
+        "lokasi_basis": "Jakarta",
+        "fokus_kajian": [
+            "Penyucian jiwa (Tazkiyatun nufus)",
+            "Adab penuntut ilmu",
+            "Isu kehidupan pemuda & urban"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@MuhammadNuzulDzikri",
+            "instagram": "https://www.instagram.com/muhammadnuzuldzikri",
+            "website": "https://muhammadnuzuldzikri.com"
+        }
+    },
+    {
+        "id": 5,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Dr. Erwandi Tarmizi, Lc., M.A.",
+        "lokasi_basis": "Bogor / Jakarta",
+        "fokus_kajian": [
+            "Fikih muamalah kontemporer",
+            "Hukum perbankan & transaksi syariah",
+            "Investasi, bisnis, & anti-riba"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@AshiilTV",
+            "instagram": "https://www.instagram.com/erwanditarmizi_official",
+            "website": "https://erwanditarmizi.com"
+        }
+    },
+    {
+        "id": 6,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Ammi Nur Baits, S.T., B.A.",
+        "lokasi_basis": "Yogyakarta",
+        "fokus_kajian": [
+            "Fikih muamalah dasar",
+            "Fikih ibadah harian",
+            "Konsultasi fatwa syariah praktis"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@anbchannel",
+            "instagram": "https://www.instagram.com/amminurbaits",
+            "website": "https://konsultasisyariah.com"
+        }
+    },
+    {
+        "id": 7,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Abu Yahya Badrusalam, Lc.",
+        "lokasi_basis": "Bogor, Jawa Barat",
+        "fokus_kajian": [
+            "Hadis tematik (Riyadhus Shalihin, Shahih Bukhari)",
+            "Pemurnian sunnah",
+            "Dakwah media Islam"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@cintasunnahtv",
+            "instagram": "https://www.instagram.com/ub_cintasunnah",
+            "website": "https://cintasunnah.com"
+        }
+    },
+    {
+        "id": 8,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Dr. Abdullah Roy, M.A.",
+        "lokasi_basis": "Jember, Jawa Timur",
+        "fokus_kajian": [
+            "Akidah dan tauhid silsilah terstruktur (HSI)",
+            "Kaidah dasar keimanan"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@AbdullahRoy",
+            "instagram": "https://www.instagram.com/hsi.abdullahroy",
+            "website": "https://abdullahroy.com"
+        }
+    },
+    {
+        "id": 9,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Subhan Bawazier, Lc.",
+        "lokasi_basis": "Bogor / Jakarta",
+        "fokus_kajian": [
+            "Kajian tematik sosial",
+            "Nasihat praktis hijrah",
+            "Binaan komunitas pemuda & otomotif"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@AladzievieChannel",
+            "instagram": "https://www.instagram.com/usb.bahanan93",
+            "website": null
+        }
+    },
+    {
+        "id": 10,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Yazid bin Abdul Qadir Jawas (Rahimahullah)",
+        "lokasi_basis": "Bogor, Jawa Barat (Arsip Dakwah)",
+        "fokus_kajian": [
+            "Pemurnian tauhid & manhaj salaf",
+            "Syarah Arba'in An-Nawawiyah",
+            "Prinsip dakwah Ahlus Sunnah wal Jama'ah"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@SahabatSunnahOfficial",
+            "instagram": null,
+            "website": null
+        }
+    },
+    {
+        "id": 11,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Abdul Hakim bin Amir Abdat",
+        "lokasi_basis": "Jakarta",
+        "fokus_kajian": [
+            "Ilmu musthalah hadis & jarh wa ta'dil",
+            "Takhrij & derajat hadis",
+            "Bantahan terhadap syubhat & bid'ah"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@abdulhakimabdat",
+            "instagram": null,
+            "website": null
+        }
+    },
+    {
+        "id": 12,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Dr. Muhammad Arifin Badri, M.A.",
+        "lokasi_basis": "Jember / STDI Imam Syafi'i",
+        "fokus_kajian": [
+            "Fikih muamalah kontemporer",
+            "Dewan pengawas syariah",
+            "Tafsir ayat-ayat hukum"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@ArifinBadriOfficial",
+            "instagram": "https://www.instagram.com/dr.arifinbadri",
+            "website": null
+        }
+    },
+    {
+        "id": 13,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Dr. Ali Musri Semjan Putra, M.A.",
+        "lokasi_basis": "Jember / STDI Imam Syafi'i",
+        "fokus_kajian": [
+            "Akidah dan perbandingan firqah/aliran",
+            "Tafsir tematik Al-Qur'an",
+            "Sejarah pemikiran Islam"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@DrAliMusriSemjanPutraOfficial",
+            "instagram": "https://www.instagram.com/alimusrisemjanputra",
+            "website": null
+        }
+    },
+    {
+        "id": 14,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Dr. Sufyan Baswedan, M.A.",
+        "lokasi_basis": "Solo, Jawa Tengah",
+        "fokus_kajian": [
+            "Hadis tematik & syarah Bulughul Maram",
+            "Fatwa kontemporer",
+            "Adab islami harian"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@SufyanBaswedanOfficial",
+            "instagram": "https://www.instagram.com/sufyanbaswedan",
+            "website": null
+        }
+    },
+    {
+        "id": 15,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Dr. Musyaffa' Ad-Dariny, M.A.",
+        "lokasi_basis": "Kudus, Jawa Tengah",
+        "fokus_kajian": [
+            "Qawa'id Fiqhiyyah (Kaidah fikih)",
+            "Ushul fikih",
+            "Fatwa fikih terapan"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@MusyaffaAdDarinyOfficial",
+            "instagram": "https://www.instagram.com/musyaffa_addariny",
+            "website": null
+        }
+    },
+    {
+        "id": 16,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Abu Haidar As-Sundawy, Lc.",
+        "lokasi_basis": "Bandung, Jawa Barat",
+        "fokus_kajian": [
+            "Syarah Kitabut Tauhid & Ushuluts Tsalatsah",
+            "Tazkiyatun nufus",
+            "Kajian bilingual (Sunda & Indonesia)"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@AbuHaidarAsSundawyOfficial",
+            "instagram": "https://www.instagram.com/abuhaidarassundawy",
+            "website": null
+        }
+    },
+    {
+        "id": 17,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. dr. Raehanul Bahraen, M.Sc., Sp.PK",
+        "lokasi_basis": "Yogyakarta",
+        "fokus_kajian": [
+            "Integrasi fikih & kesehatan medis",
+            "Psikologi tazkiyatun nufus",
+            "Edukasi pranikah & pemuda"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@RaehanulBahraenOfficial",
+            "instagram": "https://www.instagram.com/raehanul_bahraen",
+            "website": "https://muslimafiyah.com"
+        }
+    },
+    {
+        "id": 18,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Ahmad Zainuddin Al-Banjary, Lc.",
+        "lokasi_basis": "Banjarmasin, Kalimantan Selatan",
+        "fokus_kajian": [
+            "Penyucian jiwa & kelembutan hati",
+            "Fikih ibadah praktis",
+            "Nasihat keluarga muslim"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@AhmadZainuddinAlBanjary",
+            "instagram": "https://www.instagram.com/dakwahsunnahbanjarmasin",
+            "website": null
+        }
+    },
+    {
+        "id": 19,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Mizan Qudsiyah, Lc., M.A.",
+        "lokasi_basis": "Lombok, Nusa Tenggara Barat",
+        "fokus_kajian": [
+            "Pemurnian akidah dan tauhid",
+            "Syarah hadis-hadis hukum",
+            "Dakwah kultural lokal"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@MizanQudsiyahOfficial",
+            "instagram": "https://www.instagram.com/mizanqudsiyah_official",
+            "website": null
+        }
+    },
+    {
+        "id": 20,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Maududi Abdullah, Lc.",
+        "lokasi_basis": "Pekanbaru, Riau",
+        "fokus_kajian": [
+            "Motivasi hijrah",
+            "Pendidikan anak generasi muda",
+            "Adab dan muamalah sosial"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@MaududiAbdullahOfficial",
+            "instagram": "https://www.instagram.com/maududiabdullah",
+            "website": null
+        }
+    },
+    {
+        "id": 21,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Abdullah Zaen, Lc., M.A.",
+        "lokasi_basis": "Purwokerto, Jawa Tengah",
+        "fokus_kajian": [
+            "Fiqih rumah tangga & parenting",
+            "Syarah Riyadhus Shalihin",
+            "Adab pergaulan islami"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@AbdullahZaenOfficial",
+            "instagram": "https://www.instagram.com/abdullahzaen_official",
+            "website": null
+        }
+    },
+    {
+        "id": 22,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Aris Munandar, S.S., M.P.I.",
+        "lokasi_basis": "Yogyakarta",
+        "fokus_kajian": [
+            "Kajian kitab fikih mazhab Syafi'i",
+            "Kaidah nahwu dan sharaf",
+            "Ushul fikih"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@ArisMunandarOfficial",
+            "instagram": "https://www.instagram.com/ustadzaris.munandar",
+            "website": null
+        }
+    },
+    {
+        "id": 23,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Abu Ihsan Al-Atsary, M.A.",
+        "lokasi_basis": "Medan, Sumatera Utara",
+        "fokus_kajian": [
+            "Islamic parenting & psikologi anak",
+            "Keluarga sakinah",
+            "Tazkiyatun nufus"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@abuihsanalatsary",
+            "instagram": "https://www.instagram.com/abuihsan_alatsary",
+            "website": null
+        }
+    },
+    {
+        "id": 24,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Abu Ya'la Kurnaedi, Lc.",
+        "lokasi_basis": "Bogor, Jawa Barat",
+        "fokus_kajian": [
+            "Tahsin & kaidah tajwid Al-Qur'an",
+            "Dzikir pagi dan petang sunnah",
+            "Tafsir surah-surah pendek"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@AbuYalaKurnaediOfficial",
+            "instagram": "https://www.instagram.com/abuya_kurnaedi",
+            "website": null
+        }
+    },
+    {
+        "id": 25,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Dzulqarnain Muhammad Sunusi",
+        "lokasi_basis": "Makassar, Sulawesi Selatan",
+        "fokus_kajian": [
+            "Manhaj salaf & fatwa ulama kibar",
+            "Syarah Shahih Bukhari & Shahih Muslim",
+            "Tahsin bacaan tartil Al-Qur'an"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@DzulqarnainMS",
+            "instagram": "https://www.instagram.com/dzulqarnainms",
+            "website": "https://dzulqarnain.net"
+        }
+    },
+    {
+        "id": 26,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Dr. Andy Octavian Latief, M.Sc.",
+        "lokasi_basis": "Jakarta / Bandung",
+        "fokus_kajian": [
+            "Integrasi sains & fisika dengan akidah tauhid",
+            "Diskusi ilmiah kalangan akademisi",
+            "Ushuluddin dasar"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@AndyOctavianLatief",
+            "instagram": "https://www.instagram.com/andyoctavianlatief",
+            "website": null
+        }
+    },
+    {
+        "id": 27,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Abul Aswad Al-Bayati, B.A.",
+        "lokasi_basis": "Klaten / Yogyakarta",
+        "fokus_kajian": [
+            "Nasihat tematik santai & analogi awam",
+            "Fikih praktis masyarakat",
+            "Adab bertetangga & sosial"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@AbulAswadAlBayatiOfficial",
+            "instagram": "https://www.instagram.com/abul_aswad_albayati",
+            "website": null
+        }
+    },
+    {
+        "id": 28,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Zainal Abidin bin Syamsuddin, Lc.",
+        "lokasi_basis": "Bekasi / Jakarta",
+        "fokus_kajian": [
+            "Pemurnian akidah dari takhayul dan bid'ah",
+            "Syarah hadis ibadah",
+            "Tanya-jawab syariat"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@ZainalAbidinSyamsuddin",
+            "instagram": "https://www.instagram.com/zainalabidin.syamsuddin",
+            "website": null
+        }
+    },
+    {
+        "id": 29,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Sofyan Chalid Ruray, Lc.",
+        "lokasi_basis": "Jakarta / Depok",
+        "fokus_kajian": [
+            "Manhaj Ahlus Sunnah wal Jama'ah",
+            "Syarah kitab akidah salaf",
+            "Bantahan syubhat & fatwa interaktif"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@SofyanRuray",
+            "instagram": "https://www.instagram.com/sofyanruray.info",
+            "website": "https://sofyanruray.info"
+        }
+    },
+    {
+        "id": 30,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Afifi Abdul Wadud, B.A.",
+        "lokasi_basis": "Yogyakarta",
+        "fokus_kajian": [
+            "Dasar-dasar tauhid masyarakat awam",
+            "Pemurnian amalan ibadah",
+            "Penyucian hati"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@AfifiAbdulWadudOfficial",
+            "instagram": "https://www.instagram.com/afifiabdulwadud",
+            "website": null
+        }
+    },
+    {
+        "id": 31,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Beni Sarbeni, Lc.",
+        "lokasi_basis": "Bandung, Jawa Barat",
+        "fokus_kajian": [
+            "Ushul fikih",
+            "Kaidah bahasa Arab (Lughah)",
+            "Syarah kitab fikih perbandingan"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@BeniSarbeniOfficial",
+            "instagram": "https://www.instagram.com/beni_sarbeni",
+            "website": null
+        }
+    },
+    {
+        "id": 32,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Syahrul Fatwa, Lc.",
+        "lokasi_basis": "Bogor, Jawa Barat",
+        "fokus_kajian": [
+            "Sirah Nabawiyah & sahabat",
+            "Fikih amalan harian",
+            "Hadis adab & akhlak"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@SyahrulFatwaOfficial",
+            "instagram": "https://www.instagram.com/syahrul_fatwa",
+            "website": null
+        }
+    },
+    {
+        "id": 33,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Farhan Abu Furaihan",
+        "lokasi_basis": "Banda Aceh, Aceh",
+        "fokus_kajian": [
+            "Dakwah tauhid & sunnah Serambi Makkah",
+            "Motivasi hijrah pemuda",
+            "Adab penuntut ilmu"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@FarhanAbuFuraihan",
+            "instagram": "https://www.instagram.com/farhanabufuraihan",
+            "website": null
+        }
+    },
+    {
+        "id": 34,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Harits Abu Naufal",
+        "lokasi_basis": "Bandung / Aceh",
+        "fokus_kajian": [
+            "Tazkiyatun nufus",
+            "Kajian akhlak & budi pekerti",
+            "Nasihat generasi muda"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@HaritsAbuNaufal",
+            "instagram": "https://www.instagram.com/haritsabunaufal",
+            "website": null
+        }
+    },
+    {
+        "id": 35,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Rizal Yuliar Putrananda, Lc.",
+        "lokasi_basis": "Magetan / Madiun, Jawa Timur",
+        "fokus_kajian": [
+            "Fikih keluarga sakinah",
+            "Konsultasi hukum syariah",
+            "Kajian hadis tematik"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@RizalYuliarOfficial",
+            "instagram": "https://www.instagram.com/rizalyuliarputrananda",
+            "website": null
+        }
+    },
+    {
+        "id": 36,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Boris Tanesia",
+        "lokasi_basis": "Jakarta",
+        "fokus_kajian": [
+            "Dakwah ringkas generasi muda",
+            "Etika profesional di lingkungan kerja",
+            "Motivasi hijrah praktis"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@BorisTanesia",
+            "instagram": "https://www.instagram.com/boristanesia",
+            "website": null
+        }
+    },
+    {
+        "id": 37,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Dr. Anas Burhanuddin, M.A.",
+        "lokasi_basis": "Jember / STDI Imam Syafi'i",
+        "fokus_kajian": [
+            "Fikih nawazil (kontemporer)",
+            "Maqashid syariah",
+            "Syarah hadis hukum"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@AnasBurhanuddinOfficial",
+            "instagram": "https://www.instagram.com/anasburhanuddin.official",
+            "website": null
+        }
+    },
+    {
+        "id": 38,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Kholid Syamhudi, Lc.",
+        "lokasi_basis": "Solo, Jawa Tengah",
+        "fokus_kajian": [
+            "Fikih pernikahan & keluarga",
+            "Hukum waris Islam (Faraidh)",
+            "Muamalah sehari-hari"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@KholidSyamhudiOfficial",
+            "instagram": "https://www.instagram.com/kholidsyamhudi",
+            "website": null
+        }
+    },
+    {
+        "id": 39,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Abu Qatadah",
+        "lokasi_basis": "Tasikmalaya, Jawa Barat",
+        "fokus_kajian": [
+            "Prinsip manhaj Salafush Shalih",
+            "Pendidikan pondok pesantren",
+            "Syarah akidah ahlussunnah"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@AbuQatadahOfficial",
+            "instagram": "https://www.instagram.com/abuqatadahofficial",
+            "website": null
+        }
+    },
+    {
+        "id": 40,
+        "kategori": "ustadz_personal",
+        "nama": "Ust. Fachrudin Nu'man, Lc.",
+        "lokasi_basis": "Bekasi / Jakarta",
+        "fokus_kajian": [
+            "Aqidah Shahihah",
+            "Syarah Kitabut Tauhid",
+            "Kisah dan sirah para sahabat"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@FachrudinNuman",
+            "instagram": "https://www.instagram.com/fachrudin_numan",
+            "website": null
+        }
+    },
+    {
+        "id": 41,
+        "kategori": "media_dakwah",
+        "nama": "Rodja TV & Radio Rodja 756 AM",
+        "lokasi_basis": "Cileungsi, Bogor (Nasional)",
+        "fokus_kajian": [
+            "Kajian kitab rujukan salaf lintas ustadz",
+            "Fatwa tanya-jawab langsung via telepon",
+            "Bahasa Arab dan tahsin tajwid"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@rodjatv",
+            "instagram": "https://www.instagram.com/radiorodja",
+            "website": "https://radiorodja.com"
+        }
+    },
+    {
+        "id": 42,
+        "kategori": "media_dakwah",
+        "nama": "Yufid TV",
+        "lokasi_basis": "Yogyakarta (Nasional)",
+        "fokus_kajian": [
+            "Video animasi fikih praktis",
+            "Kajian tematik ringkas",
+            "Fatwa konsultasi syariah & edukasi anak"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@YufidTV",
+            "instagram": "https://www.instagram.com/yufid",
+            "website": "https://yufid.tv"
+        }
+    },
+    {
+        "id": 43,
+        "kategori": "media_dakwah",
+        "nama": "Tarbiyah Sunnah Channel",
+        "lokasi_basis": "Bandung, Jawa Barat",
+        "fokus_kajian": [
+            "Kajian akidah & manhaj kitab para ulama klasik",
+            "Syarah Aqidah Wasithiyyah & Kitabut Tauhid",
+            "Siar dakwah bahasa Sunda & Indonesia"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@TarbiyahSunnahChannel",
+            "instagram": "https://www.instagram.com/tarbiyahsunnah",
+            "website": "https://tarbiyahsunnah.or.id"
+        }
+    },
+    {
+        "id": 44,
+        "kategori": "media_dakwah",
+        "nama": "Ashiil TV",
+        "lokasi_basis": "Jakarta / Bogor",
+        "fokus_kajian": [
+            "Fikih muamalah kontemporer & perbankan",
+            "Kajian hadis & sirah",
+            "Keluarga sakinah"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@AshiilTV",
+            "instagram": "https://www.instagram.com/ashiiltv",
+            "website": "https://ashiil.tv"
+        }
+    },
+    {
+        "id": 45,
+        "kategori": "media_dakwah",
+        "nama": "Surau TV",
+        "lokasi_basis": "Padang, Sumatera Barat",
+        "fokus_kajian": [
+            "Kajian sunnah regional Minang & Sumatera",
+            "Pemurnian akidah tauhid",
+            "Siar televisi edukasi satelit"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@SurauTVPadang",
+            "instagram": "https://www.instagram.com/surautv",
+            "website": "https://surautv.com"
+        }
+    },
+    {
+        "id": 46,
+        "kategori": "media_dakwah",
+        "nama": "Insan TV",
+        "lokasi_basis": "Jakarta / Depok",
+        "fokus_kajian": [
+            "Dakwah tauhid lintas Nusantara",
+            "Tahsin Al-Qur'an interaktif",
+            "Kajian tematik keluarga"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@insantvofficial",
+            "instagram": "https://www.instagram.com/insantv",
+            "website": "https://insantv.com"
+        }
+    },
+    {
+        "id": 47,
+        "kategori": "media_dakwah",
+        "nama": "Surabaya Mengaji",
+        "lokasi_basis": "Surabaya, Jawa Timur",
+        "fokus_kajian": [
+            "Jadwal & live streaming kajian masjid Surabaya-Sidoarjo",
+            "Tabligh akbar berkala",
+            "Informasi safari dakwah Jawa Timur"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@SurabayaMengaji",
+            "instagram": "https://www.instagram.com/surabayamengaji",
+            "website": "https://surabayamengaji.com"
+        }
+    },
+    {
+        "id": 48,
+        "kategori": "media_dakwah",
+        "nama": "Jakarta Mengaji",
+        "lokasi_basis": "DKI Jakarta & Jabodetabek",
+        "fokus_kajian": [
+            "Kajian perkantoran & masjid di kawasan ibu kota",
+            "Dakwah hijrah bagi kalangan profesional urban"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@JakartaMengaji",
+            "instagram": "https://www.instagram.com/jakartamengajiofficial",
+            "website": null
+        }
+    },
+    {
+        "id": 49,
+        "kategori": "media_dakwah",
+        "nama": "Bali Mengaji",
+        "lokasi_basis": "Denpasar, Bali",
+        "fokus_kajian": [
+            "Dakwah sunnah di daerah minoritas muslim",
+            "Penyelenggaraan safari dakwah nasional di Pulau Bali"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@balimengaji",
+            "instagram": "https://www.instagram.com/balimengaji",
+            "website": null
+        }
+    },
+    {
+        "id": 50,
+        "kategori": "media_dakwah",
+        "nama": "Muadz TV",
+        "lokasi_basis": "Kendari, Sulawesi Tenggara",
+        "fokus_kajian": [
+            "Kajian fikih & tazkiyatun nufus wilayah Sulawesi Tenggara",
+            "Aktivitas dakwah pondok pesantren"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@MuadzTVOfficial",
+            "instagram": "https://www.instagram.com/muadztv",
+            "website": null
+        }
+    },
+    {
+        "id": 51,
+        "kategori": "media_dakwah",
+        "nama": "Salam TV",
+        "lokasi_basis": "Medan, Sumatera Utara",
+        "fokus_kajian": [
+            "Kajian sunnah regional Sumatera Utara",
+            "Keluarga sakinah & syiar edukasi Islam"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@SalamTVOfficial",
+            "instagram": "https://www.instagram.com/salamtv",
+            "website": "https://salamtv.id"
+        }
+    },
+    {
+        "id": 52,
+        "kategori": "media_dakwah",
+        "nama": "Jogja Mengaji",
+        "lokasi_basis": "DI Yogyakarta",
+        "fokus_kajian": [
+            "Kajian rutin masjid-masjid sekitar kampus Yogyakarta",
+            "Informasi silsilah kitab & dauroh santri"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@JogjaMengaji",
+            "instagram": "https://www.instagram.com/jogjamengaji",
+            "website": null
+        }
+    },
+    {
+        "id": 53,
+        "kategori": "media_dakwah",
+        "nama": "Semarang Mengaji",
+        "lokasi_basis": "Semarang, Jawa Tengah",
+        "fokus_kajian": [
+            "Kajian rutin kota Semarang dan sekitarnya",
+            "Tabligh akbar dan safari asatidzah"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@SemarangMengajiOfficial",
+            "instagram": "https://www.instagram.com/semarangmengaji",
+            "website": null
+        }
+    },
+    {
+        "id": 54,
+        "kategori": "media_dakwah",
+        "nama": "Batam Mengaji",
+        "lokasi_basis": "Batam, Kepulauan Riau",
+        "fokus_kajian": [
+            "Dakwah sunnah wilayah perbatasan Kepulauan Riau",
+            "Kajian tematik pekerja industri"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@BatamMengaji",
+            "instagram": "https://www.instagram.com/batammengaji",
+            "website": null
+        }
+    },
+    {
+        "id": 55,
+        "kategori": "media_dakwah",
+        "nama": "Makassar Mengaji",
+        "lokasi_basis": "Makassar, Sulawesi Selatan",
+        "fokus_kajian": [
+            "Kajian rutin masjid dan tabligh akbar di Sulawesi Selatan",
+            "Kajian pemuda hijrah Makassar"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@MakassarMengajiOfficial",
+            "instagram": "https://www.instagram.com/makassarmengaji",
+            "website": null
+        }
+    },
+    {
+        "id": 56,
+        "kategori": "media_dakwah",
+        "nama": "Medan Mengaji",
+        "lokasi_basis": "Medan, Sumatera Utara",
+        "fokus_kajian": [
+            "Kajian rutin sunnah wilayah kota Medan & Deli Serdang",
+            "Dauroh ilmiah berkala"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@MedanMengaji",
+            "instagram": "https://www.instagram.com/medanmengajiofficial",
+            "website": null
+        }
+    },
+    {
+        "id": 57,
+        "kategori": "media_dakwah",
+        "nama": "Bandung Mengaji",
+        "lokasi_basis": "Bandung, Jawa Barat",
+        "fokus_kajian": [
+            "Jadwal dauroh & kajian tematik di Bandung Raya",
+            "Edukasi penuntut ilmu pemula"
+        ],
+        "media_sosial": {
+            "youtube": "https://www.youtube.com/@BandungMengaji",
+            "instagram": "https://www.instagram.com/bandungmengaji",
+            "website": null
+        }
+    }
+]
