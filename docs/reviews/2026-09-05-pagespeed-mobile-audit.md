@@ -62,6 +62,15 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 
 ## 3. Apa yang Sudah Berhasil Diperbaiki (Wins)
 
+- **Post-Refactor Route Unification Benchmark (6 Sep 2026)**:
+  Setelah konsolidasi route publik dan dashboard menjadi shared components (-2.617 baris duplikasi):
+  - `/siroh`: Perf **52**, A11y **96**, Best Practices **81**, SEO **100**, FCP **1.9s**, CLS **0.004**.
+  - `/sejarah`: Perf **49**, A11y **96**, Best Practices **81**, SEO **100**, FCP **2.2s**, CLS **0.000**.
+  - `/fiqh`: Perf **42**, A11y **96**, Best Practices **81**, SEO **100**, FCP **2.2s**, CLS **0.000**.
+  - `/kamus`: Perf **42**, A11y **93**, Best Practices **81**, SEO **100**, FCP **1.7s**, CLS **0.000**.
+  - *Semua route mempertahankan SEO 100%, A11y >90%, CLS 0 (stabil tanpa layout shift).*
+
+
 1. **Eliminasi Render-Blocking External Font (750ms penghematan)**:
     - `@import url(fonts.googleapis.com/...Amiri)` di `globals.css` dihapus.
     - `@font-face Amiri` di-alias langsung ke `/fonts/Kitab-Regular.woff2` lokal.
