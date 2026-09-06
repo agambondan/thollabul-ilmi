@@ -225,8 +225,14 @@ func (r *kajianRepository) SearchTranscripts(query, speaker, mode string, limit,
 }
 
 func (r *kajianRepository) GetTranscriptsByKajianID(kajianID int) ([]model.KajianTranscript, error) {
+	transcriptTable := "kajian_transcript"
+	if r.db.Migrator().HasTable("kajian_transcripts") {
+		transcriptTable = "kajian_transcripts"
+	}
+
 	var items []model.KajianTranscript
 	if err := r.db.
+		Table(transcriptTable).
 		Where("kajian_id = ?", kajianID).
 		Order("start_seconds ASC").
 		Find(&items).Error; err != nil {
