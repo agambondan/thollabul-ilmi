@@ -83,6 +83,8 @@ export default function NotificationPermissionPrompt() {
     useEffect(() => {
         let cancelled = false;
         let timer = null;
+        let observer = null;
+        let sentinel = null;
 
         const boot = async () => {
             if (typeof window === "undefined" || isLoading) return;
@@ -124,9 +126,27 @@ export default function NotificationPermissionPrompt() {
             if (!canAskNotification && !canAskLocation) return;
             if (isPromptDismissed()) return;
 
-            timer = setTimeout(() => {
-                if (!cancelled) setVisible(true);
-            }, 3500);
+            // Defer until the user actually reaches the bottom of the page so
+            // this fixed banner never becomes the LCP element. `rootMargin`
+            // mirrors the existing visual offset; the sentinel sits at the
+            // document end and fires when the user has seen the main content.
+            sentinel = document.createElement("div");
+            sentinel.style.cssText =
+                "position:absolute;left:0;top:0;width:1px;height:1px;pointer-events:none;opacity:0;";
+            document.body.appendChild(sentinel);
+            observer = new IntersectionObserver(
+                (entries) => {
+                    if (entries.some((e) => e.isIntersecting)) {
+                        timer = setTimeout(() => {
+                            if (!cancelled) setVisible(true);
+                        }, 1200);
+                    }
+                },
+                { rootMargin: "0px 0px 200px 0px" },
+            );
+            sentinel.style.position = "fixed";
+            sentinel.style.bottom = "0";
+            observer.observe(sentinel);
         };
 
         boot();
@@ -134,6 +154,10 @@ export default function NotificationPermissionPrompt() {
         return () => {
             cancelled = true;
             if (timer) clearTimeout(timer);
+            if (observer) observer.disconnect();
+            if (sentinel && sentinel.parentNode) {
+                sentinel.parentNode.removeChild(sentinel);
+            }
         };
     }, [isAuthenticated, isLoading, registerPushToken]);
 
