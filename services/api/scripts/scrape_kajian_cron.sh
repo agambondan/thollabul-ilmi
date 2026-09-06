@@ -13,10 +13,10 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 
 OUT_FILE="${OUT_FILE:-${REPO_ROOT}/services/api/data/static/kajian.json}"
 LOG_FILE="${LOG_FILE:-/var/log/thollabul-kajian-scrape.log}"
-SCRAPE_BIN="${SCRAPE_BIN:-python3}"
+CHANNELS_FILE="${CHANNELS_FILE:-${REPO_ROOT}/list_ustad_sunnah.json}"
 SCRAPE_ARGS="${SCRAPE_ARGS:-}"
 COOKIES="${COOKIES:-}"        # pass-through: chrome / firefox / path
-MAX_VIDEOS="${MAX_VIDEOS:-20}"
+MAX_VIDEOS="${MAX_VIDEOS:-5}"
 VPS_SSH_HOST="${VPS_SSH_HOST:-sumopod}"
 VPS_REMOTE_DIR="${VPS_REMOTE_DIR:-/works/me/thollabul-ilmi}"
 
@@ -31,13 +31,20 @@ log() {
 run_scrape() {
     log "Scraping up to ${MAX_VIDEOS} videos per channel -> ${OUT_FILE}"
     local args=()
-    args+=("--max" "${MAX_VIDEOS}")
-    args+=("--out" "${OUT_FILE}")
-    [[ -n "${COOKIES}" ]] && args+=("--cookies" "${COOKIES}")
+    args+=("-max" "${MAX_VIDEOS}")
+    args+=("-out" "${OUT_FILE}")
+    args+=("-channels-file" "${CHANNELS_FILE}")
+    [[ -n "${COOKIES}" ]] && args+=("-cookies" "${COOKIES}")
     [[ -n "${SCRAPE_ARGS}" ]] && args+=(${SCRAPE_ARGS})
 
     cd "${REPO_ROOT}/services/api"
-    "${SCRAPE_BIN}" scripts/scrape_youtube_kajian.py "${args[@]}"
+    if command -v go >/dev/null 2>&1; then
+        go run ./cmd/scrape-kajian "${args[@]}"
+    elif [[ -f "${REPO_ROOT}/services/api/bin/scrape-kajian" ]]; then
+        "${REPO_ROOT}/services/api/bin/scrape-kajian" "${args[@]}"
+    else
+        python3 scripts/scrape_youtube_kajian.py --max "${MAX_VIDEOS}" --out "${OUT_FILE}" --channels-file "${CHANNELS_FILE}"
+    fi
 }
 
 sync_to_vps() {

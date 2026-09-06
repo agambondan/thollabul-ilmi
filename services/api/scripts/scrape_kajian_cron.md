@@ -3,17 +3,23 @@
 Filesystem layout:
 
 ```
-services/api/scripts/
-├── scrape_youtube_kajian.py     # existing: scrape 9 ustadz channels
-├── scrape_kajian_cron.sh        # bash wrapper: scrape + rsync + restart
-├── scrape_kajian_cron.service   # systemd service template
-└── scrape_kajian_cron.timer     # systemd timer (weekly, Sun 02:00 UTC)
+services/api/
+├── cmd/scrape-kajian/main.go    # native Go scraper CLI (calls yt-dlp binary)
+├── scripts/
+│   ├── scrape_youtube_kajian.py # Python fallback (same flags)
+│   ├── scrape_kajian_cron.sh    # bash wrapper: Go scrape + rsync + restart
+│   ├── scrape_kajian_cron.service# systemd oneshot template
+│   └── scrape_kajian_cron.timer # systemd timer (weekly, Sun 02:00 UTC)
+└── data/static/kajian.json      # output live dataset
 ```
 
 ## Quick start (manual run)
 
 ```bash
-# From VPS or local dev environment:
+# Direct Go run:
+cd services/api && go run ./cmd/scrape-kajian -max 5
+
+# Or via wrapper (runs Go -> syncs -> restarts API):
 services/api/scripts/scrape_kajian_cron.sh
 ```
 
@@ -23,8 +29,8 @@ Environment variables (override per invocation):
 | --- | --- | --- |
 | `OUT_FILE` | `services/api/data/static/kajian.json` | Output JSON location |
 | `LOG_FILE` | `/var/log/thollabul-kajian-scrape.log` | Append log |
-| `SCRAPE_BIN` | `python3` | Python interpreter |
-| `MAX_VIDEOS` | `20` | Max new videos per channel per run |
+| `CHANNELS_FILE` | `list_ustad_sunnah.json` | Source ustadz/channel registry |
+| `MAX_VIDEOS` | `5` | Max new videos per channel per run (kept low to avoid YouTube throttling across 56 channels) |
 | `COOKIES` | _empty_ | `chrome` / `firefox` / path to cookies.txt |
 | `VPS_SSH_HOST` | `sumopod` | SSH host alias for the VPS |
 | `VPS_REMOTE_DIR` | `/works/me/thollabul-ilmi` | Remote compose root |
