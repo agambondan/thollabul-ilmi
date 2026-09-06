@@ -86,11 +86,13 @@ const safeParse = (raw, fallback) => {
 
 export function TasbihContent() {
     const { t } = useLocale();
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [count, setCount] = useState(0);
-    const [target, setTarget] = useState(33);
-    const [totalToday, setTotalToday] = useState(0);
-    const [vibrate, setVibrate] = useState(true);
+    const [state, setState] = useState({
+        activeIndex: 0,
+        count: 0,
+        target: 33,
+        totalToday: 0,
+        vibrate: true,
+    });
     const lastDateRef = useRef("");
 
     const todayStr = () => {
@@ -103,40 +105,38 @@ export function TasbihContent() {
         const today = todayStr();
         lastDateRef.current = today;
         if (stored) {
-            setActiveIndex(stored.activeIndex ?? 0);
-            setCount(stored.count ?? 0);
-            setTarget(stored.target ?? 33);
-            setVibrate(stored.vibrate ?? true);
-            if (stored.date === today) {
-                setTotalToday(stored.totalToday ?? 0);
-            } else {
-                setTotalToday(0);
-            }
+            setState({
+                activeIndex: stored.activeIndex ?? 0,
+                count: stored.count ?? 0,
+                target: stored.target ?? 33,
+                vibrate: stored.vibrate ?? true,
+                totalToday: stored.date === today ? (stored.totalToday ?? 0) : 0,
+            });
         }
     }, []);
 
     useEffect(() => {
         const payload = {
-            activeIndex,
-            count,
-            target,
-            totalToday,
-            vibrate,
+            ...state,
             date: lastDateRef.current || todayStr(),
         };
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
         } catch {}
-    }, [activeIndex, count, target, totalToday, vibrate]);
+    }, [state]);
 
+    const { activeIndex, count, target, totalToday, vibrate } = state;
     const active = PRESETS[activeIndex] ?? PRESETS[0];
     const reachedTarget = target > 0 && count >= target;
     const progressPct = target > 0 ? Math.min(100, (count / target) * 100) : 0;
 
     const handleTap = () => {
         const next = count + 1;
-        setCount(next);
-        setTotalToday((prev) => prev + 1);
+        setState((prev) => ({
+            ...prev,
+            count: next,
+            totalToday: prev.totalToday + 1,
+        }));
         if (vibrate && typeof navigator !== "undefined" && navigator.vibrate) {
             if (target > 0 && next === target) {
                 navigator.vibrate([60, 40, 60, 40, 120]);
@@ -148,17 +148,30 @@ export function TasbihContent() {
         }
     };
 
-    const reset = () => setCount(0);
-    const resetAll = () => {
-        setCount(0);
-        setTotalToday(0);
-    };
+    const reset = () => setState((prev) => ({ ...prev, count: 0 }));
+    const resetAll = () =>
+        setState((prev) => ({ ...prev, count: 0, totalToday: 0 }));
 
     const choosePreset = (idx) => {
-        setActiveIndex(idx);
-        setCount(0);
-        setTarget(PRESETS[idx].target);
+        setState((prev) => ({
+            ...prev,
+            activeIndex: idx,
+            count: 0,
+            target: PRESETS[idx].target,
+        }));
     };
+
+    const setTarget = (val) =>
+        setState((prev) => ({
+            ...prev,
+            target: Math.max(0, Number(val) || 0),
+        }));
+
+    const setVibrate = (fn) =>
+        setState((prev) => ({
+            ...prev,
+            vibrate: typeof fn === "function" ? fn(prev.vibrate) : fn,
+        }));
 
     return (
         <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
