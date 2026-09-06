@@ -47,12 +47,47 @@ const catColor = {
     hadith: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400",
 };
 
-export default function KajianClient({ kajian: initialKajian = [], initialTab = "list" }) {
+export default function KajianClient({
+    kajian: initialKajian = [],
+    initialTotal = 0,
+    initialTab = "list",
+}) {
     const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
     const [kajian, setKajian] = useState(initialKajian);
+    const [totalKajian, setTotalKajian] = useState(initialTotal || initialKajian.length);
+    const [page, setPage] = useState(0);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [hasMore, setHasMore] = useState(
+        initialKajian.length < (initialTotal || initialKajian.length),
+    );
     const [activeCategory, setActiveCategory] = useState("semua");
     const [search, setSearch] = useState("");
+
+    const loadMore = async () => {
+        if (loadingMore || !hasMore) return;
+        setLoadingMore(true);
+        const nextPage = page + 1;
+        try {
+            const apiUrl =
+                process.env.NEXT_PUBLIC_API_URL ||
+                "https://api-thollabul.jangkauin.site";
+            const res = await fetch(`${apiUrl}/api/v1/kajian?page=${nextPage}&size=10`);
+            if (res.ok) {
+                const data = await res.json();
+                const items = data?.items ?? (Array.isArray(data) ? data : []);
+                setKajian((prev) => [...prev, ...items]);
+                setPage(nextPage);
+                const total = data?.total ?? totalKajian;
+                setTotalKajian(total);
+                setHasMore(!data?.last && items.length > 0 && kajian.length + items.length < total);
+            }
+        } catch (e) {
+            console.error("Failed to load more kajian:", e);
+        } finally {
+            setLoadingMore(false);
+        }
+    };
 
     // Tab: 'list' = daftar kajian (default), 'transcript' = cari transkrip
     const [tab, setTab] = useState(initialTab);
@@ -156,20 +191,13 @@ export default function KajianClient({ kajian: initialKajian = [], initialTab = 
         return matchCat && matchSearch;
     });
 
-    const totalKajian = kajian.length;
     const youtubeCount = kajian.filter(
-        (item) => item.platform === "youtube",
+        (item) => item.platform === "youtube" || item.type === "video",
     ).length;
     const categoryCount = new Set(kajian.map((item) => item.category)).size;
 
     return (
-        <div
-            className={
-                isWide
-                    ? "w-full px-4"
-                    : "container mx-auto px-4 max-w-3xl"
-            }
-        >
+        <div className='w-full max-w-6xl mx-auto px-2 sm:px-4'>
             <div className='flex items-center gap-3 mb-4'>
                 <div className='w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center'>
                     <MdOutlinePlayLesson className='text-xl text-emerald-700 dark:text-emerald-400' />
@@ -232,6 +260,9 @@ export default function KajianClient({ kajian: initialKajian = [], initialTab = 
                     setSearch={setSearch}
                     activeCategory={activeCategory}
                     setActiveCategory={setActiveCategory}
+                    hasMore={hasMore && !search && activeCategory === "semua"}
+                    loadingMore={loadingMore}
+                    onLoadMore={loadMore}
                     t={t}
                     lang={lang}
                 />
@@ -253,6 +284,9 @@ function ListView({
     setSearch,
     activeCategory,
     setActiveCategory,
+    hasMore,
+    loadingMore,
+    onLoadMore,
     t,
     lang,
 }) {
@@ -381,6 +415,21 @@ function ListView({
                             </div>
                         </a>
                     ))}
+                </div>
+            )}
+
+            {hasMore && (
+                <div className='text-center mt-6'>
+                    <button
+                        type='button'
+                        onClick={onLoadMore}
+                        disabled={loadingMore}
+                        className='px-6 py-2.5 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 disabled:opacity-50 transition-colors'
+                    >
+                        {loadingMore
+                            ? (t("kajian.loading") || "Memuat...")
+                            : (t("common.load_more") || "Muat Lebih")}
+                    </button>
                 </div>
             )}
         </div>

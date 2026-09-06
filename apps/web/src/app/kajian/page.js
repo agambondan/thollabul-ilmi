@@ -21,28 +21,31 @@ const getYouTubeId = (url) => {
     return m ? m[1] : null;
 };
 
-async function getInitialItems() {
+async function getInitialData() {
     try {
-        const res = await fetch(`${API_URL}/api/v1/kajian?page=0&size=20`, {
+        const res = await fetch(`${API_URL}/api/v1/kajian?page=0&size=10`, {
             next: { revalidate: 3600 },
         });
-        if (!res.ok) return [];
+        if (!res.ok) return { items: [], total: 0 };
         const data = await res.json();
-        return data?.items ?? (Array.isArray(data) ? data : []);
+        return {
+            items: data?.items ?? (Array.isArray(data) ? data : []),
+            total: data?.total ?? (Array.isArray(data) ? data.length : 0),
+        };
     } catch {
-        return [];
+        return { items: [], total: 0 };
     }
 }
 
 export default async function KajianPage(props) {
     const searchParams = await props.searchParams;
     const tab = searchParams?.tab || "transcript";
-    const kajian = await getInitialItems();
+    const { items, total } = await getInitialData();
 
     return (
         <main className='min-h-screen flex flex-col'>
             <Section>
-                <KajianClient kajian={kajian} initialTab={tab} />
+                <KajianClient kajian={items} initialTotal={total} initialTab={tab} />
             </Section>
         </main>
     );
