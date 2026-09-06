@@ -120,6 +120,7 @@ export function PanduanSholatContent({ initialSteps = [] }) {
     const [openStep, setOpenStep] = useState(null);
     const [apiSteps, setApiSteps] = useState(initialSteps);
     const [isLoading, setIsLoading] = useState(initialSteps.length === 0);
+    const [visibleCount, setVisibleCount] = useState(6);
 
     useEffect(() => {
         if (initialSteps.length > 0) return;
@@ -223,7 +224,7 @@ export function PanduanSholatContent({ initialSteps = [] }) {
                                 ))}
                             </div>
                         ) : (
-                            steps.map((s, si) => (
+                            steps.slice(0, visibleCount).map((s, si) => (
                                 <div
                                     key={si}
                                     className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden shadow-sm'
@@ -317,6 +318,17 @@ export function PanduanSholatContent({ initialSteps = [] }) {
                                     )}
                                 </div>
                             ))
+                        )}
+
+                        {!isLoading && visibleCount < steps.length && (
+                            <div className='text-center pt-2'>
+                                <button
+                                    onClick={() => setVisibleCount(steps.length)}
+                                    className='px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors shadow-sm'
+                                >
+                                    {t("common.load_more") || "Tampilkan Semua Langkah"} ({steps.length - visibleCount} {t("prayer_guide.steps_left") || "langkah lagi"})
+                                </button>
+                            </div>
                         )}
                     </div>
                 );
