@@ -586,11 +586,11 @@ export default function Home() {
                     }}
                 />
                 <div className='absolute top-16 right-16 w-80 h-80 rounded-full bg-emerald-700 opacity-25 blur-3xl pointer-events-none' />
-                <div className='absolute bottom-32 left-10 w-96 h-96 rounded-full bg-gold-600 opacity-10 blur-3xl pointer-events-none' />
+                <div className='absolute top-2/3 left-10 w-96 h-96 rounded-full bg-gold-600 opacity-10 blur-3xl pointer-events-none' />
 
                 <div className='relative z-10 mx-auto max-w-3xl px-6 py-20 text-center text-white'>
                     <p
-                        className='min-h-[5.5rem] text-4xl md:text-5xl text-gold-300 mb-6 leading-loose'
+                        className='min-h-[7.5rem] sm:min-h-[6rem] text-4xl md:text-5xl text-gold-300 mb-6 leading-loose'
                         style={{ fontFamily: "Amiri, serif", direction: "rtl" }}
                     >
                         بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ

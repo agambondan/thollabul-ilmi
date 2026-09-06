@@ -36,14 +36,24 @@ const AnalyticsTracker = () => {
             return;
 
         const path = `${pathname}${window.location.search || ""}`;
-        analyticsApi
-            .trackPageView({
-                visitor_id: getVisitorID(),
-                path,
-                source: sourceFromPath(pathname),
-                referrer: document.referrer || "",
-            })
-            .catch((e) => console.error(e));
+        const track = () => {
+            analyticsApi
+                .trackPageView({
+                    visitor_id: getVisitorID(),
+                    path,
+                    source: sourceFromPath(pathname),
+                    referrer: document.referrer || "",
+                })
+                .catch(() => {});
+        };
+
+        if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+            const handle = window.requestIdleCallback(track, { timeout: 2000 });
+            return () => window.cancelIdleCallback(handle);
+        }
+
+        const timer = setTimeout(track, 1000);
+        return () => clearTimeout(timer);
     }, [pathname]);
 
     return null;
