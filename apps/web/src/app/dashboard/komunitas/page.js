@@ -48,16 +48,24 @@ const formatRelative = (iso) => {
  * Also rendered by the public /komunitas route; `basePath` keeps an anonymous
  * visitor on public URLs rather than pushing them into the dashboard tree.
  */
-export default function KomunitasPage({ basePath = "/dashboard" }) {
+export default function KomunitasPage({
+    basePath = "/dashboard",
+    initialBlog = [],
+    initialForum = [],
+    initialHallOfFame = [],
+}) {
     const root = basePath === "/dashboard" ? "/dashboard" : "";
     const { t } = useLocale();
     const { isWide } = useLayoutMode();
-    const [blogPosts, setBlogPosts] = useState([]);
-    const [topForum, setTopForum] = useState([]);
-    const [hallOfFame, setHallOfFame] = useState([]);
+    const [blogPosts, setBlogPosts] = useState(initialBlog);
+    const [topForum, setTopForum] = useState(initialForum);
+    const [hallOfFame, setHallOfFame] = useState(initialHallOfFame);
 
     useEffect(() => {
         let cancelled = false;
+        if (initialBlog.length > 0 && initialForum.length > 0) {
+            return;
+        }
 
         const fetchBlog = async () => {
             try {
@@ -102,7 +110,7 @@ export default function KomunitasPage({ basePath = "/dashboard" }) {
         return () => {
             cancelled = true;
         };
-    }, []);
+    }, [initialBlog.length, initialForum.length]);
 
     const LeaderboardSkeleton = () => (
         <div className='space-y-3'>

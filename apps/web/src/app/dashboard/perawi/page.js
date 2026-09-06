@@ -53,16 +53,20 @@ export default function DashboardPerawiPage() {
     return <PerawiContent basePath='/dashboard/perawi' />;
 }
 
-export function PerawiContent({ basePath = "/dashboard/perawi" }) {
+export function PerawiContent({
+    basePath = "/dashboard/perawi",
+    initialPerawi = [],
+    initialTotal = 0,
+}) {
     const { t, lang } = useLocale();
-    const [perawi, setPerawi] = useState([]);
-    const [total, setTotal] = useState(0);
+    const [perawi, setPerawi] = useState(initialPerawi);
+    const [total, setTotal] = useState(initialTotal);
     const [search, setSearch] = useState("");
     const [searchInput, setSearchInput] = useState("");
     const [tabaqah, setTabaqah] = useState("");
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(initialPerawi.length === 0);
 
     const fetchPerawi = useCallback(async (pg, q, tab, reset = false) => {
         setLoading(true);
@@ -95,10 +99,13 @@ export function PerawiContent({ basePath = "/dashboard/perawi" }) {
     }, []);
 
     useEffect(() => {
+        if (initialPerawi.length > 0 && search === "" && tabaqah === "") {
+            return;
+        }
         setPage(0);
         setHasMore(true);
         fetchPerawi(0, search, tabaqah, true);
-    }, [search, tabaqah, fetchPerawi]);
+    }, [search, tabaqah, fetchPerawi, initialPerawi.length]);
 
     const handleSearch = (e) => {
         e.preventDefault();
