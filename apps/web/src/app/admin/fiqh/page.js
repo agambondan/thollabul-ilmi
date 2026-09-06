@@ -2,6 +2,7 @@
 
 import {
     PanelEmpty,
+    PanelPagination,
     PanelTable,
     Td,
     Th,
@@ -25,6 +26,8 @@ const CATEGORIES = [
     "munakahat",
     "umum",
 ];
+
+const PAGE_SIZE = 20;
 
 const slugify = (str) =>
     str
@@ -52,8 +55,8 @@ const AdminFiqhPage = () => {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
-    const [catFilter, setCatFilter] = useState("");
     const [deleteId, setDeleteId] = useState(null);
+    const [page, setPage] = useState(1);
 
     const load = async () => {
         setLoading(true);

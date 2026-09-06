@@ -3,7 +3,7 @@
 import ContentWidth from "@/components/layout/ContentWidth";
 import Section from "@/components/Section";
 import { useLocale } from "@/context/Locale";
-import { asmaulHusnaData } from "@/lib/asmaulHusnaData";
+import { asmaulHusnaMinimal } from "@/lib/asmaulHusnaMinimal";
 import { getLocalizedText } from "@/lib/translation";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -18,7 +18,7 @@ import { MdRefresh } from "react-icons/md";
 const STORAGE_KEY = "tholabul_asmaul_wirid_state";
 const TOTAL_NAMES = 99;
 
-const DEFAULT_NAMES = Object.values(asmaulHusnaData).map((item) => ({
+const DEFAULT_NAMES = asmaulHusnaMinimal.map((item) => ({
     number: item.number,
     arabic: item.arabic,
     transliteration: item.latin,
