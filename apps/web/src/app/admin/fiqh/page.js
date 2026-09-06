@@ -152,6 +152,13 @@ const AdminFiqhPage = () => {
                     .includes(search.toLowerCase())),
     );
 
+    const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    const currentPage = Math.min(page, pageCount);
+    const visible = filtered.slice(
+        (currentPage - 1) * PAGE_SIZE,
+        currentPage * PAGE_SIZE,
+    );
+
     return (
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
@@ -197,65 +204,77 @@ const AdminFiqhPage = () => {
             {loading ? (
                 <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
             ) : (
-                <PanelTable
-                    head={
-                        <>
-                            <Th>{t("admin.field.title")}</Th>
-                            <Th className='w-28'>
-                                {t("admin.field.category")}
-                            </Th>
-                            <Th className='hidden md:table-cell'>Dalil</Th>
-                            <Th className='w-20'></Th>
-                        </>
-                    }
-                >
-                    {filtered.map((item) => (
-                        <Tr key={item.id ?? item._id}>
-                            <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium max-w-xs truncate'>
-                                {getLocalizedField(item, "title", lang)}
-                            </Td>
-                            <Td>
-                                <span className='px-2 py-0.5 bg-lime-100 dark:bg-lime-900/30 text-lime-700 dark:text-lime-400 rounded text-xs capitalize'>
-                                    {item.category}
-                                </span>
-                            </Td>
-                            <Td className='text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
-                                {item.source || item.dalil ? (
-                                    <SourceBadges source={item.source || item.dalil} />
-                                ) : (
-                                    "-"
-                                )}
-                            </Td>
-                            <Td>
-                                <div className='flex items-center gap-2 justify-end'>
-                                    <button
-                                        onClick={() => openEdit(item)}
-                                        aria-label={t("common.edit")}
-                                        title={t("common.edit")}
-                                        className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
-                                    >
-                                        <BsPencil />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            setDeleteId(item.id ?? item._id)
-                                        }
-                                        aria-label={t("common.delete")}
-                                        title={t("common.delete")}
-                                        className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
-                                    >
-                                        <BsTrash />
-                                    </button>
-                                </div>
-                            </Td>
-                        </Tr>
-                    ))}
-                    {filtered.length === 0 && (
-                        <PanelEmpty colSpan={4}>
-                            {t("admin.crud.no_data")}
-                        </PanelEmpty>
-                    )}
-                </PanelTable>
+                <>
+                    <PanelTable
+                        head={
+                            <>
+                                <Th>{t("admin.field.title")}</Th>
+                                <Th className='w-28'>
+                                    {t("admin.field.category")}
+                                </Th>
+                                <Th className='hidden md:table-cell'>Dalil</Th>
+                                <Th className='w-20'></Th>
+                            </>
+                        }
+                    >
+                        {visible.map((item) => (
+                            <Tr key={item.id ?? item._id}>
+                                <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium max-w-xs truncate'>
+                                    {getLocalizedField(item, "title", lang)}
+                                </Td>
+                                <Td>
+                                    <span className='px-2 py-0.5 bg-lime-100 dark:bg-lime-900/30 text-lime-700 dark:text-lime-400 rounded text-xs capitalize'>
+                                        {item.category}
+                                    </span>
+                                </Td>
+                                <Td className='text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
+                                    {item.source || item.dalil ? (
+                                        <SourceBadges source={item.source || item.dalil} />
+                                    ) : (
+                                        "-"
+                                    )}
+                                </Td>
+                                <Td>
+                                    <div className='flex items-center gap-2 justify-end'>
+                                        <button
+                                            onClick={() => openEdit(item)}
+                                            aria-label={t("common.edit")}
+                                            title={t("common.edit")}
+                                            className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
+                                        >
+                                            <BsPencil />
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                setDeleteId(item.id ?? item._id)
+                                            }
+                                            aria-label={t("common.delete")}
+                                            title={t("common.delete")}
+                                            className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
+                                        >
+                                            <BsTrash />
+                                        </button>
+                                    </div>
+                                </Td>
+                            </Tr>
+                        ))}
+                        {filtered.length === 0 && (
+                            <PanelEmpty colSpan={4}>
+                                {t("admin.crud.no_data")}
+                            </PanelEmpty>
+                        )}
+                    </PanelTable>
+                    <PanelPagination
+                        page={currentPage}
+                        pageCount={pageCount}
+                        total={filtered.length}
+                        onChange={setPage}
+                        labels={{
+                            prev: t("common.prev"),
+                            next: t("common.next"),
+                        }}
+                    />
+                </>
             )}
 
             {showModal && (

@@ -2,6 +2,7 @@
 
 import {
     PanelEmpty,
+    PanelPagination,
     PanelTable,
     Td,
     Th,
@@ -24,6 +25,8 @@ const CATEGORIES = [
     "modern",
     "umum",
 ];
+
+const PAGE_SIZE = 20;
 
 const slugify = (str) =>
     str
@@ -48,6 +51,7 @@ const AdminHistoryPage = () => {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [page, setPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
@@ -149,6 +153,13 @@ const AdminHistoryPage = () => {
         );
     });
 
+    const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    const currentPage = Math.min(page, pageCount);
+    const visible = filtered.slice(
+        (currentPage - 1) * PAGE_SIZE,
+        currentPage * PAGE_SIZE,
+    );
+
     return (
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
@@ -174,7 +185,10 @@ const AdminHistoryPage = () => {
                     type='text'
                     placeholder={t("admin.history.search_placeholder")}
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                        setSearch(e.target.value);
+                        setPage(1);
+                    }}
                     className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white'
                 />
             </div>
@@ -182,63 +196,75 @@ const AdminHistoryPage = () => {
             {loading ? (
                 <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
             ) : (
-                <PanelTable
-                    head={
-                        <>
-                            <Th className='w-20'>
-                                {t("admin.history.year_h")}
-                            </Th>
-                            <Th>{t("admin.history.event")}</Th>
-                            <Th className='w-32'>
-                                {t("admin.field.category")}
-                            </Th>
-                            <Th className='w-20'></Th>
-                        </>
-                    }
-                >
-                    {filtered.map((item) => (
-                        <Tr key={item.id ?? item._id}>
-                            <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 font-mono text-xs'>
-                                {item.year_hijri ? `${item.year_hijri} H` : "-"}
-                            </Td>
-                            <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium'>
-                                {getLocalizedField(item, "title", lang)}
-                            </Td>
-                            <Td>
-                                <span className='px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 dark:text-gray-400 rounded text-xs capitalize'>
-                                    {item.category}
-                                </span>
-                            </Td>
-                            <Td>
-                                <div className='flex items-center gap-2 justify-end'>
-                                    <button
-                                        onClick={() => openEdit(item)}
-                                        aria-label={t("common.edit")}
-                                        title={t("common.edit")}
-                                        className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
-                                    >
-                                        <BsPencil />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            setDeleteId(item.id ?? item._id)
-                                        }
-                                        aria-label={t("common.delete")}
-                                        title={t("common.delete")}
-                                        className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
-                                    >
-                                        <BsTrash />
-                                    </button>
-                                </div>
-                            </Td>
-                        </Tr>
-                    ))}
-                    {filtered.length === 0 && (
-                        <PanelEmpty colSpan={4}>
-                            {t("admin.crud.no_data")}
-                        </PanelEmpty>
-                    )}
-                </PanelTable>
+                <>
+                    <PanelTable
+                        head={
+                            <>
+                                <Th className='w-20'>
+                                    {t("admin.history.year_h")}
+                                </Th>
+                                <Th>{t("admin.history.event")}</Th>
+                                <Th className='w-32'>
+                                    {t("admin.field.category")}
+                                </Th>
+                                <Th className='w-20'></Th>
+                            </>
+                        }
+                    >
+                        {visible.map((item) => (
+                            <Tr key={item.id ?? item._id}>
+                                <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 font-mono text-xs'>
+                                    {item.year_hijri ? `${item.year_hijri} H` : "-"}
+                                </Td>
+                                <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium'>
+                                    {getLocalizedField(item, "title", lang)}
+                                </Td>
+                                <Td>
+                                    <span className='px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 dark:text-gray-400 rounded text-xs capitalize'>
+                                        {item.category}
+                                    </span>
+                                </Td>
+                                <Td>
+                                    <div className='flex items-center gap-2 justify-end'>
+                                        <button
+                                            onClick={() => openEdit(item)}
+                                            aria-label={t("common.edit")}
+                                            title={t("common.edit")}
+                                            className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
+                                        >
+                                            <BsPencil />
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                setDeleteId(item.id ?? item._id)
+                                            }
+                                            aria-label={t("common.delete")}
+                                            title={t("common.delete")}
+                                            className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
+                                        >
+                                            <BsTrash />
+                                        </button>
+                                    </div>
+                                </Td>
+                            </Tr>
+                        ))}
+                        {filtered.length === 0 && (
+                            <PanelEmpty colSpan={4}>
+                                {t("admin.crud.no_data")}
+                            </PanelEmpty>
+                        )}
+                    </PanelTable>
+                    <PanelPagination
+                        page={currentPage}
+                        pageCount={pageCount}
+                        total={filtered.length}
+                        onChange={setPage}
+                        labels={{
+                            prev: t("common.prev"),
+                            next: t("common.next"),
+                        }}
+                    />
+                </>
             )}
 
             {showModal && (
