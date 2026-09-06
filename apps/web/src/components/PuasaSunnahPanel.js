@@ -35,54 +35,56 @@ const formatDate = (date, lang) =>
 
 const labelOf = (item, lang) => (lang === "EN" ? item.label_en : item.label_id);
 
-export default function PuasaSunnahPanel() {
+export default function PuasaSunnahPanel({ initialHijri = null }) {
     const { t, lang } = useLocale();
-    const [todayHijri, setTodayHijri] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [upcoming, setUpcoming] = useState([]);
+    const [todayHijri, setTodayHijri] = useState(initialHijri);
+    const [loading, setLoading] = useState(!initialHijri);
+    const [upcoming, setUpcoming] = useState(() =>
+        initialHijri ? calculateUpcoming(initialHijri) : [],
+    );
 
     useEffect(() => {
+        if (initialHijri) return;
         hijriApi
             .today()
             .then((r) => r.json())
             .then(async (data) => {
                 const h = data?.hijri ?? data;
                 setTodayHijri(h);
-                await buildUpcoming(h);
+                setUpcoming(calculateUpcoming(h));
             })
             .catch((e) => console.error(e))
             .finally(() => setLoading(false));
-    }, []);
+    }, [initialHijri]);
 
-    const buildUpcoming = async (currentHijri) => {
-        const list = [];
-        const today = new Date();
-        for (let offset = 1; offset <= 30; offset++) {
-            const d = new Date(today);
-            d.setDate(today.getDate() + offset);
-            const estimatedHijriDay =
-                ((Number(currentHijri.day) + offset - 1) % 30) + 1;
-            const monthsAdvanced = Math.floor(
-                (Number(currentHijri.day) + offset - 1) / 30,
-            );
-            const estimatedHijriMonth =
-                ((Number(currentHijri.month) - 1 + monthsAdvanced) % 12) + 1;
-            const matches = getPuasaSunnahForDate(d, {
-                day: estimatedHijriDay,
-                month: estimatedHijriMonth,
+const calculateUpcoming = (currentHijri) => {
+    if (!currentHijri) return [];
+    const list = [];
+    const today = new Date();
+    const curDay = Number(currentHijri.hijri_day ?? currentHijri.day);
+    const curMonth = Number(currentHijri.hijri_month ?? currentHijri.month);
+    for (let offset = 1; offset <= 30; offset++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + offset);
+        const estimatedHijriDay = ((curDay + offset - 1) % 30) + 1;
+        const monthsAdvanced = Math.floor((curDay + offset - 1) / 30);
+        const estimatedHijriMonth = ((curMonth - 1 + monthsAdvanced) % 12) + 1;
+        const matches = getPuasaSunnahForDate(d, {
+            day: estimatedHijriDay,
+            month: estimatedHijriMonth,
+        });
+        if (matches.length > 0) {
+            list.push({
+                date: d,
+                hijriDay: estimatedHijriDay,
+                hijriMonth: estimatedHijriMonth,
+                matches,
             });
-            if (matches.length > 0) {
-                list.push({
-                    date: d,
-                    hijriDay: estimatedHijriDay,
-                    hijriMonth: estimatedHijriMonth,
-                    matches,
-                });
-            }
-            if (list.length >= 6) break;
         }
-        setUpcoming(list);
-    };
+        if (list.length >= 6) break;
+    }
+    return list;
+};
 
     if (loading) {
         return (

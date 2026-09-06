@@ -115,7 +115,7 @@ export default function HijriClient({ initialToday = null, initialEvents = [] })
                     : "container mx-auto px-4 max-w-2xl"
             }
         >
-            <div className='text-center mb-8'>
+            <div className='text-center mb-6'>
                 <BsCalendar3 className='text-4xl text-emerald-600 dark:text-emerald-400 mx-auto mb-2' />
                 <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                     {t("hijri.title")}
@@ -125,16 +125,8 @@ export default function HijriClient({ initialToday = null, initialEvents = [] })
                 </p>
             </div>
 
-            <div className='mb-6'>
-                <RamadanCountdown />
-            </div>
-
-            <div className='mb-6'>
-                <PuasaSunnahPanel />
-            </div>
-
             {todayHijri ? (
-                <div className='bg-emerald-700 dark:bg-emerald-900 rounded-2xl p-6 text-center mb-6 text-white'>
+                <div className='bg-emerald-700 dark:bg-emerald-900 rounded-2xl p-6 text-center mb-6 text-white shadow-sm min-h-[160px] flex flex-col justify-center'>
                     <p className='text-xs uppercase tracking-wider text-emerald-200 mb-2'>
                         {t("hijri.today")}
                     </p>
@@ -167,10 +159,18 @@ export default function HijriClient({ initialToday = null, initialEvents = [] })
                     </p>
                 </div>
             ) : (
-                <div className='bg-gray-100 dark:bg-slate-800 rounded-2xl p-6 text-center mb-6 text-gray-500 dark:text-gray-300'>
+                <div className='bg-gray-100 dark:bg-slate-800 rounded-2xl p-6 text-center mb-6 text-gray-500 dark:text-gray-300 min-h-[160px] flex items-center justify-center'>
                     {t("hijri.empty_today")}
                 </div>
             )}
+
+            <div className='mb-6'>
+                <RamadanCountdown initialHijri={todayHijri} />
+            </div>
+
+            <div className='mb-6'>
+                <PuasaSunnahPanel initialHijri={todayHijri} />
+            </div>
 
             <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 p-5 mb-6'>
                 <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-4'>

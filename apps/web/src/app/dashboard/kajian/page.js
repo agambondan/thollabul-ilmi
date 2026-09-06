@@ -24,15 +24,7 @@ export default function DashboardKajianPage() {
     }, []);
 
     return (
-        <div className='p-4 sm:p-6'>
-            <div className='mb-4'>
-                <h1 className='text-xl sm:text-2xl font-bold text-gray-800 dark:text-white'>
-                    {t("kajian.title") || "Kajian Islam"}
-                </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
-                    {t("kajian.subtitle") || "Rekaman kajian dari ustadz-ustadz ahlus sunnah"}
-                </p>
-            </div>
+        <div className='p-4 sm:p-6 max-w-4xl mx-auto'>
             {loading ? (
                 <p className='text-center text-gray-400 py-10'>
                     {t("kajian.loading") || "Memuat..."}

@@ -6,12 +6,13 @@ import { daysUntilRamadan } from "@/lib/puasaSunnah";
 import { useEffect, useState } from "react";
 import { BsMoonStarsFill } from "react-icons/bs";
 
-export default function RamadanCountdown({ compact = false }) {
+export default function RamadanCountdown({ compact = false, initialHijri = null }) {
     const { t } = useLocale();
-    const [hijri, setHijri] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [hijri, setHijri] = useState(initialHijri);
+    const [loading, setLoading] = useState(!initialHijri);
 
     useEffect(() => {
+        if (initialHijri) return;
         hijriApi
             .today()
             .then((r) => r.json())
@@ -21,7 +22,7 @@ export default function RamadanCountdown({ compact = false }) {
             })
             .catch((e) => console.error(e))
             .finally(() => setLoading(false));
-    }, []);
+    }, [initialHijri]);
 
     if (loading) {
         return compact ? null : (

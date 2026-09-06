@@ -2,6 +2,7 @@
 
 import {
     PanelEmpty,
+    PanelPagination,
     PanelTable,
     Td,
     Th,
@@ -31,6 +32,8 @@ const CATEGORIES = [
     "umum",
 ];
 const TYPES = ["video", "audio", "text"];
+
+const PAGE_SIZE = 20;
 
 const parseDurationSeconds = (value) => {
     if (typeof value === "number") return value;
