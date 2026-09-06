@@ -158,11 +158,11 @@ export function PanduanSholatContent({ initialSteps = [] }) {
                     <button
                         key={p.name}
                         onClick={() => {
-                            setOpenPrayer(i);
+                            setSelectedPrayer(i);
                             setOpenStep(null);
                         }}
                         className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
-                            openPrayer === i
+                            selectedPrayer === i
                                 ? "bg-emerald-600 text-white border-emerald-600 shadow"
                                 : "bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-slate-600 hover:border-emerald-400"
                         }`}
@@ -174,7 +174,7 @@ export function PanduanSholatContent({ initialSteps = [] }) {
 
             {/* Prayer info card + steps */}
             {(() => {
-                const p = PRAYERS[openPrayer];
+                const p = PRAYERS[selectedPrayer] ?? PRAYERS[0];
                 const niatStep = {
                     step: t("prayer_guide.intention"),
                     arabic: p.niat.arabic,
