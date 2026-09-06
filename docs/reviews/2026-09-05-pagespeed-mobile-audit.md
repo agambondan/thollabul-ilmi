@@ -29,9 +29,9 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 | 1   | `/` (Beranda)           |   **87**    |    **100**    |       81       | 100 | 1.8s | 3.6s  | **130ms** | **0.022** |    ✅ Near 90 (TBT 130ms)    |
 | 2   | `/quran`                |   **72**    |    **93**     |       81       | 100 | 1.4s | 6.4s  | **80ms**  | **0.001** |   ✅ ISR Active (TBT 80ms)   |
 | 3   | `/quran/1` (Al-Fatihah) |   **67**    |      89       |       77       | 92  | 2.4s | 6.1s  | **220ms** | **0.000** |    ✅ SSG Active (CLS 0)     |
-| 4   | `/quran/2` (Al-Baqarah) |   **59**    |      89       |       77       | 92  | 2.5s | 5.6s  |   720ms   | **0.048** |        ✅ SSG Active         |
+| 4   | `/quran/2` (Al-Baqarah) |   **59**    |      89       |       77       | 92  | 1.9s | 5.0s  |   610ms   | **0.025** | ✅ LPMQ Preload + PWA Fix  |
 | 5   | `/quran/page-mushaf`    |   **63**    |    **96**     |       81       | 100 | 2.6s | 6.6s  | **120ms** | **0.146** |      ⚠️ CLS Borderline       |
-| 6   | `/hadith`               |   **64**    |    **97**     |       81       | 100 | 2.0s | 6.1s  | **310ms** | **0.087** | ✅ A11y 97% (WAI-ARIA fixed) |
+| 6   | `/hadith`               |   **65**    |    **97**     |       81       | 100 | 1.9s | 5.1s  | **440ms** | **0.000** | ✅ Tab CLS + Cover Fixed   |
 | 7   | `/hadith/bukhari`       |   **65**    |    **96**     |       81       | 92  | 2.5s | 6.8s  |   370ms   | **0.026** |         ⚠️ Needs SSG         |
 | 8   | `/hadith/muslim`        |   **65**    |    **96**     |       81       | 100 | 2.4s | 5.0s  |   450ms   | **0.005** |         ⚠️ Needs SSG         |
 | 9   | `/jadwal-sholat`        |   **54**    |    **93**     |       81       | 100 | 2.4s | 4.9s  |   710ms   | **0.000** |   ✅ RSC + Jakarta Default (LCP -17s) |
