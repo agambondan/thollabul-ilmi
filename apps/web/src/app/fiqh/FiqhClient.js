@@ -68,6 +68,35 @@ export default function FiqhClient({
         };
     }, [lang, initialCategories.length]);
 
+    // Warm up the per-category items in the background so the first open of
+    // each category is instant. Skips when SSR already shipped the data.
+    useEffect(() => {
+        if (Object.keys(initialGroupedItems).length > 0) return;
+        if (categories.length === 0) return;
+        let cancelled = false;
+        Promise.all(
+            categories.map((cat) =>
+                fiqhApi
+                    .categoryBySlug(cat.slug, lang)
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (cancelled) return;
+                        const items = Array.isArray(data?.items)
+                            ? data.items
+                            : [];
+                        setItemsByCategory((prev) => ({
+                            ...prev,
+                            [cat.slug]: items,
+                        }));
+                    })
+                    .catch(() => {}),
+            ),
+        );
+        return () => {
+            cancelled = true;
+        };
+    }, [categories, lang, initialGroupedItems]);
+
     useEffect(() => {
         if (Object.keys(initialGroupedItems).length > 0 && lang === "ID") return;
         let cancelled = false;

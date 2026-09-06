@@ -18,34 +18,18 @@ const API_URL =
 
 async function getInitialFiqhData() {
     try {
-        const [catRes, itemRes] = await Promise.all([
-            fetch(`${API_URL}/api/v1/fiqh`, {
-                next: { revalidate: 86400 },
-            }),
-            fetch(`${API_URL}/api/v1/fiqh/items?size=500`, {
-                next: { revalidate: 86400 },
-            }),
-        ]);
+        const catRes = await fetch(`${API_URL}/api/v1/fiqh`, {
+            next: { revalidate: 86400 },
+        });
 
         let categories = [];
-        let groupedItems = {};
 
         if (catRes.ok) {
             const catData = await catRes.json();
             categories = Array.isArray(catData) ? catData : [];
         }
 
-        if (itemRes.ok) {
-            const itemData = await itemRes.json();
-            const items = Array.isArray(itemData?.items) ? itemData.items : [];
-            for (const item of items) {
-                const slug = item.category;
-                if (!slug) continue;
-                (groupedItems[slug] ??= []).push(item);
-            }
-        }
-
-        return { categories, groupedItems };
+        return { categories, groupedItems: {} };
     } catch {
         return { categories: [], groupedItems: {} };
     }

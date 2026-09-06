@@ -48,6 +48,11 @@ export default function SejarahClient({ initialEvents = [] }) {
     const [events, setEvents] = useState(initialEvents);
     const [isLoading, setIsLoading] = useState(initialEvents.length === 0);
     const [error, setError] = useState(false);
+    const [visibleCount, setVisibleCount] = useState(8);
+
+    useEffect(() => {
+        setVisibleCount(8);
+    }, [activeCategory, lang]);
 
     useEffect(() => {
         if (initialEvents.length > 0 && activeCategory === "semua" && lang === "ID") return;
@@ -181,8 +186,9 @@ export default function SejarahClient({ initialEvents = [] }) {
             )}
 
             {!isLoading && !error && filtered.length > 0 && (
+                <>
                 <div className='relative pl-6 border-l-2 border-emerald-200 dark:border-emerald-800/50 space-y-6'>
-                    {filtered.map((ev) => {
+                    {filtered.slice(0, visibleCount).map((ev) => {
                         const isOpen = openId === ev.id;
                         const cat = ev.category || "peristiwa";
                         const badgeColor =
@@ -256,6 +262,18 @@ export default function SejarahClient({ initialEvents = [] }) {
                         );
                     })}
                 </div>
+                {filtered.length > visibleCount && (
+                    <div className='text-center pt-4'>
+                        <button
+                            type='button'
+                            onClick={() => setVisibleCount((c) => c + 8)}
+                            className='px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                        >
+                            {t("common.load_more") ?? "Muat lebih banyak..."} ({filtered.length - visibleCount} tersisa)
+                        </button>
+                    </div>
+                )}
+                </>
             )}
         </div>
     );
