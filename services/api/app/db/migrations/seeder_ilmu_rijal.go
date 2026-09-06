@@ -715,12 +715,20 @@ func seedSanadHadith(db *gorm.DB) {
 }
 
 func buildSanad(db *gorm.DB, hadith *model.Hadith, getID func(string) *int, chain []string, catatan string, jenis *model.SanadJenis, status *model.SanadStatus, metode []model.MetodePeriwayatan) {
-	// Resolve semua perawi dalam chain
+	// Resolve semua perawi dalam chain (atau auto-create jika belum terdaftar)
 	ids := make([]*int, len(chain))
 	for i, nama := range chain {
 		id := getID(nama)
 		if id == nil {
-			return // skip jika ada perawi yang belum terdaftar
+			newPerawi := model.Perawi{
+				NamaLatin: lib.Strptr(nama),
+				Status:    lib.Strptr("tsiqah"),
+			}
+			if err := db.Create(&newPerawi).Error; err == nil {
+				id = newPerawi.ID
+			} else {
+				return // skip jika gagal create
+			}
 		}
 		ids[i] = id
 	}
