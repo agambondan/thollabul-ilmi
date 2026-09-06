@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import BookmarkButton from "@/components/BookmarkButton";
 import GradeBadge, { HadithAuthenticity } from "@/components/GradeBadge";
-import Select, { SelectOptionWithLabel } from "@/components/select/Select";
 import { useLocale } from "@/context/Locale";
 import { listMasjidImage } from "@/lib/const";
 import { CopyImageToClipboard, CopyToClipboard } from "@/lib/copy";
@@ -858,63 +857,80 @@ export function HadithDetailContent({
                 <>
                     {showSelectors && (
                         <div className='flex flex-col gap-3 mb-5'>
-                            <SelectOptionWithLabel
-                                id='theme'
-                                label={t("hadith.select_theme")}
-                                callbackOnChange={(e) => {
-                                    const picked = themes.find(
-                                        (t) =>
-                                            String(themeId(t)) ===
-                                            e.target.value,
-                                    );
-                                    if (picked)
-                                        setSelectedTheme(themeId(picked));
-                                }}
-                                defaultValue={
-                                    selectedTheme != null
-                                        ? String(selectedTheme)
-                                        : ""
-                                }
-                            >
-                                {themes.map((t) => {
-                                    const tid = themeId(t);
-                                    return (
-                                        <Select.Option
-                                            key={tid}
-                                            value={String(tid)}
-                                        >
-                                            {themeName(t, lang)}
-                                        </Select.Option>
-                                    );
-                                })}
-                            </SelectOptionWithLabel>
-
-                            {chapters.length > 0 && (
-                                <SelectOptionWithLabel
-                                    id='chapter'
-                                    label={t("hadith.select_chapter")}
-                                    callbackOnChange={(e) => {
-                                        const ch = chapters.find(
-                                            (c) =>
-                                                String(c.id) === e.target.value,
-                                        );
-                                        if (ch) setSelectedChapter(ch);
-                                    }}
-                                    defaultValue={
-                                        selectedChapter?.id != null
-                                            ? String(selectedChapter.id)
+                            <div className='flex flex-col'>
+                                <label
+                                    htmlFor='theme'
+                                    className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
+                                >
+                                    {t("hadith.select_theme")}
+                                </label>
+                                <select
+                                    id='theme'
+                                    value={
+                                        selectedTheme != null
+                                            ? String(selectedTheme)
                                             : ""
                                     }
+                                    onChange={(e) => {
+                                        const picked = themes.find(
+                                            (t) =>
+                                                String(themeId(t)) ===
+                                                e.target.value,
+                                        );
+                                        if (picked)
+                                            setSelectedTheme(themeId(picked));
+                                    }}
+                                    className='w-full p-2.5 rounded-lg block border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 text-sm dark:text-white focus:ring-emerald-500 focus:border-emerald-500'
                                 >
-                                    {chapters.map((c) => (
-                                        <Select.Option
-                                            key={c.id}
-                                            value={String(c.id)}
-                                        >
-                                            {chapterName(c, lang)}
-                                        </Select.Option>
-                                    ))}
-                                </SelectOptionWithLabel>
+                                    {themes.map((t) => {
+                                        const tid = themeId(t);
+                                        return (
+                                            <option
+                                                key={tid}
+                                                value={String(tid)}
+                                            >
+                                                {themeName(t, lang)}
+                                            </option>
+                                        );
+                                    })}
+                                </select>
+                            </div>
+
+                            {chapters.length > 0 && (
+                                <div className='flex flex-col'>
+                                    <label
+                                        htmlFor='chapter'
+                                        className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
+                                    >
+                                        {t("hadith.select_chapter")}
+                                    </label>
+                                    <select
+                                        id='chapter'
+                                        value={
+                                            selectedChapter?.id != null
+                                                ? String(selectedChapter.id)
+                                                : ""
+                                        }
+                                        onChange={(e) => {
+                                            const ch = chapters.find(
+                                                (c) =>
+                                                    String(c.id) ===
+                                                    e.target.value,
+                                            );
+                                            if (ch) setSelectedChapter(ch);
+                                        }}
+                                        className='w-full p-2.5 rounded-lg block border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 text-sm dark:text-white focus:ring-emerald-500 focus:border-emerald-500'
+                                    >
+                                        {chapters.map((c) => (
+                                            <option
+                                                key={c.id}
+                                                value={String(c.id)}
+                                            >
+                                                {chapterName(c, lang)}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                             )}
                         </div>
                     )}
