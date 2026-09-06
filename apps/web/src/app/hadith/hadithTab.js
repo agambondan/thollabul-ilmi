@@ -26,7 +26,7 @@ const HadithTab = ({ tabs, basePath, activeTab, children }) => {
                             role='tab'
                             aria-selected={isActive}
                             className={classNames(
-                                "shrink-0 whitespace-nowrap px-4 sm:px-5 py-2 rounded-full text-sm font-medium transition-all",
+                                "shrink-0 min-w-[4.5rem] text-center whitespace-nowrap px-4 sm:px-5 py-2 rounded-full text-sm font-medium transition-all",
                                 {
                                     "bg-emerald-700 dark:bg-emerald-700 text-white shadow-sm":
                                         isActive,

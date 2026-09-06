@@ -60,12 +60,15 @@ const ByBook = ({ basePath = "/hadith", initialBooks = null }) => {
                 return (
                     <div
                         key={book.id}
-                        className='flex flex-row bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md hover:border-emerald-200 dark:hover:border-emerald-700 transition-all overflow-hidden'
+                        className='flex flex-row min-h-[163px] bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md hover:border-emerald-200 dark:hover:border-emerald-700 transition-all overflow-hidden'
                     >
                         <img
-                            className='h-auto w-full max-w-[120px] object-cover'
+                            className='w-[120px] h-[163px] shrink-0 object-cover bg-emerald-50 dark:bg-slate-900'
+                            width={120}
+                            height={163}
                             src={`/assets/images/kitab/hadith/${book.slug}.png`}
                             alt={label}
+                            loading='lazy'
                         />
                         <div className='flex flex-col justify-between p-4 flex-1'>
                             <div>

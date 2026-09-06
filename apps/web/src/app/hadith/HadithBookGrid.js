@@ -39,7 +39,7 @@ export default function HadithBookGrid({ books, basePath = "/hadith" }) {
                                 role='tab'
                                 aria-selected={isActive}
                                 className={classNames(
-                                    "shrink-0 whitespace-nowrap px-4 sm:px-5 py-2 rounded-full text-sm font-medium transition-all",
+                                    "shrink-0 min-w-[4.5rem] text-center whitespace-nowrap px-4 sm:px-5 py-2 rounded-full text-sm font-medium transition-all",
                                     {
                                         "bg-emerald-700 dark:bg-emerald-700 text-white shadow-sm":
                                             isActive,
@@ -49,7 +49,7 @@ export default function HadithBookGrid({ books, basePath = "/hadith" }) {
                                 )}
                             >
                                 {TAB_LABELS[entry.id]}
-                           </Link>
+                            </Link>
                         );
                     })}
                </div>
@@ -68,10 +68,12 @@ export default function HadithBookGrid({ books, basePath = "/hadith" }) {
                     return (
                         <div
                             key={book.id}
-                            className='flex flex-row bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md hover:border-emerald-200 dark:hover:border-emerald-700 transition-all overflow-hidden'
+                            className='flex flex-row min-h-[163px] bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md hover:border-emerald-200 dark:hover:border-emerald-700 transition-all overflow-hidden'
                         >
                             <img
-                                className='h-auto w-full max-w-[120px] object-cover'
+                                className='w-[120px] h-[163px] shrink-0 object-cover bg-emerald-50 dark:bg-slate-900'
+                                width={120}
+                                height={163}
                                 src={`/assets/images/kitab/hadith/${book.slug}.png`}
                                 alt={label}
                                 loading='lazy'
