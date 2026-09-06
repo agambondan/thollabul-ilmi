@@ -2,6 +2,7 @@
 
 import {
     PanelEmpty,
+    PanelPagination,
     PanelTable,
     Td,
     Th,
@@ -23,6 +24,8 @@ const CATEGORIES = [
     "umum",
 ];
 
+const PAGE_SIZE = 20;
+
 const EMPTY_FORM = {
     title: "",
     arabic: "",
@@ -43,6 +46,7 @@ const AdminDhikrPage = () => {
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
     const [deleteId, setDeleteId] = useState(null);
+    const [page, setPage] = useState(1);
 
     const load = async () => {
         setLoading(true);

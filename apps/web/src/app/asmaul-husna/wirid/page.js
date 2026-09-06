@@ -3,7 +3,7 @@
 import ContentWidth from "@/components/layout/ContentWidth";
 import Section from "@/components/Section";
 import { useLocale } from "@/context/Locale";
-import { asmaulHusnaApi } from "@/lib/api";
+import { asmaulHusnaData } from "@/lib/asmaulHusnaData";
 import { getLocalizedText } from "@/lib/translation";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -18,6 +18,14 @@ import { MdRefresh } from "react-icons/md";
 const STORAGE_KEY = "tholabul_asmaul_wirid_state";
 const TOTAL_NAMES = 99;
 
+const DEFAULT_NAMES = Object.values(asmaulHusnaData).map((item) => ({
+    number: item.number,
+    arabic: item.arabic,
+    transliteration: item.latin,
+    indonesian: item.meaning_idn,
+    english: item.meaning_en,
+}));
+
 const safeParse = (raw, fallback) => {
     try {
         const parsed = JSON.parse(raw ?? "");
@@ -29,8 +37,7 @@ const safeParse = (raw, fallback) => {
 
 export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
     const { t, lang } = useLocale();
-    const [names, setNames] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [names] = useState(DEFAULT_NAMES);
     const [activeIndex, setActiveIndex] = useState(0);
     const [count, setCount] = useState(0);
     const [totalToday, setTotalToday] = useState(0);
@@ -41,21 +48,6 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
         const d = new Date();
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     };
-
-    useEffect(() => {
-        setIsLoading(true);
-        asmaulHusnaApi
-            .list(lang)
-            .then((r) => r.json())
-            .then((data) => {
-                const items = (data?.items ?? data ?? []).sort(
-                    (a, b) => (a.number ?? 0) - (b.number ?? 0),
-                );
-                if (items.length > 0) setNames(items);
-            })
-            .catch((e) => console.error(e))
-            .finally(() => setIsLoading(false));
-    }, [lang]);
 
     useEffect(() => {
         const stored = safeParse(localStorage.getItem(STORAGE_KEY), null);
@@ -149,13 +141,7 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
                 </p>
             </div>
 
-            {isLoading ? (
-                <div className='bg-white dark:bg-slate-800 rounded-3xl border border-emerald-100 dark:border-slate-700 shadow-sm p-6 mb-5 animate-pulse'>
-                    <div className='h-10 bg-gray-200 dark:bg-slate-700 rounded mb-4 w-3/4 mx-auto' />
-                    <div className='h-8 bg-gray-200 dark:bg-slate-700 rounded mb-2 w-1/2 mx-auto' />
-                    <div className='h-56 bg-gray-200 dark:bg-slate-700 rounded-full w-56 mx-auto' />
-                </div>
-            ) : active ? (
+            {active ? (
                 <div className='bg-white dark:bg-slate-800 rounded-3xl border border-emerald-100 dark:border-slate-700 shadow-sm p-6 mb-5'>
                     <div className='flex items-center justify-between mb-3'>
                         <span className='text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 rounded-full px-3 py-1'>
