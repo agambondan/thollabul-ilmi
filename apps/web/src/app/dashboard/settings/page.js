@@ -291,7 +291,7 @@ export default function SettingsPage() {
     };
 
     return (
-        <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
+        <div className={isWide ? "px-4 py-6 w-full" : "px-4 py-6 max-w-3xl mx-auto w-full"}>
             <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-6'>
                 {t("settings.title")}
             </h1>

@@ -190,7 +190,7 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
     const lowerSearch = search.trim().toLowerCase();
 
     return (
-        <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
+        <div className={isWide ? "px-4 py-6 w-full" : "px-4 py-6 max-w-5xl mx-auto w-full"}>
             <section className={`rounded-3xl p-6 text-white shadow-sm bg-gradient-to-br ${isWide ? "from-emerald-700 via-teal-700 to-sky-700" : "from-emerald-700 to-teal-700"}`}>
                 <p className='text-xs font-bold uppercase tracking-[0.25em] text-emerald-100'>{t("belajar.subtitle")}</p>
                 <h1 className='text-2xl md:text-3xl font-extrabold mt-2'>{t("belajar.title")}</h1>

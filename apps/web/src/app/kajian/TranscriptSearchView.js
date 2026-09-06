@@ -2,7 +2,9 @@
 
 import { useLocale } from "@/context/Locale";
 import Image from "next/image";
-import { BsPlayCircle, BsSearch, BsYoutube } from "react-icons/bs";
+import { useState } from "react";
+import { BsBoxArrowUpRight, BsPlayCircle, BsSearch, BsX, BsYoutube } from "react-icons/bs";
+import ModalShell from "@/components/ModalShell";
 
 export const getSearchModes = (t) => [
     {
@@ -74,6 +76,7 @@ export default function TranscriptSearchView({
 }) {
     const { t } = useLocale();
     const searchModes = getSearchModes(t);
+    const [activeVideo, setActiveVideo] = useState(null);
 
     return (
         <div>
@@ -133,7 +136,7 @@ export default function TranscriptSearchView({
             {speakers.length > 0 && (
                 <div className='mb-4'>
                     <p className='text-[10px] uppercase tracking-wide text-gray-400 mb-1.5'>
-                        {t("kajian.transcript_filter_speaker") || "Filter Ustadz"}
+                        {t("kajian.filter_speaker") || "Filter Ustadz"}
                     </p>
                     <div className='flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-hide'>
                         <button
@@ -144,7 +147,7 @@ export default function TranscriptSearchView({
                                 : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
                                 }`}
                         >
-                            {t("kajian.transcript_all_speakers") || "Semua"}
+                            {t("common.all") || "Semua"}
                         </button>
                         {speakers.map((s) => (
                             <button
@@ -163,11 +166,11 @@ export default function TranscriptSearchView({
                 </div>
             )}
 
-            {/* Results */}
+            {/* Results metadata */}
             <div className='mb-3 text-xs text-gray-500 dark:text-gray-400'>
                 {loading
-                    ? t("kajian.transcript_searching") || "Mencari..."
-                    : `${meta.total || results.length} ${t("kajian.results_found") || "hasil"} ${t("kajian.transcript_match_mode_separator") || "•"} mode: ${searchModes.find((m) => m.key === mode)?.label}`}
+                    ? (t("common.searching") || "Mencari...")
+                    : `${meta.total || results.length} ${t("kajian.results_found") || "hasil"} • mode: ${searchModes.find((m) => m.key === mode)?.label}`}
             </div>
 
             {loading ? (
@@ -188,36 +191,46 @@ export default function TranscriptSearchView({
                     <BsSearch className='text-4xl mx-auto mb-3 opacity-50' />
                     <p className='text-sm'>
                         {query
-                            ? t("kajian.transcript_no_results") ||
-                              "Tidak ada hasil. Coba ubah kata kunci atau mode pencarian."
-                            : t("kajian.transcript_empty") ||
-                              "Ketik kata kunci untuk mulai mencari di dalam transkrip video kajian."}
+                            ? (t("kajian.empty_search_hint") || "Tidak ada hasil. Coba ubah kata kunci atau mode pencarian.")
+                            : (t("kajian.type_keyword_hint") || "Ketik kata kunci untuk mulai mencari di dalam transkrip video kajian.")}
                     </p>
                 </div>
             ) : (
                 <div className='space-y-3'>
                     {results.map((r) => (
-                        <TranscriptResultCard key={r.id} result={r} query={query} t={t} />
+                        <TranscriptResultCard
+                            key={r.id}
+                            result={r}
+                            query={query}
+                            onPlay={() => setActiveVideo(r)}
+                        />
                     ))}
                 </div>
+            )}
+
+            {/* Video Player Modal / Bottom Sheet */}
+            {activeVideo && (
+                <TranscriptPlayerModal
+                    item={activeVideo}
+                    onClose={() => setActiveVideo(null)}
+                />
             )}
         </div>
     );
 }
 
-function TranscriptResultCard({ result, query, t }) {
+function TranscriptResultCard({ result, query, onPlay }) {
     const videoId = getYouTubeIdFromTimestampUrl(result.timestamp_url) || result.video_id;
 
     return (
         <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-all overflow-hidden'>
             <div className='flex items-start gap-3 p-3.5'>
-                {/* Mini player thumbnail */}
+                {/* Clickable thumbnail to play in-app */}
                 {videoId && (
-                    <a
-                        href={result.timestamp_url}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='relative shrink-0 w-28 h-20 sm:w-32 sm:h-20 rounded-lg overflow-hidden bg-black group'
+                    <button
+                        type='button'
+                        onClick={onPlay}
+                        className='relative shrink-0 w-28 h-20 sm:w-32 sm:h-20 rounded-lg overflow-hidden bg-black group text-left'
                     >
                         <Image
                             src={`https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`}
@@ -233,7 +246,7 @@ function TranscriptResultCard({ result, query, t }) {
                         <div className='absolute bottom-1 right-1 bg-black/80 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded'>
                             {result.timestamp}
                         </div>
-                    </a>
+                    </button>
                 )}
 
                 <div className='flex-1 min-w-0'>
@@ -259,14 +272,13 @@ function TranscriptResultCard({ result, query, t }) {
                         )}
                     </div>
 
-                    <a
-                        href={result.timestamp_url}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='block font-semibold text-sm text-gray-800 dark:text-gray-100 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors leading-snug mb-1'
+                    <button
+                        type='button'
+                        onClick={onPlay}
+                        className='block text-left font-semibold text-sm text-gray-800 dark:text-gray-100 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors leading-snug mb-1'
                     >
                         {result.title}
-                    </a>
+                    </button>
 
                     <p className='text-[11px] text-gray-500 dark:text-gray-400 mb-2'>
                         {result.speaker} · ⏱️ {result.timestamp}
@@ -276,18 +288,101 @@ function TranscriptResultCard({ result, query, t }) {
                         {highlightText(result.snippet, query)}
                     </p>
 
-                    <a
-                        href={result.timestamp_url}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='inline-flex items-center gap-1 mt-2 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 hover:underline'
-                    >
-                        <BsYoutube className='text-base' />
-                        {t?.("kajian.transcript_open_youtube") || "Buka di YouTube @"}{" "}
-                        {result.timestamp}
-                    </a>
+                    <div className='flex items-center gap-3 mt-2'>
+                        <button
+                            type='button'
+                            onClick={onPlay}
+                            className='inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 hover:underline'
+                        >
+                            <BsPlayCircle className='text-sm' />
+                            Putar @ {result.timestamp}
+                        </button>
+                        <a
+                            href={result.timestamp_url}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='inline-flex items-center gap-1 text-[11px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                        >
+                            <BsYoutube className='text-red-500 text-sm' />
+                            Buka di YouTube
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+    );
+}
+
+function TranscriptPlayerModal({ item, onClose }) {
+    const videoId = getYouTubeIdFromTimestampUrl(item.timestamp_url) || item.video_id;
+    const startSeconds = item.start_seconds || 0;
+
+    return (
+        <ModalShell
+            onClose={onClose}
+            overlayClassName='fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4'
+            panelClassName='bg-white dark:bg-slate-900 w-full sm:max-w-2xl rounded-t-2xl sm:rounded-2xl overflow-hidden shadow-2xl max-h-[90vh] flex flex-col'
+        >
+            {/* Header */}
+            <div className='flex items-center justify-between p-4 border-b border-gray-100 dark:border-slate-800'>
+                <div className='min-w-0 flex-1 pr-2'>
+                    <h3 className='font-bold text-sm sm:text-base text-gray-900 dark:text-gray-100 truncate'>
+                        {item.title}
+                    </h3>
+                    <p className='text-xs text-emerald-600 dark:text-emerald-400'>
+                        {item.speaker} · ⏱️ {item.timestamp}
+                    </p>
+                </div>
+                <button
+                    type='button'
+                    onClick={onClose}
+                    className='p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors'
+                >
+                    <BsX className='text-xl' />
+                </button>
+            </div>
+
+            {/* Embedded Video */}
+            {videoId && (
+                <div className='aspect-video w-full bg-black'>
+                    <iframe
+                        src={`https://www.youtube.com/embed/${videoId}?start=${startSeconds}&autoplay=1`}
+                        title={item.title}
+                        className='w-full h-full'
+                        allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                        allowFullScreen
+                    />
+                </div>
+            )}
+
+            {/* Transcript Snippet Body */}
+            <div className='p-4 overflow-y-auto max-h-40 sm:max-h-48 bg-gray-50 dark:bg-slate-800/50 text-xs text-gray-700 dark:text-gray-300 leading-relaxed border-t border-gray-100 dark:border-slate-800'>
+                <p className='font-semibold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider text-[10px]'>
+                    Kutipan Transkrip:
+                </p>
+                <p className='italic'>&ldquo;{item.snippet}&rdquo;</p>
+            </div>
+
+            {/* Footer Actions */}
+            <div className='p-3 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 flex items-center justify-between gap-2'>
+                <a
+                    href={item.timestamp_url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-xs font-semibold hover:bg-red-100 transition-colors'
+                >
+                    <BsYoutube className='text-sm' />
+                    Buka di YouTube
+                    <BsBoxArrowUpRight className='text-[10px]' />
+                </a>
+                <button
+                    type='button'
+                    onClick={onClose}
+                    className='px-4 py-1.5 rounded-lg bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 text-xs font-medium hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors'
+                >
+                    Tutup
+                </button>
+            </div>
+        </ModalShell>
     );
 }

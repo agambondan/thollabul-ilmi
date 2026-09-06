@@ -156,7 +156,7 @@ export default function LessonsContent({ basePath = "/dashboard" }) {
     const currentDone = completed[stepKey(activeModule.slug, stepNumber(step, activeStepIdx))];
 
     return (
-        <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
+        <div className={isWide ? "px-4 py-6 w-full" : "px-4 py-6 max-w-3xl mx-auto w-full"}>
             <Link href={backHref} className='inline-flex items-center text-sm text-gray-500 dark:text-gray-300 hover:text-emerald-600 mb-4'>
                 <BsChevronLeft />
                 <span className='ml-1'>{t("belajar.back_to_learn")}</span>

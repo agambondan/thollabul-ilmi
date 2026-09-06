@@ -124,7 +124,7 @@ export default function KomunitasPage({
     );
 
     return (
-        <div className={isWide ? "px-4 py-6" : "px-4 py-6 max-w-md mx-auto"}>
+        <div className={isWide ? "px-4 py-6 w-full" : "px-4 py-6 max-w-4xl mx-auto w-full"}>
             <div className='mb-6'>
                 <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-2'>
                     {t("komunitas.title")}
