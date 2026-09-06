@@ -634,6 +634,20 @@ func seedQuizQuestionsFromFile(db *gorm.DB) {
 	}
 	log.Printf("[seeder] seedQuizQuestionsFromFile: %d entri", len(rows))
 	for _, r := range rows {
+		if r.QuestionText == "" {
+			continue
+		}
+		var existing model.Quiz
+		if err := db.Where("question_text = ?", r.QuestionText).First(&existing).Error; err == nil {
+			db.Model(&existing).Updates(map[string]interface{}{
+				"type":           model.QuizType(r.Type),
+				"difficulty":     r.Difficulty,
+				"correct_answer": r.CorrectAnswer,
+				"options":        r.Options,
+				"explanation":    r.Explanation,
+			})
+			continue
+		}
 		item := model.Quiz{
 			Type:          model.QuizType(r.Type),
 			Difficulty:    r.Difficulty,
@@ -642,10 +656,9 @@ func seedQuizQuestionsFromFile(db *gorm.DB) {
 			Options:       r.Options,
 			Explanation:   r.Explanation,
 		}
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "question_text"}},
-			DoUpdates: clause.AssignmentColumns([]string{"type", "difficulty", "correct_answer", "options", "explanation"}),
-		}).Create(&item)
+		if err := db.Create(&item).Error; err != nil {
+			log.Printf("[seeder] quiz insert '%s': %v", r.QuestionText, err)
+		}
 	}
 }
 
@@ -955,11 +968,6 @@ func seedAsbabunNuzulFromFile(db *gorm.DB) {
 // ── Perawi ────────────────────────────────────────────────────────────────────
 
 func seedPerawiFromFile(db *gorm.DB) {
-	var count int64
-	db.Model(&model.Perawi{}).Count(&count)
-	if count > 0 {
-		return
-	}
 	type row struct {
 		NamaArab    string `json:"nama_arab"`
 		NamaLatin   string `json:"nama_latin"`
@@ -981,6 +989,26 @@ func seedPerawiFromFile(db *gorm.DB) {
 	}
 	log.Printf("[seeder] seedPerawiFromFile: %d entri", len(rows))
 	for _, r := range rows {
+		if r.NamaLatin == "" {
+			continue
+		}
+		var existing model.Perawi
+		if err := db.Where("nama_latin = ?", r.NamaLatin).First(&existing).Error; err == nil {
+			db.Model(&existing).Updates(map[string]interface{}{
+				"nama_arab":    strptrIfNonEmpty(r.NamaArab),
+				"nama_lengkap": strptrIfNonEmpty(r.NamaLengkap),
+				"kunyah":       strptrIfNonEmpty(r.Kunyah),
+				"nisbah":       strptrIfNonEmpty(r.Nisbah),
+				"tahun_lahir":  r.TahunLahir,
+				"tahun_wafat":  r.TahunWafat,
+				"tempat_lahir": strptrIfNonEmpty(r.TempatLahir),
+				"tempat_wafat": strptrIfNonEmpty(r.TempatWafat),
+				"tabaqah":      strptrIfNonEmpty(r.Tabaqah),
+				"status":       strptrIfNonEmpty(r.Status),
+				"biografis":    strptrIfNonEmpty(r.Biografis),
+			})
+			continue
+		}
 		tr := model.Translation{
 			Idn:            stringPtr(r.Biografis),
 			DescriptionIdn: stringPtr(r.Biografis),
@@ -1005,10 +1033,9 @@ func seedPerawiFromFile(db *gorm.DB) {
 			Biografis:     strptrIfNonEmpty(r.Biografis),
 			TranslationID: tr.ID,
 		}
-		db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "nama_latin"}},
-			DoUpdates: clause.AssignmentColumns([]string{"nama_arab", "nama_lengkap", "kunyah", "nisbah", "tahun_lahir", "tahun_wafat", "tempat_lahir", "tempat_wafat", "tabaqah", "status", "biografis", "translation_id"}),
-		}).Create(&item)
+		if err := db.Create(&item).Error; err != nil {
+			log.Printf("[seeder] perawi insert '%s': %v", r.NamaLatin, err)
+		}
 	}
 }
 

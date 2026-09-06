@@ -1,15 +1,16 @@
 [Unit]
 Description=Weekly scraper for Thullaabul Ilmi YouTube kajian
-After=network-online.target
+After=network-online.target docker.service
 Wants=network-online.target
 
 [Service]
 Type=oneshot
-User=deploy
-WorkingDirectory=/home/deploy/works/me/thollabul-ilmi
+User=ubuntu
+WorkingDirectory=/works/me/thollabul-ilmi
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 Environment=COOKIES=
-Environment=MAX_VIDEOS=20
-ExecStart=/home/deploy/works/me/thollabul-ilmi/services/api/scripts/scrape_kajian_cron.sh
+Environment=MAX_VIDEOS=5
+ExecStart=/works/me/thollabul-ilmi/services/api/scripts/scrape_kajian_cron.sh
 StandardOutput=append:/var/log/thollabul-kajian-scrape.log
 StandardError=append:/var/log/thollabul-kajian-scrape.log
 Nice=10

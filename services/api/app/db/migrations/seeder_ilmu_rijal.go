@@ -2,6 +2,7 @@ package migrations
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
@@ -721,12 +722,14 @@ func buildSanad(db *gorm.DB, hadith *model.Hadith, getID func(string) *int, chai
 		id := getID(nama)
 		if id == nil {
 			newPerawi := model.Perawi{
+				NamaArab:  lib.Strptr(nama),
 				NamaLatin: lib.Strptr(nama),
 				Status:    lib.Strptr("tsiqah"),
 			}
 			if err := db.Create(&newPerawi).Error; err == nil {
 				id = newPerawi.ID
 			} else {
+				log.Printf("[seeder] buildSanad gagal auto-create perawi '%s': %v", nama, err)
 				return // skip jika gagal create
 			}
 		}
@@ -736,7 +739,25 @@ func buildSanad(db *gorm.DB, hadith *model.Hadith, getID func(string) *int, chai
 	jalur1 := 1
 	var existingSanad model.Sanad
 	if err := db.Where("hadith_id = ? AND nomor_jalur = ?", hadith.ID, jalur1).First(&existingSanad).Error; err == nil {
-		return // sudah ada sanad untuk jalur ini
+		// Pastikan mata sanad lengkap, jika 0 buatkan
+		var mataCount int64
+		db.Model(&model.MataSanad{}).Where("sanad_id = ?", existingSanad.ID).Count(&mataCount)
+		if mataCount > 0 {
+			return
+		}
+		// Isi mata sanad yang kosong
+		for i, id := range ids {
+			m := model.MataSanad{
+				SanadID:  existingSanad.ID,
+				PerawiID: id,
+				Urutan:   lib.Intptr(i + 1),
+			}
+			if i < len(metode) {
+				m.Metode = &metode[i]
+			}
+			db.Create(&m)
+		}
+		return
 	}
 
 	sanad := model.Sanad{
@@ -748,6 +769,7 @@ func buildSanad(db *gorm.DB, hadith *model.Hadith, getID func(string) *int, chai
 	}
 
 	if err := db.Create(&sanad).Error; err != nil {
+		log.Printf("[seeder] buildSanad gagal create sanad hadith_id=%v: %v", hadith.ID, err)
 		return
 	}
 
@@ -761,7 +783,9 @@ func buildSanad(db *gorm.DB, hadith *model.Hadith, getID func(string) *int, chai
 		if i < len(metode) {
 			m.Metode = &metode[i]
 		}
-		db.Create(&m)
+		if err := db.Create(&m).Error; err != nil {
+			log.Printf("[seeder] buildSanad gagal create mata_sanad: %v", err)
+		}
 	}
 }
 

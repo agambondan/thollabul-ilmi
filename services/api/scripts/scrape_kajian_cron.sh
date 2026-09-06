@@ -48,13 +48,24 @@ run_scrape() {
 }
 
 sync_to_vps() {
+    if [[ -d "${VPS_REMOTE_DIR}/data/static" && -f "${OUT_FILE}" ]]; then
+        log "Local environment detected on VPS; copying ${OUT_FILE} to ${VPS_REMOTE_DIR}/data/static/kajian.json"
+        cp -f "${OUT_FILE}" "${VPS_REMOTE_DIR}/data/static/kajian.json"
+        return 0
+    fi
     log "Syncing ${OUT_FILE} to ${VPS_SSH_HOST}:${VPS_REMOTE_DIR}/services/api/data/static/kajian.json"
     rsync -avz --progress \
         "${OUT_FILE}" \
         "${VPS_SSH_HOST}:${VPS_REMOTE_DIR}/services/api/data/static/kajian.json"
+    ssh "${VPS_SSH_HOST}" "mkdir -p ${VPS_REMOTE_DIR}/data/static && cp -f ${VPS_REMOTE_DIR}/services/api/data/static/kajian.json ${VPS_REMOTE_DIR}/data/static/kajian.json"
 }
 
 restart_api() {
+    if [[ -d "${VPS_REMOTE_DIR}" && -f "${VPS_REMOTE_DIR}/docker-compose.yml" && "$(hostname)" =~ "sumopod" || ! -n "${SSH_CLIENT:-}" && -d "/works/me/thollabul-ilmi" ]]; then
+        log "Restarting tholabul-ilmi-api locally"
+        docker compose -f "${VPS_REMOTE_DIR}/docker-compose.yml" restart tholabul-ilmi-api
+        return 0
+    fi
     log "Restarting tholabul-ilmi-api on ${VPS_SSH_HOST}"
     ssh "${VPS_SSH_HOST}" "cd ${VPS_REMOTE_DIR} && docker compose restart tholabul-ilmi-api"
 }
