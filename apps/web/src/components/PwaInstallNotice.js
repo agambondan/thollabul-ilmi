@@ -105,7 +105,8 @@ export default function PwaInstallNotice() {
                     alt="Thullaabul 'Ilmi"
                     width={40}
                     height={40}
-                    className='rounded-xl border border-emerald-100 dark:border-emerald-800'
+                    className='w-10 h-10 shrink-0 rounded-xl border border-emerald-100 dark:border-emerald-800'
+                    unoptimized
                 />
                 <div className='min-w-0 flex-1'>
                     <p className='truncate text-xs font-bold text-slate-900 dark:text-slate-100'>

@@ -95,6 +95,13 @@ export default async function RootLayout({ children }) {
             <head>
                 <link
                     rel='preload'
+                    href='/fonts/LPMQ-Isep-Misbah.woff2'
+                    as='font'
+                    type='font/woff2'
+                    crossOrigin='anonymous'
+                />
+                <link
+                    rel='preload'
                     href='/fonts/Kitab-Regular.woff2'
                     as='font'
                     type='font/woff2'
