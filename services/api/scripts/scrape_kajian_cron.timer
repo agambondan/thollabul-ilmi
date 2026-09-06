@@ -1,0 +1,11 @@
+[Unit]
+Description=Run Thullaabul Ilmi kajian scraper weekly (Sunday 02:00 UTC)
+
+[Timer]
+OnCalendar=Sun *-*-* 02:00:00 UTC
+Persistent=true
+RandomizedDelaySec=15min
+Unit=scrape_kajian_cron.service
+
+[Install]
+WantedBy=timers.target
