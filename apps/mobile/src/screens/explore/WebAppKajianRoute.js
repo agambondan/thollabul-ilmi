@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { radius, spacing } from "../../theme";
+import { KajianPlayerModal } from "../../components/KajianPlayerModal";
 
 const ACCENT = "#10b981";
 
@@ -109,13 +110,13 @@ function KajianCard({
     );
 }
 
-function TranscriptCard({ item, onOpenUrl }) {
+function TranscriptCard({ item, onOpenUrl, onOpenPlayer }) {
     const videoId = item.video_id || getYouTubeId(item.timestamp_url);
 
     return (
         <Pressable
             accessibilityRole='button'
-            onPress={() => onOpenUrl(item.timestamp_url)}
+            onPress={() => (onOpenPlayer ? onOpenPlayer(item) : onOpenUrl(item.timestamp_url))}
             style={styles.transcriptCard}
         >
             <View style={styles.transcriptContent}>
@@ -219,6 +220,9 @@ export function WebAppKajianRoute({
     const [transcriptResults, setTranscriptResults] = useState([]);
     const [transcriptLoading, setTranscriptLoading] = useState(false);
     const [speakers, setSpeakers] = useState([]);
+
+    // Player modal
+    const [playerItem, setPlayerItem] = useState(null);
 
     // Fetch Speakers List
     useEffect(() => {
@@ -436,6 +440,7 @@ export function WebAppKajianRoute({
                                     item={item}
                                     key={item.id}
                                     onOpenUrl={onOpenUrl}
+                                    onOpenPlayer={setPlayerItem}
                                 />
                             ))}
                         </View>
@@ -557,6 +562,13 @@ export function WebAppKajianRoute({
                     ) : null}
                 </View>
             )}
+
+            <KajianPlayerModal
+                item={playerItem}
+                searchQuery={transcriptQuery}
+                visible={Boolean(playerItem)}
+                onClose={() => setPlayerItem(null)}
+            />
         </ScrollView>
     );
 }

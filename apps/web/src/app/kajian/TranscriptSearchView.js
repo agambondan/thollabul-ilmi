@@ -3,7 +3,7 @@
 import { useLocale } from "@/context/Locale";
 import Image from "next/image";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { BsBoxArrowUpRight, BsPlayCircle, BsSearch, BsX, BsYoutube } from "react-icons/bs";
+import { BsBoxArrowUpRight, BsPlayCircle, BsSearch, BsShare, BsX, BsYoutube } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 
 export const getSearchModes = (t) => [
@@ -77,6 +77,25 @@ export default function TranscriptSearchView({
     const { t } = useLocale();
     const searchModes = getSearchModes(t);
     const [activeVideo, setActiveVideo] = useState(null);
+
+    const handleShare = async (result) => {
+        if (!result) return;
+        const text = `📖 *${result.title}*\n👤 ${result.speaker}\n⏱️ ${result.timestamp}\n\n"${result.snippet}"\n\n🔗 ${result.timestamp_url}`;
+        const shareData = {
+            title: result.title || "Kajian",
+            text,
+            url: result.timestamp_url,
+        };
+        try {
+            if (typeof navigator !== "undefined" && navigator.share) {
+                await navigator.share(shareData);
+            } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+                await navigator.clipboard.writeText(`${text}`);
+            }
+        } catch {
+            // user cancelled or unsupported
+        }
+    };
 
     // Defensive deduplication by (video_id/kajian_id + timestamp)
     const uniqueResults = useMemo(() => {
@@ -214,6 +233,7 @@ export default function TranscriptSearchView({
                             result={r}
                             query={query}
                             onPlay={() => setActiveVideo(r)}
+                            onShare={handleShare}
                         />
                     ))}
                 </div>
@@ -231,7 +251,7 @@ export default function TranscriptSearchView({
     );
 }
 
-function TranscriptResultCard({ result, query, onPlay }) {
+function TranscriptResultCard({ result, query, onPlay, onShare }) {
     const videoId = getYouTubeIdFromTimestampUrl(result.timestamp_url) || result.video_id;
 
     return (
@@ -318,6 +338,14 @@ function TranscriptResultCard({ result, query, onPlay }) {
                             <BsYoutube className='text-red-500 text-sm' />
                             Buka di YouTube
                         </a>
+                        <button
+                            type='button'
+                            onClick={() => onShare?.(result)}
+                            className='inline-flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400'
+                        >
+                            <BsShare className='text-sm' />
+                            Bagikan
+                        </button>
                     </div>
                 </div>
             </div>
@@ -338,19 +366,53 @@ function formatTime(seconds) {
 
 function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
     const videoId = getYouTubeIdFromTimestampUrl(item.timestamp_url) || item.video_id;
-    const initialStart = item.start_seconds || 0;
+    const storageKey = item?.kajian_id ? `kajian-player:${item.kajian_id}` : null;
+    const bookmarkKey = item?.kajian_id ? `kajian-bookmarks:${item.kajian_id}` : null;
 
     const [transcripts, setTranscripts] = useState([]);
     const [loadingTranscripts, setLoadingTranscripts] = useState(false);
-    const [currentTime, setCurrentTime] = useState(initialStart);
+    const [playerStart, setPlayerStart] = useState(item.start_seconds || 0);
+    const [currentTime, setCurrentTime] = useState(item.start_seconds || 0);
     const [autoScroll, setAutoScroll] = useState(true);
     const [filterQuery, setFilterQuery] = useState("");
+    const [bookmarked, setBookmarked] = useState(new Set());
 
     const playerRef = useRef(null);
     const activeChunkRef = useRef(null);
     const listContainerRef = useRef(null);
     const reactId = useId();
     const containerId = `yt-player-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        if (storageKey) {
+            const saved = Number(window.localStorage.getItem(storageKey));
+            if (Number.isFinite(saved) && saved > 0) {
+                setPlayerStart(saved);
+                setCurrentTime(saved);
+            }
+        }
+        if (bookmarkKey) {
+            try {
+                setBookmarked(new Set(JSON.parse(window.localStorage.getItem(bookmarkKey) || "[]")));
+            } catch {
+                setBookmarked(new Set());
+            }
+        }
+    }, [bookmarkKey, storageKey]);
+
+    useEffect(() => {
+        if (typeof window === "undefined" || !storageKey) return;
+        const timer = setTimeout(() => {
+            window.localStorage.setItem(storageKey, String(Math.floor(currentTime || 0)));
+        }, 1000);
+        return () => clearTimeout(timer);
+    }, [currentTime, storageKey]);
+
+    useEffect(() => {
+        if (typeof window === "undefined" || !bookmarkKey) return;
+        window.localStorage.setItem(bookmarkKey, JSON.stringify([...bookmarked]));
+    }, [bookmarked, bookmarkKey]);
 
     // 1. Fetch full transcripts for this kajian
     useEffect(() => {
@@ -390,7 +452,7 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                     videoId: videoId,
                     playerVars: {
                         autoplay: 1,
-                        start: initialStart,
+                        start: Math.floor(playerStart || 0),
                         enablejsapi: 1,
                         origin: typeof window !== "undefined" ? window.location.origin : undefined,
                     },
@@ -433,7 +495,7 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                 playerRef.current.destroy();
             }
         };
-    }, [containerId, videoId, initialStart]);
+    }, [containerId, videoId, playerStart]);
 
     // 3. Find active transcript chunk based on currentTime
     const activeIndex = useMemo(() => {
@@ -459,6 +521,15 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
             playerRef.current.playVideo?.();
         }
         setCurrentTime(seconds);
+    };
+
+    const toggleBookmark = (id) => {
+        setBookmarked((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
     };
 
     // Filtered transcripts for search inside video
@@ -584,6 +655,7 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                         ) : (
                             displayedTranscripts.map((t, idx) => {
                                 const isCurrent = transcripts.indexOf(t) === activeIndex;
+                                const isBookmarked = bookmarked.has(t.id);
                                 return (
                                     <div
                                         key={t.id || idx}
@@ -595,6 +667,19 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                                                 : "hover:bg-emerald-50/70 dark:hover:bg-slate-800/80 text-gray-700 dark:text-gray-300"
                                         }`}
                                     >
+                                        <button
+                                            type='button'
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleBookmark(t.id);
+                                            }}
+                                            className={`shrink-0 text-sm transition-opacity ${
+                                                isBookmarked ? "opacity-100" : "opacity-30 hover:opacity-70"
+                                            }`}
+                                            title={isBookmarked ? "Hapus bookmark" : "Tambah bookmark"}
+                                        >
+                                            {isBookmarked ? "🔖" : "⚪"}
+                                        </button>
                                         <button
                                             type='button'
                                             className={`shrink-0 font-mono text-[10px] px-1.5 py-0.5 rounded font-bold transition-colors ${
