@@ -45,10 +45,10 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 | 17  | `/kiblat`               |   **69**    |      87       |       81       | 100 | 2.5s | 6.3s  | **160ms** | **0.000** |       ✅ Geo on-click        |
 | 18  | `/tokoh`                |   **77**    |      88       |       81       | 100 | 2.2s | 4.3s  | **200ms** | **0.000** |           ✅ Good            |
 | 19  | `/tafsir`               |   **76**    |    **93**     |       81       | 100 | 2.5s | 4.6s  | **210ms** | **0.000** |           ✅ Good            |
-| 20  | `/tasbih`               |   **65**    |      88       |       81       | 100 | 2.5s | 6.4s  |   270ms   | **0.000** |            ⚠️ LCP            |
+| 20  | `/tasbih`               |   **73**    |      88       |       81       | 100 | 2.0s | 5.6s  | **210ms** | **0.000** |    ✅ Consolidated State (TBT 210ms) |
 | 21  | `/sejarah`              |   **73**    |    **93**     |       81       | 100 | 1.9s | 8.4s  | **130ms** | **0.000** |    ✅ RSC + ISR Active (TBT 130ms) |
-| 22  | `/panduan-sholat`       |   **65**    |      92       |       77       | 100 | 2.8s | 6.8s  | **260ms** | **0.000** |       ✅ Preload Steps       |
-| 23  | `/kamus`                |   **57**    |    **93**     |       81       | 100 | 2.6s | 5.6s  |   640ms   | **0.042** |         ⚠️ TBT & LCP         |
+| 22  | `/panduan-sholat`       |   **52**    |      92       |       77       | 100 | 3.7s | 9.2s  |   520ms   | **0.000** |       ✅ Chunk 6 Steps       |
+| 23  | `/kamus`                |   **63**    |    **93**     |       81       | 100 | 2.9s | 8.2s  | **290ms** | **0.000** |   ✅ RSC + ISR Active (TBT 290ms) |
 | 24  | `/asbabun-nuzul`        |   **85**    |      88       |       81       | 100 | 3.1s | 3.1s  | **120ms** | **0.002** | 🚀 **Score 85** (SSR Surah 2) |
 | 25  | `/hijri`                |   **66**    |      88       |       81       | 100 | 2.9s | 8.2s  | **180ms** | **0.000** |    ✅ RSC + Sync Calc (CLS 0)     |
 | 26  | `/perawi`               |   **61**    |    **93**     |       81       | 100 | 4.3s | 10.0s | **140ms** | **0.001** |       ✅ RSC Active          |
