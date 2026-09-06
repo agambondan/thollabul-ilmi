@@ -92,6 +92,7 @@ export default function KajianClient({ kajian: initialKajian = [], initialTab = 
 
     useEffect(() => {
         if (tab !== "transcript") return;
+        let cancelled = false;
         const timer = setTimeout(async () => {
             setTranscriptLoading(true);
             try {
@@ -108,8 +109,10 @@ export default function KajianClient({ kajian: initialKajian = [], initialTab = 
 
                 const res = await fetch(`${apiUrl}/api/v1/kajian/search?${params.toString()}`);
                 if (!res.ok) {
-                    setTranscriptResults([]);
-                    setTranscriptMeta({ total: 0, page: 1 });
+                    if (!cancelled) {
+                        setTranscriptResults([]);
+                        setTranscriptMeta({ total: 0, page: 1 });
+                    }
                     return;
                 }
                 const data = await res.json();
@@ -119,12 +122,19 @@ export default function KajianClient({ kajian: initialKajian = [], initialTab = 
                 setTranscriptResults(items);
                 setTranscriptMeta(meta);
             } catch (e) {
-                setTranscriptResults([]);
+                if (!cancelled) {
+                    setTranscriptResults([]);
+                }
             } finally {
-                setTranscriptLoading(false);
+                if (!cancelled) {
+                    setTranscriptLoading(false);
+                }
             }
         }, 350);
-        return () => clearTimeout(timer);
+        return () => {
+            cancelled = true;
+            clearTimeout(timer);
+        };
     }, [transcriptQuery, searchMode, speakerFilter, tab]);
 
     const filtered = kajian.filter((k) => {
