@@ -2,6 +2,7 @@
 
 import {
     PanelEmpty,
+    PanelPagination,
     PanelTable,
     Td,
     Th,
@@ -28,6 +29,8 @@ const CATEGORIES = [
     "umum",
 ];
 
+const PAGE_SIZE = 20;
+
 const EMPTY_FORM = {
     title: "",
     arabic: "",
@@ -47,6 +50,7 @@ const AdminPrayersPage = () => {
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
     const [deleteId, setDeleteId] = useState(null);
+    const [page, setPage] = useState(1);
 
     const load = async () => {
         setLoading(true);
@@ -132,6 +136,13 @@ const AdminPrayersPage = () => {
             i.category?.toLowerCase().includes(q)
         );
     });
+
+    const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+    const currentPage = Math.min(page, pageCount);
+    const visible = filtered.slice(
+        (currentPage - 1) * PAGE_SIZE,
+        currentPage * PAGE_SIZE,
+    );
 
     return (
         <div className='p-6'>

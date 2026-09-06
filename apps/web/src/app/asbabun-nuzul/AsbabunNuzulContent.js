@@ -3,7 +3,11 @@
 import { useLocale } from "@/context/Locale";
 import AsbabunNuzulForm from "./AsbabunNuzulForm";
 
-export const AsbabunNuzulContent = ({ quranBasePath = "/quran" }) => {
+export const AsbabunNuzulContent = ({
+    quranBasePath = "/quran",
+    initialResults = [],
+    initialSurahNumber = "",
+}) => {
     const { t } = useLocale();
 
     return (
@@ -23,7 +27,11 @@ export const AsbabunNuzulContent = ({ quranBasePath = "/quran" }) => {
                         "Latar belakang dan sebab diturunkannya ayat-ayat Al-Quran"}
                 </p>
             </div>
-            <AsbabunNuzulForm quranBasePath={quranBasePath} />
+            <AsbabunNuzulForm
+                quranBasePath={quranBasePath}
+                initialResults={initialResults}
+                initialSurahNumber={initialSurahNumber}
+            />
         </div>
     );
 };

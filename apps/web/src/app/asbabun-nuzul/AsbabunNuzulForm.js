@@ -48,6 +48,8 @@ const asbabunAyahLabel = (item, t) => {
 
 export default function AsbabunNuzulForm({
     quranBasePath = "/quran",
+    initialResults = [],
+    initialSurahNumber = "",
     placeholderLabel = "Pilih Surah (1-114)...",
     searchLabel = "Cari",
     quickExampleLabel = "Surah populer:",
@@ -61,11 +63,11 @@ export default function AsbabunNuzulForm({
     loadErrorLabel = "Gagal memuat. Coba lagi nanti.",
 }) {
     const { t, lang } = useLocale();
-    const [surahNumber, setSurahNumber] = useState("");
-    const [results, setResults] = useState([]);
+    const [surahNumber, setSurahNumber] = useState(initialSurahNumber);
+    const [results, setResults] = useState(initialResults);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
-    const [searched, setSearched] = useState(false);
+    const [searched, setSearched] = useState(initialResults.length > 0);
 
     const handleSearch = async (e) => {
         e.preventDefault();
