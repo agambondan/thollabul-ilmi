@@ -34,7 +34,7 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 | 6   | `/hadith`               |   **64**    |    **97**     |       81       | 100 | 2.0s | 6.1s  | **310ms** | **0.087** | ✅ A11y 97% (WAI-ARIA fixed) |
 | 7   | `/hadith/bukhari`       |   **65**    |    **96**     |       81       | 92  | 2.5s | 6.8s  |   370ms   | **0.026** |         ⚠️ Needs SSG         |
 | 8   | `/hadith/muslim`        |   **65**    |    **96**     |       81       | 100 | 2.4s | 5.0s  |   450ms   | **0.005** |         ⚠️ Needs SSG         |
-| 9   | `/jadwal-sholat`        |   **63**    |    **93**     |       81       | 100 | 2.5s | 4.8s  |   280ms   | **0.000** |      ✅ Hydration Fixed      |
+| 9   | `/jadwal-sholat`        |   **54**    |    **93**     |       81       | 100 | 2.4s | 4.9s  |   710ms   | **0.000** |   ✅ RSC + Jakarta Default (LCP -17s) |
 | 10  | `/imsakiyah`            |   **70**    |    **93**     |       81       | 100 | 2.0s | 6.8s  | **150ms** | **0.000** |         ✅ TBT -88%          |
 | 11  | `/doa`                  |   **73**    |    **93**     |       81       | 100 | 2.2s | 6.4s  | **50ms**  | **0.000** |   ✅ ISR Active (TBT 50ms)   |
 | 12  | `/dzikir`               |   **92**    |    **93**     |       81       | 100 | 2.0s | 3.0s  | **40ms**  | **0.001** |    🚀 **Score 92** (Good)    |
