@@ -9,7 +9,7 @@ import (
 )
 
 type KajianService interface {
-	FindAll(ctx *fiber.Ctx, topic, kajianType string) *paginate.Page
+	FindAll(ctx *fiber.Ctx, topic, kajianType, speaker string) *paginate.Page
 	FindByID(id int) (*model.Kajian, error)
 	Create(req *model.CreateKajianRequest) (*model.Kajian, error)
 	Update(id int, req *model.CreateKajianRequest) (*model.Kajian, error)
@@ -32,17 +32,17 @@ func NewKajianServiceWithCache(repo repository.KajianRepository, cache *lib.Cach
 	return &kajianService{repo: repo, cache: cache}
 }
 
-func (s *kajianService) FindAll(ctx *fiber.Ctx, topic, kajianType string) *paginate.Page {
+func (s *kajianService) FindAll(ctx *fiber.Ctx, topic, kajianType, speaker string) *paginate.Page {
 	if s.cache == nil {
-		return s.repo.FindAll(ctx, topic, kajianType)
+		return s.repo.FindAll(ctx, topic, kajianType, speaker)
 	}
 	var result *paginate.Page
 	key := lib.RequestCacheKey("kajian:all", ctx)
 	err := s.cache.Remember(key, &result, func() (interface{}, error) {
-		return s.repo.FindAll(ctx, topic, kajianType), nil
+		return s.repo.FindAll(ctx, topic, kajianType, speaker), nil
 	})
 	if err != nil {
-		return s.repo.FindAll(ctx, topic, kajianType)
+		return s.repo.FindAll(ctx, topic, kajianType, speaker)
 	}
 	return result
 }

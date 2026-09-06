@@ -33,6 +33,7 @@ func NewKajianController(services *service.Services) KajianController {
 // @Produce json
 // @Param topic query string false "Filter by topic"
 // @Param type query string false "Filter by type"
+// @Param speaker query string false "Filter by speaker"
 // @Param page query int false "Page number"
 // @Param size query int false "Page size"
 // @Success 200 {object} lib.Response
@@ -41,7 +42,8 @@ func NewKajianController(services *service.Services) KajianController {
 func (c *kajianController) FindAll(ctx *fiber.Ctx) error {
 	topic := ctx.Query("topic")
 	kajianType := ctx.Query("type")
-	page := c.svc.FindAll(ctx, topic, kajianType)
+	speaker := ctx.Query("speaker")
+	page := c.svc.FindAll(ctx, topic, kajianType, speaker)
 	lang := lib.GetPreferredLang(ctx)
 	lib.ApplyToPageItems(page, func(k *model.Kajian) {
 		if k.Translation != nil {

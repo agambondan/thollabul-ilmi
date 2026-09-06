@@ -8,6 +8,7 @@ import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useMemo, useState } from "react";
 import { BsPlayCircle, BsSearch, BsYoutube } from "react-icons/bs";
 import { MdOutlinePlayLesson } from "react-icons/md";
+import VideoPlayerModal from "./VideoPlayerModal";
 
 const TranscriptSearchView = dynamic(
     () => import("./TranscriptSearchView"),
@@ -64,6 +65,66 @@ export default function KajianClient({
     const [activeCategory, setActiveCategory] = useState("semua");
     const [search, setSearch] = useState("");
     const [ustadzFilter, setUstadzFilter] = useState("");
+    const [playingKajian, setPlayingKajian] = useState(null);
+
+    // Speakers list (all speakers from DB)
+    const [speakers, setSpeakers] = useState([]);
+
+    useEffect(() => {
+        let cancelled = false;
+        const fetchSpeakers = async () => {
+            try {
+                const apiUrl =
+                    process.env.NEXT_PUBLIC_API_URL ||
+                    "https://api-thollabul.jangkauin.site";
+                const res = await fetch(`${apiUrl}/api/v1/kajian/speakers`);
+                if (!res.ok) return;
+                const data = await res.json();
+                if (cancelled) return;
+                const list = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : [];
+                setSpeakers(list);
+            } catch (e) {
+                // ignore
+            }
+        };
+        fetchSpeakers();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
+    // Re-fetch when ustadzFilter changes
+    useEffect(() => {
+        let cancelled = false;
+        const fetchBySpeaker = async () => {
+            setLoadingMore(true);
+            try {
+                const apiUrl =
+                    process.env.NEXT_PUBLIC_API_URL ||
+                    "https://api-thollabul.jangkauin.site";
+                const params = new URLSearchParams({ page: "0", size: "12" });
+                if (ustadzFilter) params.set("speaker", ustadzFilter);
+                const res = await fetch(`${apiUrl}/api/v1/kajian?${params.toString()}`);
+                if (!res.ok) return;
+                const data = await res.json();
+                if (cancelled) return;
+                const items = data?.items ?? (Array.isArray(data) ? data : []);
+                const total = data?.total ?? items.length;
+                setKajian(items);
+                setTotalKajian(total);
+                setPage(0);
+                setHasMore(!data?.last && items.length > 0 && items.length < total);
+            } catch (e) {
+                // ignore
+            } finally {
+                if (!cancelled) setLoadingMore(false);
+            }
+        };
+        fetchBySpeaker();
+        return () => {
+            cancelled = true;
+        };
+    }, [ustadzFilter]);
 
     const loadMore = async () => {
         if (loadingMore || !hasMore) return;
@@ -73,7 +134,9 @@ export default function KajianClient({
             const apiUrl =
                 process.env.NEXT_PUBLIC_API_URL ||
                 "https://api-thollabul.jangkauin.site";
-            const res = await fetch(`${apiUrl}/api/v1/kajian?page=${nextPage}&size=10`);
+            const params = new URLSearchParams({ page: String(nextPage), size: "12" });
+            if (ustadzFilter) params.set("speaker", ustadzFilter);
+            const res = await fetch(`${apiUrl}/api/v1/kajian?${params.toString()}`);
             if (res.ok) {
                 const data = await res.json();
                 const items = data?.items ?? (Array.isArray(data) ? data : []);
@@ -100,31 +163,6 @@ export default function KajianClient({
     const [transcriptResults, setTranscriptResults] = useState([]);
     const [transcriptLoading, setTranscriptLoading] = useState(false);
     const [transcriptMeta, setTranscriptMeta] = useState({ total: 0, page: 1 });
-    const [speakers, setSpeakers] = useState([]);
-
-    useEffect(() => {
-        if (tab !== "transcript" || speakers.length > 0) return;
-        let cancelled = false;
-        const fetchSpeakers = async () => {
-            try {
-                const apiUrl =
-                    process.env.NEXT_PUBLIC_API_URL ||
-                    "https://api-thollabul.jangkauin.site";
-                const res = await fetch(`${apiUrl}/api/v1/kajian/speakers`);
-                if (!res.ok) return;
-                const data = await res.json();
-                if (cancelled) return;
-                const list = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : [];
-                setSpeakers(list);
-            } catch (e) {
-                // ignore
-            }
-        };
-        fetchSpeakers();
-        return () => {
-            cancelled = true;
-        };
-    }, [tab, speakers.length]);
 
     useEffect(() => {
         if (tab !== "transcript") return;
@@ -198,13 +236,12 @@ export default function KajianClient({
         (item) => item.platform === "youtube" || item.type === "video",
     ).length;
     const categoryCount = new Set(kajian.map((item) => item.category)).size;
-    const ustadzOptions = useMemo(
-        () =>
-            Array.from(
-                new Set(kajian.map((k) => k.speaker).filter(Boolean)),
-            ).sort(),
-        [kajian],
-    );
+    const ustadzOptions = useMemo(() => {
+        if (speakers.length > 0) return speakers;
+        return Array.from(
+            new Set(kajian.map((k) => k.speaker).filter(Boolean)),
+        ).sort();
+    }, [speakers, kajian]);
 
     return (
         <div className={isWide ? "w-full px-2 sm:px-4" : "w-full max-w-6xl mx-auto px-2 sm:px-4"}>
@@ -273,11 +310,19 @@ export default function KajianClient({
                     ustadzFilter={ustadzFilter}
                     setUstadzFilter={setUstadzFilter}
                     ustadzOptions={ustadzOptions}
-                    hasMore={hasMore && !search && activeCategory === "semua" && !ustadzFilter}
+                    hasMore={hasMore && !search && activeCategory === "semua"}
                     loadingMore={loadingMore}
                     onLoadMore={loadMore}
+                    onPlay={setPlayingKajian}
                     t={t}
                     lang={lang}
+                />
+            )}
+
+            {playingKajian && (
+                <VideoPlayerModal
+                    kajian={playingKajian}
+                    onClose={() => setPlayingKajian(null)}
                 />
             )}
 
@@ -303,6 +348,7 @@ function ListView({
     hasMore,
     loadingMore,
     onLoadMore,
+    onPlay,
     t,
     lang,
 }) {
@@ -424,20 +470,16 @@ function ListView({
                     <p className='text-sm'>{t("kajian.not_found")}</p>
                 </div>
             ) : (
-                <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4'>
                     {kajian.map((k) => (
-                        <a
+                        <button
                             key={k.id}
-                            href={k.url}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            className='group bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm transition-all p-4 flex flex-col gap-3'
+                            type='button'
+                            onClick={() => onPlay?.(k)}
+                            className='text-left group bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm transition-all p-2.5 sm:p-3 flex flex-col gap-2 cursor-pointer'
                         >
-                            {k.platform === "youtube" && (
-                                <BsYoutube className='text-red-500 text-lg' />
-                            )}
                             {getYouTubeId(k.url) && (
-                                <div className='aspect-video rounded-lg overflow-hidden bg-black relative group/thumb'>
+                                <div className='aspect-video rounded-lg overflow-hidden bg-black relative group/thumb w-full'>
                                     <img
                                         src={`https://img.youtube.com/vi/${getYouTubeId(k.url)}/mqdefault.jpg`}
                                         alt={k.title}
@@ -445,24 +487,38 @@ function ListView({
                                         className='w-full h-full object-cover group-hover/thumb:scale-105 transition-transform duration-300'
                                     />
                                     <div className='absolute inset-0 bg-black/20 flex items-center justify-center group-hover/thumb:bg-black/30 transition-colors'>
-                                        <div className='w-12 h-12 rounded-full bg-red-600/90 text-white flex items-center justify-center shadow-lg group-hover/thumb:scale-110 transition-transform'>
-                                            <BsPlayCircle className='text-2xl ml-0.5' />
+                                        <div className='w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-600/90 text-white flex items-center justify-center shadow-lg group-hover/thumb:scale-110 transition-transform'>
+                                            <BsPlayCircle className='text-lg sm:text-xl ml-0.5' />
                                         </div>
                                     </div>
+                                    {k.platform === "youtube" && (
+                                        <div className='absolute top-1.5 right-1.5 bg-black/60 backdrop-blur-xs px-1.5 py-0.5 rounded text-[10px] text-white flex items-center gap-1'>
+                                            <BsYoutube className='text-red-500' />
+                                        </div>
+                                    )}
                                 </div>
                             )}
-                            <div>
-                                <p className='font-semibold text-gray-800 dark:text-gray-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-1'>
-                                    {k.title}
-                                </p>
-                                <p className='text-xs text-gray-400'>
-                                    {k.speaker} ·{" "}
-                                    {k.duration
-                                        ? `${Math.floor(k.duration / 60)}m`
-                                        : ""}
-                                </p>
+                            <div className='flex-1 min-w-0 flex flex-col justify-between'>
+                                <div>
+                                    <p className='font-semibold text-xs sm:text-sm text-gray-800 dark:text-gray-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-1 line-clamp-2 leading-snug'>
+                                        {k.title}
+                                    </p>
+                                    <p className='text-[11px] text-gray-500 dark:text-gray-400 truncate'>
+                                        {k.speaker}
+                                    </p>
+                                </div>
+                                <div className='mt-2 flex items-center justify-between text-[10px] text-gray-400'>
+                                    <span>
+                                        {k.duration
+                                            ? `${Math.floor(k.duration / 60)}m`
+                                            : ""}
+                                    </span>
+                                    <span className='font-medium text-emerald-600 dark:text-emerald-400 group-hover:underline'>
+                                        Putar Video
+                                    </span>
+                                </div>
                             </div>
-                        </a>
+                        </button>
                     ))}
                 </div>
             )}

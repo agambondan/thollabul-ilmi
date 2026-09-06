@@ -11,7 +11,7 @@ import (
 )
 
 type KajianRepository interface {
-	FindAll(ctx *fiber.Ctx, topic, kajianType string) *paginate.Page
+	FindAll(ctx *fiber.Ctx, topic, kajianType, speaker string) *paginate.Page
 	FindByID(id int) (*model.Kajian, error)
 	Create(k *model.Kajian) (*model.Kajian, error)
 	Update(id int, k *model.Kajian) (*model.Kajian, error)
@@ -40,18 +40,21 @@ func formatTimestamp(seconds int) string {
 	return fmt.Sprintf("%02d:%02d", m, s)
 }
 
-func (r *kajianRepository) FindAll(ctx *fiber.Ctx, topic, kajianType string) *paginate.Page {
+func (r *kajianRepository) FindAll(ctx *fiber.Ctx, topic, kajianType, speaker string) *paginate.Page {
 	var list []model.Kajian
 	q := r.db.Model(&model.Kajian{}).Preload("Translation").Order("published_at DESC, id DESC")
+	likeOp := "ILIKE"
+	if r.db.Dialector.Name() == "sqlite" {
+		likeOp = "LIKE"
+	}
 	if topic != "" {
-		likeOp := "ILIKE"
-		if r.db.Dialector.Name() == "sqlite" {
-			likeOp = "LIKE"
-		}
 		q = q.Where(fmt.Sprintf("topic %s ?", likeOp), "%"+topic+"%")
 	}
 	if kajianType != "" {
 		q = q.Where("type = ?", kajianType)
+	}
+	if speaker != "" {
+		q = q.Where(fmt.Sprintf("speaker %s ?", likeOp), "%"+speaker+"%")
 	}
 	page := r.pg.With(q).Request(ctx.Request()).Response(&list)
 	return &page
