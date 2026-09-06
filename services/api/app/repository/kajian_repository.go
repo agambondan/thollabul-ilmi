@@ -225,19 +225,39 @@ func (r *kajianRepository) SearchTranscripts(query, speaker, mode string, limit,
 }
 
 func (r *kajianRepository) GetTranscriptsByKajianID(kajianID int) ([]model.KajianTranscript, error) {
-	transcriptTable := "kajian_transcript"
-	if r.db.Migrator().HasTable("kajian_transcripts") {
-		transcriptTable = "kajian_transcripts"
+	tables := []string{"kajian_transcript", "kajian_transcripts"}
+	
+	// Cari video_id dari kajian jika ada
+	var k model.Kajian
+	_ = r.db.Select("id, url").Where("id = ?", kajianID).First(&k).Error
+	
+	var videoID string
+	if k.URL != "" {
+		parts := strings.Split(k.URL, "v=")
+		if len(parts) > 1 {
+			videoID = strings.Split(parts[1], "&")[0]
+		} else if strings.Contains(k.URL, "youtu.be/") {
+			parts = strings.Split(k.URL, "youtu.be/")
+			if len(parts) > 1 {
+				videoID = strings.Split(parts[1], "?")[0]
+			}
+		}
 	}
 
-	var items []model.KajianTranscript
-	if err := r.db.
-		Table(transcriptTable).
-		Where("kajian_id = ?", kajianID).
-		Order("start_seconds ASC").
-		Find(&items).Error; err != nil {
-		return nil, err
+	for _, tbl := range tables {
+		var items []model.KajianTranscript
+		q := r.db.Table(tbl).Order("start_seconds ASC")
+		if videoID != "" {
+			q = q.Where("kajian_id = ? OR video_id = ?", kajianID, videoID)
+		} else {
+			q = q.Where("kajian_id = ?", kajianID)
+		}
+
+		if err := q.Scan(&items).Error; err == nil && len(items) > 0 {
+			return items, nil
+		}
 	}
-	return items, nil
+
+	return []model.KajianTranscript{}, nil
 }
 
