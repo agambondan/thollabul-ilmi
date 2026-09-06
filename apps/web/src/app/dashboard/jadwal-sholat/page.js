@@ -1,6 +1,6 @@
 "use client";
 
-import { JadwalSholatContent } from "@/app/jadwal-sholat/page";
+import { JadwalSholatContent } from "@/app/jadwal-sholat/JadwalSholatClient";
 
 export default function DashboardJadwalSholatPage() {
     return (
