@@ -197,7 +197,7 @@ export default function KajianClient({
     const categoryCount = new Set(kajian.map((item) => item.category)).size;
 
     return (
-        <div className='w-full max-w-6xl mx-auto px-2 sm:px-4'>
+        <div className={isWide ? "w-full px-2 sm:px-4" : "w-full max-w-6xl mx-auto px-2 sm:px-4"}>
             <div className='flex items-center gap-3 mb-4'>
                 <div className='w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center'>
                     <MdOutlinePlayLesson className='text-xl text-emerald-700 dark:text-emerald-400' />
