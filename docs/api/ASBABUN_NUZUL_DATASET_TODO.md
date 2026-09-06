@@ -9,11 +9,11 @@
 
 | Metric                                         | Angka   |
 | ---------------------------------------------- | ------- |
-| Entri ter-seed                                 | **216** |
-| Ayat ter-cover (range expanded)                | ~380    |
-| Surat ter-cover (sebagian)                     | 75      |
-| Coverage vs total Quran (6,236 ayat)           | ~6.1%   |
-| Coverage vs estimasi total asbab shahih (~270) | ~80%    |
+| Entri ter-seed                                 | **227** |
+| Ayat ter-cover (range expanded)                | ~415    |
+| Surat ter-cover (sebagian)                     | 83      |
+| Coverage vs total Quran (6,236 ayat)           | ~6.6%   |
+| Coverage vs estimasi total asbab shahih (~270) | ~84%    |
 
 ## Target final (MVP shahih)
 
@@ -44,7 +44,7 @@ Surat-surat berikut paling sering dibuka di mobile app + paling banyak riwayat s
 Sudah ada: 97-98, 104, 115, 142-143, 144, 158, 177, 178-179, 187, 189, 196, 219, 222, 223, 233, 235, 238, 255, 267, 272, 284-286.
 Gap target (sisa):
 
-- [ ] **2:1-7** — Pembagian manusia (mukmin/kafir/munafik) — Tafsir Ibnu Katsir
+- [x] **2:1-7** — Pembagian manusia (mukmin/kafir/munafik) — Tafsir Ibnu Katsir
 
 #### An-Nisa' (4) — covered: 11/176
 
@@ -89,21 +89,21 @@ Banyak surat pendek punya asbab nuzul yang ada di Bukhari/Muslim:
 - [x] **Al-Fil (105)** — sudah ada ✓ (batch 6)
 - [ ] **Al-Humazah (104)** — sudah ada ✓ (batch 6)
 - [x] **Al-Ma'un (107)** — sudah ada ✓ (batch 6)
-- [ ] **Al-'Ashr (103)** — Tafsir umum
+- [x] **Al-'Ashr (103)** — sudah ada ✓ (batch 8)
 - [x] **At-Takatsur (102)** — sudah ada ✓
-- [ ] **Al-Qari'ah (101)** — Tafsir
-- [ ] **Az-Zalzalah (99)** — Tafsir
-- [ ] **Al-Qadr (97)** — Tafsir umum
-- [ ] **Al-Bayyinah (98)** — Tafsir umum
+- [x] **Al-Qari'ah (101)** — sudah ada ✓ (batch 8)
+- [x] **Az-Zalzalah (99)** — sudah ada ✓ (batch 8)
+- [x] **Al-Qadr (97)** — sudah ada ✓ (batch 8)
+- [x] **Al-Bayyinah (98)** — sudah ada ✓ (batch 8)
 - [x] **Al-Qiyamah (75)** — sudah ada 16-19 ✓
-- [ ] **Al-Insan (76)** — Ali, Fatimah, Hasan, Husain — Tafsir
+- [x] **Al-Insan (76)** — sudah ada ✓ (batch 8)
 - [x] **Al-Mursalat (77)** — sudah ada ✓
-- [ ] **An-Naba' (78)** — Tafsir
+- [x] **An-Naba' (78)** — sudah ada ✓ (batch 8)
 - [x] **'Abasa (80)** — sudah ada 1-10 ✓
-- [ ] **At-Takwir (81)** — Tafsir
-- [ ] **Al-Infithar (82)** — Tafsir
+- [x] **At-Takwir (81)** — sudah ada ✓ (batch 8)
+- [x] **Al-Infithar (82)** — sudah ada ✓ (batch 8)
 - [x] **Al-Muthaffifin (83)** — sudah ada ✓
-- [ ] **Al-Insyiqaq (84)** — Tafsir
+- [x] **Al-Insyiqaq (84)** — sudah ada ✓ (batch 8)
 - [x] **Al-Buruj (85)** — sudah ada ✓
 
 ### Tier 4 — Mekah klasik

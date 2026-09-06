@@ -43,11 +43,28 @@ const getSunnahUrl = (slug, number) => {
     return s && number ? `https://sunnah.com/${s}:${number}` : null;
 };
 
-function SanadPanel({ hadithId }) {
+const PERAWI_STATUS_COLORS = {
+    tsiqah_tsiqah: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 border-emerald-300",
+    tsiqah: "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300 border-green-300",
+    shaduq: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 border-blue-300",
+    la_baasa_bihi: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300 border-cyan-300",
+    maqbul: "bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-300 border-sky-300",
+    majhul: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 border-gray-300",
+    layyin: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300 border-yellow-300",
+    dhaif: "bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300 border-orange-300",
+    matruk: "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300 border-red-300",
+    kadzdzab: "bg-red-200 text-red-900 dark:bg-red-900/60 dark:text-red-200 border-red-400",
+};
+
+function SanadPanel({ hadithId, basePath = "/hadith" }) {
     const { t } = useLocale();
     const [data, setData] = useState(null);
     const [failed, setFailed] = useState(false);
     const [loading, setLoading] = useState(true);
+
+    const perawiBase = basePath.startsWith("/dashboard")
+        ? "/dashboard/perawi"
+        : "/perawi";
 
     useEffect(() => {
         fetch(`${API_URL}/api/v1/hadiths/${hadithId}/sanad`)
@@ -60,8 +77,6 @@ function SanadPanel({ hadithId }) {
     }, [hadithId]);
 
     if (loading) return <p className='text-xs text-gray-400 py-2'>...</p>;
-    // Distinguish "no sanad recorded" from "the request failed" — for hadith
-    // provenance the difference matters.
     if (failed)
         return (
             <p className='text-xs text-red-500 py-2'>
@@ -76,38 +91,67 @@ function SanadPanel({ hadithId }) {
         );
 
     return (
-        <div className='space-y-3'>
+        <div className='space-y-4'>
             {data.map((sanad, i) => (
-                <div key={sanad.id ?? i} className='text-sm'>
-                    {sanad.keterangan && (
-                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-1.5 italic'>
-                            {sanad.keterangan}
-                        </p>
-                    )}
-                    <div className='flex flex-wrap items-start gap-1'>
-                        {(sanad.mata_sanad ?? []).map((ms, idx, arr) => (
-                            <span
-                                key={ms.id ?? idx}
-                                className='flex items-center gap-1'
-                            >
-                                <span className='inline-flex flex-col items-center gap-0.5'>
-                                    <span className='px-2 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 rounded text-xs font-medium'>
-                                        {ms.perawi?.nama_latin ??
-                                            `Perawi ${idx + 1}`}
+                <div key={sanad.id ?? i} className='text-sm bg-gray-50/50 dark:bg-slate-800/40 p-3 rounded-xl border border-gray-100 dark:border-slate-700/60'>
+                    <div className='flex items-center gap-2 mb-2 flex-wrap'>
+                        {sanad.jenis && (
+                            <span className='px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 capitalize'>
+                                {sanad.jenis}
+                            </span>
+                        )}
+                        {sanad.status_sanad && (
+                            <span className='px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 capitalize'>
+                                {sanad.status_sanad}
+                            </span>
+                        )}
+                        {sanad.keterangan && (
+                            <span className='text-xs text-gray-500 dark:text-gray-400 italic'>
+                                {sanad.keterangan}
+                            </span>
+                        )}
+                    </div>
+                    <div className='flex flex-wrap items-center gap-2 pt-1'>
+                        {(sanad.mata_sanad ?? []).map((ms, idx, arr) => {
+                            const p = ms.perawi;
+                            const statusColor = p?.status ? (PERAWI_STATUS_COLORS[p.status] || "bg-gray-100 text-gray-700 border-gray-200") : "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800";
+                            return (
+                                <span
+                                    key={ms.id ?? idx}
+                                    className='inline-flex items-center gap-1.5'
+                                >
+                                    <span className='inline-flex flex-col items-center gap-0.5'>
+                                        {p?.id ? (
+                                            <Link
+                                                href={`${perawiBase}/${p.id}`}
+                                                className={`px-2.5 py-1.5 border rounded-lg text-xs font-semibold hover:opacity-80 transition-opacity shadow-sm ${statusColor}`}
+                                            >
+                                                {p.nama_latin || `Perawi ${idx + 1}`}
+                                                {p.status && (
+                                                    <span className='block text-[10px] font-normal opacity-80 capitalize text-center'>
+                                                        {p.status.replace(/_/g, " ")}
+                                                    </span>
+                                                )}
+                                            </Link>
+                                        ) : (
+                                            <span className={`px-2.5 py-1.5 border rounded-lg text-xs font-semibold ${statusColor}`}>
+                                                {ms.perawi?.nama_latin ?? `Perawi ${idx + 1}`}
+                                            </span>
+                                        )}
+                                        {ms.metode && (
+                                            <span className='text-[10px] text-gray-400 font-mono'>
+                                                ({ms.metode})
+                                            </span>
+                                        )}
                                     </span>
-                                    {ms.metode && (
-                                        <span className='text-[10px] text-gray-400'>
-                                            {ms.metode}
+                                    {idx < arr.length - 1 && (
+                                        <span className='text-gray-400 text-sm font-bold'>
+                                            ←
                                         </span>
                                     )}
                                 </span>
-                                {idx < arr.length - 1 && (
-                                    <span className='text-gray-400 text-sm'>
-                                        ←
-                                    </span>
-                                )}
-                            </span>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             ))}
@@ -684,7 +728,7 @@ const HadithPage = ({
                         </p>
                         <PanelCloseButton onClose={() => setShowSanad(false)} />
                     </div>
-                    <SanadPanel hadithId={hadith.id} />
+                    <SanadPanel hadithId={hadith.id} basePath={basePath} />
                 </div>
             )}
             {showTakhrij && (
