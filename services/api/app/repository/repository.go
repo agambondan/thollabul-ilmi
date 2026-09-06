@@ -212,6 +212,7 @@ func (s *Repositories) Migrations() error {
 // GORM struct tags can't express composite indexes on embedded fields, so we do it here.
 func (s *Repositories) createCompositeIndexes() {
 	s.db.Exec(`CREATE EXTENSION IF NOT EXISTS pg_trgm`)
+	s.db.Exec(`CREATE EXTENSION IF NOT EXISTS vector`)
 
 	indexes := []string{
 		`CREATE INDEX IF NOT EXISTS idx_hadith_book_del    ON hadith (book_id, deleted_at)`,
@@ -236,6 +237,7 @@ func (s *Repositories) createCompositeIndexes() {
 		`CREATE INDEX IF NOT EXISTS idx_trgm_doa_arabic      ON doa USING GIN (arabic gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_kajian_title    ON kajian USING GIN (title gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_kajian_speaker  ON kajian USING GIN (speaker gin_trgm_ops)`,
+		`CREATE INDEX IF NOT EXISTS idx_kajian_transcript_embedding_hnsw ON kajian_transcript USING hnsw (embedding vector_cosine_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_perawi_latin    ON perawi USING GIN (nama_latin gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_perawi_arab     ON perawi USING GIN (nama_arab gin_trgm_ops)`,
 	}

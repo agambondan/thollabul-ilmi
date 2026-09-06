@@ -69,7 +69,7 @@ func TestKajianSearchTranscriptsExactAndSemantic(t *testing.T) {
 	}
 
 	// 1. Exact Match test
-	exactResults, totalExact, err := repo.SearchTranscripts("syirik", "", "exact", 10, 0)
+	exactResults, totalExact, err := repo.SearchTranscripts("syirik", "", "exact", nil, 10, 0)
 	if err != nil {
 		t.Fatalf("search exact error: %v", err)
 	}
@@ -81,7 +81,7 @@ func TestKajianSearchTranscriptsExactAndSemantic(t *testing.T) {
 	}
 
 	// 2. Semantic Match test
-	semanticResults, totalSemantic, err := repo.SearchTranscripts("ilmu tauhid perbuatan", "", "semantic", 10, 0)
+	semanticResults, totalSemantic, err := repo.SearchTranscripts("ilmu tauhid perbuatan", "", "semantic", nil, 10, 0)
 	if err != nil {
 		t.Fatalf("search semantic error: %v", err)
 	}
@@ -90,7 +90,7 @@ func TestKajianSearchTranscriptsExactAndSemantic(t *testing.T) {
 	}
 
 	// 3. Hybrid Match test
-	hybridResults, totalHybrid, err := repo.SearchTranscripts("doa pertolongan", "", "hybrid", 10, 0)
+	hybridResults, totalHybrid, err := repo.SearchTranscripts("doa pertolongan", "", "hybrid", nil, 10, 0)
 	if err != nil {
 		t.Fatalf("search hybrid error: %v", err)
 	}
@@ -99,7 +99,7 @@ func TestKajianSearchTranscriptsExactAndSemantic(t *testing.T) {
 	}
 
 	// 4. Filter by Speaker
-	speakerResults, _, err := repo.SearchTranscripts("tauhid", "Firanda", "hybrid", 10, 0)
+	speakerResults, _, err := repo.SearchTranscripts("tauhid", "Firanda", "hybrid", nil, 10, 0)
 	if err != nil {
 		t.Fatalf("search with speaker filter error: %v", err)
 	}

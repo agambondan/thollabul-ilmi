@@ -244,14 +244,48 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
         }
     }, [item]);
 
-    const toggleBookmark = (id) => {
+    const toggleBookmark = (chunk) => {
+        if (!chunk) return;
         hapticTap();
+        const id = chunk.id;
         setBookmarked((prev) => {
             const next = new Set(prev);
             if (next.has(id)) next.delete(id);
             else next.add(id);
             return next;
         });
+
+        AsyncStorage.getItem("kajian_saved_chunks")
+            .then((raw) => {
+                const list = raw ? JSON.parse(raw) : [];
+                const exists = list.some((x) => x.id === id);
+                let next;
+                if (exists) {
+                    next = list.filter((x) => x.id !== id);
+                } else {
+                    next = [
+                        {
+                            id: chunk.id,
+                            kajian_id: item.kajian_id || item.id,
+                            video_id: item.video_id || videoId,
+                            title: item.title,
+                            speaker: item.speaker,
+                            topic: item.topic,
+                            start_seconds: chunk.start_seconds,
+                            end_seconds: chunk.end_seconds,
+                            timestamp: formatTime(chunk.start_seconds),
+                            timestamp_url:
+                                chunk.timestamp_url ||
+                                `https://youtu.be/${videoId}?t=${chunk.start_seconds}`,
+                            snippet: chunk.text,
+                            created_at: new Date().toISOString(),
+                        },
+                        ...list,
+                    ];
+                }
+                return AsyncStorage.setItem("kajian_saved_chunks", JSON.stringify(next));
+            })
+            .catch(() => {});
     };
 
     const displayed = useMemo(() => {
@@ -372,7 +406,7 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
                                     style={[styles.row, isCurrent && styles.rowActive]}
                                 >
                                     <Pressable
-                                        onPress={() => toggleBookmark(t.id)}
+                                        onPress={() => toggleBookmark(t)}
                                         style={styles.bookmarkBtn}
                                     >
                                         <Text style={isBookmarked ? styles.bookmarkOn : styles.bookmarkOff}>

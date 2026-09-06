@@ -1,5 +1,6 @@
-import { BookOpen, ExternalLink, Play, Search, Youtube } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { Bookmark, BookOpen, ExternalLink, Play, Search, Trash2, Youtube } from "lucide-react-native";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
     ActivityIndicator,
     Image,
@@ -224,6 +225,43 @@ export function WebAppKajianRoute({
     // Player modal
     const [playerItem, setPlayerItem] = useState(null);
 
+    // Bookmarks state
+    const [savedBookmarks, setSavedBookmarks] = useState([]);
+    const [savedQuery, setSavedQuery] = useState("");
+
+    const loadSavedBookmarks = useCallback(() => {
+        AsyncStorage.getItem("kajian_saved_chunks")
+            .then((raw) => {
+                const list = raw ? JSON.parse(raw) : [];
+                setSavedBookmarks(Array.isArray(list) ? list : []);
+            })
+            .catch(() => setSavedBookmarks([]));
+    }, []);
+
+    useEffect(() => {
+        if (tab === "bookmarks" || !playerItem) {
+            loadSavedBookmarks();
+        }
+    }, [tab, playerItem, loadSavedBookmarks]);
+
+    const removeSavedBookmark = (id) => {
+        const next = savedBookmarks.filter((b) => b.id !== id);
+        setSavedBookmarks(next);
+        AsyncStorage.setItem("kajian_saved_chunks", JSON.stringify(next)).catch(() => {});
+    };
+
+    const filteredSaved = useMemo(() => {
+        if (!savedQuery) return savedBookmarks;
+        const q = savedQuery.toLowerCase();
+        return savedBookmarks.filter((b) =>
+            [b.title, b.speaker, b.topic, b.snippet]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase()
+                .includes(q),
+        );
+    }, [savedBookmarks, savedQuery]);
+
     // Fetch Speakers List
     useEffect(() => {
         let active = true;
@@ -312,22 +350,32 @@ export function WebAppKajianRoute({
             <View style={styles.tabContainer}>
                 <Pressable
                     accessibilityRole='button'
-                    onPress={() => setTab("list")}
-                    style={[styles.tabButton, tab === "list" && styles.tabButtonActive]}
-                    testID='web-app-kajian-tab-list'
-                >
-                    <Text style={[styles.tabButtonText, tab === "list" && styles.tabButtonTextActive]}>
-                        📚 Semua Kajian
-                    </Text>
-                </Pressable>
-                <Pressable
-                    accessibilityRole='button'
                     onPress={() => setTab("transcript")}
                     style={[styles.tabButton, tab === "transcript" && styles.tabButtonActive]}
                     testID='web-app-kajian-tab-transcript'
                 >
                     <Text style={[styles.tabButtonText, tab === "transcript" && styles.tabButtonTextActive]}>
-                        🔍 Cari di Transkrip
+                        🔍 Transkrip
+                    </Text>
+                </Pressable>
+                <Pressable
+                    accessibilityRole='button'
+                    onPress={() => setTab("bookmarks")}
+                    style={[styles.tabButton, tab === "bookmarks" && styles.tabButtonActive]}
+                    testID='web-app-kajian-tab-bookmarks'
+                >
+                    <Text style={[styles.tabButtonText, tab === "bookmarks" && styles.tabButtonTextActive]}>
+                        🔖 Tersimpan
+                    </Text>
+                </Pressable>
+                <Pressable
+                    accessibilityRole='button'
+                    onPress={() => setTab("list")}
+                    style={[styles.tabButton, tab === "list" && styles.tabButtonActive]}
+                    testID='web-app-kajian-tab-list'
+                >
+                    <Text style={[styles.tabButtonText, tab === "list" && styles.tabButtonTextActive]}>
+                        📚 Kajian
                     </Text>
                 </Pressable>
             </View>
@@ -454,6 +502,54 @@ export function WebAppKajianRoute({
                             </Text>
                             <Text style={styles.emptyText}>
                                 Cari potongan video berdasarkan tema atau teks ceramah ustadz.
+                            </Text>
+                        </View>
+                    )}
+                </View>
+            ) : tab === "bookmarks" ? (
+                <View>
+                    {/* Search Bookmark */}
+                    <View style={styles.searchBar}>
+                        <Bookmark color='#f59e0b' size={18} />
+                        <TextInput
+                            onChangeText={setSavedQuery}
+                            placeholder='Filter bookmark...'
+                            placeholderTextColor='#9ca3af'
+                            style={styles.searchInput}
+                            value={savedQuery}
+                        />
+                    </View>
+
+                    {filteredSaved.length > 0 ? (
+                        <View style={styles.grid}>
+                            <Text style={styles.resultsCount}>
+                                {filteredSaved.length} bookmark tersimpan
+                            </Text>
+                            {filteredSaved.map((item) => (
+                                <View key={item.id} style={styles.savedCardWrapper}>
+                                    <TranscriptCard
+                                        item={item}
+                                        onOpenUrl={onOpenUrl}
+                                        onOpenPlayer={setPlayerItem}
+                                    />
+                                    <Pressable
+                                        onPress={() => removeSavedBookmark(item.id)}
+                                        style={styles.removeBookmarkBtn}
+                                    >
+                                        <Trash2 color='#ef4444' size={14} />
+                                        <Text style={styles.removeBookmarkText}>Hapus</Text>
+                                    </Pressable>
+                                </View>
+                            ))}
+                        </View>
+                    ) : (
+                        <View style={styles.empty}>
+                            <Bookmark color='#9ca3af' size={32} strokeWidth={1.8} />
+                            <Text style={styles.emptyTitle}>
+                                {savedQuery ? "Tidak ada bookmark yang cocok" : "Belum ada bookmark"}
+                            </Text>
+                            <Text style={styles.emptyText}>
+                                Buka transkrip kajian dan tekan ikon 🔖 untuk menyimpan potongan ceramah penting.
                             </Text>
                         </View>
                     )}
@@ -822,6 +918,24 @@ const styles = StyleSheet.create({
         color: "#dc2626",
         fontSize: 11,
         fontWeight: "800",
+    },
+    savedCardWrapper: {
+        position: "relative",
+    },
+    removeBookmarkBtn: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 4,
+        alignSelf: "flex-end",
+        marginTop: 4,
+        marginRight: 6,
+        paddingVertical: 2,
+        paddingHorizontal: 6,
+    },
+    removeBookmarkText: {
+        fontSize: 11,
+        color: "#ef4444",
+        fontWeight: "600",
     },
     thumbnailWrapper: {
         aspectRatio: 16 / 9,

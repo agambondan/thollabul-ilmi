@@ -23,3 +23,18 @@ jest.mock("react-native-gesture-handler", () => {
         Directions: {},
     };
 });
+
+jest.mock("react-native-webview", () => {
+    const React = require("react");
+    const { View } = require("react-native");
+    return {
+        WebView: React.forwardRef((props, ref) => {
+            React.useImperativeHandle(ref, () => ({
+                postMessage: jest.fn(),
+                injectJavaScript: jest.fn(),
+                reload: jest.fn(),
+            }));
+            return React.createElement(View, { testID: "mock-webview", ...props });
+        }),
+    };
+});

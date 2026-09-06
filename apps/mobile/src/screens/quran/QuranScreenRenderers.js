@@ -80,6 +80,7 @@ export function createQuranScreenRenderers(context) {
         cycleHafalanStatus,
         displayMode,
         fontSize,
+        fullscreen,
         hadithAyahModal,
         hafalanList,
         hafalanLoading,
@@ -162,6 +163,7 @@ export function createQuranScreenRenderers(context) {
         updateAudioRangeField,
         updateDisplayMode,
         updateFontSize,
+        updateFullscreen,
         updateMemorizationMode,
         updateTranslationFontSize,
         translationFontSize,
@@ -1351,6 +1353,33 @@ export function createQuranScreenRenderers(context) {
                     </Pressable>
                 ))}
             </View>
+
+            <Text style={styles.settingLabel}>Layar Penuh (Immersive)</Text>
+            <View style={styles.settingChips}>
+                <Pressable
+                    accessibilityRole='button'
+                    onPress={() => updateFullscreen(!fullscreen)}
+                    style={[
+                        styles.settingChip,
+                        fullscreen ? styles.settingChipActive : null,
+                    ]}
+                >
+                    <Text
+                        style={[
+                            styles.settingChipText,
+                            fullscreen ? styles.settingChipTextActive : null,
+                        ]}
+                    >
+                        {fullscreen
+                            ? "✓ Aktif (Tanpa Header / Bottom Nav)"
+                            : "Nonaktif"}
+                    </Text>
+                </Pressable>
+            </View>
+            <Text style={styles.settingHint}>
+                Saat aktif, header atas dan bottom navigation disembunyikan agar
+                fokus penuh ke mushaf / ayat.
+            </Text>
 
             <Pressable
                 accessibilityRole='button'

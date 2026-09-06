@@ -2,8 +2,11 @@ package repository
 
 import (
 	"fmt"
+	"regexp"
+	"sort"
 	"strings"
 
+	"github.com/agambondan/islamic-explorer/app/lib/embeddings"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/morkid/paginate"
@@ -17,7 +20,7 @@ type KajianRepository interface {
 	Update(id int, k *model.Kajian) (*model.Kajian, error)
 	Delete(id int) error
 	IncrementView(id int) error
-	SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, int64, error)
+	SearchTranscripts(query, speaker, mode string, queryVector []float32, limit, offset int) ([]model.SearchTranscriptResult, int64, error)
 	GetSpeakers() ([]string, error)
 	GetTranscriptsByKajianID(kajianID int) ([]model.KajianTranscript, error)
 }
@@ -39,6 +42,21 @@ func formatTimestamp(seconds int) string {
 		return fmt.Sprintf("%02d:%02d:%02d", h, m, s)
 	}
 	return fmt.Sprintf("%02d:%02d", m, s)
+}
+
+type searchTranscriptRow struct {
+	ID           int
+	KajianID     int
+	VideoID      string
+	Title        string
+	Speaker      string
+	Topic        string
+	StartSeconds int
+	EndSeconds   int
+	Text         string
+	TimestampURL string
+	ThumbnailURL string
+	Score        float64
 }
 
 func (r *kajianRepository) FindAll(ctx *fiber.Ctx, topic, kajianType, speaker string) *paginate.Page {
@@ -100,7 +118,7 @@ func (r *kajianRepository) GetSpeakers() ([]string, error) {
 	return speakers, err
 }
 
-func (r *kajianRepository) SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, int64, error) {
+func (r *kajianRepository) SearchTranscripts(query, speaker, mode string, queryVector []float32, limit, offset int) ([]model.SearchTranscriptResult, int64, error) {
 	if limit <= 0 {
 		limit = 20
 	}
@@ -112,97 +130,216 @@ func (r *kajianRepository) SearchTranscripts(query, speaker, mode string, limit,
 	}
 
 	query = strings.TrimSpace(query)
-	var rawResults []struct {
-		ID           int
-		KajianID     int
-		VideoID      string
-		Title        string
-		Speaker      string
-		Topic        string
-		StartSeconds int
-		EndSeconds   int
-		Text         string
-		TimestampURL string
-		ThumbnailURL string
-	}
-
 	likeOp := "ILIKE"
-	if r.db.Dialector.Name() == "sqlite" {
+	isSQLite := r.db.Dialector.Name() == "sqlite"
+	if isSQLite {
 		likeOp = "LIKE"
+	}
+	matchExpr := func(field string) string {
+		if isSQLite {
+			return field + " LIKE ?"
+		}
+		return field + " ~* ?"
+	}
+	matchValue := func(term string) string {
+		if isSQLite {
+			return "%" + term + "%"
+		}
+		return "\\m" + regexp.QuoteMeta(term) + "\\M"
 	}
 
 	transcriptTable := "kajian_transcript"
 	kajianTable := "kajian"
-	// if plural table name is used by GORM configuration
-	var countPlural int64
 	if r.db.Migrator().HasTable("kajian_transcripts") {
 		transcriptTable = "kajian_transcripts"
 		kajianTable = "kajians"
 	}
-	_ = countPlural
 
 	selectCols := fmt.Sprintf("%[1]s.id, %[1]s.kajian_id, %[1]s.video_id, %[1]s.start_seconds, %[1]s.end_seconds, %[1]s.text, %[1]s.timestamp_url, %[2]s.title, %[2]s.speaker, %[2]s.topic, %[2]s.thumbnail_url", transcriptTable, kajianTable)
 	joinClause := fmt.Sprintf("JOIN %[2]s ON %[2]s.id = %[1]s.kajian_id", transcriptTable, kajianTable)
-
-	dbQuery := r.db.Table(transcriptTable).
-		Select(selectCols).
-		Joins(joinClause)
-
+	base := r.db.Table(transcriptTable).Select(selectCols).Joins(joinClause)
 	if speaker != "" {
-		dbQuery = dbQuery.Where(fmt.Sprintf("%s.speaker %s ?", kajianTable, likeOp), "%"+speaker+"%")
+		base = base.Where(fmt.Sprintf("%s.speaker %s ?", kajianTable, likeOp), "%"+speaker+"%")
 	}
 
-	if query != "" {
-		switch mode {
-		case "exact":
-			dbQuery = dbQuery.Where(fmt.Sprintf("%s.text %s ? OR %s.title %s ?", transcriptTable, likeOp, kajianTable, likeOp), "%"+query+"%", "%"+query+"%")
-		case "semantic":
-			words := strings.Fields(query)
-			if len(words) > 0 {
-				var conditions []string
-				var args []interface{}
-				for _, w := range words {
-					conditions = append(conditions, fmt.Sprintf("(%s.text %s ? OR %s.title %s ? OR %s.topic %s ?)", transcriptTable, likeOp, kajianTable, likeOp, kajianTable, likeOp))
-					args = append(args, "%"+w+"%", "%"+w+"%", "%"+w+"%")
-				}
-				dbQuery = dbQuery.Where(strings.Join(conditions, " OR "), args...)
-			}
-		default: // hybrid
-			words := strings.Fields(query)
-			exactPattern := "%" + query + "%"
-			var conditions []string
-			var args []interface{}
-			conditions = append(conditions, fmt.Sprintf("(%s.text %s ? OR %s.title %s ?)", transcriptTable, likeOp, kajianTable, likeOp))
-			args = append(args, exactPattern, exactPattern)
-			for _, w := range words {
-				conditions = append(conditions, fmt.Sprintf("(%s.text %s ? OR %s.topic %s ?)", transcriptTable, likeOp, kajianTable, likeOp))
-				args = append(args, "%"+w+"%", "%"+w+"%")
-			}
-			dbQuery = dbQuery.Where(strings.Join(conditions, " OR "), args...)
-		}
-	}
-
+	// Count total
 	var total int64
-	if err := dbQuery.Count(&total).Error; err != nil {
+	if err := base.Session(&gorm.Session{}).Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
 
-	err := dbQuery.Order(fmt.Sprintf("%s.kajian_id ASC, %s.start_seconds ASC", transcriptTable, transcriptTable)).
-		Limit(limit).
-		Offset(offset).
-		Scan(&rawResults).Error
-	if err != nil {
-		return nil, 0, err
-	}
-
-	var results []model.SearchTranscriptResult
-	for _, r := range rawResults {
-		score := 1.0
-		if query != "" && strings.Contains(strings.ToLower(r.Text), strings.ToLower(query)) {
-			score = 2.0
+	// No query => return chronological chunks (no scoring)
+	if query == "" {
+		var rows []searchTranscriptRow
+		err := base.Order(fmt.Sprintf("%s.kajian_id ASC, %s.start_seconds ASC", transcriptTable, transcriptTable)).
+			Limit(limit).Offset(offset).Scan(&rows).Error
+		if err != nil {
+			return nil, 0, err
 		}
+		return toResults(rows, "", 1.0, "lexical"), total, nil
+	}
 
-		res := model.SearchTranscriptResult{
+	// Pure lexical (exact or semantic fallback) - both use whole-word LIKE
+	if mode == "exact" || mode == "semantic" {
+		words := strings.Fields(query)
+		if mode == "exact" {
+			words = []string{query}
+		}
+		dbQuery := base
+		if len(words) > 0 {
+			conds := make([]string, 0, len(words))
+			args := make([]interface{}, 0, len(words)*3)
+			for _, w := range words {
+				v := matchValue(w)
+				conds = append(conds, fmt.Sprintf("(%s OR %s OR %s)", matchExpr(transcriptTable+".text"), matchExpr(kajianTable+".title"), matchExpr(kajianTable+".topic")))
+				args = append(args, v, v, v)
+			}
+			dbQuery = dbQuery.Where(strings.Join(conds, " AND "), args...)
+		}
+		var rows []searchTranscriptRow
+		if err := dbQuery.
+			Order(fmt.Sprintf("%s.kajian_id ASC, %s.start_seconds ASC", transcriptTable, transcriptTable)).
+			Limit(limit).Offset(offset).
+			Scan(&rows).Error; err != nil {
+			return nil, 0, err
+		}
+		results := toResults(rows, query, 1.0, mode)
+		return results, int64(len(results)), nil
+	}
+
+	// Hybrid: lexical whole-word UNION vector cosine, ranked by RRF
+	sideFetch := limit * 5
+	if sideFetch < 50 {
+		sideFetch = 50
+	}
+	if sideFetch > 200 {
+		sideFetch = 200
+	}
+
+	words := strings.Fields(query)
+	conds := make([]string, 0, len(words)+1)
+	args := make([]interface{}, 0, len(words)*2+2)
+	conds = append(conds, fmt.Sprintf("(%s OR %s)", matchExpr(transcriptTable+".text"), matchExpr(kajianTable+".title")))
+	phraseVal := matchValue(query)
+	args = append(args, phraseVal, phraseVal)
+	for _, w := range words {
+		v := matchValue(w)
+		conds = append(conds, fmt.Sprintf("(%s OR %s)", matchExpr(transcriptTable+".text"), matchExpr(kajianTable+".topic")))
+		args = append(args, v, v)
+	}
+	lexExpr := strings.Join(conds, " OR ")
+
+	var lexRows []searchTranscriptRow
+	if err := base.Session(&gorm.Session{}).
+		Where(lexExpr, args...).
+		Order(fmt.Sprintf("%s.kajian_id ASC, %s.start_seconds ASC", transcriptTable, transcriptTable)).
+		Limit(sideFetch).
+		Scan(&lexRows).Error; err != nil {
+		return nil, 0, err
+	}
+
+	if len(queryVector) == 0 || r.db.Dialector.Name() == "sqlite" {
+		// No vector available or sqlite test fallback
+		results := toResults(lexRows[:min(len(lexRows), limit)], query, 1.0, "lexical")
+		return results, int64(len(results)), nil
+	}
+
+	// Vector search via raw SQL on postgres
+	vectorLiteral := embeddings.FormatVector(queryVector)
+	vecSQL := fmt.Sprintf(`
+SELECT %[1]s.id, %[1]s.kajian_id, %[1]s.video_id, %[1]s.start_seconds, %[1]s.end_seconds,
+       %[1]s.text, %[1]s.timestamp_url, %[2]s.title, %[2]s.speaker, %[2]s.topic, %[2]s.thumbnail_url,
+       (1 - (%[1]s.embedding <=> $1::vector)) AS score
+FROM %[1]s
+JOIN %[2]s ON %[2]s.id = %[1]s.kajian_id
+WHERE %[1]s.embedding IS NOT NULL
+`, transcriptTable, kajianTable)
+	if speaker != "" {
+		vecSQL += fmt.Sprintf(" AND %s.speaker %s $2", kajianTable, likeOp)
+	}
+	vecSQL += " ORDER BY %[1]s.embedding <=> $1::vector ASC LIMIT %[3]d"
+
+	vecSQL = fmt.Sprintf(vecSQL, transcriptTable, kajianTable, sideFetch)
+	vecArgs := []interface{}{vectorLiteral}
+	if speaker != "" {
+		vecArgs = append(vecArgs, "%"+speaker+"%")
+	}
+	var vecRows []searchTranscriptRow
+	if err := r.db.Raw(vecSQL, vecArgs...).Scan(&vecRows).Error; err != nil {
+		return nil, 0, err
+	}
+
+	type fused struct {
+		row   searchTranscriptRow
+		score float64
+	}
+	scores := make(map[int]*fused)
+	const rrfK = 60.0
+	rank := func(rows []searchTranscriptRow) {
+		for i, row := range rows {
+			f, ok := scores[row.ID]
+			if !ok {
+				cp := row
+				f = &fused{row: cp}
+				scores[row.ID] = f
+			}
+			f.score += 1.0 / (rrfK + float64(i+1))
+		}
+	}
+	rank(lexRows)
+	rank(vecRows)
+
+	merged := make([]fused, 0, len(scores))
+	for _, f := range scores {
+		merged = append(merged, *f)
+	}
+	sort.Slice(merged, func(i, j int) bool {
+		if merged[i].score != merged[j].score {
+			return merged[i].score > merged[j].score
+		}
+		return merged[i].row.KajianID < merged[j].row.KajianID
+	})
+
+	if offset >= len(merged) {
+		return []model.SearchTranscriptResult{}, int64(len(merged)), nil
+	}
+	end := offset + limit
+	if end > len(merged) {
+		end = len(merged)
+	}
+	page := merged[offset:end]
+	results := make([]model.SearchTranscriptResult, 0, len(page))
+	for _, p := range page {
+		row := p.row
+		row.Score = p.score
+		results = append(results, model.SearchTranscriptResult{
+			ID:           row.ID,
+			KajianID:     row.KajianID,
+			VideoID:      row.VideoID,
+			Title:        row.Title,
+			Speaker:      row.Speaker,
+			Topic:        row.Topic,
+			StartSeconds: row.StartSeconds,
+			EndSeconds:   row.EndSeconds,
+			Timestamp:    formatTimestamp(row.StartSeconds),
+			Snippet:      row.Text,
+			TimestampURL: row.TimestampURL,
+			ThumbnailURL: row.ThumbnailURL,
+			Score:        p.score,
+			MatchMode:    "hybrid",
+		})
+	}
+	return results, int64(len(merged)), nil
+}
+
+func toResults(rows []searchTranscriptRow, query string, score float64, mode string) []model.SearchTranscriptResult {
+	out := make([]model.SearchTranscriptResult, 0, len(rows))
+	for _, r := range rows {
+		s := score
+		if query != "" && strings.Contains(strings.ToLower(r.Text), strings.ToLower(query)) {
+			s = score * 2
+		}
+		out = append(out, model.SearchTranscriptResult{
 			ID:           r.ID,
 			KajianID:     r.KajianID,
 			VideoID:      r.VideoID,
@@ -215,13 +352,11 @@ func (r *kajianRepository) SearchTranscripts(query, speaker, mode string, limit,
 			Snippet:      r.Text,
 			TimestampURL: r.TimestampURL,
 			ThumbnailURL: r.ThumbnailURL,
-			Score:        score,
+			Score:        s,
 			MatchMode:    mode,
-		}
-		results = append(results, res)
+		})
 	}
-
-	return results, total, nil
+	return out
 }
 
 func (r *kajianRepository) GetTranscriptsByKajianID(kajianID int) ([]model.KajianTranscript, error) {

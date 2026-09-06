@@ -1,9 +1,11 @@
 package service
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/agambondan/islamic-explorer/app/lib"
+	"github.com/agambondan/islamic-explorer/app/lib" 
+	"github.com/agambondan/islamic-explorer/app/lib/embeddings"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/repository"
 	"github.com/gofiber/fiber/v2"
@@ -105,7 +107,14 @@ func (s *kajianService) IncrementView(id int) {
 }
 
 func (s *kajianService) SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, int64, error) {
-	results, total, err := s.repo.SearchTranscripts(query, speaker, mode, limit, offset)
+	var queryVector []float32
+	if mode == "" || mode == "hybrid" || mode == "semantic" {
+		provider := embeddings.NewLocalHashProvider()
+		if vec, err := provider.EmbedText(context.Background(), query); err == nil {
+			queryVector = vec
+		}
+	}
+	results, total, err := s.repo.SearchTranscripts(query, speaker, mode, queryVector, limit, offset)
 	if err != nil {
 		return nil, 0, err
 	}

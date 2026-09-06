@@ -31,6 +31,7 @@ export const preferenceKeys = {
     quranAudioSpeed: "quran-audio-speed",
     quranDisplayMode: "quran-display-mode",
     quranFontSize: "quran-font-size",
+    quranFullscreen: "quran-fullscreen",
     quranMemorizationMode: "quran-memorization-mode",
     quranTranslationFontSize: "quran-translation-font-size",
 };

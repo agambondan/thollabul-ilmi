@@ -5,8 +5,6 @@ import { historyApi } from "@/lib/api";
 import { getLocalizedField } from "@/lib/translation";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { useEffect, useMemo, useState } from "react";
-import { BsChevronDown, BsChevronUp, BsSearch } from "react-icons/bs";
-import { MdTimeline } from "react-icons/md";
 
 const CATEGORIES = [
     { key: "semua", labelKey: "common.all" },
@@ -107,7 +105,19 @@ export default function SejarahClient({ initialEvents = [] }) {
         >
             <div className='flex items-center gap-3 mb-6'>
                 <div className='w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center'>
-                    <MdTimeline className='text-xl text-emerald-700 dark:text-emerald-400' />
+                    <svg
+                        className='w-5 h-5 text-emerald-700 dark:text-emerald-400'
+                        fill='none'
+                        viewBox='0 0 24 24'
+                        stroke='currentColor'
+                    >
+                        <path
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                            strokeWidth={2}
+                            d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
+                        />
+                    </svg>
                 </div>
                 <div>
                     <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
@@ -120,7 +130,19 @@ export default function SejarahClient({ initialEvents = [] }) {
             </div>
 
             <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
-                <BsSearch className='text-gray-400 shrink-0' />
+                <svg
+                    className='w-4 h-4 text-gray-400 shrink-0'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    stroke='currentColor'
+                >
+                    <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={2}
+                        d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+                    />
+                </svg>
                 <input
                     type='text'
                     placeholder={t("history.search_placeholder")}
@@ -245,9 +267,33 @@ export default function SejarahClient({ initialEvents = [] }) {
                                             aria-label='Toggle detail'
                                         >
                                             {isOpen ? (
-                                                <BsChevronUp className='text-sm' />
+                                                <svg
+                                                    className='w-3.5 h-3.5'
+                                                    fill='none'
+                                                    viewBox='0 0 24 24'
+                                                    stroke='currentColor'
+                                                >
+                                                    <path
+                                                        strokeLinecap='round'
+                                                        strokeLinejoin='round'
+                                                        strokeWidth={2}
+                                                        d='M5 15l7-7 7 7'
+                                                    />
+                                                </svg>
                                             ) : (
-                                                <BsChevronDown className='text-sm' />
+                                                <svg
+                                                    className='w-3.5 h-3.5'
+                                                    fill='none'
+                                                    viewBox='0 0 24 24'
+                                                    stroke='currentColor'
+                                                >
+                                                    <path
+                                                        strokeLinecap='round'
+                                                        strokeLinejoin='round'
+                                                        strokeWidth={2}
+                                                        d='M19 9l-7 7-7-7'
+                                                    />
+                                                </svg>
                                             )}
                                         </button>
                                     </div>

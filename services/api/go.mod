@@ -21,6 +21,7 @@ require (
 	github.com/morkid/gocache v1.0.0
 	github.com/morkid/gocache-redis/v8 v8.0.2
 	github.com/morkid/paginate v1.1.7
+	github.com/pgvector/pgvector-go v0.4.1
 	github.com/prometheus/client_golang v1.20.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.17.0

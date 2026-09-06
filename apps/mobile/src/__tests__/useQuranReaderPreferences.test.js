@@ -5,6 +5,7 @@ jest.mock("../storage/preferences", () => ({
         quranFontSize: "quran-font-size",
         quranArabicFont: "quran-arabic-font",
         quranDisplayMode: "quran-display-mode",
+        quranFullscreen: "quran-fullscreen",
         quranMemorizationMode: "quran-memorization-mode",
         quranTranslationFontSize: "quran-translation-font-size",
     },
@@ -30,6 +31,22 @@ describe("useQuranReaderPreferences", () => {
         expect(result.current.arabicFont).toBe("kitab");
         expect(result.current.displayMode).toBe("card");
         expect(result.current.memorizationMode).toBe("off");
+        expect(result.current.fullscreen).toBe(false);
+    });
+
+    test("updateFullscreen updates state and persists", async () => {
+        const { result } = renderHook(() => useQuranReaderPreferences());
+        await act(async () => {});
+
+        await act(async () => {
+            await result.current.updateFullscreen(true);
+        });
+
+        expect(result.current.fullscreen).toBe(true);
+        expect(writePreference).toHaveBeenCalledWith(
+            "quran-fullscreen",
+            true,
+        );
     });
 
     test("loads saved preferences", async () => {

@@ -9,6 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { updateProfile } from "../api/auth";
 import { useSession } from "../context/SessionContext";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
+import { preferenceKeys, readPreference } from "../storage/preferences";
 import { colors } from "../theme";
 import { useLayoutMode } from "./LayoutModeProvider";
 import { MobileAccountMenu } from "./MobileAccountMenu";
@@ -34,8 +35,23 @@ export function WebAppShell({
         useLayoutMode();
     const [accountMenuVisible, setAccountMenuVisible] = useState(false);
     const [menuVisible, setMenuVisible] = useState(false);
+    const [quranFullscreen, setQuranFullscreen] = useState(false);
     const accountLabel = getWebAppAccountLabel(user, t("account.userGuest"));
     const canSignOut = Boolean(session?.token || user);
+
+    useEffect(() => {
+        let mounted = true;
+        if (activeTab === "quran") {
+            readPreference(preferenceKeys.quranFullscreen, false).then((val) => {
+                if (mounted && typeof val === "boolean") setQuranFullscreen(val);
+            });
+        } else {
+            setQuranFullscreen(false);
+        }
+        return () => {
+            mounted = false;
+        };
+    }, [activeTab]);
 
     useEffect(() => {
         StatusBar.setBarStyle(isDarkTheme ? "light-content" : "dark-content");
@@ -84,18 +100,22 @@ export function WebAppShell({
         [updateCurrentUser, user],
     );
 
+    const hideChrome = activeTab === "quran" && quranFullscreen;
+
     return (
         <SafeAreaView
             edges={["top", "left", "right"]}
             style={[styles.safeArea, isDarkTheme && styles.safeAreaDark]}
             testID='web-app-shell'
         >
-            <MobileTopHeader
-                accountMenuOpen={accountMenuVisible}
-                accountLabel={accountLabel}
-                isDarkTheme={isDarkTheme}
-                onOpenAccountMenu={openAccountMenu}
-            />
+            {hideChrome ? null : (
+                <MobileTopHeader
+                    accountMenuOpen={accountMenuVisible}
+                    accountLabel={accountLabel}
+                    isDarkTheme={isDarkTheme}
+                    onOpenAccountMenu={openAccountMenu}
+                />
+            )}
             <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : undefined}
                 keyboardVerticalOffset={0}
@@ -103,7 +123,7 @@ export function WebAppShell({
             >
                 {children}
             </KeyboardAvoidingView>
-            {keyboardVisible ? null : (
+            {keyboardVisible || hideChrome ? null : (
                 <MobileBottomNav
                     active={activeTab}
                     isDarkTheme={isDarkTheme}

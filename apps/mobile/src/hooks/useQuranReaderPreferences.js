@@ -54,6 +54,13 @@ export function useQuranReaderPreferences({ onMemorizationModeChange } = {}) {
     const [arabicFont, setArabicFont] = useState("kitab");
     const [displayMode, setDisplayMode] = useState("card");
     const [memorizationMode, setMemorizationMode] = useState("off");
+    const [fullscreen, setFullscreen] = useState(false);
+
+    const updateFullscreen = useCallback(async (nextValue) => {
+        const val = Boolean(nextValue);
+        setFullscreen(val);
+        await writePreference(preferenceKeys.quranFullscreen, val);
+    }, []);
 
     const updateFontSize = useCallback(async (nextSize) => {
         const normalized = clampFontSize(nextSize);
@@ -146,6 +153,13 @@ export function useQuranReaderPreferences({ onMemorizationModeChange } = {}) {
             },
         );
 
+        readPreference(preferenceKeys.quranFullscreen, false).then(
+            (value) => {
+                if (mounted && typeof value === "boolean")
+                    setFullscreen(value);
+            },
+        );
+
         return () => {
             mounted = false;
         };
@@ -155,11 +169,13 @@ export function useQuranReaderPreferences({ onMemorizationModeChange } = {}) {
         arabicFont,
         displayMode,
         fontSize,
+        fullscreen,
         memorizationMode,
         translationFontSize,
         updateArabicFont,
         updateDisplayMode,
         updateFontSize,
+        updateFullscreen,
         updateMemorizationMode,
         updateTranslationFontSize,
     };

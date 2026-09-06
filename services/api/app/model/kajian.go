@@ -1,5 +1,7 @@
 package model
 
+import "github.com/pgvector/pgvector-go"
+
 type KajianType string
 
 const (
@@ -31,9 +33,10 @@ type KajianTranscript struct {
 	VideoID      string  `json:"video_id" gorm:"type:varchar(64);index"`
 	StartSeconds int     `json:"start_seconds" gorm:"not null;index"`
 	EndSeconds   int     `json:"end_seconds" gorm:"not null"`
-	Text         string  `json:"text" gorm:"type:text;not null"`
-	TimestampURL string  `json:"timestamp_url" gorm:"type:varchar(1024)"`
-	Kajian       *Kajian `json:"kajian,omitempty" gorm:"foreignKey:KajianID;-:migration"`
+	Text         string             `json:"text" gorm:"type:text;not null"`
+	TimestampURL string             `json:"timestamp_url" gorm:"type:varchar(1024)"`
+	Embedding    pgvector.Vector    `json:"embedding,omitempty" gorm:"type:vector(256)"`
+	Kajian       *Kajian            `json:"kajian,omitempty" gorm:"foreignKey:KajianID;-:migration"`
 }
 
 type SearchTranscriptResult struct {
