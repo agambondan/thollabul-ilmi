@@ -2,6 +2,7 @@
 
 import {
     PanelEmpty,
+    PanelPagination,
     PanelTable,
     Td,
     Th,
@@ -40,6 +41,8 @@ const AdminManasikPage = () => {
     const [form, setForm] = useState(EMPTY_FORM);
     const [filter, setFilter] = useState("haji");
     const [deleteId, setDeleteId] = useState(null);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     const load = async () => {
         setLoading(true);
@@ -136,6 +139,13 @@ const AdminManasikPage = () => {
 
     const filtered = items.filter((i) => i.type === filter);
 
+    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const currentPage = Math.min(page, pageCount);
+    const visible = filtered.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize,
+    );
+
     return (
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
@@ -163,7 +173,10 @@ const AdminManasikPage = () => {
                 {TYPES.map((t) => (
                     <button
                         key={t}
-                        onClick={() => setFilter(t)}
+                        onClick={() => {
+                            setFilter(t);
+                            setPage(1);
+                        }}
                         className={`px-4 py-1.5 rounded-lg text-sm font-medium capitalize transition-colors ${
                             filter === t
                                 ? "bg-amber-600 text-white"
@@ -178,64 +191,82 @@ const AdminManasikPage = () => {
             {loading ? (
                 <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
             ) : (
-                <PanelTable
-                    head={
-                        <>
-                            <Th className='w-16'>{t("admin.manasik.step")}</Th>
-                            <Th>{t("admin.field.title")}</Th>
-                            <Th className='hidden md:table-cell'>
-                                {t("admin.field.description")}
-                            </Th>
-                            <Th className='w-20'></Th>
-                        </>
-                    }
-                >
-                    {filtered.map((item) => (
-                        <Tr key={item.id ?? item._id}>
-                            <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 font-mono text-xs'>
-                                {item.step}
-                            </Td>
-                            <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium'>
-                                <div>{item.title || item.translation?.idn || getLocalizedField(item, "title", lang) || "-"}</div>
-                                {item.source && <SourceBadges source={item.source} />}
-                            </Td>
-                            <Td className='text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
-                                {getLocalizedField(
-                                    item,
-                                    "description",
-                                    lang,
-                                )?.slice(0, 80) ?? "-"}
-                            </Td>
-                            <Td>
-                                <div className='flex items-center gap-2 justify-end'>
-                                    <button
-                                        onClick={() => openEdit(item)}
-                                        aria-label={t("common.edit")}
-                                        title={t("common.edit")}
-                                        className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
-                                    >
-                                        <BsPencil />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            setDeleteId(item.id ?? item._id)
-                                        }
-                                        aria-label={t("common.delete")}
-                                        title={t("common.delete")}
-                                        className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
-                                    >
-                                        <BsTrash />
-                                    </button>
-                                </div>
-                            </Td>
-                        </Tr>
-                    ))}
-                    {filtered.length === 0 && (
-                        <PanelEmpty colSpan={4}>
-                            {t("admin.crud.no_data")} {filter}
-                        </PanelEmpty>
-                    )}
-                </PanelTable>
+                <>
+                    <PanelTable
+                        head={
+                            <>
+                                <Th className='w-16'>{t("admin.manasik.step")}</Th>
+                                <Th>{t("admin.field.title")}</Th>
+                                <Th className='hidden md:table-cell'>
+                                    {t("admin.field.description")}
+                                </Th>
+                                <Th className='w-20'></Th>
+                            </>
+                        }
+                    >
+                        {visible.map((item) => (
+                            <Tr key={item.id ?? item._id}>
+                                <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 font-mono text-xs'>
+                                    {item.step}
+                                </Td>
+                                <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium'>
+                                    <div>{item.title || item.translation?.idn || getLocalizedField(item, "title", lang) || "-"}</div>
+                                    {item.source && <SourceBadges source={item.source} />}
+                                </Td>
+                                <Td className='text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
+                                    {getLocalizedField(
+                                        item,
+                                        "description",
+                                        lang,
+                                    )?.slice(0, 80) ?? "-"}
+                                </Td>
+                                <Td>
+                                    <div className='flex items-center gap-2 justify-end'>
+                                        <button
+                                            onClick={() => openEdit(item)}
+                                            aria-label={t("common.edit")}
+                                            title={t("common.edit")}
+                                            className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
+                                        >
+                                            <BsPencil />
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                setDeleteId(item.id ?? item._id)
+                                            }
+                                            aria-label={t("common.delete")}
+                                            title={t("common.delete")}
+                                            className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
+                                        >
+                                            <BsTrash />
+                                        </button>
+                                    </div>
+                                </Td>
+                            </Tr>
+                        ))}
+                        {filtered.length === 0 && (
+                            <PanelEmpty colSpan={4}>
+                                {t("admin.crud.no_data")} {filter}
+                            </PanelEmpty>
+                        )}
+                    </PanelTable>
+                    <PanelPagination
+                        page={currentPage}
+                        pageCount={pageCount}
+                        total={filtered.length}
+                        onChange={setPage}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newSize) => {
+                            setPageSize(newSize);
+                            setPage(1);
+                        }}
+                        pageSizeOptions={[10, 20, 50]}
+                        labels={{
+                            prev: t("common.prev"),
+                            next: t("common.next"),
+                        }}
+                    />
+                </>
             )}
 
             {showModal && (

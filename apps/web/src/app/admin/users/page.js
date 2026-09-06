@@ -1,7 +1,9 @@
 "use client";
 
 import {
+    PanelEmpty,
     PanelPage,
+    PanelPagination,
     PanelTable,
     Td,
     Th,
@@ -55,6 +57,8 @@ const AdminUsersPage = () => {
     const [error, setError] = useState("");
     const [actionError, setActionError] = useState("");
     const [changingId, setChangingId] = useState(null);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     useEffect(() => {
         const load = async () => {
@@ -121,6 +125,13 @@ const AdminUsersPage = () => {
         );
     }
 
+    const pageCount = Math.max(1, Math.ceil(users.length / pageSize));
+    const currentPage = Math.min(page, pageCount);
+    const visible = users.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize,
+    );
+
     return (
         <PanelPage>
             <div className='mb-6'>
@@ -174,7 +185,7 @@ const AdminUsersPage = () => {
                     </>
                 }
             >
-                {users.length === 0 && (
+                {visible.length === 0 && users.length === 0 && (
                     <Tr>
                         <Td
                             colSpan={5}
@@ -184,7 +195,7 @@ const AdminUsersPage = () => {
                         </Td>
                     </Tr>
                 )}
-                {users.map((u) => {
+                {visible.map((u) => {
                     const isSelf = u.id === currentUser?.id;
                     return (
                         <Tr
@@ -243,6 +254,23 @@ const AdminUsersPage = () => {
                     );
                 })}
             </PanelTable>
+
+            <PanelPagination
+                page={currentPage}
+                pageCount={pageCount}
+                total={users.length}
+                onChange={setPage}
+                pageSize={pageSize}
+                onPageSizeChange={(newSize) => {
+                    setPageSize(newSize);
+                    setPage(1);
+                }}
+                pageSizeOptions={[10, 20, 50]}
+                labels={{
+                    prev: t("common.prev"),
+                    next: t("common.next"),
+                }}
+            />
 
             <div className='mt-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 text-xs'>
                 <strong>{t("admin.users.role_notes_title")}:</strong>{" "}

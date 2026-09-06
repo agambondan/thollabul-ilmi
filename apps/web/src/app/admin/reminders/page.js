@@ -2,6 +2,7 @@
 
 import {
     PanelEmpty,
+    PanelPagination,
     PanelTable,
     Td,
     Th,
@@ -47,6 +48,8 @@ const AdminRemindersPage = () => {
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
     const [deleteId, setDeleteId] = useState(null);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     const fb = (type, msg) =>
         window.dispatchEvent(
@@ -133,6 +136,13 @@ const AdminRemindersPage = () => {
             .some((value) => String(value).toLowerCase().includes(q));
     });
 
+    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const currentPage = Math.min(page, pageCount);
+    const visible = filtered.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize,
+    );
+
     return (
         <div className='p-6'>
             <div className='mb-6 flex items-center justify-between gap-4'>
@@ -158,7 +168,10 @@ const AdminRemindersPage = () => {
                     type='text'
                     placeholder={t("reminders.title_source_example")}
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                        setSearch(e.target.value);
+                        setPage(1);
+                    }}
                     className='w-full max-w-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white px-3 py-2 text-sm text-gray-900 dark:text-gray-100 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
                 />
             </div>
@@ -166,7 +179,8 @@ const AdminRemindersPage = () => {
             {loading ? (
                 <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
             ) : (
-                <PanelTable
+                <>
+                    <PanelTable
                     head={
                         <>
                             <Th className='font-medium text-gray-600 dark:text-gray-300'>
@@ -185,8 +199,8 @@ const AdminRemindersPage = () => {
                         </>
                     }
                 >
-                    {filtered.map((item) => (
-                        <Tr key={item.id ?? item._id}>
+                        {visible.map((item) => (
+                            <Tr key={item.id ?? item._id}>
                             <Td>
                                 <p className='font-medium text-gray-900 dark:text-gray-100 dark:text-white'>
                                     {item.title}
@@ -249,6 +263,23 @@ const AdminRemindersPage = () => {
                         </PanelEmpty>
                     )}
                 </PanelTable>
+                <PanelPagination
+                    page={currentPage}
+                    pageCount={pageCount}
+                    total={filtered.length}
+                    onChange={setPage}
+                    pageSize={pageSize}
+                    onPageSizeChange={(newSize) => {
+                        setPageSize(newSize);
+                        setPage(1);
+                    }}
+                    pageSizeOptions={[10, 20, 50]}
+                    labels={{
+                        prev: t("common.prev"),
+                        next: t("common.next"),
+                    }}
+                />
+            </>
             )}
 
             {showModal && (

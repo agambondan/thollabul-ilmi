@@ -2,6 +2,7 @@
 
 import {
     PanelEmpty,
+    PanelPagination,
     PanelTable,
     Td,
     Th,
@@ -35,6 +36,8 @@ const AdminWirdPage = () => {
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
     const [deleteId, setDeleteId] = useState(null);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     const load = async () => {
         setLoading(true);
@@ -120,6 +123,13 @@ const AdminWirdPage = () => {
         );
     });
 
+    const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+    const currentPage = Math.min(page, pageCount);
+    const visible = filtered.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize,
+    );
+
     return (
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
@@ -145,7 +155,10 @@ const AdminWirdPage = () => {
                     type='text'
                     placeholder={t("admin.crud.search_title_category")}
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                        setSearch(e.target.value);
+                        setPage(1);
+                    }}
                     className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white'
                 />
             </div>
@@ -153,63 +166,81 @@ const AdminWirdPage = () => {
             {loading ? (
                 <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
             ) : (
-                <PanelTable
-                    head={
-                        <>
-                            <Th>{t("admin.field.title")}</Th>
-                            <Th className='w-32'>
-                                {t("admin.field.category")}
-                            </Th>
-                            <Th className='w-20 hidden md:table-cell'>
-                                {t("admin.field.repetition")}
-                            </Th>
-                            <Th className='w-20'></Th>
-                        </>
-                    }
-                >
-                    {filtered.map((item) => (
-                        <Tr key={item.id ?? item._id}>
-                            <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium'>
-                                {getLocalizedField(item, "title", lang)}
-                            </Td>
-                            <Td>
-                                <span className='px-2 py-0.5 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-400 rounded text-xs'>
-                                    {item.category}
-                                </span>
-                            </Td>
-                            <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 hidden md:table-cell'>
-                                {item.count ? `${item.count}x` : "-"}
-                            </Td>
-                            <Td>
-                                <div className='flex items-center gap-2 justify-end'>
-                                    <button
-                                        onClick={() => openEdit(item)}
-                                        aria-label={t("common.edit")}
-                                        title={t("common.edit")}
-                                        className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
-                                    >
-                                        <BsPencil />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            setDeleteId(item.id ?? item._id)
-                                        }
-                                        aria-label={t("common.delete")}
-                                        title={t("common.delete")}
-                                        className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
-                                    >
-                                        <BsTrash />
-                                    </button>
-                                </div>
-                            </Td>
-                        </Tr>
-                    ))}
-                    {filtered.length === 0 && (
-                        <PanelEmpty colSpan={4}>
-                            {t("admin.crud.no_data")}
-                        </PanelEmpty>
-                    )}
-                </PanelTable>
+                <>
+                    <PanelTable
+                        head={
+                            <>
+                                <Th>{t("admin.field.title")}</Th>
+                                <Th className='w-32'>
+                                    {t("admin.field.category")}
+                                </Th>
+                                <Th className='w-20 hidden md:table-cell'>
+                                    {t("admin.field.repetition")}
+                                </Th>
+                                <Th className='w-20'></Th>
+                            </>
+                        }
+                    >
+                        {visible.map((item) => (
+                            <Tr key={item.id ?? item._id}>
+                                <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium'>
+                                    {getLocalizedField(item, "title", lang)}
+                                </Td>
+                                <Td>
+                                    <span className='px-2 py-0.5 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-400 rounded text-xs'>
+                                        {item.category}
+                                    </span>
+                                </Td>
+                                <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 hidden md:table-cell'>
+                                    {item.count ? `${item.count}x` : "-"}
+                                </Td>
+                                <Td>
+                                    <div className='flex items-center gap-2 justify-end'>
+                                        <button
+                                            onClick={() => openEdit(item)}
+                                            aria-label={t("common.edit")}
+                                            title={t("common.edit")}
+                                            className='p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded'
+                                        >
+                                            <BsPencil />
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                setDeleteId(item.id ?? item._id)
+                                            }
+                                            aria-label={t("common.delete")}
+                                            title={t("common.delete")}
+                                            className='p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded'
+                                        >
+                                            <BsTrash />
+                                        </button>
+                                    </div>
+                                </Td>
+                            </Tr>
+                        ))}
+                        {filtered.length === 0 && (
+                            <PanelEmpty colSpan={4}>
+                                {t("admin.crud.no_data")}
+                            </PanelEmpty>
+                        )}
+                    </PanelTable>
+                    <PanelPagination
+                        page={currentPage}
+                        pageCount={pageCount}
+                        total={filtered.length}
+                        onChange={setPage}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newSize) => {
+                            setPageSize(newSize);
+                            setPage(1);
+                        }}
+                        pageSizeOptions={[10, 20, 50]}
+                        labels={{
+                            prev: t("common.prev"),
+                            next: t("common.next"),
+                        }}
+                    />
+                </>
             )}
 
             {showModal && (

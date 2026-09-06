@@ -1,6 +1,6 @@
 "use client";
 
-import { PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
+import { PanelEmpty, PanelPagination, PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
 import { useLocale } from "@/context/Locale";
 import { authFetch, parseApiError } from "@/lib/api";
 import { useEffect, useState } from "react";
@@ -25,6 +25,8 @@ export default function AdminLessonsPage() {
         order: 1,
         steps: [],
     });
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     const fetchModules = async () => {
         try {
@@ -130,6 +132,13 @@ export default function AdminLessonsPage() {
         });
     };
 
+    const pageCount = Math.max(1, Math.ceil(modules.length / pageSize));
+    const currentPage = Math.min(page, pageCount);
+    const visible = modules.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize,
+    );
+
     return (
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
@@ -176,7 +185,7 @@ export default function AdminLessonsPage() {
                         </Td>
                     </Tr>
                 ) : (
-                    modules.map((m) => (
+                    visible.map((m) => (
                         <Tr
                             key={m.id}
                             className='hover:bg-gray-50 dark:hover:bg-slate-700/30'
@@ -207,6 +216,22 @@ export default function AdminLessonsPage() {
                     ))
                 )}
             </PanelTable>
+            <PanelPagination
+                page={currentPage}
+                pageCount={pageCount}
+                total={modules.length}
+                onChange={setPage}
+                pageSize={pageSize}
+                onPageSizeChange={(newSize) => {
+                    setPageSize(newSize);
+                    setPage(1);
+                }}
+                pageSizeOptions={[10, 20, 50]}
+                labels={{
+                    prev: t("common.prev"),
+                    next: t("common.next"),
+                }}
+            />
 
             {/* Modal */}
             {modalOpen && (

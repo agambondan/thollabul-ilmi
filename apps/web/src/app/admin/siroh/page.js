@@ -1,5 +1,6 @@
 "use client";
 
+import { PanelPagination } from "@/components/panel/DataPanel";
 import { Spinner3 } from "@/components/spinner/Spinner";
 import { useLocale } from "@/context/Locale";
 import { adminSirohApi, parseApiError } from "@/lib/api";
@@ -31,6 +32,8 @@ const AdminSirahPage = () => {
     const [editingCat, setEditingCat] = useState(null);
     const [editCatTitle, setEditCatTitle] = useState("");
     const [editCatOrder, setEditCatOrder] = useState("");
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
 
     const load = useCallback(async () => {
         setIsLoading(true);
@@ -135,6 +138,13 @@ const AdminSirahPage = () => {
     };
 
     if (isLoading) return <Spinner3 />;
+
+    const pageCount = Math.max(1, Math.ceil(contents.length / pageSize));
+    const currentPage = Math.min(page, pageCount);
+    const visibleContents = contents.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize,
+    );
 
     return (
         <div className='p-8'>
@@ -324,7 +334,7 @@ const AdminSirahPage = () => {
                                 </Link>
                             </div>
                         )}
-                        {contents.map((item) => {
+                        {visibleContents.map((item) => {
                             const title = getLocalizedField(
                                 item,
                                 "title",
@@ -376,6 +386,22 @@ const AdminSirahPage = () => {
                             );
                         })}
                     </div>
+                    <PanelPagination
+                        page={currentPage}
+                        pageCount={pageCount}
+                        total={contents.length}
+                        onChange={setPage}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newSize) => {
+                            setPageSize(newSize);
+                            setPage(1);
+                        }}
+                        pageSizeOptions={[10, 20, 50]}
+                        labels={{
+                            prev: t("common.prev"),
+                            next: t("common.next"),
+                        }}
+                    />
                 </div>
             </div>
         </div>
