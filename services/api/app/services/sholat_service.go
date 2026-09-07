@@ -96,3 +96,15 @@ func (s *sholatService) GetAllGuides() ([]model.SholatGuide, error) {
 func (s *sholatService) GetGuideByStep(step int) (*model.SholatGuide, error) {
 	return s.repo.FindGuideByStep(step)
 }
+
+func (s *sholatService) CreateGuide(guide *model.SholatGuide) (*model.SholatGuide, error) {
+	return s.repo.CreateGuide(guide)
+}
+
+func (s *sholatService) UpdateGuide(id int, guide *model.SholatGuide) (*model.SholatGuide, error) {
+	return s.repo.UpdateGuide(id, guide)
+}
+
+func (s *sholatService) DeleteGuide(id int) error {
+	return s.repo.DeleteGuide(id)
+}
