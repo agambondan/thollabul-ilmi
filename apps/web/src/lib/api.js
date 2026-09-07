@@ -563,7 +563,8 @@ export const notificationApi = {
         authFetch("/api/v1/notifications/push-test", {
             method: "POST",
         }),
-    getVapidPublicKey: () => authFetch("/api/v1/notifications/vapid-public-key"),
+    getVapidPublicKey: () =>
+        authFetch("/api/v1/notifications/vapid-public-key"),
     broadcastPush: (data) =>
         authFetch("/api/v1/notifications/admin/broadcast", {
             method: "POST",
@@ -708,7 +709,8 @@ export const goalsApi = {
 
 export const lessonsApi = {
     list: () => fetch(`${API_URL}/api/v1/lessons`),
-    bySlug: (slug) => fetch(`${API_URL}/api/v1/lessons/${encodeURIComponent(slug)}`),
+    bySlug: (slug) =>
+        fetch(`${API_URL}/api/v1/lessons/${encodeURIComponent(slug)}`),
     myProgress: () => authFetch("/api/v1/lessons/progress"),
     saveProgress: (moduleId, step, done) =>
         authFetch("/api/v1/lessons/progress", {
@@ -897,6 +899,81 @@ export const adminLibraryApi = {
     delete: (id) =>
         authFetch(`/api/v1/library/books/${id}`, { method: "DELETE" }),
 };
+
+const buildResourceApi = ({
+    listPath,
+    createPath = listPath,
+    updatePath = (id) => `${listPath}/${id}`,
+    deletePath = (id) => `${listPath}/${id}`,
+    listParam = "page=0&size=500",
+}) => ({
+    list: () => authFetch(`${listPath}?${listParam}`),
+    create: (data) =>
+        authFetch(createPath, { method: "POST", body: JSON.stringify(data) }),
+    update: (id, data) =>
+        authFetch(updatePath(id), {
+            method: "PUT",
+            body: JSON.stringify(data),
+        }),
+    delete: (id) => authFetch(deletePath(id), { method: "DELETE" }),
+});
+
+export const adminAmalanApi = buildResourceApi({
+    listPath: "/api/v1/amalan",
+    createPath: "/api/v1/amalan/items",
+    updatePath: (id) => `/api/v1/amalan/items/${id}`,
+    deletePath: (id) => `/api/v1/amalan/items/${id}`,
+});
+
+export const adminAchievementApi = buildResourceApi({
+    listPath: "/api/v1/achievements",
+    listParam: "page=0&size=500",
+});
+
+export const adminPerawiApi = buildResourceApi({
+    listPath: "/api/v1/perawi",
+    listParam: "size=500",
+});
+
+export const adminJarhTadilApi = buildResourceApi({
+    listPath: "/api/v1/jarh-tadil",
+    listParam: "size=500",
+});
+
+export const adminSanadApi = {
+    list: () => authFetch("/api/v1/hadiths?size=1"),
+    get: (id) => authFetch(`/api/v1/hadiths/${id}/sanad`),
+    create: (data) =>
+        authFetch("/api/v1/sanad", { method: "POST", body: JSON.stringify(data) }),
+    update: (id, data) =>
+        authFetch(`/api/v1/sanad/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(data),
+        }),
+    delete: (id) => authFetch(`/api/v1/sanad/${id}`, { method: "DELETE" }),
+    addMata: (id, data) =>
+        authFetch(`/api/v1/sanad/${id}/mata-sanad`, {
+            method: "POST",
+            body: JSON.stringify(data),
+        }),
+    updateMata: (id, data) =>
+        authFetch(`/api/v1/mata-sanad/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(data),
+        }),
+    deleteMata: (id) =>
+        authFetch(`/api/v1/mata-sanad/${id}`, { method: "DELETE" }),
+};
+
+export const adminTokohTarikhApi = buildResourceApi({
+    listPath: "/api/v1/tokoh-tarikh",
+    listParam: "page=1&size=200",
+});
+
+export const adminLocationApi = buildResourceApi({
+    listPath: "/api/v1/locations",
+    listParam: "page=1&size=200",
+});
 
 export const adminKamusApi = {
     list: (page = 0, size = 100) =>
@@ -1145,15 +1222,11 @@ export const contentReportApi = {
         }),
     listMine: (params = {}) => {
         const qs = new URLSearchParams(params).toString();
-        return authFetch(
-            `/api/v1/reports/mine${qs ? "?" + qs : ""}`,
-        );
+        return authFetch(`/api/v1/reports/mine${qs ? "?" + qs : ""}`);
     },
     adminList: (params = {}) => {
         const qs = new URLSearchParams(params).toString();
-        return authFetch(
-            `/api/v1/admin/reports${qs ? "?" + qs : ""}`,
-        );
+        return authFetch(`/api/v1/admin/reports${qs ? "?" + qs : ""}`);
     },
     adminGet: (id) => authFetch(`/api/v1/admin/reports/${id}`),
     adminUpdateStatus: (id, data) =>
@@ -1181,7 +1254,9 @@ export const contentAuditLogApi = {
     },
     export: (params = {}) => {
         const qs = new URLSearchParams(params).toString();
-        return authFetch(`/api/v1/admin/audit-logs/export${qs ? "?" + qs : ""}`);
+        return authFetch(
+            `/api/v1/admin/audit-logs/export${qs ? "?" + qs : ""}`,
+        );
     },
 };
 
@@ -1293,4 +1368,21 @@ export const parseApiError = async (res, fallback = "Gagal memproses data") => {
     } catch {
         return fallback;
     }
+};
+
+export const kajianBookmarkApi = {
+    list: () => authFetch("/api/v1/kajian/bookmarks/me"),
+    chunkIds: (kajianId = 0) =>
+        authFetch(
+            `/api/v1/kajian/bookmarks/ids?kajian_id=${kajianId}`,
+        ),
+    add: (chunkId, kajianId) =>
+        authFetch("/api/v1/kajian/bookmarks", {
+            method: "POST",
+            body: JSON.stringify({ chunk_id: chunkId, kajian_id: kajianId }),
+        }),
+    remove: (chunkId) =>
+        authFetch(`/api/v1/kajian/bookmarks/${chunkId}`, {
+            method: "DELETE",
+        }),
 };
