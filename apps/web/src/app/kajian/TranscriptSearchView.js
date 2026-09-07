@@ -366,21 +366,27 @@ function formatTime(seconds) {
 
 function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
     const { t } = useLocale();
-    const videoId = getYouTubeIdFromTimestampUrl(item.timestamp_url) || item.video_id;
+    const videoId = item ? (getYouTubeIdFromTimestampUrl(item.timestamp_url) || item.video_id) : null;
     const storageKey = item?.kajian_id ? `kajian-player:${item.kajian_id}` : null;
     const bookmarkKey = item?.kajian_id ? `kajian-bookmarks:${item.kajian_id}` : null;
 
     const [transcripts, setTranscripts] = useState([]);
     const [loadingTranscripts, setLoadingTranscripts] = useState(false);
-    const [playerStart, setPlayerStart] = useState(item.start_seconds || 0);
-    const [currentTime, setCurrentTime] = useState(item.start_seconds || 0);
+    const [playerStart, setPlayerStart] = useState(item?.start_seconds || 0);
+    const [currentTime, setCurrentTime] = useState(item?.start_seconds || 0);
     const [autoScroll, setAutoScroll] = useState(true);
     const [filterQuery, setFilterQuery] = useState("");
     const [bookmarked, setBookmarked] = useState(new Set());
+    const [useFallbackIframe, setUseFallbackIframe] = useState(false);
 
     const playerRef = useRef(null);
+    const iframeRef = useRef(null);
     const activeChunkRef = useRef(null);
     const listContainerRef = useRef(null);
+    const playerStartRef = useRef(playerStart);
+    useEffect(() => {
+        playerStartRef.current = playerStart;
+    }, [playerStart]);
     const reactId = useId();
     const containerId = `yt-player-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
 
@@ -441,25 +447,33 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
         };
     }, [item.kajian_id]);
 
-    // 2. Load YouTube IFrame API & instantiate player
+    // 2. Load YouTube IFrame API with fallback to direct iframe
     useEffect(() => {
+        if (!videoId || typeof window === "undefined") return undefined;
         let timer = null;
+        let fallbackTimer = null;
         let isMounted = true;
 
         const initPlayer = () => {
-            if (!window.YT || !window.YT.Player) return;
+            if (!window.YT || !window.YT.Player) {
+                setUseFallbackIframe(true);
+                return;
+            }
             try {
+                const startSec = Math.floor(playerStartRef.current || 0);
                 playerRef.current = new window.YT.Player(containerId, {
                     videoId: videoId,
                     playerVars: {
                         autoplay: 1,
-                        start: Math.floor(playerStart || 0),
+                        start: startSec,
                         enablejsapi: 1,
-                        origin: typeof window !== "undefined" ? window.location.origin : undefined,
+                        origin: window.location.origin,
+                        rel: 0,
+                        modestbranding: 1,
                     },
                     events: {
                         onReady: () => {
-                            // start polling current time
+                            if (!isMounted) return;
                             timer = setInterval(() => {
                                 if (playerRef.current && typeof playerRef.current.getCurrentTime === "function" && isMounted) {
                                     const time = playerRef.current.getCurrentTime();
@@ -467,36 +481,70 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                                 }
                             }, 350);
                         },
+                        onError: () => {
+                            if (isMounted) setUseFallbackIframe(true);
+                        },
                     },
                 });
-            } catch (err) {
-                // fallback
+            } catch {
+                if (isMounted) setUseFallbackIframe(true);
             }
         };
 
-        if (typeof window !== "undefined") {
-            if (!window.YT) {
+        if (window.YT && window.YT.Player) {
+            initPlayer();
+        } else {
+            // If API script fails to load within 2.5s (e.g. corporate SSL/firewall block), fallback
+            fallbackTimer = setTimeout(() => {
+                if (isMounted && (!window.YT || !window.YT.Player)) {
+                    setUseFallbackIframe(true);
+                }
+            }, 2500);
+
+            if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
                 const tag = document.createElement("script");
                 tag.src = "https://www.youtube.com/iframe_api";
-                const firstScriptTag = document.getElementsByTagName("script")[0];
-                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-                window.onYouTubeIframeAPIReady = () => {
-                    initPlayer();
+                tag.onerror = () => {
+                    if (isMounted) setUseFallbackIframe(true);
                 };
-            } else {
-                initPlayer();
+                const firstScriptTag = document.getElementsByTagName("script")[0];
+                if (firstScriptTag?.parentNode) {
+                    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+                } else {
+                    document.head.appendChild(tag);
+                }
             }
+
+            const prevReady = window.onYouTubeIframeAPIReady;
+            window.onYouTubeIframeAPIReady = () => {
+                if (typeof prevReady === "function") prevReady();
+                if (isMounted) initPlayer();
+            };
         }
+
+        // Listen for postMessage updates from iframe as secondary time source
+        const onMessage = (event) => {
+            try {
+                const data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+                if (data?.event === "infoDelivery" && typeof data?.info?.currentTime === "number") {
+                    setCurrentTime(data.info.currentTime);
+                }
+            } catch {}
+        };
+        window.addEventListener("message", onMessage);
 
         return () => {
             isMounted = false;
             if (timer) clearInterval(timer);
+            if (fallbackTimer) clearTimeout(fallbackTimer);
+            window.removeEventListener("message", onMessage);
             if (playerRef.current && typeof playerRef.current.destroy === "function") {
-                playerRef.current.destroy();
+                try {
+                    playerRef.current.destroy();
+                } catch {}
             }
         };
-    }, [containerId, videoId, playerStart]);
+    }, [containerId, videoId]);
 
     // 3. Find active transcript chunk based on currentTime
     const activeIndex = useMemo(() => {
@@ -518,8 +566,21 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
     // 5. Seek to timestamp when clicking a transcript row
     const handleSeek = (seconds) => {
         if (playerRef.current && typeof playerRef.current.seekTo === "function") {
-            playerRef.current.seekTo(seconds, true);
-            playerRef.current.playVideo?.();
+            try {
+                playerRef.current.seekTo(seconds, true);
+                playerRef.current.playVideo?.();
+            } catch {}
+        } else if (iframeRef.current?.contentWindow) {
+            try {
+                iframeRef.current.contentWindow.postMessage(
+                    JSON.stringify({ event: "command", func: "seekTo", args: [seconds, true] }),
+                    "*",
+                );
+                iframeRef.current.contentWindow.postMessage(
+                    JSON.stringify({ event: "command", func: "playVideo", args: [] }),
+                    "*",
+                );
+            } catch {}
         }
         setCurrentTime(seconds);
     };
@@ -575,7 +636,18 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                 {/* Left Col: Video Player & Current Quote (7 cols) */}
                 <div className='lg:col-span-7 flex flex-col min-h-0 border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-slate-800'>
                     <div className='aspect-video w-full bg-black shrink-0 relative'>
-                        <div id={containerId} className='w-full h-full' />
+                        {useFallbackIframe && videoId ? (
+                            <iframe
+                                ref={iframeRef}
+                                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&start=${Math.floor(playerStart || 0)}&enablejsapi=1&origin=${typeof window !== "undefined" ? encodeURIComponent(window.location.origin) : ""}`}
+                                title={item?.title || "YouTube player"}
+                                allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+                                allowFullScreen
+                                className='absolute inset-0 w-full h-full'
+                            />
+                        ) : (
+                            <div id={containerId} className='w-full h-full' />
+                        )}
                     </div>
 
                     <div className='p-3 sm:p-4 overflow-y-auto flex-1 bg-white dark:bg-slate-900/40 text-xs text-gray-700 dark:text-gray-300'>
