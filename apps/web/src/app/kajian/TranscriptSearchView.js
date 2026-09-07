@@ -4,7 +4,7 @@ import ModalShell from "@/components/ModalShell";
 import { PlayCircleIcon, SearchIcon, ShareIcon } from "@/components/icons/Icon";
 import { useLocale } from "@/context/Locale";
 import Image from "next/image";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
 export const getSearchModes = (t) => [
     {
@@ -421,8 +421,10 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
     const activeChunkRef = useRef(null);
     const listContainerRef = useRef(null);
     const playerStartRef = useRef(playerStart);
+    const fallbackClockRef = useRef({ base: item?.start_seconds || 0, startedAt: 0 });
     useEffect(() => {
         playerStartRef.current = playerStart;
+        fallbackClockRef.current = { base: playerStart, startedAt: Date.now() };
     }, [playerStart]);
     const reactId = useId();
     const containerId = `yt-player-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
@@ -597,6 +599,27 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
             };
         }
 
+        // Poll iframe currentTime when YT API is unavailable. The direct
+        // <iframe> embed with enablejsapi=1 only posts infoDelivery on
+        // state changes; without an API instance, asking for currentTime
+        // every 350ms keeps the transcript highlight in sync.
+        const pollIframeTime = () => {
+            if (!isMounted) return;
+            const w = iframeRef.current?.contentWindow;
+            if (!w) return;
+            try {
+                w.postMessage(
+                    JSON.stringify({
+                        event: "command",
+                        func: "getCurrentTime",
+                        args: [],
+                    }),
+                    "*",
+                );
+            } catch {}
+        };
+        const iframePollTimer = setInterval(pollIframeTime, 500);
+
         // Listen for postMessage updates from iframe as secondary time source
         const onMessage = (event) => {
             try {
@@ -608,6 +631,10 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                     data?.event === "infoDelivery" &&
                     typeof data?.info?.currentTime === "number"
                 ) {
+                    fallbackClockRef.current = {
+                        base: data.info.currentTime,
+                        startedAt: Date.now(),
+                    };
                     setCurrentTime(data.info.currentTime);
                 }
             } catch {}
@@ -618,6 +645,7 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
             isMounted = false;
             if (timer) clearInterval(timer);
             if (fallbackTimer) clearTimeout(fallbackTimer);
+            clearInterval(iframePollTimer);
             window.removeEventListener("message", onMessage);
             if (
                 playerRef.current &&
@@ -629,6 +657,20 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
             }
         };
     }, [containerId, videoId]);
+
+    useEffect(() => {
+        if (!useFallbackIframe || !playerReady) return undefined;
+        fallbackClockRef.current = {
+            base: playerStartRef.current || 0,
+            startedAt: Date.now(),
+        };
+        const timer = setInterval(() => {
+            const { base, startedAt } = fallbackClockRef.current;
+            if (!startedAt) return;
+            setCurrentTime(base + (Date.now() - startedAt) / 1000);
+        }, 500);
+        return () => clearInterval(timer);
+    }, [playerReady, useFallbackIframe, videoId]);
 
     // 3. Find active transcript chunk based on currentTime
     const activeIndex = useMemo(() => {
@@ -650,7 +692,7 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
     }, [activeIndex, autoScroll]);
 
     // 5. Seek to timestamp when clicking a transcript row
-    const handleSeek = (seconds) => {
+    const handleSeek = useCallback((seconds) => {
         if (
             playerRef.current &&
             typeof playerRef.current.seekTo === "function"
@@ -679,8 +721,12 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                 );
             } catch {}
         }
+        fallbackClockRef.current = {
+            base: seconds,
+            startedAt: Date.now(),
+        };
         setCurrentTime(seconds);
-    };
+    }, []);
 
     const toggleBookmark = (id) => {
         setBookmarked((prev) => {
@@ -746,10 +792,18 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                             <>
                                 <iframe
                                     ref={iframeRef}
-                                    src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0&modestbranding=1&start=${Math.floor(playerStart || 0)}&enablejsapi=1&origin=${typeof window !== "undefined" ? encodeURIComponent(window.location.origin) : ""}`}
+                                    src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0&modestbranding=1&start=${Math.floor(playerStart || 0)}&enablejsapi=1&origin=${typeof window !== "undefined" ? window.location.origin : ""}`}
                                     title={item?.title || "YouTube player"}
                                     allow='autoplay; encrypted-media; accelerometer; gyroscope; picture-in-picture'
                                     allowFullScreen
+                                    onLoad={() => {
+                                        try {
+                                            iframeRef.current?.contentWindow?.postMessage(
+                                                JSON.stringify({ event: "listening" }),
+                                                "*",
+                                            );
+                                        } catch {}
+                                    }}
                                     className='absolute inset-0 w-full h-full'
                                 />
                                 {!playerReady && (
