@@ -7,6 +7,7 @@ import (
 
 type LocationRepository interface {
 	Save(*model.Location) (*model.Location, error)
+	Update(int, *model.Location) (*model.Location, error)
 	FindAll(search, category, era string, limit, offset int) ([]model.Location, int64, error)
 	FindByID(int) (*model.Location, error)
 	Delete(int) error
@@ -21,6 +22,13 @@ func (r *locationRepo) Save(l *model.Location) (*model.Location, error) {
 		return nil, err
 	}
 	return l, nil
+}
+
+func (r *locationRepo) Update(id int, l *model.Location) (*model.Location, error) {
+	if err := r.db.Model(&model.Location{}).Where("id = ?", id).Updates(l).Error; err != nil {
+		return nil, err
+	}
+	return r.FindByID(id)
 }
 
 func (r *locationRepo) FindAll(search, category, era string, limit, offset int) ([]model.Location, int64, error) {

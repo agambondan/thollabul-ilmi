@@ -11,6 +11,7 @@ import (
 
 type LocationController interface {
 	Create(ctx *fiber.Ctx) error
+	Update(ctx *fiber.Ctx) error
 	FindAll(ctx *fiber.Ctx) error
 	FindByID(ctx *fiber.Ctx) error
 	Delete(ctx *fiber.Ctx) error
@@ -69,4 +70,20 @@ func (c *locationController) Delete(ctx *fiber.Ctx) error {
 		return lib.ErrorNotFound(ctx)
 	}
 	return lib.OK(ctx, fiber.Map{"message": "deleted"})
+}
+
+func (c *locationController) Update(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	req := new(model.CreateLocationRequest)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	item, err := c.svc.Update(id, req)
+	if err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	return lib.OK(ctx, item)
 }

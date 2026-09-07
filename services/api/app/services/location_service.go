@@ -8,6 +8,7 @@ import (
 
 type LocationService interface {
 	Create(req *model.CreateLocationRequest) (*model.Location, error)
+	Update(id int, req *model.CreateLocationRequest) (*model.Location, error)
 	FindAll(search, category, era string, limit, offset int) ([]model.Location, int64, error)
 	FindByID(int) (*model.Location, error)
 	Delete(int) error
@@ -79,4 +80,22 @@ func (s *locationService) Delete(id int) error {
 		s.cache.Invalidate("location:*")
 	}
 	return err
+}
+
+func (s *locationService) Update(id int, req *model.CreateLocationRequest) (*model.Location, error) {
+	l := &model.Location{
+		Name:        req.Name,
+		Description: req.Description,
+		Latitude:    req.Latitude,
+		Longitude:   req.Longitude,
+		Category:    req.Category,
+		Era:         req.Era,
+		ImageURL:    req.ImageURL,
+		TokohIDs:    req.TokohIDs,
+	}
+	result, err := s.repo.Update(id, l)
+	if err == nil && s.cache != nil {
+		s.cache.Invalidate("location:*")
+	}
+	return result, err
 }

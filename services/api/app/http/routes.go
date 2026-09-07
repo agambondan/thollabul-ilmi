@@ -807,6 +807,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/locations", newLocationController.FindAll)
 	master.Get("/locations/:id", newLocationController.FindByID)
 	master.Post("/locations", admin, newLocationController.Create)
+	master.Put("/locations/:id", middlewares.EditorOrAdminMiddleware(), newLocationController.Update)
 	master.Delete("/locations/:id", admin, newLocationController.Delete)
 
 	// #53 Sanad & Mata Sanad (public read, editor/admin write)
