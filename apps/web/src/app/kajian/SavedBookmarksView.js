@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useLocale } from "@/context/Locale";
 import { getLocalizedField } from "@/lib/translation";
+import { PlayCircleIcon } from "@/components/icons/Icon";
 
 const formatTime = (seconds) => {
     const s = Math.floor(Number(seconds) || 0);
@@ -93,7 +94,7 @@ export default function SavedBookmarksView() {
                                     href={`/kajian?focus=${g.kajianId}&t=${Math.floor(s)}`}
                                     className='inline-flex items-center gap-2 text-emerald-700 dark:text-emerald-300 hover:underline'
                                 >
-                                    <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' aria-hidden='true'><path d='M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z' /></svg>
+                                    <PlayCircleIcon />
                                     {formatTime(s)}
                                 </a>
                                 <button

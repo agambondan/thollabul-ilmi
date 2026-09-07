@@ -1,10 +1,10 @@
 "use client";
 
+import ModalShell from "@/components/ModalShell";
+import { PlayCircleIcon, SearchIcon, ShareIcon } from "@/components/icons/Icon";
 import { useLocale } from "@/context/Locale";
 import Image from "next/image";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import ModalShell from "@/components/ModalShell";
-import { SearchIcon, PlayCircleIcon, ShareIcon } from "@/components/icons/Icon";
 
 export const getSearchModes = (t) => [
     {
@@ -28,9 +28,19 @@ export const getSearchModes = (t) => [
 ];
 
 export const SEARCH_MODES = [
-    { key: "hybrid", label: "Hybrid (Semua)", icon: "⚡", desc: "Exact + Semantic" },
+    {
+        key: "hybrid",
+        label: "Hybrid (Semua)",
+        icon: "⚡",
+        desc: "Exact + Semantic",
+    },
     { key: "exact", label: "Teks Persis", icon: "🔤", desc: "Kata kunci sama" },
-    { key: "semantic", label: "Makna / Tema", icon: "🧠", desc: "Berdasarkan tema" },
+    {
+        key: "semantic",
+        label: "Makna / Tema",
+        icon: "🧠",
+        desc: "Berdasarkan tema",
+    },
 ];
 
 const getYouTubeIdFromTimestampUrl = (url) => {
@@ -46,13 +56,16 @@ const highlightText = (text, query) => {
     if (!lowerQuery) return safe;
     const tokens = lowerQuery.split(/\s+/).filter((t) => t.length > 1);
     if (tokens.length === 0) return safe;
-    const regex = new RegExp(`(${tokens.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "gi");
+    const regex = new RegExp(
+        `(${tokens.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
+        "gi",
+    );
     const parts = safe.split(regex);
     return parts.map((p, i) =>
         regex.test(p) ? (
             <mark
                 key={i}
-                className="bg-yellow-200 dark:bg-yellow-700/60 text-gray-900 dark:text-yellow-50 px-0.5 rounded"
+                className='bg-yellow-200 dark:bg-yellow-700/60 text-gray-900 dark:text-yellow-50 px-0.5 rounded'
             >
                 {p}
             </mark>
@@ -89,7 +102,10 @@ export default function TranscriptSearchView({
         try {
             if (typeof navigator !== "undefined" && navigator.share) {
                 await navigator.share(shareData);
-            } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+            } else if (
+                typeof navigator !== "undefined" &&
+                navigator.clipboard
+            ) {
                 await navigator.clipboard.writeText(`${text}`);
             }
         } catch {
@@ -141,20 +157,22 @@ export default function TranscriptSearchView({
                         key={m.key}
                         type='button'
                         onClick={() => setMode(m.key)}
-                        className={`px-2 py-2 rounded-lg text-[11px] sm:text-xs font-semibold transition-all flex flex-col items-center gap-0.5 ${mode === m.key
-                            ? m.key === "exact"
-                                ? "bg-blue-600 text-white shadow-sm"
-                                : m.key === "semantic"
-                                    ? "bg-purple-600 text-white shadow-sm"
-                                    : "bg-emerald-600 text-white shadow-sm"
-                            : "text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-slate-800"
-                            }`}
+                        className={`px-2 py-2 rounded-lg text-[11px] sm:text-xs font-semibold transition-all flex flex-col items-center gap-0.5 ${
+                            mode === m.key
+                                ? m.key === "exact"
+                                    ? "bg-blue-600 text-white shadow-sm"
+                                    : m.key === "semantic"
+                                      ? "bg-purple-600 text-white shadow-sm"
+                                      : "bg-emerald-600 text-white shadow-sm"
+                                : "text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-slate-800"
+                        }`}
                     >
                         <span className='text-base'>{m.icon}</span>
                         <span>{m.label}</span>
                         <span
-                            className={`text-[9px] font-normal ${mode === m.key ? "opacity-80" : "opacity-60"
-                                }`}
+                            className={`text-[9px] font-normal ${
+                                mode === m.key ? "opacity-80" : "opacity-60"
+                            }`}
                         >
                             {m.desc}
                         </span>
@@ -172,10 +190,11 @@ export default function TranscriptSearchView({
                         <button
                             type='button'
                             onClick={() => setSpeaker("")}
-                            className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${!speaker
-                                ? "bg-emerald-600 text-white"
-                                : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
-                                }`}
+                            className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
+                                !speaker
+                                    ? "bg-emerald-600 text-white"
+                                    : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
+                            }`}
                         >
                             {t("common.all") || "Semua"}
                         </button>
@@ -184,10 +203,11 @@ export default function TranscriptSearchView({
                                 key={s}
                                 type='button'
                                 onClick={() => setSpeaker(s)}
-                                className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${speaker === s
-                                    ? "bg-emerald-600 text-white"
-                                    : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
-                                    }`}
+                                className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
+                                    speaker === s
+                                        ? "bg-emerald-600 text-white"
+                                        : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
+                                }`}
                             >
                                 {s.replace(/^Ust\.\s*Dr\.\s*/i, "Ust. ")}
                             </button>
@@ -199,7 +219,7 @@ export default function TranscriptSearchView({
             {query.trim() && (
                 <div className='mb-3 text-xs text-gray-500 dark:text-gray-400'>
                     {loading
-                        ? (t("common.searching") || "Mencari...")
+                        ? t("common.searching") || "Mencari..."
                         : `${uniqueResults.length} ${t("kajian.results_found") || "hasil"} • mode: ${searchModes.find((m) => m.key === mode)?.label}`}
                 </div>
             )}
@@ -222,8 +242,10 @@ export default function TranscriptSearchView({
                     <SearchIcon className='text-4xl mx-auto mb-3 opacity-50' />
                     <p className='text-sm'>
                         {query
-                            ? (t("kajian.empty_search_hint") || "Tidak ada hasil. Coba ubah kata kunci atau mode pencarian.")
-                            : (t("kajian.type_keyword_hint") || "Ketik kata kunci untuk mulai mencari di dalam transkrip video kajian.")}
+                            ? t("kajian.empty_search_hint") ||
+                              "Tidak ada hasil. Coba ubah kata kunci atau mode pencarian."
+                            : t("kajian.type_keyword_hint") ||
+                              "Ketik kata kunci untuk mulai mencari di dalam transkrip video kajian."}
                     </p>
                 </div>
             ) : (
@@ -253,7 +275,8 @@ export default function TranscriptSearchView({
 }
 
 function TranscriptResultCard({ result, query, onPlay, onShare }) {
-    const videoId = getYouTubeIdFromTimestampUrl(result.timestamp_url) || result.video_id;
+    const videoId =
+        getYouTubeIdFromTimestampUrl(result.timestamp_url) || result.video_id;
 
     return (
         <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-all overflow-hidden'>
@@ -285,18 +308,19 @@ function TranscriptResultCard({ result, query, onPlay, onShare }) {
                 <div className='flex-1 min-w-0'>
                     <div className='flex items-center gap-1.5 flex-wrap mb-1'>
                         <span
-                            className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${result.match_mode === "exact"
-                                ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
-                                : result.match_mode === "semantic"
-                                    ? "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300"
-                                    : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
-                                }`}
+                            className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${
+                                result.match_mode === "exact"
+                                    ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
+                                    : result.match_mode === "semantic"
+                                      ? "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300"
+                                      : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
+                            }`}
                         >
                             {result.match_mode === "exact"
                                 ? "🔤 EXACT"
                                 : result.match_mode === "semantic"
-                                    ? "🧠 SEMANTIC"
-                                    : "⚡ HYBRID"}
+                                  ? "🧠 SEMANTIC"
+                                  : "⚡ HYBRID"}
                         </span>
                         {result.topic && (
                             <span className='text-[10px] text-gray-400 truncate max-w-[200px]'>
@@ -336,7 +360,12 @@ function TranscriptResultCard({ result, query, onPlay, onShare }) {
                             rel='noopener noreferrer'
                             className='inline-flex items-center gap-1 text-[11px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
                         >
-                            <span className='text-red-500 text-sm' aria-hidden='true'>▶</span>
+                            <span
+                                className='text-red-500 text-sm'
+                                aria-hidden='true'
+                            >
+                                ▶
+                            </span>
                             Buka di YouTube
                         </a>
                         <button
@@ -367,9 +396,15 @@ function formatTime(seconds) {
 
 function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
     const { t } = useLocale();
-    const videoId = item ? (getYouTubeIdFromTimestampUrl(item.timestamp_url) || item.video_id) : null;
-    const storageKey = item?.kajian_id ? `kajian-player:${item.kajian_id}` : null;
-    const bookmarkKey = item?.kajian_id ? `kajian-bookmarks:${item.kajian_id}` : null;
+    const videoId = item
+        ? getYouTubeIdFromTimestampUrl(item.timestamp_url) || item.video_id
+        : null;
+    const storageKey = item?.kajian_id
+        ? `kajian-player:${item.kajian_id}`
+        : null;
+    const bookmarkKey = item?.kajian_id
+        ? `kajian-bookmarks:${item.kajian_id}`
+        : null;
 
     const [transcripts, setTranscripts] = useState([]);
     const [loadingTranscripts, setLoadingTranscripts] = useState(false);
@@ -403,7 +438,13 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
         }
         if (bookmarkKey) {
             try {
-                setBookmarked(new Set(JSON.parse(window.localStorage.getItem(bookmarkKey) || "[]")));
+                setBookmarked(
+                    new Set(
+                        JSON.parse(
+                            window.localStorage.getItem(bookmarkKey) || "[]",
+                        ),
+                    ),
+                );
             } catch {
                 setBookmarked(new Set());
             }
@@ -413,14 +454,20 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
     useEffect(() => {
         if (typeof window === "undefined" || !storageKey) return;
         const timer = setTimeout(() => {
-            window.localStorage.setItem(storageKey, String(Math.floor(currentTime || 0)));
+            window.localStorage.setItem(
+                storageKey,
+                String(Math.floor(currentTime || 0)),
+            );
         }, 1000);
         return () => clearTimeout(timer);
     }, [currentTime, storageKey]);
 
     useEffect(() => {
         if (typeof window === "undefined" || !bookmarkKey) return;
-        window.localStorage.setItem(bookmarkKey, JSON.stringify([...bookmarked]));
+        window.localStorage.setItem(
+            bookmarkKey,
+            JSON.stringify([...bookmarked]),
+        );
     }, [bookmarked, bookmarkKey]);
 
     // 1. Fetch full transcripts for this kajian
@@ -430,12 +477,20 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
             if (!item.kajian_id) return;
             setLoadingTranscripts(true);
             try {
-                const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api-thollabul.jangkauin.site";
-                const res = await fetch(`${apiUrl}/api/v1/kajian/${item.kajian_id}/transcripts`);
+                const apiUrl =
+                    process.env.NEXT_PUBLIC_API_URL ||
+                    "https://api-thollabul.jangkauin.site";
+                const res = await fetch(
+                    `${apiUrl}/api/v1/kajian/${item.kajian_id}/transcripts`,
+                );
                 if (!res.ok) return;
                 const data = await res.json();
                 if (cancelled) return;
-                const list = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : [];
+                const list = Array.isArray(data?.data)
+                    ? data.data
+                    : Array.isArray(data)
+                      ? data
+                      : [];
                 setTranscripts(list);
             } catch {
                 // ignore
@@ -479,8 +534,14 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                             if (!isMounted) return;
                             setPlayerReady(true);
                             timer = setInterval(() => {
-                                if (playerRef.current && typeof playerRef.current.getCurrentTime === "function" && isMounted) {
-                                    const time = playerRef.current.getCurrentTime();
+                                if (
+                                    playerRef.current &&
+                                    typeof playerRef.current.getCurrentTime ===
+                                        "function" &&
+                                    isMounted
+                                ) {
+                                    const time =
+                                        playerRef.current.getCurrentTime();
                                     setCurrentTime(time);
                                 }
                             }, 350);
@@ -512,13 +573,16 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                 }
             }, 1200);
 
-            if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+            if (
+                !document.querySelector('script[src*="youtube.com/iframe_api"]')
+            ) {
                 const tag = document.createElement("script");
                 tag.src = "https://www.youtube.com/iframe_api";
                 tag.onerror = () => {
                     if (isMounted) setUseFallbackIframe(true);
                 };
-                const firstScriptTag = document.getElementsByTagName("script")[0];
+                const firstScriptTag =
+                    document.getElementsByTagName("script")[0];
                 if (firstScriptTag?.parentNode) {
                     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
                 } else {
@@ -536,8 +600,14 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
         // Listen for postMessage updates from iframe as secondary time source
         const onMessage = (event) => {
             try {
-                const data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
-                if (data?.event === "infoDelivery" && typeof data?.info?.currentTime === "number") {
+                const data =
+                    typeof event.data === "string"
+                        ? JSON.parse(event.data)
+                        : event.data;
+                if (
+                    data?.event === "infoDelivery" &&
+                    typeof data?.info?.currentTime === "number"
+                ) {
                     setCurrentTime(data.info.currentTime);
                 }
             } catch {}
@@ -549,7 +619,10 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
             if (timer) clearInterval(timer);
             if (fallbackTimer) clearTimeout(fallbackTimer);
             window.removeEventListener("message", onMessage);
-            if (playerRef.current && typeof playerRef.current.destroy === "function") {
+            if (
+                playerRef.current &&
+                typeof playerRef.current.destroy === "function"
+            ) {
                 try {
                     playerRef.current.destroy();
                 } catch {}
@@ -561,7 +634,9 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
     const activeIndex = useMemo(() => {
         if (!transcripts || transcripts.length === 0) return -1;
         const cur = Math.floor(currentTime);
-        return transcripts.findIndex((t) => cur >= t.start_seconds && cur <= t.end_seconds);
+        return transcripts.findIndex(
+            (t) => cur >= t.start_seconds && cur <= t.end_seconds,
+        );
     }, [currentTime, transcripts]);
 
     // 4. Auto-scroll to active transcript chunk
@@ -576,7 +651,10 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
 
     // 5. Seek to timestamp when clicking a transcript row
     const handleSeek = (seconds) => {
-        if (playerRef.current && typeof playerRef.current.seekTo === "function") {
+        if (
+            playerRef.current &&
+            typeof playerRef.current.seekTo === "function"
+        ) {
             try {
                 playerRef.current.seekTo(seconds, true);
                 playerRef.current.playVideo?.();
@@ -584,11 +662,19 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
         } else if (iframeRef.current?.contentWindow) {
             try {
                 iframeRef.current.contentWindow.postMessage(
-                    JSON.stringify({ event: "command", func: "seekTo", args: [seconds, true] }),
+                    JSON.stringify({
+                        event: "command",
+                        func: "seekTo",
+                        args: [seconds, true],
+                    }),
                     "*",
                 );
                 iframeRef.current.contentWindow.postMessage(
-                    JSON.stringify({ event: "command", func: "playVideo", args: [] }),
+                    JSON.stringify({
+                        event: "command",
+                        func: "playVideo",
+                        args: [],
+                    }),
                     "*",
                 );
             } catch {}
@@ -616,7 +702,7 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
         <ModalShell
             onClose={onClose}
             overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-2 sm:p-4'
-            panelClassName='bg-white dark:bg-slate-900 w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl max-h-[95vh] flex flex-col'
+            panelClassName='bg-white dark:bg-slate-900 w-full max-w-7xl rounded-2xl overflow-hidden shadow-2xl max-h-[95vh] flex flex-col'
         >
             {/* Header */}
             <div className='flex items-center justify-between p-3.5 sm:p-4 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0'>
@@ -638,7 +724,16 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                     onClick={onClose}
                     className='p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors'
                 >
-                    <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-2xl' aria-hidden='true'><path d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z' /></svg>
+                    <svg
+                        width='1em'
+                        height='1em'
+                        viewBox='0 0 16 16'
+                        fill='currentColor'
+                        className='text-2xl'
+                        aria-hidden='true'
+                    >
+                        <path d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z' />
+                    </svg>
                 </button>
             </div>
 
@@ -662,9 +757,16 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                                         type='button'
                                         onClick={() => {
                                             try {
-                                                if (iframeRef.current?.contentWindow) {
+                                                if (
+                                                    iframeRef.current
+                                                        ?.contentWindow
+                                                ) {
                                                     iframeRef.current.contentWindow.postMessage(
-                                                        JSON.stringify({ event: "command", func: "playVideo", args: [] }),
+                                                        JSON.stringify({
+                                                            event: "command",
+                                                            func: "playVideo",
+                                                            args: [],
+                                                        }),
                                                         "*",
                                                     );
                                                 }
@@ -675,7 +777,13 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                                         aria-label={t("kajian.play_video")}
                                     >
                                         <span className='w-20 h-20 rounded-full bg-red-600 group-hover:bg-red-700 text-white flex items-center justify-center shadow-2xl transition-colors'>
-                                            <svg className='w-10 h-10 ml-1' fill='currentColor' viewBox='0 0 24 24'><path d='M8 5v14l11-7z' /></svg>
+                                            <svg
+                                                className='w-10 h-10 ml-1'
+                                                fill='currentColor'
+                                                viewBox='0 0 24 24'
+                                            >
+                                                <path d='M8 5v14l11-7z' />
+                                            </svg>
                                         </span>
                                     </button>
                                 )}
@@ -695,7 +803,8 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                             </span>
                         </div>
                         <p className='p-2.5 rounded-lg bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 leading-relaxed italic text-gray-800 dark:text-gray-200'>
-                            &ldquo;{highlightText(item.snippet, searchQuery)}&rdquo;
+                            &ldquo;{highlightText(item.snippet, searchQuery)}
+                            &rdquo;
                         </p>
                     </div>
                 </div>
@@ -717,7 +826,9 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                                 <input
                                     type='checkbox'
                                     checked={autoScroll}
-                                    onChange={(e) => setAutoScroll(e.target.checked)}
+                                    onChange={(e) =>
+                                        setAutoScroll(e.target.checked)
+                                    }
                                     className='rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 h-3.5 w-3.5'
                                 />
                                 Auto-scroll
@@ -766,21 +877,28 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                         {loadingTranscripts ? (
                             <div className='flex flex-col items-center justify-center h-48 text-gray-400'>
                                 <div className='animate-spin rounded-full h-5 w-5 border-2 border-emerald-500 border-t-transparent mb-2' />
-                                <span className='text-xs'>{t("kajian.loading_transcript")}</span>
+                                <span className='text-xs'>
+                                    {t("kajian.loading_transcript")}
+                                </span>
                             </div>
                         ) : displayedTranscripts.length === 0 ? (
                             <div className='text-center py-12 text-gray-400 text-xs'>
-                                {filterQuery ? t("kajian.no_matching_sentence") : t("kajian.transcript_not_available")}
+                                {filterQuery
+                                    ? t("kajian.no_matching_sentence")
+                                    : t("kajian.transcript_not_available")}
                             </div>
                         ) : (
                             displayedTranscripts.map((chunk, idx) => {
-                                const isCurrent = transcripts.indexOf(chunk) === activeIndex;
+                                const isCurrent =
+                                    transcripts.indexOf(chunk) === activeIndex;
                                 const isBookmarked = bookmarked.has(chunk.id);
                                 return (
                                     <div
                                         key={chunk.id || idx}
                                         ref={isCurrent ? activeChunkRef : null}
-                                        onClick={() => handleSeek(chunk.start_seconds)}
+                                        onClick={() =>
+                                            handleSeek(chunk.start_seconds)
+                                        }
                                         className={`group p-2 sm:p-2.5 rounded-xl cursor-pointer transition-all duration-200 flex gap-2.5 items-start ${
                                             isCurrent
                                                 ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/20 scale-[1.01]"
@@ -794,9 +912,17 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                                                 toggleBookmark(chunk.id);
                                             }}
                                             className={`shrink-0 text-sm transition-opacity ${
-                                                isBookmarked ? "opacity-100" : "opacity-30 hover:opacity-70"
+                                                isBookmarked
+                                                    ? "opacity-100"
+                                                    : "opacity-30 hover:opacity-70"
                                             }`}
-                                            title={isBookmarked ? t("kajian.remove_bookmark") : t("kajian.add_bookmark")}
+                                            title={
+                                                isBookmarked
+                                                    ? t(
+                                                          "kajian.remove_bookmark",
+                                                      )
+                                                    : t("kajian.add_bookmark")
+                                            }
                                         >
                                             {isBookmarked ? "🔖" : "⚪"}
                                         </button>
@@ -810,8 +936,13 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                                         >
                                             {formatTime(chunk.start_seconds)}
                                         </button>
-                                        <p className={`flex-1 text-xs leading-relaxed ${isCurrent ? "font-medium" : ""}`}>
-                                            {highlightText(chunk.text, filterQuery || searchQuery)}
+                                        <p
+                                            className={`flex-1 text-xs leading-relaxed ${isCurrent ? "font-medium" : ""}`}
+                                        >
+                                            {highlightText(
+                                                chunk.text,
+                                                filterQuery || searchQuery,
+                                            )}
                                         </p>
                                     </div>
                                 );
@@ -829,9 +960,24 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                     rel='noopener noreferrer'
                     className='inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-xs font-semibold hover:bg-red-100 transition-colors'
                 >
-                    <span className='text-sm' aria-hidden='true'>▶</span>
+                    <span className='text-sm' aria-hidden='true'>
+                        ▶
+                    </span>
                     Buka di YouTube
-                    <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-[10px]' aria-hidden='true'><path fill-rule='evenodd' d='M10.5 7H5.5v2h5V7zm-1 4H6.5v-2h3v2zm-5-9h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM6.5 11h3v-2h-3v2zM4 6h8v-.5a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5V6z' clip-rule='evenodd'/></svg>
+                    <svg
+                        width='1em'
+                        height='1em'
+                        viewBox='0 0 16 16'
+                        fill='currentColor'
+                        className='text-[10px]'
+                        aria-hidden='true'
+                    >
+                        <path
+                            fill-rule='evenodd'
+                            d='M10.5 7H5.5v2h5V7zm-1 4H6.5v-2h3v2zm-5-9h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM6.5 11h3v-2h-3v2zM4 6h8v-.5a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5V6z'
+                            clip-rule='evenodd'
+                        />
+                    </svg>
                 </a>
                 <button
                     type='button'

@@ -7,6 +7,7 @@ import { useLayoutMode } from "@/lib/useLayoutMode";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useMemo, useState } from "react";
 import SavedBookmarksView from "./SavedBookmarksView";
+import { SearchIcon, PlayCircleIcon, ShareIcon } from "@/components/icons/Icon";
 import VideoPlayerModal from "./VideoPlayerModal";
 
 const TranscriptSearchView = dynamic(() => import("./TranscriptSearchView"), {
@@ -403,7 +404,7 @@ function ListView({
     return (
         <div>
             <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
-                <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-gray-400 shrink-0' aria-hidden='true'><path d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z' /></svg>
+                <SearchIcon className='text-gray-400 shrink-0' />
                 <input
                     type='text'
                     placeholder={t("kajian.public_search_placeholder")}
@@ -518,7 +519,7 @@ function ListView({
 
             {kajian.length === 0 ? (
                 <div className='text-center py-16 text-gray-400'>
-                    <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-4xl mx-auto mb-3' aria-hidden='true'><path d='M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z' /></svg>
+                    <PlayCircleIcon className='text-4xl mx-auto mb-3' />
                     <p className='text-sm'>{t("kajian.not_found")}</p>
                 </div>
             ) : (
@@ -540,7 +541,7 @@ function ListView({
                                     />
                                     <div className='absolute inset-0 bg-black/20 flex items-center justify-center group-hover/thumb:bg-black/30 transition-colors'>
                                         <div className='w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-600/90 text-white flex items-center justify-center shadow-lg group-hover/thumb:scale-110 transition-transform'>
-                                            <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-lg sm:text-xl ml-0.5' aria-hidden='true'><path d='M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z' /></svg>
+                                            <PlayCircleIcon className='text-lg sm:text-xl ml-0.5' />
                                         </div>
                                     </div>
                                     {k.platform === "youtube" && (
