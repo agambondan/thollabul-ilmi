@@ -7,7 +7,13 @@ import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import SavedBookmarksView from "./SavedBookmarksView";
 import { SearchIcon, PlayCircleIcon } from "@/components/icons/Icon";
-import VideoPlayerModal from "./VideoPlayerModal";
+const TranscriptPlayerModal = dynamic(
+    () =>
+        import("./TranscriptSearchView").then(
+            (mod) => mod.TranscriptPlayerModal,
+        ),
+    { ssr: false },
+);
 
 const TranscriptSearchView = dynamic(() => import("./TranscriptSearchView"), {
     loading: () => (
@@ -365,8 +371,17 @@ export default function KajianClient({
             )}
 
             {playingKajian && (
-                <VideoPlayerModal
-                    kajian={playingKajian}
+                <TranscriptPlayerModal
+                    item={{
+                        ...playingKajian,
+                        kajian_id: playingKajian.id,
+                        video_id: getYouTubeId(playingKajian.url),
+                        timestamp_url: playingKajian.url,
+                        snippet:
+                            playingKajian.description || playingKajian.title,
+                        timestamp: "00:00",
+                        start_seconds: 0,
+                    }}
                     onClose={() => setPlayingKajian(null)}
                 />
             )}

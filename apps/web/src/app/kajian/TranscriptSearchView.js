@@ -394,7 +394,7 @@ function formatTime(seconds) {
     return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
 }
 
-function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
+export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
     const { t } = useLocale();
     const videoId = item
         ? getYouTubeIdFromTimestampUrl(item.timestamp_url) || item.video_id
