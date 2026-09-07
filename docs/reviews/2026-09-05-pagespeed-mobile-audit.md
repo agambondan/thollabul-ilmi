@@ -191,3 +191,25 @@ Audit Lighthouse pasca-deploy: skor sudah stabil di angka 60-73 untuk halaman st
 2. `next/font` dengan `display: 'optional'` untuk skip FOIT dan turunkan FCP.
 3. Inline critical CSS untuk 2 chunk render-blocking (16KB + 9KB) yang masih menambah 894ms ke LCP.
 
+
+---
+
+## 8. Update Setelah Deploy 7 Sep 2026 Sore
+
+Penambahan: mobile kajian player bookmark disinkronkan ke server jika user login (commit `1feec90`).
+Hasil benchmark pasca-deploy:
+
+| Page   | Perf | A11y | BP  | SEO  | LCP   | TBT    | Bootup |
+|--------|------|------|-----|------|-------|--------|--------|
+| /fiqh              | 64 | 96 | 75 | 100 | 6.3s | 520ms | 1.8s |
+| /sejarah           | 71 | 96 | 82 | 100 | 6.6s | 160ms | 1.0s |
+| /kamus             | 70 | 93 | 82 | 100 | 8.2s |  50ms | 0.6s |
+| /asmaul-husna      | 71 | 93 | 82 | 100 | 7.3s | 110ms | 0.8s |
+| /wirid             | 73 | 96 | 79 | 100 | 6.5s | 150ms | —    |
+| /imsakiyah         | 77 | 93 | 82 | 100 | 5.7s | 140ms | 1.0s |
+| /dzikir            | 75 | 93 | 79 | 100 | 6.3s |  50ms | 0.8s |
+| /hadith            | 72 | 97 | 82 | 100 | 7.1s |  70ms | 0.8s |
+| /doa               | 66 | 93 | 82 | 100 | 8.6s | 170ms | 0.7s |
+
+`/imsakiyah` naik ke 77 karena inline SVG menggantikan `react-icons/bs+md` (commit `c0bc72c`).
+
