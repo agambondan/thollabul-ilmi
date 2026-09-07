@@ -14,7 +14,6 @@ import { useSettings } from "@/lib/useSettings";
 import classNames from "classnames";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { TbPlayerTrackNext, TbPlayerTrackPrev } from "react-icons/tb";
 
 const AutoScrollButton = dynamic(
     () => import("@/components/popup/AutoScrollButton"),
@@ -85,6 +84,7 @@ const InfiniteScrollAyahPage = ({
     const [error, setError] = useState("");
     const [selectedQari, setSelectedQari] = useState("");
     const [openActionMenuAyahId, setOpenActionMenuAyahId] = useState(null);
+    const lastSavedAyahRef = useRef(null);
     const loadMoreSentinelRef = useRef(null);
     const pendingPageRef = useRef(null);
     const retryAfterRef = useRef(0);
@@ -154,7 +154,13 @@ const InfiniteScrollAyahPage = ({
 
     useEffect(() => {
         if (initialMatchesSlug && surah) {
-            if (surah.number && ayahs[0] && typeof window !== "undefined") {
+            if (
+                surah.number &&
+                ayahs[0] &&
+                typeof window !== "undefined" &&
+                lastSavedAyahRef.current !== `${surah.number}:${ayahs[0].number}`
+            ) {
+                lastSavedAyahRef.current = `${surah.number}:${ayahs[0].number}`;
                 progressApi
                     .saveQuran(
                         surah.number,
@@ -190,7 +196,12 @@ const InfiniteScrollAyahPage = ({
                     nextAyahs.length <
                         (nextSurah.number_of_ayahs ?? nextAyahs.length),
                 );
-                if (nextSurah.number && nextAyahs[0]) {
+                if (
+                    nextSurah.number &&
+                    nextAyahs[0] &&
+                    lastSavedAyahRef.current !== `${nextSurah.number}:${nextAyahs[0].number}`
+                ) {
+                    lastSavedAyahRef.current = `${nextSurah.number}:${nextAyahs[0].number}`;
                     progressApi
                         .saveQuran(
                             nextSurah.number,
@@ -466,15 +477,21 @@ const InfiniteScrollAyahPage = ({
                             }
                             className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                         >
-                            <TbPlayerTrackPrev size={13} />
+                            <svg width={13} height={13} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' aria-hidden='true'>
+                                <path d='M21 5v14' />
+                                <path d='M17 12L3 5v14l14-7z' />
+                            </svg>
                             <span className='max-w-[75px] sm:max-w-[120px] truncate'>
                                 {getSurahName(surah?.prev_surah, lang) ??
                                     t("quran.prev")}
-                           </span>
-                       </Link>
+                            </span>
+                        </Link>
                     ) : (
                         <span className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-gray-300 dark:text-slate-600 cursor-not-allowed'>
-                            <TbPlayerTrackPrev size={13} />
+                            <svg width={13} height={13} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' aria-hidden='true'>
+                                <path d='M21 5v14' />
+                                <path d='M17 12L3 5v14l14-7z' />
+                            </svg>
                             <span>{t("quran.prev")}</span>
                         </span>
                     )}
@@ -494,12 +511,18 @@ const InfiniteScrollAyahPage = ({
                                 {getSurahName(surah?.next_surah, lang) ??
                                     t("quran.next")}
                             </span>
-                            <TbPlayerTrackNext size={13} />
+                            <svg width={13} height={13} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' aria-hidden='true'>
+                                <path d='M3 5v14' />
+                                <path d='M7 12l14-7v14l-14-7z' />
+                            </svg>
                         </Link>
                     ) : (
                         <span className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-gray-300 dark:text-slate-600 cursor-not-allowed'>
                             <span>{t("quran.next")}</span>
-                            <TbPlayerTrackNext size={13} />
+                            <svg width={13} height={13} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' aria-hidden='true'>
+                                <path d='M3 5v14' />
+                                <path d='M7 12l14-7v14l-14-7z' />
+                            </svg>
                         </span>
                     )}
                 </div>
