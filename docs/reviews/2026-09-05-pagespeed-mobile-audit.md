@@ -45,7 +45,7 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 | 17  | `/kiblat`               |   **69**    |      87       |       81       | 100 | 2.5s | 6.3s  | **160ms** | **0.000** |       ✅ Geo on-click        |
 | 18  | `/tokoh`                |   **77**    |      88       |       81       | 100 | 2.2s | 4.3s  | **200ms** | **0.000** |           ✅ Good            |
 | 19  | `/tafsir`               |   **76**    |    **93**     |       81       | 100 | 2.5s | 4.6s  | **210ms** | **0.000** |           ✅ Good            |
-| 20  | `/tasbih`               |   **57**    |    **88**     |       81       | 100 | 2.0s | 6.7s  |   580ms   | **0.000** | ✅ react-icons + ContentWidth removed |
+| 20  | `/tasbih`               |   **67**    |    **88**     |       81       | 100 | 1.6s | 6.1s  |   430ms   | **0.000** | ✅ below-fold content-visibility |
 | 21  | `/sejarah`              |   **73**    |    **93**     |       81       | 100 | 1.9s | 8.4s  | **130ms** | **0.000** |    ✅ RSC + ISR Active (TBT 130ms) |
 | 22  | `/panduan-sholat`       |   **70**    |    **92**     |       77       | 100 | 2.0s | 7.6s  |   220ms   | **0.000** |       ✅ Chunk 6 Steps       |
 | 23  | `/kamus`                |   **63**    |    **93**     |       81       | 100 | 2.9s | 8.2s  | **290ms** | **0.000** |   ✅ RSC + ISR Active (TBT 290ms) |

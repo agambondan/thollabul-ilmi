@@ -101,8 +101,7 @@ export const exploreRouteTranslations = {
         "explore.kajian.filterBookmarks": "Filter bookmark...",
         "explore.kajian.savedCount": "{count} bookmark tersimpan",
         "explore.kajian.removeBookmark": "Hapus",
-        "explore.kajian.noMatchingBookmarks":
-            "Tidak ada bookmark yang cocok",
+        "explore.kajian.noMatchingBookmarks": "Tidak ada bookmark yang cocok",
         "explore.kajian.emptyBookmarks": "Belum ada bookmark",
         "explore.kajian.emptyBookmarksHint":
             "Buka transkrip kajian dan tekan ikon 🔖 untuk menyimpan potongan ceramah penting.",

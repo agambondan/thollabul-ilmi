@@ -1354,7 +1354,9 @@ export function createQuranScreenRenderers(context) {
                 ))}
             </View>
 
-            <Text style={styles.settingLabel}>{t("quran.fullscreen.label")}</Text>
+            <Text style={styles.settingLabel}>
+                {t("quran.fullscreen.label")}
+            </Text>
             <View style={styles.settingChips}>
                 <Pressable
                     accessibilityRole='button'
@@ -1376,9 +1378,7 @@ export function createQuranScreenRenderers(context) {
                     </Text>
                 </Pressable>
             </View>
-            <Text style={styles.settingHint}>
-                {t("quran.fullscreen.hint")}
-            </Text>
+            <Text style={styles.settingHint}>{t("quran.fullscreen.hint")}</Text>
 
             <Pressable
                 accessibilityRole='button'
