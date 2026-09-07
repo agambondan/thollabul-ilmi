@@ -144,6 +144,8 @@ const enAdmin = {
     "admin.group.content": "Content",
     "admin.group.worship": "Worship",
     "admin.group.tools": "Learning & Tools",
+    "admin.group.rijal": "Rijal Studies",
+    "admin.group.directory": "Directory",
     "admin.group.system": "System",
     "admin.nav.dashboard": "Dashboard",
     "admin.nav.blog": "Blog / Articles",

@@ -84,6 +84,16 @@ const NAV_GROUPS = [
                 icon: <BsListCheck />,
             },
             {
+                href: "/admin/achievements",
+                label: "Achievements",
+                icon: <BsStar />,
+            },
+            {
+                href: "/admin/amalan",
+                label: "Master Amalan",
+                icon: <BsListCheck />,
+            },
+            {
                 href: "/admin/fiqh",
                 labelKey: "admin.nav.fiqh",
                 icon: <BsListCheck />,
@@ -132,6 +142,41 @@ const NAV_GROUPS = [
                 href: "/admin/quiz",
                 labelKey: "admin.nav.quiz",
                 icon: <BsQuestionCircle />,
+            },
+        ],
+    },
+    {
+        titleKey: "admin.group.rijal",
+        links: [
+            {
+                href: "/admin/perawi",
+                label: "Perawi",
+                icon: <BsPeople />,
+            },
+            {
+                href: "/admin/jarh-tadil",
+                label: "Jarh wa Ta'dil",
+                icon: <BsQuestionCircle />,
+            },
+            {
+                href: "/admin/sanad",
+                label: "Sanad",
+                icon: <BsBook />,
+            },
+        ],
+    },
+    {
+        titleKey: "admin.group.directory",
+        links: [
+            {
+                href: "/admin/tokoh-tarikh",
+                label: "Tokoh Tarikh",
+                icon: <BsPeople />,
+            },
+            {
+                href: "/admin/locations",
+                label: "Peta Islam",
+                icon: <BsMap />,
             },
         ],
     },

@@ -900,6 +900,80 @@ export const adminLibraryApi = {
         authFetch(`/api/v1/library/books/${id}`, { method: "DELETE" }),
 };
 
+const buildResourceApi = ({
+    listPath,
+    createPath = listPath,
+    updatePath = (id) => `${listPath}/${id}`,
+    deletePath = (id) => `${listPath}/${id}`,
+    listParam = "page=0&size=500",
+}) => ({
+    list: () => authFetch(`${listPath}?${listParam}`),
+    create: (data) =>
+        authFetch(createPath, { method: "POST", body: JSON.stringify(data) }),
+    update: (id, data) =>
+        authFetch(updatePath(id), {
+            method: "PUT",
+            body: JSON.stringify(data),
+        }),
+    delete: (id) => authFetch(deletePath(id), { method: "DELETE" }),
+});
+
+export const adminAmalanApi = buildResourceApi({
+    listPath: "/api/v1/amalan",
+    createPath: "/api/v1/amalan/items",
+    updatePath: (id) => `/api/v1/amalan/items/${id}`,
+    deletePath: (id) => `/api/v1/amalan/items/${id}`,
+});
+
+export const adminAchievementApi = buildResourceApi({
+    listPath: "/api/v1/achievements",
+});
+
+export const adminPerawiApi = buildResourceApi({
+    listPath: "/api/v1/perawi",
+    listParam: "size=500",
+});
+
+export const adminJarhTadilApi = buildResourceApi({
+    listPath: "/api/v1/jarh-tadil",
+    listParam: "size=500",
+});
+
+export const adminSanadApi = {
+    list: () => authFetch("/api/v1/hadiths?size=1"),
+    get: (id) => authFetch(`/api/v1/hadiths/${id}/sanad`),
+    create: (data) =>
+        authFetch("/api/v1/sanad", { method: "POST", body: JSON.stringify(data) }),
+    update: (id, data) =>
+        authFetch(`/api/v1/sanad/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(data),
+        }),
+    delete: (id) => authFetch(`/api/v1/sanad/${id}`, { method: "DELETE" }),
+    addMata: (id, data) =>
+        authFetch(`/api/v1/sanad/${id}/mata-sanad`, {
+            method: "POST",
+            body: JSON.stringify(data),
+        }),
+    updateMata: (id, data) =>
+        authFetch(`/api/v1/mata-sanad/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(data),
+        }),
+    deleteMata: (id) =>
+        authFetch(`/api/v1/mata-sanad/${id}`, { method: "DELETE" }),
+};
+
+export const adminTokohTarikhApi = buildResourceApi({
+    listPath: "/api/v1/tokoh-tarikh",
+    listParam: "page=1&size=200",
+});
+
+export const adminLocationApi = buildResourceApi({
+    listPath: "/api/v1/locations",
+    listParam: "page=1&size=200",
+});
+
 export const adminKamusApi = {
     list: (page = 0, size = 100) =>
         authFetch(`/api/v1/dictionary?page=${page}&size=${size}`),

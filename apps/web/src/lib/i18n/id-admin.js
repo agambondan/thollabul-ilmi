@@ -149,6 +149,8 @@ const idAdmin = {
     "admin.group.content": "Konten",
     "admin.group.worship": "Ibadah",
     "admin.group.tools": "Belajar & Tools",
+    "admin.group.rijal": "Ilmu Rijal",
+    "admin.group.directory": "Direktori",
     "admin.group.system": "Sistem",
     "admin.nav.dashboard": "Dashboard",
     "admin.nav.blog": "Blog / Artikel",
