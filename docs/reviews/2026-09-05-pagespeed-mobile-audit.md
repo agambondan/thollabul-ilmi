@@ -30,9 +30,9 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 | 2   | `/quran`                |   **72**    |    **93**     |       81       | 100 | 1.4s | 6.4s  | **80ms**  | **0.001** |   ✅ ISR Active (TBT 80ms)   |
 | 3   | `/quran/1` (Al-Fatihah) |   **67**    |      89       |       77       | 92  | 2.4s | 6.1s  | **220ms** | **0.000** |    ✅ SSG Active (CLS 0)     |
 | 4   | `/quran/2` (Al-Baqarah) |   **79**    |      89       |       77       | 92  | 1.6s | 5.1s  |   140ms   | **0.025** | ✅ react-icons dropped + progressApi dedup |
-| 5   | `/quran/page-mushaf`    |   **63**    |    **96**     |       81       | 100 | 2.6s | 6.6s  | **120ms** | **0.146** |      ⚠️ CLS Borderline       |
+| 5   | `/quran/page-mushaf`    |   **74**    |    **96**     |       81       | 100 | 2.1s | 6.4s  | **110ms** | **0.000** |    ✅ TBT floor (110ms)      |
 | 6   | `/hadith`               |   **65**    |    **97**     |       81       | 100 | 1.9s | 5.1s  | **440ms** | **0.000** | ✅ Tab CLS + Cover Fixed   |
-| 7   | `/hadith/bukhari`       |   **58**    |    **96**     |       81       | 92  | 2.1s | 5.7s  |   620ms   | **0.000** |    ✅ SSG themes+chapters+hadiths |
+| 7   | `/hadith/bukhari`       |   **75**    |    **96**     |       81       | 92  | 2.2s | 4.7s  |   240ms   | **0.000** |    ✅ SSG + react-icons dropped |
 | 8   | `/hadith/muslim`        |   **63**    |    **96**     |       81       | 100 | 2.1s | 7.1s  |   330ms   | **0.000** |    ✅ SSG themes+chapters+hadiths |
 | 9   | `/jadwal-sholat`        |   **52**    |    **93**     |       81       | 100 | 2.1s | 5.7s  |  1130ms   | **0.000** | ✅ Skip mount refetch + drop react-icons |
 | 10  | `/imsakiyah`            |   **70**    |    **93**     |       81       | 100 | 2.0s | 6.8s  | **150ms** | **0.000** |         ✅ TBT -88%          |
