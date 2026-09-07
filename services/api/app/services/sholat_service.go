@@ -15,6 +15,9 @@ type SholatService interface {
 	GetStats(userID uuid.UUID) (*model.SholatStats, error)
 	GetAllGuides() ([]model.SholatGuide, error)
 	GetGuideByStep(step int) (*model.SholatGuide, error)
+	CreateGuide(guide *model.SholatGuide) (*model.SholatGuide, error)
+	UpdateGuide(id int, guide *model.SholatGuide) (*model.SholatGuide, error)
+	DeleteGuide(id int) error
 }
 
 type sholatService struct {

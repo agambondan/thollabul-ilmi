@@ -196,12 +196,13 @@ export default function TranscriptSearchView({
                 </div>
             )}
 
-            {/* Results metadata */}
-            <div className='mb-3 text-xs text-gray-500 dark:text-gray-400'>
-                {loading
-                    ? (t("common.searching") || "Mencari...")
-                    : `${uniqueResults.length} ${t("kajian.results_found") || "hasil"} • mode: ${searchModes.find((m) => m.key === mode)?.label}`}
-            </div>
+            {query.trim() && (
+                <div className='mb-3 text-xs text-gray-500 dark:text-gray-400'>
+                    {loading
+                        ? (t("common.searching") || "Mencari...")
+                        : `${uniqueResults.length} ${t("kajian.results_found") || "hasil"} • mode: ${searchModes.find((m) => m.key === mode)?.label}`}
+                </div>
+            )}
 
             {loading ? (
                 <div className='space-y-3'>

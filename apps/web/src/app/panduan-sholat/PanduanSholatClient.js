@@ -176,15 +176,7 @@ export function PanduanSholatContent({ initialSteps = [] }) {
             {/* Prayer info card + steps */}
             {(() => {
                 const p = PRAYERS[selectedPrayer] ?? PRAYERS[0];
-                const niatStep = {
-                    step: t("prayer_guide.intention"),
-                    arabic: p.niat.arabic,
-                    latin: p.niat.latin,
-                    terjemah: getLocalizedField(p.niat, "terjemah", lang),
-                    note: "",
-                    source: "",
-                };
-                const steps = [niatStep, ...apiSteps];
+                const steps = apiSteps;
 
                 return (
                     <div className='space-y-3'>

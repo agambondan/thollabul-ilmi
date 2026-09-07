@@ -168,15 +168,8 @@ func (r *kajianRepository) SearchTranscripts(query, speaker, mode string, queryV
 		return nil, 0, err
 	}
 
-	// No query => return chronological chunks (no scoring)
 	if query == "" {
-		var rows []searchTranscriptRow
-		err := base.Order(fmt.Sprintf("%s.kajian_id ASC, %s.start_seconds ASC", transcriptTable, transcriptTable)).
-			Limit(limit).Offset(offset).Scan(&rows).Error
-		if err != nil {
-			return nil, 0, err
-		}
-		return toResults(rows, "", 1.0, "lexical"), total, nil
+		return []model.SearchTranscriptResult{}, 0, nil
 	}
 
 	// Pure lexical (exact or semantic fallback) - both use whole-word LIKE

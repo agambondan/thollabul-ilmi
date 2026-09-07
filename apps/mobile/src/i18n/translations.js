@@ -1,4 +1,4 @@
-import { exploreRouteTranslations } from "./exploreRouteTranslations";
+import { exploreRouteTranslations } from "./exploreRouteTranslations.js";
 
 export const mobileLanguages = {
     en: "en",

@@ -9,7 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BsPlayCircle, BsSearch, BsYoutube } from "react-icons/bs";
 import { MdOutlinePlayLesson } from "react-icons/md";
 import SavedBookmarksView from "./SavedBookmarksView";
-import { TranscriptPlayerModal } from "./TranscriptSearchView";
+import VideoPlayerModal from "./VideoPlayerModal";
 
 const TranscriptSearchView = dynamic(() => import("./TranscriptSearchView"), {
     loading: () => (
@@ -370,32 +370,8 @@ export default function KajianClient({
             )}
 
             {playingKajian && (
-                <TranscriptPlayerModal
-                    item={{
-                        id: playingKajian.id,
-                        kajian_id: playingKajian.id,
-                        video_id: getYouTubeId(playingKajian.url),
-                        title:
-                            getLocalizedField(playingKajian, "title", lang) ||
-                            playingKajian.title,
-                        speaker:
-                            playingKajian.speaker || playingKajian.ustadz || "",
-                        topic:
-                            playingKajian.topic || playingKajian.category || "",
-                        start_seconds: 0,
-                        end_seconds: 0,
-                        timestamp: "00:00",
-                        snippet:
-                            getLocalizedField(
-                                playingKajian,
-                                "description",
-                                lang,
-                            ) ||
-                            playingKajian.description ||
-                            "",
-                        timestamp_url: playingKajian.url,
-                        thumbnail_url: playingKajian.thumbnail_url,
-                    }}
+                <VideoPlayerModal
+                    kajian={playingKajian}
                     onClose={() => setPlayingKajian(null)}
                 />
             )}
