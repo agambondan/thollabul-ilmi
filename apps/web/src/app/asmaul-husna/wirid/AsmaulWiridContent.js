@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
 import { asmaulHusnaMinimal } from "@/lib/asmaulHusnaMinimal";
 import { getLocalizedText } from "@/lib/translation";
@@ -109,7 +110,7 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
     };
 
     return (
-        <div className='max-w-3xl mx-auto px-4 py-6'>
+        <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
             <div className='text-center mb-6'>
                 <Link
                     href={basePath}
@@ -267,7 +268,7 @@ export function AsmaulWiridContent({ basePath = "/asmaul-husna" }) {
                     </p>
                 </div>
             </div>
-        </div>
+        </ContentWidth>
     );
 }
 

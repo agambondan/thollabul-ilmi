@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { sholatTrackerApi, streakApi } from "@/lib/api";
@@ -160,7 +161,7 @@ const SholatTrackerPage = () => {
     const pct = Math.round((doneCount / 5) * 100);
 
     return (
-        <div className='px-4 py-6'>
+        <ContentWidth compact='max-w-4xl' className='px-4 py-6'>
             <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-6'>
                 {t("sholat.title")}
             </h1>
@@ -371,7 +372,7 @@ const SholatTrackerPage = () => {
                     </div>
                 </div>
             )}
-        </div>
+        </ContentWidth>
     );
 };
 

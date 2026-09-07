@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { hafalanApi } from "@/lib/api";
@@ -141,7 +142,7 @@ const MurojaahPage = () => {
     }
 
     return (
-        <div className='px-4 py-6'>
+        <ContentWidth compact='max-w-4xl' className='px-4 py-6'>
             <div className='flex items-center gap-2 mb-2'>
                 <MdRefresh className='text-xl text-emerald-600 dark:text-emerald-400' />
                 <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
@@ -302,7 +303,7 @@ const MurojaahPage = () => {
                     })}
                 </div>
             )}
-        </div>
+        </ContentWidth>
     );
 };
 

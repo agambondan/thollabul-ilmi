@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { amalanApi, streakApi } from "@/lib/api";
@@ -113,7 +114,7 @@ const AmalanPage = () => {
     const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
 
     return (
-        <div className='px-4 py-6'>
+        <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
             <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-1'>
                 {t("amalan.title")}
             </h1>
@@ -186,7 +187,7 @@ const AmalanPage = () => {
                     })}
                 </ul>
             )}
-        </div>
+        </ContentWidth>
     );
 };
 

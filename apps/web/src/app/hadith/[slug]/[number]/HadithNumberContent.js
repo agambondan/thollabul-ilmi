@@ -1,3 +1,4 @@
+import ContentWidth from "@/components/layout/ContentWidth";
 import HadithPage from "@/app/hadith/[slug]/HadithPage";
 import HadithNumberHeader from "./HadithNumberHeader";
 import { getLocalizedTranslation } from "@/lib/translation";
@@ -71,7 +72,7 @@ export default async function HadithNumberContent({
     const sunnahUrl = getSunnahComUrl(book.slug ?? params.slug, number);
 
     return (
-        <div className='p-4'>
+        <ContentWidth compact='max-w-4xl' className='p-4'>
             <HadithNumberHeader
                 basePath={basePath}
                 slug={params.slug}
@@ -84,6 +85,6 @@ export default async function HadithNumberContent({
                 hadith={hadith}
                 basePath={basePath}
             />
-        </div>
+        </ContentWidth>
     );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { notificationApi, notificationInboxApi } from "@/lib/api";
@@ -457,7 +458,7 @@ const NotificationsPage = () => {
     const unreadCount = notifs.filter((n) => !n.is_read).length;
 
     return (
-        <div className='px-4 py-6'>
+        <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
             <div className='flex items-center justify-between mb-6'>
                 <div className='flex items-center gap-2'>
                     <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
@@ -807,7 +808,7 @@ const NotificationsPage = () => {
                     ))}
                 </ul>
             )}
-        </div>
+        </ContentWidth>
     );
 };
 

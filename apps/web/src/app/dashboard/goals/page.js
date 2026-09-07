@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { goalsApi } from "@/lib/api";
@@ -209,7 +210,7 @@ const GoalsPage = () => {
     );
 
     return (
-        <div className='px-4 py-6'>
+        <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
             <div className='flex items-center justify-between mb-6'>
                 <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {t("goals.title")}
@@ -535,7 +536,7 @@ const GoalsPage = () => {
                     </div>
                 </div>
             )}
-        </div>
+        </ContentWidth>
     );
 };
 

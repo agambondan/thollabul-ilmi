@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import DailyReminderCarousel from "@/components/DailyReminderCarousel";
 import AdzanQuickControl from "@/components/AdzanQuickControl";
 import PrayerCountdownWidget from "@/components/PrayerCountdownWidget";
@@ -166,7 +167,7 @@ const DashboardPage = () => {
     if (authLoading) return null;
 
     return (
-        <div className='px-4 py-6'>
+        <ContentWidth compact='max-w-5xl' className='px-4 py-6'>
             {/* Welcome */}
             <div className='mb-6'>
                 <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
@@ -389,7 +390,7 @@ const DashboardPage = () => {
                     {t("common.write")}
                 </Link>
             </div>
-        </div>
+        </ContentWidth>
     );
 };
 

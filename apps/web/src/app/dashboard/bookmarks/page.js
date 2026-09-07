@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { bookmarkApi } from "@/lib/api";
@@ -136,7 +137,7 @@ const BookmarksPage = () => {
     const typeIcon = (type) => REF_ICON[type] ?? "🔖";
 
     return (
-        <div className='px-4 py-6'>
+        <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
             <div className='flex items-center justify-between mb-6'>
                 <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {t("bookmarks.title")}
@@ -257,7 +258,7 @@ const BookmarksPage = () => {
                     ))}
                 </div>
             )}
-        </div>
+        </ContentWidth>
     );
 };
 

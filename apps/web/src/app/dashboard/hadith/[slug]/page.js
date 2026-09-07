@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import dynamic from "next/dynamic";
 import BookmarkButton from "@/components/BookmarkButton";
 import GradeBadge, { HadithAuthenticity } from "@/components/GradeBadge";
@@ -891,7 +892,7 @@ export function HadithDetailContent({
     }, [hadiths]);
 
     return (
-        <div className='p-4'>
+        <ContentWidth compact='max-w-4xl' className='p-4'>
             <Link
                 href={basePath}
                 className='inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:underline mb-4'
@@ -1027,6 +1028,6 @@ export function HadithDetailContent({
                     )}
                 </>
             )}
-        </div>
+        </ContentWidth>
     );
 }

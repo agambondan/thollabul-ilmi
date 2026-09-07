@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import Link from "next/link";
 import { useEffect, useState, use } from "react";
 import { useLocale } from "@/context/Locale";
@@ -144,7 +145,7 @@ export function PerawiDetailContent({
     const jarhList = jarhTadilList.filter((j) => j.jenis_nilai === "jarh");
 
     return (
-        <div className='p-4 md:p-6'>
+        <ContentWidth compact='max-w-4xl' className='p-4 md:p-6'>
             <Link
                 href={basePath}
                 className='inline-flex items-center gap-1 text-sm text-teal-600 dark:text-teal-400 hover:underline mb-5'
@@ -308,6 +309,6 @@ export function PerawiDetailContent({
                     )}
                 </div>
             )}
-        </div>
+        </ContentWidth>
     );
 }

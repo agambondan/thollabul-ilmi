@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useRef, useState } from "react";
 
@@ -168,7 +169,7 @@ export function TasbihContent() {
         }));
 
     return (
-        <div className='max-w-3xl mx-auto px-4 py-6'>
+        <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
             <div className='text-center mb-6'>
                 <p
                     className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'
@@ -389,7 +390,7 @@ export function TasbihContent() {
                     );
                 })}
             </div>
-        </div>
+        </ContentWidth>
     );
 }
 

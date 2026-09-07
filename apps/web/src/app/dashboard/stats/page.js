@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
 import { useAuth } from "@/context/Auth";
 import {
@@ -197,7 +198,7 @@ const StatsPage = () => {
     const prayerCount = countDonePrayers(todayPrayer);
 
     return (
-        <div className='px-4 py-6'>
+        <ContentWidth compact='max-w-4xl' className='px-4 py-6'>
             <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-6'>
                 {t("stats.title")}
             </h1>
@@ -398,7 +399,7 @@ const StatsPage = () => {
                     />
                 </div>
             )}
-        </div>
+        </ContentWidth>
     );
 };
 

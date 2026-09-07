@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import { useLocale } from "@/context/Locale";
@@ -124,7 +125,7 @@ export function PerawiContent({
     };
 
     return (
-        <div className='p-6'>
+        <ContentWidth compact='max-w-4xl' className='p-6'>
             <div className='mb-6'>
                 <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
                     {t("perawi.title")}
@@ -250,6 +251,6 @@ export function PerawiContent({
                     </button>
                 </div>
             )}
-        </div>
+        </ContentWidth>
     );
 }

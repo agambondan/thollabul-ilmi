@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import ProfileContent from "@/components/account/ProfileContent";
 import Section from "@/components/Section";
 
@@ -10,9 +11,9 @@ import Section from "@/components/Section";
 const ProfilePage = () => (
     <main className='min-h-screen flex flex-col'>
         <Section>
-            <div className='w-full px-4'>
+            <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
                 <ProfileContent />
-            </div>
+            </ContentWidth>
         </Section>
     </main>
 );
