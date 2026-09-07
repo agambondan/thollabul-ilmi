@@ -702,7 +702,7 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
         <ModalShell
             onClose={onClose}
             overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-2 sm:p-4'
-            panelClassName='bg-white dark:bg-slate-900 w-full max-w-7xl rounded-2xl overflow-hidden shadow-2xl max-h-[95vh] flex flex-col'
+            panelClassName='bg-white dark:bg-slate-900 w-[90vw] max-w-none rounded-2xl overflow-hidden shadow-2xl max-h-[95vh] flex flex-col'
         >
             {/* Header */}
             <div className='flex items-center justify-between p-3.5 sm:p-4 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0'>
