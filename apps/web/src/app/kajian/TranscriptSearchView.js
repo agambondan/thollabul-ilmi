@@ -4,6 +4,7 @@ import { useLocale } from "@/context/Locale";
 import Image from "next/image";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import ModalShell from "@/components/ModalShell";
+import { SearchIcon, PlayCircleIcon, ShareIcon } from "@/components/icons/Icon";
 
 export const getSearchModes = (t) => [
     {
@@ -111,7 +112,7 @@ export default function TranscriptSearchView({
         <div>
             {/* Search bar */}
             <div className='flex items-center gap-2 mb-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-emerald-200 dark:border-emerald-800 px-3 py-2.5 shadow-sm'>
-                <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-emerald-500 shrink-0 text-lg' aria-hidden='true'><path d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z' /></svg>
+                <SearchIcon className='text-emerald-500 shrink-0 text-lg' />
                 <input
                     type='text'
                     placeholder={
@@ -218,7 +219,7 @@ export default function TranscriptSearchView({
                 </div>
             ) : uniqueResults.length === 0 ? (
                 <div className='text-center py-12 text-gray-400'>
-                    <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-4xl mx-auto mb-3 opacity-50' aria-hidden='true'><path d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z' /></svg>
+                    <SearchIcon className='text-4xl mx-auto mb-3 opacity-50' />
                     <p className='text-sm'>
                         {query
                             ? (t("kajian.empty_search_hint") || "Tidak ada hasil. Coba ubah kata kunci atau mode pencarian.")
@@ -273,7 +274,7 @@ function TranscriptResultCard({ result, query, onPlay, onShare }) {
                             unoptimized
                         />
                         <div className='absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center'>
-                            <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-white text-2xl opacity-90' aria-hidden='true'><path d='M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z' /></svg>
+                            <PlayCircleIcon className='text-white text-2xl opacity-90' />
                         </div>
                         <div className='absolute bottom-1 right-1 bg-black/80 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded'>
                             {result.timestamp}
@@ -326,7 +327,7 @@ function TranscriptResultCard({ result, query, onPlay, onShare }) {
                             onClick={onPlay}
                             className='inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 hover:underline'
                         >
-                            <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-sm' aria-hidden='true'><path d='M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z' /></svg>
+                            <PlayCircleIcon className='text-sm' />
                             Putar @ {result.timestamp}
                         </button>
                         <a
@@ -343,7 +344,7 @@ function TranscriptResultCard({ result, query, onPlay, onShare }) {
                             onClick={() => onShare?.(result)}
                             className='inline-flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400'
                         >
-                            <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-sm' aria-hidden='true'><path d='M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z' /></svg>
+                            <ShareIcon className='text-sm' />
                             Bagikan
                         </button>
                     </div>
@@ -378,6 +379,7 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
     const [filterQuery, setFilterQuery] = useState("");
     const [bookmarked, setBookmarked] = useState(new Set());
     const [useFallbackIframe, setUseFallbackIframe] = useState(false);
+    const [playerReady, setPlayerReady] = useState(false);
 
     const playerRef = useRef(null);
     const iframeRef = useRef(null);
@@ -457,6 +459,7 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
         const initPlayer = () => {
             if (!window.YT || !window.YT.Player) {
                 setUseFallbackIframe(true);
+                setPlayerReady(true);
                 return;
             }
             try {
@@ -474,6 +477,7 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                     events: {
                         onReady: () => {
                             if (!isMounted) return;
+                            setPlayerReady(true);
                             timer = setInterval(() => {
                                 if (playerRef.current && typeof playerRef.current.getCurrentTime === "function" && isMounted) {
                                     const time = playerRef.current.getCurrentTime();
@@ -482,24 +486,31 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                             }, 350);
                         },
                         onError: () => {
-                            if (isMounted) setUseFallbackIframe(true);
+                            if (isMounted) {
+                                setUseFallbackIframe(true);
+                                setPlayerReady(true);
+                            }
                         },
                     },
                 });
             } catch {
-                if (isMounted) setUseFallbackIframe(true);
+                if (isMounted) {
+                    setUseFallbackIframe(true);
+                    setPlayerReady(true);
+                }
             }
         };
 
         if (window.YT && window.YT.Player) {
             initPlayer();
         } else {
-            // If API script fails to load within 2.5s (e.g. corporate SSL/firewall block), fallback
+            // If API script fails to load within 1.2s (e.g. corporate SSL/firewall block), fallback
             fallbackTimer = setTimeout(() => {
                 if (isMounted && (!window.YT || !window.YT.Player)) {
                     setUseFallbackIframe(true);
+                    setPlayerReady(true);
                 }
-            }, 2500);
+            }, 1200);
 
             if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
                 const tag = document.createElement("script");
@@ -637,14 +648,38 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                 <div className='lg:col-span-7 flex flex-col min-h-0 border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-slate-800'>
                     <div className='aspect-video w-full bg-black shrink-0 relative'>
                         {useFallbackIframe && videoId ? (
-                            <iframe
-                                ref={iframeRef}
-                                src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&start=${Math.floor(playerStart || 0)}&enablejsapi=1&origin=${typeof window !== "undefined" ? encodeURIComponent(window.location.origin) : ""}`}
-                                title={item?.title || "YouTube player"}
-                                allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
-                                allowFullScreen
-                                className='absolute inset-0 w-full h-full'
-                            />
+                            <>
+                                <iframe
+                                    ref={iframeRef}
+                                    src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0&modestbranding=1&start=${Math.floor(playerStart || 0)}&enablejsapi=1&origin=${typeof window !== "undefined" ? encodeURIComponent(window.location.origin) : ""}`}
+                                    title={item?.title || "YouTube player"}
+                                    allow='autoplay; encrypted-media; accelerometer; gyroscope; picture-in-picture'
+                                    allowFullScreen
+                                    className='absolute inset-0 w-full h-full'
+                                />
+                                {!playerReady && (
+                                    <button
+                                        type='button'
+                                        onClick={() => {
+                                            try {
+                                                if (iframeRef.current?.contentWindow) {
+                                                    iframeRef.current.contentWindow.postMessage(
+                                                        JSON.stringify({ event: "command", func: "playVideo", args: [] }),
+                                                        "*",
+                                                    );
+                                                }
+                                            } catch {}
+                                            setPlayerReady(true);
+                                        }}
+                                        className='absolute inset-0 z-10 flex items-center justify-center bg-black/60 hover:bg-black/50 transition-colors group'
+                                        aria-label={t("kajian.play_video")}
+                                    >
+                                        <span className='w-20 h-20 rounded-full bg-red-600 group-hover:bg-red-700 text-white flex items-center justify-center shadow-2xl transition-colors'>
+                                            <svg className='w-10 h-10 ml-1' fill='currentColor' viewBox='0 0 24 24'><path d='M8 5v14l11-7z' /></svg>
+                                        </span>
+                                    </button>
+                                )}
+                            </>
                         ) : (
                             <div id={containerId} className='w-full h-full' />
                         )}
