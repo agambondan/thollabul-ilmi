@@ -174,3 +174,20 @@ _Estimasi hasil:_ Bundle size awal turun ~35%, TBT turun ke **< 150ms**.
 Pondasi utama Web Vitals untuk **SEO (100)**, **Accessibility (93 - 100)**, **Best Practices (81)**, dan **CLS (0.00)** sudah solid dan selesai diperbaiki secara menyeluruh di seluruh 164 route.
 
 Satu-satunya faktor penahan skor Performance di angka 60-70an saat ini adalah arsitektur **Client-Side Rendering (CSR)** pada halaman konten dalil/bacaan. Mengubah halaman bacaan tersebut menjadi **Server Component / Static (SSG)** adalah kunci utama untuk menaikkan skor Performance mobile ke **90+**.
+
+---
+
+## 7. Update Setelah Investigasi LCP (7 Sep 2026)
+
+Audit Lighthouse pasca-deploy: skor sudah stabil di angka 60-73 untuk halaman statis. Investigasi lebih dalam menunjukkan **gap FCP → LCP** adalah bottleneck utama (bukan CSS/JS blocking). Pada `/wirid`:
+- FCP 1.9s (skeleton loading.tsx tampil),
+- LCP 6.5s (h1 baru muncul setelah JSX client-component ter-hydrate).
+
+**Fix arsitektur:** konversi `/wirid` menjadi Server Component (RSC) yang me-fetch data default occasion (jumat) di server dan me-render `<h1>` di initial HTML. Hasil:
+- `/wirid`: Perf **59 → 73** (+14), TBT **540ms → 150ms** (-72%).
+
+**Rekomendasi lanjutan** untuk LCP 6s+:
+1. Audit halaman lain yang masih full client-render (mis. `/asmaul-husna/wirid`).
+2. `next/font` dengan `display: 'optional'` untuk skip FOIT dan turunkan FCP.
+3. Inline critical CSS untuk 2 chunk render-blocking (16KB + 9KB) yang masih menambah 894ms ke LCP.
+
