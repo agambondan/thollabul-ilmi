@@ -67,6 +67,7 @@ import { useTabActivity } from "../context/TabActivityContext";
 import { useLayoutModePreference } from "../hooks/useLayoutModePreference";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
 import { useQuranReaderPreferences } from "../hooks/useQuranReaderPreferences";
+import { useQuranLastRead } from "../hooks/useQuranLastRead";
 import {
     preferenceKeys,
     readPreference,
@@ -273,10 +274,37 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     } = useQuranReaderPreferences({
         onMemorizationModeChange: resetRevealedAyahs,
     });
+    const { lastRead, save: saveLastRead } = useQuranLastRead();
 
     useEffect(() => {
         audioSourcesRef.current = audioState.sourcesByAyah;
     }, [audioState.sourcesByAyah]);
+
+    useEffect(() => {
+        if (!lastRead || !lastRead.ayah_id) return;
+        setTargetAyah((current) => {
+            if (current?.id && Number(current.id) === Number(lastRead.ayah_id)) {
+                return current;
+            }
+            return {
+                id: lastRead.ayah_id,
+                number: lastRead.ayah_number ?? null,
+            };
+        });
+    }, [lastRead]);
+
+    useEffect(() => {
+        if (!targetAyah?.id) return;
+        const surahId =
+            selectedSurah?.id ||
+            (selectedSurah?.number ? Number(selectedSurah.number) : null);
+        saveLastRead({
+            ayah_id: targetAyah.id,
+            ayah_number: targetAyah.number ?? null,
+            surah_id: surahId,
+            position: 0,
+        });
+    }, [targetAyah, selectedSurah, saveLastRead]);
 
     useEffect(() => {
         audioQariRef.current = audioState.qariSlug;

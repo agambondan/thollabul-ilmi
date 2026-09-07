@@ -32,6 +32,7 @@ export const preferenceKeys = {
     quranDisplayMode: "quran-display-mode",
     quranFontSize: "quran-font-size",
     quranFullscreen: "quran-fullscreen",
+    quranLastRead: "quran-last-read",
     quranMemorizationMode: "quran-memorization-mode",
     quranTranslationFontSize: "quran-translation-font-size",
 };

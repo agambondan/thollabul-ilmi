@@ -22,6 +22,11 @@ import {
 import { useMobileLocale } from "../../i18n/MobileLocaleProvider";
 import { radius, spacing } from "../../theme";
 import { KajianPlayerModal } from "../../components/KajianPlayerModal";
+import { readSession } from "../../storage/session";
+import {
+    listSyncedKajianBookmarks,
+    removeSyncedKajianBookmark,
+} from "../../api/explore";
 
 const ACCENT = "#10b981";
 
@@ -286,12 +291,84 @@ export function WebAppKajianRoute({
         }
     }, [tab, playerItem, loadSavedBookmarks]);
 
+    // If signed in, pull synced bookmarks and merge.
+    useEffect(() => {
+        let active = true;
+        Promise.all([
+            readSession().catch(() => null),
+            AsyncStorage.getItem("kajian_saved_chunks").catch(() => null),
+        ])
+            .then(([session, raw]) => {
+                if (!active || !session?.token) return;
+                const local = raw ? JSON.parse(raw) : [];
+                if (!Array.isArray(local)) return;
+                return listSyncedKajianBookmarks().then((serverItems) => {
+                    if (!active) return;
+                    const seen = new Set();
+                    const merged = [];
+                    const add = (item) => {
+                        if (!item?.id) return;
+                        if (seen.has(item.id)) return;
+                        seen.add(item.id);
+                        merged.push(item);
+                    };
+                    const toTimestamp = (s) => {
+                        const sec = Math.floor(Number(s) || 0);
+                        const m = Math.floor(sec / 60);
+                        const r = sec % 60;
+                        return `${String(m).padStart(2, "0")}:${String(r).padStart(2, "0")}`;
+                    };
+                    serverItems.forEach((row) => {
+                        const ch = row.chunk || row.Chunk;
+                        const kj = row.kajian || row.Kajian;
+                        if (!ch) return;
+                        add({
+                            id: ch.id,
+                            kajian_id: ch.kajian_id,
+                            video_id: kj?.video_id,
+                            title: kj?.title || row.title || "Kajian",
+                            speaker: kj?.speaker || row.speaker || "",
+                            topic: kj?.topic || row.topic || "",
+                            start_seconds: ch.start_seconds,
+                            end_seconds: ch.end_seconds,
+                            timestamp: toTimestamp(ch.start_seconds),
+                            timestamp_url:
+                                ch.timestamp_url ||
+                                (kj?.video_id
+                                    ? `https://youtu.be/${kj.video_id}?t=${ch.start_seconds}`
+                                    : ""),
+                            snippet: ch.text || "",
+                            created_at: row.created_at || null,
+                        });
+                    });
+                    local.forEach(add);
+                    if (merged.length !== local.length) {
+                        AsyncStorage.setItem(
+                            "kajian_saved_chunks",
+                            JSON.stringify(merged),
+                        ).catch(() => {});
+                    }
+                    setSavedBookmarks(merged);
+                });
+            })
+            .catch(() => {});
+        return () => {
+            active = false;
+        };
+    }, [tab]);
+
     const removeSavedBookmark = (id) => {
         const next = savedBookmarks.filter((b) => b.id !== id);
         setSavedBookmarks(next);
         AsyncStorage.setItem("kajian_saved_chunks", JSON.stringify(next)).catch(
             () => {},
         );
+        readSession()
+            .then((session) => {
+                if (!session?.token) return;
+                removeSyncedKajianBookmark(id).catch(() => {});
+            })
+            .catch(() => {});
     };
 
     const filteredSaved = useMemo(() => {
