@@ -800,6 +800,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/tokoh-tarikh", newTokohTarikhController.FindAll)
 	master.Get("/tokoh-tarikh/:id", newTokohTarikhController.FindByID)
 	master.Post("/tokoh-tarikh", admin, newTokohTarikhController.Create)
+	master.Put("/tokoh-tarikh/:id", middlewares.EditorOrAdminMiddleware(), newTokohTarikhController.Update)
 	master.Delete("/tokoh-tarikh/:id", admin, newTokohTarikhController.Delete)
 
 	// Location / Peta Islam (public read, admin write)
