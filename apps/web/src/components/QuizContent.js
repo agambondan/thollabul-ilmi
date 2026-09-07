@@ -13,12 +13,42 @@ import { MdRefresh } from "react-icons/md";
 const QUESTIONS_PER_ROUND = 10;
 
 const QUIZ_TYPES = [
-    { key: "", label: "Semua Kategori", icon: "✨" },
-    { key: "hafalan", label: "Sambung Ayat / Quran", icon: "📖" },
-    { key: "hadith", label: "Hadits Nabawi", icon: "📜" },
-    { key: "fiqh", label: "Fiqih Ibadah", icon: "⚖️" },
-    { key: "sirah", label: "Sirah Nabawiyah", icon: "🕌" },
-    { key: "asmaul_husna", label: "Asmaul Husna", icon: "💫" },
+    {
+        key: "",
+        labelKey: "quiz.type_all",
+        fallback: "Semua Kategori",
+        icon: "✨",
+    },
+    {
+        key: "hafalan",
+        labelKey: "quiz.type_hafalan",
+        fallback: "Sambung Ayat / Quran",
+        icon: "📖",
+    },
+    {
+        key: "hadith",
+        labelKey: "quiz.type_hadith",
+        fallback: "Hadits Nabawi",
+        icon: "📜",
+    },
+    {
+        key: "fiqh",
+        labelKey: "quiz.type_fiqh",
+        fallback: "Fiqih Ibadah",
+        icon: "⚖️",
+    },
+    {
+        key: "sirah",
+        labelKey: "quiz.type_sirah",
+        fallback: "Sirah Nabawiyah",
+        icon: "🕌",
+    },
+    {
+        key: "asmaul_husna",
+        labelKey: "quiz.type_asmaul_husna",
+        fallback: "Asmaul Husna",
+        icon: "💫",
+    },
 ];
 
 const normalizeQuestion = (q) => {
@@ -74,7 +104,8 @@ export default function QuizContent({ initialType = "" }) {
     }, []);
 
     const startQuiz = async (typeOverride) => {
-        const typeToUse = typeof typeOverride === "string" ? typeOverride : selectedType;
+        const typeToUse =
+            typeof typeOverride === "string" ? typeOverride : selectedType;
         setIsLoading(true);
         setFetchError(false);
         try {
@@ -190,10 +221,9 @@ export default function QuizContent({ initialType = "" }) {
                         {t("quiz.random_each_session")}
                     </p>
 
-                    {/* Category Selector */}
                     <div className='mb-6 text-left'>
                         <label className='block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2'>
-                            Pilih Kategori Kuis:
+                            {t("quiz.select_category", "Pilih Kategori Kuis:")}
                         </label>
                         <div className='grid grid-cols-2 sm:grid-cols-3 gap-2'>
                             {QUIZ_TYPES.map((qt) => (
@@ -208,7 +238,9 @@ export default function QuizContent({ initialType = "" }) {
                                     }`}
                                 >
                                     <span className='text-base'>{qt.icon}</span>
-                                    <span className='truncate'>{qt.label}</span>
+                                    <span className='truncate'>
+                                        {t(qt.labelKey, qt.fallback)}
+                                    </span>
                                 </button>
                             ))}
                         </div>
@@ -240,8 +272,12 @@ export default function QuizContent({ initialType = "" }) {
                                         className='flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-750 px-3 py-2 rounded-lg'
                                     >
                                         <span>
-                                            {new Date(h.date).toLocaleDateString(
-                                                lang === "ID" ? "id-ID" : "en-US",
+                                            {new Date(
+                                                h.date,
+                                            ).toLocaleDateString(
+                                                lang === "ID"
+                                                    ? "id-ID"
+                                                    : "en-US",
                                                 {
                                                     day: "numeric",
                                                     month: "short",
@@ -251,7 +287,9 @@ export default function QuizContent({ initialType = "" }) {
                                         </span>
                                         <span className='font-bold text-emerald-600 dark:text-emerald-400'>
                                             {h.score}/{h.total} (
-                                            {Math.round((h.score / h.total) * 100)}
+                                            {Math.round(
+                                                (h.score / h.total) * 100,
+                                            )}
                                             %)
                                         </span>
                                     </div>
@@ -347,8 +385,11 @@ export default function QuizContent({ initialType = "" }) {
                             {(getLocalizedField(q, "explanation", lang) ||
                                 q.explanation) && (
                                 <p className='mt-1 opacity-90 leading-relaxed'>
-                                    {getLocalizedField(q, "explanation", lang) ||
-                                        q.explanation}
+                                    {getLocalizedField(
+                                        q,
+                                        "explanation",
+                                        lang,
+                                    ) || q.explanation}
                                 </p>
                             )}
                         </div>
@@ -394,14 +435,16 @@ export default function QuizContent({ initialType = "" }) {
                         >
                             <MdRefresh className='text-lg' />
                             <span>
-                                {isLoading ? t("common.loading") : t("quiz.retry")}
+                                {isLoading
+                                    ? t("common.loading")
+                                    : t("quiz.retry")}
                             </span>
                         </button>
                         <button
                             onClick={() => setPhase("intro")}
                             className='py-3.5 px-5 bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 rounded-xl font-semibold text-sm transition-colors'
                         >
-                            Pilih Kategori Lain
+                            {t("quiz.change_category", "Pilih Kategori Lain")}
                         </button>
                     </div>
                 </div>

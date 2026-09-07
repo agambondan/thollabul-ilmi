@@ -35,7 +35,7 @@ import {
     BsSunFill,
     BsTrophyFill,
 } from "react-icons/bs";
-import { FaBrain, FaQuran } from "react-icons/fa";
+import { FaBrain, FaGraduationCap, FaQuran } from "react-icons/fa";
 import { GiOpenBook } from "react-icons/gi";
 import { ImBook } from "react-icons/im";
 import {

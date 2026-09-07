@@ -111,14 +111,17 @@ const id = {
     "library.all_levels": "Semua level",
     "library.all_progress": "Semua progress",
     "library.back_to_library": "← Kembali ke perpustakaan",
-    "library.not_found_or_error": "Buku tidak ditemukan atau belum bisa dimuat.",
+    "library.not_found_or_error":
+        "Buku tidak ditemukan atau belum bisa dimuat.",
     "library.open_resource": "Buka resource",
     "library.no_file_attached": "File sumber belum dilampirkan.",
     "library.license_label": "Lisensi:",
     "library.source_verified": "Sumber terverifikasi",
     "library.study_progress": "Progress Belajar",
-    "library.study_progress_desc": "Simpan posisi belajar dan catatan ringkas untuk resource ini.",
-    "library.study_progress_login_desc": "Masuk untuk menyimpan progress belajar.",
+    "library.study_progress_desc":
+        "Simpan posisi belajar dan catatan ringkas untuk resource ini.",
+    "library.study_progress_login_desc":
+        "Masuk untuk menyimpan progress belajar.",
     "library.status": "Status",
     "library.last_page": "Halaman terakhir",
     "library.brief_note": "Catatan ringkas",
@@ -174,7 +177,8 @@ const id = {
     "auth.show_password": "Lihat password",
     "auth.hide_password": "Sembunyikan password",
     "pwa.install_title": "Install aplikasi Thullaabul 'Ilmi",
-    "pwa.install_desc": "Akses cepat Quran, Hadits, & jadwal sholat dari layar HP",
+    "pwa.install_desc":
+        "Akses cepat Quran, Hadits, & jadwal sholat dari layar HP",
     "pwa.install_android":
         "Android: buka menu browser, lalu pilih Tambahkan ke layar utama.",
     "pwa.install_ios":
@@ -319,7 +323,8 @@ const id = {
     "share_image.share_btn": "Bagikan Gambar & Teks",
     "share_image.copy_btn": "Salin Gambar",
     "share_image.download_btn": "Unduh Gambar",
-    "share_image.copy_instruction": "Gambar tersalin! Buka WhatsApp/sosmed lalu tekan Tempel (Ctrl+V).",
+    "share_image.copy_instruction":
+        "Gambar tersalin! Buka WhatsApp/sosmed lalu tekan Tempel (Ctrl+V).",
     "share_image.processing": "Memproses gambar...",
     "share_image.copied_clipboard": "Gambar tersalin ke clipboard!",
     "share_image.copied": "Gambar tersalin!",
@@ -834,6 +839,14 @@ const id = {
     "quiz.available_questions": "soal tersedia",
     "quiz.random_each_session": "Acak setiap sesi",
     "quiz.start": "Mulai Quiz",
+    "quiz.select_category": "Pilih Kategori Kuis:",
+    "quiz.change_category": "Pilih Kategori Lain",
+    "quiz.type_all": "Semua Kategori",
+    "quiz.type_hafalan": "Sambung Ayat / Quran",
+    "quiz.type_hadith": "Hadits Nabawi",
+    "quiz.type_fiqh": "Fiqih Ibadah",
+    "quiz.type_sirah": "Sirah Nabawiyah",
+    "quiz.type_asmaul_husna": "Asmaul Husna",
     "quiz.load_error":
         "Gagal memuat soal. Pastikan server berjalan lalu coba lagi.",
     "quiz.finished": "Selesai!",
@@ -1525,9 +1538,12 @@ const id = {
     "settings.notif_denied": "Izin notifikasi ditolak browser",
     "adzan.test_notif_btn": "Tes Notifikasi",
     "adzan.test_notif_title": "Tes Notifikasi Thollabul Ilmi",
-    "adzan.test_notif_body": "Pengingat adzan & jadwal sholat berfungsi dengan baik.",
-    "adzan.test_notif_sent": "Notifikasi tes terkirim. Cek banner sistem atau bar notifikasi.",
-    "adzan.test_notif_unsupported": "Browser/perangkat ini tidak mendukung Web Notifications.",
+    "adzan.test_notif_body":
+        "Pengingat adzan & jadwal sholat berfungsi dengan baik.",
+    "adzan.test_notif_sent":
+        "Notifikasi tes terkirim. Cek banner sistem atau bar notifikasi.",
+    "adzan.test_notif_unsupported":
+        "Browser/perangkat ini tidak mendukung Web Notifications.",
     "adzan.test_notif_error": "Gagal mengirim notifikasi tes.",
     "settings.sound_blocked": "Audio diblokir browser. Klik Tes Suara lagi.",
     "settings.notif_kajian": "Info Kajian",
@@ -1568,13 +1584,17 @@ const id = {
     "belajar.filter.all": "Semua",
     "belajar.track.label": "Jalur {name}",
     "belajar.track.dasar": "Dasar Ibadah & Fardhu 'Ain",
-    "belajar.track.dasar_d": "Wudhu, shalat, adzan, puasa, zakat, dan rukun iman.",
+    "belajar.track.dasar_d":
+        "Wudhu, shalat, adzan, puasa, zakat, dan rukun iman.",
     "belajar.track.quran": "Al-Quran & Bahasa",
-    "belajar.track.quran_d": "Tajwid, kamus, dan kajian untuk memahami Al-Quran.",
+    "belajar.track.quran_d":
+        "Tajwid, kamus, dan kajian untuk memahami Al-Quran.",
     "belajar.track.sejarah": "Sirah & Peradaban",
-    "belajar.track.sejarah_d": "Siroh Nabawiyah dan sejarah Islam untuk konteks dakwah.",
+    "belajar.track.sejarah_d":
+        "Siroh Nabawiyah dan sejarah Islam untuk konteks dakwah.",
     "belajar.track.adab": "Adab & Etika",
-    "belajar.track.adab_d": "Adab menuntut ilmu dan etika pejuang tholabul 'ilmi.",
+    "belajar.track.adab_d":
+        "Adab menuntut ilmu dan etika pejuang tholabul 'ilmi.",
     "belajar.track.done": "{count}/{total} selesai",
     "belajar.level.pemula": "Pemula",
     "komunitas.title": "Komunitas",
@@ -1849,8 +1869,10 @@ const id = {
     "report.correction": "Usulan Koreksi",
     "report.submit": "Kirim Koreksi",
     "report.success": "Jazakallahu Khairan!",
-    "report.success_desc": "Laporan koreksi Anda telah kami terima untuk ditinjau oleh tim.",
-    "report.login_required": "Silakan login untuk mengirimkan laporan/review koreksi.",
+    "report.success_desc":
+        "Laporan koreksi Anda telah kami terima untuk ditinjau oleh tim.",
+    "report.login_required":
+        "Silakan login untuk mengirimkan laporan/review koreksi.",
     "feed.ref_type": "Tipe Rujukan",
     "feed.ref_ayah": "Ayat Quran",
     "feed.ref_hadith": "Hadis",

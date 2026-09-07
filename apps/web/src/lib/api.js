@@ -563,7 +563,8 @@ export const notificationApi = {
         authFetch("/api/v1/notifications/push-test", {
             method: "POST",
         }),
-    getVapidPublicKey: () => authFetch("/api/v1/notifications/vapid-public-key"),
+    getVapidPublicKey: () =>
+        authFetch("/api/v1/notifications/vapid-public-key"),
     broadcastPush: (data) =>
         authFetch("/api/v1/notifications/admin/broadcast", {
             method: "POST",
@@ -708,7 +709,8 @@ export const goalsApi = {
 
 export const lessonsApi = {
     list: () => fetch(`${API_URL}/api/v1/lessons`),
-    bySlug: (slug) => fetch(`${API_URL}/api/v1/lessons/${encodeURIComponent(slug)}`),
+    bySlug: (slug) =>
+        fetch(`${API_URL}/api/v1/lessons/${encodeURIComponent(slug)}`),
     myProgress: () => authFetch("/api/v1/lessons/progress"),
     saveProgress: (moduleId, step, done) =>
         authFetch("/api/v1/lessons/progress", {
@@ -1145,15 +1147,11 @@ export const contentReportApi = {
         }),
     listMine: (params = {}) => {
         const qs = new URLSearchParams(params).toString();
-        return authFetch(
-            `/api/v1/reports/mine${qs ? "?" + qs : ""}`,
-        );
+        return authFetch(`/api/v1/reports/mine${qs ? "?" + qs : ""}`);
     },
     adminList: (params = {}) => {
         const qs = new URLSearchParams(params).toString();
-        return authFetch(
-            `/api/v1/admin/reports${qs ? "?" + qs : ""}`,
-        );
+        return authFetch(`/api/v1/admin/reports${qs ? "?" + qs : ""}`);
     },
     adminGet: (id) => authFetch(`/api/v1/admin/reports/${id}`),
     adminUpdateStatus: (id, data) =>
@@ -1181,7 +1179,9 @@ export const contentAuditLogApi = {
     },
     export: (params = {}) => {
         const qs = new URLSearchParams(params).toString();
-        return authFetch(`/api/v1/admin/audit-logs/export${qs ? "?" + qs : ""}`);
+        return authFetch(
+            `/api/v1/admin/audit-logs/export${qs ? "?" + qs : ""}`,
+        );
     },
 };
 

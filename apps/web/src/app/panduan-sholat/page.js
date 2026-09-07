@@ -16,16 +16,17 @@ const API_URL =
     "https://api-thollabul.jangkauin.site";
 
 const normalizeStep = (s) => ({
-    step: s.step,
-    name: s.name,
-    name_en: s.name_en,
-    arabic: s.arabic,
-    latin: s.latin,
-    terjemah: s.terjemah,
-    terjemah_en: s.terjemah_en,
-    penjelasan: s.penjelasan,
-    penjelasan_en: s.penjelasan_en,
-    source: s.source,
+    ...s,
+    title: s.title || s.translation?.idn || "",
+    arabic: s.arabic || s.translation?.ar || "",
+    latin: s.latin || s.transliteration || s.translation?.latin_idn || "",
+    terjemah:
+        (typeof s.translation === "string"
+            ? s.translation
+            : s.translation?.description_idn) ||
+        s.translation_text ||
+        "",
+    note: s.notes || s.description || "",
 });
 
 async function getInitialSteps() {
@@ -35,9 +36,7 @@ async function getInitialSteps() {
         });
         if (!res.ok) return [];
         const data = await res.json();
-        return (data?.items ?? data ?? [])
-            .filter((s) => s.step !== 1)
-            .map(normalizeStep);
+        return (data?.items ?? data ?? []).map(normalizeStep);
     } catch {
         return [];
     }

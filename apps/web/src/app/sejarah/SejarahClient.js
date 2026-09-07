@@ -53,7 +53,12 @@ export default function SejarahClient({ initialEvents = [] }) {
     }, [activeCategory, lang]);
 
     useEffect(() => {
-        if (initialEvents.length > 0 && activeCategory === "semua" && lang === "ID") return;
+        if (
+            initialEvents.length > 0 &&
+            activeCategory === "semua" &&
+            lang === "ID"
+        )
+            return;
         let cancelled = false;
         setIsLoading(true);
         setError(false);
@@ -84,8 +89,12 @@ export default function SejarahClient({ initialEvents = [] }) {
         const q = search.trim().toLowerCase();
         if (!q) return events;
         return events.filter((ev) => {
-            const title = (getLocalizedField(ev, "title", lang) || "").toLowerCase();
-            const desc = (getLocalizedField(ev, "description", lang) || "").toLowerCase();
+            const title = (
+                getLocalizedField(ev, "title", lang) || ""
+            ).toLowerCase();
+            const desc = (
+                getLocalizedField(ev, "description", lang) || ""
+            ).toLowerCase();
             const yearM = formatYear(ev).toLowerCase();
             const yearH = formatHijri(ev).toLowerCase();
             return (
@@ -209,116 +218,119 @@ export default function SejarahClient({ initialEvents = [] }) {
 
             {!isLoading && !error && filtered.length > 0 && (
                 <>
-                <div className='relative pl-6 border-l-2 border-emerald-200 dark:border-emerald-800/50 space-y-6'>
-                    {filtered.slice(0, visibleCount).map((ev) => {
-                        const isOpen = openId === ev.id;
-                        const cat = ev.category || "peristiwa";
-                        const badgeColor =
-                            CAT_COLOR[cat] ||
-                            "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-gray-300";
-                        const yearM = formatYear(ev);
-                        const yearH = formatHijri(ev);
-                        const title =
-                            getLocalizedField(ev, "title", lang) ||
-                            ev.title_id ||
-                            ev.title_en ||
-                            "-";
-                        const desc =
-                            getLocalizedField(ev, "description", lang) ||
-                            ev.description_id ||
-                            ev.description_en ||
-                            "";
+                    <div className='relative pl-6 border-l-2 border-emerald-200 dark:border-emerald-800/50 space-y-6'>
+                        {filtered.slice(0, visibleCount).map((ev) => {
+                            const isOpen = openId === ev.id;
+                            const cat = ev.category || "peristiwa";
+                            const badgeColor =
+                                CAT_COLOR[cat] ||
+                                "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-gray-300";
+                            const yearM = formatYear(ev);
+                            const yearH = formatHijri(ev);
+                            const title =
+                                getLocalizedField(ev, "title", lang) ||
+                                ev.title_id ||
+                                ev.title_en ||
+                                "-";
+                            const desc =
+                                getLocalizedField(ev, "description", lang) ||
+                                ev.description_id ||
+                                ev.description_en ||
+                                "";
 
-                        return (
-                            <div key={ev.id} className='relative group'>
-                                <div className='absolute -left-[31px] top-4 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900 shadow-sm' />
-                                <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 shadow-sm hover:border-emerald-200 dark:hover:border-emerald-700/60 transition-all'>
-                                    <div
-                                        className='flex items-start justify-between gap-2 cursor-pointer select-none'
-                                        onClick={() =>
-                                            setOpenId(isOpen ? null : ev.id)
-                                        }
-                                    >
-                                        <div className='flex-1 min-w-0'>
-                                            <div className='flex items-center gap-2 flex-wrap mb-1'>
-                                                <span
-                                                    className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${badgeColor}`}
-                                                >
-                                                    {t(
-                                                        `history.cat.${cat}`,
-                                                        cat,
-                                                    )}
-                                                </span>
-                                                {(yearM || yearH) && (
-                                                    <span className='text-xs font-bold text-emerald-700 dark:text-emerald-400'>
-                                                        {[yearM, yearH]
-                                                            .filter(Boolean)
-                                                            .join(" / ")}
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <h2 className='text-sm font-semibold text-gray-800 dark:text-gray-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors'>
-                                                {title}
-                                            </h2>
-                                        </div>
-                                        <button
-                                            type='button'
-                                            className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 mt-0.5'
-                                            aria-label='Toggle detail'
+                            return (
+                                <div key={ev.id} className='relative group'>
+                                    <div className='absolute -left-[31px] top-4 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900 shadow-sm' />
+                                    <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 shadow-sm hover:border-emerald-200 dark:hover:border-emerald-700/60 transition-all'>
+                                        <div
+                                            className='flex items-start justify-between gap-2 cursor-pointer select-none'
+                                            onClick={() =>
+                                                setOpenId(isOpen ? null : ev.id)
+                                            }
                                         >
-                                            {isOpen ? (
-                                                <svg
-                                                    className='w-3.5 h-3.5'
-                                                    fill='none'
-                                                    viewBox='0 0 24 24'
-                                                    stroke='currentColor'
-                                                >
-                                                    <path
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                        strokeWidth={2}
-                                                        d='M5 15l7-7 7 7'
-                                                    />
-                                                </svg>
-                                            ) : (
-                                                <svg
-                                                    className='w-3.5 h-3.5'
-                                                    fill='none'
-                                                    viewBox='0 0 24 24'
-                                                    stroke='currentColor'
-                                                >
-                                                    <path
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                        strokeWidth={2}
-                                                        d='M19 9l-7 7-7-7'
-                                                    />
-                                                </svg>
-                                            )}
-                                        </button>
-                                    </div>
-
-                                    {isOpen && desc && (
-                                        <div className='mt-3 pt-3 border-t border-gray-100 dark:border-slate-700 text-xs text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line'>
-                                            {desc}
+                                            <div className='flex-1 min-w-0'>
+                                                <div className='flex items-center gap-2 flex-wrap mb-1'>
+                                                    <span
+                                                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${badgeColor}`}
+                                                    >
+                                                        {t(
+                                                            `history.cat.${cat}`,
+                                                            cat,
+                                                        )}
+                                                    </span>
+                                                    {(yearM || yearH) && (
+                                                        <span className='text-xs font-bold text-emerald-700 dark:text-emerald-400'>
+                                                            {[yearM, yearH]
+                                                                .filter(Boolean)
+                                                                .join(" / ")}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <h2 className='text-sm font-semibold text-gray-800 dark:text-gray-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors'>
+                                                    {title}
+                                                </h2>
+                                            </div>
+                                            <button
+                                                type='button'
+                                                className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 mt-0.5'
+                                                aria-label='Toggle detail'
+                                            >
+                                                {isOpen ? (
+                                                    <svg
+                                                        className='w-3.5 h-3.5'
+                                                        fill='none'
+                                                        viewBox='0 0 24 24'
+                                                        stroke='currentColor'
+                                                    >
+                                                        <path
+                                                            strokeLinecap='round'
+                                                            strokeLinejoin='round'
+                                                            strokeWidth={2}
+                                                            d='M5 15l7-7 7 7'
+                                                        />
+                                                    </svg>
+                                                ) : (
+                                                    <svg
+                                                        className='w-3.5 h-3.5'
+                                                        fill='none'
+                                                        viewBox='0 0 24 24'
+                                                        stroke='currentColor'
+                                                    >
+                                                        <path
+                                                            strokeLinecap='round'
+                                                            strokeLinejoin='round'
+                                                            strokeWidth={2}
+                                                            d='M19 9l-7 7-7-7'
+                                                        />
+                                                    </svg>
+                                                )}
+                                            </button>
                                         </div>
-                                    )}
+
+                                        {isOpen && desc && (
+                                            <div className='mt-3 pt-3 border-t border-gray-100 dark:border-slate-700 text-xs text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line'>
+                                                {desc}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    })}
-                </div>
-                {filtered.length > visibleCount && (
-                    <div className='text-center pt-4'>
-                        <button
-                            type='button'
-                            onClick={() => setVisibleCount((c) => c + 8)}
-                            className='px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
-                        >
-                            {t("common.load_more") ?? "Muat lebih banyak..."} ({filtered.length - visibleCount} {t("common.remaining") ?? "tersisa"})
-                        </button>
+                            );
+                        })}
                     </div>
-                )}
+                    {filtered.length > visibleCount && (
+                        <div className='text-center pt-4'>
+                            <button
+                                type='button'
+                                onClick={() => setVisibleCount((c) => c + 8)}
+                                className='px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                            >
+                                {t("common.load_more") ??
+                                    "Muat lebih banyak..."}{" "}
+                                ({filtered.length - visibleCount}{" "}
+                                {t("common.remaining") ?? "tersisa"})
+                            </button>
+                        </div>
+                    )}
                 </>
             )}
         </div>

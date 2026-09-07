@@ -13,7 +13,7 @@ jest.mock("@/lib/api", () => ({
 
 jest.mock("@/context/Locale", () => ({
     useLocale: () => ({
-        t: (key) => key,
+        t: (key, fallback) => fallback ?? key,
         lang: "ID",
     }),
 }));
@@ -57,6 +57,8 @@ describe("QuizContent", () => {
                 lang: "ID",
             });
         });
-        expect(await screen.findByText(mockQuestions[0].question)).toBeInTheDocument();
+        expect(
+            await screen.findByText(mockQuestions[0].question),
+        ).toBeInTheDocument();
     });
 });

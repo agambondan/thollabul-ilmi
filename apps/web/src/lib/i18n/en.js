@@ -126,7 +126,8 @@ const en = {
     "library.license_label": "License:",
     "library.source_verified": "Verified source",
     "library.study_progress": "Study Progress",
-    "library.study_progress_desc": "Save study position and brief notes for this resource.",
+    "library.study_progress_desc":
+        "Save study position and brief notes for this resource.",
     "library.study_progress_login_desc": "Sign in to save study progress.",
     "library.status": "Status",
     "library.last_page": "Last page",
@@ -183,7 +184,8 @@ const en = {
     "auth.show_password": "Show password",
     "auth.hide_password": "Hide password",
     "pwa.install_title": "Install Thullaabul 'Ilmi app",
-    "pwa.install_desc": "Quick access to Quran, Hadith, and prayer times from your phone",
+    "pwa.install_desc":
+        "Quick access to Quran, Hadith, and prayer times from your phone",
     "pwa.install_android":
         "Android: open the browser menu, then choose Add to Home screen.",
     "pwa.install_ios":
@@ -328,7 +330,8 @@ const en = {
     "share_image.share_btn": "Share Image & Text",
     "share_image.copy_btn": "Copy Image",
     "share_image.download_btn": "Download Image",
-    "share_image.copy_instruction": "Image copied! Open WhatsApp/social media and Paste (Ctrl+V).",
+    "share_image.copy_instruction":
+        "Image copied! Open WhatsApp/social media and Paste (Ctrl+V).",
     "share_image.processing": "Processing image...",
     "share_image.copied_clipboard": "Image copied to clipboard!",
     "share_image.copied": "Image copied!",
@@ -844,6 +847,14 @@ const en = {
     "quiz.available_questions": "questions available",
     "quiz.random_each_session": "Randomized every session",
     "quiz.start": "Start Quiz",
+    "quiz.select_category": "Select Quiz Category:",
+    "quiz.change_category": "Choose Another Category",
+    "quiz.type_all": "All Categories",
+    "quiz.type_hafalan": "Verse Completion / Quran",
+    "quiz.type_hadith": "Prophetic Hadith",
+    "quiz.type_fiqh": "Jurisprudence (Fiqh)",
+    "quiz.type_sirah": "Prophetic Biography",
+    "quiz.type_asmaul_husna": "Names of Allah",
     "quiz.load_error":
         "Failed to load questions. Make sure the server is running, then try again.",
     "quiz.finished": "Finished!",
@@ -1186,8 +1197,10 @@ const en = {
     "kajian.watch": "Watch ->",
     "kajian.filter_in_video": "Filter text in this video...",
     "kajian.loading_transcript": "Loading transcript...",
-    "kajian.no_matching_sentence": "No matching sentence for the current filter.",
-    "kajian.transcript_not_available": "Transcript is not yet available for this video.",
+    "kajian.no_matching_sentence":
+        "No matching sentence for the current filter.",
+    "kajian.transcript_not_available":
+        "Transcript is not yet available for this video.",
     "kajian.add_bookmark": "Add bookmark",
     "kajian.remove_bookmark": "Remove bookmark",
     "kajian.external_note":
@@ -1764,7 +1777,8 @@ const en = {
     "report.correction": "Suggested Correction",
     "report.submit": "Submit Review",
     "report.success": "Thank you!",
-    "report.success_desc": "Your correction report has been received and will be reviewed.",
+    "report.success_desc":
+        "Your correction report has been received and will be reviewed.",
     "report.login_required": "Please login to submit a review/report.",
     "feed.ref_type": "Reference Type",
     "feed.ref_ayah": "Quran Verse",
@@ -1800,9 +1814,12 @@ const en = {
     "settings.notif_denied": "Browser notification permission denied",
     "adzan.test_notif_btn": "Test Notification",
     "adzan.test_notif_title": "Test Notification — Thollabul Ilmi",
-    "adzan.test_notif_body": "Adzan reminders & prayer schedule are working properly.",
-    "adzan.test_notif_sent": "Test notification sent. Check your system banner or notification bar.",
-    "adzan.test_notif_unsupported": "This browser/device does not support Web Notifications.",
+    "adzan.test_notif_body":
+        "Adzan reminders & prayer schedule are working properly.",
+    "adzan.test_notif_sent":
+        "Test notification sent. Check your system banner or notification bar.",
+    "adzan.test_notif_unsupported":
+        "This browser/device does not support Web Notifications.",
     "adzan.test_notif_error": "Failed to send test notification.",
     "settings.sound_blocked":
         "Audio blocked by browser. Click Test Sound again.",
@@ -1845,13 +1862,17 @@ const en = {
     "belajar.filter.all": "All",
     "belajar.track.label": "Track {name}",
     "belajar.track.dasar": "Worship Foundations",
-    "belajar.track.dasar_d": "Wudhu, prayer, adhan, fasting, zakat, and pillars of faith.",
+    "belajar.track.dasar_d":
+        "Wudhu, prayer, adhan, fasting, zakat, and pillars of faith.",
     "belajar.track.quran": "Quran & Language",
-    "belajar.track.quran_d": "Tajwid, dictionary, and lectures to understand the Quran.",
+    "belajar.track.quran_d":
+        "Tajwid, dictionary, and lectures to understand the Quran.",
     "belajar.track.sejarah": "Sirah & Civilization",
-    "belajar.track.sejarah_d": "Prophetic biography and Islamic history as dawah context.",
+    "belajar.track.sejarah_d":
+        "Prophetic biography and Islamic history as dawah context.",
     "belajar.track.adab": "Adab & Ethics",
-    "belajar.track.adab_d": "Adab of seeking knowledge and the etiquette of a student.",
+    "belajar.track.adab_d":
+        "Adab of seeking knowledge and the etiquette of a student.",
     "belajar.track.done": "{count}/{total} done",
     "belajar.level.pemula": "Beginner",
     "komunitas.title": "Community",

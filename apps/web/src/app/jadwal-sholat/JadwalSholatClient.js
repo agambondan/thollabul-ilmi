@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
 import {
     buildSholatTimesUrl,
@@ -17,6 +18,8 @@ import {
     requestAndStoreUserLocation,
 } from "@/lib/userLocation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { BsBell, BsBellFill, BsGeoAlt } from "react-icons/bs";
+import { MdAccessTime, MdTimer } from "react-icons/md";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 

@@ -17,14 +17,7 @@ const PRAYERS = [
         time: "Fajar shadiq → terbit matahari",
         time_en: "True dawn -> sunrise",
         color: "indigo",
-        niat: {
-            arabic: "أُصَلِّي فَرْضَ الصُّبْحِ رَكْعَتَيْنِ مُسْتَقْبِلَ الْقِبْلَةِ أَدَاءً لِلهِ تَعَالَى",
-            latin: "Ushalli fardhas-shubhi rak'ataini mustaqbilal-qiblati adaa'an lillahi ta'ala",
-            terjemah:
-                "Aku niat sholat fardhu Subuh 2 rakaat menghadap kiblat karena Allah Ta'ala",
-            terjemah_en:
-                "I intend to pray the obligatory Fajr prayer, two rakaat, facing the qiblah, for Allah Most High.",
-        },
+
     },
     {
         name: "Sholat Dzuhur",
@@ -34,14 +27,7 @@ const PRAYERS = [
         time: "Matahari tergelincir → bayangan sama panjang benda",
         time_en: "After the sun declines -> when shadow equals object length",
         color: "yellow",
-        niat: {
-            arabic: "أُصَلِّي فَرْضَ الظُّهْرِ أَرْبَعَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ أَدَاءً لِلهِ تَعَالَى",
-            latin: "Ushalli fardhadh-dhuhri arba'a raka'aatin mustaqbilal-qiblati adaa'an lillahi ta'ala",
-            terjemah:
-                "Aku niat sholat fardhu Dzuhur 4 rakaat menghadap kiblat karena Allah Ta'ala",
-            terjemah_en:
-                "I intend to pray the obligatory Dhuhr prayer, four rakaat, facing the qiblah, for Allah Most High.",
-        },
+
     },
     {
         name: "Sholat Ashar",
@@ -51,14 +37,7 @@ const PRAYERS = [
         time: "Bayangan lebih panjang → terbenam matahari",
         time_en: "When shadows lengthen -> sunset",
         color: "orange",
-        niat: {
-            arabic: "أُصَلِّي فَرْضَ الْعَصْرِ أَرْبَعَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ أَدَاءً لِلهِ تَعَالَى",
-            latin: "Ushalli fardhal-'ashri arba'a raka'aatin mustaqbilal-qiblati adaa'an lillahi ta'ala",
-            terjemah:
-                "Aku niat sholat fardhu Ashar 4 rakaat menghadap kiblat karena Allah Ta'ala",
-            terjemah_en:
-                "I intend to pray the obligatory Asr prayer, four rakaat, facing the qiblah, for Allah Most High.",
-        },
+
     },
     {
         name: "Sholat Maghrib",
@@ -68,14 +47,7 @@ const PRAYERS = [
         time: "Terbenam matahari → hilang mega merah",
         time_en: "Sunset -> disappearance of the red twilight",
         color: "red",
-        niat: {
-            arabic: "أُصَلِّي فَرْضَ الْمَغْرِبِ ثَلَاثَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ أَدَاءً لِلهِ تَعَالَى",
-            latin: "Ushalli fardhal-maghribi tsalaatsa raka'aatin mustaqbilal-qiblati adaa'an lillahi ta'ala",
-            terjemah:
-                "Aku niat sholat fardhu Maghrib 3 rakaat menghadap kiblat karena Allah Ta'ala",
-            terjemah_en:
-                "I intend to pray the obligatory Maghrib prayer, three rakaat, facing the qiblah, for Allah Most High.",
-        },
+
     },
     {
         name: "Sholat Isya",
@@ -85,14 +57,7 @@ const PRAYERS = [
         time: "Hilang mega merah → sebelum fajar",
         time_en: "After twilight disappears -> before dawn",
         color: "purple",
-        niat: {
-            arabic: "أُصَلِّي فَرْضَ الْعِشَاءِ أَرْبَعَ رَكَعَاتٍ مُسْتَقْبِلَ الْقِبْلَةِ أَدَاءً لِلهِ تَعَالَى",
-            latin: "Ushalli fardhal-'isyaa'i arba'a raka'aatin mustaqbilal-qiblati adaa'an lillahi ta'ala",
-            terjemah:
-                "Aku niat sholat fardhu Isya 4 rakaat menghadap kiblat karena Allah Ta'ala",
-            terjemah_en:
-                "I intend to pray the obligatory Isha prayer, four rakaat, facing the qiblah, for Allah Most High.",
-        },
+
     },
 ];
 
@@ -106,12 +71,16 @@ const COLOR_BADGE = {
 
 const normalizeStep = (s) => ({
     ...s,
-    step: s.title ?? s.step ?? "",
-    arabic: s.arabic ?? "",
-    latin: s.transliteration ?? "",
-    terjemah: s.translation ?? "",
-    note: s.notes ?? s.description ?? "",
-    source: s.source ?? "",
+    title: s.title || s.translation?.idn || "",
+    arabic: s.arabic || s.translation?.ar || "",
+    latin: s.latin || s.transliteration || s.translation?.latin_idn || "",
+    terjemah:
+        (typeof s.translation === "string"
+            ? s.translation
+            : s.translation?.description_idn) ||
+        s.translation_text ||
+        "",
+    note: s.notes || s.description || "",
 });
 
 export function PanduanSholatContent({ initialSteps = [] }) {
@@ -129,9 +98,7 @@ export function PanduanSholatContent({ initialSteps = [] }) {
         )
             .then((r) => r.json())
             .then((data) => {
-                const items = (data?.items ?? data ?? [])
-                    .filter((s) => s.step !== 1)
-                    .map(normalizeStep);
+                const items = (data?.items ?? data ?? []).map(normalizeStep);
                 setApiSteps(items);
             })
             .catch((e) => console.error(e))
