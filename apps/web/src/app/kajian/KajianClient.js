@@ -545,7 +545,7 @@ function ListView({
                             {getYouTubeId(k.url) && (
                                 <div className='aspect-video rounded-lg overflow-hidden bg-black relative group/thumb w-full'>
                                     <img
-                                        src={`https://img.youtube.com/vi/${getYouTubeId(k.url)}/mqdefault.jpg`}
+                                        src={`https://i.ytimg.com/vi/${getYouTubeId(k.url)}/mqdefault.jpg`}
                                         alt={k.title}
                                         loading={idx < 4 ? "eager" : "lazy"}
                                         decoding="async"
