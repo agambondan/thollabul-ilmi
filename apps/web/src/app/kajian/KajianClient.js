@@ -3,11 +3,10 @@
 
 import dynamic from "next/dynamic";
 import { useLocale } from "@/context/Locale";
-import { useLayoutMode } from "@/lib/useLayoutMode";
 import { getLocalizedField } from "@/lib/translation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SavedBookmarksView from "./SavedBookmarksView";
-import { SearchIcon, PlayCircleIcon, ShareIcon } from "@/components/icons/Icon";
+import { SearchIcon, PlayCircleIcon } from "@/components/icons/Icon";
 import VideoPlayerModal from "./VideoPlayerModal";
 
 const TranscriptSearchView = dynamic(() => import("./TranscriptSearchView"), {
@@ -35,16 +34,6 @@ const CATEGORIES = [
     { key: "hadith", labelKey: "kajian.category_hadith" },
 ];
 
-const catColor = {
-    aqidah: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
-    fiqh: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
-    tazkiyah:
-        "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
-    sirah: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-    tafsir: "bg-teal-100 text-teal-700 dark:text-teal-400",
-    hadith: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400",
-};
-
 export default function KajianClient({
     kajian: initialKajian = [],
     initialTotal = 0,
@@ -52,7 +41,6 @@ export default function KajianClient({
     initialQuery = "",
 }) {
     const { t, lang } = useLocale();
-    const { isWide } = useLayoutMode();
     const [kajian, setKajian] = useState(initialKajian);
     const [totalKajian, setTotalKajian] = useState(
         initialTotal || initialKajian.length,
@@ -67,10 +55,13 @@ export default function KajianClient({
     const [ustadzFilter, setUstadzFilter] = useState("");
     const [playingKajian, setPlayingKajian] = useState(null);
 
-    // Speakers list (all speakers from DB)
     const [speakers, setSpeakers] = useState([]);
+    const speakersFetchedRef = useRef(false);
+    const ustadzFetchedRef = useRef(false);
 
     useEffect(() => {
+        if (speakersFetchedRef.current) return;
+        speakersFetchedRef.current = true;
         let cancelled = false;
         const fetchSpeakers = async () => {
             try {
@@ -88,17 +79,19 @@ export default function KajianClient({
                       : [];
                 setSpeakers(list);
             } catch (e) {
-                // ignore
+                speakersFetchedRef.current = false;
             }
         };
-        fetchSpeakers();
+        const timer = setTimeout(fetchSpeakers, 1000);
         return () => {
             cancelled = true;
+            clearTimeout(timer);
         };
     }, []);
 
-    // Re-fetch when ustadzFilter changes
     useEffect(() => {
+        if (!ustadzFilter && !ustadzFetchedRef.current) return;
+        ustadzFetchedRef.current = true;
         let cancelled = false;
         const fetchBySpeaker = async () => {
             setLoadingMore(true);
@@ -272,13 +265,7 @@ export default function KajianClient({
     }, [speakers, kajian]);
 
     return (
-        <div
-            className={
-                isWide
-                    ? "w-full px-2 sm:px-4"
-                    : "w-full max-w-6xl mx-auto px-2 sm:px-4"
-            }
-        >
+        <div className='w-full max-w-6xl mx-auto px-2 sm:px-4'>
             <div className='flex items-center gap-3 mb-4'>
                 <div className='w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center'>
                     <svg
@@ -533,7 +520,7 @@ function ListView({
                 </div>
             ) : (
                 <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4'>
-                    {kajian.map((k) => (
+                    {kajian.map((k, idx) => (
                         <button
                             key={k.id}
                             type='button'
@@ -545,7 +532,9 @@ function ListView({
                                     <img
                                         src={`https://img.youtube.com/vi/${getYouTubeId(k.url)}/mqdefault.jpg`}
                                         alt={k.title}
-                                        loading='lazy'
+                                        loading={idx < 4 ? "eager" : "lazy"}
+                                        decoding="async"
+                                        fetchPriority={idx < 4 ? "high" : "low"}
                                         className='w-full h-full object-cover group-hover/thumb:scale-105 transition-transform duration-300'
                                     />
                                     <div className='absolute inset-0 bg-black/20 flex items-center justify-center group-hover/thumb:bg-black/30 transition-colors'>

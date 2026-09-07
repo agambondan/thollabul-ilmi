@@ -9,14 +9,6 @@ const API_URL =
     process.env.NEXT_PUBLIC_API_URL ||
     "https://api-thollabul.jangkauin.site";
 
-const getYouTubeId = (url) => {
-    if (!url) return null;
-    const m = url.match(
-        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
-    );
-    return m ? m[1] : null;
-};
-
 async function getInitialData() {
     try {
         const res = await fetch(`${API_URL}/api/v1/kajian?page=0&size=10`, {
@@ -35,8 +27,7 @@ async function getInitialData() {
 
 export default async function KajianPage(props) {
     const searchParams = await props.searchParams;
-    const tab =
-        searchParams?.tab || (searchParams?.q ? "transcript" : "transcript");
+    const tab = searchParams?.tab || (searchParams?.q ? "transcript" : "list");
     const q = searchParams?.q || "";
     const { items, total } = await getInitialData();
 
