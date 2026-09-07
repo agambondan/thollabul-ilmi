@@ -32,8 +32,8 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 | 4   | `/quran/2` (Al-Baqarah) |   **59**    |      89       |       77       | 92  | 1.9s | 5.0s  |   610ms   | **0.025** | ✅ LPMQ Preload + PWA Fix  |
 | 5   | `/quran/page-mushaf`    |   **63**    |    **96**     |       81       | 100 | 2.6s | 6.6s  | **120ms** | **0.146** |      ⚠️ CLS Borderline       |
 | 6   | `/hadith`               |   **65**    |    **97**     |       81       | 100 | 1.9s | 5.1s  | **440ms** | **0.000** | ✅ Tab CLS + Cover Fixed   |
-| 7   | `/hadith/bukhari`       |   **65**    |    **96**     |       81       | 92  | 2.5s | 6.8s  |   370ms   | **0.026** |         ⚠️ Needs SSG         |
-| 8   | `/hadith/muslim`        |   **65**    |    **96**     |       81       | 100 | 2.4s | 5.0s  |   450ms   | **0.005** |         ⚠️ Needs SSG         |
+| 7   | `/hadith/bukhari`       |   **58**    |    **96**     |       81       | 92  | 2.1s | 5.7s  |   620ms   | **0.000** |    ✅ SSG themes+chapters+hadiths |
+| 8   | `/hadith/muslim`        |   **63**    |    **96**     |       81       | 100 | 2.1s | 7.1s  |   330ms   | **0.000** |    ✅ SSG themes+chapters+hadiths |
 | 9   | `/jadwal-sholat`        |   **54**    |    **93**     |       81       | 100 | 2.4s | 4.9s  |   710ms   | **0.000** |   ✅ RSC + Jakarta Default (LCP -17s) |
 | 10  | `/imsakiyah`            |   **70**    |    **93**     |       81       | 100 | 2.0s | 6.8s  | **150ms** | **0.000** |         ✅ TBT -88%          |
 | 11  | `/doa`                  |   **73**    |    **93**     |       81       | 100 | 2.2s | 6.4s  | **50ms**  | **0.000** |   ✅ ISR Active (TBT 50ms)   |
@@ -41,17 +41,17 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 | 13  | `/fiqh`                 |   **66**    |    **93**     |       81       | 100 | 2.8s | 6.7s  | **190ms** | **0.000** |         ⚠️ LCP high          |
 | 14  | `/siroh`                |   **72**    |    **96**     |       81       | 100 | 2.7s | 6.5s  | **60ms**  | **0.002** |   ✅ ISR Active (TBT 60ms)   |
 | 15  | `/asmaul-husna`         |   **70**    |    **93**     |       81       | 100 | 2.5s | 12.1s | **90ms**  | **0.000** |   ✅ ISR Active (TBT 90ms)   |
-| 16  | `/asmaul-husna/wirid`   |   **65**    |      87       |       81       | 100 | 2.8s | 8.3s  | **240ms** | **0.000** |       ✅ Static Data Bundled       |
+| 16  | `/asmaul-husna/wirid`   |   **57**    |    **87**     |       81       | 100 | 1.8s | 6.6s  |   610ms   | **0.000** | ✅ RSC page + react-icons removed |
 | 17  | `/kiblat`               |   **69**    |      87       |       81       | 100 | 2.5s | 6.3s  | **160ms** | **0.000** |       ✅ Geo on-click        |
 | 18  | `/tokoh`                |   **77**    |      88       |       81       | 100 | 2.2s | 4.3s  | **200ms** | **0.000** |           ✅ Good            |
 | 19  | `/tafsir`               |   **76**    |    **93**     |       81       | 100 | 2.5s | 4.6s  | **210ms** | **0.000** |           ✅ Good            |
-| 20  | `/tasbih`               |   **73**    |      88       |       81       | 100 | 2.0s | 5.6s  | **210ms** | **0.000** |    ✅ Consolidated State (TBT 210ms) |
+| 20  | `/tasbih`               |   **57**    |    **88**     |       81       | 100 | 2.0s | 6.7s  |   580ms   | **0.000** | ✅ react-icons + ContentWidth removed |
 | 21  | `/sejarah`              |   **73**    |    **93**     |       81       | 100 | 1.9s | 8.4s  | **130ms** | **0.000** |    ✅ RSC + ISR Active (TBT 130ms) |
-| 22  | `/panduan-sholat`       |   **52**    |      92       |       77       | 100 | 3.7s | 9.2s  |   520ms   | **0.000** |       ✅ Chunk 6 Steps       |
+| 22  | `/panduan-sholat`       |   **70**    |    **92**     |       77       | 100 | 2.0s | 7.6s  |   220ms   | **0.000** |       ✅ Chunk 6 Steps       |
 | 23  | `/kamus`                |   **63**    |    **93**     |       81       | 100 | 2.9s | 8.2s  | **290ms** | **0.000** |   ✅ RSC + ISR Active (TBT 290ms) |
 | 24  | `/asbabun-nuzul`        |   **85**    |      88       |       81       | 100 | 3.1s | 3.1s  | **120ms** | **0.002** | 🚀 **Score 85** (SSR Surah 2) |
 | 25  | `/hijri`                |   **66**    |      88       |       81       | 100 | 2.9s | 8.2s  | **180ms** | **0.000** |    ✅ RSC + Sync Calc (CLS 0)     |
-| 26  | `/perawi`               |   **61**    |    **93**     |       81       | 100 | 4.3s | 10.0s | **140ms** | **0.001** |       ✅ RSC Active          |
+| 26  | `/perawi`               |   **61**    |    **93**     |       81       | 100 | 2.0s | 5.8s  |   600ms   | **0.000** | ✅ RSC size=10 + react-icons removed |
 | 27  | `/kajian`               |   **72**    |    **93**     |       81       | 100 | 2.4s | 6.5s  | **100ms** | **0.000** |  ✅ ISR Active (TBT 100ms)   |
 | 28  | `/blog`                 |   **74**    |    **93**     |       81       | 100 | 2.7s | 5.4s  | **120ms** | **0.000** |  ✅ ISR Active (TBT 120ms)   |
 | 29  | `/komunitas`            |   **67**    |    **93**     |       81       | 100 | 3.1s | 8.4s  | **130ms** | **0.000** |       ✅ RSC + ISR Active       |

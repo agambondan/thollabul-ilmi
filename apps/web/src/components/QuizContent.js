@@ -12,6 +12,15 @@ import { MdRefresh } from "react-icons/md";
 
 const QUESTIONS_PER_ROUND = 10;
 
+const QUIZ_TYPES = [
+    { key: "", label: "Semua Kategori", icon: "✨" },
+    { key: "hafalan", label: "Sambung Ayat / Quran", icon: "📖" },
+    { key: "hadith", label: "Hadits Nabawi", icon: "📜" },
+    { key: "fiqh", label: "Fiqih Ibadah", icon: "⚖️" },
+    { key: "sirah", label: "Sirah Nabawiyah", icon: "🕌" },
+    { key: "asmaul_husna", label: "Asmaul Husna", icon: "💫" },
+];
+
 const normalizeQuestion = (q) => {
     let options = q?.options ?? [];
     if (typeof options === "string") {
@@ -40,9 +49,10 @@ const normalizeQuestion = (q) => {
     };
 };
 
-export default function QuizContent() {
+export default function QuizContent({ initialType = "" }) {
     const { t, lang } = useLocale();
     const { isAuthenticated } = useAuth();
+    const [selectedType, setSelectedType] = useState(initialType);
     const [phase, setPhase] = useState("intro"); // intro | quiz | result
     const [questions, setQuestions] = useState([]);
     const [current, setCurrent] = useState(0);
@@ -63,16 +73,22 @@ export default function QuizContent() {
         } catch {}
     }, []);
 
-    const startQuiz = async () => {
+    const startQuiz = async (typeOverride) => {
+        const typeToUse = typeof typeOverride === "string" ? typeOverride : selectedType;
         setIsLoading(true);
         setFetchError(false);
         try {
             const res = await quizApi.session({
                 count: QUESTIONS_PER_ROUND,
+                type: typeToUse,
                 lang,
             });
             const data = await res.json();
-            const items = data?.items ?? data ?? [];
+            const items = data?.items ?? (Array.isArray(data) ? data : []);
+            if (!items.length) {
+                setFetchError(true);
+                return;
+            }
             setQuestions(items.map(normalizeQuestion));
             setCurrent(0);
             setAnswers([]);
@@ -174,6 +190,30 @@ export default function QuizContent() {
                         {t("quiz.random_each_session")}
                     </p>
 
+                    {/* Category Selector */}
+                    <div className='mb-6 text-left'>
+                        <label className='block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-2'>
+                            Pilih Kategori Kuis:
+                        </label>
+                        <div className='grid grid-cols-2 sm:grid-cols-3 gap-2'>
+                            {QUIZ_TYPES.map((qt) => (
+                                <button
+                                    key={qt.key}
+                                    type='button'
+                                    onClick={() => setSelectedType(qt.key)}
+                                    className={`p-2.5 rounded-xl border text-xs font-medium transition-all text-left flex items-center gap-2 ${
+                                        selectedType === qt.key
+                                            ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 font-bold shadow-sm"
+                                            : "border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:border-emerald-300"
+                                    }`}
+                                >
+                                    <span className='text-base'>{qt.icon}</span>
+                                    <span className='truncate'>{qt.label}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     {fetchError && (
                         <p className='text-rose-600 dark:text-rose-400 text-xs mb-4'>
                             {t("quiz.load_error")}
@@ -181,7 +221,7 @@ export default function QuizContent() {
                     )}
 
                     <button
-                        onClick={startQuiz}
+                        onClick={() => startQuiz()}
                         disabled={isLoading}
                         className='w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl font-bold text-sm transition-colors shadow-sm shadow-emerald-200 dark:shadow-none'
                     >
@@ -346,16 +386,24 @@ export default function QuizContent() {
                         {correctCount} / {questions.length} {t("quiz.correct")}
                     </p>
 
-                    <button
-                        onClick={startQuiz}
-                        disabled={isLoading}
-                        className='w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2'
-                    >
-                        <MdRefresh className='text-lg' />
-                        <span>
-                            {isLoading ? t("common.loading") : t("quiz.retry")}
-                        </span>
-                    </button>
+                    <div className='flex flex-col sm:flex-row gap-3'>
+                        <button
+                            onClick={() => startQuiz()}
+                            disabled={isLoading}
+                            className='flex-1 py-3.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2 shadow-sm'
+                        >
+                            <MdRefresh className='text-lg' />
+                            <span>
+                                {isLoading ? t("common.loading") : t("quiz.retry")}
+                            </span>
+                        </button>
+                        <button
+                            onClick={() => setPhase("intro")}
+                            className='py-3.5 px-5 bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-gray-700 dark:text-gray-200 rounded-xl font-semibold text-sm transition-colors'
+                        >
+                            Pilih Kategori Lain
+                        </button>
+                    </div>
                 </div>
             )}
         </ContentWidth>

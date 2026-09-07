@@ -267,7 +267,10 @@ export function TasbihContent() {
                 </div>
             </div>
 
-            <div className='grid grid-cols-3 gap-3 mb-6'>
+            <div
+                className='grid grid-cols-3 gap-3 mb-6'
+                style={{ contentVisibility: "auto", containIntrinsicSize: "96px" }}
+            >
                 <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 text-center'>
                     <p className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
                         {count}
@@ -294,7 +297,10 @@ export function TasbihContent() {
                 </div>
             </div>
 
-            <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 mb-5'>
+            <div
+                className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 mb-5'
+                style={{ contentVisibility: "auto", containIntrinsicSize: "120px" }}
+            >
                 <div className='flex items-center justify-between mb-3'>
                     <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                         {t("tasbih.target_label") ?? "Atur Target"}
@@ -326,7 +332,10 @@ export function TasbihContent() {
                 </div>
             </div>
 
-            <div className='space-y-2'>
+            <div
+                className='space-y-2'
+                style={{ contentVisibility: "auto", containIntrinsicSize: "600px" }}
+            >
                 <p className='text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2'>
                     {t("tasbih.presets") ?? "Pilihan Bacaan"}
                 </p>

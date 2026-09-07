@@ -18,6 +18,7 @@ import (
 	"github.com/agambondan/islamic-explorer/app/db"
 	"github.com/agambondan/islamic-explorer/app/lib/embeddings"
 	"github.com/agambondan/islamic-explorer/app/repository"
+	"github.com/spf13/viper"
 )
 
 func main() {
@@ -25,6 +26,7 @@ func main() {
 	limit := flag.Int("limit", 0, "max rows to process (0 = no limit); useful for smoke tests")
 	flag.Parse()
 
+	viper.AutomaticEnv()
 	env := (&config.Environment{}).Init()
 	dbConn := db.NewPostgresql(env)
 	repos, err := repository.NewRepositories(dbConn, nil)

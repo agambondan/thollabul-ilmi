@@ -355,7 +355,7 @@ export function WebAppKajianRoute({
                     testID='web-app-kajian-tab-transcript'
                 >
                     <Text style={[styles.tabButtonText, tab === "transcript" && styles.tabButtonTextActive]}>
-                        🔍 Transkrip
+                        {t("explore.kajian.tabTranscript")}
                     </Text>
                 </Pressable>
                 <Pressable
@@ -365,7 +365,7 @@ export function WebAppKajianRoute({
                     testID='web-app-kajian-tab-bookmarks'
                 >
                     <Text style={[styles.tabButtonText, tab === "bookmarks" && styles.tabButtonTextActive]}>
-                        🔖 Tersimpan
+                        {t("explore.kajian.tabBookmarks")}
                     </Text>
                 </Pressable>
                 <Pressable
@@ -375,7 +375,7 @@ export function WebAppKajianRoute({
                     testID='web-app-kajian-tab-list'
                 >
                     <Text style={[styles.tabButtonText, tab === "list" && styles.tabButtonTextActive]}>
-                        📚 Kajian
+                        {t("explore.kajian.tabList")}
                     </Text>
                 </Pressable>
             </View>
@@ -513,7 +513,7 @@ export function WebAppKajianRoute({
                         <Bookmark color='#f59e0b' size={18} />
                         <TextInput
                             onChangeText={setSavedQuery}
-                            placeholder='Filter bookmark...'
+                            placeholder={t("explore.kajian.filterBookmarks")}
                             placeholderTextColor='#9ca3af'
                             style={styles.searchInput}
                             value={savedQuery}
@@ -523,7 +523,9 @@ export function WebAppKajianRoute({
                     {filteredSaved.length > 0 ? (
                         <View style={styles.grid}>
                             <Text style={styles.resultsCount}>
-                                {filteredSaved.length} bookmark tersimpan
+                                {t("explore.kajian.savedCount", {
+                                    count: filteredSaved.length,
+                                })}
                             </Text>
                             {filteredSaved.map((item) => (
                                 <View key={item.id} style={styles.savedCardWrapper}>
@@ -537,7 +539,9 @@ export function WebAppKajianRoute({
                                         style={styles.removeBookmarkBtn}
                                     >
                                         <Trash2 color='#ef4444' size={14} />
-                                        <Text style={styles.removeBookmarkText}>Hapus</Text>
+                                        <Text style={styles.removeBookmarkText}>
+                                            {t("explore.kajian.removeBookmark")}
+                                        </Text>
                                     </Pressable>
                                 </View>
                             ))}
@@ -546,10 +550,12 @@ export function WebAppKajianRoute({
                         <View style={styles.empty}>
                             <Bookmark color='#9ca3af' size={32} strokeWidth={1.8} />
                             <Text style={styles.emptyTitle}>
-                                {savedQuery ? "Tidak ada bookmark yang cocok" : "Belum ada bookmark"}
+                                {savedQuery
+                                    ? t("explore.kajian.noMatchingBookmarks")
+                                    : t("explore.kajian.emptyBookmarks")}
                             </Text>
                             <Text style={styles.emptyText}>
-                                Buka transkrip kajian dan tekan ikon 🔖 untuk menyimpan potongan ceramah penting.
+                                {t("explore.kajian.emptyBookmarksHint")}
                             </Text>
                         </View>
                     )}

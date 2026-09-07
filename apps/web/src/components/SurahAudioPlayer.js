@@ -669,6 +669,57 @@ export default function SurahAudioPlayer({
         persistPreferences({ speed: normalizedSpeed });
     };
 
+    useEffect(() => {
+        if (typeof navigator === "undefined" || !navigator.mediaSession) return;
+        navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
+        if (!currentLabel || typeof MediaMetadata === "undefined") return;
+        const qari = getQariInfo(selectedQari);
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: currentLabel,
+            artist: qari.name,
+            album: surahName ? `Al-Qur'an · ${surahName}` : "Al-Qur'an",
+            artwork: [
+                { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
+                { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
+            ],
+        });
+    }, [currentLabel, isPlaying, selectedQari, surahName]);
+
+    useEffect(() => {
+        if (typeof navigator === "undefined" || !navigator.mediaSession?.setActionHandler) return undefined;
+        const actions = [
+            ["play", () => togglePlayRef.current?.()],
+            ["pause", () => {
+                audioRef.current?.pause();
+                setIsPlaying(false);
+            }],
+            ["previoustrack", () => skipQueueItemRef.current?.(-1)],
+            ["nexttrack", () => skipQueueItemRef.current?.(1)],
+            ["stop", () => stopPlaybackRef.current?.()],
+        ];
+        actions.forEach(([action, handler]) => {
+            try {
+                navigator.mediaSession.setActionHandler(action, handler);
+            } catch {}
+        });
+        return () => {
+            actions.forEach(([action]) => {
+                try {
+                    navigator.mediaSession.setActionHandler(action, null);
+                } catch {}
+            });
+        };
+    }, []);
+
+    const togglePlayRef = useRef(togglePlay);
+    const skipQueueItemRef = useRef(skipQueueItem);
+    const stopPlaybackRef = useRef(stopPlayback);
+    useEffect(() => {
+        togglePlayRef.current = togglePlay;
+        skipQueueItemRef.current = skipQueueItem;
+        stopPlaybackRef.current = stopPlayback;
+    });
+
     const currentAudio =
         audioList.find((item) => item.qari_slug === selectedQari) ??
         audioList[0];

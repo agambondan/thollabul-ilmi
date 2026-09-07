@@ -580,6 +580,7 @@ describe("QuranScreen", () => {
         await waitFor(() => {
             expect(getByTestId("modal-sheet")).toBeTruthy();
             expect(getByText("Mode Hafalan")).toBeTruthy();
+            expect(getByText("Layar Penuh (Immersive)")).toBeTruthy();
             expect(getByText("Ukuran Teks Terjemahan")).toBeTruthy();
             expect(getByText("16px")).toBeTruthy();
             expect(getByText("Normal")).toBeTruthy();

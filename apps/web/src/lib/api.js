@@ -721,6 +721,15 @@ export const kajianApi = {
     list: (params = "") =>
         fetch(`${API_URL}/api/v1/kajian${params ? `?${params}` : ""}`),
     detail: (id) => fetch(`${API_URL}/api/v1/kajian/${id}`),
+    speakers: () => fetch(`${API_URL}/api/v1/kajian/speakers`),
+    search: (params) => {
+        const qs =
+            typeof params === "string"
+                ? params
+                : new URLSearchParams(params).toString();
+        return fetch(`${API_URL}/api/v1/kajian/search${qs ? `?${qs}` : ""}`);
+    },
+    transcripts: (id) => fetch(`${API_URL}/api/v1/kajian/${id}/transcripts`),
 };
 
 export const wiridApi = {

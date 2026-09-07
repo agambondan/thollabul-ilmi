@@ -39,13 +39,20 @@ async function getInitialData() {
 
 export default async function KajianPage(props) {
     const searchParams = await props.searchParams;
-    const tab = searchParams?.tab || "transcript";
+    const tab =
+        searchParams?.tab || (searchParams?.q ? "transcript" : "transcript");
+    const q = searchParams?.q || "";
     const { items, total } = await getInitialData();
 
     return (
         <main className='min-h-screen flex flex-col'>
             <Section>
-                <KajianClient kajian={items} initialTotal={total} initialTab={tab} />
+                <KajianClient
+                    kajian={items}
+                    initialTotal={total}
+                    initialTab={tab}
+                    initialQuery={q}
+                />
             </Section>
         </main>
     );

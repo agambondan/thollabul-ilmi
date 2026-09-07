@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import { BsPlayCircle, BsSearch, BsYoutube } from "react-icons/bs";
 import { MdOutlinePlayLesson } from "react-icons/md";
 import VideoPlayerModal from "./VideoPlayerModal";
+import SavedBookmarksView from "./SavedBookmarksView";
 
 const TranscriptSearchView = dynamic(
     () => import("./TranscriptSearchView"),
@@ -52,6 +53,7 @@ export default function KajianClient({
     kajian: initialKajian = [],
     initialTotal = 0,
     initialTab = "list",
+    initialQuery = "",
 }) {
     const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
@@ -157,7 +159,7 @@ export default function KajianClient({
     const [tab, setTab] = useState(initialTab);
 
     // Transcript search state
-    const [transcriptQuery, setTranscriptQuery] = useState("");
+    const [transcriptQuery, setTranscriptQuery] = useState(initialQuery);
     const [searchMode, setSearchMode] = useState("hybrid");
     const [speakerFilter, setSpeakerFilter] = useState("");
     const [transcriptResults, setTranscriptResults] = useState([]);
@@ -273,6 +275,16 @@ export default function KajianClient({
                 </button>
                 <button
                     type='button'
+                    onClick={() => setTab("bookmarks")}
+                    className={`flex-1 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${tab === "bookmarks"
+                        ? "bg-white dark:bg-slate-700 text-amber-700 dark:text-amber-300 shadow-sm"
+                        : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                        }`}
+                >
+                    {t("kajian.tab_bookmarks") || "🔖 Bookmark"}
+                </button>
+                <button
+                    type='button'
                     onClick={() => setTab("list")}
                     className={`flex-1 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${tab === "list"
                         ? "bg-white dark:bg-slate-700 text-emerald-700 dark:text-emerald-300 shadow-sm"
@@ -297,6 +309,8 @@ export default function KajianClient({
                     meta={transcriptMeta}
                     t={t}
                 />
+            ) : tab === "bookmarks" ? (
+                <SavedBookmarksView />
             ) : (
                 <ListView
                     kajian={filtered}

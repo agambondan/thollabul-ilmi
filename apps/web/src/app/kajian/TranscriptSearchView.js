@@ -621,7 +621,7 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                             <BsSearch className='text-gray-400 text-[11px]' />
                             <input
                                 type='text'
-                                placeholder='Filter teks di video ini...'
+                                placeholder={t("kajian.filter_in_video")}
                                 value={filterQuery}
                                 onChange={(e) => setFilterQuery(e.target.value)}
                                 className='w-full bg-transparent outline-none text-gray-700 dark:text-gray-200 placeholder:text-gray-400 text-xs'
@@ -646,11 +646,11 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                         {loadingTranscripts ? (
                             <div className='flex flex-col items-center justify-center h-48 text-gray-400'>
                                 <div className='animate-spin rounded-full h-5 w-5 border-2 border-emerald-500 border-t-transparent mb-2' />
-                                <span className='text-xs'>Memuat transkrip...</span>
+                                <span className='text-xs'>{t("kajian.loading_transcript")}</span>
                             </div>
                         ) : displayedTranscripts.length === 0 ? (
                             <div className='text-center py-12 text-gray-400 text-xs'>
-                                {filterQuery ? "Tidak ada kalimat yang cocok dengan filter." : "Transkrip belum tersedia untuk video ini."}
+                                {filterQuery ? t("kajian.no_matching_sentence") : t("kajian.transcript_not_available")}
                             </div>
                         ) : (
                             displayedTranscripts.map((t, idx) => {
@@ -676,7 +676,7 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                                             className={`shrink-0 text-sm transition-opacity ${
                                                 isBookmarked ? "opacity-100" : "opacity-30 hover:opacity-70"
                                             }`}
-                                            title={isBookmarked ? "Hapus bookmark" : "Tambah bookmark"}
+                                            title={isBookmarked ? t("kajian.remove_bookmark") : t("kajian.add_bookmark")}
                                         >
                                             {isBookmarked ? "🔖" : "⚪"}
                                         </button>

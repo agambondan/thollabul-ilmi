@@ -778,6 +778,12 @@ const dictionaries = {
         "quran.progress.saveError": "Progres ayat belum bisa disimpan.",
         "quran.progress.started": "Progres disimpan untuk {surah}.",
         "quran.progress.startError": "Progres Al-Qur'an belum bisa disimpan.",
+        "quran.fullscreen.label": "Layar Penuh (Immersive)",
+        "quran.fullscreen.active":
+            "✓ Aktif (Tanpa Header / Bottom Nav)",
+        "quran.fullscreen.inactive": "Nonaktif",
+        "quran.fullscreen.hint":
+            "Saat aktif, header atas dan bottom navigation disembunyikan agar fokus penuh ke mushaf / ayat.",
         "session.active.fallbackMeta":
             "Fitur personal sudah aktif di perangkat ini.",
         "session.active.fallbackName": "Pengguna Thullaabul Ilmi",
@@ -1924,6 +1930,12 @@ const dictionaries = {
         "quran.progress.saveError": "Verse progress could not be saved.",
         "quran.progress.started": "Progress saved for {surah}.",
         "quran.progress.startError": "Quran progress could not be saved.",
+        "quran.fullscreen.label": "Fullscreen (Immersive)",
+        "quran.fullscreen.active":
+            "✓ Active (No Header / Bottom Nav)",
+        "quran.fullscreen.inactive": "Inactive",
+        "quran.fullscreen.hint":
+            "When active, the top header and bottom navigation are hidden to focus completely on the mushaf / verses.",
         "session.active.fallbackMeta":
             "Personal features are active on this device.",
         "session.active.fallbackName": "Thullaabul Ilmi User",

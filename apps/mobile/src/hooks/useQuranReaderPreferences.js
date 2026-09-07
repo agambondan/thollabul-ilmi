@@ -56,12 +56,6 @@ export function useQuranReaderPreferences({ onMemorizationModeChange } = {}) {
     const [memorizationMode, setMemorizationMode] = useState("off");
     const [fullscreen, setFullscreen] = useState(false);
 
-    const updateFullscreen = useCallback(async (nextValue) => {
-        const val = Boolean(nextValue);
-        setFullscreen(val);
-        await writePreference(preferenceKeys.quranFullscreen, val);
-    }, []);
-
     const updateFontSize = useCallback(async (nextSize) => {
         const normalized = clampFontSize(nextSize);
         setFontSize(normalized);
@@ -90,6 +84,12 @@ export function useQuranReaderPreferences({ onMemorizationModeChange } = {}) {
         setDisplayMode(normalized);
         await writePreference(preferenceKeys.quranDisplayMode, normalized);
     }, []);
+
+    const updateFullscreen = useCallback(async (val) => {
+        const next = typeof val === "function" ? val(fullscreen) : Boolean(val);
+        setFullscreen(next);
+        await writePreference(preferenceKeys.quranFullscreen, next);
+    }, [fullscreen]);
 
     const updateMemorizationMode = useCallback(
         async (mode) => {
@@ -153,12 +153,9 @@ export function useQuranReaderPreferences({ onMemorizationModeChange } = {}) {
             },
         );
 
-        readPreference(preferenceKeys.quranFullscreen, false).then(
-            (value) => {
-                if (mounted && typeof value === "boolean")
-                    setFullscreen(value);
-            },
-        );
+        readPreference(preferenceKeys.quranFullscreen, false).then((value) => {
+            if (mounted && typeof value === "boolean") setFullscreen(value);
+        });
 
         return () => {
             mounted = false;

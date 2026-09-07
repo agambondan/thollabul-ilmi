@@ -100,6 +100,14 @@ describe("SurahAudioPlayer", () => {
                 return Promise.resolve();
             });
         });
+        global.MediaMetadata = jest.fn(function (metadata) {
+            Object.assign(this, metadata);
+        });
+        navigator.mediaSession = {
+            metadata: null,
+            playbackState: "none",
+            setActionHandler: jest.fn(),
+        };
     });
 
     test("plays Quran audio range with selected qari, repeat, and speed", async () => {

@@ -1354,7 +1354,7 @@ export function createQuranScreenRenderers(context) {
                 ))}
             </View>
 
-            <Text style={styles.settingLabel}>Layar Penuh (Immersive)</Text>
+            <Text style={styles.settingLabel}>{t("quran.fullscreen.label")}</Text>
             <View style={styles.settingChips}>
                 <Pressable
                     accessibilityRole='button'
@@ -1371,14 +1371,13 @@ export function createQuranScreenRenderers(context) {
                         ]}
                     >
                         {fullscreen
-                            ? "✓ Aktif (Tanpa Header / Bottom Nav)"
-                            : "Nonaktif"}
+                            ? t("quran.fullscreen.active")
+                            : t("quran.fullscreen.inactive")}
                     </Text>
                 </Pressable>
             </View>
             <Text style={styles.settingHint}>
-                Saat aktif, header atas dan bottom navigation disembunyikan agar
-                fokus penuh ke mushaf / ayat.
+                {t("quran.fullscreen.hint")}
             </Text>
 
             <Pressable
