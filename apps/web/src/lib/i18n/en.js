@@ -232,6 +232,7 @@ const en = {
     "link.blog": "Blog",
     "link.library": "Knowledge Library",
     "link.kajian": "Islamic Studies",
+    "link.kajian_short": "Studies",
     "link.forum": "Discussion Forum",
     "link.tafsir": "Quran Tafsir",
     "link.arabic_dict": "Arabic Dictionary",

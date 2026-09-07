@@ -3,21 +3,15 @@
 import { useLocale } from "@/context/Locale";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BsHouseDoor, BsJournalBookmark } from "react-icons/bs";
+import { BsJournalBookmark } from "react-icons/bs";
 import { FaGraduationCap, FaQuran } from "react-icons/fa";
-import { MdMosque } from "react-icons/md";
+import { MdMosque, MdOutlinePlayLesson } from "react-icons/md";
 import { useQuranFullscreen } from "@/lib/useQuranFullscreen";
 
-/*
- * Mirrors the five tabs the mobile app settled on
- * (docs/MOBILE_IA_FINAL_APPROACH.md): Beranda · Quran · Hadis · Ibadah ·
- * Belajar. The web app had no bottom navigation at all, so every move on a
- * phone went through the hamburger menu.
- */
 const TABS = [
-    { href: "/", labelKey: "link.home", Icon: BsHouseDoor, exact: true },
     { href: "/quran", labelKey: "link.quran", Icon: FaQuran },
     { href: "/hadith", labelKey: "link.hadith", Icon: BsJournalBookmark },
+    { href: "/kajian", labelKey: "link.kajian_short", Icon: MdOutlinePlayLesson },
     { href: "/jadwal-sholat", labelKey: "nav.worship", Icon: MdMosque },
     { href: "/belajar", labelKey: "link.belajar_short", Icon: FaGraduationCap },
 ];
@@ -47,10 +41,9 @@ export default function MobileTabBar() {
             style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
             <ul className='mx-auto flex max-w-lg items-stretch'>
-                {TABS.map(({ href, labelKey, Icon, exact }) => {
-                    const isActive = exact
-                        ? pathname === href
-                        : pathname === href || pathname.startsWith(`${href}/`);
+                {TABS.map(({ href, labelKey, Icon }) => {
+                    const isActive =
+                        pathname === href || pathname.startsWith(`${href}/`);
                     return (
                         <li key={href} className='flex-1'>
                             <Link

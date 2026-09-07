@@ -439,11 +439,6 @@ const DashboardLayout = ({ children }) => {
         ? t("sidebar.expand")
         : t("sidebar.collapse");
     const mobilePrimaryLinks = [
-        {
-            labelKey: "link.dashboard",
-            href: "/dashboard",
-            icon: <BsBarChart />,
-        },
         { labelKey: "link.quran", href: "/dashboard/quran", icon: <FaQuran /> },
         {
             labelKey: "link.hadith",
@@ -451,11 +446,16 @@ const DashboardLayout = ({ children }) => {
             icon: <ImBook />,
         },
         {
+            labelKey: "link.kajian_short",
+            href: "/dashboard/kajian",
+            icon: <MdOutlinePlayLesson />,
+        },
+        {
             labelKey: "link.belajar",
             // The bottom-nav cell is ~78px; the full label truncates there.
             shortLabelKey: "link.belajar_short",
             href: "/dashboard/belajar",
-            icon: <MdOutlinePlayLesson />,
+            icon: <FaGraduationCap />,
         },
     ];
 
