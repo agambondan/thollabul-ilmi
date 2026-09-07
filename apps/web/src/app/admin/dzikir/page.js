@@ -100,7 +100,10 @@ const AdminDhikrPage = () => {
             } else {
                 res = await adminDzikirApi.create(payload);
             }
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setShowModal(false);
             load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -115,7 +118,10 @@ const AdminDhikrPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminDzikirApi.delete(deleteId);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setDeleteId(null);
             load();
             fb("admin:success", t("admin.crud.delete_success"));
@@ -171,7 +177,9 @@ const AdminDhikrPage = () => {
             </div>
 
             {loading ? (
-                <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
+                <p className='text-sm text-gray-500 dark:text-gray-300'>
+                    {t("common.loading")}
+                </p>
             ) : (
                 <>
                     <PanelTable
@@ -191,8 +199,12 @@ const AdminDhikrPage = () => {
                         {visible.map((item) => (
                             <Tr key={item.id ?? item._id}>
                                 <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium'>
-                                    <div>{getLocalizedField(item, "title", lang)}</div>
-                                    {item.source && <SourceBadges source={item.source} />}
+                                    <div>
+                                        {getLocalizedField(item, "title", lang)}
+                                    </div>
+                                    {item.source && (
+                                        <SourceBadges source={item.source} />
+                                    )}
                                 </Td>
                                 <Td>
                                     <span className='px-2 py-0.5 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 rounded text-xs'>

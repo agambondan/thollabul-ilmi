@@ -352,7 +352,12 @@ export const belajarFeatureGroups = [
         key: "kajian-artikel",
         label: "Kajian & Artikel",
         meta: "Belajar rutin",
-        features: pickFeatures(["community-feed", "komunitas", "kajian", "blog"]),
+        features: pickFeatures([
+            "community-feed",
+            "komunitas",
+            "kajian",
+            "blog",
+        ]),
     },
     {
         key: "siroh-sejarah",

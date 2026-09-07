@@ -39,7 +39,9 @@ function formatTime(seconds) {
 
 function extractVideoId(url) {
     if (!url) return null;
-    const m = String(url).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    const m = String(url).match(
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+    );
     return m ? m[1] : null;
 }
 
@@ -127,7 +129,12 @@ function buildPlayerHtml(videoId, startSeconds) {
 </body></html>`;
 }
 
-export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) {
+export function KajianPlayerModal({
+    item,
+    searchQuery = "",
+    visible,
+    onClose,
+}) {
     const videoId = useMemo(
         () => extractVideoId(item?.timestamp_url) || item?.video_id,
         [item?.timestamp_url, item?.video_id],
@@ -146,8 +153,12 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
 
     const webRef = useRef(null);
     const listRef = useRef(null);
-    const storageKey = item?.kajian_id ? `kajian-player:${item.kajian_id}` : null;
-    const bookmarkKey = item?.kajian_id ? `kajian-bookmarks:${item.kajian_id}` : null;
+    const storageKey = item?.kajian_id
+        ? `kajian-player:${item.kajian_id}`
+        : null;
+    const bookmarkKey = item?.kajian_id
+        ? `kajian-bookmarks:${item.kajian_id}`
+        : null;
 
     useEffect(() => {
         if (!visible || !storageKey || !bookmarkKey) return;
@@ -156,37 +167,41 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
             AsyncStorage.getItem(storageKey),
             AsyncStorage.getItem(bookmarkKey),
             readSession().catch(() => null),
-        ]).then(([savedTime, savedBookmarks, session]) => {
-            if (cancelled) return;
-            const resumeAt = Number(savedTime);
-            if (Number.isFinite(resumeAt) && resumeAt > 0) {
-                setPlayerStart(resumeAt);
-                setCurrentTime(resumeAt);
-            }
-            const local = savedBookmarks
-                ? new Set(JSON.parse(savedBookmarks))
-                : new Set();
-            if (session?.token && kajianId) {
-                listSyncedKajianBookmarkIDs(kajianId)
-                    .then((ids) => {
-                        if (cancelled) return;
-                        const merged = new Set([
-                            ...local,
-                            ...ids.map((n) => Number(n)).filter(Number.isFinite),
-                        ]);
-                        setBookmarked(merged);
-                        if (ids.length) {
-                            AsyncStorage.setItem(
-                                bookmarkKey,
-                                JSON.stringify([...merged]),
-                            ).catch(() => {});
-                        }
-                    })
-                    .catch(() => setBookmarked(local));
-            } else {
-                setBookmarked(local);
-            }
-        }).catch(() => {});
+        ])
+            .then(([savedTime, savedBookmarks, session]) => {
+                if (cancelled) return;
+                const resumeAt = Number(savedTime);
+                if (Number.isFinite(resumeAt) && resumeAt > 0) {
+                    setPlayerStart(resumeAt);
+                    setCurrentTime(resumeAt);
+                }
+                const local = savedBookmarks
+                    ? new Set(JSON.parse(savedBookmarks))
+                    : new Set();
+                if (session?.token && kajianId) {
+                    listSyncedKajianBookmarkIDs(kajianId)
+                        .then((ids) => {
+                            if (cancelled) return;
+                            const merged = new Set([
+                                ...local,
+                                ...ids
+                                    .map((n) => Number(n))
+                                    .filter(Number.isFinite),
+                            ]);
+                            setBookmarked(merged);
+                            if (ids.length) {
+                                AsyncStorage.setItem(
+                                    bookmarkKey,
+                                    JSON.stringify([...merged]),
+                                ).catch(() => {});
+                            }
+                        })
+                        .catch(() => setBookmarked(local));
+                } else {
+                    setBookmarked(local);
+                }
+            })
+            .catch(() => {});
         return () => {
             cancelled = true;
         };
@@ -195,14 +210,20 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
     useEffect(() => {
         if (!visible || !storageKey) return;
         const timer = setTimeout(() => {
-            AsyncStorage.setItem(storageKey, String(Math.floor(currentTime))).catch(() => {});
+            AsyncStorage.setItem(
+                storageKey,
+                String(Math.floor(currentTime)),
+            ).catch(() => {});
         }, 1000);
         return () => clearTimeout(timer);
     }, [currentTime, storageKey, visible]);
 
     useEffect(() => {
         if (!bookmarkKey) return;
-        AsyncStorage.setItem(bookmarkKey, JSON.stringify([...bookmarked])).catch(() => {});
+        AsyncStorage.setItem(
+            bookmarkKey,
+            JSON.stringify([...bookmarked]),
+        ).catch(() => {});
     }, [bookmarked, bookmarkKey]);
 
     // Fetch transcripts
@@ -229,14 +250,22 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
             })
             .catch(() => {});
         fetch(`${API_URL}/api/v1/kajian/${kajianId}/transcripts`)
-            .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+            .then((r) =>
+                r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`)),
+            )
             .then((data) => {
                 if (cancelled) return;
-                const list = Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : [];
+                const list = Array.isArray(data)
+                    ? data
+                    : Array.isArray(data?.data)
+                      ? data.data
+                      : [];
                 setTranscripts(list);
                 setTranscriptsFromCache(false);
                 if (list.length > 0) {
-                    AsyncStorage.setItem(cacheKey, JSON.stringify(list)).catch(() => {});
+                    AsyncStorage.setItem(cacheKey, JSON.stringify(list)).catch(
+                        () => {},
+                    );
                 }
             })
             .catch(() => {
@@ -254,7 +283,9 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
     const activeIndex = useMemo(() => {
         if (!transcripts.length) return -1;
         const cur = Math.floor(currentTime);
-        return transcripts.findIndex((t) => cur >= t.start_seconds && cur <= t.end_seconds);
+        return transcripts.findIndex(
+            (t) => cur >= t.start_seconds && cur <= t.end_seconds,
+        );
     }, [currentTime, transcripts]);
 
     // WebView message handler
@@ -273,7 +304,11 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
     useEffect(() => {
         if (!autoScroll || activeIndex < 0 || !listRef.current) return;
         try {
-            listRef.current.scrollToIndex({ index: activeIndex, animated: true, viewPosition: 0.3 });
+            listRef.current.scrollToIndex({
+                index: activeIndex,
+                animated: true,
+                viewPosition: 0.3,
+            });
         } catch {
             // ignore
         }
@@ -283,7 +318,9 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
         hapticTap();
         setCurrentTime(seconds);
         if (webRef.current) {
-            webRef.current.postMessage(JSON.stringify({ cmd: "seek", t: seconds }));
+            webRef.current.postMessage(
+                JSON.stringify({ cmd: "seek", t: seconds }),
+            );
         }
     };
 
@@ -343,7 +380,10 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
                         ...list,
                     ];
                 }
-                return AsyncStorage.setItem("kajian_saved_chunks", JSON.stringify(next));
+                return AsyncStorage.setItem(
+                    "kajian_saved_chunks",
+                    JSON.stringify(next),
+                );
             })
             .catch(() => {});
 
@@ -371,8 +411,8 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
             <AppModalSheet
                 visible={visible}
                 onClose={onClose}
-                title="Video tidak tersedia"
-                subtitle="ID video YouTube tidak dapat ditemukan"
+                title='Video tidak tersedia'
+                subtitle='ID video YouTube tidak dapat ditemukan'
             >
                 <Text style={styles.muted}>Transkrip tidak dapat diputar.</Text>
             </AppModalSheet>
@@ -385,7 +425,7 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
             onClose={onClose}
             title={item.title}
             subtitle={`${item.speaker} · ⏱️ ${item.timestamp}`}
-            maxHeight="92%"
+            maxHeight='92%'
             scroll={false}
         >
             <View style={styles.container}>
@@ -393,7 +433,10 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
                 <View style={styles.playerBox}>
                     <WebView
                         ref={webRef}
-                        style={[styles.player, audioOnly && styles.playerHidden]}
+                        style={[
+                            styles.player,
+                            audioOnly && styles.playerHidden,
+                        ]}
                         source={{ html: buildPlayerHtml(videoId, playerStart) }}
                         originWhitelist={["*"]}
                         onMessage={onWebViewMessage}
@@ -401,13 +444,15 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
                         mediaPlaybackRequiresUserAction={false}
                         javaScriptEnabled
                         domStorageEnabled
-                        mixedContentMode="always"
+                        mixedContentMode='always'
                     />
                     {audioOnly ? (
                         <View style={styles.audioOnlyOverlay}>
                             <Text style={styles.audioEmoji}>🎧</Text>
                             <Text style={styles.audioTitle}>Mode Audio</Text>
-                            <Text style={styles.audioSubtitle}>Video tetap berjalan, visual disembunyikan</Text>
+                            <Text style={styles.audioSubtitle}>
+                                Video tetap berjalan, visual disembunyikan
+                            </Text>
                         </View>
                     ) : null}
                 </View>
@@ -418,7 +463,12 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
                         onPress={() => setAudioOnly((v) => !v)}
                         style={[styles.chip, audioOnly && styles.chipActive]}
                     >
-                        <Text style={[styles.chipText, audioOnly && styles.chipTextActive]}>
+                        <Text
+                            style={[
+                                styles.chipText,
+                                audioOnly && styles.chipTextActive,
+                            ]}
+                        >
                             {audioOnly ? "🎧 Audio" : "🎬 Video"}
                         </Text>
                     </Pressable>
@@ -426,12 +476,17 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
                         onPress={() => setAutoScroll((v) => !v)}
                         style={[styles.chip, autoScroll && styles.chipActive]}
                     >
-                        <Text style={[styles.chipText, autoScroll && styles.chipTextActive]}>
+                        <Text
+                            style={[
+                                styles.chipText,
+                                autoScroll && styles.chipTextActive,
+                            ]}
+                        >
                             {autoScroll ? "↕ Auto-scroll" : "✋ Manual"}
                         </Text>
                     </Pressable>
                     <Pressable onPress={handleShare} style={styles.chip}>
-                        <Share2 size={14} color="#047857" />
+                        <Share2 size={14} color='#047857' />
                         <Text style={styles.chipText}>Bagikan</Text>
                     </Pressable>
                     {transcriptsFromCache && (
@@ -443,17 +498,17 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
 
                 {/* Filter input */}
                 <View style={styles.filterBox}>
-                    <Search size={14} color="#94a3b8" />
+                    <Search size={14} color='#94a3b8' />
                     <TextInput
                         style={styles.filterInput}
-                        placeholder="Cari di transkrip ini..."
+                        placeholder='Cari di transkrip ini...'
                         value={filter}
                         onChangeText={setFilter}
-                        placeholderTextColor="#94a3b8"
+                        placeholderTextColor='#94a3b8'
                     />
                     {filter ? (
                         <Pressable onPress={() => setFilter("")}>
-                            <X size={14} color="#94a3b8" />
+                            <X size={14} color='#94a3b8' />
                         </Pressable>
                     ) : null}
                 </View>
@@ -461,7 +516,7 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
                 {/* Transcript list */}
                 {loadingTranscripts ? (
                     <View style={styles.loading}>
-                        <ActivityIndicator color="#10b981" />
+                        <ActivityIndicator color='#10b981' />
                         <Text style={styles.muted}>Memuat transkrip...</Text>
                     </View>
                 ) : (
@@ -479,30 +534,52 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
                             return (
                                 <Pressable
                                     onPress={() => handleSeek(t.start_seconds)}
-                                    style={[styles.row, isCurrent && styles.rowActive]}
+                                    style={[
+                                        styles.row,
+                                        isCurrent && styles.rowActive,
+                                    ]}
                                 >
                                     <Pressable
                                         onPress={() => toggleBookmark(t)}
                                         style={styles.bookmarkBtn}
                                     >
-                                        <Text style={isBookmarked ? styles.bookmarkOn : styles.bookmarkOff}>
+                                        <Text
+                                            style={
+                                                isBookmarked
+                                                    ? styles.bookmarkOn
+                                                    : styles.bookmarkOff
+                                            }
+                                        >
                                             {isBookmarked ? "🔖" : "⚪"}
                                         </Text>
                                     </Pressable>
                                     <Pressable
-                                        onPress={() => handleSeek(t.start_seconds)}
+                                        onPress={() =>
+                                            handleSeek(t.start_seconds)
+                                        }
                                         style={[
                                             styles.timeBadge,
                                             isCurrent && styles.timeBadgeActive,
                                         ]}
                                     >
-                                        <Text style={[styles.timeText, isCurrent && styles.timeTextActive]}>
+                                        <Text
+                                            style={[
+                                                styles.timeText,
+                                                isCurrent &&
+                                                    styles.timeTextActive,
+                                            ]}
+                                        >
                                             {formatTime(t.start_seconds)}
                                         </Text>
                                     </Pressable>
                                     <Text
-                                        style={[styles.text, isCurrent && styles.textActive]}
-                                        numberOfLines={isCurrent ? undefined : 3}
+                                        style={[
+                                            styles.text,
+                                            isCurrent && styles.textActive,
+                                        ]}
+                                        numberOfLines={
+                                            isCurrent ? undefined : 3
+                                        }
                                     >
                                         {t.text}
                                     </Text>
@@ -518,7 +595,12 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
 
 const styles = StyleSheet.create({
     container: { flex: 1 },
-    playerBox: { width: "100%", aspectRatio: 16 / 9, backgroundColor: "#000", position: "relative" },
+    playerBox: {
+        width: "100%",
+        aspectRatio: 16 / 9,
+        backgroundColor: "#000",
+        position: "relative",
+    },
     player: { flex: 1 },
     playerHidden: { opacity: 0 },
     audioOnlyOverlay: {
@@ -528,7 +610,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#020617",
     },
     audioEmoji: { fontSize: 48 },
-    audioTitle: { color: "#fff", fontSize: 18, fontWeight: "700", marginTop: 8 },
+    audioTitle: {
+        color: "#fff",
+        fontSize: 18,
+        fontWeight: "700",
+        marginTop: 8,
+    },
     audioSubtitle: { color: "#cbd5e1", fontSize: 12, marginTop: 4 },
     cacheBadge: {
         backgroundColor: "#fef3c7",
@@ -571,7 +658,12 @@ const styles = StyleSheet.create({
         borderColor: "#e2e8f0",
         borderRadius: 10,
     },
-    filterInput: { flex: 1, fontSize: 13, color: "#1e293b", paddingVertical: 4 },
+    filterInput: {
+        flex: 1,
+        fontSize: 13,
+        color: "#1e293b",
+        paddingVertical: 4,
+    },
     list: { flex: 1 },
     listContent: { padding: spacing.sm || 10, gap: 6 },
     row: {
@@ -598,7 +690,12 @@ const styles = StyleSheet.create({
         borderRadius: 6,
     },
     timeBadgeActive: { backgroundColor: "rgba(255,255,255,0.25)" },
-    timeText: { fontSize: 10, color: "#047857", fontWeight: "700", fontFamily: Platform.OS === "ios" ? "Menlo" : "monospace" },
+    timeText: {
+        fontSize: 10,
+        color: "#047857",
+        fontWeight: "700",
+        fontFamily: Platform.OS === "ios" ? "Menlo" : "monospace",
+    },
     timeTextActive: { color: "#fff" },
     text: { flex: 1, fontSize: 12, color: "#334155", lineHeight: 18 },
     textActive: { color: "#fff", fontWeight: "500" },

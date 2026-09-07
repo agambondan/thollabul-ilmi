@@ -135,7 +135,10 @@ export default function SettingsPage() {
     };
 
     const playAdzanPreview = () => {
-        const src = resolveAdzanSoundSrc(settings.adzanSound, settings.adzanSoundUrl);
+        const src = resolveAdzanSoundSrc(
+            settings.adzanSound,
+            settings.adzanSoundUrl,
+        );
         if (!src) {
             toast.error("Sumber audio tidak valid");
             return;
@@ -218,7 +221,9 @@ export default function SettingsPage() {
                 ),
             );
         } catch (err) {
-            toast.error(t("adzan.test_notif_error", "Gagal mengirim notifikasi tes."));
+            toast.error(
+                t("adzan.test_notif_error", "Gagal mengirim notifikasi tes."),
+            );
         }
     };
 
@@ -291,7 +296,13 @@ export default function SettingsPage() {
     };
 
     return (
-        <div className={isWide ? "px-4 py-6 w-full" : "px-4 py-6 max-w-3xl mx-auto w-full"}>
+        <div
+            className={
+                isWide
+                    ? "px-4 py-6 w-full"
+                    : "px-4 py-6 max-w-3xl mx-auto w-full"
+            }
+        >
             <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-6'>
                 {t("settings.title")}
             </h1>
@@ -384,7 +395,9 @@ export default function SettingsPage() {
                                 step='2'
                                 value={translationFontSize}
                                 onChange={(e) =>
-                                    setTranslationFontSize(Number(e.target.value))
+                                    setTranslationFontSize(
+                                        Number(e.target.value),
+                                    )
                                 }
                                 className='flex-1 sm:w-32 accent-emerald-600'
                             />
@@ -393,12 +406,20 @@ export default function SettingsPage() {
                             </span>
                         </div>
                     </SettingRow>
-                    <SettingRow label={t("settings.show_translation", "Tampilkan Terjemahan")}>
+                    <SettingRow
+                        label={t(
+                            "settings.show_translation",
+                            "Tampilkan Terjemahan",
+                        )}
+                    >
                         <input
                             type='checkbox'
                             checked={settings.quranShowTranslation ?? true}
                             onChange={(e) =>
-                                updateSetting("quranShowTranslation", e.target.checked)
+                                updateSetting(
+                                    "quranShowTranslation",
+                                    e.target.checked,
+                                )
                             }
                             className='w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500 dark:bg-gray-700 dark:border-gray-600'
                         />
@@ -517,7 +538,8 @@ export default function SettingsPage() {
                                     </span>
                                     <select
                                         value={
-                                            settings.adzanReminderLeadByPrayer?.[
+                                            settings
+                                                .adzanReminderLeadByPrayer?.[
                                                 key
                                             ] ?? "global"
                                         }
@@ -591,8 +613,12 @@ export default function SettingsPage() {
                             </div>
                             {selectedAdzan?.qari && (
                                 <p className='text-xs text-emerald-700 dark:text-emerald-400'>
-                                    Muadzin/Qari: <span className='font-medium'>{selectedAdzan.qari}</span>
-                                    {selectedAdzan.region && ` • ${selectedAdzan.region}`}
+                                    Muadzin/Qari:{" "}
+                                    <span className='font-medium'>
+                                        {selectedAdzan.qari}
+                                    </span>
+                                    {selectedAdzan.region &&
+                                        ` • ${selectedAdzan.region}`}
                                 </p>
                             )}
                         </div>

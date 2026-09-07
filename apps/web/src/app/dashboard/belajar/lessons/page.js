@@ -3,5 +3,5 @@
 import LessonsContent from "./LessonsContent";
 
 export default function LessonsPage() {
-    return <LessonsContent basePath="/dashboard" />;
+    return <LessonsContent basePath='/dashboard' />;
 }

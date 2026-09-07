@@ -277,7 +277,10 @@ export default function MushafPageReader({
 
                 <div className='min-h-[820px] bg-[linear-gradient(180deg,rgba(16,185,129,0.08)_0,rgba(16,185,129,0)_56px)] p-3 space-y-2'>
                     {loading && (
-                        <div className='space-y-4 py-4 animate-pulse' aria-busy='true'>
+                        <div
+                            className='space-y-4 py-4 animate-pulse'
+                            aria-busy='true'
+                        >
                             {Array.from({ length: 12 }).map((_, idx) => (
                                 <div
                                     key={idx}

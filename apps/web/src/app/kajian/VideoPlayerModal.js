@@ -21,7 +21,7 @@ export default function VideoPlayerModal({ kajian, onClose }) {
 
     if (!kajian || !videoId) {
         return (
-            <ModalShell onClose={onClose} label="Video player">
+            <ModalShell onClose={onClose} label='Video player'>
                 <div className='bg-white dark:bg-slate-800 rounded-xl p-6 max-w-md w-full'>
                     <p className='text-sm text-gray-600 dark:text-gray-300'>
                         Video tidak dapat diputar.
@@ -56,7 +56,9 @@ export default function VideoPlayerModal({ kajian, onClose }) {
                         </p>
                         <p className='text-xs text-gray-500 dark:text-gray-400 truncate'>
                             {kajian.speaker}
-                            {kajian.duration ? ` · ${Math.floor(kajian.duration / 60)}m` : ""}
+                            {kajian.duration
+                                ? ` · ${Math.floor(kajian.duration / 60)}m`
+                                : ""}
                         </p>
                     </div>
                     <a
@@ -65,7 +67,9 @@ export default function VideoPlayerModal({ kajian, onClose }) {
                         rel='noopener noreferrer'
                         className='inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-medium flex-shrink-0'
                     >
-                        <span className='text-base' aria-hidden='true'>▶</span>
+                        <span className='text-base' aria-hidden='true'>
+                            ▶
+                        </span>
                         YouTube
                     </a>
                 </div>

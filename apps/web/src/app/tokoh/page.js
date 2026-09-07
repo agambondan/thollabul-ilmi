@@ -17,7 +17,8 @@ async function getInitialTokoh() {
         );
         if (!res.ok) return [];
         const data = await res.json();
-        const items = data?.items ?? data?.data ?? (Array.isArray(data) ? data : []);
+        const items =
+            data?.items ?? data?.data ?? (Array.isArray(data) ? data : []);
         return Array.isArray(items) ? items : [];
     } catch {
         return [];
@@ -30,7 +31,10 @@ export default async function TokohPage() {
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
             <Section>
-                <TokohClient initialItems={initialItems} className='pt-navbar' />
+                <TokohClient
+                    initialItems={initialItems}
+                    className='pt-navbar'
+                />
             </Section>
         </main>
     );

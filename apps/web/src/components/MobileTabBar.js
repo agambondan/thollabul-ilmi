@@ -11,7 +11,11 @@ import { useQuranFullscreen } from "@/lib/useQuranFullscreen";
 const TABS = [
     { href: "/quran", labelKey: "link.quran", Icon: FaQuran },
     { href: "/hadith", labelKey: "link.hadith", Icon: BsJournalBookmark },
-    { href: "/kajian", labelKey: "link.kajian_short", Icon: MdOutlinePlayLesson },
+    {
+        href: "/kajian",
+        labelKey: "link.kajian_short",
+        Icon: MdOutlinePlayLesson,
+    },
     { href: "/jadwal-sholat", labelKey: "nav.worship", Icon: MdMosque },
     { href: "/belajar", labelKey: "link.belajar_short", Icon: FaGraduationCap },
 ];

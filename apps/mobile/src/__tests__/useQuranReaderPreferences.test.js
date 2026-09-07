@@ -43,10 +43,7 @@ describe("useQuranReaderPreferences", () => {
         });
 
         expect(result.current.fullscreen).toBe(true);
-        expect(writePreference).toHaveBeenCalledWith(
-            "quran-fullscreen",
-            true,
-        );
+        expect(writePreference).toHaveBeenCalledWith("quran-fullscreen", true);
     });
 
     test("loads saved preferences", async () => {

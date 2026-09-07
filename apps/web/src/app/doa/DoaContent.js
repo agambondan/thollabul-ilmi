@@ -356,7 +356,8 @@ export const DoaContent = ({ initialItems = [] }) => {
                                             className='flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 rounded-lg text-sm font-medium hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors'
                                         >
                                             <BsExclamationTriangleFill className='text-xs' />
-                                            {t("report.correction_btn") ?? "Laporkan Kesalahan"}
+                                            {t("report.correction_btn") ??
+                                                "Laporkan Kesalahan"}
                                         </button>
                                     </div>
                                 </div>
@@ -391,7 +392,10 @@ export const DoaContent = ({ initialItems = [] }) => {
                     onClose={() => setReportDoa(null)}
                     targetType='doa'
                     targetId={String(reportDoa.id)}
-                    targetTitle={getLocalizedField(reportDoa, "title", lang, ["name"]) || "Doa"}
+                    targetTitle={
+                        getLocalizedField(reportDoa, "title", lang, ["name"]) ||
+                        "Doa"
+                    }
                     snippet={reportDoa.translation?.ar}
                 />
             )}

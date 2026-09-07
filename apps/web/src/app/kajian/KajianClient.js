@@ -281,7 +281,16 @@ export default function KajianClient({
         >
             <div className='flex items-center gap-3 mb-4'>
                 <div className='w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center'>
-                    <svg width='1.25em' height='1.25em' viewBox='0 0 24 24' fill='currentColor' className='text-xl text-emerald-700 dark:text-emerald-400' aria-hidden='true'><path d='M5 20V4h2v7l2.5-1.5L12 11V4h5v7.08c.33-.05.66-.08 1-.08s.67.03 1 .08V4c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h7.26c-.42-.6-.75-1.28-.97-2H5zm13-7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm-1.25 7.5v-5l4 2.5-4 2.5z' /></svg>
+                    <svg
+                        width='1.25em'
+                        height='1.25em'
+                        viewBox='0 0 24 24'
+                        fill='currentColor'
+                        className='text-xl text-emerald-700 dark:text-emerald-400'
+                        aria-hidden='true'
+                    >
+                        <path d='M5 20V4h2v7l2.5-1.5L12 11V4h5v7.08c.33-.05.66-.08 1-.08s.67.03 1 .08V4c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h7.26c-.42-.6-.75-1.28-.97-2H5zm13-7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm-1.25 7.5v-5l4 2.5-4 2.5z' />
+                    </svg>
                 </div>
                 <div>
                     <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
@@ -546,7 +555,12 @@ function ListView({
                                     </div>
                                     {k.platform === "youtube" && (
                                         <div className='absolute top-1.5 right-1.5 bg-black/60 backdrop-blur-xs px-1.5 py-0.5 rounded text-[10px] text-white flex items-center gap-1'>
-                                            <span className='text-red-500' aria-hidden='true'>▶</span>
+                                            <span
+                                                className='text-red-500'
+                                                aria-hidden='true'
+                                            >
+                                                ▶
+                                            </span>
                                         </div>
                                     )}
                                 </div>

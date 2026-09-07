@@ -117,7 +117,10 @@ const AdminFiqhPage = () => {
             } else {
                 res = await adminFiqhApi.create(payload);
             }
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setShowModal(false);
             load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -132,7 +135,10 @@ const AdminFiqhPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminFiqhApi.delete(deleteId);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setDeleteId(null);
             load();
             fb("admin:success", t("admin.crud.delete_success"));
@@ -202,7 +208,9 @@ const AdminFiqhPage = () => {
             </div>
 
             {loading ? (
-                <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
+                <p className='text-sm text-gray-500 dark:text-gray-300'>
+                    {t("common.loading")}
+                </p>
             ) : (
                 <>
                     <PanelTable
@@ -229,7 +237,9 @@ const AdminFiqhPage = () => {
                                 </Td>
                                 <Td className='text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
                                     {item.source || item.dalil ? (
-                                        <SourceBadges source={item.source || item.dalil} />
+                                        <SourceBadges
+                                            source={item.source || item.dalil}
+                                        />
                                     ) : (
                                         "-"
                                     )}

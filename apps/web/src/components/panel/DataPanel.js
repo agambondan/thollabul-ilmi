@@ -165,7 +165,9 @@ export const PanelPagination = ({
                         <span>Baris:</span>
                         <select
                             value={pageSize}
-                            onChange={(e) => onPageSizeChange(Number(e.target.value))}
+                            onChange={(e) =>
+                                onPageSizeChange(Number(e.target.value))
+                            }
                             className='px-2 py-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 rounded-lg text-xs text-gray-700 dark:text-gray-200 outline-none cursor-pointer'
                         >
                             {pageSizeOptions.map((opt) => (

@@ -23,7 +23,10 @@ const HADITH_SLUG_MAP = {
 };
 
 const normalizeKey = (value) =>
-    value.toLowerCase().replace(/['’.-]/g, "").replace(/\s+/g, "");
+    value
+        .toLowerCase()
+        .replace(/['’.-]/g, "")
+        .replace(/\s+/g, "");
 
 const HADITH_BOOKS =
     "Bukhari|Muslim|Abu Dawud|Tirmidzi|Ibnu Majah|Nasai|Ahmad|Malik|Darimi|at-Tirmidzi|an-Nasa'i";
@@ -46,7 +49,11 @@ const resolveSurahNumber = (surahName) => {
             s.number === Number(surahName)
         );
     });
-    return match ? match.number : Number.isFinite(Number(surahName)) ? Number(surahName) : null;
+    return match
+        ? match.number
+        : Number.isFinite(Number(surahName))
+          ? Number(surahName)
+          : null;
 };
 
 export function parseSourceMobile(source) {
@@ -68,7 +75,11 @@ export function parseSourceMobile(source) {
                 refs.push({
                     text: `HR. ${hrMatch[1].trim()} No. ${num}`,
                     tab: "hadith",
-                    params: { bookSlug: slug, hadithNumber: num, hadithId: num },
+                    params: {
+                        bookSlug: slug,
+                        hadithNumber: num,
+                        hadithId: num,
+                    },
                 });
                 continue;
             }

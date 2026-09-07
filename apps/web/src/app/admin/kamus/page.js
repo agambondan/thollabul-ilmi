@@ -98,7 +98,10 @@ const AdminDictionaryPage = () => {
             } else {
                 res = await adminKamusApi.create(form);
             }
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setShowModal(false);
             load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -113,7 +116,10 @@ const AdminDictionaryPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminKamusApi.delete(deleteId);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setDeleteId(null);
             load();
             fb("admin:success", t("admin.crud.delete_success"));
@@ -175,7 +181,9 @@ const AdminDictionaryPage = () => {
             </div>
 
             {loading ? (
-                <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
+                <p className='text-sm text-gray-500 dark:text-gray-300'>
+                    {t("common.loading")}
+                </p>
             ) : (
                 <>
                     <PanelTable
@@ -203,7 +211,10 @@ const AdminDictionaryPage = () => {
                                     {item.definition ?? item.meaning}
                                 </Td>
                                 <Td className='text-gray-400 text-xs hidden md:table-cell'>
-                                    {item.origin || item.source || item.root || "-"}
+                                    {item.origin ||
+                                        item.source ||
+                                        item.root ||
+                                        "-"}
                                 </Td>
                                 <Td>
                                     <div className='flex items-center gap-2 justify-end'>
@@ -420,7 +431,11 @@ const AdminDictionaryPage = () => {
                         </button>
                         <button
                             onClick={save}
-                            disabled={saving || !form.term.trim() || !form.definition.trim()}
+                            disabled={
+                                saving ||
+                                !form.term.trim() ||
+                                !form.definition.trim()
+                            }
                             className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
                         >
                             {saving ? t("common.saving") : t("common.save")}

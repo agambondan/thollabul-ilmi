@@ -28,7 +28,9 @@ export default function DailyAyahWidget({
 
     useEffect(() => {
         setLoading(true);
-        fetch(`${API_URL}/api/v1/ayah/daily${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`)
+        fetch(
+            `${API_URL}/api/v1/ayah/daily${lang ? `?lang=${encodeURIComponent(lang)}` : ""}`,
+        )
             .then((r) => {
                 if (!r.ok) throw new Error("not ok");
                 return r.json();

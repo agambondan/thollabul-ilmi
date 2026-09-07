@@ -67,7 +67,10 @@ export const sanitizeBlogHtml = (html) => {
         return stripped
             .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "")
             .replace(/(href|src)\s*=\s*("|')?\s*javascript:[^"'>]*/gi, "")
-            .replace(/<a\s+(?![^>]*\btarget=)([^>]*href="[^"]*"[^>]*)>/gi, '<a target="_blank" rel="noopener noreferrer" $1>');
+            .replace(
+                /<a\s+(?![^>]*\btarget=)([^>]*href="[^"]*"[^>]*)>/gi,
+                '<a target="_blank" rel="noopener noreferrer" $1>',
+            );
     }
 
     const doc = new DOMParser().parseFromString(
@@ -139,10 +142,7 @@ export const renderBlogContent = (raw) => {
     let listType = "ul";
 
     const escapeHtml = (str) =>
-        str
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
+        str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
     const formatInline = (text) => {
         return text
@@ -221,7 +221,9 @@ export const renderBlogContent = (raw) => {
                 inList = false;
             }
             const quoteContent = trimmedLine.replace(/^>\s*/, "");
-            output.push(`<blockquote>${formatInline(quoteContent)}</blockquote>`);
+            output.push(
+                `<blockquote>${formatInline(quoteContent)}</blockquote>`,
+            );
             continue;
         }
 

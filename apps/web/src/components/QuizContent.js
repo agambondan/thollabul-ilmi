@@ -13,12 +13,42 @@ import { MdRefresh } from "react-icons/md";
 const QUESTIONS_PER_ROUND = 10;
 
 const QUIZ_TYPES = [
-    { key: "", labelKey: "quiz.type_all", fallback: "Semua Kategori", icon: "✨" },
-    { key: "hafalan", labelKey: "quiz.type_hafalan", fallback: "Sambung Ayat / Quran", icon: "📖" },
-    { key: "hadith", labelKey: "quiz.type_hadith", fallback: "Hadits Nabawi", icon: "📜" },
-    { key: "fiqh", labelKey: "quiz.type_fiqh", fallback: "Fiqih Ibadah", icon: "⚖️" },
-    { key: "sirah", labelKey: "quiz.type_sirah", fallback: "Sirah Nabawiyah", icon: "🕌" },
-    { key: "asmaul_husna", labelKey: "quiz.type_asmaul_husna", fallback: "Asmaul Husna", icon: "💫" },
+    {
+        key: "",
+        labelKey: "quiz.type_all",
+        fallback: "Semua Kategori",
+        icon: "✨",
+    },
+    {
+        key: "hafalan",
+        labelKey: "quiz.type_hafalan",
+        fallback: "Sambung Ayat / Quran",
+        icon: "📖",
+    },
+    {
+        key: "hadith",
+        labelKey: "quiz.type_hadith",
+        fallback: "Hadits Nabawi",
+        icon: "📜",
+    },
+    {
+        key: "fiqh",
+        labelKey: "quiz.type_fiqh",
+        fallback: "Fiqih Ibadah",
+        icon: "⚖️",
+    },
+    {
+        key: "sirah",
+        labelKey: "quiz.type_sirah",
+        fallback: "Sirah Nabawiyah",
+        icon: "🕌",
+    },
+    {
+        key: "asmaul_husna",
+        labelKey: "quiz.type_asmaul_husna",
+        fallback: "Asmaul Husna",
+        icon: "💫",
+    },
 ];
 
 const normalizeQuestion = (q) => {
@@ -34,16 +64,22 @@ const normalizeQuestion = (q) => {
 
     const answer = options.indexOf(q?.correct_answer);
     const fallback = Number(
-        q?.answer ??
-            q?.correct_answer_index ??
-            q?.correctAnswerIndex ??
-            0,
+        q?.answer ?? q?.correct_answer_index ?? q?.correctAnswerIndex ?? 0,
     );
-    const safeAnswer = Number.isInteger(fallback) && fallback >= 0 && fallback < options.length
-        ? fallback
-        : 0;
-    if (answer < 0 && safeAnswer === 0 && (q?.correct_answer ?? q?.answer ?? q?.correct_answer_index) != null) {
-        console.warn("QuizContent: could not resolve correct answer", { id: q?.id, correct_answer: q?.correct_answer, options });
+    const safeAnswer =
+        Number.isInteger(fallback) && fallback >= 0 && fallback < options.length
+            ? fallback
+            : 0;
+    if (
+        answer < 0 &&
+        safeAnswer === 0 &&
+        (q?.correct_answer ?? q?.answer ?? q?.correct_answer_index) != null
+    ) {
+        console.warn("QuizContent: could not resolve correct answer", {
+            id: q?.id,
+            correct_answer: q?.correct_answer,
+            options,
+        });
     }
     return {
         raw: q,
@@ -78,7 +114,8 @@ export default function QuizContent({ initialType = "" }) {
     }, []);
 
     const startQuiz = async (typeOverride) => {
-        const typeToUse = typeof typeOverride === "string" ? typeOverride : selectedType;
+        const typeToUse =
+            typeof typeOverride === "string" ? typeOverride : selectedType;
         setIsLoading(true);
         setFetchError(false);
         try {
@@ -212,7 +249,9 @@ export default function QuizContent({ initialType = "" }) {
                                     }`}
                                 >
                                     <span className='text-base'>{qt.icon}</span>
-                                    <span className='truncate'>{t(qt.labelKey) ?? qt.fallback}</span>
+                                    <span className='truncate'>
+                                        {t(qt.labelKey) ?? qt.fallback}
+                                    </span>
                                 </button>
                             ))}
                         </div>
@@ -244,8 +283,12 @@ export default function QuizContent({ initialType = "" }) {
                                         className='flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-750 px-3 py-2 rounded-lg'
                                     >
                                         <span>
-                                            {new Date(h.date).toLocaleDateString(
-                                                lang === "ID" ? "id-ID" : "en-US",
+                                            {new Date(
+                                                h.date,
+                                            ).toLocaleDateString(
+                                                lang === "ID"
+                                                    ? "id-ID"
+                                                    : "en-US",
                                                 {
                                                     day: "numeric",
                                                     month: "short",
@@ -255,7 +298,9 @@ export default function QuizContent({ initialType = "" }) {
                                         </span>
                                         <span className='font-bold text-emerald-600 dark:text-emerald-400'>
                                             {h.score}/{h.total} (
-                                            {Math.round((h.score / h.total) * 100)}
+                                            {Math.round(
+                                                (h.score / h.total) * 100,
+                                            )}
                                             %)
                                         </span>
                                     </div>
@@ -351,8 +396,11 @@ export default function QuizContent({ initialType = "" }) {
                             {(getLocalizedField(q, "explanation", lang) ||
                                 q.explanation) && (
                                 <p className='mt-1 opacity-90 leading-relaxed'>
-                                    {getLocalizedField(q, "explanation", lang) ||
-                                        q.explanation}
+                                    {getLocalizedField(
+                                        q,
+                                        "explanation",
+                                        lang,
+                                    ) || q.explanation}
                                 </p>
                             )}
                         </div>
@@ -398,7 +446,9 @@ export default function QuizContent({ initialType = "" }) {
                         >
                             <MdRefresh className='text-lg' />
                             <span>
-                                {isLoading ? t("common.loading") : t("quiz.retry")}
+                                {isLoading
+                                    ? t("common.loading")
+                                    : t("quiz.retry")}
                             </span>
                         </button>
                         <button

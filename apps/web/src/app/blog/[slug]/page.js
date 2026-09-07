@@ -298,7 +298,8 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
         const translation = post.translation ?? {};
         return (
             (lang === "EN" &&
-                (translation.description_en || translation.descriptionEnglish)) ||
+                (translation.description_en ||
+                    translation.descriptionEnglish)) ||
             post.content ||
             post.body ||
             translation.description_idn ||
@@ -375,13 +376,15 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                     {stats.minutes > 0 && (
                                         <span className='inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 rounded-full text-xs font-medium'>
                                             <BsClock className='text-xs' />
-                                            {stats.minutes} {t("blog.reading_time")}
+                                            {stats.minutes}{" "}
+                                            {t("blog.reading_time")}
                                         </span>
                                     )}
                                     {stats.words > 0 && (
                                         <span className='inline-flex items-center gap-1.5 px-3 py-1 bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 rounded-full text-xs font-medium'>
                                             <BsBook className='text-xs' />
-                                            {stats.words.toLocaleString()} {t("blog.words_count")}
+                                            {stats.words.toLocaleString()}{" "}
+                                            {t("blog.words_count")}
                                         </span>
                                     )}
                                 </div>
@@ -402,7 +405,10 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                         )}
                                         {post.published_at && (
                                             <span>
-                                                {formatDate(post.published_at, lang)}
+                                                {formatDate(
+                                                    post.published_at,
+                                                    lang,
+                                                )}
                                             </span>
                                         )}
                                         {post.view_count != null && (
@@ -456,7 +462,10 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                             {t("blog.tags_label")}:
                                         </span>
                                         {post.tags.map((tag) => {
-                                            const tagLabel = getTagLabel(tag, lang);
+                                            const tagLabel = getTagLabel(
+                                                tag,
+                                                lang,
+                                            );
                                             return (
                                                 <span
                                                     key={getTagValue(tag, lang)}
@@ -472,7 +481,8 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                         </article>
 
                         {/* Related & Popular Posts */}
-                        {(relatedPosts.length > 0 || popularPosts.length > 0) && (
+                        {(relatedPosts.length > 0 ||
+                            popularPosts.length > 0) && (
                             <div className='bg-white dark:bg-slate-900 rounded-3xl border border-gray-100 dark:border-slate-800 p-6 md:p-8 shadow-sm space-y-8'>
                                 {relatedPosts.length > 0 && (
                                     <section>
@@ -557,10 +567,13 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                                             )}
                                                         </p>
                                                     </div>
-                                                    {item.view_count != null && (
+                                                    {item.view_count !=
+                                                        null && (
                                                         <span className='shrink-0 text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-1 rounded-full'>
                                                             {item.view_count.toLocaleString()}{" "}
-                                                            {t("blog.read_count")}
+                                                            {t(
+                                                                "blog.read_count",
+                                                            )}
                                                         </span>
                                                     )}
                                                 </Link>
@@ -623,7 +636,10 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                     <div className='flex items-center justify-between'>
                                         <span>{t("common.date")}</span>
                                         <span className='font-medium text-gray-800 dark:text-gray-200'>
-                                            {formatDate(post.published_at, lang)}
+                                            {formatDate(
+                                                post.published_at,
+                                                lang,
+                                            )}
                                         </span>
                                     </div>
                                 )}
@@ -631,7 +647,8 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                     <div className='flex items-center justify-between'>
                                         <span>{t("blog.reading_time")}</span>
                                         <span className='font-medium text-gray-800 dark:text-gray-200'>
-                                            ~{stats.minutes} {t("blog.reading_time")}
+                                            ~{stats.minutes}{" "}
+                                            {t("blog.reading_time")}
                                         </span>
                                     </div>
                                 )}
@@ -639,7 +656,8 @@ export const BlogDetailContent = ({ params, basePath = "/blog" }) => {
                                     <div className='flex items-center justify-between'>
                                         <span>{t("blog.words_count")}</span>
                                         <span className='font-medium text-gray-800 dark:text-gray-200'>
-                                            {stats.words.toLocaleString()} {t("blog.words_count")}
+                                            {stats.words.toLocaleString()}{" "}
+                                            {t("blog.words_count")}
                                         </span>
                                     </div>
                                 )}

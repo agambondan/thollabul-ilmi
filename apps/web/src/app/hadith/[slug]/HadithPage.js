@@ -44,16 +44,19 @@ const getSunnahUrl = (slug, number) => {
 };
 
 const PERAWI_STATUS_COLORS = {
-    tsiqah_tsiqah: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 border-emerald-300",
+    tsiqah_tsiqah:
+        "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 border-emerald-300",
     tsiqah: "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300 border-green-300",
     shaduq: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300 border-blue-300",
-    la_baasa_bihi: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300 border-cyan-300",
+    la_baasa_bihi:
+        "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300 border-cyan-300",
     maqbul: "bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-300 border-sky-300",
     majhul: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 border-gray-300",
     layyin: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300 border-yellow-300",
     dhaif: "bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300 border-orange-300",
     matruk: "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300 border-red-300",
-    kadzdzab: "bg-red-200 text-red-900 dark:bg-red-900/60 dark:text-red-200 border-red-400",
+    kadzdzab:
+        "bg-red-200 text-red-900 dark:bg-red-900/60 dark:text-red-200 border-red-400",
 };
 
 function SanadPanel({ hadithId, basePath = "/hadith" }) {
@@ -93,7 +96,10 @@ function SanadPanel({ hadithId, basePath = "/hadith" }) {
     return (
         <div className='space-y-4'>
             {data.map((sanad, i) => (
-                <div key={sanad.id ?? i} className='text-sm bg-gray-50/50 dark:bg-slate-800/40 p-3 rounded-xl border border-gray-100 dark:border-slate-700/60'>
+                <div
+                    key={sanad.id ?? i}
+                    className='text-sm bg-gray-50/50 dark:bg-slate-800/40 p-3 rounded-xl border border-gray-100 dark:border-slate-700/60'
+                >
                     <div className='flex items-center gap-2 mb-2 flex-wrap'>
                         {sanad.jenis && (
                             <span className='px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 capitalize'>
@@ -114,7 +120,10 @@ function SanadPanel({ hadithId, basePath = "/hadith" }) {
                     <div className='flex flex-wrap items-center gap-2 pt-1'>
                         {(sanad.mata_sanad ?? []).map((ms, idx, arr) => {
                             const p = ms.perawi;
-                            const statusColor = p?.status ? (PERAWI_STATUS_COLORS[p.status] || "bg-gray-100 text-gray-700 border-gray-200") : "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800";
+                            const statusColor = p?.status
+                                ? PERAWI_STATUS_COLORS[p.status] ||
+                                  "bg-gray-100 text-gray-700 border-gray-200"
+                                : "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800";
                             return (
                                 <span
                                     key={ms.id ?? idx}
@@ -126,16 +135,23 @@ function SanadPanel({ hadithId, basePath = "/hadith" }) {
                                                 href={`${perawiBase}/${p.id}`}
                                                 className={`px-2.5 py-1.5 border rounded-lg text-xs font-semibold hover:opacity-80 transition-opacity shadow-sm ${statusColor}`}
                                             >
-                                                {p.nama_latin || `Perawi ${idx + 1}`}
+                                                {p.nama_latin ||
+                                                    `Perawi ${idx + 1}`}
                                                 {p.status && (
                                                     <span className='block text-[10px] font-normal opacity-80 capitalize text-center'>
-                                                        {p.status.replace(/_/g, " ")}
+                                                        {p.status.replace(
+                                                            /_/g,
+                                                            " ",
+                                                        )}
                                                     </span>
                                                 )}
                                             </Link>
                                         ) : (
-                                            <span className={`px-2.5 py-1.5 border rounded-lg text-xs font-semibold ${statusColor}`}>
-                                                {ms.perawi?.nama_latin ?? `Perawi ${idx + 1}`}
+                                            <span
+                                                className={`px-2.5 py-1.5 border rounded-lg text-xs font-semibold ${statusColor}`}
+                                            >
+                                                {ms.perawi?.nama_latin ??
+                                                    `Perawi ${idx + 1}`}
                                             </span>
                                         )}
                                         {ms.metode && (
@@ -589,7 +605,9 @@ const HadithPage = ({
                                                     href={sunnahUrl}
                                                     target='_blank'
                                                     rel='noopener noreferrer'
-                                                    className={actionMenuButtonClass}
+                                                    className={
+                                                        actionMenuButtonClass
+                                                    }
                                                 >
                                                     <IoMdOpen />
                                                     sunnah.com
@@ -631,8 +649,9 @@ const HadithPage = ({
                                                 SetSettingPopUp(false);
                                             }}
                                         >
-                                            <BsExclamationTriangleFill className="text-amber-500" />
-                                            {t("report.correction_btn") ?? "Laporkan Kesalahan"}
+                                            <BsExclamationTriangleFill className='text-amber-500' />
+                                            {t("report.correction_btn") ??
+                                                "Laporkan Kesalahan"}
                                         </button>
                                         <button
                                             className={actionMenuButtonClass}
@@ -749,14 +768,16 @@ const HadithPage = ({
                 <ContentReportModal
                     isOpen={reportOpen}
                     onClose={() => setReportOpen(false)}
-                    targetType="hadith"
+                    targetType='hadith'
                     targetId={`${hadith?.book?.slug || params.slug}-${hadith?.number}`}
                     targetTitle={`HR. ${hadith?.book?.translation?.latin_en || hadith?.book?.slug} No. ${hadith?.number}`}
-                    snippet={
-                        (hadith?.translation?.idn || hadith?.translation?.en || "")
-                            .replace(/<[^>]+>/g, "")
-                            .slice(0, 200)
-                    }
+                    snippet={(
+                        hadith?.translation?.idn ||
+                        hadith?.translation?.en ||
+                        ""
+                    )
+                        .replace(/<[^>]+>/g, "")
+                        .slice(0, 200)}
                 />
             )}
         </>

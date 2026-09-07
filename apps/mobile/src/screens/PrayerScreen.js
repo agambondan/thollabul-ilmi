@@ -1195,51 +1195,82 @@ export function PrayerScreen({ isActive, navigation }) {
                                         >
                                             +1
                                         </Text>
-                        </Pressable>
-                    </View>
+                                    </Pressable>
+                                </View>
 
-                    {adzanAudioEnabled && (
-                        <>
-                            <Text style={styles.settingsLabel}>
-                                {t("prayer.reminder.audio_choice") ?? "Pilihan Muadzin / Suara Adzan"}
-                            </Text>
-                            <View style={styles.adzanSoundList}>
-                                {ADZAN_SOUNDS.map((sound) => {
-                                    const isSelected = adzanSound === sound.value;
-                                    return (
-                                        <Pressable
-                                            accessibilityRole='button'
-                                            key={sound.value}
-                                            onPress={() => selectAdzanSound(sound.value)}
-                                            style={[
-                                                styles.adzanSoundItem,
-                                                isSelected ? styles.adzanSoundItemActive : null,
-                                            ]}
-                                        >
-                                            <View style={styles.adzanSoundInfo}>
-                                                <Text
-                                                    style={[
-                                                        styles.adzanSoundLabel,
-                                                        isSelected ? styles.adzanSoundLabelActive : null,
-                                                    ]}
-                                                >
-                                                    {sound.label}
-                                                </Text>
-                                                <Text style={styles.adzanSoundQari}>
-                                                    {sound.qari} • {sound.region}
-                                                </Text>
-                                            </View>
-                                            {isSelected && (
-                                                <View style={styles.adzanSoundBadge}>
-                                                    <Text style={styles.adzanSoundBadgeText}>Dipilih</Text>
-                                                </View>
-                                            )}
-                                        </Pressable>
-                                    );
-                                })}
-                            </View>
-                        </>
-                    )}
+                                {adzanAudioEnabled && (
+                                    <>
+                                        <Text style={styles.settingsLabel}>
+                                            {t(
+                                                "prayer.reminder.audio_choice",
+                                            ) ??
+                                                "Pilihan Muadzin / Suara Adzan"}
+                                        </Text>
+                                        <View style={styles.adzanSoundList}>
+                                            {ADZAN_SOUNDS.map((sound) => {
+                                                const isSelected =
+                                                    adzanSound === sound.value;
+                                                return (
+                                                    <Pressable
+                                                        accessibilityRole='button'
+                                                        key={sound.value}
+                                                        onPress={() =>
+                                                            selectAdzanSound(
+                                                                sound.value,
+                                                            )
+                                                        }
+                                                        style={[
+                                                            styles.adzanSoundItem,
+                                                            isSelected
+                                                                ? styles.adzanSoundItemActive
+                                                                : null,
+                                                        ]}
+                                                    >
+                                                        <View
+                                                            style={
+                                                                styles.adzanSoundInfo
+                                                            }
+                                                        >
+                                                            <Text
+                                                                style={[
+                                                                    styles.adzanSoundLabel,
+                                                                    isSelected
+                                                                        ? styles.adzanSoundLabelActive
+                                                                        : null,
+                                                                ]}
+                                                            >
+                                                                {sound.label}
+                                                            </Text>
+                                                            <Text
+                                                                style={
+                                                                    styles.adzanSoundQari
+                                                                }
+                                                            >
+                                                                {sound.qari} •{" "}
+                                                                {sound.region}
+                                                            </Text>
+                                                        </View>
+                                                        {isSelected && (
+                                                            <View
+                                                                style={
+                                                                    styles.adzanSoundBadge
+                                                                }
+                                                            >
+                                                                <Text
+                                                                    style={
+                                                                        styles.adzanSoundBadgeText
+                                                                    }
+                                                                >
+                                                                    Dipilih
+                                                                </Text>
+                                                            </View>
+                                                        )}
+                                                    </Pressable>
+                                                );
+                                            })}
+                                        </View>
+                                    </>
+                                )}
                             </View>
                         ))}
                         <Pressable
@@ -1368,37 +1399,66 @@ export function PrayerScreen({ isActive, navigation }) {
                         {adzanAudioEnabled && (
                             <>
                                 <Text style={styles.webAppSettingsLabel}>
-                                    {t("prayer.reminder.audio_choice") ?? "Pilihan Muadzin / Suara Adzan"}
+                                    {t("prayer.reminder.audio_choice") ??
+                                        "Pilihan Muadzin / Suara Adzan"}
                                 </Text>
                                 <View style={styles.adzanSoundList}>
                                     {ADZAN_SOUNDS.map((sound) => {
-                                        const isSelected = adzanSound === sound.value;
+                                        const isSelected =
+                                            adzanSound === sound.value;
                                         return (
                                             <Pressable
                                                 accessibilityRole='button'
                                                 key={sound.value}
-                                                onPress={() => selectAdzanSound(sound.value)}
+                                                onPress={() =>
+                                                    selectAdzanSound(
+                                                        sound.value,
+                                                    )
+                                                }
                                                 style={[
                                                     styles.adzanSoundItem,
-                                                    isSelected ? styles.adzanSoundItemActive : null,
+                                                    isSelected
+                                                        ? styles.adzanSoundItemActive
+                                                        : null,
                                                 ]}
                                             >
-                                                <View style={styles.adzanSoundInfo}>
+                                                <View
+                                                    style={
+                                                        styles.adzanSoundInfo
+                                                    }
+                                                >
                                                     <Text
                                                         style={[
                                                             styles.adzanSoundLabel,
-                                                            isSelected ? styles.adzanSoundLabelActive : null,
+                                                            isSelected
+                                                                ? styles.adzanSoundLabelActive
+                                                                : null,
                                                         ]}
                                                     >
                                                         {sound.label}
                                                     </Text>
-                                                    <Text style={styles.adzanSoundQari}>
-                                                        {sound.qari} • {sound.region}
+                                                    <Text
+                                                        style={
+                                                            styles.adzanSoundQari
+                                                        }
+                                                    >
+                                                        {sound.qari} •{" "}
+                                                        {sound.region}
                                                     </Text>
                                                 </View>
                                                 {isSelected && (
-                                                    <View style={styles.adzanSoundBadge}>
-                                                        <Text style={styles.adzanSoundBadgeText}>Dipilih</Text>
+                                                    <View
+                                                        style={
+                                                            styles.adzanSoundBadge
+                                                        }
+                                                    >
+                                                        <Text
+                                                            style={
+                                                                styles.adzanSoundBadgeText
+                                                            }
+                                                        >
+                                                            Dipilih
+                                                        </Text>
                                                     </View>
                                                 )}
                                             </Pressable>
@@ -1842,37 +1902,60 @@ export function PrayerScreen({ isActive, navigation }) {
                     {adzanAudioEnabled && (
                         <>
                             <Text style={styles.settingsLabel}>
-                                {t("prayer.reminder.audio_choice") ?? "Pilihan Muadzin / Suara Adzan"}
+                                {t("prayer.reminder.audio_choice") ??
+                                    "Pilihan Muadzin / Suara Adzan"}
                             </Text>
                             <View style={styles.adzanSoundList}>
                                 {ADZAN_SOUNDS.map((sound) => {
-                                    const isSelected = adzanSound === sound.value;
+                                    const isSelected =
+                                        adzanSound === sound.value;
                                     return (
                                         <Pressable
                                             accessibilityRole='button'
                                             key={sound.value}
-                                            onPress={() => selectAdzanSound(sound.value)}
+                                            onPress={() =>
+                                                selectAdzanSound(sound.value)
+                                            }
                                             style={[
                                                 styles.adzanSoundItem,
-                                                isSelected ? styles.adzanSoundItemActive : null,
+                                                isSelected
+                                                    ? styles.adzanSoundItemActive
+                                                    : null,
                                             ]}
                                         >
                                             <View style={styles.adzanSoundInfo}>
                                                 <Text
                                                     style={[
                                                         styles.adzanSoundLabel,
-                                                        isSelected ? styles.adzanSoundLabelActive : null,
+                                                        isSelected
+                                                            ? styles.adzanSoundLabelActive
+                                                            : null,
                                                     ]}
                                                 >
                                                     {sound.label}
                                                 </Text>
-                                                <Text style={styles.adzanSoundQari}>
-                                                    {sound.qari} • {sound.region}
+                                                <Text
+                                                    style={
+                                                        styles.adzanSoundQari
+                                                    }
+                                                >
+                                                    {sound.qari} •{" "}
+                                                    {sound.region}
                                                 </Text>
                                             </View>
                                             {isSelected && (
-                                                <View style={styles.adzanSoundBadge}>
-                                                    <Text style={styles.adzanSoundBadgeText}>Dipilih</Text>
+                                                <View
+                                                    style={
+                                                        styles.adzanSoundBadge
+                                                    }
+                                                >
+                                                    <Text
+                                                        style={
+                                                            styles.adzanSoundBadgeText
+                                                        }
+                                                    >
+                                                        Dipilih
+                                                    </Text>
                                                 </View>
                                             )}
                                         </Pressable>

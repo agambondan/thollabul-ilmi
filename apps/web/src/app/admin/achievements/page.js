@@ -3,7 +3,14 @@
 import GenericAdminCRUD from "@/components/panel/GenericAdminCRUD";
 import { adminAchievementApi } from "@/lib/api";
 
-const CATEGORIES = ["streak", "hafalan", "bookmark", "tahfiz", "sedekah", "lainnya"];
+const CATEGORIES = [
+    "streak",
+    "hafalan",
+    "bookmark",
+    "tahfiz",
+    "sedekah",
+    "lainnya",
+];
 
 export default function AdminAchievementPage() {
     return (

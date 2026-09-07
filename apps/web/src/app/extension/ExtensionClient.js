@@ -11,7 +11,13 @@ export default function ExtensionClient() {
     const { isWide } = useLayoutMode();
 
     return (
-        <div className={isWide ? "w-full py-8 px-4 sm:px-6" : "max-w-4xl mx-auto py-8 px-4 sm:px-6"}>
+        <div
+            className={
+                isWide
+                    ? "w-full py-8 px-4 sm:px-6"
+                    : "max-w-4xl mx-auto py-8 px-4 sm:px-6"
+            }
+        >
             {/* Header Banner */}
             <div className='text-center mb-12'>
                 <span className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 mb-4'>

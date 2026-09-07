@@ -454,7 +454,8 @@ export const DzikirContent = ({ initialItems = [] }) => {
                                             className='inline-flex items-center gap-1.5 px-2.5 py-1 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors'
                                         >
                                             <BsExclamationTriangleFill className='text-[10px]' />
-                                            {t("report.correction_btn") ?? "Laporkan Kesalahan"}
+                                            {t("report.correction_btn") ??
+                                                "Laporkan Kesalahan"}
                                         </button>
                                     </div>
                                 </div>
@@ -484,7 +485,11 @@ export const DzikirContent = ({ initialItems = [] }) => {
                     onClose={() => setReportDzikir(null)}
                     targetType='dzikir'
                     targetId={String(reportDzikir.id)}
-                    targetTitle={getLocalizedField(reportDzikir, "title", lang, ["name"]) || "Dzikir"}
+                    targetTitle={
+                        getLocalizedField(reportDzikir, "title", lang, [
+                            "name",
+                        ]) || "Dzikir"
+                    }
                     snippet={reportDzikir.translation?.ar}
                 />
             )}

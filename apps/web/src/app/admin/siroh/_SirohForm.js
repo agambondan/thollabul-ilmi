@@ -66,7 +66,10 @@ const SirahForm = ({ initialData = null, contentId = null }) => {
             const res = isEdit
                 ? await adminSirohApi.updateContent(contentId, payload)
                 : await adminSirohApi.createContent(payload);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             router.push("/admin/siroh");
         } catch (err) {
             setError(err.message || t("admin.error.save"));

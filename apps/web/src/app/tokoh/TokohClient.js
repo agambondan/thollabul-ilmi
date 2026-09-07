@@ -107,7 +107,9 @@ export default function TokohClient({ initialItems = [], className = "" }) {
                 </div>
             ) : items.length === 0 ? (
                 <div className='text-center py-16 text-gray-400'>
-                    <p className='text-sm'>{t("tokoh.empty") ?? "Tidak ada tokoh yang cocok."}</p>
+                    <p className='text-sm'>
+                        {t("tokoh.empty") ?? "Tidak ada tokoh yang cocok."}
+                    </p>
                 </div>
             ) : (
                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
@@ -204,7 +206,8 @@ export default function TokohClient({ initialItems = [], className = "" }) {
                             {selected.known_for && (
                                 <p>
                                     <strong className='text-gray-900 dark:text-gray-100'>
-                                        {t("tokoh.known_for") ?? "Dikenal atas"}:
+                                        {t("tokoh.known_for") ?? "Dikenal atas"}
+                                        :
                                     </strong>{" "}
                                     {selected.known_for}
                                 </p>
@@ -212,7 +215,9 @@ export default function TokohClient({ initialItems = [], className = "" }) {
                             {selected.major_works && (
                                 <p>
                                     <strong className='text-gray-900 dark:text-gray-100'>
-                                        {t("tokoh.major_works") ?? "Karya utama"}:
+                                        {t("tokoh.major_works") ??
+                                            "Karya utama"}
+                                        :
                                     </strong>{" "}
                                     {selected.major_works}
                                 </p>

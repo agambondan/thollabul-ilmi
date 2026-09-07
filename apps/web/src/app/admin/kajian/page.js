@@ -136,7 +136,10 @@ const AdminStudiesPage = () => {
             } else {
                 res = await adminKajianApi.create(payload);
             }
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setShowModal(false);
             load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -151,7 +154,10 @@ const AdminStudiesPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminKajianApi.delete(deleteId);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setDeleteId(null);
             load();
             fb("admin:success", t("admin.crud.delete_success"));
@@ -213,7 +219,9 @@ const AdminStudiesPage = () => {
             </div>
 
             {loading ? (
-                <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
+                <p className='text-sm text-gray-500 dark:text-gray-300'>
+                    {t("common.loading")}
+                </p>
             ) : (
                 <>
                     <PanelTable
@@ -513,7 +521,9 @@ const AdminStudiesPage = () => {
                         </button>
                         <button
                             onClick={save}
-                            disabled={saving || !form.title.trim() || !form.type}
+                            disabled={
+                                saving || !form.title.trim() || !form.type
+                            }
                             className='flex-1 py-2 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white rounded-lg text-sm font-medium'
                         >
                             {saving ? t("common.saving") : t("common.save")}

@@ -162,7 +162,8 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
             );
         } catch {
             setProgressMessage(
-                t("library.progress_save_failed") || "Progress belum bisa disimpan.",
+                t("library.progress_save_failed") ||
+                    "Progress belum bisa disimpan.",
             );
         } finally {
             setSavingProgress(false);
@@ -195,7 +196,9 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                         <div className='mb-4 flex flex-wrap items-start justify-between gap-3'>
                             <div>
                                 <p className='text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
-                                    {book.category || t("home.f.library") || "Perpustakaan"}
+                                    {book.category ||
+                                        t("home.f.library") ||
+                                        "Perpustakaan"}
                                 </p>
                                 <h1 className='mt-2 text-2xl font-bold leading-snug text-emerald-950 dark:text-emerald-300 dark:text-white md:text-3xl'>
                                     {book.title}
@@ -212,8 +215,11 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                         onClick={toggleBookmark}
                                         title={
                                             bookmarked
-                                                ? t("library.remove_bookmark") || "Hapus bookmark"
-                                                : t("library.save_bookmark") || "Simpan bookmark"
+                                                ? t(
+                                                      "library.remove_bookmark",
+                                                  ) || "Hapus bookmark"
+                                                : t("library.save_bookmark") ||
+                                                  "Simpan bookmark"
                                         }
                                     >
                                         {bookmarked ? (
@@ -259,12 +265,14 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                     rel='noreferrer'
                                     target='_blank'
                                 >
-                                    {t("library.open_resource") || "Buka resource"}
+                                    {t("library.open_resource") ||
+                                        "Buka resource"}
                                     <BsBoxArrowUpRight />
                                 </a>
                             ) : (
                                 <span className='rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800 dark:text-amber-300 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200'>
-                                    {t("library.no_file_attached") || "File sumber belum dilampirkan."}
+                                    {t("library.no_file_attached") ||
+                                        "File sumber belum dilampirkan."}
                                 </span>
                             )}
                             {book.license && (
@@ -291,12 +299,15 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                         book.license_status !==
                                             "unverified" && (
                                             <span className='rounded-full bg-white px-2 py-0.5 font-semibold text-gray-700 dark:bg-slate-900 dark:text-gray-200'>
-                                                {t("library.license_label") || "Lisensi:"} {book.license_status}
+                                                {t("library.license_label") ||
+                                                    "Lisensi:"}{" "}
+                                                {book.license_status}
                                             </span>
                                         )}
                                     {book.is_source_verified && (
                                         <span className='rounded-full bg-emerald-100 px-2 py-0.5 font-semibold text-emerald-800 dark:text-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-200'>
-                                            {t("library.source_verified") || "Sumber terverifikasi"}
+                                            {t("library.source_verified") ||
+                                                "Sumber terverifikasi"}
                                         </span>
                                     )}
                                 </div>
@@ -312,13 +323,18 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                             <div className='mb-3 flex flex-wrap items-center justify-between gap-2'>
                                 <div>
                                     <h2 className='text-sm font-bold text-emerald-950 dark:text-emerald-300 dark:text-white'>
-                                        {t("library.study_progress") || "Progress Belajar"}
+                                        {t("library.study_progress") ||
+                                            "Progress Belajar"}
                                     </h2>
                                     <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                         {isAuthenticated
-                                            ? t("library.study_progress_desc") ||
+                                            ? t(
+                                                  "library.study_progress_desc",
+                                              ) ||
                                               "Simpan posisi belajar dan catatan ringkas untuk resource ini."
-                                            : t("library.study_progress_login_desc") ||
+                                            : t(
+                                                  "library.study_progress_login_desc",
+                                              ) ||
                                               "Masuk untuk menyimpan progress belajar."}
                                     </p>
                                 </div>
@@ -350,14 +366,16 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                             }
                                             value={progressForm.status}
                                         >
-                                            {getProgressStatuses(t).map((item) => (
-                                                <option
-                                                    key={item.value}
-                                                    value={item.value}
-                                                >
-                                                    {item.label}
-                                                </option>
-                                            ))}
+                                            {getProgressStatuses(t).map(
+                                                (item) => (
+                                                    <option
+                                                        key={item.value}
+                                                        value={item.value}
+                                                    >
+                                                        {item.label}
+                                                    </option>
+                                                ),
+                                            )}
                                         </select>
                                     </div>
                                     <div>
@@ -365,7 +383,8 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                             htmlFor='page-halaman-terakhir'
                                             className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'
                                         >
-                                            {t("library.last_page") || "Halaman terakhir"}
+                                            {t("library.last_page") ||
+                                                "Halaman terakhir"}
                                         </label>
                                         <input
                                             id='page-halaman-terakhir'
@@ -392,7 +411,8 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                             htmlFor='page-catatan-ringkas'
                                             className='mb-1 block text-xs font-semibold text-gray-600 dark:text-gray-300'
                                         >
-                                            {t("library.brief_note") || "Catatan ringkas"}
+                                            {t("library.brief_note") ||
+                                                "Catatan ringkas"}
                                         </label>
                                         <textarea
                                             id='page-catatan-ringkas'
@@ -414,8 +434,10 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                             onClick={saveProgress}
                                         >
                                             {savingProgress
-                                                ? t("library.saving") || "Menyimpan..."
-                                                : t("library.save_progress") || "Simpan progress"}
+                                                ? t("library.saving") ||
+                                                  "Menyimpan..."
+                                                : t("library.save_progress") ||
+                                                  "Simpan progress"}
                                         </button>
                                         {progressMessage && (
                                             <span className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>

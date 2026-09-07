@@ -17,9 +17,14 @@ export default function DashboardKajianPage() {
         fetch(`${apiUrl}/api/v1/kajian?page=0&size=10`)
             .then((res) => res.json())
             .then((data) => {
-                const list = data?.items ?? data?.data?.items ?? (Array.isArray(data) ? data : []);
+                const list =
+                    data?.items ??
+                    data?.data?.items ??
+                    (Array.isArray(data) ? data : []);
                 setItems(Array.isArray(list) ? list : []);
-                setTotal(data?.total ?? (Array.isArray(list) ? list.length : 0));
+                setTotal(
+                    data?.total ?? (Array.isArray(list) ? list.length : 0),
+                );
             })
             .catch(() => {
                 setItems([]);

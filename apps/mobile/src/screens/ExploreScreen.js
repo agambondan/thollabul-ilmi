@@ -1759,7 +1759,7 @@ export function ExploreScreen({
             setZakatHarvestWeight,
             setZakatHaul,
             setZakatHistory,
-                setZakatRiceKgPrice,
+            setZakatRiceKgPrice,
             setZakatRicePrice,
             setZakatSavedMsg,
             setZakatSaving,

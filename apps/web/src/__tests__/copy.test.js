@@ -138,7 +138,9 @@ describe("copy utilities", () => {
         });
 
         test("resolves when user aborts", async () => {
-            const err = Object.assign(new Error("aborted"), { name: "AbortError" });
+            const err = Object.assign(new Error("aborted"), {
+                name: "AbortError",
+            });
             Object.defineProperty(navigator, "canShare", {
                 value: jest.fn(() => true),
                 writable: true,
@@ -150,7 +152,9 @@ describe("copy utilities", () => {
                 configurable: true,
             });
             const canvas = { toBlob: (cb) => cb(makeBlob()) };
-            await expect(shareCanvasWithText(canvas, {})).resolves.toBeUndefined();
+            await expect(
+                shareCanvasWithText(canvas, {}),
+            ).resolves.toBeUndefined();
         });
     });
 });

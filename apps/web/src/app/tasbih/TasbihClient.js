@@ -103,7 +103,8 @@ export function TasbihContent() {
                 count: stored.count ?? 0,
                 target: stored.target ?? 33,
                 vibrate: stored.vibrate ?? true,
-                totalToday: stored.date === today ? (stored.totalToday ?? 0) : 0,
+                totalToday:
+                    stored.date === today ? (stored.totalToday ?? 0) : 0,
             });
         }
     }, []);
@@ -241,15 +242,13 @@ export function TasbihContent() {
                         onClick={reset}
                         className='flex items-center gap-1.5 px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-200 rounded-xl text-sm font-medium hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors'
                     >
-                        ↺
-                        {t("tasbih.reset") ?? "Reset"}
+                        ↺{t("tasbih.reset") ?? "Reset"}
                     </button>
                     <button
                         onClick={resetAll}
                         className='flex items-center gap-1.5 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors'
                     >
-                        ↻
-                        {t("tasbih.reset_all") ?? "Reset Semua"}
+                        ↻{t("tasbih.reset_all") ?? "Reset Semua"}
                     </button>
                     <button
                         onClick={() => setVibrate((v) => !v)}
@@ -269,7 +268,10 @@ export function TasbihContent() {
 
             <div
                 className='grid grid-cols-3 gap-3 mb-6'
-                style={{ contentVisibility: "auto", containIntrinsicSize: "96px" }}
+                style={{
+                    contentVisibility: "auto",
+                    containIntrinsicSize: "96px",
+                }}
             >
                 <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 text-center'>
                     <p className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
@@ -299,7 +301,10 @@ export function TasbihContent() {
 
             <div
                 className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 mb-5'
-                style={{ contentVisibility: "auto", containIntrinsicSize: "120px" }}
+                style={{
+                    contentVisibility: "auto",
+                    containIntrinsicSize: "120px",
+                }}
             >
                 <div className='flex items-center justify-between mb-3'>
                     <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300'>
@@ -334,7 +339,10 @@ export function TasbihContent() {
 
             <div
                 className='space-y-2'
-                style={{ contentVisibility: "auto", containIntrinsicSize: "600px" }}
+                style={{
+                    contentVisibility: "auto",
+                    containIntrinsicSize: "600px",
+                }}
             >
                 <p className='text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2'>
                     {t("tasbih.presets") ?? "Pilihan Bacaan"}

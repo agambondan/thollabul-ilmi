@@ -54,7 +54,10 @@ const parseAladhanHijri = (data) => ({
     hijri_arabic: `${data.hijri.day} ${data.hijri.month.ar} ${data.hijri.year}`,
 });
 
-export default function HijriClient({ initialToday = null, initialEvents = [] }) {
+export default function HijriClient({
+    initialToday = null,
+    initialEvents = [],
+}) {
     const { lang, t } = useLocale();
     const { isWide } = useLayoutMode();
     const months = monthNames(lang);
@@ -110,9 +113,7 @@ export default function HijriClient({ initialToday = null, initialEvents = [] })
     return (
         <div
             className={
-                isWide
-                    ? "w-full px-4"
-                    : "container mx-auto px-4 max-w-2xl"
+                isWide ? "w-full px-4" : "container mx-auto px-4 max-w-2xl"
             }
         >
             <div className='text-center mb-6'>
@@ -139,12 +140,9 @@ export default function HijriClient({ initialToday = null, initialEvents = [] })
                     <p className='text-xl font-bold'>
                         {todayHijri.hijri_day ?? todayHijri.day}{" "}
                         {months[
-                            (todayHijri.hijri_month ??
-                                todayHijri.month) - 1
+                            (todayHijri.hijri_month ?? todayHijri.month) - 1
                         ] ?? ""}{" "}
-                        {todayHijri.hijri_year ??
-                            todayHijri.year}{" "}
-                        H
+                        {todayHijri.hijri_year ?? todayHijri.year} H
                     </p>
                     <p className='text-sm text-emerald-200 mt-1'>
                         {new Date().toLocaleDateString(
@@ -176,17 +174,12 @@ export default function HijriClient({ initialToday = null, initialEvents = [] })
                 <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-4'>
                     {t("hijri.convert_title")}
                 </h2>
-                <form
-                    onSubmit={handleConvert}
-                    className='flex items-end gap-3'
-                >
+                <form onSubmit={handleConvert} className='flex items-end gap-3'>
                     <div className='flex-1'>
                         <input
                             type='date'
                             value={convertDate}
-                            onChange={(e) =>
-                                setConvertDate(e.target.value)
-                            }
+                            onChange={(e) => setConvertDate(e.target.value)}
                             className='w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                         />
                     </div>
@@ -219,12 +212,7 @@ export default function HijriClient({ initialToday = null, initialEvents = [] })
                                 </p>
                                 <p className='text-sm font-bold text-emerald-900 dark:text-emerald-200'>
                                     {convertResult.hijri_day}{" "}
-                                    {
-                                        months[
-                                            convertResult.hijri_month -
-                                                1
-                                        ]
-                                    }{" "}
+                                    {months[convertResult.hijri_month - 1]}{" "}
                                     {convertResult.hijri_year} H
                                 </p>
                             </>
@@ -240,9 +228,9 @@ export default function HijriClient({ initialToday = null, initialEvents = [] })
                             {t("hijri.events_title")}
                         </h2>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
-                            {t("common.showing")}{" "}
-                            {visibleEvents.length} {t("common.of")}{" "}
-                            {events.length} {t("hijri.events_unit")}
+                            {t("common.showing")} {visibleEvents.length}{" "}
+                            {t("common.of")} {events.length}{" "}
+                            {t("hijri.events_unit")}
                         </p>
                     </div>
                 </div>
@@ -253,12 +241,8 @@ export default function HijriClient({ initialToday = null, initialEvents = [] })
                         <input
                             type='text'
                             value={eventSearch}
-                            onChange={(e) =>
-                                setEventSearch(e.target.value)
-                            }
-                            placeholder={t(
-                                "hijri.events_search_placeholder",
-                            )}
+                            onChange={(e) => setEventSearch(e.target.value)}
+                            placeholder={t("hijri.events_search_placeholder")}
                             className='w-full pl-8 pr-8 py-2 text-xs rounded-lg border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                         />
                         {eventSearch && (
@@ -275,14 +259,10 @@ export default function HijriClient({ initialToday = null, initialEvents = [] })
 
                     <select
                         value={selectedMonth}
-                        onChange={(e) =>
-                            setSelectedMonth(e.target.value)
-                        }
+                        onChange={(e) => setSelectedMonth(e.target.value)}
                         className='px-3 py-2 text-xs rounded-lg border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                     >
-                        <option value=''>
-                            {t("hijri.all_months")}
-                        </option>
+                        <option value=''>{t("hijri.all_months")}</option>
                         {months.map((name, i) => (
                             <option key={i + 1} value={String(i + 1)}>
                                 {name}
@@ -299,23 +279,14 @@ export default function HijriClient({ initialToday = null, initialEvents = [] })
                         >
                             <div className='flex items-start justify-between gap-2 mb-1'>
                                 <h3 className='font-semibold text-sm text-gray-900 dark:text-gray-100 dark:text-white'>
-                                    {getLocalizedField(
-                                        ev,
-                                        "name",
-                                        lang,
-                                    )}
+                                    {getLocalizedField(ev, "name", lang)}
                                 </h3>
                                 <span className='text-xs font-mono px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 shrink-0'>
-                                    {ev.hijri_day}{" "}
-                                    {months[ev.hijri_month - 1]}
+                                    {ev.hijri_day} {months[ev.hijri_month - 1]}
                                 </span>
                             </div>
                             <p className='text-xs text-gray-600 dark:text-gray-300'>
-                                {getLocalizedField(
-                                    ev,
-                                    "description",
-                                    lang,
-                                )}
+                                {getLocalizedField(ev, "description", lang)}
                             </p>
                         </div>
                     ))}

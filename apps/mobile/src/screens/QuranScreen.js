@@ -283,7 +283,10 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     useEffect(() => {
         if (!lastRead || !lastRead.ayah_id) return;
         setTargetAyah((current) => {
-            if (current?.id && Number(current.id) === Number(lastRead.ayah_id)) {
+            if (
+                current?.id &&
+                Number(current.id) === Number(lastRead.ayah_id)
+            ) {
                 return current;
             }
             return {

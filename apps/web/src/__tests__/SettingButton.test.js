@@ -29,7 +29,9 @@ jest.mock("@/context/Locale", () => ({
 }));
 
 jest.mock("@/lib/api", () => ({
-    authFetch: jest.fn().mockResolvedValue({ ok: true, json: async () => ({}) }),
+    authFetch: jest
+        .fn()
+        .mockResolvedValue({ ok: true, json: async () => ({}) }),
 }));
 
 jest.mock("@/context/Auth", () => ({
@@ -56,7 +58,9 @@ describe("SettingButton Quran-scoped controls", () => {
 
         expect(screen.getByText("Mode Hafalan")).toBeInTheDocument();
         expect(screen.getByText("Sembunyikan Arab")).toBeInTheDocument();
-        expect(screen.getAllByText("Sembunyikan Terjemahan").length).toBeGreaterThan(0);
+        expect(
+            screen.getAllByText("Sembunyikan Terjemahan").length,
+        ).toBeGreaterThan(0);
         expect(screen.getByText("Tampilan")).toBeInTheDocument();
         expect(screen.getByText("Alur (Mushaf)")).toBeInTheDocument();
     });
@@ -75,7 +79,9 @@ describe("SettingButton Quran-scoped controls", () => {
 
         expect(screen.getByText("Mode Hafalan")).toBeInTheDocument();
         expect(screen.getByText("Sembunyikan Arab")).toBeInTheDocument();
-        expect(screen.getAllByText("Sembunyikan Terjemahan").length).toBeGreaterThan(0);
+        expect(
+            screen.getAllByText("Sembunyikan Terjemahan").length,
+        ).toBeGreaterThan(0);
         expect(screen.getByText("Tampilan")).toBeInTheDocument();
         expect(screen.getByText("Alur (Mushaf)")).toBeInTheDocument();
     });

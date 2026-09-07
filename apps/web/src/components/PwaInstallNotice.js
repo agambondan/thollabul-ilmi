@@ -61,8 +61,7 @@ export default function PwaInstallNotice() {
         };
 
         window.addEventListener("beforeinstallprompt", handler);
-        return () =>
-            window.removeEventListener("beforeinstallprompt", handler);
+        return () => window.removeEventListener("beforeinstallprompt", handler);
     }, []);
 
     const dismiss = () => {
@@ -89,9 +88,7 @@ export default function PwaInstallNotice() {
 
     if (hidden) return null;
 
-    const guideText = isIos
-        ? t("pwa.install_ios")
-        : t("pwa.install_android");
+    const guideText = isIos ? t("pwa.install_ios") : t("pwa.install_android");
 
     return (
         <aside

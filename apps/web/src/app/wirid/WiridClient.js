@@ -147,7 +147,8 @@ const WiridClient = ({ initialItems = [] }) => {
                 <div className='flex flex-col items-center justify-center min-h-[30vh] text-center bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-8'>
                     <p className='text-4xl mb-3'>📿</p>
                     <p className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300'>
-                        {t("wirid.empty") ?? "Belum ada bacaan wirid untuk kategori ini."}
+                        {t("wirid.empty") ??
+                            "Belum ada bacaan wirid untuk kategori ini."}
                     </p>
                 </div>
             ) : (
@@ -263,7 +264,8 @@ const WIRID_OCCASIONS = [
         label_en: "Laylat al-Qadr",
         emoji: "✨",
         description: "Malam lebih baik dari seribu bulan — perbanyak doa ini",
-        description_en: "The night better than a thousand months. Increase this dua",
+        description_en:
+            "The night better than a thousand months. Increase this dua",
     },
     {
         occasion: "ramadan",

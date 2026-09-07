@@ -55,10 +55,7 @@ describe("SourceBadges component", () => {
     it("renders clickable badge and triggers onOpenTab", () => {
         const onOpenTab = jest.fn();
         const { getByText } = render(
-            <SourceBadges
-                source="HR. Muslim No. 1218"
-                onOpenTab={onOpenTab}
-            />,
+            <SourceBadges source='HR. Muslim No. 1218' onOpenTab={onOpenTab} />,
         );
         const badge = getByText("HR. Muslim No. 1218");
         expect(badge).toBeTruthy();
@@ -71,7 +68,7 @@ describe("SourceBadges component", () => {
     });
 
     it("renders nothing when source is empty", () => {
-        const { toJSON } = render(<SourceBadges source="" />);
+        const { toJSON } = render(<SourceBadges source='' />);
         expect(toJSON()).toBeNull();
     });
 });

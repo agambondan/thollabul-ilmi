@@ -6,7 +6,12 @@ import { useRequireAuth } from "@/lib/useRequireAuth";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BsExclamationTriangleFill, BsCheckCircleFill, BsHourglassSplit, BsXCircleFill } from "react-icons/bs";
+import {
+    BsExclamationTriangleFill,
+    BsCheckCircleFill,
+    BsHourglassSplit,
+    BsXCircleFill,
+} from "react-icons/bs";
 
 const STATUS_BADGE = {
     pending: {
@@ -61,7 +66,13 @@ export default function MyReportsPage() {
     if (authLoading) return <div className='p-6'>Loading...</div>;
 
     return (
-        <div className={isWide ? "p-4 md:p-6 w-full" : "p-4 md:p-6 max-w-4xl mx-auto w-full"}>
+        <div
+            className={
+                isWide
+                    ? "p-4 md:p-6 w-full"
+                    : "p-4 md:p-6 max-w-4xl mx-auto w-full"
+            }
+        >
             <div className='mb-6'>
                 <Link
                     href='/dashboard/profile'
@@ -72,7 +83,9 @@ export default function MyReportsPage() {
                 <div className='flex items-center gap-2.5'>
                     <BsExclamationTriangleFill className='text-amber-500 text-xl' />
                     <h1 className='text-xl md:text-2xl font-bold text-gray-900 dark:text-white'>
-                        {lang === "EN" ? "My Content Reports" : "Laporan Koreksi Saya"}
+                        {lang === "EN"
+                            ? "My Content Reports"
+                            : "Laporan Koreksi Saya"}
                     </h1>
                 </div>
                 <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
@@ -108,7 +121,8 @@ export default function MyReportsPage() {
             ) : (
                 <div className='space-y-3'>
                     {reports.map((r) => {
-                        const badge = STATUS_BADGE[r.status] || STATUS_BADGE.pending;
+                        const badge =
+                            STATUS_BADGE[r.status] || STATUS_BADGE.pending;
                         const BadgeIcon = badge.icon;
                         return (
                             <div
@@ -128,26 +142,39 @@ export default function MyReportsPage() {
                                         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${badge.cls}`}
                                     >
                                         <BadgeIcon className='text-xs' />
-                                        <span>{lang === "EN" ? badge.labelEn : badge.label}</span>
+                                        <span>
+                                            {lang === "EN"
+                                                ? badge.labelEn
+                                                : badge.label}
+                                        </span>
                                     </div>
                                 </div>
 
                                 <div className='space-y-1.5 text-xs text-gray-600 dark:text-gray-300'>
                                     <p>
                                         <strong className='text-gray-700 dark:text-gray-200'>
-                                            {lang === "EN" ? "Issue:" : "Kekeliruan:"}
+                                            {lang === "EN"
+                                                ? "Issue:"
+                                                : "Kekeliruan:"}
                                         </strong>{" "}
                                         {r.description}
                                     </p>
                                     {r.correction && (
                                         <p className='text-emerald-700 dark:text-emerald-400 italic'>
-                                            <strong>{lang === "EN" ? "Suggested:" : "Usulan:"}</strong> {r.correction}
+                                            <strong>
+                                                {lang === "EN"
+                                                    ? "Suggested:"
+                                                    : "Usulan:"}
+                                            </strong>{" "}
+                                            {r.correction}
                                         </p>
                                     )}
                                     {r.admin_note && (
                                         <div className='mt-2 rounded-lg bg-gray-50 dark:bg-slate-800/80 p-2 text-xs text-gray-700 dark:text-gray-300 border border-gray-100 dark:border-slate-700'>
                                             <strong className='text-gray-900 dark:text-gray-100'>
-                                                {lang === "EN" ? "Admin Note:" : "Catatan Admin:"}
+                                                {lang === "EN"
+                                                    ? "Admin Note:"
+                                                    : "Catatan Admin:"}
                                             </strong>{" "}
                                             {r.admin_note}
                                         </div>

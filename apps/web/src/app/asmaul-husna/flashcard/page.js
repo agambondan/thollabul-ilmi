@@ -174,15 +174,25 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                         </p>
                         <p className='text-base text-emerald-700 dark:text-emerald-400 text-center mt-2 font-medium'>
                             {lang === "EN"
-                                ? (current.translation?.en || current.english || current.meaning_en || current.meaning)
-                                : (current.translation?.idn || current.indonesian || current.meaning_idn || current.meaning)}
+                                ? current.translation?.en ||
+                                  current.english ||
+                                  current.meaning_en ||
+                                  current.meaning
+                                : current.translation?.idn ||
+                                  current.indonesian ||
+                                  current.meaning_idn ||
+                                  current.meaning}
                         </p>
                         {(() => {
                             const extra = asmaulHusnaData[current.number];
                             const description =
                                 lang === "EN"
-                                    ? current.description_en || extra?.meaning_en || current.english
-                                    : current.description || current.meaning || extra?.explanation;
+                                    ? current.description_en ||
+                                      extra?.meaning_en ||
+                                      current.english
+                                    : current.description ||
+                                      current.meaning ||
+                                      extra?.explanation;
                             return description ? (
                                 <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 text-center mt-3 leading-relaxed'>
                                     {description}
@@ -209,7 +219,8 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                                             )}
                                             {extra.dalilTrans && (
                                                 <p className='text-gray-600 dark:text-gray-300 italic'>
-                                                    &ldquo;{extra.dalilTrans}&rdquo;
+                                                    &ldquo;{extra.dalilTrans}
+                                                    &rdquo;
                                                 </p>
                                             )}
                                         </div>
@@ -217,7 +228,10 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                                     {extra.ulamaQuote && (
                                         <div className='p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-800/30 text-amber-900 dark:text-amber-300'>
                                             <p className='font-semibold'>
-                                                {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
+                                                {t(
+                                                    "asmaul.ulama_explanation",
+                                                ) ?? "Penjelasan Ulama"}
+                                                :
                                             </p>
                                             <p className='text-gray-700 dark:text-gray-200 dark:text-gray-300 mt-0.5'>
                                                 {extra.ulamaQuote}
@@ -228,10 +242,14 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                                         <div className='text-center pt-1'>
                                             <Link
                                                 href={extra.internalLink}
-                                                onClick={(e) => e.stopPropagation()}
+                                                onClick={(e) =>
+                                                    e.stopPropagation()
+                                                }
                                                 className='inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 hover:underline font-medium'
                                             >
-                                                {t("asmaul.open_quran") ?? "Lihat di Al-Qur'an"} &rarr;
+                                                {t("asmaul.open_quran") ??
+                                                    "Lihat di Al-Qur'an"}{" "}
+                                                &rarr;
                                             </Link>
                                         </div>
                                     )}
@@ -285,7 +303,11 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                     <span>Lihat Daftar Lengkap 99 Asmaul Husna</span>
                 </Link>
                 <Link
-                    href={basePath.startsWith("/dashboard") ? "/dashboard/asmaul-husna/wirid" : "/asmaul-husna/wirid"}
+                    href={
+                        basePath.startsWith("/dashboard")
+                            ? "/dashboard/asmaul-husna/wirid"
+                            : "/asmaul-husna/wirid"
+                    }
                     className='flex items-center gap-2.5 p-3 rounded-xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 text-amber-800 dark:text-amber-300 text-xs font-medium hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors'
                 >
                     <GiPrayerBeads className='text-base shrink-0 text-amber-600 dark:text-amber-400' />
@@ -296,7 +318,8 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
             <div className='mt-4 p-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-xs text-gray-600 dark:text-gray-300 space-y-3'>
                 <div className='flex items-center justify-between'>
                     <span className='font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide text-[11px]'>
-                        {t("asmaul.general_dalil_title") ?? "Dalil 99 Asmaul Husna"}
+                        {t("asmaul.general_dalil_title") ??
+                            "Dalil 99 Asmaul Husna"}
                     </span>
                     <span className='text-[10px] text-gray-400'>
                         Shahih Bukhari & Muslim
@@ -306,7 +329,10 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                     <p className='font-semibold text-emerald-900 dark:text-emerald-300'>
                         {asmaulHusnaGeneralDalil.hadith.ref}
                     </p>
-                    <p dir='rtl' className='font-arabic text-sm text-right text-emerald-950 dark:text-emerald-300 dark:text-emerald-200 my-1'>
+                    <p
+                        dir='rtl'
+                        className='font-arabic text-sm text-right text-emerald-950 dark:text-emerald-300 dark:text-emerald-200 my-1'
+                    >
                         {asmaulHusnaGeneralDalil.hadith.arabic}
                     </p>
                     <p className='italic text-gray-600 dark:text-gray-300'>
@@ -325,7 +351,10 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                     <p className='font-semibold text-emerald-900 dark:text-emerald-300'>
                         {asmaulHusnaGeneralDalil.quran.ref}
                     </p>
-                    <p dir='rtl' className='font-arabic text-sm text-right text-emerald-950 dark:text-emerald-300 dark:text-emerald-200 my-1'>
+                    <p
+                        dir='rtl'
+                        className='font-arabic text-sm text-right text-emerald-950 dark:text-emerald-300 dark:text-emerald-200 my-1'
+                    >
                         {asmaulHusnaGeneralDalil.quran.arabic}
                     </p>
                     <p className='italic text-gray-600 dark:text-gray-300'>
@@ -336,7 +365,8 @@ export function AsmaulHusnaFlashcardContent({ basePath = "/asmaul-husna" }) {
                             href={asmaulHusnaGeneralDalil.quran.link}
                             className='inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-medium hover:underline text-[11px]'
                         >
-                            <BsLink45Deg /> Buka QS. Al-A&apos;raf: 180 di Quran &rarr;
+                            <BsLink45Deg /> Buka QS. Al-A&apos;raf: 180 di Quran
+                            &rarr;
                         </Link>
                     </div>
                 </div>

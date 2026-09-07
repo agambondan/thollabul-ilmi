@@ -31,21 +31,29 @@ describe("ContentReportModal", () => {
             <ContentReportModal
                 isOpen={true}
                 onClose={onClose}
-                targetType="quran"
-                targetId="1:1"
-                targetTitle="QS. Al-Fatihah: 1"
-                snippet="Bismillah"
+                targetType='quran'
+                targetId='1:1'
+                targetTitle='QS. Al-Fatihah: 1'
+                snippet='Bismillah'
             />,
         );
 
         expect(screen.getByText("QS. Al-Fatihah: 1")).toBeInTheDocument();
 
-        fireEvent.change(screen.getByPlaceholderText(/Jelaskan bagian terjemahan/i), {
-            target: { value: "Ada kesalahan ketik pada terjemahan." },
-        });
-        fireEvent.change(screen.getByPlaceholderText(/Teks atau terjemahan yang seharusnya/i), {
-            target: { value: "Dengan nama Allah Yang Maha Pengasih" },
-        });
+        fireEvent.change(
+            screen.getByPlaceholderText(/Jelaskan bagian terjemahan/i),
+            {
+                target: { value: "Ada kesalahan ketik pada terjemahan." },
+            },
+        );
+        fireEvent.change(
+            screen.getByPlaceholderText(
+                /Teks atau terjemahan yang seharusnya/i,
+            ),
+            {
+                target: { value: "Dengan nama Allah Yang Maha Pengasih" },
+            },
+        );
 
         fireEvent.click(screen.getByRole("button", { name: /Kirim Koreksi/i }));
 

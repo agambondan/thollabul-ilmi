@@ -120,7 +120,10 @@ const AdminHistoryPage = () => {
             } else {
                 res = await adminSejarahApi.create(payload);
             }
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setShowModal(false);
             load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -135,7 +138,10 @@ const AdminHistoryPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminSejarahApi.delete(deleteId);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setDeleteId(null);
             load();
             fb("admin:success", t("admin.crud.delete_success"));
@@ -195,7 +201,9 @@ const AdminHistoryPage = () => {
             </div>
 
             {loading ? (
-                <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
+                <p className='text-sm text-gray-500 dark:text-gray-300'>
+                    {t("common.loading")}
+                </p>
             ) : (
                 <>
                     <PanelTable
@@ -215,7 +223,9 @@ const AdminHistoryPage = () => {
                         {visible.map((item) => (
                             <Tr key={item.id ?? item._id}>
                                 <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 font-mono text-xs'>
-                                    {item.year_hijri ? `${item.year_hijri} H` : "-"}
+                                    {item.year_hijri
+                                        ? `${item.year_hijri} H`
+                                        : "-"}
                                 </Td>
                                 <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium'>
                                     {getLocalizedField(item, "title", lang)}

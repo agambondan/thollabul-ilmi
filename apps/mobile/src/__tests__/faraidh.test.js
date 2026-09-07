@@ -34,14 +34,8 @@ describe("calculateFaraidh (mobile parity)", () => {
     test("Umariyyatain: ayah + suami = 1/2 : 1/2", () => {
         const r = calculateFaraidh({ ayah: 1, suami: 1 }, 100);
         expect(r.applied.umariyyah).toBe(true);
-        expect(r.rows.find((x) => x.key === "suami").share).toBeCloseTo(
-            0.5,
-            5,
-        );
-        expect(r.rows.find((x) => x.key === "ayah").share).toBeCloseTo(
-            0.5,
-            5,
-        );
+        expect(r.rows.find((x) => x.key === "suami").share).toBeCloseTo(0.5, 5);
+        expect(r.rows.find((x) => x.key === "ayah").share).toBeCloseTo(0.5, 5);
     });
 
     test("Musytarakah: suami + ibu + 2 saudara -> totalShare=1", () => {

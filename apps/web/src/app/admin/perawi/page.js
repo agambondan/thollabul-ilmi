@@ -30,8 +30,18 @@ export default function AdminPerawiPage() {
             searchableFields={["nama_latin", "nama_arab", "kunyah", "nisbah"]}
             defaultPageSize={15}
             fields={[
-                { key: "nama_arab", label: "Nama Arab", type: "text", required: true },
-                { key: "nama_latin", label: "Nama Latin", type: "text", required: true },
+                {
+                    key: "nama_arab",
+                    label: "Nama Arab",
+                    type: "text",
+                    required: true,
+                },
+                {
+                    key: "nama_latin",
+                    label: "Nama Latin",
+                    type: "text",
+                    required: true,
+                },
                 { key: "nama_lengkap", label: "Nama Lengkap", type: "text" },
                 { key: "kunyah", label: "Kunyah", type: "text" },
                 { key: "laqab", label: "Laqab", type: "text" },
@@ -58,7 +68,12 @@ export default function AdminPerawiPage() {
                 },
                 { key: "tempat_lahir", label: "Tempat Lahir", type: "text" },
                 { key: "tempat_wafat", label: "Tempat Wafat", type: "text" },
-                { key: "biografis", label: "Biografi", type: "textarea", rows: 4 },
+                {
+                    key: "biografis",
+                    label: "Biografi",
+                    type: "textarea",
+                    rows: 4,
+                },
             ]}
         />
     );

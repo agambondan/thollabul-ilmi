@@ -281,7 +281,9 @@ export function WiridCustomContent() {
                                             </p>
                                         )}
                                         {item.source && (
-                                            <SourceBadges source={item.source} />
+                                            <SourceBadges
+                                                source={item.source}
+                                            />
                                         )}
                                         {item.note && (
                                             <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 italic border-l-2 border-emerald-200 dark:border-emerald-700 pl-2'>

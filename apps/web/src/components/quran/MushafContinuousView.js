@@ -2,7 +2,10 @@
 
 import { useQuranFont } from "@/lib/useQuranFont";
 import { useLocale } from "@/context/Locale";
-import { getSurahMeaning, getSurahName as getLocalizedSurahName } from "@/lib/surahList";
+import {
+    getSurahMeaning,
+    getSurahName as getLocalizedSurahName,
+} from "@/lib/surahList";
 import { useMemo } from "react";
 
 const toArabicNumber = (n) => {

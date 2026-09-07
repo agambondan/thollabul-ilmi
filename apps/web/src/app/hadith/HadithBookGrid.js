@@ -52,8 +52,8 @@ export default function HadithBookGrid({ books, basePath = "/hadith" }) {
                             </Link>
                         );
                     })}
-               </div>
-           </div>
+                </div>
+            </div>
 
             <div className='py-4' />
 
@@ -82,22 +82,23 @@ export default function HadithBookGrid({ books, basePath = "/hadith" }) {
                                 <div>
                                     <h2 className='text-base font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
                                         {label}
-                                   </h2>
+                                    </h2>
                                     <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-2'>
-                                        {book.count} {t("hadith.unit") || "Hadits"}
-                                   </p>
-                               </div>
+                                        {book.count}{" "}
+                                        {t("hadith.unit") || "Hadits"}
+                                    </p>
+                                </div>
                                 <Link
                                     href={`${basePath}/${book.slug}`}
                                     className='bg-emerald-700 hover:bg-emerald-600 text-white text-sm text-center py-1.5 px-3 rounded-lg transition-colors'
                                 >
                                     {t("hadith.open_reader") || "Buka Reader"}
-                               </Link>
-                           </div>
-                       </div>
+                                </Link>
+                            </div>
+                        </div>
                     );
                 })}
-           </ContentWidth>
+            </ContentWidth>
         </>
     );
 }

@@ -1,6 +1,13 @@
 "use client";
 
-import { PanelEmpty, PanelPagination, PanelTable, Td, Th, Tr } from "@/components/panel/DataPanel";
+import {
+    PanelEmpty,
+    PanelPagination,
+    PanelTable,
+    Td,
+    Th,
+    Tr,
+} from "@/components/panel/DataPanel";
 import { useLocale } from "@/context/Locale";
 import { authFetch, parseApiError } from "@/lib/api";
 import { useEffect, useState } from "react";
@@ -82,7 +89,8 @@ export default function AdminLessonsPage() {
                 method,
                 body: JSON.stringify(form),
             });
-            if (!res.ok) throw new Error(await parseApiError(res, "Gagal simpan"));
+            if (!res.ok)
+                throw new Error(await parseApiError(res, "Gagal simpan"));
             toast.success("Modul berhasil disimpan");
             setModalOpen(false);
             fetchModules();
@@ -97,7 +105,8 @@ export default function AdminLessonsPage() {
             const res = await authFetch(`/api/v1/lessons/${id}`, {
                 method: "DELETE",
             });
-            if (!res.ok) throw new Error(await parseApiError(res, "Gagal hapus"));
+            if (!res.ok)
+                throw new Error(await parseApiError(res, "Gagal hapus"));
             toast.success("Modul dihapus");
             fetchModules();
         } catch (err) {
@@ -194,7 +203,9 @@ export default function AdminLessonsPage() {
                             <Td className='font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
                                 {m.title}
                             </Td>
-                            <Td className='text-gray-500 dark:text-gray-300'>{m.slug}</Td>
+                            <Td className='text-gray-500 dark:text-gray-300'>
+                                {m.slug}
+                            </Td>
                             <Td className='text-gray-500 dark:text-gray-300'>
                                 {m.steps?.length || 0} langkah
                             </Td>

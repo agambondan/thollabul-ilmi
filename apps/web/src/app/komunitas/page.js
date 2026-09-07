@@ -42,9 +42,12 @@ async function getInitialData() {
     } catch {}
 
     try {
-        const res = await fetch(`${API_URL}/api/v1/forum?page=0&size=50&sort=top`, {
-            next: { revalidate: 3600 },
-        });
+        const res = await fetch(
+            `${API_URL}/api/v1/forum?page=0&size=50&sort=top`,
+            {
+                next: { revalidate: 3600 },
+            },
+        );
         if (res.ok) {
             const data = await res.json();
             const items = pickItems(data);

@@ -112,7 +112,10 @@ export default function AdzanQuickControl({
     };
 
     const play = () => {
-        const src = resolveAdzanSoundSrc(settings.adzanSound, settings.adzanSoundUrl);
+        const src = resolveAdzanSoundSrc(
+            settings.adzanSound,
+            settings.adzanSoundUrl,
+        );
         if (!src) return;
         if (isPlaying) {
             stop();
@@ -148,10 +151,7 @@ export default function AdzanQuickControl({
         ) {
             try {
                 await fireAdzanNotification(
-                    t(
-                        "adzan.test_notif_title",
-                        "Tes Notifikasi Thollabul",
-                    ),
+                    t("adzan.test_notif_title", "Tes Notifikasi Thollabul"),
                     t(
                         "adzan.test_notif_body",
                         "Kalau notif ini muncul, pengingat adzan siap dipakai.",
@@ -168,10 +168,7 @@ export default function AdzanQuickControl({
         if (Notification.permission === "granted") {
             try {
                 new Notification(
-                    t(
-                        "adzan.test_notif_title",
-                        "Tes Notifikasi Thollabul",
-                    ),
+                    t("adzan.test_notif_title", "Tes Notifikasi Thollabul"),
                     {
                         body: t(
                             "adzan.test_notif_body",
@@ -196,10 +193,7 @@ export default function AdzanQuickControl({
             if (perm === "granted") {
                 setNotifChecked(true);
                 new Notification(
-                    t(
-                        "adzan.test_notif_title",
-                        "Tes Notifikasi Thollabul",
-                    ),
+                    t("adzan.test_notif_title", "Tes Notifikasi Thollabul"),
                     {
                         body: t(
                             "adzan.test_notif_body",

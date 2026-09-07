@@ -38,7 +38,10 @@ export const CopyImageToClipboard = (canvas) => {
     });
 };
 
-export const shareCanvasWithText = (canvas, { title, text, url, filename = "share.png" } = {}) => {
+export const shareCanvasWithText = (
+    canvas,
+    { title, text, url, filename = "share.png" } = {},
+) => {
     return new Promise((resolve, reject) => {
         const afterBlob = async (blob) => {
             if (!blob) {
@@ -73,7 +76,10 @@ export const shareCanvasWithText = (canvas, { title, text, url, filename = "shar
         } else {
             try {
                 const dataUrl = canvas.toDataURL("image/png");
-                fetch(dataUrl).then((r) => r.blob()).then(afterBlob).catch(reject);
+                fetch(dataUrl)
+                    .then((r) => r.blob())
+                    .then(afterBlob)
+                    .catch(reject);
             } catch (err) {
                 reject(err);
             }

@@ -14,7 +14,8 @@ describe("blogContent utility", () => {
     });
 
     test("calculateReadStats returns words and minutes", () => {
-        const text = "Satu dua tiga empat lima enam tujuh delapan sembilan sepuluh.";
+        const text =
+            "Satu dua tiga empat lima enam tujuh delapan sembilan sepuluh.";
         const stats = calculateReadStats(text);
         expect(stats.words).toBe(10);
         expect(stats.minutes).toBe(1);
@@ -43,7 +44,7 @@ console.log("hello");
         expect(html).toContain("<blockquote>Quote text</blockquote>");
         expect(html).toContain("<ul>");
         expect(html).toContain("<li>Item 1</li>");
-        expect(html).toContain("<pre><code class=\"language-js\">");
+        expect(html).toContain('<pre><code class="language-js">');
     });
 
     test("extractHeadings finds h2 and h3 from rendered HTML", () => {

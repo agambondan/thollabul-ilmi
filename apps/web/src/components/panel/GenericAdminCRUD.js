@@ -27,7 +27,8 @@ const formatValue = (value) => {
     return String(value);
 };
 
-const toBool = (value) => value === true || value === "true" || value === 1 || value === "1";
+const toBool = (value) =>
+    value === true || value === "true" || value === 1 || value === "1";
 
 const fieldValueToString = (field, value) => {
     if (value === null || value === undefined) return "";
@@ -57,15 +58,15 @@ const stringToFieldValue = (field, raw) => {
 
 const EMPTY_FORM = (fields) =>
     fields.reduce((acc, f) => {
-        acc[f.key] =
-            f.type === TYPE_BOOLEAN ? false : f.default ?? "";
+        acc[f.key] = f.type === TYPE_BOOLEAN ? false : (f.default ?? "");
         return acc;
     }, {});
 
 const fillForm = (item, fields) =>
     fields.reduce((acc, f) => {
         const value = item?.[f.key];
-        acc[f.key] = value === undefined || value === null ? f.default ?? "" : value;
+        acc[f.key] =
+            value === undefined || value === null ? (f.default ?? "") : value;
         return acc;
     }, {});
 
@@ -105,7 +106,7 @@ export default function GenericAdminCRUD({
                 );
             }
             setItems(
-                Array.isArray(data) ? data : data?.items ?? data?.data ?? [],
+                Array.isArray(data) ? data : (data?.items ?? data?.data ?? []),
             );
         } catch (err) {
             setError(err.message || "Gagal memuat data");
@@ -221,10 +222,7 @@ export default function GenericAdminCRUD({
         try {
             const res = await api.delete(deleting[idField]);
             if (!res.ok) {
-                const msg = await parseApiError(
-                    res,
-                    "Gagal menghapus data",
-                );
+                const msg = await parseApiError(res, "Gagal menghapus data");
                 throw new Error(msg);
             }
             dispatchToast("admin:success", "Data berhasil dihapus");
@@ -396,7 +394,7 @@ export default function GenericAdminCRUD({
                             const value =
                                 f.type === TYPE_BOOLEAN
                                     ? toBool(raw)
-                                    : raw ?? "";
+                                    : (raw ?? "");
                             return (
                                 <div key={f.key}>
                                     <label className='block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1'>
@@ -460,7 +458,8 @@ export default function GenericAdminCRUD({
                                                 onChange={(e) =>
                                                     setForm((prev) => ({
                                                         ...prev,
-                                                        [f.key]: e.target.checked,
+                                                        [f.key]:
+                                                            e.target.checked,
                                                     }))
                                                 }
                                             />

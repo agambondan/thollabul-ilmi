@@ -42,11 +42,11 @@ const SettingButton = () => {
     const hafalanMode = settings.quranHafalanMode ?? "off";
     const readerMode = settings.quranReaderMode ?? "ayah";
     const showAyahTranslation = settings.quranShowTranslation ?? true;
-    const showMushafTranslation =
-        settings.quranMushafTranslation ?? true;
+    const showMushafTranslation = settings.quranMushafTranslation ?? true;
     const currentShowTranslation =
         readerMode === "mushaf" ? showMushafTranslation : showAyahTranslation;
-    const { isFullscreen, toggle: toggleQuranFullscreen } = useQuranFullscreen();
+    const { isFullscreen, toggle: toggleQuranFullscreen } =
+        useQuranFullscreen();
     const popupRef = useRef(null);
     const label = (key, fallback) => {
         const val = t(key);
@@ -239,8 +239,8 @@ const SettingButton = () => {
                                               "mushaf.translation_on",
                                               "Tampilkan Terjemahan",
                                           )}
-                               </button>
-                           </div>
+                                </button>
+                            </div>
 
                             {/* Quran fullscreen toggle */}
                             <button
@@ -270,8 +270,7 @@ const SettingButton = () => {
                                           "quran.fullscreen_on",
                                           "Layar Penuh (Tanpa Navbar)",
                                       )}
-                           </button>
-
+                            </button>
 
                             <div className='my-3 border-t border-gray-100 dark:border-slate-700' />
                         </>

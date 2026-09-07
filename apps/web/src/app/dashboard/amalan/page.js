@@ -175,7 +175,9 @@ const AmalanPage = () => {
                                             {label}
                                         </span>
                                         {item.source && (
-                                            <SourceBadges source={item.source} />
+                                            <SourceBadges
+                                                source={item.source}
+                                            />
                                         )}
                                     </span>
                                 </button>

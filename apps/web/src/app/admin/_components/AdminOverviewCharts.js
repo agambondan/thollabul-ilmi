@@ -511,7 +511,8 @@ export default function AdminOverviewCharts({
                             (() => {
                                 const groups = {};
                                 overview.topPagesBySource.forEach((p) => {
-                                    if (!groups[p.source]) groups[p.source] = [];
+                                    if (!groups[p.source])
+                                        groups[p.source] = [];
                                     groups[p.source].push(p);
                                 });
                                 return (

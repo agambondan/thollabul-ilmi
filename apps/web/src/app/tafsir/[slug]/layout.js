@@ -32,7 +32,10 @@ export async function generateMetadata(props) {
     const decodedSlug = decodeURIComponent(params.slug);
     const surah = await getSurah(decodedSlug);
 
-    const name = getSurahName(surah, "ID") || surah?.translation?.latin_en || decodedSlug;
+    const name =
+        getSurahName(surah, "ID") ||
+        surah?.translation?.latin_en ||
+        decodedSlug;
     const arabicName = surah?.name ?? "";
     const title = surah
         ? `Tafsir Surah ${name}${arabicName ? ` (${arabicName})` : ""}`

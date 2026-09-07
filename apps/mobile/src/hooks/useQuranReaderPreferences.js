@@ -85,11 +85,15 @@ export function useQuranReaderPreferences({ onMemorizationModeChange } = {}) {
         await writePreference(preferenceKeys.quranDisplayMode, normalized);
     }, []);
 
-    const updateFullscreen = useCallback(async (val) => {
-        const next = typeof val === "function" ? val(fullscreen) : Boolean(val);
-        setFullscreen(next);
-        await writePreference(preferenceKeys.quranFullscreen, next);
-    }, [fullscreen]);
+    const updateFullscreen = useCallback(
+        async (val) => {
+            const next =
+                typeof val === "function" ? val(fullscreen) : Boolean(val);
+            setFullscreen(next);
+            await writePreference(preferenceKeys.quranFullscreen, next);
+        },
+        [fullscreen],
+    );
 
     const updateMemorizationMode = useCallback(
         async (mode) => {

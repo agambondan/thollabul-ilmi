@@ -57,34 +57,35 @@ export default function PuasaSunnahPanel({ initialHijri = null }) {
             .finally(() => setLoading(false));
     }, [initialHijri]);
 
-const calculateUpcoming = (currentHijri) => {
-    if (!currentHijri) return [];
-    const list = [];
-    const today = new Date();
-    const curDay = Number(currentHijri.hijri_day ?? currentHijri.day);
-    const curMonth = Number(currentHijri.hijri_month ?? currentHijri.month);
-    for (let offset = 1; offset <= 30; offset++) {
-        const d = new Date(today);
-        d.setDate(today.getDate() + offset);
-        const estimatedHijriDay = ((curDay + offset - 1) % 30) + 1;
-        const monthsAdvanced = Math.floor((curDay + offset - 1) / 30);
-        const estimatedHijriMonth = ((curMonth - 1 + monthsAdvanced) % 12) + 1;
-        const matches = getPuasaSunnahForDate(d, {
-            day: estimatedHijriDay,
-            month: estimatedHijriMonth,
-        });
-        if (matches.length > 0) {
-            list.push({
-                date: d,
-                hijriDay: estimatedHijriDay,
-                hijriMonth: estimatedHijriMonth,
-                matches,
+    const calculateUpcoming = (currentHijri) => {
+        if (!currentHijri) return [];
+        const list = [];
+        const today = new Date();
+        const curDay = Number(currentHijri.hijri_day ?? currentHijri.day);
+        const curMonth = Number(currentHijri.hijri_month ?? currentHijri.month);
+        for (let offset = 1; offset <= 30; offset++) {
+            const d = new Date(today);
+            d.setDate(today.getDate() + offset);
+            const estimatedHijriDay = ((curDay + offset - 1) % 30) + 1;
+            const monthsAdvanced = Math.floor((curDay + offset - 1) / 30);
+            const estimatedHijriMonth =
+                ((curMonth - 1 + monthsAdvanced) % 12) + 1;
+            const matches = getPuasaSunnahForDate(d, {
+                day: estimatedHijriDay,
+                month: estimatedHijriMonth,
             });
+            if (matches.length > 0) {
+                list.push({
+                    date: d,
+                    hijriDay: estimatedHijriDay,
+                    hijriMonth: estimatedHijriMonth,
+                    matches,
+                });
+            }
+            if (list.length >= 6) break;
         }
-        if (list.length >= 6) break;
-    }
-    return list;
-};
+        return list;
+    };
 
     if (loading) {
         return (

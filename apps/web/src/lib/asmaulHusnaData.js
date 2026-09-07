@@ -8,7 +8,8 @@ export const asmaulHusnaData = {
         explanation:
             "Nama Allah yang paling agung (Al-Ism Al-A'zham) yang mencakup seluruh makna nama-nama dan sifat-sifat kesempurnaan-Nya. Tidak ada yang berhak menyandang nama ini selain Dia semata.",
         dalilRef: "QS. Thaha: 14",
-        dalilText: "إِنَّنِي أَنَا اللَّهُ لَا إِلَٰهَ إِلَّا أَنَا فَاعْبُدْنِي وَأَقِمِ الصَّلَاةَ لِذِكْرِي",
+        dalilText:
+            "إِنَّنِي أَنَا اللَّهُ لَا إِلَٰهَ إِلَّا أَنَا فَاعْبُدْنِي وَأَقِمِ الصَّلَاةَ لِذِكْرِي",
         dalilTrans:
             "Sungguh, Aku ini Allah, tidak ada tuhan selain Aku, maka sembahlah Aku dan laksanakanlah sholat untuk mengingat-Ku.",
         ulamaQuote:
@@ -57,7 +58,8 @@ export const asmaulHusnaData = {
         explanation:
             "Maha Memiliki kerajaan mutlak di langit dan bumi. Dialah Penguasa yang mengatur, memerintah, dan menentukan segala urusan makhluk tanpa ada yang menandingi.",
         dalilRef: "QS. Al-Hasyr: 23",
-        dalilText: "هُوَ اللَّهُ الَّذِي لَا إِلَٰهَ إِلَّا هُوَ الْمَلِكُ الْقُدُّوسُ السَّلَامُ",
+        dalilText:
+            "هُوَ اللَّهُ الَّذِي لَا إِلَٰهَ إِلَّا هُوَ الْمَلِكُ الْقُدُّوسُ السَّلَامُ",
         dalilTrans:
             "Dialah Allah tidak ada tuhan selain Dia. Maharaja, Yang Mahasuci, Yang Mahasejahtera...",
         ulamaQuote:
@@ -74,7 +76,8 @@ export const asmaulHusnaData = {
         explanation:
             "Maha Suci dan bersih dari segala bentuk kekurangan, aib, kelemahan, sekutu, anak, maupun keserupaan dengan makhluk-Nya.",
         dalilRef: "QS. Al-Jumu'ah: 1",
-        dalilText: "يُسَبِّحُ لِلَّهِ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ الْمَلِكِ الْقُدُّوسِ الْعَزِيزِ الْحَكِيمِ",
+        dalilText:
+            "يُسَبِّحُ لِلَّهِ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ الْمَلِكِ الْقُدُّوسِ الْعَزِيزِ الْحَكِيمِ",
         dalilTrans:
             "Apa yang ada di langit dan apa yang ada di bumi senantiasa bertasbih kepada Allah. Maharaja, Yang Mahasuci, Yang Mahaperkasa, Mahabijaksana.",
         ulamaQuote:
@@ -92,7 +95,8 @@ export const asmaulHusnaData = {
             "Maha Selamat dari segala aib dan kekurangan, serta Dzat yang mengaruniakan keselamatan dan kedamaian kepada hamba-hamba-Nya.",
         dalilRef: "QS. Al-Hasyr: 23",
         dalilText: "الْمَلِكُ الْقُدُّوسُ السَّلَامُ الْمُؤْمِنُ الْمُهَيْمِنُ",
-        dalilTrans: "...Maharaja, Yang Mahasuci, Yang Mahasejahtera, Yang Menjaga Keamanan, Pemelihara Keselamatan...",
+        dalilTrans:
+            "...Maharaja, Yang Mahasuci, Yang Mahasejahtera, Yang Menjaga Keamanan, Pemelihara Keselamatan...",
         ulamaQuote:
             "Rasulullah ﷺ berdoa setelah sholat: 'Allahumma antas salam wa minkas salam tabarakta ya dzal jalali wal ikram.' (HR. Muslim 592)",
         internalLink: "/hadith/muslim/592",
@@ -108,7 +112,8 @@ export const asmaulHusnaData = {
             "Dzat yang membenarkan para rasul-Nya dengan mukjizat, menepati janji-Nya kepada kaum mukminin, dan memberi rasa aman dari rasa takut dan azab yang zalim.",
         dalilRef: "QS. Quraisy: 4",
         dalilText: "الَّذِي أَطْعَمَهُمْ مِنْ جُوعٍ وَآمَنَهُمْ مِنْ خَوْفٍ",
-        dalilTrans: "Yang telah memberi makanan kepada mereka untuk menghilangkan lapar dan mengamankan mereka dari rasa takut.",
+        dalilTrans:
+            "Yang telah memberi makanan kepada mereka untuk menghilangkan lapar dan mengamankan mereka dari rasa takut.",
         ulamaQuote:
             "Mujahid rahimahullah: 'Al-Mu'min adalah Yang mengesakan Diri-Nya sendiri dengan firman-Nya: Syahidallahu annahu la ilaha illa Huwa.'",
         internalLink: "/quran/surah/106#verse-4",
@@ -124,7 +129,8 @@ export const asmaulHusnaData = {
             "Dzat yang mengawasi seluruh amal perbuatan hamba-Nya, menjaga rezeki dan ajal mereka, serta memelihara seluruh ciptaan dengan keadilan-Nya.",
         dalilRef: "QS. Al-Hasyr: 23",
         dalilText: "الْمُؤْمِنُ الْمُهَيْمِنُ الْعَزِيزُ الْجَبَّارُ",
-        dalilTrans: "...Yang Menjaga Keamanan, Pemelihara Keselamatan, Yang Mahaperkasa, Yang Mahakuasa...",
+        dalilTrans:
+            "...Yang Menjaga Keamanan, Pemelihara Keselamatan, Yang Mahaperkasa, Yang Mahakuasa...",
         ulamaQuote:
             "Ibnu Abbas: 'Al-Muhaymin adalah Yang Maha Menyaksikan lagi Maha Menjaga terhadap amal-amal hamba-Nya.' (Tafsir Ath-Thabari)",
         internalLink: "/quran/surah/59#verse-23",
@@ -140,7 +146,8 @@ export const asmaulHusnaData = {
             "Maha Perkasa dan tidak terkalahkan. Kemuliaan dan keperkasaan-Nya meliputi keperkasaan kekuatan, keperkasaan pencegahan, dan keperkasaan penundukan.",
         dalilRef: "QS. Ali 'Imran: 62",
         dalilText: "وَإِنَّ اللَّهَ لَهُوَ الْعَزِيزُ الْحَكِيمُ",
-        dalilTrans: "Dan sesungguhnya Allah, Dialah Yang Mahaperkasa, Mahabijaksana.",
+        dalilTrans:
+            "Dan sesungguhnya Allah, Dialah Yang Mahaperkasa, Mahabijaksana.",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Al-Aziz bermakna Dzat yang memiliki seluruh makna keperkasaan, yang tidak ada seorang pun mampu mendatangkan mudarat atau menandingi-Nya.'",
         internalLink: "/quran/surah/3#verse-62",
@@ -156,7 +163,8 @@ export const asmaulHusnaData = {
             "Maha Kuasa menundukkan seluruh makhluk, Maha Tinggi di atas mereka, dan Maha Memperbaiki hati orang-orang yang patah serta mencukupi orang yang fakir.",
         dalilRef: "QS. Al-Hasyr: 23",
         dalilText: "الْعَزِيزُ الْجَبَّارُ الْمُتَكَبِّرُ",
-        dalilTrans: "...Yang Mahaperkasa, Yang Mahakuasa, Yang Memiliki Segala Keagungan...",
+        dalilTrans:
+            "...Yang Mahaperkasa, Yang Mahakuasa, Yang Memiliki Segala Keagungan...",
         ulamaQuote:
             "Doa Nabi ﷺ saat duduk di antara dua sujud: 'Rabbighfirli warhamni wajburni...' (Wahai Rabbku ampunilah aku, rahmatilah aku, dan cukupkan/perbaikilah keadaanku). (HR. Abu Dawud 850)",
         internalLink: "/quran/surah/59#verse-23",
@@ -187,8 +195,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang menciptakan segala sesuatu dari tiada menjadi ada sesuai dengan takdir dan ukuran yang Dia tentukan.",
         dalilRef: "QS. Az-Zumar: 62",
-        dalilText: "اللَّهُ خَالِقُ كُلِّ شَيْءٍ ۖ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ وَكِيلٌ",
-        dalilTrans: "Allah pencipta segala sesuatu dan Dia Maha Pemelihara atas segala sesuatu.",
+        dalilText:
+            "اللَّهُ خَالِقُ كُلِّ شَيْءٍ ۖ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ وَكِيلٌ",
+        dalilTrans:
+            "Allah pencipta segala sesuatu dan Dia Maha Pemelihara atas segala sesuatu.",
         ulamaQuote:
             "Imam Ibnu Katsir: 'Al-Khaliq adalah Dzat yang mentakdirkan dan mengadakan segala sesuatu tanpa ada teladan sebelumnya.'",
         internalLink: "/quran/surah/39#verse-62",
@@ -204,7 +214,8 @@ export const asmaulHusnaData = {
             "Dzat yang mewujudkan ciptaan ke alam nyata dan memisahkan karakteristik antar makhluk satu dengan makhluk lainnya dengan teratur.",
         dalilRef: "QS. Al-Hasyr: 24",
         dalilText: "هُوَ اللَّهُ الْخَالِقُ الْبَارِئُ الْمُصَوِّرُ",
-        dalilTrans: "Dialah Allah Yang Menciptakan, Yang Mengadakan, Yang Membentuk Rupa...",
+        dalilTrans:
+            "Dialah Allah Yang Menciptakan, Yang Mengadakan, Yang Membentuk Rupa...",
         ulamaQuote:
             "Syaikh Abdurrazzaq al-Badr: 'Al-Khaliq adalah penentu takdir, Al-Bari' adalah pelaksana yang mengeluarkannya menjadi wujud.'",
         internalLink: "/quran/surah/59#verse-24",
@@ -219,8 +230,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang memberi bentuk, rupa, dan ciri khas yang beraneka ragam kepada setiap makhluk sesuai dengan hikmah-Nya.",
         dalilRef: "QS. Ghafir: 64",
-        dalilText: "وَصَوَّرَكُمْ فَأَحْسَنَ صُوَرَكُمْ وَرَزَقَكُمْ مِنَ الطَّيِّبَاتِ",
-        dalilTrans: "...dan Dia membentuk rupamu lalu memperbagus rupamu serta memberi rezeki kepadamu yang baik-baik...",
+        dalilText:
+            "وَصَوَّرَكُمْ فَأَحْسَنَ صُوَرَكُمْ وَرَزَقَكُمْ مِنَ الطَّيِّبَاتِ",
+        dalilTrans:
+            "...dan Dia membentuk rupamu lalu memperbagus rupamu serta memberi rezeki kepadamu yang baik-baik...",
         ulamaQuote:
             "Imam Ath-Thabari: 'Al-Musawwir adalah Dzat yang menyusun bentuk setiap ciptaan sebagaimana yang Dia kehendaki.'",
         internalLink: "/quran/surah/40#verse-64",
@@ -236,7 +249,8 @@ export const asmaulHusnaData = {
             "Dzat yang berulang-ulang menutup dan mengampuni dosa hamba-Nya sebanyak apapun kesalahan itu ketika hamba-Nya bertaubat.",
         dalilRef: "QS. Nuh: 10",
         dalilText: "فَقُلْتُ اسْتَغْفِرُوا رَبَّكُمْ إِنَّهُ كَانَ غَفَّارًا",
-        dalilTrans: "maka aku berkata (kepada mereka), 'Mohonlah ampunan kepada Tuhanmu, sungguh, Dia Maha Pengampun.'",
+        dalilTrans:
+            "maka aku berkata (kepada mereka), 'Mohonlah ampunan kepada Tuhanmu, sungguh, Dia Maha Pengampun.'",
         ulamaQuote:
             "Imam Al-Khatthabi: 'Al-Ghaffar adalah Dzat yang senantiasa memaafkan dosa hamba-Nya berulang kali saat mereka memohon ampun.'",
         internalLink: "/quran/surah/71#verse-10",
@@ -251,8 +265,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang menundukkan seluruh makhluk di bawah kekuasaan dan kehendak-Nya. Segala sesuatu tunduk dan patuh di hadapan kebesaran-Nya.",
         dalilRef: "QS. Ar-Ra'd: 16",
-        dalilText: "قُلِ اللَّهُ خَالِقُ كُلِّ شَيْءٍ وَهُوَ الْوَاحِدُ الْقَهَّارُ",
-        dalilTrans: "Katakanlah: 'Allah adalah Pencipta segala sesuatu dan Dialah Yang Maha Esa, Maha Menundukkan.'",
+        dalilText:
+            "قُلِ اللَّهُ خَالِقُ كُلِّ شَيْءٍ وَهُوَ الْوَاحِدُ الْقَهَّارُ",
+        dalilTrans:
+            "Katakanlah: 'Allah adalah Pencipta segala sesuatu dan Dialah Yang Maha Esa, Maha Menundukkan.'",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Al-Qahhar adalah Yang menundukkan semua alam semesta, yang ubun-ubun semua makhluk berada di tangan-Nya.'",
         internalLink: "/quran/surah/13#verse-16",
@@ -267,8 +283,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang melimpahkan berbagai anugerah dan pemberian tanpa batas serta tanpa meminta balasan sedikitpun dari makhluk-Nya.",
         dalilRef: "QS. Ali 'Imran: 8",
-        dalilText: "رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً ۚ إِنَّكَ أَنْتَ الْوَهَّابُ",
-        dalilTrans: "...dan karuniakanlah kepada kami rahmat dari sisi-Mu; sungguh, Engkau Maha Pemberi (karunia).",
+        dalilText:
+            "رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً ۚ إِنَّكَ أَنْتَ الْوَهَّابُ",
+        dalilTrans:
+            "...dan karuniakanlah kepada kami rahmat dari sisi-Mu; sungguh, Engkau Maha Pemberi (karunia).",
         ulamaQuote:
             "Ibnul Qayyim: 'Pemberian Allah kepada hamba-Nya merupakan karunia murni (hibah), bukan karena kewajiban atas-Nya.'",
         internalLink: "/quran/surah/3#verse-8",
@@ -284,7 +302,8 @@ export const asmaulHusnaData = {
             "Dzat yang menciptakan rezeki dan menjamin pembagiannya untuk seluruh makhluk, baik rezeki lahiriyah berupa makanan maupun batiniyah berupa ilmu dan iman.",
         dalilRef: "QS. Adz-Dzariyat: 58",
         dalilText: "إِنَّ اللَّهَ هُوَ الرَّزَّاقُ ذُو الْقُوَّةِ الْمَتِينُ",
-        dalilTrans: "Sungguh Allah, Dialah Pemberi rezeki Yang Mempunyai Kekuatan lagi Sangat Kokoh.",
+        dalilTrans:
+            "Sungguh Allah, Dialah Pemberi rezeki Yang Mempunyai Kekuatan lagi Sangat Kokoh.",
         ulamaQuote:
             "Imam Ibnu Katsir: 'Ar-Razzaq maknanya adalah Yang melimpahkan rezeki kepada seluruh makhluk-Nya tanpa terkecuali.'",
         internalLink: "/quran/surah/51#verse-58",
@@ -299,8 +318,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang membuka pintu-pintu rahmat, rezeki, dan kebaikan, serta Maha Memutuskan perselisihan di antara hamba-Nya dengan hukum yang adil.",
         dalilRef: "QS. Saba': 26",
-        dalilText: "قُلْ يَجْمَعُ بَيْنَنَا رَبُّنَا ثُمَّ يَفْتَحُ بَيْنَنَا بِالْحَقِّ وَهُوَ الْفَتَّاحُ الْعَلِيمُ",
-        dalilTrans: "Katakanlah, 'Tuhan kita akan mengumpulkan kita semua, kemudian Dia memberi keputusan antara kita dengan benar. Dan Dialah Maha Pemberi Keputusan, Maha Mengetahui.'",
+        dalilText:
+            "قُلْ يَجْمَعُ بَيْنَنَا رَبُّنَا ثُمَّ يَفْتَحُ بَيْنَنَا بِالْحَقِّ وَهُوَ الْفَتَّاحُ الْعَلِيمُ",
+        dalilTrans:
+            "Katakanlah, 'Tuhan kita akan mengumpulkan kita semua, kemudian Dia memberi keputusan antara kita dengan benar. Dan Dialah Maha Pemberi Keputusan, Maha Mengetahui.'",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Al-Fattah membuka pintu rezeki dan rahmat, serta membukakan hati hamba-Nya untuk menerima petunjuk kebenaran.'",
         internalLink: "/quran/surah/34#verse-26",
@@ -332,7 +353,8 @@ export const asmaulHusnaData = {
             "Dzat yang menahan dan menyempitkan rezeki atau nyawa seseorang sesuai dengan keadilan dan hikmah-Nya yang mendalam.",
         dalilRef: "QS. Al-Baqarah: 245",
         dalilText: "وَاللَّهُ يَقْبِضُ وَيَبْسُطُ وَإِلَيْهِ تُرْجَعُونَ",
-        dalilTrans: "...Dan Allah menyempitkan dan melapangkan (rezeki) dan kepada-Nyalah kamu dikembalikan.",
+        dalilTrans:
+            "...Dan Allah menyempitkan dan melapangkan (rezeki) dan kepada-Nyalah kamu dikembalikan.",
         ulamaQuote:
             "Nabi ﷺ bersabda: 'Sesungguhnya Allah adalah Al-Khaliq, Al-Qabidh, Al-Basith, Ar-Razzaq...' (HR. Tirmidzi 1314, Abu Dawud 3451)",
         internalLink: "/quran/surah/2#verse-245",
@@ -347,8 +369,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang meluaskan dan melapangkan rezeki, kemudahan, dan rahmat kepada hamba-hamba yang dikehendaki-Nya.",
         dalilRef: "QS. Asy-Syura: 27",
-        dalilText: "وَلَوْ بَسَطَ اللَّهُ الرِّزْقَ لِعِبَادِهِ لَبَغَوْا فِي الْأَرْضِ",
-        dalilTrans: "Dan sekiranya Allah melapangkan rezeki kepada hamba-hamba-Nya niscaya mereka akan berbuat melampaui batas di bumi...",
+        dalilText:
+            "وَلَوْ بَسَطَ اللَّهُ الرِّزْقَ لِعِبَادِهِ لَبَغَوْا فِي الْأَرْضِ",
+        dalilTrans:
+            "Dan sekiranya Allah melapangkan rezeki kepada hamba-hamba-Nya niscaya mereka akan berbuat melampaui batas di bumi...",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Al-Basith membentangkan rezeki lahiriah dan kelapangan dada serta ketentraman jiwa bagi kaum mukminin.'",
         internalLink: "/quran/surah/42#verse-27",
@@ -364,7 +388,8 @@ export const asmaulHusnaData = {
             "Dzat yang merendahkan orang-orang kafir, sombong, dan zalim dengan kehinaan di dunia dan azab di akhirat.",
         dalilRef: "QS. Al-Waqi'ah: 3",
         dalilText: "خَافِضَةٌ رَافِعَةٌ",
-        dalilTrans: "(Kejadian itu) merendahkan (satu golongan) dan meninggikan (golongan yang lain).",
+        dalilTrans:
+            "(Kejadian itu) merendahkan (satu golongan) dan meninggikan (golongan yang lain).",
         ulamaQuote:
             "Imam Al-Baghawi: 'Merendahkan musuh-musuh-Nya ke dalam neraka, dan meninggikan para wali-Nya ke dalam surga.'",
         internalLink: "/quran/surah/56#verse-3",
@@ -379,8 +404,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang meninggikan derajat orang-orang yang beriman, berilmu, dan bertakwa baik dalam kehidupan dunia maupun di akhirat.",
         dalilRef: "QS. Al-Mujadilah: 11",
-        dalilText: "يَرْفَعِ اللَّهُ الَّذِينَ آمَنُوا مِنْكُمْ وَالَّذِينَ أُوتُوا الْعِلْمَ دَرَجَاتٍ",
-        dalilTrans: "...Niscaya Allah akan mengangkat (derajat) orang-orang yang beriman di antaramu dan orang-orang yang diberi ilmu beberapa derajat...",
+        dalilText:
+            "يَرْفَعِ اللَّهُ الَّذِينَ آمَنُوا مِنْكُمْ وَالَّذِينَ أُوتُوا الْعِلْمَ دَرَجَاتٍ",
+        dalilTrans:
+            "...Niscaya Allah akan mengangkat (derajat) orang-orang yang beriman di antaramu dan orang-orang yang diberi ilmu beberapa derajat...",
         ulamaQuote:
             "Ibnu Abbas: 'Allah meninggikan kedudukan orang berilmu di atas kaum mukmin lainnya sebanyak tujuh ratus derajat.'",
         internalLink: "/quran/surah/58#verse-11",
@@ -395,8 +422,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang menganugerahkan kemuliaan, kejayaan, dan kehormatan sejati kepada hamba-hamba yang taat kepada-Nya.",
         dalilRef: "QS. Ali 'Imran: 26",
-        dalilText: "تُعِزُّ مَنْ تَشَاءُ وَتُذِلُّ مَنْ تَشَاءُ ۖ بِيَدِكَ الْخَيْرُ",
-        dalilTrans: "...Engkau muliakan siapa pun yang Engkau kehendaki dan Engkau hinakan siapa pun yang Engkau kehendaki. Di tangan-Mulah segala kebajikan...",
+        dalilText:
+            "تُعِزُّ مَنْ تَشَاءُ وَتُذِلُّ مَنْ تَشَاءُ ۖ بِيَدِكَ الْخَيْرُ",
+        dalilTrans:
+            "...Engkau muliakan siapa pun yang Engkau kehendaki dan Engkau hinakan siapa pun yang Engkau kehendaki. Di tangan-Mulah segala kebajikan...",
         ulamaQuote:
             "Hasan Al-Bashri: 'Barangsiapa mencari kemuliaan dengan ketaatan kepada Allah, maka Allah pasti memuliakannya.'",
         internalLink: "/quran/surah/3#verse-26",
@@ -411,8 +440,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang menimpakan kehinaan dan kenistaan kepada orang-orang yang ingkar, durhaka, dan sombong terhadap syariat-Nya.",
         dalilRef: "QS. Ali 'Imran: 26",
-        dalilText: "وَتُذِلُّ مَنْ تَشَاءُ ۖ بِيَدِكَ الْخَيْرُ ۖ إِنَّكَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
-        dalilTrans: "...dan Engkau hinakan siapa pun yang Engkau kehendaki. Di tangan-Mulah segala kebajikan. Sungguh, Engkau Mahakuasa atas segala sesuatu.",
+        dalilText:
+            "وَتُذِلُّ مَنْ تَشَاءُ ۖ بِيَدِكَ الْخَيْرُ ۖ إِنَّكَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
+        dalilTrans:
+            "...dan Engkau hinakan siapa pun yang Engkau kehendaki. Di tangan-Mulah segala kebajikan. Sungguh, Engkau Mahakuasa atas segala sesuatu.",
         ulamaQuote:
             "Imam Al-Ghazali: 'Kehinaan yang hakiki adalah dicabutnya taufik dan dibiarkannya manusia menuruti hawa nafsunya.'",
         internalLink: "/quran/surah/3#verse-26",
@@ -428,7 +459,8 @@ export const asmaulHusnaData = {
             "Dzat yang mendengar seluruh suara makhluk tanpa ada yang terluput, baik yang diucapkan dengan lantang maupun bisikan rahasia di dalam hati.",
         dalilRef: "QS. Asy-Syura: 11",
         dalilText: "لَيْسَ كَمِثْلِهِ شَيْءٌ ۖ وَهُوَ السَّمِيعُ الْبَصِيرُ",
-        dalilTrans: "...Tidak ada sesuatu pun yang serupa dengan Dia. Dan Dia Yang Maha Mendengar, Maha Melihat.",
+        dalilTrans:
+            "...Tidak ada sesuatu pun yang serupa dengan Dia. Dan Dia Yang Maha Mendengar, Maha Melihat.",
         ulamaQuote:
             "Aisyah radhiyallahu 'anha: 'Maha Suci Dzat yang pendengaran-Nya meliputi segala suara.' (HR. Bukhari 7386)",
         internalLink: "/quran/surah/42#verse-11",
@@ -459,8 +491,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat Hakim yang menetapkan hukum dengan seadil-adilnya. Tidak ada seorang pun yang mampu menolak atau mengubah ketetapan hukum-Nya.",
         dalilRef: "QS. Al-An'am: 114",
-        dalilText: "أَفَغَيْرَ اللَّهِ أَبْتَغِي حَكَمًا وَهُوَ الَّذِي أَنْزَلَ إِلَيْكُمُ الْكِتَابَ مُفَصَّلًا",
-        dalilTrans: "Pantaskah aku mencari hakim selain Allah, padahal Dialah yang menurunkan Kitab (Al-Qur'an) kepadamu secara rinci?",
+        dalilText:
+            "أَفَغَيْرَ اللَّهِ أَبْتَغِي حَكَمًا وَهُوَ الَّذِي أَنْزَلَ إِلَيْكُمُ الْكِتَابَ مُفَصَّلًا",
+        dalilTrans:
+            "Pantaskah aku mencari hakim selain Allah, padahal Dialah yang menurunkan Kitab (Al-Qur'an) kepadamu secara rinci?",
         ulamaQuote:
             "Nabi ﷺ bersabda kepada Hani': 'Sesungguhnya Allah adalah Al-Hakam, dan kepada-Nyalah tempat kembalinya segala hukum.' (HR. Abu Dawud 4955)",
         internalLink: "/quran/surah/6#verse-114",
@@ -475,8 +509,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang suci dari segala perbuatan aniaya dan kezaliman. Seluruh ketetapan, syariat, dan balasan-Nya adalah mutlak berlandaskan keadilan.",
         dalilRef: "QS. Al-An'am: 115",
-        dalilText: "وَتَمَّتْ كَلِمَتُ رَبِّكَ صِدْقًا وَعَدْلًا ۚ لَا مُبَدِّلَ لِكَلِمَاتِهِ",
-        dalilTrans: "Dan telah sempurna firman Tuhanmu (Al-Qur'an) dengan benar dan adil. Tidak ada yang dapat mengubah firman-Nya...",
+        dalilText:
+            "وَتَمَّتْ كَلِمَتُ رَبِّكَ صِدْقًا وَعَدْلًا ۚ لَا مُبَدِّلَ لِكَلِمَاتِهِ",
+        dalilTrans:
+            "Dan telah sempurna firman Tuhanmu (Al-Qur'an) dengan benar dan adil. Tidak ada yang dapat mengubah firman-Nya...",
         ulamaQuote:
             "Ibnu Katsir: 'Shidqan fil akhbar wa 'adlan fit thalab (Benar dalam setiap kabar berita-Nya dan adil dalam setiap perintah dan larangan-Nya).'",
         internalLink: "/quran/surah/6#verse-115",
@@ -492,7 +528,8 @@ export const asmaulHusnaData = {
             "Dzat yang mengetahui perkara-perkara yang paling samar dan tersembunyi, serta menyampaikan kebaikan kepada para hamba-Nya dengan cara yang amat halus.",
         dalilRef: "QS. Al-Mulk: 14",
         dalilText: "أَلَا يَعْلَمُ مَنْ خَلَقَ وَهُوَ اللَّطِيفُ الْخَبِيرُ",
-        dalilTrans: "Apakah (pantas) Allah yang menciptakan itu tidak mengetahui? Dan Dia Mahahalus, Maha Mengetahui.",
+        dalilTrans:
+            "Apakah (pantas) Allah yang menciptakan itu tidak mengetahui? Dan Dia Mahahalus, Maha Mengetahui.",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Al-Lathif bermakna ilmu-Nya menembus hal-hal tersembunyi dan mengarahkan hamba-Nya pada kemaslahatan tanpa disadari sang hamba.'",
         internalLink: "/quran/surah/67#verse-14",
@@ -555,8 +592,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang menutupi dosa hamba-hamba-Nya dan tidak mempermalukan mereka di hadapan makhluk serta memaafkan kesalahan mereka.",
         dalilRef: "QS. Az-Zumar: 53",
-        dalilText: "إِنَّ اللَّهَ يَغْفِرُ الذُّنُوبَ جَمِيعًا ۚ إِنَّهُ هُوَ الْغَفُورُ الرَّحِيمُ",
-        dalilTrans: "...Sungguh, Allah mengampuni dosa-dosa semuanya. Sungguh, Dialah Yang Maha Pengampun, Maha Penyayang.",
+        dalilText:
+            "إِنَّ اللَّهَ يَغْفِرُ الذُّنُوبَ جَمِيعًا ۚ إِنَّهُ هُوَ الْغَفُورُ الرَّحِيمُ",
+        dalilTrans:
+            "...Sungguh, Allah mengampuni dosa-dosa semuanya. Sungguh, Dialah Yang Maha Pengampun, Maha Penyayang.",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Maghfirah Allah mencakup penghapusan dosa dan penjagaan dari akibat buruk dosa tersebut.'",
         internalLink: "/quran/surah/39#verse-53",
@@ -571,8 +610,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang membalas amal kebaikan yang sedikit dari hamba-Nya dengan ganjaran pahala yang berlipat ganda tanpa batas.",
         dalilRef: "QS. Fatir: 30",
-        dalilText: "لِيُوَفِّيَهُمْ أُجُورَهُمْ وَيَزِيدَهُمْ مِنْ فَضْلِهِ ۚ إِنَّهُ غَفُورٌ شَكُورٌ",
-        dalilTrans: "...agar Allah menyempurnakan pahalanya kepada mereka dan menambah karunia-Nya. Sungguh, Allah Maha Pengampun, Maha Mensyukuri.",
+        dalilText:
+            "لِيُوَفِّيَهُمْ أُجُورَهُمْ وَيَزِيدَهُمْ مِنْ فَضْلِهِ ۚ إِنَّهُ غَفُورٌ شَكُورٌ",
+        dalilTrans:
+            "...agar Allah menyempurnakan pahalanya kepada mereka dan menambah karunia-Nya. Sungguh, Allah Maha Pengampun, Maha Mensyukuri.",
         ulamaQuote:
             "Ibnul Qayyim: 'Asy-Syakur adalah Dzat yang mensyukuri ketaatan hamba-Nya, melipatgandakan balasan, dan memuji amal sholeh mereka.'",
         internalLink: "/quran/surah/35#verse-30",
@@ -604,7 +645,8 @@ export const asmaulHusnaData = {
             "Dzat yang memiliki kebesaran dan kemegahan yang mutlak. Tidak ada satupun yang lebih besar dari-Nya, segala sesuatu kecil di hadapan-Nya.",
         dalilRef: "QS. Ar-Ra'd: 9",
         dalilText: "عَالِمُ الْغَيْبِ وَالشَّهَادَةِ الْكَبِيرُ الْمُتَعَالِ",
-        dalilTrans: "(Dialah) Yang Mengetahui semua yang gaib dan yang nyata; Yang Mahabesar, Mahatinggi.",
+        dalilTrans:
+            "(Dialah) Yang Mengetahui semua yang gaib dan yang nyata; Yang Mahabesar, Mahatinggi.",
         ulamaQuote:
             "Kalimat Takbir 'Allahu Akbar' mengikrarkan bahwa Allah jauh lebih besar dari segala urusan duniawi.",
         internalLink: "/quran/surah/13#verse-9",
@@ -668,7 +710,8 @@ export const asmaulHusnaData = {
             "Dzat yang berhak disifati dengan segala sifat keagungan, keluhuran derajat, dan kemuliaan yang sempurna.",
         dalilRef: "QS. Ar-Rahman: 27",
         dalilText: "وَيَبْقَىٰ وَجْهُ رَبِّكَ ذُو الْجَلَالِ وَالْإِكْرَامِ",
-        dalilTrans: "Dan tetap kekal Wajah Tuhanmu yang mempunyai kebesaran dan kemuliaan.",
+        dalilTrans:
+            "Dan tetap kekal Wajah Tuhanmu yang mempunyai kebesaran dan kemuliaan.",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Dzul Jalal wal Ikram adalah Pemilik segala keagungan dan sifat-sifat kemuliaan yang melahirkan rasa cinta dan pengagungan di hati hamba.'",
         internalLink: "/quran/surah/55#verse-27",
@@ -684,7 +727,8 @@ export const asmaulHusnaData = {
             "Dzat yang sangat banyak kebaikan-Nya, memberi sebelum diminta, memaafkan kesalahan, dan tidak pernah mengecewakan harapan orang yang memohon kepada-Nya.",
         dalilRef: "QS. Al-Infitar: 6",
         dalilText: "يَا أَيُّهَا الْإِنْسَانُ مَا غَرَّكَ بِرَبِّكَ الْكَرِيمِ",
-        dalilTrans: "Wahai manusia! Apakah yang telah memperdayakan kamu (berbuat durhaka) terhadap Tuhanmu Yang Mahamulia?",
+        dalilTrans:
+            "Wahai manusia! Apakah yang telah memperdayakan kamu (berbuat durhaka) terhadap Tuhanmu Yang Mahamulia?",
         ulamaQuote:
             "Imam Al-Khatthabi: 'Al-Karim adalah Yang banyak kebajikan-Nya dan senantiasa melimpahkan karunia kepada makhluk-Nya tanpa batas.'",
         internalLink: "/quran/surah/82#verse-6",
@@ -716,7 +760,8 @@ export const asmaulHusnaData = {
             "Dzat yang menjawab permohonan orang yang berdoa, menolong orang yang tertindas, dan mencukupi orang yang berada dalam kesulitan.",
         dalilRef: "QS. Hud: 61",
         dalilText: "إِنَّ رَبِّي قَرِيبٌ مُجِيبٌ",
-        dalilTrans: "...Sungguh, Tuhanku sangat dekat (rahmat-Nya) lagi memperkenankan (doa hamba-Nya).",
+        dalilTrans:
+            "...Sungguh, Tuhanku sangat dekat (rahmat-Nya) lagi memperkenankan (doa hamba-Nya).",
         ulamaQuote:
             "Rasulullah ﷺ bersabda: 'Sesungguhnya Rabb kalian Maha Pemalu lagi Maha Mulia, Dia malu jika hamba-Nya mengangkat kedua tangannya lalu menolaknya dengan hampa.' (HR. Abu Dawud 1488)",
         internalLink: "/quran/surah/11#verse-61",
@@ -748,7 +793,8 @@ export const asmaulHusnaData = {
             "Dzat yang meletakkan segala sesuatu pada tempatnya yang tepat, menciptakan segala sesuatu dengan hikmah agung dan tujuan yang mulia.",
         dalilRef: "QS. Al-Baqarah: 32",
         dalilText: "إِنَّكَ أَنْتَ الْعَلِيمُ الْحَكِيمُ",
-        dalilTrans: "...Sungguh, Engkaulah Yang Maha Mengetahui, Mahabijaksana.",
+        dalilTrans:
+            "...Sungguh, Engkaulah Yang Maha Mengetahui, Mahabijaksana.",
         ulamaQuote:
             "Ibnu Katsir: 'Al-Hakim adalah Yang Mahabijaksana dalam segenap perbuatan dan firman-Nya, tidak berbuat sesuatu dengan sia-sia.'",
         internalLink: "/quran/surah/2#verse-32",
@@ -795,8 +841,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang mengutus para rasul sebagai pembawa petunjuk dan yang akan membangkitkan seluruh manusia dari kubur pada Hari Kiamat.",
         dalilRef: "QS. Al-Hajj: 7",
-        dalilText: "وَأَنَّ السَّاعَةَ آتِيَةٌ لَا رَيْبَ فِيهَا وَأَنَّ اللَّهَ يَبْعَثُ مَنْ فِي الْقُبُورِ",
-        dalilTrans: "Dan sungguh, (hari) Kiamat itu pasti datang, tidak ada keraguan padanya; dan sungguh, Allah akan membangkitkan siapa pun yang di dalam kubur.",
+        dalilText:
+            "وَأَنَّ السَّاعَةَ آتِيَةٌ لَا رَيْبَ فِيهَا وَأَنَّ اللَّهَ يَبْعَثُ مَنْ فِي الْقُبُورِ",
+        dalilTrans:
+            "Dan sungguh, (hari) Kiamat itu pasti datang, tidak ada keraguan padanya; dan sungguh, Allah akan membangkitkan siapa pun yang di dalam kubur.",
         ulamaQuote:
             "Imam Ath-Thabari: 'Al-Ba'its menghidupkan kembali jasad yang telah menjadi tanah untuk dihisab amalnya secara adil.'",
         internalLink: "/quran/surah/22#verse-7",
@@ -827,8 +875,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang wujud-Nya pasti, nama dan sifat-Nya sempurna, firman-Nya adalah kebenaran mutlak, dan janji-Nya pasti terwujud.",
         dalilRef: "QS. Al-Hajj: 6",
-        dalilText: "ذَٰلِكَ بِأَنَّ اللَّهَ هُوَ الْحَقُّ وَأَنَّهُ يُحْيِي الْمَوْتَىٰ",
-        dalilTrans: "Yang demikian itu karena sungguh, Allah, Dialah yang hak dan sungguh, Dialah yang menghidupkan segala yang mati...",
+        dalilText:
+            "ذَٰلِكَ بِأَنَّ اللَّهَ هُوَ الْحَقُّ وَأَنَّهُ يُحْيِي الْمَوْتَىٰ",
+        dalilTrans:
+            "Yang demikian itu karena sungguh, Allah, Dialah yang hak dan sungguh, Dialah yang menghidupkan segala yang mati...",
         ulamaQuote:
             "Doa Tahajud Nabi ﷺ: 'Antal Haqqu wa wa'dukal haqqu wa liqa'uka haq...' (Engkaulah Al-Haq, janji-Mu benar, dan pertemuan dengan-Mu benar). (HR. Bukhari 1120)",
         internalLink: "/hadith/bukhari/1120",
@@ -844,7 +894,8 @@ export const asmaulHusnaData = {
             "Dzat yang diserahi segala urusan dan Dia menjamin pemeliharaan hamba-hamba-Nya yang bertawakal serta mencukupi kebutuhan mereka.",
         dalilRef: "QS. Ali 'Imran: 173",
         dalilText: "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
-        dalilTrans: "...Cukuplah Allah (menjadi penolong) bagi kami dan Dia sebaik-baik pelindung.",
+        dalilTrans:
+            "...Cukuplah Allah (menjadi penolong) bagi kami dan Dia sebaik-baik pelindung.",
         ulamaQuote:
             "Ibnu Abbas: 'Hasbunallah wa ni'mal wakil diucapkan oleh Nabi Ibrahim saat dilempar ke api, dan diucapkan Nabi Muhammad ﷺ saat orang musyrik mengepung.' (HR. Bukhari 4563)",
         internalLink: "/quran/surah/3#verse-173",
@@ -876,7 +927,8 @@ export const asmaulHusnaData = {
             "Dzat yang sangat kokoh kekuatan-Nya, tidak ada kelelahan dalam perbuatan-Nya dan tidak pernah tertimpa kelemahan sedikitpun.",
         dalilRef: "QS. Adz-Dzariyat: 58",
         dalilText: "إِنَّ اللَّهَ هُوَ الرَّزَّاقُ ذُو الْقُوَّةِ الْمَتِينُ",
-        dalilTrans: "Sungguh Allah, Dialah Pemberi rezeki Yang Mempunyai Kekuatan lagi Sangat Kokoh.",
+        dalilTrans:
+            "Sungguh Allah, Dialah Pemberi rezeki Yang Mempunyai Kekuatan lagi Sangat Kokoh.",
         ulamaQuote:
             "Imam Ibnu Katsir: 'Al-Matin adalah Dzat yang memiliki kekuatan yang amat sangat kokoh dan tidak terkalahkan.'",
         internalLink: "/quran/surah/51#verse-58",
@@ -891,8 +943,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang mengatur urusan seluruh makhluk, dan secara khusus membimbing, menolong, serta membela hamba-hamba-Nya yang beriman.",
         dalilRef: "QS. Al-Baqarah: 257",
-        dalilText: "اللَّهُ وَلِيُّ الَّذِينَ آمَنُوا يُخْرِجُهُمْ مِنَ الظُّلُمَاتِ إِلَى النُّورِ",
-        dalilTrans: "Allah pelindung orang yang beriman. Dia mengeluarkan mereka dari kegelapan kepada cahaya...",
+        dalilText:
+            "اللَّهُ وَلِيُّ الَّذِينَ آمَنُوا يُخْرِجُهُمْ مِنَ الظُّلُمَاتِ إِلَى النُّورِ",
+        dalilTrans:
+            "Allah pelindung orang yang beriman. Dia mengeluarkan mereka dari kegelapan kepada cahaya...",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Kewalian Allah kepada mukminin adalah mengaruniakan taufik dan mengeluarkan mereka dari kesesatan menuju hidayah.'",
         internalLink: "/quran/surah/2#verse-257",
@@ -940,7 +994,8 @@ export const asmaulHusnaData = {
             "Dzat yang memulai penciptaan seluruh makhluk dari ketiadaan tanpa memerlukan contoh atau bahan sebelumnya.",
         dalilRef: "QS. Al-Buruj: 13",
         dalilText: "إِنَّهُ هُوَ يُبْدِئُ وَيُعِيدُ",
-        dalilTrans: "Sungguh, Dialah yang memulai penciptaan (makhluk) dan yang menghidupkannya kembali.",
+        dalilTrans:
+            "Sungguh, Dialah yang memulai penciptaan (makhluk) dan yang menghidupkannya kembali.",
         ulamaQuote:
             "Imam Ibnu Katsir: 'Al-Mubdi' menciptakan makhluk pada awal mulanya hanya dengan firman-Nya: Kun fayakun.'",
         internalLink: "/quran/surah/85#verse-13",
@@ -955,8 +1010,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang mengembalikan makhluk hidup menjadi hidup kembali setelah mereka mati dan hancur lebur pada Hari Kebangkitan.",
         dalilRef: "QS. Yunus: 34",
-        dalilText: "قُلِ اللَّهُ يَبْدَأُ الْخَلْقَ ثُمَّ يُعِيدُهُ ۖ فَأَنَّىٰ تُؤْفَكُونَ",
-        dalilTrans: "Katakanlah, 'Allah-lah yang memulai penciptaan (makhluk), kemudian mengulanginya kembali. Maka bagaimana kamu dipalingkan (dari kebenaran)?'",
+        dalilText:
+            "قُلِ اللَّهُ يَبْدَأُ الْخَلْقَ ثُمَّ يُعِيدُهُ ۖ فَأَنَّىٰ تُؤْفَكُونَ",
+        dalilTrans:
+            "Katakanlah, 'Allah-lah yang memulai penciptaan (makhluk), kemudian mengulanginya kembali. Maka bagaimana kamu dipalingkan (dari kebenaran)?'",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Mengembalikan penciptaan adalah bukti tak terbantahkan atas kekuasaan Allah membangkitkan manusia.'",
         internalLink: "/quran/surah/10#verse-34",
@@ -971,8 +1028,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang meniupkan ruh dan memberikan kehidupan kepada jasad yang mati, serta menghidupkan hati manusia dengan cahaya petunjuk iman.",
         dalilRef: "QS. Ar-Rum: 50",
-        dalilText: "فَانْظُرْ إِلَىٰ آثَارِ رَحْمَتِ اللَّهِ كَيْفَ يُحْيِي الْأَرْضَ بَعْدَ مَوْتِهَا ۚ إِنَّ ذَٰلِكَ لَمُحْيِي الْمَوْتَىٰ",
-        dalilTrans: "Maka perhatikanlah bekas-bekas rahmat Allah, bagaimana Dia menghidupkan bumi setelah mati (kering). Sungguh, itu berarti Dia pasti menghidupkan orang yang telah mati...",
+        dalilText:
+            "فَانْظُرْ إِلَىٰ آثَارِ رَحْمَتِ اللَّهِ كَيْفَ يُحْيِي الْأَرْضَ بَعْدَ مَوْتِهَا ۚ إِنَّ ذَٰلِكَ لَمُحْيِي الْمَوْتَىٰ",
+        dalilTrans:
+            "Maka perhatikanlah bekas-bekas rahmat Allah, bagaimana Dia menghidupkan bumi setelah mati (kering). Sungguh, itu berarti Dia pasti menghidupkan orang yang telah mati...",
         ulamaQuote:
             "Imam Al-Baghawi: 'Menghidupkan tanah gersang dengan hujan adalah perumpamaan nyata bagi penghidupan manusia dari kuburnya.'",
         internalLink: "/quran/surah/30#verse-50",
@@ -988,7 +1047,8 @@ export const asmaulHusnaData = {
             "Dzat yang mencabut nyawa setiap makhluk hidup apabila telah tiba ajal yang telah ditentukan dengan hikmah dan keadilan-Nya.",
         dalilRef: "QS. Al-Hijr: 23",
         dalilText: "وَإِنَّا لَنَحْنُ نُحْيِي وَنُمِيتُ وَنَحْنُ الْوَارِثُونَ",
-        dalilTrans: "Dan sungguh, Kamilah yang menghidupkan dan mematikan dan Kami (pulalah) yang mewarisi.",
+        dalilTrans:
+            "Dan sungguh, Kamilah yang menghidupkan dan mematikan dan Kami (pulalah) yang mewarisi.",
         ulamaQuote:
             "Hasan Al-Bashri: 'Kematian adalah hakikat pasti yang memutus segala kelezatan duniawi dan menghadapkan manusia pada amalnya.'",
         internalLink: "/quran/surah/15#verse-23",
@@ -1004,7 +1064,8 @@ export const asmaulHusnaData = {
             "Dzat yang hidup kekal abadi sempurna tanpa permulaan dan tanpa akhir, tidak pernah mengantuk, tidur, ataupun mati.",
         dalilRef: "QS. Al-Baqarah: 255",
         dalilText: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ",
-        dalilTrans: "Allah, tidak ada tuhan selain Dia. Yang Mahahidup, Yang terus-menerus mengurus (makhluk-Nya)...",
+        dalilTrans:
+            "Allah, tidak ada tuhan selain Dia. Yang Mahahidup, Yang terus-menerus mengurus (makhluk-Nya)...",
         ulamaQuote:
             "Ibnul Qayyim: 'Al-Hayy adalah pokok seluruh sifat dzatiyah Allah, sedangkan Al-Qayyum adalah pokok seluruh sifat fi'liyah-Nya.' (Zadul Ma'ad)",
         internalLink: "/quran/surah/2#verse-255",
@@ -1020,7 +1081,8 @@ export const asmaulHusnaData = {
             "Dzat yang berdiri sendiri tidak membutuhkan bantuan siapapun, dan senantiasa menegakkan serta memelihara keberlangsungan seluruh alam semesta.",
         dalilRef: "QS. Thaha: 111",
         dalilText: "وَعَنَتِ الْوُجُوهُ لِلْحَيِّ الْقَيُّومِ",
-        dalilTrans: "Dan tunduklah semua muka (dengan rendah hati) di hadapan (Allah) Yang Hidup Kekal lagi senantiasa mengurus (makhluk-Nya)...",
+        dalilTrans:
+            "Dan tunduklah semua muka (dengan rendah hati) di hadapan (Allah) Yang Hidup Kekal lagi senantiasa mengurus (makhluk-Nya)...",
         ulamaQuote:
             "Doa Nabi ﷺ saat gundah: 'Ya Hayyu Ya Qayyum, bi rahmatika astaghits...' (Wahai Yang Maha Hidup lagi Maha Mandiri, dengan rahmat-Mu aku memohon pertolongan). (HR. Tirmidzi 3524)",
         internalLink: "/quran/surah/20#verse-111",
@@ -1036,7 +1098,8 @@ export const asmaulHusnaData = {
             "Dzat yang serba ada, tidak pernah mengalami kekurangan apapun, dan dapat mewujudkan segala sesuatu yang dikehendaki-Nya.",
         dalilRef: "QS. Adh-Dhuha: 6-8",
         dalilText: "وَوَجَدَكَ عَائِلًا فَأَغْنَىٰ",
-        dalilTrans: "dan Dia mendapatimu sebagai seorang yang kekurangan, lalu Dia memberikan kecukupan.",
+        dalilTrans:
+            "dan Dia mendapatimu sebagai seorang yang kekurangan, lalu Dia memberikan kecukupan.",
         ulamaQuote:
             "Imam Al-Khatthabi: 'Al-Wajid adalah Yang tidak pernah kekurangan, perbendaharaan-Nya tidak pernah habis oleh pemberian-Nya.'",
         internalLink: "/quran/surah/93#verse-8",
@@ -1067,8 +1130,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang Maha Tunggal tanpa sekutu, tiada tandingan dalam Dzat, sifat, perbuatan, dan hak-Nya untuk diibadahi.",
         dalilRef: "QS. Al-Baqarah: 163",
-        dalilText: "وَإِلَٰهُكُمْ إِلَٰهٌ وَاحِدٌ ۖ لَا إِلَٰهَ إِلَّا هُوَ الرَّحْمَٰنُ الرَّحِيمُ",
-        dalilTrans: "Dan Tuhan kamu adalah Tuhan Yang Maha Esa; tidak ada tuhan selain Dia, Yang Maha Pengasih, Maha Penyayang.",
+        dalilText:
+            "وَإِلَٰهُكُمْ إِلَٰهٌ وَاحِدٌ ۖ لَا إِلَٰهَ إِلَّا هُوَ الرَّحْمَٰنُ الرَّحِيمُ",
+        dalilTrans:
+            "Dan Tuhan kamu adalah Tuhan Yang Maha Esa; tidak ada tuhan selain Dia, Yang Maha Pengasih, Maha Penyayang.",
         ulamaQuote:
             "Imam Ibnu Katsir: 'Keesaan Allah menuntut pemurnian ibadah hanya untuk-Nya semata, bebas dari noda syirik.'",
         internalLink: "/quran/surah/2#verse-163",
@@ -1115,8 +1180,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang berkuasa penuh mewujudkan apa yang dikehendaki-Nya dan tidak mewujudkan apa yang tidak dikehendaki-Nya sesuai ukuran yang tepat.",
         dalilRef: "QS. Al-An'am: 65",
-        dalilText: "قُلْ هُوَ الْقَادِرُ عَلَىٰ أَنْ يَبْعَثَ عَلَيْكُمْ عَذَابًا مِنْ فَوْقِكُمْ أَوْ مِنْ تَحْتِ أَرْجُلِكُمْ",
-        dalilTrans: "Katakanlah (Muhammad), 'Dialah yang berkuasa mengirimkan azab kepadamu, dari atas atau dari bawah kakimu...'",
+        dalilText:
+            "قُلْ هُوَ الْقَادِرُ عَلَىٰ أَنْ يَبْعَثَ عَلَيْكُمْ عَذَابًا مِنْ فَوْقِكُمْ أَوْ مِنْ تَحْتِ أَرْجُلِكُمْ",
+        dalilTrans:
+            "Katakanlah (Muhammad), 'Dialah yang berkuasa mengirimkan azab kepadamu, dari atas atau dari bawah kakimu...'",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Kekuasaan Allah meliputi segala kemungkinan, tiada suatu halangan pun di bumi maupun di langit yang melemahkan-Nya.'",
         internalLink: "/quran/surah/6#verse-65",
@@ -1132,7 +1199,8 @@ export const asmaulHusnaData = {
             "Dzat yang memiliki kekuasaan mutlak yang tak terbatas, menundukkan segala sesuatu tanpa ada perlawanan dari siapapun.",
         dalilRef: "QS. Al-Qamar: 42",
         dalilText: "فَأَخَذْنَاهُمْ أَخْذَ عَزِيزٍ مُقْتَدِرٍ",
-        dalilTrans: "...maka Kami azab mereka dengan azab dari Yang Mahaperkasa, Mahakuasa.",
+        dalilTrans:
+            "...maka Kami azab mereka dengan azab dari Yang Mahaperkasa, Mahakuasa.",
         ulamaQuote:
             "Imam Ath-Thabari: 'Al-Muqtadir adalah Yang memiliki kekuasaan paripurna untuk melaksanakan apa saja yang telah Dia putuskan.'",
         internalLink: "/quran/surah/54#verse-42",
@@ -1147,8 +1215,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang memajukan dan mendahulukan apa yang Dia kehendaki, baik waktu, tempat, martabat, maupun keutamaan hamba-hamba-Nya.",
         dalilRef: "QS. Qaf: 28",
-        dalilText: "قَالَ لَا تَخْتَصِمُوا لَدَيَّ وَقَدْ قَدَّمْتُ إِلَيْكُمْ بِالْوَعِيدِ",
-        dalilTrans: "Dia (Allah) berfirman, 'Janganlah kamu bertengkar di hadapan-Ku, dan sungguh, dahulu Aku telah menyampaikan ancaman kepadamu.'",
+        dalilText:
+            "قَالَ لَا تَخْتَصِمُوا لَدَيَّ وَقَدْ قَدَّمْتُ إِلَيْكُمْ بِالْوَعِيدِ",
+        dalilTrans:
+            "Dia (Allah) berfirman, 'Janganlah kamu bertengkar di hadapan-Ku, dan sungguh, dahulu Aku telah menyampaikan ancaman kepadamu.'",
         ulamaQuote:
             "Doa Nabi ﷺ: 'Antal Muqaddimu wa Antal Mu'akhkhir, la ilaha illa Ant.' (Engkaulah Yang Mendahulukan dan Yang Mengakhirkan, tiada ilah selain Engkau). (HR. Bukhari 1120)",
         internalLink: "/hadith/bukhari/1120",
@@ -1163,8 +1233,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang menunda atau mengakhirkan sesuatu sesuai hikmah-Nya, seperti mengakhirkan balasan dosa orang zalim hingga hari kiamat.",
         dalilRef: "QS. Ibrahim: 42",
-        dalilText: "إِنَّمَا يُؤَخِّرُهُمْ لِيَوْمٍ تَشْخَصُ فِيهِ الْأَبْصَارُ",
-        dalilTrans: "...Sesungguhnya Allah menangguhkan mereka sampai hari yang pada waktu itu mata (mereka) terbelalak.",
+        dalilText:
+            "إِنَّمَا يُؤَخِّرُهُمْ لِيَوْمٍ تَشْخَصُ فِيهِ الْأَبْصَارُ",
+        dalilTrans:
+            "...Sesungguhnya Allah menangguhkan mereka sampai hari yang pada waktu itu mata (mereka) terbelalak.",
         ulamaQuote:
             "Imam Ibnu Katsir: 'Allah mengakhirkan ajal dan hukuman orang-orang zalim semata-mata sebagai bentuk istidraj dan hikmah keadilan-Nya.'",
         internalLink: "/quran/surah/14#verse-42",
@@ -1179,8 +1251,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang ada sebelum segala sesuatu ada, tanpa permulaan bagi wujud-Nya.",
         dalilRef: "QS. Al-Hadid: 3",
-        dalilText: "هُوَ الْأَوَّلُ وَالْآخِرُ وَالظَّاهِرُ وَالْبَاطِنُ ۖ وَهُوَ بِكُلِّ شَيْءٍ عَلِيمٌ",
-        dalilTrans: "Dialah Yang Awal, Yang Akhir, Yang Zahir dan Yang Batin; dan Dia Maha Mengetahui segala sesuatu.",
+        dalilText:
+            "هُوَ الْأَوَّلُ وَالْآخِرُ وَالظَّاهِرُ وَالْبَاطِنُ ۖ وَهُوَ بِكُلِّ شَيْءٍ عَلِيمٌ",
+        dalilTrans:
+            "Dialah Yang Awal, Yang Akhir, Yang Zahir dan Yang Batin; dan Dia Maha Mengetahui segala sesuatu.",
         ulamaQuote:
             "Nabi ﷺ menafsirkan: 'Antal Awwalu fa laisa qablaka syai' (Engkaulah Al-Awwal, maka tidak ada sesuatupun sebelum-Mu).' (HR. Muslim 2713)",
         internalLink: "/quran/surah/57#verse-3",
@@ -1260,7 +1334,8 @@ export const asmaulHusnaData = {
             "Dzat yang Maha Tinggi dari segala sangkaan, kekurangan, fitnah orang-orang kafir, dan keserupaan dengan makhluk.",
         dalilRef: "QS. Ar-Ra'd: 9",
         dalilText: "عَالِمُ الْغَيْبِ وَالشَّهَادَةِ الْكَبِيرُ الْمُتَعَالِ",
-        dalilTrans: "(Dialah) Yang Mengetahui semua yang gaib dan yang nyata; Yang Mahabesar, Mahatinggi.",
+        dalilTrans:
+            "(Dialah) Yang Mengetahui semua yang gaib dan yang nyata; Yang Mahabesar, Mahatinggi.",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Tinggi dalam kekuasaan-Nya, tinggi dalam Dzat-Nya di atas 'Arsy, dan tinggi dalam segenap kemuliaan sifat-sifat-Nya.'",
         internalLink: "/quran/surah/13#verse-9",
@@ -1275,8 +1350,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang sangat luas kebaikan dan kasih sayang-Nya, menepati janji, serta melimpahkan kenikmatan lahir batin bagi seluruh makhluk.",
         dalilRef: "QS. At-Tur: 28",
-        dalilText: "إِنَّا كُنَّا مِنْ قَبْلُ نَدْعُوهُ ۖ إِنَّهُ هُوَ الْبَرُّ الرَّحِيمُ",
-        dalilTrans: "Sesungguhnya kami dahulu menyembah-Nya. Sungguh, Dialah Yang Melimpahkan Kebaikan, Maha Penyayang.",
+        dalilText:
+            "إِنَّا كُنَّا مِنْ قَبْلُ نَدْعُوهُ ۖ إِنَّهُ هُوَ الْبَرُّ الرَّحِيمُ",
+        dalilTrans:
+            "Sesungguhnya kami dahulu menyembah-Nya. Sungguh, Dialah Yang Melimpahkan Kebaikan, Maha Penyayang.",
         ulamaQuote:
             "Ibnu Abbas: 'Al-Barr adalah Dzat yang sangat berlemah lembut dan berbuat kebajikan kepada hamba-hamba-Nya.'",
         internalLink: "/quran/surah/52#verse-28",
@@ -1308,7 +1385,8 @@ export const asmaulHusnaData = {
             "Dzat yang menimpakan balasan azab yang setimpal dan menghancurkan para penentang kebenaran dan orang-orang yang melampaui batas.",
         dalilRef: "QS. As-Sajdah: 22",
         dalilText: "إِنَّا مِنَ الْمُجْرِمِينَ مُنْتَقِمُونَ",
-        dalilTrans: "...Sungguh, Kami akan memberikan pembalasan kepada orang-orang yang berdosa.",
+        dalilTrans:
+            "...Sungguh, Kami akan memberikan pembalasan kepada orang-orang yang berdosa.",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Pembalasan Allah berlaku bagi orang-orang yang sombong, mendustakan para rasul, dan berbuat zalim di muka bumi.'",
         internalLink: "/quran/surah/32#verse-22",
@@ -1355,8 +1433,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat Pemilik seluruh kekuasaan mutlak di jagat raya, memberikan kekuasaan kepada siapa yang dikehendaki dan mencabutnya sesuai kehendak-Nya.",
         dalilRef: "QS. Ali 'Imran: 26",
-        dalilText: "قُلِ اللَّهُمَّ مَالِكَ الْمُلْكِ تُؤْتِي الْمُلْكَ مَنْ تَشَاءُ وَتَنْزِعُ الْمُلْكَ مِمَّنْ تَشَاءُ",
-        dalilTrans: "Katakanlah (Muhammad), 'Wahai Tuhan pemilik kekuasaan, Engkau berikan kekuasaan kepada siapa pun yang Engkau kehendaki, dan Engkau cabut kekuasaan dari siapa pun yang Engkau kehendaki...'",
+        dalilText:
+            "قُلِ اللَّهُمَّ مَالِكَ الْمُلْكِ تُؤْتِي الْمُلْكَ مَنْ تَشَاءُ وَتَنْزِعُ الْمُلْكَ مِمَّنْ تَشَاءُ",
+        dalilTrans:
+            "Katakanlah (Muhammad), 'Wahai Tuhan pemilik kekuasaan, Engkau berikan kekuasaan kepada siapa pun yang Engkau kehendaki, dan Engkau cabut kekuasaan dari siapa pun yang Engkau kehendaki...'",
         ulamaQuote:
             "Ibnu Katsir: 'Hanya Allah Pengatur sejati alam semesta; tiada kekuasaan makhluk yang abadi selain kekuasaan-Nya.'",
         internalLink: "/quran/surah/3#verse-26",
@@ -1403,8 +1483,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang menghimpun seluruh makhluk pada Hari Kiamat di Padang Mahsyar, serta menghimpun seluruh kesempurnaan pada Dzat-Nya.",
         dalilRef: "QS. Ali 'Imran: 9",
-        dalilText: "رَبَّنَا إِنَّكَ جَامِعُ النَّاسِ لِيَوْمٍ لَا رَيْبَ فِيهِ ۚ إِنَّ اللَّهَ لَا يُخْلِفُ الْمِيعَادَ",
-        dalilTrans: "Ya Tuhan kami, Engkaulah yang mengumpulkan manusia pada hari yang tidak ada keraguan padanya. Sungguh, Allah tidak menyalahi janji.",
+        dalilText:
+            "رَبَّنَا إِنَّكَ جَامِعُ النَّاسِ لِيَوْمٍ لَا رَيْبَ فِيهِ ۚ إِنَّ اللَّهَ لَا يُخْلِفُ الْمِيعَادَ",
+        dalilTrans:
+            "Ya Tuhan kami, Engkaulah yang mengumpulkan manusia pada hari yang tidak ada keraguan padanya. Sungguh, Allah tidak menyalahi janji.",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Al-Jami' mengumpulkan partikel jasad yang tercerai-berai untuk dihidupkan kembali di hari perjumpaan.'",
         internalLink: "/quran/surah/3#verse-9",
@@ -1419,8 +1501,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang Maha Kaya secara mutlak, tidak memerlukan siapapun dan apapun, sedangkan seluruh makhluk sangat fakir dan butuh kepada-Nya.",
         dalilRef: "QS. Fatir: 15",
-        dalilText: "يَا أَيُّهَا النَّاسُ أَنْتُمُ الْفُقَرَاءُ إِلَى اللَّهِ ۖ وَاللَّهُ هُوَ الْغَنِيُّ الْحَمِيدُ",
-        dalilTrans: "Wahai manusia! Kamulah yang memerlukan Allah; dan Allah Dialah Yang Mahakaya (tidak memerlukan sesuatu), Maha Terpuji.",
+        dalilText:
+            "يَا أَيُّهَا النَّاسُ أَنْتُمُ الْفُقَرَاءُ إِلَى اللَّهِ ۖ وَاللَّهُ هُوَ الْغَنِيُّ الْحَمِيدُ",
+        dalilTrans:
+            "Wahai manusia! Kamulah yang memerlukan Allah; dan Allah Dialah Yang Mahakaya (tidak memerlukan sesuatu), Maha Terpuji.",
         ulamaQuote:
             "Hadits Qudsi: 'Wahai hamba-Ku, andai orang pertama hingga terakhir dari kalian bertaqwa, itu tak menambah kerajaan-Ku sedikitpun...' (HR. Muslim 2577)",
         internalLink: "/quran/surah/35#verse-15",
@@ -1436,7 +1520,8 @@ export const asmaulHusnaData = {
             "Dzat yang menganugerahkan kekayaan materi, ketenangan hati, dan kecukupan qana'ah kepada siapa yang Dia kehendaki.",
         dalilRef: "QS. An-Najm: 48",
         dalilText: "وَأَنَّهُ هُوَ أَغْنَىٰ وَأَقْنَىٰ",
-        dalilTrans: "dan sesungguhnya Dialah yang memberikan kekayaan dan kecukupan.",
+        dalilTrans:
+            "dan sesungguhnya Dialah yang memberikan kekayaan dan kecukupan.",
         ulamaQuote:
             "Ibnu Katsir: 'Allah-lah yang mempermudah jalan rezeki dan memampukan manusia untuk hidup berkecukupan.'",
         internalLink: "/quran/surah/53#verse-48",
@@ -1452,7 +1537,8 @@ export const asmaulHusnaData = {
             "Dzat yang mencegah keburukan menimpa para hamba-Nya dan menahan rezeki atau cobaan sesuai ketetapan hikmah-Nya.",
         dalilRef: "QS. Al-Mulk: 21",
         dalilText: "أَمَّنْ هَٰذَا الَّذِي يَرْزُقُكُمْ إِنْ أَمْسَكَ رِزْقَهُ",
-        dalilTrans: "Atau siapakah yang dapat memberimu rezeki jika Dia menahan rezeki-Nya?...",
+        dalilTrans:
+            "Atau siapakah yang dapat memberimu rezeki jika Dia menahan rezeki-Nya?...",
         ulamaQuote:
             "Doa setelah sholat Nabi ﷺ: 'Allahumma la mani'a lima a'thaita wa la mu'thiya lima mana'ta' (Ya Allah tiada yang dapat mencegah apa yang Engkau beri, dan tiada yang dapat memberi apa yang Engkau cegah). (HR. Bukhari 844, Muslim 593)",
         internalLink: "/hadith/bukhari/844",
@@ -1467,8 +1553,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang di tangan-Nya lah segala ketetapan mudarat dan ujian bagi makhluk, dan tiada satupun yang mampu menolaknya selain izin-Nya.",
         dalilRef: "QS. Al-An'am: 17",
-        dalilText: "وَإِنْ يَمْسَسْكَ اللَّهُ بِضُرٍّ فَلَا كَاشِفَ لَهُ إِلَّا هُوَ",
-        dalilTrans: "Dan jika Allah menimpakan suatu bencana kepadamu, maka tidak ada yang dapat menghilangkannya selain Dia...",
+        dalilText:
+            "وَإِنْ يَمْسَسْكَ اللَّهُ بِضُرٍّ فَلَا كَاشِفَ لَهُ إِلَّا هُوَ",
+        dalilTrans:
+            "Dan jika Allah menimpakan suatu bencana kepadamu, maka tidak ada yang dapat menghilangkannya selain Dia...",
         ulamaQuote:
             "Ibnul Qayyim: 'Penyebutan Ad-Dharr selalu digandengkan dengan An-Nafi' untuk menunjukkan kesempurnaan hikmah dan kekuasaan-Nya.'",
         internalLink: "/quran/surah/6#verse-17",
@@ -1483,8 +1571,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang mendatangkan segala manfaat, kebaikan, dan kemaslahatan bagi seluruh alam semesta.",
         dalilRef: "QS. Yunus: 107",
-        dalilText: "وَإِنْ يُرِدْكَ بِخَيْرٍ فَلَا رَادَّ لِفَضْلِهِ ۚ يُصِيبُ بِهِ مَنْ يَشَاءُ مِنْ عِبَادِهِ",
-        dalilTrans: "...dan jika Dia menghendaki kebaikan bagimu, maka tidak ada yang dapat menolak karunia-Nya. Dia memberikan kebaikan itu kepada siapa pun yang Dia kehendaki...",
+        dalilText:
+            "وَإِنْ يُرِدْكَ بِخَيْرٍ فَلَا رَادَّ لِفَضْلِهِ ۚ يُصِيبُ بِهِ مَنْ يَشَاءُ مِنْ عِبَادِهِ",
+        dalilTrans:
+            "...dan jika Dia menghendaki kebaikan bagimu, maka tidak ada yang dapat menolak karunia-Nya. Dia memberikan kebaikan itu kepada siapa pun yang Dia kehendaki...",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Segala nikmat, keselamatan, dan keberkahan berasal semata-mata dari limpahan anugerah An-Nafi'.' (Taisirul Karimir Rahman)",
         internalLink: "/quran/surah/10#verse-107",
@@ -1515,8 +1605,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang membimbing seluruh makhluk menuju kelangsungan hidup mereka, dan mengaruniakan hidayah taufik ke jalan yang lurus (Sirathal Mustaqim) bagi orang beriman.",
         dalilRef: "QS. Al-Hajj: 54",
-        dalilText: "وَإِنَّ اللَّهَ لَهَادِ الَّذِينَ آمَنُوا إِلَىٰ صِرَاطٍ مُسْتَقِيمٍ",
-        dalilTrans: "...Dan sungguh, Allah pemberi petunjuk bagi orang-orang yang beriman kepada jalan yang lurus.",
+        dalilText:
+            "وَإِنَّ اللَّهَ لَهَادِ الَّذِينَ آمَنُوا إِلَىٰ صِرَاطٍ مُسْتَقِيمٍ",
+        dalilTrans:
+            "...Dan sungguh, Allah pemberi petunjuk bagi orang-orang yang beriman kepada jalan yang lurus.",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Hidayah terbagi dua: hidayah ilmu/bimbingan umum dan hidayah taufik khusus untuk beramal shalih.'",
         internalLink: "/quran/surah/22#verse-54",
@@ -1531,8 +1623,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang menciptakan alam semesta dalam bentuk yang teramat indah, sempurna, dan menakjubkan tanpa ada contoh tandingan sebelumnya.",
         dalilRef: "QS. Al-Baqarah: 117",
-        dalilText: "بَدِيعُ السَّمَاوَاتِ وَالْأَرْضِ ۖ وَإِذَا قَضَىٰ أَمْرًا فَإِنَّمَا يَقُولُ لَهُ كُنْ فَيَكُونُ",
-        dalilTrans: "(Allah) pencipta langit dan bumi. Apabila Dia hendak menetapkan sesuatu, Dia hanya berkata kepadanya, 'Jadilah!' Maka jadilah sesuatu itu.",
+        dalilText:
+            "بَدِيعُ السَّمَاوَاتِ وَالْأَرْضِ ۖ وَإِذَا قَضَىٰ أَمْرًا فَإِنَّمَا يَقُولُ لَهُ كُنْ فَيَكُونُ",
+        dalilTrans:
+            "(Allah) pencipta langit dan bumi. Apabila Dia hendak menetapkan sesuatu, Dia hanya berkata kepadanya, 'Jadilah!' Maka jadilah sesuatu itu.",
         ulamaQuote:
             "Imam Ath-Thabari: 'Al-Badi' adalah Dzat yang mengadakan sesuatu yang belum pernah ada wujudnya sama sekali.'",
         internalLink: "/quran/surah/2#verse-117",
@@ -1547,8 +1641,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang keberadaan-Nya kekal selamanya tanpa pernah berakhir, sementara seluruh alam raya dan ciptaan akan fana dan musnah.",
         dalilRef: "QS. Ar-Rahman: 26-27",
-        dalilText: "كُلُّ مَنْ عَلَيْهَا فَانٍ وَيَبْقَىٰ وَجْهُ رَبِّكَ ذُو الْجَلَالِ وَالْإِكْرَامِ",
-        dalilTrans: "Semua yang ada di bumi itu akan binasa, tetapi Wajah Tuhanmu yang memiliki kebesaran dan kemuliaan tetap kekal.",
+        dalilText:
+            "كُلُّ مَنْ عَلَيْهَا فَانٍ وَيَبْقَىٰ وَجْهُ رَبِّكَ ذُو الْجَلَالِ وَالْإِكْرَامِ",
+        dalilTrans:
+            "Semua yang ada di bumi itu akan binasa, tetapi Wajah Tuhanmu yang memiliki kebesaran dan kemuliaan tetap kekal.",
         ulamaQuote:
             "Ibnu Katsir: 'Kekekalan Allah adalah sifat hakiki yang tidak terikat oleh waktu dan kebinasaan alam fana.'",
         internalLink: "/quran/surah/55#verse-27",
@@ -1564,7 +1660,8 @@ export const asmaulHusnaData = {
             "Dzat yang tetap ada dan mewarisi seluruh alam semesta setelah kepunahan seluruh makhluk, dan kepada-Nya lah tempat kembali segala urusan.",
         dalilRef: "QS. Al-Hijr: 23",
         dalilText: "وَإِنَّا لَنَحْنُ نُحْيِي وَنُمِيتُ وَنَحْنُ الْوَارِثُونَ",
-        dalilTrans: "Dan sungguh, Kamilah yang menghidupkan dan mematikan dan Kami (pulalah) yang mewarisi.",
+        dalilTrans:
+            "Dan sungguh, Kamilah yang menghidupkan dan mematikan dan Kami (pulalah) yang mewarisi.",
         ulamaQuote:
             "Doa Nabi Zakariya 'alaihissalam: 'Rabbi la tadzarni fardan wa Anta Khairul Waritsin' (Ya Tuhanku janganlah Engkau biarkan aku hidup seorang diri dan Engkaulah Ahli Waris yang terbaik). (QS. Al-Anbiya: 89)",
         internalLink: "/quran/surah/15#verse-23",
@@ -1579,8 +1676,10 @@ export const asmaulHusnaData = {
         explanation:
             "Dzat yang seluruh perbuatan dan ketetapan-Nya tepat, bijak, dan lurus, serta membimbing para hamba-Nya menuju kebaikan dunia dan keselamatan akhirat.",
         dalilRef: "QS. Al-Kahf: 10",
-        dalilText: "رَبَّنَا آتِنَا مِنْ لَدُنْكَ رَحْمَةً وَهَيِّئْ لَنَا مِنْ أَمْرِنَا رَشَدًا",
-        dalilTrans: "...'Wahai Tuhan kami! Berikanlah rahmat kepada kami dari sisi-Mu dan sempurnakanlah petunjuk yang lurus bagi kami dalam urusan kami.'",
+        dalilText:
+            "رَبَّنَا آتِنَا مِنْ لَدُنْكَ رَحْمَةً وَهَيِّئْ لَنَا مِنْ أَمْرِنَا رَشَدًا",
+        dalilTrans:
+            "...'Wahai Tuhan kami! Berikanlah rahmat kepada kami dari sisi-Mu dan sempurnakanlah petunjuk yang lurus bagi kami dalam urusan kami.'",
         ulamaQuote:
             "Syaikh As-Sa'di: 'Ar-Rasyid adalah Yang sempurna kebijaksanaan-Nya, mengarahkan segala takdir menuju kebaikan yang sejati.' (Taisirul Karimir Rahman)",
         internalLink: "/quran/surah/18#verse-10",

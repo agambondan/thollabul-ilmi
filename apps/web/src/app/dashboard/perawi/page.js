@@ -138,7 +138,10 @@ export function PerawiContent({
 
             {/* Search */}
             <form onSubmit={handleSearch} className='relative mb-4 max-w-lg'>
-                <span className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 select-none' aria-hidden='true'>
+                <span
+                    className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 select-none'
+                    aria-hidden='true'
+                >
                     ⌕
                 </span>
                 <input

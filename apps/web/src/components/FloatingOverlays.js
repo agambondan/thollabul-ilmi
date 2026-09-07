@@ -3,9 +3,12 @@
 import dynamic from "next/dynamic";
 import { Toaster } from "react-hot-toast";
 
-const SettingButton = dynamic(() => import("@/components/popup/SettingButton"), {
-    ssr: false,
-});
+const SettingButton = dynamic(
+    () => import("@/components/popup/SettingButton"),
+    {
+        ssr: false,
+    },
+);
 const PwaInstallNotice = dynamic(
     () => import("@/components/PwaInstallNotice"),
     { ssr: false },

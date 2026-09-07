@@ -95,7 +95,10 @@ const AdminAsmaulHusnaPage = () => {
             } else {
                 res = await adminAsmaulHusnaApi.create(payload);
             }
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setShowModal(false);
             load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -110,7 +113,10 @@ const AdminAsmaulHusnaPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminAsmaulHusnaApi.delete(deleteId);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setDeleteId(null);
             load();
             fb("admin:success", t("admin.crud.delete_success"));
@@ -171,13 +177,17 @@ const AdminAsmaulHusnaPage = () => {
             </div>
 
             {loading ? (
-                <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
+                <p className='text-sm text-gray-500 dark:text-gray-300'>
+                    {t("common.loading")}
+                </p>
             ) : (
                 <>
                     <PanelTable
                         head={
                             <>
-                                <Th className='w-12'>{t("admin.field.number")}</Th>
+                                <Th className='w-12'>
+                                    {t("admin.field.number")}
+                                </Th>
                                 <Th>{t("admin.field.arabic")}</Th>
                                 <Th>{t("admin.field.latin")}</Th>
                                 <Th className='hidden md:table-cell'>
@@ -199,11 +209,17 @@ const AdminAsmaulHusnaPage = () => {
                                     {item.transliteration}
                                 </Td>
                                 <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 hidden md:table-cell'>
-                                    <div>{getLocalizedField(item, "meaning", lang, [
-                                        "indonesian",
-                                        "english",
-                                    ])}</div>
-                                    {item.source && <SourceBadges source={item.source} />}
+                                    <div>
+                                        {getLocalizedField(
+                                            item,
+                                            "meaning",
+                                            lang,
+                                            ["indonesian", "english"],
+                                        )}
+                                    </div>
+                                    {item.source && (
+                                        <SourceBadges source={item.source} />
+                                    )}
                                 </Td>
                                 <Td>
                                     <div className='flex items-center gap-2 justify-end'>

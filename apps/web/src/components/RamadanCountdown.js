@@ -6,7 +6,10 @@ import { daysUntilRamadan } from "@/lib/puasaSunnah";
 import { useEffect, useState } from "react";
 import { BsMoonStarsFill } from "react-icons/bs";
 
-export default function RamadanCountdown({ compact = false, initialHijri = null }) {
+export default function RamadanCountdown({
+    compact = false,
+    initialHijri = null,
+}) {
     const { t } = useLocale();
     const [hijri, setHijri] = useState(initialHijri);
     const [loading, setLoading] = useState(!initialHijri);

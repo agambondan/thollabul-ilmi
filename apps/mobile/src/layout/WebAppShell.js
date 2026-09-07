@@ -42,9 +42,12 @@ export function WebAppShell({
     useEffect(() => {
         let mounted = true;
         if (activeTab === "quran") {
-            readPreference(preferenceKeys.quranFullscreen, false).then((val) => {
-                if (mounted && typeof val === "boolean") setQuranFullscreen(val);
-            });
+            readPreference(preferenceKeys.quranFullscreen, false).then(
+                (val) => {
+                    if (mounted && typeof val === "boolean")
+                        setQuranFullscreen(val);
+                },
+            );
         } else {
             setQuranFullscreen(false);
         }

@@ -9,7 +9,8 @@ const API_URL =
     process.env.NEXT_PUBLIC_API_URL ||
     "https://api-thollabul.jangkauin.site";
 
-const toArr = (data) => (Array.isArray(data?.items ?? data) ? (data?.items ?? data) : []);
+const toArr = (data) =>
+    Array.isArray(data?.items ?? data) ? (data?.items ?? data) : [];
 
 async function fetchThemes(slug) {
     try {
@@ -68,36 +69,33 @@ const Page = async (props) => {
     const themes = await fetchThemes(params.slug);
     const firstThemeId = themes[0]?.id ?? themes[0]?.theme?.id ?? null;
 
-    const [initialChapters, initialHadiths, fallbackHadiths] = await Promise.all([
-        firstThemeId
-            ? fetchChapters(params.slug, firstThemeId)
-            : Promise.resolve([]),
-        (async () => {
-            if (!firstThemeId) return [];
-            const chapters = firstThemeId
-                ? await fetchChapters(params.slug, firstThemeId)
-                : [];
-            const firstChapterId = chapters[0]?.id;
-            if (!firstChapterId) return [];
-            return fetchHadiths(
-                params.slug,
-                firstThemeId,
-                firstChapterId,
-            );
-        })(),
-        (async () => {
-            try {
-                const res = await fetch(
-                    `${API_URL}/api/v1/hadiths/book/${params.slug}?page=0&size=10&slim=1`,
-                    { next: { revalidate: 86400 } },
-                );
-                if (!res.ok) return [];
-                return toArr(await res.json());
-            } catch {
-                return [];
-            }
-        })(),
-    ]);
+    const [initialChapters, initialHadiths, fallbackHadiths] =
+        await Promise.all([
+            firstThemeId
+                ? fetchChapters(params.slug, firstThemeId)
+                : Promise.resolve([]),
+            (async () => {
+                if (!firstThemeId) return [];
+                const chapters = firstThemeId
+                    ? await fetchChapters(params.slug, firstThemeId)
+                    : [];
+                const firstChapterId = chapters[0]?.id;
+                if (!firstChapterId) return [];
+                return fetchHadiths(params.slug, firstThemeId, firstChapterId);
+            })(),
+            (async () => {
+                try {
+                    const res = await fetch(
+                        `${API_URL}/api/v1/hadiths/book/${params.slug}?page=0&size=10&slim=1`,
+                        { next: { revalidate: 86400 } },
+                    );
+                    if (!res.ok) return [];
+                    return toArr(await res.json());
+                } catch {
+                    return [];
+                }
+            })(),
+        ]);
 
     return (
         <main className='min-h-screen flex flex-col'>
@@ -107,7 +105,11 @@ const Page = async (props) => {
                         params={params}
                         basePath='/hadith'
                         showSelectors={true}
-                        initialHadiths={initialHadiths.length ? initialHadiths : fallbackHadiths}
+                        initialHadiths={
+                            initialHadiths.length
+                                ? initialHadiths
+                                : fallbackHadiths
+                        }
                         initialThemes={themes}
                         initialChapters={initialChapters}
                     />

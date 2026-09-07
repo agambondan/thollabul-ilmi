@@ -21,8 +21,17 @@ export default function AdminJarhTadilPage() {
             searchableFields={["teks_nilai", "sumber", "perawi_id"]}
             defaultPageSize={20}
             fields={[
-                { key: "perawi_id", label: "Perawi ID", type: "number", required: true },
-                { key: "penilai_id", label: "Penilai (Perawi) ID", type: "number" },
+                {
+                    key: "perawi_id",
+                    label: "Perawi ID",
+                    type: "number",
+                    required: true,
+                },
+                {
+                    key: "penilai_id",
+                    label: "Penilai (Perawi) ID",
+                    type: "number",
+                },
                 {
                     key: "jenis_nilai",
                     label: "Jenis",
@@ -37,18 +46,19 @@ export default function AdminJarhTadilPage() {
                     required: true,
                     options: TINGKAT_OPTIONS,
                 },
-                { key: "teks_nilai", label: "Teks Nilai", type: "text", required: true },
+                {
+                    key: "teks_nilai",
+                    label: "Teks Nilai",
+                    type: "text",
+                    required: true,
+                },
                 { key: "sumber", label: "Sumber Kitab", type: "text" },
                 { key: "halaman", label: "Halaman", type: "text" },
                 { key: "catatan", label: "Catatan", type: "textarea", rows: 3 },
             ]}
             transformPayload={(payload) => {
                 const out = { ...payload };
-                for (const k of [
-                    "perawi_id",
-                    "penilai_id",
-                    "tingkat",
-                ]) {
+                for (const k of ["perawi_id", "penilai_id", "tingkat"]) {
                     if (out[k] === "" || out[k] === null) out[k] = null;
                 }
                 return out;

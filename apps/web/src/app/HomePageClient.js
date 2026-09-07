@@ -9,7 +9,9 @@ import Link from "next/link";
 import { useSyncExternalStore } from "react";
 
 const TajweedTable = dynamic(() => import("@/components/table/Tajweed"), {
-    loading: () => <div className='h-48 rounded-xl bg-emerald-900/10 animate-pulse' />,
+    loading: () => (
+        <div className='h-48 rounded-xl bg-emerald-900/10 animate-pulse' />
+    ),
 });
 import {
     BsBarChart,

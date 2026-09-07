@@ -639,15 +639,22 @@ const AdminLayout = ({ children }) => {
                                 <div className='hidden md:block px-4 py-2.5 border-b border-gray-100 dark:border-slate-700'>
                                     <div className='flex items-center justify-between mb-2'>
                                         <span className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
-                                            {t("settings.ayah_layout") || "Tampilan Layout"}
+                                            {t("settings.ayah_layout") ||
+                                                "Tampilan Layout"}
                                         </span>
                                     </div>
                                     <div className='flex gap-2'>
                                         <button
                                             type='button'
                                             onClick={() => setLayout(false)}
-                                            title={t("settings.compact") || "Compact"}
-                                            aria-label={t("settings.compact") || "Compact"}
+                                            title={
+                                                t("settings.compact") ||
+                                                "Compact"
+                                            }
+                                            aria-label={
+                                                t("settings.compact") ||
+                                                "Compact"
+                                            }
                                             className={`flex-1 flex justify-center items-center py-1.5 px-1 rounded-lg border text-xs transition-all ${
                                                 !isWide
                                                     ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold"
@@ -660,7 +667,9 @@ const AdminLayout = ({ children }) => {
                                             type='button'
                                             onClick={() => setLayout(true)}
                                             title={t("settings.wide") || "Wide"}
-                                            aria-label={t("settings.wide") || "Wide"}
+                                            aria-label={
+                                                t("settings.wide") || "Wide"
+                                            }
                                             className={`flex-1 flex justify-center items-center py-1.5 px-1 rounded-lg border text-xs transition-all ${
                                                 isWide
                                                     ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 font-semibold"
@@ -704,7 +713,9 @@ const AdminLayout = ({ children }) => {
                         )}
                     </div>
                 </header>
-                <div className={`w-full ${isWide ? "" : "max-w-7xl mx-auto"}`}>{children}</div>
+                <div className={`w-full ${isWide ? "" : "max-w-7xl mx-auto"}`}>
+                    {children}
+                </div>
             </main>
         </div>
     );

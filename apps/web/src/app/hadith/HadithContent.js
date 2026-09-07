@@ -7,13 +7,19 @@ import { hadithTabList } from "@/lib/const";
 import { useSearchParams } from "next/navigation";
 
 const ByChapter = dynamic(() => import("@/app/hadith/byChapter"), {
-    loading: () => <div className='h-48 rounded-xl bg-emerald-900/10 animate-pulse' />,
+    loading: () => (
+        <div className='h-48 rounded-xl bg-emerald-900/10 animate-pulse' />
+    ),
 });
 const ByHadith = dynamic(() => import("@/app/hadith/byHadith"), {
-    loading: () => <div className='h-48 rounded-xl bg-emerald-900/10 animate-pulse' />,
+    loading: () => (
+        <div className='h-48 rounded-xl bg-emerald-900/10 animate-pulse' />
+    ),
 });
 const ByTheme = dynamic(() => import("@/app/hadith/byTheme"), {
-    loading: () => <div className='h-48 rounded-xl bg-emerald-900/10 animate-pulse' />,
+    loading: () => (
+        <div className='h-48 rounded-xl bg-emerald-900/10 animate-pulse' />
+    ),
 });
 
 export const HadithContent = ({
@@ -44,7 +50,12 @@ export const HadithContent = ({
     );
 };
 
-const SwitchComponent = ({ activeTab, basePath, themeBasePath, initialBooks }) => {
+const SwitchComponent = ({
+    activeTab,
+    basePath,
+    themeBasePath,
+    initialBooks,
+}) => {
     switch (activeTab) {
         case "#book":
             return <ByBook basePath={basePath} initialBooks={initialBooks} />;

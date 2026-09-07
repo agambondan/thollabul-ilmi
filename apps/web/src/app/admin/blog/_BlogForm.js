@@ -181,7 +181,10 @@ const BlogForm = ({ initialData = null, postId = null }) => {
             const res = isEdit
                 ? await adminBlogApi.update(postId, payload)
                 : await adminBlogApi.create(payload);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             router.push("/admin/blog");
         } catch (err) {
             setError(err.message || t("admin.error.save"));
@@ -289,7 +292,9 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                                 id='blogform-field-1'
                                 required
                                 value={title}
-                                onChange={(e) => handleTitleChange(e.target.value)}
+                                onChange={(e) =>
+                                    handleTitleChange(e.target.value)
+                                }
                                 className={`${inputCls} text-base font-semibold`}
                                 placeholder={t("admin.blog.title_placeholder")}
                             />
@@ -312,7 +317,9 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                                         setSlug(e.target.value);
                                     }}
                                     className={inputCls}
-                                    placeholder={t("admin.blog.slug_placeholder")}
+                                    placeholder={t(
+                                        "admin.blog.slug_placeholder",
+                                    )}
                                 />
                                 <p className='text-[11px] text-gray-400 mt-1 truncate'>
                                     /blog/{slug || "..."}
@@ -359,7 +366,9 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                                 onChange={(e) => setExcerpt(e.target.value)}
                                 rows={2}
                                 className={inputCls}
-                                placeholder={t("admin.blog.summary_placeholder")}
+                                placeholder={t(
+                                    "admin.blog.summary_placeholder",
+                                )}
                             />
                         </div>
 
@@ -377,7 +386,13 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                             <div className='flex flex-wrap items-center gap-1 p-2 rounded-xl bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 dark:border-slate-700'>
                                 <button
                                     type='button'
-                                    onClick={() => insertFormatting("**", "**", "teks tebal")}
+                                    onClick={() =>
+                                        insertFormatting(
+                                            "**",
+                                            "**",
+                                            "teks tebal",
+                                        )
+                                    }
                                     className='p-1.5 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-white dark:hover:bg-slate-700 transition-colors'
                                     title='Tebal (Bold)'
                                     aria-label='Bold'
@@ -386,7 +401,13 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                                 </button>
                                 <button
                                     type='button'
-                                    onClick={() => insertFormatting("*", "*", "teks miring")}
+                                    onClick={() =>
+                                        insertFormatting(
+                                            "*",
+                                            "*",
+                                            "teks miring",
+                                        )
+                                    }
                                     className='p-1.5 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-white dark:hover:bg-slate-700 transition-colors'
                                     title='Miring (Italic)'
                                     aria-label='Italic'
@@ -443,7 +464,9 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                                 <div className='w-px h-4 bg-gray-300 dark:bg-slate-600 mx-1' />
                                 <button
                                     type='button'
-                                    onClick={() => insertFormatting("`", "`", "kode")}
+                                    onClick={() =>
+                                        insertFormatting("`", "`", "kode")
+                                    }
                                     className='p-1.5 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-white dark:hover:bg-slate-700 transition-colors'
                                     title='Inline Code'
                                     aria-label='Inline Code'
@@ -505,10 +528,13 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                                 onChange={(e) => setContent(e.target.value)}
                                 rows={18}
                                 className={`${inputCls} font-mono text-xs leading-relaxed`}
-                                placeholder={t("admin.blog.content_placeholder")}
+                                placeholder={t(
+                                    "admin.blog.content_placeholder",
+                                )}
                             />
                             <p className='text-[11px] text-gray-400'>
-                                Mendukung format Markdown (# Judul, **tebal**, *miring*, `kode`, &gt; kutipan) dan HTML.
+                                Mendukung format Markdown (# Judul, **tebal**,
+                                *miring*, `kode`, &gt; kutipan) dan HTML.
                             </p>
                         </div>
 
@@ -525,7 +551,9 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                                 value={coverImage}
                                 onChange={(e) => setCoverImage(e.target.value)}
                                 className={inputCls}
-                                placeholder={t("admin.blog.cover_image_placeholder")}
+                                placeholder={t(
+                                    "admin.blog.cover_image_placeholder",
+                                )}
                             />
                             {coverImage && (
                                 <div className='mt-2 relative rounded-xl overflow-hidden h-40 border border-gray-200 dark:border-gray-700 dark:border-slate-700'>
@@ -533,7 +561,9 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                                         src={coverImage}
                                         alt='Cover preview'
                                         className='w-full h-full object-cover'
-                                        onError={(e) => (e.target.style.display = "none")}
+                                        onError={(e) =>
+                                            (e.target.style.display = "none")
+                                        }
                                     />
                                 </div>
                             )}
@@ -640,7 +670,9 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                                         src={coverImage}
                                         alt='Cover'
                                         className='w-full h-full object-cover'
-                                        onError={(e) => (e.target.style.display = "none")}
+                                        onError={(e) =>
+                                            (e.target.style.display = "none")
+                                        }
                                     />
                                 </div>
                             )}
@@ -653,7 +685,8 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                                 )}
 
                                 <h2 className='text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-gray-100 dark:text-white leading-tight mb-3'>
-                                    {title || "Judul Artikel Akan Muncul Di Sini"}
+                                    {title ||
+                                        "Judul Artikel Akan Muncul Di Sini"}
                                 </h2>
 
                                 {excerpt && (

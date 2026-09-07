@@ -23,8 +23,12 @@ describe("asmaulHusnaData", () => {
 
     test("general dalil contains hadith and quran", () => {
         expect(asmaulHusnaGeneralDalil.hadith.ref).toContain("Bukhari");
-        expect(asmaulHusnaGeneralDalil.hadith.link).toBe("/hadith/bukhari/2736");
+        expect(asmaulHusnaGeneralDalil.hadith.link).toBe(
+            "/hadith/bukhari/2736",
+        );
         expect(asmaulHusnaGeneralDalil.quran.ref).toContain("Al-A'raf: 180");
-        expect(asmaulHusnaGeneralDalil.quran.link).toBe("/quran/surah/7#verse-180");
+        expect(asmaulHusnaGeneralDalil.quran.link).toBe(
+            "/quran/surah/7#verse-180",
+        );
     });
 });

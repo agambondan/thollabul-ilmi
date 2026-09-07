@@ -55,10 +55,7 @@ const HijriPage = async () => {
     return (
         <main className='min-h-screen flex flex-col'>
             <Section>
-                <HijriClient
-                    initialToday={today}
-                    initialEvents={events}
-                />
+                <HijriClient initialToday={today} initialEvents={events} />
             </Section>
         </main>
     );

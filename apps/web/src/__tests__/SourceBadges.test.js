@@ -84,14 +84,18 @@ describe("parseSource", () => {
     });
 
     test("splits comma between hadith refs", () => {
-        const result = parseSource("HR. Bukhari No. 1503, HR. Abu Dawud No. 1609");
+        const result = parseSource(
+            "HR. Bukhari No. 1503, HR. Abu Dawud No. 1609",
+        );
         expect(result).toHaveLength(2);
         expect(result[0].url).toBe("/hadith/bukhari/1503");
         expect(result[1].url).toBe("/hadith/abudaud/1609");
     });
 
     test("splits dan conjunction", () => {
-        const result = parseSource("HR. Abu Dawud No. 1464 dan HR. at-Tirmidzi No. 2914");
+        const result = parseSource(
+            "HR. Abu Dawud No. 1464 dan HR. at-Tirmidzi No. 2914",
+        );
         expect(result).toHaveLength(2);
         expect(result[0].url).toBe("/hadith/abudaud/1464");
         expect(result[1].url).toBe("/hadith/tirmidzi/2914");

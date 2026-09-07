@@ -15,7 +15,12 @@ export default function AdminSanadPage() {
             searchableFields={["hadith_id", "catatan"]}
             defaultPageSize={15}
             fields={[
-                { key: "hadith_id", label: "Hadith ID", type: "number", required: true },
+                {
+                    key: "hadith_id",
+                    label: "Hadith ID",
+                    type: "number",
+                    required: true,
+                },
                 { key: "nomor_jalur", label: "Nomor Jalur", type: "number" },
                 {
                     key: "jenis",

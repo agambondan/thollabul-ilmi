@@ -21,12 +21,16 @@ export const revalidate = 86400;
 
 export async function generateStaticParams() {
     try {
-        const res = await fetch(`${API_URL}/api/v1/siroh/contents?page=0&size=100`, {
-            next: { revalidate: 86400 },
-        });
+        const res = await fetch(
+            `${API_URL}/api/v1/siroh/contents?page=0&size=100`,
+            {
+                next: { revalidate: 86400 },
+            },
+        );
         if (!res.ok) return [];
         const data = await res.json();
-        const items = data?.items ?? data?.data ?? (Array.isArray(data) ? data : []);
+        const items =
+            data?.items ?? data?.data ?? (Array.isArray(data) ? data : []);
         return items
             .map((it) => ({ slug: String(it.slug ?? it.id ?? "") }))
             .filter((it) => it.slug);

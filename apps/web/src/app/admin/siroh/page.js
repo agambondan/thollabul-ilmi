@@ -67,7 +67,10 @@ const AdminSirahPage = () => {
                 slug: slugify(title),
                 order: newCatOrder ? Number(newCatOrder) : 0,
             });
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             const data = await res.json();
             if (data?.id) {
                 setCategories((prev) => [...prev, data]);
@@ -88,7 +91,10 @@ const AdminSirahPage = () => {
         setActionError("");
         try {
             const res = await adminSirohApi.deleteCategory(id);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
         } catch (err) {
             setCategories(prev);
             setActionError(err.message || t("admin.error.save"));
@@ -110,7 +116,10 @@ const AdminSirahPage = () => {
                 slug: slugify(title),
                 order: Number(editCatOrder) || 0,
             });
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             const data = await res.json();
             if (data?.id) {
                 setCategories((prev) =>
@@ -130,7 +139,10 @@ const AdminSirahPage = () => {
         setActionError("");
         try {
             const res = await adminSirohApi.deleteContent(id);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
         } catch (err) {
             setContents(prev);
             setActionError(err.message || t("admin.error.save"));
@@ -330,7 +342,8 @@ const AdminSirahPage = () => {
                                     className='inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-medium transition-colors'
                                 >
                                     <BsPlus className='text-base' />
-                                    {t("admin.sirah.add_content") ?? "Tambah Konten"}
+                                    {t("admin.sirah.add_content") ??
+                                        "Tambah Konten"}
                                 </Link>
                             </div>
                         )}

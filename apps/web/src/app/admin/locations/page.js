@@ -15,13 +15,38 @@ export default function AdminLocationPage() {
             defaultPageSize={15}
             fields={[
                 { key: "name", label: "Nama", type: "text", required: true },
-                { key: "category", label: "Kategori", type: "select", options: CATEGORY },
+                {
+                    key: "category",
+                    label: "Kategori",
+                    type: "select",
+                    options: CATEGORY,
+                },
                 { key: "era", label: "Era", type: "text" },
-                { key: "latitude", label: "Latitude", type: "number", required: true },
-                { key: "longitude", label: "Longitude", type: "number", required: true },
+                {
+                    key: "latitude",
+                    label: "Latitude",
+                    type: "number",
+                    required: true,
+                },
+                {
+                    key: "longitude",
+                    label: "Longitude",
+                    type: "number",
+                    required: true,
+                },
                 { key: "image_url", label: "URL Foto", type: "text" },
-                { key: "tokoh_ids", label: "ID Tokoh (koma)", type: "text", hint: "Contoh: 1,5,12" },
-                { key: "description", label: "Deskripsi", type: "textarea", rows: 4 },
+                {
+                    key: "tokoh_ids",
+                    label: "ID Tokoh (koma)",
+                    type: "text",
+                    hint: "Contoh: 1,5,12",
+                },
+                {
+                    key: "description",
+                    label: "Deskripsi",
+                    type: "textarea",
+                    rows: 4,
+                },
             ]}
         />
     );

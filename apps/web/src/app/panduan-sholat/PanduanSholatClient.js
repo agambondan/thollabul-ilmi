@@ -17,7 +17,6 @@ const PRAYERS = [
         time: "Fajar shadiq → terbit matahari",
         time_en: "True dawn -> sunrise",
         color: "indigo",
-
     },
     {
         name: "Sholat Dzuhur",
@@ -27,7 +26,6 @@ const PRAYERS = [
         time: "Matahari tergelincir → bayangan sama panjang benda",
         time_en: "After the sun declines -> when shadow equals object length",
         color: "yellow",
-
     },
     {
         name: "Sholat Ashar",
@@ -37,7 +35,6 @@ const PRAYERS = [
         time: "Bayangan lebih panjang → terbenam matahari",
         time_en: "When shadows lengthen -> sunset",
         color: "orange",
-
     },
     {
         name: "Sholat Maghrib",
@@ -47,7 +44,6 @@ const PRAYERS = [
         time: "Terbenam matahari → hilang mega merah",
         time_en: "Sunset -> disappearance of the red twilight",
         color: "red",
-
     },
     {
         name: "Sholat Isya",
@@ -57,7 +53,6 @@ const PRAYERS = [
         time: "Hilang mega merah → sebelum fajar",
         time_en: "After twilight disappears -> before dawn",
         color: "purple",
-
     },
 ];
 
@@ -282,10 +277,17 @@ export function PanduanSholatContent({ initialSteps = [] }) {
                         {!isLoading && visibleCount < steps.length && (
                             <div className='text-center pt-2'>
                                 <button
-                                    onClick={() => setVisibleCount(steps.length)}
+                                    onClick={() =>
+                                        setVisibleCount(steps.length)
+                                    }
                                     className='px-4 py-2.5 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors shadow-sm'
                                 >
-                                    {t("common.load_more") || "Tampilkan Semua Langkah"} ({steps.length - visibleCount} {t("prayer_guide.steps_left") || "langkah lagi"})
+                                    {t("common.load_more") ||
+                                        "Tampilkan Semua Langkah"}{" "}
+                                    ({steps.length - visibleCount}{" "}
+                                    {t("prayer_guide.steps_left") ||
+                                        "langkah lagi"}
+                                    )
                                 </button>
                             </div>
                         )}

@@ -150,12 +150,20 @@ export default function AdminAuditLogsPage() {
                     <table className='w-full text-sm'>
                         <thead className='bg-gray-50 dark:bg-slate-800/60 text-xs uppercase text-gray-500 dark:text-gray-400'>
                             <tr>
-                                <th className='px-3 py-2.5 text-left'>Target</th>
+                                <th className='px-3 py-2.5 text-left'>
+                                    Target
+                                </th>
                                 <th className='px-3 py-2.5 text-left'>Field</th>
-                                <th className='px-3 py-2.5 text-left'>Before</th>
+                                <th className='px-3 py-2.5 text-left'>
+                                    Before
+                                </th>
                                 <th className='px-3 py-2.5 text-left'>After</th>
-                                <th className='px-3 py-2.5 text-left'>Modifier</th>
-                                <th className='px-3 py-2.5 text-left'>Timestamp</th>
+                                <th className='px-3 py-2.5 text-left'>
+                                    Modifier
+                                </th>
+                                <th className='px-3 py-2.5 text-left'>
+                                    Timestamp
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -188,7 +196,8 @@ export default function AdminAuditLogsPage() {
                                 >
                                     <td className='px-3 py-2.5'>
                                         <p className='font-semibold text-gray-800 dark:text-gray-200 text-xs'>
-                                            {TARGET_LABELS[it.target_type] || it.target_type}
+                                            {TARGET_LABELS[it.target_type] ||
+                                                it.target_type}
                                         </p>
                                         <p className='text-xs text-gray-500 dark:text-gray-400'>
                                             {it.target_title || it.target_id}

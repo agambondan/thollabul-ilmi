@@ -95,7 +95,8 @@ export default function FiqhClient({
     }, [categories, lang, initialGroupedItems]);
 
     useEffect(() => {
-        if (Object.keys(initialGroupedItems).length > 0 && lang === "ID") return;
+        if (Object.keys(initialGroupedItems).length > 0 && lang === "ID")
+            return;
         let cancelled = false;
         fiqhApi
             .listItems(500, lang)
@@ -276,9 +277,7 @@ export default function FiqhClient({
                             >
                                 <button
                                     type='button'
-                                    onClick={() =>
-                                        toggleCategory(ci, cat.slug)
-                                    }
+                                    onClick={() => toggleCategory(ci, cat.slug)}
                                     className='w-full flex items-center justify-between p-4 text-left hover:bg-gray-50/50 dark:hover:bg-slate-700/30 transition-colors'
                                 >
                                     <div className='flex items-center gap-3 min-w-0'>
@@ -388,7 +387,9 @@ export default function FiqhClient({
                                                                 <path
                                                                     strokeLinecap='round'
                                                                     strokeLinejoin='round'
-                                                                    strokeWidth={2}
+                                                                    strokeWidth={
+                                                                        2
+                                                                    }
                                                                     d='M19 9l-7 7-7-7'
                                                                 />
                                                             </svg>

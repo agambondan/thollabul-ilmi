@@ -944,7 +944,10 @@ export const adminSanadApi = {
     list: () => authFetch("/api/v1/hadiths?size=1"),
     get: (id) => authFetch(`/api/v1/hadiths/${id}/sanad`),
     create: (data) =>
-        authFetch("/api/v1/sanad", { method: "POST", body: JSON.stringify(data) }),
+        authFetch("/api/v1/sanad", {
+            method: "POST",
+            body: JSON.stringify(data),
+        }),
     update: (id, data) =>
         authFetch(`/api/v1/sanad/${id}`, {
             method: "PUT",
@@ -1373,9 +1376,7 @@ export const parseApiError = async (res, fallback = "Gagal memproses data") => {
 export const kajianBookmarkApi = {
     list: () => authFetch("/api/v1/kajian/bookmarks/me"),
     chunkIds: (kajianId = 0) =>
-        authFetch(
-            `/api/v1/kajian/bookmarks/ids?kajian_id=${kajianId}`,
-        ),
+        authFetch(`/api/v1/kajian/bookmarks/ids?kajian_id=${kajianId}`),
     add: (chunkId, kajianId) =>
         authFetch("/api/v1/kajian/bookmarks", {
             method: "POST",

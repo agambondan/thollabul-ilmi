@@ -513,8 +513,7 @@ export default function SurahAudioPlayer({
         } catch {
             if (sessionId !== sessionRef.current) return;
             setError(
-                t("audio.queue_error") ??
-                    "Gagal menyiapkan antrean audio.",
+                t("audio.queue_error") ?? "Gagal menyiapkan antrean audio.",
             );
             setLoading(false);
         }
@@ -695,25 +694,34 @@ export default function SurahAudioPlayer({
     });
 
     useEffect(() => {
-        if (typeof navigator === "undefined" || !navigator.mediaSession?.setActionHandler) return undefined;
+        if (
+            typeof navigator === "undefined" ||
+            !navigator.mediaSession?.setActionHandler
+        )
+            return undefined;
         const actions = [
             ["play", () => togglePlayRef.current()],
-            ["pause", () => {
-                audioRef.current?.pause();
-                setIsPlaying(false);
-            }],
+            [
+                "pause",
+                () => {
+                    audioRef.current?.pause();
+                    setIsPlaying(false);
+                },
+            ],
             ["previoustrack", () => skipQueueItemRef.current(-1)],
             ["nexttrack", () => skipQueueItemRef.current(1)],
             ["stop", () => stopPlaybackRef.current()],
         ];
-        const cleanup = actions.map(([action, handler]) => {
-            try {
-                navigator.mediaSession.setActionHandler(action, handler);
-                return action;
-            } catch {
-                return null;
-            }
-        }).filter(Boolean);
+        const cleanup = actions
+            .map(([action, handler]) => {
+                try {
+                    navigator.mediaSession.setActionHandler(action, handler);
+                    return action;
+                } catch {
+                    return null;
+                }
+            })
+            .filter(Boolean);
         return () => {
             cleanup.forEach((action) => {
                 try {
@@ -823,25 +831,24 @@ export default function SurahAudioPlayer({
                 role='dialog'
                 aria-modal='true'
                 aria-label={
-                    t("audio.dialog") ??
-                    label("audio.dialog", "Audio Player")
+                    t("audio.dialog") ?? label("audio.dialog", "Audio Player")
                 }
                 className='relative flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border border-emerald-100 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-800 md:rounded-2xl'
             >
                 <div className='flex justify-center pt-2 pb-1 md:hidden'>
                     <div className='h-1 w-10 rounded-full bg-gray-300 dark:bg-slate-600' />
-               </div>
+                </div>
                 <div className='flex items-center justify-between gap-2 border-b border-gray-100 dark:border-slate-700 px-4 py-3'>
                     <div className='min-w-0'>
                         <p className='truncate text-sm font-bold text-emerald-600 dark:text-emerald-400'>
                             {currentLabel ||
                                 surahName ||
                                 `Surah ${surahNumber}`}
-                       </p>
+                        </p>
                         <p className='truncate text-[11px] text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {currentAudio?.qari_name ?? "Pilih qari"} · {speed}x
-                       </p>
-                   </div>
+                        </p>
+                    </div>
                     <div className='flex shrink-0 items-center gap-1'>
                         <button
                             type='button'
@@ -858,224 +865,239 @@ export default function SurahAudioPlayer({
                             className='flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 hover:dark:text-gray-300 dark:hover:bg-slate-700 dark:hover:text-gray-200'
                         >
                             <BsX className='text-lg' />
-                       </button>
-                   </div>
-               </div>
+                        </button>
+                    </div>
+                </div>
                 <div className='flex-1 overflow-y-auto overscroll-contain p-4 pb-8'>
                     <div className='grid grid-cols-3 gap-2 mb-3'>
                         {[
-                            ["startSurah", "Dari surat", `${surahNumber ?? ""}`],
-                            ["endSurah", "Sampai surat", `${surahNumber ?? ""}`],
+                            [
+                                "startSurah",
+                                "Dari surat",
+                                `${surahNumber ?? ""}`,
+                            ],
+                            [
+                                "endSurah",
+                                "Sampai surat",
+                                `${surahNumber ?? ""}`,
+                            ],
                             ["endAyah", "Sampai ayat", `${totalAyahs ?? ""}`],
                         ].map(([field, label, placeholder]) => (
                             <label key={field} className='block'>
                                 <span className='mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                                     {label}
-                            </span>
-                            <input
-                                type='text'
-                                inputMode='numeric'
-                                value={range[field]}
-                                onChange={(event) =>
-                                    handleRangeChange(field, event.target.value)
-                                }
-                                placeholder={placeholder}
-                                className='w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 px-2 py-2 text-center text-xs font-bold text-gray-900 dark:text-gray-100 outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white'
-                            />
-                        </label>
-                    ))}
-                </div>
-
-                <div className='flex items-center justify-center gap-2 mb-3'>
-                    <button
-                        type='button'
-                        onClick={() => skipQueueItem(-1)}
-                        disabled={loading || !canSkipBackward}
-                        aria-label={t("audio.prev")}
-                        className='p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-30 transition-colors'
-                    >
-                        <BsSkipBackwardFill />
-                    </button>
-                    <button
-                        type='button'
-                        onClick={togglePlay}
-                        disabled={loading}
-                        className='inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-700 disabled:opacity-60'
-                    >
-                        {isPlaying ? (
-                            <BsPauseFill className='text-xl' />
-                        ) : (
-                            <BsPlayFill className='text-xl' />
-                        )}
-                        {loading
-                            ? "Memuat"
-                            : isPlaying
-                              ? "Jeda"
-                              : "Putar range"}
-                    </button>
-                    <button
-                        type='button'
-                        onClick={() => skipQueueItem(1)}
-                        disabled={loading || !canSkipForward}
-                        aria-label={t("audio.next")}
-                        className='p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-30 transition-colors'
-                    >
-                        <BsSkipForwardFill />
-                    </button>
-                </div>
-
-                {loading && (
-                    <p className='text-xs text-gray-400 text-center py-1'>
-                        {label("common.loading", "Memuat...")}
-                    </p>
-                )}
-
-                {error && !loading && (
-                    <p className='text-xs text-red-500 dark:text-red-400 text-center py-1'>
-                        {error}
-                    </p>
-                )}
-
-                {audioList.length > 0 && (
-                    <div className='mb-2'>
-                        <p className='mb-1 text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-300 dark:text-gray-400'>
-                            Qari
-                        </p>
-                        <div
-                            className='relative'
-                            onBlur={(event) => {
-                                if (
-                                    !event.currentTarget.contains(
-                                        event.relatedTarget,
-                                    )
-                                )
-                                    setQariDropdownOpen(false);
-                            }}
-                        >
-                            <button
-                                type='button'
-                                onClick={() =>
-                                    setQariDropdownOpen((value) => !value)
-                                }
-                                aria-label={t("audio.select_qari")}
-                                aria-expanded={qariDropdownOpen}
-                                className='flex w-full items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 p-2 pr-8 text-left outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900'
-                            >
-                                <img
-                                    src={getQariInfo(selectedQari).photo}
-                                    alt={getQariInfo(selectedQari).name}
-                                    onError={(event) => {
-                                        event.currentTarget.src =
-                                            QARI_FALLBACK_AVATAR;
-                                    }}
-                                    className='h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-emerald-200 dark:ring-slate-600'
-                                />
-                                <span className='min-w-0 flex-1'>
-                                    <span className='block truncate text-xs font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
-                                        {currentAudio?.qari_name ??
-                                            getQariInfo(selectedQari).name}
-                                    </span>
-                                    <span className='block truncate text-[10px] text-gray-500 dark:text-gray-300 dark:text-gray-400'>
-                                        {getQariInfo(selectedQari).country ||
-                                            "Syaikh"}
-                                    </span>
                                 </span>
-                            </button>
-                            <BsChevronDown className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400' />
-                            {qariDropdownOpen && (
-                                <div className='absolute z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-gray-200 dark:border-gray-700 bg-white p-1 shadow-xl dark:border-slate-700 dark:bg-slate-900'>
-                                    {audioList.map((item) => {
-                                        const info = getQariInfo(
-                                            item.qari_slug,
-                                        );
-                                        return (
-                                            <button
-                                                key={item.qari_slug}
-                                                type='button'
-                                                onMouseDown={(event) =>
-                                                    event.preventDefault()
-                                                }
-                                                onClick={() => {
-                                                    handleQariChange(
-                                                        item.qari_slug,
-                                                    );
-                                                    setQariDropdownOpen(false);
-                                                }}
-                                                className={`flex w-full items-center gap-2 rounded-lg p-2 text-left transition-colors ${
-                                                    selectedQari ===
-                                                    item.qari_slug
-                                                        ? "bg-emerald-50 dark:bg-emerald-900/30"
-                                                        : "hover:bg-gray-50 dark:hover:bg-slate-800"
-                                                }`}
-                                            >
-                                                <img
-                                                    src={info.photo}
-                                                    alt={info.name}
-                                                    onError={(event) => {
-                                                        event.currentTarget.src =
-                                                            QARI_FALLBACK_AVATAR;
-                                                    }}
-                                                    className='h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-emerald-100 dark:ring-slate-700'
-                                                />
-                                                <span className='min-w-0 flex-1'>
-                                                    <span className='block truncate text-xs font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
-                                                        {item.qari_name}
-                                                    </span>
-                                                    <span className='block truncate text-[10px] text-gray-500 dark:text-gray-300 dark:text-gray-400'>
-                                                        {info.country ||
-                                                            "Syaikh"}
-                                                    </span>
-                                                </span>
-                                                {selectedQari ===
-                                                    item.qari_slug && (
-                                                    <span className='text-[10px] font-bold text-emerald-600 dark:text-emerald-400'>
-                                                        Aktif
-                                                    </span>
-                                                )}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            )}
-                        </div>
+                                <input
+                                    type='text'
+                                    inputMode='numeric'
+                                    value={range[field]}
+                                    onChange={(event) =>
+                                        handleRangeChange(
+                                            field,
+                                            event.target.value,
+                                        )
+                                    }
+                                    placeholder={placeholder}
+                                    className='w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 px-2 py-2 text-center text-xs font-bold text-gray-900 dark:text-gray-100 outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white'
+                                />
+                            </label>
+                        ))}
                     </div>
-                )}
 
-                <div className='flex flex-wrap items-center justify-between gap-2'>
-                    <div>
-                        <p className='mb-1 text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-300 dark:text-gray-400'>
-                            Speed
-                        </p>
-                        <div className='flex flex-wrap gap-1'>
-                            {AUDIO_SPEED_OPTIONS.map((option) => (
-                                <button
-                                    key={option}
-                                    type='button'
-                                    onClick={() => handleSpeedChange(option)}
-                                    className={`rounded-full px-2 py-1 text-[11px] font-bold transition-colors ${
-                                        speed === option
-                                            ? "bg-emerald-500 text-white"
-                                            : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-slate-700 dark:text-gray-300 dark:hover:bg-slate-600"
-                                    }`}
-                                >
-                                    {option}x
-                                </button>
-                            ))}
-                        </div>
+                    <div className='flex items-center justify-center gap-2 mb-3'>
+                        <button
+                            type='button'
+                            onClick={() => skipQueueItem(-1)}
+                            disabled={loading || !canSkipBackward}
+                            aria-label={t("audio.prev")}
+                            className='p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-30 transition-colors'
+                        >
+                            <BsSkipBackwardFill />
+                        </button>
+                        <button
+                            type='button'
+                            onClick={togglePlay}
+                            disabled={loading}
+                            className='inline-flex items-center gap-2 rounded-full bg-emerald-600 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-700 disabled:opacity-60'
+                        >
+                            {isPlaying ? (
+                                <BsPauseFill className='text-xl' />
+                            ) : (
+                                <BsPlayFill className='text-xl' />
+                            )}
+                            {loading
+                                ? "Memuat"
+                                : isPlaying
+                                  ? "Jeda"
+                                  : "Putar range"}
+                        </button>
+                        <button
+                            type='button'
+                            onClick={() => skipQueueItem(1)}
+                            disabled={loading || !canSkipForward}
+                            aria-label={t("audio.next")}
+                            className='p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-30 transition-colors'
+                        >
+                            <BsSkipForwardFill />
+                        </button>
                     </div>
-                    <label className='flex items-center gap-2 cursor-pointer text-xs text-gray-600 dark:text-gray-300 dark:text-gray-400'>
-                        <input
-                            type='checkbox'
-                            checked={repeat}
-                            onChange={(event) =>
-                                handleRepeatChange(event.target.checked)
-                            }
-                            className='accent-emerald-600'
-                        />
-                        Repeat
-                    </label>
+
+                    {loading && (
+                        <p className='text-xs text-gray-400 text-center py-1'>
+                            {label("common.loading", "Memuat...")}
+                        </p>
+                    )}
+
+                    {error && !loading && (
+                        <p className='text-xs text-red-500 dark:text-red-400 text-center py-1'>
+                            {error}
+                        </p>
+                    )}
+
+                    {audioList.length > 0 && (
+                        <div className='mb-2'>
+                            <p className='mb-1 text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                Qari
+                            </p>
+                            <div
+                                className='relative'
+                                onBlur={(event) => {
+                                    if (
+                                        !event.currentTarget.contains(
+                                            event.relatedTarget,
+                                        )
+                                    )
+                                        setQariDropdownOpen(false);
+                                }}
+                            >
+                                <button
+                                    type='button'
+                                    onClick={() =>
+                                        setQariDropdownOpen((value) => !value)
+                                    }
+                                    aria-label={t("audio.select_qari")}
+                                    aria-expanded={qariDropdownOpen}
+                                    className='flex w-full items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 p-2 pr-8 text-left outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900'
+                                >
+                                    <img
+                                        src={getQariInfo(selectedQari).photo}
+                                        alt={getQariInfo(selectedQari).name}
+                                        onError={(event) => {
+                                            event.currentTarget.src =
+                                                QARI_FALLBACK_AVATAR;
+                                        }}
+                                        className='h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-emerald-200 dark:ring-slate-600'
+                                    />
+                                    <span className='min-w-0 flex-1'>
+                                        <span className='block truncate text-xs font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
+                                            {currentAudio?.qari_name ??
+                                                getQariInfo(selectedQari).name}
+                                        </span>
+                                        <span className='block truncate text-[10px] text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                            {getQariInfo(selectedQari)
+                                                .country || "Syaikh"}
+                                        </span>
+                                    </span>
+                                </button>
+                                <BsChevronDown className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400' />
+                                {qariDropdownOpen && (
+                                    <div className='absolute z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-gray-200 dark:border-gray-700 bg-white p-1 shadow-xl dark:border-slate-700 dark:bg-slate-900'>
+                                        {audioList.map((item) => {
+                                            const info = getQariInfo(
+                                                item.qari_slug,
+                                            );
+                                            return (
+                                                <button
+                                                    key={item.qari_slug}
+                                                    type='button'
+                                                    onMouseDown={(event) =>
+                                                        event.preventDefault()
+                                                    }
+                                                    onClick={() => {
+                                                        handleQariChange(
+                                                            item.qari_slug,
+                                                        );
+                                                        setQariDropdownOpen(
+                                                            false,
+                                                        );
+                                                    }}
+                                                    className={`flex w-full items-center gap-2 rounded-lg p-2 text-left transition-colors ${
+                                                        selectedQari ===
+                                                        item.qari_slug
+                                                            ? "bg-emerald-50 dark:bg-emerald-900/30"
+                                                            : "hover:bg-gray-50 dark:hover:bg-slate-800"
+                                                    }`}
+                                                >
+                                                    <img
+                                                        src={info.photo}
+                                                        alt={info.name}
+                                                        onError={(event) => {
+                                                            event.currentTarget.src =
+                                                                QARI_FALLBACK_AVATAR;
+                                                        }}
+                                                        className='h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-emerald-100 dark:ring-slate-700'
+                                                    />
+                                                    <span className='min-w-0 flex-1'>
+                                                        <span className='block truncate text-xs font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
+                                                            {item.qari_name}
+                                                        </span>
+                                                        <span className='block truncate text-[10px] text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                                            {info.country ||
+                                                                "Syaikh"}
+                                                        </span>
+                                                    </span>
+                                                    {selectedQari ===
+                                                        item.qari_slug && (
+                                                        <span className='text-[10px] font-bold text-emerald-600 dark:text-emerald-400'>
+                                                            Aktif
+                                                        </span>
+                                                    )}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    <div className='flex flex-wrap items-center justify-between gap-2'>
+                        <div>
+                            <p className='mb-1 text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                Speed
+                            </p>
+                            <div className='flex flex-wrap gap-1'>
+                                {AUDIO_SPEED_OPTIONS.map((option) => (
+                                    <button
+                                        key={option}
+                                        type='button'
+                                        onClick={() =>
+                                            handleSpeedChange(option)
+                                        }
+                                        className={`rounded-full px-2 py-1 text-[11px] font-bold transition-colors ${
+                                            speed === option
+                                                ? "bg-emerald-500 text-white"
+                                                : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-slate-700 dark:text-gray-300 dark:hover:bg-slate-600"
+                                        }`}
+                                    >
+                                        {option}x
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <label className='flex items-center gap-2 cursor-pointer text-xs text-gray-600 dark:text-gray-300 dark:text-gray-400'>
+                            <input
+                                type='checkbox'
+                                checked={repeat}
+                                onChange={(event) =>
+                                    handleRepeatChange(event.target.checked)
+                                }
+                                className='accent-emerald-600'
+                            />
+                            Repeat
+                        </label>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     );

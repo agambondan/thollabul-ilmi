@@ -1223,7 +1223,11 @@ export default function DevPageClient() {
     );
 
     return (
-        <div className={isWide ? "w-full px-4 py-8" : "max-w-4xl mx-auto px-4 py-8"}>
+        <div
+            className={
+                isWide ? "w-full px-4 py-8" : "max-w-4xl mx-auto px-4 py-8"
+            }
+        >
             <div className='mb-10'>
                 <p
                     className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'

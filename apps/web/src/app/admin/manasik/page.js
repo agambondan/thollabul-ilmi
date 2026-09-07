@@ -76,14 +76,22 @@ const AdminManasikPage = () => {
 
     const openEdit = (item) => {
         setEditId(item.id ?? item._id);
-        const trObj = typeof item.translation === "object" && item.translation !== null ? item.translation : null;
+        const trObj =
+            typeof item.translation === "object" && item.translation !== null
+                ? item.translation
+                : null;
         setForm({
             type: item.type ?? "haji",
             step: item.step ?? item.step_order ?? "",
             title: item.title || trObj?.idn || "",
             arabic: item.arabic || trObj?.ar || "",
             latin: item.latin || item.transliteration || trObj?.latin_idn || "",
-            translation: (typeof item.translation === "string" ? item.translation : trObj?.description_idn) || item.translation_text || "",
+            translation:
+                (typeof item.translation === "string"
+                    ? item.translation
+                    : trObj?.description_idn) ||
+                item.translation_text ||
+                "",
             description: item.description ?? "",
             notes: item.notes ?? "",
             source: item.source ?? "",
@@ -113,7 +121,10 @@ const AdminManasikPage = () => {
             } else {
                 res = await adminManasikApi.create(payload);
             }
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setShowModal(false);
             load();
             fb("admin:success", t("admin.crud.save_success"));
@@ -128,7 +139,10 @@ const AdminManasikPage = () => {
         if (!deleteId) return;
         try {
             const res = await adminManasikApi.delete(deleteId);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             setDeleteId(null);
             load();
             fb("admin:success", t("admin.crud.delete_success"));
@@ -189,13 +203,17 @@ const AdminManasikPage = () => {
             </div>
 
             {loading ? (
-                <p className='text-sm text-gray-500 dark:text-gray-300'>{t("common.loading")}</p>
+                <p className='text-sm text-gray-500 dark:text-gray-300'>
+                    {t("common.loading")}
+                </p>
             ) : (
                 <>
                     <PanelTable
                         head={
                             <>
-                                <Th className='w-16'>{t("admin.manasik.step")}</Th>
+                                <Th className='w-16'>
+                                    {t("admin.manasik.step")}
+                                </Th>
                                 <Th>{t("admin.field.title")}</Th>
                                 <Th className='hidden md:table-cell'>
                                     {t("admin.field.description")}
@@ -210,8 +228,19 @@ const AdminManasikPage = () => {
                                     {item.step}
                                 </Td>
                                 <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium'>
-                                    <div>{item.title || item.translation?.idn || getLocalizedField(item, "title", lang) || "-"}</div>
-                                    {item.source && <SourceBadges source={item.source} />}
+                                    <div>
+                                        {item.title ||
+                                            item.translation?.idn ||
+                                            getLocalizedField(
+                                                item,
+                                                "title",
+                                                lang,
+                                            ) ||
+                                            "-"}
+                                    </div>
+                                    {item.source && (
+                                        <SourceBadges source={item.source} />
+                                    )}
                                 </Td>
                                 <Td className='text-gray-400 text-xs hidden md:table-cell max-w-xs truncate'>
                                     {getLocalizedField(

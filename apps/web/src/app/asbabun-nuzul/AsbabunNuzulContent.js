@@ -13,7 +13,11 @@ export const AsbabunNuzulContent = ({
     const { isWide } = useLayoutMode();
 
     return (
-        <div className={isWide ? "w-full px-4" : "container mx-auto px-4 max-w-3xl"}>
+        <div
+            className={
+                isWide ? "w-full px-4" : "container mx-auto px-4 max-w-3xl"
+            }
+        >
             <div className='text-center mb-8'>
                 <p
                     className='text-3xl text-emerald-700 dark:text-emerald-400 mb-2'

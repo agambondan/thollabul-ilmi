@@ -349,7 +349,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                 </div>
                 <p className='mb-2 text-xs font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                     {t("share_image.pick_background")}
-               </p>
+                </p>
                 <div className='grid grid-cols-3 md:grid-cols-4 gap-2'>
                     {images.map((image, index) => {
                         const isSelected = image.src === selectedImage;
@@ -375,12 +375,12 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                                 {isSelected && (
                                     <span className='absolute top-1 right-1 bg-emerald-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold'>
                                         ✓
-                                   </span>
+                                    </span>
                                 )}
-                           </button>
+                            </button>
                         );
                     })}
-               </div>
+                </div>
                 {selectedImage && (
                     <div className='grid grid-cols-3 gap-2 mt-3'>
                         <button
@@ -392,7 +392,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                             className='rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300 disabled:opacity-50'
                         >
                             {t("share_image.share_btn")}
-                       </button>
+                        </button>
                         <button
                             type='button'
                             disabled={isProcessing}
@@ -402,7 +402,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                             className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300 disabled:opacity-50'
                         >
                             {t("share_image.copy_btn")}
-                       </button>
+                        </button>
                         <button
                             type='button'
                             disabled={isProcessing}
@@ -412,8 +412,8 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                             className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300 disabled:opacity-50'
                         >
                             {t("share_image.download_btn")}
-                       </button>
-                   </div>
+                        </button>
+                    </div>
                 )}
                 {isProcessing && (
                     <p className='text-center text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-3'>

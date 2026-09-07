@@ -196,7 +196,13 @@ export function WebAppLessonsRoute({
                     ]}
                 >
                     <View style={localStyles.headerRow}>
-                        <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                gap: 6,
+                                alignItems: "center",
+                            }}
+                        >
                             <Text
                                 style={[
                                     localStyles.stepBadge,
@@ -213,10 +219,19 @@ export function WebAppLessonsRoute({
                                     style={[
                                         localStyles.stepBadge,
                                         step.kind === "rukun"
-                                            ? { backgroundColor: "#fee2e2", color: "#b91c1c" }
+                                            ? {
+                                                  backgroundColor: "#fee2e2",
+                                                  color: "#b91c1c",
+                                              }
                                             : step.kind === "sunnah"
-                                              ? { backgroundColor: "#fef3c7", color: "#b45309" }
-                                              : { backgroundColor: "#e0f2fe", color: "#0369a1" },
+                                              ? {
+                                                    backgroundColor: "#fef3c7",
+                                                    color: "#b45309",
+                                                }
+                                              : {
+                                                    backgroundColor: "#e0f2fe",
+                                                    color: "#0369a1",
+                                                },
                                         isDarkTheme && {
                                             backgroundColor: "#1e293b",
                                             color: "#93c5fd",
@@ -241,7 +256,7 @@ export function WebAppLessonsRoute({
                         {step?.title || activeModule.title}
                     </Text>
 
-                    {(step?.body || step?.content) ? (
+                    {step?.body || step?.content ? (
                         <Text
                             style={[
                                 localStyles.stepBody,
@@ -344,7 +359,10 @@ export function WebAppLessonsRoute({
                                 },
                             ]}
                         >
-                            <Play size={16} color={isDarkTheme ? "#6ee7b7" : colors.primary} />
+                            <Play
+                                size={16}
+                                color={isDarkTheme ? "#6ee7b7" : colors.primary}
+                            />
                             <Text
                                 style={[
                                     localStyles.audioButtonText,

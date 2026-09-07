@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { preferenceKeys, readPreference, writePreference } from "../storage/preferences";
+import {
+    preferenceKeys,
+    readPreference,
+    writePreference,
+} from "../storage/preferences";
 
 // Tracks the user's last opened Quran ayah so reopening the Quran screen
 // jumps straight back into their reading flow. Saved with a 600ms debounce
@@ -20,7 +24,9 @@ export function useQuranLastRead() {
         readPreference(preferenceKeys.quranLastRead, null)
             .then((value) => {
                 if (active) {
-                    setLastRead(value && typeof value === "object" ? value : null);
+                    setLastRead(
+                        value && typeof value === "object" ? value : null,
+                    );
                     setLoaded(true);
                 }
             })

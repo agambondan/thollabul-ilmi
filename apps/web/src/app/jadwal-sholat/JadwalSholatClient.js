@@ -375,7 +375,9 @@ export function JadwalSholatContent({
                             {t("geo.my_location")}
                         </button>
                         <select
-                            aria-label={t("prayer_schedule.choose_city") || "Pilih Kota"}
+                            aria-label={
+                                t("prayer_schedule.choose_city") || "Pilih Kota"
+                            }
                             value={city.name}
                             onChange={(e) => {
                                 const found = CITIES.find(
@@ -430,11 +432,16 @@ export function JadwalSholatContent({
                                     <select
                                         id='page-method'
                                         value={method}
-                                        onChange={(e) => setMethod(e.target.value)}
+                                        onChange={(e) =>
+                                            setMethod(e.target.value)
+                                        }
                                         className='w-full border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg px-2.5 py-1.5 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-200 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
                                     >
                                         {PRAYER_METHODS.map((m) => (
-                                            <option key={m.value} value={m.value}>
+                                            <option
+                                                key={m.value}
+                                                value={m.value}
+                                            >
                                                 {m.label}
                                             </option>
                                         ))}
@@ -451,11 +458,16 @@ export function JadwalSholatContent({
                                     <select
                                         id='page-madhab'
                                         value={madhab}
-                                        onChange={(e) => setMadhab(e.target.value)}
+                                        onChange={(e) =>
+                                            setMadhab(e.target.value)
+                                        }
                                         className='w-full border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg px-2.5 py-1.5 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-200 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
                                     >
                                         {PRAYER_MADHABS.map((m) => (
-                                            <option key={m.value} value={m.value}>
+                                            <option
+                                                key={m.value}
+                                                value={m.value}
+                                            >
                                                 {t(m.labelKey)}
                                             </option>
                                         ))}
@@ -473,15 +485,18 @@ export function JadwalSholatContent({
                                                 Notification.requestPermission().then(
                                                     (p) => {
                                                         if (p === "granted")
-                                                            setNotifGranted(true);
+                                                            setNotifGranted(
+                                                                true,
+                                                            );
                                                     },
                                                 )
                                             }
                                             className='flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-medium'
                                         >
                                             <BsBell />{" "}
-                                            {t("prayer_schedule.enable_notif") ??
-                                                "Aktifkan Notifikasi"}
+                                            {t(
+                                                "prayer_schedule.enable_notif",
+                                            ) ?? "Aktifkan Notifikasi"}
                                         </button>
                                     )}
                                 <button
@@ -512,7 +527,10 @@ export function JadwalSholatContent({
                                         );
                                         if (!next) return;
                                         updateSetting("adzanSound", next.value);
-                                        updateSetting("adzanSoundUrl", next.src);
+                                        updateSetting(
+                                            "adzanSoundUrl",
+                                            next.src,
+                                        );
                                         updateSetting(
                                             "adzanSoundLabel",
                                             next.label,
@@ -550,7 +568,9 @@ export function JadwalSholatContent({
                                         {REMINDER_LEAD_OPTIONS.map((m) => (
                                             <option key={m} value={m}>
                                                 {m === 0
-                                                    ? t("prayer_schedule.at_time")
+                                                    ? t(
+                                                          "prayer_schedule.at_time",
+                                                      )
                                                     : `${m} ${t("prayer_schedule.minutes")}`}
                                             </option>
                                         ))}
@@ -559,10 +579,17 @@ export function JadwalSholatContent({
 
                                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-1.5'>
                                     {PRAYER_KEYS_FOR_REMINDER.map((key) => {
-                                        const row = PRAYERS.find((p) => p.key === key);
-                                        const label = row ? t(row.labelKey) : key;
+                                        const row = PRAYERS.find(
+                                            (p) => p.key === key,
+                                        );
+                                        const label = row
+                                            ? t(row.labelKey)
+                                            : key;
                                         const perPrayer =
-                                            settings.adzanReminderLeadByPrayer?.[key];
+                                            settings
+                                                .adzanReminderLeadByPrayer?.[
+                                                key
+                                            ];
                                         return (
                                             <div
                                                 key={key}
@@ -572,15 +599,21 @@ export function JadwalSholatContent({
                                                     {label}
                                                 </span>
                                                 <select
-                                                    value={perPrayer ?? "global"}
+                                                    value={
+                                                        perPrayer ?? "global"
+                                                    }
                                                     onChange={(e) => {
-                                                        const v = e.target.value;
+                                                        const v =
+                                                            e.target.value;
                                                         const next = {
-                                                            ...(settings.adzanReminderLeadByPrayer || {}),
+                                                            ...(settings.adzanReminderLeadByPrayer ||
+                                                                {}),
                                                         };
                                                         if (v === "global")
                                                             delete next[key];
-                                                        else next[key] = Number(v);
+                                                        else
+                                                            next[key] =
+                                                                Number(v);
                                                         updateSetting(
                                                             "adzanReminderLeadByPrayer",
                                                             next,
@@ -593,15 +626,24 @@ export function JadwalSholatContent({
                                                     )}
                                                 >
                                                     <option value='global'>
-                                                        {t("prayer_schedule.global") ?? "Global"}
+                                                        {t(
+                                                            "prayer_schedule.global",
+                                                        ) ?? "Global"}
                                                     </option>
-                                                    {REMINDER_LEAD_OPTIONS.map((m) => (
-                                                        <option key={m} value={m}>
-                                                            {m === 0
-                                                                ? t("prayer_schedule.at_time")
-                                                                : `${m} ${t("prayer_schedule.minutes")}`}
-                                                        </option>
-                                                    ))}
+                                                    {REMINDER_LEAD_OPTIONS.map(
+                                                        (m) => (
+                                                            <option
+                                                                key={m}
+                                                                value={m}
+                                                            >
+                                                                {m === 0
+                                                                    ? t(
+                                                                          "prayer_schedule.at_time",
+                                                                      )
+                                                                    : `${m} ${t("prayer_schedule.minutes")}`}
+                                                            </option>
+                                                        ),
+                                                    )}
                                                 </select>
                                             </div>
                                         );
@@ -633,8 +675,9 @@ export function JadwalSholatContent({
                                 {t("prayer_schedule.towards") ?? "Menuju"}{" "}
                                 <span className='font-bold text-gray-800 dark:text-white'>
                                     {t(
-                                        PRAYERS.find((p) => p.key === nextPrayer)
-                                            ?.labelKey,
+                                        PRAYERS.find(
+                                            (p) => p.key === nextPrayer,
+                                        )?.labelKey,
                                     )}
                                 </span>
                             </span>

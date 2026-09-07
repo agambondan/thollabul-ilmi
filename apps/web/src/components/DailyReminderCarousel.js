@@ -200,8 +200,9 @@ export default function DailyReminderCarousel({
                     ? normalizeHadith(results[1].value, lang, hadithBasePath, t)
                     : null,
                 ...(results[2].status === "fulfilled"
-                    ? unwrapListPayload(results[2].value)
-                          .map((item) => normalizeReminder(item, lang))
+                    ? unwrapListPayload(results[2].value).map((item) =>
+                          normalizeReminder(item, lang),
+                      )
                     : []),
             ].filter(Boolean);
 

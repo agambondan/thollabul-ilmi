@@ -224,8 +224,12 @@ const NotificationsPage = () => {
             if (sub) {
                 try {
                     const storedLoc = readStoredUserLocation();
-                    const lat = storedLoc?.lat ? Number(storedLoc.lat) : -6.2088;
-                    const lng = storedLoc?.lng ? Number(storedLoc.lng) : 106.8456;
+                    const lat = storedLoc?.lat
+                        ? Number(storedLoc.lat)
+                        : -6.2088;
+                    const lng = storedLoc?.lng
+                        ? Number(storedLoc.lng)
+                        : 106.8456;
                     const cityName = storedLoc?.label || "Jakarta";
                     const userTimezone =
                         Intl.DateTimeFormat().resolvedOptions().timeZone ||
@@ -694,7 +698,8 @@ const NotificationsPage = () => {
                         href='/dashboard/settings'
                         className='inline-flex items-center px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-sm font-medium transition-colors'
                     >
-                        {t("notif.preferences_cta") ?? "Atur Preferensi Notifikasi"}
+                        {t("notif.preferences_cta") ??
+                            "Atur Preferensi Notifikasi"}
                     </Link>
                 </div>
             ) : (

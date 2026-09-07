@@ -3,7 +3,13 @@
 import { contentReportApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useMemo, useState } from "react";
-import { BsCheckCircle, BsXCircle, BsHourglassSplit, BsDownload, BsSearch } from "react-icons/bs";
+import {
+    BsCheckCircle,
+    BsXCircle,
+    BsHourglassSplit,
+    BsDownload,
+    BsSearch,
+} from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 
 const STATUSES = [
@@ -70,7 +76,10 @@ const AdminReportsPage = () => {
             const data = await r.json();
             setItems(data?.items || data?.data?.items || []);
         } catch (err) {
-            fb("admin:toast-error", parseApiError(err) || "Gagal memuat laporan");
+            fb(
+                "admin:toast-error",
+                parseApiError(err) || "Gagal memuat laporan",
+            );
         } finally {
             setLoading(false);
         }
@@ -167,7 +176,10 @@ const AdminReportsPage = () => {
                 const data = await r.json().catch(() => ({}));
                 throw new Error(data?.message || "Gagal menerapkan koreksi");
             }
-            fb("admin:toast-success", "Koreksi berhasil diterapkan ke database (+25 poin ke user)!");
+            fb(
+                "admin:toast-success",
+                "Koreksi berhasil diterapkan ke database (+25 poin ke user)!",
+            );
             setActive(null);
             setAdminNote("");
             setCorrectionText("");
@@ -196,9 +208,21 @@ const AdminReportsPage = () => {
 
             <div className='grid grid-cols-2 md:grid-cols-4 gap-3 mb-6'>
                 {[
-                    { key: "pending", icon: BsHourglassSplit, color: "text-amber-500" },
-                    { key: "reviewed", icon: BsCheckCircle, color: "text-sky-500" },
-                    { key: "resolved", icon: BsCheckCircle, color: "text-emerald-500" },
+                    {
+                        key: "pending",
+                        icon: BsHourglassSplit,
+                        color: "text-amber-500",
+                    },
+                    {
+                        key: "reviewed",
+                        icon: BsCheckCircle,
+                        color: "text-sky-500",
+                    },
+                    {
+                        key: "resolved",
+                        icon: BsCheckCircle,
+                        color: "text-emerald-500",
+                    },
                     { key: "rejected", icon: BsXCircle, color: "text-red-500" },
                 ].map(({ key, icon: Icon, color }) => (
                     <div
@@ -275,12 +299,24 @@ const AdminReportsPage = () => {
                     <table className='w-full text-sm'>
                         <thead className='bg-gray-50 dark:bg-slate-800/60 text-xs uppercase text-gray-500 dark:text-gray-400'>
                             <tr>
-                                <th className='px-3 py-2.5 text-left'>Target</th>
-                                <th className='px-3 py-2.5 text-left'>Category</th>
-                                <th className='px-3 py-2.5 text-left'>Description</th>
-                                <th className='px-3 py-2.5 text-left'>Status</th>
-                                <th className='px-3 py-2.5 text-left'>Created</th>
-                                <th className='px-3 py-2.5 text-right'>Action</th>
+                                <th className='px-3 py-2.5 text-left'>
+                                    Target
+                                </th>
+                                <th className='px-3 py-2.5 text-left'>
+                                    Category
+                                </th>
+                                <th className='px-3 py-2.5 text-left'>
+                                    Description
+                                </th>
+                                <th className='px-3 py-2.5 text-left'>
+                                    Status
+                                </th>
+                                <th className='px-3 py-2.5 text-left'>
+                                    Created
+                                </th>
+                                <th className='px-3 py-2.5 text-right'>
+                                    Action
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -313,17 +349,21 @@ const AdminReportsPage = () => {
                                 >
                                     <td className='px-3 py-2.5'>
                                         <p className='font-semibold text-gray-800 dark:text-gray-200 text-xs'>
-                                            {TARGET_LABELS[it.target_type] || it.target_type}
+                                            {TARGET_LABELS[it.target_type] ||
+                                                it.target_type}
                                         </p>
                                         <p className='text-xs text-gray-500 dark:text-gray-400'>
                                             {it.target_title || it.target_id}
                                         </p>
                                     </td>
                                     <td className='px-3 py-2.5 text-xs text-gray-600 dark:text-gray-400'>
-                                        {CATEGORY_LABELS[it.category] || it.category}
+                                        {CATEGORY_LABELS[it.category] ||
+                                            it.category}
                                     </td>
                                     <td className='px-3 py-2.5 text-xs text-gray-700 dark:text-gray-300 max-w-md'>
-                                        <p className='line-clamp-2'>{it.description}</p>
+                                        <p className='line-clamp-2'>
+                                            {it.description}
+                                        </p>
                                         {it.correction && (
                                             <p className='mt-1 line-clamp-1 text-emerald-600 dark:text-emerald-400 italic'>
                                                 → {it.correction}
@@ -353,8 +393,12 @@ const AdminReportsPage = () => {
                                             type='button'
                                             onClick={() => {
                                                 setActive(it);
-                                                setAdminNote(it.admin_note || "");
-                                                setCorrectionText(it.correction || "");
+                                                setAdminNote(
+                                                    it.admin_note || "",
+                                                );
+                                                setCorrectionText(
+                                                    it.correction || "",
+                                                );
                                             }}
                                             className='text-emerald-600 dark:text-emerald-400 hover:underline text-xs font-semibold'
                                         >
@@ -385,8 +429,9 @@ const AdminReportsPage = () => {
                                 Target
                             </p>
                             <p className='text-sm font-medium text-gray-900 dark:text-white'>
-                                {TARGET_LABELS[active.target_type] || active.target_type} ·{" "}
-                                {active.target_title || active.target_id}
+                                {TARGET_LABELS[active.target_type] ||
+                                    active.target_type}{" "}
+                                · {active.target_title || active.target_id}
                             </p>
                             {active.target_id && (
                                 <p className='text-xs text-gray-400 mt-0.5'>
@@ -400,7 +445,8 @@ const AdminReportsPage = () => {
                                 Category
                             </p>
                             <p className='text-sm text-gray-700 dark:text-gray-300'>
-                                {CATEGORY_LABELS[active.category] || active.category}
+                                {CATEGORY_LABELS[active.category] ||
+                                    active.category}
                             </p>
                         </div>
 
@@ -429,7 +475,8 @@ const AdminReportsPage = () => {
                                 Reporter
                             </p>
                             <p className='text-sm text-gray-700 dark:text-gray-300'>
-                                {active.user?.name || "-"} · {active.user?.email || ""}
+                                {active.user?.name || "-"} ·{" "}
+                                {active.user?.email || ""}
                             </p>
                             <p className='text-xs text-gray-400 mt-0.5'>
                                 Submitted: {formatDate(active.created_at)}
@@ -443,7 +490,9 @@ const AdminReportsPage = () => {
                             <textarea
                                 rows={3}
                                 value={correctionText}
-                                onChange={(e) => setCorrectionText(e.target.value)}
+                                onChange={(e) =>
+                                    setCorrectionText(e.target.value)
+                                }
                                 placeholder='Teks terjemahan/konten yang akan ditimpa ke database...'
                                 className='mt-1 w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 text-sm text-gray-800 dark:text-gray-200 focus:border-emerald-500 focus:outline-none'
                             />
@@ -494,7 +543,9 @@ const AdminReportsPage = () => {
                                 title='Terapkan teks koreksi langsung ke database konten dan berikan poin reward ke user'
                                 className='rounded-lg px-3.5 py-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm disabled:opacity-50'
                             >
-                                {saving ? "..." : "⚡ Terapkan Koreksi (+25 Poin)"}
+                                {saving
+                                    ? "..."
+                                    : "⚡ Terapkan Koreksi (+25 Poin)"}
                             </button>
                         </div>
                     </div>

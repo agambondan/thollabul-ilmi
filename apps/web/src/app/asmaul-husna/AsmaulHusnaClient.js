@@ -113,7 +113,8 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                 <MdOutlineFlipCameraAndroid className='text-2xl text-emerald-600 dark:text-emerald-400 shrink-0' />
                 <div className='flex-1 min-w-0'>
                     <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300 group-hover:underline'>
-                        {t("asmaul.flashcard_title") ?? "Flashcard Asmaul Husna"}
+                        {t("asmaul.flashcard_title") ??
+                            "Flashcard Asmaul Husna"}
                     </p>
                     <p className='text-xs text-emerald-600 dark:text-emerald-500 truncate'>
                         {t("asmaul.flashcard_subtitle") ??
@@ -170,20 +171,20 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                         <div className='flex items-start justify-between mb-2'>
                             <span className='text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 rounded-full w-6 h-6 flex items-center justify-center'>
                                 {name.number}
-                           </span>
+                            </span>
                             {name.audio_url && (
                                 <BsVolumeUpFill className='text-emerald-400 dark:text-emerald-600 text-sm' />
                             )}
-                       </div>
+                        </div>
                         <p
                             className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1 text-right'
                             style={{ fontFamily: "Amiri, serif" }}
                         >
                             {name.arabic}
-                       </p>
+                        </p>
                         <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 italic mb-0.5'>
                             {name.transliteration}
-                       </p>
+                        </p>
                         <p className='text-sm font-medium text-gray-700 dark:text-gray-200'>
                             {getLocalizedText(
                                 {
@@ -192,10 +193,10 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                                 },
                                 lang,
                             )}
-                       </p>
-                   </button>
+                        </p>
+                    </button>
                 ))}
-           </div>
+            </div>
 
             {filteredNames.length > visibleCount && (
                 <div className='flex justify-center mt-6'>
@@ -209,14 +210,14 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                                 12,
                                 filteredNames.length - visibleCount,
                             )} lagi`}
-                   </button>
-               </div>
+                    </button>
+                </div>
             )}
 
             {filteredNames.length === 0 && (
                 <p className='text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 py-4'>
                     {t("asmaul.not_found")}
-               </p>
+                </p>
             )}
 
             {selected && (
@@ -244,14 +245,20 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                             {selected.transliteration}
                         </p>
                         <p className='text-base font-semibold text-emerald-800 dark:text-emerald-300 text-center mb-4'>
-                            {lang === "EN" ? selected.english : selected.indonesian}
+                            {lang === "EN"
+                                ? selected.english
+                                : selected.indonesian}
                         </p>
                         {(() => {
                             const extra = asmaulHusnaData[selected.number];
                             const desc =
                                 lang === "EN"
-                                    ? selected.description_en || extra?.meaning_en || selected.english
-                                    : selected.description || selected.meaning || extra?.explanation;
+                                    ? selected.description_en ||
+                                      extra?.meaning_en ||
+                                      selected.english
+                                    : selected.description ||
+                                      selected.meaning ||
+                                      extra?.explanation;
                             return desc ? (
                                 <p className='text-sm text-gray-600 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3 mb-3'>
                                     {desc}
@@ -278,7 +285,8 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                                             )}
                                             {extra.dalilTrans && (
                                                 <p className='text-gray-600 dark:text-gray-300 italic'>
-                                                    &ldquo;{extra.dalilTrans}&rdquo;
+                                                    &ldquo;{extra.dalilTrans}
+                                                    &rdquo;
                                                 </p>
                                             )}
                                         </div>
@@ -286,7 +294,10 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                                     {extra.ulamaQuote && (
                                         <div className='p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-800/30 text-amber-900 dark:text-amber-300'>
                                             <p className='font-semibold'>
-                                                {t("asmaul.ulama_explanation") ?? "Penjelasan Ulama"}:
+                                                {t(
+                                                    "asmaul.ulama_explanation",
+                                                ) ?? "Penjelasan Ulama"}
+                                                :
                                             </p>
                                             <p className='text-gray-700 dark:text-gray-200 dark:text-gray-300 mt-0.5'>
                                                 {extra.ulamaQuote}
@@ -299,7 +310,10 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                                                 href={extra.internalLink}
                                                 className='inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-medium hover:underline'
                                             >
-                                                <BsLink45Deg /> {t("asmaul.open_quran") ?? "Buka di Al-Qur'an"} &rarr;
+                                                <BsLink45Deg />{" "}
+                                                {t("asmaul.open_quran") ??
+                                                    "Buka di Al-Qur'an"}{" "}
+                                                &rarr;
                                             </Link>
                                         </div>
                                     )}

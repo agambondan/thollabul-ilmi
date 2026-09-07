@@ -15,7 +15,8 @@ const CardHorizontal = ({
     ayahUnit = "Ayat",
     t = (k) => k,
 }) => {
-    const arabicName = surat?.translation?.ar?.replace("سُورَةُ", "")?.trim() ?? "";
+    const arabicName =
+        surat?.translation?.ar?.replace("سُورَةُ", "")?.trim() ?? "";
 
     return (
         <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-700 hover:shadow-sm transition-all p-4 group cursor-pointer'>
@@ -34,8 +35,8 @@ const CardHorizontal = ({
                     </p>
                     <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5 truncate'>
                         {getRevelationType(surat.revelation_type, t)} &middot;{" "}
-                        {getSurahMeaning(surat, lang)}{" "}
-                        &middot; {surat.number_of_ayahs} {ayahUnit}
+                        {getSurahMeaning(surat, lang)} &middot;{" "}
+                        {surat.number_of_ayahs} {ayahUnit}
                     </p>
                 </div>
 

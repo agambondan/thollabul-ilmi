@@ -153,9 +153,7 @@ const HafalanPage = () => {
             surah_name: surah.name,
             status: selectedStatus,
         };
-        const withoutDup = list.filter(
-            (l) => Number(l.surah_id) !== surahId,
-        );
+        const withoutDup = list.filter((l) => Number(l.surah_id) !== surahId);
         const updated = [newItem, ...withoutDup];
         setList(updated);
         try {
@@ -370,13 +368,12 @@ const HafalanPage = () => {
                                     className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 >
                                     <option value=''>
-                                        -- {t("hafalan.select_surah_placeholder")} --
+                                        --{" "}
+                                        {t("hafalan.select_surah_placeholder")}{" "}
+                                        --
                                     </option>
                                     {SURAH_LIST.map((s) => (
-                                        <option
-                                            key={s.number}
-                                            value={s.number}
-                                        >
+                                        <option key={s.number} value={s.number}>
                                             {s.number}. {s.name} ({s.ayat} ayat)
                                         </option>
                                     ))}

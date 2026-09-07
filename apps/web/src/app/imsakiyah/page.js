@@ -107,10 +107,12 @@ export function ImsakiyahContent() {
             setLoading(true);
             setError("");
             try {
-                const lat = useGps && gpsCoords ? gpsCoords.lat : CITIES[cityIndex].lat;
-                const lng = useGps && gpsCoords ? gpsCoords.lng : CITIES[cityIndex].lng;
+                const lat =
+                    useGps && gpsCoords ? gpsCoords.lat : CITIES[cityIndex].lat;
+                const lng =
+                    useGps && gpsCoords ? gpsCoords.lng : CITIES[cityIndex].lng;
                 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
-                
+
                 let data = null;
                 try {
                     const internalRes = await fetch(
@@ -346,7 +348,9 @@ export function ImsakiyahContent() {
                                 </thead>
                                 <tbody className='divide-y divide-gray-50 dark:divide-slate-700'>
                                     {schedule.map((day, idx) => {
-                                        const dateParts = (day.dateStr || "").split("-");
+                                        const dateParts = (
+                                            day.dateStr || ""
+                                        ).split("-");
                                         const dateObj =
                                             dateParts.length === 3
                                                 ? new Date(
@@ -358,7 +362,8 @@ export function ImsakiyahContent() {
                                         const dayName = dateObj
                                             ? dayNames[dateObj.getDay()]
                                             : "-";
-                                        const dayNum = dateParts[2] || String(idx + 1);
+                                        const dayNum =
+                                            dateParts[2] || String(idx + 1);
                                         const isJumat = dateObj?.getDay() === 5;
                                         const isToday =
                                             dateObj &&

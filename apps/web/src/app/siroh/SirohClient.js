@@ -11,7 +11,10 @@ import { SearchIcon } from "@/components/icons/Icon";
 
 const PAGE_SIZE = 20;
 
-export default function SirohClient({ initialChapters = [], basePath = "/siroh" }) {
+export default function SirohClient({
+    initialChapters = [],
+    basePath = "/siroh",
+}) {
     const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
     const [chapters, setChapters] = useState(initialChapters);
@@ -97,9 +100,7 @@ export default function SirohClient({ initialChapters = [], basePath = "/siroh" 
     return (
         <div
             className={
-                isWide
-                    ? "w-full px-4"
-                    : "container mx-auto px-4 max-w-3xl"
+                isWide ? "w-full px-4" : "container mx-auto px-4 max-w-3xl"
             }
         >
             <div className='text-center mb-8'>
@@ -159,17 +160,9 @@ export default function SirohClient({ initialChapters = [], basePath = "/siroh" 
                         </span>
                         <div className='flex-1 min-w-0'>
                             <p className='font-semibold text-emerald-900 dark:text-emerald-300 dark:text-white text-sm truncate'>
-                                {getLocalizedField(
-                                    chapter,
-                                    "title",
-                                    lang,
-                                )}
+                                {getLocalizedField(chapter, "title", lang)}
                             </p>
-                            {getLocalizedField(
-                                chapter,
-                                "excerpt",
-                                lang,
-                            ) && (
+                            {getLocalizedField(chapter, "excerpt", lang) && (
                                 <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5 truncate'>
                                     {getLocalizedField(
                                         chapter,

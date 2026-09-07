@@ -188,10 +188,7 @@ export default function AsbabunNuzulForm({
                                 )}
                                 className='text-xs px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-medium hover:bg-emerald-100 transition-colors'
                             >
-                                {asbabunAyahLabel(
-                                    item,
-                                    t,
-                                )}
+                                {asbabunAyahLabel(item, t)}
                             </Link>
                             {item.source && (
                                 <SourceBadges source={item.source} />

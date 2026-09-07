@@ -73,7 +73,7 @@ describe("useSettings", () => {
         rerender(
             <SettingsProvider>
                 <Setter />
-           </SettingsProvider>,
+            </SettingsProvider>,
         );
 
         fireEvent.click(view.getByText("set"));
@@ -125,7 +125,8 @@ describe("useSettings", () => {
                 data: {
                     settings: JSON.stringify({
                         adzanSound: "islamcan",
-                        adzanSoundUrl: "https://www.islamcan.com/audio/adzan/azan1.mp3",
+                        adzanSoundUrl:
+                            "https://www.islamcan.com/audio/adzan/azan1.mp3",
                         adzanSoundLabel: "IslamCan Azan 1",
                     }),
                 },

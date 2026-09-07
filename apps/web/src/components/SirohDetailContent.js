@@ -39,7 +39,11 @@ export default function SirohDetailContent({ slug, basePath = "/siroh" }) {
     if (isLoading) return <SkeletonList title={false} rows={5} />;
 
     return (
-        <div className={isWide ? "w-full px-4" : "container mx-auto px-4 max-w-3xl"}>
+        <div
+            className={
+                isWide ? "w-full px-4" : "container mx-auto px-4 max-w-3xl"
+            }
+        >
             <Link
                 href={basePath}
                 className='inline-flex items-center gap-1 text-sm text-emerald-600 dark:text-emerald-400 hover:underline mb-6'
@@ -72,7 +76,10 @@ export default function SirohDetailContent({ slug, basePath = "/siroh" }) {
                         </p>
                     )}
                     <div className='prose dark:prose-invert prose-emerald max-w-none text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
-                        {(getLocalizedField(content, "content", lang) || content.content)
+                        {(
+                            getLocalizedField(content, "content", lang) ||
+                            content.content
+                        )
                             ?.split("\n")
                             .filter(Boolean)
                             .map((para, i) => (
@@ -83,7 +90,9 @@ export default function SirohDetailContent({ slug, basePath = "/siroh" }) {
                     </div>
                     {content.source && (
                         <div className='mt-8 border-t border-gray-100 dark:border-slate-700 pt-4'>
-                            <p className='text-xs text-gray-400'>{t("common.source")}:</p>
+                            <p className='text-xs text-gray-400'>
+                                {t("common.source")}:
+                            </p>
                             <SourceBadges source={content.source} />
                         </div>
                     )}
@@ -106,7 +115,9 @@ export default function SirohDetailContent({ slug, basePath = "/siroh" }) {
                     onClose={() => setReportOpen(false)}
                     targetType='siroh'
                     targetId={String(content.id ?? content.slug ?? slug)}
-                    targetTitle={getLocalizedField(content, "title", lang) || "Siroh"}
+                    targetTitle={
+                        getLocalizedField(content, "title", lang) || "Siroh"
+                    }
                     snippet={getLocalizedField(content, "content", lang)}
                 />
             )}

@@ -6,7 +6,8 @@ export const metadata = {
     alternates: { canonical: "/belajar/lessons" },
     openGraph: openGraphFor("/belajar/lessons"),
     title: "Modul Belajar — Thullaabul 'Ilmi",
-    description: "Modul interaktif langkah demi langkah: wudhu, sholat, adzan, tajwid, dan aqidah.",
+    description:
+        "Modul interaktif langkah demi langkah: wudhu, sholat, adzan, tajwid, dan aqidah.",
 };
 
 export default function PublicLessonsPage() {

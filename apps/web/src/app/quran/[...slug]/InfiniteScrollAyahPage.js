@@ -52,8 +52,7 @@ const InfiniteScrollAyahPage = ({
     const hafalanMode = settings.quranHafalanMode ?? "off";
     const readerMode = settings.quranReaderMode ?? "ayah";
     const showTranslation = settings.quranShowTranslation ?? true;
-    const showMushafTranslation =
-        settings.quranMushafTranslation ?? true;
+    const showMushafTranslation = settings.quranMushafTranslation ?? true;
 
     const rawSlug = params.slug;
     const slugPart = Array.isArray(rawSlug)
@@ -69,10 +68,13 @@ const InfiniteScrollAyahPage = ({
             String(initialSurah.number) === slug ||
             initialSurah.identifier === slug);
 
-    const [surah, setSurah] = useState(initialMatchesSlug ? initialSurah : null);
+    const [surah, setSurah] = useState(
+        initialMatchesSlug ? initialSurah : null,
+    );
     const [ayahs, setAyahs] = useState(initialMatchesSlug ? initialAyahs : []);
     const [pageRequest, setPageRequest] = useState(null);
-    const [isInitialLoading, setIsInitialLoading] = useState(!initialMatchesSlug);
+    const [isInitialLoading, setIsInitialLoading] =
+        useState(!initialMatchesSlug);
     const [isFetchingMore, setIsFetchingMore] = useState(false);
     const [isFetchingMushaf, setIsFetchingMushaf] = useState(false);
     const [hasMore, setHasMore] = useState(
@@ -158,19 +160,14 @@ const InfiniteScrollAyahPage = ({
                 surah.number &&
                 ayahs[0] &&
                 typeof window !== "undefined" &&
-                lastSavedAyahRef.current !== `${surah.number}:${ayahs[0].number}`
+                lastSavedAyahRef.current !==
+                    `${surah.number}:${ayahs[0].number}`
             ) {
                 lastSavedAyahRef.current = `${surah.number}:${ayahs[0].number}`;
                 progressApi
-                    .saveQuran(
-                        surah.number,
-                        ayahs[0].number,
-                        ayahs[0].id,
-                    )
+                    .saveQuran(surah.number, ayahs[0].number, ayahs[0].id)
                     .catch((e) => console.error(e));
-                streakApi
-                    .logActivity("quran")
-                    .catch((e) => console.error(e));
+                streakApi.logActivity("quran").catch((e) => console.error(e));
             }
             return;
         }
@@ -199,7 +196,8 @@ const InfiniteScrollAyahPage = ({
                 if (
                     nextSurah.number &&
                     nextAyahs[0] &&
-                    lastSavedAyahRef.current !== `${nextSurah.number}:${nextAyahs[0].number}`
+                    lastSavedAyahRef.current !==
+                        `${nextSurah.number}:${nextAyahs[0].number}`
                 ) {
                     lastSavedAyahRef.current = `${nextSurah.number}:${nextAyahs[0].number}`;
                     progressApi
@@ -337,7 +335,8 @@ const InfiniteScrollAyahPage = ({
             </div>
         );
 
-    const surahTitle = getSurahName(surah, lang) || surah?.translation?.latin_en || "Al-Quran";
+    const surahTitle =
+        getSurahName(surah, lang) || surah?.translation?.latin_en || "Al-Quran";
     const prevHref = surah?.prev_surah?.translation?.latin_en
         ? `${basePath}/${surah.prev_surah.translation.latin_en}`
         : "";
@@ -366,8 +365,8 @@ const InfiniteScrollAyahPage = ({
                         {surahTitle}
                     </h1>
                     <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-4'>
-                        {getSurahMeaning(surah, lang)}{" "}
-                        &middot; {surah?.number_of_ayahs ?? ayahs.length}{" "}
+                        {getSurahMeaning(surah, lang)} &middot;{" "}
+                        {surah?.number_of_ayahs ?? ayahs.length}{" "}
                         {t("common.verse")} &middot;{" "}
                         {surah?.revelation_type?.toLowerCase() === "meccan"
                             ? t("quran.meccan")
@@ -477,7 +476,17 @@ const InfiniteScrollAyahPage = ({
                             }
                             className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
                         >
-                            <svg width={13} height={13} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' aria-hidden='true'>
+                            <svg
+                                width={13}
+                                height={13}
+                                viewBox='0 0 24 24'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeWidth={2}
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                aria-hidden='true'
+                            >
                                 <path d='M21 5v14' />
                                 <path d='M17 12L3 5v14l14-7z' />
                             </svg>
@@ -488,7 +497,17 @@ const InfiniteScrollAyahPage = ({
                         </Link>
                     ) : (
                         <span className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-gray-300 dark:text-slate-600 cursor-not-allowed'>
-                            <svg width={13} height={13} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' aria-hidden='true'>
+                            <svg
+                                width={13}
+                                height={13}
+                                viewBox='0 0 24 24'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeWidth={2}
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                aria-hidden='true'
+                            >
                                 <path d='M21 5v14' />
                                 <path d='M17 12L3 5v14l14-7z' />
                             </svg>
@@ -511,7 +530,17 @@ const InfiniteScrollAyahPage = ({
                                 {getSurahName(surah?.next_surah, lang) ??
                                     t("quran.next")}
                             </span>
-                            <svg width={13} height={13} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' aria-hidden='true'>
+                            <svg
+                                width={13}
+                                height={13}
+                                viewBox='0 0 24 24'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeWidth={2}
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                aria-hidden='true'
+                            >
                                 <path d='M3 5v14' />
                                 <path d='M7 12l14-7v14l-14-7z' />
                             </svg>
@@ -519,7 +548,17 @@ const InfiniteScrollAyahPage = ({
                     ) : (
                         <span className='flex items-center gap-1 px-2.5 py-1.5 rounded-full text-gray-300 dark:text-slate-600 cursor-not-allowed'>
                             <span>{t("quran.next")}</span>
-                            <svg width={13} height={13} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth={2} strokeLinecap='round' strokeLinejoin='round' aria-hidden='true'>
+                            <svg
+                                width={13}
+                                height={13}
+                                viewBox='0 0 24 24'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeWidth={2}
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                aria-hidden='true'
+                            >
                                 <path d='M3 5v14' />
                                 <path d='M7 12l14-7v14l-14-7z' />
                             </svg>

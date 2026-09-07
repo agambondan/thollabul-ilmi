@@ -86,7 +86,10 @@ const AdminBlogPage = () => {
         setActionError("");
         try {
             const res = await adminBlogApi.delete(id);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
         } catch (err) {
             setPosts(prev);
             setActionError(err.message || t("admin.error.save"));
@@ -104,7 +107,10 @@ const AdminBlogPage = () => {
                 name,
                 slug: slugify(name),
             });
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             const data = await res.json();
             if (data?.id) {
                 setCategories((prev) => [...prev, data]);
@@ -124,7 +130,10 @@ const AdminBlogPage = () => {
         setActionError("");
         try {
             const res = await adminBlogApi.deleteCategory(id);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
         } catch (err) {
             setCategories(prev);
             setActionError(err.message || t("admin.error.save"));
@@ -142,7 +151,10 @@ const AdminBlogPage = () => {
                 name,
                 slug: slugify(name),
             });
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
             const data = await res.json();
             if (data?.id) {
                 setTags((prev) => [...prev, data]);
@@ -162,7 +174,10 @@ const AdminBlogPage = () => {
         setActionError("");
         try {
             const res = await adminBlogApi.deleteTag(id);
-            if (!res.ok) throw new Error(await parseApiError(res, t("admin.error.save")));
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
         } catch (err) {
             setTags(prev);
             setActionError(err.message || t("admin.error.save"));

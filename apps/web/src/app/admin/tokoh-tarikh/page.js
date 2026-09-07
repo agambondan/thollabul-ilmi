@@ -34,12 +34,28 @@ export default function AdminTokohTarikhPage() {
             fields={[
                 { key: "nama", label: "Nama", type: "text", required: true },
                 { key: "era", label: "Era", type: "select", options: ERA },
-                { key: "kategori", label: "Kategori", type: "select", options: KATEGORI },
+                {
+                    key: "kategori",
+                    label: "Kategori",
+                    type: "select",
+                    options: KATEGORI,
+                },
                 { key: "tahun_lahir", label: "Tahun Lahir", type: "text" },
                 { key: "tahun_wafat", label: "Tahun Wafat", type: "text" },
                 { key: "image_url", label: "URL Foto", type: "text" },
-                { key: "biografi", label: "Biografi", type: "textarea", rows: 4, required: true },
-                { key: "kontribusi", label: "Kontribusi", type: "textarea", rows: 3 },
+                {
+                    key: "biografi",
+                    label: "Biografi",
+                    type: "textarea",
+                    rows: 4,
+                    required: true,
+                },
+                {
+                    key: "kontribusi",
+                    label: "Kontribusi",
+                    type: "textarea",
+                    rows: 3,
+                },
             ]}
         />
     );
