@@ -34,7 +34,7 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 | 6   | `/hadith`               |   **65**    |    **97**     |       81       | 100 | 1.9s | 5.1s  | **440ms** | **0.000** | ✅ Tab CLS + Cover Fixed   |
 | 7   | `/hadith/bukhari`       |   **58**    |    **96**     |       81       | 92  | 2.1s | 5.7s  |   620ms   | **0.000** |    ✅ SSG themes+chapters+hadiths |
 | 8   | `/hadith/muslim`        |   **63**    |    **96**     |       81       | 100 | 2.1s | 7.1s  |   330ms   | **0.000** |    ✅ SSG themes+chapters+hadiths |
-| 9   | `/jadwal-sholat`        |   **54**    |    **93**     |       81       | 100 | 2.4s | 4.9s  |   710ms   | **0.000** |   ✅ RSC + Jakarta Default (LCP -17s) |
+| 9   | `/jadwal-sholat`        |   **52**    |    **93**     |       81       | 100 | 2.1s | 5.7s  |  1130ms   | **0.000** | ✅ Skip mount refetch + drop react-icons |
 | 10  | `/imsakiyah`            |   **70**    |    **93**     |       81       | 100 | 2.0s | 6.8s  | **150ms** | **0.000** |         ✅ TBT -88%          |
 | 11  | `/doa`                  |   **73**    |    **93**     |       81       | 100 | 2.2s | 6.4s  | **50ms**  | **0.000** |   ✅ ISR Active (TBT 50ms)   |
 | 12  | `/dzikir`               |   **92**    |    **93**     |       81       | 100 | 2.0s | 3.0s  | **40ms**  | **0.001** |    🚀 **Score 92** (Good)    |
