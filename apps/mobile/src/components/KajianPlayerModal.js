@@ -136,6 +136,7 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
     const [autoScroll, setAutoScroll] = useState(true);
     const [filter, setFilter] = useState("");
     const [bookmarked, setBookmarked] = useState(new Set());
+    const [transcriptsFromCache, setTranscriptsFromCache] = useState(false);
 
     const webRef = useRef(null);
     const listRef = useRef(null);
@@ -178,16 +179,43 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
     // Fetch transcripts
     useEffect(() => {
         if (!visible || !item?.kajian_id) return;
+        const kajianId = item.kajian_id;
         let cancelled = false;
         setLoadingTranscripts(true);
-        fetch(`${API_URL}/api/v1/kajian/${item.kajian_id}/transcripts`)
-            .then((r) => (r.ok ? r.json() : []))
+        const cacheKey = `kajian-transcripts:${kajianId}`;
+        AsyncStorage.getItem(cacheKey)
+            .then((cached) => {
+                if (cancelled) return;
+                if (cached) {
+                    try {
+                        const parsed = JSON.parse(cached);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            setTranscripts(parsed);
+                            setTranscriptsFromCache(true);
+                        }
+                    } catch {
+                        // ignore corrupted cache
+                    }
+                }
+            })
+            .catch(() => {});
+        fetch(`${API_URL}/api/v1/kajian/${kajianId}/transcripts`)
+            .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
             .then((data) => {
                 if (cancelled) return;
                 const list = Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : [];
                 setTranscripts(list);
+                setTranscriptsFromCache(false);
+                if (list.length > 0) {
+                    AsyncStorage.setItem(cacheKey, JSON.stringify(list)).catch(() => {});
+                }
             })
-            .catch(() => setTranscripts([]))
+            .catch(() => {
+                if (cancelled) return;
+                if (!transcripts || transcripts.length === 0) {
+                    setTranscripts([]);
+                }
+            })
             .finally(() => !cancelled && setLoadingTranscripts(false));
         return () => {
             cancelled = true;
@@ -363,6 +391,11 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
                         <Share2 size={14} color="#047857" />
                         <Text style={styles.chipText}>Bagikan</Text>
                     </Pressable>
+                    {transcriptsFromCache && (
+                        <View style={styles.cacheBadge}>
+                            <Text style={styles.cacheBadgeText}>📡 Cache</Text>
+                        </View>
+                    )}
                 </View>
 
                 {/* Filter input */}
@@ -454,6 +487,15 @@ const styles = StyleSheet.create({
     audioEmoji: { fontSize: 48 },
     audioTitle: { color: "#fff", fontSize: 18, fontWeight: "700", marginTop: 8 },
     audioSubtitle: { color: "#cbd5e1", fontSize: 12, marginTop: 4 },
+    cacheBadge: {
+        backgroundColor: "#fef3c7",
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 999,
+        borderWidth: 1,
+        borderColor: "#fcd34d",
+    },
+    cacheBadgeText: { color: "#92400e", fontSize: 11, fontWeight: "700" },
     controls: {
         flexDirection: "row",
         gap: spacing.xs || 6,
