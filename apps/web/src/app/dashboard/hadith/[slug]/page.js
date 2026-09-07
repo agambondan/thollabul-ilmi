@@ -12,13 +12,6 @@ import { useQuranFont } from "@/lib/useQuranFont";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, use } from "react";
 import { useRouter } from "next/navigation";
-import {
-    BsFileEarmarkPlay,
-    BsPauseFill,
-    BsShare,
-    BsThreeDotsVertical,
-} from "react-icons/bs";
-import { IoIosLink, IoMdCopy, IoMdImages } from "react-icons/io";
 import PanelCloseButton from "@/components/PanelCloseButton";
 
 const PopUpIsCopied = dynamic(
@@ -338,7 +331,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                 title={t("hadith.open_detail")}
                                 className={`${actionsMenu ? "hidden" : ""} p-2 rounded-lg text-base text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors`}
                             >
-                                <IoIosLink />
+                                <span aria-hidden='true'>🔗</span>
                             </Link>
                         )}
                         {h.id && (
@@ -362,9 +355,9 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                 {audioLoading ? (
                                     <span className='text-[10px]'>...</span>
                                 ) : isPlayingAudio ? (
-                                    <BsPauseFill />
+                                    <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' aria-hidden='true'><path d='M5.5 3.5A1.5 1.5 0 0 1 7 2h2a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 9 14H7a1.5 1.5 0 0 1-1.5-1.5v-9zM2 4a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-3A.5.5 0 0 1 2 12V4zm9.5 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V4z' /></svg>
                                 ) : (
-                                    <BsFileEarmarkPlay />
+                                    <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' aria-hidden='true'><path d='M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z' /></svg>
                                 )}
                             </button>
                         )}
@@ -377,7 +370,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                             onClick={() => setShareImagePopUp(true)}
                             className={`${actionsMenu ? "hidden" : ""} p-2 rounded-lg text-base text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors`}
                         >
-                            <BsShare />
+                            <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' aria-hidden='true'><path d='M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z' /></svg>
                         </button>
                         <div className='relative'>
                             <button
@@ -386,7 +379,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                 onClick={() => setSettingPopUp((v) => !v)}
                                 className='p-2 rounded-lg text-base text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors'
                             >
-                                <BsThreeDotsVertical />
+                                <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' aria-hidden='true'><path d='M9.5 13a1.5 1.5 0 1 1-2-1.415V11.5a.5.5 0 0 1 .5-.5h.086a.5.5 0 0 0 .5-.5v-.086A1.5 1.5 0 0 1 9.5 9h1a1.5 1.5 0 0 1 1.5 1.5v.086a.5.5 0 0 0 .5.5h.086a1.5 1.5 0 0 1 0 1.5h-.086a.5.5 0 0 0-.5.5v.086a1.5 1.5 0 0 1-1.5 1.5h-1zM4 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm10-3a1 1 0 1 1 0-2 1 1 0 0 1 0 2z' /></svg>
                             </button>
                             {settingPopUp && (
                                 <div className='absolute right-0 top-9 z-20'>
@@ -405,7 +398,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                             )
                                                         }
                                                     >
-                                                        <IoIosLink />{" "}
+                                                        <span aria-hidden='true'>🔗</span>{" "}
                                                         {t(
                                                             "hadith.open_detail_menu",
                                                         )}
@@ -429,9 +422,9 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                         }
                                                     >
                                                         {isPlayingAudio ? (
-                                                            <BsPauseFill />
+                                                            <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' aria-hidden='true'><path d='M5.5 3.5A1.5 1.5 0 0 1 7 2h2a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 9 14H7a1.5 1.5 0 0 1-1.5-1.5v-9zM2 4a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-3A.5.5 0 0 1 2 12V4zm9.5 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V4z' /></svg>
                                                         ) : (
-                                                            <BsFileEarmarkPlay />
+                                                            <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' aria-hidden='true'><path d='M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z' /></svg>
                                                         )}
                                                         {audioLoading
                                                             ? t(
@@ -481,7 +474,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                         setSettingPopUp(false);
                                                     }}
                                                 >
-                                                    <BsShare />{" "}
+                                                    <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' aria-hidden='true'><path d='M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z' /></svg>{" "}
                                                     {t("common.share")}
                                                 </button>
                                             </div>
@@ -494,7 +487,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                 setSettingPopUp(false);
                                             }}
                                         >
-                                            <IoIosLink />{" "}
+                                            <span aria-hidden='true'>🔗</span>{" "}
                                             {t("hadith.copy_link")}
                                         </button>
                                         <button
@@ -527,7 +520,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                 }, 500);
                                             }}
                                         >
-                                            <IoMdImages />{" "}
+                                            <span aria-hidden='true'>🖼️</span>{" "}
                                             {t("hadith.copy_image")}
                                         </button>
                                         <button
@@ -540,7 +533,7 @@ function HadithCard({ h, idx, lang, t, slug, basePath }) {
                                                 setSettingPopUp(false);
                                             }}
                                         >
-                                            <IoMdCopy /> {t("hadith.copy_text")}
+                                            <span aria-hidden='true'>📋</span> {t("hadith.copy_text")}
                                         </button>
                                     </div>
                                 </div>
