@@ -52,7 +52,7 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 | 24  | `/asbabun-nuzul`        |   **85**    |      88       |       81       | 100 | 3.1s | 3.1s  | **120ms** | **0.002** | 🚀 **Score 85** (SSR Surah 2) |
 | 25  | `/hijri`                |   **66**    |      88       |       81       | 100 | 2.9s | 8.2s  | **180ms** | **0.000** |    ✅ RSC + Sync Calc (CLS 0)     |
 | 26  | `/perawi`               |   **61**    |    **93**     |       81       | 100 | 2.0s | 5.8s  |   600ms   | **0.000** | ✅ RSC size=10 + react-icons removed |
-| 27  | `/kajian`               |   **72**    |    **93**     |       81       | 100 | 2.4s | 6.5s  | **100ms** | **0.000** |  ✅ ISR Active (TBT 100ms)   |
+| 27  | `/kajian`               |   **59**    |    **93**     |       81       | 100 | 2.0s | 7.5s  |   530ms   | **0.015** |  ✅ react-icons dropped       |
 | 28  | `/blog`                 |   **74**    |    **93**     |       81       | 100 | 2.7s | 5.4s  | **120ms** | **0.000** |  ✅ ISR Active (TBT 120ms)   |
 | 29  | `/komunitas`            |   **67**    |    **93**     |       81       | 100 | 3.1s | 8.4s  | **130ms** | **0.000** |       ✅ RSC + ISR Active       |
 | 30  | `/sholat-tracker`       |   **66**    |    **96**     |       81       | 69  | 5.4s | 4.1s  |   870ms   | **0.000** |       ✅ Redirect 308        |

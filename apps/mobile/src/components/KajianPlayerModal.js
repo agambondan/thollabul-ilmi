@@ -16,6 +16,12 @@ import { Search, Share2, X } from "lucide-react-native";
 import { AppModalSheet } from "./AppModalSheet";
 import { radius, spacing } from "../theme";
 import { hapticTap } from "../utils/haptics";
+import { readSession } from "../storage/session";
+import {
+    addSyncedKajianBookmark,
+    listSyncedKajianBookmarkIDs,
+    removeSyncedKajianBookmark,
+} from "../api/explore";
 
 const API_URL =
     process.env.EXPO_PUBLIC_API_URL || "https://api-thollabul.jangkauin.site";
@@ -149,14 +155,37 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
         Promise.all([
             AsyncStorage.getItem(storageKey),
             AsyncStorage.getItem(bookmarkKey),
-        ]).then(([savedTime, savedBookmarks]) => {
+            readSession().catch(() => null),
+        ]).then(([savedTime, savedBookmarks, session]) => {
             if (cancelled) return;
             const resumeAt = Number(savedTime);
             if (Number.isFinite(resumeAt) && resumeAt > 0) {
                 setPlayerStart(resumeAt);
                 setCurrentTime(resumeAt);
             }
-            if (savedBookmarks) setBookmarked(new Set(JSON.parse(savedBookmarks)));
+            const local = savedBookmarks
+                ? new Set(JSON.parse(savedBookmarks))
+                : new Set();
+            if (session?.token && kajianId) {
+                listSyncedKajianBookmarkIDs(kajianId)
+                    .then((ids) => {
+                        if (cancelled) return;
+                        const merged = new Set([
+                            ...local,
+                            ...ids.map((n) => Number(n)).filter(Number.isFinite),
+                        ]);
+                        setBookmarked(merged);
+                        if (ids.length) {
+                            AsyncStorage.setItem(
+                                bookmarkKey,
+                                JSON.stringify([...merged]),
+                            ).catch(() => {});
+                        }
+                    })
+                    .catch(() => setBookmarked(local));
+            } else {
+                setBookmarked(local);
+            }
         }).catch(() => {});
         return () => {
             cancelled = true;
@@ -276,12 +305,15 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
         if (!chunk) return;
         hapticTap();
         const id = chunk.id;
+        let nowBookmarked;
         setBookmarked((prev) => {
             const next = new Set(prev);
             if (next.has(id)) next.delete(id);
             else next.add(id);
+            nowBookmarked = next.has(id);
             return next;
         });
+        const bookmarkedAfter = nowBookmarked;
 
         AsyncStorage.getItem("kajian_saved_chunks")
             .then((raw) => {
@@ -312,6 +344,17 @@ export function KajianPlayerModal({ item, searchQuery = "", visible, onClose }) 
                     ];
                 }
                 return AsyncStorage.setItem("kajian_saved_chunks", JSON.stringify(next));
+            })
+            .catch(() => {});
+
+        readSession()
+            .then((session) => {
+                if (!session?.token) return;
+                const studyId = item.kajian_id || item.id;
+                if (!studyId) return;
+                return bookmarkedAfter
+                    ? addSyncedKajianBookmark(id, studyId).catch(() => {})
+                    : removeSyncedKajianBookmark(id).catch(() => {});
             })
             .catch(() => {});
     };
