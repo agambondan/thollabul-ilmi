@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
 import { kamusApi } from "@/lib/api";
 import { getLocalizedField } from "@/lib/translation";
@@ -78,7 +79,7 @@ export function KamusContent({ initialWords = [] }) {
     const visibleResults = displayResults.slice(0, visibleCount);
 
     return (
-        <div className='max-w-3xl mx-auto px-4 py-8'>
+        <ContentWidth compact='max-w-3xl' className='px-4 py-8'>
             <div className='text-center mb-8'>
                 <div className='inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 mb-3'>
                     <svg
@@ -237,7 +238,7 @@ export function KamusContent({ initialWords = [] }) {
                     </button>
                 </div>
             )}
-        </div>
+        </ContentWidth>
     );
 }
 export default KamusContent;

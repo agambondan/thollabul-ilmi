@@ -18,8 +18,6 @@ import {
     requestAndStoreUserLocation,
 } from "@/lib/userLocation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { BsBell, BsBellFill, BsGeoAlt } from "react-icons/bs";
-import { MdAccessTime, MdTimer } from "react-icons/md";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -348,7 +346,21 @@ export function JadwalSholatContent({
                 {/* Header */}
                 <div className='mb-6 text-center'>
                     <div className='inline-flex items-center justify-center w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl mb-4'>
-                        <MdAccessTime className='text-3xl text-emerald-600 dark:text-emerald-400' />
+                        <svg
+                            width='32'
+                            height='32'
+                            viewBox='0 0 24 24'
+                            fill='none'
+                            stroke='currentColor'
+                            strokeWidth='2'
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                            className='text-emerald-600 dark:text-emerald-400'
+                            aria-hidden='true'
+                        >
+                            <circle cx='12' cy='12' r='10' />
+                            <polyline points='12 6 12 12 16 14' />
+                        </svg>
                     </div>
                     <h1 className='text-2xl sm:text-3xl font-extrabold text-emerald-900 dark:text-emerald-100 mb-1'>
                         {t("prayer_schedule.title")}
@@ -371,7 +383,20 @@ export function JadwalSholatContent({
                             onClick={handleGeo}
                             className='flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition-colors whitespace-nowrap'
                         >
-                            <BsGeoAlt />
+                            <svg
+                                width='16'
+                                height='16'
+                                viewBox='0 0 24 24'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeWidth='2'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                aria-hidden='true'
+                            >
+                                <path d='M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z' />
+                                <circle cx='12' cy='10' r='3' />
+                            </svg>
                             {t("geo.my_location")}
                         </button>
                         <select
@@ -399,7 +424,21 @@ export function JadwalSholatContent({
                     </div>
                     {geoLabel && (
                         <p className='text-xs text-emerald-600 dark:text-emerald-400 mt-2 flex items-center gap-1'>
-                            <BsGeoAlt /> {geoLabel}
+                            <svg
+                                width='12'
+                                height='12'
+                                viewBox='0 0 24 24'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeWidth='2'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                aria-hidden='true'
+                            >
+                                <path d='M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z' />
+                                <circle cx='12' cy='10' r='3' />
+                            </svg>{" "}
+                            {geoLabel}
                         </p>
                     )}
                     {gpsStatus === "detecting" && (
@@ -493,7 +532,20 @@ export function JadwalSholatContent({
                                             }
                                             className='flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-xs font-medium'
                                         >
-                                            <BsBell />{" "}
+                                            <svg
+                                                width='12'
+                                                height='12'
+                                                viewBox='0 0 24 24'
+                                                fill='none'
+                                                stroke='currentColor'
+                                                strokeWidth='2'
+                                                strokeLinecap='round'
+                                                strokeLinejoin='round'
+                                                aria-hidden='true'
+                                            >
+                                                <path d='M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9' />
+                                                <path d='M10.3 21a1.94 1.94 0 0 0 3.4 0' />
+                                            </svg>{" "}
                                             {t(
                                                 "prayer_schedule.enable_notif",
                                             ) ?? "Aktifkan Notifikasi"}
@@ -509,9 +561,30 @@ export function JadwalSholatContent({
                                     className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shrink-0 ${settings.notifAdzan ? "bg-emerald-700 text-white" : "bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300"}`}
                                 >
                                     {settings.notifAdzan ? (
-                                        <BsBellFill />
+                                        <svg
+                                            width='12'
+                                            height='12'
+                                            viewBox='0 0 24 24'
+                                            fill='currentColor'
+                                            aria-hidden='true'
+                                        >
+                                            <path d='M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2Zm6-6V11a6 6 0 0 0-5-5.91V4a1 1 0 1 0-2 0v1.09A6 6 0 0 0 6 11v5l-2 2v1h16v-1Z' />
+                                        </svg>
                                     ) : (
-                                        <BsBell />
+                                        <svg
+                                            width='12'
+                                            height='12'
+                                            viewBox='0 0 24 24'
+                                            fill='none'
+                                            stroke='currentColor'
+                                            strokeWidth='2'
+                                            strokeLinecap='round'
+                                            strokeLinejoin='round'
+                                            aria-hidden='true'
+                                        >
+                                            <path d='M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9' />
+                                            <path d='M10.3 21a1.94 1.94 0 0 0 3.4 0' />
+                                        </svg>
                                     )}
                                     {settings.notifAdzan
                                         ? (t("prayer_schedule.adzan_on") ??
@@ -670,7 +743,22 @@ export function JadwalSholatContent({
                     </span>
                     {countdown && nextPrayer && (
                         <div className='mt-3 flex items-center justify-center gap-2'>
-                            <MdTimer className='text-emerald-500 dark:text-emerald-400 text-xl' />
+                            <svg
+                                width='20'
+                                height='20'
+                                viewBox='0 0 24 24'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeWidth='2'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                className='text-emerald-500 dark:text-emerald-400'
+                                aria-hidden='true'
+                            >
+                                <line x1='10' x2='14' y1='2' y2='2' />
+                                <line x1='12' x2='15' y1='14' y2='11' />
+                                <circle cx='12' cy='14' r='8' />
+                            </svg>
                             <span className='text-base sm:text-lg text-gray-600 dark:text-gray-300 font-medium'>
                                 {t("prayer_schedule.towards") ?? "Menuju"}{" "}
                                 <span className='font-bold text-gray-800 dark:text-white'>
@@ -775,7 +863,7 @@ export function JadwalSholatContent({
                         settings.adzanSound,
                         settings.adzanSoundUrl,
                     )}
-                    preload='auto'
+                    preload='none'
                 />
             )}
         </>

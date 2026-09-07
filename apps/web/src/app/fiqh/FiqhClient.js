@@ -1,5 +1,6 @@
 "use client";
 
+import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
 import { fiqhApi } from "@/lib/api";
 import { getLocalizedField, getLocalizedText } from "@/lib/translation";
@@ -182,7 +183,7 @@ export default function FiqhClient({
     }, [enrichedCategories, search, lang]);
 
     return (
-        <div className='max-w-4xl mx-auto px-4 py-8'>
+        <ContentWidth compact='max-w-4xl' className='px-4 py-8'>
             <div className='flex items-center gap-3 mb-6'>
                 <div className='w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center'>
                     <svg
@@ -420,6 +421,6 @@ export default function FiqhClient({
                     })}
                 </div>
             )}
-        </div>
+        </ContentWidth>
     );
 }
