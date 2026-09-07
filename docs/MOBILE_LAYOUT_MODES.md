@@ -98,7 +98,12 @@ mobile kecuali mismatch terbukti sebagai bug di web dashboard.
 Karakter target:
 
 - top header dengan brand/account surface;
-- bottom nav untuk 5 tab utama: Beranda, Quran, Hadis, Ibadah, Belajar;
+- bottom nav untuk 5 tab utama:
+  - `web` public shell: Quran, Hadis, Kajian, Ibadah, Belajar
+    (Beranda diakses via brand/logo di header, bukan bottom-nav tab).
+  - `web` dashboard shell: Quran, Hadis, Kajian, Belajar, Menu.
+  - `mobile` app (native): Beranda, Quran, Hadis, Ibadah, Belajar
+    (Beranda tetap cockpit harian via tab pertama).
 - tombol menu membuka bottom-sheet untuk fitur sekunder;
 - screen detail memakai bottom-sheet modal atau page detail, bukan inline
   expand/collapse;
@@ -181,8 +186,10 @@ Source of truth feature tetap:
 
 Rules:
 
-- Semua 5 tab final wajib ada di setiap layout: Beranda, Quran, Hadis,
-  Ibadah, Belajar.
+- Semua 5 tab final wajib ada di setiap layout:
+  - `web` public: Quran, Hadis, Kajian, Ibadah, Belajar.
+  - `web` dashboard: Quran, Hadis, Kajian, Belajar, Menu.
+  - `mobile` app: Beranda, Quran, Hadis, Ibadah, Belajar.
 - Fitur utama seperti Quran, Hadis, Jadwal Sholat, Qibla, Hafalan, Tafsir,
   Doa/Dzikir, Journal, Kuis, Kajian, Bookmark, Notes, Target, dan Profile/
   Settings tetap harus reachable.
