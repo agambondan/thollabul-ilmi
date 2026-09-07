@@ -15,6 +15,7 @@ import (
 	"github.com/agambondan/islamic-explorer/app/http"
 	"github.com/agambondan/islamic-explorer/app/http/middlewares"
 	"github.com/agambondan/islamic-explorer/app/lib"
+	"github.com/agambondan/islamic-explorer/app/lib/embeddings"
 	"github.com/agambondan/islamic-explorer/app/repository"
 	service "github.com/agambondan/islamic-explorer/app/services"
 	"github.com/go-redis/redis/v8"
@@ -85,6 +86,9 @@ func main() {
 			panic(err)
 		}
 		return
+	case *backfillEmbeddingsFlag:
+		RunBackfillEmbeddings(newRepositories)
+		return
 	}
 
 	services := service.NewServices(newRepositories)
@@ -126,9 +130,22 @@ func main() {
 }
 
 var (
-	migrateFlag = flag.Bool("migrate", false, "run migrations and seed, then exit")
-	seedFlag    = flag.Bool("seed", false, "run seed only, then exit")
+	migrateFlag            = flag.Bool("migrate", false, "run migrations and seed, then exit")
+	seedFlag               = flag.Bool("seed", false, "run seed only, then exit")
+	backfillEmbeddingsFlag = flag.Bool("backfill-embeddings", false, "backfill kajian transcript embeddings, then exit")
 )
+
+// RunBackfillEmbeddings is wired to the -backfill-embeddings CLI flag and
+// delegates to the shared lib so the embedded binary matches the standalone
+// cmd/backfill-kajian-embeddings runner.
+func RunBackfillEmbeddings(repos *repository.Repositories) {
+	scanned, backfilled, skipped, err := embeddings.BackfillKajianEmbeddings(repos.GetDB(), embeddings.BackfillOptions{})
+	if err != nil {
+		slog.Error("backfill failed", "err", err)
+		os.Exit(1)
+	}
+	slog.Info("backfill complete", "scanned", scanned, "backfilled", backfilled, "skipped", skipped)
+}
 
 func init() {
 	env := flag.String("environment", "", "set environment")
