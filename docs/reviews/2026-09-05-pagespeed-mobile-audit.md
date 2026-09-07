@@ -45,13 +45,13 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 | 17  | `/kiblat`               |   **69**    |      87       |       81       | 100 | 2.5s | 6.3s  | **160ms** | **0.000** |                              ✅ Geo on-click                               |
 | 18  | `/tokoh`                |   **77**    |      88       |       81       | 100 | 2.2s | 4.3s  | **200ms** | **0.000** |                                  ✅ Good                                   |
 | 19  | `/tafsir`               |   **76**    |    **93**     |       81       | 100 | 2.5s | 4.6s  | **210ms** | **0.000** |                                  ✅ Good                                   |
-| 20  | `/tasbih`               |   **67**    |    **88**     |       81       | 100 | 1.6s | 6.1s  |   430ms   | **0.000** |                      ✅ below-fold content-visibility                      |
+| 20  | `/tasbih`               |   **70**    |    **88**     |       81       | 100 | 1.9s | 6.7s  | **190ms** | **0.000** |                        ✅ ContentWidth + TBT 190ms                         |
 | 21  | `/sejarah`              |   **73**    |    **93**     |       81       | 100 | 1.9s | 8.4s  | **130ms** | **0.000** |                      ✅ RSC + ISR Active (TBT 130ms)                       |
 | 22  | `/panduan-sholat`       |   **70**    |    **92**     |       77       | 100 | 2.0s | 7.6s  |   220ms   | **0.000** |                              ✅ Chunk 6 Steps                              |
 | 23  | `/kamus`                |   **62**    |    **93**     |       81       | 100 | 1.9s | 7.2s  |   400ms   | **0.000** |                   ✅ ContentWidth + react-icons dropped                    |
 | 24  | `/asbabun-nuzul`        |   **85**    |      88       |       81       | 100 | 3.1s | 3.1s  | **120ms** | **0.002** |                       🚀 **Score 85** (SSR Surah 2)                        |
 | 25  | `/hijri`                |   **66**    |      88       |       81       | 100 | 2.9s | 8.2s  | **180ms** | **0.000** |                         ✅ RSC + Sync Calc (CLS 0)                         |
-| 26  | `/perawi`               |   **61**    |    **93**     |       81       | 100 | 2.0s | 5.8s  |   600ms   | **0.000** |                    ✅ RSC size=10 + react-icons removed                    |
+| 26  | `/perawi`               |   **65**    |    **93**     |       81       | 100 | 2.9s | 9.2s  | **190ms** | **0.001** |                        ✅ ContentWidth + TBT 190ms                         |
 | 27  | `/kajian`               |   **78**    |    **93**     |       81       | 100 | 1.9s | 4.1s  |   330ms   | **0.000** | ✅ TBT -70% (dedupe mount fetches + eager LCP thumbs + preconnect i.ytimg) |
 | 28  | `/blog`                 |   **74**    |    **93**     |       81       | 100 | 2.7s | 5.4s  | **120ms** | **0.000** |                         ✅ ISR Active (TBT 120ms)                          |
 | 29  | `/komunitas`            |   **67**    |    **93**     |       81       | 100 | 3.1s | 8.4s  | **130ms** | **0.000** |                            ✅ RSC + ISR Active                             |
