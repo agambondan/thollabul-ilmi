@@ -6,8 +6,6 @@ import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useMemo, useState } from "react";
-import { BsPlayCircle, BsSearch, BsYoutube } from "react-icons/bs";
-import { MdOutlinePlayLesson } from "react-icons/md";
 import SavedBookmarksView from "./SavedBookmarksView";
 import VideoPlayerModal from "./VideoPlayerModal";
 
@@ -282,7 +280,7 @@ export default function KajianClient({
         >
             <div className='flex items-center gap-3 mb-4'>
                 <div className='w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center'>
-                    <MdOutlinePlayLesson className='text-xl text-emerald-700 dark:text-emerald-400' />
+                    <svg width='1.25em' height='1.25em' viewBox='0 0 24 24' fill='currentColor' className='text-xl text-emerald-700 dark:text-emerald-400' aria-hidden='true'><path d='M5 20V4h2v7l2.5-1.5L12 11V4h5v7.08c.33-.05.66-.08 1-.08s.67.03 1 .08V4c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h7.26c-.42-.6-.75-1.28-.97-2H5zm13-7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm-1.25 7.5v-5l4 2.5-4 2.5z' /></svg>
                 </div>
                 <div>
                     <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
@@ -405,7 +403,7 @@ function ListView({
     return (
         <div>
             <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
-                <BsSearch className='text-gray-400 shrink-0' />
+                <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-gray-400 shrink-0' aria-hidden='true'><path d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z' /></svg>
                 <input
                     type='text'
                     placeholder={t("kajian.public_search_placeholder")}
@@ -520,7 +518,7 @@ function ListView({
 
             {kajian.length === 0 ? (
                 <div className='text-center py-16 text-gray-400'>
-                    <BsPlayCircle className='text-4xl mx-auto mb-3' />
+                    <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-4xl mx-auto mb-3' aria-hidden='true'><path d='M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z' /></svg>
                     <p className='text-sm'>{t("kajian.not_found")}</p>
                 </div>
             ) : (
@@ -542,12 +540,12 @@ function ListView({
                                     />
                                     <div className='absolute inset-0 bg-black/20 flex items-center justify-center group-hover/thumb:bg-black/30 transition-colors'>
                                         <div className='w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-600/90 text-white flex items-center justify-center shadow-lg group-hover/thumb:scale-110 transition-transform'>
-                                            <BsPlayCircle className='text-lg sm:text-xl ml-0.5' />
+                                            <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-lg sm:text-xl ml-0.5' aria-hidden='true'><path d='M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z' /></svg>
                                         </div>
                                     </div>
                                     {k.platform === "youtube" && (
                                         <div className='absolute top-1.5 right-1.5 bg-black/60 backdrop-blur-xs px-1.5 py-0.5 rounded text-[10px] text-white flex items-center gap-1'>
-                                            <BsYoutube className='text-red-500' />
+                                            <span className='text-red-500' aria-hidden='true'>▶</span>
                                         </div>
                                     )}
                                 </div>

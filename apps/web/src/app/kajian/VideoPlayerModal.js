@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import ModalShell from "@/components/ModalShell";
-import { BsYoutube } from "react-icons/bs";
 
 const getYouTubeId = (url) => {
     if (!url) return null;
@@ -66,7 +65,7 @@ export default function VideoPlayerModal({ kajian, onClose }) {
                         rel='noopener noreferrer'
                         className='inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-medium flex-shrink-0'
                     >
-                        <BsYoutube className='text-base' />
+                        <span className='text-base' aria-hidden='true'>▶</span>
                         YouTube
                     </a>
                 </div>

@@ -1,8 +1,4 @@
-import ContentWidth from "@/components/layout/ContentWidth";
 import Section from "@/components/Section";
-import Link from "next/link";
-import { BsPlayCircle, BsSearch, BsYoutube } from "react-icons/bs";
-import { MdOutlinePlayLesson } from "react-icons/md";
 import KajianClient from "./KajianClient";
 
 export const revalidate = 3600;

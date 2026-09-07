@@ -3,7 +3,6 @@
 import { useLocale } from "@/context/Locale";
 import Image from "next/image";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { BsBoxArrowUpRight, BsPlayCircle, BsSearch, BsShare, BsX, BsYoutube } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 
 export const getSearchModes = (t) => [
@@ -112,7 +111,7 @@ export default function TranscriptSearchView({
         <div>
             {/* Search bar */}
             <div className='flex items-center gap-2 mb-3 bg-white dark:bg-slate-800 rounded-xl border-2 border-emerald-200 dark:border-emerald-800 px-3 py-2.5 shadow-sm'>
-                <BsSearch className='text-emerald-500 shrink-0 text-lg' />
+                <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-emerald-500 shrink-0 text-lg' aria-hidden='true'><path d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z' /></svg>
                 <input
                     type='text'
                     placeholder={
@@ -219,7 +218,7 @@ export default function TranscriptSearchView({
                 </div>
             ) : uniqueResults.length === 0 ? (
                 <div className='text-center py-12 text-gray-400'>
-                    <BsSearch className='text-4xl mx-auto mb-3 opacity-50' />
+                    <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-4xl mx-auto mb-3 opacity-50' aria-hidden='true'><path d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z' /></svg>
                     <p className='text-sm'>
                         {query
                             ? (t("kajian.empty_search_hint") || "Tidak ada hasil. Coba ubah kata kunci atau mode pencarian.")
@@ -274,7 +273,7 @@ function TranscriptResultCard({ result, query, onPlay, onShare }) {
                             unoptimized
                         />
                         <div className='absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors flex items-center justify-center'>
-                            <BsPlayCircle className='text-white text-2xl opacity-90' />
+                            <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-white text-2xl opacity-90' aria-hidden='true'><path d='M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z' /></svg>
                         </div>
                         <div className='absolute bottom-1 right-1 bg-black/80 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded'>
                             {result.timestamp}
@@ -327,7 +326,7 @@ function TranscriptResultCard({ result, query, onPlay, onShare }) {
                             onClick={onPlay}
                             className='inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 hover:underline'
                         >
-                            <BsPlayCircle className='text-sm' />
+                            <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-sm' aria-hidden='true'><path d='M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16zM6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z' /></svg>
                             Putar @ {result.timestamp}
                         </button>
                         <a
@@ -336,7 +335,7 @@ function TranscriptResultCard({ result, query, onPlay, onShare }) {
                             rel='noopener noreferrer'
                             className='inline-flex items-center gap-1 text-[11px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
                         >
-                            <BsYoutube className='text-red-500 text-sm' />
+                            <span className='text-red-500 text-sm' aria-hidden='true'>▶</span>
                             Buka di YouTube
                         </a>
                         <button
@@ -344,7 +343,7 @@ function TranscriptResultCard({ result, query, onPlay, onShare }) {
                             onClick={() => onShare?.(result)}
                             className='inline-flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400'
                         >
-                            <BsShare className='text-sm' />
+                            <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-sm' aria-hidden='true'><path d='M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z' /></svg>
                             Bagikan
                         </button>
                     </div>
@@ -567,7 +566,7 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                     onClick={onClose}
                     className='p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors'
                 >
-                    <BsX className='text-2xl' />
+                    <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-2xl' aria-hidden='true'><path d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z' /></svg>
                 </button>
             </div>
 
@@ -620,7 +619,19 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
 
                         {/* Local Search Input within this transcript */}
                         <div className='flex items-center gap-1.5 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-xs'>
-                            <BsSearch className='text-gray-400 text-[11px]' />
+                            <svg
+                                className='w-3 h-3 text-gray-400'
+                                fill='none'
+                                viewBox='0 0 24 24'
+                                stroke='currentColor'
+                            >
+                                <path
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
+                                    strokeWidth={2}
+                                    d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+                                />
+                            </svg>
                             <input
                                 type='text'
                                 placeholder={t("kajian.filter_in_video")}
@@ -711,9 +722,9 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                     rel='noopener noreferrer'
                     className='inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-xs font-semibold hover:bg-red-100 transition-colors'
                 >
-                    <BsYoutube className='text-sm' />
+                    <span className='text-sm' aria-hidden='true'>▶</span>
                     Buka di YouTube
-                    <BsBoxArrowUpRight className='text-[10px]' />
+                    <svg width='1em' height='1em' viewBox='0 0 16 16' fill='currentColor' className='text-[10px]' aria-hidden='true'><path fill-rule='evenodd' d='M10.5 7H5.5v2h5V7zm-1 4H6.5v-2h3v2zm-5-9h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM6.5 11h3v-2h-3v2zM4 6h8v-.5a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0-.5.5V6z' clip-rule='evenodd'/></svg>
                 </a>
                 <button
                     type='button'
