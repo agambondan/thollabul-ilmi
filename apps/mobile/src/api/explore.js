@@ -343,6 +343,32 @@ export const getBookmarkItems = async () => {
     return items.map(normalizeExploreItem);
 };
 
+const authRequest = (path, init = {}) =>
+    requestJson(path, { auth: true, ...init });
+
+export const listSyncedKajianBookmarks = () =>
+    authRequest("/api/v1/kajian/bookmarks/me").then((data) =>
+        Array.isArray(data?.items) ? data.items : [],
+    );
+
+export const listSyncedKajianBookmarkIDs = async (kajianId = 0) => {
+    const data = await authRequest(
+        `/api/v1/kajian/bookmarks/ids?kajian_id=${kajianId}`,
+    );
+    return Array.isArray(data?.chunk_ids) ? data.chunk_ids : [];
+};
+
+export const addSyncedKajianBookmark = (chunkId, kajianId) =>
+    authRequest("/api/v1/kajian/bookmarks", {
+        method: "POST",
+        body: { chunk_id: chunkId, kajian_id: kajianId },
+    });
+
+export const removeSyncedKajianBookmark = (chunkId) =>
+    authRequest(`/api/v1/kajian/bookmarks/${chunkId}`, {
+        method: "DELETE",
+    });
+
 export const searchDictionary = async (query) => {
     if (!query.trim()) return [];
     const payload = await requestJson(

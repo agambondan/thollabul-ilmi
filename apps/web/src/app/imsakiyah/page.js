@@ -3,8 +3,6 @@
 import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useState } from "react";
-import { BsCalendar3, BsGeoAlt } from "react-icons/bs";
-import { MdAccessTime } from "react-icons/md";
 
 const CITIES = [
     { label: "Jakarta", lat: -6.2088, lng: 106.8456 },
@@ -201,7 +199,13 @@ export function ImsakiyahContent() {
             <div className='bg-gradient-to-br from-emerald-900 to-emerald-800 text-white px-6 pt-28 pb-8'>
                 <ContentWidth compact='max-w-5xl'>
                     <div className='flex items-center gap-2 mb-1'>
-                        <BsCalendar3 className='text-emerald-300' />
+                        <svg
+                            className='w-4 h-4 text-emerald-300'
+                            fill='currentColor'
+                            viewBox='0 0 20 20'
+                        >
+                            <path d='M5.75 3a.75.75 0 01.75.75v.5h7v-.5a.75.75 0 011.5 0v.5h.75A2.25 2.25 0 0118 6.75v9A2.25 2.25 0 0115.75 18H4.25A2.25 2.25 0 012 15.75v-9A2.25 2.25 0 014.25 4.5H5v-.5A.75.75 0 015.75 3zM3.5 8v7.75c0 .414.336.75.75.75h11.5a.75.75 0 00.75-.75V8h-13z' />
+                        </svg>
                         <span className='text-xs font-semibold uppercase tracking-widest text-emerald-300'>
                             {t("imsakiyah.schedule_label")}
                         </span>
@@ -262,7 +266,17 @@ export function ImsakiyahContent() {
                             onClick={fetchGps}
                             className='flex items-center gap-1.5 text-sm px-3 py-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors border border-emerald-200 dark:border-emerald-800'
                         >
-                            <BsGeoAlt />
+                            <svg
+                                className='w-4 h-4'
+                                fill='currentColor'
+                                viewBox='0 0 20 20'
+                            >
+                                <path
+                                    fillRule='evenodd'
+                                    d='M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z'
+                                    clipRule='evenodd'
+                                />
+                            </svg>
                             GPS
                         </button>
                     </div>
@@ -278,7 +292,19 @@ export function ImsakiyahContent() {
                 {/* Table */}
                 {loading ? (
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-12 text-center'>
-                        <MdAccessTime className='text-4xl text-emerald-400 mx-auto mb-3 animate-spin' />
+                        <svg
+                            className='w-10 h-10 text-emerald-400 mx-auto mb-3 animate-spin'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                            stroke='currentColor'
+                        >
+                            <path
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                strokeWidth={1.8}
+                                d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
+                            />
+                        </svg>
                         <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             {t("imsakiyah.loading")}
                         </p>

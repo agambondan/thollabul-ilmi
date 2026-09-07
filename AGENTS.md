@@ -36,3 +36,16 @@ repo, so every repo carries an identical copy of its `deploy.sh` + `Makefile` as
 the only versioned record. The `Makefile` there lists targets for *every*
 project — that is expected, it mirrors the workspace file. Read
 `ops/deploy-workspace/README.md` before touching it.
+
+## Multi-agent shared session — DO NOT TOUCH STASH
+
+This repo is shared across multiple concurrent Claude/agent sessions. Some
+sessions park WIP work in `git stash` (e.g. `stash@{1}` may contain
+unrelated-in-progress changes from a different agent doing kajian+quiz+player
+work). **NEVER run `git stash drop`, `git stash pop`, `git stash clear`, or
+`git stash apply stash@{N}`** — you can destroy another agent's work-in-progress.
+
+If you think a stash belongs to you, verify with the user first. Otherwise
+treat every existing `stash@{N}` as read-only and out of scope. Same rule
+applies to `git reflog` cleanups and `git filter-branch`/`filter-repo` — they
+can rewrite commits other agents are about to base on.

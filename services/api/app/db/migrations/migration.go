@@ -61,6 +61,7 @@ var ModelMigrations []interface{} = []interface{}{
 	model.FiqhItem{},
 	model.Kajian{},
 	model.KajianTranscript{},
+	model.KajianUserBookmark{},
 	model.Muhasabah{},
 	model.StudyGoal{},
 	model.RefreshToken{},

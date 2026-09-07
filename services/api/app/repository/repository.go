@@ -54,6 +54,7 @@ type Repositories struct {
 	Murojaah             MurojaahRepository
 	Fiqh                 FiqhRepository
 	Kajian               KajianRepository
+	KajianBookmark       KajianBookmarkRepository
 	Muhasabah            MuhasabahRepository
 	Goal                 GoalRepository
 	History              HistoryRepository
@@ -143,6 +144,7 @@ func NewRepositories(db *gorm.DB, client *redis.Client) (*Repositories, error) {
 		Murojaah:             NewMurojaahRepository(db),
 		Fiqh:                 NewFiqhRepository(db),
 		Kajian:               NewKajianRepository(db, pg),
+		KajianBookmark:       NewKajianBookmarkRepository(db),
 		Muhasabah:            NewMuhasabahRepository(db),
 		Goal:                 NewGoalRepository(db),
 		History:              NewHistoryRepository(db),

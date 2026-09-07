@@ -927,6 +927,7 @@ export const adminAmalanApi = buildResourceApi({
 
 export const adminAchievementApi = buildResourceApi({
     listPath: "/api/v1/achievements",
+    listParam: "page=0&size=500",
 });
 
 export const adminPerawiApi = buildResourceApi({
@@ -1367,4 +1368,21 @@ export const parseApiError = async (res, fallback = "Gagal memproses data") => {
     } catch {
         return fallback;
     }
+};
+
+export const kajianBookmarkApi = {
+    list: () => authFetch("/api/v1/kajian/bookmarks/me"),
+    chunkIds: (kajianId = 0) =>
+        authFetch(
+            `/api/v1/kajian/bookmarks/ids?kajian_id=${kajianId}`,
+        ),
+    add: (chunkId, kajianId) =>
+        authFetch("/api/v1/kajian/bookmarks", {
+            method: "POST",
+            body: JSON.stringify({ chunk_id: chunkId, kajian_id: kajianId }),
+        }),
+    remove: (chunkId) =>
+        authFetch(`/api/v1/kajian/bookmarks/${chunkId}`, {
+            method: "DELETE",
+        }),
 };
