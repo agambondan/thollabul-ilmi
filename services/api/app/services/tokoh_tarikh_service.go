@@ -8,6 +8,7 @@ import (
 
 type TokohTarikhService interface {
 	Create(req *model.CreateTokohTarikhRequest) (*model.TokohTarikh, error)
+	Update(id int, req *model.CreateTokohTarikhRequest) (*model.TokohTarikh, error)
 	FindAll(search, era, kategori string, limit, offset int) ([]model.TokohTarikh, int64, error)
 	FindByID(int) (*model.TokohTarikh, error)
 	Delete(int) error
@@ -79,4 +80,22 @@ func (s *tokohTarikhService) Delete(id int) error {
 		s.cache.Invalidate("tokoh-tarikh:*")
 	}
 	return err
+}
+
+func (s *tokohTarikhService) Update(id int, req *model.CreateTokohTarikhRequest) (*model.TokohTarikh, error) {
+	t := &model.TokohTarikh{
+		Nama:       req.Nama,
+		Era:        req.Era,
+		TahunLahir: req.TahunLahir,
+		TahunWafat: req.TahunWafat,
+		Biografi:   req.Biografi,
+		Kontribusi: req.Kontribusi,
+		Kategori:   req.Kategori,
+		ImageURL:   req.ImageURL,
+	}
+	result, err := s.repo.Update(id, t)
+	if err == nil && s.cache != nil {
+		s.cache.Invalidate("tokoh-tarikh:*")
+	}
+	return result, err
 }

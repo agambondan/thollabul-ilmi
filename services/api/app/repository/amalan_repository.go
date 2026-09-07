@@ -9,6 +9,10 @@ import (
 
 type AmalanRepository interface {
 	FindAllItems() ([]model.AmalanItem, error)
+	FindItemByID(id int) (*model.AmalanItem, error)
+	CreateItem(item *model.AmalanItem) (*model.AmalanItem, error)
+	UpdateItem(id int, item *model.AmalanItem) (*model.AmalanItem, error)
+	DeleteItem(id int) error
 	FindTodayStatus(userID uuid.UUID, date string) ([]model.AmalanWithStatus, error)
 	ToggleLog(userID uuid.UUID, amalanItemID int, date string, isDone bool) error
 	FindHistory(userID uuid.UUID, from, to string) ([]model.AmalanLog, error)
@@ -24,8 +28,34 @@ func NewAmalanRepository(db *gorm.DB) AmalanRepository {
 
 func (r *amalanRepository) FindAllItems() ([]model.AmalanItem, error) {
 	var items []model.AmalanItem
-	err := r.db.Where("is_active = true").Order("category, name").Limit(200).Find(&items).Error
+	err := r.db.Order("category, name").Limit(500).Find(&items).Error
 	return items, err
+}
+
+func (r *amalanRepository) FindItemByID(id int) (*model.AmalanItem, error) {
+	var item model.AmalanItem
+	if err := r.db.Preload("Translation").First(&item, id).Error; err != nil {
+		return nil, err
+	}
+	return &item, nil
+}
+
+func (r *amalanRepository) CreateItem(item *model.AmalanItem) (*model.AmalanItem, error) {
+	if err := r.db.Create(item).Error; err != nil {
+		return nil, err
+	}
+	return r.FindItemByID(*item.ID)
+}
+
+func (r *amalanRepository) UpdateItem(id int, item *model.AmalanItem) (*model.AmalanItem, error) {
+	if err := r.db.Model(&model.AmalanItem{}).Where("id = ?", id).Updates(item).Error; err != nil {
+		return nil, err
+	}
+	return r.FindItemByID(id)
+}
+
+func (r *amalanRepository) DeleteItem(id int) error {
+	return r.db.Delete(&model.AmalanItem{}, id).Error
 }
 
 func (r *amalanRepository) FindTodayStatus(userID uuid.UUID, date string) ([]model.AmalanWithStatus, error) {

@@ -10,6 +10,9 @@ import (
 
 type AchievementService interface {
 	GetAll() ([]model.Achievement, error)
+	Create(a *model.Achievement) (*model.Achievement, error)
+	Update(id int, a *model.Achievement) (*model.Achievement, error)
+	Delete(id int) error
 	GetUserAchievements(userID uuid.UUID) ([]model.UserAchievement, error)
 	GetUserPoints(userID uuid.UUID) (*model.UserPoints, error)
 	// Evaluate checks a user's progress and awards any newly-earned achievements.
@@ -28,6 +31,18 @@ func NewAchievementService(repo repository.AchievementRepository) AchievementSer
 
 func (s *achievementService) GetAll() ([]model.Achievement, error) {
 	return s.repo.FindAll()
+}
+
+func (s *achievementService) Create(a *model.Achievement) (*model.Achievement, error) {
+	return s.repo.Create(a)
+}
+
+func (s *achievementService) Update(id int, a *model.Achievement) (*model.Achievement, error) {
+	return s.repo.Update(id, a)
+}
+
+func (s *achievementService) Delete(id int) error {
+	return s.repo.Delete(id)
 }
 
 func (s *achievementService) GetUserAchievements(userID uuid.UUID) ([]model.UserAchievement, error) {

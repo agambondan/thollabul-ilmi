@@ -477,6 +477,10 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/amalan/today", jwt, newAmalanController.GetToday)
 	master.Put("/amalan/:id/check", jwt, newAmalanController.Toggle)
 	master.Get("/amalan/history", jwt, newAmalanController.GetHistory)
+	// Admin: amalan master items
+	master.Post("/amalan/items", middlewares.EditorOrAdminMiddleware(), newAmalanController.CreateItem)
+	master.Put("/amalan/items/:id", middlewares.EditorOrAdminMiddleware(), newAmalanController.UpdateItem)
+	master.Delete("/amalan/items/:id", middlewares.EditorOrAdminMiddleware(), newAmalanController.DeleteItem)
 
 	// Dzikir (public)
 	master.Get("/dzikir", newDzikirController.FindAll)
@@ -501,6 +505,10 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/achievements", newAchievementController.GetAll)
 	master.Get("/achievements/mine", jwt, newAchievementController.GetMine)
 	master.Get("/achievements/points", jwt, newAchievementController.GetMyPoints)
+	// Admin: achievements master
+	master.Post("/achievements", middlewares.EditorOrAdminMiddleware(), newAchievementController.Create)
+	master.Put("/achievements/:id", middlewares.EditorOrAdminMiddleware(), newAchievementController.Update)
+	master.Delete("/achievements/:id", middlewares.EditorOrAdminMiddleware(), newAchievementController.Delete)
 
 	// Share / Card Metadata (public)
 	master.Get("/share/ayah/:id", newShareController.ShareAyah)

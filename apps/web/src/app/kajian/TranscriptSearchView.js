@@ -366,6 +366,7 @@ function formatTime(seconds) {
 }
 
 function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
+    const { t } = useLocale();
     const videoId = getYouTubeIdFromTimestampUrl(item.timestamp_url) || item.video_id;
     const storageKey = item?.kajian_id ? `kajian-player:${item.kajian_id}` : null;
     const bookmarkKey = item?.kajian_id ? `kajian-bookmarks:${item.kajian_id}` : null;
@@ -654,14 +655,14 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                                 {filterQuery ? t("kajian.no_matching_sentence") : t("kajian.transcript_not_available")}
                             </div>
                         ) : (
-                            displayedTranscripts.map((t, idx) => {
-                                const isCurrent = transcripts.indexOf(t) === activeIndex;
-                                const isBookmarked = bookmarked.has(t.id);
+                            displayedTranscripts.map((chunk, idx) => {
+                                const isCurrent = transcripts.indexOf(chunk) === activeIndex;
+                                const isBookmarked = bookmarked.has(chunk.id);
                                 return (
                                     <div
-                                        key={t.id || idx}
+                                        key={chunk.id || idx}
                                         ref={isCurrent ? activeChunkRef : null}
-                                        onClick={() => handleSeek(t.start_seconds)}
+                                        onClick={() => handleSeek(chunk.start_seconds)}
                                         className={`group p-2 sm:p-2.5 rounded-xl cursor-pointer transition-all duration-200 flex gap-2.5 items-start ${
                                             isCurrent
                                                 ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/20 scale-[1.01]"
@@ -672,7 +673,7 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                                             type='button'
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                toggleBookmark(t.id);
+                                                toggleBookmark(chunk.id);
                                             }}
                                             className={`shrink-0 text-sm transition-opacity ${
                                                 isBookmarked ? "opacity-100" : "opacity-30 hover:opacity-70"
@@ -689,10 +690,10 @@ function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                                                     : "bg-gray-100 dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/50"
                                             }`}
                                         >
-                                            {formatTime(t.start_seconds)}
+                                            {formatTime(chunk.start_seconds)}
                                         </button>
                                         <p className={`flex-1 text-xs leading-relaxed ${isCurrent ? "font-medium" : ""}`}>
-                                            {highlightText(t.text, filterQuery || searchQuery)}
+                                            {highlightText(chunk.text, filterQuery || searchQuery)}
                                         </p>
                                     </div>
                                 );

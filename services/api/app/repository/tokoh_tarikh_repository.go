@@ -7,6 +7,7 @@ import (
 
 type TokohTarikhRepository interface {
 	Save(*model.TokohTarikh) (*model.TokohTarikh, error)
+	Update(id int, t *model.TokohTarikh) (*model.TokohTarikh, error)
 	FindAll(search, era, kategori string, limit, offset int) ([]model.TokohTarikh, int64, error)
 	FindByID(int) (*model.TokohTarikh, error)
 	Delete(int) error
@@ -21,6 +22,13 @@ func (r *tokohTarikhRepo) Save(t *model.TokohTarikh) (*model.TokohTarikh, error)
 		return nil, err
 	}
 	return t, nil
+}
+
+func (r *tokohTarikhRepo) Update(id int, t *model.TokohTarikh) (*model.TokohTarikh, error) {
+	if err := r.db.Model(&model.TokohTarikh{}).Where("id = ?", id).Updates(t).Error; err != nil {
+		return nil, err
+	}
+	return r.FindByID(id)
 }
 
 func (r *tokohTarikhRepo) FindAll(search, era, kategori string, limit, offset int) ([]model.TokohTarikh, int64, error) {

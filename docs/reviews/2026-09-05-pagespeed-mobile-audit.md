@@ -29,7 +29,7 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 | 1   | `/` (Beranda)           |   **60**    |    **100**    |       81       | 100 | 2.0s | 4.5s  |   750ms   | **0.000** |    ✅ Zero CLS (Shift Fixed) |
 | 2   | `/quran`                |   **72**    |    **93**     |       81       | 100 | 1.4s | 6.4s  | **80ms**  | **0.001** |   ✅ ISR Active (TBT 80ms)   |
 | 3   | `/quran/1` (Al-Fatihah) |   **67**    |      89       |       77       | 92  | 2.4s | 6.1s  | **220ms** | **0.000** |    ✅ SSG Active (CLS 0)     |
-| 4   | `/quran/2` (Al-Baqarah) |   **59**    |      89       |       77       | 92  | 1.9s | 5.0s  |   610ms   | **0.025** | ✅ LPMQ Preload + PWA Fix  |
+| 4   | `/quran/2` (Al-Baqarah) |   **79**    |      89       |       77       | 92  | 1.6s | 5.1s  |   140ms   | **0.025** | ✅ react-icons dropped + progressApi dedup |
 | 5   | `/quran/page-mushaf`    |   **63**    |    **96**     |       81       | 100 | 2.6s | 6.6s  | **120ms** | **0.146** |      ⚠️ CLS Borderline       |
 | 6   | `/hadith`               |   **65**    |    **97**     |       81       | 100 | 1.9s | 5.1s  | **440ms** | **0.000** | ✅ Tab CLS + Cover Fixed   |
 | 7   | `/hadith/bukhari`       |   **58**    |    **96**     |       81       | 92  | 2.1s | 5.7s  |   620ms   | **0.000** |    ✅ SSG themes+chapters+hadiths |

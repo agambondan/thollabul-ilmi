@@ -65,8 +65,26 @@ export async function generateStaticParams() {
 
 const Page = async (props) => {
     const params = await props.params;
-    const [themes, fallbackHadiths] = await Promise.all([
-        fetchThemes(params.slug),
+    const themes = await fetchThemes(params.slug);
+    const firstThemeId = themes[0]?.id ?? themes[0]?.theme?.id ?? null;
+
+    const [initialChapters, initialHadiths, fallbackHadiths] = await Promise.all([
+        firstThemeId
+            ? fetchChapters(params.slug, firstThemeId)
+            : Promise.resolve([]),
+        (async () => {
+            if (!firstThemeId) return [];
+            const chapters = firstThemeId
+                ? await fetchChapters(params.slug, firstThemeId)
+                : [];
+            const firstChapterId = chapters[0]?.id;
+            if (!firstChapterId) return [];
+            return fetchHadiths(
+                params.slug,
+                firstThemeId,
+                firstChapterId,
+            );
+        })(),
         (async () => {
             try {
                 const res = await fetch(
@@ -80,22 +98,6 @@ const Page = async (props) => {
             }
         })(),
     ]);
-
-    const firstThemeId = themes[0]?.id ?? themes[0]?.theme?.id ?? null;
-    let initialChapters = [];
-    let initialHadiths = [];
-    if (firstThemeId) {
-        initialChapters = await fetchChapters(params.slug, firstThemeId);
-        const firstChapter = initialChapters[0];
-        const firstChapterId = firstChapter?.id;
-        if (firstChapterId) {
-            initialHadiths = await fetchHadiths(
-                params.slug,
-                firstThemeId,
-                firstChapterId,
-            );
-        }
-    }
 
     return (
         <main className='min-h-screen flex flex-col'>

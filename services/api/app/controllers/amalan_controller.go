@@ -4,12 +4,16 @@ import (
 	"strconv"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
+	"github.com/agambondan/islamic-explorer/app/model"
 	service "github.com/agambondan/islamic-explorer/app/services"
 	"github.com/gofiber/fiber/v2"
 )
 
 type AmalanController interface {
 	FindAllItems(ctx *fiber.Ctx) error
+	CreateItem(ctx *fiber.Ctx) error
+	UpdateItem(ctx *fiber.Ctx) error
+	DeleteItem(ctx *fiber.Ctx) error
 	GetToday(ctx *fiber.Ctx) error
 	Toggle(ctx *fiber.Ctx) error
 	GetHistory(ctx *fiber.Ctx) error
@@ -109,4 +113,67 @@ func (c *amalanController) GetHistory(ctx *fiber.Ctx) error {
 		return lib.ErrorInternal(ctx)
 	}
 	return lib.OK(ctx, logs)
+}
+
+// @Summary Create amalan item (admin)
+// @Tags Personal
+// @Accept json
+// @Produce json
+// @Param body body model.AmalanItem true "Amalan item"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Router /amalan/items [post]
+func (c *amalanController) CreateItem(ctx *fiber.Ctx) error {
+	item := new(model.AmalanItem)
+	if err := lib.BodyParser(ctx, item); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	created, err := c.svc.CreateItem(item)
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, created)
+}
+
+// @Summary Update amalan item (admin)
+// @Tags Personal
+// @Accept json
+// @Produce json
+// @Param id path int true "Amalan item ID"
+// @Param body body model.AmalanItem true "Amalan item"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Failure 404 {object} lib.Response
+// @Router /amalan/items/{id} [put]
+func (c *amalanController) UpdateItem(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	item := new(model.AmalanItem)
+	if err := lib.BodyParser(ctx, item); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	updated, err := c.svc.UpdateItem(id, item)
+	if err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	return lib.OK(ctx, updated)
+}
+
+// @Summary Delete amalan item (admin)
+// @Tags Personal
+// @Param id path int true "Amalan item ID"
+// @Success 200 {object} lib.Response
+// @Failure 404 {object} lib.Response
+// @Router /amalan/items/{id} [delete]
+func (c *amalanController) DeleteItem(ctx *fiber.Ctx) error {
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		return lib.ErrorBadRequest(ctx, "invalid id")
+	}
+	if err := c.svc.DeleteItem(id); err != nil {
+		return lib.ErrorNotFound(ctx)
+	}
+	return lib.OK(ctx)
 }

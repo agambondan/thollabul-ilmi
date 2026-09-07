@@ -10,6 +10,10 @@ import (
 
 type AchievementRepository interface {
 	FindAll() ([]model.Achievement, error)
+	FindByID(id int) (*model.Achievement, error)
+	Create(a *model.Achievement) (*model.Achievement, error)
+	Update(id int, a *model.Achievement) (*model.Achievement, error)
+	Delete(id int) error
 	FindByCode(code string) (*model.Achievement, error)
 	// UserAchievement
 	FindUserAchievements(userID uuid.UUID) ([]model.UserAchievement, error)
@@ -40,6 +44,32 @@ func (r *achievementRepo) FindByCode(code string) (*model.Achievement, error) {
 		return nil, err
 	}
 	return &a, nil
+}
+
+func (r *achievementRepo) FindByID(id int) (*model.Achievement, error) {
+	var a model.Achievement
+	if err := r.db.First(&a, id).Error; err != nil {
+		return nil, err
+	}
+	return &a, nil
+}
+
+func (r *achievementRepo) Create(a *model.Achievement) (*model.Achievement, error) {
+	if err := r.db.Create(a).Error; err != nil {
+		return nil, err
+	}
+	return r.FindByID(*a.ID)
+}
+
+func (r *achievementRepo) Update(id int, a *model.Achievement) (*model.Achievement, error) {
+	if err := r.db.Model(&model.Achievement{}).Where("id = ?", id).Updates(a).Error; err != nil {
+		return nil, err
+	}
+	return r.FindByID(id)
+}
+
+func (r *achievementRepo) Delete(id int) error {
+	return r.db.Delete(&model.Achievement{}, id).Error
 }
 
 func (r *achievementRepo) FindUserAchievements(userID uuid.UUID) ([]model.UserAchievement, error) {
