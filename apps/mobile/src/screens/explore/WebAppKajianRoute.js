@@ -1,4 +1,12 @@
-import { Bookmark, BookOpen, ExternalLink, Play, Search, Trash2, Youtube } from "lucide-react-native";
+import {
+    Bookmark,
+    BookOpen,
+    ExternalLink,
+    Play,
+    Search,
+    Trash2,
+    Youtube,
+} from "lucide-react-native";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -20,12 +28,19 @@ const ACCENT = "#10b981";
 const SEARCH_MODES = [
     { key: "hybrid", label: "Hybrid", icon: "⚡", desc: "Exact + Semantic" },
     { key: "exact", label: "Exact", icon: "🔤", desc: "Kata kunci sama" },
-    { key: "semantic", label: "Semantic", icon: "🧠", desc: "Berdasarkan makna" },
+    {
+        key: "semantic",
+        label: "Semantic",
+        icon: "🧠",
+        desc: "Berdasarkan makna",
+    },
 ];
 
 function getYouTubeId(url) {
     if (!url) return null;
-    const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    const m = url.match(
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+    );
     return m ? m[1] : null;
 }
 
@@ -41,6 +56,7 @@ function KajianCard({
     index,
     item,
     onOpenItem,
+    onOpenPlayer,
     onOpenUrl,
 }) {
     const type = getType(item);
@@ -56,6 +72,22 @@ function KajianCard({
             accessibilityRole='button'
             key={`${getItemKey(item)}-${index}`}
             onPress={() => {
+                if (videoId && onOpenPlayer) {
+                    onOpenPlayer({
+                        ...item,
+                        kajian_id: item.id,
+                        video_id: videoId,
+                        title: getTitle(item, index),
+                        speaker,
+                        topic,
+                        start_seconds: 0,
+                        end_seconds: 0,
+                        timestamp: "00:00",
+                        timestamp_url: url,
+                        snippet: description,
+                    });
+                    return;
+                }
                 if (url) {
                     onOpenUrl(url);
                     return;
@@ -68,7 +100,9 @@ function KajianCard({
             {videoId ? (
                 <View style={styles.thumbnailWrapper}>
                     <Image
-                        source={{ uri: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg` }}
+                        source={{
+                            uri: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
+                        }}
                         style={styles.thumbnail}
                     />
                     <View style={styles.playOverlay}>
@@ -117,18 +151,26 @@ function TranscriptCard({ item, onOpenUrl, onOpenPlayer }) {
     return (
         <Pressable
             accessibilityRole='button'
-            onPress={() => (onOpenPlayer ? onOpenPlayer(item) : onOpenUrl(item.timestamp_url))}
+            onPress={() =>
+                onOpenPlayer
+                    ? onOpenPlayer(item)
+                    : onOpenUrl(item.timestamp_url)
+            }
             style={styles.transcriptCard}
         >
             <View style={styles.transcriptContent}>
                 {videoId ? (
                     <View style={styles.transcriptThumbWrapper}>
                         <Image
-                            source={{ uri: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg` }}
+                            source={{
+                                uri: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
+                            }}
                             style={styles.transcriptThumb}
                         />
                         <View style={styles.transcriptTimeBadge}>
-                            <Text style={styles.transcriptTimeText}>{item.timestamp}</Text>
+                            <Text style={styles.transcriptTimeText}>
+                                {item.timestamp}
+                            </Text>
                         </View>
                     </View>
                 ) : null}
@@ -247,7 +289,9 @@ export function WebAppKajianRoute({
     const removeSavedBookmark = (id) => {
         const next = savedBookmarks.filter((b) => b.id !== id);
         setSavedBookmarks(next);
-        AsyncStorage.setItem("kajian_saved_chunks", JSON.stringify(next)).catch(() => {});
+        AsyncStorage.setItem("kajian_saved_chunks", JSON.stringify(next)).catch(
+            () => {},
+        );
     };
 
     const filteredSaved = useMemo(() => {
@@ -269,7 +313,11 @@ export function WebAppKajianRoute({
             .then((r) => r.json())
             .then((data) => {
                 if (!active) return;
-                const list = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : [];
+                const list = Array.isArray(data?.data)
+                    ? data.data
+                    : Array.isArray(data)
+                      ? data
+                      : [];
                 setSpeakers(list);
             })
             .catch(() => {});
@@ -322,9 +370,12 @@ export function WebAppKajianRoute({
         >
             <View testID='explore-web-app-kajian-surface' />
             <View style={styles.header}>
-                <Text style={styles.title}>{t("explore.kajian.title") || "Kajian Islam"}</Text>
+                <Text style={styles.title}>
+                    {t("explore.kajian.title") || "Kajian Islam"}
+                </Text>
                 <Text style={styles.subtitle}>
-                    {t("explore.kajian.subtitle") || "Rekaman kajian dari ustadz-ustadz ahlus sunnah"}
+                    {t("explore.kajian.subtitle") ||
+                        "Rekaman kajian dari ustadz-ustadz ahlus sunnah"}
                 </Text>
             </View>
 
@@ -351,30 +402,54 @@ export function WebAppKajianRoute({
                 <Pressable
                     accessibilityRole='button'
                     onPress={() => setTab("transcript")}
-                    style={[styles.tabButton, tab === "transcript" && styles.tabButtonActive]}
+                    style={[
+                        styles.tabButton,
+                        tab === "transcript" && styles.tabButtonActive,
+                    ]}
                     testID='web-app-kajian-tab-transcript'
                 >
-                    <Text style={[styles.tabButtonText, tab === "transcript" && styles.tabButtonTextActive]}>
+                    <Text
+                        style={[
+                            styles.tabButtonText,
+                            tab === "transcript" && styles.tabButtonTextActive,
+                        ]}
+                    >
                         {t("explore.kajian.tabTranscript")}
                     </Text>
                 </Pressable>
                 <Pressable
                     accessibilityRole='button'
                     onPress={() => setTab("bookmarks")}
-                    style={[styles.tabButton, tab === "bookmarks" && styles.tabButtonActive]}
+                    style={[
+                        styles.tabButton,
+                        tab === "bookmarks" && styles.tabButtonActive,
+                    ]}
                     testID='web-app-kajian-tab-bookmarks'
                 >
-                    <Text style={[styles.tabButtonText, tab === "bookmarks" && styles.tabButtonTextActive]}>
+                    <Text
+                        style={[
+                            styles.tabButtonText,
+                            tab === "bookmarks" && styles.tabButtonTextActive,
+                        ]}
+                    >
                         {t("explore.kajian.tabBookmarks")}
                     </Text>
                 </Pressable>
                 <Pressable
                     accessibilityRole='button'
                     onPress={() => setTab("list")}
-                    style={[styles.tabButton, tab === "list" && styles.tabButtonActive]}
+                    style={[
+                        styles.tabButton,
+                        tab === "list" && styles.tabButtonActive,
+                    ]}
                     testID='web-app-kajian-tab-list'
                 >
-                    <Text style={[styles.tabButtonText, tab === "list" && styles.tabButtonTextActive]}>
+                    <Text
+                        style={[
+                            styles.tabButtonText,
+                            tab === "list" && styles.tabButtonTextActive,
+                        ]}
+                    >
                         {t("explore.kajian.tabList")}
                     </Text>
                 </Pressable>
@@ -402,20 +477,20 @@ export function WebAppKajianRoute({
                                 onPress={() => setSearchMode(m.key)}
                                 style={[
                                     styles.modeButton,
-                                    searchMode === m.key && (
-                                        m.key === "exact"
+                                    searchMode === m.key &&
+                                        (m.key === "exact"
                                             ? styles.modeButtonExact
                                             : m.key === "semantic"
                                               ? styles.modeButtonSemantic
-                                              : styles.modeButtonHybrid
-                                    ),
+                                              : styles.modeButtonHybrid),
                                 ]}
                             >
                                 <Text style={styles.modeIcon}>{m.icon}</Text>
                                 <Text
                                     style={[
                                         styles.modeLabel,
-                                        searchMode === m.key && styles.modeLabelActive,
+                                        searchMode === m.key &&
+                                            styles.modeLabelActive,
                                     ]}
                                 >
                                     {m.label}
@@ -427,7 +502,9 @@ export function WebAppKajianRoute({
                     {/* Speaker Filter Pills */}
                     {speakers.length > 0 && (
                         <View style={styles.speakerSection}>
-                            <Text style={styles.speakerLabel}>FILTER USTADZ:</Text>
+                            <Text style={styles.speakerLabel}>
+                                FILTER USTADZ:
+                            </Text>
                             <ScrollView
                                 horizontal
                                 showsHorizontalScrollIndicator={false}
@@ -437,13 +514,15 @@ export function WebAppKajianRoute({
                                     onPress={() => setSpeakerFilter("")}
                                     style={[
                                         styles.speakerPill,
-                                        !speakerFilter && styles.speakerPillActive,
+                                        !speakerFilter &&
+                                            styles.speakerPillActive,
                                     ]}
                                 >
                                     <Text
                                         style={[
                                             styles.speakerPillText,
-                                            !speakerFilter && styles.speakerPillTextActive,
+                                            !speakerFilter &&
+                                                styles.speakerPillTextActive,
                                         ]}
                                     >
                                         Semua
@@ -452,19 +531,28 @@ export function WebAppKajianRoute({
                                 {speakers.map((s) => (
                                     <Pressable
                                         key={s}
-                                        onPress={() => setSpeakerFilter(s === speakerFilter ? "" : s)}
+                                        onPress={() =>
+                                            setSpeakerFilter(
+                                                s === speakerFilter ? "" : s,
+                                            )
+                                        }
                                         style={[
                                             styles.speakerPill,
-                                            speakerFilter === s && styles.speakerPillActive,
+                                            speakerFilter === s &&
+                                                styles.speakerPillActive,
                                         ]}
                                     >
                                         <Text
                                             style={[
                                                 styles.speakerPillText,
-                                                speakerFilter === s && styles.speakerPillTextActive,
+                                                speakerFilter === s &&
+                                                    styles.speakerPillTextActive,
                                             ]}
                                         >
-                                            {s.replace(/^Ust\.\s*Dr\.\s*/i, "Ust. ")}
+                                            {s.replace(
+                                                /^Ust\.\s*Dr\.\s*/i,
+                                                "Ust. ",
+                                            )}
                                         </Text>
                                     </Pressable>
                                 ))}
@@ -476,12 +564,15 @@ export function WebAppKajianRoute({
                     {transcriptLoading ? (
                         <View style={styles.state}>
                             <ActivityIndicator color={ACCENT} size='small' />
-                            <Text style={styles.stateText}>Mencari potongan transkrip...</Text>
+                            <Text style={styles.stateText}>
+                                Mencari potongan transkrip...
+                            </Text>
                         </View>
                     ) : transcriptResults.length > 0 ? (
                         <View style={styles.grid}>
                             <Text style={styles.resultsCount}>
-                                Ditemukan {transcriptResults.length} potongan kajian
+                                Ditemukan {transcriptResults.length} potongan
+                                kajian
                             </Text>
                             {transcriptResults.map((item) => (
                                 <TranscriptCard
@@ -494,14 +585,19 @@ export function WebAppKajianRoute({
                         </View>
                     ) : (
                         <View style={styles.empty}>
-                            <Search color='#9ca3af' size={32} strokeWidth={1.8} />
+                            <Search
+                                color='#9ca3af'
+                                size={32}
+                                strokeWidth={1.8}
+                            />
                             <Text style={styles.emptyTitle}>
                                 {transcriptQuery
                                     ? "Tidak ada hasil transkrip"
                                     : "Ketik kata kunci untuk mencari di transkrip"}
                             </Text>
                             <Text style={styles.emptyText}>
-                                Cari potongan video berdasarkan tema atau teks ceramah ustadz.
+                                Cari potongan video berdasarkan tema atau teks
+                                ceramah ustadz.
                             </Text>
                         </View>
                     )}
@@ -528,14 +624,19 @@ export function WebAppKajianRoute({
                                 })}
                             </Text>
                             {filteredSaved.map((item) => (
-                                <View key={item.id} style={styles.savedCardWrapper}>
+                                <View
+                                    key={item.id}
+                                    style={styles.savedCardWrapper}
+                                >
                                     <TranscriptCard
                                         item={item}
                                         onOpenUrl={onOpenUrl}
                                         onOpenPlayer={setPlayerItem}
                                     />
                                     <Pressable
-                                        onPress={() => removeSavedBookmark(item.id)}
+                                        onPress={() =>
+                                            removeSavedBookmark(item.id)
+                                        }
                                         style={styles.removeBookmarkBtn}
                                     >
                                         <Trash2 color='#ef4444' size={14} />
@@ -548,7 +649,11 @@ export function WebAppKajianRoute({
                         </View>
                     ) : (
                         <View style={styles.empty}>
-                            <Bookmark color='#9ca3af' size={32} strokeWidth={1.8} />
+                            <Bookmark
+                                color='#9ca3af'
+                                size={32}
+                                strokeWidth={1.8}
+                            />
                             <Text style={styles.emptyTitle}>
                                 {savedQuery
                                     ? t("explore.kajian.noMatchingBookmarks")
@@ -586,7 +691,8 @@ export function WebAppKajianRoute({
                             <Text
                                 style={[
                                     styles.categoryText,
-                                    !kajianCategory && styles.categoryTextActive,
+                                    !kajianCategory &&
+                                        styles.categoryTextActive,
                                 ]}
                             >
                                 {t("explore.common.all")}
@@ -598,7 +704,9 @@ export function WebAppKajianRoute({
                                 key={category}
                                 onPress={() =>
                                     onSelectCategory(
-                                        kajianCategory === category ? "" : category,
+                                        kajianCategory === category
+                                            ? ""
+                                            : category,
                                     )
                                 }
                                 style={[
@@ -646,6 +754,7 @@ export function WebAppKajianRoute({
                                     item={item}
                                     key={`${getItemKey(item)}-${index}`}
                                     onOpenItem={onOpenItem}
+                                    onOpenPlayer={setPlayerItem}
                                     onOpenUrl={onOpenUrl}
                                 />
                             ))}
@@ -653,7 +762,11 @@ export function WebAppKajianRoute({
                     ) : null}
                     {!loading && !error && !filteredItems.length ? (
                         <View style={styles.empty}>
-                            <BookOpen color='#9ca3af' size={32} strokeWidth={1.8} />
+                            <BookOpen
+                                color='#9ca3af'
+                                size={32}
+                                strokeWidth={1.8}
+                            />
                             <Text style={styles.emptyTitle}>
                                 {t("explore.kajian.emptyTitle")}
                             </Text>

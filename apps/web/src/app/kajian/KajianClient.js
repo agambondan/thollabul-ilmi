@@ -8,18 +8,15 @@ import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useMemo, useState } from "react";
 import { BsPlayCircle, BsSearch, BsYoutube } from "react-icons/bs";
 import { MdOutlinePlayLesson } from "react-icons/md";
-import VideoPlayerModal from "./VideoPlayerModal";
 import SavedBookmarksView from "./SavedBookmarksView";
+import { TranscriptPlayerModal } from "./TranscriptSearchView";
 
-const TranscriptSearchView = dynamic(
-    () => import("./TranscriptSearchView"),
-    {
-        loading: () => (
-            <div className='h-64 rounded-xl bg-emerald-900/10 animate-pulse' />
-        ),
-        ssr: false,
-    },
-);
+const TranscriptSearchView = dynamic(() => import("./TranscriptSearchView"), {
+    loading: () => (
+        <div className='h-64 rounded-xl bg-emerald-900/10 animate-pulse' />
+    ),
+    ssr: false,
+});
 
 const getYouTubeId = (url) => {
     if (!url) return null;
@@ -58,7 +55,9 @@ export default function KajianClient({
     const { t, lang } = useLocale();
     const { isWide } = useLayoutMode();
     const [kajian, setKajian] = useState(initialKajian);
-    const [totalKajian, setTotalKajian] = useState(initialTotal || initialKajian.length);
+    const [totalKajian, setTotalKajian] = useState(
+        initialTotal || initialKajian.length,
+    );
     const [page, setPage] = useState(0);
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(
@@ -83,7 +82,11 @@ export default function KajianClient({
                 if (!res.ok) return;
                 const data = await res.json();
                 if (cancelled) return;
-                const list = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : [];
+                const list = Array.isArray(data?.data)
+                    ? data.data
+                    : Array.isArray(data)
+                      ? data
+                      : [];
                 setSpeakers(list);
             } catch (e) {
                 // ignore
@@ -106,7 +109,9 @@ export default function KajianClient({
                     "https://api-thollabul.jangkauin.site";
                 const params = new URLSearchParams({ page: "0", size: "12" });
                 if (ustadzFilter) params.set("speaker", ustadzFilter);
-                const res = await fetch(`${apiUrl}/api/v1/kajian?${params.toString()}`);
+                const res = await fetch(
+                    `${apiUrl}/api/v1/kajian?${params.toString()}`,
+                );
                 if (!res.ok) return;
                 const data = await res.json();
                 if (cancelled) return;
@@ -115,7 +120,9 @@ export default function KajianClient({
                 setKajian(items);
                 setTotalKajian(total);
                 setPage(0);
-                setHasMore(!data?.last && items.length > 0 && items.length < total);
+                setHasMore(
+                    !data?.last && items.length > 0 && items.length < total,
+                );
             } catch (e) {
                 // ignore
             } finally {
@@ -136,9 +143,14 @@ export default function KajianClient({
             const apiUrl =
                 process.env.NEXT_PUBLIC_API_URL ||
                 "https://api-thollabul.jangkauin.site";
-            const params = new URLSearchParams({ page: String(nextPage), size: "12" });
+            const params = new URLSearchParams({
+                page: String(nextPage),
+                size: "12",
+            });
             if (ustadzFilter) params.set("speaker", ustadzFilter);
-            const res = await fetch(`${apiUrl}/api/v1/kajian?${params.toString()}`);
+            const res = await fetch(
+                `${apiUrl}/api/v1/kajian?${params.toString()}`,
+            );
             if (res.ok) {
                 const data = await res.json();
                 const items = data?.items ?? (Array.isArray(data) ? data : []);
@@ -146,7 +158,11 @@ export default function KajianClient({
                 setPage(nextPage);
                 const total = data?.total ?? totalKajian;
                 setTotalKajian(total);
-                setHasMore(!data?.last && items.length > 0 && kajian.length + items.length < total);
+                setHasMore(
+                    !data?.last &&
+                        items.length > 0 &&
+                        kajian.length + items.length < total,
+                );
             }
         } catch (e) {
             console.error("Failed to load more kajian:", e);
@@ -168,6 +184,12 @@ export default function KajianClient({
 
     useEffect(() => {
         if (tab !== "transcript") return;
+        if (!transcriptQuery.trim()) {
+            setTranscriptResults([]);
+            setTranscriptMeta({ total: 0, page: 1 });
+            setTranscriptLoading(false);
+            return;
+        }
         let cancelled = false;
         const timer = setTimeout(async () => {
             setTranscriptLoading(true);
@@ -183,7 +205,9 @@ export default function KajianClient({
                 params.set("page", "1");
                 params.set("limit", "20");
 
-                const res = await fetch(`${apiUrl}/api/v1/kajian/search?${params.toString()}`);
+                const res = await fetch(
+                    `${apiUrl}/api/v1/kajian/search?${params.toString()}`,
+                );
                 if (!res.ok) {
                     if (!cancelled) {
                         setTranscriptResults([]);
@@ -193,8 +217,12 @@ export default function KajianClient({
                 }
                 const data = await res.json();
                 if (cancelled) return;
-                const items = data?.items ?? data?.data?.items ?? (Array.isArray(data) ? data : []);
-                const meta = data?.meta ?? data?.data?.meta ?? { total: items.length, page: 1 };
+                const items =
+                    data?.items ??
+                    data?.data?.items ??
+                    (Array.isArray(data) ? data : []);
+                const meta = data?.meta ??
+                    data?.data?.meta ?? { total: items.length, page: 1 };
                 setTranscriptResults(items);
                 setTranscriptMeta(meta);
             } catch (e) {
@@ -216,8 +244,7 @@ export default function KajianClient({
     const filtered = kajian.filter((k) => {
         const matchCat =
             activeCategory === "semua" || k.category === activeCategory;
-        const matchSpeaker =
-            !ustadzFilter || k.speaker === ustadzFilter;
+        const matchSpeaker = !ustadzFilter || k.speaker === ustadzFilter;
         const matchSearch =
             !search ||
             [
@@ -246,7 +273,13 @@ export default function KajianClient({
     }, [speakers, kajian]);
 
     return (
-        <div className={isWide ? "w-full px-2 sm:px-4" : "w-full max-w-6xl mx-auto px-2 sm:px-4"}>
+        <div
+            className={
+                isWide
+                    ? "w-full px-2 sm:px-4"
+                    : "w-full max-w-6xl mx-auto px-2 sm:px-4"
+            }
+        >
             <div className='flex items-center gap-3 mb-4'>
                 <div className='w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center'>
                     <MdOutlinePlayLesson className='text-xl text-emerald-700 dark:text-emerald-400' />
@@ -266,30 +299,33 @@ export default function KajianClient({
                 <button
                     type='button'
                     onClick={() => setTab("transcript")}
-                    className={`flex-1 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${tab === "transcript"
-                        ? "bg-white dark:bg-slate-700 text-emerald-700 dark:text-emerald-300 shadow-sm"
-                        : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                        }`}
+                    className={`flex-1 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${
+                        tab === "transcript"
+                            ? "bg-white dark:bg-slate-700 text-emerald-700 dark:text-emerald-300 shadow-sm"
+                            : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                    }`}
                 >
                     {t("kajian.tab_search") || "🔍 Cari di Transkrip"}
                 </button>
                 <button
                     type='button'
                     onClick={() => setTab("bookmarks")}
-                    className={`flex-1 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${tab === "bookmarks"
-                        ? "bg-white dark:bg-slate-700 text-amber-700 dark:text-amber-300 shadow-sm"
-                        : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                        }`}
+                    className={`flex-1 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${
+                        tab === "bookmarks"
+                            ? "bg-white dark:bg-slate-700 text-amber-700 dark:text-amber-300 shadow-sm"
+                            : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                    }`}
                 >
                     {t("kajian.tab_bookmarks") || "🔖 Bookmark"}
                 </button>
                 <button
                     type='button'
                     onClick={() => setTab("list")}
-                    className={`flex-1 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${tab === "list"
-                        ? "bg-white dark:bg-slate-700 text-emerald-700 dark:text-emerald-300 shadow-sm"
-                        : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                        }`}
+                    className={`flex-1 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${
+                        tab === "list"
+                            ? "bg-white dark:bg-slate-700 text-emerald-700 dark:text-emerald-300 shadow-sm"
+                            : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                    }`}
                 >
                     {t("kajian.tab_all") || "📚 Semua Kajian"}
                 </button>
@@ -334,8 +370,32 @@ export default function KajianClient({
             )}
 
             {playingKajian && (
-                <VideoPlayerModal
-                    kajian={playingKajian}
+                <TranscriptPlayerModal
+                    item={{
+                        id: playingKajian.id,
+                        kajian_id: playingKajian.id,
+                        video_id: getYouTubeId(playingKajian.url),
+                        title:
+                            getLocalizedField(playingKajian, "title", lang) ||
+                            playingKajian.title,
+                        speaker:
+                            playingKajian.speaker || playingKajian.ustadz || "",
+                        topic:
+                            playingKajian.topic || playingKajian.category || "",
+                        start_seconds: 0,
+                        end_seconds: 0,
+                        timestamp: "00:00",
+                        snippet:
+                            getLocalizedField(
+                                playingKajian,
+                                "description",
+                                lang,
+                            ) ||
+                            playingKajian.description ||
+                            "",
+                        timestamp_url: playingKajian.url,
+                        thumbnail_url: playingKajian.thumbnail_url,
+                    }}
                     onClose={() => setPlayingKajian(null)}
                 />
             )}
@@ -420,10 +480,11 @@ function ListView({
                     <button
                         key={cat.key}
                         onClick={() => setActiveCategory(cat.key)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 ${activeCategory === cat.key
-                            ? "bg-emerald-700 text-white"
-                            : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600"
-                            }`}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors flex-shrink-0 ${
+                            activeCategory === cat.key
+                                ? "bg-emerald-700 text-white"
+                                : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600"
+                        }`}
                     >
                         {t(cat.labelKey)}
                     </button>
@@ -433,16 +494,18 @@ function ListView({
             {ustadzOptions.length > 0 && (
                 <div className='mb-5'>
                     <p className='text-[10px] uppercase tracking-wide text-gray-400 mb-1.5'>
-                        {t("kajian.transcript_filter_speaker") || "Filter Ustadz"}
+                        {t("kajian.transcript_filter_speaker") ||
+                            "Filter Ustadz"}
                     </p>
                     <div className='flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-hide'>
                         <button
                             type='button'
                             onClick={() => setUstadzFilter("")}
-                            className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${!ustadzFilter
-                                ? "bg-emerald-600 text-white"
-                                : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
-                                }`}
+                            className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
+                                !ustadzFilter
+                                    ? "bg-emerald-600 text-white"
+                                    : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
+                            }`}
                         >
                             {t("kajian.transcript_all_speakers") || "Semua"}
                         </button>
@@ -451,10 +514,11 @@ function ListView({
                                 key={s}
                                 type='button'
                                 onClick={() => setUstadzFilter(s)}
-                                className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${ustadzFilter === s
-                                    ? "bg-emerald-600 text-white"
-                                    : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
-                                    }`}
+                                className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
+                                    ustadzFilter === s
+                                        ? "bg-emerald-600 text-white"
+                                        : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
+                                }`}
                             >
                                 {s.replace(/^Ust\.\s*Dr\.\s*/i, "Ust. ")}
                             </button>
@@ -546,8 +610,8 @@ function ListView({
                         className='px-6 py-2.5 bg-emerald-700 text-white rounded-lg text-sm font-medium hover:bg-emerald-800 disabled:opacity-50 transition-colors'
                     >
                         {loadingMore
-                            ? (t("kajian.loading") || "Memuat...")
-                            : (t("common.load_more") || "Muat Lebih")}
+                            ? t("kajian.loading") || "Memuat..."
+                            : t("common.load_more") || "Muat Lebih"}
                     </button>
                 </div>
             )}
