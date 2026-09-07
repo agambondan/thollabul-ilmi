@@ -24,39 +24,39 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 
 ## 2. Hasil Audit Lengkap per Route
 
-| No  | Route                   | Performance | Accessibility | Best Practices | SEO | FCP  |  LCP  |    TBT    |    CLS    |            Status            |
-| --- | ----------------------- | :---------: | :-----------: | :------------: | :-: | :--: | :---: | :-------: | :-------: | :--------------------------: |
-| 1   | `/` (Beranda)           |   **60**    |    **100**    |       81       | 100 | 2.0s | 4.5s  |   750ms   | **0.000** |    ✅ Zero CLS (Shift Fixed) |
-| 2   | `/quran`                |   **72**    |    **93**     |       81       | 100 | 1.4s | 6.4s  | **80ms**  | **0.001** |   ✅ ISR Active (TBT 80ms)   |
-| 3   | `/quran/1` (Al-Fatihah) |   **67**    |      89       |       77       | 92  | 2.4s | 6.1s  | **220ms** | **0.000** |    ✅ SSG Active (CLS 0)     |
-| 4   | `/quran/2` (Al-Baqarah) |   **79**    |      89       |       77       | 92  | 1.6s | 5.1s  |   140ms   | **0.025** | ✅ react-icons dropped + progressApi dedup |
-| 5   | `/quran/page-mushaf`    |   **74**    |    **96**     |       81       | 100 | 2.1s | 6.4s  | **110ms** | **0.000** |    ✅ TBT floor (110ms)      |
-| 6   | `/hadith`               |   **65**    |    **97**     |       81       | 100 | 1.9s | 5.1s  | **440ms** | **0.000** | ✅ Tab CLS + Cover Fixed   |
-| 7   | `/hadith/bukhari`       |   **75**    |    **96**     |       81       | 92  | 2.2s | 4.7s  |   240ms   | **0.000** |    ✅ SSG + react-icons dropped |
-| 8   | `/hadith/muslim`        |   **63**    |    **96**     |       81       | 100 | 2.1s | 7.1s  |   330ms   | **0.000** |    ✅ SSG themes+chapters+hadiths |
-| 9   | `/jadwal-sholat`        |   **52**    |    **93**     |       81       | 100 | 2.1s | 5.7s  |  1130ms   | **0.000** | ✅ Skip mount refetch + drop react-icons |
-| 10  | `/imsakiyah`            |   **70**    |    **93**     |       81       | 100 | 2.0s | 6.8s  | **150ms** | **0.000** |         ✅ TBT -88%          |
-| 11  | `/doa`                  |   **73**    |    **93**     |       81       | 100 | 2.2s | 6.4s  | **50ms**  | **0.000** |   ✅ ISR Active (TBT 50ms)   |
-| 12  | `/dzikir`               |   **92**    |    **93**     |       81       | 100 | 2.0s | 3.0s  | **40ms**  | **0.001** |    🚀 **Score 92** (Good)    |
-| 13  | `/fiqh`                 |   **66**    |    **93**     |       81       | 100 | 2.8s | 6.7s  | **190ms** | **0.000** |         ⚠️ LCP high          |
-| 14  | `/siroh`                |   **72**    |    **96**     |       81       | 100 | 2.7s | 6.5s  | **60ms**  | **0.002** |   ✅ ISR Active (TBT 60ms)   |
-| 15  | `/asmaul-husna`         |   **70**    |    **93**     |       81       | 100 | 2.5s | 12.1s | **90ms**  | **0.000** |   ✅ ISR Active (TBT 90ms)   |
-| 16  | `/asmaul-husna/wirid`   |   **57**    |    **87**     |       81       | 100 | 1.8s | 6.6s  |   610ms   | **0.000** | ✅ RSC page + react-icons removed |
-| 17  | `/kiblat`               |   **69**    |      87       |       81       | 100 | 2.5s | 6.3s  | **160ms** | **0.000** |       ✅ Geo on-click        |
-| 18  | `/tokoh`                |   **77**    |      88       |       81       | 100 | 2.2s | 4.3s  | **200ms** | **0.000** |           ✅ Good            |
-| 19  | `/tafsir`               |   **76**    |    **93**     |       81       | 100 | 2.5s | 4.6s  | **210ms** | **0.000** |           ✅ Good            |
-| 20  | `/tasbih`               |   **67**    |    **88**     |       81       | 100 | 1.6s | 6.1s  |   430ms   | **0.000** | ✅ below-fold content-visibility |
-| 21  | `/sejarah`              |   **73**    |    **93**     |       81       | 100 | 1.9s | 8.4s  | **130ms** | **0.000** |    ✅ RSC + ISR Active (TBT 130ms) |
-| 22  | `/panduan-sholat`       |   **70**    |    **92**     |       77       | 100 | 2.0s | 7.6s  |   220ms   | **0.000** |       ✅ Chunk 6 Steps       |
-| 23  | `/kamus`                |   **63**    |    **93**     |       81       | 100 | 2.9s | 8.2s  | **290ms** | **0.000** |   ✅ RSC + ISR Active (TBT 290ms) |
-| 24  | `/asbabun-nuzul`        |   **85**    |      88       |       81       | 100 | 3.1s | 3.1s  | **120ms** | **0.002** | 🚀 **Score 85** (SSR Surah 2) |
-| 25  | `/hijri`                |   **66**    |      88       |       81       | 100 | 2.9s | 8.2s  | **180ms** | **0.000** |    ✅ RSC + Sync Calc (CLS 0)     |
-| 26  | `/perawi`               |   **61**    |    **93**     |       81       | 100 | 2.0s | 5.8s  |   600ms   | **0.000** | ✅ RSC size=10 + react-icons removed |
-| 27  | `/kajian`               |   **59**    |    **93**     |       81       | 100 | 2.0s | 7.5s  |   530ms   | **0.015** |  ✅ react-icons dropped       |
-| 28  | `/blog`                 |   **74**    |    **93**     |       81       | 100 | 2.7s | 5.4s  | **120ms** | **0.000** |  ✅ ISR Active (TBT 120ms)   |
-| 29  | `/komunitas`            |   **67**    |    **93**     |       81       | 100 | 3.1s | 8.4s  | **130ms** | **0.000** |       ✅ RSC + ISR Active       |
-| 30  | `/sholat-tracker`       |   **66**    |    **96**     |       81       | 69  | 5.4s | 4.1s  |   870ms   | **0.000** |       ✅ Redirect 308        |
-| 31  | `/tilawah`              |   **57**    |    **96**     |       81       | 69  | 4.1s | 5.7s  |   700ms   | **0.000** |       ✅ Redirect 308        |
+| No  | Route                   | Performance | Accessibility | Best Practices | SEO | FCP  |  LCP  |    TBT    |    CLS    |                        Status                         |
+| --- | ----------------------- | :---------: | :-----------: | :------------: | :-: | :--: | :---: | :-------: | :-------: | :---------------------------------------------------: |
+| 1   | `/` (Beranda)           |   **60**    |    **100**    |       81       | 100 | 2.0s | 4.5s  |   750ms   | **0.000** |               ✅ Zero CLS (Shift Fixed)               |
+| 2   | `/quran`                |   **72**    |    **93**     |       81       | 100 | 1.4s | 6.4s  | **80ms**  | **0.001** |               ✅ ISR Active (TBT 80ms)                |
+| 3   | `/quran/1` (Al-Fatihah) |   **67**    |      89       |       77       | 92  | 2.4s | 6.1s  | **220ms** | **0.000** |                 ✅ SSG Active (CLS 0)                 |
+| 4   | `/quran/2` (Al-Baqarah) |   **79**    |      89       |       77       | 92  | 1.6s | 5.1s  |   140ms   | **0.025** |      ✅ react-icons dropped + progressApi dedup       |
+| 5   | `/quran/page-mushaf`    |   **74**    |    **96**     |       81       | 100 | 2.1s | 6.4s  | **110ms** | **0.000** |                 ✅ TBT floor (110ms)                  |
+| 6   | `/hadith`               |   **65**    |    **97**     |       81       | 100 | 1.9s | 5.1s  | **440ms** | **0.000** |               ✅ Tab CLS + Cover Fixed                |
+| 7   | `/hadith/bukhari`       |   **75**    |    **96**     |       81       | 92  | 2.2s | 4.7s  |   240ms   | **0.000** |             ✅ SSG + react-icons dropped              |
+| 8   | `/hadith/muslim`        |   **63**    |    **96**     |       81       | 100 | 2.1s | 7.1s  |   330ms   | **0.000** |            ✅ SSG themes+chapters+hadiths             |
+| 9   | `/jadwal-sholat`        |   **52**    |    **93**     |       81       | 100 | 2.1s | 5.7s  |  1130ms   | **0.000** |       ✅ Skip mount refetch + drop react-icons        |
+| 10  | `/imsakiyah`            |   **70**    |    **93**     |       81       | 100 | 2.0s | 6.8s  | **150ms** | **0.000** |                      ✅ TBT -88%                      |
+| 11  | `/doa`                  |   **73**    |    **93**     |       81       | 100 | 2.2s | 6.4s  | **50ms**  | **0.000** |               ✅ ISR Active (TBT 50ms)                |
+| 12  | `/dzikir`               |   **92**    |    **93**     |       81       | 100 | 2.0s | 3.0s  | **40ms**  | **0.001** |                🚀 **Score 92** (Good)                 |
+| 13  | `/fiqh`                 |   **66**    |    **93**     |       81       | 100 | 2.8s | 6.7s  | **190ms** | **0.000** |                      ⚠️ LCP high                      |
+| 14  | `/siroh`                |   **72**    |    **96**     |       81       | 100 | 2.7s | 6.5s  | **60ms**  | **0.002** |               ✅ ISR Active (TBT 60ms)                |
+| 15  | `/asmaul-husna`         |   **70**    |    **93**     |       81       | 100 | 2.5s | 12.1s | **90ms**  | **0.000** |               ✅ ISR Active (TBT 90ms)                |
+| 16  | `/asmaul-husna/wirid`   |   **57**    |    **87**     |       81       | 100 | 1.8s | 6.6s  |   610ms   | **0.000** |           ✅ RSC page + react-icons removed           |
+| 17  | `/kiblat`               |   **69**    |      87       |       81       | 100 | 2.5s | 6.3s  | **160ms** | **0.000** |                    ✅ Geo on-click                    |
+| 18  | `/tokoh`                |   **77**    |      88       |       81       | 100 | 2.2s | 4.3s  | **200ms** | **0.000** |                        ✅ Good                        |
+| 19  | `/tafsir`               |   **76**    |    **93**     |       81       | 100 | 2.5s | 4.6s  | **210ms** | **0.000** |                        ✅ Good                        |
+| 20  | `/tasbih`               |   **67**    |    **88**     |       81       | 100 | 1.6s | 6.1s  |   430ms   | **0.000** |           ✅ below-fold content-visibility            |
+| 21  | `/sejarah`              |   **73**    |    **93**     |       81       | 100 | 1.9s | 8.4s  | **130ms** | **0.000** |            ✅ RSC + ISR Active (TBT 130ms)            |
+| 22  | `/panduan-sholat`       |   **70**    |    **92**     |       77       | 100 | 2.0s | 7.6s  |   220ms   | **0.000** |                   ✅ Chunk 6 Steps                    |
+| 23  | `/kamus`                |   **63**    |    **93**     |       81       | 100 | 2.9s | 8.2s  | **290ms** | **0.000** |            ✅ RSC + ISR Active (TBT 290ms)            |
+| 24  | `/asbabun-nuzul`        |   **85**    |      88       |       81       | 100 | 3.1s | 3.1s  | **120ms** | **0.002** |             🚀 **Score 85** (SSR Surah 2)             |
+| 25  | `/hijri`                |   **66**    |      88       |       81       | 100 | 2.9s | 8.2s  | **180ms** | **0.000** |              ✅ RSC + Sync Calc (CLS 0)               |
+| 26  | `/perawi`               |   **61**    |    **93**     |       81       | 100 | 2.0s | 5.8s  |   600ms   | **0.000** |         ✅ RSC size=10 + react-icons removed          |
+| 27  | `/kajian`               |   **75**    |    **93**     |       81       | 100 | 2.0s | 6.0s  |   160ms   | **0.013** | ✅ TBT -70% (no useLayoutMode + dedupe mount fetches) |
+| 28  | `/blog`                 |   **74**    |    **93**     |       81       | 100 | 2.7s | 5.4s  | **120ms** | **0.000** |               ✅ ISR Active (TBT 120ms)               |
+| 29  | `/komunitas`            |   **67**    |    **93**     |       81       | 100 | 3.1s | 8.4s  | **130ms** | **0.000** |                  ✅ RSC + ISR Active                  |
+| 30  | `/sholat-tracker`       |   **66**    |    **96**     |       81       | 69  | 5.4s | 4.1s  |   870ms   | **0.000** |                    ✅ Redirect 308                    |
+| 31  | `/tilawah`              |   **57**    |    **96**     |       81       | 69  | 4.1s | 5.7s  |   700ms   | **0.000** |                    ✅ Redirect 308                    |
 
 ---
 
@@ -64,12 +64,11 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 
 - **Post-Refactor Route Unification Benchmark (6 Sep 2026)**:
   Setelah konsolidasi route publik dan dashboard menjadi shared components (-2.617 baris duplikasi):
-  - `/siroh`: Perf **52**, A11y **96**, Best Practices **81**, SEO **100**, FCP **1.9s**, CLS **0.004**.
-  - `/sejarah`: Perf **49**, A11y **96**, Best Practices **81**, SEO **100**, FCP **2.2s**, CLS **0.000**.
-  - `/fiqh`: Perf **42**, A11y **96**, Best Practices **81**, SEO **100**, FCP **2.2s**, CLS **0.000**.
-  - `/kamus`: Perf **42**, A11y **93**, Best Practices **81**, SEO **100**, FCP **1.7s**, CLS **0.000**.
-  - *Semua route mempertahankan SEO 100%, A11y >90%, CLS 0 (stabil tanpa layout shift).*
-
+    - `/siroh`: Perf **52**, A11y **96**, Best Practices **81**, SEO **100**, FCP **1.9s**, CLS **0.004**.
+    - `/sejarah`: Perf **49**, A11y **96**, Best Practices **81**, SEO **100**, FCP **2.2s**, CLS **0.000**.
+    - `/fiqh`: Perf **42**, A11y **96**, Best Practices **81**, SEO **100**, FCP **2.2s**, CLS **0.000**.
+    - `/kamus`: Perf **42**, A11y **93**, Best Practices **81**, SEO **100**, FCP **1.7s**, CLS **0.000**.
+    - _Semua route mempertahankan SEO 100%, A11y >90%, CLS 0 (stabil tanpa layout shift)._
 
 1. **Eliminasi Render-Blocking External Font (750ms penghematan)**:
     - `@import url(fonts.googleapis.com/...Amiri)` di `globals.css` dihapus.
@@ -180,17 +179,19 @@ Satu-satunya faktor penahan skor Performance di angka 60-70an saat ini adalah ar
 ## 7. Update Setelah Investigasi LCP (7 Sep 2026)
 
 Audit Lighthouse pasca-deploy: skor sudah stabil di angka 60-73 untuk halaman statis. Investigasi lebih dalam menunjukkan **gap FCP → LCP** adalah bottleneck utama (bukan CSS/JS blocking). Pada `/wirid`:
+
 - FCP 1.9s (skeleton loading.tsx tampil),
 - LCP 6.5s (h1 baru muncul setelah JSX client-component ter-hydrate).
 
 **Fix arsitektur:** konversi `/wirid` menjadi Server Component (RSC) yang me-fetch data default occasion (jumat) di server dan me-render `<h1>` di initial HTML. Hasil:
+
 - `/wirid`: Perf **59 → 73** (+14), TBT **540ms → 150ms** (-72%).
 
 **Rekomendasi lanjutan** untuk LCP 6s+:
+
 1. Audit halaman lain yang masih full client-render (mis. `/asmaul-husna/wirid`).
 2. `next/font` dengan `display: 'optional'` untuk skip FOIT dan turunkan FCP.
 3. Inline critical CSS untuk 2 chunk render-blocking (16KB + 9KB) yang masih menambah 894ms ke LCP.
-
 
 ---
 
@@ -199,17 +200,16 @@ Audit Lighthouse pasca-deploy: skor sudah stabil di angka 60-73 untuk halaman st
 Penambahan: mobile kajian player bookmark disinkronkan ke server jika user login (commit `1feec90`).
 Hasil benchmark pasca-deploy:
 
-| Page   | Perf | A11y | BP  | SEO  | LCP   | TBT    | Bootup |
-|--------|------|------|-----|------|-------|--------|--------|
-| /fiqh              | 64 | 96 | 75 | 100 | 6.3s | 520ms | 1.8s |
-| /sejarah           | 71 | 96 | 82 | 100 | 6.6s | 160ms | 1.0s |
-| /kamus             | 70 | 93 | 82 | 100 | 8.2s |  50ms | 0.6s |
-| /asmaul-husna      | 71 | 93 | 82 | 100 | 7.3s | 110ms | 0.8s |
-| /wirid             | 73 | 96 | 79 | 100 | 6.5s | 150ms | —    |
-| /imsakiyah         | 77 | 93 | 82 | 100 | 5.7s | 140ms | 1.0s |
-| /dzikir            | 75 | 93 | 79 | 100 | 6.3s |  50ms | 0.8s |
-| /hadith            | 72 | 97 | 82 | 100 | 7.1s |  70ms | 0.8s |
-| /doa               | 66 | 93 | 82 | 100 | 8.6s | 170ms | 0.7s |
+| Page          | Perf | A11y | BP  | SEO | LCP  | TBT   | Bootup |
+| ------------- | ---- | ---- | --- | --- | ---- | ----- | ------ |
+| /fiqh         | 64   | 96   | 75  | 100 | 6.3s | 520ms | 1.8s   |
+| /sejarah      | 71   | 96   | 82  | 100 | 6.6s | 160ms | 1.0s   |
+| /kamus        | 70   | 93   | 82  | 100 | 8.2s | 50ms  | 0.6s   |
+| /asmaul-husna | 71   | 93   | 82  | 100 | 7.3s | 110ms | 0.8s   |
+| /wirid        | 73   | 96   | 79  | 100 | 6.5s | 150ms | —      |
+| /imsakiyah    | 77   | 93   | 82  | 100 | 5.7s | 140ms | 1.0s   |
+| /dzikir       | 75   | 93   | 79  | 100 | 6.3s | 50ms  | 0.8s   |
+| /hadith       | 72   | 97   | 82  | 100 | 7.1s | 70ms  | 0.8s   |
+| /doa          | 66   | 93   | 82  | 100 | 8.6s | 170ms | 0.7s   |
 
 `/imsakiyah` naik ke 77 karena inline SVG menggantikan `react-icons/bs+md` (commit `c0bc72c`).
-
