@@ -250,7 +250,7 @@ export default function QuizContent({ initialType = "" }) {
                                 >
                                     <span className='text-base'>{qt.icon}</span>
                                     <span className='truncate'>
-                                        {t(qt.labelKey) ?? qt.fallback}
+                                        {t(qt.labelKey, qt.fallback)}
                                     </span>
                                 </button>
                             ))}
