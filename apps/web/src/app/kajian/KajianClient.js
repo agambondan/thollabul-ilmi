@@ -556,7 +556,7 @@ function ListView({
                                         src={`https://i.ytimg.com/vi/${getYouTubeId(k.url)}/mqdefault.jpg`}
                                         alt={k.title}
                                         loading={idx < 4 ? "eager" : "lazy"}
-                                        decoding="async"
+                                        decoding='async'
                                         fetchPriority={idx < 4 ? "high" : "low"}
                                         className='w-full h-full object-cover group-hover/thumb:scale-105 transition-transform duration-300'
                                     />

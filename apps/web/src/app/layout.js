@@ -93,7 +93,11 @@ export default async function RootLayout({ children }) {
             suppressHydrationWarning
         >
             <head>
-                <link rel='preconnect' href='https://i.ytimg.com' crossOrigin='anonymous' />
+                <link
+                    rel='preconnect'
+                    href='https://i.ytimg.com'
+                    crossOrigin='anonymous'
+                />
                 <link
                     rel='preload'
                     href='/fonts/LPMQ-Isep-Misbah.woff2'

@@ -561,7 +561,8 @@ tajweed.idgh_mus:hover {
 }
 
 .blog-content code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-family:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.85em;
     background: rgba(15, 23, 42, 0.06);
     color: #0f172a;
