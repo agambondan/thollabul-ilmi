@@ -533,6 +533,11 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/sholat/stats", jwt, newSholatController.GetStats)
 	master.Get("/panduan-sholat", newSholatController.GetAllGuides)
 	master.Get("/panduan-sholat/:step", newSholatController.GetGuideByStep)
+	// Admin CRUD: panduan sholat
+	master.Get("/panduan-sholat/admin", middlewares.EditorOrAdminMiddleware(), newSholatController.FindAllGuidesAdmin)
+	master.Post("/panduan-sholat", middlewares.EditorOrAdminMiddleware(), newSholatController.CreateGuide)
+	master.Put("/panduan-sholat/:id", middlewares.EditorOrAdminMiddleware(), newSholatController.UpdateGuide)
+	master.Delete("/panduan-sholat/:id", middlewares.EditorOrAdminMiddleware(), newSholatController.DeleteGuide)
 
 	// Muroja'ah Mode (protected)
 	master.Post("/murojaah/result", jwt, newMurojaahController.RecordSession)

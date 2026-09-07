@@ -1,6 +1,5 @@
 "use client";
 
-import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
 import {
     buildSholatTimesUrl,
@@ -18,8 +17,6 @@ import {
     requestAndStoreUserLocation,
 } from "@/lib/userLocation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { BsBell, BsBellFill, BsGeoAlt } from "react-icons/bs";
-import { MdAccessTime, MdTimer } from "react-icons/md";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
@@ -98,6 +95,7 @@ export function JadwalSholatContent({
     const audioRef = useRef(null);
     const lastNotifRef = useRef("");
     const lastReminderRef = useRef("");
+    const skipInitialFetchRef = useRef(Boolean(initialPrayers));
 
     useEffect(() => {
         if (
@@ -289,9 +287,11 @@ export function JadwalSholatContent({
     ]);
 
     useEffect(() => {
-        Promise.resolve().then(() =>
-            fetchByCoords(city.lat, city.lng, city.name),
-        );
+        if (skipInitialFetchRef.current) {
+            skipInitialFetchRef.current = false;
+            return;
+        }
+        fetchByCoords(city.lat, city.lng, city.name);
     }, [city, method, madhab, dateKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleGeo = () => {

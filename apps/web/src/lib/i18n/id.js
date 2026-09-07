@@ -223,6 +223,7 @@ const id = {
     "link.blog": "Blog",
     "link.library": "Perpustakaan Ilmu",
     "link.kajian": "Kajian Islam",
+    "link.kajian_short": "Kajian",
     "link.forum": "Forum Diskusi",
     "link.tafsir": "Tafsir Al-Quran",
     "link.arabic_dict": "Kamus Arab",
