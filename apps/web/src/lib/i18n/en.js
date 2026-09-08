@@ -310,7 +310,7 @@ const en = {
     "bookmarks.label_placeholder": "tadabbur, memorize...",
     "bookmarks.remove": "Remove Bookmark",
     "settings.title": "Settings",
-    "settings.ayah_layout": "Verse Layout",
+    "settings.content_width": "Content Width",
     "settings.compact": "Compact",
     "settings.wide": "Wide",
     "settings.action_position": "Verse/Hadith Actions",

@@ -279,7 +279,7 @@ const SettingButton = () => {
                     {/* Layout toggle */}
                     <div className='hidden md:block mb-3'>
                         <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-2'>
-                            {t("settings.ayah_layout")}
+                            {t("settings.content_width")}
                         </p>
                         <div className='flex gap-2'>
                             <button

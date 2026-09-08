@@ -303,7 +303,7 @@ const id = {
     "bookmarks.label_placeholder": "tadabbur, hafalan...",
     "bookmarks.remove": "Hapus Bookmark",
     "settings.title": "Pengaturan",
-    "settings.ayah_layout": "Tampilan Ayat",
+    "settings.content_width": "Lebar Konten",
     "settings.compact": "Kompak",
     "settings.wide": "Wide",
     "settings.action_position": "Aksi Ayat/Hadith",

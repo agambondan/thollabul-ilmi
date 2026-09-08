@@ -655,8 +655,8 @@ const AdminLayout = ({ children }) => {
                                 <div className='hidden md:block px-4 py-2.5 border-b border-gray-100 dark:border-slate-700'>
                                     <div className='flex items-center justify-between mb-2'>
                                         <span className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
-                                            {t("settings.ayah_layout") ||
-                                                "Tampilan Layout"}
+                                            {t("settings.content_width") ||
+                                                "Lebar Konten"}
                                         </span>
                                     </div>
                                     <div className='flex gap-2'>

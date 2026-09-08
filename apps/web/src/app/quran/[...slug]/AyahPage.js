@@ -700,23 +700,24 @@ const AyahPage = ({
                             {ayahTranslation}
                         </li>
                     )}
-                    {hafalanMode !== "off" && (
-                        <li
-                            className='pb-2 md:px-2'
-                            style={{ direction: "ltr" }}
-                        >
-                            <button
-                                type='button'
-                                onClick={() => setRevealed((v) => !v)}
-                                className='text-xs px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
+                    {hafalanMode !== "off" &&
+                        hafalanMode !== "hide_translation" && (
+                            <li
+                                className='pb-2 md:px-2'
+                                style={{ direction: "ltr" }}
                             >
-                                {revealed
-                                    ? (t("hafalan.hide_again") ??
-                                      "Sembunyikan lagi")
-                                    : (t("hafalan.reveal") ?? "Tampilkan")}
-                            </button>
-                        </li>
-                    )}
+                                <button
+                                    type='button'
+                                    onClick={() => setRevealed((v) => !v)}
+                                    className='text-xs px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
+                                >
+                                    {revealed
+                                        ? (t("hafalan.hide_again") ??
+                                          "Sembunyikan lagi")
+                                        : (t("hafalan.reveal") ?? "Tampilkan")}
+                                </button>
+                            </li>
+                        )}
                 </ul>
             </ul>
 
