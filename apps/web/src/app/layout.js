@@ -1,6 +1,7 @@
 import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 import { cookies } from "next/headers";
+import Script from "next/script";
 import { AuthProvider } from "@/context/Auth";
 import { LocaleProvider } from "@/context/Locale";
 import { SettingsProvider } from "@/lib/useSettings";
@@ -131,6 +132,18 @@ export default async function RootLayout({ children }) {
                         __html: JSON.stringify(websiteJsonLd),
                     }}
                 />
+                <Script
+                    src='https://www.googletagmanager.com/gtag/js?id=G-WYXWPX0ZBH'
+                    strategy='afterInteractive'
+                />
+                <Script id='google-analytics' strategy='afterInteractive'>
+                    {`
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', 'G-WYXWPX0ZBH');
+                    `}
+                </Script>
                 <LocaleProvider initialLang={initialLang}>
                     <AuthProvider>
                         <SettingsProvider>
