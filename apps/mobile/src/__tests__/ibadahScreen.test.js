@@ -10,6 +10,7 @@ jest.mock("lucide-react-native", () => {
         "HandHeart",
         "ListChecks",
         "Map",
+        "MapPin",
         "ScrollText",
         "Sparkles",
     ];
@@ -385,7 +386,7 @@ describe("IbadahScreen", () => {
                 onOpenTab={jest.fn()}
             />,
         );
-        expect(getAllByTestId("compact-row").length).toBe(15);
+        expect(getAllByTestId("compact-row").length).toBe(16);
     });
 
     test("renders QiblaScreen sub-view when view is qibla", () => {

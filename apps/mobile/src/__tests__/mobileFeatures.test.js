@@ -13,10 +13,12 @@ const supportedFeatureTypes = new Set([
     "komunitas",
     "lessons",
     "list",
+    "masjid",
     "notes",
     "notifications",
     "protected-list",
     "quiz",
+    "radio-islamic",
     "sholat-tracker",
     "surah-content",
     "tasbih",
@@ -27,7 +29,13 @@ const supportedFeatureTypes = new Set([
 
 const expectedBelajarFeatureKeysByGroup = {
     "Modul & Kelas": ["lessons"],
-    "Kajian & Artikel": ["community-feed", "komunitas", "kajian", "blog"],
+    "Kajian & Artikel": [
+        "community-feed",
+        "komunitas",
+        "kajian",
+        "blog",
+        "radio-islamic",
+    ],
     "Siroh & Sejarah": ["siroh", "sejarah", "manasik"],
     "Fiqh & Panduan": ["fiqh", "panduan-sholat", "user-wird"],
     Referensi: [
@@ -51,7 +59,9 @@ const localRendererTypes = new Set([
     "historical-map",
     "komunitas",
     "lessons",
+    "masjid",
     "notifications",
+    "radio-islamic",
     "sholat-tracker",
     "surah-content",
     "tasbih",

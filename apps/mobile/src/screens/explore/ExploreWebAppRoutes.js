@@ -116,6 +116,8 @@ import { WEB_APP_TOOL_ROUTE_CONFIGS, WebAppToolRoute } from "./WebAppToolRoute";
 import { WebAppUserWirdRoute } from "./WebAppUserWirdRoute";
 import { WebAppZakatRoute } from "./WebAppZakatRoute";
 import { HistoricalMapContent } from "../HistoricalMapScreen";
+import { MasjidDirectoryContent } from "../MasjidDirectoryContent";
+import { RadioIslamicContent } from "../RadioIslamicContent";
 import { TokohTarikhContent } from "../TokohTarikhContent";
 
 export function renderExploreWebAppRoute(context) {
@@ -2233,6 +2235,24 @@ export function renderExploreWebAppRoute(context) {
             <>
                 <View testID='explore-web-app-tokoh-surface' />
                 <TokohTarikhContent />
+            </>
+        );
+    }
+
+    if (activeFeature?.key === "masjid") {
+        return (
+            <>
+                <View testID='explore-web-app-masjid-surface' />
+                <MasjidDirectoryContent />
+            </>
+        );
+    }
+
+    if (activeFeature?.key === "radio-islamic") {
+        return (
+            <>
+                <View testID='explore-web-app-radio-islamic-surface' />
+                <RadioIslamicContent />
             </>
         );
     }

@@ -8,6 +8,7 @@ import {
     HandHeart,
     ListChecks,
     Map,
+    MapPin,
     ScrollText,
     Sparkles,
 } from "lucide-react-native";
@@ -72,6 +73,12 @@ const sectionDefinitions = [
                 featureKey: "imsakiyah",
                 subtitleKey: "ibadah.row.imsakiyah.subtitle",
                 titleKey: "ibadah.row.imsakiyah.title",
+            },
+            {
+                Icon: MapPin,
+                featureKey: "masjid",
+                subtitleKey: "ibadah.row.masjid.subtitle",
+                titleKey: "ibadah.row.masjid.title",
             },
         ],
     },

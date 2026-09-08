@@ -295,6 +295,31 @@ export const getAudioManifest = async () => {
     return payload?.data ?? payload;
 };
 
+export const getMasjids = async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    const payload = await requestJson(`/api/v1/masjids${qs ? `?${qs}` : ""}`);
+    return pickItems(payload);
+};
+
+export const getNearbyMasjids = async ({
+    lat,
+    lng,
+    radius = 10,
+    limit = 20,
+}) => {
+    const qs = new URLSearchParams({ lat, lng, radius, limit }).toString();
+    const payload = await requestJson(`/api/v1/masjids/nearby?${qs}`);
+    return pickItems(payload);
+};
+
+export const getRadioIslamicStations = async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    const payload = await requestJson(
+        `/api/v1/radio-islamic${qs ? `?${qs}` : ""}`,
+    );
+    return pickItems(payload);
+};
+
 export const getAyahAudio = async ({ ayahId }) => {
     const payload = await requestJson(`/api/v1/audio/ayah/${ayahId}`);
     return pickItems(payload)

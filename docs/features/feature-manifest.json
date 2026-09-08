@@ -718,6 +718,28 @@
             "ctaLabel": "Buka Pengaturan",
             "searchable": false,
             "status": "active"
+        },
+        {
+            "key": "masjid",
+            "title": "Masjid",
+            "publicWebRoute": "/masjid",
+            "dashboardWebRoute": "/dashboard/masjid",
+            "mobileRoute": "feature:masjid",
+            "authRequired": false,
+            "ctaLabel": "Buka Masjid",
+            "searchable": true,
+            "status": "active"
+        },
+        {
+            "key": "radio-islamic",
+            "title": "Radio Islam",
+            "publicWebRoute": "/radio-islamic",
+            "dashboardWebRoute": "/dashboard/radio-islamic",
+            "mobileRoute": "feature:radio-islamic",
+            "authRequired": false,
+            "ctaLabel": "Buka Radio Islam",
+            "searchable": true,
+            "status": "active"
         }
     ]
 }

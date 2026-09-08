@@ -115,6 +115,20 @@ export const featureGroups = [
                 type: "historical-map",
             },
             {
+                key: "masjid",
+                title: "Masjid",
+                subtitle: "Direktori masjid & pencarian terdekat",
+                badges: ["Baru"],
+                type: "masjid",
+            },
+            {
+                key: "radio-islamic",
+                title: "Radio Islam",
+                subtitle: "Radio dakwah & tilawah per kota",
+                badges: ["Baru"],
+                type: "radio-islamic",
+            },
+            {
                 key: "fiqh",
                 title: "Fiqh Ringkas",
                 subtitle: "Pelajaran fiqh ringkas",
@@ -357,6 +371,7 @@ export const belajarFeatureGroups = [
             "komunitas",
             "kajian",
             "blog",
+            "radio-islamic",
         ]),
     },
     {

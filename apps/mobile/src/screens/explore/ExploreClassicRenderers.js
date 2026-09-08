@@ -67,6 +67,8 @@ import { calculateFaraidh, HEIR_LABELS } from "../../lib/faraidh";
 import { hapticMedium, hapticTap } from "../../utils/haptics";
 import { HistoricalMapContent } from "../HistoricalMapScreen";
 import { styles } from "../ExploreScreen.styles";
+import { MasjidDirectoryContent } from "../MasjidDirectoryContent";
+import { RadioIslamicContent } from "../RadioIslamicContent";
 import { TokohTarikhContent } from "../TokohTarikhContent";
 import {
     LIBRARY_PROGRESS_STATUSES,
@@ -3837,6 +3839,24 @@ export function createExploreClassicRenderers(context) {
                 <Card>
                     <CardTitle>Tokoh Tarikh</CardTitle>
                     <TokohTarikhContent />
+                </Card>
+            );
+        }
+
+        if (activeFeature.type === "masjid") {
+            return (
+                <Card>
+                    <CardTitle meta='Cari terdekat'>Masjid</CardTitle>
+                    <MasjidDirectoryContent />
+                </Card>
+            );
+        }
+
+        if (activeFeature.type === "radio-islamic") {
+            return (
+                <Card>
+                    <CardTitle>Radio Islam</CardTitle>
+                    <RadioIslamicContent />
                 </Card>
             );
         }

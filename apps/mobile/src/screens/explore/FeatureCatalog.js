@@ -6,7 +6,9 @@ import {
     Globe,
     HelpCircle,
     ListChecks,
+    MapPin,
     MessageCircle,
+    Radio,
     Scale,
     Star,
     StickyNote,
@@ -32,6 +34,8 @@ export const LOCAL_TOOL_TYPES = [
     "historical-map",
     "tokoh",
     "komunitas",
+    "masjid",
+    "radio-islamic",
 ];
 
 const featureIcons = {
@@ -50,10 +54,12 @@ const featureIcons = {
     leaderboard: Users,
     lessons: BookOpen,
     manasik: BookOpen,
+    masjid: MapPin,
     notes: StickyNote,
     "panduan-sholat": BookOpen,
     perawi: Users,
     quiz: HelpCircle,
+    "radio-islamic": Radio,
     sejarah: Globe,
     siroh: Users,
     stats: Globe,

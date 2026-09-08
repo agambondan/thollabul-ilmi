@@ -85,11 +85,27 @@ gate, jadi review dilakukan manual sebelum commit).
       seharusnya `lib.ErrorConflict` (pola yang sudah dipakai
       `doa_controller.go` dkk, auto-parse pesan Postgres "duplicate key"
       jadi respons 409 yang jelas). Diperbaiki di kedua controller.
-7. [ ] Tambahkan entri ke `docs/features/feature-manifest.json` kalau fitur
-   ini ingin muncul di discovery/mobile catalog — **masih belum ada mobile
-   screen sama sekali** untuk masjid/radio (dikonfirmasi lewat investigasi
-   terpisah 2026-09-08, lihat
-   `docs/reviews/2026-09-08-feature-route-inventory.md` §4 gap #24-25).
+7. [x] Mobile screen (2026-09-08, sesi lanjutan): `MasjidDirectoryContent`
+   (search + "Masjid Terdekat" pakai GPS `expo-location` →
+   `/masjids/nearby`, detail via `AppModalSheet`) dan `RadioIslamicContent`
+   (search + play/pause per baris pakai `utils/audioPlayer.js`, satu
+   stream aktif sekaligus, `stopAudio()` saat unmount). Didaftarkan ke
+   `mobileFeatures.js`, `FeatureCatalog.js` (`LOCAL_TOOL_TYPES` + ikon),
+   `ExploreClassicRenderers.js`/`ExploreWebAppRoutes.js` (dispatch dua
+   layout mode), dan `docs/features/feature-manifest.json` (dua entri
+   baru, `node scripts/check-feature-parity.js` → passed). Masjid juga
+   dapat baris di Ibadah hub (section "Arah & Waktu", redirect ke
+   Belajar); Radio Islamic masuk grup Belajar "Kajian & Artikel".
+    - Parity check ini butuh `dashboardWebRoute` terisi untuk status
+      `active` — dibuatkan `apps/web/src/app/dashboard/masjid/page.js`
+      dan `.../dashboard/radio-islamic/page.js` (wrapper tipis, pola sama
+      seperti `dashboard/tokoh/page.js`).
+    - Test baru: `masjidDirectoryContent.test.js`,
+      `radioIslamicContent.test.js`; `mobileFeatures.test.js` dan
+      `ibadahScreen.test.js` diupdate untuk entri/baris baru. Mobile suite
+      770/770 hijau.
+    - Belum diverifikasi di device fisik (izin lokasi & streaming audio
+      real hanya diverifikasi lewat mock jest, bukan expo dev build).
 
 ## Acceptance Criteria
 
@@ -114,9 +130,13 @@ gate, jadi review dilakukan manual sebelum commit).
       regresi untuk bug koordinat `0`)
 - Device/API/Web smoke: lihat task #5 — CRUD dasar (create/update
   parsial/delete) diverifikasi lewat browser + curl terhadap Postgres asli
-  di `docker compose`. `/masjids/nearby` belum di-smoke-test langsung.
-- Notes: fitur ini belum masuk `feature-manifest.json` / mobile catalog —
-  saat ini web-only (admin CRUD sudah ada, tapi mobile screen masih nihil).
+  di `docker compose`. `/masjids/nearby` belum di-smoke-test langsung, dan
+  mobile screen belum dicoba di device/emulator fisik (Expo dev build) —
+  cuma jest dengan `expo-location`/`utils/audioPlayer` di-mock.
+- Notes: fitur ini sekarang lengkap di ketiga platform (backend, web
+  publik+dashboard+admin, mobile) — lihat
+  `docs/reviews/2026-09-08-feature-route-inventory.md` §4 untuk status
+  checklist terbaru per platform.
 
 ## Source of Truth
 
