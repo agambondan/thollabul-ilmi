@@ -68,7 +68,7 @@ services:
         restart: unless-stopped
 
     tholabul-ilmi-postgres:
-        image: postgres:18-alpine
+        image: pgvector/pgvector:pg18
         ports:
             - "54320:5432"
         environment:

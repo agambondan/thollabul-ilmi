@@ -206,6 +206,11 @@ func (s *Repositories) Migrations() error {
 	migrations.DeduplicateSeedData(s.db)
 	migrations.PreMigrateAsbabunNuzul(s.db)
 	migrations.DropTahlilTables(s.db)
+	// Extensions must exist before AutoMigrate runs -- the KajianTranscript
+	// model's Embedding column is gorm:"type:vector(...)", so AutoMigrate
+	// fails with "type vector does not exist" if pgvector isn't created yet.
+	s.db.Exec(`CREATE EXTENSION IF NOT EXISTS pg_trgm`)
+	s.db.Exec(`CREATE EXTENSION IF NOT EXISTS vector`)
 	err := s.db.AutoMigrate(migrations.ModelMigrations...)
 	if err != nil {
 		return err
@@ -219,9 +224,6 @@ func (s *Repositories) Migrations() error {
 // Also adds pg_trgm GIN indexes for ILIKE search performance.
 // GORM struct tags can't express composite indexes on embedded fields, so we do it here.
 func (s *Repositories) createCompositeIndexes() {
-	s.db.Exec(`CREATE EXTENSION IF NOT EXISTS pg_trgm`)
-	s.db.Exec(`CREATE EXTENSION IF NOT EXISTS vector`)
-
 	indexes := []string{
 		`CREATE INDEX IF NOT EXISTS idx_hadith_book_del    ON hadith (book_id, deleted_at)`,
 		`CREATE INDEX IF NOT EXISTS idx_hadith_book_number_del ON hadith (book_id, number, deleted_at)`,
