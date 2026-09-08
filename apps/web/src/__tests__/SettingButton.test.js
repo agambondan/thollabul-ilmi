@@ -38,10 +38,21 @@ jest.mock("@/context/Auth", () => ({
     useAuth: () => ({ isAuthenticated: false }),
 }));
 
+const originalMatchMedia = window.matchMedia;
+const mockMatchMedia = (matches) => {
+    window.matchMedia = jest.fn().mockImplementation((query) => ({
+        matches,
+        media: query,
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+    }));
+};
+
 describe("SettingButton Quran-scoped controls", () => {
     beforeEach(() => {
         localStorage.clear();
         jest.clearAllMocks();
+        window.matchMedia = originalMatchMedia;
     });
 
     test("shows Mode Hafalan and Tampilan options when pathname is /quran/surah/Al-Baqara", () => {
@@ -100,6 +111,69 @@ describe("SettingButton Quran-scoped controls", () => {
 
         expect(screen.queryByText("Mode Hafalan")).not.toBeInTheDocument();
         expect(screen.queryByText("Alur (Mushaf)")).not.toBeInTheDocument();
+    });
+
+    test("hides Quran/Hadith-only controls (action position, font sizing) on an unrelated route", () => {
+        mockMatchMedia(false); // desktop, so the button still renders for content width
+        usePathname.mockReturnValue("/kajian");
+
+        render(
+            <SettingsProvider>
+                <SettingButton />
+            </SettingsProvider>,
+        );
+
+        fireEvent.click(screen.getByTestId("global-setting-button"));
+
+        expect(screen.queryByText("Aksi Ayat/Hadith")).not.toBeInTheDocument();
+        expect(
+            screen.queryByText("Ukuran Arab (Quran/Hadis)"),
+        ).not.toBeInTheDocument();
+        expect(screen.queryByText("Ukuran Terjemahan")).not.toBeInTheDocument();
+    });
+
+    test("still shows action position and font sizing controls on a hadith route", () => {
+        mockMatchMedia(true); // compact viewport — only route-scoped controls could show
+        usePathname.mockReturnValue("/hadith/bukhari");
+
+        render(
+            <SettingsProvider>
+                <SettingButton />
+            </SettingsProvider>,
+        );
+
+        fireEvent.click(screen.getByTestId("global-setting-button"));
+
+        expect(screen.getByText("Aksi Ayat/Hadith")).toBeInTheDocument();
+        expect(
+            screen.getByText("Ukuran Arab (Quran/Hadis)"),
+        ).toBeInTheDocument();
+    });
+
+    test("renders nothing on a compact viewport when the route has no relevant settings at all", () => {
+        mockMatchMedia(true); // mobile: the content-width toggle is desktop-only
+        usePathname.mockReturnValue("/kajian");
+
+        const { container } = render(
+            <SettingsProvider>
+                <SettingButton />
+            </SettingsProvider>,
+        );
+
+        expect(container).toBeEmptyDOMElement();
+    });
+
+    test("keeps the button on a wide viewport with no relevant settings, for the content-width toggle", () => {
+        mockMatchMedia(false); // desktop: content-width toggle still applies
+        usePathname.mockReturnValue("/kajian");
+
+        render(
+            <SettingsProvider>
+                <SettingButton />
+            </SettingsProvider>,
+        );
+
+        expect(screen.getByTestId("global-setting-button")).toBeInTheDocument();
     });
 
     test("allows selecting a hafalan mode", () => {
