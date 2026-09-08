@@ -90,6 +90,7 @@ const InfiniteScrollAyahPage = ({
     const loadMoreSentinelRef = useRef(null);
     const pendingPageRef = useRef(null);
     const retryAfterRef = useRef(0);
+    const fetchedSlugRef = useRef(null);
 
     const loadMoreAyah = useCallback(() => {
         if (isInitialLoading || isFetchingMore || !hasMore) return;
@@ -169,9 +170,21 @@ const InfiniteScrollAyahPage = ({
                     .catch((e) => console.error(e));
                 streakApi.logActivity("quran").catch((e) => console.error(e));
             }
+            fetchedSlugRef.current = slug;
             return;
         }
-        let isActive = true;
+        // Guards against re-fetching page 0 forever: this effect sets
+        // `surah`/`ayahs` itself, so it must not depend on them (see the
+        // dependency array below) or every fetch would immediately
+        // re-trigger itself. `slug` is the only thing that should start a
+        // new fetch. The promise handlers below re-check the ref (instead
+        // of a per-effect "isActive" closure) so that a benign re-run for
+        // the *same* slug — e.g. `t` changing because the user switched
+        // language while this fetch was still in flight — can't cancel it
+        // out from under itself and strand the loading state forever.
+        if (fetchedSlugRef.current === slug) return;
+        fetchedSlugRef.current = slug;
+
         setIsInitialLoading(true);
         setError("");
         setPageRequest(null);
@@ -184,7 +197,7 @@ const InfiniteScrollAyahPage = ({
 
         fetchSurah(0)
             .then((data) => {
-                if (!isActive) return;
+                if (fetchedSlugRef.current !== slug) return;
                 const nextSurah = data ?? {};
                 const nextAyahs = normalizeAyahs(nextSurah);
                 setSurah(nextSurah);
@@ -213,16 +226,13 @@ const InfiniteScrollAyahPage = ({
                 }
             })
             .catch(() => {
-                if (isActive) setError(t("quran.error_desc"));
+                if (fetchedSlugRef.current === slug)
+                    setError(t("quran.error_desc"));
             })
             .finally(() => {
-                if (isActive) setIsInitialLoading(false);
+                if (fetchedSlugRef.current === slug) setIsInitialLoading(false);
             });
-
-        return () => {
-            isActive = false;
-        };
-    }, [fetchSurah, initialMatchesSlug, surah, ayahs, t]);
+    }, [fetchSurah, initialMatchesSlug, slug, t]);
 
     useEffect(() => {
         if (!pageRequest || !surah) return;
