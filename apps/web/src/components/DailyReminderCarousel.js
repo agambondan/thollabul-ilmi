@@ -3,7 +3,7 @@
 import { useLocale } from "@/context/Locale";
 import { hadithApi, remindersApi } from "@/lib/api";
 import { getSurahName } from "@/lib/surahList";
-import { getLocalizedTranslation } from "@/lib/translation";
+import { getLocalizedField, getLocalizedTranslation } from "@/lib/translation";
 import { parseSource } from "@/components/SourceBadges";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
