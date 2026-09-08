@@ -12,3 +12,7 @@ kerja, tetapi belum mulai aktif.
 ## Task List
 
 - [Multilingual Content Wiring](./multilingual-content-wiring.md) (IN_PROGRESS — only EN content fill remains)
+- [Server Push Notifications (FCM / APNs)](./server-push-notifications.md) (P1)
+- [Custom Adzan Audio & Offline Murottal Manager](./custom-adzan-audio-offline.md) (P1)
+- [Peta Sirah Interaktif & Visual Faraidh](./peta-sirah-faraidh-visual.md) (P2)
+- [Semantic Search & Islamic RAG](./semantic-search-islamic-rag.md) (P2)
