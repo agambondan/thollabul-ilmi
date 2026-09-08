@@ -23,6 +23,7 @@ type NotificationService interface {
 	RegisterPushToken(userID uuid.UUID, req *model.PushTokenRegisterRequest) (model.PushToken, error)
 	SendTestPush(userID uuid.UUID) (model.PushTestResponse, error)
 	BroadcastPush(adminID uuid.UUID, req *model.BroadcastPushRequest) (model.BroadcastPushResponse, error)
+	UnregisterPushToken(userID uuid.UUID, token string) error
 	DispatchDueReminders(now time.Time) (int, error)
 	DispatchDueAdzanPush(now time.Time) (int, error)
 	StartReminderScheduler(ctx context.Context, interval time.Duration)
@@ -134,6 +135,14 @@ func (s *notificationService) RegisterPushToken(userID uuid.UUID, req *model.Pus
 		Timezone:        strings.TrimSpace(req.Timezone),
 		TzOffsetMinutes: req.TzOffsetMinutes,
 	})
+}
+
+func (s *notificationService) UnregisterPushToken(userID uuid.UUID, token string) error {
+	token = strings.TrimSpace(token)
+	if token == "" {
+		return fmt.Errorf("token is required")
+	}
+	return s.repo.DeactivatePushTokenByToken(userID, token)
 }
 
 func (s *notificationService) SendTestPush(userID uuid.UUID) (model.PushTestResponse, error) {

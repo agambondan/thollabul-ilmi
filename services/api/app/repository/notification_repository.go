@@ -17,6 +17,7 @@ type NotificationRepository interface {
 	FindAllActivePushTokens() ([]model.PushToken, error)
 	FindPushTokensByUser(userID uuid.UUID) ([]model.PushToken, error)
 	DeactivatePushToken(id int) error
+	DeactivatePushTokenByToken(userID uuid.UUID, token string) error
 	FindDue(now time.Time) ([]model.NotificationSetting, error)
 	MarkSent(id int, sentAt time.Time) error
 }
@@ -53,28 +54,36 @@ func (r *notificationRepository) UpsertPushToken(token model.PushToken) (model.P
 	now := time.Now()
 	token.LastSeenAt = now
 	token.IsActive = true
-	err := r.db.Clauses(clause.OnConflict{
-		Columns: []clause.Column{{Name: "user_id"}, {Name: "token"}},
-		DoUpdates: clause.Assignments(map[string]interface{}{
-			"platform":          token.Platform,
-			"provider":          token.Provider,
-			"device_id":         token.DeviceID,
-			"key_p256_dh":       token.KeyP256DH,
-			"key_auth":          token.KeyAuth,
-			"latitude":          token.Latitude,
-			"longitude":         token.Longitude,
-			"city_name":         token.CityName,
-			"timezone":          token.Timezone,
-			"tz_offset_minutes": token.TzOffsetMinutes,
-			"is_active":         true,
-			"last_seen_at":      now,
-			"updated_at":        now,
-		}),
-	}).Create(&token).Error
-	if err != nil {
-		return model.PushToken{}, err
-	}
-	return token, nil
+	return token, r.db.Transaction(func(tx *gorm.DB) error {
+		// A physical device only ever holds one push token, so deactivate any
+		// other account still holding it before (re)claiming it for this user
+		// — otherwise a shared/family device switching accounts would leave
+		// both users subscribed to each other's push notifications.
+		if err := tx.Model(&model.PushToken{}).
+			Where("token = ? AND user_id <> ?", token.Token, token.UserID).
+			Update("is_active", false).Error; err != nil {
+			return err
+		}
+
+		return tx.Clauses(clause.OnConflict{
+			Columns: []clause.Column{{Name: "user_id"}, {Name: "token"}},
+			DoUpdates: clause.Assignments(map[string]interface{}{
+				"platform":          token.Platform,
+				"provider":          token.Provider,
+				"device_id":         token.DeviceID,
+				"key_p256_dh":       token.KeyP256DH,
+				"key_auth":          token.KeyAuth,
+				"latitude":          token.Latitude,
+				"longitude":         token.Longitude,
+				"city_name":         token.CityName,
+				"timezone":          token.Timezone,
+				"tz_offset_minutes": token.TzOffsetMinutes,
+				"is_active":         true,
+				"last_seen_at":      now,
+				"updated_at":        now,
+			}),
+		}).Create(&token).Error
+	})
 }
 
 func (r *notificationRepository) FindActivePushTokens(userID uuid.UUID) ([]model.PushToken, error) {
@@ -109,6 +118,12 @@ func (r *notificationRepository) FindPushTokensByUser(userID uuid.UUID) ([]model
 
 func (r *notificationRepository) DeactivatePushToken(id int) error {
 	return r.db.Model(&model.PushToken{}).Where("id = ?", id).Update("is_active", false).Error
+}
+
+func (r *notificationRepository) DeactivatePushTokenByToken(userID uuid.UUID, token string) error {
+	return r.db.Model(&model.PushToken{}).
+		Where("user_id = ? AND token = ?", userID, token).
+		Update("is_active", false).Error
 }
 
 func (r *notificationRepository) FindDue(now time.Time) ([]model.NotificationSetting, error) {

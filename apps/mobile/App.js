@@ -233,6 +233,42 @@ export default function App() {
         return () => window.removeEventListener("hashchange", handleHashChange);
     }, [handleDeepLink]);
 
+    useEffect(() => {
+        let Notifications;
+        try {
+            Notifications = require("expo-notifications");
+        } catch {
+            return undefined;
+        }
+
+        const dataToUrl = (data) => {
+            if (!data || typeof data !== "object") return null;
+            if (typeof data.url === "string" && data.url.length > 0) {
+                return data.url;
+            }
+            if (typeof data.deep_link === "string" && data.deep_link.length > 0) {
+                return data.deep_link;
+            }
+            return null;
+        };
+
+        try {
+            const last = Notifications.getLastNotificationResponse();
+            const url = dataToUrl(last?.notification?.request?.content?.data);
+            if (url) handleDeepLink(url);
+        } catch {
+            // ignore
+        }
+
+        const subscription =
+            Notifications.addNotificationResponseReceivedListener((response) => {
+                const url = dataToUrl(response?.notification?.request?.content?.data);
+                if (url) handleDeepLink(url);
+            });
+
+        return () => subscription?.remove?.();
+    }, [handleDeepLink]);
+
     const currentTarget = useMemo(
         () => (deepLinkTarget?.tab === activeTab ? deepLinkTarget : null),
         [activeTab, deepLinkTarget],

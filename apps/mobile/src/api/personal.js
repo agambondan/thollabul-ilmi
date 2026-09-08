@@ -161,6 +161,12 @@ export const registerPushToken = async ({
         { auth: true },
     );
 
+export const unregisterPushToken = async ({ token }) =>
+    deleteJson("/api/v1/notifications/push-token", {
+        auth: true,
+        body: { token },
+    });
+
 export const getPushTokenStatus = async () => {
     const payload = await requestJson("/api/v1/notifications/push-tokens", {
         auth: true,

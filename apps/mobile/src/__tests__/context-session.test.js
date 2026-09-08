@@ -22,9 +22,20 @@ jest.mock("../storage/session", () => ({
     saveSession: jest.fn(() => Promise.resolve()),
 }));
 
+jest.mock("../api/personal", () => ({
+    registerPushToken: jest.fn(() => Promise.resolve()),
+    unregisterPushToken: jest.fn(() => Promise.resolve()),
+}));
+
+jest.mock("../utils/pushNotifications", () => ({
+    getPushNotificationRegistration: jest.fn(() => Promise.resolve({ token: "" })),
+}));
+
 import { SessionProvider, useSession } from "../context/SessionContext";
 import * as auth from "../api/auth";
 import * as session from "../storage/session";
+import * as personal from "../api/personal";
+import * as pushNotifications from "../utils/pushNotifications";
 
 function TestConsumer({ onReady }) {
     const ctx = useSession();
@@ -42,6 +53,9 @@ function renderWithSession(ui) {
 
 afterEach(() => {
     jest.clearAllMocks();
+    pushNotifications.getPushNotificationRegistration.mockResolvedValue({
+        token: "",
+    });
 });
 
 describe("SessionProvider", () => {
@@ -207,6 +221,38 @@ describe("useSession", () => {
         expect(auth.logout).toHaveBeenCalledWith("rt");
         expect(ctx.session).toBeNull();
         expect(ctx.user).toBeNull();
+    });
+
+    test("signOut unregisters the device push token when one is registered", async () => {
+        session.readSession.mockResolvedValue(null);
+        auth.login.mockResolvedValue({
+            token: "tok",
+            refreshToken: "rt",
+            user: { name: "Dewi" },
+        });
+        pushNotifications.getPushNotificationRegistration.mockResolvedValue({
+            token: "device-push-token",
+        });
+
+        let ctx;
+        function Capture() {
+            ctx = useSession();
+            return null;
+        }
+
+        renderWithSession(<Capture />);
+        await waitFor(() => expect(ctx).toBeDefined());
+        await act(async () => {
+            await ctx.signIn({ email: "a@b.com", password: "x" });
+        });
+        personal.unregisterPushToken.mockClear();
+        await act(async () => {
+            await ctx.signOut();
+        });
+
+        expect(personal.unregisterPushToken).toHaveBeenCalledWith({
+            token: "device-push-token",
+        });
     });
 
     test("updateCurrentUser persists merged user data", async () => {

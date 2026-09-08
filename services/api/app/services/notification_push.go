@@ -98,6 +98,7 @@ func (s *notificationService) sendPushToUser(userID uuid.UUID, notificationType 
 				Data: map[string]interface{}{
 					"type":              "daily_reminder",
 					"notification_type": notificationType,
+					"url":               notificationDeepLink(notificationType),
 				},
 			})
 
@@ -122,6 +123,23 @@ func (s *notificationService) sendPushToUser(userID uuid.UUID, notificationType 
 	}
 
 	return sent, nil
+}
+
+// notificationDeepLink maps a notification type to the mobile app's custom
+// URL scheme (see apps/mobile/app.json "scheme" and
+// apps/mobile/src/utils/deepLinks.js) so a tapped notification opens the
+// relevant tab instead of just launching the app to its default screen.
+func notificationDeepLink(notificationType model.NotificationType) string {
+	switch notificationType {
+	case model.NotificationTypeDailyQuran:
+		return "thullaabulilmi://quran"
+	case model.NotificationTypeDailyHadith:
+		return "thullaabulilmi://hadith"
+	case model.NotificationTypeDoa, model.NotificationTypeStreakRisk, model.NotificationTypeAdzan:
+		return "thullaabulilmi://ibadah"
+	default:
+		return "thullaabulilmi://home"
+	}
 }
 
 func isValidExpoToken(token string) bool {

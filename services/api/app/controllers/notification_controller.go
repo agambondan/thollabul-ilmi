@@ -12,6 +12,7 @@ type NotificationController interface {
 	FindSettings(ctx *fiber.Ctx) error
 	FindPushTokens(ctx *fiber.Ctx) error
 	RegisterPushToken(ctx *fiber.Ctx) error
+	UnregisterPushToken(ctx *fiber.Ctx) error
 	SendTestPush(ctx *fiber.Ctx) error
 	BroadcastPush(ctx *fiber.Ctx) error
 	GetVapidPublicKey(ctx *fiber.Ctx) error
@@ -87,6 +88,30 @@ func (c *notificationController) RegisterPushToken(ctx *fiber.Ctx) error {
 		return lib.ErrorBadRequest(ctx, err)
 	}
 	return lib.OK(ctx, item)
+}
+
+// @Summary Unregister push notification token
+// @Tags Personal
+// @Accept json
+// @Produce json
+// @Param body body model.PushTokenUnregisterRequest true "Push token data"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Failure 401 {object} lib.Response
+// @Router /notifications/push-token [delete]
+func (c *notificationController) UnregisterPushToken(ctx *fiber.Ctx) error {
+	userID, err := extractUserID(ctx)
+	if err != nil {
+		return lib.ErrorUnauthorized(ctx)
+	}
+	req := new(model.PushTokenUnregisterRequest)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	if err := c.svc.UnregisterPushToken(userID, req.Token); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	return lib.OK(ctx, fiber.Map{"message": "token deactivated"})
 }
 
 // @Summary Send test push notification

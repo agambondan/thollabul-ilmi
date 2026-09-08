@@ -70,6 +70,10 @@ type PushTokenRegisterRequest struct {
 	TzOffsetMinutes *int     `json:"tz_offset_minutes,omitempty"`
 }
 
+type PushTokenUnregisterRequest struct {
+	Token string `json:"token" validate:"required"`
+}
+
 type PushTokenStatus struct {
 	DeviceID    string    `json:"device_id,omitempty"`
 	ID          *int      `json:"id,omitempty"`

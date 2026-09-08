@@ -12,11 +12,17 @@ import (
 	"github.com/spf13/viper"
 )
 
+type deactivatedByTokenCall struct {
+	userID uuid.UUID
+	token  string
+}
+
 type fakeNotificationRepo struct {
-	deactivated []int
-	due         []model.NotificationSetting
-	marked      []int
-	tokens      []model.PushToken
+	deactivated        []int
+	deactivatedByToken []deactivatedByTokenCall
+	due                []model.NotificationSetting
+	marked             []int
+	tokens             []model.PushToken
 }
 
 func (f *fakeNotificationRepo) FindByUser(userID uuid.UUID) ([]model.NotificationSetting, error) {
@@ -45,6 +51,11 @@ func (f *fakeNotificationRepo) FindPushTokensByUser(userID uuid.UUID) ([]model.P
 
 func (f *fakeNotificationRepo) DeactivatePushToken(id int) error {
 	f.deactivated = append(f.deactivated, id)
+	return nil
+}
+
+func (f *fakeNotificationRepo) DeactivatePushTokenByToken(userID uuid.UUID, token string) error {
+	f.deactivatedByToken = append(f.deactivatedByToken, deactivatedByTokenCall{userID: userID, token: token})
 	return nil
 }
 
@@ -190,5 +201,41 @@ func TestNotificationPushDeactivatesUnregisteredToken(t *testing.T) {
 	}
 	if len(repo.deactivated) != 1 || repo.deactivated[0] != tokenID {
 		t.Fatalf("deactivated = %v, want [%d]", repo.deactivated, tokenID)
+	}
+}
+
+func TestUnregisterPushTokenDeactivatesGivenToken(t *testing.T) {
+	userID := uuid.New()
+	repo := &fakeNotificationRepo{}
+	inboxRepo := &fakeNotificationInboxRepo{}
+	svc := NewNotificationService(repo, inboxRepo, NewPrayerTimesService())
+
+	if err := svc.UnregisterPushToken(userID, "  ExponentPushToken[mine]  "); err != nil {
+		t.Fatalf("UnregisterPushToken: %v", err)
+	}
+
+	if len(repo.deactivatedByToken) != 1 {
+		t.Fatalf("deactivatedByToken calls = %d, want 1", len(repo.deactivatedByToken))
+	}
+	call := repo.deactivatedByToken[0]
+	if call.userID != userID {
+		t.Fatalf("deactivated userID = %v, want %v", call.userID, userID)
+	}
+	if call.token != "ExponentPushToken[mine]" {
+		t.Fatalf("deactivated token = %q, want trimmed token", call.token)
+	}
+}
+
+func TestUnregisterPushTokenRejectsEmptyToken(t *testing.T) {
+	userID := uuid.New()
+	repo := &fakeNotificationRepo{}
+	inboxRepo := &fakeNotificationInboxRepo{}
+	svc := NewNotificationService(repo, inboxRepo, NewPrayerTimesService())
+
+	if err := svc.UnregisterPushToken(userID, "   "); err == nil {
+		t.Fatalf("expected error for blank token")
+	}
+	if len(repo.deactivatedByToken) != 0 {
+		t.Fatalf("expected no repo call for blank token, got %v", repo.deactivatedByToken)
 	}
 }

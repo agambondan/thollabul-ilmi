@@ -14,6 +14,8 @@ import {
     refreshSession,
 } from "../api/auth";
 import { clearSession, readSession, saveSession } from "../storage/session";
+import { registerPushToken, unregisterPushToken } from "../api/personal";
+import { getPushNotificationRegistration } from "../utils/pushNotifications";
 
 const SessionContext = createContext(null);
 
@@ -130,6 +132,15 @@ export function SessionProvider({ children }) {
         setError("");
 
         try {
+            try {
+                const reg = await getPushNotificationRegistration();
+                if (reg?.token) {
+                    await unregisterPushToken({ token: reg.token });
+                }
+            } catch {
+                // Push token cleanup is best-effort; it must not block sign-out.
+            }
+
             if (session?.refreshToken) {
                 await logout(session.refreshToken);
             }
@@ -172,6 +183,25 @@ export function SessionProvider({ children }) {
     useEffect(() => {
         restore();
     }, [restore]);
+
+    useEffect(() => {
+        if (!session?.token) return;
+        let active = true;
+
+        (async () => {
+            try {
+                const reg = await getPushNotificationRegistration();
+                if (!active || !reg?.token) return;
+                await registerPushToken(reg);
+            } catch {
+                // Background push registration failure is non-fatal
+            }
+        })();
+
+        return () => {
+            active = false;
+        };
+    }, [session?.token]);
 
     const value = useMemo(
         () => ({
