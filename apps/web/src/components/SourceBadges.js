@@ -32,6 +32,10 @@ const HADITH_BOOKS =
     "Bukhari|Muslim|Abu Dawud|Tirmidzi|Ibnu Majah|Nasai|Ahmad|Malik|Darimi|at-Tirmidzi|an-Nasa'i";
 
 const QS_PATTERN = /QS\.\s*([^:]+):\s*([\d-]+)/i;
+const BOOK_PATTERN =
+    /(tafsir|asbabun nuzul|lubabun nuqul|shahih asbab|mustadrak|silsilah|syamilah|al-wahidi|ibnu katsir|ath-thabari|ibnu abi hatim|al-baghawi|al-hakim|al-baihaqi|dorar|shahih|hasan)/i;
+
+const sourceLabel = (text) => (BOOK_PATTERN.test(text) ? `Kitab: ${text}` : text);
 
 const tokenizeParts = (source) =>
     source
@@ -100,8 +104,11 @@ export default function SourceBadges({ source }) {
                         {ref.text}
                     </Link>
                 ) : (
-                    <span key={i} className='text-xs text-gray-400'>
-                        {ref.text}
+                    <span
+                        key={i}
+                        className='inline-flex rounded-md border border-emerald-200/70 dark:border-emerald-800/60 bg-emerald-50/70 dark:bg-emerald-950/30 px-2 py-0.5 text-xs text-emerald-800 dark:text-emerald-300'
+                    >
+                        {sourceLabel(ref.text)}
                     </span>
                 ),
             )}

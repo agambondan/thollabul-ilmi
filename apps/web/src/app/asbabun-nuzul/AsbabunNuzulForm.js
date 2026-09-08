@@ -190,9 +190,6 @@ export default function AsbabunNuzulForm({
                             >
                                 {asbabunAyahLabel(item, t)}
                             </Link>
-                            {item.source && (
-                                <SourceBadges source={item.source} />
-                            )}
                         </div>
                         <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
                             {getLocalizedField(item, "content", lang, [
@@ -200,6 +197,14 @@ export default function AsbabunNuzulForm({
                                 "text",
                             ])}
                         </p>
+                        {item.source && (
+                            <div className='mt-3 pt-2.5 border-t border-gray-100 dark:border-slate-700/60 flex items-start gap-2'>
+                                <span className='text-xs font-medium text-emerald-700 dark:text-emerald-400 shrink-0 mt-1'>
+                                    Rujukan:
+                                </span>
+                                <SourceBadges source={item.source} />
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
