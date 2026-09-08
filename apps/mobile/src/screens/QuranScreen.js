@@ -200,6 +200,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         playing: false,
         repeat: false,
         speed: 1,
+        startAyah: "1",
         startSurah: "",
     });
     const [audioQueueInfo, setAudioQueueInfo] = useState({
@@ -1331,7 +1332,12 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
         }
     };
 
-    const fetchAudioRangeQueue = async ({ endAyah, endSurah, startSurah }) => {
+    const fetchAudioRangeQueue = async ({
+        endAyah,
+        endSurah,
+        startAyah,
+        startSurah,
+    }) => {
         const queue = [];
         for (
             let surahNumber = startSurah;
@@ -1341,6 +1347,8 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             const surah = surahs.find(
                 (item) => Number(item.number) === surahNumber,
             );
+            const firstAyah =
+                surahNumber === startSurah && startAyah ? startAyah : 1;
             const lastAyah =
                 surahNumber === endSurah
                     ? endAyah
@@ -1355,7 +1363,11 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                     size: SURAH_PAGE_SIZE,
                 });
                 const items = (result?.items ?? [])
-                    .filter((item) => Number(item.number) <= lastAyah)
+                    .filter(
+                        (item) =>
+                            Number(item.number) >= firstAyah &&
+                            Number(item.number) <= lastAyah,
+                    )
                     .map((item) => ({
                         ...item,
                         surahName: item.surahName || surah?.name,
@@ -1383,6 +1395,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             toPositiveInt(audioRange.endAyah) ?? maxEndAyah,
             maxEndAyah,
         );
+        const startAyah = Math.max(1, toPositiveInt(audioRange.startAyah) ?? 1);
 
         if (startSurah > endSurah) {
             setMessage(t("quran.audioRange.invalidOrder"));
@@ -1395,6 +1408,10 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             setMessage(t("quran.audioRange.invalidSurah"));
             return;
         }
+        if (startSurah === endSurah && startAyah > endAyah) {
+            setMessage(t("quran.audioRange.invalidAyah"));
+            return;
+        }
 
         setMessage("");
         setAudioRange((current) => ({
@@ -1403,11 +1420,13 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             endSurah: `${endSurah}`,
             loading: true,
             playing: false,
+            startAyah: `${startAyah}`,
             startSurah: `${startSurah}`,
         }));
         await writePreference(preferenceKeys.quranAudioRange, {
             endAyah: `${endAyah}`,
             endSurah: `${endSurah}`,
+            startAyah: `${startAyah}`,
             startSurah: `${startSurah}`,
         });
         stopAudio();
@@ -1417,6 +1436,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             const queue = await fetchAudioRangeQueue({
                 endAyah,
                 endSurah,
+                startAyah,
                 startSurah,
             });
             if (!queue.length) {
@@ -1533,7 +1553,6 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
     };
 
     const selectQari = async (ayahId, qariSlug) => {
-        stopRangeAudio();
         audioQariRef.current = qariSlug;
         setAudioState((current) => ({
             ...current,
@@ -1541,7 +1560,22 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             playingAyahId: null,
             qariSlug,
         }));
+        const wasPlaying = audioRange.playing;
+        const resumeIndex = audioQueueIndexRef.current;
+        const hasQueue = audioQueueRef.current.length > 0;
+        audioRangeSessionRef.current += 1;
+        stopAudio();
+        setAudioRange((current) => ({
+            ...current,
+            loading: false,
+            playing: false,
+        }));
         await writePreference(preferenceKeys.quranAudioQari, qariSlug);
+        if (wasPlaying && hasQueue) {
+            const sessionId = audioRangeSessionRef.current + 1;
+            audioRangeSessionRef.current = sessionId;
+            playRangeQueueItem(resumeIndex, sessionId);
+        }
     };
 
     useEffect(() => {
@@ -1657,6 +1691,10 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
                         : current.endSurah,
                 repeat: Boolean(repeat),
                 speed: nextSpeed,
+                startAyah:
+                    typeof range?.startAyah === "string"
+                        ? range.startAyah
+                        : current.startAyah,
                 startSurah:
                     typeof range?.startSurah === "string"
                         ? range.startSurah
@@ -1675,6 +1713,7 @@ export function QuranScreen({ deepLinkTarget, isActive, navigation }) {
             ...current,
             endAyah: current.endAyah || `${selectedSurah.ayahs || ""}`,
             endSurah: current.endSurah || `${selectedSurah.number}`,
+            startAyah: current.startAyah || "1",
             startSurah: current.startSurah || `${selectedSurah.number}`,
         }));
     }, [selectedSurah?.number, selectedSurah?.ayahs, selectedSurah?.type]);

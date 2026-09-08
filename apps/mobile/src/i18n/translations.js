@@ -740,6 +740,8 @@ const dictionaries = {
             "Range audio belum valid: surat awal tidak boleh melewati surat akhir.",
         "quran.audioRange.invalidSurah":
             "Range audio belum valid: nomor surat tidak ditemukan.",
+        "quran.audioRange.invalidAyah":
+            "Range audio belum valid: ayat awal tidak boleh melewati ayat akhir.",
         "quran.audioRange.loadError": "Range audio belum bisa dimuat.",
         "quran.audioRange.loading": "Memuat audio...",
         "quran.audioRange.loadingShort": "Memuat",
@@ -752,6 +754,7 @@ const dictionaries = {
         "quran.audioRange.repeatOn": "Ulangi Aktif",
         "quran.audioRange.selectQari": "Pilih qari",
         "quran.audioRange.speed": "Kecepatan",
+        "quran.audioRange.startAyah": "Dari ayat",
         "quran.audioRange.startSurah": "Dari surat",
         "quran.audioRange.stop": "Stop",
         "quran.audioRange.title": "Audio Surat",
@@ -1892,6 +1895,8 @@ const dictionaries = {
             "Audio range is invalid: starting surah cannot be after ending surah.",
         "quran.audioRange.invalidSurah":
             "Audio range is invalid: surah number was not found.",
+        "quran.audioRange.invalidAyah":
+            "Audio range is invalid: starting verse cannot be after ending verse.",
         "quran.audioRange.loadError": "Audio range could not be loaded.",
         "quran.audioRange.loading": "Loading audio...",
         "quran.audioRange.loadingShort": "Loading",
@@ -1904,6 +1909,7 @@ const dictionaries = {
         "quran.audioRange.repeatOn": "Repeat On",
         "quran.audioRange.selectQari": "Select qari",
         "quran.audioRange.speed": "Speed",
+        "quran.audioRange.startAyah": "From verse",
         "quran.audioRange.startSurah": "From surah",
         "quran.audioRange.stop": "Stop",
         "quran.audioRange.title": "Surah Audio",

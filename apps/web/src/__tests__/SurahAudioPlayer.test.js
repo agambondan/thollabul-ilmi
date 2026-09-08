@@ -299,4 +299,45 @@ describe("SurahAudioPlayer", () => {
             expect(screen.getByText("Surah 1 · Ayat 2")).toBeInTheDocument();
         });
     });
+
+    test("plays from specified startAyah and switches qari without resetting to ayat 1", async () => {
+        render(
+            <SurahAudioPlayer
+                surahNumber={1}
+                surahName='Al-Fatihah'
+                totalAyahs={7}
+            />,
+        );
+
+        fireEvent.click(screen.getByText("Dengar Surah"));
+        await screen.findByLabelText("Pilih qari");
+
+        expect(screen.getByLabelText("Dari ayat")).toBeInTheDocument();
+        fireEvent.change(screen.getByLabelText("Dari ayat"), {
+            target: { value: "2" },
+        });
+        fireEvent.change(screen.getByLabelText("Sampai ayat"), {
+            target: { value: "2" },
+        });
+
+        fireEvent.click(screen.getByRole("button", { name: /Putar range/i }));
+
+        await waitFor(() => {
+            expect(mockByAyah).toHaveBeenCalledWith(12);
+            expect(global.Audio).toHaveBeenCalledWith(
+                "https://example.com/alafasy-12.mp3",
+            );
+            expect(screen.getByText("Surah 1 · Ayat 2")).toBeInTheDocument();
+        });
+
+        fireEvent.click(screen.getByLabelText("Pilih qari"));
+        fireEvent.click(await screen.findByText(/Abdul Rahman Al-Sudais/i));
+
+        await waitFor(() => {
+            expect(global.Audio).toHaveBeenLastCalledWith(
+                "https://example.com/sudais-12.mp3",
+            );
+            expect(screen.getByText("Surah 1 · Ayat 2")).toBeInTheDocument();
+        });
+    });
 });

@@ -211,6 +211,22 @@ export function renderQuranAudioRangePanel({
                 </View>
                 <View style={styles.audioInputGroup}>
                     <Text style={styles.audioInputLabel}>
+                        {translate("quran.audioRange.startAyah")}
+                    </Text>
+                    <TextInput
+                        keyboardType='number-pad'
+                        onChangeText={(value) =>
+                            updateAudioRangeField("startAyah", value)
+                        }
+                        placeholder='1'
+                        placeholderTextColor={colors.muted}
+                        style={styles.audioInput}
+                        testID='audio-start-ayah'
+                        value={audioRange.startAyah}
+                    />
+                </View>
+                <View style={styles.audioInputGroup}>
+                    <Text style={styles.audioInputLabel}>
                         {translate("quran.audioRange.endSurah")}
                     </Text>
                     <TextInput

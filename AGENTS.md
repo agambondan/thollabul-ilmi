@@ -49,3 +49,10 @@ If you think a stash belongs to you, verify with the user first. Otherwise
 treat every existing `stash@{N}` as read-only and out of scope. Same rule
 applies to `git reflog` cleanups and `git filter-branch`/`filter-repo` — they
 can rewrite commits other agents are about to base on.
+
+## Multi-agent Shared Workspace — Commit Scoping Rule (Wajib)
+
+Setiap agent **HANYA BOLEH** men-stage, me-commit, dan me-push file yang dikerjakan oleh sesinya sendiri.
+- **DILARANG** menjalankan `git add .`, `git add -A`, atau `git commit -a` secara global.
+- Selalu periksa `git status` dan pilih file yang relevan secara eksplisit (`git add <file1> <file2>`).
+- File modifikasi/untracked milik sesi agent lain yang sedang berjalan bersamaan tidak boleh disentuh, di-stage, di-stash, ataupun di-revert.

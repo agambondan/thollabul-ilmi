@@ -166,6 +166,7 @@ export default function SurahAudioPlayer({
     const [range, setRange] = useState({
         endAyah: "",
         endSurah: `${surahNumber ?? ""}`,
+        startAyah: "1",
         startSurah: `${surahNumber ?? ""}`,
     });
     const [repeat, setRepeat] = useState(false);
@@ -201,6 +202,7 @@ export default function SurahAudioPlayer({
                     ...current,
                     endAyah: `${stored.range.endAyah ?? current.endAyah}`,
                     endSurah: `${stored.range.endSurah ?? current.endSurah}`,
+                    startAyah: `${stored.range.startAyah ?? current.startAyah}`,
                     startSurah: `${stored.range.startSurah ?? current.startSurah}`,
                 }));
             }
@@ -219,6 +221,7 @@ export default function SurahAudioPlayer({
         setRange((current) => ({
             ...current,
             endSurah: current.endSurah || `${surahNumber ?? ""}`,
+            startAyah: current.startAyah || "1",
             startSurah: current.startSurah || `${surahNumber ?? ""}`,
         }));
     }, [surahNumber]);
@@ -295,6 +298,7 @@ export default function SurahAudioPlayer({
         setRange({
             endAyah: "",
             endSurah: `${surahNumber ?? ""}`,
+            startAyah: "1",
             startSurah: `${surahNumber ?? ""}`,
         });
     }, [surahNumber]);
@@ -359,7 +363,12 @@ export default function SurahAudioPlayer({
         ];
     };
 
-    const fetchRangeQueue = async ({ endAyah, endSurah, startSurah }) => {
+    const fetchRangeQueue = async ({
+        endAyah,
+        endSurah,
+        startAyah = 1,
+        startSurah,
+    }) => {
         const nextQueue = [];
         for (
             let currentSurah = startSurah;
@@ -371,11 +380,18 @@ export default function SurahAudioPlayer({
             const ayahs = normalizeItems(await res.json())
                 .map((item) => normalizeAyah(item, currentSurah, lang))
                 .filter((ayah) => ayah.id && Number.isFinite(ayah.number));
+            const firstAyah =
+                currentSurah === startSurah && startAyah ? startAyah : 1;
             const lastAyah =
                 currentSurah === endSurah && endAyah
                     ? endAyah
                     : Number.POSITIVE_INFINITY;
-            nextQueue.push(...ayahs.filter((ayah) => ayah.number <= lastAyah));
+            nextQueue.push(
+                ...ayahs.filter(
+                    (ayah) =>
+                        ayah.number >= firstAyah && ayah.number <= lastAyah,
+                ),
+            );
         }
         return nextQueue;
     };
@@ -474,6 +490,7 @@ export default function SurahAudioPlayer({
         const normalizedRange = {
             endAyah: totalAyahs ? `${totalAyahs}` : "",
             endSurah: `${currentSurah}`,
+            startAyah: `${toPositiveInt(targetAyahNumber) ?? 1}`,
             startSurah: `${currentSurah}`,
         };
         setRange(normalizedRange);
@@ -544,6 +561,7 @@ export default function SurahAudioPlayer({
     const startRangeAudio = async () => {
         const currentSurah = Number(surahNumber) || 1;
         const startSurah = toPositiveInt(range.startSurah) ?? currentSurah;
+        const startAyah = toPositiveInt(range.startAyah) ?? 1;
         const endSurah = toPositiveInt(range.endSurah) ?? startSurah;
         const endAyah = toPositiveInt(range.endAyah) ?? null;
 
@@ -559,10 +577,17 @@ export default function SurahAudioPlayer({
             );
             return;
         }
+        if (startSurah === endSurah && endAyah && startAyah > endAyah) {
+            setError(
+                "Range audio belum valid: ayat awal tidak boleh melewati ayat akhir.",
+            );
+            return;
+        }
 
         const normalizedRange = {
             endAyah: endAyah ? `${endAyah}` : "",
             endSurah: `${endSurah}`,
+            startAyah: `${startAyah}`,
             startSurah: `${startSurah}`,
         };
         setRange(normalizedRange);
@@ -580,6 +605,7 @@ export default function SurahAudioPlayer({
             const queue = await fetchRangeQueue({
                 endAyah,
                 endSurah,
+                startAyah,
                 startSurah,
             });
             if (!queue.length) {
@@ -615,6 +641,12 @@ export default function SurahAudioPlayer({
                 );
             return;
         }
+        if (queueRef.current.length) {
+            const sessionId = sessionRef.current + 1;
+            sessionRef.current = sessionId;
+            playQueueItem(queueIndexRef.current, sessionId);
+            return;
+        }
         startRangeAudio();
     };
 
@@ -645,13 +677,35 @@ export default function SurahAudioPlayer({
         const nextRange = { ...range, [field]: value.replace(/[^\d]/g, "") };
         setRange(nextRange);
         persistPreferences({ range: nextRange });
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current = null;
+        }
+        queueRef.current = [];
+        queueIndexRef.current = 0;
+        setQueueIndex(0);
+        setQueueLength(0);
+        setIsPlaying(false);
     };
 
     const handleQariChange = (qariSlug) => {
-        stopPlayback({ keepOpen: true });
         setSelectedQari(qariSlug);
         qariRef.current = qariSlug;
         persistPreferences({ qari: qariSlug });
+
+        if (queueRef.current.length > 0) {
+            const currentIndex = queueIndexRef.current;
+            const wasPlaying = isPlaying;
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current = null;
+            }
+            if (wasPlaying) {
+                const sessionId = sessionRef.current + 1;
+                sessionRef.current = sessionId;
+                playQueueItem(currentIndex, sessionId);
+            }
+        }
     };
 
     const handleRepeatChange = (checked) => {
@@ -869,13 +923,14 @@ export default function SurahAudioPlayer({
                     </div>
                 </div>
                 <div className='flex-1 overflow-y-auto overscroll-contain p-4 pb-8'>
-                    <div className='grid grid-cols-3 gap-2 mb-3'>
+                    <div className='grid grid-cols-4 gap-2 mb-3'>
                         {[
                             [
                                 "startSurah",
                                 "Dari surat",
                                 `${surahNumber ?? ""}`,
                             ],
+                            ["startAyah", "Dari ayat", "1"],
                             [
                                 "endSurah",
                                 "Sampai surat",
