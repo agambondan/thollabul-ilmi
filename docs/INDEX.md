@@ -55,6 +55,7 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 | Dokumen                                                                                                  | Isi                                                                     |
 | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | **[reviews/README.md](./reviews/README.md)**                                                             | **← Hub hasil review lintas platform.**                                 |
+| [reviews/2026-09-08-feature-route-inventory.md](./reviews/2026-09-08-feature-route-inventory.md)         | **← Inventaris semua route backend/web/mobile (59 feature domain) + todolist review per-platform** |
 | [reviews/2026-09-08-audit-transkrip-kajian.md](./reviews/2026-09-08-audit-transkrip-kajian.md)           | Audit + fix: 5 video transkrip fabrikasi, videonya memang tanpa caption |
 | [reviews/2026-09-03-audit-pasangan-hadis.md](./reviews/2026-09-03-audit-pasangan-hadis.md)               | Audit pasangan Arab ↔ terjemahan hadis: sebaran salah pasang per kitab  |
 | [reviews/2026-09-01-mobile-accessibility-review.md](./reviews/2026-09-01-mobile-accessibility-review.md) | Sweep aksesibilitas mobile: role, state, label, semantik modal          |
