@@ -11,6 +11,7 @@ jest.mock("@/context/Locale", () => ({
                 "tafsir.title": "Tafsir Al-Quran",
                 "ayah.mufrodat_title": "Mufrodat (Kosakata)",
                 "munasabah.title": "Ayat Terkait",
+                "hadithAyah.title": "Hadis Terkait",
                 "ayah.copy_link": "Copy Link",
                 "ayah.copy_image": "Copy Image",
                 "ayah.copy_ayah": "Copy Ayah",
@@ -68,6 +69,7 @@ jest.mock("@/lib/api", () => ({
     audioApi: { list: jest.fn() },
     mufrodatApi: { byAyah: jest.fn() },
     munasabahApi: { byAyah: jest.fn() },
+    hadithAyahApi: { byAyah: jest.fn() },
     tafsirApi: { byAyah: jest.fn() },
 }));
 
@@ -144,5 +146,11 @@ describe("AyahPage action menu", () => {
 
         fireEvent.click(moreButtons[1]);
         expect(screen.getAllByText("Copy Link")).toHaveLength(1);
+    });
+
+    test("renders a Hadis Terkait toggle for each ayah", () => {
+        render(<ControlledAyahList />);
+
+        expect(screen.getAllByTitle("Hadis Terkait")).toHaveLength(2);
     });
 });

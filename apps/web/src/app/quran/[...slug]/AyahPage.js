@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import BookmarkButton from "@/components/BookmarkButton";
 import NoteButton from "@/components/NoteButton";
-import { mufrodatApi, munasabahApi, tafsirApi } from "@/lib/api";
+import { hadithAyahApi, mufrodatApi, munasabahApi, tafsirApi } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { listMasjidImage } from "@/lib/const";
 import { NumberToArabic } from "@/lib/converter";
@@ -66,6 +66,9 @@ const AyahPage = ({
 
     const [munasabahOpen, setMunasabahOpen] = useState(false);
     const munasabahRes = useAsyncResource(() => munasabahApi.byAyah(ayah.id));
+
+    const [hadithAyahOpen, setHadithAyahOpen] = useState(false);
+    const hadithAyahRes = useAsyncResource(() => hadithAyahApi.byAyah(ayah.id));
 
     const [revealed, setRevealed] = useState(false);
     const ayahTranslation = getLocalizedTranslation(ayah.translation, lang);
@@ -170,6 +173,11 @@ const AyahPage = ({
     const toggleMunasabah = () => {
         if (!munasabahOpen) munasabahRes.load();
         setMunasabahOpen((v) => !v);
+    };
+
+    const toggleHadithAyah = () => {
+        if (!hadithAyahOpen) hadithAyahRes.load();
+        setHadithAyahOpen((v) => !v);
     };
 
     const handleAudio = () => {
@@ -320,6 +328,32 @@ const AyahPage = ({
                                 actionsMenu ? "hidden" : "flex justify-center"
                             }
                         >
+                            <button
+                                title={t("hadithAyah.title") ?? "Hadis Terkait"}
+                                onClick={toggleHadithAyah}
+                                className={`p-2 rounded-lg text-lg transition-colors ${
+                                    hadithAyahOpen
+                                        ? "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20"
+                                        : "text-gray-400 hover:bg-amber-100 dark:hover:bg-slate-700"
+                                }`}
+                            >
+                                <svg
+                                    width='1em'
+                                    height='1em'
+                                    viewBox='0 0 16 16'
+                                    fill='currentColor'
+                                    aria-hidden='true'
+                                >
+                                    <path d='M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z' />
+                                    <path d='M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z' />
+                                </svg>
+                            </button>
+                        </li>
+                        <li
+                            className={
+                                actionsMenu ? "hidden" : "flex justify-center"
+                            }
+                        >
                             <BookmarkButton refType='ayah' refId={ayah.id} />
                         </li>
                         <li
@@ -459,6 +493,28 @@ const AyahPage = ({
                                                     </svg>
                                                     {t("munasabah.title") ??
                                                         "Ayat Terkait"}
+                                                </button>
+                                                <button
+                                                    className={
+                                                        actionMenuButtonClass
+                                                    }
+                                                    onClick={() => {
+                                                        toggleHadithAyah();
+                                                        SetSettingPopUp(false);
+                                                    }}
+                                                >
+                                                    <svg
+                                                        width='1em'
+                                                        height='1em'
+                                                        viewBox='0 0 16 16'
+                                                        fill='currentColor'
+                                                        aria-hidden='true'
+                                                    >
+                                                        <path d='M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z' />
+                                                        <path d='M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z' />
+                                                    </svg>
+                                                    {t("hadithAyah.title") ??
+                                                        "Hadis Terkait"}
                                                 </button>
                                                 {/* Ikon di KIRI lalu label, sama seperti item lain di menu ini.
                                                     Sebelumnya barisnya memakai justify-between dengan label dulu,
@@ -795,6 +851,62 @@ const AyahPage = ({
                                 </p>
                             </div>
                         ))}
+                </div>
+            )}
+
+            {hadithAyahOpen && (
+                <div className='bg-amber-50 dark:bg-amber-900/10 border-b border-amber-100 dark:border-amber-900/30 px-4 py-4'>
+                    <div className='flex items-start justify-between gap-3 mb-3'>
+                        <p className='text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wide'>
+                            {t("hadithAyah.title") ?? "Hadis Terkait"}{" "}
+                            {surah.number}:{ayah.number}
+                        </p>
+                        <PanelCloseButton
+                            onClose={() => setHadithAyahOpen(false)}
+                        />
+                    </div>
+                    <PanelStatus
+                        isLoading={hadithAyahRes.isLoading}
+                        error={hadithAyahRes.error}
+                        isEmpty={hadithAyahRes.data?.length === 0}
+                        loadingText={t("ayah.loading_tafsir")}
+                        emptyText={t("hadithAyah.empty")}
+                        onRetry={hadithAyahRes.retry}
+                    />
+                    {!hadithAyahRes.isLoading &&
+                        Array.isArray(hadithAyahRes.data) &&
+                        hadithAyahRes.data.map((item, i) => {
+                            const hadith = item.hadith;
+                            if (!hadith) return null;
+                            const bookName =
+                                getLocalizedTranslation(
+                                    hadith.book?.translation,
+                                    lang,
+                                ) ??
+                                hadith.book?.slug ??
+                                "Hadis";
+                            return (
+                                <div
+                                    key={item.id ?? i}
+                                    className='mb-3 last:mb-0 bg-white dark:bg-slate-800 rounded-lg p-3'
+                                >
+                                    <p className='text-xs text-amber-600 dark:text-amber-400 font-medium mb-1'>
+                                        {bookName} No. {hadith.number}
+                                    </p>
+                                    <p className='text-sm text-gray-700 dark:text-gray-300'>
+                                        {getLocalizedTranslation(
+                                            hadith.translation,
+                                            lang,
+                                        ) || item.catatan}
+                                    </p>
+                                    {item.catatan && (
+                                        <p className='text-xs text-gray-400 mt-1'>
+                                            {item.catatan}
+                                        </p>
+                                    )}
+                                </div>
+                            );
+                        })}
                 </div>
             )}
 

@@ -41,6 +41,7 @@ func (r *hadithAyahRepo) FindByAyahID(ayahID int) ([]model.HadithAyah, error) {
 	var items []model.HadithAyah
 	err := r.db.
 		Preload("Hadith").Preload("Hadith.Translation").
+		Preload("Hadith.Book").Preload("Hadith.Book.Translation").
 		Where("ayah_id = ?", ayahID).
 		Order("hadith_id asc").
 		Find(&items).Error

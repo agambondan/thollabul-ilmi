@@ -231,6 +231,72 @@ function TakhrijPanel({ hadithId }) {
     );
 }
 
+function HadithAyahPanel({ hadithId }) {
+    const { t, lang } = useLocale();
+    const [data, setData] = useState(null);
+    const [failed, setFailed] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetch(`${API_URL}/api/v1/hadiths/${hadithId}/ayahs`)
+            .then((r) => r.json())
+            .then((d) =>
+                setData(Array.isArray(d?.items ?? d) ? (d?.items ?? d) : []),
+            )
+            .catch(() => setFailed(true))
+            .finally(() => setLoading(false));
+    }, [hadithId]);
+
+    if (loading) return <p className='text-xs text-gray-400 py-2'>...</p>;
+    if (failed)
+        return (
+            <p className='text-xs text-red-500 py-2'>
+                {t("common.load_error")}
+            </p>
+        );
+    if (!data?.length)
+        return (
+            <p className='text-xs text-gray-400 py-2'>
+                {t("hadith.related_ayah_empty")}
+            </p>
+        );
+
+    return (
+        <div className='space-y-3'>
+            {data.map((item, i) => {
+                const ayah = item.ayah;
+                if (!ayah) return null;
+                const surahName =
+                    ayah.surah?.translation?.latin_en ??
+                    `QS ${ayah.surah?.number ?? "?"}`;
+                return (
+                    <div
+                        key={item.id ?? i}
+                        className='bg-purple-50 dark:bg-purple-900/10 rounded-lg p-3'
+                    >
+                        <p className='text-xs text-purple-600 dark:text-purple-400 font-medium mb-1'>
+                            {surahName}:{ayah.number}
+                        </p>
+                        {ayah.translation?.ar && (
+                            <p className='font-arabic text-lg leading-loose text-right text-emerald-950 dark:text-emerald-50 mb-1'>
+                                {ayah.translation.ar}
+                            </p>
+                        )}
+                        <p className='text-sm text-gray-700 dark:text-gray-300'>
+                            {getLocalizedTranslation(ayah.translation, lang)}
+                        </p>
+                        {item.catatan && (
+                            <p className='text-xs text-gray-400 mt-1'>
+                                {item.catatan}
+                            </p>
+                        )}
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
 const HadithPage = ({
     params,
     hadith,
@@ -255,6 +321,7 @@ const HadithPage = ({
     const [statusMsg, SetStatusMsg] = useState("");
     const [showSanad, setShowSanad] = useState(false);
     const [showTakhrij, setShowTakhrij] = useState(false);
+    const [showAyat, setShowAyat] = useState(false);
 
     const audioSources = (hadith?.media ?? [])
         .map((entry) => entry?.multimedia?.url)
@@ -738,6 +805,18 @@ const HadithPage = ({
                 >
                     {t("hadith.takhrij")}
                 </button>
+                <button
+                    type='button'
+                    onClick={() => setShowAyat((v) => !v)}
+                    className={classNames(
+                        "text-xs px-3 py-1 rounded-full border transition-colors",
+                        showAyat
+                            ? "bg-purple-600 dark:bg-purple-700 text-white border-purple-600 dark:border-purple-700"
+                            : "text-purple-700 dark:text-purple-400 border-purple-300 dark:border-purple-800 hover:bg-purple-50 dark:hover:bg-purple-900/20",
+                    )}
+                >
+                    {t("hadith.related_ayah")}
+                </button>
             </div>
             {showSanad && (
                 <div className='px-4 pb-3'>
@@ -761,6 +840,17 @@ const HadithPage = ({
                         />
                     </div>
                     <TakhrijPanel hadithId={hadith.id} />
+                </div>
+            )}
+            {showAyat && (
+                <div className='px-4 pb-3'>
+                    <div className='flex items-start justify-between gap-3 mb-2'>
+                        <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-widest'>
+                            {t("hadith.related_ayah")}
+                        </p>
+                        <PanelCloseButton onClose={() => setShowAyat(false)} />
+                    </div>
+                    <HadithAyahPanel hadithId={hadith.id} />
                 </div>
             )}
             {isCopied ? <PopUpIsCopied /> : <></>}

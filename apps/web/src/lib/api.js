@@ -282,6 +282,12 @@ export const munasabahApi = {
     byAyah: (ayahId) => fetch(`${API_URL}/api/v1/munasabah/ayah/${ayahId}`),
 };
 
+export const hadithAyahApi = {
+    byAyah: (ayahId) => fetch(`${API_URL}/api/v1/ayahs/${ayahId}/hadiths`),
+    byHadith: (hadithId) =>
+        fetch(`${API_URL}/api/v1/hadiths/${hadithId}/ayahs`),
+};
+
 export const tokohTarikhApi = {
     list: (params = {}) => {
         const qs = new URLSearchParams(params).toString();
