@@ -273,8 +273,8 @@ prioritaskan investigasi kenapa sebelum review mendalam.
 | 21 | Belajar / Lessons (Modul) | [ ] | [ ] | [ ] |
 | 22 | Quiz & Flashcard | [ ] | [ ] | [ ] |
 | 23 | Kajian (list + search + bookmarks + notes + player) | [ ] | [ ] | [ ] |
-| 24 | **Masjid** (baru dibangun, web-only — belum ada di mobile & belum ada admin UI web) | [ ] | [ ] | [ ] |
-| 25 | **Radio Islamic** (baru dibangun, web-only — belum ada di mobile & belum ada admin UI web) | [ ] | [ ] | [ ] |
+| 24 | Masjid (web-only, reviewed + admin CRUD added 2026-09-08 — **masih belum ada di mobile**) | [x] | [x] | [ ] |
+| 25 | Radio Islamic (web-only, reviewed + admin CRUD added 2026-09-08 — **masih belum ada di mobile**) | [x] | [x] | [ ] |
 | 26 | Blog | [ ] | [ ] | [ ] |
 | 27 | Library / Perpustakaan | [ ] | [ ] | [ ] |
 | 28 | Forum Q&A | [ ] | [ ] | [ ] |

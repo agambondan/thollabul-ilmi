@@ -37,7 +37,13 @@ import {
     BsStar,
     BsSunFill,
 } from "react-icons/bs";
-import { MdClose, MdLogout, MdPersonOutline } from "react-icons/md";
+import {
+    MdClose,
+    MdLogout,
+    MdMosque,
+    MdPersonOutline,
+    MdRadio,
+} from "react-icons/md";
 
 const NAV_GROUPS = [
     {
@@ -177,6 +183,16 @@ const NAV_GROUPS = [
                 href: "/admin/locations",
                 label: "Peta Islam",
                 icon: <BsMap />,
+            },
+            {
+                href: "/admin/masjid",
+                label: "Masjid",
+                icon: <MdMosque />,
+            },
+            {
+                href: "/admin/radio-islamic",
+                label: "Radio Islam",
+                icon: <MdRadio />,
             },
         ],
     },

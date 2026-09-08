@@ -60,14 +60,36 @@ gate, jadi review dilakukan manual sebelum commit).
       ada". Diganti `== null`.
     - Hapus tipe request/response (`MasjidNearbyRequest`, dst.) yang
       didefinisikan tapi tidak pernah dipakai controller manapun (dead code).
-5. [ ] Smoke test end-to-end terhadap Postgres asli (bukan sekadar
-   `go build`/`go vet`) — helper matematika raw SQL (`radians`, `acos`, dst.)
-   tidak tersedia di driver SQLite yang dipakai test harness repo ini,
-   sehingga `FindNearby` belum ada automated test dan baru diverifikasi lewat
-   pembacaan manual query + semantik `HAVING`/`GORM Updates`.
-6. [ ] Tambahkan entri ke `docs/features/feature-manifest.json` kalau fitur
-   ini ingin muncul di discovery/mobile catalog (belum dilakukan — saat ini
-   hanya live di web).
+5. [x] Smoke test end-to-end terhadap Postgres asli (2026-09-08, sesi
+   lanjutan): `docker compose up --build` + `make db-setup-docker` untuk
+   migrate+seed nyata (catatan: `db-setup-docker` gagal total di tabel
+   `kajian_transcript` karena image `postgres:18-alpine` tidak punya
+   extension `vector` — pre-existing gap infra, di luar scope fitur ini;
+   tabel `masjid`/`radio_islamic` dibuat manual by-hand mengikuti skema
+   model persis untuk melewati blocker itu). Diverifikasi via browser
+   (Playwright + Chrome) dan curl langsung ke API:
+    - Create lewat form admin → row muncul di DB & list.
+    - `PUT` partial (`{"is_active": false}` saja) → field lain (name,
+      address, city, lat/lng) terbukti **tidak** ikut ter-reset — mengonfirmasi
+      fix GORM zero-value dari task #4 beneran jalan di Postgres asli.
+    - `DELETE` → row hilang dari list & DB.
+    - `/masjids/nearby` (trig SQL) **belum** diverifikasi langsung di sesi
+      ini — hanya CRUD dasar yang di-smoke-test.
+6. [x] Admin CRUD UI (2026-09-08, sesi lanjutan): `/admin/masjid` dan
+   `/admin/radio-islamic` (pola `GenericAdminCRUD`, sama seperti
+   `/admin/locations`), didaftarkan di nav admin group "Directory". Sebelum
+   ini backend sudah bisa `POST/PUT/DELETE` tapi **tidak ada UI sama
+   sekali** — data cuma bisa diubah lewat DB langsung.
+    - Review sambil bangun: `Create` masjid/radio pakai `lib.ErrorInternal`
+      untuk error apa pun termasuk duplicate-name (unique constraint) —
+      seharusnya `lib.ErrorConflict` (pola yang sudah dipakai
+      `doa_controller.go` dkk, auto-parse pesan Postgres "duplicate key"
+      jadi respons 409 yang jelas). Diperbaiki di kedua controller.
+7. [ ] Tambahkan entri ke `docs/features/feature-manifest.json` kalau fitur
+   ini ingin muncul di discovery/mobile catalog — **masih belum ada mobile
+   screen sama sekali** untuk masjid/radio (dikonfirmasi lewat investigasi
+   terpisah 2026-09-08, lihat
+   `docs/reviews/2026-09-08-feature-route-inventory.md` §4 gap #24-25).
 
 ## Acceptance Criteria
 
@@ -90,9 +112,11 @@ gate, jadi review dilakukan manual sebelum commit).
     - `go test ./app/controllers/... ./app/repository/... ./app/services/...` → OK (paket ada, belum ada test khusus masjid/radio — lihat task #5)
     - `npx jest --testPathPattern='masjidRadio'` → PASS (10 tests, termasuk
       regresi untuk bug koordinat `0`)
-- Device/API/Web smoke: belum dilakukan terhadap Postgres asli.
+- Device/API/Web smoke: lihat task #5 — CRUD dasar (create/update
+  parsial/delete) diverifikasi lewat browser + curl terhadap Postgres asli
+  di `docker compose`. `/masjids/nearby` belum di-smoke-test langsung.
 - Notes: fitur ini belum masuk `feature-manifest.json` / mobile catalog —
-  saat ini web-only.
+  saat ini web-only (admin CRUD sudah ada, tapi mobile screen masih nihil).
 
 ## Source of Truth
 

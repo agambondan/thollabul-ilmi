@@ -979,6 +979,16 @@ export const adminLocationApi = buildResourceApi({
     listParam: "page=1&size=200",
 });
 
+export const adminMasjidApi = buildResourceApi({
+    listPath: "/api/v1/masjids",
+    listParam: "page=1&size=100",
+});
+
+export const adminRadioIslamicApi = buildResourceApi({
+    listPath: "/api/v1/radio-islamic",
+    listParam: "page=1&size=100",
+});
+
 export const adminKamusApi = {
     list: (page = 0, size = 100) =>
         authFetch(`/api/v1/dictionary?page=${page}&size=${size}`),

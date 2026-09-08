@@ -32,7 +32,7 @@ func (c *masjidController) Create(ctx *fiber.Ctx) error {
 	}
 	result, err := c.svc.Create(req)
 	if err != nil {
-		return lib.ErrorInternal(ctx)
+		return lib.ErrorConflict(ctx, err)
 	}
 	return lib.OK(ctx, result)
 }
