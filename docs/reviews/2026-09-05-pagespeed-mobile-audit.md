@@ -34,7 +34,7 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 | 6   | `/hadith`               |   **65**    |    **97**     |       81       | 100 | 1.9s | 5.1s  | **440ms** | **0.000** |                          ✅ Tab CLS + Cover Fixed                          |
 | 7   | `/hadith/bukhari`       |   **75**    |    **96**     |       81       | 92  | 2.2s | 4.7s  |   240ms   | **0.000** |                        ✅ SSG + react-icons dropped                        |
 | 8   | `/hadith/muslim`        |   **63**    |    **96**     |       81       | 100 | 2.1s | 7.1s  |   330ms   | **0.000** |                       ✅ SSG themes+chapters+hadiths                       |
-| 9   | `/jadwal-sholat`        |   **55**    |    **93**     |       81       | 100 | 1.9s | 7.4s  |   660ms   | **0.000** |                 ✅ react-icons dropped + audio preload off                 |
+| 9   | `/jadwal-sholat`        |   **79**    |    **93**     |       81       | 100 | 1.1s | 5.6s  | **118ms** | **0.011** |                   ✅ countdown tick optimized + TBT -85%                   |
 | 10  | `/imsakiyah`            |   **70**    |    **93**     |       81       | 100 | 2.0s | 6.8s  | **150ms** | **0.000** |                                ✅ TBT -88%                                 |
 | 11  | `/doa`                  |   **73**    |    **93**     |       81       | 100 | 2.2s | 6.4s  | **50ms**  | **0.000** |                          ✅ ISR Active (TBT 50ms)                          |
 | 12  | `/dzikir`               |   **92**    |    **93**     |       81       | 100 | 2.0s | 3.0s  | **40ms**  | **0.001** |                           🚀 **Score 92** (Good)                           |
@@ -98,9 +98,10 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
     - Kartu CTA manual "Deteksi Lokasi Saya" ditambahkan di `/kiblat`.
     - Prompt izin notifikasi & lokasi `NotificationPermissionPrompt.js` di-delay 3.5 detik agar tidak merebut metrik LCP dari konten halaman.
 
-7. **Optimasi Drastis `/imsakiyah` (TBT -88%)**:
+7. **Optimasi Drastis `/imsakiyah` (TBT -88%) & `/jadwal-sholat` (TBT -85%)**:
     - Mengalihkan data fetching dari third-party `api.aladhan.com` (sering timeout/lambat) ke endpoint internal backend Go `/api/v1/imsakiyah` yang berkecepatan hitungan milidetik.
     - Rendering tabel dinormalisasi flat tanpa pembuatan `new Date()` redundant di setiap loop baris.
+    - Di `/jadwal-sholat`: hoist parsing `parseTimeStr()` keluar dari per-second interval tick, single-pass iterator untuk countdown & notification, serta menaikkan interval `setNow()` dari 15 detik ke 60 detik (TBT pangkas dari 794ms ke 118ms, Skor Performance naik dari 52 ke **79**).
 
 ---
 
