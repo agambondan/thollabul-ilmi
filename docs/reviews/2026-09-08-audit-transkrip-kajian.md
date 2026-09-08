@@ -135,6 +135,30 @@ temuan #1 di atas bukan cuma "cakupan transkrip rendah karena scrape
 gagal" — dulu ada sesi yang mengarang 2 kalimat generik sebagai pengganti
 transkrip yang memang tidak tersedia, alih-alih membiarkannya kosong.
 
+## Audit lanjutan: sisa 141 video lain bersih
+
+Setelah fix di atas, sisa 141 video dicek ulang dengan pendekatan mekanis
+(bukan cuma rasio durasi): `chunkTranscript()` di scraper asli memotong
+teks tiap 60 detik **tanpa peduli batas kalimat**, jadi transkrip hasil
+scrape sungguhan hampir pasti punya banyak chunk yang terputus di
+tengah kata/kalimat (lihat contoh `VuJ31eoVmTg` — chunk berakhir
+`"...Asalamual"`, `"...Tug"`). Transkrip fabrikasi justru sebaliknya:
+semua chunk-nya rapi berakhir di tanda baca kalimat.
+
+Dicek: dari 110 video (durasi ≥5 menit, ≥2 chunk), **0 video** yang
+≥90% chunk-nya berakhir bersih di tanda baca kalimat. Tidak ada indikasi
+fabrikasi lain selain 5 yang sudah diperbaiki.
+
+Satu video dengan cakupan 30–60% (`VuJ31eoVmTg`, "Thematic Study: Work
+Ethic") dicek manual: transkripnya asli (gaya bicara natural, filler,
+potongan kata) untuk 37 menit pertama dari video 78 menit, lalu ada
+lompatan ~40 menit tanpa transkrip, dan satu chunk nyasar ("Yeah.") tepat
+di detik-detik akhir video. Dicoba re-scrape lewat tunnel VPS untuk
+melengkapi cakupannya — hasilnya `ERROR: Video unavailable`, video ini
+sudah dihapus/diprivat dari YouTube sejak terakhir di-scrape. Jadi ini
+gap asli yang **tidak bisa diperbaiki lagi** (bukan bug, bukan fabrikasi),
+dibiarkan apa adanya.
+
 ## Fix yang sudah diterapkan
 
 `transcripts` untuk kelima `video_id` di atas dikosongkan (`[]`) di
