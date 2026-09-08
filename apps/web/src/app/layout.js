@@ -9,6 +9,7 @@ import ServiceWorkerRegistrar from "@/components/ServiceWorkerRegistrar";
 import MobileTabBar from "@/components/MobileTabBar";
 import SkipToContent from "@/components/SkipToContent";
 import { PublicFooter, PublicNavbar } from "@/components/PublicChrome";
+import { PublicMobileMenuProvider } from "@/context/PublicMobileMenu";
 import FloatingOverlays from "@/components/FloatingOverlays";
 
 const websiteJsonLd = {
@@ -136,12 +137,14 @@ export default async function RootLayout({ children }) {
                             <AnalyticsTracker />
                             <ServiceWorkerRegistrar />
                             <SkipToContent />
-                            <PublicNavbar />
-                            <div id='main-content' tabIndex={-1}>
-                                {children}
-                            </div>
-                            <PublicFooter />
-                            <MobileTabBar />
+                            <PublicMobileMenuProvider>
+                                <PublicNavbar />
+                                <div id='main-content' tabIndex={-1}>
+                                    {children}
+                                </div>
+                                <PublicFooter />
+                                <MobileTabBar />
+                            </PublicMobileMenuProvider>
                             <FloatingOverlays />
                         </SettingsProvider>
                     </AuthProvider>

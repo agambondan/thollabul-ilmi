@@ -1,22 +1,23 @@
 "use client";
 
 import { useLocale } from "@/context/Locale";
+import { usePublicMobileMenu } from "@/context/PublicMobileMenu";
+import { isNavLinkActive } from "@/lib/navGroups";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BsJournalBookmark } from "react-icons/bs";
 import { FaGraduationCap, FaQuran } from "react-icons/fa";
-import { MdMosque, MdOutlinePlayLesson } from "react-icons/md";
+import { ImBook } from "react-icons/im";
+import { MdMenu, MdOutlinePlayLesson } from "react-icons/md";
 import { useQuranFullscreen } from "@/lib/useQuranFullscreen";
 
 const TABS = [
     { href: "/quran", labelKey: "link.quran", Icon: FaQuran },
-    { href: "/hadith", labelKey: "link.hadith", Icon: BsJournalBookmark },
+    { href: "/hadith", labelKey: "link.hadith", Icon: ImBook },
     {
         href: "/kajian",
         labelKey: "link.kajian_short",
         Icon: MdOutlinePlayLesson,
     },
-    { href: "/jadwal-sholat", labelKey: "nav.worship", Icon: MdMosque },
     { href: "/belajar", labelKey: "link.belajar_short", Icon: FaGraduationCap },
 ];
 
@@ -27,6 +28,7 @@ export default function MobileTabBar() {
     const pathname = usePathname();
     const { t } = useLocale();
     const { isFullscreen } = useQuranFullscreen();
+    const { open: menuOpen, setOpen: setMenuOpen } = usePublicMobileMenu();
 
     if (
         !pathname ||
@@ -41,31 +43,50 @@ export default function MobileTabBar() {
     return (
         <nav
             aria-label={t("nav.menu")}
-            className='fixed inset-x-0 bottom-0 z-40 border-t border-emerald-100 bg-white/95 backdrop-blur lg:hidden dark:border-slate-800 dark:bg-slate-900/95'
-            style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+            className='lg:hidden fixed inset-x-0 bottom-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-t border-gray-100 dark:border-slate-800 px-2 pb-2 pt-1.5'
+            style={{
+                paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))",
+            }}
         >
-            <ul className='mx-auto flex max-w-lg items-stretch'>
+            <div className='grid grid-cols-5 gap-1 mx-auto max-w-lg'>
                 {TABS.map(({ href, labelKey, Icon }) => {
-                    const isActive =
-                        pathname === href || pathname.startsWith(`${href}/`);
+                    const isActive = isNavLinkActive(pathname, href);
                     return (
-                        <li key={href} className='flex-1'>
-                            <Link
-                                href={href}
-                                aria-current={isActive ? "page" : undefined}
-                                className={`flex flex-col items-center gap-0.5 px-1 py-2 text-[10px] font-semibold transition-colors ${
-                                    isActive
-                                        ? "text-emerald-700 dark:text-emerald-300"
-                                        : "text-slate-500 dark:text-slate-400"
-                                }`}
-                            >
-                                <Icon className='text-lg' aria-hidden='true' />
-                                <span className='truncate'>{t(labelKey)}</span>
-                            </Link>
-                        </li>
+                        <Link
+                            key={href}
+                            href={href}
+                            aria-current={isActive ? "page" : undefined}
+                            className={`min-h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 text-[10px] transition-colors ${
+                                isActive
+                                    ? "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 font-medium"
+                                    : "text-gray-500 dark:text-gray-400"
+                            }`}
+                        >
+                            <Icon className='text-base' aria-hidden='true' />
+                            <span className='max-w-full px-1 truncate'>
+                                {t(labelKey)}
+                            </span>
+                        </Link>
                     );
                 })}
-            </ul>
+                <button
+                    type='button'
+                    onClick={() => setMenuOpen((v) => !v)}
+                    aria-label={t("nav.open_menu")}
+                    aria-haspopup='dialog'
+                    aria-expanded={menuOpen}
+                    className={`min-h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 text-[10px] transition-colors ${
+                        menuOpen
+                            ? "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 font-medium"
+                            : "text-gray-500 dark:text-gray-400"
+                    }`}
+                >
+                    <MdMenu className='text-lg' />
+                    <span className='max-w-full px-1 truncate'>
+                        {t("nav.menu")}
+                    </span>
+                </button>
+            </div>
         </nav>
     );
 }
