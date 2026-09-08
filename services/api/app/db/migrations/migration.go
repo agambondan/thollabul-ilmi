@@ -103,6 +103,6 @@ var ModelMigrations []interface{} = []interface{}{
 	model.LessonStep{},
 	model.UserLessonProgress{},
 	model.AdzanSound{},
-	model.	ContentReport{},
+	model.ContentReport{},
 	model.ContentAuditLog{},
 }
