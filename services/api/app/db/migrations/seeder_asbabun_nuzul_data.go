@@ -2470,5 +2470,19 @@ func verifiedAsbabunNuzulDataset() []asbabunNuzulSeed {
 			Content: "Diriwayatkan dari Al-Bara' bin 'Azib radhiyallahu 'anhu: serombongan orang Yahudi lewat di hadapan Nabi ﷺ membawa seorang lelaki Yahudi yang berzina dalam keadaan wajahnya dilumuri arang hitam dan diarak keliling. Rasulullah ﷺ memanggil pendeta mereka dan bertanya: 'Apakah seperti ini hukuman zina bagi orang yang beristri dalam kitab Taurat kalian?' Mereka berdusta: 'Ya.' Beliau lalu memanggil salah seorang ulama mereka dan menyumpahnya dengan nama Allah yang menurunkan Taurat kepada Musa. Ulama itu mengaku: 'Demi Allah, seandainya engkau tidak menyumpahku, niscaya aku tidak memberitahukanmu. Hukuman zina dalam Taurat sebenarnya adalah rajam. Namun tatkala perzinaan banyak dilakukan oleh kaum bangsawan kami, kami membiarkan mereka dan hanya merajam rakyat jelata. Akhirnya kami bersepakat mengganti rajam dengan arang dan cambukan.' Nabi ﷺ bersabda: 'Ya Allah, aku adalah orang pertama yang menghidupkan kembali perintah-Mu saat mereka mematikannya,' lalu memerintahkan lelaki itu dirajam. Maka Allah menurunkan ayat: 'Barangsiapa yang tidak memutuskan menurut apa yang diturunkan Allah, maka mereka itu adalah orang-orang yang kafir' (5:44).",
 			Source:  "HR. Muslim No. 1700; HR. Abu Dawud No. 4447; Tafsir Ibnu Katsir 3/118-120; Shahih Muslim",
 		},
+		{
+			Title:    "At-Taubah — Keutamaan Iman dan Jihad Dibanding Sekadar Memberi Minum Jamaah Haji",
+			Narrator: "An-Nu'man bin Basyir radhiyallahu 'anhu",
+			SurahID:  9, AyahFrom: 19, AyahTo: 20,
+			Content: "Diriwayatkan dari An-Nu'man bin Basyir radhiyallahu 'anhu: aku berada di dekat mimbar Rasulullah ﷺ pada hari Jumat. Seorang sahabat berkata: 'Aku tidak peduli beramal apa pun setelah masuk Islam selain memberi minum jamaah haji (siqayah).' Sahabat lain berkata: 'Memakmurkan Masjidil Haram lebih utama daripada itu.' Dan Ali bin Abi Thalib radhiyallahu 'anhu berkata: 'Jihad di jalan Allah lebih utama daripada semua yang kalian sebutkan.' Umar bin Al-Khaththab menegur mereka: 'Janganlah kalian mengeraskan suara dan berselisih di dekat mimbar Rasulullah ﷺ pada hari Jumat. Namun setelah selesai shalat, aku akan menanyakan perkara ini kepada beliau.' Tatkala ditanyakan, Allah menurunkan ayat: 'Apakah (orang-orang) yang memberi minuman orang-orang yang mengerjakan haji dan mengurus Masjidil Haram kamu samakan dengan orang-orang yang beriman kepada Allah dan hari kemudian serta berjihad di jalan Allah? Mereka tidak sama di sisi Allah; dan Allah tidak memberikan petunjuk kepada kaum yang zalim. Orang-orang yang beriman dan berhijrah serta berjihad di jalan Allah dengan harta dan diri mereka, adalah lebih tinggi derajatnya di sisi Allah...' (9:19-20).",
+			Source:  "HR. Muslim No. 1879; HR. Abu Dawud No. 1696; Tafsir Ibnu Katsir 4/127-129; Shahih Muslim",
+		},
+		{
+			Title:    "Al-Hasyr — Hukum Penebangan Pohon Kurma Yahudi Bani Nadhir saat Pengepungan",
+			Narrator: "Abdullah bin Umar radhiyallahu 'anhuma",
+			SurahID:  59, AyahFrom: 5, AyahTo: 5,
+			Content: "Diriwayatkan dari Abdullah bin Umar radhiyallahu 'anhuma: Rasulullah ﷺ memerintahkan para sahabat untuk menebang dan membakar sebagian pohon kurma milik orang-orang Yahudi Bani Nadhir di daerah Al-Buwairah tatkala mengepung benteng pertahanan mereka. Kaum Yahudi mencela seraya berseru: 'Wahai Muhammad, bukankah engkau melarang berbuat kerusakan di muka bumi? Mengapa engkau menebang pohon-pohon ini?' Sebagian sahabat pun merasa bimbang dan takut jika perbuatan itu termasuk dosa. Maka Allah menurunkan ayat: 'Apa saja yang kamu tebang dari pohon kurma (milik orang-orang kafir) atau yang kamu biarkan tumbuh berdiri di atas pokoknya, maka (semua itu) adalah dengan izin Allah; dan karena Dia hendak memberikan kehinaan kepada orang-orang fasik' (59:5).",
+			Source:  "HR. Bukhari No. 2326, 4031; HR. Muslim No. 1740; Shahih Muttafaq 'alaih",
+		},
 	}
 }
