@@ -12,7 +12,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/morkid/paginate"
-	"github.com/spf13/viper"
 )
 
 var (
@@ -261,11 +260,7 @@ func createToken(userID, email, role, preferredLang string) (string, error) {
 		"exp":            time.Now().Add(24 * time.Hour).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	secret := viper.GetString("ACCESS_SECRET")
-	if secret == "" {
-		secret = "tholabul-ilmi-secret"
-	}
-	return token.SignedString([]byte(secret))
+	return token.SignedString(lib.JWTSecret())
 }
 
 func (s *userService) FindOrCreateOAuthUser(email, name, picture, provider, providerID string) (*model.LoginResponse, error) {

@@ -7,6 +7,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/spf13/viper"
 )
 
 func TestVerifyTokenRejectsMalformedAuthorizationHeader(t *testing.T) {
@@ -34,6 +35,9 @@ func TestVerifyTokenRejectsMalformedAuthorizationHeader(t *testing.T) {
 }
 
 func TestVerifyTokenAcceptsBearerCaseInsensitively(t *testing.T) {
+	viper.Set("ACCESS_SECRET", "test-secret-key-12345")
+	t.Cleanup(func() { viper.Set("ACCESS_SECRET", "") })
+
 	app := fiber.New()
 	app.Get("/protected", func(c *fiber.Ctx) error {
 		if _, err := VerifyToken(c); err != nil {
@@ -48,7 +52,7 @@ func TestVerifyTokenAcceptsBearerCaseInsensitively(t *testing.T) {
 		"role":    "user",
 		"exp":     time.Now().Add(time.Hour).Unix(),
 	})
-	signed, err := token.SignedString([]byte("tholabul-ilmi-secret"))
+	signed, err := token.SignedString([]byte("test-secret-key-12345"))
 	if err != nil {
 		t.Fatalf("sign token: %v", err)
 	}

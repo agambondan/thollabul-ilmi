@@ -16,6 +16,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/morkid/paginate"
+	"github.com/spf13/viper"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -215,13 +216,15 @@ func newUserControllerTestApp(t *testing.T) (*fiber.App, *gorm.DB, uuid.UUID) {
 func newAuthRequest(t *testing.T, method, path string, userID uuid.UUID) *http.Request {
 	t.Helper()
 
+	viper.Set("ACCESS_SECRET", "test-secret-key-12345")
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": userID.String(),
 		"email":   "controller@example.com",
 		"role":    string(model.RoleUser),
 		"exp":     time.Now().Add(time.Hour).Unix(),
 	})
-	signed, err := token.SignedString([]byte("tholabul-ilmi-secret"))
+	signed, err := token.SignedString([]byte("test-secret-key-12345"))
 	if err != nil {
 		t.Fatalf("sign token: %v", err)
 	}

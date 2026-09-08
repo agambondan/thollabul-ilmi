@@ -46,10 +46,13 @@ func VerifyTokenHeaders(c *fiber.Ctx) (*jwt.Token, error) {
 	return nil, errors.New("token is empty")
 }
 
-func jwtSecret() []byte {
+// JWTSecret returns the signing/verification key for access tokens.
+// It panics if ACCESS_SECRET is not configured — there is no hardcoded
+// fallback, since a shared default secret lets anyone forge admin tokens.
+func JWTSecret() []byte {
 	secret := viper.GetString("ACCESS_SECRET")
 	if secret == "" {
-		secret = "tholabul-ilmi-secret"
+		panic("ACCESS_SECRET is not set")
 	}
 	return []byte(secret)
 }
@@ -60,7 +63,7 @@ func extractToken(reqToken string) (*jwt.Token, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return jwtSecret(), nil
+		return JWTSecret(), nil
 	})
 	if err != nil {
 		return nil, err

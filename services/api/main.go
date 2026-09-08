@@ -44,6 +44,7 @@ func main() {
 	}
 	environment := config.Environment{}
 	env := environment.Init()
+	lib.JWTSecret() // fail fast at boot if ACCESS_SECRET is missing
 
 	redisDB, err := db.NewRedisDB(env)
 	if err != nil {
