@@ -429,6 +429,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Delete("/asmaul-husna/:id", middlewares.EditorOrAdminMiddleware(), newAsmaUlHusnaController.Delete)
 
 	// Audio Murotal (public read, admin write)
+	master.Get("/audio/manifest", newAudioController.GetManifest)
 	master.Get("/audio/surah/:surahId", newAudioController.FindSurahAudio)
 	master.Get("/audio/ayah/:ayahId", newAudioController.FindAyahAudio)
 	master.Post("/audio/surah", admin, newAudioController.AddSurahAudio)
