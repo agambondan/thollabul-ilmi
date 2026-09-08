@@ -1,6 +1,6 @@
 # Asbabun Nuzul Dataset — Tracker
 
-> Last updated: 2026-09-07
+> Last updated: 2026-09-08
 > Schema: `services/api/app/model/asbabun_nuzul.go` (m2m → Ayah)
 > Dataset file: `services/api/app/db/migrations/seeder_asbabun_nuzul_data.go`
 > Acuan aturan: `MEMORY.md "Islamic data seeding harus shahih"`
@@ -9,11 +9,11 @@
 
 | Metric                                         | Angka    |
 | ---------------------------------------------- | -------- |
-| Entri ter-seed                                 | **324**  |
-| Ayat ter-cover (range expanded)                | ~868     |
+| Entri ter-seed                                 | **336**  |
+| Ayat ter-cover (range expanded)                | ~882     |
 | Surat ter-cover (semua surat Quran)            | 114/114  |
-| Coverage vs total Quran (6,236 ayat)           | ~13.9%   |
-| Coverage vs estimasi total asbab shahih (~270) | **120%** |
+| Coverage vs total Quran (6,236 ayat)           | ~14.1%   |
+| Coverage vs estimasi total asbab shahih (~270) | **124%** |
 
 ## Target final (MVP shahih)
 
