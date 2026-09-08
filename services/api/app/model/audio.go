@@ -17,3 +17,22 @@ type AyahAudio struct {
 	AudioURL string `json:"audio_url" gorm:"type:varchar(512);not null"`
 	Ayah     *Ayah  `json:"ayah,omitempty"`
 }
+
+type AudioQariManifest struct {
+	Name string `json:"name"`
+	Slug string `json:"slug"`
+}
+
+type SurahAudioManifest struct {
+	SurahID     int    `json:"surah_id"`
+	SurahNumber int    `json:"surah_number"`
+	QariName    string `json:"qari_name"`
+	QariSlug    string `json:"qari_slug"`
+	AudioURL    string `json:"audio_url"`
+	Checksum    string `json:"checksum"`
+}
+
+type AudioManifest struct {
+	Qaris  []AudioQariManifest  `json:"qaris"`
+	Surahs []SurahAudioManifest `json:"surahs"`
+}

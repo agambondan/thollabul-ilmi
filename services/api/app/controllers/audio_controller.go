@@ -10,6 +10,7 @@ import (
 )
 
 type AudioController interface {
+	GetManifest(ctx *fiber.Ctx) error
 	FindSurahAudio(ctx *fiber.Ctx) error
 	FindAyahAudio(ctx *fiber.Ctx) error
 	AddSurahAudio(ctx *fiber.Ctx) error
@@ -24,6 +25,23 @@ type audioController struct {
 
 func NewAudioController(services *service.Services) AudioController {
 	return &audioController{services.Audio}
+}
+
+// GetManifest
+// @Summary Get audio manifest
+// @Description Get list of qaris and surah audio mappings with URLs
+// @Accept json
+// @Produce json
+// @Success 200 {object} lib.Response
+// @Failure 500 {object} lib.Response
+// @Router /audio/manifest [get]
+// @Tags Audio
+func (c *audioController) GetManifest(ctx *fiber.Ctx) error {
+	manifest, err := c.svc.GetManifest()
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, manifest)
 }
 
 // FindSurahAudio

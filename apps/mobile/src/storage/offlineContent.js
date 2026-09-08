@@ -39,3 +39,29 @@ export const getOfflineItems = async () => [];
 export const getOfflineHadithCountByBook = async () => 0;
 
 export const getOfflineHadithCountsBySlug = async () => ({});
+
+export const getOfflineAudioOverview = async () => ({
+    count: 0,
+    totalBytes: 0,
+    supported: false,
+});
+
+export const downloadSurahAudio = async () => {
+    throw new Error("Download audio hanya didukung di aplikasi native.");
+};
+
+export const getOfflineAudioUri = async () => null;
+
+export const saveOfflineAudioRecord = async () => {};
+
+export const deleteOfflineAudio = async () => getOfflineAudioOverview();
+
+export const cleanupExpiredOfflineAudio = async () => ({
+    removedCount: 0,
+    freedBytes: 0,
+});
+
+export const enforceOfflineAudioStorageLimit = async () => ({
+    removedCount: 0,
+    freedBytes: 0,
+});

@@ -6,6 +6,7 @@ import (
 )
 
 type AudioService interface {
+	GetManifest() (*model.AudioManifest, error)
 	FindSurahAudio(surahID int) ([]model.SurahAudio, error)
 	FindAyahAudio(ayahID int) ([]model.AyahAudio, error)
 	AddSurahAudio(*model.SurahAudio) (*model.SurahAudio, error)
@@ -20,6 +21,10 @@ type audioService struct {
 
 func NewAudioService(repo repository.AudioRepository) AudioService {
 	return &audioService{repo}
+}
+
+func (s *audioService) GetManifest() (*model.AudioManifest, error) {
+	return s.repo.FindManifest()
 }
 
 func (s *audioService) FindSurahAudio(surahID int) ([]model.SurahAudio, error) {

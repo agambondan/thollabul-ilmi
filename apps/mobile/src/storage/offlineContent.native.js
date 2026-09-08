@@ -1,3 +1,4 @@
+import * as FileSystem from "expo-file-system";
 import {
     normalizeAyah,
     normalizeHadith,
@@ -12,6 +13,8 @@ const MAIN_PACK_TYPES = ["quran_surah", "quran_ayah", "hadith"];
 const HADITH_PAGE_SIZE = 100;
 const HADITH_SAFETY_MAX_PAGES = 5000;
 const PRAYER_PACK_DAYS = 30;
+const OFFLINE_AUDIO_MAX_AGE_DAYS = 90;
+const OFFLINE_AUDIO_MAX_BYTES = 1.5 * 1024 * 1024 * 1024;
 
 let dbPromise;
 
@@ -50,6 +53,16 @@ const openDb = async () => {
           value TEXT NOT NULL,
           saved_at TEXT NOT NULL
         );
+        CREATE TABLE IF NOT EXISTS offline_audio (
+          key TEXT PRIMARY KEY NOT NULL,
+          surah_number INTEGER NOT NULL,
+          qari_slug TEXT NOT NULL,
+          local_uri TEXT NOT NULL,
+          size_bytes INTEGER DEFAULT 0,
+          saved_at TEXT NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS idx_offline_audio_surah ON offline_audio(surah_number);
+        CREATE INDEX IF NOT EXISTS idx_offline_audio_qari ON offline_audio(qari_slug);
       `);
             return db;
         })();
@@ -627,6 +640,225 @@ export const buildOfflinePack = async ({
         deltaCount: hadith.hadithCount,
         checkedForUpdates: checkUpdates,
     };
+};
+
+export const downloadSurahAudio = async ({
+    surahNumber,
+    qariSlug,
+    audioUrl,
+    onProgress,
+}) => {
+    if (!audioUrl) throw new Error("Audio URL tidak valid.");
+    const dir = `${FileSystem.documentDirectory}murottal/${qariSlug}/`;
+    const dirInfo = await FileSystem.getInfoAsync(dir);
+    if (!dirInfo.exists) {
+        await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
+    }
+
+    const filename = `${String(surahNumber).padStart(3, "0")}.mp3`;
+    const localUri = `${dir}${filename}`;
+
+    const downloadResumable = FileSystem.createDownloadResumable(
+        audioUrl,
+        localUri,
+        {},
+        (downloadProgress) => {
+            const progress =
+                downloadProgress.totalBytesWritten /
+                downloadProgress.totalBytesExpectedToWrite;
+            onProgress?.(Math.min(Math.round(progress * 100), 100));
+        },
+    );
+
+    const result = await downloadResumable.downloadAsync();
+    const fileInfo = await FileSystem.getInfoAsync(result.uri);
+    await saveOfflineAudioRecord({
+        surahNumber,
+        qariSlug,
+        localUri: result.uri,
+        sizeBytes: fileInfo.size ?? 0,
+    });
+    await cleanupExpiredOfflineAudio();
+    await enforceOfflineAudioStorageLimit();
+    return result.uri;
+};
+
+export const getOfflineAudioOverview = async () => {
+    try {
+        const db = await openDb();
+        const row = await db.getFirstAsync(
+            "SELECT COUNT(*) as count, COALESCE(SUM(size_bytes), 0) as total_bytes FROM offline_audio",
+        );
+        return {
+            count: Number(row?.count ?? 0),
+            totalBytes: Number(row?.total_bytes ?? 0),
+            supported: true,
+        };
+    } catch {
+        return { count: 0, totalBytes: 0, supported: false };
+    }
+};
+
+export const getOfflineAudioUri = async (surahNumber, qariSlug) => {
+    try {
+        const db = await openDb();
+        const row = await db.getFirstAsync(
+            "SELECT local_uri FROM offline_audio WHERE surah_number = ? AND qari_slug = ?",
+            [Number(surahNumber), qariSlug],
+        );
+        return row?.local_uri ?? null;
+    } catch {
+        return null;
+    }
+};
+
+export const saveOfflineAudioRecord = async ({
+    surahNumber,
+    qariSlug,
+    localUri,
+    sizeBytes = 0,
+}) => {
+    const db = await openDb();
+    const savedAt = new Date().toISOString();
+    const key = `audio:${surahNumber}:${qariSlug}`;
+    await db.runAsync(
+        "INSERT OR REPLACE INTO offline_audio (key, surah_number, qari_slug, local_uri, size_bytes, saved_at) VALUES (?, ?, ?, ?, ?, ?)",
+        [key, Number(surahNumber), qariSlug, localUri, sizeBytes, savedAt],
+    );
+};
+
+const deleteOfflineAudioFile = async (localUri) => {
+    if (!localUri) return;
+    try {
+        const info = await FileSystem.getInfoAsync(localUri);
+        if (info.exists) {
+            await FileSystem.deleteAsync(localUri, { idempotent: true });
+        }
+    } catch {
+        // file sudah hilang/tidak bisa diakses, biarkan row DB tetap dibersihkan
+    }
+};
+
+export const deleteOfflineAudio = async (surahNumber, qariSlug) => {
+    const db = await openDb();
+    let rows;
+    if (surahNumber && qariSlug) {
+        rows = await db.getAllAsync(
+            "SELECT local_uri FROM offline_audio WHERE surah_number = ? AND qari_slug = ?",
+            [Number(surahNumber), qariSlug],
+        );
+    } else if (surahNumber) {
+        rows = await db.getAllAsync(
+            "SELECT local_uri FROM offline_audio WHERE surah_number = ?",
+            [Number(surahNumber)],
+        );
+    } else if (qariSlug) {
+        rows = await db.getAllAsync(
+            "SELECT local_uri FROM offline_audio WHERE qari_slug = ?",
+            [qariSlug],
+        );
+    } else {
+        rows = await db.getAllAsync("SELECT local_uri FROM offline_audio");
+    }
+
+    await Promise.all(
+        (rows ?? []).map((row) => deleteOfflineAudioFile(row?.local_uri)),
+    );
+
+    if (surahNumber && qariSlug) {
+        await db.runAsync(
+            "DELETE FROM offline_audio WHERE surah_number = ? AND qari_slug = ?",
+            [Number(surahNumber), qariSlug],
+        );
+    } else if (surahNumber) {
+        await db.runAsync("DELETE FROM offline_audio WHERE surah_number = ?", [
+            Number(surahNumber),
+        ]);
+    } else if (qariSlug) {
+        await db.runAsync("DELETE FROM offline_audio WHERE qari_slug = ?", [
+            qariSlug,
+        ]);
+    } else {
+        await db.runAsync("DELETE FROM offline_audio");
+    }
+    return getOfflineAudioOverview();
+};
+
+export const cleanupExpiredOfflineAudio = async ({
+    maxAgeDays = OFFLINE_AUDIO_MAX_AGE_DAYS,
+} = {}) => {
+    try {
+        const db = await openDb();
+        const cutoff = new Date(
+            Date.now() - maxAgeDays * 24 * 60 * 60 * 1000,
+        ).toISOString();
+        const rows = await db.getAllAsync(
+            "SELECT local_uri, size_bytes FROM offline_audio WHERE saved_at < ?",
+            [cutoff],
+        );
+        if (!rows.length) {
+            return { removedCount: 0, freedBytes: 0 };
+        }
+
+        await Promise.all(
+            rows.map((row) => deleteOfflineAudioFile(row?.local_uri)),
+        );
+        await db.runAsync("DELETE FROM offline_audio WHERE saved_at < ?", [
+            cutoff,
+        ]);
+        return {
+            removedCount: rows.length,
+            freedBytes: rows.reduce(
+                (sum, row) => sum + Number(row?.size_bytes ?? 0),
+                0,
+            ),
+        };
+    } catch {
+        return { removedCount: 0, freedBytes: 0 };
+    }
+};
+
+export const enforceOfflineAudioStorageLimit = async ({
+    maxBytes = OFFLINE_AUDIO_MAX_BYTES,
+} = {}) => {
+    try {
+        const overview = await getOfflineAudioOverview();
+        if (overview.totalBytes <= maxBytes) {
+            return { removedCount: 0, freedBytes: 0 };
+        }
+
+        const db = await openDb();
+        const rows = await db.getAllAsync(
+            "SELECT key, local_uri, size_bytes FROM offline_audio ORDER BY saved_at ASC",
+        );
+        let bytesOver = overview.totalBytes - maxBytes;
+        const toRemove = [];
+        for (const row of rows) {
+            if (bytesOver <= 0) break;
+            toRemove.push(row);
+            bytesOver -= Number(row?.size_bytes ?? 0);
+        }
+        if (!toRemove.length) {
+            return { removedCount: 0, freedBytes: 0 };
+        }
+
+        await Promise.all(
+            toRemove.map((row) => deleteOfflineAudioFile(row?.local_uri)),
+        );
+        await db.runAsync(
+            `DELETE FROM offline_audio WHERE key IN (${toRemove.map(() => "?").join(",")})`,
+            toRemove.map((row) => row.key),
+        );
+        return {
+            removedCount: toRemove.length,
+            freedBytes: toRemove.reduce(
+                (sum, row) => sum + Number(row?.size_bytes ?? 0),
+                0,
+            ),
+        };
+    } catch {
+        return { removedCount: 0, freedBytes: 0 };
+    }
 };
 
 export const getOfflineItems = async (type) => {

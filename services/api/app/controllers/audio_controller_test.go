@@ -170,9 +170,46 @@ func newAudioControllerTestApp(t *testing.T) (*fiber.App, *gorm.DB) {
 	})
 
 	app := fiber.New()
+	app.Get("/audio/manifest", controller.GetManifest)
 	app.Get("/audio/surah/:surahId", controller.FindSurahAudio)
 	app.Get("/audio/ayah/:ayahId", controller.FindAyahAudio)
 	return app, db
+}
+
+func TestGetManifestReturnsQarisAndSurahs(t *testing.T) {
+	app, db := newAudioControllerTestApp(t)
+
+	surahID := 1
+	surahNum := 1
+	transID := 1
+	_ = db.Create(&model.Surah{
+		BaseID:        model.BaseID{ID: &surahID},
+		Number:        &surahNum,
+		TranslationID: &transID,
+	})
+	_ = db.Create(&model.SurahAudio{
+		SurahID:  &surahID,
+		QariName: "Mishary Rashid Al-Afasy",
+		QariSlug: "mishary-rashid-alafasy",
+		AudioURL: "https://example.com/001.mp3",
+	})
+
+	res := audioControllerRequest(t, app, "/audio/manifest")
+	defer res.Body.Close()
+	if res.StatusCode != fiber.StatusOK {
+		t.Fatalf("expected 200, got %d", res.StatusCode)
+	}
+
+	var manifest model.AudioManifest
+	if err := json.NewDecoder(res.Body).Decode(&manifest); err != nil {
+		t.Fatalf("decode manifest: %v", err)
+	}
+	if len(manifest.Qaris) != 1 || manifest.Qaris[0].Slug != "mishary-rashid-alafasy" {
+		t.Fatalf("unexpected qaris: %#v", manifest.Qaris)
+	}
+	if len(manifest.Surahs) != 1 || manifest.Surahs[0].SurahNumber != 1 {
+		t.Fatalf("unexpected surahs: %#v", manifest.Surahs)
+	}
 }
 
 func audioControllerRequest(t *testing.T, app *fiber.App, path string) *http.Response {

@@ -6,6 +6,7 @@ import (
 )
 
 type AudioRepository interface {
+	FindManifest() (*model.AudioManifest, error)
 	FindSurahAudioBySurahID(int) ([]model.SurahAudio, error)
 	FindAyahAudioByAyahID(int) ([]model.AyahAudio, error)
 	SaveSurahAudio(*model.SurahAudio) (*model.SurahAudio, error)
@@ -20,6 +21,38 @@ type audioRepo struct {
 
 func NewAudioRepository(db *gorm.DB) AudioRepository {
 	return &audioRepo{db}
+}
+
+func (r *audioRepo) FindManifest() (*model.AudioManifest, error) {
+	var qaris []model.AudioQariManifest
+	if err := r.db.Model(&model.SurahAudio{}).
+		Select("DISTINCT qari_name as name, qari_slug as slug").
+		Order("qari_name ASC").
+		Scan(&qaris).Error; err != nil {
+		return nil, err
+	}
+
+	var items []model.SurahAudioManifest
+	err := r.db.Model(&model.SurahAudio{}).
+		Select("surah_audios.surah_id, COALESCE(surahs.number, surah_audios.surah_id) as surah_number, surah_audios.qari_name, surah_audios.qari_slug, surah_audios.audio_url, '' as checksum").
+		Joins("LEFT JOIN surahs ON surahs.id = surah_audios.surah_id").
+		Order("surah_number ASC, surah_audios.qari_slug ASC").
+		Scan(&items).Error
+	if err != nil {
+		return nil, err
+	}
+
+	if qaris == nil {
+		qaris = []model.AudioQariManifest{}
+	}
+	if items == nil {
+		items = []model.SurahAudioManifest{}
+	}
+
+	return &model.AudioManifest{
+		Qaris:  qaris,
+		Surahs: items,
+	}, nil
 }
 
 func (r *audioRepo) resolveSurahAudioID(surahID int) (int, error) {
