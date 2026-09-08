@@ -40,9 +40,13 @@ import {
  * Shared by every nav surface that walks a getNavGroups() list (drawer,
  * sidebar, bottom tabs) so "is this link active" can't drift between them.
  * None of these hrefs are ever bare "/" or "/dashboard", so no extra guard
- * for those is needed.
+ * for those is needed. Pass `exact: true` (see the `exact` field on a link)
+ * for a link whose own href is also a path-prefix of a sibling link's href
+ * (e.g. "/asmaul-husna" vs "/asmaul-husna/flashcard") — otherwise both would
+ * light up together on the child page.
  */
-export function isNavLinkActive(pathname, href) {
+export function isNavLinkActive(pathname, href, { exact = false } = {}) {
+    if (exact) return pathname === href;
     return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -176,6 +180,10 @@ export function getNavGroups(basePath = "") {
                     labelKey: "link.asmaul_husna",
                     href: `${prefix}/asmaul-husna`,
                     icon: <MdStar />,
+                    // Its own two children below share this href as a path
+                    // prefix, so it needs an exact match to avoid lighting
+                    // up together with them.
+                    exact: true,
                 },
                 {
                     labelKey: "link.asmaul_flashcard",

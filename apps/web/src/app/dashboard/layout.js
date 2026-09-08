@@ -283,6 +283,7 @@ const DashboardLayout = ({ children }) => {
                                     const isActive = isNavLinkActive(
                                         pathname,
                                         link.href,
+                                        { exact: link.exact },
                                     );
                                     return (
                                         <li key={link.href}>

@@ -60,11 +60,13 @@ export const NavbarTailwindCss = () => {
     }, []);
 
     useEffect(() => {
-        setMobileMenuOpen(false);
+        // The shared mobile-menu open state is reset by
+        // PublicMobileMenuProvider itself (it never unmounts across route
+        // changes, unlike this component) — see context/PublicMobileMenu.js.
         setIsProfileMenuOpen(false);
         setIsSmallDropdownOpen(false);
         setIsContentMenuOpen(false);
-    }, [currentPath, setMobileMenuOpen]);
+    }, [currentPath]);
 
     useEffect(() => {
         const handleKeyDown = (event) => {

@@ -121,16 +121,26 @@ export default function MobileMenuDrawer({ open, onClose, basePath = "" }) {
 
                 {!isDashboard && (
                     <div className='px-4 pt-3 flex items-center justify-between gap-2'>
-                        <p className='text-[10px] font-semibold text-gray-400 uppercase tracking-wider'>
+                        <p
+                            id='mobile-menu-lang-label'
+                            className='text-[10px] font-semibold text-gray-400 uppercase tracking-wider'
+                        >
                             {t("nav.language")}
                         </p>
-                        <div className='flex gap-1'>
+                        <div
+                            className='flex gap-1'
+                            role='group'
+                            aria-labelledby='mobile-menu-lang-label'
+                        >
                             {LANGS.map((code) => (
                                 <button
                                     key={code}
                                     type='button'
                                     onClick={() => setLang(code)}
                                     aria-pressed={lang?.toUpperCase() === code}
+                                    aria-label={
+                                        code === "ID" ? "Indonesia" : "English"
+                                    }
                                     className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
                                         lang?.toUpperCase() === code
                                             ? "bg-emerald-600 text-white"
@@ -205,6 +215,7 @@ export default function MobileMenuDrawer({ open, onClose, basePath = "" }) {
                                     const isActive = isNavLinkActive(
                                         pathname,
                                         link.href,
+                                        { exact: link.exact },
                                     );
                                     return (
                                         <Link
