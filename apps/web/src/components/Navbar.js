@@ -1,5 +1,6 @@
 "use client";
 
+import MobileMenuDrawer from "@/components/layout/MobileMenuDrawer";
 import SmallDropDown from "@/components/dropdown/SmallDropDown";
 import { useAuth } from "@/context/Auth";
 import { useTheme } from "@/lib/useTheme";
@@ -34,7 +35,6 @@ export const NavbarTailwindCss = () => {
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const { lang: language, setLang: setLanguage, t } = useLocale();
     const profileMenuRef = useRef(null);
-    const mobileMenuRef = useRef(null);
     const { isAuthenticated, user, logout } = useAuth();
     const { isDark: isDarkMode, toggleTheme } = useTheme();
 
@@ -83,12 +83,6 @@ export const NavbarTailwindCss = () => {
 
     const languages = ["ID", "EN"];
 
-    const mainLinks = [
-        ...linksMenu,
-        ...linksMenuContent,
-        { label: t("nav.search"), href: "/search", icon: <BsSearch /> },
-    ];
-
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (
@@ -108,71 +102,106 @@ export const NavbarTailwindCss = () => {
             <div className='relative max-w-7xl mx-auto flex items-center justify-between gap-3 px-4 py-3'>
                 <Link
                     href='/'
-                    className='flex flex-col items-start hover:opacity-90 transition-opacity'
+                    className='flex items-center gap-2.5 hover:opacity-90 transition-opacity'
                 >
-                    <span
-                        className={classNames({
-                            "text-lg font-extrabold tracking-wide": true,
-                            "text-gold-400": "/" === currentPath,
-                            "text-white": "/" !== currentPath,
-                        })}
-                    >
-                        Thullaabul &apos;Ilmi
-                    </span>
-                    <span
-                        className='text-xs text-emerald-300 leading-tight'
-                        style={{ fontFamily: "Amiri, serif" }}
-                    >
-                        طُلَّابُ الْعِلْمِ
-                    </span>
+                    <div className='w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center shrink-0 shadow-sm'>
+                        <span className='text-white text-xs font-bold'>
+                            ط
+                        </span>
+                    </div>
+                    <div className='flex flex-col leading-none'>
+                        <span
+                            className={classNames({
+                                "text-base sm:text-lg font-extrabold tracking-wide": true,
+                                "text-gold-400": "/" === currentPath,
+                                "text-white": "/" !== currentPath,
+                            })}
+                        >
+                            Thullaabul &apos;Ilmi
+                        </span>
+                        <span
+                            className='text-[10px] sm:text-xs text-emerald-300 leading-tight mt-0.5'
+                            style={{ fontFamily: "Amiri, serif" }}
+                        >
+                            طُلَّابُ الْعِلْمِ
+                        </span>
+                    </div>
                 </Link>
 
-                <button
-                    onClick={toggleMobileMenu}
-                    type='button'
-                    className='inline-flex items-center justify-center w-11 h-11 rounded-xl border border-emerald-700 text-emerald-100 bg-emerald-950/20 hover:bg-emerald-800/60 transition-colors lg:hidden focus:outline-none focus:ring-2 focus:ring-emerald-500'
-                    aria-controls='navbar-main'
-                    aria-expanded={isMobileMenuOpen}
-                >
-                    <span className='sr-only'>
-                        {isMobileMenuOpen
-                            ? t("nav.close_menu")
-                            : t("nav.open_menu")}
-                    </span>
-                    {isMobileMenuOpen ? (
-                        <svg
-                            className='w-5 h-5'
-                            aria-hidden='true'
-                            xmlns='http://www.w3.org/2000/svg'
-                            fill='none'
-                            viewBox='0 0 24 24'
+                <div className='flex items-center gap-2 lg:hidden'>
+                    <button
+                        className='flex h-9 w-9 items-center justify-center rounded-lg text-emerald-200 hover:bg-emerald-800 transition-colors'
+                        onClick={clickSetDarkMode}
+                        aria-label={isDarkMode ? t("nav.light") : t("nav.dark")}
+                        title={isDarkMode ? t("nav.light") : t("nav.dark")}
+                    >
+                        {isDarkMode ? <IoSunnySharp /> : <IoMoonSharp />}
+                    </button>
+
+                    {isAuthenticated ? (
+                        <Link
+                            href='/dashboard'
+                            className='flex items-center justify-center w-8 h-8 rounded-full bg-emerald-700 text-white font-semibold text-xs border border-emerald-600 shadow-sm'
+                            title={user?.name ?? t("common.user")}
                         >
-                            <path
-                                stroke='currentColor'
-                                strokeLinecap='round'
-                                strokeLinejoin='round'
-                                strokeWidth='2'
-                                d='M6 6l12 12M18 6 6 18'
-                            />
-                        </svg>
+                            {(user?.name || "U")[0].toUpperCase()}
+                        </Link>
                     ) : (
-                        <svg
-                            className='w-5 h-5'
-                            aria-hidden='true'
-                            xmlns='http://www.w3.org/2000/svg'
-                            fill='none'
-                            viewBox='0 0 17 14'
+                        <Link
+                            href={`/auth/login?next=${encodeURIComponent(currentPath || "/")}`}
+                            className='px-2.5 py-1 rounded-lg bg-emerald-800/90 hover:bg-emerald-800 text-white text-xs font-semibold border border-emerald-700 transition-colors'
                         >
-                            <path
-                                stroke='currentColor'
-                                strokeLinecap='round'
-                                strokeLinejoin='round'
-                                strokeWidth='2'
-                                d='M1 1h15M1 7h15M1 13h15'
-                            />
-                        </svg>
+                            {t("nav.login")}
+                        </Link>
                     )}
-                </button>
+
+                    <button
+                        onClick={toggleMobileMenu}
+                        type='button'
+                        className='inline-flex items-center justify-center w-9 h-9 rounded-lg border border-emerald-700 text-emerald-100 bg-emerald-950/20 hover:bg-emerald-800/60 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                        aria-controls='navbar-main'
+                        aria-expanded={isMobileMenuOpen}
+                    >
+                        <span className='sr-only'>
+                            {isMobileMenuOpen
+                                ? t("nav.close_menu")
+                                : t("nav.open_menu")}
+                        </span>
+                        {isMobileMenuOpen ? (
+                            <svg
+                                className='w-5 h-5'
+                                aria-hidden='true'
+                                xmlns='http://www.w3.org/2000/svg'
+                                fill='none'
+                                viewBox='0 0 24 24'
+                            >
+                                <path
+                                    stroke='currentColor'
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
+                                    strokeWidth='2'
+                                    d='M6 6l12 12M18 6 6 18'
+                                />
+                            </svg>
+                        ) : (
+                            <svg
+                                className='w-5 h-5'
+                                aria-hidden='true'
+                                xmlns='http://www.w3.org/2000/svg'
+                                fill='none'
+                                viewBox='0 0 17 14'
+                            >
+                                <path
+                                    stroke='currentColor'
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
+                                    strokeWidth='2'
+                                    d='M1 1h15M1 7h15M1 13h15'
+                                />
+                            </svg>
+                        )}
+                    </button>
+                </div>
 
                 <div className='hidden w-full lg:block lg:w-auto'>
                     <ul className='flex flex-row items-center gap-1'>
@@ -197,9 +226,11 @@ export const NavbarTailwindCss = () => {
                                         })}
                                     >
                                         {link.icon}
-                                        {link.labelKey
-                                            ? t(link.labelKey)
-                                            : link.label}
+                                        <span>
+                                            {link.labelKey
+                                                ? t(link.labelKey)
+                                                : link.label}
+                                        </span>
                                     </Link>
                                 </li>
                             );
@@ -501,251 +532,12 @@ export const NavbarTailwindCss = () => {
                 </div>
             </div>
 
-            <div
-                className={`${isMobileMenuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"} lg:hidden absolute inset-x-0 top-full transition-all duration-200`}
-                aria-hidden={!isMobileMenuOpen}
-                inert={!isMobileMenuOpen ? "" : undefined}
-            >
-                <button
-                    type='button'
-                    aria-label={t("common.close_menu")}
-                    className={`absolute inset-0 h-[calc(100svh_-_var(--navbar-height))] w-full bg-black/30 backdrop-blur-[2px] transition-opacity duration-200 ${isMobileMenuOpen ? "opacity-100" : "opacity-0"}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                />
-                <div
-                    ref={mobileMenuRef}
-                    className='relative overflow-y-auto max-h-[calc(100svh-var(--navbar-height))] border-b border-emerald-700/60 bg-gradient-to-b from-emerald-900 via-emerald-950 to-gray-950 shadow-2xl'
-                >
-                    <div className='px-4 pt-4 pb-5'>
-                        <div className='mb-4 flex items-center justify-between'>
-                            <div>
-                                <p className='text-xs uppercase tracking-[0.2em] text-emerald-300/80'>
-                                    {t("nav.menu")}
-                                </p>
-                                <h2 className='text-base font-semibold text-white'>
-                                    {t("nav.quick_browse")}
-                                </h2>
-                            </div>
-                            <span className='rounded-full border border-emerald-700 bg-emerald-900/70 px-3 py-1 text-xs text-emerald-200'>
-                                {isAuthenticated
-                                    ? t("nav.active_account")
-                                    : t("nav.guest")}
-                            </span>
-                        </div>
-
-                        <div className='grid grid-cols-2 gap-3'>
-                            {mainLinks.map((link) => {
-                                const isActive =
-                                    link.href === "/"
-                                        ? currentPath === "/"
-                                        : currentPath.startsWith(link.href);
-
-                                return (
-                                    <Link
-                                        key={link.href}
-                                        href={link.href}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className={classNames(
-                                            "flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm transition-all",
-                                            isActive
-                                                ? "border-emerald-400 bg-emerald-500/15 text-white shadow-[0_0_0_1px_rgba(52,211,153,0.15)]"
-                                                : "border-emerald-800/80 bg-white/5 text-emerald-100 hover:border-emerald-500 hover:bg-white/10",
-                                        )}
-                                    >
-                                        <span className='text-base'>
-                                            {link.icon}
-                                        </span>
-                                        <span className='font-medium'>
-                                            {link.labelKey
-                                                ? t(link.labelKey)
-                                                : link.label}
-                                        </span>
-                                    </Link>
-                                );
-                            })}
-                        </div>
-
-                        <div className='mt-4 grid grid-cols-2 gap-3'>
-                            <button
-                                className='flex items-center justify-center gap-2 rounded-2xl border border-emerald-800 bg-white/5 px-4 py-3 text-sm text-emerald-100 transition-colors hover:border-emerald-500 hover:bg-white/10'
-                                onClick={clickSetDarkMode}
-                            >
-                                {isDarkMode ? (
-                                    <>
-                                        <IoSunnySharp />
-                                        <span>{t("nav.light")}</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <IoMoonSharp />
-                                        <span>{t("nav.dark")}</span>
-                                    </>
-                                )}
-                            </button>
-
-                            <div className='rounded-2xl border border-emerald-800 bg-white/5 px-3 py-2 text-emerald-100'>
-                                <div className='mb-1 text-[11px] uppercase tracking-[0.18em] text-emerald-300/75'>
-                                    {t("nav.language")}
-                                </div>
-                                <SmallDropDown
-                                    flag={ConvertFLagLanguage(language)}
-                                    isSmallDropdownOpen={isSmallDropdownOpen}
-                                    toggleSmallDropdown={toggleSmallDropdown}
-                                >
-                                    {languages.map((lang) => (
-                                        <button
-                                            key={lang}
-                                            className='flex w-full items-center gap-2 px-4 py-3 text-sm hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors'
-                                            onClick={() => {
-                                                setLanguage(lang);
-                                                toggleSmallDropdown();
-                                            }}
-                                        >
-                                            {ConvertFLagLanguage(lang)}
-                                            <span className='text-xs text-gray-500 dark:text-gray-300'>
-                                                {lang === "ID"
-                                                    ? "Indonesia"
-                                                    : "English"}
-                                            </span>
-                                        </button>
-                                    ))}
-                                </SmallDropDown>
-                            </div>
-                        </div>
-
-                        {isAuthenticated ? (
-                            <div className='mt-4 rounded-2xl border border-emerald-800 bg-white/5 p-3'>
-                                <div className='mb-3 flex items-center gap-3'>
-                                    <div className='flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-200'>
-                                        <BsPerson />
-                                    </div>
-                                    <div>
-                                        <p className='text-sm font-semibold text-white'>
-                                            {user?.name ?? t("nav.profile")}
-                                        </p>
-                                        <p className='text-xs text-emerald-300/80'>
-                                            {t("nav.manage_profile")}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className='grid grid-cols-1 gap-2'>
-                                    <Link
-                                        href='/dashboard'
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className='flex items-center gap-2 rounded-xl bg-emerald-500/20 border border-emerald-400/30 px-4 py-3 text-sm font-semibold text-emerald-100 transition-colors hover:bg-emerald-500/30'
-                                    >
-                                        <BsBarChart />
-                                        {t("nav.dashboard")}
-                                    </Link>
-                                    <Link
-                                        href='/dashboard/profile'
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
-                                    >
-                                        <BsPerson />
-                                        {t("nav.profile_streak")}
-                                    </Link>
-                                    <Link
-                                        href='/dashboard/bookmarks'
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
-                                    >
-                                        <BsBookmark />
-                                        {t("nav.bookmarks")}
-                                    </Link>
-                                    <Link
-                                        href='/dashboard/hafalan'
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
-                                    >
-                                        <span className='text-base'>📖</span>
-                                        {t("nav.memorization")}
-                                    </Link>
-                                    <Link
-                                        href='/dashboard/muroja-ah'
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
-                                    >
-                                        <MdMenuBook />
-                                        {t("nav.review")}
-                                    </Link>
-                                    <Link
-                                        href='/dashboard/tilawah'
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
-                                    >
-                                        <BsJournalCheck />
-                                        {t("nav.recitation")}
-                                    </Link>
-                                    <Link
-                                        href='/dashboard/amalan'
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
-                                    >
-                                        <MdFormatListBulleted />
-                                        {t("nav.deeds")}
-                                    </Link>
-                                    <Link
-                                        href='/dashboard/notes'
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
-                                    >
-                                        <BsBookmark />
-                                        {t("nav.notes")}
-                                    </Link>
-                                    <Link
-                                        href='/dashboard/notifications'
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
-                                    >
-                                        <BsBell />
-                                        {t("nav.notifications")}
-                                    </Link>
-                                    <Link
-                                        href='/dashboard/stats'
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className='flex items-center gap-2 rounded-xl bg-emerald-800/70 px-4 py-3 text-sm text-emerald-50 transition-colors hover:bg-emerald-700'
-                                    >
-                                        <BsBarChart />
-                                        {t("nav.statistics")}
-                                    </Link>
-                                    {user?.role === "admin" && (
-                                        <Link
-                                            href='/admin'
-                                            onClick={() =>
-                                                setMobileMenuOpen(false)
-                                            }
-                                            className='flex items-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-700/60 px-4 py-3 text-sm text-emerald-100 transition-colors hover:bg-emerald-700'
-                                        >
-                                            <BsShieldLock />
-                                            {t("nav.admin")}
-                                        </Link>
-                                    )}
-                                    <button
-                                        onClick={() => {
-                                            logout();
-                                            setMobileMenuOpen(false);
-                                        }}
-                                        className='flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200 transition-colors hover:bg-red-500/20'
-                                    >
-                                        {t("nav.logout")}
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            <Link
-                                href={`/auth/login?next=${encodeURIComponent(currentPath || "/")}`}
-                                onClick={() => setMobileMenuOpen(false)}
-                                className='mt-4 flex items-center justify-center gap-2 rounded-2xl bg-gold-500 px-4 py-3 text-sm font-semibold text-emerald-950 dark:text-emerald-300 transition-colors hover:bg-gold-400'
-                            >
-                                <BsPerson />
-                                {t("nav.login_account")}
-                            </Link>
-                        )}
-                    </div>
-                </div>
-            </div>
+            <MobileMenuDrawer
+                open={isMobileMenuOpen}
+                onClose={() => setMobileMenuOpen(false)}
+                basePath=''
+                userName={user?.name}
+            />
         </nav>
     );
 };
