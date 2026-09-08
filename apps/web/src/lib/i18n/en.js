@@ -252,6 +252,8 @@ const en = {
     "link.sholat_tracker": "Prayer Tracker",
     "link.muhasabah": "Self-Reflection",
     "link.imsakiyah": "Imsakiyah",
+    "link.masjid": "Nearby Mosques",
+    "link.radio_islamic": "Islamic Radio",
     "link.tasbih": "Digital Tasbih",
     "link.faraidh": "Inheritance Calculator",
     "link.asmaul_flashcard": "Asmaul Husna Flashcard",

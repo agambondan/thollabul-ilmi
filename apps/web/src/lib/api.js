@@ -1,4 +1,5 @@
 import { getLocalizedTranslation } from "@/lib/translation";
+import { parseApiJson } from "@/lib/personalSync";
 
 const API_URL =
     typeof window === "undefined"
@@ -1409,4 +1410,36 @@ export const kajianNoteApi = {
         authFetch(`/api/v1/kajian/notes/${id}`, {
             method: "DELETE",
         }),
+};
+
+export const masjidApi = {
+    list: (params = {}) => {
+        const query = new URLSearchParams(params).toString();
+        return fetch(
+            `${API_URL}/api/v1/masjids${query ? `?${query}` : ""}`,
+        ).then(parseApiJson);
+    },
+    nearby: ({ lat, lng, radius = 10, limit = 20 }) => {
+        const query = new URLSearchParams({
+            lat,
+            lng,
+            radius,
+            limit,
+        }).toString();
+        return fetch(`${API_URL}/api/v1/masjids/nearby?${query}`).then(
+            parseApiJson,
+        );
+    },
+    get: (id) => fetch(`${API_URL}/api/v1/masjids/${id}`).then(parseApiJson),
+};
+
+export const radioIslamicApi = {
+    list: (params = {}) => {
+        const query = new URLSearchParams(params).toString();
+        return fetch(
+            `${API_URL}/api/v1/radio-islamic${query ? `?${query}` : ""}`,
+        ).then(parseApiJson);
+    },
+    get: (id) =>
+        fetch(`${API_URL}/api/v1/radio-islamic/${id}`).then(parseApiJson),
 };

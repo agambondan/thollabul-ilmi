@@ -303,6 +303,8 @@ func (s *Repositories) Seeder() error {
 	migrations.SeedStaticFromFiles(s.db)
 	migrations.SeedAudioFromCDN(s.db)
 	migrations.SeedLocationsFromFile(s.db)
+	migrations.SeedMasjids(s.db)
+	migrations.SeedRadioIslamic(s.db)
 	migrations.SeedLessons(s.db)
 	if err := migrations.BackfillTranslations(s.db); err != nil {
 		return err
