@@ -51,11 +51,14 @@ type Services struct {
 	NotificationTemplate NotificationTemplateService
 	TokohTarikh          TokohTarikhService
 	Location             LocationService
+	Masjid               MasjidService
+	RadioIslamic         RadioIslamicService
 	Sholat               SholatService
 	Murojaah             MurojaahService
 	Fiqh                 FiqhService
 	Kajian               KajianService
 	KajianBookmark       KajianBookmarkService
+	KajianNote           KajianNoteService
 	Muhasabah            MuhasabahService
 	Goal                 GoalService
 	Hijri                HijriService
@@ -153,6 +156,9 @@ func NewServices(repo *repository.Repositories) *Services {
 		Fiqh:                 NewFiqhServiceWithCache(repo.Fiqh, cache),
 		Kajian:               NewKajianServiceWithCache(repo.Kajian, cache),
 		KajianBookmark:       NewKajianBookmarkService(repo.KajianBookmark),
+		KajianNote:           NewKajianNoteService(repo.KajianNote),
+		Masjid:               NewMasjidService(repo.Masjid),
+		RadioIslamic:         NewRadioIslamicService(repo.RadioIslamic),
 		Muhasabah:            NewMuhasabahService(repo.Muhasabah),
 		Goal:                 NewGoalService(repo.Goal),
 		Hijri:                NewHijriService(repo.IslamicEvent),

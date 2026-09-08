@@ -1196,6 +1196,7 @@ const id = {
     "kajian.tab_all": "📚 Semua Kajian",
     "kajian.tab_search": "🔍 Cari di Transkrip",
     "kajian.tab_bookmarks": "🔖 Bookmark",
+    "kajian.tab_notes": "📝 Catatan",
     "kajian.mode_hybrid_label": "Hybrid (Semua)",
     "kajian.mode_hybrid_desc": "Exact + Semantic",
     "kajian.mode_exact_label": "Teks Persis",

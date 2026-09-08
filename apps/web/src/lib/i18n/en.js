@@ -1214,6 +1214,7 @@ const en = {
     "kajian.tab_all": "📚 All Studies",
     "kajian.tab_search": "🔍 Search in Transcript",
     "kajian.tab_bookmarks": "🔖 Bookmarks",
+    "kajian.tab_notes": "📝 Notes",
     "kajian.mode_hybrid_label": "Hybrid (All)",
     "kajian.mode_hybrid_desc": "Exact + Semantic",
     "kajian.mode_exact_label": "Exact Text",

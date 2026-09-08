@@ -7,6 +7,7 @@ import { useLayoutMode } from "@/lib/useLayoutMode";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import SavedBookmarksView from "./SavedBookmarksView";
+import SavedNotesView from "./SavedNotesView";
 import { SearchIcon, PlayCircleIcon } from "@/components/icons/Icon";
 const TranscriptPlayerModal = dynamic(
     () =>
@@ -329,6 +330,17 @@ export default function KajianClient({
                 </button>
                 <button
                     type='button'
+                    onClick={() => setTab("notes")}
+                    className={`flex-1 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${
+                        tab === "notes"
+                            ? "bg-white dark:bg-slate-700 text-emerald-700 dark:text-emerald-300 shadow-sm"
+                            : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                    }`}
+                >
+                    {t("kajian.tab_notes") || "📝 Catatan"}
+                </button>
+                <button
+                    type='button'
                     onClick={() => setTab("list")}
                     className={`flex-1 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors ${
                         tab === "list"
@@ -356,6 +368,28 @@ export default function KajianClient({
                 />
             ) : tab === "bookmarks" ? (
                 <SavedBookmarksView />
+            ) : tab === "notes" ? (
+                <SavedNotesView
+                    onPlayNote={(note) => {
+                        const targetKajian =
+                            kajian.find((k) => k.id === note.kajianId) ||
+                            note.kajian;
+                        if (targetKajian) {
+                            setPlayingKajian({
+                                ...targetKajian,
+                                start_seconds: note.start || 0,
+                            });
+                        } else if (note.videoId) {
+                            setPlayingKajian({
+                                id: null,
+                                title: "Kajian",
+                                speaker: "",
+                                url: `https://www.youtube.com/watch?v=${note.videoId}`,
+                                start_seconds: note.start || 0,
+                            });
+                        }
+                    }}
+                />
             ) : (
                 <ListView
                     kajian={filtered}
@@ -388,7 +422,7 @@ export default function KajianClient({
                         snippet:
                             playingKajian.description || playingKajian.title,
                         timestamp: "00:00",
-                        start_seconds: 0,
+                        start_seconds: playingKajian.start_seconds || 0,
                     }}
                     onClose={() => setPlayingKajian(null)}
                 />

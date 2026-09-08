@@ -1387,3 +1387,24 @@ export const kajianBookmarkApi = {
             method: "DELETE",
         }),
 };
+
+export const kajianNoteApi = {
+    list: (kajianId) =>
+        authFetch(
+            `/api/v1/kajian/notes/me${kajianId ? `?kajian_id=${kajianId}` : ""}`,
+        ),
+    create: (payload) =>
+        authFetch("/api/v1/kajian/notes", {
+            method: "POST",
+            body: JSON.stringify(payload),
+        }),
+    update: (id, payload) =>
+        authFetch(`/api/v1/kajian/notes/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(payload),
+        }),
+    delete: (id) =>
+        authFetch(`/api/v1/kajian/notes/${id}`, {
+            method: "DELETE",
+        }),
+};

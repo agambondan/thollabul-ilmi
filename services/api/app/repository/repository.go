@@ -55,6 +55,7 @@ type Repositories struct {
 	Fiqh                 FiqhRepository
 	Kajian               KajianRepository
 	KajianBookmark       KajianBookmarkRepository
+	KajianNote           KajianNoteRepository
 	Muhasabah            MuhasabahRepository
 	Goal                 GoalRepository
 	History              HistoryRepository
@@ -74,6 +75,8 @@ type Repositories struct {
 	NotificationTemplate NotificationTemplateRepository
 	TokohTarikh          TokohTarikhRepository
 	Location             LocationRepository
+	Masjid               MasjidRepository
+	RadioIslamic         RadioIslamicRepository
 	AsbabunNuzul         AsbabunNuzulRepository
 	Perawi               PerawiRepository
 	JarhTadil            JarhTadilRepository
@@ -145,6 +148,7 @@ func NewRepositories(db *gorm.DB, client *redis.Client) (*Repositories, error) {
 		Fiqh:                 NewFiqhRepository(db),
 		Kajian:               NewKajianRepository(db, pg),
 		KajianBookmark:       NewKajianBookmarkRepository(db),
+		KajianNote:           NewKajianNoteRepository(db),
 		Muhasabah:            NewMuhasabahRepository(db),
 		Goal:                 NewGoalRepository(db),
 		History:              NewHistoryRepository(db),
@@ -164,6 +168,8 @@ func NewRepositories(db *gorm.DB, client *redis.Client) (*Repositories, error) {
 		NotificationTemplate: NewNotificationTemplateRepository(db),
 		TokohTarikh:          NewTokohTarikhRepository(db),
 		Location:             NewLocationRepository(db),
+		Masjid:               NewMasjidRepository(db),
+		RadioIslamic:         NewRadioIslamicRepository(db),
 		AsbabunNuzul:         NewAsbabunNuzulRepository(db),
 		Perawi:               NewPerawiRepository(db, pg),
 		JarhTadil:            NewJarhTadilRepository(db),

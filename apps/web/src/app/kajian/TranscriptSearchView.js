@@ -2,7 +2,9 @@
 
 import ModalShell from "@/components/ModalShell";
 import { PlayCircleIcon, SearchIcon, ShareIcon } from "@/components/icons/Icon";
+import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
+import { kajianBookmarkApi, kajianNoteApi, parseApiJson } from "@/lib/api";
 import Image from "next/image";
 import {
     useCallback,
@@ -403,6 +405,7 @@ function formatTime(seconds) {
 
 export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
     const { t } = useLocale();
+    const { isAuthenticated } = useAuth();
     const videoId = item
         ? getYouTubeIdFromTimestampUrl(item.timestamp_url) || item.video_id
         : null;
@@ -486,6 +489,48 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
             }
         }
     }, [bookmarkKey, notesKey, storageKey]);
+
+    // Fetch cloud notes if logged in
+    useEffect(() => {
+        if (!isAuthenticated || !item?.kajian_id) return;
+        let cancelled = false;
+        const loadCloudNotes = async () => {
+            try {
+                const res = await kajianNoteApi.list(item.kajian_id);
+                if (!res.ok) return;
+                const data = await parseApiJson(res);
+                const items = Array.isArray(data?.items) ? data.items : [];
+                if (cancelled) return;
+                if (items.length > 0) {
+                    const formatted = items.map((n) => ({
+                        id: n.id,
+                        start: n.start_sec,
+                        end: n.end_sec,
+                        text: n.content,
+                        createdAt: n.created_at,
+                        isCloud: true,
+                    }));
+                    setNotes((prev) => {
+                        // Merge cloud notes with any un-synced local notes
+                        const map = new Map();
+                        formatted.forEach((n) => map.set(String(n.id), n));
+                        prev.forEach((n) => {
+                            if (!map.has(String(n.id))) {
+                                map.set(String(n.id), n);
+                            }
+                        });
+                        return Array.from(map.values());
+                    });
+                }
+            } catch {
+                // ignore
+            }
+        };
+        loadCloudNotes();
+        return () => {
+            cancelled = true;
+        };
+    }, [isAuthenticated, item?.kajian_id]);
 
     useEffect(() => {
         if (typeof window === "undefined" || !storageKey) return;
@@ -802,16 +847,19 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
         setNoteEnd("");
     };
 
-    const saveNote = () => {
+    const saveNote = async () => {
         const text = noteText.trim();
         if (!text) return;
         const start = Math.max(0, Math.floor(Number(noteStart) || 0));
         const endRaw = String(noteEnd).trim();
-        const end = endRaw === "" ? 0 : Math.max(0, Math.floor(Number(endRaw) || 0));
+        const end =
+            endRaw === "" ? 0 : Math.max(0, Math.floor(Number(endRaw) || 0));
         if (end && end <= start) {
             return;
         }
+
         if (editingNoteId) {
+            const isNumericId = typeof editingNoteId === "number" || /^\d+$/.test(String(editingNoteId));
             setNotes((prev) =>
                 prev.map((n) =>
                     n.id === editingNoteId
@@ -819,22 +867,72 @@ export function TranscriptPlayerModal({ item, onClose, searchQuery = "" }) {
                         : n,
                 ),
             );
+            if (isAuthenticated && isNumericId) {
+                try {
+                    await kajianNoteApi.update(editingNoteId, {
+                        start_sec: start,
+                        end_sec: end > 0 ? end : null,
+                        content: text,
+                    });
+                } catch {
+                    // fallback to local
+                }
+            }
         } else {
+            const tempId = `note_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
             const note = {
-                id: `note_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+                id: tempId,
                 start,
                 end,
                 text,
                 createdAt: Date.now(),
             };
             setNotes((prev) => [note, ...prev]);
+
+            if (isAuthenticated && item?.kajian_id) {
+                try {
+                    const res = await kajianNoteApi.create({
+                        kajian_id: item.kajian_id,
+                        start_sec: start,
+                        end_sec: end > 0 ? end : null,
+                        content: text,
+                    });
+                    if (res.ok) {
+                        const saved = await parseApiJson(res);
+                        if (saved?.id) {
+                            setNotes((prev) =>
+                                prev.map((n) =>
+                                    n.id === tempId
+                                        ? {
+                                              ...n,
+                                              id: saved.id,
+                                              isCloud: true,
+                                          }
+                                        : n,
+                                ),
+                            );
+                        }
+                    }
+                } catch {
+                    // keep local
+                }
+            }
         }
         cancelNote();
     };
 
-    const deleteNote = (id) => {
+    const deleteNote = async (id) => {
         setNotes((prev) => prev.filter((n) => n.id !== id));
         if (editingNoteId === id) cancelNote();
+
+        const isNumericId = typeof id === "number" || /^\d+$/.test(String(id));
+        if (isAuthenticated && isNumericId) {
+            try {
+                await kajianNoteApi.delete(id);
+            } catch {
+                // ignore
+            }
+        }
     };
 
     const seekFromNote = (note) => {
