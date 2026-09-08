@@ -5,6 +5,7 @@ import SmallDropDown from "@/components/dropdown/SmallDropDown";
 import { useAuth } from "@/context/Auth";
 import { useTheme } from "@/lib/useTheme";
 import { useLocale } from "@/context/Locale";
+import { usePublicMobileMenu } from "@/context/PublicMobileMenu";
 import {
     linksMenu,
     linksMenuContent,
@@ -28,7 +29,8 @@ import { MdFormatListBulleted, MdMenuBook } from "react-icons/md";
 import { IoMoonSharp, IoSunnySharp } from "react-icons/io5";
 
 export const NavbarTailwindCss = () => {
-    const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const { open: isMobileMenuOpen, setOpen: setMobileMenuOpen } =
+        usePublicMobileMenu();
     const toggleMobileMenu = () => setMobileMenuOpen(!isMobileMenuOpen);
     const currentPath = usePathname();
     const [isSmallDropdownOpen, setIsSmallDropdownOpen] = useState(false);
@@ -62,7 +64,7 @@ export const NavbarTailwindCss = () => {
         setIsProfileMenuOpen(false);
         setIsSmallDropdownOpen(false);
         setIsContentMenuOpen(false);
-    }, [currentPath]);
+    }, [currentPath, setMobileMenuOpen]);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -76,7 +78,7 @@ export const NavbarTailwindCss = () => {
 
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    }, []);
+    }, [setMobileMenuOpen]);
 
     const [isContentMenuOpen, setIsContentMenuOpen] = useState(false);
     const contentMenuRef = useRef(null);
@@ -105,9 +107,7 @@ export const NavbarTailwindCss = () => {
                     className='flex items-center gap-2.5 hover:opacity-90 transition-opacity'
                 >
                     <div className='w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center shrink-0 shadow-sm'>
-                        <span className='text-white text-xs font-bold'>
-                            ط
-                        </span>
+                        <span className='text-white text-xs font-bold'>ط</span>
                     </div>
                     <div className='flex flex-col leading-none'>
                         <span
@@ -536,7 +536,6 @@ export const NavbarTailwindCss = () => {
                 open={isMobileMenuOpen}
                 onClose={() => setMobileMenuOpen(false)}
                 basePath=''
-                userName={user?.name}
             />
         </nav>
     );

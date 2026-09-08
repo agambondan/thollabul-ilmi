@@ -5,6 +5,7 @@ import {
     BsBookHalf,
     BsCalculator,
     BsCalendar3,
+    BsChatDots,
     BsCurrencyDollar,
     BsGlobe,
     BsJournalCheck,
@@ -15,7 +16,7 @@ import {
     BsTrophyFill,
 } from "react-icons/bs";
 import { FaBrain, FaQuran } from "react-icons/fa";
-import { GiOpenBook } from "react-icons/gi";
+import { GiOpenBook, GiPrayerBeads } from "react-icons/gi";
 import { ImBook } from "react-icons/im";
 import {
     MdAccessTime,
@@ -26,6 +27,7 @@ import {
     MdMenuBook,
     MdMosque,
     MdOutlineAutoStories,
+    MdOutlineContactPhone,
     MdOutlineDirectionsWalk,
     MdOutlinePlayLesson,
     MdRefresh,
@@ -33,6 +35,16 @@ import {
     MdStar,
     MdTimeline,
 } from "react-icons/md";
+
+/**
+ * Shared by every nav surface that walks a getNavGroups() list (drawer,
+ * sidebar, bottom tabs) so "is this link active" can't drift between them.
+ * None of these hrefs are ever bare "/" or "/dashboard", so no extra guard
+ * for those is needed.
+ */
+export function isNavLinkActive(pathname, href) {
+    return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export function getNavGroups(basePath = "") {
     const isDashboard = basePath === "/dashboard";
@@ -166,6 +178,16 @@ export function getNavGroups(basePath = "") {
                     icon: <MdStar />,
                 },
                 {
+                    labelKey: "link.asmaul_flashcard",
+                    href: `${prefix}/asmaul-husna/flashcard`,
+                    icon: <MdStar />,
+                },
+                {
+                    labelKey: "link.asmaul_wirid",
+                    href: `${prefix}/asmaul-husna/wirid`,
+                    icon: <GiPrayerBeads />,
+                },
+                {
                     labelKey: "link.doa",
                     href: `${prefix}/doa`,
                     icon: <MdSelfImprovement />,
@@ -194,6 +216,11 @@ export function getNavGroups(basePath = "") {
                     labelKey: "link.komunitas",
                     href: `${prefix}/komunitas`,
                     icon: <BsGlobe />,
+                },
+                {
+                    labelKey: "link.forum",
+                    href: `${prefix}/forum`,
+                    icon: <BsChatDots />,
                 },
                 {
                     labelKey: "link.kajian",
@@ -277,11 +304,6 @@ export function getNavGroups(basePath = "") {
                               icon: <MdExplore />,
                           },
                           {
-                              labelKey: "link.faraidh",
-                              href: "/dashboard/faraidh",
-                              icon: <BsCalculator />,
-                          },
-                          {
                               labelKey: "link.zakat",
                               href: "/dashboard/zakat",
                               icon: <BsCurrencyDollar />,
@@ -289,11 +311,16 @@ export function getNavGroups(basePath = "") {
                       ]
                     : [
                           {
-                              labelKey: "link.faraidh",
-                              href: "/faraidh",
-                              icon: <BsCalculator />,
+                              labelKey: "link.contact",
+                              href: "/contact",
+                              icon: <MdOutlineContactPhone />,
                           },
                       ]),
+                {
+                    labelKey: "link.faraidh",
+                    href: `${prefix}/faraidh`,
+                    icon: <BsCalculator />,
+                },
                 {
                     labelKey: "link.search",
                     href: `${prefix}/search`,
@@ -304,13 +331,13 @@ export function getNavGroups(basePath = "") {
                     href: `${prefix}/quiz`,
                     icon: <FaBrain />,
                 },
+                {
+                    labelKey: "link.leaderboard",
+                    href: `${prefix}/leaderboard`,
+                    icon: <BsTrophyFill />,
+                },
                 ...(isDashboard
                     ? [
-                          {
-                              labelKey: "link.leaderboard",
-                              href: "/dashboard/leaderboard",
-                              icon: <BsTrophyFill />,
-                          },
                           {
                               labelKey: "link.achievements",
                               href: "/dashboard/achievements",

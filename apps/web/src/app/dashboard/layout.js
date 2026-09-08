@@ -5,7 +5,7 @@ import MobileMenuDrawer from "@/components/layout/MobileMenuDrawer";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { useTheme } from "@/lib/useTheme";
-import { getNavGroups } from "@/lib/navGroups";
+import { getNavGroups, isNavLinkActive } from "@/lib/navGroups";
 import { ConvertFLagLanguage } from "@/lib/converter";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -24,11 +24,7 @@ import {
 } from "react-icons/bs";
 import { FaGraduationCap, FaQuran } from "react-icons/fa";
 import { ImBook } from "react-icons/im";
-import {
-    MdLogout,
-    MdMenu,
-    MdOutlinePlayLesson,
-} from "react-icons/md";
+import { MdLogout, MdMenu, MdOutlinePlayLesson } from "react-icons/md";
 
 const LANGS = ["ID", "EN"];
 const SIDEBAR_STORAGE_KEY = "tholabul_dashboard_sidebar_collapsed";
@@ -284,12 +280,10 @@ const DashboardLayout = ({ children }) => {
                             )}
                             <ul className='space-y-0.5'>
                                 {group.links.map((link) => {
-                                    const isActive =
-                                        pathname === link.href ||
-                                        (link.href !== "/" &&
-                                            pathname.startsWith(
-                                                link.href + "/",
-                                            ));
+                                    const isActive = isNavLinkActive(
+                                        pathname,
+                                        link.href,
+                                    );
                                     return (
                                         <li key={link.href}>
                                             <Link
@@ -522,23 +516,29 @@ const DashboardLayout = ({ children }) => {
                     open={mobileMenuOpen}
                     onClose={() => setMobileMenuOpen(false)}
                     basePath='/dashboard'
-                    userName={user?.name}
                 />
 
-                <nav className='md:hidden fixed inset-x-0 bottom-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-t border-gray-100 dark:border-slate-800 px-2 pb-2 pt-1.5'>
+                <nav
+                    className='md:hidden fixed inset-x-0 bottom-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-t border-gray-100 dark:border-slate-800 px-2 pb-2 pt-1.5'
+                    style={{
+                        paddingBottom:
+                            "max(0.5rem, env(safe-area-inset-bottom))",
+                    }}
+                >
                     <div className='grid grid-cols-5 gap-1'>
                         {mobilePrimaryLinks.map((link) => {
-                            const isActive =
-                                pathname === link.href ||
-                                (link.href !== "/dashboard" &&
-                                    pathname.startsWith(link.href + "/"));
+                            const isActive = isNavLinkActive(
+                                pathname,
+                                link.href,
+                            );
                             return (
                                 <Link
                                     key={link.href}
                                     href={link.href}
+                                    aria-current={isActive ? "page" : undefined}
                                     className={`min-h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 text-[10px] transition-colors ${
                                         isActive
-                                            ? "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30"
+                                            ? "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 font-medium"
                                             : "text-gray-500 dark:text-gray-400"
                                     }`}
                                 >
@@ -555,9 +555,11 @@ const DashboardLayout = ({ children }) => {
                             type='button'
                             onClick={() => setMobileMenuOpen(true)}
                             aria-label={t("nav.open_menu")}
+                            aria-haspopup='dialog'
+                            aria-expanded={mobileMenuOpen}
                             className={`min-h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 text-[10px] transition-colors ${
                                 mobileMenuOpen
-                                    ? "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30"
+                                    ? "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 font-medium"
                                     : "text-gray-500 dark:text-gray-400"
                             }`}
                         >
