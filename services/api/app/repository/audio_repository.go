@@ -34,9 +34,9 @@ func (r *audioRepo) FindManifest() (*model.AudioManifest, error) {
 
 	var items []model.SurahAudioManifest
 	err := r.db.Model(&model.SurahAudio{}).
-		Select("surah_audios.surah_id, COALESCE(surahs.number, surah_audios.surah_id) as surah_number, surah_audios.qari_name, surah_audios.qari_slug, surah_audios.audio_url, '' as checksum").
-		Joins("LEFT JOIN surahs ON surahs.id = surah_audios.surah_id").
-		Order("surah_number ASC, surah_audios.qari_slug ASC").
+		Select("surah_audio.surah_id, COALESCE(surah.number, surah_audio.surah_id) as surah_number, surah_audio.qari_name, surah_audio.qari_slug, surah_audio.audio_url, '' as checksum").
+		Joins("LEFT JOIN surah ON surah.id = surah_audio.surah_id").
+		Order("surah_number ASC, surah_audio.qari_slug ASC").
 		Scan(&items).Error
 	if err != nil {
 		return nil, err

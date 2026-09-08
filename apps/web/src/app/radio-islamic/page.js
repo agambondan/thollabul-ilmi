@@ -26,9 +26,12 @@ export default async function RadioIslamicPage() {
     const { items = [], total = 0 } = await getInitialRadios();
 
     return (
-        <main className="min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900">
+        <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
             <Section>
-                <RadioIslamicClientContent initialRadios={items} initialTotal={total} />
+                <RadioIslamicClientContent
+                    initialRadios={items}
+                    initialTotal={total}
+                />
             </Section>
         </main>
     );

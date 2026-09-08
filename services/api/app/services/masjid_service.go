@@ -8,7 +8,7 @@ import (
 
 type MasjidService interface {
 	Create(req *model.CreateMasjidRequest) (*model.Masjid, error)
-	Update(id int, req *model.CreateMasjidRequest) (*model.Masjid, error)
+	Update(id int, req *model.UpdateMasjidRequest) (*model.Masjid, error)
 	FindAll(search, city, province string, limit, offset int) ([]model.Masjid, int64, error)
 	FindByID(int) (*model.Masjid, error)
 	Delete(int) error
@@ -89,24 +89,51 @@ func (s *masjidService) Delete(id int) error {
 	return err
 }
 
-func (s *masjidService) Update(id int, req *model.CreateMasjidRequest) (*model.Masjid, error) {
-	m := &model.Masjid{
-		Name:        req.Name,
-		Description: req.Description,
-		Address:     req.Address,
-		District:    req.District,
-		City:        req.City,
-		Province:    req.Province,
-		Latitude:    req.Latitude,
-		Longitude:   req.Longitude,
-		Phone:       req.Phone,
-		Capacity:    req.Capacity,
-		Facilities:  req.Facilities,
-		ImageURL:    req.ImageURL,
-		Website:     req.Website,
-		IsActive:    req.IsActive,
+func (s *masjidService) Update(id int, req *model.UpdateMasjidRequest) (*model.Masjid, error) {
+	fields := map[string]interface{}{}
+	if req.Name != nil {
+		fields["name"] = *req.Name
 	}
-	result, err := s.repo.Update(id, m)
+	if req.Description != nil {
+		fields["description"] = *req.Description
+	}
+	if req.Address != nil {
+		fields["address"] = *req.Address
+	}
+	if req.District != nil {
+		fields["district"] = *req.District
+	}
+	if req.City != nil {
+		fields["city"] = *req.City
+	}
+	if req.Province != nil {
+		fields["province"] = *req.Province
+	}
+	if req.Latitude != nil {
+		fields["latitude"] = *req.Latitude
+	}
+	if req.Longitude != nil {
+		fields["longitude"] = *req.Longitude
+	}
+	if req.Phone != nil {
+		fields["phone"] = *req.Phone
+	}
+	if req.Capacity != nil {
+		fields["capacity"] = *req.Capacity
+	}
+	if req.Facilities != nil {
+		fields["facilities"] = *req.Facilities
+	}
+	if req.ImageURL != nil {
+		fields["image_url"] = *req.ImageURL
+	}
+	if req.Website != nil {
+		fields["website"] = *req.Website
+	}
+	if req.IsActive != nil {
+		fields["is_active"] = *req.IsActive
+	}
+	result, err := s.repo.Update(id, fields)
 	if err == nil && s.cache != nil {
 		s.cache.Invalidate("masjid:*")
 	}

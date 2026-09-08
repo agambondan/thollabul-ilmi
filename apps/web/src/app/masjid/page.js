@@ -26,9 +26,12 @@ export default async function MasjidPage() {
     const { items = [], total = 0 } = await getInitialMasjids();
 
     return (
-        <main className="min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900">
+        <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
             <Section>
-                <MasjidClientContent initialMasjids={items} initialTotal={total} />
+                <MasjidClientContent
+                    initialMasjids={items}
+                    initialTotal={total}
+                />
             </Section>
         </main>
     );

@@ -8,7 +8,7 @@ import (
 
 type RadioIslamicService interface {
 	Create(req *model.CreateRadioIslamicRequest) (*model.RadioIslamic, error)
-	Update(id int, req *model.CreateRadioIslamicRequest) (*model.RadioIslamic, error)
+	Update(id int, req *model.UpdateRadioIslamicRequest) (*model.RadioIslamic, error)
 	FindAll(search, city, province string, limit, offset int) ([]model.RadioIslamic, int64, error)
 	FindByID(int) (*model.RadioIslamic, error)
 	Delete(int) error
@@ -84,20 +84,39 @@ func (s *radioIslamicService) Delete(id int) error {
 	return err
 }
 
-func (s *radioIslamicService) Update(id int, req *model.CreateRadioIslamicRequest) (*model.RadioIslamic, error) {
-	rad := &model.RadioIslamic{
-		Name:        req.Name,
-		Frequency:   req.Frequency,
-		City:        req.City,
-		Province:    req.Province,
-		StreamURL:   req.StreamURL,
-		Description: req.Description,
-		LogoURL:     req.LogoURL,
-		Website:     req.Website,
-		IsActive:    req.IsActive,
-		Tags:        req.Tags,
+func (s *radioIslamicService) Update(id int, req *model.UpdateRadioIslamicRequest) (*model.RadioIslamic, error) {
+	fields := map[string]interface{}{}
+	if req.Name != nil {
+		fields["name"] = *req.Name
 	}
-	result, err := s.repo.Update(id, rad)
+	if req.Frequency != nil {
+		fields["frequency"] = *req.Frequency
+	}
+	if req.City != nil {
+		fields["city"] = *req.City
+	}
+	if req.Province != nil {
+		fields["province"] = *req.Province
+	}
+	if req.StreamURL != nil {
+		fields["stream_url"] = *req.StreamURL
+	}
+	if req.Description != nil {
+		fields["description"] = *req.Description
+	}
+	if req.LogoURL != nil {
+		fields["logo_url"] = *req.LogoURL
+	}
+	if req.Website != nil {
+		fields["website"] = *req.Website
+	}
+	if req.IsActive != nil {
+		fields["is_active"] = *req.IsActive
+	}
+	if req.Tags != nil {
+		fields["tags"] = *req.Tags
+	}
+	result, err := s.repo.Update(id, fields)
 	if err == nil && s.cache != nil {
 		s.cache.Invalidate("radio:*")
 	}

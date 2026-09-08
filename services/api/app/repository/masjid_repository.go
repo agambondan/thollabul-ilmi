@@ -7,7 +7,7 @@ import (
 
 type MasjidRepository interface {
 	Save(*model.Masjid) (*model.Masjid, error)
-	Update(int, *model.Masjid) (*model.Masjid, error)
+	Update(int, map[string]interface{}) (*model.Masjid, error)
 	FindAll(search, city, province string, limit, offset int) ([]model.Masjid, int64, error)
 	FindByID(int) (*model.Masjid, error)
 	Delete(int) error
@@ -25,12 +25,11 @@ func (r *masjidRepo) Save(m *model.Masjid) (*model.Masjid, error) {
 	return m, nil
 }
 
-func (r *masjidRepo) Update(id int, m *model.Masjid) (*model.Masjid, error) {
-	err := r.db.Model(&model.Masjid{}).Where("id = ?", id).
-		Select("Name", "Description", "Address", "District", "City", "Province", "Latitude", "Longitude", "Phone", "Capacity", "Facilities", "ImageURL", "Website", "IsActive").
-		Updates(m).Error
-	if err != nil {
-		return nil, err
+func (r *masjidRepo) Update(id int, fields map[string]interface{}) (*model.Masjid, error) {
+	if len(fields) > 0 {
+		if err := r.db.Model(&model.Masjid{}).Where("id = ?", id).Updates(fields).Error; err != nil {
+			return nil, err
+		}
 	}
 	return r.FindByID(id)
 }
@@ -82,7 +81,7 @@ func (r *masjidRepo) FindNearby(lat, lng, radiusKm float64, limit int) ([]model.
 						cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))
 					))
 				)) as distance_km
-			FROM masjids
+			FROM masjid
 			WHERE is_active = true
 		) sub
 		WHERE distance_km <= ?
@@ -100,7 +99,7 @@ func (r *masjidRepo) FindNearby(lat, lng, radiusKm float64, limit int) ([]model.
 					cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude))
 				))
 			)) as distance_km
-			FROM masjids
+			FROM masjid
 			WHERE is_active = true
 		) sub
 		WHERE distance_km <= ?

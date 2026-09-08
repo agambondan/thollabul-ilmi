@@ -83,7 +83,7 @@ func (c *radioIslamicController) Update(ctx *fiber.Ctx) error {
 	if err != nil {
 		return lib.ErrorBadRequest(ctx, "invalid id")
 	}
-	req := new(model.CreateRadioIslamicRequest)
+	req := new(model.UpdateRadioIslamicRequest)
 	if err := lib.BodyParser(ctx, req); err != nil {
 		return lib.ErrorBadRequest(ctx, err)
 	}

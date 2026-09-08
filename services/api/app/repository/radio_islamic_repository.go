@@ -7,7 +7,7 @@ import (
 
 type RadioIslamicRepository interface {
 	Save(*model.RadioIslamic) (*model.RadioIslamic, error)
-	Update(int, *model.RadioIslamic) (*model.RadioIslamic, error)
+	Update(int, map[string]interface{}) (*model.RadioIslamic, error)
 	FindAll(search, city, province string, limit, offset int) ([]model.RadioIslamic, int64, error)
 	FindByID(int) (*model.RadioIslamic, error)
 	Delete(int) error
@@ -26,12 +26,11 @@ func (r *radioIslamicRepo) Save(rad *model.RadioIslamic) (*model.RadioIslamic, e
 	return rad, nil
 }
 
-func (r *radioIslamicRepo) Update(id int, rad *model.RadioIslamic) (*model.RadioIslamic, error) {
-	err := r.db.Model(&model.RadioIslamic{}).Where("id = ?", id).
-		Select("Name", "Frequency", "City", "Province", "StreamURL", "Description", "LogoURL", "Website", "IsActive", "Tags").
-		Updates(rad).Error
-	if err != nil {
-		return nil, err
+func (r *radioIslamicRepo) Update(id int, fields map[string]interface{}) (*model.RadioIslamic, error) {
+	if len(fields) > 0 {
+		if err := r.db.Model(&model.RadioIslamic{}).Where("id = ?", id).Updates(fields).Error; err != nil {
+			return nil, err
+		}
 	}
 	return r.FindByID(id)
 }

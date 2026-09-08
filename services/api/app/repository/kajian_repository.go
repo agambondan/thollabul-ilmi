@@ -271,15 +271,28 @@ FROM %[1]s
 JOIN %[2]s ON %[2]s.id = %[1]s.kajian_id
 WHERE %[1]s.embedding IS NOT NULL
 `, transcriptTable, kajianTable)
+	speakerParts := []string{}
 	if speaker != "" {
-		vecSQL += fmt.Sprintf(" AND %s.speaker %s $2", kajianTable, likeOp)
+		for _, p := range strings.Split(speaker, "||") {
+			p = strings.TrimSpace(p)
+			if p != "" {
+				speakerParts = append(speakerParts, p)
+			}
+		}
+	}
+	if len(speakerParts) > 0 {
+		conds := make([]string, len(speakerParts))
+		for i := range speakerParts {
+			conds[i] = fmt.Sprintf("%s.speaker %s $%d", kajianTable, likeOp, i+2)
+		}
+		vecSQL += " AND (" + strings.Join(conds, " OR ") + ")"
 	}
 	vecSQL += " ORDER BY %[1]s.embedding <=> $1::vector ASC LIMIT %[3]d"
 
 	vecSQL = fmt.Sprintf(vecSQL, transcriptTable, kajianTable, sideFetch)
 	vecArgs := []interface{}{vectorLiteral}
-	if speaker != "" {
-		vecArgs = append(vecArgs, "%"+speaker+"%")
+	for _, p := range speakerParts {
+		vecArgs = append(vecArgs, "%"+p+"%")
 	}
 	var vecRows []searchTranscriptRow
 	if err := r.db.Raw(vecSQL, vecArgs...).Scan(&vecRows).Error; err != nil {

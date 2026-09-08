@@ -12,6 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 func TestFindSurahAudioRouteAcceptsSurahNumber(t *testing.T) {
@@ -156,7 +157,9 @@ type responsePayload struct {
 func newAudioControllerTestApp(t *testing.T) (*fiber.App, *gorm.DB) {
 	t.Helper()
 
-	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{SingularTable: true},
+	})
 	if err != nil {
 		t.Fatalf("open sqlite: %v", err)
 	}

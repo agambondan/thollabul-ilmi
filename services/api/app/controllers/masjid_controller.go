@@ -126,7 +126,7 @@ func (c *masjidController) Update(ctx *fiber.Ctx) error {
 	if err != nil {
 		return lib.ErrorBadRequest(ctx, "invalid id")
 	}
-	req := new(model.CreateMasjidRequest)
+	req := new(model.UpdateMasjidRequest)
 	if err := lib.BodyParser(ctx, req); err != nil {
 		return lib.ErrorBadRequest(ctx, err)
 	}

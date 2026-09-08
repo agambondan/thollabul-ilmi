@@ -556,8 +556,8 @@ func seedKajianFromFile(db *gorm.DB) {
 			continue
 		}
 
+		db.Where("kajian_id = ?", *existing.ID).Delete(&model.KajianTranscript{})
 		if len(r.Transcripts) > 0 {
-			db.Where("kajian_id = ?", *existing.ID).Delete(&model.KajianTranscript{})
 			for _, chunk := range r.Transcripts {
 				tsURL := fmt.Sprintf("https://youtu.be/%s?t=%d", r.VideoID, chunk.StartSeconds)
 				if r.VideoID == "" {

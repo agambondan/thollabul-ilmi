@@ -50,6 +50,7 @@ func (s *notificationService) SendPushToUser(userID uuid.UUID, title, body, noti
 	return s.sendPushToUser(userID, model.NotificationTypeReport, reminderContent{
 		Title:       title,
 		Description: body,
+		URL:         notifURL,
 	})
 }
 
@@ -68,6 +69,11 @@ func (s *notificationService) sendPushToUser(userID uuid.UUID, notificationType 
 	tokens, err := s.repo.FindActivePushTokens(userID)
 	if err != nil {
 		return 0, err
+	}
+
+	notifURL := content.URL
+	if notifURL == "" {
+		notifURL = notificationDeepLink(notificationType)
 	}
 
 	expoMessages := make([]expoPushMessage, 0, len(tokens))
@@ -98,7 +104,7 @@ func (s *notificationService) sendPushToUser(userID uuid.UUID, notificationType 
 				Data: map[string]interface{}{
 					"type":              "daily_reminder",
 					"notification_type": notificationType,
-					"url":               notificationDeepLink(notificationType),
+					"url":               notifURL,
 				},
 			})
 
@@ -106,7 +112,7 @@ func (s *notificationService) sendPushToUser(userID uuid.UUID, notificationType 
 			if token.KeyP256DH == "" || token.KeyAuth == "" {
 				continue
 			}
-			if err := s.sendWebPush(token, content.Title, content.Description, notificationType); err != nil {
+			if err := s.sendWebPushCustom(token, content.Title, content.Description, notifURL, notificationType); err != nil {
 				slog.Warn("web push send failed", "user_id", userID, "err", err)
 				continue
 			}
@@ -148,10 +154,6 @@ func isValidExpoToken(token string) bool {
 
 func isDeliverableExpoPushToken(token model.PushToken) bool {
 	return token.IsActive && strings.EqualFold(token.Provider, "expo") && isValidExpoToken(token.Token)
-}
-
-func (s *notificationService) sendWebPush(token model.PushToken, title, body string, notificationType model.NotificationType) error {
-	return s.sendWebPushCustom(token, title, body, "/", notificationType)
 }
 
 func (s *notificationService) sendWebPushCustom(token model.PushToken, title, body, notifURL string, notificationType model.NotificationType) error {

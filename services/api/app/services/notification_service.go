@@ -467,6 +467,7 @@ type reminderContent struct {
 	Description string
 	EmailHTML   string
 	Title       string
+	URL         string
 }
 
 func reminderMessage(notificationType model.NotificationType) reminderContent {

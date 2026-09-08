@@ -35,22 +35,14 @@ export default function SpeakerMultiSelectDropdown({
         return speakers.filter((s) => s.toLowerCase().includes(q));
     }, [speakers, search]);
 
-    const isAllSelected =
-        selectedSpeakers.length === 0 ||
-        selectedSpeakers.length === speakers.length;
+    const isAllSelected = selectedSpeakers.length === 0;
 
     const handleToggle = (speaker) => {
-        let next;
-        if (selectedSpeakers.includes(speaker)) {
-            next = selectedSpeakers.filter((s) => s !== speaker);
-        } else {
-            next = [...selectedSpeakers, speaker];
-        }
-        if (next.length === speakers.length) {
-            onChange([]);
-        } else {
-            onChange(next);
-        }
+        const base = isAllSelected ? speakers : selectedSpeakers;
+        const next = base.includes(speaker)
+            ? base.filter((s) => s !== speaker)
+            : [...base, speaker];
+        onChange(next.length === speakers.length ? [] : next);
     };
 
     const handleSelectAll = () => {
@@ -155,7 +147,6 @@ export default function SpeakerMultiSelectDropdown({
 
             {isOpen && (
                 <div className='absolute z-30 mt-1.5 w-full bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-200 dark:border-slate-700 p-2 overflow-hidden animate-in fade-in zoom-in-95 duration-100'>
-
                     <div className='mb-2 relative'>
                         <input
                             type='text'
@@ -174,7 +165,6 @@ export default function SpeakerMultiSelectDropdown({
                             </button>
                         )}
                     </div>
-
 
                     <div className='flex items-center justify-between px-1 py-1 mb-1 border-b border-gray-100 dark:border-slate-700/60 text-[11px]'>
                         <button
@@ -199,7 +189,6 @@ export default function SpeakerMultiSelectDropdown({
                         )}
                     </div>
 
-
                     <div className='max-h-56 overflow-y-auto space-y-0.5 pr-1 scrollbar-thin'>
                         {filteredSpeakers.length === 0 ? (
                             <div className='py-4 text-center text-xs text-gray-400'>
@@ -207,7 +196,9 @@ export default function SpeakerMultiSelectDropdown({
                             </div>
                         ) : (
                             filteredSpeakers.map((s) => {
-                                const isChecked = selectedSpeakers.includes(s);
+                                const isChecked =
+                                    isAllSelected ||
+                                    selectedSpeakers.includes(s);
                                 return (
                                     <label
                                         key={s}
@@ -231,7 +222,6 @@ export default function SpeakerMultiSelectDropdown({
                             })
                         )}
                     </div>
-
 
                     <div className='mt-2 pt-1.5 border-t border-gray-100 dark:border-slate-700/60 px-1 flex items-center justify-between text-[10px] text-gray-400'>
                         <span>

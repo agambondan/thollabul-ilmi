@@ -35,6 +35,23 @@ type CreateMasjidRequest struct {
 	IsActive    bool    `json:"is_active"`
 }
 
+type UpdateMasjidRequest struct {
+	Name        *string  `json:"name"`
+	Description *string  `json:"description"`
+	Address     *string  `json:"address"`
+	District    *string  `json:"district"`
+	City        *string  `json:"city"`
+	Province    *string  `json:"province"`
+	Latitude    *float64 `json:"latitude"`
+	Longitude   *float64 `json:"longitude"`
+	Phone       *string  `json:"phone"`
+	Capacity    *int     `json:"capacity"`
+	Facilities  *string  `json:"facilities"`
+	ImageURL    *string  `json:"image_url"`
+	Website     *string  `json:"website"`
+	IsActive    *bool    `json:"is_active"`
+}
+
 type MasjidDistance struct {
 	Masjid   `json:",inline"`
 	Distance float64 `json:"distance_km" gorm:"column:distance_km"`
@@ -65,4 +82,17 @@ type CreateRadioIslamicRequest struct {
 	Website     string `json:"website"`
 	IsActive    bool   `json:"is_active"`
 	Tags        string `json:"tags"`
+}
+
+type UpdateRadioIslamicRequest struct {
+	Name        *string `json:"name"`
+	Frequency   *string `json:"frequency"`
+	City        *string `json:"city"`
+	Province    *string `json:"province"`
+	StreamURL   *string `json:"stream_url"`
+	Description *string `json:"description"`
+	LogoURL     *string `json:"logo_url"`
+	Website     *string `json:"website"`
+	IsActive    *bool   `json:"is_active"`
+	Tags        *string `json:"tags"`
 }
