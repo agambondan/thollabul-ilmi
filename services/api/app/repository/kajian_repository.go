@@ -73,7 +73,19 @@ func (r *kajianRepository) FindAll(ctx *fiber.Ctx, topic, kajianType, speaker st
 		q = q.Where("type = ?", kajianType)
 	}
 	if speaker != "" {
-		q = q.Where(fmt.Sprintf("speaker %s ?", likeOp), "%"+speaker+"%")
+		parts := strings.Split(speaker, "||")
+		var conds []string
+		var args []interface{}
+		for _, p := range parts {
+			p = strings.TrimSpace(p)
+			if p != "" {
+				conds = append(conds, fmt.Sprintf("speaker %s ?", likeOp))
+				args = append(args, "%"+p+"%")
+			}
+		}
+		if len(conds) > 0 {
+			q = q.Where(strings.Join(conds, " OR "), args...)
+		}
 	}
 	page := r.pg.With(q).Request(ctx.Request()).Response(&list)
 	return &page
@@ -159,7 +171,19 @@ func (r *kajianRepository) SearchTranscripts(query, speaker, mode string, queryV
 	joinClause := fmt.Sprintf("JOIN %[2]s ON %[2]s.id = %[1]s.kajian_id", transcriptTable, kajianTable)
 	base := r.db.Table(transcriptTable).Select(selectCols).Joins(joinClause)
 	if speaker != "" {
-		base = base.Where(fmt.Sprintf("%s.speaker %s ?", kajianTable, likeOp), "%"+speaker+"%")
+		parts := strings.Split(speaker, "||")
+		var conds []string
+		var args []interface{}
+		for _, p := range parts {
+			p = strings.TrimSpace(p)
+			if p != "" {
+				conds = append(conds, fmt.Sprintf("%s.speaker %s ?", kajianTable, likeOp))
+				args = append(args, "%"+p+"%")
+			}
+		}
+		if len(conds) > 0 {
+			base = base.Where(strings.Join(conds, " OR "), args...)
+		}
 	}
 
 	// Count total

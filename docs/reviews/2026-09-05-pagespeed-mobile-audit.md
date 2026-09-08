@@ -52,7 +52,7 @@ Audit performa menyeluruh dilakukan pada 35+ route publik menggunakan Google Lig
 | 24  | `/asbabun-nuzul`        |   **85**    |      88       |       81       | 100 | 3.1s | 3.1s  | **120ms** | **0.002** |                       🚀 **Score 85** (SSR Surah 2)                        |
 | 25  | `/hijri`                |   **66**    |      88       |       81       | 100 | 2.9s | 8.2s  | **180ms** | **0.000** |                         ✅ RSC + Sync Calc (CLS 0)                         |
 | 26  | `/perawi`               |   **65**    |    **93**     |       81       | 100 | 2.9s | 9.2s  | **190ms** | **0.001** |                        ✅ ContentWidth + TBT 190ms                         |
-| 27  | `/kajian`               |   **78**    |    **93**     |       81       | 100 | 1.9s | 4.1s  |   330ms   | **0.000** | ✅ TBT -70% (dedupe mount fetches + eager LCP thumbs + preconnect i.ytimg) |
+| 27  | `/kajian`               |   **82**    |    **93**     |       81       | 100 | 1.1s | 4.9s  |  **23ms** | **0.039** | ✅ TBT 23ms (lazy tabs/dropdowns + memoized filters + single YT ID parse) |
 | 28  | `/blog`                 |   **74**    |    **93**     |       81       | 100 | 2.7s | 5.4s  | **120ms** | **0.000** |                         ✅ ISR Active (TBT 120ms)                          |
 | 29  | `/komunitas`            |   **67**    |    **93**     |       81       | 100 | 3.1s | 8.4s  | **130ms** | **0.000** |                            ✅ RSC + ISR Active                             |
 | 30  | `/sholat-tracker`       |   **66**    |    **96**     |       81       | 69  | 5.4s | 4.1s  |   870ms   | **0.000** |                              ✅ Redirect 308                               |

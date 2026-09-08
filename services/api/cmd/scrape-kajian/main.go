@@ -64,6 +64,17 @@ type FlatVideo struct {
 	Duration json.RawMessage `json:"duration"`
 }
 
+type SkipCache struct {
+	Entries map[string]SkipEntry `json:"entries"`
+}
+
+type SkipEntry struct {
+	AttemptedAt time.Time `json:"attempted_at"`
+	RetryAfter  time.Time `json:"retry_after"`
+	Reason      string    `json:"reason"`
+	Channel     string    `json:"channel"`
+}
+
 type Snippet struct {
 	Text     string
 	Start    float64
@@ -89,8 +100,10 @@ func main() {
 	maxVideos := flag.Int("max", 50, "Max videos per channel, 0 for unlimited")
 	cookies := flag.String("cookies", "", "Browser name or cookies.txt path")
 	allowEmptyTranscript := flag.Bool("allow-empty-transcript", false, "Include videos without transcript")
+	skipRetryDays := flag.Int("skip-retry-days", 14, "Days to defer retrying videos with no transcript")
 	out := flag.String("out", defaultOutFile(), "Output JSON path")
 	channelsFile := flag.String("channels-file", defaultChannelsFile(), "Ustadz/channel JSON file")
+	skipCachePath := flag.String("skip-cache", defaultSkipCacheFile(), "Path to no-transcript skip cache JSON")
 	flag.Parse()
 
 	if _, err := exec.LookPath("yt-dlp"); err != nil {
@@ -99,6 +112,11 @@ func main() {
 
 	existing, existingMap := loadExisting(*out)
 	_ = existing
+
+	skipCache := loadSkipCache(*skipCachePath)
+	skipCachePathPtr := *skipCachePath
+	retryInterval := time.Duration(*skipRetryDays) * 24 * time.Hour
+	now := time.Now().UTC()
 
 	targets := []Channel{}
 	if strings.TrimSpace(*channel) != "" {
@@ -116,7 +134,7 @@ func main() {
 
 	totalNew := 0
 	for _, target := range targets {
-		items := scrapeChannel(target, *maxVideos, *cookies, !*allowEmptyTranscript, *out, existingMap)
+		items := scrapeChannel(target, *maxVideos, *cookies, !*allowEmptyTranscript, *out, existingMap, skipCache, retryInterval, &now, &skipCachePathPtr)
 		for _, item := range items {
 			if _, ok := existingMap[item.VideoID]; !ok {
 				totalNew++
@@ -128,6 +146,9 @@ func main() {
 	if err := writeItems(*out, mapValues(existingMap)); err != nil {
 		fatalf("write output: %v", err)
 	}
+	if err := saveSkipCache(*skipCachePath, skipCache); err != nil {
+		fmt.Fprintf(os.Stderr, "warning: save skip cache: %v\n", err)
+	}
 	fmt.Printf("\n[DONE] Berhasil menyimpan %d video (%d baru) ke %s\n", len(existingMap), totalNew, *out)
 }
 
@@ -137,6 +158,10 @@ func defaultOutFile() string {
 
 func defaultChannelsFile() string {
 	return filepath.Join(repoRoot(), "list_ustad_sunnah.json")
+}
+
+func defaultSkipCacheFile() string {
+	return filepath.Join(repoRoot(), "services", "api", "data", "static", "kajian_scrape_state.json")
 }
 
 func repoRoot() string {
@@ -214,7 +239,41 @@ func loadExisting(path string) ([]KajianItem, map[string]KajianItem) {
 	return items, m
 }
 
-func scrapeChannel(channel Channel, maxVideos int, cookies string, onlyWithTranscript bool, outFile string, existing map[string]KajianItem) []KajianItem {
+func loadSkipCache(path string) SkipCache {
+	cache := SkipCache{Entries: map[string]SkipEntry{}}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return cache
+	}
+	if err := json.Unmarshal(data, &cache); err != nil || cache.Entries == nil {
+		return SkipCache{Entries: map[string]SkipEntry{}}
+	}
+	return cache
+}
+
+func saveSkipCache(path string, cache SkipCache) error {
+	if cache.Entries == nil {
+		cache.Entries = map[string]SkipEntry{}
+	}
+	data, err := json.MarshalIndent(cache, "", "  ")
+	if err != nil {
+		return err
+	}
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return err
+	}
+	return os.WriteFile(path, append(data, '\n'), 0o644)
+}
+
+func shouldDefer(cache SkipCache, videoID string, now time.Time) bool {
+	if videoID == "" || cache.Entries == nil {
+		return false
+	}
+	entry, ok := cache.Entries[videoID]
+	return ok && now.Before(entry.RetryAfter)
+}
+
+func scrapeChannel(channel Channel, maxVideos int, cookies string, onlyWithTranscript bool, outFile string, existing map[string]KajianItem, skipCache SkipCache, retryInterval time.Duration, now *time.Time, skipCachePath *string) []KajianItem {
 	fmt.Printf("\n[SCAN] %s (%s)...\n", channel.Name, channel.ChannelURL)
 	videos := getChannelVideos(channel.ChannelURL, maxVideos, cookies)
 	fmt.Printf("       Ditemukan %d video.\n", len(videos))
@@ -225,14 +284,23 @@ func scrapeChannel(channel Channel, maxVideos int, cookies string, onlyWithTrans
 			fmt.Printf("       [%d/%d] ↷ %s... (Sudah ada - skip)\n", i+1, len(videos), trim(video.Title, 45))
 			continue
 		}
+		if onlyWithTranscript && shouldDefer(skipCache, video.VideoID, *now) {
+			entry := skipCache.Entries[video.VideoID]
+			fmt.Printf("       [%d/%d] ↷ %s... (Tanpa transkrip, retry %s)\n", i+1, len(videos), trim(video.Title, 45), entry.RetryAfter.Format("2006-01-02"))
+			continue
+		}
 
 		snippets := fetchTranscript(video.VideoID, cookies)
 		chunks := chunkTranscript(snippets, 60)
 		if onlyWithTranscript && len(chunks) == 0 {
-			fmt.Printf("       [%d/%d] ✗ %s... (Tanpa transkrip - skip)\n", i+1, len(videos), trim(video.Title, 45))
+			retryAfter := now.Add(retryInterval)
+			skipCache.Entries[video.VideoID] = SkipEntry{AttemptedAt: *now, RetryAfter: retryAfter, Reason: "no_transcript", Channel: channel.ChannelURL}
+			_ = saveSkipCache(*skipCachePath, skipCache)
+			fmt.Printf("       [%d/%d] ✗ %s... (Tanpa transkrip - retry %s)\n", i+1, len(videos), trim(video.Title, 45), retryAfter.Format("2006-01-02"))
 			time.Sleep(time.Second)
 			continue
 		}
+		delete(skipCache.Entries, video.VideoID)
 
 		item := KajianItem{
 			Title:        video.Title,

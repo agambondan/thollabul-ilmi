@@ -6,9 +6,22 @@ import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { getLocalizedField } from "@/lib/translation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import SavedBookmarksView from "./SavedBookmarksView";
-import SavedNotesView from "./SavedNotesView";
 import { SearchIcon, PlayCircleIcon } from "@/components/icons/Icon";
+
+const SpeakerMultiSelectDropdown = dynamic(
+    () => import("./SpeakerMultiSelectDropdown"),
+    { ssr: false },
+);
+
+const SavedBookmarksView = dynamic(() => import("./SavedBookmarksView"), {
+    loading: () => <div className='h-32 rounded-xl bg-amber-900/10 animate-pulse' />,
+    ssr: false,
+});
+
+const SavedNotesView = dynamic(() => import("./SavedNotesView"), {
+    loading: () => <div className='h-32 rounded-xl bg-emerald-900/10 animate-pulse' />,
+    ssr: false,
+});
 const TranscriptPlayerModal = dynamic(
     () =>
         import("./TranscriptSearchView").then(
@@ -61,7 +74,7 @@ export default function KajianClient({
     );
     const [activeCategory, setActiveCategory] = useState("semua");
     const [search, setSearch] = useState("");
-    const [ustadzFilter, setUstadzFilter] = useState("");
+    const [selectedSpeakers, setSelectedSpeakers] = useState([]);
     const [playingKajian, setPlayingKajian] = useState(null);
 
     const [speakers, setSpeakers] = useState([]);
@@ -99,7 +112,7 @@ export default function KajianClient({
     }, []);
 
     useEffect(() => {
-        if (!ustadzFilter && !ustadzFetchedRef.current) return;
+        if (selectedSpeakers.length === 0 && !ustadzFetchedRef.current) return;
         ustadzFetchedRef.current = true;
         let cancelled = false;
         const fetchBySpeaker = async () => {
@@ -109,7 +122,9 @@ export default function KajianClient({
                     process.env.NEXT_PUBLIC_API_URL ||
                     "https://api-thollabul.jangkauin.site";
                 const params = new URLSearchParams({ page: "0", size: "12" });
-                if (ustadzFilter) params.set("speaker", ustadzFilter);
+                if (selectedSpeakers.length > 0) {
+                    params.set("speaker", selectedSpeakers.join("||"));
+                }
                 const res = await fetch(
                     `${apiUrl}/api/v1/kajian?${params.toString()}`,
                 );
@@ -134,7 +149,7 @@ export default function KajianClient({
         return () => {
             cancelled = true;
         };
-    }, [ustadzFilter]);
+    }, [selectedSpeakers]);
 
     const loadMore = async () => {
         if (loadingMore || !hasMore) return;
@@ -148,7 +163,9 @@ export default function KajianClient({
                 page: String(nextPage),
                 size: "12",
             });
-            if (ustadzFilter) params.set("speaker", ustadzFilter);
+            if (selectedSpeakers.length > 0) {
+                params.set("speaker", selectedSpeakers.join("||"));
+            }
             const res = await fetch(
                 `${apiUrl}/api/v1/kajian?${params.toString()}`,
             );
@@ -178,7 +195,7 @@ export default function KajianClient({
     // Transcript search state
     const [transcriptQuery, setTranscriptQuery] = useState(initialQuery);
     const [searchMode, setSearchMode] = useState("hybrid");
-    const [speakerFilter, setSpeakerFilter] = useState("");
+    const [transcriptSelectedSpeakers, setTranscriptSelectedSpeakers] = useState([]);
     const [transcriptResults, setTranscriptResults] = useState([]);
     const [transcriptLoading, setTranscriptLoading] = useState(false);
     const [transcriptMeta, setTranscriptMeta] = useState({ total: 0, page: 1 });
@@ -202,7 +219,9 @@ export default function KajianClient({
                     q: transcriptQuery || "",
                     mode: searchMode,
                 });
-                if (speakerFilter) params.set("speaker", speakerFilter);
+                if (transcriptSelectedSpeakers.length > 0) {
+                    params.set("speaker", transcriptSelectedSpeakers.join("||"));
+                }
                 params.set("page", "1");
                 params.set("limit", "20");
 
@@ -240,32 +259,52 @@ export default function KajianClient({
             cancelled = true;
             clearTimeout(timer);
         };
-    }, [transcriptQuery, searchMode, speakerFilter, tab]);
+    }, [transcriptQuery, searchMode, transcriptSelectedSpeakers, tab]);
 
-    const filtered = kajian.filter((k) => {
-        const matchCat =
-            activeCategory === "semua" || k.category === activeCategory;
-        const matchSpeaker = !ustadzFilter || k.speaker === ustadzFilter;
-        const matchSearch =
-            !search ||
-            [
-                getLocalizedField(k, "title", lang),
-                k.ustadz,
-                getLocalizedField(k, "description", lang),
-                k.category,
-                k.duration,
-            ]
-                .filter(Boolean)
-                .join(" ")
-                .toLowerCase()
-                .includes(search.toLowerCase());
-        return matchCat && matchSpeaker && matchSearch;
-    });
+    const searchText = search.trim().toLowerCase();
+    const selectedSpeakerSet = useMemo(
+        () => new Set(selectedSpeakers),
+        [selectedSpeakers],
+    );
+    const filtered = useMemo(
+        () =>
+            kajian.filter((k) => {
+                if (activeCategory !== "semua" && k.category !== activeCategory) {
+                    return false;
+                }
+                if (
+                    selectedSpeakerSet.size > 0 &&
+                    !selectedSpeakerSet.has(k.speaker)
+                ) {
+                    return false;
+                }
+                if (!searchText) return true;
+                return [
+                    getLocalizedField(k, "title", lang),
+                    k.ustadz,
+                    getLocalizedField(k, "description", lang),
+                    k.category,
+                    k.duration,
+                ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase()
+                    .includes(searchText);
+            }),
+        [activeCategory, kajian, lang, searchText, selectedSpeakerSet],
+    );
 
-    const youtubeCount = kajian.filter(
-        (item) => item.platform === "youtube" || item.type === "video",
-    ).length;
-    const categoryCount = new Set(kajian.map((item) => item.category)).size;
+    const youtubeCount = useMemo(
+        () =>
+            kajian.filter(
+                (item) => item.platform === "youtube" || item.type === "video",
+            ).length,
+        [kajian],
+    );
+    const categoryCount = useMemo(
+        () => new Set(kajian.map((item) => item.category)).size,
+        [kajian],
+    );
     const ustadzOptions = useMemo(() => {
         if (speakers.length > 0) return speakers;
         return Array.from(
@@ -358,8 +397,8 @@ export default function KajianClient({
                     setQuery={setTranscriptQuery}
                     mode={searchMode}
                     setMode={setSearchMode}
-                    speaker={speakerFilter}
-                    setSpeaker={setSpeakerFilter}
+                    selectedSpeakers={transcriptSelectedSpeakers}
+                    setSelectedSpeakers={setTranscriptSelectedSpeakers}
                     speakers={speakers}
                     results={transcriptResults}
                     loading={transcriptLoading}
@@ -400,8 +439,8 @@ export default function KajianClient({
                     setSearch={setSearch}
                     activeCategory={activeCategory}
                     setActiveCategory={setActiveCategory}
-                    ustadzFilter={ustadzFilter}
-                    setUstadzFilter={setUstadzFilter}
+                    selectedSpeakers={selectedSpeakers}
+                    setSelectedSpeakers={setSelectedSpeakers}
                     ustadzOptions={ustadzOptions}
                     hasMore={hasMore && !search && activeCategory === "semua"}
                     loadingMore={loadingMore}
@@ -444,8 +483,8 @@ function ListView({
     setSearch,
     activeCategory,
     setActiveCategory,
-    ustadzFilter,
-    setUstadzFilter,
+    selectedSpeakers,
+    setSelectedSpeakers,
     ustadzOptions,
     hasMore,
     loadingMore,
@@ -520,39 +559,12 @@ function ListView({
             </div>
 
             {ustadzOptions.length > 0 && (
-                <div className='mb-5'>
-                    <p className='text-[10px] uppercase tracking-wide text-gray-400 mb-1.5'>
-                        {t("kajian.transcript_filter_speaker") ||
-                            "Filter Ustadz"}
-                    </p>
-                    <div className='flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-hide'>
-                        <button
-                            type='button'
-                            onClick={() => setUstadzFilter("")}
-                            className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
-                                !ustadzFilter
-                                    ? "bg-emerald-600 text-white"
-                                    : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
-                            }`}
-                        >
-                            {t("kajian.transcript_all_speakers") || "Semua"}
-                        </button>
-                        {ustadzOptions.map((s) => (
-                            <button
-                                key={s}
-                                type='button'
-                                onClick={() => setUstadzFilter(s)}
-                                className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
-                                    ustadzFilter === s
-                                        ? "bg-emerald-600 text-white"
-                                        : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
-                                }`}
-                            >
-                                {s.replace(/^Ust\.\s*Dr\.\s*/i, "Ust. ")}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                <SpeakerMultiSelectDropdown
+                    speakers={ustadzOptions}
+                    selectedSpeakers={selectedSpeakers}
+                    onChange={setSelectedSpeakers}
+                    t={t}
+                />
             )}
 
             <div className='mb-4 flex items-center justify-between text-xs text-gray-400'>
@@ -577,62 +589,65 @@ function ListView({
                 </div>
             ) : (
                 <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4'>
-                    {kajian.map((k, idx) => (
-                        <button
-                            key={k.id}
-                            type='button'
-                            onClick={() => onPlay?.(k)}
-                            className='text-left group bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm transition-all p-2.5 sm:p-3 flex flex-col gap-2 cursor-pointer'
-                        >
-                            {getYouTubeId(k.url) && (
-                                <div className='aspect-video rounded-lg overflow-hidden bg-black relative group/thumb w-full'>
-                                    <img
-                                        src={`https://i.ytimg.com/vi/${getYouTubeId(k.url)}/mqdefault.jpg`}
-                                        alt={k.title}
-                                        loading={idx < 4 ? "eager" : "lazy"}
-                                        decoding='async'
-                                        fetchPriority={idx < 4 ? "high" : "low"}
-                                        className='w-full h-full object-cover group-hover/thumb:scale-105 transition-transform duration-300'
-                                    />
-                                    <div className='absolute inset-0 bg-black/20 flex items-center justify-center group-hover/thumb:bg-black/30 transition-colors'>
-                                        <div className='w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-600/90 text-white flex items-center justify-center shadow-lg group-hover/thumb:scale-110 transition-transform'>
-                                            <PlayCircleIcon className='text-lg sm:text-xl ml-0.5' />
+                    {kajian.map((k, idx) => {
+                        const ytId = getYouTubeId(k.url);
+                        return (
+                            <button
+                                key={k.id}
+                                type='button'
+                                onClick={() => onPlay?.(k)}
+                                className='text-left group bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm transition-all p-2.5 sm:p-3 flex flex-col gap-2 cursor-pointer'
+                            >
+                                {ytId && (
+                                    <div className='aspect-video rounded-lg overflow-hidden bg-black relative group/thumb w-full'>
+                                        <img
+                                            src={`https://i.ytimg.com/vi/${ytId}/mqdefault.jpg`}
+                                            alt={k.title}
+                                            loading={idx < 4 ? "eager" : "lazy"}
+                                            decoding='async'
+                                            fetchPriority={idx < 4 ? "high" : "low"}
+                                            className='w-full h-full object-cover group-hover/thumb:scale-105 transition-transform duration-300'
+                                        />
+                                        <div className='absolute inset-0 bg-black/20 flex items-center justify-center group-hover/thumb:bg-black/30 transition-colors'>
+                                            <div className='w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-600/90 text-white flex items-center justify-center shadow-lg group-hover/thumb:scale-110 transition-transform'>
+                                                <PlayCircleIcon className='text-lg sm:text-xl ml-0.5' />
+                                            </div>
                                         </div>
+                                        {k.platform === "youtube" && (
+                                            <div className='absolute top-1.5 right-1.5 bg-black/60 backdrop-blur-xs px-1.5 py-0.5 rounded text-[10px] text-white flex items-center gap-1'>
+                                                <span
+                                                    className='text-red-500'
+                                                    aria-hidden='true'
+                                                >
+                                                    ▶
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
-                                    {k.platform === "youtube" && (
-                                        <div className='absolute top-1.5 right-1.5 bg-black/60 backdrop-blur-xs px-1.5 py-0.5 rounded text-[10px] text-white flex items-center gap-1'>
-                                            <span
-                                                className='text-red-500'
-                                                aria-hidden='true'
-                                            >
-                                                ▶
-                                            </span>
-                                        </div>
-                                    )}
+                                )}
+                                <div className='flex-1 min-w-0 flex flex-col justify-between'>
+                                    <div>
+                                        <p className='font-semibold text-xs sm:text-sm text-gray-800 dark:text-gray-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-1 line-clamp-2 leading-snug'>
+                                            {k.title}
+                                        </p>
+                                        <p className='text-[11px] text-gray-500 dark:text-gray-400 truncate'>
+                                            {k.speaker}
+                                        </p>
+                                    </div>
+                                    <div className='mt-2 flex items-center justify-between text-[10px] text-gray-400'>
+                                        <span>
+                                            {k.duration
+                                                ? `${Math.floor(k.duration / 60)}m`
+                                                : ""}
+                                        </span>
+                                        <span className='font-medium text-emerald-600 dark:text-emerald-400 group-hover:underline'>
+                                            Putar Video
+                                        </span>
+                                    </div>
                                 </div>
-                            )}
-                            <div className='flex-1 min-w-0 flex flex-col justify-between'>
-                                <div>
-                                    <p className='font-semibold text-xs sm:text-sm text-gray-800 dark:text-gray-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors mb-1 line-clamp-2 leading-snug'>
-                                        {k.title}
-                                    </p>
-                                    <p className='text-[11px] text-gray-500 dark:text-gray-400 truncate'>
-                                        {k.speaker}
-                                    </p>
-                                </div>
-                                <div className='mt-2 flex items-center justify-between text-[10px] text-gray-400'>
-                                    <span>
-                                        {k.duration
-                                            ? `${Math.floor(k.duration / 60)}m`
-                                            : ""}
-                                    </span>
-                                    <span className='font-medium text-emerald-600 dark:text-emerald-400 group-hover:underline'>
-                                        Putar Video
-                                    </span>
-                                </div>
-                            </div>
-                        </button>
-                    ))}
+                            </button>
+                        );
+                    })}
                 </div>
             )}
 

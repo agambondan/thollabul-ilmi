@@ -107,6 +107,46 @@ func TestKajianSearchTranscriptsExactAndSemantic(t *testing.T) {
 		t.Errorf("expected results for speaker Firanda")
 	}
 
+	// 4b. Filter by multiple speakers (OR match via "||" delimiter)
+	secondKajianID := 2
+	k2 := &model.Kajian{
+		BaseID:   model.BaseID{ID: &secondKajianID},
+		Title:    "Kitab Tauhid",
+		Speaker:  "Ust. Khalid Basalamah",
+		Topic:    "Akidah",
+		Type:     "video",
+		URL:      "https://youtube.com/watch?v=khalid_01",
+		Duration: 1800,
+	}
+	if err := db.Create(k2).Error; err != nil {
+		t.Fatalf("create second kajian: %v", err)
+	}
+	if err := db.Create(&model.KajianTranscript{
+		KajianID:     2,
+		VideoID:      "khalid_01",
+		StartSeconds: 0,
+		EndSeconds:   60,
+		Text:         "Penjelasan kitab tauhid karya Syaikh Muhammad bin Abdul Wahhab.",
+		TimestampURL: "https://youtu.be/khalid_01?t=0",
+	}).Error; err != nil {
+		t.Fatalf("create second kajian transcript: %v", err)
+	}
+
+	multiSpeakerResults, totalMulti, err := repo.SearchTranscripts("tauhid", "Firanda||Khalid", "hybrid", nil, 10, 0)
+	if err != nil {
+		t.Fatalf("search with multi-speaker filter error: %v", err)
+	}
+	if totalMulti < 2 || len(multiSpeakerResults) < 2 {
+		t.Errorf("expected results from both speakers, got %d", totalMulti)
+	}
+	speakersSeen := map[string]bool{}
+	for _, r := range multiSpeakerResults {
+		speakersSeen[r.Speaker] = true
+	}
+	if !speakersSeen[k.Speaker] || !speakersSeen[k2.Speaker] {
+		t.Errorf("expected results from both %q and %q, got speakers %v", k.Speaker, k2.Speaker, speakersSeen)
+	}
+
 	// 5. GetSpeakers
 	speakers, err := repo.GetSpeakers()
 	if err != nil {

@@ -14,6 +14,7 @@ import {
     useRef,
     useState,
 } from "react";
+import SpeakerMultiSelectDropdown from "./SpeakerMultiSelectDropdown";
 
 export const getSearchModes = (t) => [
     {
@@ -89,8 +90,8 @@ export default function TranscriptSearchView({
     setQuery,
     mode,
     setMode,
-    speaker,
-    setSpeaker,
+    selectedSpeakers,
+    setSelectedSpeakers,
     speakers,
     results,
     loading,
@@ -189,40 +190,13 @@ export default function TranscriptSearchView({
                 ))}
             </div>
 
-            {/* Speaker filter */}
             {speakers.length > 0 && (
-                <div className='mb-4'>
-                    <p className='text-[10px] uppercase tracking-wide text-gray-400 mb-1.5'>
-                        {t("kajian.filter_speaker") || "Filter Ustadz"}
-                    </p>
-                    <div className='flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-hide'>
-                        <button
-                            type='button'
-                            onClick={() => setSpeaker("")}
-                            className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
-                                !speaker
-                                    ? "bg-emerald-600 text-white"
-                                    : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
-                            }`}
-                        >
-                            {t("common.all") || "Semua"}
-                        </button>
-                        {speakers.map((s) => (
-                            <button
-                                key={s}
-                                type='button'
-                                onClick={() => setSpeaker(s)}
-                                className={`px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
-                                    speaker === s
-                                        ? "bg-emerald-600 text-white"
-                                        : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300"
-                                }`}
-                            >
-                                {s.replace(/^Ust\.\s*Dr\.\s*/i, "Ust. ")}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                <SpeakerMultiSelectDropdown
+                    speakers={speakers}
+                    selectedSpeakers={selectedSpeakers}
+                    onChange={setSelectedSpeakers}
+                    t={t}
+                />
             )}
 
             {query.trim() && (
