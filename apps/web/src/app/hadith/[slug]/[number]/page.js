@@ -1,4 +1,4 @@
-import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
+import { OG_IMAGE, serializeJsonLd, SITE_NAME, SITE_URL } from "@/lib/site";
 import HadithNumberContent, {
     fetchHadithByBookNumber,
     getHadithTitle,
@@ -52,9 +52,48 @@ export async function generateMetadata(props) {
 
 export default async function Page(props) {
     const params = await props.params;
+    const number = normalizeHadithNumber(params.number);
+    const hadith = await fetchHadithByBookNumber(params.slug, number);
+    const title = getHadithTitle(hadith, params.slug, number);
+    const breadcrumbJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Beranda",
+                item: `${SITE_URL}/`,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Hadits",
+                item: `${SITE_URL}/hadith`,
+            },
+            {
+                "@type": "ListItem",
+                position: 3,
+                name: params.slug,
+                item: `${SITE_URL}/hadith/${params.slug}`,
+            },
+            {
+                "@type": "ListItem",
+                position: 4,
+                name: title,
+                item: `${SITE_URL}/hadith/${params.slug}/${number}`,
+            },
+        ],
+    };
 
     return (
         <main className='min-h-screen flex flex-col'>
+            <script
+                type='application/ld+json'
+                dangerouslySetInnerHTML={{
+                    __html: serializeJsonLd(breadcrumbJsonLd),
+                }}
+            />
             <Section>
                 <div className='dark:text-white'>
                     <HadithNumberContent params={params} basePath='/hadith' />

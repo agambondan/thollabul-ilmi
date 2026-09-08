@@ -1,4 +1,4 @@
-import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
+import { OG_IMAGE, serializeJsonLd, SITE_NAME, SITE_URL } from "@/lib/site";
 const API_URL =
     process.env.API_INTERNAL_URL ||
     process.env.API_PROXY_URL ||
@@ -74,6 +74,49 @@ export async function generateMetadata(props) {
     };
 }
 
-export default function SirohDetailLayout({ children }) {
-    return children;
+export default async function SirohDetailLayout(props) {
+    const params = await props.params;
+    const { children } = props;
+    const content = await getSirohContent(params?.slug);
+
+    const breadcrumbJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Beranda",
+                item: `${SITE_URL}/`,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Siroh",
+                item: `${SITE_URL}/siroh`,
+            },
+            ...(params?.slug
+                ? [
+                      {
+                          "@type": "ListItem",
+                          position: 3,
+                          name: content?.title ?? params.slug,
+                          item: `${SITE_URL}/siroh/${params.slug}`,
+                      },
+                  ]
+                : []),
+        ],
+    };
+
+    return (
+        <>
+            <script
+                type='application/ld+json'
+                dangerouslySetInnerHTML={{
+                    __html: serializeJsonLd(breadcrumbJsonLd),
+                }}
+            />
+            {children}
+        </>
+    );
 }

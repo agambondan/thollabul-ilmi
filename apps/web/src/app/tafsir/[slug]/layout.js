@@ -1,4 +1,4 @@
-import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
+import { OG_IMAGE, serializeJsonLd, SITE_NAME, SITE_URL } from "@/lib/site";
 import { getSurahName } from "@/lib/surahList";
 const API_URL =
     process.env.API_INTERNAL_URL ||
@@ -66,6 +66,54 @@ export async function generateMetadata(props) {
     };
 }
 
-export default function TafsirSurahLayout({ children }) {
-    return children;
+export default async function TafsirSurahLayout(props) {
+    const params = await props.params;
+    const { children } = props;
+    const decodedSlug = decodeURIComponent(params?.slug ?? "");
+    const surah = await getSurah(decodedSlug);
+    const name =
+        getSurahName(surah, "ID") ||
+        surah?.translation?.latin_en ||
+        decodedSlug;
+
+    const breadcrumbJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Beranda",
+                item: `${SITE_URL}/`,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Tafsir",
+                item: `${SITE_URL}/tafsir`,
+            },
+            ...(decodedSlug
+                ? [
+                      {
+                          "@type": "ListItem",
+                          position: 3,
+                          name: `Tafsir Surah ${name}`,
+                          item: `${SITE_URL}/tafsir/${params.slug}`,
+                      },
+                  ]
+                : []),
+        ],
+    };
+
+    return (
+        <>
+            <script
+                type='application/ld+json'
+                dangerouslySetInnerHTML={{
+                    __html: serializeJsonLd(breadcrumbJsonLd),
+                }}
+            />
+            {children}
+        </>
+    );
 }

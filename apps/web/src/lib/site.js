@@ -23,6 +23,9 @@ export const OG_IMAGE = {
 
 export const ogImages = (image) => (image ? [image, OG_IMAGE] : [OG_IMAGE]);
 
+export const serializeJsonLd = (value) =>
+    JSON.stringify(value).replace(/</g, "\\u003c");
+
 /**
  * Open Graph block for one route.
  *

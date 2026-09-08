@@ -1,4 +1,4 @@
-import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
+import { OG_IMAGE, serializeJsonLd, SITE_NAME, SITE_URL } from "@/lib/site";
 const API_URL =
     process.env.API_INTERNAL_URL ||
     process.env.API_PROXY_URL ||
@@ -57,7 +57,7 @@ export default async function BlogSlugLayout(props) {
 
     const post = await getBlogPost(params.slug);
 
-    const jsonLd = post
+    const articleJsonLd = post
         ? {
               "@context": "https://schema.org",
               "@type": "Article",
@@ -83,14 +83,51 @@ export default async function BlogSlugLayout(props) {
           }
         : null;
 
+    const breadcrumbJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Beranda",
+                item: `${SITE_URL}/`,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Blog",
+                item: `${SITE_URL}/blog`,
+            },
+            ...(post?.title
+                ? [
+                      {
+                          "@type": "ListItem",
+                          position: 3,
+                          name: post.title,
+                          item: `${SITE_URL}/blog/${params.slug}`,
+                      },
+                  ]
+                : []),
+        ],
+    };
+
     return (
         <>
-            {jsonLd && (
+            {articleJsonLd && (
                 <script
                     type='application/ld+json'
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                    dangerouslySetInnerHTML={{
+                        __html: serializeJsonLd(articleJsonLd),
+                    }}
                 />
             )}
+            <script
+                type='application/ld+json'
+                dangerouslySetInnerHTML={{
+                    __html: serializeJsonLd(breadcrumbJsonLd),
+                }}
+            />
             {children}
         </>
     );

@@ -1,4 +1,4 @@
-import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
+import { OG_IMAGE, serializeJsonLd, SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 import { cookies } from "next/headers";
 import Script from "next/script";
@@ -129,7 +129,7 @@ export default async function RootLayout({ children }) {
                 <script
                     type='application/ld+json'
                     dangerouslySetInnerHTML={{
-                        __html: JSON.stringify(websiteJsonLd),
+                        __html: serializeJsonLd(websiteJsonLd),
                     }}
                 />
                 <Script

@@ -1,4 +1,4 @@
-import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
+import { OG_IMAGE, serializeJsonLd, SITE_NAME, SITE_URL } from "@/lib/site";
 import { getSurahMeaning, getSurahName } from "@/lib/surahList";
 const API_URL =
     process.env.API_INTERNAL_URL ||
@@ -66,6 +66,54 @@ export async function generateMetadata(props) {
     };
 }
 
-export default function QuranSlugLayout({ children }) {
-    return children;
+export default async function QuranSlugLayout(props) {
+    const params = await props.params;
+    const { children } = props;
+    const slugParts = params?.slug ?? [];
+    const surahSlug = decodeURIComponent(slugParts[1] ?? slugParts[0] ?? "");
+    const surah = surahSlug ? await getSurah(surahSlug) : null;
+    const name =
+        getSurahName(surah, "ID") || surah?.translation?.latin_en || surahSlug;
+    const urlPath = surahSlug ? `/quran/surah/${surahSlug}` : "/quran";
+
+    const breadcrumbJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Beranda",
+                item: `${SITE_URL}/`,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Al-Quran",
+                item: `${SITE_URL}/quran`,
+            },
+            ...(surahSlug
+                ? [
+                      {
+                          "@type": "ListItem",
+                          position: 3,
+                          name: `Surah ${name}`,
+                          item: `${SITE_URL}${urlPath}`,
+                      },
+                  ]
+                : []),
+        ],
+    };
+
+    return (
+        <>
+            <script
+                type='application/ld+json'
+                dangerouslySetInnerHTML={{
+                    __html: serializeJsonLd(breadcrumbJsonLd),
+                }}
+            />
+            {children}
+        </>
+    );
 }
