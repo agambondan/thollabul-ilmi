@@ -13,6 +13,7 @@ import (
 
 	service "github.com/agambondan/islamic-explorer/app/services"
 	"github.com/gofiber/fiber/v2"
+	"github.com/spf13/viper"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 )
@@ -64,6 +65,7 @@ func (c *googleAuthController) Login(ctx *fiber.Ctx) error {
 		Path:     "/",
 		Expires:  time.Now().Add(10 * time.Minute),
 		HTTPOnly: true,
+		Secure:   viper.GetString("ENVIRONMENT") == "production",
 		SameSite: "Lax",
 	})
 	authURL := cfg.AuthCodeURL(state, oauth2.AccessTypeOffline, oauth2.ApprovalForce)
@@ -97,6 +99,7 @@ func (c *googleAuthController) Callback(ctx *fiber.Ctx) error {
 		Path:     "/",
 		Expires:  time.Now().Add(-1 * time.Hour),
 		HTTPOnly: true,
+		Secure:   viper.GetString("ENVIRONMENT") == "production",
 		SameSite: "Lax",
 	})
 
@@ -130,6 +133,12 @@ func (c *googleAuthController) Callback(ctx *fiber.Ctx) error {
 	}
 	if profile.Email == "" {
 		return c.renderErrorPage(ctx, "google account has no email")
+	}
+	if !profile.VerifiedEmail {
+		// An unverified email is not proof of ownership — trusting it here
+		// would let anyone claim a victim's address and take over (or create)
+		// the matching local account.
+		return c.renderErrorPage(ctx, "google account email is not verified")
 	}
 
 	loginResp, err := c.user.FindOrCreateOAuthUser(profile.Email, profile.Name, profile.Picture, "google", profile.ID)
