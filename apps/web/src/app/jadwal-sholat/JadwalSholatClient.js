@@ -147,7 +147,7 @@ export function JadwalSholatContent({
     };
 
     useEffect(() => {
-        const iv = setInterval(() => setNow(new Date()), 15000);
+        const iv = setInterval(() => setNow(new Date()), 60000);
         return () => clearInterval(iv);
     }, []);
 
@@ -190,91 +190,110 @@ export function JadwalSholatContent({
 
     useEffect(() => {
         if (!prayers) return;
+        const parsedPrayers = PRAYERS.filter((p) => !p.info)
+            .map((p) => ({
+                ...p,
+                timeMs: parseTimeStr(prayers[p.key])?.getTime(),
+            }))
+            .filter((p) => p.timeMs);
+
         const tick = () => {
-            const n = new Date();
-            for (const p of PRAYERS.filter((p) => !p.info)) {
-                const pt = parseTimeStr(prayers[p.key]);
-                if (pt && pt > n) {
-                    const diff = pt - n;
-                    const h = Math.floor(diff / 3600000);
-                    const m = Math.floor((diff % 3600000) / 60000);
-                    const s = Math.floor((diff % 60000) / 1000);
-                    if (
-                        diff < 10000 &&
-                        diff >= 0 &&
-                        settings.notifAdzan &&
-                        lastNotifRef.current !== p.key
-                    ) {
-                        lastNotifRef.current = p.key;
-                        if (audioRef.current) {
-                            audioRef.current.play().catch(() => {
-                                const play = () =>
-                                    audioRef.current?.play().catch(() => {});
-                                document.addEventListener("click", play, {
-                                    once: true,
-                                });
-                            });
-                        }
-                        const nTitle = `${t("prayer_schedule.adzan")} ${t(p.labelKey)}`;
-                        const nBody = `${t("prayer_schedule.adzan_body")} ${t(p.labelKey)}`;
-                        if (notifGranted) {
-                            new Notification(nTitle, {
-                                body: nBody,
-                                icon: "/icon.png",
-                            });
-                        }
-                        if (
-                            "serviceWorker" in navigator &&
-                            navigator.serviceWorker.controller
-                        ) {
-                            navigator.serviceWorker.controller.postMessage({
-                                type: "ADZAN_NOTIFICATION",
-                                title: nTitle,
-                                body: nBody,
-                                url: "/jadwal-sholat",
-                            });
-                        }
-                    }
-                    const lead = getLeadForPrayer(p.key);
-                    if (
-                        settings.notifAdzan &&
-                        lead > 0 &&
-                        diff <= lead * 60 * 1000 &&
-                        lastReminderRef.current !== p.key
-                    ) {
-                        lastReminderRef.current = p.key;
-                        const rTitle = `${t("prayer_schedule.reminder_title")} ${t(p.labelKey)}`;
-                        const rBody = `${t("prayer_schedule.reminder_body")} ${lead} ${t("prayer_schedule.minutes")}`;
-                        if (notifGranted) {
-                            new Notification(rTitle, {
-                                body: rBody,
-                                icon: "/icon.png",
-                            });
-                        }
-                        if (
-                            "serviceWorker" in navigator &&
-                            navigator.serviceWorker.controller
-                        ) {
-                            navigator.serviceWorker.controller.postMessage({
-                                type: "ADZAN_NOTIFICATION",
-                                title: rTitle,
-                                body: rBody,
-                                url: "/jadwal-sholat",
-                            });
-                        }
-                    }
-                    setCountdown(
-                        `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`,
-                    );
-                    return;
+            const n = Date.now();
+            let nextPrayerTime = Infinity;
+            let nextPrayerKey = null;
+            let nextPrayerLead = 0;
+
+            for (const p of parsedPrayers) {
+                const diff = p.timeMs - n;
+                if (diff > 0 && diff < nextPrayerTime) {
+                    nextPrayerTime = diff;
+                    nextPrayerKey = p.key;
+                    nextPrayerLead = getLeadForPrayer(p.key);
                 }
             }
-            setCountdown("");
-            lastNotifRef.current = "";
-            lastReminderRef.current = "";
+
+            if (nextPrayerKey) {
+                const h = Math.floor(nextPrayerTime / 3600000);
+                const m = Math.floor((nextPrayerTime % 3600000) / 60000);
+                const s = Math.floor((nextPrayerTime % 60000) / 1000);
+                setCountdown(
+                    `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`,
+                );
+
+                if (
+                    settings.notifAdzan &&
+                    nextPrayerTime < 10000 &&
+                    nextPrayerTime >= 0 &&
+                    lastNotifRef.current !== nextPrayerKey
+                ) {
+                    lastNotifRef.current = nextPrayerKey;
+                    if (audioRef.current) {
+                        audioRef.current.play().catch(() => {
+                            const play = () =>
+                                audioRef.current?.play().catch(() => {});
+                            document.addEventListener("click", play, {
+                                once: true,
+                            });
+                        });
+                    }
+                    const nTitle = `${t("prayer_schedule.adzan")} ${t(PRAYERS.find((pp) => pp.key === nextPrayerKey)?.labelKey)}`;
+                    const nBody = `${t("prayer_schedule.adzan_body")} ${t(PRAYERS.find((pp) => pp.key === nextPrayerKey)?.labelKey)}`;
+                    if (notifGranted) {
+                        new Notification(nTitle, {
+                            body: nBody,
+                            icon: "/icon.png",
+                        });
+                    }
+                    if (
+                        "serviceWorker" in navigator &&
+                        navigator.serviceWorker.controller
+                    ) {
+                        navigator.serviceWorker.controller.postMessage({
+                            type: "ADZAN_NOTIFICATION",
+                            title: nTitle,
+                            body: nBody,
+                            url: "/jadwal-sholat",
+                        });
+                    }
+                }
+
+                if (
+                    settings.notifAdzan &&
+                    nextPrayerLead > 0 &&
+                    nextPrayerTime <= nextPrayerLead * 60 * 1000 &&
+                    lastReminderRef.current !== nextPrayerKey
+                ) {
+                    lastReminderRef.current = nextPrayerKey;
+                    const rTitle = `${t("prayer_schedule.reminder_title")} ${t(PRAYERS.find((pp) => pp.key === nextPrayerKey)?.labelKey)}`;
+                    const rBody = `${t("prayer_schedule.reminder_body")} ${nextPrayerLead} ${t("prayer_schedule.minutes")}`;
+                    if (notifGranted) {
+                        new Notification(rTitle, {
+                            body: rBody,
+                            icon: "/icon.png",
+                        });
+                    }
+                    if (
+                        "serviceWorker" in navigator &&
+                        navigator.serviceWorker.controller
+                    ) {
+                        navigator.serviceWorker.controller.postMessage({
+                            type: "ADZAN_NOTIFICATION",
+                            title: rTitle,
+                            body: rBody,
+                            url: "/jadwal-sholat",
+                        });
+                    }
+                }
+            } else {
+                setCountdown("");
+                lastNotifRef.current = "";
+                lastReminderRef.current = "";
+            }
         };
+
         tick();
-        const iv = setInterval(tick, 1000);
+        const intervalMs = parsedPrayers.length ? 1000 : 30000;
+        const iv = setInterval(tick, intervalMs);
         return () => clearInterval(iv);
     }, [
         prayers,
@@ -320,14 +339,16 @@ export function JadwalSholatContent({
             });
     };
 
-    const nextPrayer = (() => {
+    const nextPrayerObj = (() => {
         if (!prayers) return null;
+        const n = now.getTime();
         for (const p of PRAYERS.filter((p) => !p.info)) {
             const pt = parseTimeStr(prayers[p.key]);
-            if (pt && pt > now) return p.key;
+            if (pt && pt.getTime() > n) return p;
         }
-        return "fajr";
+        return PRAYERS.find((p) => p.key === "fajr");
     })();
+    const nextPrayer = nextPrayerObj?.key ?? "fajr";
 
     const todayStr = now.toLocaleDateString(lang === "EN" ? "en-US" : "id-ID", {
         weekday: "long",
