@@ -290,6 +290,11 @@ export const getMufrodatGroupedByPage = async (page) => {
     return groupMufrodatByAyah(items);
 };
 
+export const getAudioManifest = async () => {
+    const payload = await requestJson("/api/v1/audio/manifest");
+    return payload?.data ?? payload;
+};
+
 export const getAyahAudio = async ({ ayahId }) => {
     const payload = await requestJson(`/api/v1/audio/ayah/${ayahId}`);
     return pickItems(payload)
