@@ -138,9 +138,9 @@ export default function MobileMenuDrawer({ open, onClose, basePath = "" }) {
                                     type='button'
                                     onClick={() => setLang(code)}
                                     aria-pressed={lang?.toUpperCase() === code}
-                                    aria-label={
+                                    aria-label={`${code} (${
                                         code === "ID" ? "Indonesia" : "English"
-                                    }
+                                    })`}
                                     className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
                                         lang?.toUpperCase() === code
                                             ? "bg-emerald-600 text-white"
