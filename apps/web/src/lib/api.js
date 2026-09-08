@@ -1363,6 +1363,8 @@ export const uploadWithProgress = (path, formData, onProgress) => {
     });
 };
 
+export { parseApiJson } from "@/lib/personalSync";
+
 export const parseApiError = async (res, fallback = "Gagal memproses data") => {
     if (!res) return fallback;
     try {
