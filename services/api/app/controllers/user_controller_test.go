@@ -123,10 +123,10 @@ func TestUserControllerDeleteSessionRevokesOnlyRequestedSession(t *testing.T) {
 	for _, token := range tokens {
 		got[token.Token] = true
 	}
-	if got["other-refresh"] {
+	if got[lib.ConvertToSHA256("other-refresh")] {
 		t.Fatal("expected requested refresh token to be revoked")
 	}
-	if !got["current-refresh"] {
+	if !got[lib.ConvertToSHA256("current-refresh")] {
 		t.Fatalf("expected current refresh token to remain, got %#v", got)
 	}
 }
@@ -148,7 +148,7 @@ func TestUserControllerDeleteSessionRejectsCurrentSession(t *testing.T) {
 	}
 
 	var tokens int64
-	if err := db.Model(&model.RefreshToken{}).Where("token = ?", "current-refresh").Count(&tokens).Error; err != nil {
+	if err := db.Model(&model.RefreshToken{}).Where("token = ?", lib.ConvertToSHA256("current-refresh")).Count(&tokens).Error; err != nil {
 		t.Fatalf("count current token: %v", err)
 	}
 	if tokens != 1 {
@@ -171,7 +171,7 @@ func TestUserControllerDeleteSessionRequiresCurrentRefreshToken(t *testing.T) {
 	}
 
 	var tokens int64
-	if err := db.Model(&model.RefreshToken{}).Where("token = ?", "other-refresh").Count(&tokens).Error; err != nil {
+	if err := db.Model(&model.RefreshToken{}).Where("token = ?", lib.ConvertToSHA256("other-refresh")).Count(&tokens).Error; err != nil {
 		t.Fatalf("count other token: %v", err)
 	}
 	if tokens != 1 {
@@ -238,7 +238,7 @@ func seedUserControllerRefreshToken(t *testing.T, db *gorm.DB, userID, token str
 
 	refreshToken := &model.RefreshToken{
 		UserID:    userID,
-		Token:     token,
+		Token:     lib.ConvertToSHA256(token),
 		CreatedAt: createdAt,
 		ExpiresAt: expiresAt,
 	}

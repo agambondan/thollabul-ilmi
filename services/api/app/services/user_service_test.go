@@ -105,10 +105,10 @@ func TestUserServiceRevokeSessionDeletesOnlyRequestedNonCurrentSession(t *testin
 	for _, token := range tokens {
 		got[token.Token] = true
 	}
-	if got["other-token"] {
+	if got[lib.ConvertToSHA256("other-token")] {
 		t.Fatal("expected requested session token to be deleted")
 	}
-	if !got["current-token"] || !got["other-user-token"] {
+	if !got[lib.ConvertToSHA256("current-token")] || !got[lib.ConvertToSHA256("other-user-token")] {
 		t.Fatalf("expected current and other-user tokens to remain, got %#v", got)
 	}
 }
@@ -131,7 +131,7 @@ func seedRefreshToken(t *testing.T, db *gorm.DB, userID, token string, createdAt
 
 	refreshToken := &model.RefreshToken{
 		UserID:    userID,
-		Token:     token,
+		Token:     lib.ConvertToSHA256(token),
 		CreatedAt: createdAt,
 		ExpiresAt: expiresAt,
 	}

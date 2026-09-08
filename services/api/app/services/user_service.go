@@ -85,7 +85,7 @@ func (s *userService) Login(req *model.LoginRequest) (*model.LoginResponse, erro
 	}
 
 	refreshToken := uuid.New().String()
-	if err := s.user.SaveRefreshToken(user.ID.String(), refreshToken, time.Now().Add(7*24*time.Hour)); err != nil {
+	if err := s.user.SaveRefreshToken(user.ID.String(), lib.ConvertToSHA256(refreshToken), time.Now().Add(7*24*time.Hour)); err != nil {
 		return nil, err
 	}
 
@@ -94,12 +94,12 @@ func (s *userService) Login(req *model.LoginRequest) (*model.LoginResponse, erro
 }
 
 func (s *userService) RefreshAccessToken(refreshToken string) (*model.LoginResponse, error) {
-	rt, err := s.user.FindRefreshToken(refreshToken)
+	rt, err := s.user.FindRefreshToken(lib.ConvertToSHA256(refreshToken))
 	if err != nil {
 		return nil, errors.New("invalid refresh token")
 	}
 	if time.Now().After(rt.ExpiresAt) {
-		_ = s.user.DeleteRefreshToken(refreshToken)
+		_ = s.user.DeleteRefreshTokenByID(rt.ID)
 		return nil, errors.New("refresh token expired")
 	}
 	user, err := s.user.FindById(rt.UserID)
@@ -114,14 +114,28 @@ func (s *userService) RefreshAccessToken(refreshToken string) (*model.LoginRespo
 	if err != nil {
 		return nil, err
 	}
+
+	// Rotate: the presented refresh token is single-use, so replace it with a
+	// fresh one instead of letting the same value be replayed until expiry.
+	newRefreshToken := uuid.New().String()
+	if err := s.user.SaveRefreshToken(user.ID.String(), lib.ConvertToSHA256(newRefreshToken), time.Now().Add(7*24*time.Hour)); err != nil {
+		return nil, err
+	}
+	_ = s.user.DeleteRefreshTokenByID(rt.ID)
+
 	user.Password = nil
-	return &model.LoginResponse{Token: newToken, User: user}, nil
+	return &model.LoginResponse{Token: newToken, RefreshToken: newRefreshToken, User: user}, nil
 }
 
 func (s *userService) FindSessions(userID, currentRefreshToken string) ([]model.AuthSession, error) {
 	tokens, err := s.user.FindRefreshTokensByUserID(userID)
 	if err != nil {
 		return nil, err
+	}
+
+	currentHash := ""
+	if currentRefreshToken != "" {
+		currentHash = lib.ConvertToSHA256(currentRefreshToken)
 	}
 
 	sessions := make([]model.AuthSession, 0, len(tokens))
@@ -134,7 +148,7 @@ func (s *userService) FindSessions(userID, currentRefreshToken string) ([]model.
 			ID:        token.ID,
 			CreatedAt: token.CreatedAt,
 			ExpiresAt: token.ExpiresAt,
-			Current:   currentRefreshToken != "" && token.Token == currentRefreshToken,
+			Current:   currentHash != "" && token.Token == currentHash,
 		})
 	}
 	return sessions, nil
@@ -146,21 +160,26 @@ func (s *userService) RevokeSession(userID string, sessionID uint, currentRefres
 		return err
 	}
 
+	currentHash := ""
+	if currentRefreshToken != "" {
+		currentHash = lib.ConvertToSHA256(currentRefreshToken)
+	}
+
 	for _, token := range tokens {
 		if token.ID != sessionID {
 			continue
 		}
-		if currentRefreshToken != "" && token.Token == currentRefreshToken {
+		if currentHash != "" && token.Token == currentHash {
 			return ErrCannotRevokeCurrentSession
 		}
-		return s.user.DeleteRefreshToken(token.Token)
+		return s.user.DeleteRefreshTokenByID(token.ID)
 	}
 
 	return ErrSessionNotFound
 }
 
 func (s *userService) Logout(refreshToken string) error {
-	return s.user.DeleteRefreshToken(refreshToken)
+	return s.user.DeleteRefreshToken(lib.ConvertToSHA256(refreshToken))
 }
 
 func (s *userService) ForgotPassword(email string) error {
@@ -170,7 +189,7 @@ func (s *userService) ForgotPassword(email string) error {
 		return nil
 	}
 	token := uuid.New().String()
-	if err := s.user.SavePasswordResetToken(user.ID.String(), token, time.Now().Add(time.Hour)); err != nil {
+	if err := s.user.SavePasswordResetToken(user.ID.String(), lib.ConvertToSHA256(token), time.Now().Add(time.Hour)); err != nil {
 		return err
 	}
 	go func() {
@@ -187,7 +206,8 @@ func (s *userService) ForgotPassword(email string) error {
 }
 
 func (s *userService) ResetPassword(token, newPassword string) error {
-	prt, err := s.user.FindPasswordResetToken(token)
+	tokenHash := lib.ConvertToSHA256(token)
+	prt, err := s.user.FindPasswordResetToken(tokenHash)
 	if err != nil {
 		return errors.New("invalid or expired reset token")
 	}
@@ -198,7 +218,13 @@ func (s *userService) ResetPassword(token, newPassword string) error {
 	if _, err := s.user.UpdateById(prt.UserID, &model.User{Password: lib.Strptr(hashed)}); err != nil {
 		return err
 	}
-	return s.user.MarkPasswordResetTokenUsed(token)
+	// A password reset is often triggered because the account is suspected
+	// compromised — revoke every existing session so a stolen refresh token
+	// doesn't keep working after the reset.
+	if err := s.user.DeleteUserRefreshTokens(prt.UserID); err != nil {
+		return err
+	}
+	return s.user.MarkPasswordResetTokenUsed(tokenHash)
 }
 
 func (s *userService) FindAll(ctx *fiber.Ctx) *paginate.Page {
@@ -225,8 +251,12 @@ func (s *userService) UpdatePassword(id string, req *model.UpdatePasswordRequest
 	}
 
 	hashed := lib.PasswordEncrypt(req.NewPassword)
-	_, err = s.user.UpdateById(id, &model.User{Password: lib.Strptr(hashed)})
-	return err
+	if _, err := s.user.UpdateById(id, &model.User{Password: lib.Strptr(hashed)}); err != nil {
+		return err
+	}
+	// Revoke every session (including the one making this request) so a
+	// stolen refresh token can't survive a deliberate password change.
+	return s.user.DeleteUserRefreshTokens(id)
 }
 
 func (s *userService) UpdateRole(id string, req *model.UpdateRoleRequest) (*model.User, error) {
@@ -293,7 +323,7 @@ func (s *userService) FindOrCreateOAuthUser(email, name, picture, provider, prov
 	}
 
 	refreshToken := uuid.New().String()
-	if err := s.user.SaveRefreshToken(user.ID.String(), refreshToken, time.Now().Add(7*24*time.Hour)); err != nil {
+	if err := s.user.SaveRefreshToken(user.ID.String(), lib.ConvertToSHA256(refreshToken), time.Now().Add(7*24*time.Hour)); err != nil {
 		return nil, err
 	}
 

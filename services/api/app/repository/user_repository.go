@@ -21,6 +21,7 @@ type UserRepository interface {
 	FindRefreshToken(token string) (*model.RefreshToken, error)
 	FindRefreshTokensByUserID(userID string) ([]model.RefreshToken, error)
 	DeleteRefreshToken(token string) error
+	DeleteRefreshTokenByID(id uint) error
 	DeleteUserRefreshTokens(userID string) error
 	SavePasswordResetToken(userID, token string, expiresAt time.Time) error
 	FindPasswordResetToken(token string) (*model.PasswordResetToken, error)
@@ -104,6 +105,10 @@ func (r *userRepo) FindRefreshTokensByUserID(userID string) ([]model.RefreshToke
 
 func (r *userRepo) DeleteRefreshToken(token string) error {
 	return r.db.Delete(&model.RefreshToken{}, "token = ?", token).Error
+}
+
+func (r *userRepo) DeleteRefreshTokenByID(id uint) error {
+	return r.db.Delete(&model.RefreshToken{}, "id = ?", id).Error
 }
 
 func (r *userRepo) DeleteUserRefreshTokens(userID string) error {

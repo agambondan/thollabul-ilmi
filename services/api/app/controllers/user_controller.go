@@ -335,7 +335,7 @@ func (c *userController) Refresh(ctx *fiber.Ctx) error {
 	if err != nil {
 		return lib.ErrorUnauthorized(ctx, err.Error())
 	}
-	setAuthCookies(ctx, resp.Token, "")
+	setAuthCookies(ctx, resp.Token, resp.RefreshToken)
 	return lib.OK(ctx, resp)
 }
 

@@ -48,16 +48,22 @@ type AuthSession struct {
 }
 
 type RefreshToken struct {
-	ID        uint      `json:"id" gorm:"primaryKey;autoIncrement"`
-	UserID    string    `json:"user_id" gorm:"type:varchar(36);not null;index"`
+	ID     uint   `json:"id" gorm:"primaryKey;autoIncrement"`
+	UserID string `json:"user_id" gorm:"type:varchar(36);not null;index"`
+	// Token stores the SHA-256 hash of the raw token handed to the client,
+	// never the raw value itself — see lib.ConvertToSHA256 call sites in
+	// userService.
 	Token     string    `json:"token" gorm:"type:varchar(64);uniqueIndex;not null"`
 	ExpiresAt time.Time `json:"expires_at"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
 type PasswordResetToken struct {
-	ID        uint       `json:"id" gorm:"primaryKey;autoIncrement"`
-	UserID    string     `json:"user_id" gorm:"type:varchar(36);not null;index"`
+	ID     uint   `json:"id" gorm:"primaryKey;autoIncrement"`
+	UserID string `json:"user_id" gorm:"type:varchar(36);not null;index"`
+	// Token stores the SHA-256 hash of the raw token emailed to the user,
+	// never the raw value itself — see lib.ConvertToSHA256 call sites in
+	// userService.
 	Token     string     `json:"token" gorm:"type:varchar(64);uniqueIndex;not null"`
 	ExpiresAt time.Time  `json:"expires_at"`
 	UsedAt    *time.Time `json:"used_at,omitempty"`
