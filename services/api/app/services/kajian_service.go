@@ -1,11 +1,7 @@
 package service
 
 import (
-	"context"
-	"fmt"
-
-	"github.com/agambondan/islamic-explorer/app/lib" 
-	"github.com/agambondan/islamic-explorer/app/lib/embeddings"
+	"github.com/agambondan/islamic-explorer/app/lib"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/repository"
 	"github.com/gofiber/fiber/v2"
@@ -19,7 +15,7 @@ type KajianService interface {
 	Update(id int, req *model.CreateKajianRequest) (*model.Kajian, error)
 	Delete(id int) error
 	IncrementView(id int)
-	SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, int64, error)
+	SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, model.SearchTranscriptMeta, error)
 	GetSpeakers() ([]string, error)
 	GetTranscriptsByKajianID(kajianID int) ([]model.KajianTranscript, error)
 }
@@ -106,29 +102,8 @@ func (s *kajianService) IncrementView(id int) {
 	_ = s.repo.IncrementView(id)
 }
 
-func (s *kajianService) SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, int64, error) {
-	var queryVector []float32
-	if mode == "" || mode == "hybrid" || mode == "semantic" {
-		provider := embeddings.NewLocalHashProvider()
-		if vec, err := provider.EmbedText(context.Background(), query); err == nil {
-			queryVector = vec
-		}
-	}
-	results, total, err := s.repo.SearchTranscripts(query, speaker, mode, queryVector, limit, offset)
-	if err != nil {
-		return nil, 0, err
-	}
-	seen := make(map[string]struct{}, len(results))
-	out := results[:0]
-	for _, r := range results {
-		key := fmt.Sprintf("%d-%d-%d", r.KajianID, r.StartSeconds, r.EndSeconds)
-		if _, ok := seen[key]; ok {
-			continue
-		}
-		seen[key] = struct{}{}
-		out = append(out, r)
-	}
-	return out, total, nil
+func (s *kajianService) SearchTranscripts(query, speaker, mode string, limit, offset int) ([]model.SearchTranscriptResult, model.SearchTranscriptMeta, error) {
+	return s.repo.SearchTranscripts(query, speaker, mode, limit, offset)
 }
 
 func (s *kajianService) GetSpeakers() ([]string, error) {

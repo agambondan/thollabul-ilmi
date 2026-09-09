@@ -492,6 +492,8 @@ func seedKajianFromFile(db *gorm.DB) {
 		return
 	}
 	log.Printf("[seeder] seedKajianFromFile: %d entri", len(rows))
+	transcriptRows, transcriptErrors := 0, 0
+	var firstTranscriptErr error
 
 	// Clean up legacy rows that have no URL (link ngaco) so we don't duplicate.
 	db.Where("(url = '' OR url IS NULL)").Delete(&model.Kajian{})
@@ -556,14 +558,19 @@ func seedKajianFromFile(db *gorm.DB) {
 			continue
 		}
 
-		db.Where("kajian_id = ?", *existing.ID).Delete(&model.KajianTranscript{})
+		// Hard-delete: the model is soft-deletable, and a plain Delete would
+		// leave one more tombstone copy of every chunk per seed run. The search
+		// queries filter deleted_at, but the table would still grow unbounded.
+		db.Unscoped().Where("kajian_id = ?", *existing.ID).Delete(&model.KajianTranscript{})
 		if len(r.Transcripts) > 0 {
 			for _, chunk := range r.Transcripts {
 				tsURL := fmt.Sprintf("https://youtu.be/%s?t=%d", r.VideoID, chunk.StartSeconds)
 				if r.VideoID == "" {
 					tsURL = r.URL
 				}
-				_ = db.Create(&model.KajianTranscript{
+				// Omit the embedding: the zero pgvector.Vector serialises as
+				// '[]' which Postgres rejects, silently dropping every chunk.
+				err := db.Omit("Embedding").Create(&model.KajianTranscript{
 					KajianID:     *existing.ID,
 					VideoID:      r.VideoID,
 					StartSeconds: chunk.StartSeconds,
@@ -571,9 +578,21 @@ func seedKajianFromFile(db *gorm.DB) {
 					Text:         chunk.Text,
 					TimestampURL: tsURL,
 				}).Error
+				if err != nil {
+					transcriptErrors++
+					if firstTranscriptErr == nil {
+						firstTranscriptErr = err
+					}
+					continue
+				}
+				transcriptRows++
 			}
 		}
 	}
+	if transcriptErrors > 0 {
+		log.Printf("[seeder] seedKajianFromFile: %d transcript chunk INSERT gagal (contoh: %v)", transcriptErrors, firstTranscriptErr)
+	}
+	log.Printf("[seeder] seedKajianFromFile: %d transcript chunk tersimpan", transcriptRows)
 }
 
 // ── Achievement ───────────────────────────────────────────────────────────────

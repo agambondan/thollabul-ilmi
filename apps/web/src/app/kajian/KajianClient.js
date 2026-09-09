@@ -198,10 +198,30 @@ export default function KajianClient({
     const [transcriptSelectedSpeakers, setTranscriptSelectedSpeakers] = useState([]);
     const [transcriptResults, setTranscriptResults] = useState([]);
     const [transcriptLoading, setTranscriptLoading] = useState(false);
+    const [transcriptLoadingMore, setTranscriptLoadingMore] = useState(false);
     const [transcriptMeta, setTranscriptMeta] = useState({ total: 0, page: 1 });
+    const [transcriptPage, setTranscriptPage] = useState(1);
+    // Bumped whenever the search inputs change so an in-flight "load more"
+    // for the previous query is discarded instead of appended.
+    const transcriptRequestRef = useRef(0);
+
+    const buildTranscriptParams = (page) => {
+        const params = new URLSearchParams({
+            q: transcriptQuery || "",
+            mode: searchMode,
+        });
+        if (transcriptSelectedSpeakers.length > 0) {
+            params.set("speaker", transcriptSelectedSpeakers.join("||"));
+        }
+        params.set("page", String(page));
+        params.set("limit", "20");
+        return params;
+    };
 
     useEffect(() => {
         if (tab !== "transcript") return;
+        transcriptRequestRef.current += 1;
+        setTranscriptPage(1);
         if (!transcriptQuery.trim()) {
             setTranscriptResults([]);
             setTranscriptMeta({ total: 0, page: 1 });
@@ -215,15 +235,7 @@ export default function KajianClient({
                 const apiUrl =
                     process.env.NEXT_PUBLIC_API_URL ||
                     "https://api-thollabul.jangkauin.site";
-                const params = new URLSearchParams({
-                    q: transcriptQuery || "",
-                    mode: searchMode,
-                });
-                if (transcriptSelectedSpeakers.length > 0) {
-                    params.set("speaker", transcriptSelectedSpeakers.join("||"));
-                }
-                params.set("page", "1");
-                params.set("limit", "20");
+                const params = buildTranscriptParams(1);
 
                 const res = await fetch(
                     `${apiUrl}/api/v1/kajian/search?${params.toString()}`,
@@ -259,7 +271,49 @@ export default function KajianClient({
             cancelled = true;
             clearTimeout(timer);
         };
+        // buildTranscriptParams reads the same three inputs listed here.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [transcriptQuery, searchMode, transcriptSelectedSpeakers, tab]);
+
+    const loadMoreTranscripts = async () => {
+        if (
+            transcriptLoadingMore ||
+            transcriptLoading ||
+            !transcriptMeta?.has_more
+        ) {
+            return;
+        }
+        const requestId = transcriptRequestRef.current;
+        const nextPage = transcriptPage + 1;
+        setTranscriptLoadingMore(true);
+        try {
+            const apiUrl =
+                process.env.NEXT_PUBLIC_API_URL ||
+                "https://api-thollabul.jangkauin.site";
+            const params = buildTranscriptParams(nextPage);
+            const res = await fetch(
+                `${apiUrl}/api/v1/kajian/search?${params.toString()}`,
+            );
+            if (!res.ok) return;
+            const data = await res.json();
+            // Inputs changed while this page was loading: drop it.
+            if (requestId !== transcriptRequestRef.current) return;
+            const items = data?.items ?? data?.data?.items ?? [];
+            const meta = data?.meta ?? data?.data?.meta ?? {};
+            setTranscriptResults((prev) => {
+                const seen = new Set(prev.map((r) => r.id));
+                return [...prev, ...items.filter((r) => !seen.has(r.id))];
+            });
+            setTranscriptMeta((prev) => ({ ...prev, ...meta }));
+            setTranscriptPage(nextPage);
+        } catch (e) {
+            // keep what is already on screen
+        } finally {
+            if (requestId === transcriptRequestRef.current) {
+                setTranscriptLoadingMore(false);
+            }
+        }
+    };
 
     const searchText = search.trim().toLowerCase();
     const selectedSpeakerSet = useMemo(
@@ -402,6 +456,9 @@ export default function KajianClient({
                     speakers={speakers}
                     results={transcriptResults}
                     loading={transcriptLoading}
+                    loadingMore={transcriptLoadingMore}
+                    hasMore={Boolean(transcriptMeta?.has_more)}
+                    onLoadMore={loadMoreTranscripts}
                     meta={transcriptMeta}
                     t={t}
                 />

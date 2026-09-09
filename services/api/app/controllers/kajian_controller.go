@@ -152,9 +152,9 @@ func (c *kajianController) Delete(ctx *fiber.Ctx) error {
 // @Produce json
 // @Param q query string false "Search query text"
 // @Param speaker query string false "Filter by ustadz/speaker name"
-// @Param mode query string false "Search mode: exact | semantic | hybrid (default: hybrid)"
+// @Param mode query string false "Search mode: exact (verbatim phrase) | semantic (stemmed + spelling variants + embedding) | hybrid (exact first, then all-concept, then semantic tail; default)"
 // @Param page query int false "Page number (default: 1)"
-// @Param limit query int false "Items per page (default: 20)"
+// @Param limit query int false "Items per page (default: 20, max 100). Response meta carries total, has_more, kajian_count and expanded_terms."
 // @Success 200 {object} lib.Response
 // @Failure 500 {object} lib.Response
 // @Router /kajian/search [get]
@@ -172,7 +172,7 @@ func (c *kajianController) SearchTranscripts(ctx *fiber.Ctx) error {
 	}
 	offset := (page - 1) * limit
 
-	results, total, err := c.svc.SearchTranscripts(q, speaker, mode, limit, offset)
+	results, meta, err := c.svc.SearchTranscripts(q, speaker, mode, limit, offset)
 	if err != nil {
 		return lib.ErrorInternal(ctx)
 	}
@@ -180,11 +180,14 @@ func (c *kajianController) SearchTranscripts(ctx *fiber.Ctx) error {
 	return lib.OK(ctx, fiber.Map{
 		"items": results,
 		"meta": fiber.Map{
-			"page":  page,
-			"limit": limit,
-			"total": total,
-			"mode":  mode,
-			"query": q,
+			"page":           page,
+			"limit":          limit,
+			"total":          meta.Total,
+			"has_more":       meta.HasMore,
+			"kajian_count":   meta.KajianCount,
+			"expanded_terms": meta.ExpandedTerms,
+			"mode":           meta.Mode,
+			"query":          q,
 		},
 	})
 }

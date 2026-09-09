@@ -21,19 +21,21 @@ export const getSearchModes = (t) => [
         key: "hybrid",
         label: t?.("kajian.mode_hybrid_label") || "Hybrid (Semua)",
         icon: "⚡",
-        desc: t?.("kajian.mode_hybrid_desc") || "Exact + Semantic",
+        desc: t?.("kajian.mode_hybrid_desc") || "Persis dulu, lalu makna",
     },
     {
         key: "exact",
         label: t?.("kajian.mode_exact_label") || "Teks Persis",
         icon: "🔤",
-        desc: t?.("kajian.mode_exact_desc") || "Kata kunci sama",
+        desc: t?.("kajian.mode_exact_desc") || "Frasa persis seperti diketik",
     },
     {
         key: "semantic",
         label: t?.("kajian.mode_semantic_label") || "Makna / Tema",
         icon: "🧠",
-        desc: t?.("kajian.mode_semantic_desc") || "Berdasarkan tema",
+        desc:
+            t?.("kajian.mode_semantic_desc") ||
+            "Per kajian: kata dasar, ejaan lain & topik",
     },
 ];
 
@@ -59,20 +61,34 @@ const getYouTubeIdFromTimestampUrl = (url) => {
     return m ? m[1] : null;
 };
 
-const highlightText = (text, query) => {
-    if (!query || !text) return text;
+const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+// Terms to paint: the API's expanded terms (query words minus stopwords, plus
+// spelling variants such as "salat" for a "sholat" query). Falls back to the
+// raw query tokens when the API did not send any.
+const highlightTokens = (query, extraTerms = []) => {
+    const fromApi = (extraTerms || [])
+        .map((t) => String(t).toLowerCase())
+        .filter((t) => t.length > 2);
+    const lowerQuery = (query || "").toLowerCase().trim();
+    const fromQuery = lowerQuery.split(/\s+/).filter((t) => t.length > 2);
+    const phrase = fromQuery.length > 1 ? [lowerQuery] : [];
+    return [...new Set([...phrase, ...(fromApi.length ? fromApi : fromQuery)])];
+};
+
+const highlightText = (text, query, extraTerms = []) => {
+    if (!text) return text;
     const safe = String(text);
-    const lowerQuery = query.toLowerCase().trim();
-    if (!lowerQuery) return safe;
-    const tokens = lowerQuery.split(/\s+/).filter((t) => t.length > 1);
+    const tokens = highlightTokens(query, extraTerms);
     if (tokens.length === 0) return safe;
-    const regex = new RegExp(
-        `(${tokens.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
-        "gi",
-    );
-    const parts = safe.split(regex);
+    const pattern = `(${tokens.map(escapeRegex).join("|")})`;
+    // Split with a global regex, but classify parts with a non-global one:
+    // RegExp#test on a /g regex advances lastIndex and misses adjacent hits.
+    const splitter = new RegExp(pattern, "gi");
+    const matcher = new RegExp(`^${pattern}$`, "i");
+    const parts = safe.split(splitter);
     return parts.map((p, i) =>
-        regex.test(p) ? (
+        matcher.test(p) ? (
             <mark
                 key={i}
                 className='bg-yellow-200 dark:bg-yellow-700/60 text-gray-900 dark:text-yellow-50 px-0.5 rounded'
@@ -85,6 +101,55 @@ const highlightText = (text, query) => {
     );
 };
 
+// Why a card matched, from the API's match_reason (falls back to the legacy
+// match_mode badge for older API responses).
+const matchBadge = (result, t) => {
+    switch (result.match_reason) {
+        case "phrase":
+            return {
+                cls: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+                text: `🔤 ${t("kajian.reason_phrase") || "Frasa persis"}`,
+            };
+        case "all_terms":
+            return {
+                cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
+                text: `✅ ${t("kajian.reason_all_terms") || "Semua kata"}`,
+            };
+        case "some_terms":
+            return {
+                cls: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
+                text: `🧠 ${t("kajian.reason_some_terms") || "Sebagian kata"}`,
+            };
+        case "fuzzy":
+            return {
+                cls: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
+                text: `≈ ${t("kajian.reason_fuzzy") || "Ejaan mirip"}`,
+            };
+        case "title":
+            return {
+                cls: "bg-slate-100 text-slate-700 dark:bg-slate-700/60 dark:text-slate-200",
+                text: `🏷️ ${t("kajian.reason_title") || "Judul / topik"}`,
+            };
+        default:
+            if (result.match_mode === "exact") {
+                return {
+                    cls: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+                    text: "🔤 EXACT",
+                };
+            }
+            if (result.match_mode === "semantic") {
+                return {
+                    cls: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
+                    text: "🧠 SEMANTIC",
+                };
+            }
+            return {
+                cls: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
+                text: "⚡ HYBRID",
+            };
+    }
+};
+
 export default function TranscriptSearchView({
     query,
     setQuery,
@@ -95,11 +160,15 @@ export default function TranscriptSearchView({
     speakers,
     results,
     loading,
+    loadingMore = false,
+    hasMore = false,
+    onLoadMore,
     meta,
 }) {
     const { t } = useLocale();
     const searchModes = getSearchModes(t);
     const [activeVideo, setActiveVideo] = useState(null);
+    const highlightTerms = meta?.expanded_terms || [];
 
     const handleShare = async (result) => {
         if (!result) return;
@@ -133,6 +202,14 @@ export default function TranscriptSearchView({
             return true;
         });
     }, [results]);
+    const kajianCount =
+        meta?.kajian_count ??
+        new Set(uniqueResults.map((r) => r.kajian_id || r.video_id)).size;
+    const totalResults = Math.max(
+        Number(meta?.total) || 0,
+        uniqueResults.length,
+    );
+    const totalLabel = meta?.truncated ? `${totalResults}+` : totalResults;
 
     return (
         <div>
@@ -203,7 +280,24 @@ export default function TranscriptSearchView({
                 <div className='mb-3 text-xs text-gray-500 dark:text-gray-400'>
                     {loading
                         ? t("common.searching") || "Mencari..."
-                        : `${uniqueResults.length} ${t("kajian.results_found") || "hasil"} • mode: ${searchModes.find((m) => m.key === mode)?.label}`}
+                        : meta?.mode === "semantic"
+                          ? t(
+                                "kajian.transcript_results_summary_kajian",
+                                "{shown} dari {total} kajian yang membahas tema ini",
+                                {
+                                    shown: uniqueResults.length,
+                                    total: totalLabel,
+                                },
+                            )
+                          : t(
+                                "kajian.transcript_results_summary",
+                                "{shown} dari {total} potongan transkrip • {kajian} kajian",
+                                {
+                                    shown: uniqueResults.length,
+                                    total: totalLabel,
+                                    kajian: kajianCount,
+                                },
+                            )}
                 </div>
             )}
 
@@ -238,10 +332,26 @@ export default function TranscriptSearchView({
                             key={r.id}
                             result={r}
                             query={query}
+                            highlightTerms={highlightTerms}
                             onPlay={() => setActiveVideo(r)}
                             onShare={handleShare}
                         />
                     ))}
+                    {hasMore && (
+                        <div className='text-center pt-2'>
+                            <button
+                                type='button'
+                                onClick={onLoadMore}
+                                disabled={loadingMore}
+                                className='px-5 py-2 rounded-lg text-sm font-medium bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors'
+                            >
+                                {loadingMore
+                                    ? t("common.loading") || "Memuat..."
+                                    : t("kajian.transcript_load_more") ||
+                                      "Muat lebih banyak"}
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -257,9 +367,17 @@ export default function TranscriptSearchView({
     );
 }
 
-function TranscriptResultCard({ result, query, onPlay, onShare }) {
+function TranscriptResultCard({
+    result,
+    query,
+    highlightTerms = [],
+    onPlay,
+    onShare,
+}) {
+    const { t } = useLocale();
     const videoId =
         getYouTubeIdFromTimestampUrl(result.timestamp_url) || result.video_id;
+    const badge = matchBadge(result, t);
 
     return (
         <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-all overflow-hidden'>
@@ -291,20 +409,19 @@ function TranscriptResultCard({ result, query, onPlay, onShare }) {
                 <div className='flex-1 min-w-0'>
                     <div className='flex items-center gap-1.5 flex-wrap mb-1'>
                         <span
-                            className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${
-                                result.match_mode === "exact"
-                                    ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300"
-                                    : result.match_mode === "semantic"
-                                      ? "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300"
-                                      : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
-                            }`}
+                            className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${badge.cls}`}
                         >
-                            {result.match_mode === "exact"
-                                ? "🔤 EXACT"
-                                : result.match_mode === "semantic"
-                                  ? "🧠 SEMANTIC"
-                                  : "⚡ HYBRID"}
+                            {badge.text}
                         </span>
+                        {result.match_count > 1 && (
+                            <span className='text-[10px] text-emerald-600 dark:text-emerald-400 font-medium'>
+                                {t(
+                                    "kajian.match_count",
+                                    "{count} potongan cocok",
+                                    { count: result.match_count },
+                                )}
+                            </span>
+                        )}
                         {result.topic && (
                             <span className='text-[10px] text-gray-400 truncate max-w-[200px]'>
                                 {result.topic}
@@ -325,7 +442,10 @@ function TranscriptResultCard({ result, query, onPlay, onShare }) {
                     </p>
 
                     <p className='text-xs text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-3'>
-                        {highlightText(result.snippet, query)}
+                        {highlightText(result.snippet, query, [
+                            ...highlightTerms,
+                            ...(result.matched_terms || []),
+                        ])}
                     </p>
 
                     <div className='flex items-center gap-3 mt-2'>

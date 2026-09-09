@@ -120,7 +120,7 @@ func SeedKajianTranscriptsFromFile(db *gorm.DB) {
 					Where("kajian_id = ? AND start_seconds = ?", kajianID, chunk.StartSeconds).
 					Count(&count)
 				if count == 0 {
-					_ = db.Create(&t).Error
+					_ = db.Omit("Embedding").Create(&t).Error
 				}
 			}
 		}

@@ -7,7 +7,7 @@ import {
     Trash2,
     Youtube,
 } from "lucide-react-native";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
     ActivityIndicator,
@@ -31,15 +31,89 @@ import {
 const ACCENT = "#10b981";
 
 const SEARCH_MODES = [
-    { key: "hybrid", label: "Hybrid", icon: "⚡", desc: "Exact + Semantic" },
-    { key: "exact", label: "Exact", icon: "🔤", desc: "Kata kunci sama" },
+    {
+        key: "hybrid",
+        label: "Hybrid",
+        icon: "⚡",
+        desc: "Persis dulu, lalu makna",
+    },
+    { key: "exact", label: "Exact", icon: "🔤", desc: "Frasa persis" },
     {
         key: "semantic",
         label: "Semantic",
         icon: "🧠",
-        desc: "Berdasarkan makna",
+        desc: "Kata dasar & ejaan lain",
     },
 ];
+const TRANSCRIPT_PAGE_SIZE = 20;
+
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+// Terms to highlight: the API's expanded terms (query words minus stopwords
+// plus spelling variants), falling back to the raw query tokens.
+function highlightTokens(query, extraTerms = []) {
+    const fromApi = (extraTerms || [])
+        .map((t) => String(t).toLowerCase())
+        .filter((t) => t.length > 2);
+    const lowerQuery = (query || "").toLowerCase().trim();
+    const fromQuery = lowerQuery.split(/\s+/).filter((t) => t.length > 2);
+    const phrase = fromQuery.length > 1 ? [lowerQuery] : [];
+    return [...new Set([...phrase, ...(fromApi.length ? fromApi : fromQuery)])];
+}
+
+function HighlightedText({ text, query, terms, style, numberOfLines }) {
+    const tokens = highlightTokens(query, terms);
+    if (!text || tokens.length === 0) {
+        return (
+            <Text numberOfLines={numberOfLines} style={style}>
+                {text}
+            </Text>
+        );
+    }
+    const pattern = `(${tokens.map(escapeRegex).join("|")})`;
+    const parts = String(text).split(new RegExp(pattern, "gi"));
+    const matcher = new RegExp(`^${pattern}$`, "i");
+    return (
+        <Text numberOfLines={numberOfLines} style={style}>
+            {parts.map((part, index) =>
+                matcher.test(part) ? (
+                    <Text key={index} style={styles.highlight}>
+                        {part}
+                    </Text>
+                ) : (
+                    <Text key={index}>{part}</Text>
+                ),
+            )}
+        </Text>
+    );
+}
+
+// Why a card matched (match_reason), falling back to the legacy match_mode.
+function matchBadge(item) {
+    switch (item.match_reason) {
+        case "phrase":
+            return { style: styles.modeBadgeExact, text: "🔤 FRASA PERSIS" };
+        case "all_terms":
+            return { style: styles.modeBadgeHybrid, text: "✅ SEMUA KATA" };
+        case "some_terms":
+            return {
+                style: styles.modeBadgeSemantic,
+                text: "🧠 SEBAGIAN KATA",
+            };
+        case "fuzzy":
+            return { style: styles.modeBadgeFuzzy, text: "≈ EJAAN MIRIP" };
+        case "title":
+            return { style: styles.modeBadgeTitle, text: "🏷️ JUDUL / TOPIK" };
+        default:
+            if (item.match_mode === "exact") {
+                return { style: styles.modeBadgeExact, text: "🔤 EXACT" };
+            }
+            if (item.match_mode === "semantic") {
+                return { style: styles.modeBadgeSemantic, text: "🧠 SEMANTIC" };
+            }
+            return { style: styles.modeBadgeHybrid, text: "⚡ HYBRID" };
+    }
+}
 
 function getYouTubeId(url) {
     if (!url) return null;
@@ -150,8 +224,15 @@ function KajianCard({
     );
 }
 
-function TranscriptCard({ item, onOpenUrl, onOpenPlayer }) {
+function TranscriptCard({
+    item,
+    onOpenUrl,
+    onOpenPlayer,
+    highlightTerms = [],
+    query = "",
+}) {
     const videoId = item.video_id || getYouTubeId(item.timestamp_url);
+    const badge = matchBadge(item);
 
     return (
         <Pressable
@@ -182,22 +263,14 @@ function TranscriptCard({ item, onOpenUrl, onOpenPlayer }) {
 
                 <View style={styles.transcriptDetails}>
                     <View style={styles.modeBadgeRow}>
-                        <Text
-                            style={[
-                                styles.modeBadge,
-                                item.match_mode === "exact"
-                                    ? styles.modeBadgeExact
-                                    : item.match_mode === "semantic"
-                                      ? styles.modeBadgeSemantic
-                                      : styles.modeBadgeHybrid,
-                            ]}
-                        >
-                            {item.match_mode === "exact"
-                                ? "🔤 EXACT"
-                                : item.match_mode === "semantic"
-                                  ? "🧠 SEMANTIC"
-                                  : "⚡ HYBRID"}
+                        <Text style={[styles.modeBadge, badge.style]}>
+                            {badge.text}
                         </Text>
+                        {item.match_count > 1 ? (
+                            <Text style={styles.matchCount}>
+                                {item.match_count} potongan cocok
+                            </Text>
+                        ) : null}
                     </View>
 
                     <Text numberOfLines={2} style={styles.transcriptTitle}>
@@ -208,9 +281,16 @@ function TranscriptCard({ item, onOpenUrl, onOpenPlayer }) {
                         {item.speaker} · ⏱️ {item.timestamp}
                     </Text>
 
-                    <Text numberOfLines={3} style={styles.transcriptSnippet}>
-                        &ldquo;{item.snippet}&rdquo;
-                    </Text>
+                    <HighlightedText
+                        numberOfLines={3}
+                        query={query}
+                        style={styles.transcriptSnippet}
+                        terms={[
+                            ...highlightTerms,
+                            ...(item.matched_terms || []),
+                        ]}
+                        text={`\u201c${item.snippet || ""}\u201d`}
+                    />
 
                     <View style={styles.watchRow}>
                         <Youtube color='#ef4444' size={14} />
@@ -267,6 +347,12 @@ export function WebAppKajianRoute({
     const [speakerFilter, setSpeakerFilter] = useState("");
     const [transcriptResults, setTranscriptResults] = useState([]);
     const [transcriptLoading, setTranscriptLoading] = useState(false);
+    const [transcriptLoadingMore, setTranscriptLoadingMore] = useState(false);
+    const [transcriptMeta, setTranscriptMeta] = useState(null);
+    const [transcriptPage, setTranscriptPage] = useState(1);
+    // Bumped when the search inputs change so a stale "load more" response
+    // is dropped instead of appended to the new result list.
+    const transcriptRequestRef = useRef(0);
     const [speakers, setSpeakers] = useState([]);
 
     // Player modal
@@ -403,19 +489,35 @@ export function WebAppKajianRoute({
         };
     }, [apiUrl]);
 
-    // Search Transcripts with Debounce
-    useEffect(() => {
-        if (tab !== "transcript") return;
-        let active = true;
-        const timer = setTimeout(() => {
-            setTranscriptLoading(true);
+    const buildTranscriptParams = useCallback(
+        (page) => {
             const params = new URLSearchParams({
                 q: transcriptQuery || "",
                 mode: searchMode,
-                page: "1",
-                limit: "20",
+                page: String(page),
+                limit: String(TRANSCRIPT_PAGE_SIZE),
             });
             if (speakerFilter) params.set("speaker", speakerFilter);
+            return params;
+        },
+        [transcriptQuery, searchMode, speakerFilter],
+    );
+
+    // Search Transcripts with Debounce
+    useEffect(() => {
+        if (tab !== "transcript") return;
+        transcriptRequestRef.current += 1;
+        setTranscriptPage(1);
+        if (!transcriptQuery.trim()) {
+            setTranscriptResults([]);
+            setTranscriptMeta(null);
+            setTranscriptLoading(false);
+            return undefined;
+        }
+        let active = true;
+        const timer = setTimeout(() => {
+            setTranscriptLoading(true);
+            const params = buildTranscriptParams(1);
 
             fetch(`${apiUrl}/api/v1/kajian/search?${params.toString()}`)
                 .then((r) => r.json())
@@ -423,9 +525,13 @@ export function WebAppKajianRoute({
                     if (!active) return;
                     const items = data?.items ?? data?.data?.items ?? [];
                     setTranscriptResults(items);
+                    setTranscriptMeta(data?.meta ?? data?.data?.meta ?? null);
                 })
                 .catch(() => {
-                    if (active) setTranscriptResults([]);
+                    if (active) {
+                        setTranscriptResults([]);
+                        setTranscriptMeta(null);
+                    }
                 })
                 .finally(() => {
                     if (active) setTranscriptLoading(false);
@@ -436,7 +542,57 @@ export function WebAppKajianRoute({
             active = false;
             clearTimeout(timer);
         };
-    }, [transcriptQuery, searchMode, speakerFilter, tab, apiUrl]);
+    }, [buildTranscriptParams, tab, apiUrl, transcriptQuery]);
+
+    const transcriptTotal = Math.max(
+        Number(transcriptMeta?.total) || 0,
+        transcriptResults.length,
+    );
+    const transcriptTotalLabel = transcriptMeta?.truncated
+        ? `${transcriptTotal}+`
+        : `${transcriptTotal}`;
+
+    const loadMoreTranscripts = useCallback(() => {
+        if (
+            transcriptLoadingMore ||
+            transcriptLoading ||
+            !transcriptMeta?.has_more
+        ) {
+            return;
+        }
+        const requestId = transcriptRequestRef.current;
+        const nextPage = transcriptPage + 1;
+        setTranscriptLoadingMore(true);
+        const params = buildTranscriptParams(nextPage);
+        fetch(`${apiUrl}/api/v1/kajian/search?${params.toString()}`)
+            .then((r) => r.json())
+            .then((data) => {
+                if (requestId !== transcriptRequestRef.current) return;
+                const items = data?.items ?? data?.data?.items ?? [];
+                const meta = data?.meta ?? data?.data?.meta ?? null;
+                setTranscriptResults((prev) => {
+                    const seen = new Set(prev.map((r) => r.id));
+                    return [...prev, ...items.filter((r) => !seen.has(r.id))];
+                });
+                if (meta) {
+                    setTranscriptMeta((prev) => ({ ...(prev || {}), ...meta }));
+                }
+                setTranscriptPage(nextPage);
+            })
+            .catch(() => {})
+            .finally(() => {
+                if (requestId === transcriptRequestRef.current) {
+                    setTranscriptLoadingMore(false);
+                }
+            });
+    }, [
+        apiUrl,
+        buildTranscriptParams,
+        transcriptLoading,
+        transcriptLoadingMore,
+        transcriptMeta,
+        transcriptPage,
+    ]);
 
     return (
         <ScrollView
@@ -572,6 +728,9 @@ export function WebAppKajianRoute({
                                 >
                                     {m.label}
                                 </Text>
+                                <Text numberOfLines={1} style={styles.modeDesc}>
+                                    {m.desc}
+                                </Text>
                             </Pressable>
                         ))}
                     </View>
@@ -648,17 +807,52 @@ export function WebAppKajianRoute({
                     ) : transcriptResults.length > 0 ? (
                         <View style={styles.grid}>
                             <Text style={styles.resultsCount}>
-                                Ditemukan {transcriptResults.length} potongan
-                                kajian
+                                {transcriptMeta?.mode === "semantic"
+                                    ? `${transcriptResults.length} dari ${transcriptTotalLabel} kajian yang membahas tema ini`
+                                    : `${transcriptResults.length} dari ${transcriptTotalLabel} potongan transkrip${
+                                          transcriptMeta?.kajian_count
+                                              ? ` • ${transcriptMeta.kajian_count} kajian`
+                                              : ""
+                                      }`}
                             </Text>
                             {transcriptResults.map((item) => (
                                 <TranscriptCard
+                                    highlightTerms={
+                                        transcriptMeta?.expanded_terms || []
+                                    }
                                     item={item}
                                     key={item.id}
                                     onOpenUrl={onOpenUrl}
                                     onOpenPlayer={setPlayerItem}
+                                    query={transcriptQuery}
                                 />
                             ))}
+                            {transcriptMeta?.has_more ? (
+                                <Pressable
+                                    accessibilityRole='button'
+                                    accessibilityState={{
+                                        disabled: transcriptLoadingMore,
+                                    }}
+                                    disabled={transcriptLoadingMore}
+                                    onPress={loadMoreTranscripts}
+                                    style={[
+                                        styles.loadMoreButton,
+                                        transcriptLoadingMore &&
+                                            styles.loadMoreButtonDisabled,
+                                    ]}
+                                >
+                                    {transcriptLoadingMore ? (
+                                        <ActivityIndicator
+                                            color='#ffffff'
+                                            size='small'
+                                        />
+                                    ) : (
+                                        <Text style={styles.loadMoreText}>
+                                            Muat lebih banyak
+                                        </Text>
+                                    )}
+                                </Pressable>
+                            ) : null}
                         </View>
                     ) : (
                         <View style={styles.empty}>
@@ -1019,6 +1213,50 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "600",
         marginBottom: 4,
+    },
+    highlight: {
+        backgroundColor: "#fef08a",
+        color: "#111827",
+    },
+    matchCount: {
+        color: "#047857",
+        fontSize: 10,
+        fontWeight: "700",
+    },
+    modeBadgeFuzzy: {
+        backgroundColor: "#fef3c7",
+        color: "#b45309",
+    },
+    modeBadgeTitle: {
+        backgroundColor: "#f1f5f9",
+        color: "#334155",
+    },
+    modeDesc: {
+        color: "#9ca3af",
+        fontSize: 9,
+        fontWeight: "600",
+        marginTop: 2,
+        textAlign: "center",
+    },
+    loadMoreButton: {
+        alignItems: "center",
+        alignSelf: "center",
+        backgroundColor: ACCENT,
+        borderRadius: radius.md,
+        justifyContent: "center",
+        marginTop: spacing.sm,
+        minHeight: 40,
+        minWidth: 160,
+        paddingHorizontal: spacing.lg,
+        paddingVertical: 10,
+    },
+    loadMoreButtonDisabled: {
+        opacity: 0.6,
+    },
+    loadMoreText: {
+        color: "#ffffff",
+        fontSize: 13,
+        fontWeight: "800",
     },
     transcriptCard: {
         backgroundColor: "#ffffff",

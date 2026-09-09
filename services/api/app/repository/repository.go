@@ -248,6 +248,14 @@ func (s *Repositories) createCompositeIndexes() {
 		`CREATE INDEX IF NOT EXISTS idx_trgm_kajian_title    ON kajian USING GIN (title gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_kajian_speaker  ON kajian USING GIN (speaker gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_kajian_transcript_embedding_hnsw ON kajian_transcript USING hnsw (embedding vector_cosine_ops)`,
+		// Stored tsvector for the transcript search so ranking never recomputes
+		// to_tsvector per matched row (PG12+ generated column). The expression
+		// index below stays as a fallback for databases without the column.
+		`ALTER TABLE kajian_transcript ADD COLUMN IF NOT EXISTS text_tsv tsvector GENERATED ALWAYS AS (to_tsvector('indonesian', text)) STORED`,
+		`CREATE INDEX IF NOT EXISTS idx_kajian_transcript_text_tsv ON kajian_transcript USING GIN (text_tsv)`,
+		`CREATE INDEX IF NOT EXISTS idx_kajian_transcript_text_fts ON kajian_transcript USING GIN (to_tsvector('indonesian', text))`,
+		// Trigram index backing the typo-tolerant `query <% text` candidate list of the transcript search.
+		`CREATE INDEX IF NOT EXISTS idx_trgm_kajian_transcript_text ON kajian_transcript USING GIN (text gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_perawi_latin    ON perawi USING GIN (nama_latin gin_trgm_ops)`,
 		`CREATE INDEX IF NOT EXISTS idx_trgm_perawi_arab     ON perawi USING GIN (nama_arab gin_trgm_ops)`,
 	}

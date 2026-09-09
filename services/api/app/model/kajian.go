@@ -35,7 +35,10 @@ type KajianTranscript struct {
 	EndSeconds   int     `json:"end_seconds" gorm:"not null"`
 	Text         string             `json:"text" gorm:"type:text;not null"`
 	TimestampURL string             `json:"timestamp_url" gorm:"type:varchar(1024)"`
-	Embedding    pgvector.Vector    `json:"embedding,omitempty" gorm:"type:vector(256)"`
+	// default:null makes GORM skip the column on insert when the value is the
+	// zero Vector; otherwise it serialises as '[]', which Postgres rejects
+	// ("vector must have at least 1 dimension") and every seeded chunk fails.
+	Embedding    pgvector.Vector    `json:"embedding,omitempty" gorm:"type:vector(256);default:null"`
 	Kajian       *Kajian            `json:"kajian,omitempty" gorm:"foreignKey:KajianID;-:migration"`
 }
 
@@ -54,6 +57,39 @@ type SearchTranscriptResult struct {
 	ThumbnailURL string  `json:"thumbnail_url"`
 	Score        float64 `json:"score,omitempty"`
 	MatchMode    string  `json:"match_mode"`
+	// MatchReason explains why the row matched: phrase | all_terms |
+	// some_terms | fuzzy | title. Prefer it over MatchMode for badges.
+	MatchReason string `json:"match_reason"`
+	// MatchCount (semantic mode) is how many chunks of this kajian matched;
+	// the row itself is the best one.
+	MatchCount int `json:"match_count,omitempty"`
+	// MatchedTerms are surface words in this chunk that matched but are not
+	// in the query or its variants (fuzzy hits), so clients can highlight them.
+	MatchedTerms []string `json:"matched_terms,omitempty"`
+	// Description is the kajian description; shown as the snippet when only
+	// the title/topic/description matched.
+	Description string `json:"description,omitempty"`
+}
+
+// SearchTranscriptMeta describes the result set of a transcript search beyond
+// the page that was returned.
+type SearchTranscriptMeta struct {
+	// Mode is the normalised search mode that was actually applied
+	// (exact | semantic | hybrid), whatever the client sent.
+	Mode string `json:"mode"`
+	// Total is the size of the ranked result set (exact mode: the real match
+	// count, which may exceed what is pageable).
+	Total int64 `json:"total"`
+	// KajianCount is the number of distinct kajian (videos) in the result set.
+	KajianCount int `json:"kajian_count"`
+	// HasMore reports whether another page exists after the returned one.
+	HasMore bool `json:"has_more"`
+	// Truncated is true when at least one candidate list hit its cap, so
+	// Total is a lower bound ("300+").
+	Truncated bool `json:"truncated"`
+	// ExpandedTerms are the spelling variants the search also matched on, so a
+	// client can highlight "salat" when the user typed "sholat".
+	ExpandedTerms []string `json:"expanded_terms"`
 }
 
 type CreateKajianRequest struct {
