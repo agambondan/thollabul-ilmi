@@ -301,6 +301,9 @@ const en = {
     "search.type.all": "All",
     "search.type.ayah": "Al-Quran",
     "search.type.hadith": "Hadith",
+    "search.mode_keyword": "Keyword",
+    "search.mode_makna": "Meaning",
+    "search.ask_answer": "Answer",
     "bookmarks.my_title": "My Bookmarks",
     "bookmarks.empty": "No bookmarks yet.",
     "bookmarks.empty_hint":

@@ -294,6 +294,9 @@ const id = {
     "search.type.all": "Semua",
     "search.type.ayah": "Al-Quran",
     "search.type.hadith": "Hadith",
+    "search.mode_keyword": "Kata Kunci",
+    "search.mode_makna": "Makna",
+    "search.ask_answer": "Jawaban",
     "bookmarks.my_title": "Bookmark Saya",
     "bookmarks.empty": "Belum ada bookmark.",
     "bookmarks.empty_hint":

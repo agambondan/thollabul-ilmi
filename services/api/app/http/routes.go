@@ -143,6 +143,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	newLessonController := controllers.NewLessonController(newServices)
 	newAdzanSoundController := controllers.NewAdzanSoundController(newServices)
 	newContentReportController := controllers.NewContentReportController(newServices)
+	newSemanticSearchController := controllers.NewSemanticSearchController(newServices)
 
 	app.Use(middlewares.MetricsMiddleware())
 	app.Get("/health", func(c *fiber.Ctx) error {
@@ -255,6 +256,20 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 
 	// Search (public) with stricter rate limit
 	master.Get("/search", searchLimiter, newSearchController.Search)
+
+	// Semantic Search & Ask (public) with rate limit
+	semanticLimiter := limiter.New(limiter.Config{
+		Max:        viper.GetInt("RATE_LIMIT_SEARCH"),
+		Expiration: 1 * time.Minute,
+		KeyGenerator: func(c *fiber.Ctx) string {
+			if uid := c.Locals("userId"); uid != nil {
+				return "semantic:" + uid.(string)
+			}
+			return "semantic:ip:" + c.IP()
+		},
+	})
+	master.Get("/search/semantic", semanticLimiter, newSemanticSearchController.SemanticSearch)
+	master.Post("/ask", semanticLimiter, newSemanticSearchController.Ask)
 
 	// Mobile Sync (public)
 	master.Get("/sync", newSyncController.InitialSync)
@@ -463,6 +478,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/siroh/categories/:slug", newSirohController.FindCategoryBySlug)
 	master.Get("/siroh/contents", newSirohController.FindAllContents)
 	master.Get("/siroh/contents/:slug", newSirohController.FindContentBySlug)
+	master.Get("/sirah/map", newLocationController.FindAll)
 	master.Post("/siroh/categories", middlewares.EditorOrAdminMiddleware(), newSirohController.CreateCategory)
 	master.Put("/siroh/categories/:id", middlewares.EditorOrAdminMiddleware(), newSirohController.UpdateCategory)
 	master.Delete("/siroh/categories/:id", middlewares.EditorOrAdminMiddleware(), newSirohController.DeleteCategory)

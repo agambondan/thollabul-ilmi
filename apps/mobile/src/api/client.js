@@ -432,6 +432,37 @@ export const searchGlobal = async (
     };
 };
 
+export const searchSemantic = async (
+    query,
+    { types = [], limit = 10 } = {},
+) => {
+    const normalizedQuery = `${query ?? ""}`.trim();
+    if (!normalizedQuery) {
+        return { query: normalizedQuery, results: [], count: 0 };
+    }
+    const params = new URLSearchParams({
+        q: normalizedQuery,
+        limit: `${limit}`,
+    });
+    if (types.length) params.set("types", types.join(","));
+    const payload = await requestJson(
+        `/api/v1/search/semantic?${params.toString()}`,
+    );
+    return payload?.data ?? payload;
+};
+
+export const askQuestion = async (question, { types = [] } = {}) => {
+    const normalizedQuestion = `${question ?? ""}`.trim();
+    if (!normalizedQuestion) {
+        return { answer: "", sources: [], confidence: 0 };
+    }
+    const payload = await postJson("/api/v1/ask", {
+        question: normalizedQuestion,
+        ...(types.length ? { types } : {}),
+    });
+    return payload?.data ?? payload;
+};
+
 const normalizeSearchText = (value = "") => `${value}`.trim().toLowerCase();
 const includesQuery = (value = "", query = "") =>
     normalizeSearchText(value).includes(normalizeSearchText(query));
@@ -976,4 +1007,20 @@ export const getPrayerTimes = async ({
     const prayers = payload?.prayers ?? payload?.data?.prayers;
     if (!prayers) throw new Error("Prayer schedule is not available yet.");
     return prayers;
+};
+
+export const getLocations = async (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    const payload = await requestJson(
+        `/api/v1/locations${query ? `?${query}` : ""}`,
+    );
+    return pickItems(payload);
+};
+
+export const getSirahMap = async (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    const payload = await requestJson(
+        `/api/v1/sirah/map${query ? `?${query}` : ""}`,
+    );
+    return pickItems(payload);
 };

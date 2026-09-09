@@ -5,7 +5,7 @@ import { SkeletonInline } from "@/components/skeleton/Skeleton";
 import { useLocale } from "@/context/Locale";
 import { usePathname, useRouter } from "next/navigation";
 import { useLayoutMode } from "@/lib/useLayoutMode";
-import { searchApi } from "@/lib/api";
+import { searchApi, semanticSearchApi } from "@/lib/api";
 import { getSurahName } from "@/lib/surahList";
 import { getLocalizedField, getLocalizedTranslation } from "@/lib/translation";
 import Link from "next/link";
@@ -32,6 +32,78 @@ const TYPE_VALUES = [
     "kajian",
     "perawi",
 ];
+
+const SEMANTIC_TYPES = [
+    { value: "", label: "Semua" },
+    { value: "quran", label: "Quran" },
+    { value: "hadith", label: "Hadith" },
+    { value: "tafsir", label: "Tafsir" },
+    { value: "asbabun_nuzul", label: "Asbabun Nuzul" },
+    { value: "doa", label: "Doa" },
+    { value: "fiqh", label: "Fiqh" },
+    { value: "sirah", label: "Sirah" },
+    { value: "kajian", label: "Kajian" },
+];
+
+const SEMANTIC_TYPE_LABELS = SEMANTIC_TYPES.reduce((acc, t) => {
+    if (t.value) acc[t.value] = t.label;
+    return acc;
+}, {});
+
+const SEMANTIC_SOURCE_HREF = {
+    hadith: ({ metadata }) =>
+        metadata?.book_slug
+            ? `/hadith/${metadata.book_slug}#${metadata.number ?? ""}`
+            : null,
+    kajian: ({ metadata }) => metadata?.timestamp_url || null,
+    doa: () => "/doa",
+};
+
+function SemanticResultCard({ result }) {
+    let metadata = {};
+    try {
+        metadata = JSON.parse(result.metadata || "{}");
+    } catch {
+        metadata = {};
+    }
+    const href = SEMANTIC_SOURCE_HREF[result.content_type]?.({ metadata });
+    const typeLabel =
+        SEMANTIC_TYPE_LABELS[result.content_type] || result.content_type;
+
+    const body = (
+        <>
+            <span className='inline-block text-[11px] font-semibold uppercase tracking-wide text-purple-600 dark:text-purple-400 mb-1'>
+                {typeLabel}
+            </span>
+            <p className='text-sm text-gray-700 dark:text-gray-200 line-clamp-4 whitespace-pre-line'>
+                {result.chunk_text}
+            </p>
+        </>
+    );
+
+    const cardClass =
+        "block p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-purple-300 dark:hover:border-purple-700 transition-colors";
+
+    if (href) {
+        const isExternal = href.startsWith("http");
+        return isExternal ? (
+            <a
+                href={href}
+                target='_blank'
+                rel='noreferrer'
+                className={cardClass}
+            >
+                {body}
+            </a>
+        ) : (
+            <Link href={href} className={cardClass}>
+                {body}
+            </Link>
+        );
+    }
+
+    return <div className={cardClass}>{body}</div>;
+}
 
 const searchHref = (basePath, q, type) =>
     `${basePath}?q=${encodeURIComponent(q)}&type=${type}`;
@@ -250,6 +322,38 @@ export default function SearchClient({
     const [error, setError] = useState("");
     const inputRef = useRef(null);
 
+    const [mode, setMode] = useState("keyword");
+    const [semanticType, setSemanticType] = useState("");
+    const [semanticResults, setSemanticResults] = useState(null);
+    const [askAnswer, setAskAnswer] = useState(null);
+    const [isSemanticLoading, setIsSemanticLoading] = useState(false);
+    const [semanticError, setSemanticError] = useState("");
+
+    const doSemanticSearch = useCallback(
+        async (q, contentType) => {
+            if (!q.trim()) return;
+            setIsSemanticLoading(true);
+            setSemanticError("");
+            setAskAnswer(null);
+            const types = contentType ? [contentType] : [];
+            try {
+                const [searchRes, askRes] = await Promise.all([
+                    semanticSearchApi.search(q, types, 10),
+                    semanticSearchApi.ask(q, types),
+                ]);
+                const searchData = await searchRes.json();
+                const askData = await askRes.json();
+                setSemanticResults(searchData);
+                setAskAnswer(askData);
+            } catch {
+                setSemanticError(t("search.error") || "Terjadi kesalahan");
+            } finally {
+                setIsSemanticLoading(false);
+            }
+        },
+        [t],
+    );
+
     const doSearch = useCallback(
         async (q, tp, pg, append) => {
             if (!q.trim()) return;
@@ -321,6 +425,10 @@ export default function SearchClient({
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (mode === "makna") {
+            doSemanticSearch(query, semanticType);
+            return;
+        }
         setPage(0);
         syncUrl(query, type);
         doSearch(query, type, 0, false);
@@ -331,6 +439,15 @@ export default function SearchClient({
         setPage(0);
         syncUrl(query, newType);
         if (query.trim()) doSearch(query, newType, 0, false);
+    };
+
+    const handleSemanticTypeChange = (newType) => {
+        setSemanticType(newType);
+        if (query.trim()) doSemanticSearch(query, newType);
+    };
+
+    const handleModeChange = (newMode) => {
+        setMode(newMode);
     };
 
     const handleLoadMore = () => {
@@ -369,31 +486,121 @@ export default function SearchClient({
                 </button>
             </form>
 
-            <div className='flex gap-2 mb-6 flex-wrap'>
-                {TYPES.map((typeItem) => (
-                    <button
-                        key={typeItem.value}
-                        onClick={() => handleTypeChange(typeItem.value)}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                            type === typeItem.value
-                                ? "bg-emerald-700 text-white"
-                                : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600"
-                        }`}
-                    >
-                        {typeItem.label}
-                    </button>
-                ))}
+            <div className='grid grid-cols-2 gap-1.5 mb-4 bg-gray-50 dark:bg-slate-900/50 p-1 rounded-xl max-w-xs'>
+                <button
+                    type='button'
+                    onClick={() => handleModeChange("keyword")}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                        mode === "keyword"
+                            ? "bg-emerald-600 text-white shadow-sm"
+                            : "text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-slate-800"
+                    }`}
+                >
+                    🔤 {t("search.mode_keyword") || "Kata Kunci"}
+                </button>
+                <button
+                    type='button'
+                    onClick={() => handleModeChange("makna")}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                        mode === "makna"
+                            ? "bg-purple-600 text-white shadow-sm"
+                            : "text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-slate-800"
+                    }`}
+                >
+                    🧠 {t("search.mode_makna") || "Makna"}
+                </button>
             </div>
 
-            {isLoading && <SkeletonInline rows={4} />}
-
-            {error && (
-                <p className='text-sm text-red-500 dark:text-red-400'>
-                    {error}
-                </p>
+            {mode === "keyword" ? (
+                <div className='flex gap-2 mb-6 flex-wrap'>
+                    {TYPES.map((typeItem) => (
+                        <button
+                            key={typeItem.value}
+                            onClick={() => handleTypeChange(typeItem.value)}
+                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                                type === typeItem.value
+                                    ? "bg-emerald-700 text-white"
+                                    : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-slate-600"
+                            }`}
+                        >
+                            {typeItem.label}
+                        </button>
+                    ))}
+                </div>
+            ) : (
+                <div className='flex gap-2 mb-6 flex-wrap'>
+                    {SEMANTIC_TYPES.map((typeItem) => (
+                        <button
+                            key={typeItem.value || "all"}
+                            onClick={() =>
+                                handleSemanticTypeChange(typeItem.value)
+                            }
+                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                                semanticType === typeItem.value
+                                    ? "bg-purple-600 text-white"
+                                    : "bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 hover:bg-purple-100 dark:hover:bg-slate-600"
+                            }`}
+                        >
+                            {typeItem.label}
+                        </button>
+                    ))}
+                </div>
             )}
 
-            {results && !isLoading && (
+            {mode === "makna" ? (
+                <>
+                    {isSemanticLoading && <SkeletonInline rows={4} />}
+
+                    {semanticError && (
+                        <p className='text-sm text-red-500 dark:text-red-400'>
+                            {semanticError}
+                        </p>
+                    )}
+
+                    {!isSemanticLoading && askAnswer && (
+                        <div className='mb-6 p-4 rounded-xl border border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-900/20'>
+                            <p className='text-[11px] font-semibold uppercase tracking-wide text-purple-600 dark:text-purple-400 mb-1'>
+                                🧠 {t("search.ask_answer") || "Jawaban"}
+                            </p>
+                            <p className='text-sm text-gray-700 dark:text-gray-200 whitespace-pre-line'>
+                                {askAnswer.answer}
+                            </p>
+                        </div>
+                    )}
+
+                    {!isSemanticLoading &&
+                        semanticResults &&
+                        (semanticResults.results?.length > 0 ? (
+                            <div className='space-y-2'>
+                                {semanticResults.results.map((r, i) => (
+                                    <SemanticResultCard
+                                        key={`${r.content_type}-${r.content_id}-${i}`}
+                                        result={r}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className='text-center py-12'>
+                                <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm'>
+                                    {t("common.no_results")} &quot;{query}
+                                    &quot;
+                                </p>
+                            </div>
+                        ))}
+                </>
+            ) : (
+                <>
+                    {isLoading && <SkeletonInline rows={4} />}
+
+                    {error && (
+                        <p className='text-sm text-red-500 dark:text-red-400'>
+                            {error}
+                        </p>
+                    )}
+                </>
+            )}
+
+            {mode === "keyword" && results && !isLoading && (
                 <div className='space-y-8'>
                     {isAll ? (
                         <>

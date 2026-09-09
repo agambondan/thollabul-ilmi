@@ -245,6 +245,22 @@ export const searchApi = {
         ),
 };
 
+export const semanticSearchApi = {
+    search: (q, types = [], limit = 10) =>
+        fetch(
+            `${API_URL}/api/v1/search/semantic?q=${encodeURIComponent(q)}${types.length ? `&types=${types.join(",")}` : ""}&limit=${limit}`,
+        ),
+    ask: (question, types = []) =>
+        fetch(`${API_URL}/api/v1/ask`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                question,
+                ...(types.length ? { types } : {}),
+            }),
+        }),
+};
+
 export const doaApi = {
     list: (page = 0, size = 20, lang = "") =>
         fetch(

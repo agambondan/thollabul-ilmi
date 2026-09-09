@@ -11,6 +11,7 @@ Folder ini berisi feature yang sedang dikerjakan atau masih bergerak.
 | [2026-05-23-web-mobile-parity-gap-followup.md](./2026-05-23-web-mobile-parity-gap-followup.md)       | Follow-up gap parity web/mobile: mobile Profile settings implemented, remaining platform decisions tracked                                             |
 | [2026-05-17-sync-performance-task-breakdown.md](./2026-05-17-sync-performance-task-breakdown.md)     | Breakdown task hasil deep review sync web/mobile/backend, CTA, dan performance                                                                         |
 | [2026-09-08-masjid-radio-islamic-directory.md](./2026-09-08-masjid-radio-islamic-directory.md)       | Direktori masjid (pencarian terdekat) & radio dakwah/tilawah Islam; dibangun sebelumnya lalu direview & diperbaiki sebelum commit                       |
+| [2026-09-09-semantic-search-islamic-rag.md](./2026-09-09-semantic-search-islamic-rag.md)             | Semantic search & Ask API (pgvector + LocalHashProvider) jalan end-to-end; UI mobile/web & kualitas retrieval semantik sungguhan masih perlu keputusan  |
 
 ## Cara Pakai
 

@@ -98,6 +98,7 @@ var ModelMigrations []interface{} = []interface{}{
 	model.Masjid{},
 	model.RadioIslamic{},
 	model.UserSettings{},
+	model.ContentEmbedding{},
 	model.ChatMessage{},
 	model.LessonModule{},
 	model.LessonStep{},

@@ -18,7 +18,12 @@ import {
     Search,
     UserRound,
 } from "lucide-react-native";
-import { getSurahs, searchGlobal } from "../api/client";
+import {
+    askQuestion,
+    getSurahs,
+    searchGlobal,
+    searchSemantic,
+} from "../api/client";
 import { ContentCard } from "../components/ContentCard";
 import { IconActionButton, PaperSearchInput } from "../components/Paper";
 import { Screen } from "../components/Screen";
@@ -84,6 +89,35 @@ const resultFieldByFilter = {
     kajian: "kajians",
     perawi: "perawis",
     quran: "ayahs",
+};
+
+const searchModeOptions = [
+    { key: "keyword", label: "Kata Kunci" },
+    { key: "makna", label: "Makna" },
+];
+
+const semanticFilterOptions = [
+    { key: "all", label: "Semua", type: "" },
+    { key: "quran", label: "Quran", type: "quran" },
+    { key: "hadith", label: "Hadith", type: "hadith" },
+    { key: "tafsir", label: "Tafsir", type: "tafsir" },
+    { key: "asbabun_nuzul", label: "Asbabun Nuzul", type: "asbabun_nuzul" },
+    { key: "doa", label: "Doa", type: "doa" },
+    { key: "fiqh", label: "Fiqh", type: "fiqh" },
+    { key: "sirah", label: "Sirah", type: "sirah" },
+    { key: "kajian", label: "Kajian", type: "kajian" },
+];
+
+const semanticTypeLabelByKey = {
+    asbabun_nuzul: "Asbabun Nuzul",
+    blog: "Blog",
+    doa: "Doa",
+    fiqh: "Fiqh",
+    hadith: "Hadith",
+    kajian: "Kajian",
+    quran: "Quran",
+    sirah: "Sirah",
+    tafsir: "Tafsir",
 };
 
 const normalizeQuery = (value = "") => value.trim().toLowerCase();
@@ -314,6 +348,13 @@ export function GlobalSearchScreen({
     const [pageByFilter, setPageByFilter] = useState({});
     const searchGenRef = useRef(0);
     const loadedFullRef = useRef({});
+    const [searchMode, setSearchMode] = useState("keyword");
+    const [semanticFilterKey, setSemanticFilterKey] = useState("all");
+    const [semanticResults, setSemanticResults] = useState(null);
+    const [semanticAnswer, setSemanticAnswer] = useState(null);
+    const [semanticLoading, setSemanticLoading] = useState(false);
+    const [semanticMessage, setSemanticMessage] = useState("");
+    const semanticGenRef = useRef(0);
 
     const featureResults = useMemo(() => findFeatureResults(query), [query]);
     const selectedFilter =
@@ -412,7 +453,7 @@ export function GlobalSearchScreen({
     }, []);
 
     useEffect(() => {
-        if (!hasQuery) {
+        if (!hasQuery || searchMode !== "keyword") {
             setRemoteResultsByFilter(createEmptyResultsByFilter());
             setPageByFilter({});
             loadedFullRef.current = {};
@@ -493,10 +534,64 @@ export function GlobalSearchScreen({
             cancelled = true;
             clearTimeout(timer);
         };
-    }, [featureResults.length, hasQuery, t, trimmedQuery]);
+    }, [featureResults.length, hasQuery, searchMode, t, trimmedQuery]);
 
     useEffect(() => {
-        if (!hasQuery || activeFilter === "all" || activeFilter === "feature")
+        if (!hasQuery || searchMode !== "makna") {
+            setSemanticResults(null);
+            setSemanticAnswer(null);
+            setSemanticLoading(false);
+            setSemanticMessage("");
+            return undefined;
+        }
+
+        const filter =
+            semanticFilterOptions.find(
+                (item) => item.key === semanticFilterKey,
+            ) ?? semanticFilterOptions[0];
+        const types = filter.type ? [filter.type] : [];
+
+        let cancelled = false;
+        const gen = ++semanticGenRef.current;
+        setSemanticLoading(true);
+        setSemanticMessage("");
+
+        const timer = setTimeout(() => {
+            Promise.all([
+                searchSemantic(trimmedQuery, { types, limit: 10 }),
+                askQuestion(trimmedQuery, { types }),
+            ])
+                .then(([searchResult, askResult]) => {
+                    if (cancelled || gen !== semanticGenRef.current) return;
+                    setSemanticResults(searchResult);
+                    setSemanticAnswer(askResult);
+                })
+                .catch(() => {
+                    if (cancelled || gen !== semanticGenRef.current) return;
+                    setSemanticMessage(
+                        "Pencarian makna belum bisa dimuat, coba lagi.",
+                    );
+                })
+                .finally(() => {
+                    if (!cancelled && gen === semanticGenRef.current) {
+                        setSemanticLoading(false);
+                    }
+                });
+        }, 320);
+
+        return () => {
+            cancelled = true;
+            clearTimeout(timer);
+        };
+    }, [hasQuery, searchMode, semanticFilterKey, trimmedQuery]);
+
+    useEffect(() => {
+        if (
+            !hasQuery ||
+            searchMode !== "keyword" ||
+            activeFilter === "all" ||
+            activeFilter === "feature"
+        )
             return undefined;
 
         const filter = searchFilters.find((item) => item.key === activeFilter);
@@ -545,7 +640,14 @@ export function GlobalSearchScreen({
         return () => {
             cancelled = true;
         };
-    }, [activeFilter, hasQuery, remoteResultsByFilter, t, trimmedQuery]);
+    }, [
+        activeFilter,
+        hasQuery,
+        remoteResultsByFilter,
+        searchMode,
+        t,
+        trimmedQuery,
+    ]);
 
     const handleLoadMore = async () => {
         if (loadingMore || activeFilter === "all" || activeFilter === "feature")
@@ -620,6 +722,14 @@ export function GlobalSearchScreen({
 
     const handleSeeAll = (filterKey) => {
         setActiveFilter(filterKey);
+    };
+
+    const handleSearchModeChange = (nextMode) => {
+        setSearchMode(nextMode);
+    };
+
+    const handleSemanticFilterChange = (filterKey) => {
+        setSemanticFilterKey(filterKey);
     };
 
     const searchChips = recentSearches.length
@@ -1003,6 +1113,65 @@ export function GlobalSearchScreen({
         </>
     );
 
+    const renderSemanticResults = () => (
+        <>
+            <View
+                testID={
+                    isWebAppLayout
+                        ? "global-search-semantic-web-app-surface"
+                        : "global-search-semantic-classic-surface"
+                }
+            />
+
+            {!hasQuery ? (
+                <View style={styles.hintCard}>
+                    <View style={styles.hintIcon}>
+                        <Search
+                            color={colors.primary}
+                            size={22}
+                            strokeWidth={2.2}
+                        />
+                    </View>
+                    <Text style={styles.hintTitle}>Cari berdasarkan makna</Text>
+                    <Text style={styles.hintText}>
+                        Ketik pertanyaan atau topik, sistem mencari berdasarkan
+                        makna, bukan hanya kata yang persis sama.
+                    </Text>
+                </View>
+            ) : null}
+
+            {semanticLoading ? <LoadingSearchState label='makna' /> : null}
+
+            {semanticMessage ? (
+                <Text style={styles.message}>{semanticMessage}</Text>
+            ) : null}
+
+            {!semanticLoading && semanticAnswer?.answer ? (
+                <View style={styles.answerCard}>
+                    <Text style={styles.answerLabel}>Jawaban</Text>
+                    <Text style={styles.answerText}>
+                        {semanticAnswer.answer}
+                    </Text>
+                </View>
+            ) : null}
+
+            {!semanticLoading && semanticResults?.results?.length
+                ? semanticResults.results.map((item, index) => (
+                      <ContentCard
+                          eyebrow={
+                              semanticTypeLabelByKey[item.content_type] ||
+                              item.content_type
+                          }
+                          key={`semantic-${item.content_type}-${item.content_id}-${index}`}
+                          numberOfSubtitleLines={4}
+                          style={styles.resultRow}
+                          subtitle={item.chunk_text}
+                      />
+                  ))
+                : null}
+        </>
+    );
+
     if (isWebAppLayout) {
         const webAppSearchTheme = isDarkTheme
             ? WEB_APP_SEARCH_DARK
@@ -1079,28 +1248,19 @@ export function GlobalSearchScreen({
                         </Text>
                     </Pressable>
                 </View>
-                <View style={styles.webAppFilterWrap}>
-                    {webAppFilters.map((filter) => {
-                        const active = filter.key === activeFilter;
-                        const count = filterCounts[filter.key] ?? 0;
-                        const baseLabel = t(filter.labelKey);
-                        const label =
-                            hasQuery && count
-                                ? `${baseLabel} ${count}`
-                                : baseLabel;
-                        const displayLabel =
-                            filter.key === "quran"
-                                ? "Al-Quran"
-                                : filter.key === "hadith"
-                                  ? "Hadith"
-                                  : label;
+                <View style={styles.webAppModeToggleWrap}>
+                    {searchModeOptions.map((option) => {
+                        const active = option.key === searchMode;
                         return (
                             <Pressable
                                 accessibilityRole='button'
-                                key={filter.key}
-                                onPress={() => setActiveFilter(filter.key)}
+                                accessibilityState={{ selected: active }}
+                                key={option.key}
+                                onPress={() =>
+                                    handleSearchModeChange(option.key)
+                                }
                                 style={[
-                                    styles.webAppFilterChip,
+                                    styles.webAppModeToggleChip,
                                     {
                                         backgroundColor: active
                                             ? webAppSearchTheme.active
@@ -1110,7 +1270,7 @@ export function GlobalSearchScreen({
                             >
                                 <Text
                                     style={[
-                                        styles.webAppFilterText,
+                                        styles.webAppModeToggleText,
                                         {
                                             color: active
                                                 ? webAppSearchTheme.activeText
@@ -1118,14 +1278,99 @@ export function GlobalSearchScreen({
                                         },
                                     ]}
                                 >
-                                    {displayLabel}
+                                    {option.label}
                                 </Text>
                             </Pressable>
                         );
                     })}
                 </View>
+                {searchMode === "keyword" ? (
+                    <View style={styles.webAppFilterWrap}>
+                        {webAppFilters.map((filter) => {
+                            const active = filter.key === activeFilter;
+                            const count = filterCounts[filter.key] ?? 0;
+                            const baseLabel = t(filter.labelKey);
+                            const label =
+                                hasQuery && count
+                                    ? `${baseLabel} ${count}`
+                                    : baseLabel;
+                            const displayLabel =
+                                filter.key === "quran"
+                                    ? "Al-Quran"
+                                    : filter.key === "hadith"
+                                      ? "Hadith"
+                                      : label;
+                            return (
+                                <Pressable
+                                    accessibilityRole='button'
+                                    key={filter.key}
+                                    onPress={() => setActiveFilter(filter.key)}
+                                    style={[
+                                        styles.webAppFilterChip,
+                                        {
+                                            backgroundColor: active
+                                                ? webAppSearchTheme.active
+                                                : webAppSearchTheme.chip,
+                                        },
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.webAppFilterText,
+                                            {
+                                                color: active
+                                                    ? webAppSearchTheme.activeText
+                                                    : webAppSearchTheme.chipText,
+                                            },
+                                        ]}
+                                    >
+                                        {displayLabel}
+                                    </Text>
+                                </Pressable>
+                            );
+                        })}
+                    </View>
+                ) : (
+                    <View style={styles.webAppFilterWrap}>
+                        {semanticFilterOptions.map((filter) => {
+                            const active = filter.key === semanticFilterKey;
+                            return (
+                                <Pressable
+                                    accessibilityRole='button'
+                                    key={filter.key}
+                                    onPress={() =>
+                                        handleSemanticFilterChange(filter.key)
+                                    }
+                                    style={[
+                                        styles.webAppFilterChip,
+                                        {
+                                            backgroundColor: active
+                                                ? webAppSearchTheme.active
+                                                : webAppSearchTheme.chip,
+                                        },
+                                    ]}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.webAppFilterText,
+                                            {
+                                                color: active
+                                                    ? webAppSearchTheme.activeText
+                                                    : webAppSearchTheme.chipText,
+                                            },
+                                        ]}
+                                    >
+                                        {filter.label}
+                                    </Text>
+                                </Pressable>
+                            );
+                        })}
+                    </View>
+                )}
                 <View style={styles.webAppSearchResults}>
-                    {renderSearchResults()}
+                    {searchMode === "keyword"
+                        ? renderSearchResults()
+                        : renderSemanticResults()}
                 </View>
             </ScrollView>
         );
@@ -1150,75 +1395,160 @@ export function GlobalSearchScreen({
             }
             headerExtra={
                 <>
-                    <ScrollView
-                        contentContainerStyle={styles.filterContent}
-                        horizontal
-                        keyboardShouldPersistTaps='handled'
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        {searchFilters.map((filter) => {
-                            const active = filter.key === activeFilter;
-                            const count = filterCounts[filter.key] ?? 0;
-                            const baseLabel = t(filter.labelKey);
-                            const label =
-                                hasQuery && count
-                                    ? `${baseLabel} ${count}`
-                                    : baseLabel;
+                    <View style={styles.modeToggleWrap}>
+                        {searchModeOptions.map((option) => {
+                            const active = option.key === searchMode;
                             return (
                                 <Pressable
                                     accessibilityRole='button'
+                                    accessibilityState={{ selected: active }}
                                     android_ripple={{
                                         color: "rgba(91, 110, 91, 0.12)",
                                         borderless: false,
                                     }}
-                                    key={filter.key}
-                                    onPress={() => setActiveFilter(filter.key)}
+                                    key={option.key}
+                                    onPress={() =>
+                                        handleSearchModeChange(option.key)
+                                    }
                                     style={[
-                                        styles.filterChip,
-                                        active && styles.filterChipActive,
+                                        styles.modeToggleChip,
+                                        active && styles.modeToggleChipActive,
                                     ]}
                                 >
                                     <Text
                                         style={[
-                                            styles.filterText,
-                                            active && styles.filterTextActive,
+                                            styles.modeToggleText,
+                                            active &&
+                                                styles.modeToggleTextActive,
                                         ]}
                                     >
-                                        {label}
+                                        {option.label}
                                     </Text>
                                 </Pressable>
                             );
                         })}
-                    </ScrollView>
-                    {!hasQuery ? (
-                        <View style={styles.quickWrap}>
-                            <Text style={styles.quickLabel}>{chipLabel}</Text>
-                            <View style={styles.quickChips}>
-                                {searchChips.slice(0, 6).map((item) => (
+                    </View>
+                    {searchMode === "keyword" ? (
+                        <>
+                            <ScrollView
+                                contentContainerStyle={styles.filterContent}
+                                horizontal
+                                keyboardShouldPersistTaps='handled'
+                                showsHorizontalScrollIndicator={false}
+                            >
+                                {searchFilters.map((filter) => {
+                                    const active = filter.key === activeFilter;
+                                    const count = filterCounts[filter.key] ?? 0;
+                                    const baseLabel = t(filter.labelKey);
+                                    const label =
+                                        hasQuery && count
+                                            ? `${baseLabel} ${count}`
+                                            : baseLabel;
+                                    return (
+                                        <Pressable
+                                            accessibilityRole='button'
+                                            android_ripple={{
+                                                color: "rgba(91, 110, 91, 0.12)",
+                                                borderless: false,
+                                            }}
+                                            key={filter.key}
+                                            onPress={() =>
+                                                setActiveFilter(filter.key)
+                                            }
+                                            style={[
+                                                styles.filterChip,
+                                                active &&
+                                                    styles.filterChipActive,
+                                            ]}
+                                        >
+                                            <Text
+                                                style={[
+                                                    styles.filterText,
+                                                    active &&
+                                                        styles.filterTextActive,
+                                                ]}
+                                            >
+                                                {label}
+                                            </Text>
+                                        </Pressable>
+                                    );
+                                })}
+                            </ScrollView>
+                            {!hasQuery ? (
+                                <View style={styles.quickWrap}>
+                                    <Text style={styles.quickLabel}>
+                                        {chipLabel}
+                                    </Text>
+                                    <View style={styles.quickChips}>
+                                        {searchChips.slice(0, 6).map((item) => (
+                                            <Pressable
+                                                accessibilityRole='button'
+                                                android_ripple={{
+                                                    color: "rgba(91, 110, 91, 0.12)",
+                                                    borderless: false,
+                                                }}
+                                                key={item}
+                                                onPress={() => setQuery(item)}
+                                                style={styles.quickChip}
+                                            >
+                                                <Text style={styles.quickText}>
+                                                    {item}
+                                                </Text>
+                                            </Pressable>
+                                        ))}
+                                    </View>
+                                </View>
+                            ) : null}
+                        </>
+                    ) : (
+                        <ScrollView
+                            contentContainerStyle={styles.filterContent}
+                            horizontal
+                            keyboardShouldPersistTaps='handled'
+                            showsHorizontalScrollIndicator={false}
+                        >
+                            {semanticFilterOptions.map((filter) => {
+                                const active = filter.key === semanticFilterKey;
+                                return (
                                     <Pressable
                                         accessibilityRole='button'
                                         android_ripple={{
                                             color: "rgba(91, 110, 91, 0.12)",
                                             borderless: false,
                                         }}
-                                        key={item}
-                                        onPress={() => setQuery(item)}
-                                        style={styles.quickChip}
+                                        key={filter.key}
+                                        onPress={() =>
+                                            handleSemanticFilterChange(
+                                                filter.key,
+                                            )
+                                        }
+                                        style={[
+                                            styles.filterChip,
+                                            active && styles.filterChipActive,
+                                        ]}
                                     >
-                                        <Text style={styles.quickText}>
-                                            {item}
+                                        <Text
+                                            style={[
+                                                styles.filterText,
+                                                active &&
+                                                    styles.filterTextActive,
+                                            ]}
+                                        >
+                                            {filter.label}
                                         </Text>
                                     </Pressable>
-                                ))}
-                            </View>
-                        </View>
-                    ) : null}
+                                );
+                            })}
+                        </ScrollView>
+                    )}
                 </>
             }
             subtitle={t("search.subtitle")}
             title={t("search.title")}
         >
-            {renderSearchResults()}
+            {searchMode === "keyword"
+                ? renderSearchResults()
+                : renderSemanticResults()}
         </Screen>
     );
 }
@@ -1276,6 +1606,25 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: "800",
     },
+    webAppModeToggleWrap: {
+        flexDirection: "row",
+        gap: spacing.sm,
+        marginBottom: spacing.md,
+    },
+    webAppModeToggleChip: {
+        alignItems: "center",
+        borderRadius: 10,
+        flex: 1,
+        justifyContent: "center",
+        minHeight: 38,
+        paddingHorizontal: spacing.md,
+        paddingVertical: 8,
+    },
+    webAppModeToggleText: {
+        fontSize: 13,
+        fontWeight: "800",
+        textAlign: "center",
+    },
     webAppFilterWrap: {
         flexDirection: "row",
         flexWrap: "wrap",
@@ -1315,6 +1664,35 @@ const styles = StyleSheet.create({
         fontWeight: "900",
     },
     filterTextActive: {
+        color: colors.onPrimary,
+    },
+    modeToggleWrap: {
+        backgroundColor: colors.surface,
+        borderColor: colors.faint,
+        borderRadius: radius.md,
+        borderWidth: 1,
+        flexDirection: "row",
+        gap: spacing.xs,
+        marginBottom: spacing.sm,
+        padding: 4,
+    },
+    modeToggleChip: {
+        alignItems: "center",
+        borderRadius: radius.sm,
+        flex: 1,
+        justifyContent: "center",
+        minHeight: 34,
+        paddingHorizontal: spacing.sm,
+    },
+    modeToggleChipActive: {
+        backgroundColor: colors.primary,
+    },
+    modeToggleText: {
+        color: colors.primary,
+        fontSize: 12,
+        fontWeight: "900",
+    },
+    modeToggleTextActive: {
         color: colors.onPrimary,
     },
     hintCard: {
@@ -1408,6 +1786,27 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "800",
         marginBottom: spacing.md,
+    },
+    answerCard: {
+        backgroundColor: colors.surfaceMuted,
+        borderColor: colors.primary,
+        borderRadius: radius.lg,
+        borderWidth: 1,
+        marginBottom: spacing.md,
+        padding: spacing.md,
+        ...shadows.paper,
+    },
+    answerLabel: {
+        color: colors.primary,
+        fontSize: 11,
+        fontWeight: "900",
+        marginBottom: spacing.xs,
+        textTransform: "uppercase",
+    },
+    answerText: {
+        color: colors.ink,
+        fontSize: 13,
+        lineHeight: 19,
     },
     quickChip: {
         backgroundColor: colors.surface,

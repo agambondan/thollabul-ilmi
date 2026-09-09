@@ -1,8 +1,8 @@
 # Semantic Search & Islamic RAG
 
-Status: `TODO`
+Status: `IN_PROGRESS` — API backend jalan end-to-end, UI mobile/web belum digarap
 Priority: `P2`
-Tanggal: `2026-09-08`
+Tanggal: `2026-09-08` (dipindah ke progress 2026-09-09)
 
 ## Objective
 
@@ -34,14 +34,14 @@ Pengguna bisa mencari dan bertanya lintas Quran, Hadith, Tafsir, Asbabun Nuzul, 
 
 ## Task List
 
-1. Pilih backend vector: PostgreSQL `pgvector` dulu (paling minim infra), upgrade ke Qdrant/Weaviate hanya jika perlu scale.
-2. Tambah migrasi `pgvector` + tabel `content_embeddings`.
-3. Buat chunker konten per type (Quran, Hadith, Tafsir, Asbabun Nuzul, Fiqh, dst).
-4. Buat CLI/job backfill embeddings.
-5. Endpoint semantic search dengan filter konten + source metadata.
-6. Endpoint `POST /ask` dengan retrieval top-k + response grounded + sitasi.
-7. UI mobile/web untuk hasil semantic search & ask.
-8. Guardrail: fallback ke “tidak cukup data” jika retrieval lemah.
+1. ✅ Backend vector: PostgreSQL `pgvector` (`vector(256)`, sama dimensi dengan `kajian_transcript.embedding`), extension sudah di-create otomatis di `Repositories.Migrations()`.
+2. ✅ Migrasi tabel `content_embeddings` — didaftarkan lewat `ModelMigrations` (auto-migrate), bukan file migrasi terpisah.
+3. ✅ Chunker per content type (Quran, Hadith, Tafsir, Asbabun Nuzul, Doa, Fiqh, Sirah, Blog, Kajian) — `cmd/backfill-content-embeddings/main.go`.
+4. ✅ CLI backfill embeddings (`go run ./cmd/backfill-content-embeddings -types ... -limit ... -batch ...`).
+5. ✅ Endpoint `GET /search/semantic?q=&types=&limit=`.
+6. ✅ Endpoint `POST /ask` dengan retrieval + confidence threshold + fallback jawaban.
+7. ❌ UI mobile/web untuk hasil semantic search & ask — belum dikerjakan.
+8. ⚠️ Guardrail dasar ada (fallback text saat similarity < 0.3 / tidak ada hasil), tapi belum ditest dengan skenario adversarial atau red-team query.
 
 ## Acceptance Criteria
 
@@ -52,9 +52,11 @@ Pengguna bisa mencari dan bertanya lintas Quran, Hadith, Tafsir, Asbabun Nuzul, 
 
 ## Evidence
 
-- Commands: `go test ./...`, benchmark API semantic search.
-- Device/API/Web smoke: 10 query uji semantik + verifikasi sitasi.
-- Notes:
+- `go build ./...` dan `go vet ./...` bersih (2026-09-09).
+- Smoke test lokal (docker postgres+redis, DB `thullabul_ilmi`): `-migrate` berhasil bikin tabel `content_embeddings`, `cmd/backfill-content-embeddings -types quran,hadith,doa,fiqh -limit 30` berhasil index 116 chunk tanpa error.
+- `GET /search/semantic` dan `POST /ask` merespons 200 dengan data nyata (bukan cuma fallback kosong) setelah backfill.
+- **Catatan kualitas retrieval:** provider embedding yang dipakai adalah `LocalHashProvider` (hash token + trigram, pure-Go, sama seperti yang dipakai kajian transcript search) — bukan model embedding semantik sungguhan. Hasil test manual: query makna seperti "siapa saja yang berhak menerima zakat" tidak selalu menaikkan chunk fiqh zakat yang relevan ke urutan atas (malah kalah sama chunk topik lain yang share kata umum). Acceptance criteria "menemukan hasil relevan meski kata literal berbeda" **belum sepenuhnya tercapai** dengan provider ini — cocok untuk lexical/hybrid matching (mirip kajian search), tapi lemah untuk true semantic query lintas topik yang beda kosakata. Perlu keputusan: terima trade-off ini (gratis, tanpa dependency eksternal) atau ganti provider ke model embedding sungguhan (mis. OpenAI text-embedding-3-small / lokal sentence-transformer via sidecar) untuk kualitas lebih baik.
+- Bug yang ditemukan & diperbaiki saat verifikasi: kolom `content_embeddings.embedding` sempat didefinisikan `vector(1536)` padahal `LocalHashProvider` menghasilkan 256 dimensi — insert akan gagal di production kalau tidak disamakan ke `vector(256)`.
 
 ## Source of Truth
 
