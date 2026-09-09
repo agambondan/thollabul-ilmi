@@ -50,15 +50,17 @@ describe("SessionCard", () => {
     test("calls signIn on submit", async () => {
         const signIn = jest.fn().mockResolvedValue({});
         useSession.mockReturnValue({ ...defaultSession, signIn });
-        const { getAllByText } = render(<SessionCard />);
+        const { getAllByText, getByPlaceholderText } = render(<SessionCard />);
+        fireEvent.changeText(getByPlaceholderText("Email"), "test@test.com");
+        fireEvent.changeText(getByPlaceholderText("Kata sandi"), "password123");
         await act(async () => {
             fireEvent.press(getAllByText("Masuk")[1]);
         });
         await flushAsyncWork();
         expect(signIn).toHaveBeenCalledTimes(1);
         expect(signIn).toHaveBeenCalledWith({
-            email: expect.any(String),
-            password: expect.any(String),
+            email: "test@test.com",
+            password: "password123",
         });
     });
 
@@ -98,9 +100,11 @@ describe("SessionCard", () => {
         const passwordInput = getByPlaceholderText(
             "Kata sandi (min. 8 karakter)",
         );
+        const confirmPasswordInput = getByPlaceholderText("Ulangi kata sandi");
         fireEvent.changeText(nameInput, "Test User");
         fireEvent.changeText(emailInput, "test@test.com");
         fireEvent.changeText(passwordInput, "password123");
+        fireEvent.changeText(confirmPasswordInput, "password123");
         await act(async () => {
             fireEvent.press(getByText("Buat Akun"));
         });
@@ -110,6 +114,26 @@ describe("SessionCard", () => {
             name: "Test User",
             password: "password123",
         });
+    });
+
+    test("submitRegister is blocked when confirm password does not match", async () => {
+        register.mockResolvedValue({});
+        const { getByText, getByPlaceholderText } = render(<SessionCard />);
+        fireEvent.press(getByText("Daftar"));
+        fireEvent.changeText(getByPlaceholderText("Nama"), "Test User");
+        fireEvent.changeText(getByPlaceholderText("Email"), "test@test.com");
+        fireEvent.changeText(
+            getByPlaceholderText("Kata sandi (min. 8 karakter)"),
+            "password123",
+        );
+        fireEvent.changeText(
+            getByPlaceholderText("Ulangi kata sandi"),
+            "different123",
+        );
+        await act(async () => {
+            fireEvent.press(getByText("Buat Akun"));
+        });
+        expect(register).not.toHaveBeenCalled();
     });
 
     test("forgotPassword calls API", async () => {

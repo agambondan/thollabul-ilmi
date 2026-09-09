@@ -15,16 +15,14 @@ import { forgotPassword, register } from "../api/auth";
 import { colors, radius, spacing } from "../theme";
 import { Card, CardTitle } from "./Card";
 
-const DEV_DEFAULT_EMAIL = __DEV__ ? "admin@tholabul-ilmi.com" : "";
-const DEV_DEFAULT_PASSWORD = __DEV__ ? "Admin@123" : "";
-
 export function SessionCard() {
     const { error, loading, signIn, signOut, user } = useSession();
     const { showError, showInfo, showSuccess } = useFeedback();
     const { t } = useMobileLocale();
     const [name, setName] = useState("");
-    const [email, setEmail] = useState(DEV_DEFAULT_EMAIL);
-    const [password, setPassword] = useState(DEV_DEFAULT_PASSWORD);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [message, setMessage] = useState("");
     const [mode, setMode] = useState("signin");
@@ -83,9 +81,15 @@ export function SessionCard() {
 
     const submitRegister = async () => {
         if (!name.trim() || !email.trim() || !password) return;
-        if (password.length < 8) {
+        const trimmedPassword = password.trim();
+        if (trimmedPassword.length < 8) {
             setMessage(t("session.password.minLength"));
             showInfo(t("session.password.minLength"));
+            return;
+        }
+        if (trimmedPassword !== confirmPassword.trim()) {
+            setMessage(t("session.password.mismatch"));
+            showInfo(t("session.password.mismatch"));
             return;
         }
         setBusy(true);
@@ -94,9 +98,11 @@ export function SessionCard() {
             await register({
                 email: email.trim(),
                 name: name.trim(),
-                password,
+                password: trimmedPassword,
             });
             setMode("signin");
+            setPassword("");
+            setConfirmPassword("");
             setMessage(t("session.register.success"));
             showSuccess(t("session.register.success"));
         } catch (err) {
@@ -141,7 +147,11 @@ export function SessionCard() {
         loading ||
         busy ||
         (isSignIn && (!email || !password)) ||
-        (isRegister && (!name.trim() || !email || password.length < 8)) ||
+        (isRegister &&
+            (!name.trim() ||
+                !email ||
+                password.trim().length < 8 ||
+                password.trim() !== confirmPassword.trim())) ||
         (isForgot && !email);
 
     return (
@@ -225,6 +235,17 @@ export function SessionCard() {
                             )}
                         </Pressable>
                     </View>
+                ) : null}
+                {isRegister ? (
+                    <TextInput
+                        accessibilityLabel={t("session.password.confirmLabel")}
+                        onChangeText={setConfirmPassword}
+                        placeholder={t("session.password.confirmPlaceholder")}
+                        placeholderTextColor={colors.muted}
+                        secureTextEntry={!showPassword}
+                        style={styles.input}
+                        value={confirmPassword}
+                    />
                 ) : null}
 
                 <Pressable
