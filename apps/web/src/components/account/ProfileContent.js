@@ -220,7 +220,7 @@ const ProfileContent = () => {
             );
             setSessionMsg({
                 type: "success",
-                text: "Sesi login lain berhasil dikeluarkan.",
+                text: "Sesi ini dicabut. Perangkat tersebut tidak bisa mendapat akses baru, tapi sesi yang sedang berjalan di sana bisa tetap aktif hingga 24 jam.",
             });
         } catch {
             setSessionMsg({
@@ -597,6 +597,9 @@ const ProfileContent = () => {
                         </p>
                         <p className='mt-1 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
                             Daftar sesi login yang masih aktif di akun ini.
+                            Mencabut sesi memblokir akses baru dari perangkat
+                            itu; sesi yang sedang berjalan bisa tetap aktif
+                            hingga 24 jam.
                         </p>
                     </div>
                     {sessionsFailed && !sessionsLoading ? (
@@ -644,8 +647,8 @@ const ProfileContent = () => {
                                         type='button'
                                     >
                                         {sessionActionId === sessionItem.id
-                                            ? "Keluar..."
-                                            : "Keluar"}
+                                            ? "Mencabut..."
+                                            : "Cabut"}
                                     </button>
                                 )}
                             </div>
