@@ -95,6 +95,15 @@ export default async function RootLayout({ children }) {
             suppressHydrationWarning
         >
             <head>
+                <Script id='gtm-script' strategy='afterInteractive'>
+                    {`
+                        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                        })(window,document,'script','dataLayer','GTM-5KG4F8QG');
+                    `}
+                </Script>
                 <link
                     rel='preconnect'
                     href='https://i.ytimg.com'
@@ -116,6 +125,14 @@ export default async function RootLayout({ children }) {
                 />
             </head>
             <body>
+                <noscript>
+                    <iframe
+                        src='https://www.googletagmanager.com/ns.html?id=GTM-5KG4F8QG'
+                        height='0'
+                        width='0'
+                        style={{ display: "none", visibility: "hidden" }}
+                    />
+                </noscript>
                 {/*
                  * Runs before hydration so dark-mode users do not get a flash
                  * of the light theme on every page load. Navbar, the dashboard
@@ -132,18 +149,6 @@ export default async function RootLayout({ children }) {
                         __html: serializeJsonLd(websiteJsonLd),
                     }}
                 />
-                <Script
-                    src='https://www.googletagmanager.com/gtag/js?id=G-WYXWPX0ZBH'
-                    strategy='afterInteractive'
-                />
-                <Script id='google-analytics' strategy='afterInteractive'>
-                    {`
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag(){dataLayer.push(arguments);}
-                        gtag('js', new Date());
-                        gtag('config', 'G-WYXWPX0ZBH');
-                    `}
-                </Script>
                 <LocaleProvider initialLang={initialLang}>
                     <AuthProvider>
                         <SettingsProvider>
