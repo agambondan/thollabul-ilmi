@@ -49,7 +49,7 @@ func NewUserService(repo repository.UserRepository) UserService {
 
 func (s *userService) Register(req *model.RegisterRequest) (*model.User, error) {
 	if _, err := s.user.FindByEmail(req.Email); err == nil {
-		return nil, errors.New("email already registered")
+		return nil, errors.New("unable to register with the provided details")
 	}
 
 	hashed := lib.PasswordEncrypt(req.Password)

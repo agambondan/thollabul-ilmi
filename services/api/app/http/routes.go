@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"net/http/pprof"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/agambondan/islamic-explorer/app/controllers"
 	"github.com/agambondan/islamic-explorer/app/db"
 	"github.com/agambondan/islamic-explorer/app/http/middlewares"
+	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/repository"
 	service "github.com/agambondan/islamic-explorer/app/services"
 	_ "github.com/agambondan/islamic-explorer/docs"
@@ -216,9 +218,28 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	// Rate limiter for auth endpoints (10 req/min)
 	authLimiter := limiter.New(limiter.Config{Max: viper.GetInt("RATE_LIMIT_AUTH"), Expiration: 1 * time.Minute})
 
+	loginLockout := limiter.New(limiter.Config{
+		Max:                    viper.GetInt("RATE_LIMIT_LOGIN_ACCOUNT"),
+		Expiration:             15 * time.Minute,
+		SkipSuccessfulRequests: true,
+		KeyGenerator: func(c *fiber.Ctx) string {
+			var req model.LoginRequest
+			if err := c.BodyParser(&req); err == nil && req.Email != "" {
+				return "login:acct:" + strings.ToLower(strings.TrimSpace(req.Email))
+			}
+			return "login:ip:" + c.IP()
+		},
+		LimitReached: func(c *fiber.Ctx) error {
+			return c.Status(429).JSON(fiber.Map{
+				"error":       "too many failed login attempts, try again later",
+				"retry_after": 900,
+			})
+		},
+	})
+
 	// Auth (public)
 	master.Post("/auth/register", authLimiter, newUserController.Register)
-	master.Post("/auth/login", authLimiter, newUserController.Login)
+	master.Post("/auth/login", authLimiter, loginLockout, newUserController.Login)
 	master.Post("/auth/refresh", authLimiter, newUserController.Refresh)
 	master.Post("/auth/logout", newUserController.Logout)
 	master.Post("/auth/forgot-password", authLimiter, newUserController.ForgotPassword)
