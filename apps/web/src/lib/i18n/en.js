@@ -248,6 +248,7 @@ const en = {
     "link.notifications": "Notifications",
     "link.profile": "Profile",
     "link.dashboard": "Dashboard",
+    "link.public_site": "Public Site",
     "link.goals": "Learning Goals",
     "link.sholat_tracker": "Prayer Tracker",
     "link.muhasabah": "Self-Reflection",

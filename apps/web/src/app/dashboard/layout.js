@@ -17,6 +17,7 @@ import {
     BsChevronLeft,
     BsChevronRight,
     BsGear,
+    BsHouseDoor,
     BsMoonStarsFill,
     BsPerson,
     BsStickyFill,
@@ -408,6 +409,18 @@ const DashboardLayout = ({ children }) => {
                                             </p>
                                         </div>
                                     </div>
+                                </div>
+
+                                {/* Public site */}
+                                <div className='py-1 border-b border-gray-100 dark:border-slate-700'>
+                                    <Link
+                                        href='/'
+                                        onClick={() => setAccountOpen(false)}
+                                        className='flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                                    >
+                                        <BsHouseDoor className='text-base text-gray-400' />
+                                        {t("link.public_site")}
+                                    </Link>
                                 </div>
 
                                 {/* Account links */}

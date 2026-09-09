@@ -241,6 +241,7 @@ const id = {
     "link.notifications": "Notifikasi",
     "link.profile": "Profil",
     "link.dashboard": "Dashboard",
+    "link.public_site": "Situs Publik",
     "link.goals": "Target Belajar",
     "link.sholat_tracker": "Sholat Tracker",
     "link.muhasabah": "Muhasabah",
