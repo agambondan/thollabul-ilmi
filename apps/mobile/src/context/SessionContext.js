@@ -16,6 +16,7 @@ import {
 import { clearSession, readSession, saveSession } from "../storage/session";
 import { registerPushToken, unregisterPushToken } from "../api/personal";
 import { getPushNotificationRegistration } from "../utils/pushNotifications";
+import { setUnauthorizedHandler } from "../api/client";
 
 const SessionContext = createContext(null);
 
@@ -178,6 +179,34 @@ export function SessionProvider({ children }) {
             setLoading(false);
         }
     }, [persist]);
+
+    const refreshCurrentSession = useCallback(async () => {
+        const stored = await readSession();
+        if (!stored?.refreshToken) {
+            await persist(null);
+            return null;
+        }
+
+        try {
+            const refreshed = await refreshSession(stored.refreshToken);
+            const next = {
+                ...stored,
+                ...refreshed,
+                refreshToken: refreshed.refreshToken || stored.refreshToken,
+                user: refreshed.user || stored.user,
+            };
+            await persist(next);
+            return next.token;
+        } catch {
+            await persist(null);
+            return null;
+        }
+    }, [persist]);
+
+    useEffect(() => {
+        setUnauthorizedHandler(refreshCurrentSession);
+        return () => setUnauthorizedHandler(null);
+    }, [refreshCurrentSession]);
 
     useEffect(() => {
         restore();

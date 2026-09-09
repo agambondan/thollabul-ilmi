@@ -8,7 +8,14 @@ import {
     normalizeDictionary,
     normalizePerawi,
     normalizeKajian,
+    requestJson,
+    setUnauthorizedHandler,
 } from "../api/client";
+import { readSession } from "../storage/session";
+
+jest.mock("../storage/session", () => ({
+    readSession: jest.fn(),
+}));
 
 describe("pickItems", () => {
     test("returns array directly", () => {
@@ -343,5 +350,121 @@ describe("normalizeKajian", () => {
         expect(result.title).toBe("Kajian");
         expect(result.body).toBe("");
         expect(result.meta).toBe("");
+    });
+});
+
+describe("requestJson 401 retry", () => {
+    beforeEach(() => {
+        readSession.mockReset();
+        global.fetch = jest.fn();
+        setUnauthorizedHandler(null);
+    });
+
+    afterEach(() => {
+        setUnauthorizedHandler(null);
+    });
+
+    test("retries once with a refreshed token after a 401", async () => {
+        readSession
+            .mockResolvedValueOnce({ token: "old-token" })
+            .mockResolvedValueOnce({ token: "new-token" });
+
+        global.fetch
+            .mockResolvedValueOnce({
+                ok: false,
+                status: 401,
+                json: async () => ({ message: "expired" }),
+            })
+            .mockResolvedValueOnce({
+                ok: true,
+                status: 200,
+                json: async () => ({ data: "ok" }),
+            });
+
+        const handler = jest.fn().mockResolvedValue("new-token");
+        setUnauthorizedHandler(handler);
+
+        const result = await requestJson("/api/v1/auth/me", { auth: true });
+
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(global.fetch).toHaveBeenCalledTimes(2);
+        expect(global.fetch.mock.calls[1][1].headers.Authorization).toBe(
+            "Bearer new-token",
+        );
+        expect(result).toEqual({ data: "ok" });
+    });
+
+    test("does not retry a second time when the retried request also 401s", async () => {
+        readSession.mockResolvedValue({ token: "old-token" });
+        global.fetch.mockResolvedValue({
+            ok: false,
+            status: 401,
+            json: async () => ({ message: "expired" }),
+        });
+        const handler = jest.fn().mockResolvedValue("new-token");
+        setUnauthorizedHandler(handler);
+
+        await expect(
+            requestJson("/api/v1/auth/me", { auth: true }),
+        ).rejects.toThrow();
+
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(global.fetch).toHaveBeenCalledTimes(2);
+    });
+
+    test("does not retry when no unauthorized handler is registered", async () => {
+        readSession.mockResolvedValue({ token: "old-token" });
+        global.fetch.mockResolvedValue({
+            ok: false,
+            status: 401,
+            json: async () => ({ message: "expired" }),
+        });
+
+        await expect(
+            requestJson("/api/v1/auth/me", { auth: true }),
+        ).rejects.toThrow();
+
+        expect(global.fetch).toHaveBeenCalledTimes(1);
+    });
+
+    test("dedupes concurrent 401s behind a single refresh call", async () => {
+        readSession.mockResolvedValue({ token: "old-token" });
+
+        const handler = jest.fn(
+            () =>
+                new Promise((resolve) =>
+                    setTimeout(() => resolve("new-token"), 10),
+                ),
+        );
+        setUnauthorizedHandler(handler);
+
+        let callCount = 0;
+        global.fetch.mockImplementation(() => {
+            callCount += 1;
+            const isInitialCall = callCount <= 2;
+            return Promise.resolve(
+                isInitialCall
+                    ? {
+                          ok: false,
+                          status: 401,
+                          json: async () => ({ message: "expired" }),
+                      }
+                    : {
+                          ok: true,
+                          status: 200,
+                          json: async () => ({ data: "ok" }),
+                      },
+            );
+        });
+
+        const [a, b] = await Promise.all([
+            requestJson("/api/v1/a", { auth: true }),
+            requestJson("/api/v1/b", { auth: true }),
+        ]);
+
+        expect(handler).toHaveBeenCalledTimes(1);
+        expect(callCount).toBe(4);
+        expect(a).toEqual({ data: "ok" });
+        expect(b).toEqual({ data: "ok" });
     });
 });

@@ -17,8 +17,25 @@ const resolveApiUrl = () => {
 
 export const API_URL = resolveApiUrl();
 
+let unauthorizedHandler = null;
+let refreshPromise = null;
+
+export const setUnauthorizedHandler = (fn) => {
+    unauthorizedHandler = fn;
+};
+
+const handleUnauthorized = () => {
+    if (!unauthorizedHandler) return Promise.resolve(null);
+    if (!refreshPromise) {
+        refreshPromise = unauthorizedHandler().finally(() => {
+            refreshPromise = null;
+        });
+    }
+    return refreshPromise;
+};
+
 export const requestJson = async (path, options = {}) => {
-    const { auth, body: rawBody, headers, ...fetchOptions } = options;
+    const { auth, body: rawBody, headers, _retried, ...fetchOptions } = options;
     const session = auth ? await readSession() : null;
     const body =
         rawBody && typeof rawBody !== "string"
@@ -47,6 +64,13 @@ export const requestJson = async (path, options = {}) => {
     }
 
     if (!response.ok) {
+        if (auth && response.status === 401 && !_retried) {
+            const refreshedToken = await handleUnauthorized();
+            if (refreshedToken) {
+                return requestJson(path, { ...options, _retried: true });
+            }
+        }
+
         let message = `Request failed: ${response.status}`;
         try {
             const error = await response.json();
