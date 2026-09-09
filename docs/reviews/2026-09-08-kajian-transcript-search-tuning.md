@@ -3,11 +3,13 @@
 Tanggal: `2026-09-08`
 Scope: `GET /api/v1/kajian/search` (Go), tab **Cari di Transkrip** di web
 (`apps/web/src/app/kajian/`) dan mobile (`WebAppKajianRoute.js`)
-Status: `DIPERBAIKI` — backend + web + mobile diubah, tes lulus. Versi
-pertama ikut terbawa deploy sesi lain (2026-09-09 01:25 WIB) dan **memicu
-insiden hasil kosong** di production; akar masalahnya (insert transkrip
-gagal sejak kolom `embedding` ada) sudah diperbaiki, butuh deploy ulang —
-lihat [Insiden production](#insiden-production-2026-09-09)
+Status: `DIPERBAIKI & DEPLOYED` — backend + web + mobile diubah, tes lulus.
+Versi pertama ikut terbawa deploy sesi lain (2026-09-09 01:25 WIB) dan
+memicu insiden hasil kosong di production; akar masalahnya (insert
+transkrip gagal sejak kolom `embedding` ada) diperbaiki dan API di-deploy
+ulang 2026-09-09 ±10:30 WIB. Production pulih: 79.777 chunk dari 3.013
+kajian, semua mode mengembalikan hasil — lihat
+[Insiden production](#insiden-production-2026-09-09)
 
 Dipicu pertanyaan user: kenapa hasil "Cari di Transkrip" maksimal 20, dan
 kenapa tiga mode pencarian (Hybrid / Teks Persis / Makna) hasilnya sama
@@ -211,10 +213,15 @@ sebelum harness diisi manual — gejala yang sama.
 dimension`; model baru → sukses; `SeedStaticFromFiles` terhadap DB lokal
   menyimpan 80.087 chunk tanpa satu pun gagal.
 
-**Pemulihan production.** Butuh build + deploy ulang API
-(`make thollabul-api` dari `~/works/me`); langkah `-migrate` di deploy
-akan menjalankan seeder yang sudah benar dan mengisi ulang 5.494 chunk dari
-`kajian.json` server. Tidak ada langkah manual lain.
+**Pemulihan production (2026-09-09).** `make thollabul-api` gagal di
+langkah sync `services/api/data/static` karena `kajian.json` (46 MB) sedang
+ditulis ulang oleh scraper sesi lain (`tar: File shrank`), sehingga salinan
+di server sempat korup; salinan valid `data/static/kajian.json` (yang
+dibaca container) di-copy balik. Image yang sudah terkirim kemudian
+di-migrate + restart tanpa sync (`DEPLOY_SYNC_PATHS=""`). Hasil: 79.777
+chunk dari 3.013 kajian tersimpan, `/kajian/search` dan
+`/kajian/:id/transcripts` normal lagi. Pelajaran: jangan deploy API saat
+scraper masih menulis `kajian.json`.
 
 ---
 
