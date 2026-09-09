@@ -1,10 +1,26 @@
 package repository
 
 import (
+	"fmt"
+	"hash/fnv"
+
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
+
+var leaderboardPseudonymWords = []string{
+	"Sahabat", "Penuntut Ilmu", "Musafir Ilmu", "Pejuang Subuh",
+	"Santri", "Murid", "Perindu Ilmu", "Pencari Hidayah",
+}
+
+func anonymizeLeaderboardName(userID string) string {
+	h := fnv.New32a()
+	h.Write([]byte(userID))
+	sum := h.Sum32()
+	word := leaderboardPseudonymWords[sum%uint32(len(leaderboardPseudonymWords))]
+	return fmt.Sprintf("%s #%04d", word, sum%9000+1000)
+}
 
 type LeaderboardRepository interface {
 	TopStreak(limit int) ([]model.LeaderboardEntry, error)
@@ -39,12 +55,15 @@ func (r *leaderboardRepository) TopStreak(limit int) ([]model.LeaderboardEntry, 
 			SELECT user_id, MAX(streak) AS score FROM streak_counts GROUP BY user_id
 		)
 		SELECT ROW_NUMBER() OVER (ORDER BY ms.score DESC) AS rank,
-			ms.user_id::text, u.name, u.avatar, ms.score
+			ms.user_id::text, ms.score
 		FROM max_streaks ms
 		JOIN "user" u ON u.id = ms.user_id::text
 		WHERE u.deleted_at IS NULL
 		ORDER BY ms.score DESC
 		LIMIT ?`, limit).Scan(&rows).Error
+	for i := range rows {
+		rows[i].Name = anonymizeLeaderboardName(rows[i].UserID)
+	}
 	return rows, err
 }
 
@@ -52,13 +71,16 @@ func (r *leaderboardRepository) TopHafalan(limit int) ([]model.LeaderboardEntry,
 	var rows []model.LeaderboardEntry
 	err := r.db.Raw(`
 		SELECT ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS rank,
-			hp.user_id::text, u.name, u.avatar, COUNT(*) AS score
+			hp.user_id::text, COUNT(*) AS score
 		FROM hafalan_progress hp
 		JOIN "user" u ON u.id = hp.user_id::text
 		WHERE hp.status = 'memorized' AND hp.deleted_at IS NULL AND u.deleted_at IS NULL
-		GROUP BY hp.user_id, u.name, u.avatar
+		GROUP BY hp.user_id
 		ORDER BY score DESC
 		LIMIT ?`, limit).Scan(&rows).Error
+	for i := range rows {
+		rows[i].Name = anonymizeLeaderboardName(rows[i].UserID)
+	}
 	return rows, err
 }
 
@@ -107,13 +129,16 @@ func (r *leaderboardRepository) TopMushahhih(limit int) ([]model.LeaderboardEntr
 	var rows []model.LeaderboardEntry
 	err := r.db.Raw(`
 		SELECT ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS rank,
-			cr.user_id::text, u.name, u.avatar, COUNT(*) AS score
+			cr.user_id::text, COUNT(*) AS score
 		FROM content_reports cr
 		JOIN "user" u ON u.id = cr.user_id::text
 		WHERE cr.status = 'resolved' AND cr.deleted_at IS NULL AND u.deleted_at IS NULL
-		GROUP BY cr.user_id, u.name, u.avatar
+		GROUP BY cr.user_id
 		ORDER BY score DESC
 		LIMIT ?`, limit).Scan(&rows).Error
+	for i := range rows {
+		rows[i].Name = anonymizeLeaderboardName(rows[i].UserID)
+	}
 	return rows, err
 }
 

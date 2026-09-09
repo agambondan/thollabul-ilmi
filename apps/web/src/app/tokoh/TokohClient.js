@@ -123,7 +123,7 @@ export default function TokohClient({ initialItems = [], className = "" }) {
                             <div>
                                 <div className='flex items-start justify-between gap-2 mb-2'>
                                     <h2 className='text-sm font-bold text-gray-900 dark:text-gray-100 line-clamp-1'>
-                                        {item.name}
+                                        {item.nama}
                                     </h2>
                                     {item.era && (
                                         <span className='shrink-0 px-2 py-0.5 rounded-full text-[10px] font-medium bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'>
@@ -131,22 +131,14 @@ export default function TokohClient({ initialItems = [], className = "" }) {
                                         </span>
                                     )}
                                 </div>
-                                {item.arabic_name && (
-                                    <p
-                                        dir='rtl'
-                                        className='text-base text-gray-500 dark:text-gray-400 mb-2 font-arabic'
-                                    >
-                                        {item.arabic_name}
-                                    </p>
-                                )}
                                 <p className='text-xs text-gray-500 dark:text-gray-400 line-clamp-2'>
-                                    {item.short_bio ?? item.biography}
+                                    {item.translation?.idn}
                                 </p>
                             </div>
                             <div className='mt-3 pt-2 border-t border-gray-50 dark:border-slate-700/50 flex items-center justify-between text-[11px] text-gray-400'>
                                 <span>
-                                    {item.birth_year || item.death_year
-                                        ? `${item.birth_year ?? "?"} – ${item.death_year ?? "?"} H`
+                                    {item.tahun_lahir || item.tahun_wafat
+                                        ? `${item.tahun_lahir ?? "?"} – ${item.tahun_wafat ?? "?"} H`
                                         : null}
                                 </span>
                                 <span className='text-indigo-600 dark:text-indigo-400 font-medium'>
@@ -168,7 +160,7 @@ export default function TokohClient({ initialItems = [], className = "" }) {
                         <div className='flex items-start justify-between gap-3 mb-3'>
                             <div>
                                 <h3 className='text-lg font-bold text-gray-900 dark:text-gray-100'>
-                                    {selected.name}
+                                    {selected.nama}
                                 </h3>
                                 {selected.era && (
                                     <span className='inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300'>
@@ -185,47 +177,21 @@ export default function TokohClient({ initialItems = [], className = "" }) {
                             </button>
                         </div>
 
-                        {selected.arabic_name && (
-                            <p
-                                dir='rtl'
-                                className='text-2xl text-gray-700 dark:text-gray-300 mb-3 font-arabic text-right'
-                            >
-                                {selected.arabic_name}
-                            </p>
-                        )}
-
                         <div className='space-y-3 text-xs text-gray-600 dark:text-gray-300 leading-relaxed border-t border-gray-100 dark:border-slate-700 pt-3'>
-                            {selected.field && (
-                                <p>
-                                    <strong className='text-gray-900 dark:text-gray-100'>
-                                        {t("tokoh.field") ?? "Bidang"}:
-                                    </strong>{" "}
-                                    {selected.field}
-                                </p>
-                            )}
-                            {selected.known_for && (
-                                <p>
-                                    <strong className='text-gray-900 dark:text-gray-100'>
-                                        {t("tokoh.known_for") ?? "Dikenal atas"}
-                                        :
-                                    </strong>{" "}
-                                    {selected.known_for}
-                                </p>
-                            )}
-                            {selected.major_works && (
-                                <p>
-                                    <strong className='text-gray-900 dark:text-gray-100'>
-                                        {t("tokoh.major_works") ??
-                                            "Karya utama"}
-                                        :
-                                    </strong>{" "}
-                                    {selected.major_works}
-                                </p>
-                            )}
-                            {selected.biography && (
+                            {selected.translation?.idn && (
                                 <div className='pt-2'>
                                     <p className='whitespace-pre-line text-sm text-gray-700 dark:text-gray-200'>
-                                        {selected.biography}
+                                        {selected.translation.idn}
+                                    </p>
+                                </div>
+                            )}
+                            {selected.translation?.description_idn && (
+                                <div className='mt-2 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl'>
+                                    <p className='text-xs font-semibold text-indigo-700 dark:text-indigo-400 mb-1'>
+                                        {t("tokoh.kontribusi") ?? "Kontribusi"}
+                                    </p>
+                                    <p className='whitespace-pre-line text-sm text-gray-700 dark:text-gray-200'>
+                                        {selected.translation.description_idn}
                                     </p>
                                 </div>
                             )}
