@@ -183,6 +183,7 @@ export const ForumDetailContent = ({
                 <div className='space-y-3'>
                     {answers.map((a) => (
                         <div
+                            id={`answer-${a.id}`}
                             key={a.id}
                             className={`bg-white dark:bg-slate-800 rounded-2xl border p-5 ${a.is_accepted ? "border-emerald-300 dark:border-emerald-700" : "border-gray-100 dark:border-slate-700"}`}
                         >
