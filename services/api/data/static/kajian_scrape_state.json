@@ -936,6 +936,12 @@
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@AladzievieChannel"
     },
+    "DGYHD0NAh2Q": {
+      "attempted_at": "2026-09-09T09:42:34.967082166Z",
+      "retry_after": "2026-09-23T09:42:34.967082166Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@khalidbasalamah"
+    },
     "DJJMHIGnu2Q": {
       "attempted_at": "2026-09-08T17:49:59.024031229Z",
       "retry_after": "2026-09-22T17:49:59.024031229Z",
@@ -2946,6 +2952,12 @@
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@khalidbasalamah"
     },
+    "f9l0VFxr6_M": {
+      "attempted_at": "2026-09-09T09:42:34.967082166Z",
+      "retry_after": "2026-09-23T09:42:34.967082166Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@khalidbasalamah"
+    },
     "fEHVWxIb1y4": {
       "attempted_at": "2026-09-09T07:00:53.013797524Z",
       "retry_after": "2026-09-23T07:00:53.013797524Z",
@@ -4133,6 +4145,12 @@
       "retry_after": "2026-09-22T17:49:59.024031229Z",
       "reason": "no_transcript",
       "channel": "https://www.youtube.com/@AladzievieChannel"
+    },
+    "z0FSY31K-Oo": {
+      "attempted_at": "2026-09-09T09:42:34.967082166Z",
+      "retry_after": "2026-09-23T09:42:34.967082166Z",
+      "reason": "no_transcript",
+      "channel": "https://www.youtube.com/@khalidbasalamah"
     },
     "z0mOn8crTf0": {
       "attempted_at": "2026-09-08T17:49:59.024031229Z",
