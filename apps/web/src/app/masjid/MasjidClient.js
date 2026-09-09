@@ -10,8 +10,23 @@ import {
 } from "@/lib/masjidRadioData";
 import { masjidApi } from "@/lib/api";
 import { pickItems } from "@/lib/personalSync";
+import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
-import { MdLocationOn, MdMosque, MdMyLocation, MdSearch } from "react-icons/md";
+import {
+    MdGridView,
+    MdLocationOn,
+    MdMap,
+    MdMosque,
+    MdMyLocation,
+    MdSearch,
+} from "react-icons/md";
+
+const MasjidMapComponent = dynamic(() => import("./MasjidMapComponent"), {
+    ssr: false,
+    loading: () => (
+        <div className="h-[480px] w-full animate-pulse rounded-3xl bg-gray-100 dark:bg-slate-800" />
+    ),
+});
 
 const normalize = (value) => String(value || "").toLowerCase();
 
@@ -19,6 +34,7 @@ const formatDistance = (value) =>
     typeof value === "number" ? `${value.toFixed(value < 10 ? 1 : 0)} km` : "—";
 
 export function MasjidClientContent({ initialMasjids = [], initialTotal = 0 }) {
+    const [viewMode, setViewMode] = useState("grid");
     const [query, setQuery] = useState("");
     const [domisili, setDomisili] = useState("Semua Jakarta");
     const [masjids, setMasjids] = useState(
@@ -155,62 +171,95 @@ export function MasjidClientContent({ initialMasjids = [], initialTotal = 0 }) {
                         {loading ? "Mencari..." : "Masjid Terdekat"}
                     </button>
                 </div>
-                <div className='mt-3 flex flex-wrap gap-2 text-xs text-gray-500 dark:text-gray-400'>
-                    <span>{visibleMasjids.length} tampil</span>
-                    <span>•</span>
-                    <span>{total} data</span>
-                    {nearby && (
-                        <>
-                            <span>•</span>
-                            <span>Diurutkan berdasarkan jarak</span>
-                        </>
-                    )}
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-3 dark:border-slate-700/60">
+                    <div className="flex flex-wrap gap-2 text-xs text-gray-500 dark:text-gray-400">
+                        <span>{visibleMasjids.length} tampil</span>
+                        <span>•</span>
+                        <span>{total} data</span>
+                        {nearby && (
+                            <>
+                                <span>•</span>
+                                <span>Diurutkan berdasarkan jarak</span>
+                            </>
+                        )}
+                    </div>
+                    <div className="inline-flex rounded-xl bg-gray-100 p-1 dark:bg-slate-700">
+                        <button
+                            type="button"
+                            onClick={() => setViewMode("grid")}
+                            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                                viewMode === "grid"
+                                    ? "bg-white text-emerald-800 shadow-sm dark:bg-slate-900 dark:text-emerald-300"
+                                    : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                            }`}
+                        >
+                            <MdGridView /> Daftar
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setViewMode("map")}
+                            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                                viewMode === "map"
+                                    ? "bg-white text-emerald-800 shadow-sm dark:bg-slate-900 dark:text-emerald-300"
+                                    : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                            }`}
+                        >
+                            <MdMap /> Peta
+                        </button>
+                    </div>
                 </div>
                 {error && (
-                    <p className='mt-3 text-sm font-medium text-red-600 dark:text-red-400'>
+                    <p className="mt-3 text-sm font-medium text-red-600 dark:text-red-400">
                         {error}
                     </p>
                 )}
             </div>
 
-            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-                {visibleMasjids.map((masjid) => {
-                    const distance = masjid.distance_km ?? masjid.distance;
-                    return (
-                        <button
-                            type='button'
-                            key={masjid.id || masjid.name}
-                            onClick={() => setSelected(masjid)}
-                            className='group rounded-3xl border border-gray-100 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-md dark:border-slate-700 dark:bg-slate-800'
-                        >
-                            <div className='mb-3 flex items-start justify-between gap-3'>
-                                <div>
-                                    <h2 className='text-lg font-extrabold text-gray-950 group-hover:text-emerald-700 dark:text-white dark:group-hover:text-emerald-300'>
-                                        {masjid.name}
-                                    </h2>
-                                    <p className='mt-1 text-sm font-semibold text-emerald-700 dark:text-emerald-300'>
-                                        {masjid.district} · {masjid.city}
-                                    </p>
+            {viewMode === "map" ? (
+                <MasjidMapComponent
+                    masjids={visibleMasjids}
+                    onSelect={(m) => setSelected(m)}
+                />
+            ) : (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {visibleMasjids.map((masjid) => {
+                        const distance = masjid.distance_km ?? masjid.distance;
+                        return (
+                            <button
+                                type="button"
+                                key={masjid.id || masjid.name}
+                                onClick={() => setSelected(masjid)}
+                                className="group rounded-3xl border border-gray-100 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+                            >
+                                <div className="mb-3 flex items-start justify-between gap-3">
+                                    <div>
+                                        <h2 className="text-lg font-extrabold text-gray-950 group-hover:text-emerald-700 dark:text-white dark:group-hover:text-emerald-300">
+                                            {masjid.name}
+                                        </h2>
+                                        <p className="mt-1 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+                                            {masjid.district} · {masjid.city}
+                                        </p>
+                                    </div>
+                                    {distance != null && (
+                                        <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+                                            {formatDistance(distance)}
+                                        </span>
+                                    )}
                                 </div>
-                                {distance != null && (
-                                    <span className='rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
-                                        {formatDistance(distance)}
+                                <p className="line-clamp-2 text-sm text-gray-600 dark:text-gray-300">
+                                    {masjid.description || masjid.address}
+                                </p>
+                                <div className="mt-4 flex items-center gap-2 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                                    <MdLocationOn className="shrink-0" />
+                                    <span className="line-clamp-1">
+                                        {masjid.address}
                                     </span>
-                                )}
-                            </div>
-                            <p className='line-clamp-2 text-sm text-gray-600 dark:text-gray-300'>
-                                {masjid.description || masjid.address}
-                            </p>
-                            <div className='mt-4 flex items-center gap-2 text-xs font-semibold text-gray-500 dark:text-gray-400'>
-                                <MdLocationOn className='shrink-0' />
-                                <span className='line-clamp-1'>
-                                    {masjid.address}
-                                </span>
-                            </div>
-                        </button>
-                    );
-                })}
-            </div>
+                                </div>
+                            </button>
+                        );
+                    })}
+                </div>
+            )}
 
             {!visibleMasjids.length && (
                 <div className='rounded-3xl border border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-500 dark:border-slate-700 dark:bg-slate-800 dark:text-gray-300'>

@@ -19,25 +19,25 @@ const Location = require("expo-location");
 const masjidItems = [
     {
         id: 1,
-        name: "Masjid Istiqlal",
-        district: "Sawah Besar",
-        city: "Jakarta Pusat",
-        address: "Jl. Taman Wijaya Kusuma",
-        latitude: -6.1704,
-        longitude: 106.8306,
-        phone: "021-3813294",
-        capacity: 200000,
-        facilities: "Parkir, Wudhu",
-        description: "Masjid terbesar di Asia Tenggara.",
+        name: "Masjid Jami' Al-Barkah (Rodja)",
+        district: "Kramat Jati",
+        city: "Jakarta Timur",
+        address: "Jl. Raya Condet No.27, Batu Ampar",
+        latitude: -6.2704,
+        longitude: 106.8678,
+        phone: "021-87781371",
+        capacity: 2500,
+        facilities: "Kajian sunnah, live streaming Rodja",
+        description: "Masjid pusat Radio Rodja 756 AM, kajian sunnah salaf.",
     },
     {
         id: 2,
-        name: "Masjid Cut Meutia",
-        district: "Menteng",
-        city: "Jakarta Pusat",
-        address: "Jl. Cut Mutiah No.1",
-        latitude: -6.1874,
-        longitude: 106.8331,
+        name: "Masjid Nur-Salma",
+        district: "Setiabudi",
+        city: "Jakarta Selatan",
+        address: "Jl. HR. Rasuna Said Kav. B1-3, Karet Kuningan",
+        latitude: -6.218,
+        longitude: 106.831,
     },
 ];
 
@@ -49,12 +49,12 @@ beforeEach(() => {
 });
 
 describe("MasjidDirectoryContent", () => {
-    test("loads and renders the masjid list", async () => {
+    test("loads and renders the sunnah masjid list", async () => {
         const { getByText } = render(<MasjidDirectoryContent />);
 
         await waitFor(() => {
-            expect(getByText("Masjid Istiqlal")).toBeTruthy();
-            expect(getByText("Masjid Cut Meutia")).toBeTruthy();
+            expect(getByText("Masjid Jami' Al-Barkah (Rodja)")).toBeTruthy();
+            expect(getByText("Masjid Nur-Salma")).toBeTruthy();
         });
         expect(client.getMasjids).toHaveBeenCalledWith({
             page: "1",
@@ -67,18 +67,20 @@ describe("MasjidDirectoryContent", () => {
             <MasjidDirectoryContent />,
         );
 
-        await waitFor(() => expect(getByText("Masjid Istiqlal")).toBeTruthy());
+        await waitFor(() =>
+            expect(getByText("Masjid Jami' Al-Barkah (Rodja)")).toBeTruthy(),
+        );
 
         fireEvent.changeText(
             getByPlaceholderText("Cari nama, kota, atau kecamatan..."),
-            "cut",
+            "nur",
         );
 
         await waitFor(() => {
             expect(client.getMasjids).toHaveBeenLastCalledWith({
                 page: "1",
                 size: "50",
-                q: "cut",
+                q: "nur",
             });
         });
     });
@@ -86,19 +88,23 @@ describe("MasjidDirectoryContent", () => {
     test("opens a detail sheet with address, phone, and facilities", async () => {
         const { getByText } = render(<MasjidDirectoryContent />);
 
-        await waitFor(() => expect(getByText("Masjid Istiqlal")).toBeTruthy());
-        fireEvent.press(getByText("Masjid Istiqlal"));
+        await waitFor(() =>
+            expect(getByText("Masjid Jami' Al-Barkah (Rodja)")).toBeTruthy(),
+        );
+        fireEvent.press(getByText("Masjid Jami' Al-Barkah (Rodja)"));
 
         await waitFor(() => {
-            expect(getByText("Masjid terbesar di Asia Tenggara.")).toBeTruthy();
-            expect(getByText("Jl. Taman Wijaya Kusuma")).toBeTruthy();
-            expect(getByText("021-3813294")).toBeTruthy();
-            expect(getByText("Parkir")).toBeTruthy();
+            expect(
+                getByText("Masjid pusat Radio Rodja 756 AM, kajian sunnah salaf."),
+            ).toBeTruthy();
+            expect(getByText("Jl. Raya Condet No.27, Batu Ampar")).toBeTruthy();
+            expect(getByText("021-87781371")).toBeTruthy();
+            expect(getByText("Kajian sunnah")).toBeTruthy();
         });
 
         fireEvent.press(getByText("Buka Maps"));
         expect(Linking.openURL).toHaveBeenCalledWith(
-            "https://www.google.com/maps/search/?api=1&query=-6.1704,106.8306",
+            "https://www.google.com/maps/search/?api=1&query=-6.2704,106.8678",
         );
     });
 
@@ -114,7 +120,9 @@ describe("MasjidDirectoryContent", () => {
         ]);
 
         const { getByText } = render(<MasjidDirectoryContent />);
-        await waitFor(() => expect(getByText("Masjid Istiqlal")).toBeTruthy());
+        await waitFor(() =>
+            expect(getByText("Masjid Jami' Al-Barkah (Rodja)")).toBeTruthy(),
+        );
 
         fireEvent.press(getByText("Masjid Terdekat"));
 
@@ -135,7 +143,9 @@ describe("MasjidDirectoryContent", () => {
         });
 
         const { getByText } = render(<MasjidDirectoryContent />);
-        await waitFor(() => expect(getByText("Masjid Istiqlal")).toBeTruthy());
+        await waitFor(() =>
+            expect(getByText("Masjid Jami' Al-Barkah (Rodja)")).toBeTruthy(),
+        );
 
         fireEvent.press(getByText("Masjid Terdekat"));
 

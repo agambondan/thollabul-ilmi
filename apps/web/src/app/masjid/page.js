@@ -10,7 +10,7 @@ export const metadata = {
     openGraph: openGraphFor("/masjid"),
     title: "Daftar Masjid Jakarta & Sekitarnya — Thullaabul 'Ilmi",
     description:
-        "Cari masjid di Jakarta dan Bodetabek dengan lokasi, fasilitas, dan jarak dari posisi Anda. Termasuk Masjid Istiqlal, Al-Azhar, Pondok Indah, At-Tin, JIC, dan banyak lagi.",
+        "Daftar masjid ahlussunnah waljama'ah di Jakarta & Bodetabek: Masjid Jami' Al-Barkah (Rodja), Masjid Nur-Salma Kuningan, Masjid Nurim Blok M, Masjid Sunda Kelapa, Masjid Al-Ikhlas Cipete, Baitussalam Billy Moon, BSD, Cibubur. Cari fasilitas, lokasi, dan jarak GPS.",
 };
 
 async function getInitialMasjids() {

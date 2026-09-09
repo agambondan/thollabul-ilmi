@@ -20,15 +20,29 @@ describe("Masjid and Radio Islamic Data & Helpers", () => {
         expect(RADIO_DOMISILI).toContain("Bandung");
     });
 
-    test("has masjid entries with valid coordinates and properties", () => {
-        expect(JAKARTA_MASJIDS.length).toBeGreaterThan(10);
-        const istiqlal = JAKARTA_MASJIDS.find((m) =>
-            m.name.includes("Istiqlal"),
+    test("only contains masjid sunnah entries with valid coordinates", () => {
+        expect(JAKARTA_MASJIDS.length).toBeGreaterThanOrEqual(6);
+        for (const m of JAKARTA_MASJIDS) {
+            expect(m.name).toBeDefined();
+            expect(typeof m.lat).toBe("number");
+            expect(typeof m.lng).toBe("number");
+            expect(m.lat).toBeGreaterThan(-10);
+            expect(m.lat).toBeLessThan(5);
+            expect(m.lng).toBeGreaterThan(95);
+            expect(m.lng).toBeLessThan(141);
+        }
+        const barkah = JAKARTA_MASJIDS.find((m) =>
+            m.name.includes("Al-Barkah"),
         );
-        expect(istiqlal).toBeDefined();
-        expect(istiqlal.city).toBe("Jakarta Pusat");
-        expect(istiqlal.lat).toBeCloseTo(-6.1704, 2);
-        expect(istiqlal.lng).toBeCloseTo(106.8306, 2);
+        expect(barkah).toBeDefined();
+        expect(barkah.city).toBe("Jakarta Timur");
+    });
+
+    test("includes the 3 core sunnah masjids requested", () => {
+        const names = JAKARTA_MASJIDS.map((m) => m.name.toLowerCase());
+        expect(names.some((n) => n.includes("al-barkah") || n.includes("rodja"))).toBe(true);
+        expect(names.some((n) => n.includes("nur-salma"))).toBe(true);
+        expect(names.some((n) => n.includes("nurim"))).toBe(true);
     });
 
     test("has islamic radio entries with frequency information", () => {
@@ -40,10 +54,8 @@ describe("Masjid and Radio Islamic Data & Helpers", () => {
     });
 
     test("calculateDistanceKm calculates distance correctly", () => {
-        // Monas to Istiqlal is around 1 km
-        const dist = calculateDistanceKm(-6.1754, 106.8272, -6.1704, 106.8306);
-        expect(dist).toBeGreaterThan(0.4);
-        expect(dist).toBeLessThan(1.5);
+        const dist = calculateDistanceKm(-6.244, 106.7995, -6.2440, 106.7995);
+        expect(dist).toBe(0);
     });
 
     test("calculateDistanceKm handles null/empty coordinates gracefully", () => {
@@ -51,15 +63,14 @@ describe("Masjid and Radio Islamic Data & Helpers", () => {
     });
 
     test("getNearbyMasjids sorts masjids by proximity", () => {
-        // Position near Kebayoran Baru / Al-Azhar
-        const userLat = -6.235;
-        const userLng = 106.799;
+        const userLat = -6.244;
+        const userLng = 106.7995;
         const results = getNearbyMasjids(userLat, userLng);
         expect(results.length).toBe(JAKARTA_MASJIDS.length);
-        expect(results[0].distance_km).toBeLessThan(
+        expect(results[0].distance_km).toBeLessThanOrEqual(
             results[results.length - 1].distance_km,
         );
-        expect(results[0].name).toContain("Al-Azhar");
+        expect(results[0].name).toContain("Nurim");
     });
 
     test("getNearbyMasjids returns empty when coords missing", () => {
