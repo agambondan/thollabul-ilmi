@@ -9,7 +9,7 @@ User=ubuntu
 WorkingDirectory=/works/me/thollabul-ilmi
 Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 Environment=COOKIES=
-Environment=MAX_VIDEOS=5
+Environment=MAX_VIDEOS=0
 ExecStart=/works/me/thollabul-ilmi/services/api/scripts/scrape_kajian_cron.sh
 StandardOutput=append:/var/log/thollabul-kajian-scrape.log
 StandardError=append:/var/log/thollabul-kajian-scrape.log

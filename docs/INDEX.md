@@ -52,22 +52,23 @@ Panduan navigasi dokumen project. Baca ini sebelum mulai task supaya tidak salah
 
 ## Review Docs
 
-| Dokumen                                                                                                          | Isi                                                                                                |
-| ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| **[reviews/README.md](./reviews/README.md)**                                                                     | **← Hub hasil review lintas platform.**                                                            |
-| [reviews/2026-09-08-kajian-transcript-search-tuning.md](./reviews/2026-09-08-kajian-transcript-search-tuning.md) | Tuning pencarian transkrip kajian: ranking baru, varian ejaan, muat lebih, mode Makna per kajian   |
-| [reviews/2026-09-08-mobile-shell-parity-review.md](./reviews/2026-09-08-mobile-shell-parity-review.md)           | Review `feat/mobile-shell-parity`: 10 temuan diperbaiki + diverifikasi ulang, sudah di-merge       |
-| [reviews/2026-09-08-feature-route-inventory.md](./reviews/2026-09-08-feature-route-inventory.md)                 | **← Inventaris semua route backend/web/mobile (59 feature domain) + todolist review per-platform** |
-| [reviews/2026-09-08-audit-transkrip-kajian.md](./reviews/2026-09-08-audit-transkrip-kajian.md)                   | Audit + fix: 5 video transkrip fabrikasi, videonya memang tanpa caption                            |
-| [reviews/2026-09-05-pagespeed-mobile-audit.md](./reviews/2026-09-05-pagespeed-mobile-audit.md)                   | Audit Lighthouse mobile 31 route: skor performa, root cause LCP/TBT, roadmap SSG                   |
-| [reviews/2026-09-03-audit-pasangan-hadis.md](./reviews/2026-09-03-audit-pasangan-hadis.md)                       | Audit pasangan Arab ↔ terjemahan hadis: sebaran salah pasang per kitab                             |
-| [reviews/2026-09-01-mobile-accessibility-review.md](./reviews/2026-09-01-mobile-accessibility-review.md)         | Sweep aksesibilitas mobile: role, state, label, semantik modal                                     |
-| [reviews/2026-09-01-web-frontend-deep-review.md](./reviews/2026-09-01-web-frontend-deep-review.md)               | Deep review frontend web: UI/UX, a11y, performa, kebenaran data, SEO                               |
-| [reviews/2026-05-13-deep-review-summary.md](./reviews/2026-05-13-deep-review-summary.md)                         | Ringkasan prioritas hasil deep review                                                              |
-| [reviews/2026-05-13-contract-sync-review.md](./reviews/2026-05-13-contract-sync-review.md)                       | Drift kontrak API antara web, mobile, dan backend                                                  |
-| [reviews/2026-05-13-mobile-ui-ux-review.md](./reviews/2026-05-13-mobile-ui-ux-review.md)                         | Risiko bug dan polish UI/UX mobile                                                                 |
-| [reviews/2026-05-13-web-dashboard-review.md](./reviews/2026-05-13-web-dashboard-review.md)                       | Risiko web dashboard/admin dan sync data personal                                                  |
-| [reviews/2026-05-13-verification-log.md](./reviews/2026-05-13-verification-log.md)                               | Evidence command review                                                                            |
+| Dokumen                                                                                                                    | Isi                                                                                                              |
+| -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **[reviews/README.md](./reviews/README.md)**                                                                               | **← Hub hasil review lintas platform.**                                                                          |
+| [reviews/2026-09-09-kajian-scraper-per-channel-migration.md](./reviews/2026-09-09-kajian-scraper-per-channel-migration.md) | Scraper kajian sekarang satu file per channel + tanpa batas video, plus fix cron yang tidak pernah migrate ke DB |
+| [reviews/2026-09-08-kajian-transcript-search-tuning.md](./reviews/2026-09-08-kajian-transcript-search-tuning.md)           | Tuning pencarian transkrip kajian: ranking baru, varian ejaan, muat lebih, mode Makna per kajian                 |
+| [reviews/2026-09-08-mobile-shell-parity-review.md](./reviews/2026-09-08-mobile-shell-parity-review.md)                     | Review `feat/mobile-shell-parity`: 10 temuan diperbaiki + diverifikasi ulang, sudah di-merge                     |
+| [reviews/2026-09-08-feature-route-inventory.md](./reviews/2026-09-08-feature-route-inventory.md)                           | **← Inventaris semua route backend/web/mobile (59 feature domain) + todolist review per-platform**               |
+| [reviews/2026-09-08-audit-transkrip-kajian.md](./reviews/2026-09-08-audit-transkrip-kajian.md)                             | Audit + fix: 5 video transkrip fabrikasi, videonya memang tanpa caption                                          |
+| [reviews/2026-09-05-pagespeed-mobile-audit.md](./reviews/2026-09-05-pagespeed-mobile-audit.md)                             | Audit Lighthouse mobile 31 route: skor performa, root cause LCP/TBT, roadmap SSG                                 |
+| [reviews/2026-09-03-audit-pasangan-hadis.md](./reviews/2026-09-03-audit-pasangan-hadis.md)                                 | Audit pasangan Arab ↔ terjemahan hadis: sebaran salah pasang per kitab                                           |
+| [reviews/2026-09-01-mobile-accessibility-review.md](./reviews/2026-09-01-mobile-accessibility-review.md)                   | Sweep aksesibilitas mobile: role, state, label, semantik modal                                                   |
+| [reviews/2026-09-01-web-frontend-deep-review.md](./reviews/2026-09-01-web-frontend-deep-review.md)                         | Deep review frontend web: UI/UX, a11y, performa, kebenaran data, SEO                                             |
+| [reviews/2026-05-13-deep-review-summary.md](./reviews/2026-05-13-deep-review-summary.md)                                   | Ringkasan prioritas hasil deep review                                                                            |
+| [reviews/2026-05-13-contract-sync-review.md](./reviews/2026-05-13-contract-sync-review.md)                                 | Drift kontrak API antara web, mobile, dan backend                                                                |
+| [reviews/2026-05-13-mobile-ui-ux-review.md](./reviews/2026-05-13-mobile-ui-ux-review.md)                                   | Risiko bug dan polish UI/UX mobile                                                                               |
+| [reviews/2026-05-13-web-dashboard-review.md](./reviews/2026-05-13-web-dashboard-review.md)                                 | Risiko web dashboard/admin dan sync data personal                                                                |
+| [reviews/2026-05-13-verification-log.md](./reviews/2026-05-13-verification-log.md)                                         | Evidence command review                                                                                          |
 
 ---
 

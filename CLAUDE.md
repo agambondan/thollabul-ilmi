@@ -131,6 +131,15 @@ Urutan tier: Bookmark → Search → Reading Progress → Hafalan → Streak →
 - Module Go: `github.com/agambondan/islamic-explorer` (nama lama, jangan ubah tanpa koordinasi)
 - Makefile masih punya target lama (`weddinggo`, `cp-server`) — abaikan, tidak relevan
 - Data content Islam (ayat, hadith) di-seed via `scripts/` atau tool import di root `services/api/`
+- **Data kajian transkrip = folder, bukan satu file** (sejak 2026-09-09):
+  `services/api/data/static/kajian/<channel-slug>.json`, satu file per
+  channel/ustadz (`_index.json` di situ cuma ringkasan buat manusia, bukan
+  dibaca seeder). Kalau nemu referensi ke `data/static/kajian.json` (file
+  tunggal) di kode/dokumen lama, itu sudah basi. Scraper
+  (`cmd/scrape-kajian`) juga sudah tanpa batas video per channel secara
+  default (`-max 0`) — flag lama `-out <file>` diganti `-out-dir <folder>`.
+  Detail lengkap: [`services/api/scripts/scrape_kajian_cron.md`](services/api/scripts/scrape_kajian_cron.md),
+  riwayat migrasi: [`docs/reviews/2026-09-09-kajian-scraper-per-channel-migration.md`](docs/reviews/2026-09-09-kajian-scraper-per-channel-migration.md).
 
 ## Deploy tooling in `ops/deploy-workspace/`
 

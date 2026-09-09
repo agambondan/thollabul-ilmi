@@ -97,26 +97,15 @@ func main() {
 	channel := flag.String("channel", "", "Single channel URL")
 	speaker := flag.String("speaker", "", "Speaker name when using --channel")
 	topic := flag.String("topic", "", "Topic/focus when using --channel")
-	maxVideos := flag.Int("max", 50, "Max videos per channel, 0 for unlimited")
+	maxVideos := flag.Int("max", 0, "Max videos per channel, 0 for unlimited (whole channel history)")
 	cookies := flag.String("cookies", "", "Browser name or cookies.txt path")
 	allowEmptyTranscript := flag.Bool("allow-empty-transcript", false, "Include videos without transcript")
 	skipRetryDays := flag.Int("skip-retry-days", 14, "Days to defer retrying videos with no transcript")
-	out := flag.String("out", defaultOutFile(), "Output JSON path")
+	outDir := flag.String("out-dir", defaultOutDir(), "Output directory: one <slug>.json per channel")
 	channelsFile := flag.String("channels-file", defaultChannelsFile(), "Ustadz/channel JSON file")
 	skipCachePath := flag.String("skip-cache", defaultSkipCacheFile(), "Path to no-transcript skip cache JSON")
+	listChannels := flag.Bool("list-channels", false, "Print each channel's output slug and exit (no scraping)")
 	flag.Parse()
-
-	if _, err := exec.LookPath("yt-dlp"); err != nil {
-		fatalf("yt-dlp not found in PATH")
-	}
-
-	existing, existingMap := loadExisting(*out)
-	_ = existing
-
-	skipCache := loadSkipCache(*skipCachePath)
-	skipCachePathPtr := *skipCachePath
-	retryInterval := time.Duration(*skipRetryDays) * 24 * time.Hour
-	now := time.Now().UTC()
 
 	targets := []Channel{}
 	if strings.TrimSpace(*channel) != "" {
@@ -132,28 +121,107 @@ func main() {
 		targets = loadChannels(*channelsFile)
 	}
 
-	totalNew := 0
-	for _, target := range targets {
-		items := scrapeChannel(target, *maxVideos, *cookies, !*allowEmptyTranscript, *out, existingMap, skipCache, retryInterval, &now, &skipCachePathPtr)
-		for _, item := range items {
-			if _, ok := existingMap[item.VideoID]; !ok {
-				totalNew++
-			}
-			existingMap[item.VideoID] = item
+	if *listChannels {
+		for _, target := range targets {
+			fmt.Printf("%s\t%s\t%s\n", channelSlug(target), target.ChannelURL, target.Name)
 		}
+		return
 	}
 
-	if err := writeItems(*out, mapValues(existingMap)); err != nil {
-		fatalf("write output: %v", err)
+	if _, err := exec.LookPath("yt-dlp"); err != nil {
+		fatalf("yt-dlp not found in PATH")
 	}
+	if err := os.MkdirAll(*outDir, 0o755); err != nil {
+		fatalf("create output dir: %v", err)
+	}
+
+	skipCache := loadSkipCache(*skipCachePath)
+	skipCachePathPtr := *skipCachePath
+	retryInterval := time.Duration(*skipRetryDays) * 24 * time.Hour
+	now := time.Now().UTC()
+
+	totalNew, totalAll := 0, 0
+	for _, target := range targets {
+		channelPath := filepath.Join(*outDir, channelSlug(target)+".json")
+		_, existingMap := loadExisting(channelPath)
+		newItems := scrapeChannel(target, *maxVideos, *cookies, !*allowEmptyTranscript, channelPath, existingMap, skipCache, retryInterval, &now, &skipCachePathPtr)
+		totalNew += len(newItems)
+		totalAll += len(existingMap)
+	}
+	writeManifest(*outDir, targets)
+
 	if err := saveSkipCache(*skipCachePath, skipCache); err != nil {
 		fmt.Fprintf(os.Stderr, "warning: save skip cache: %v\n", err)
 	}
-	fmt.Printf("\n[DONE] Berhasil menyimpan %d video (%d baru) ke %s\n", len(existingMap), totalNew, *out)
+	fmt.Printf("\n[DONE] Berhasil menyimpan %d video (%d baru) ke %s (%d channel)\n", totalAll, totalNew, *outDir, len(targets))
 }
 
-func defaultOutFile() string {
-	return filepath.Join(repoRoot(), "services", "api", "data", "static", "kajian.json")
+// channelSlug derives a stable filename stem from a channel URL, e.g.
+// "https://www.youtube.com/@khalidbasalamah" -> "khalidbasalamah". Two
+// different channels never collide because YouTube handles are unique; if a
+// URL somehow has no usable segment, the ustadz's name is used instead so the
+// scraper still produces a distinct, deterministic file per channel.
+func channelSlug(c Channel) string {
+	s := slugify(lastPathSegment(c.ChannelURL))
+	if s == "" {
+		s = slugify(c.Name)
+	}
+	if s == "" {
+		s = "channel"
+	}
+	return s
+}
+
+func lastPathSegment(url string) string {
+	url = strings.TrimRight(strings.TrimSpace(url), "/")
+	if i := strings.LastIndex(url, "/"); i >= 0 {
+		url = url[i+1:]
+	}
+	return strings.TrimPrefix(url, "@")
+}
+
+var nonSlugChars = regexp.MustCompile(`[^a-z0-9_-]+`)
+
+func slugify(s string) string {
+	s = strings.ToLower(strings.TrimSpace(s))
+	s = nonSlugChars.ReplaceAllString(s, "_")
+	s = strings.Trim(s, "_-")
+	return s
+}
+
+// writeManifest writes a small, git-diff-friendly summary of every channel's
+// file next to the per-channel JSONs. It is not read by the API seeder
+// (readStaticJSONDir skips "_"-prefixed files); it exists purely so an
+// operator can see catalog size without opening 50+ files.
+type manifestEntry struct {
+	Slug       string `json:"slug"`
+	Name       string `json:"nama"`
+	ChannelURL string `json:"channel_url"`
+	Videos     int    `json:"videos"`
+	Chunks     int    `json:"chunks"`
+}
+
+func writeManifest(outDir string, targets []Channel) {
+	entries := make([]manifestEntry, 0, len(targets))
+	for _, target := range targets {
+		slug := channelSlug(target)
+		items, _ := loadExisting(filepath.Join(outDir, slug+".json"))
+		chunks := 0
+		for _, item := range items {
+			chunks += len(item.Transcripts)
+		}
+		entries = append(entries, manifestEntry{Slug: slug, Name: target.Name, ChannelURL: target.ChannelURL, Videos: len(items), Chunks: chunks})
+	}
+	sort.Slice(entries, func(i, j int) bool { return entries[i].Slug < entries[j].Slug })
+	data, err := json.MarshalIndent(entries, "", "    ")
+	if err != nil {
+		return
+	}
+	_ = os.WriteFile(filepath.Join(outDir, "_index.json"), append(data, '\n'), 0o644)
+}
+
+func defaultOutDir() string {
+	return filepath.Join(repoRoot(), "services", "api", "data", "static", "kajian")
 }
 
 func defaultChannelsFile() string {
@@ -290,9 +358,19 @@ func scrapeChannel(channel Channel, maxVideos int, cookies string, onlyWithTrans
 			continue
 		}
 
-		snippets := fetchTranscript(video.VideoID, cookies)
+		snippets, confirmedAbsent := fetchTranscript(video.VideoID, cookies)
 		chunks := chunkTranscript(snippets, 60)
 		if onlyWithTranscript && len(chunks) == 0 {
+			if !confirmedAbsent {
+				// yt-dlp itself failed (network drop, timeout, an
+				// intercepting proxy, a rate limit) rather than cleanly
+				// reporting "no captions" — this is not evidence the video
+				// lacks a transcript, so don't park it in the skip-cache.
+				// Leaving it un-cached means the very next run retries it.
+				fmt.Printf("       [%d/%d] ⚠ %s... (Gagal mengambil, bukan dipastikan tanpa transkrip - dicoba lagi run berikutnya)\n", i+1, len(videos), trim(video.Title, 45))
+				time.Sleep(time.Second)
+				continue
+			}
 			retryAfter := now.Add(retryInterval)
 			skipCache.Entries[video.VideoID] = SkipEntry{AttemptedAt: *now, RetryAfter: retryAfter, Reason: "no_transcript", Channel: channel.ChannelURL}
 			_ = saveSkipCache(*skipCachePath, skipCache)
@@ -346,7 +424,18 @@ func getChannelVideos(channelURL string, maxVideos int, cookies string) []Video 
 		args = append(args, "--playlist-end", strconv.Itoa(maxVideos))
 	}
 	args = append(args, target)
-	stdout, err := runCmd(120*time.Second, "yt-dlp", args...)
+	// yt-dlp has to paginate through YouTube's continuation tokens to
+	// enumerate a channel's videos; an unbounded request ("-max 0", the
+	// default) or a large one walks the whole catalog instead of stopping
+	// early. A prolific channel (Khalid Basalamah, Firanda Andirja, ...) can
+	// hold 2,000+ videos and take well over two minutes to list in full —
+	// the old fixed 120s timeout made every such channel silently report
+	// "0 video" once -max stopped being passed.
+	listTimeout := 120 * time.Second
+	if maxVideos <= 0 || maxVideos > 200 {
+		listTimeout = 30 * time.Minute
+	}
+	stdout, err := runCmd(listTimeout, "yt-dlp", args...)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error fetching channel videos from %s: %v\n", channelURL, err)
 		return nil
@@ -377,10 +466,19 @@ func getChannelVideos(channelURL string, maxVideos int, cookies string) []Video 
 	return videos
 }
 
-func fetchTranscript(videoID string, cookies string) []Snippet {
+// fetchTranscript downloads a video's captions and reports whether the
+// absence of any transcript is a *confirmed* fact rather than a fetch
+// failure. yt-dlp exits 0 with "There are no subtitles for the requested
+// languages" when a video genuinely has none — that is safe to cache. A
+// non-zero exit or a timeout (a dropped connection, a network that
+// intercepts YouTube's TLS — BBG-style — a transient block, a rate limit)
+// means we simply don't know yet, and treating it as "confirmed absent"
+// would park a perfectly normal video in the skip-cache for
+// -skip-retry-days over what was really a connectivity blip.
+func fetchTranscript(videoID string, cookies string) (snippets []Snippet, confirmedAbsent bool) {
 	dir, err := os.MkdirTemp("", "kajian-caption-*")
 	if err != nil {
-		return nil
+		return nil, false
 	}
 	defer os.RemoveAll(dir)
 
@@ -394,17 +492,25 @@ func fetchTranscript(videoID string, cookies string) []Snippet {
 		"-o", stem,
 		"https://www.youtube.com/watch?v=" + videoID,
 	}
+	sawFetchError := false
 	for _, mode := range []string{"--write-subs", "--write-auto-subs"} {
 		args := append([]string{}, cookieArgs(cookies)...)
 		args = append(args, mode)
 		args = append(args, base...)
-		_, _ = runCmd(60*time.Second, "yt-dlp", args...)
+		_, err := runCmd(60*time.Second, "yt-dlp", args...)
 		files, _ := filepath.Glob(filepath.Join(dir, "caption_tmp*.vtt"))
 		if len(files) > 0 {
-			return dedupeRollingCaptions(parseVTT(pickVTT(files)))
+			// yt-dlp can exit non-zero after partially succeeding (e.g. one
+			// requested language 429s after another already downloaded) —
+			// a real transcript in hand always counts as success regardless
+			// of the exit code.
+			return dedupeRollingCaptions(parseVTT(pickVTT(files))), false
+		}
+		if err != nil {
+			sawFetchError = true
 		}
 	}
-	return nil
+	return nil, !sawFetchError
 }
 
 func parseVTT(path string) []Snippet {

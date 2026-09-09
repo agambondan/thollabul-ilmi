@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/agambondan/islamic-explorer/app/model"
 	"gorm.io/gorm"
@@ -83,6 +85,64 @@ func readStaticJSON(name string, dst interface{}) bool {
 		return false
 	}
 	return true
+}
+
+// readStaticJSONDir reads every "*.json" file directly inside a static-data
+// subdirectory (one file per channel/ustadz, e.g. data/static/kajian/*.json)
+// and concatenates their contents into one slice. Each file must decode as
+// []T on its own; a file that fails to parse is logged and skipped rather
+// than aborting the whole seed. Files starting with "_" are skipped (e.g. a
+// human-readable "_index.json" manifest the scraper writes alongside them).
+func readStaticJSONDir[T any](dirName string) []T {
+	candidateDirs := []string{
+		"data/static/" + dirName,
+		"/app/data/static/" + dirName,
+		"services/api/data/static/" + dirName,
+		"../data/static/" + dirName,
+		"../../data/static/" + dirName,
+		"../../../data/static/" + dirName,
+	}
+
+	var foundDir string
+	for _, d := range candidateDirs {
+		if info, err := os.Stat(d); err == nil && info.IsDir() {
+			foundDir = d
+			break
+		}
+	}
+	if foundDir == "" {
+		log.Printf("[seeder] direktori %s tidak ditemukan di lokasi mana pun — skip", dirName)
+		return nil
+	}
+
+	entries, err := os.ReadDir(foundDir)
+	if err != nil {
+		log.Printf("[seeder] baca direktori %s gagal: %v", foundDir, err)
+		return nil
+	}
+
+	var all []T
+	for _, entry := range entries {
+		name := entry.Name()
+		if entry.IsDir() || !strings.HasSuffix(name, ".json") || strings.HasPrefix(name, "_") {
+			continue
+		}
+		path := filepath.Join(foundDir, name)
+		f, err := os.Open(path)
+		if err != nil {
+			log.Printf("[seeder] %s gagal dibuka: %v", path, err)
+			continue
+		}
+		var rows []T
+		decodeErr := json.NewDecoder(f).Decode(&rows)
+		f.Close()
+		if decodeErr != nil {
+			log.Printf("[seeder] parse %s gagal: %v", path, decodeErr)
+			continue
+		}
+		all = append(all, rows...)
+	}
+	return all
 }
 
 // ── Doa ───────────────────────────────────────────────────────────────────────
@@ -487,9 +547,16 @@ func seedKajianFromFile(db *gorm.DB) {
 		PublishedAt  string            `json:"published_at"`
 		Transcripts  []transcriptChunk `json:"transcripts"`
 	}
-	var rows []row
-	if !readStaticJSON("kajian.json", &rows) {
-		return
+	// One file per channel/ustadz (data/static/kajian/<slug>.json) instead of
+	// a single multi-tens-of-megabytes kajian.json — that file grew too large
+	// to open in an editor as the scrape catalog widened. Falls back to the
+	// legacy single-file layout if the directory does not exist yet, so an
+	// unmigrated checkout still seeds.
+	rows := readStaticJSONDir[row]("kajian")
+	if rows == nil {
+		if !readStaticJSON("kajian.json", &rows) {
+			return
+		}
 	}
 	log.Printf("[seeder] seedKajianFromFile: %d entri", len(rows))
 	transcriptRows, transcriptErrors := 0, 0
@@ -511,7 +578,7 @@ func seedKajianFromFile(db *gorm.DB) {
 				continue
 			}
 			if _, keep := staticKeys[ek.Speaker+"|"+ek.Title]; !keep {
-				db.Where("kajian_id = ?", *ek.ID).Delete(&model.KajianTranscript{})
+				db.Unscoped().Where("kajian_id = ?", *ek.ID).Delete(&model.KajianTranscript{})
 				db.Delete(&model.Kajian{}, *ek.ID)
 			}
 		}
@@ -558,35 +625,60 @@ func seedKajianFromFile(db *gorm.DB) {
 			continue
 		}
 
-		// Hard-delete: the model is soft-deletable, and a plain Delete would
-		// leave one more tombstone copy of every chunk per seed run. The search
-		// queries filter deleted_at, but the table would still grow unbounded.
-		db.Unscoped().Where("kajian_id = ?", *existing.ID).Delete(&model.KajianTranscript{})
-		if len(r.Transcripts) > 0 {
-			for _, chunk := range r.Transcripts {
-				tsURL := fmt.Sprintf("https://youtu.be/%s?t=%d", r.VideoID, chunk.StartSeconds)
-				if r.VideoID == "" {
-					tsURL = r.URL
-				}
-				// Omit the embedding: the zero pgvector.Vector serialises as
-				// '[]' which Postgres rejects, silently dropping every chunk.
-				err := db.Omit("Embedding").Create(&model.KajianTranscript{
-					KajianID:     *existing.ID,
-					VideoID:      r.VideoID,
-					StartSeconds: chunk.StartSeconds,
-					EndSeconds:   chunk.EndSeconds,
-					Text:         chunk.Text,
-					TimestampURL: tsURL,
-				}).Error
-				if err != nil {
-					transcriptErrors++
-					if firstTranscriptErr == nil {
-						firstTranscriptErr = err
-					}
-					continue
-				}
-				transcriptRows++
+		// Upsert each chunk by (kajian_id, start_seconds, end_seconds) instead
+		// of wiping and recreating every row: a chunk whose window is
+		// unchanged keeps its id, so bookmarks/notes pointing at it survive a
+		// re-seed. Only chunks whose window no longer appears in the file
+		// (a re-chunk after improved captions moved the boundaries) get
+		// removed, further down.
+		keepWindows := make(map[[2]int]struct{}, len(r.Transcripts))
+		for _, chunk := range r.Transcripts {
+			keepWindows[[2]int{chunk.StartSeconds, chunk.EndSeconds}] = struct{}{}
+			tsURL := fmt.Sprintf("https://youtu.be/%s?t=%d", r.VideoID, chunk.StartSeconds)
+			if r.VideoID == "" {
+				tsURL = r.URL
 			}
+			// Omit the embedding: the zero pgvector.Vector serialises as '[]'
+			// which Postgres rejects, silently dropping every chunk.
+			err := db.Omit("Embedding").Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "kajian_id"}, {Name: "start_seconds"}, {Name: "end_seconds"}},
+				DoUpdates: clause.AssignmentColumns([]string{"video_id", "text", "timestamp_url", "deleted_at"}),
+			}).Create(&model.KajianTranscript{
+				KajianID:     *existing.ID,
+				VideoID:      r.VideoID,
+				StartSeconds: chunk.StartSeconds,
+				EndSeconds:   chunk.EndSeconds,
+				Text:         chunk.Text,
+				TimestampURL: tsURL,
+			}).Error
+			if err != nil {
+				transcriptErrors++
+				if firstTranscriptErr == nil {
+					firstTranscriptErr = err
+				}
+				continue
+			}
+			transcriptRows++
+		}
+
+		type chunkWindow struct {
+			ID           int
+			StartSeconds int
+			EndSeconds   int
+		}
+		var currentChunks []chunkWindow
+		db.Model(&model.KajianTranscript{}).
+			Where("kajian_id = ?", *existing.ID).
+			Select("id, start_seconds, end_seconds").
+			Scan(&currentChunks)
+		staleIDs := make([]int, 0, len(currentChunks))
+		for _, c := range currentChunks {
+			if _, keep := keepWindows[[2]int{c.StartSeconds, c.EndSeconds}]; !keep {
+				staleIDs = append(staleIDs, c.ID)
+			}
+		}
+		if len(staleIDs) > 0 {
+			db.Unscoped().Where("id IN ?", staleIDs).Delete(&model.KajianTranscript{})
 		}
 	}
 	if transcriptErrors > 0 {
