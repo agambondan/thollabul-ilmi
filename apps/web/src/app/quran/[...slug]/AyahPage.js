@@ -59,7 +59,25 @@ const AyahPage = ({
     const menuContainerRef = useRef(null);
 
     const [tafsirOpen, setTafsirOpen] = useState(false);
-    const tafsirRes = useAsyncResource(() => tafsirApi.byAyah(ayah.id));
+    const tafsirRes = useAsyncResource(async () => {
+        const res = await tafsirApi.byAyah(ayah.id);
+        if (!res.ok) return res;
+        const data = await res.json();
+        // The API returns one object with a named field per tafsir source
+        // (`kemenag`, `ibnu_katsir`), not a list — flatten it into the
+        // {source, text} entries this panel renders.
+        const items = [
+            {
+                source: t("tafsir.kitab_kemenag_label"),
+                text: data?.kemenag?.description_idn,
+            },
+            {
+                source: t("tafsir.kitab_ibnu_katsir_label"),
+                text: data?.ibnu_katsir?.description_idn,
+            },
+        ].filter((entry) => entry.text);
+        return { items };
+    });
 
     const [mufrodatOpen, setMufrodatOpen] = useState(false);
     const mufrodatRes = useAsyncResource(() => mufrodatApi.byAyah(ayah.id));
