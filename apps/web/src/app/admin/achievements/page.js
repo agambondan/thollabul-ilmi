@@ -1,65 +1,475 @@
 "use client";
 
-import GenericAdminCRUD from "@/components/panel/GenericAdminCRUD";
-import { adminAchievementApi } from "@/lib/api";
+import {
+    PanelEmpty,
+    PanelPagination,
+    PanelTable,
+    Td,
+    Th,
+    Tr,
+} from "@/components/panel/DataPanel";
+import { adminAchievementApi, parseApiError } from "@/lib/api";
+import { useLocale } from "@/context/Locale";
+import { useEffect, useState } from "react";
+import { BsPencil, BsPlusCircle, BsTrash } from "react-icons/bs";
+import ModalShell from "@/components/ModalShell";
+
+const EMPTY_FORM = {
+    code: "",
+    name: "",
+    name_en: "",
+    description: "",
+    desc_en: "",
+    icon: "🏆",
+    category: "general",
+    threshold: 1,
+};
 
 const CATEGORIES = [
-    "streak",
-    "hafalan",
-    "bookmark",
-    "tahfiz",
-    "sedekah",
-    "lainnya",
+    { value: "streak", label: "Streak (Keaktifan)" },
+    { value: "hafalan", label: "Hafalan" },
+    { value: "bookmark", label: "Bookmark" },
+    { value: "reading", label: "Baca Quran" },
+    { value: "amalan", label: "Amalan Sunnah" },
+    { value: "general", label: "Umum" },
 ];
 
-export default function AdminAchievementPage() {
+const INPUT_CLASS =
+    "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-700 dark:text-white";
+
+const asItems = (payload) =>
+    payload?.items ?? payload?.data?.items ?? payload?.data ?? payload ?? [];
+
+export default function AdminAchievementsPage() {
+    const { t } = useLocale();
+    const [items, setItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [editId, setEditId] = useState(null);
+    const [form, setForm] = useState(EMPTY_FORM);
+    const [search, setSearch] = useState("");
+    const [deleteId, setDeleteId] = useState(null);
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+
+    const fb = (type, msg) =>
+        window.dispatchEvent(
+            new CustomEvent(type, { detail: { message: msg } }),
+        );
+
+    const load = async () => {
+        setLoading(true);
+        try {
+            const r = await adminAchievementApi.list();
+            const data = await r.json();
+            const nextItems = asItems(data);
+            setItems(Array.isArray(nextItems) ? nextItems : []);
+        } catch {
+            setItems([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        load();
+    }, []);
+
+    const openCreate = () => {
+        setEditId(null);
+        setForm(EMPTY_FORM);
+        setShowModal(true);
+    };
+
+    const openEdit = (item) => {
+        setEditId(item.id ?? item._id);
+        setForm({
+            code: item.code ?? "",
+            name: item.name ?? "",
+            name_en: item.name_en ?? "",
+            description: item.description ?? "",
+            desc_en: item.desc_en ?? "",
+            icon: item.icon ?? "🏆",
+            category: item.category ?? "general",
+            threshold: item.threshold ?? 1,
+        });
+        setShowModal(true);
+    };
+
+    const save = async () => {
+        setSaving(true);
+        try {
+            const payload = {
+                ...form,
+                threshold: Number(form.threshold) || 1,
+            };
+            let res;
+            if (editId) {
+                res = await adminAchievementApi.update(editId, payload);
+            } else {
+                res = await adminAchievementApi.create(payload);
+            }
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.save")),
+                );
+            setShowModal(false);
+            load();
+            fb("admin:success", t("admin.crud.save_success"));
+        } catch (err) {
+            fb("admin:mutation-error", err.message);
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const res = await adminAchievementApi.delete(id);
+            if (!res.ok)
+                throw new Error(
+                    await parseApiError(res, t("admin.error.delete")),
+                );
+            setDeleteId(null);
+            load();
+            fb("admin:success", t("admin.crud.delete_success"));
+        } catch (err) {
+            fb("admin:mutation-error", err.message);
+        }
+    };
+
+    const filtered = items.filter((item) => {
+        const q = search.toLowerCase();
+        return (
+            item.code?.toLowerCase().includes(q) ||
+            item.name?.toLowerCase().includes(q) ||
+            item.name_en?.toLowerCase().includes(q) ||
+            item.category?.toLowerCase().includes(q) ||
+            item.description?.toLowerCase().includes(q)
+        );
+    });
+
+    const totalPages = Math.ceil(filtered.length / pageSize) || 1;
+    const paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+
     return (
-        <GenericAdminCRUD
-            title='Master Pencapaian'
-            description='Kelola badge pencapaian yang bisa di-unlock oleh user.'
-            api={adminAchievementApi}
-            searchableFields={["name", "code", "category"]}
-            fields={[
-                {
-                    key: "code",
-                    label: "Kode",
-                    type: "text",
-                    required: true,
-                    placeholder: "streak-7",
-                },
-                {
-                    key: "name",
-                    label: "Nama",
-                    type: "text",
-                    required: true,
-                },
-                {
-                    key: "category",
-                    label: "Kategori",
-                    type: "select",
-                    required: true,
-                    options: CATEGORIES,
-                },
-                {
-                    key: "icon",
-                    label: "Icon",
-                    type: "text",
-                    placeholder: "🏆",
-                },
-                {
-                    key: "threshold",
-                    label: "Target",
-                    type: "number",
-                    default: 1,
-                    min: 1,
-                },
-                {
-                    key: "description",
-                    label: "Deskripsi",
-                    type: "textarea",
-                    rows: 3,
-                },
-            ]}
-        />
+        <div className='p-6'>
+            <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6'>
+                <div>
+                    <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+                        Achievements
+                    </h1>
+                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
+                        Kelola badge pencapaian, kriteria target, dan poin
+                        motivasi pengguna
+                    </p>
+                </div>
+                <button
+                    onClick={openCreate}
+                    className='inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-emerald-700 transition'
+                >
+                    <BsPlusCircle /> Tambah Achievement
+                </button>
+            </div>
+
+            <div className='mb-4'>
+                <input
+                    type='text'
+                    placeholder='Cari kode, nama badge, kategori, atau deskripsi...'
+                    value={search}
+                    onChange={(e) => {
+                        setSearch(e.target.value);
+                        setPage(1);
+                    }}
+                    className='w-full max-w-sm rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
+                />
+            </div>
+
+            <PanelTable
+                loading={loading}
+                empty={
+                    <PanelEmpty
+                        message={
+                            search
+                                ? t("admin.empty.search")
+                                : "Belum ada master achievement."
+                        }
+                    />
+                }
+                head={
+                    <>
+                        <Th className='w-14 text-center'>Icon</Th>
+                        <Th>Kode</Th>
+                        <Th>Nama (ID / EN)</Th>
+                        <Th>Kategori</Th>
+                        <Th className='w-20 text-center'>Target</Th>
+                        <Th>Deskripsi</Th>
+                        <Th className='text-right w-24'>Aksi</Th>
+                    </>
+                }
+                pagination={
+                    <PanelPagination
+                        page={page}
+                        totalPages={totalPages}
+                        pageSize={pageSize}
+                        totalItems={filtered.length}
+                        onPageChange={setPage}
+                        onPageSizeChange={(sz) => {
+                            setPageSize(sz);
+                            setPage(1);
+                        }}
+                    />
+                }
+            >
+                {paginated.map((item) => (
+                    <Tr key={item.id}>
+                        <Td className='text-center text-2xl'>
+                            {item.icon || "🏆"}
+                        </Td>
+                        <Td className='font-mono text-xs text-emerald-700 dark:text-emerald-400 font-bold'>
+                            {item.code}
+                        </Td>
+                        <Td className='font-medium text-gray-900 dark:text-white'>
+                            <div>{item.name}</div>
+                            {item.name_en && (
+                                <div className='text-xs text-gray-400'>
+                                    {item.name_en}
+                                </div>
+                            )}
+                        </Td>
+                        <Td>
+                            <span className='px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
+                                {item.category || "general"}
+                            </span>
+                        </Td>
+                        <Td className='text-center font-bold text-gray-800 dark:text-gray-200'>
+                            {item.threshold}
+                        </Td>
+                        <Td className='max-w-xs text-xs text-gray-600 dark:text-gray-300'>
+                            <div className='line-clamp-2'>
+                                {item.description || item.desc_en || "—"}
+                            </div>
+                        </Td>
+                        <Td className='text-right'>
+                            <div className='flex items-center justify-end gap-2'>
+                                <button
+                                    onClick={() => openEdit(item)}
+                                    className='p-1 text-gray-500 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400'
+                                    aria-label='Edit'
+                                >
+                                    <BsPencil />
+                                </button>
+                                <button
+                                    onClick={() => setDeleteId(item.id)}
+                                    className='p-1 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400'
+                                    aria-label='Hapus'
+                                >
+                                    <BsTrash />
+                                </button>
+                            </div>
+                        </Td>
+                    </Tr>
+                ))}
+            </PanelTable>
+
+            {/* Create/Edit Modal */}
+            <ModalShell
+                open={showModal}
+                onClose={() => setShowModal(false)}
+                title={editId ? "Edit Achievement" : "Tambah Achievement"}
+            >
+                <div className='space-y-4 p-4'>
+                    <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
+                        <div className='sm:col-span-2'>
+                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                                Kode Unik (Code)
+                            </label>
+                            <input
+                                type='text'
+                                value={form.code}
+                                onChange={(e) =>
+                                    setForm({ ...form, code: e.target.value })
+                                }
+                                className={INPUT_CLASS}
+                                placeholder='Contoh: streak_7, hafalan_10'
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                                Icon (Emoji / Symbol)
+                            </label>
+                            <input
+                                type='text'
+                                value={form.icon}
+                                onChange={(e) =>
+                                    setForm({ ...form, icon: e.target.value })
+                                }
+                                className={INPUT_CLASS}
+                                placeholder='🏆, 🔖, 🌙'
+                            />
+                        </div>
+                    </div>
+
+                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                        <div>
+                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                                Nama Badge (Indonesia)
+                            </label>
+                            <input
+                                type='text'
+                                value={form.name}
+                                onChange={(e) =>
+                                    setForm({ ...form, name: e.target.value })
+                                }
+                                className={INPUT_CLASS}
+                                placeholder='Contoh: Pejuang Subuh'
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                                Nama Badge (English)
+                            </label>
+                            <input
+                                type='text'
+                                value={form.name_en}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        name_en: e.target.value,
+                                    })
+                                }
+                                className={INPUT_CLASS}
+                                placeholder='Contoh: Fajr Warrior'
+                            />
+                        </div>
+                    </div>
+
+                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                        <div>
+                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                                Kategori
+                            </label>
+                            <select
+                                value={form.category}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        category: e.target.value,
+                                    })
+                                }
+                                className={INPUT_CLASS}
+                            >
+                                {CATEGORIES.map((c) => (
+                                    <option key={c.value} value={c.value}>
+                                        {c.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                                Nilai Target (Threshold)
+                            </label>
+                            <input
+                                type='number'
+                                value={form.threshold}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        threshold: e.target.value,
+                                    })
+                                }
+                                className={INPUT_CLASS}
+                                min='1'
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                            Deskripsi (Indonesia)
+                        </label>
+                        <textarea
+                            rows='2'
+                            value={form.description}
+                            onChange={(e) =>
+                                setForm({
+                                    ...form,
+                                    description: e.target.value,
+                                })
+                            }
+                            className={INPUT_CLASS}
+                            placeholder='Penjelasan cara mendapatkan badge...'
+                        />
+                    </div>
+
+                    <div>
+                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                            Deskripsi (English)
+                        </label>
+                        <textarea
+                            rows='2'
+                            value={form.desc_en}
+                            onChange={(e) =>
+                                setForm({ ...form, desc_en: e.target.value })
+                            }
+                            className={INPUT_CLASS}
+                            placeholder='English description...'
+                        />
+                    </div>
+
+                    <div className='flex justify-end gap-2 pt-2 border-t border-gray-200 dark:border-slate-700'>
+                        <button
+                            type='button'
+                            onClick={() => setShowModal(false)}
+                            className='rounded-lg px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800'
+                        >
+                            Batal
+                        </button>
+                        <button
+                            type='button'
+                            onClick={save}
+                            disabled={saving || !form.code || !form.name}
+                            className='rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50'
+                        >
+                            {saving ? "Menyimpan..." : "Simpan"}
+                        </button>
+                    </div>
+                </div>
+            </ModalShell>
+
+            {/* Delete Confirmation Modal */}
+            <ModalShell
+                open={deleteId !== null}
+                onClose={() => setDeleteId(null)}
+                title='Hapus Achievement'
+            >
+                <div className='p-4 space-y-4'>
+                    <p className='text-sm text-gray-600 dark:text-gray-300'>
+                        Apakah Anda yakin ingin menghapus achievement ini?
+                        Riwayat perolehan badge pengguna yang terhubung mungkin
+                        terpengaruh.
+                    </p>
+                    <div className='flex justify-end gap-2'>
+                        <button
+                            onClick={() => setDeleteId(null)}
+                            className='rounded-lg px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800'
+                        >
+                            Batal
+                        </button>
+                        <button
+                            onClick={() => handleDelete(deleteId)}
+                            className='rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700'
+                        >
+                            Hapus
+                        </button>
+                    </div>
+                </div>
+            </ModalShell>
+        </div>
     );
 }

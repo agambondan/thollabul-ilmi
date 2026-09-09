@@ -8,28 +8,23 @@ import {
     Th,
     Tr,
 } from "@/components/panel/DataPanel";
-import { adminAmalanApi, parseApiError } from "@/lib/api";
+import { adminPanduanSholatApi, parseApiError } from "@/lib/api";
 import { useLocale } from "@/context/Locale";
 import { useEffect, useState } from "react";
-import { BsPencil, BsPlusCircle, BsTrash } from "react-icons/bs";
+import { BsPencil, BsPlusCircle, BsTrash, BsX } from "react-icons/bs";
 import ModalShell from "@/components/ModalShell";
 import SourceBadges from "@/components/SourceBadges";
 
 const EMPTY_FORM = {
-    name: "",
-    category: "sholat",
+    step: 1,
+    title: "",
+    arabic: "",
+    latin: "",
+    translation: "",
     description: "",
+    notes: "",
     source: "",
-    is_active: true,
 };
-
-const CATEGORIES = [
-    { value: "sholat", label: "Sholat Sunnah" },
-    { value: "puasa", label: "Puasa Sunnah" },
-    { value: "dzikir", label: "Dzikir & Tilawah" },
-    { value: "sedekah", label: "Sedekah & Infaq" },
-    { value: "lainnya", label: "Amalan Lainnya" },
-];
 
 const INPUT_CLASS =
     "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-700 dark:text-white";
@@ -37,7 +32,7 @@ const INPUT_CLASS =
 const asItems = (payload) =>
     payload?.items ?? payload?.data?.items ?? payload?.data ?? payload ?? [];
 
-export default function AdminAmalanPage() {
+export default function AdminPanduanSholatPage() {
     const { t } = useLocale();
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -46,7 +41,6 @@ export default function AdminAmalanPage() {
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState(EMPTY_FORM);
     const [search, setSearch] = useState("");
-    const [categoryFilter, setCategoryFilter] = useState("all");
     const [deleteId, setDeleteId] = useState(null);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
@@ -59,10 +53,13 @@ export default function AdminAmalanPage() {
     const load = async () => {
         setLoading(true);
         try {
-            const r = await adminAmalanApi.list();
+            const r = await adminPanduanSholatApi.list();
             const data = await r.json();
             const nextItems = asItems(data);
-            setItems(Array.isArray(nextItems) ? nextItems : []);
+            const sorted = Array.isArray(nextItems)
+                ? nextItems.sort((a, b) => (a.step ?? 0) - (b.step ?? 0))
+                : [];
+            setItems(sorted);
         } catch {
             setItems([]);
         } finally {
@@ -76,18 +73,25 @@ export default function AdminAmalanPage() {
 
     const openCreate = () => {
         setEditId(null);
-        setForm(EMPTY_FORM);
+        const nextStep =
+            items.length > 0
+                ? Math.max(...items.map((it) => it.step || 0)) + 1
+                : 1;
+        setForm({ ...EMPTY_FORM, step: nextStep });
         setShowModal(true);
     };
 
     const openEdit = (item) => {
         setEditId(item.id ?? item._id);
         setForm({
-            name: item.name ?? "",
-            category: item.category ?? "sholat",
+            step: item.step ?? 1,
+            title: item.title ?? "",
+            arabic: item.arabic ?? "",
+            latin: item.latin ?? item.transliteration ?? "",
+            translation: item.translation ?? item.translation_text ?? "",
             description: item.description ?? "",
+            notes: item.notes ?? "",
             source: item.source ?? "",
-            is_active: item.is_active !== false,
         });
         setShowModal(true);
     };
@@ -95,11 +99,15 @@ export default function AdminAmalanPage() {
     const save = async () => {
         setSaving(true);
         try {
+            const payload = {
+                ...form,
+                step: Number(form.step) || 1,
+            };
             let res;
             if (editId) {
-                res = await adminAmalanApi.update(editId, form);
+                res = await adminPanduanSholatApi.update(editId, payload);
             } else {
-                res = await adminAmalanApi.create(form);
+                res = await adminPanduanSholatApi.create(payload);
             }
             if (!res.ok)
                 throw new Error(
@@ -117,7 +125,7 @@ export default function AdminAmalanPage() {
 
     const handleDelete = async (id) => {
         try {
-            const res = await adminAmalanApi.delete(id);
+            const res = await adminPanduanSholatApi.delete(id);
             if (!res.ok)
                 throw new Error(
                     await parseApiError(res, t("admin.error.delete")),
@@ -131,15 +139,13 @@ export default function AdminAmalanPage() {
     };
 
     const filtered = items.filter((item) => {
-        const matchesCategory =
-            categoryFilter === "all" || item.category === categoryFilter;
         const q = search.toLowerCase();
-        const matchesSearch =
-            !q ||
-            item.name?.toLowerCase().includes(q) ||
+        return (
+            String(item.step).includes(q) ||
+            item.title?.toLowerCase().includes(q) ||
             item.description?.toLowerCase().includes(q) ||
-            item.source?.toLowerCase().includes(q);
-        return matchesCategory && matchesSearch;
+            item.source?.toLowerCase().includes(q)
+        );
     });
 
     const totalPages = Math.ceil(filtered.length / pageSize) || 1;
@@ -150,24 +156,24 @@ export default function AdminAmalanPage() {
             <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6'>
                 <div>
                     <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
-                        Master Amalan
+                        Panduan Sholat
                     </h1>
                     <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
-                        Kelola katalog daftar amalan sunnah harian pengguna
+                        Kelola langkah dan rukun panduan tata cara sholat
                     </p>
                 </div>
                 <button
                     onClick={openCreate}
                     className='inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow hover:bg-emerald-700 transition'
                 >
-                    <BsPlusCircle /> Tambah Amalan
+                    <BsPlusCircle /> Tambah Langkah
                 </button>
             </div>
 
-            <div className='flex flex-wrap gap-3 mb-4'>
+            <div className='mb-4'>
                 <input
                     type='text'
-                    placeholder='Cari nama amalan, deskripsi, atau rujukan...'
+                    placeholder='Cari langkah, judul, keterangan, atau dalil...'
                     value={search}
                     onChange={(e) => {
                         setSearch(e.target.value);
@@ -175,21 +181,6 @@ export default function AdminAmalanPage() {
                     }}
                     className='w-full max-w-sm rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
                 />
-                <select
-                    value={categoryFilter}
-                    onChange={(e) => {
-                        setCategoryFilter(e.target.value);
-                        setPage(1);
-                    }}
-                    className='rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white'
-                >
-                    <option value='all'>Semua Kategori</option>
-                    {CATEGORIES.map((c) => (
-                        <option key={c.value} value={c.value}>
-                            {c.label}
-                        </option>
-                    ))}
-                </select>
             </div>
 
             <PanelTable
@@ -197,19 +188,19 @@ export default function AdminAmalanPage() {
                 empty={
                     <PanelEmpty
                         message={
-                            search || categoryFilter !== "all"
+                            search
                                 ? t("admin.empty.search")
-                                : "Belum ada data master amalan."
+                                : "Belum ada langkah panduan sholat."
                         }
                     />
                 }
                 head={
                     <>
-                        <Th>Nama Amalan</Th>
-                        <Th>Kategori</Th>
-                        <Th>Deskripsi</Th>
+                        <Th className='w-16'>Step</Th>
+                        <Th>Judul</Th>
+                        <Th>Lafaz Arab / Latin</Th>
+                        <Th>Terjemahan / Keterangan</Th>
                         <Th>Sumber / Rujukan</Th>
-                        <Th className='w-20 text-center'>Status</Th>
                         <Th className='text-right w-24'>Aksi</Th>
                     </>
                 }
@@ -229,17 +220,30 @@ export default function AdminAmalanPage() {
             >
                 {paginated.map((item) => (
                     <Tr key={item.id}>
-                        <Td className='font-medium text-gray-900 dark:text-white'>
-                            {item.name}
+                        <Td className='font-bold text-emerald-700 dark:text-emerald-400'>
+                            #{item.step}
                         </Td>
-                        <Td>
-                            <span className='px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'>
-                                {item.category}
-                            </span>
+                        <Td className='font-medium text-gray-900 dark:text-white'>
+                            {item.title}
+                        </Td>
+                        <Td className='max-w-xs'>
+                            {item.arabic && (
+                                <div
+                                    dir='rtl'
+                                    className='font-arabic text-sm text-gray-800 dark:text-gray-200 line-clamp-1'
+                                >
+                                    {item.arabic}
+                                </div>
+                            )}
+                            {item.latin && (
+                                <div className='text-xs italic text-gray-500 dark:text-gray-400 line-clamp-1'>
+                                    {item.latin}
+                                </div>
+                            )}
                         </Td>
                         <Td className='max-w-xs text-xs text-gray-600 dark:text-gray-300'>
                             <div className='line-clamp-2'>
-                                {item.description || "—"}
+                                {item.translation || item.description || "—"}
                             </div>
                         </Td>
                         <Td className='text-xs'>
@@ -248,19 +252,6 @@ export default function AdminAmalanPage() {
                             ) : (
                                 "—"
                             )}
-                        </Td>
-                        <Td className='text-center'>
-                            <span
-                                className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                                    item.is_active !== false
-                                        ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-                                        : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
-                                }`}
-                            >
-                                {item.is_active !== false
-                                    ? "Aktif"
-                                    : "Nonaktif"}
-                            </span>
                         </Td>
                         <Td className='text-right'>
                             <div className='flex items-center justify-end gap-2'>
@@ -288,68 +279,98 @@ export default function AdminAmalanPage() {
             <ModalShell
                 open={showModal}
                 onClose={() => setShowModal(false)}
-                title={editId ? "Edit Master Amalan" : "Tambah Master Amalan"}
+                title={
+                    editId
+                        ? "Edit Langkah Panduan Sholat"
+                        : "Tambah Langkah Panduan Sholat"
+                }
             >
                 <div className='space-y-4 p-4'>
+                    <div className='grid grid-cols-1 sm:grid-cols-4 gap-4'>
+                        <div>
+                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                                Urutan Langkah (Step)
+                            </label>
+                            <input
+                                type='number'
+                                value={form.step}
+                                onChange={(e) =>
+                                    setForm({ ...form, step: e.target.value })
+                                }
+                                className={INPUT_CLASS}
+                                min='1'
+                                required
+                            />
+                        </div>
+                        <div className='sm:col-span-3'>
+                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                                Judul Rukun / Gerakan
+                            </label>
+                            <input
+                                type='text'
+                                value={form.title}
+                                onChange={(e) =>
+                                    setForm({ ...form, title: e.target.value })
+                                }
+                                className={INPUT_CLASS}
+                                placeholder='Contoh: Takbiratul Ihram, Ruku...'
+                                required
+                            />
+                        </div>
+                    </div>
+
                     <div>
                         <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
-                            Nama Amalan
+                            Lafaz Arab (Opsional)
                         </label>
-                        <input
-                            type='text'
-                            value={form.name}
+                        <textarea
+                            dir='rtl'
+                            rows='2'
+                            value={form.arabic}
                             onChange={(e) =>
-                                setForm({ ...form, name: e.target.value })
+                                setForm({ ...form, arabic: e.target.value })
                             }
-                            className={INPUT_CLASS}
-                            placeholder='Contoh: Sholat Dhuha, Sedekah Subuh'
-                            required
+                            className={`${INPUT_CLASS} font-arabic text-base`}
+                            placeholder='Teks bacaan Arab...'
                         />
                     </div>
 
-                    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-                        <div>
-                            <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
-                                Kategori
-                            </label>
-                            <select
-                                value={form.category}
-                                onChange={(e) =>
-                                    setForm({
-                                        ...form,
-                                        category: e.target.value,
-                                    })
-                                }
-                                className={INPUT_CLASS}
-                            >
-                                {CATEGORIES.map((c) => (
-                                    <option key={c.value} value={c.value}>
-                                        {c.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className='flex items-center pt-5'>
-                            <label className='inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer'>
-                                <input
-                                    type='checkbox'
-                                    checked={form.is_active}
-                                    onChange={(e) =>
-                                        setForm({
-                                            ...form,
-                                            is_active: e.target.checked,
-                                        })
-                                    }
-                                    className='rounded border-gray-300 text-emerald-600 focus:ring-emerald-500'
-                                />
-                                Status Aktif (Tampil di checklist harian)
-                            </label>
-                        </div>
+                    <div>
+                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                            Transliterasi Latin (Opsional)
+                        </label>
+                        <input
+                            type='text'
+                            value={form.latin}
+                            onChange={(e) =>
+                                setForm({ ...form, latin: e.target.value })
+                            }
+                            className={INPUT_CLASS}
+                            placeholder='Bacaan latin...'
+                        />
                     </div>
 
                     <div>
                         <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
-                            Deskripsi / Keutamaan
+                            Arti / Terjemahan Bacaan
+                        </label>
+                        <textarea
+                            rows='2'
+                            value={form.translation}
+                            onChange={(e) =>
+                                setForm({
+                                    ...form,
+                                    translation: e.target.value,
+                                })
+                            }
+                            className={INPUT_CLASS}
+                            placeholder='Terjemahan bacaan...'
+                        />
+                    </div>
+
+                    <div>
+                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                            Deskripsi Tata Cara Gerakan
                         </label>
                         <textarea
                             rows='3'
@@ -361,7 +382,22 @@ export default function AdminAmalanPage() {
                                 })
                             }
                             className={INPUT_CLASS}
-                            placeholder='Keutamaan atau tata cara amalan...'
+                            placeholder='Keterangan cara pelaksanaan rukun sholat...'
+                        />
+                    </div>
+
+                    <div>
+                        <label className='block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1'>
+                            Catatan Fiqh / Faedah
+                        </label>
+                        <textarea
+                            rows='2'
+                            value={form.notes}
+                            onChange={(e) =>
+                                setForm({ ...form, notes: e.target.value })
+                            }
+                            className={INPUT_CLASS}
+                            placeholder='Catatan khusus dari para ulama...'
                         />
                     </div>
 
@@ -376,7 +412,7 @@ export default function AdminAmalanPage() {
                                 setForm({ ...form, source: e.target.value })
                             }
                             className={INPUT_CLASS}
-                            placeholder='Contoh: HR. Muslim No. 720; HR. Bukhari'
+                            placeholder='Contoh: HR. Bukhari No. 1; Al-Mughni'
                         />
                     </div>
 
@@ -391,7 +427,7 @@ export default function AdminAmalanPage() {
                         <button
                             type='button'
                             onClick={save}
-                            disabled={saving || !form.name}
+                            disabled={saving || !form.title}
                             className='rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50'
                         >
                             {saving ? "Menyimpan..." : "Simpan"}
@@ -404,13 +440,12 @@ export default function AdminAmalanPage() {
             <ModalShell
                 open={deleteId !== null}
                 onClose={() => setDeleteId(null)}
-                title='Hapus Master Amalan'
+                title='Hapus Langkah Panduan Sholat'
             >
                 <div className='p-4 space-y-4'>
                     <p className='text-sm text-gray-600 dark:text-gray-300'>
-                        Apakah Anda yakin ingin menghapus amalan ini? Riwayat
-                        checklist harian pengguna yang sudah tercatat mungkin
-                        terpengaruh.
+                        Apakah Anda yakin ingin menghapus langkah panduan sholat
+                        ini? Tindakan ini tidak dapat dibatalkan.
                     </p>
                     <div className='flex justify-end gap-2'>
                         <button

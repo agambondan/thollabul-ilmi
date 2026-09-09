@@ -932,6 +932,22 @@ export const adminAmalanApi = buildResourceApi({
     deletePath: (id) => `/api/v1/amalan/items/${id}`,
 });
 
+export const adminPanduanSholatApi = {
+    list: () => authFetch("/api/v1/panduan-sholat/admin"),
+    create: (data) =>
+        authFetch("/api/v1/panduan-sholat", {
+            method: "POST",
+            body: JSON.stringify(data),
+        }),
+    update: (id, data) =>
+        authFetch(`/api/v1/panduan-sholat/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(data),
+        }),
+    delete: (id) =>
+        authFetch(`/api/v1/panduan-sholat/${id}`, { method: "DELETE" }),
+};
+
 export const adminAchievementApi = buildResourceApi({
     listPath: "/api/v1/achievements",
     listParam: "page=0&size=500",

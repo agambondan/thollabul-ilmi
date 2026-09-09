@@ -91,12 +91,12 @@ const NAV_GROUPS = [
             },
             {
                 href: "/admin/achievements",
-                label: "Achievements",
+                labelKey: "admin.nav.achievements",
                 icon: <BsStar />,
             },
             {
                 href: "/admin/amalan",
-                label: "Master Amalan",
+                labelKey: "admin.nav.amalan",
                 icon: <BsListCheck />,
             },
             {
@@ -123,6 +123,11 @@ const NAV_GROUPS = [
                 href: "/admin/wirid",
                 labelKey: "admin.nav.wird",
                 icon: <BsHeart />,
+            },
+            {
+                href: "/admin/panduan-sholat",
+                labelKey: "admin.nav.panduan_sholat",
+                icon: <BsBook />,
             },
             {
                 href: "/admin/asmaul-husna",
