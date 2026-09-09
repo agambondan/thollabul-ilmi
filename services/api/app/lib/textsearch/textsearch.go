@@ -39,7 +39,14 @@ type Query struct {
 	Groups []Group
 }
 
-var termPattern = regexp.MustCompile(`^[a-z0-9]+$`)
+// termPattern guards against a term ever breaking the tsquery grammar it gets
+// spliced into as "(a | b | c)". Tokenize already strips every character that
+// could do that (it splits on anything that is not a Unicode letter or
+// digit), so this only needs to reject the pathological case of an empty or
+// whitespace-only term slipping through — it must NOT be ASCII-only, or every
+// Arabic-script and accented-Latin word (a scholar's name, a Qur'an term
+// typed in Arabic) silently drops out of the query with no error.
+var termPattern = regexp.MustCompile(`^[\p{L}\p{N}]+$`)
 
 // Parse normalises and expands a raw query. It never returns an error: an
 // empty or punctuation-only query yields a Query with IsEmpty() == true.
@@ -120,8 +127,8 @@ func (q Query) PhraseRegex() string {
 	return `\m` + strings.Join(parts, `[\s-]+`) + `\M`
 }
 
-// TSQuery renders the group as a tsquery fragment: (a | b | c). Terms that are
-// not plain [a-z0-9]+ are skipped so the fragment can never break the tsquery
+// TSQuery renders the group as a tsquery fragment: (a | b | c). Terms that
+// fail termPattern are skipped so the fragment can never break the tsquery
 // grammar. Empty when nothing survives.
 func (g Group) TSQuery() string {
 	terms := make([]string, 0, len(g.Terms))

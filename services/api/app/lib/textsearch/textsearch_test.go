@@ -2,6 +2,7 @@ package textsearch
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -85,6 +86,25 @@ func TestGroupTSQuerySkipsNonAlnum(t *testing.T) {
 	}
 }
 
+func TestTSQueryKeepsNonASCIILetters(t *testing.T) {
+	// Regression: termPattern used to be ASCII-only ([a-z0-9]+), so any
+	// Arabic-script or accented-Latin word silently vanished from the query
+	// while the API still advertised it in expanded_terms. A live search for
+	// "café wudhu" matched every "wudhu" chunk while ignoring "café" outright.
+	arabic := Parse("بسم الله")
+	if got := arabic.GroupQueries(); len(got) != 2 {
+		t.Fatalf("Arabic groups should survive TSQuery filtering, got %v", got)
+	}
+	mixed := Parse("café wudhu")
+	groups := mixed.GroupQueries()
+	if len(groups) != 2 {
+		t.Fatalf("expected both concepts in a mixed-script query, got %v", groups)
+	}
+	if !strings.Contains(mixed.TSQueryAll(), "café") {
+		t.Fatalf("TSQueryAll dropped the accented word: %q", mixed.TSQueryAll())
+	}
+}
+
 func TestHighlightTerms(t *testing.T) {
 	got := Parse("hadits sholat hadits").HighlightTerms()
 	want := []string{"hadis", "hadist", "hadith", "hadits", "salat", "sembahyang", "shalat", "sholat", "solat"}
@@ -107,7 +127,7 @@ func TestVariantGroupsAreWellFormed(t *testing.T) {
 		}
 		for _, term := range g {
 			if !termPattern.MatchString(term) {
-				t.Errorf("group %d term %q is not [a-z0-9]+", i, term)
+				t.Errorf("group %d term %q fails termPattern", i, term)
 			}
 			if prev, dup := seen[term]; dup && prev != i {
 				t.Errorf("term %q appears in groups %d and %d", term, prev, i)
