@@ -1,5 +1,7 @@
 import { HadithDetailContent } from "@/app/dashboard/hadith/[slug]/page";
 import Section from "@/components/Section";
+import { getBooks } from "@/lib/api";
+import { serializeJsonLd, SITE_URL } from "@/lib/site";
 
 export const revalidate = 86400;
 
@@ -97,8 +99,44 @@ const Page = async (props) => {
             })(),
         ]);
 
+    const books = await getBooks();
+    const book = books.find((k) => k.slug === params?.slug);
+    const bookName =
+        book?.translation?.en ?? book?.translation?.idn ?? params?.slug;
+
+    const breadcrumbJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Beranda",
+                item: `${SITE_URL}/`,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Hadits",
+                item: `${SITE_URL}/hadith`,
+            },
+            {
+                "@type": "ListItem",
+                position: 3,
+                name: `Kitab ${bookName}`,
+                item: `${SITE_URL}/hadith/${params.slug}`,
+            },
+        ],
+    };
+
     return (
         <main className='min-h-screen flex flex-col'>
+            <script
+                type='application/ld+json'
+                dangerouslySetInnerHTML={{
+                    __html: serializeJsonLd(breadcrumbJsonLd),
+                }}
+            />
             <Section>
                 <div className='dark:text-white'>
                     <HadithDetailContent

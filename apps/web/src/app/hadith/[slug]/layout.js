@@ -1,4 +1,4 @@
-import { OG_IMAGE, serializeJsonLd, SITE_NAME, SITE_URL } from "@/lib/site";
+import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/site";
 import { getBooks } from "@/lib/api";
 
 export async function generateStaticParams() {
@@ -40,52 +40,6 @@ export async function generateMetadata(props) {
     };
 }
 
-export default async function HadithSlugLayout(props) {
-    const params = await props.params;
-    const { children } = props;
-    const books = await getBooks();
-    const book = books.find((k) => k.slug === params?.slug);
-    const bookName =
-        book?.translation?.en ?? book?.translation?.idn ?? params?.slug;
-
-    const breadcrumbJsonLd = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        itemListElement: [
-            {
-                "@type": "ListItem",
-                position: 1,
-                name: "Beranda",
-                item: `${SITE_URL}/`,
-            },
-            {
-                "@type": "ListItem",
-                position: 2,
-                name: "Hadits",
-                item: `${SITE_URL}/hadith`,
-            },
-            ...(params?.slug
-                ? [
-                      {
-                          "@type": "ListItem",
-                          position: 3,
-                          name: bookName ? `Kitab ${bookName}` : params.slug,
-                          item: `${SITE_URL}/hadith/${params.slug}`,
-                      },
-                  ]
-                : []),
-        ],
-    };
-
-    return (
-        <>
-            <script
-                type='application/ld+json'
-                dangerouslySetInnerHTML={{
-                    __html: serializeJsonLd(breadcrumbJsonLd),
-                }}
-            />
-            {children}
-        </>
-    );
+export default function HadithSlugLayout({ children }) {
+    return children;
 }

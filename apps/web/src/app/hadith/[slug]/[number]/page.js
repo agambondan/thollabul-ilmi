@@ -5,6 +5,7 @@ import HadithNumberContent, {
     normalizeHadithNumber,
 } from "@/app/hadith/[slug]/[number]/HadithNumberContent";
 import Section from "@/components/Section";
+import { getBooks } from "@/lib/api";
 import { getLocalizedTranslation } from "@/lib/translation";
 
 export async function generateMetadata(props) {
@@ -53,7 +54,13 @@ export async function generateMetadata(props) {
 export default async function Page(props) {
     const params = await props.params;
     const number = normalizeHadithNumber(params.number);
-    const hadith = await fetchHadithByBookNumber(params.slug, number);
+    const [hadith, books] = await Promise.all([
+        fetchHadithByBookNumber(params.slug, number),
+        getBooks(),
+    ]);
+    const book = books.find((k) => k.slug === params.slug);
+    const bookName =
+        book?.translation?.en ?? book?.translation?.idn ?? params.slug;
     const title = getHadithTitle(hadith, params.slug, number);
     const breadcrumbJsonLd = {
         "@context": "https://schema.org",
@@ -74,7 +81,7 @@ export default async function Page(props) {
             {
                 "@type": "ListItem",
                 position: 3,
-                name: params.slug,
+                name: `Kitab ${bookName}`,
                 item: `${SITE_URL}/hadith/${params.slug}`,
             },
             {
