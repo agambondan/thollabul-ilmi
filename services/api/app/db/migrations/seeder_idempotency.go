@@ -23,7 +23,6 @@ func DeduplicateSeedData(db *gorm.DB) {
 		{model: model.AmalanItem{}, groupColumns: []string{"category", "name"}},
 		{model: model.Dzikir{}, groupColumns: []string{"category", "title"}},
 		{model: model.SholatGuide{}, groupColumns: []string{"step"}},
-		{model: model.Kajian{}, groupColumns: []string{"title", "speaker", "published_at"}},
 		{model: model.IslamicEvent{}, groupColumns: []string{"hijri_month", "hijri_day", "name"}},
 	}
 
@@ -54,9 +53,6 @@ func UpsertSeedData(db *gorm.DB) error {
 		return err
 	}
 	if err := upsertSholatGuideSeeds(db); err != nil {
-		return err
-	}
-	if err := upsertKajianSeeds(db); err != nil {
 		return err
 	}
 	return nil
@@ -241,19 +237,6 @@ func upsertSholatGuideSeeds(db *gorm.DB) error {
 		if err := db.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "step"}},
 			DoUpdates: clause.AssignmentColumns([]string{"title", "arabic", "transliteration", "translation", "description", "source", "notes"}),
-		}).Create(&items[i]).Error; err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func upsertKajianSeeds(db *gorm.DB) error {
-	items := seedKajian()
-	for i := range items {
-		if err := db.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "title"}, {Name: "speaker"}, {Name: "published_at"}},
-			DoUpdates: clause.AssignmentColumns([]string{"description", "topic", "type", "url", "duration", "thumbnail_url"}),
 		}).Create(&items[i]).Error; err != nil {
 			return err
 		}

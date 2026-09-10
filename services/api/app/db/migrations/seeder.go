@@ -25,7 +25,6 @@ func DataSeeds(db *gorm.DB) []interface{} {
 		seedSirohCategories(),
 		seedBlogCategories(),
 		seedBlogTags(),
-		seedKajian(),
 		seedMasjids(),
 		seedRadioIslamic(),
 	}

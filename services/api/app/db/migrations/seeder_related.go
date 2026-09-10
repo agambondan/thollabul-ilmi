@@ -56,19 +56,6 @@ func seedBlogTags() []model.BlogTag {
 	}
 }
 
-func seedKajian() []model.Kajian {
-	return []model.Kajian{
-		{Title: "Tafsir Surah Al-Fatihah", Speaker: "Ust. Adi Hidayat", Topic: "Quran & Tafsir", Type: model.KajianTypeVideo, Description: "Kajian mendalam tentang makna dan kandungan Surah Al-Fatihah sebagai induk Al-Quran.", Duration: 3600, PublishedAt: "2024-01-15"},
-		{Title: "Kitab Riyadhus Shalihin: Bab Ikhlas", Speaker: "Ust. Khalid Basalamah", Topic: "Hadith & Sunnah", Type: model.KajianTypeVideo, Description: "Kajian kitab Riyadhus Shalihin karya Imam Nawawi tentang bab keikhlasan beramal.", Duration: 2700, PublishedAt: "2024-02-01"},
-		{Title: "Fiqh Sholat Lengkap", Speaker: "Ust. Firanda Andirja", Topic: "Fiqh", Type: model.KajianTypeVideo, Description: "Pembahasan lengkap fiqh sholat mulai dari syarat, rukun, sunnah, hingga hal-hal yang membatalkan.", Duration: 5400, PublishedAt: "2024-02-20"},
-		{Title: "Mengenal Asmaul Husna", Speaker: "Ust. Hanan Attaki", Topic: "Aqidah & Tauhid", Type: model.KajianTypeVideo, Description: "Kajian 99 nama-nama Allah yang indah dan cara mengamalkannya dalam kehidupan sehari-hari.", Duration: 3000, PublishedAt: "2024-03-05"},
-		{Title: "Sirah Nabawiyah: Hijrah ke Madinah", Speaker: "Ust. Felix Siauw", Topic: "Sejarah Islam", Type: model.KajianTypeVideo, Description: "Kisah hijrah Rasulullah ﷺ dari Makkah ke Madinah dan pelajaran yang dapat diambil.", Duration: 4200, PublishedAt: "2024-03-15"},
-		{Title: "Tadabbur Quran: Juz 30", Speaker: "Ust. Budi Ashari", Topic: "Quran & Tafsir", Type: model.KajianTypeAudio, Description: "Tadabbur ayat-ayat dalam Juz 30 Al-Quran dengan penjelasan makna yang mendalam.", Duration: 3600, PublishedAt: "2024-04-01"},
-		{Title: "Panduan Lengkap Puasa Ramadan", Speaker: "Ust. Abdul Somad", Topic: "Fiqh", Type: model.KajianTypeVideo, Description: "Panduan fiqh puasa Ramadan: niat, hal yang membatalkan, fidyah, dan amalan sunnah di bulan Ramadan.", Duration: 4800, PublishedAt: "2024-03-10"},
-		{Title: "Adab Menuntut Ilmu", Speaker: "Ust. Syafiq Riza Basalamah", Topic: "Akhlak & Adab", Type: model.KajianTypeVideo, Description: "Tuntunan adab bagi penuntut ilmu berdasarkan Al-Quran, hadith, dan kitab-kitab ulama salaf.", Duration: 3300, PublishedAt: "2024-04-20"},
-	}
-}
-
 // ─── FK-dependent seeds (needs parent ID lookup) ─────────────────────────────
 
 func seedFiqhItemsRelated(db *gorm.DB) {
