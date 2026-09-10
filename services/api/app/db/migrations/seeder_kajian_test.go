@@ -38,4 +38,19 @@ func TestSeedKajianFromFileIntegration(t *testing.T) {
 	if transcriptCount == 0 {
 		t.Errorf("expected transcripts to be seeded, got 0")
 	}
+
+	// Regression: distinct videos that happen to share the exact same
+	// title+speaker (a channel's recurring "Khutbah Jum'at" livestream, a
+	// reposted clip) must not collapse into one row. Every scraped row is
+	// keyed by video_id, so the seeded count must equal the source count.
+	type row struct {
+		VideoID string `json:"video_id"`
+	}
+	sourceRows := readStaticJSONDir[row]("kajian")
+	if len(sourceRows) == 0 {
+		t.Fatal("expected the static kajian dataset to be non-empty for this assertion")
+	}
+	if int(count) != len(sourceRows) {
+		t.Errorf("expected %d kajian (one per scraped video), got %d — a title+speaker collision merged some videos into one row", len(sourceRows), count)
+	}
 }

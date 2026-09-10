@@ -12,16 +12,24 @@ const (
 
 type Kajian struct {
 	BaseID
-	Title         string             `json:"title" gorm:"type:varchar(512);not null;uniqueIndex:idx_kajian_title_speaker_published"`
-	Description   string             `json:"description" gorm:"type:text"`
-	Speaker       string             `json:"speaker" gorm:"type:varchar(256);index;uniqueIndex:idx_kajian_title_speaker_published"`
-	Topic         string             `json:"topic" gorm:"type:varchar(256);index"`
-	Type          KajianType         `json:"type" gorm:"type:varchar(20);not null;default:'video'"`
-	URL           string             `json:"url" gorm:"type:varchar(1024)"`
+	Title       string `json:"title" gorm:"type:varchar(512);not null;index:idx_kajian_title_speaker_published"`
+	Description string `json:"description" gorm:"type:text"`
+	Speaker     string `json:"speaker" gorm:"type:varchar(256);index;index:idx_kajian_title_speaker_published"`
+	Topic       string `json:"topic" gorm:"type:varchar(256);index"`
+	Type        KajianType `json:"type" gorm:"type:varchar(20);not null;default:'video'"`
+	URL         string     `json:"url" gorm:"type:varchar(1024)"`
+	// The true identity of a video — title alone is not reliable, since
+	// channels commonly reuse the same title across distinct uploads (a
+	// weekly "Khutbah Jum'at" livestream, a reposted clip). Partial so
+	// non-video kajian (no video_id) and soft-deleted rows never collide:
+	// a plain unique index on a field that can repeat blocks every later
+	// insert that legitimately shares it, and a non-partial one keeps
+	// blocking on a soft-deleted row forever.
+	VideoID       string             `json:"video_id" gorm:"type:varchar(64);index;uniqueIndex:idx_kajian_video_id,where:video_id <> '' AND deleted_at IS NULL"`
 	Duration      int                `json:"duration_seconds" gorm:"default:0"`
 	ThumbnailURL  string             `json:"thumbnail_url" gorm:"type:varchar(1024)"`
 	ViewCount     int                `json:"view_count" gorm:"default:0"`
-	PublishedAt   string             `json:"published_at" gorm:"type:date;uniqueIndex:idx_kajian_title_speaker_published"`
+	PublishedAt   string             `json:"published_at" gorm:"type:date;index:idx_kajian_title_speaker_published"`
 	TranslationID *int               `json:"translation_id,omitempty" gorm:"index"`
 	Translation   *Translation       `json:"translation,omitempty" gorm:"foreignKey:TranslationID;-:migration"`
 	Transcripts   []KajianTranscript `json:"transcripts,omitempty" gorm:"foreignKey:KajianID;constraint:OnDelete:CASCADE"`

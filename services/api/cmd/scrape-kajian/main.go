@@ -403,10 +403,19 @@ func scrapeChannel(channel Channel, maxVideos int, cookies string, onlyWithTrans
 }
 
 func getChannelVideos(channelURL string, maxVideos int, cookies string) []Video {
+	// Without this, YouTube's channel/tab listing (flat-playlist) sometimes
+	// hands back its own auto-translated English title instead of the
+	// uploader's real one (e.g. "Friday Sermon..." for a video actually
+	// titled "Khutbah Jum'at..."), while a full per-video extraction or
+	// oEmbed on the same id returns the real title. Forcing lang=id here
+	// makes the cheap listing call agree with the real title.
+	langArgs := []string{"--extractor-args", "youtube:lang=id"}
+
 	target := ""
 	for _, suffix := range []string{"/videos", "/streams", ""} {
 		candidate := strings.TrimRight(channelURL, "/") + suffix
 		args := append([]string{}, cookieArgs(cookies)...)
+		args = append(args, langArgs...)
 		args = append(args, "--flat-playlist", "--no-warnings", "--dump-json", "--playlist-end", "1", candidate)
 		stdout, err := runCmd(20*time.Second, "yt-dlp", args...)
 		if err == nil && strings.TrimSpace(string(stdout)) != "" {
@@ -419,6 +428,7 @@ func getChannelVideos(channelURL string, maxVideos int, cookies string) []Video 
 	}
 
 	args := append([]string{}, cookieArgs(cookies)...)
+	args = append(args, langArgs...)
 	args = append(args, "--flat-playlist", "--no-warnings", "--dump-json")
 	if maxVideos > 0 {
 		args = append(args, "--playlist-end", strconv.Itoa(maxVideos))

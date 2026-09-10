@@ -208,68 +208,62 @@ export function PanduanSholatContent({ initialSteps = [] }) {
                                             className={`text-gray-400 transition-transform flex-shrink-0 ${openStep === si ? "rotate-180" : ""}`}
                                         />
                                     </button>
-                                    {openStep === si && (
-                                        <div className='px-5 pb-5 space-y-3 border-t border-gray-50 dark:border-slate-700'>
-                                            {s.arabic && (
-                                                <p
-                                                    className='text-right text-xl leading-loose text-gray-900 dark:text-gray-100 dark:text-white pt-3'
-                                                    style={{
-                                                        fontFamily:
-                                                            "Amiri, serif",
-                                                        direction: "rtl",
-                                                    }}
-                                                >
-                                                    {s.arabic}
-                                                </p>
-                                            )}
-                                            {s.latin && (
-                                                <p className='text-sm text-emerald-700 dark:text-emerald-400 italic'>
-                                                    {s.latin}
-                                                </p>
-                                            )}
-                                            {(getLocalizedField(
-                                                s,
-                                                "translation",
-                                                lang,
-                                                ["terjemah"],
-                                            ) ||
-                                                s.terjemah) && (
-                                                <p className='text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-slate-700/50 rounded-xl p-3'>
-                                                    &ldquo;
-                                                    {getLocalizedField(
-                                                        s,
-                                                        "translation",
-                                                        lang,
-                                                        ["terjemah"],
-                                                    ) || s.terjemah}
-                                                    &rdquo;
-                                                </p>
-                                            )}
-                                            {(getLocalizedField(
-                                                s,
-                                                "note",
-                                                lang,
-                                                ["description", "notes"],
-                                            ) ||
-                                                s.note) && (
-                                                <p className='text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-xl p-3 flex items-start gap-2'>
-                                                    <span className='text-amber-500 flex-shrink-0'>
-                                                        ℹ
-                                                    </span>
-                                                    {getLocalizedField(
-                                                        s,
-                                                        "note",
-                                                        lang,
-                                                        [
-                                                            "description",
-                                                            "notes",
-                                                        ],
-                                                    ) || s.note}
-                                                </p>
-                                            )}
-                                            <SourceBadges source={s.source} />
-                                        </div>
-                                    )}
+                                    <div
+                                        className={`px-5 pb-5 space-y-3 border-t border-gray-50 dark:border-slate-700 ${openStep === si ? "" : "hidden"}`}
+                                    >
+                                        {s.arabic && (
+                                            <p
+                                                className='text-right text-xl leading-loose text-gray-900 dark:text-gray-100 dark:text-white pt-3'
+                                                style={{
+                                                    fontFamily: "Amiri, serif",
+                                                    direction: "rtl",
+                                                }}
+                                            >
+                                                {s.arabic}
+                                            </p>
+                                        )}
+                                        {s.latin && (
+                                            <p className='text-sm text-emerald-700 dark:text-emerald-400 italic'>
+                                                {s.latin}
+                                            </p>
+                                        )}
+                                        {(getLocalizedField(
+                                            s,
+                                            "translation",
+                                            lang,
+                                            ["terjemah"],
+                                        ) ||
+                                            s.terjemah) && (
+                                            <p className='text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-slate-700/50 rounded-xl p-3'>
+                                                &ldquo;
+                                                {getLocalizedField(
+                                                    s,
+                                                    "translation",
+                                                    lang,
+                                                    ["terjemah"],
+                                                ) || s.terjemah}
+                                                &rdquo;
+                                            </p>
+                                        )}
+                                        {(getLocalizedField(s, "note", lang, [
+                                            "description",
+                                            "notes",
+                                        ]) ||
+                                            s.note) && (
+                                            <p className='text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-xl p-3 flex items-start gap-2'>
+                                                <span className='text-amber-500 flex-shrink-0'>
+                                                    ℹ
+                                                </span>
+                                                {getLocalizedField(
+                                                    s,
+                                                    "note",
+                                                    lang,
+                                                    ["description", "notes"],
+                                                ) || s.note}
+                                            </p>
+                                        )}
+                                        <SourceBadges source={s.source} />
+                                    </div>
                                 </div>
                             ))
                         )}

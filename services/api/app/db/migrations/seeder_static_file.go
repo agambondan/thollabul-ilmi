@@ -562,6 +562,12 @@ func seedKajianFromFile(db *gorm.DB) {
 	transcriptRows, transcriptErrors := 0, 0
 	var firstTranscriptErr error
 
+	// One-time backfill for rows seeded before the video_id column existed:
+	// extract it from the stored YouTube URL so the video_id-based lookup
+	// below recognises them instead of treating every one as brand new.
+	// No-op once every row already has a video_id.
+	db.Exec(`UPDATE kajian SET video_id = substring(url from 'v=([A-Za-z0-9_-]{11})') WHERE (video_id IS NULL OR video_id = '') AND url LIKE '%v=%'`)
+
 	// Clean up legacy rows that have no URL (link ngaco) so we don't duplicate.
 	// Hard-delete for the same reason as below: the plain unique index on
 	// (title, speaker, published_at) never frees a soft-deleted row's slot.
@@ -576,29 +582,30 @@ func seedKajianFromFile(db *gorm.DB) {
 		}
 	}
 
-	// Also drop any kajian rows that no longer match the static file's known set,
-	// so dead card entries (e.g. dummy fiktif seed lama) get cleared on first run.
+	// Also drop any kajian rows that no longer match the static file's known
+	// set, so dead card entries (e.g. dummy fiktif seed lama) get cleared on
+	// first run. Keyed by video_id, not title+speaker: channels commonly
+	// reuse the exact same title across distinct uploads (a recurring
+	// "Khutbah Jum'at" livestream, a reposted clip), so title+speaker is not
+	// a reliable identity for "this is the same video". Rows without a
+	// video_id (no parseable YouTube id in their URL) are left untouched
+	// here — the no-URL pass above already handles the empty-URL case.
 	staticKeys := make(map[string]struct{}, len(rows))
 	for _, r := range rows {
-		staticKeys[r.Speaker+"|"+r.Title] = struct{}{}
+		staticKeys[r.VideoID] = struct{}{}
 	}
 	var existingKajians []model.Kajian
 	if err := db.Find(&existingKajians).Error; err == nil {
 		for _, ek := range existingKajians {
-			if ek.ID == nil {
+			if ek.ID == nil || ek.VideoID == "" {
 				continue
 			}
-			if _, keep := staticKeys[ek.Speaker+"|"+ek.Title]; !keep {
+			if _, keep := staticKeys[ek.VideoID]; !keep {
 				db.Unscoped().Where("kajian_id = ?", *ek.ID).Delete(&model.KajianTranscript{})
-				// Hard-delete: idx_kajian_title_speaker_published is a plain
-				// (non-partial) unique index, so a soft-deleted row still
-				// occupies its (title, speaker, published_at) slot forever.
-				// Every scraped row uses the same placeholder published_at,
-				// so any later video that happens to reuse a cleaned-up
-				// title+speaker (a compilation channel reposting the same
-				// title, a re-scrape after a rename) would otherwise fail to
-				// insert with a duplicate-key error and silently lose its
-				// transcripts.
+				// Hard-delete: a plain (non-partial) unique index leaves a
+				// soft-deleted row occupying its slot forever, which would
+				// block re-inserting a video whose id gets cleaned up and
+				// later reappears (a re-scrape after a rename).
 				db.Unscoped().Delete(&model.Kajian{}, *ek.ID)
 			}
 		}
@@ -615,14 +622,26 @@ func seedKajianFromFile(db *gorm.DB) {
 			Topic:        r.Topic,
 			Type:         model.KajianType(r.Type),
 			URL:          r.URL,
+			VideoID:      r.VideoID,
 			Description:  r.Description,
 			Duration:     r.Duration,
 			ThumbnailURL: r.ThumbnailURL,
 			PublishedAt:  published,
 		}
 
+		// video_id is the only field that reliably identifies "the same
+		// video" across re-seeds — title/speaker can legitimately repeat
+		// across distinct uploads (see staticKeys comment above). Fall back
+		// to the old speaker+title match for the rare row with no parseable
+		// video_id, so it doesn't collide with unrelated rows sharing a
+		// blank id.
 		var existing model.Kajian
-		res := db.Where("speaker = ? AND title = ?", r.Speaker, r.Title).First(&existing)
+		var res *gorm.DB
+		if r.VideoID != "" {
+			res = db.Where("video_id = ?", r.VideoID).First(&existing)
+		} else {
+			res = db.Where("speaker = ? AND title = ?", r.Speaker, r.Title).First(&existing)
+		}
 		if res.Error != nil {
 			if err := db.Create(&item).Error; err != nil {
 				log.Printf("[seeder] Create kajian %s error: %v", r.Title, err)
@@ -631,9 +650,12 @@ func seedKajianFromFile(db *gorm.DB) {
 			existing = item
 		} else {
 			db.Model(&existing).Updates(map[string]interface{}{
+				"title":         r.Title,
+				"speaker":       r.Speaker,
 				"topic":         r.Topic,
 				"type":          model.KajianType(r.Type),
 				"url":           r.URL,
+				"video_id":      r.VideoID,
 				"description":   r.Description,
 				"duration":      r.Duration,
 				"thumbnail_url": r.ThumbnailURL,

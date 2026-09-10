@@ -307,11 +307,11 @@ export default function SejarahClient({ initialEvents = [] }) {
                                             </button>
                                         </div>
 
-                                        {isOpen && desc && (
-                                            <div className='mt-3 pt-3 border-t border-gray-100 dark:border-slate-700 text-xs text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line'>
-                                                {desc}
-                                            </div>
-                                        )}
+                                        <div
+                                            className={`mt-3 pt-3 border-t border-gray-100 dark:border-slate-700 text-xs text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line ${isOpen && desc ? "" : "hidden"}`}
+                                        >
+                                            {desc}
+                                        </div>
                                     </div>
                                 </div>
                             );

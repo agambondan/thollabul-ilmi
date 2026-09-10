@@ -331,47 +331,74 @@ export const TafsirSurahContent = ({
                                 </button>
 
                                 {/* Ayah content */}
-                                {isOpen && (
-                                    <div className='border-t border-gray-100 dark:border-slate-700 px-4 py-4 space-y-3'>
-                                        {/* Arabic */}
-                                        <p
-                                            dir='rtl'
-                                            className='text-2xl leading-loose font-arabic text-gray-900 dark:text-gray-100 dark:text-white text-right'
-                                        >
-                                            {ayah.translation?.ar ??
-                                                ayah.text ??
-                                                ayah.arab}
-                                        </p>
+                                <div
+                                    className={`border-t border-gray-100 dark:border-slate-700 px-4 py-4 space-y-3 ${isOpen ? "" : "hidden"}`}
+                                >
+                                    {/* Arabic */}
+                                    <p
+                                        dir='rtl'
+                                        className='text-2xl leading-loose font-arabic text-gray-900 dark:text-gray-100 dark:text-white text-right'
+                                    >
+                                        {ayah.translation?.ar ??
+                                            ayah.text ??
+                                            ayah.arab}
+                                    </p>
 
-                                        {/* Latin */}
-                                        {showLatin &&
-                                            (ayah.translation?.latin_idn ??
-                                                ayah.transliteration) && (
-                                                <p className='text-sm text-emerald-700 dark:text-emerald-400 italic'>
-                                                    {ayah.translation
-                                                        ?.latin_idn ??
-                                                        ayah.transliteration}
-                                                </p>
-                                            )}
-
-                                        {/* Translation */}
-                                        {showTranslation && (
-                                            <p className='text-sm text-gray-600 dark:text-gray-300 leading-relaxed border-l-2 border-emerald-200 dark:border-emerald-800 pl-3'>
-                                                {ayah.translation?.idn ??
-                                                    ayah.translation?.en ??
-                                                    ayah.terjemahan ??
-                                                    ayah.meaning ??
-                                                    "—"}
+                                    {/* Latin */}
+                                    {showLatin &&
+                                        (ayah.translation?.latin_idn ??
+                                            ayah.transliteration) && (
+                                            <p className='text-sm text-emerald-700 dark:text-emerald-400 italic'>
+                                                {ayah.translation?.latin_idn ??
+                                                    ayah.transliteration}
                                             </p>
                                         )}
 
-                                        {/* Tafsir */}
-                                        {primaryTafsir || secondaryTafsir ? (
-                                            sideBySide &&
-                                            kitabFilter === "all" &&
-                                            primaryTafsir &&
-                                            secondaryTafsir ? (
-                                                <div className='grid grid-cols-2 gap-3'>
+                                    {/* Translation */}
+                                    {showTranslation && (
+                                        <p className='text-sm text-gray-600 dark:text-gray-300 leading-relaxed border-l-2 border-emerald-200 dark:border-emerald-800 pl-3'>
+                                            {ayah.translation?.idn ??
+                                                ayah.translation?.en ??
+                                                ayah.terjemahan ??
+                                                ayah.meaning ??
+                                                "—"}
+                                        </p>
+                                    )}
+
+                                    {/* Tafsir */}
+                                    {primaryTafsir || secondaryTafsir ? (
+                                        sideBySide &&
+                                        kitabFilter === "all" &&
+                                        primaryTafsir &&
+                                        secondaryTafsir ? (
+                                            <div className='grid grid-cols-2 gap-3'>
+                                                <div className='bg-emerald-50 dark:bg-emerald-900/20 rounded-lg px-4 py-3'>
+                                                    <p className='text-xs font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wide mb-1'>
+                                                        {t(
+                                                            "tafsir.kitab_kemenag_label",
+                                                        ) ?? "Tafsir Kemenag"}
+                                                    </p>
+                                                    <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
+                                                        {primaryTafsir}
+                                                    </p>
+                                                </div>
+                                                <div className='bg-sky-50 dark:bg-sky-900/20 rounded-lg px-4 py-3'>
+                                                    <p className='text-xs font-semibold text-sky-700 dark:text-sky-400 uppercase tracking-wide mb-1'>
+                                                        {t(
+                                                            "tafsir.kitab_ibnu_katsir_label",
+                                                        ) ??
+                                                            "Tafsir Al-Mishbah"}
+                                                    </p>
+                                                    <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
+                                                        {secondaryTafsir}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className='space-y-3'>
+                                                {primaryTafsir &&
+                                                kitabFilter !==
+                                                    "ibnu_katsir" ? (
                                                     <div className='bg-emerald-50 dark:bg-emerald-900/20 rounded-lg px-4 py-3'>
                                                         <p className='text-xs font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wide mb-1'>
                                                             {t(
@@ -383,6 +410,9 @@ export const TafsirSurahContent = ({
                                                             {primaryTafsir}
                                                         </p>
                                                     </div>
+                                                ) : null}
+                                                {secondaryTafsir &&
+                                                kitabFilter !== "kemenag" ? (
                                                     <div className='bg-sky-50 dark:bg-sky-900/20 rounded-lg px-4 py-3'>
                                                         <p className='text-xs font-semibold text-sky-700 dark:text-sky-400 uppercase tracking-wide mb-1'>
                                                             {t(
@@ -394,60 +424,25 @@ export const TafsirSurahContent = ({
                                                             {secondaryTafsir}
                                                         </p>
                                                     </div>
-                                                </div>
-                                            ) : (
-                                                <div className='space-y-3'>
-                                                    {primaryTafsir &&
-                                                    kitabFilter !==
-                                                        "ibnu_katsir" ? (
-                                                        <div className='bg-emerald-50 dark:bg-emerald-900/20 rounded-lg px-4 py-3'>
-                                                            <p className='text-xs font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wide mb-1'>
-                                                                {t(
-                                                                    "tafsir.kitab_kemenag_label",
-                                                                ) ??
-                                                                    "Tafsir Kemenag"}
-                                                            </p>
-                                                            <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
-                                                                {primaryTafsir}
-                                                            </p>
-                                                        </div>
-                                                    ) : null}
-                                                    {secondaryTafsir &&
-                                                    kitabFilter !==
-                                                        "kemenag" ? (
-                                                        <div className='bg-sky-50 dark:bg-sky-900/20 rounded-lg px-4 py-3'>
-                                                            <p className='text-xs font-semibold text-sky-700 dark:text-sky-400 uppercase tracking-wide mb-1'>
-                                                                {t(
-                                                                    "tafsir.kitab_ibnu_katsir_label",
-                                                                ) ??
-                                                                    "Tafsir Al-Mishbah"}
-                                                            </p>
-                                                            <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
-                                                                {
-                                                                    secondaryTafsir
-                                                                }
-                                                            </p>
-                                                        </div>
-                                                    ) : null}
-                                                </div>
-                                            )
-                                        ) : (
-                                            <div className='bg-gray-50 dark:bg-slate-700/40 rounded-lg px-4 py-3'>
-                                                <p className='text-xs text-gray-400 italic'>
-                                                    {t("ayah.tafsir_empty")}
-                                                </p>
+                                                ) : null}
                                             </div>
-                                        )}
+                                        )
+                                    ) : (
+                                        <div className='bg-gray-50 dark:bg-slate-700/40 rounded-lg px-4 py-3'>
+                                            <p className='text-xs text-gray-400 italic'>
+                                                {t("ayah.tafsir_empty")}
+                                            </p>
+                                        </div>
+                                    )}
 
-                                        {/* Link to quran */}
-                                        <Link
-                                            href={`${quranBasePath}/${encodeURIComponent(decodedSlug)}#ayah-${ayah.number}`}
-                                            className='text-xs text-emerald-600 dark:text-emerald-400 hover:underline'
-                                        >
-                                            {t("tafsir.read_in_quran")}
-                                        </Link>
-                                    </div>
-                                )}
+                                    {/* Link to quran */}
+                                    <Link
+                                        href={`${quranBasePath}/${encodeURIComponent(decodedSlug)}#ayah-${ayah.number}`}
+                                        className='text-xs text-emerald-600 dark:text-emerald-400 hover:underline'
+                                    >
+                                        {t("tafsir.read_in_quran")}
+                                    </Link>
+                                </div>
                             </div>
                         );
                     })}

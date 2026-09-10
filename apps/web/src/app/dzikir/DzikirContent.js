@@ -375,91 +375,86 @@ export const DzikirContent = ({ initialItems = [] }) => {
                                 )}
                             </div>
 
-                            {expanded === dzikir.id && (
-                                <div className='px-4 pb-4 border-t border-gray-50 dark:border-slate-700 pt-3 space-y-3'>
-                                    <p
-                                        className='text-2xl leading-[2.2] text-right font-kitab text-emerald-900 dark:text-emerald-300 dark:text-white'
-                                        style={{
-                                            direction: "rtl",
-                                            fontFamily: "Amiri, serif",
-                                        }}
-                                    >
-                                        {dzikir.translation?.ar}
+                            <div
+                                className={`px-4 pb-4 border-t border-gray-50 dark:border-slate-700 pt-3 space-y-3 ${expanded === dzikir.id ? "" : "hidden"}`}
+                            >
+                                <p
+                                    className='text-2xl leading-[2.2] text-right font-kitab text-emerald-900 dark:text-emerald-300 dark:text-white'
+                                    style={{
+                                        direction: "rtl",
+                                        fontFamily: "Amiri, serif",
+                                    }}
+                                >
+                                    {dzikir.translation?.ar}
+                                </p>
+                                {dzikir.translation?.latin_idn && (
+                                    <p className='text-sm italic text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                        {dzikir.translation.latin_idn}
                                     </p>
-                                    {dzikir.translation?.latin_idn && (
-                                        <p className='text-sm italic text-gray-500 dark:text-gray-300 dark:text-gray-400'>
-                                            {dzikir.translation.latin_idn}
-                                        </p>
-                                    )}
-                                    <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
-                                        {getLocalizedField(
-                                            dzikir,
-                                            "description",
-                                            lang,
-                                            ["meaning"],
-                                        )}
-                                    </p>
+                                )}
+                                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
                                     {getLocalizedField(
                                         dzikir,
-                                        "fadhilah",
+                                        "description",
                                         lang,
-                                        ["virtue"],
-                                    ) && (
-                                        <div className='bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2'>
-                                            <p className='text-xs font-medium text-amber-700 dark:text-amber-400 mb-0.5'>
-                                                {t("dzikir.fadhilah")}
-                                            </p>
-                                            <p className='text-xs text-amber-600 dark:text-amber-300'>
-                                                {getLocalizedField(
-                                                    dzikir,
-                                                    "fadhilah",
-                                                    lang,
-                                                    ["virtue"],
-                                                )}
-                                            </p>
-                                        </div>
+                                        ["meaning"],
                                     )}
-                                    {dzikir.audio_url && (
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                playing === dzikir.audio_url
-                                                    ? stopAudio()
-                                                    : playAudio(
-                                                          dzikir.audio_url,
-                                                      );
-                                            }}
-                                            className='flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
-                                        >
-                                            {playing === dzikir.audio_url ? (
-                                                <BsPauseFill />
-                                            ) : (
-                                                <BsPlayFill />
+                                </p>
+                                {getLocalizedField(dzikir, "fadhilah", lang, [
+                                    "virtue",
+                                ]) && (
+                                    <div className='bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2'>
+                                        <p className='text-xs font-medium text-amber-700 dark:text-amber-400 mb-0.5'>
+                                            {t("dzikir.fadhilah")}
+                                        </p>
+                                        <p className='text-xs text-amber-600 dark:text-amber-300'>
+                                            {getLocalizedField(
+                                                dzikir,
+                                                "fadhilah",
+                                                lang,
+                                                ["virtue"],
                                             )}
-                                            {playing === dzikir.audio_url
-                                                ? t("common.pause")
-                                                : t("asmaul.play_audio")}
-                                        </button>
-                                    )}
-                                    {dzikir.source && (
-                                        <SourceBadges source={dzikir.source} />
-                                    )}
-                                    <div className='pt-2 flex justify-end'>
-                                        <button
-                                            type='button'
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setReportDzikir(dzikir);
-                                            }}
-                                            className='inline-flex items-center gap-1.5 px-2.5 py-1 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors'
-                                        >
-                                            <BsExclamationTriangleFill className='text-[10px]' />
-                                            {t("report.correction_btn") ??
-                                                "Laporkan Kesalahan"}
-                                        </button>
+                                        </p>
                                     </div>
+                                )}
+                                {dzikir.audio_url && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            playing === dzikir.audio_url
+                                                ? stopAudio()
+                                                : playAudio(dzikir.audio_url);
+                                        }}
+                                        className='flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
+                                    >
+                                        {playing === dzikir.audio_url ? (
+                                            <BsPauseFill />
+                                        ) : (
+                                            <BsPlayFill />
+                                        )}
+                                        {playing === dzikir.audio_url
+                                            ? t("common.pause")
+                                            : t("asmaul.play_audio")}
+                                    </button>
+                                )}
+                                {dzikir.source && (
+                                    <SourceBadges source={dzikir.source} />
+                                )}
+                                <div className='pt-2 flex justify-end'>
+                                    <button
+                                        type='button'
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setReportDzikir(dzikir);
+                                        }}
+                                        className='inline-flex items-center gap-1.5 px-2.5 py-1 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors'
+                                    >
+                                        <BsExclamationTriangleFill className='text-[10px]' />
+                                        {t("report.correction_btn") ??
+                                            "Laporkan Kesalahan"}
+                                    </button>
                                 </div>
-                            )}
+                            </div>
                         </div>
                     );
                 })}

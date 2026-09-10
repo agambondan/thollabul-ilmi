@@ -179,76 +179,74 @@ export function ManasikContent() {
                                     )}
                                 </button>
 
-                                {isOpen && (
-                                    <div className='border-t border-gray-100 dark:border-slate-700 px-4 py-4 space-y-3'>
-                                        {/* Arabic */}
-                                        {arabic && (
-                                            <p
-                                                dir='rtl'
-                                                className='text-xl leading-loose text-gray-900 dark:text-gray-100 dark:text-white text-right'
-                                                style={{
-                                                    fontFamily: "Amiri, serif",
-                                                }}
-                                            >
-                                                {arabic}
+                                <div
+                                    className={`border-t border-gray-100 dark:border-slate-700 px-4 py-4 space-y-3 ${isOpen ? "" : "hidden"}`}
+                                >
+                                    {/* Arabic */}
+                                    {arabic && (
+                                        <p
+                                            dir='rtl'
+                                            className='text-xl leading-loose text-gray-900 dark:text-gray-100 dark:text-white text-right'
+                                            style={{
+                                                fontFamily: "Amiri, serif",
+                                            }}
+                                        >
+                                            {arabic}
+                                        </p>
+                                    )}
+
+                                    {/* Latin */}
+                                    {latin && (
+                                        <p className='text-sm text-emerald-700 dark:text-emerald-400 italic'>
+                                            {latin}
+                                        </p>
+                                    )}
+
+                                    {/* Arabic meaning */}
+                                    {arabicMeaning && (
+                                        <p className='text-sm text-gray-600 dark:text-gray-300 border-l-2 border-emerald-200 dark:border-emerald-800 pl-3'>
+                                            {arabicMeaning}
+                                        </p>
+                                    )}
+
+                                    {/* Step description */}
+                                    {step.description && (
+                                        <div className='bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3'>
+                                            <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
+                                                {step.description}
                                             </p>
-                                        )}
-
-                                        {/* Latin */}
-                                        {latin && (
-                                            <p className='text-sm text-emerald-700 dark:text-emerald-400 italic'>
-                                                {latin}
-                                            </p>
-                                        )}
-
-                                        {/* Arabic meaning */}
-                                        {arabicMeaning && (
-                                            <p className='text-sm text-gray-600 dark:text-gray-300 border-l-2 border-emerald-200 dark:border-emerald-800 pl-3'>
-                                                {arabicMeaning}
-                                            </p>
-                                        )}
-
-                                        {/* Step description */}
-                                        {step.description && (
-                                            <div className='bg-gray-50 dark:bg-slate-700/50 rounded-lg p-3'>
-                                                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
-                                                    {step.description}
-                                                </p>
-                                            </div>
-                                        )}
-
-                                        {/* Notes */}
-                                        {step.notes && (
-                                            <div className='bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2'>
-                                                <p className='text-xs text-amber-700 dark:text-amber-400'>
-                                                    📝 {step.notes}
-                                                </p>
-                                            </div>
-                                        )}
-
-                                        {/* Source */}
-                                        {step.source && (
-                                            <SourceBadges
-                                                source={step.source}
-                                            />
-                                        )}
-
-                                        {/* Badge */}
-                                        <div>
-                                            <span
-                                                className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                                                    step.is_wajib
-                                                        ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-                                                        : "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-gray-400"
-                                                }`}
-                                            >
-                                                {step.is_wajib
-                                                    ? t("manasik.required")
-                                                    : t("manasik.sunnah")}
-                                            </span>
                                         </div>
+                                    )}
+
+                                    {/* Notes */}
+                                    {step.notes && (
+                                        <div className='bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2'>
+                                            <p className='text-xs text-amber-700 dark:text-amber-400'>
+                                                📝 {step.notes}
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {/* Source */}
+                                    {step.source && (
+                                        <SourceBadges source={step.source} />
+                                    )}
+
+                                    {/* Badge */}
+                                    <div>
+                                        <span
+                                            className={`text-xs px-2.5 py-1 rounded-full font-medium ${
+                                                step.is_wajib
+                                                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                                                    : "bg-gray-100 text-gray-600 dark:bg-slate-700 dark:text-gray-400"
+                                            }`}
+                                        >
+                                            {step.is_wajib
+                                                ? t("manasik.required")
+                                                : t("manasik.sunnah")}
+                                        </span>
                                     </div>
-                                )}
+                                </div>
                             </div>
                         );
                     })}
