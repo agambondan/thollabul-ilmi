@@ -563,7 +563,18 @@ func seedKajianFromFile(db *gorm.DB) {
 	var firstTranscriptErr error
 
 	// Clean up legacy rows that have no URL (link ngaco) so we don't duplicate.
-	db.Where("(url = '' OR url IS NULL)").Delete(&model.Kajian{})
+	// Hard-delete for the same reason as below: the plain unique index on
+	// (title, speaker, published_at) never frees a soft-deleted row's slot.
+	var noURLKajians []model.Kajian
+	if err := db.Where("(url = '' OR url IS NULL)").Find(&noURLKajians).Error; err == nil {
+		for _, ek := range noURLKajians {
+			if ek.ID == nil {
+				continue
+			}
+			db.Unscoped().Where("kajian_id = ?", *ek.ID).Delete(&model.KajianTranscript{})
+			db.Unscoped().Delete(&model.Kajian{}, *ek.ID)
+		}
+	}
 
 	// Also drop any kajian rows that no longer match the static file's known set,
 	// so dead card entries (e.g. dummy fiktif seed lama) get cleared on first run.
