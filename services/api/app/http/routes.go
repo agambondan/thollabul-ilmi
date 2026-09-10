@@ -70,6 +70,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 
 	newServices := service.NewServices(repo)
 	newUserController := controllers.NewUserController(newServices)
+	newWhatsappController := controllers.NewWhatsAppController(newServices)
 	newGoogleAuthController := controllers.NewGoogleAuthController(newServices.User)
 	newAyahController := controllers.NewAyahController(newServices)
 	newSurahController := controllers.NewSurahController(newServices)
@@ -245,14 +246,25 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Post("/auth/logout", newUserController.Logout)
 	master.Post("/auth/forgot-password", authLimiter, newUserController.ForgotPassword)
 	master.Post("/auth/reset-password", authLimiter, newUserController.ResetPassword)
+	master.Post("/auth/verify-email", authLimiter, newUserController.VerifyEmail)
+	master.Post("/auth/verify-whatsapp", authLimiter, newUserController.VerifyWhatsApp)
+	master.Post("/auth/resend-verification", authLimiter, newUserController.ResendVerification)
 
 	// Google OAuth
 	master.Get("/auth/google", authLimiter, newGoogleAuthController.Login)
 	master.Get("/auth/google/callback", authLimiter, newGoogleAuthController.Callback)
 
+	// WhatsApp (public availability check — used by the register form)
+	master.Get("/whatsapp/availability", newWhatsappController.Availability)
+
 	// Middleware vars — declared early so they can be used on Quran write routes
 	jwt := middlewares.JWTAuth()
 	admin := middlewares.AdminMiddleware()
+
+	// WhatsApp channel pairing (admin only)
+	master.Get("/admin/whatsapp/status", admin, newWhatsappController.Status)
+	master.Get("/admin/whatsapp/pair-stream", admin, newWhatsappController.PairStream)
+	master.Post("/admin/whatsapp/logout", admin, newWhatsappController.Logout)
 
 	// Search (public) with stricter rate limit
 	master.Get("/search", searchLimiter, newSearchController.Search)

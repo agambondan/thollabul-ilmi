@@ -183,6 +183,30 @@ const en = {
     "auth.google_register": "Sign up with Google",
     "auth.show_password": "Show password",
     "auth.hide_password": "Hide password",
+    "auth.verify_channel_label": "Verify account via",
+    "auth.channel_email": "Email",
+    "auth.channel_whatsapp": "WhatsApp",
+    "auth.whatsapp_unavailable":
+        "WhatsApp verification is currently unavailable, please use email",
+    "auth.phone": "WhatsApp Number",
+    "auth.phone_invalid":
+        "Invalid phone number, use format 08xx or +62xx",
+    "auth.verify_email_title": "Verify Account",
+    "auth.verify_email_missing_token": "Invalid verification link.",
+    "auth.verify_email_success":
+        "Your account has been verified. Please sign in.",
+    "auth.verify_email_error":
+        "This verification link is invalid or has expired.",
+    "auth.verify_whatsapp_title": "Verify WhatsApp",
+    "auth.verify_whatsapp_desc":
+        "Enter the 6-digit code sent to your WhatsApp.",
+    "auth.otp_code": "Verification Code",
+    "auth.verify_btn": "Verify",
+    "auth.resend_code": "Resend code",
+    "auth.resend_verification": "Resend verification",
+    "auth.resend_success": "A new code/link has been sent.",
+    "auth.account_not_verified":
+        "Your account isn't verified yet. Check your email/WhatsApp, or resend it.",
     "pwa.install_title": "Install Thullaabul 'Ilmi app",
     "pwa.install_desc":
         "Quick access to Quran, Hadith, and prayer times from your phone",

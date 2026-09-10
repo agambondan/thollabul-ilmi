@@ -1,18 +1,32 @@
 package service
 
 import (
+	"crypto/rand"
 	"errors"
+	"fmt"
 	"log/slog"
+	"math/big"
+	"regexp"
+	"strings"
 	"time"
 
 	"github.com/agambondan/islamic-explorer/app/lib"
+	"github.com/agambondan/islamic-explorer/app/lib/whatsapp"
 	"github.com/agambondan/islamic-explorer/app/model"
 	"github.com/agambondan/islamic-explorer/app/repository"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/morkid/paginate"
+	"github.com/spf13/viper"
 )
+
+func derefStr(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
+}
 
 var (
 	ErrSessionNotFound            = errors.New("session not found")
@@ -22,7 +36,36 @@ var (
 	// failure details (driver messages, constraint names) never reach the
 	// client; the real error is logged server-side instead.
 	errLoginFailed = errors.New("unable to log in right now, please try again")
+
+	// errAccountNotVerified is a stable, distinguishable message the frontend
+	// pattern-matches to show a "resend verification" action instead of the
+	// generic invalid-credentials error. Keep this exact string in sync with
+	// apps/web/src/context/Auth.js and apps/web/src/app/auth/login/page.js.
+	errAccountNotVerified = errors.New("account not verified")
+
+	indonesianPhone = regexp.MustCompile(`^(?:\+62|62|0)(8[0-9]{8,11})$`)
 )
+
+// normalizePhone accepts common Indonesian mobile formats (08xx, 62xx, +62xx)
+// and returns E.164 (+62xx), or an error if the input doesn't look like an
+// Indonesian mobile number.
+func normalizePhone(raw string) (string, error) {
+	digits := strings.TrimSpace(raw)
+	m := indonesianPhone.FindStringSubmatch(digits)
+	if m == nil {
+		return "", errors.New("invalid Indonesian phone number")
+	}
+	return "+62" + m[1], nil
+}
+
+// generateOTP returns a random 6-digit numeric code.
+func generateOTP() (string, error) {
+	n, err := rand.Int(rand.Reader, big.NewInt(1000000))
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%06d", n.Int64()), nil
+}
 
 type UserService interface {
 	Register(*model.RegisterRequest) (*model.User, error)
@@ -34,6 +77,9 @@ type UserService interface {
 	Logout(refreshToken string) error
 	ForgotPassword(email string) error
 	ResetPassword(token, newPassword string) error
+	VerifyEmail(token string) error
+	VerifyWhatsApp(email, code string) error
+	ResendVerification(email string) error
 	FindAll(*fiber.Ctx) *paginate.Page
 	FindById(string) (*model.User, error)
 	UpdateById(string, *model.User) (*model.User, error)
@@ -46,10 +92,11 @@ type UserService interface {
 
 type userService struct {
 	user repository.UserRepository
+	wa   *whatsapp.Manager
 }
 
-func NewUserService(repo repository.UserRepository) UserService {
-	return &userService{repo}
+func NewUserService(repo repository.UserRepository, wa *whatsapp.Manager) UserService {
+	return &userService{repo, wa}
 }
 
 func (s *userService) Register(req *model.RegisterRequest) (*model.User, error) {
@@ -57,17 +104,109 @@ func (s *userService) Register(req *model.RegisterRequest) (*model.User, error) 
 		return nil, errors.New("unable to register with the provided details")
 	}
 
+	var phone string
+	if req.VerificationChannel == model.VerificationChannelWhatsapp {
+		if s.wa == nil || !s.wa.IsConnected() {
+			return nil, errors.New("whatsapp verification is currently unavailable, please use email instead")
+		}
+		normalized, err := normalizePhone(req.Phone)
+		if err != nil {
+			return nil, errors.New("nomor HP tidak valid, gunakan format 08xx atau +62xx")
+		}
+		phone = normalized
+	}
+
 	hashed := lib.PasswordEncrypt(req.Password)
 
 	id := uuid.New()
 	user := &model.User{
-		BaseUUID: model.BaseUUID{ID: id},
-		Name:     lib.Strptr(req.Name),
-		Email:    lib.Strptr(req.Email),
-		Password: lib.Strptr(hashed),
-		Role:     model.RoleUser,
+		BaseUUID:            model.BaseUUID{ID: id},
+		Name:                lib.Strptr(req.Name),
+		Email:               lib.Strptr(req.Email),
+		Password:            lib.Strptr(hashed),
+		Role:                model.RoleUser,
+		VerificationChannel: lib.Strptr(req.VerificationChannel),
 	}
-	return s.user.Save(user)
+	if phone != "" {
+		user.Phone = lib.Strptr(phone)
+	}
+	saved, err := s.user.Save(user)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.dispatchVerification(saved); err != nil {
+		// The account still exists — surface nothing to the caller beyond a
+		// log entry; the user can always hit "resend verification" once the
+		// underlying issue (SMTP creds, WA session) is fixed.
+		slog.Error("register: failed to dispatch verification", "user_id", saved.ID.String(), "channel", req.VerificationChannel, "err", err)
+	}
+	return saved, nil
+}
+
+// dispatchVerification generates a fresh token/code for the user's chosen
+// channel, persists it, and sends it asynchronously — mirrors ForgotPassword's
+// goroutine + recover + log-only-on-failure style exactly.
+func (s *userService) dispatchVerification(user *model.User) error {
+	channel := model.VerificationChannelEmail
+	if user.VerificationChannel != nil {
+		channel = *user.VerificationChannel
+	}
+
+	_ = s.user.DeleteVerificationTokensByUserChannel(user.ID.String(), channel)
+
+	var raw string
+	var expiresIn time.Duration
+	if channel == model.VerificationChannelWhatsapp {
+		code, err := generateOTP()
+		if err != nil {
+			return err
+		}
+		raw = code
+		expiresIn = 10 * time.Minute
+	} else {
+		raw = uuid.New().String()
+		expiresIn = time.Hour
+	}
+
+	// Email links are looked up by hash alone (the request has no user
+	// context yet), so the UUID itself must be the hash input. WhatsApp OTP
+	// codes are only 6 digits, so VerifyWhatsApp resolves the user via email
+	// first and mixes the user ID into the hash to keep it collision-free
+	// under the TokenHash unique index.
+	tokenHash := lib.ConvertToSHA256(raw)
+	if channel == model.VerificationChannelWhatsapp {
+		tokenHash = lib.ConvertToSHA256(user.ID.String() + ":" + raw)
+	}
+	if err := s.user.SaveVerificationToken(user.ID.String(), channel, tokenHash, time.Now().Add(expiresIn)); err != nil {
+		return err
+	}
+
+	devLog := viper.GetString("ENVIRONMENT") != "production"
+
+	go func() {
+		defer func() {
+			if r := recover(); r != nil {
+				slog.Error("panic in verification dispatch goroutine", "recover", r)
+			}
+		}()
+		if channel == model.VerificationChannelWhatsapp {
+			if devLog {
+				slog.Info("dev: whatsapp verification code", "phone", derefStr(user.Phone), "code", raw)
+			}
+			if err := s.wa.SendOTP(derefStr(user.Phone), raw); err != nil {
+				slog.Warn("whatsapp verification send failed", "phone", derefStr(user.Phone), "err", err)
+			}
+		} else {
+			if devLog {
+				slog.Info("dev: email verification token", "email", derefStr(user.Email), "token", raw)
+			}
+			if err := lib.SendVerificationEmail(derefStr(user.Email), raw); err != nil {
+				slog.Warn("verification email failed", "email", derefStr(user.Email), "err", err)
+			}
+		}
+	}()
+	return nil
 }
 
 func (s *userService) Login(req *model.LoginRequest) (*model.LoginResponse, error) {
@@ -78,6 +217,10 @@ func (s *userService) Login(req *model.LoginRequest) (*model.LoginResponse, erro
 
 	if !lib.PasswordCompare(*user.Password, req.Password) {
 		return nil, errors.New("invalid email or password")
+	}
+
+	if !user.IsVerified() {
+		return nil, errAccountNotVerified
 	}
 
 	lang := ""
@@ -234,6 +377,65 @@ func (s *userService) ResetPassword(token, newPassword string) error {
 		return err
 	}
 	return s.user.MarkPasswordResetTokenUsed(tokenHash)
+}
+
+func (s *userService) VerifyEmail(token string) error {
+	tokenHash := lib.ConvertToSHA256(token)
+	vt, err := s.user.FindVerificationTokenByHash(tokenHash)
+	if err != nil || vt.Channel != model.VerificationChannelEmail {
+		return errors.New("invalid or expired verification link")
+	}
+	if time.Now().After(vt.ExpiresAt) {
+		return errors.New("verification link has expired, please request a new one")
+	}
+	if err := s.user.MarkEmailVerified(vt.UserID); err != nil {
+		return err
+	}
+	return s.user.MarkVerificationTokenVerified(vt.ID)
+}
+
+func (s *userService) VerifyWhatsApp(email, code string) error {
+	user, err := s.user.FindByEmail(email)
+	if err != nil {
+		return errors.New("invalid verification code")
+	}
+
+	active, err := s.user.FindActiveVerificationToken(user.ID.String(), model.VerificationChannelWhatsapp)
+	if err != nil {
+		return errors.New("invalid verification code")
+	}
+	if active.Attempts >= 5 {
+		return errors.New("too many failed attempts, please request a new code")
+	}
+	if time.Now().After(active.ExpiresAt) {
+		return errors.New("verification code has expired, please request a new one")
+	}
+
+	tokenHash := lib.ConvertToSHA256(user.ID.String() + ":" + code)
+	if tokenHash != active.TokenHash {
+		_ = s.user.IncrementVerificationTokenAttempts(active.ID)
+		return errors.New("invalid verification code")
+	}
+
+	if err := s.user.MarkPhoneVerified(user.ID.String()); err != nil {
+		return err
+	}
+	return s.user.MarkVerificationTokenVerified(active.ID)
+}
+
+func (s *userService) ResendVerification(email string) error {
+	user, err := s.user.FindByEmail(email)
+	if err != nil {
+		// Anti-enumeration: pretend it worked either way.
+		return nil
+	}
+	if user.IsVerified() {
+		return nil
+	}
+	if err := s.dispatchVerification(user); err != nil {
+		slog.Error("resend verification failed", "user_id", user.ID.String(), "err", err)
+	}
+	return nil
 }
 
 func (s *userService) FindAll(ctx *fiber.Ctx) *paginate.Page {

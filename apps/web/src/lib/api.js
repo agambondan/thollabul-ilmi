@@ -160,6 +160,26 @@ export const adminUserApi = {
     delete: (id) => authFetch(`/api/v1/users/${id}`, { method: "DELETE" }),
 };
 
+// checkWhatsappAvailability is public (no auth) — the register form calls
+// it to decide whether to offer WhatsApp as a verification channel.
+export const checkWhatsappAvailability = async () => {
+    try {
+        const res = await fetch(`${API_URL}/api/v1/whatsapp/availability`);
+        if (!res.ok) return false;
+        const data = await parseApiJson(res);
+        return Boolean(data?.available);
+    } catch {
+        return false;
+    }
+};
+
+export const whatsappApi = {
+    status: () => authFetch("/api/v1/admin/whatsapp/status"),
+    logout: () =>
+        authFetch("/api/v1/admin/whatsapp/logout", { method: "POST" }),
+    pairStreamUrl: () => `${API_URL}/api/v1/admin/whatsapp/pair-stream`,
+};
+
 export const analyticsApi = {
     trackPageView: (data) => {
         const token = getToken();

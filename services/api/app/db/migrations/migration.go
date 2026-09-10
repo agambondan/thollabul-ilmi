@@ -67,6 +67,8 @@ var ModelMigrations []interface{} = []interface{}{
 	model.StudyGoal{},
 	model.RefreshToken{},
 	model.PasswordResetToken{},
+	model.VerificationToken{},
+	model.WhatsAppChannel{},
 	model.HistoryEvent{},
 	model.ManasikStep{},
 	model.Quiz{},

@@ -204,7 +204,7 @@ func newUserControllerTestApp(t *testing.T) (*fiber.App, *gorm.DB, uuid.UUID) {
 	}
 
 	controller := NewUserController(&service.Services{
-		User: service.NewUserService(repository.NewUserRepository(db, paginate.New())),
+		User: service.NewUserService(repository.NewUserRepository(db, paginate.New()), nil),
 	})
 	app := fiber.New()
 	app.Get("/auth/sessions", controller.Sessions)

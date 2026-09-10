@@ -176,6 +176,30 @@ const id = {
     "auth.google_register": "Daftar dengan Google",
     "auth.show_password": "Lihat password",
     "auth.hide_password": "Sembunyikan password",
+    "auth.verify_channel_label": "Verifikasi akun via",
+    "auth.channel_email": "Email",
+    "auth.channel_whatsapp": "WhatsApp",
+    "auth.whatsapp_unavailable":
+        "Verifikasi WhatsApp sedang tidak tersedia, silakan pakai email",
+    "auth.phone": "Nomor WhatsApp",
+    "auth.phone_invalid":
+        "Nomor HP tidak valid, gunakan format 08xx atau +62xx",
+    "auth.verify_email_title": "Verifikasi Akun",
+    "auth.verify_email_missing_token": "Link verifikasi tidak valid.",
+    "auth.verify_email_success":
+        "Akun kamu berhasil diverifikasi. Silakan masuk.",
+    "auth.verify_email_error":
+        "Link verifikasi tidak valid atau sudah kedaluwarsa.",
+    "auth.verify_whatsapp_title": "Verifikasi WhatsApp",
+    "auth.verify_whatsapp_desc":
+        "Masukkan kode 6 digit yang dikirim ke WhatsApp kamu.",
+    "auth.otp_code": "Kode Verifikasi",
+    "auth.verify_btn": "Verifikasi",
+    "auth.resend_code": "Kirim ulang kode",
+    "auth.resend_verification": "Kirim ulang verifikasi",
+    "auth.resend_success": "Kode/link baru sudah dikirim ulang.",
+    "auth.account_not_verified":
+        "Akun kamu belum diverifikasi. Cek email/WhatsApp kamu, atau kirim ulang.",
     "pwa.install_title": "Install aplikasi Thullaabul 'Ilmi",
     "pwa.install_desc":
         "Akses cepat Quran, Hadits, & jadwal sholat dari layar HP",

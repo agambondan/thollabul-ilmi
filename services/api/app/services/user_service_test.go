@@ -15,7 +15,7 @@ import (
 
 func TestUserServiceFindSessionsFiltersExpiredAndMarksCurrent(t *testing.T) {
 	db := newUserServiceTestDB(t)
-	svc := NewUserService(repository.NewUserRepository(db, paginate.New()))
+	svc := NewUserService(repository.NewUserRepository(db, paginate.New()), nil)
 	userID := uuid.New().String()
 	now := time.Now()
 
@@ -42,7 +42,7 @@ func TestUserServiceFindSessionsFiltersExpiredAndMarksCurrent(t *testing.T) {
 func TestUserServiceDeleteSelfRevokesTokensAndSoftDeletesUser(t *testing.T) {
 	db := newUserServiceTestDB(t)
 	repo := repository.NewUserRepository(db, paginate.New())
-	svc := NewUserService(repo)
+	svc := NewUserService(repo, nil)
 
 	userID := uuid.New()
 	name := "Delete Me"
@@ -78,7 +78,7 @@ func TestUserServiceDeleteSelfRevokesTokensAndSoftDeletesUser(t *testing.T) {
 
 func TestUserServiceRevokeSessionDeletesOnlyRequestedNonCurrentSession(t *testing.T) {
 	db := newUserServiceTestDB(t)
-	svc := NewUserService(repository.NewUserRepository(db, paginate.New()))
+	svc := NewUserService(repository.NewUserRepository(db, paginate.New()), nil)
 	userID := uuid.New().String()
 	otherUserID := uuid.New().String()
 	now := time.Now()

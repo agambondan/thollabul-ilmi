@@ -17,6 +17,7 @@ import {
     BsBookHalf,
     BsBookmark,
     BsCameraVideo,
+    BsWhatsapp,
     BsChevronLeft,
     BsChevronRight,
     BsClock,
@@ -213,6 +214,11 @@ const NAV_GROUPS = [
                 href: "/admin/push",
                 label: "Push Notification",
                 icon: <BsBellFill />,
+            },
+            {
+                href: "/admin/whatsapp",
+                label: "WhatsApp Verifikasi",
+                icon: <BsWhatsapp />,
             },
             {
                 href: "/admin/reports",

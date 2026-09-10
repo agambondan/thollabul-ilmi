@@ -3,10 +3,15 @@
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { buildLoginHref, getSafeNextPath } from "@/lib/authRedirect";
+import { checkWhatsappAvailability } from "@/lib/api";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
+
+// Accepts 08xx, 62xx, or +62xx and leaves the final validation to the API —
+// this is just enough to catch obvious typos before submitting.
+const INDONESIAN_PHONE = /^(?:\+62|62|0)8[0-9]{8,11}$/;
 
 const RegisterPage = () => {
     const { register, isAuthenticated, isLoading: authLoading } = useAuth();
@@ -17,6 +22,9 @@ const RegisterPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [channel, setChannel] = useState("email");
+    const [phone, setPhone] = useState("");
+    const [whatsappAvailable, setWhatsappAvailable] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const nextUrl = getSafeNextPath(searchParams.get("next"), "/");
@@ -26,13 +34,39 @@ const RegisterPage = () => {
         if (isAuthenticated) router.replace(nextUrl);
     }, [isAuthenticated, authLoading, nextUrl, router]);
 
+    useEffect(() => {
+        let cancelled = false;
+        checkWhatsappAvailability().then((available) => {
+            if (!cancelled) setWhatsappAvailable(available);
+        });
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        if (channel === "whatsapp" && !INDONESIAN_PHONE.test(phone.trim())) {
+            setError(
+                t("auth.phone_invalid") ||
+                    "Nomor HP tidak valid, gunakan format 08xx atau +62xx",
+            );
+            return;
+        }
         setIsLoading(true);
         try {
-            await register(name, email, password);
-            router.push(`${buildLoginHref(nextUrl)}&registered=1`);
+            await register(name, email, password, {
+                channel,
+                phone: channel === "whatsapp" ? phone.trim() : undefined,
+            });
+            if (channel === "whatsapp") {
+                router.push(
+                    `/auth/verify-whatsapp?email=${encodeURIComponent(email)}`,
+                );
+            } else {
+                router.push(`${buildLoginHref(nextUrl)}&registered=1`);
+            }
         } catch (err) {
             setError(err.message);
             setIsLoading(false);
@@ -146,6 +180,68 @@ const RegisterPage = () => {
                                 </button>
                             </div>
                         </div>
+
+                        <div>
+                            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                                {t("auth.verify_channel_label") ||
+                                    "Verifikasi akun via"}
+                            </label>
+                            <div className='grid grid-cols-2 gap-2'>
+                                <button
+                                    type='button'
+                                    onClick={() => setChannel("email")}
+                                    className={`py-2 rounded-lg text-sm font-semibold border transition-colors ${
+                                        channel === "email"
+                                            ? "bg-emerald-700 text-white border-emerald-700"
+                                            : "border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300"
+                                    }`}
+                                >
+                                    {t("auth.channel_email") || "Email"}
+                                </button>
+                                <button
+                                    type='button'
+                                    disabled={!whatsappAvailable}
+                                    onClick={() =>
+                                        whatsappAvailable &&
+                                        setChannel("whatsapp")
+                                    }
+                                    title={
+                                        whatsappAvailable
+                                            ? undefined
+                                            : t("auth.whatsapp_unavailable") ||
+                                              "Verifikasi WhatsApp sedang tidak tersedia"
+                                    }
+                                    className={`py-2 rounded-lg text-sm font-semibold border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                                        channel === "whatsapp"
+                                            ? "bg-emerald-700 text-white border-emerald-700"
+                                            : "border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300"
+                                    }`}
+                                >
+                                    {t("auth.channel_whatsapp") || "WhatsApp"}
+                                </button>
+                            </div>
+                        </div>
+
+                        {channel === "whatsapp" && (
+                            <div>
+                                <label
+                                    htmlFor='page-phone'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
+                                >
+                                    {t("auth.phone") || "Nomor WhatsApp"}
+                                </label>
+                                <input
+                                    id='page-phone'
+                                    type='tel'
+                                    required
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    className='w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                    placeholder='08xxxxxxxxxx'
+                                />
+                            </div>
+                        )}
+
                         <button
                             type='submit'
                             disabled={isLoading}

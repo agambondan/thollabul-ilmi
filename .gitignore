@@ -46,6 +46,9 @@ services/api/data/audio/
 services/api/data/hadisku_compare/
 services/api/data/hadisku_raw/
 # quran_base.json dan mufrodat.json DI-COMMIT sebagai source of truth seed data
+# whatsmeow's paired-session sqlite store (real path set via WA_SESSION_DIR;
+# this catches the "data/wa" default wherever go test's CWD happens to land)
+**/data/wa/
 services/api/build/
 services/api/fill_gaps
 services/api/import_hadits

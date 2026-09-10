@@ -1,7 +1,11 @@
 package service
 
 import (
+	"context"
+	"log/slog"
+
 	"github.com/agambondan/islamic-explorer/app/lib"
+	"github.com/agambondan/islamic-explorer/app/lib/whatsapp"
 	"github.com/agambondan/islamic-explorer/app/repository"
 	"github.com/spf13/viper"
 )
@@ -84,6 +88,7 @@ type Services struct {
 	AdzanSound           AdzanSoundService
 	ContentReport        ContentReportService
 	ContentEmbedding     ContentEmbeddingService
+	WhatsApp             *whatsapp.Manager
 }
 
 func NewServices(repo *repository.Repositories) *Services {
@@ -100,6 +105,15 @@ func NewServices(repo *repository.Repositories) *Services {
 		cache = lib.NewCacheService(client, cacheTTL)
 	}
 
+	waSessionPath := viper.GetString("WA_SESSION_DIR")
+	if waSessionPath == "" {
+		waSessionPath = "data/wa"
+	}
+	waManager := whatsapp.NewManager(db, waSessionPath+"/session.db")
+	if err := waManager.Bootstrap(context.Background()); err != nil {
+		slog.Warn("whatsapp: bootstrap failed, admin can retry pairing later", "err", err)
+	}
+
 	streak := NewStreakService(repo.UserActivity)
 	doaSvc := NewDoaServiceWithCache(repo.Doa, cache)
 	dailyReminderSvc := NewDailyReminderServiceWithCache(repo.DailyReminder, cache)
@@ -108,7 +122,7 @@ func NewServices(repo *repository.Repositories) *Services {
 	prayerTimesSvc := NewPrayerTimesService()
 	notificationSvc := NewNotificationService(repo.Notification, repo.NotificationInbox, prayerTimesSvc)
 	svc := &Services{
-		User:                 NewUserService(repo.User),
+		User:                 NewUserService(repo.User, waManager),
 		Ayah:                 NewAyahServiceWithCache(repo.Ayah, cache),
 		Surah:                NewSurahServiceWithCache(repo.Surah, cache),
 		Juz:                  NewJuzServiceWithCache(repo.Juz, cache),
@@ -184,6 +198,7 @@ func NewServices(repo *repository.Repositories) *Services {
 		ContentReport:        NewContentReportService(repo.ContentReport, repo.NotificationInbox, repo, notificationSvc),
 		ContentEmbedding:     NewContentEmbeddingService(repo.ContentEmbedding),
 		Sync:                 NewSyncService(db, cache, doaSvc, dzikirSvc, asmaulHusnaSvc),
+		WhatsApp:             waManager,
 	}
 	svc.Dashboard = NewDashboardService(db, svc.Ayah, svc.Hadith, svc.Streak, svc.Sholat, svc.NotificationInbox, svc.Tilawah)
 	return svc

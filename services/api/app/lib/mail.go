@@ -129,6 +129,52 @@ func SendPasswordResetEmail(toEmail, resetToken string) error {
 	return d.DialAndSend(m)
 }
 
+// SendVerificationEmail sends an account-activation link to the given
+// address. Mirrors SendPasswordResetEmail's config lookup and inline-HTML
+// style exactly.
+func SendVerificationEmail(toEmail, verifyToken string) error {
+	appURL := viper.GetString("APP_URL")
+	if appURL == "" {
+		appURL = "https://tholabul-ilmi.app"
+	}
+	verifyLink := fmt.Sprintf("%s/auth/verify-email?token=%s", appURL, verifyToken)
+
+	smtpHost := viper.GetString("SMTP_HOST")
+	if smtpHost == "" {
+		smtpHost = ConfigSmtpHost
+	}
+	smtpPort := viper.GetInt("SMTP_PORT")
+	if smtpPort == 0 {
+		smtpPort = ConfigSmtpPort
+	}
+	smtpUser := viper.GetString("SMTP_USER")
+	if smtpUser == "" {
+		smtpUser = ConfigAuthEmail
+	}
+	smtpPass := viper.GetString("SMTP_PASS")
+	if smtpPass == "" {
+		smtpPass = ConfigAuthPassword
+	}
+	senderName := viper.GetString("SMTP_SENDER")
+	if senderName == "" {
+		senderName = ConfigSenderName
+	}
+
+	body := fmt.Sprintf(`<p>Assalamu'alaikum,</p>
+<p>Terima kasih sudah mendaftar di Thalabul Ilmi. Klik link berikut untuk mengaktifkan akun Anda:</p>
+<p><a href="%s">%s</a></p>
+<p>Jika Anda tidak merasa mendaftar, abaikan email ini.</p>`, verifyLink, verifyLink)
+
+	m := gomail.NewMessage()
+	m.SetHeader("From", senderName)
+	m.SetHeader("To", toEmail)
+	m.SetHeader("Subject", "Aktivasi Akun — Thalabul Ilmi")
+	m.SetBody("text/html", body)
+
+	d := gomail.NewDialer(smtpHost, smtpPort, smtpUser, smtpPass)
+	return d.DialAndSend(m)
+}
+
 // CheckEmailExists is Check Email Exists or not
 func CheckEmailExists(email *string) error {
 	verifier := emailverifier.NewVerifier()

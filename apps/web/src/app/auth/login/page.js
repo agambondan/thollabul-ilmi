@@ -9,7 +9,12 @@ import { useEffect, useState } from "react";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 const LoginPage = () => {
-    const { login, isAuthenticated, isLoading: authLoading } = useAuth();
+    const {
+        login,
+        resendVerification,
+        isAuthenticated,
+        isLoading: authLoading,
+    } = useAuth();
     const { t } = useLocale();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -17,6 +22,8 @@ const LoginPage = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
+    const [notVerified, setNotVerified] = useState(false);
+    const [resent, setResent] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const nextUrl = getSafeNextPath(searchParams.get("next"), "/");
@@ -30,14 +37,28 @@ const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setNotVerified(false);
+        setResent(false);
         setIsLoading(true);
         try {
             await login(email, password);
             router.push(nextUrl);
         } catch (err) {
-            setError(err.message);
+            // Stable message from userService.errAccountNotVerified — see
+            // services/api/app/services/user_service.go.
+            if (err.message === "account not verified") {
+                setNotVerified(true);
+            } else {
+                setError(err.message);
+            }
             setIsLoading(false);
         }
+    };
+
+    const handleResend = async () => {
+        setResent(false);
+        await resendVerification(email);
+        setResent(true);
     };
 
     return (
@@ -79,6 +100,29 @@ const LoginPage = () => {
                     {error && (
                         <div className='mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400'>
                             {error}
+                        </div>
+                    )}
+
+                    {notVerified && (
+                        <div className='mb-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg text-sm text-amber-700 dark:text-amber-400'>
+                            <p className='mb-2'>
+                                {t("auth.account_not_verified") ||
+                                    "Akun kamu belum diverifikasi. Cek email/WhatsApp kamu, atau kirim ulang."}
+                            </p>
+                            <button
+                                type='button'
+                                onClick={handleResend}
+                                className='font-semibold underline hover:no-underline'
+                            >
+                                {t("auth.resend_verification") ||
+                                    "Kirim ulang verifikasi"}
+                            </button>
+                            {resent && (
+                                <p className='mt-1 text-emerald-700 dark:text-emerald-400'>
+                                    {t("auth.resend_success") ||
+                                        "Kode/link baru sudah dikirim ulang."}
+                                </p>
+                            )}
                         </div>
                     )}
 

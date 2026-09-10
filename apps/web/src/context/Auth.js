@@ -125,16 +125,31 @@ export const AuthProvider = ({ children }) => {
         return data;
     };
 
-    const register = async (name, email, password) => {
+    const register = async (name, email, password, { channel, phone } = {}) => {
         const res = await fetch(`${API_URL}/api/v1/auth/register`, {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, password }),
+            body: JSON.stringify({
+                name,
+                email,
+                password,
+                verification_channel: channel || "email",
+                ...(phone ? { phone } : {}),
+            }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || "Registrasi gagal");
         return data;
+    };
+
+    const resendVerification = async (email) => {
+        const res = await fetch(`${API_URL}/api/v1/auth/resend-verification`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+        });
+        return res.ok;
     };
 
     const setSession = (newToken) => {
@@ -180,6 +195,7 @@ export const AuthProvider = ({ children }) => {
                 isAuthenticated: !!token,
                 login,
                 register,
+                resendVerification,
                 logout,
                 refetchUser,
                 setSession,

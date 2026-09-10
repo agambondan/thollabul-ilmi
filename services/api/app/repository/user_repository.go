@@ -26,6 +26,14 @@ type UserRepository interface {
 	SavePasswordResetToken(userID, token string, expiresAt time.Time) error
 	FindPasswordResetToken(token string) (*model.PasswordResetToken, error)
 	MarkPasswordResetTokenUsed(token string) error
+	SaveVerificationToken(userID, channel, tokenHash string, expiresAt time.Time) error
+	FindVerificationTokenByHash(tokenHash string) (*model.VerificationToken, error)
+	FindActiveVerificationToken(userID, channel string) (*model.VerificationToken, error)
+	MarkVerificationTokenVerified(id uint) error
+	IncrementVerificationTokenAttempts(id uint) error
+	DeleteVerificationTokensByUserChannel(userID, channel string) error
+	MarkEmailVerified(userID string) error
+	MarkPhoneVerified(userID string) error
 }
 
 type userRepo struct {
@@ -131,4 +139,51 @@ func (r *userRepo) FindPasswordResetToken(token string) (*model.PasswordResetTok
 func (r *userRepo) MarkPasswordResetTokenUsed(token string) error {
 	now := time.Now()
 	return r.db.Model(&model.PasswordResetToken{}).Where("token = ?", token).Update("used_at", now).Error
+}
+
+func (r *userRepo) SaveVerificationToken(userID, channel, tokenHash string, expiresAt time.Time) error {
+	vt := &model.VerificationToken{UserID: userID, Channel: channel, TokenHash: tokenHash, ExpiresAt: expiresAt}
+	return r.db.Create(vt).Error
+}
+
+func (r *userRepo) FindVerificationTokenByHash(tokenHash string) (*model.VerificationToken, error) {
+	var vt model.VerificationToken
+	if err := r.db.First(&vt, "token_hash = ? AND verified_at IS NULL", tokenHash).Error; err != nil {
+		return nil, err
+	}
+	return &vt, nil
+}
+
+func (r *userRepo) FindActiveVerificationToken(userID, channel string) (*model.VerificationToken, error) {
+	var vt model.VerificationToken
+	err := r.db.Order("created_at desc").
+		First(&vt, "user_id = ? AND channel = ? AND verified_at IS NULL", userID, channel).Error
+	if err != nil {
+		return nil, err
+	}
+	return &vt, nil
+}
+
+func (r *userRepo) MarkVerificationTokenVerified(id uint) error {
+	now := time.Now()
+	return r.db.Model(&model.VerificationToken{}).Where("id = ?", id).Update("verified_at", now).Error
+}
+
+func (r *userRepo) IncrementVerificationTokenAttempts(id uint) error {
+	return r.db.Model(&model.VerificationToken{}).Where("id = ?", id).
+		Update("attempts", gorm.Expr("attempts + 1")).Error
+}
+
+func (r *userRepo) DeleteVerificationTokensByUserChannel(userID, channel string) error {
+	return r.db.Delete(&model.VerificationToken{}, "user_id = ? AND channel = ?", userID, channel).Error
+}
+
+func (r *userRepo) MarkEmailVerified(userID string) error {
+	now := time.Now()
+	return r.db.Model(&model.User{}).Where("id = ?", userID).Update("email_verified_at", now).Error
+}
+
+func (r *userRepo) MarkPhoneVerified(userID string) error {
+	now := time.Now()
+	return r.db.Model(&model.User{}).Where("id = ?", userID).Update("phone_verified_at", now).Error
 }

@@ -39,6 +39,9 @@ services:
             - ALLOW_ORIGINS=http://localhost:3000,http://localhost:3001,http://localhost:5173,http://localhost:8081,http://localhost:19006,http://localhost:23000,http://127.0.0.1:3000,http://127.0.0.1:3001,http://127.0.0.1:5173,http://127.0.0.1:8081,http://127.0.0.1:19006,http://127.0.0.1:23000
             - ALLOW_METHODS=GET,POST,PUT,DELETE,OPTIONS
             - ALLOW_HEADERS=Origin,Content-Type,Accept,Authorization
+            - WA_SESSION_DIR=/app/data/wa
+        volumes:
+            - tholabul-ilmi-wa-data:/app/data/wa
         depends_on:
             tholabul-ilmi-postgres:
                 condition: service_healthy
@@ -115,6 +118,7 @@ volumes:
     tholabul-ilmi-postgres-data:
     tholabul-ilmi-redis-data:
     tholabul-ilmi-minio-data:
+    tholabul-ilmi-wa-data:
 
 networks:
     tholabul-ilmi-network:

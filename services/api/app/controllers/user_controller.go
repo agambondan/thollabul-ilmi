@@ -21,6 +21,9 @@ type UserController interface {
 	Logout(ctx *fiber.Ctx) error
 	ForgotPassword(ctx *fiber.Ctx) error
 	ResetPassword(ctx *fiber.Ctx) error
+	VerifyEmail(ctx *fiber.Ctx) error
+	VerifyWhatsApp(ctx *fiber.Ctx) error
+	ResendVerification(ctx *fiber.Ctx) error
 	Me(ctx *fiber.Ctx) error
 	FindAll(ctx *fiber.Ctx) error
 	FindById(ctx *fiber.Ctx) error
@@ -473,6 +476,66 @@ func (c *userController) ResetPassword(ctx *fiber.Ctx) error {
 		return lib.ErrorBadRequest(ctx, err)
 	}
 	return lib.OK(ctx, "Password has been reset successfully.")
+}
+
+// VerifyEmail activates an account via the link sent by SendVerificationEmail.
+// @Summary Verify account via emailed link
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param body body model.VerifyEmailRequest true "Verify email request"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Router /auth/verify-email [post]
+func (c *userController) VerifyEmail(ctx *fiber.Ctx) error {
+	req := new(model.VerifyEmailRequest)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	if err := c.user.VerifyEmail(req.Token); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	return lib.OK(ctx, "Account verified successfully.")
+}
+
+// VerifyWhatsApp activates an account via the OTP code sent by SendOTP.
+// @Summary Verify account via WhatsApp OTP
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param body body model.VerifyWhatsAppRequest true "Verify WhatsApp request"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Router /auth/verify-whatsapp [post]
+func (c *userController) VerifyWhatsApp(ctx *fiber.Ctx) error {
+	req := new(model.VerifyWhatsAppRequest)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	if err := c.user.VerifyWhatsApp(req.Email, req.Code); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	return lib.OK(ctx, "Account verified successfully.")
+}
+
+// ResendVerification re-sends the activation link/code for the account's
+// chosen verification channel.
+// @Summary Resend account verification
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param body body model.ResendVerificationRequest true "Resend verification request"
+// @Success 200 {object} lib.Response
+// @Failure 400 {object} lib.Response
+// @Router /auth/resend-verification [post]
+func (c *userController) ResendVerification(ctx *fiber.Ctx) error {
+	req := new(model.ResendVerificationRequest)
+	if err := lib.BodyParser(ctx, req); err != nil {
+		return lib.ErrorBadRequest(ctx, err)
+	}
+	// Always return 200 to avoid account enumeration.
+	_ = c.user.ResendVerification(req.Email)
+	return lib.OK(ctx, "If that account exists and isn't verified yet, a new code has been sent.")
 }
 
 // DeleteMe deletes the authenticated user's own account.
