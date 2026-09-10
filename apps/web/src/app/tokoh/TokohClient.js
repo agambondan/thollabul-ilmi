@@ -134,6 +134,11 @@ export default function TokohClient({ initialItems = [], className = "" }) {
                                 <p className='text-xs text-gray-500 dark:text-gray-400 line-clamp-2'>
                                     {item.translation?.idn}
                                 </p>
+                                {item.translation?.description_idn && (
+                                    <p className='hidden'>
+                                        {item.translation.description_idn}
+                                    </p>
+                                )}
                             </div>
                             <div className='mt-3 pt-2 border-t border-gray-50 dark:border-slate-700/50 flex items-center justify-between text-[11px] text-gray-400'>
                                 <span>

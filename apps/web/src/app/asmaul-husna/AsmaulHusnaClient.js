@@ -162,40 +162,58 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
             </div>
 
             <div className='grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3'>
-                {filteredNames.slice(0, visibleCount).map((name) => (
-                    <button
-                        key={name.number}
-                        onClick={() => setSelected(name)}
-                        className='text-left p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm transition-all'
-                    >
-                        <div className='flex items-start justify-between mb-2'>
-                            <span className='text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 rounded-full w-6 h-6 flex items-center justify-center'>
-                                {name.number}
-                            </span>
-                            {name.audio_url && (
-                                <BsVolumeUpFill className='text-emerald-400 dark:text-emerald-600 text-sm' />
-                            )}
-                        </div>
-                        <p
-                            className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1 text-right'
-                            style={{ fontFamily: "Amiri, serif" }}
+                {filteredNames.slice(0, visibleCount).map((name) => {
+                    const extra = asmaulHusnaData[name.number];
+                    const desc =
+                        lang === "EN"
+                            ? name.description_en ||
+                              extra?.meaning_en ||
+                              name.english
+                            : name.description ||
+                              name.meaning ||
+                              extra?.explanation;
+                    return (
+                        <button
+                            key={name.number}
+                            onClick={() => setSelected(name)}
+                            className='text-left p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-sm transition-all'
                         >
-                            {name.arabic}
-                        </p>
-                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 italic mb-0.5'>
-                            {name.transliteration}
-                        </p>
-                        <p className='text-sm font-medium text-gray-700 dark:text-gray-200'>
-                            {getLocalizedText(
-                                {
-                                    idn: name.indonesian,
-                                    en: name.english,
-                                },
-                                lang,
-                            )}
-                        </p>
-                    </button>
-                ))}
+                            <div className='flex items-start justify-between mb-2'>
+                                <span className='text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 rounded-full w-6 h-6 flex items-center justify-center'>
+                                    {name.number}
+                                </span>
+                                {name.audio_url && (
+                                    <BsVolumeUpFill className='text-emerald-400 dark:text-emerald-600 text-sm' />
+                                )}
+                            </div>
+                            <p
+                                className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1 text-right'
+                                style={{ fontFamily: "Amiri, serif" }}
+                            >
+                                {name.arabic}
+                            </p>
+                            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 italic mb-0.5'>
+                                {name.transliteration}
+                            </p>
+                            <p className='text-sm font-medium text-gray-700 dark:text-gray-200'>
+                                {getLocalizedText(
+                                    {
+                                        idn: name.indonesian,
+                                        en: name.english,
+                                    },
+                                    lang,
+                                )}
+                            </p>
+                            <div className='hidden'>
+                                {desc && <p>{desc}</p>}
+                                {extra?.dalilRef && <p>{extra.dalilRef}</p>}
+                                {extra?.dalilText && <p>{extra.dalilText}</p>}
+                                {extra?.dalilTrans && <p>{extra.dalilTrans}</p>}
+                                {extra?.ulamaQuote && <p>{extra.ulamaQuote}</p>}
+                            </div>
+                        </button>
+                    );
+                })}
             </div>
 
             {filteredNames.length > visibleCount && (
