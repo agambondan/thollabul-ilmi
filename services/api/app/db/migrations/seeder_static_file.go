@@ -579,7 +579,16 @@ func seedKajianFromFile(db *gorm.DB) {
 			}
 			if _, keep := staticKeys[ek.Speaker+"|"+ek.Title]; !keep {
 				db.Unscoped().Where("kajian_id = ?", *ek.ID).Delete(&model.KajianTranscript{})
-				db.Delete(&model.Kajian{}, *ek.ID)
+				// Hard-delete: idx_kajian_title_speaker_published is a plain
+				// (non-partial) unique index, so a soft-deleted row still
+				// occupies its (title, speaker, published_at) slot forever.
+				// Every scraped row uses the same placeholder published_at,
+				// so any later video that happens to reuse a cleaned-up
+				// title+speaker (a compilation channel reposting the same
+				// title, a re-scrape after a rename) would otherwise fail to
+				// insert with a duplicate-key error and silently lose its
+				// transcripts.
+				db.Unscoped().Delete(&model.Kajian{}, *ek.ID)
 			}
 		}
 	}

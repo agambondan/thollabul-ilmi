@@ -323,99 +323,94 @@ export default function FiqhClient({
                                     </svg>
                                 </button>
 
-                                {isOpen && (
-                                    <div className='border-t border-gray-100 dark:border-slate-700 divide-y divide-gray-50 dark:divide-slate-700/50'>
-                                        {cat.items?.length === 0 ? (
-                                            <p className='p-4 text-xs text-gray-400 text-center'>
-                                                {t("fiqh.empty_items")}
-                                            </p>
-                                        ) : (
-                                            cat.items.map((item, ii) => {
-                                                const isItemOpen =
-                                                    !!openItem[`${ci}-${ii}`];
-                                                const itemTitle =
-                                                    getLocalizedField(
-                                                        item,
-                                                        "title",
-                                                        lang,
-                                                    ) ||
-                                                    getLocalizedField(
-                                                        item,
-                                                        "question",
-                                                        lang,
-                                                    ) ||
-                                                    "";
-                                                const itemContent =
-                                                    getLocalizedField(
-                                                        item,
-                                                        "content",
-                                                        lang,
-                                                    ) ||
-                                                    getLocalizedField(
-                                                        item,
-                                                        "answer",
-                                                        lang,
-                                                    ) ||
-                                                    "";
-                                                return (
-                                                    <div
-                                                        key={
-                                                            item.id ??
-                                                            item.slug ??
-                                                            ii
+                                <div
+                                    className={`border-t border-gray-100 dark:border-slate-700 divide-y divide-gray-50 dark:divide-slate-700/50 ${isOpen ? "" : "hidden"}`}
+                                >
+                                    {cat.items?.length === 0 ? (
+                                        <p className='p-4 text-xs text-gray-400 text-center'>
+                                            {t("fiqh.empty_items")}
+                                        </p>
+                                    ) : (
+                                        cat.items.map((item, ii) => {
+                                            const isItemOpen =
+                                                !!openItem[`${ci}-${ii}`];
+                                            const itemTitle =
+                                                getLocalizedField(
+                                                    item,
+                                                    "title",
+                                                    lang,
+                                                ) ||
+                                                getLocalizedField(
+                                                    item,
+                                                    "question",
+                                                    lang,
+                                                ) ||
+                                                "";
+                                            const itemContent =
+                                                getLocalizedField(
+                                                    item,
+                                                    "content",
+                                                    lang,
+                                                ) ||
+                                                getLocalizedField(
+                                                    item,
+                                                    "answer",
+                                                    lang,
+                                                ) ||
+                                                "";
+                                            return (
+                                                <div
+                                                    key={
+                                                        item.id ??
+                                                        item.slug ??
+                                                        ii
+                                                    }
+                                                    className='p-4'
+                                                >
+                                                    <button
+                                                        type='button'
+                                                        onClick={() =>
+                                                            toggleItem(ci, ii)
                                                         }
-                                                        className='p-4'
+                                                        className='w-full flex items-center justify-between text-left gap-2'
                                                     >
-                                                        <button
-                                                            type='button'
-                                                            onClick={() =>
-                                                                toggleItem(
-                                                                    ci,
-                                                                    ii,
-                                                                )
-                                                            }
-                                                            className='w-full flex items-center justify-between text-left gap-2'
+                                                        <h3 className='text-xs font-semibold text-emerald-900 dark:text-emerald-300'>
+                                                            {itemTitle}
+                                                        </h3>
+                                                        <svg
+                                                            className={`w-3.5 h-3.5 text-gray-400 shrink-0 transition-transform duration-150 ${isItemOpen ? "rotate-180" : ""}`}
+                                                            fill='none'
+                                                            viewBox='0 0 24 24'
+                                                            stroke='currentColor'
                                                         >
-                                                            <h3 className='text-xs font-semibold text-emerald-900 dark:text-emerald-300'>
-                                                                {itemTitle}
-                                                            </h3>
-                                                            <svg
-                                                                className={`w-3.5 h-3.5 text-gray-400 shrink-0 transition-transform duration-150 ${isItemOpen ? "rotate-180" : ""}`}
-                                                                fill='none'
-                                                                viewBox='0 0 24 24'
-                                                                stroke='currentColor'
-                                                            >
-                                                                <path
-                                                                    strokeLinecap='round'
-                                                                    strokeLinejoin='round'
-                                                                    strokeWidth={
-                                                                        2
-                                                                    }
-                                                                    d='M19 9l-7 7-7-7'
-                                                                />
-                                                            </svg>
-                                                        </button>
+                                                            <path
+                                                                strokeLinecap='round'
+                                                                strokeLinejoin='round'
+                                                                strokeWidth={2}
+                                                                d='M19 9l-7 7-7-7'
+                                                            />
+                                                        </svg>
+                                                    </button>
 
-                                                        {isItemOpen && (
-                                                            <div className='mt-2 text-xs text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line'>
-                                                                {itemContent}
-                                                                {item.source && (
-                                                                    <div className='mt-2'>
-                                                                        <SourceBadges
-                                                                            source={
-                                                                                item.source
-                                                                            }
-                                                                        />
-                                                                    </div>
-                                                                )}
+                                                    <div
+                                                        className={`mt-2 text-xs text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-line ${isItemOpen ? "" : "hidden"}`}
+                                                    >
+                                                        {itemContent}
+                                                        {item.source && (
+                                                            <div className='mt-2'>
+                                                                <SourceBadges
+                                                                    source={
+                                                                        item.source
+                                                                    }
+                                                                />
                                                             </div>
                                                         )}
                                                     </div>
-                                                );
-                                            })
-                                        )}
-                                    </div>
-                                )}
+                                                </div>
+                                            );
+                                        })
+                                    )}
+                                </div>
                             </div>
                         );
                     })}

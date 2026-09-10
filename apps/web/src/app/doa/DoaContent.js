@@ -290,78 +290,78 @@ export const DoaContent = ({ initialItems = [] }) => {
                                 </span>
                             </button>
 
-                            {expanded === doa.id && (
-                                <div className='px-4 pb-4 border-t border-gray-50 dark:border-slate-700 pt-3 space-y-3'>
-                                    <p
-                                        className='text-2xl leading-[2.2] text-right font-kitab text-emerald-900 dark:text-emerald-300 dark:text-white'
-                                        style={{
-                                            direction: "rtl",
-                                            fontFamily: "Amiri, serif",
+                            <div
+                                className={`px-4 pb-4 border-t border-gray-50 dark:border-slate-700 pt-3 space-y-3 ${expanded === doa.id ? "" : "hidden"}`}
+                            >
+                                <p
+                                    className='text-2xl leading-[2.2] text-right font-kitab text-emerald-900 dark:text-emerald-300 dark:text-white'
+                                    style={{
+                                        direction: "rtl",
+                                        fontFamily: "Amiri, serif",
+                                    }}
+                                >
+                                    {doa.translation?.ar}
+                                </p>
+                                {doa.translation?.latin_idn && (
+                                    <p className='text-sm italic text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                        {doa.translation.latin_idn}
+                                    </p>
+                                )}
+                                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
+                                    {getLocalizedField(
+                                        doa,
+                                        "description",
+                                        lang,
+                                        ["meaning"],
+                                    )}
+                                </p>
+                                {doa.audio_url && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            playing === doa.audio_url
+                                                ? stopAudio()
+                                                : playAudio(doa.audio_url);
                                         }}
+                                        className='flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
                                     >
-                                        {doa.translation?.ar}
-                                    </p>
-                                    {doa.translation?.latin_idn && (
-                                        <p className='text-sm italic text-gray-500 dark:text-gray-300 dark:text-gray-400'>
-                                            {doa.translation.latin_idn}
-                                        </p>
-                                    )}
-                                    <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
-                                        {getLocalizedField(
-                                            doa,
-                                            "description",
-                                            lang,
-                                            ["meaning"],
+                                        {playing === doa.audio_url ? (
+                                            <BsPauseFill />
+                                        ) : (
+                                            <BsPlayFill />
                                         )}
-                                    </p>
-                                    {doa.audio_url && (
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                playing === doa.audio_url
-                                                    ? stopAudio()
-                                                    : playAudio(doa.audio_url);
-                                            }}
-                                            className='flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
-                                        >
-                                            {playing === doa.audio_url ? (
-                                                <BsPauseFill />
-                                            ) : (
-                                                <BsPlayFill />
-                                            )}
-                                            {playing === doa.audio_url
-                                                ? t("common.pause")
-                                                : t("asmaul.play_audio")}
-                                        </button>
-                                    )}
-                                    {doa.source && (
-                                        <SourceBadges source={doa.source} />
-                                    )}
-                                    <div className='flex items-center gap-2 flex-wrap'>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                openShare(doa);
-                                            }}
-                                            className='flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
-                                        >
-                                            <BsShare className='text-sm' />
-                                            {t("common.share")}
-                                        </button>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setReportDoa(doa);
-                                            }}
-                                            className='flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 rounded-lg text-sm font-medium hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors'
-                                        >
-                                            <BsExclamationTriangleFill className='text-xs' />
-                                            {t("report.correction_btn") ??
-                                                "Laporkan Kesalahan"}
-                                        </button>
-                                    </div>
+                                        {playing === doa.audio_url
+                                            ? t("common.pause")
+                                            : t("asmaul.play_audio")}
+                                    </button>
+                                )}
+                                {doa.source && (
+                                    <SourceBadges source={doa.source} />
+                                )}
+                                <div className='flex items-center gap-2 flex-wrap'>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openShare(doa);
+                                        }}
+                                        className='flex items-center gap-1.5 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm font-medium hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors'
+                                    >
+                                        <BsShare className='text-sm' />
+                                        {t("common.share")}
+                                    </button>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setReportDoa(doa);
+                                        }}
+                                        className='flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 rounded-lg text-sm font-medium hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors'
+                                    >
+                                        <BsExclamationTriangleFill className='text-xs' />
+                                        {t("report.correction_btn") ??
+                                            "Laporkan Kesalahan"}
+                                    </button>
                                 </div>
-                            )}
+                            </div>
                         </div>
                     ))}
                 </div>

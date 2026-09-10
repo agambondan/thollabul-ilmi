@@ -71,6 +71,11 @@ const WiridClient = ({ initialItems = [] }) => {
         setOpen(new Set());
     };
 
+    const current =
+        WIRID_OCCASIONS.find(
+            (w) => w.occasion === (activeOccasion ?? "jumat"),
+        ) ?? WIRID_OCCASIONS[0];
+
     return (
         <div
             className={
@@ -185,52 +190,52 @@ const WiridClient = ({ initialItems = [] }) => {
                                 )}
                             </button>
 
-                            {open.has(idx) && (
-                                <div className='border-t border-gray-100 dark:border-slate-700 px-4 py-4 space-y-3'>
-                                    <p
-                                        dir='rtl'
-                                        className='text-xl leading-loose font-arabic text-gray-900 dark:text-gray-100 dark:text-white text-right'
-                                    >
-                                        {item.arabic}
+                            <div
+                                className={`border-t border-gray-100 dark:border-slate-700 px-4 py-4 space-y-3 ${open.has(idx) ? "" : "hidden"}`}
+                            >
+                                <p
+                                    dir='rtl'
+                                    className='text-xl leading-loose font-arabic text-gray-900 dark:text-gray-100 dark:text-white text-right'
+                                >
+                                    {item.arabic}
+                                </p>
+                                {showLatin && item.latin && (
+                                    <p className='text-sm text-emerald-700 dark:text-emerald-400 italic'>
+                                        {item.latin}
                                     </p>
-                                    {showLatin && item.latin && (
-                                        <p className='text-sm text-emerald-700 dark:text-emerald-400 italic'>
-                                            {item.latin}
+                                )}
+                                {showMeaning &&
+                                    getLocalizedField(
+                                        item,
+                                        "description",
+                                        lang,
+                                        ["meaning"],
+                                    ) && (
+                                        <p className='text-sm text-gray-600 dark:text-gray-300'>
+                                            {getLocalizedField(
+                                                item,
+                                                "description",
+                                                lang,
+                                                ["meaning"],
+                                            )}
                                         </p>
                                     )}
-                                    {showMeaning &&
-                                        getLocalizedField(
-                                            item,
-                                            "description",
-                                            lang,
-                                            ["meaning"],
-                                        ) && (
-                                            <p className='text-sm text-gray-600 dark:text-gray-300'>
-                                                {getLocalizedField(
-                                                    item,
-                                                    "description",
-                                                    lang,
-                                                    ["meaning"],
-                                                )}
-                                            </p>
-                                        )}
-                                    {getLocalizedField(item, "fadhilah", lang, [
-                                        "source",
-                                    ]) && (
-                                        <div className='bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2'>
-                                            <p className='text-xs text-amber-700 dark:text-amber-400'>
-                                                📖{" "}
-                                                {getLocalizedField(
-                                                    item,
-                                                    "fadhilah",
-                                                    lang,
-                                                    ["source"],
-                                                )}
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                                {getLocalizedField(item, "fadhilah", lang, [
+                                    "source",
+                                ]) && (
+                                    <div className='bg-amber-50 dark:bg-amber-900/20 rounded-lg px-3 py-2'>
+                                        <p className='text-xs text-amber-700 dark:text-amber-400'>
+                                            📖{" "}
+                                            {getLocalizedField(
+                                                item,
+                                                "fadhilah",
+                                                lang,
+                                                ["source"],
+                                            )}
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     ))}
                 </div>
