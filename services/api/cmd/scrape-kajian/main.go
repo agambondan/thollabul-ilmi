@@ -15,6 +15,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -105,6 +106,7 @@ func main() {
 	channelsFile := flag.String("channels-file", defaultChannelsFile(), "Ustadz/channel JSON file")
 	skipCachePath := flag.String("skip-cache", defaultSkipCacheFile(), "Path to no-transcript skip cache JSON")
 	listChannels := flag.Bool("list-channels", false, "Print each channel's output slug and exit (no scraping)")
+	concurrency := flag.Int("concurrency", 2, "Channels scraped in parallel. Each channel still fetches its own videos one at a time with a delay between them -- this only overlaps different channels' requests. Keep it low (2-3); YouTube rate-limits/blocks by source IP, so this multiplies the request rate seen from this machine.")
 	flag.Parse()
 
 	targets := []Channel{}
@@ -140,14 +142,42 @@ func main() {
 	retryInterval := time.Duration(*skipRetryDays) * 24 * time.Hour
 	now := time.Now().UTC()
 
+	// skipCache is one shared map across every channel (a video id is
+	// globally unique), so concurrent channels need a lock around it --
+	// cacheMu guards every read/write inside scrapeChannel, including the
+	// file write in saveSkipCache. sem bounds how many channels run at
+	// once; each channel's own videos are still fetched sequentially with
+	// the existing per-video delay, so this only overlaps *different*
+	// channels' requests instead of firing all of them at once.
+	var cacheMu sync.Mutex
+	var totalsMu sync.Mutex
 	totalNew, totalAll := 0, 0
-	for _, target := range targets {
-		channelPath := filepath.Join(*outDir, channelSlug(target)+".json")
-		_, existingMap := loadExisting(channelPath)
-		newItems := scrapeChannel(target, *maxVideos, *cookies, !*allowEmptyTranscript, channelPath, existingMap, skipCache, retryInterval, &now, &skipCachePathPtr)
-		totalNew += len(newItems)
-		totalAll += len(existingMap)
+
+	workers := *concurrency
+	if workers < 1 {
+		workers = 1
 	}
+	sem := make(chan struct{}, workers)
+	var wg sync.WaitGroup
+	for _, target := range targets {
+		target := target
+		wg.Add(1)
+		sem <- struct{}{}
+		go func() {
+			defer wg.Done()
+			defer func() { <-sem }()
+
+			channelPath := filepath.Join(*outDir, channelSlug(target)+".json")
+			_, existingMap := loadExisting(channelPath)
+			newItems := scrapeChannel(target, *maxVideos, *cookies, !*allowEmptyTranscript, channelPath, existingMap, skipCache, &cacheMu, retryInterval, &now, &skipCachePathPtr)
+
+			totalsMu.Lock()
+			totalNew += len(newItems)
+			totalAll += len(existingMap)
+			totalsMu.Unlock()
+		}()
+	}
+	wg.Wait()
 	writeManifest(*outDir, targets)
 
 	if err := saveSkipCache(*skipCachePath, skipCache); err != nil {
@@ -341,20 +371,43 @@ func shouldDefer(cache SkipCache, videoID string, now time.Time) bool {
 	return ok && now.Before(entry.RetryAfter)
 }
 
-func scrapeChannel(channel Channel, maxVideos int, cookies string, onlyWithTranscript bool, outFile string, existing map[string]KajianItem, skipCache SkipCache, retryInterval time.Duration, now *time.Time, skipCachePath *string) []KajianItem {
-	fmt.Printf("\n[SCAN] %s (%s)...\n", channel.Name, channel.ChannelURL)
+func scrapeChannel(channel Channel, maxVideos int, cookies string, onlyWithTranscript bool, outFile string, existing map[string]KajianItem, skipCache SkipCache, cacheMu *sync.Mutex, retryInterval time.Duration, now *time.Time, skipCachePath *string) []KajianItem {
+	tag := "[" + channelSlug(channel) + "]"
+	fmt.Printf("\n%s [SCAN] %s (%s)...\n", tag, channel.Name, channel.ChannelURL)
 	videos := getChannelVideos(channel.ChannelURL, maxVideos, cookies)
-	fmt.Printf("       Ditemukan %d video.\n", len(videos))
+	fmt.Printf("%s        Ditemukan %d video.\n", tag, len(videos))
 
 	items := []KajianItem{}
 	for i, video := range videos {
 		if existingItem, ok := existing[video.VideoID]; ok && len(existingItem.Transcripts) > 0 {
-			fmt.Printf("       [%d/%d] ↷ %s... (Sudah ada - skip)\n", i+1, len(videos), trim(video.Title, 45))
+			// The transcript itself is expensive to re-fetch and doesn't
+			// change once downloaded, but cheap listing metadata (title
+			// above all — YouTube's flat-playlist listing used to hand back
+			// an auto-translated English title instead of the uploader's
+			// real one) can still be stale from an earlier run. Refresh it
+			// without touching the transcript.
+			if existingItem.Title != video.Title || existingItem.Duration != video.Duration || existingItem.ThumbnailURL != video.ThumbnailURL {
+				existingItem.Title = video.Title
+				existingItem.Description = fmt.Sprintf("Kajian oleh %s: %s", channel.Name, video.Title)
+				existingItem.Duration = video.Duration
+				existingItem.ThumbnailURL = video.ThumbnailURL
+				existing[video.VideoID] = existingItem
+				_ = writeItems(outFile, mapValues(existing))
+				fmt.Printf("%s        [%d/%d] ↻ %s... (metadata diperbarui)\n", tag, i+1, len(videos), trim(video.Title, 45))
+			} else {
+				fmt.Printf("%s        [%d/%d] ↷ %s... (Sudah ada - skip)\n", tag, i+1, len(videos), trim(video.Title, 45))
+			}
 			continue
 		}
-		if onlyWithTranscript && shouldDefer(skipCache, video.VideoID, *now) {
-			entry := skipCache.Entries[video.VideoID]
-			fmt.Printf("       [%d/%d] ↷ %s... (Tanpa transkrip, retry %s)\n", i+1, len(videos), trim(video.Title, 45), entry.RetryAfter.Format("2006-01-02"))
+		cacheMu.Lock()
+		shouldSkip := onlyWithTranscript && shouldDefer(skipCache, video.VideoID, *now)
+		var deferEntry SkipEntry
+		if shouldSkip {
+			deferEntry = skipCache.Entries[video.VideoID]
+		}
+		cacheMu.Unlock()
+		if shouldSkip {
+			fmt.Printf("%s        [%d/%d] ↷ %s... (Tanpa transkrip, retry %s)\n", tag, i+1, len(videos), trim(video.Title, 45), deferEntry.RetryAfter.Format("2006-01-02"))
 			continue
 		}
 
@@ -367,18 +420,22 @@ func scrapeChannel(channel Channel, maxVideos int, cookies string, onlyWithTrans
 				// reporting "no captions" — this is not evidence the video
 				// lacks a transcript, so don't park it in the skip-cache.
 				// Leaving it un-cached means the very next run retries it.
-				fmt.Printf("       [%d/%d] ⚠ %s... (Gagal mengambil, bukan dipastikan tanpa transkrip - dicoba lagi run berikutnya)\n", i+1, len(videos), trim(video.Title, 45))
+				fmt.Printf("%s        [%d/%d] ⚠ %s... (Gagal mengambil, bukan dipastikan tanpa transkrip - dicoba lagi run berikutnya)\n", tag, i+1, len(videos), trim(video.Title, 45))
 				time.Sleep(time.Second)
 				continue
 			}
 			retryAfter := now.Add(retryInterval)
+			cacheMu.Lock()
 			skipCache.Entries[video.VideoID] = SkipEntry{AttemptedAt: *now, RetryAfter: retryAfter, Reason: "no_transcript", Channel: channel.ChannelURL}
 			_ = saveSkipCache(*skipCachePath, skipCache)
-			fmt.Printf("       [%d/%d] ✗ %s... (Tanpa transkrip - retry %s)\n", i+1, len(videos), trim(video.Title, 45), retryAfter.Format("2006-01-02"))
+			cacheMu.Unlock()
+			fmt.Printf("%s        [%d/%d] ✗ %s... (Tanpa transkrip - retry %s)\n", tag, i+1, len(videos), trim(video.Title, 45), retryAfter.Format("2006-01-02"))
 			time.Sleep(time.Second)
 			continue
 		}
+		cacheMu.Lock()
 		delete(skipCache.Entries, video.VideoID)
+		cacheMu.Unlock()
 
 		item := KajianItem{
 			Title:        video.Title,
@@ -396,7 +453,7 @@ func scrapeChannel(channel Channel, maxVideos int, cookies string, onlyWithTrans
 		items = append(items, item)
 		existing[video.VideoID] = item
 		_ = writeItems(outFile, mapValues(existing))
-		fmt.Printf("       [%d/%d] ✓ %s... (%d chunks transkrip)\n", i+1, len(videos), trim(video.Title, 45), len(chunks))
+		fmt.Printf("%s        [%d/%d] ✓ %s... (%d chunks transkrip)\n", tag, i+1, len(videos), trim(video.Title, 45), len(chunks))
 		time.Sleep(1500 * time.Millisecond)
 	}
 	return items
