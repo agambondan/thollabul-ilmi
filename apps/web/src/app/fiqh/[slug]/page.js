@@ -47,7 +47,7 @@ export default async function FiqhItemPage(props) {
                             {category.name}
                         </p>
                     )}
-                    <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mt-1 mb-4'>
+                    <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mt-1 mb-4'>
                         {item.title}
                     </h1>
                     <div className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line'>

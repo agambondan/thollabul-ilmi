@@ -161,7 +161,7 @@ const Dialog = ({
                             {title && (
                                 <h2
                                     id={headingId}
-                                    className='truncate text-base font-bold text-gray-900 dark:text-gray-100 dark:text-white'
+                                    className='truncate text-base font-bold text-gray-900 dark:text-white'
                                 >
                                     {title}
                                 </h2>
@@ -169,7 +169,7 @@ const Dialog = ({
                             {description && (
                                 <p
                                     id={descriptionId}
-                                    className='mt-0.5 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'
+                                    className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'
                                 >
                                     {description}
                                 </p>

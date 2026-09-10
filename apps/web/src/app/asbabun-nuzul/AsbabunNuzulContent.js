@@ -25,10 +25,10 @@ export const AsbabunNuzulContent = ({
                 >
                     أَسْبَابُ النُّزُول
                 </p>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
                     {t("asbabun.title") || "Asbabun Nuzul"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-400'>
                     {t("asbabun.subtitle") ||
                         "Latar belakang dan sebab diturunkannya ayat-ayat Al-Quran"}
                 </p>

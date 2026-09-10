@@ -136,11 +136,11 @@ export function WiridCustomContent() {
                 compact='max-w-2xl'
                 className='px-4 py-10 text-center'
             >
-                <GiOpenBook className='mx-auto text-5xl text-emerald-300 dark:text-emerald-700 dark:text-emerald-400 mb-4' />
-                <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-2'>
+                <GiOpenBook className='mx-auto text-5xl text-emerald-300 dark:text-emerald-700 mb-4' />
+                <h1 className='text-xl font-bold text-emerald-900 dark:text-white mb-2'>
                     {t("wirid_custom.title") ?? "Wirid Pribadi"}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-4'>
+                <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
                     {t("wirid_custom.login_required") ??
                         "Login untuk menyimpan wirid pribadi."}
                 </p>
@@ -158,10 +158,10 @@ export function WiridCustomContent() {
         <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
             <div className='flex items-center justify-between mb-6'>
                 <div>
-                    <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-0.5'>
+                    <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-0.5'>
                         {t("wirid_custom.title") ?? "Wirid Pribadi"}
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400'>
                         {t("wirid_custom.subtitle") ??
                             "Kumpulan wirid yang kamu buat sendiri"}
                     </p>
@@ -183,8 +183,8 @@ export function WiridCustomContent() {
                 </div>
             ) : items.length === 0 ? (
                 <div className='text-center py-16'>
-                    <GiOpenBook className='mx-auto text-4xl text-gray-300 dark:text-slate-600 dark:text-slate-300 mb-3' />
-                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm mb-3'>
+                    <GiOpenBook className='mx-auto text-4xl text-gray-300 dark:text-slate-600 mb-3' />
+                    <p className='text-gray-500 dark:text-gray-400 text-sm mb-3'>
                         {t("wirid_custom.empty") ?? "Belum ada wirid pribadi."}
                     </p>
                     <button
@@ -217,7 +217,7 @@ export function WiridCustomContent() {
                                                 {item.count}×
                                             </span>
                                         )}
-                                        <span className='font-semibold text-gray-800 dark:text-gray-200 dark:text-white text-sm truncate'>
+                                        <span className='font-semibold text-gray-800 dark:text-white text-sm truncate'>
                                             {item.title}
                                         </span>
                                         {item.occasion && (
@@ -271,12 +271,12 @@ export function WiridCustomContent() {
                                             </p>
                                         )}
                                         {item.transliteration && (
-                                            <p className='text-sm italic text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                            <p className='text-sm italic text-gray-500 dark:text-gray-400'>
                                                 {item.transliteration}
                                             </p>
                                         )}
                                         {item.translation && (
-                                            <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
+                                            <p className='text-sm text-gray-700 dark:text-gray-300'>
                                                 {item.translation}
                                             </p>
                                         )}
@@ -286,7 +286,7 @@ export function WiridCustomContent() {
                                             />
                                         )}
                                         {item.note && (
-                                            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 italic border-l-2 border-emerald-200 dark:border-emerald-700 pl-2'>
+                                            <p className='text-xs text-gray-500 dark:text-gray-400 italic border-l-2 border-emerald-200 dark:border-emerald-700 pl-2'>
                                                 {item.note}
                                             </p>
                                         )}
@@ -310,7 +310,7 @@ export function WiridCustomContent() {
                         className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto'
                     >
                         <div className='flex items-center justify-between mb-4'>
-                            <h2 className='text-base font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
+                            <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
                                 {editId
                                     ? (t("wirid_custom.edit") ?? "Edit Wirid")
                                     : (t("wirid_custom.create") ??
@@ -427,7 +427,7 @@ export function WiridCustomContent() {
                             <button
                                 type='button'
                                 onClick={() => setShowModal(false)}
-                                className='px-4 py-2 text-sm text-gray-600 dark:text-gray-300 dark:text-gray-400'
+                                className='px-4 py-2 text-sm text-gray-600 dark:text-gray-400'
                             >
                                 {t("common.cancel") ?? "Batal"}
                             </button>
@@ -463,7 +463,7 @@ function Field({
         <div>
             <label
                 htmlFor='page-field-1'
-                className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
+                className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
             >
                 {label}
                 {required && <span className='text-red-500 ml-0.5'>*</span>}
@@ -484,7 +484,7 @@ function Field({
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     placeholder={placeholder}
-                    className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                    className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                 />
             )}
         </div>

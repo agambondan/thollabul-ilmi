@@ -102,7 +102,7 @@ export default function MobileMenuDrawer({ open, onClose, basePath = "" }) {
             >
                 <div className='sticky top-0 z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-gray-100 dark:border-slate-800 px-4 py-3 flex items-center justify-between'>
                     <div>
-                        <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
+                        <p className='text-sm font-semibold text-gray-900 dark:text-white'>
                             {t("nav.menu")}
                         </p>
                         <p className='text-xs text-gray-400'>

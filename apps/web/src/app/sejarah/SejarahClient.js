@@ -129,16 +129,16 @@ export default function SejarahClient({ initialEvents = [] }) {
                     </svg>
                 </div>
                 <div>
-                    <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
+                    <h1 className='text-xl font-bold text-emerald-900 dark:text-white'>
                         {t("history.title")}
                     </h1>
-                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                    <p className='text-xs text-gray-500 dark:text-gray-400'>
                         {t("history.subtitle")}
                     </p>
                 </div>
             </div>
 
-            <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
+            <div className='flex items-center gap-2 mb-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
                 <svg
                     className='w-4 h-4 text-gray-400 shrink-0'
                     fill='none'

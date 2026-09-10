@@ -213,7 +213,7 @@ const DashboardLayout = ({ children }) => {
                         </div>
                         {!isCollapsed && (
                             <div>
-                                <p className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white leading-none'>
+                                <p className='text-sm font-bold text-gray-900 dark:text-white leading-none'>
                                     Thullaabul &apos;Ilmi
                                 </p>
                                 <p className='text-[10px] text-gray-400 mt-0.5 arabic-text'>
@@ -229,7 +229,7 @@ const DashboardLayout = ({ children }) => {
                     {isCollapsed ? (
                         <div
                             title={user?.name ?? t("common.user")}
-                            className='mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-xs font-semibold text-emerald-700 dark:text-emerald-400 dark:bg-emerald-900/30 dark:text-emerald-300'
+                            className='mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-xs font-semibold text-emerald-700 dark:text-emerald-400 dark:bg-emerald-900/30'
                         >
                             {(user?.name ?? t("common.user"))
                                 .slice(0, 1)
@@ -237,7 +237,7 @@ const DashboardLayout = ({ children }) => {
                         </div>
                     ) : (
                         <>
-                            <p className='text-sm font-medium text-gray-800 dark:text-gray-200 dark:text-white truncate'>
+                            <p className='text-sm font-medium text-gray-800 dark:text-white truncate'>
                                 {user?.name ?? t("common.user")}
                             </p>
                             <p className='text-xs text-gray-400 truncate'>
@@ -336,7 +336,7 @@ const DashboardLayout = ({ children }) => {
                             onClick={toggleSidebar}
                             aria-label={sidebarToggleLabel}
                             title={sidebarToggleLabel}
-                            className='hidden md:inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 hover:dark:text-gray-100 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors'
+                            className='hidden md:inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 hover:dark:text-gray-100 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors'
                         >
                             {isCollapsed ? (
                                 <BsChevronRight />
@@ -354,7 +354,7 @@ const DashboardLayout = ({ children }) => {
                                     ط
                                 </span>
                             </div>
-                            <span className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white truncate'>
+                            <span className='text-sm font-bold text-gray-900 dark:text-white truncate'>
                                 Thullaabul &apos;Ilmi
                             </span>
                         </Link>
@@ -401,7 +401,7 @@ const DashboardLayout = ({ children }) => {
                                             </span>
                                         </div>
                                         <div className='min-w-0'>
-                                            <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white truncate'>
+                                            <p className='text-sm font-semibold text-gray-900 dark:text-white truncate'>
                                                 {user?.name ?? t("common.user")}
                                             </p>
                                             <p className='text-xs text-gray-400 truncate'>
@@ -416,7 +416,7 @@ const DashboardLayout = ({ children }) => {
                                     <Link
                                         href='/'
                                         onClick={() => setAccountOpen(false)}
-                                        className='flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                                        className='flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
                                     >
                                         <BsHouseDoor className='text-base text-gray-400' />
                                         {t("link.public_site")}
@@ -432,7 +432,7 @@ const DashboardLayout = ({ children }) => {
                                             onClick={() =>
                                                 setAccountOpen(false)
                                             }
-                                            className='flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                                            className='flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
                                         >
                                             <span className='text-base text-gray-400'>
                                                 {item.icon}
@@ -446,7 +446,7 @@ const DashboardLayout = ({ children }) => {
 
                                 {/* Theme toggle */}
                                 <div className='px-4 py-2.5 flex items-center justify-between'>
-                                    <span className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
+                                    <span className='text-sm text-gray-700 dark:text-gray-300'>
                                         {isDarkMode
                                             ? t("nav.dark")
                                             : t("nav.light")}

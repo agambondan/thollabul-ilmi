@@ -118,10 +118,10 @@ export default function HijriClient({
         >
             <div className='text-center mb-6'>
                 <BsCalendar3 className='text-4xl text-emerald-600 dark:text-emerald-400 mx-auto mb-2' />
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
                     {t("hijri.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-400'>
                     {t("hijri.subtitle")}
                 </p>
             </div>
@@ -170,8 +170,8 @@ export default function HijriClient({
                 <PuasaSunnahPanel initialHijri={todayHijri} />
             </div>
 
-            <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 p-5 mb-6'>
-                <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-4'>
+            <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5 mb-6'>
+                <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4'>
                     {t("hijri.convert_title")}
                 </h2>
                 <form onSubmit={handleConvert} className='flex items-end gap-3'>
@@ -180,7 +180,7 @@ export default function HijriClient({
                             type='date'
                             value={convertDate}
                             onChange={(e) => setConvertDate(e.target.value)}
-                            className='w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                            className='w-full px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                         />
                     </div>
                     <button
@@ -221,10 +221,10 @@ export default function HijriClient({
                 )}
             </div>
 
-            <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 p-5'>
+            <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 p-5'>
                 <div className='flex items-center justify-between gap-3 mb-4'>
                     <div>
-                        <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300'>
+                        <h2 className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
                             {t("hijri.events_title")}
                         </h2>
                         <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
@@ -243,7 +243,7 @@ export default function HijriClient({
                             value={eventSearch}
                             onChange={(e) => setEventSearch(e.target.value)}
                             placeholder={t("hijri.events_search_placeholder")}
-                            className='w-full pl-8 pr-8 py-2 text-xs rounded-lg border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                            className='w-full pl-8 pr-8 py-2 text-xs rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                         />
                         {eventSearch && (
                             <button
@@ -260,7 +260,7 @@ export default function HijriClient({
                     <select
                         value={selectedMonth}
                         onChange={(e) => setSelectedMonth(e.target.value)}
-                        className='px-3 py-2 text-xs rounded-lg border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                        className='px-3 py-2 text-xs rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                     >
                         <option value=''>{t("hijri.all_months")}</option>
                         {months.map((name, i) => (
@@ -278,7 +278,7 @@ export default function HijriClient({
                             className='p-4 rounded-lg bg-gray-50 dark:bg-slate-700/50 border border-gray-100 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-600 transition'
                         >
                             <div className='flex items-start justify-between gap-2 mb-1'>
-                                <h3 className='font-semibold text-sm text-gray-900 dark:text-gray-100 dark:text-white'>
+                                <h3 className='font-semibold text-sm text-gray-900 dark:text-white'>
                                     {getLocalizedField(ev, "name", lang)}
                                 </h3>
                                 <span className='text-xs font-mono px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 shrink-0'>

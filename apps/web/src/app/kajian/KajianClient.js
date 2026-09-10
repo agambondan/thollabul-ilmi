@@ -388,10 +388,10 @@ export default function KajianClient({
                     </svg>
                 </div>
                 <div>
-                    <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
+                    <h1 className='text-xl font-bold text-emerald-900 dark:text-white'>
                         {t("kajian.public_title")}
                     </h1>
-                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                    <p className='text-xs text-gray-500 dark:text-gray-400'>
                         {t("kajian.public_subtitle")}
                     </p>
                 </div>

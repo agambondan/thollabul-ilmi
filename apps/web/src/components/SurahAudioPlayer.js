@@ -847,7 +847,7 @@ export default function SurahAudioPlayer({
                                 surahName ||
                                 `Surah ${surahNumber}`}
                         </p>
-                        <p className='truncate text-[11px] text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                        <p className='truncate text-[11px] text-gray-500 dark:text-gray-400'>
                             {loading
                                 ? "Memuat audio..."
                                 : `${currentAudio?.qari_name ?? "Pilih qari"} · ${speed}x`}
@@ -899,7 +899,7 @@ export default function SurahAudioPlayer({
                                 surahName ||
                                 `Surah ${surahNumber}`}
                         </p>
-                        <p className='truncate text-[11px] text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                        <p className='truncate text-[11px] text-gray-500 dark:text-gray-400'>
                             {currentAudio?.qari_name ?? "Pilih qari"} · {speed}x
                         </p>
                     </div>
@@ -939,7 +939,7 @@ export default function SurahAudioPlayer({
                             ["endAyah", "Sampai ayat", `${totalAyahs ?? ""}`],
                         ].map(([field, label, placeholder]) => (
                             <label key={field} className='block'>
-                                <span className='mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                <span className='mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400'>
                                     {label}
                                 </span>
                                 <input
@@ -953,7 +953,7 @@ export default function SurahAudioPlayer({
                                         )
                                     }
                                     placeholder={placeholder}
-                                    className='w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 px-2 py-2 text-center text-xs font-bold text-gray-900 dark:text-gray-100 outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white'
+                                    className='w-full rounded-lg border border-gray-200 bg-gray-50 px-2 py-2 text-center text-xs font-bold text-gray-900 outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white'
                                 />
                             </label>
                         ))}
@@ -1011,7 +1011,7 @@ export default function SurahAudioPlayer({
 
                     {audioList.length > 0 && (
                         <div className='mb-2'>
-                            <p className='mb-1 text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                            <p className='mb-1 text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400'>
                                 Qari
                             </p>
                             <div
@@ -1032,7 +1032,7 @@ export default function SurahAudioPlayer({
                                     }
                                     aria-label={t("audio.select_qari")}
                                     aria-expanded={qariDropdownOpen}
-                                    className='flex w-full items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 p-2 pr-8 text-left outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900'
+                                    className='flex w-full items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 p-2 pr-8 text-left outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900'
                                 >
                                     <img
                                         src={getQariInfo(selectedQari).photo}
@@ -1044,11 +1044,11 @@ export default function SurahAudioPlayer({
                                         className='h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-emerald-200 dark:ring-slate-600'
                                     />
                                     <span className='min-w-0 flex-1'>
-                                        <span className='block truncate text-xs font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
+                                        <span className='block truncate text-xs font-semibold text-gray-900 dark:text-white'>
                                             {currentAudio?.qari_name ??
                                                 getQariInfo(selectedQari).name}
                                         </span>
-                                        <span className='block truncate text-[10px] text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                        <span className='block truncate text-[10px] text-gray-500 dark:text-gray-400'>
                                             {getQariInfo(selectedQari)
                                                 .country || "Syaikh"}
                                         </span>
@@ -1056,7 +1056,7 @@ export default function SurahAudioPlayer({
                                 </button>
                                 <BsChevronDown className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400' />
                                 {qariDropdownOpen && (
-                                    <div className='absolute z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-gray-200 dark:border-gray-700 bg-white p-1 shadow-xl dark:border-slate-700 dark:bg-slate-900'>
+                                    <div className='absolute z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white p-1 shadow-xl dark:border-slate-700 dark:bg-slate-900'>
                                         {audioList.map((item) => {
                                             const info = getQariInfo(
                                                 item.qari_slug,
@@ -1093,10 +1093,10 @@ export default function SurahAudioPlayer({
                                                         className='h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-emerald-100 dark:ring-slate-700'
                                                     />
                                                     <span className='min-w-0 flex-1'>
-                                                        <span className='block truncate text-xs font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
+                                                        <span className='block truncate text-xs font-semibold text-gray-900 dark:text-white'>
                                                             {item.qari_name}
                                                         </span>
-                                                        <span className='block truncate text-[10px] text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                                        <span className='block truncate text-[10px] text-gray-500 dark:text-gray-400'>
                                                             {info.country ||
                                                                 "Syaikh"}
                                                         </span>
@@ -1118,7 +1118,7 @@ export default function SurahAudioPlayer({
 
                     <div className='flex flex-wrap items-center justify-between gap-2'>
                         <div>
-                            <p className='mb-1 text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                            <p className='mb-1 text-[10px] font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400'>
                                 Speed
                             </p>
                             <div className='flex flex-wrap gap-1'>
@@ -1140,7 +1140,7 @@ export default function SurahAudioPlayer({
                                 ))}
                             </div>
                         </div>
-                        <label className='flex items-center gap-2 cursor-pointer text-xs text-gray-600 dark:text-gray-300 dark:text-gray-400'>
+                        <label className='flex items-center gap-2 cursor-pointer text-xs text-gray-600 dark:text-gray-400'>
                             <input
                                 type='checkbox'
                                 checked={repeat}

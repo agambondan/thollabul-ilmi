@@ -92,10 +92,10 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                 >
                     أَسْمَاءُ اللهِ الْحُسْنَى
                 </p>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
                     Asmaul Husna
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-400'>
                     {t("asmaul.subtitle")}
                 </p>
                 {names[0]?.source && (
@@ -150,7 +150,7 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                 </span>
             </Link>
 
-            <div className='flex items-center gap-2 mb-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
+            <div className='flex items-center gap-2 mb-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
                 <BsSearch className='text-gray-400 shrink-0' />
                 <input
                     type='text'
@@ -187,12 +187,12 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                                 )}
                             </div>
                             <p
-                                className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1 text-right'
+                                className='text-2xl font-bold text-emerald-900 dark:text-white mb-1 text-right'
                                 style={{ fontFamily: "Amiri, serif" }}
                             >
                                 {name.arabic}
                             </p>
-                            <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 italic mb-0.5'>
+                            <p className='text-xs text-gray-500 dark:text-gray-400 italic mb-0.5'>
                                 {name.transliteration}
                             </p>
                             <p className='text-sm font-medium text-gray-700 dark:text-gray-200'>
@@ -233,7 +233,7 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
             )}
 
             {filteredNames.length === 0 && (
-                <p className='text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 py-4'>
+                <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
                     {t("asmaul.not_found")}
                 </p>
             )}
@@ -254,12 +254,12 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                             </span>
                         </div>
                         <p
-                            className='text-4xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white text-center mb-2'
+                            className='text-4xl font-bold text-emerald-900 dark:text-white text-center mb-2'
                             style={{ fontFamily: "Amiri, serif" }}
                         >
                             {selected.arabic}
                         </p>
-                        <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 italic text-center mb-1'>
+                        <p className='text-sm text-gray-500 dark:text-gray-400 italic text-center mb-1'>
                             {selected.transliteration}
                         </p>
                         <p className='text-base font-semibold text-emerald-800 dark:text-emerald-300 text-center mb-4'>
@@ -296,7 +296,7 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                                             {extra.dalilText && (
                                                 <p
                                                     dir='rtl'
-                                                    className='font-arabic text-sm text-right text-emerald-950 dark:text-emerald-300 dark:text-emerald-200 my-1'
+                                                    className='font-arabic text-sm text-right text-emerald-950 dark:text-emerald-300 my-1'
                                                 >
                                                     {extra.dalilText}
                                                 </p>
@@ -317,7 +317,7 @@ export default function AsmaulHusnaClient({ initialNames = [] }) {
                                                 ) ?? "Penjelasan Ulama"}
                                                 :
                                             </p>
-                                            <p className='text-gray-700 dark:text-gray-200 dark:text-gray-300 mt-0.5'>
+                                            <p className='text-gray-700 dark:text-gray-300 mt-0.5'>
                                                 {extra.ulamaQuote}
                                             </p>
                                         </div>

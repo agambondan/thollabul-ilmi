@@ -565,7 +565,7 @@ export default async function Home() {
                         <h2 className='text-3xl font-bold text-emerald-900 dark:text-emerald-300 mb-4'>
                             {t("home.features_heading")}
                         </h2>
-                        <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 max-w-lg mx-auto text-sm'>
+                        <p className='text-gray-500 dark:text-gray-400 max-w-lg mx-auto text-sm'>
                             {t("home.features_subheading")}
                         </p>
                         <div className='flex items-center justify-center gap-3 mt-4'>
@@ -614,7 +614,7 @@ export default async function Home() {
                                                     {feat.icon}
                                                 </span>
                                                 <div className='min-w-0'>
-                                                    <p className='text-sm font-semibold text-gray-800 dark:text-gray-200 dark:text-white leading-tight'>
+                                                    <p className='text-sm font-semibold text-gray-800 dark:text-white leading-tight'>
                                                         {t(feat.labelKey)}
                                                     </p>
                                                     <span
@@ -632,7 +632,7 @@ export default async function Home() {
                                                                   "home.feature_public",
                                                               )}
                                                     </span>
-                                                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1 leading-relaxed'>
+                                                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed'>
                                                         {t(feat.descKey)}
                                                     </p>
                                                 </div>
@@ -653,7 +653,7 @@ export default async function Home() {
                         <h2 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 mb-2'>
                             {t("home.tajweed_heading")}
                         </h2>
-                        <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                        <p className='text-sm text-gray-500 dark:text-gray-400'>
                             {t("home.tajweed_desc")}
                         </p>
                     </div>

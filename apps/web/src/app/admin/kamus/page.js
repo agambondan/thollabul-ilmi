@@ -151,10 +151,10 @@ const AdminDictionaryPage = () => {
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
                 <div>
-                    <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
+                    <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
                         {t("admin.nav.dictionary")}
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400'>
                         {items.length} {t("admin.kamus.words_unit")}
                     </p>
                 </div>
@@ -176,7 +176,7 @@ const AdminDictionaryPage = () => {
                         setSearch(e.target.value);
                         setPage(1);
                     }}
-                    className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white'
+                    className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
                 />
             </div>
 
@@ -201,13 +201,13 @@ const AdminDictionaryPage = () => {
                     >
                         {visible.map((item) => (
                             <Tr key={item.id ?? item._id}>
-                                <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-medium'>
+                                <Td className='text-gray-900 dark:text-white font-medium'>
                                     {item.term ?? item.arabic}
                                 </Td>
-                                <Td className='text-gray-700 dark:text-gray-200 dark:text-gray-300'>
+                                <Td className='text-gray-700 dark:text-gray-300'>
                                     {item.category ?? "-"}
                                 </Td>
-                                <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                <Td className='text-gray-500 dark:text-gray-400'>
                                     {item.definition ?? item.meaning}
                                 </Td>
                                 <Td className='text-gray-400 text-xs hidden md:table-cell'>
@@ -272,7 +272,7 @@ const AdminDictionaryPage = () => {
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto'
                 >
                     <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
-                        <h2 className='font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
+                        <h2 className='font-bold text-gray-900 dark:text-white'>
                             {editId
                                 ? t("admin.kamus.edit_word")
                                 : t("admin.kamus.add_word")}
@@ -288,7 +288,7 @@ const AdminDictionaryPage = () => {
                         <div>
                             <label
                                 htmlFor='page-istilah'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
                                 Istilah
                             </label>
@@ -302,13 +302,13 @@ const AdminDictionaryPage = () => {
                                         term: e.target.value,
                                     })
                                 }
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>
                         <div>
                             <label
                                 htmlFor='page-category'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
                                 {t("admin.field.category")}
                             </label>
@@ -321,7 +321,7 @@ const AdminDictionaryPage = () => {
                                         category: e.target.value,
                                     })
                                 }
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             >
                                 {CATEGORIES.map((c) => (
                                     <option key={c} value={c}>
@@ -333,7 +333,7 @@ const AdminDictionaryPage = () => {
                         <div>
                             <label
                                 htmlFor='page-definisi'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
                                 Definisi
                             </label>
@@ -347,13 +347,13 @@ const AdminDictionaryPage = () => {
                                     })
                                 }
                                 rows={3}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>
                         <div>
                             <label
                                 htmlFor='page-field-1'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
                                 Contoh ({t("common.optional")})
                             </label>
@@ -367,14 +367,14 @@ const AdminDictionaryPage = () => {
                                     })
                                 }
                                 rows={2}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>
                         <div className='grid grid-cols-2 gap-4'>
                             <div>
                                 <label
                                     htmlFor='page-field-2'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
                                     Asal ({t("common.optional")})
                                 </label>
@@ -388,13 +388,13 @@ const AdminDictionaryPage = () => {
                                             origin: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor='page-field-3'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
                                     {t("common.source")} ({t("common.optional")}
                                     )
@@ -409,11 +409,11 @@ const AdminDictionaryPage = () => {
                                             source: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                                 {form.source && (
                                     <div className='mt-1'>
-                                        <p className='text-[10px] text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-0.5'>
+                                        <p className='text-[10px] text-gray-500 dark:text-gray-400 mb-0.5'>
                                             Preview
                                         </p>
                                         <SourceBadges source={form.source} />
@@ -425,7 +425,7 @@ const AdminDictionaryPage = () => {
                     <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
                         <button
                             onClick={() => setShowModal(false)}
-                            className='flex-1 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 text-gray-700 dark:text-gray-200 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
                         >
                             {t("common.cancel")}
                         </button>
@@ -450,18 +450,18 @@ const AdminDictionaryPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
                 >
-                    <h2 className='font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-2'>
+                    <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
                         {t("admin.crud.delete_title", {
                             item: t("admin.kamus.word"),
                         })}
                     </h2>
-                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-5'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-5'>
                         {t("admin.crud.delete_body")}
                     </p>
                     <div className='flex gap-3'>
                         <button
                             onClick={() => setDeleteId(null)}
-                            className='flex-1 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 text-gray-700 dark:text-gray-200 dark:text-gray-300 rounded-lg text-sm font-medium'
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium'
                         >
                             {t("common.cancel")}
                         </button>

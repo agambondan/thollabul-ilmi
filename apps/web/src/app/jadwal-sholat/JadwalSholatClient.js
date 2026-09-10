@@ -388,7 +388,7 @@ export function JadwalSholatContent({
                     </h1>
                     <p
                         suppressHydrationWarning
-                        className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'
+                        className='text-sm text-gray-500 dark:text-gray-400'
                     >
                         {todayStr}
                     </p>
@@ -434,7 +434,7 @@ export function JadwalSholatContent({
                                     setCity(found);
                                 }
                             }}
-                            className='flex-1 w-full sm:w-auto border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-200 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
+                            className='flex-1 w-full sm:w-auto border border-gray-200 dark:border-slate-600 rounded-xl px-3 py-2 text-sm bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
                         >
                             {CITIES.map((c) => (
                                 <option key={c.name} value={c.name}>
@@ -484,7 +484,7 @@ export function JadwalSholatContent({
                                 <div>
                                     <label
                                         htmlFor='page-method'
-                                        className='block text-xs font-medium text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-1'
+                                        className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'
                                     >
                                         {t("prayer_schedule.method") ??
                                             "Metode Hisab"}
@@ -495,7 +495,7 @@ export function JadwalSholatContent({
                                         onChange={(e) =>
                                             setMethod(e.target.value)
                                         }
-                                        className='w-full border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg px-2.5 py-1.5 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-200 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
+                                        className='w-full border border-gray-200 dark:border-slate-600 rounded-lg px-2.5 py-1.5 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
                                     >
                                         {PRAYER_METHODS.map((m) => (
                                             <option
@@ -510,7 +510,7 @@ export function JadwalSholatContent({
                                 <div>
                                     <label
                                         htmlFor='page-madhab'
-                                        className='block text-xs font-medium text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-1'
+                                        className='block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1'
                                     >
                                         {t("prayer_schedule.madhab") ??
                                             "Madhab Asar"}
@@ -521,7 +521,7 @@ export function JadwalSholatContent({
                                         onChange={(e) =>
                                             setMadhab(e.target.value)
                                         }
-                                        className='w-full border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg px-2.5 py-1.5 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-200 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
+                                        className='w-full border border-gray-200 dark:border-slate-600 rounded-lg px-2.5 py-1.5 text-xs bg-white dark:bg-slate-700 text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-400'
                                     >
                                         {PRAYER_MADHABS.map((m) => (
                                             <option
@@ -630,7 +630,7 @@ export function JadwalSholatContent({
                                             next.label,
                                         );
                                     }}
-                                    className='w-full sm:flex-1 min-w-0 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-xs text-gray-900 dark:text-gray-100 dark:text-white rounded-lg px-2.5 py-1.5 focus:ring-emerald-500'
+                                    className='w-full sm:flex-1 min-w-0 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2.5 py-1.5 focus:ring-emerald-500'
                                     aria-label={t("prayer.adhan_sound")}
                                 >
                                     {adzanOptions.map((s) => (
@@ -656,7 +656,7 @@ export function JadwalSholatContent({
                                                 Number(e.target.value),
                                             )
                                         }
-                                        className='w-full sm:w-auto bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-xs text-gray-900 dark:text-gray-100 dark:text-white rounded-lg px-2.5 py-1.5 focus:ring-emerald-500'
+                                        className='w-full sm:w-auto bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-xs text-gray-900 dark:text-white rounded-lg px-2.5 py-1.5 focus:ring-emerald-500'
                                         aria-label={t("prayer.reminder_lead")}
                                     >
                                         {REMINDER_LEAD_OPTIONS.map((m) => (
@@ -689,7 +689,7 @@ export function JadwalSholatContent({
                                                 key={key}
                                                 className='flex items-center justify-between gap-2 bg-gray-50 dark:bg-slate-700/50 rounded-lg px-2.5 py-1.5'
                                             >
-                                                <span className='text-xs font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 shrink-0'>
+                                                <span className='text-xs font-medium text-gray-700 dark:text-gray-300 shrink-0'>
                                                     {label}
                                                 </span>
                                                 <select
@@ -713,7 +713,7 @@ export function JadwalSholatContent({
                                                             next,
                                                         );
                                                     }}
-                                                    className='min-w-0 flex-1 sm:flex-initial sm:w-28 bg-white dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-[11px] text-gray-900 dark:text-gray-100 dark:text-white rounded-md px-2 py-1 focus:ring-emerald-500'
+                                                    className='min-w-0 flex-1 sm:flex-initial sm:w-28 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-[11px] text-gray-900 dark:text-white rounded-md px-2 py-1 focus:ring-emerald-500'
                                                     aria-label={t(
                                                         "prayer.reminder_lead_prayer",
                                                         { prayer: key },
@@ -807,7 +807,7 @@ export function JadwalSholatContent({
                 {loading && (
                     <div className='text-center py-12'>
                         <div className='w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-3' />
-                        <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                        <p className='text-sm text-gray-500 dark:text-gray-400'>
                             {t("prayer_schedule.loading")}
                         </p>
                     </div>

@@ -147,10 +147,10 @@ const AdminAsmaulHusnaPage = () => {
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
                 <div>
-                    <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
+                    <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
                         Asmaul Husna
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400'>
                         {items.length} / 99 {t("admin.asmaul.names_unit")}
                     </p>
                 </div>
@@ -172,7 +172,7 @@ const AdminAsmaulHusnaPage = () => {
                         setSearch(e.target.value);
                         setPage(1);
                     }}
-                    className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white'
+                    className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
                 />
             </div>
 
@@ -199,16 +199,16 @@ const AdminAsmaulHusnaPage = () => {
                     >
                         {visible.map((item) => (
                             <Tr key={item.id ?? item._id}>
-                                <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 font-mono text-xs'>
+                                <Td className='text-gray-500 dark:text-gray-400 font-mono text-xs'>
                                     {item.number}
                                 </Td>
-                                <Td className='text-gray-900 dark:text-gray-100 dark:text-white font-arabic text-lg'>
+                                <Td className='text-gray-900 dark:text-white font-arabic text-lg'>
                                     {item.arabic}
                                 </Td>
-                                <Td className='text-gray-700 dark:text-gray-200 dark:text-gray-300 italic'>
+                                <Td className='text-gray-700 dark:text-gray-300 italic'>
                                     {item.transliteration}
                                 </Td>
-                                <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 hidden md:table-cell'>
+                                <Td className='text-gray-500 dark:text-gray-400 hidden md:table-cell'>
                                     <div>
                                         {getLocalizedField(
                                             item,
@@ -277,7 +277,7 @@ const AdminAsmaulHusnaPage = () => {
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
                 >
                     <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
-                        <h2 className='font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
+                        <h2 className='font-bold text-gray-900 dark:text-white'>
                             {editId
                                 ? t("admin.asmaul.edit_name")
                                 : t("admin.asmaul.add_name")}
@@ -294,7 +294,7 @@ const AdminAsmaulHusnaPage = () => {
                             <div>
                                 <label
                                     htmlFor='page-number'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
                                     {t("admin.field.number")}
                                 </label>
@@ -310,13 +310,13 @@ const AdminAsmaulHusnaPage = () => {
                                     }
                                     min={1}
                                     max={99}
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor='page-arabic'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
                                     {t("admin.field.arabic")}
                                 </label>
@@ -331,14 +331,14 @@ const AdminAsmaulHusnaPage = () => {
                                         })
                                     }
                                     dir='rtl'
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white font-arabic text-lg'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white font-arabic text-lg'
                                 />
                             </div>
                         </div>
                         <div>
                             <label
                                 htmlFor='page-latin'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
                                 {t("admin.field.latin")}
                             </label>
@@ -352,14 +352,14 @@ const AdminAsmaulHusnaPage = () => {
                                         transliteration: e.target.value,
                                     })
                                 }
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>
                         <div className='grid grid-cols-2 gap-4'>
                             <div>
                                 <label
                                     htmlFor='page-meaning-id'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
                                     {t("admin.asmaul.meaning_id")}
                                 </label>
@@ -373,13 +373,13 @@ const AdminAsmaulHusnaPage = () => {
                                             indonesian: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor='page-meaning-en'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
                                     {t("admin.asmaul.meaning_en")}
                                 </label>
@@ -393,14 +393,14 @@ const AdminAsmaulHusnaPage = () => {
                                             english: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
                         </div>
                         <div>
                             <label
                                 htmlFor='page-notes'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
                                 {t("admin.asmaul.notes")}
                             </label>
@@ -414,13 +414,13 @@ const AdminAsmaulHusnaPage = () => {
                                     })
                                 }
                                 rows={3}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>
                         <div>
                             <label
                                 htmlFor='page-source'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
                                 {t("admin.field.source")}
                             </label>
@@ -435,11 +435,11 @@ const AdminAsmaulHusnaPage = () => {
                                     })
                                 }
                                 placeholder='HR. Bukhari No. 2736; HR. Muslim No. 2677'
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                             {form.source && (
                                 <div className='mt-1'>
-                                    <p className='text-[10px] text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-0.5'>
+                                    <p className='text-[10px] text-gray-500 dark:text-gray-400 mb-0.5'>
                                         Preview
                                     </p>
                                     <SourceBadges source={form.source} />
@@ -450,7 +450,7 @@ const AdminAsmaulHusnaPage = () => {
                     <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
                         <button
                             onClick={() => setShowModal(false)}
-                            className='flex-1 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 text-gray-700 dark:text-gray-200 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
                         >
                             {t("common.cancel")}
                         </button>
@@ -480,18 +480,18 @@ const AdminAsmaulHusnaPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
                 >
-                    <h2 className='font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-2'>
+                    <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
                         {t("admin.crud.delete_title", {
                             item: t("admin.asmaul.name"),
                         })}
                     </h2>
-                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-5'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-5'>
                         {t("admin.crud.delete_body")}
                     </p>
                     <div className='flex gap-3'>
                         <button
                             onClick={() => setDeleteId(null)}
-                            className='flex-1 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 text-gray-700 dark:text-gray-200 dark:text-gray-300 rounded-lg text-sm font-medium'
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium'
                         >
                             {t("common.cancel")}
                         </button>

@@ -235,12 +235,12 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                 className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl w-[90vw] max-w-lg max-h-[90vh] overflow-y-auto outline-none'
             >
                 <div className='flex items-center justify-between mb-3'>
-                    <h3 className='text-sm font-semibold text-emerald-900 dark:text-emerald-300 dark:text-white'>
+                    <h3 className='text-sm font-semibold text-emerald-900 dark:text-white'>
                         {t("ayah.share_title")}
                     </h3>
                     <button
                         onClick={isCopiedCallback}
-                        className='p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-500 dark:text-gray-300 dark:text-gray-400 transition-colors'
+                        className='p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-500 dark:text-gray-400 transition-colors'
                     >
                         <IoClose size={20} />
                     </button>
@@ -257,7 +257,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                         <button
                             type='button'
                             onClick={nativeShare}
-                            className='rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:border-emerald-900 dark:bg-emerald-900/20 dark:text-emerald-300'
+                            className='rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:border-emerald-900 dark:bg-emerald-900/20'
                         >
                             Share Sheet
                         </button>
@@ -269,7 +269,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                                 `https://wa.me/?text=${encodedText}`,
                             )
                         }
-                        className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
                     >
                         WhatsApp
                     </button>
@@ -280,7 +280,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                                 `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
                             )
                         }
-                        className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
                     >
                         Telegram
                     </button>
@@ -291,7 +291,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                                 `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
                             )
                         }
-                        className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
                     >
                         Facebook
                     </button>
@@ -302,7 +302,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                                 `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`,
                             )
                         }
-                        className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
                     >
                         X
                     </button>
@@ -313,7 +313,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                                 `https://www.threads.net/intent/post?text=${combinedText}`,
                             )
                         }
-                        className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
                     >
                         Threads
                     </button>
@@ -324,7 +324,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                                 `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
                             )
                         }
-                        className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
                     >
                         LinkedIn
                     </button>
@@ -335,19 +335,19 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                                 `mailto:?subject=Thullaabul%20'Ilmi&body=${encodedText}`,
                             )
                         }
-                        className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
                     >
                         Email
                     </button>
                     <button
                         type='button'
                         onClick={copyShareText}
-                        className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
+                        className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 hover:dark:text-emerald-400 dark:border-slate-700 dark:text-gray-300'
                     >
                         Copy Text
                     </button>
                 </div>
-                <p className='mb-2 text-xs font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                <p className='mb-2 text-xs font-semibold text-gray-500 dark:text-gray-400'>
                     {t("share_image.pick_background")}
                 </p>
                 <div className='grid grid-cols-3 md:grid-cols-4 gap-2'>
@@ -399,7 +399,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                             onClick={() =>
                                 handleImageAction(selectedImage, "copy")
                             }
-                            className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300 disabled:opacity-50'
+                            className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300 disabled:opacity-50'
                         >
                             {t("share_image.copy_btn")}
                         </button>
@@ -409,14 +409,14 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                             onClick={() =>
                                 handleImageAction(selectedImage, "download")
                             }
-                            className='rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300 disabled:opacity-50'
+                            className='rounded-lg border border-gray-200 px-3 py-2 text-xs font-semibold text-gray-700 hover:border-emerald-300 hover:text-emerald-700 dark:border-slate-700 dark:text-gray-300 disabled:opacity-50'
                         >
                             {t("share_image.download_btn")}
                         </button>
                     </div>
                 )}
                 {isProcessing && (
-                    <p className='text-center text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-3'>
+                    <p className='text-center text-sm text-gray-500 dark:text-gray-400 mt-3'>
                         {t("share_image.processing")}
                     </p>
                 )}

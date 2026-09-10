@@ -229,16 +229,16 @@ export function ImsakiyahContent() {
                     <div className='flex items-center gap-3'>
                         <button
                             onClick={prevMonth}
-                            className='px-3 py-1.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                            className='px-3 py-1.5 text-sm rounded-lg border border-gray-200 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
                         >
                             ‹
                         </button>
-                        <span className='flex-1 text-center font-semibold text-gray-800 dark:text-gray-200 dark:text-white text-sm'>
+                        <span className='flex-1 text-center font-semibold text-gray-800 dark:text-white text-sm'>
                             {monthNames[month - 1]} {year}
                         </span>
                         <button
                             onClick={nextMonth}
-                            className='px-3 py-1.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                            className='px-3 py-1.5 text-sm rounded-lg border border-gray-200 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
                         >
                             ›
                         </button>
@@ -255,7 +255,7 @@ export function ImsakiyahContent() {
                                 setCityIndex(v);
                                 setUseGps(false);
                             }}
-                            className='text-sm border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg px-3 py-2 bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                            className='text-sm border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                         >
                             {useGps && <option value={-1}>{gpsLabel}</option>}
                             {CITIES.map((c, i) => (
@@ -307,7 +307,7 @@ export function ImsakiyahContent() {
                                 d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
                             />
                         </svg>
-                        <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                        <p className='text-sm text-gray-500 dark:text-gray-400'>
                             {t("imsakiyah.loading")}
                         </p>
                     </div>
@@ -385,7 +385,7 @@ export function ImsakiyahContent() {
                                                           : "hover:bg-gray-50 dark:hover:bg-slate-700/50"
                                                 }`}
                                             >
-                                                <td className='px-3 py-2.5 font-semibold text-gray-800 dark:text-gray-200 dark:text-white whitespace-nowrap'>
+                                                <td className='px-3 py-2.5 font-semibold text-gray-800 dark:text-white whitespace-nowrap'>
                                                     {isToday ? (
                                                         <span className='inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-600 text-white text-[10px] font-bold'>
                                                             {dayNum}

@@ -40,7 +40,7 @@ export default async function WiridPage() {
         <main className='min-h-screen flex flex-col'>
             <Section>
                 <div className='container mx-auto px-4 max-w-2xl'>
-                    <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
+                    <h1 className='text-xl font-bold text-emerald-900 dark:text-white'>
                         Wirid &amp; Dzikir
                     </h1>
                     <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 mb-6'>

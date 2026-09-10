@@ -20,10 +20,10 @@ export default function HadithNumberHeader({
                 {t("hadith.back_to_list") || "← Kembali ke daftar hadith"}
             </Link>
             <div className='mb-4 rounded-xl border border-emerald-100 dark:border-emerald-900/40 bg-emerald-50/70 dark:bg-emerald-900/10 px-4 py-3'>
-                <p className='text-xs uppercase tracking-wider text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 font-semibold'>
+                <p className='text-xs uppercase tracking-wider text-emerald-700 dark:text-emerald-400 font-semibold'>
                     {t("hadith.detail_title") || "Detail Hadith"}
                 </p>
-                <h1 className='text-xl font-bold text-emerald-950 dark:text-emerald-300 dark:text-white mt-1'>
+                <h1 className='text-xl font-bold text-emerald-950 dark:text-white mt-1'>
                     {title}
                 </h1>
                 {sunnahUrl ? (

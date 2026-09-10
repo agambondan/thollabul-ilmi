@@ -200,7 +200,7 @@ export default function MushafPageReader({
                         max={MAX_PAGE}
                         defaultValue={page}
                         key={page}
-                        className='min-w-0 flex-1 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-gray-200 outline-none focus:border-emerald-500'
+                        className='min-w-0 flex-1 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-gray-200 outline-none focus:border-emerald-500'
                         aria-label={t("mushaf.go_to_page")}
                     />
                     <button
@@ -367,7 +367,7 @@ export default function MushafPageReader({
                 <div className='h-3 bg-[repeating-linear-gradient(90deg,#fef3c7_0_4px,#14b8a6_4px_14px,#f59e0b_14px_20px,#0f766e_20px_30px)]' />
             </div>
 
-            <div className='sticky bottom-4 z-10 mx-auto flex max-w-[430px] items-center justify-between gap-2 rounded-full bg-white/90 dark:bg-slate-800/90 p-1 shadow-lg border border-gray-200 dark:border-gray-700 dark:border-slate-700'>
+            <div className='sticky bottom-4 z-10 mx-auto flex max-w-[430px] items-center justify-between gap-2 rounded-full bg-white/90 dark:bg-slate-800/90 p-1 shadow-lg border border-gray-200 dark:border-slate-700'>
                 <button
                     type='button'
                     onClick={() => goToPage(page - 1)}

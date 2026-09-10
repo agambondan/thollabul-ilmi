@@ -336,10 +336,10 @@ const InfiniteScrollAyahPage = ({
         return (
             <div className='flex flex-col items-center justify-center min-h-[40vh] text-center px-4'>
                 <p className='text-4xl mb-3'>⚠️</p>
-                <h2 className='text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-2'>
+                <h2 className='text-lg font-bold text-emerald-900 dark:text-white mb-2'>
                     {t("quran.error_title")}
                 </h2>
-                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-400'>
                     {error}
                 </p>
             </div>
@@ -371,10 +371,10 @@ const InfiniteScrollAyahPage = ({
                             />
                         </div>
                     )}
-                    <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-0.5'>
+                    <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-0.5'>
                         {surahTitle}
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-4'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
                         {getSurahMeaning(surah, lang)} &middot;{" "}
                         {surah?.number_of_ayahs ?? ayahs.length}{" "}
                         {t("common.verse")} &middot;{" "}
@@ -467,7 +467,7 @@ const InfiniteScrollAyahPage = ({
 
             {!hasMore &&
                 ayahs.length >= (surah?.number_of_ayahs ?? ayahs.length) && (
-                    <p className='text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 py-4'>
+                    <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
                         {t("quran.all_displayed")}
                     </p>
                 )}

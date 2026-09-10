@@ -242,7 +242,7 @@ const AyahPage = ({
                         className='flex flex-row flex-wrap items-center w-full gap-0.5 pb-1 md:flex-col md:flex-nowrap md:w-auto md:gap-1 md:p-2 md:pb-2'
                         style={{ direction: "ltr" }}
                     >
-                        <li className='flex justify-center text-sm font-medium text-gray-500 dark:text-gray-300 dark:text-gray-400 mr-auto md:mr-0 md:pb-1'>
+                        <li className='flex justify-center text-sm font-medium text-gray-500 dark:text-gray-400 mr-auto md:mr-0 md:pb-1'>
                             {surah.number}:{ayah.number}
                         </li>
                         <li
@@ -422,7 +422,7 @@ const AyahPage = ({
                             {settingPopUp && (
                                 <div
                                     ref={menuContainerRef}
-                                    className={`absolute z-50 w-56 p-1 rounded-xl border border-emerald-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-2xl text-emerald-900 dark:text-emerald-300 dark:text-white max-h-[min(380px,calc(100vh-120px))] overflow-y-auto overscroll-contain ${
+                                    className={`absolute z-50 w-56 p-1 rounded-xl border border-emerald-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-2xl text-emerald-900 dark:text-white max-h-[min(380px,calc(100vh-120px))] overflow-y-auto overscroll-contain${
                                         openUpwards
                                             ? "bottom-9 md:bottom-0 top-auto right-0 md:right-auto md:left-9"
                                             : "top-9 md:top-0 bottom-auto right-0 md:right-auto md:left-9"
@@ -765,7 +765,7 @@ const AyahPage = ({
                                 {entry.source && (
                                     <SourceBadges source={entry.source} />
                                 )}
-                                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
+                                <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
                                     {entry.text ?? entry.content}
                                 </p>
                             </div>
@@ -804,7 +804,7 @@ const AyahPage = ({
                                         className='text-center bg-white dark:bg-slate-800 rounded-lg border border-sky-100 dark:border-slate-700 px-3 py-2 min-w-[60px]'
                                     >
                                         <p
-                                            className='text-lg font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-0.5'
+                                            className='text-lg font-bold text-emerald-900 dark:text-white mb-0.5'
                                             style={{
                                                 fontFamily: "Amiri, serif",
                                             }}
@@ -865,7 +865,7 @@ const AyahPage = ({
                                     {m.ayah_to?.surah?.translation?.latin_en ??
                                         `QS ${m.ayah_to?.surah?.number}:${m.ayah_to?.number}`}
                                 </p>
-                                <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
+                                <p className='text-sm text-gray-700 dark:text-gray-300'>
                                     {m.description}
                                 </p>
                             </div>

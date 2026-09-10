@@ -269,7 +269,7 @@ export default function AdzanQuickControl({
                 <select
                     value={settings.adzanSound || ADZAN_SOUNDS[0].value}
                     onChange={(e) => selectAdzan(e.target.value)}
-                    className='flex-1 min-w-[180px] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-gray-700 dark:border-slate-600 text-sm text-gray-900 dark:text-gray-100 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
+                    className='flex-1 min-w-[180px] bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 text-sm text-gray-900 dark:text-white rounded-lg px-3 py-1.5 focus:ring-emerald-500'
                 >
                     {adzanOptions.map((s) => (
                         <option key={s.value} value={s.value}>
@@ -295,7 +295,7 @@ export default function AdzanQuickControl({
                 <button
                     type='button'
                     onClick={testNotification}
-                    className='px-3 py-1.5 text-xs rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors'
+                    className='px-3 py-1.5 text-xs rounded-lg border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-colors'
                 >
                     🔔 {t("adzan.test_notif_btn", "Tes Notifikasi")}
                 </button>
@@ -333,7 +333,7 @@ export default function AdzanQuickControl({
                     {customSounds.map((s) => (
                         <li
                             key={s.id}
-                            className='flex items-center justify-between text-xs text-gray-700 dark:text-gray-200 dark:text-gray-300 bg-gray-50 dark:bg-slate-700/40 rounded-lg px-2.5 py-1.5'
+                            className='flex items-center justify-between text-xs text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-slate-700/40 rounded-lg px-2.5 py-1.5'
                         >
                             <span className='truncate'>{s.name}</span>
                             <button

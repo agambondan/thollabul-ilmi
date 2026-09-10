@@ -53,7 +53,7 @@ export default function SirohDetailContent({ slug, basePath = "/siroh" }) {
 
             {error && (
                 <div className='text-center py-12'>
-                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                    <p className='text-gray-500 dark:text-gray-400'>
                         {t("siroh.not_found")}
                     </p>
                     <Link
@@ -67,15 +67,15 @@ export default function SirohDetailContent({ slug, basePath = "/siroh" }) {
 
             {content && (
                 <article>
-                    <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-2'>
+                    <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-2'>
                         {getLocalizedField(content, "title", lang)}
                     </h1>
                     {getLocalizedField(content, "subtitle", lang) && (
-                        <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-6'>
+                        <p className='text-gray-500 dark:text-gray-400 mb-6'>
                             {getLocalizedField(content, "subtitle", lang)}
                         </p>
                     )}
-                    <div className='prose dark:prose-invert prose-emerald max-w-none text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
+                    <div className='prose dark:prose-invert prose-emerald max-w-none text-gray-700 dark:text-gray-300 leading-relaxed'>
                         {(
                             getLocalizedField(content, "content", lang) ||
                             content.content

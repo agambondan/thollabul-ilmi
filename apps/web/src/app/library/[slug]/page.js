@@ -179,14 +179,14 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
             }
         >
             <Link
-                className='mb-6 inline-flex items-center gap-1 text-sm text-emerald-700 dark:text-emerald-400 hover:underline dark:text-emerald-300'
+                className='mb-6 inline-flex items-center gap-1 text-sm text-emerald-700 dark:text-emerald-400 hover:underline'
                 href={basePath}
             >
                 {t("library.back_to_library") || "← Kembali ke perpustakaan"}
             </Link>
 
             {error || !book ? (
-                <div className='rounded-xl border border-red-100 bg-red-50 px-4 py-8 text-center text-sm text-red-700 dark:text-red-400 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300'>
+                <div className='rounded-xl border border-red-100 bg-red-50 px-4 py-8 text-center text-sm text-red-700 dark:text-red-400 dark:border-red-900/40 dark:bg-red-950/30'>
                     {t("library.not_found_or_error") ||
                         "Buku tidak ditemukan atau belum bisa dimuat."}
                 </div>
@@ -195,12 +195,12 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                     <div className='p-5 md:p-8'>
                         <div className='mb-4 flex flex-wrap items-start justify-between gap-3'>
                             <div>
-                                <p className='text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
+                                <p className='text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-400'>
                                     {book.category ||
                                         t("home.f.library") ||
                                         "Perpustakaan"}
                                 </p>
-                                <h1 className='mt-2 text-2xl font-bold leading-snug text-emerald-950 dark:text-emerald-300 dark:text-white md:text-3xl'>
+                                <h1 className='mt-2 text-2xl font-bold leading-snug text-emerald-950 dark:text-white md:text-3xl'>
                                     {book.title}
                                 </h1>
                             </div>
@@ -239,7 +239,7 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                         <div className='mb-6 flex flex-wrap gap-2'>
                             {metaItems(book, pagesSuffix).map((item) => (
                                 <span
-                                    className='rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800 dark:text-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-200'
+                                    className='rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800 dark:text-emerald-300 dark:bg-emerald-950/40'
                                     key={item}
                                 >
                                     {item}
@@ -247,12 +247,12 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                             ))}
                         </div>
 
-                        <p className='text-sm leading-7 text-gray-700 dark:text-gray-200 dark:text-gray-300'>
+                        <p className='text-sm leading-7 text-gray-700 dark:text-gray-300'>
                             {book.description}
                         </p>
 
                         {book.tags && (
-                            <p className='mt-4 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                            <p className='mt-4 text-xs text-gray-500 dark:text-gray-400'>
                                 Topik: {book.tags}
                             </p>
                         )}
@@ -270,18 +270,18 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                     <BsBoxArrowUpRight />
                                 </a>
                             ) : (
-                                <span className='rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800 dark:text-amber-300 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200'>
+                                <span className='rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800 dark:text-amber-300 dark:border-amber-900/50 dark:bg-amber-950/30'>
                                     {t("library.no_file_attached") ||
                                         "File sumber belum dilampirkan."}
                                 </span>
                             )}
                             {book.license && (
-                                <span className='text-xs leading-5 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                <span className='text-xs leading-5 text-gray-500 dark:text-gray-400'>
                                     {book.license}
                                 </span>
                             )}
                             {book.file_name && (
-                                <span className='rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs text-emerald-800 dark:text-emerald-300 dark:border-slate-700 dark:bg-slate-800 dark:text-emerald-200'>
+                                <span className='rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs text-emerald-800 dark:text-emerald-300 dark:border-slate-700 dark:bg-slate-800'>
                                     {book.file_name}
                                     {formatFileSize(book.file_size_bytes)
                                         ? ` · ${formatFileSize(book.file_size_bytes)}`
@@ -305,14 +305,14 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                             </span>
                                         )}
                                     {book.is_source_verified && (
-                                        <span className='rounded-full bg-emerald-100 px-2 py-0.5 font-semibold text-emerald-800 dark:text-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-200'>
+                                        <span className='rounded-full bg-emerald-100 px-2 py-0.5 font-semibold text-emerald-800 dark:text-emerald-300 dark:bg-emerald-950/60'>
                                             {t("library.source_verified") ||
                                                 "Sumber terverifikasi"}
                                         </span>
                                     )}
                                 </div>
                                 {book.source_note && (
-                                    <p className='mt-2 text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                    <p className='mt-2 text-gray-500 dark:text-gray-400'>
                                         {book.source_note}
                                     </p>
                                 )}
@@ -322,11 +322,11 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                         <div className='mt-8 rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 dark:border-slate-700 dark:bg-slate-800/70'>
                             <div className='mb-3 flex flex-wrap items-center justify-between gap-2'>
                                 <div>
-                                    <h2 className='text-sm font-bold text-emerald-950 dark:text-emerald-300 dark:text-white'>
+                                    <h2 className='text-sm font-bold text-emerald-950 dark:text-white'>
                                         {t("library.study_progress") ||
                                             "Progress Belajar"}
                                     </h2>
-                                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                    <p className='text-xs text-gray-500 dark:text-gray-400'>
                                         {isAuthenticated
                                             ? t(
                                                   "library.study_progress_desc",
@@ -339,7 +339,7 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                     </p>
                                 </div>
                                 {progress?.last_studied_at && (
-                                    <span className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                    <span className='text-xs text-gray-500 dark:text-gray-400'>
                                         {new Date(
                                             progress.last_studied_at,
                                         ).toLocaleDateString("id-ID")}
@@ -357,7 +357,7 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                         </label>
                                         <select
                                             id='page-status'
-                                            className='w-full rounded-lg border border-emerald-100 bg-white px-3 py-2 text-sm text-gray-800 dark:text-gray-200 outline-none dark:border-slate-600 dark:bg-slate-900 dark:text-gray-100'
+                                            className='w-full rounded-lg border border-emerald-100 bg-white px-3 py-2 text-sm text-gray-800 dark:text-gray-200 outline-none dark:border-slate-600 dark:bg-slate-900'
                                             onChange={(event) =>
                                                 setProgressForm((current) => ({
                                                     ...current,
@@ -388,7 +388,7 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                         </label>
                                         <input
                                             id='page-halaman-terakhir'
-                                            className='w-full rounded-lg border border-emerald-100 bg-white px-3 py-2 text-sm text-gray-800 dark:text-gray-200 outline-none dark:border-slate-600 dark:bg-slate-900 dark:text-gray-100'
+                                            className='w-full rounded-lg border border-emerald-100 bg-white px-3 py-2 text-sm text-gray-800 dark:text-gray-200 outline-none dark:border-slate-600 dark:bg-slate-900'
                                             min='0'
                                             onChange={(event) =>
                                                 setProgressForm((current) => ({
@@ -416,7 +416,7 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                         </label>
                                         <textarea
                                             id='page-catatan-ringkas'
-                                            className='w-full rounded-lg border border-emerald-100 bg-white px-3 py-2 text-sm text-gray-800 dark:text-gray-200 outline-none dark:border-slate-600 dark:bg-slate-900 dark:text-gray-100'
+                                            className='w-full rounded-lg border border-emerald-100 bg-white px-3 py-2 text-sm text-gray-800 dark:text-gray-200 outline-none dark:border-slate-600 dark:bg-slate-900'
                                             onChange={(event) =>
                                                 setProgressForm((current) => ({
                                                     ...current,
@@ -440,7 +440,7 @@ export const LibraryDetailContent = ({ params, basePath = "/library" }) => {
                                                   "Simpan progress"}
                                         </button>
                                         {progressMessage && (
-                                            <span className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                            <span className='text-xs text-gray-500 dark:text-gray-400'>
                                                 {progressMessage}
                                             </span>
                                         )}

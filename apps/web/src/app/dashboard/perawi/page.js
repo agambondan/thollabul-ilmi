@@ -127,11 +127,11 @@ export function PerawiContent({
     return (
         <ContentWidth compact='max-w-4xl' className='p-6'>
             <div className='mb-6'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
                     {t("perawi.title")}
                 </h1>
                 {total > 0 && (
-                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400 mt-0.5'>
                         {total} {t("perawi.unit")}
                     </p>
                 )}
@@ -150,7 +150,7 @@ export function PerawiContent({
                     placeholder={t("perawi.search_placeholder")}
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
-                    className='w-full pl-9 pr-20 py-2.5 border border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-xl text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-300 dark:focus:ring-teal-700'
+                    className='w-full pl-9 pr-20 py-2.5 border border-gray-200 dark:border-slate-700 rounded-xl text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-300 dark:focus:ring-teal-700'
                 />
                 <button
                     type='submit'
@@ -210,16 +210,16 @@ export function PerawiContent({
                             <div className='min-w-0 flex-1'>
                                 <p
                                     dir='rtl'
-                                    className='font-arabic text-base text-gray-800 dark:text-gray-200 dark:text-gray-100 leading-snug text-right mb-0.5'
+                                    className='font-arabic text-base text-gray-800 dark:text-gray-200 leading-snug text-right mb-0.5'
                                 >
                                     {p.nama_arab}
                                 </p>
-                                <p className='text-xs font-semibold text-gray-700 dark:text-gray-200 dark:text-gray-300 group-hover:text-teal-700 hover:dark:text-teal-400 dark:group-hover:text-teal-400 transition-colors truncate'>
+                                <p className='text-xs font-semibold text-gray-700 dark:text-gray-300 group-hover:text-teal-700 hover:dark:text-teal-400 dark:group-hover:text-teal-400 transition-colors truncate'>
                                     {p.nama_latin}
                                 </p>
                                 <div className='flex flex-wrap items-center gap-1.5 mt-1.5'>
                                     {p.tabaqah && (
-                                        <span className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                        <span className='text-xs text-gray-500 dark:text-gray-400'>
                                             {tabaqahLabel(p.tabaqah)}
                                         </span>
                                     )}

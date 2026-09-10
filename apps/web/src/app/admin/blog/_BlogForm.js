@@ -208,7 +208,7 @@ const BlogForm = ({ initialData = null, postId = null }) => {
     return (
         <div className='w-full'>
             {/* View Mode Switcher on Mobile/Desktop */}
-            <div className='flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-gray-700 dark:border-slate-800'>
+            <div className='flex items-center justify-between mb-6 pb-4 border-b border-gray-200 dark:border-slate-800'>
                 <div className='flex items-center gap-2'>
                     <button
                         type='button'
@@ -247,7 +247,7 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                     </button>
                 </div>
 
-                <div className='flex items-center gap-3 text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                <div className='flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400'>
                     <span className='inline-flex items-center gap-1'>
                         <BsBook /> {readStats.words.toLocaleString()} kata
                     </span>
@@ -383,7 +383,7 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                             </label>
 
                             {/* Toolbar */}
-                            <div className='flex flex-wrap items-center gap-1 p-2 rounded-xl bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 dark:border-slate-700'>
+                            <div className='flex flex-wrap items-center gap-1 p-2 rounded-xl bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700'>
                                 <button
                                     type='button'
                                     onClick={() =>
@@ -556,7 +556,7 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                                 )}
                             />
                             {coverImage && (
-                                <div className='mt-2 relative rounded-xl overflow-hidden h-40 border border-gray-200 dark:border-gray-700 dark:border-slate-700'>
+                                <div className='mt-2 relative rounded-xl overflow-hidden h-40 border border-gray-200 dark:border-slate-700'>
                                     <img
                                         src={coverImage}
                                         alt='Cover preview'
@@ -626,7 +626,7 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                         )}
 
                         {/* Action Buttons */}
-                        <div className='flex items-center gap-3 pt-4 border-t border-gray-200 dark:border-gray-700 dark:border-slate-800'>
+                        <div className='flex items-center gap-3 pt-4 border-t border-gray-200 dark:border-slate-800'>
                             <button
                                 type='submit'
                                 disabled={isLoading}
@@ -654,15 +654,15 @@ const BlogForm = ({ initialData = null, postId = null }) => {
                         }`}
                     >
                         <div className='flex items-center justify-between'>
-                            <div className='text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 dark:text-gray-300'>
+                            <div className='text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500'>
                                 Live Preview
                             </div>
-                            <span className='px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
+                            <span className='px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400'>
                                 {status.toUpperCase()}
                             </span>
                         </div>
 
-                        <div className='bg-white dark:bg-slate-900 rounded-3xl border border-gray-200 dark:border-gray-700/80 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6 overflow-hidden'>
+                        <div className='bg-white dark:bg-slate-900 rounded-3xl border border-gray-200 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6 overflow-hidden'>
                             {/* Cover Preview */}
                             {coverImage && (
                                 <div className='w-full h-48 sm:h-64 rounded-2xl overflow-hidden bg-gray-100 dark:bg-slate-800'>
@@ -679,18 +679,18 @@ const BlogForm = ({ initialData = null, postId = null }) => {
 
                             <div>
                                 {selectedCategoryObj && (
-                                    <span className='inline-block px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 mb-3'>
+                                    <span className='inline-block px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 mb-3'>
                                         {selectedCategoryObj.name}
                                     </span>
                                 )}
 
-                                <h2 className='text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-gray-100 dark:text-white leading-tight mb-3'>
+                                <h2 className='text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white leading-tight mb-3'>
                                     {title ||
                                         "Judul Artikel Akan Muncul Di Sini"}
                                 </h2>
 
                                 {excerpt && (
-                                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 italic mb-4 leading-relaxed'>
+                                    <p className='text-sm text-gray-500 dark:text-gray-400 italic mb-4 leading-relaxed'>
                                         {excerpt}
                                     </p>
                                 )}

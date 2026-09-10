@@ -99,7 +99,7 @@ export const ForumDetailContent = ({
     if (!question) {
         return (
             <ContentWidth compact='max-w-3xl' className='px-4 py-6 text-center'>
-                <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                <p className='text-gray-500 dark:text-gray-400'>
                     {t("forum.not_found") ?? "Pertanyaan tidak ditemukan."}
                 </p>
                 <Link
@@ -125,13 +125,13 @@ export const ForumDetailContent = ({
             <div className='mb-6'>
                 <Link
                     href={basePath}
-                    className='inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 hover:text-emerald-700 hover:dark:text-emerald-400 mb-4'
+                    className='inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-emerald-700 hover:dark:text-emerald-400 mb-4'
                 >
                     <BsChevronLeft /> {t("forum.back") ?? "Kembali ke forum"}
                 </Link>
 
                 <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6'>
-                    <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-3'>
+                    <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-3'>
                         {question.title}
                     </h1>
                     <div className='prose prose-sm dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 mb-4 whitespace-pre-wrap'>
@@ -167,7 +167,7 @@ export const ForumDetailContent = ({
             </div>
 
             <div className='mb-6'>
-                <h2 className='text-lg font-semibold text-gray-900 dark:text-gray-100 dark:text-white mb-3'>
+                <h2 className='text-lg font-semibold text-gray-900 dark:text-white mb-3'>
                     {answers.length} {t("forum.answers") ?? "Jawaban"}
                 </h2>
 
@@ -234,7 +234,7 @@ export const ForumDetailContent = ({
                     onSubmit={submitAnswer}
                     className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-6'
                 >
-                    <h3 className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white mb-3'>
+                    <h3 className='text-sm font-semibold text-gray-900 dark:text-white mb-3'>
                         {t("forum.your_answer") ?? "Jawaban Kamu"}
                     </h3>
                     <textarea
@@ -245,7 +245,7 @@ export const ForumDetailContent = ({
                             t("forum.answer_placeholder") ??
                             "Tulis jawaban kamu..."
                         }
-                        className='w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none mb-3'
+                        className='w-full px-4 py-2.5 border border-gray-200 dark:border-slate-600 rounded-xl text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none mb-3'
                     />
                     <button
                         type='submit'

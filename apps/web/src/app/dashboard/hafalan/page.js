@@ -191,7 +191,7 @@ const HafalanPage = () => {
     return (
         <ContentWidth compact='max-w-4xl' className='px-4 py-6'>
             <div className='flex items-center justify-between mb-6'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
                     {t("hafalan.title")}
                 </h1>
                 <button
@@ -203,7 +203,7 @@ const HafalanPage = () => {
                 </button>
             </div>
             {syncError ? (
-                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:text-amber-400 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-300'>
+                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:text-amber-400 dark:border-amber-800 dark:bg-amber-900/20'>
                     {syncError}
                 </div>
             ) : null}
@@ -214,7 +214,7 @@ const HafalanPage = () => {
                     <p className='text-2xl font-bold text-emerald-700 dark:text-emerald-400'>
                         {hafal}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
                         {t("hafalan.memorized")}
                     </p>
                 </div>
@@ -222,15 +222,15 @@ const HafalanPage = () => {
                     <p className='text-2xl font-bold text-amber-600 dark:text-amber-400'>
                         {sedang}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
                         {t("hafalan.in_progress")}
                     </p>
                 </div>
                 <div className='bg-white dark:bg-slate-800 rounded-xl border border-gray-100 dark:border-slate-700 p-4 text-center'>
-                    <p className='text-2xl font-bold text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                    <p className='text-2xl font-bold text-gray-500 dark:text-gray-400'>
                         {belum}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5'>
+                    <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
                         {t("hafalan.not_started")}
                     </p>
                 </div>
@@ -264,7 +264,7 @@ const HafalanPage = () => {
             ) : filtered.length === 0 ? (
                 <div className='text-center py-16'>
                     <p className='text-4xl mb-3'>📖</p>
-                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm mb-4'>
+                    <p className='text-gray-500 dark:text-gray-400 text-sm mb-4'>
                         {t("hafalan.empty")}
                     </p>
                     <button
@@ -300,7 +300,7 @@ const HafalanPage = () => {
                                     <td className='px-4 py-2.5 text-gray-400 text-xs'>
                                         {item.surah_number}
                                     </td>
-                                    <td className='px-4 py-2.5 text-gray-700 dark:text-gray-200 dark:text-gray-300'>
+                                    <td className='px-4 py-2.5 text-gray-700 dark:text-gray-300'>
                                         {item.surah_name}
                                     </td>
                                     <td className='px-4 py-2.5 text-right'>
@@ -341,7 +341,7 @@ const HafalanPage = () => {
                         className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'
                     >
                         <div className='flex items-center justify-between mb-4'>
-                            <h2 className='text-base font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
+                            <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
                                 {t("hafalan.modal_title")}
                             </h2>
                             <button
@@ -356,7 +356,7 @@ const HafalanPage = () => {
                             <div>
                                 <label
                                     htmlFor='hafalan-label-surah'
-                                    className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
                                 >
                                     {t("hafalan.surah_name")}
                                 </label>
@@ -366,7 +366,7 @@ const HafalanPage = () => {
                                     onChange={(e) =>
                                         setSelectedSurah(e.target.value)
                                     }
-                                    className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                    className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 >
                                     <option value=''>
                                         --{" "}
@@ -383,7 +383,7 @@ const HafalanPage = () => {
                             <div>
                                 <label
                                     htmlFor='hafalan-label-status'
-                                    className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
                                 >
                                     {t("hafalan.status_label")}
                                 </label>
@@ -393,7 +393,7 @@ const HafalanPage = () => {
                                     onChange={(e) =>
                                         setSelectedStatus(e.target.value)
                                     }
-                                    className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                    className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 >
                                     <option value='not_started'>
                                         {t("hafalan.not_started")}
@@ -411,7 +411,7 @@ const HafalanPage = () => {
                         <div className='flex justify-end gap-2 mt-5'>
                             <button
                                 onClick={() => setShowModal(false)}
-                                className='px-4 py-2 text-sm text-gray-600 dark:text-gray-300 dark:text-gray-400'
+                                className='px-4 py-2 text-sm text-gray-600 dark:text-gray-400'
                             >
                                 {t("common.cancel")}
                             </button>

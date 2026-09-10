@@ -103,7 +103,7 @@ export default function PuasaSunnahPanel({ initialHijri = null }) {
         <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
             <div className='flex items-center gap-2 mb-3'>
                 <BsCalendarCheck className='text-emerald-600 dark:text-emerald-400 text-lg' />
-                <h2 className='text-base font-semibold text-gray-800 dark:text-gray-200 dark:text-white'>
+                <h2 className='text-base font-semibold text-gray-800 dark:text-white'>
                     {t("puasa.title") ?? "Puasa Sunnah"}
                 </h2>
             </div>
@@ -113,7 +113,7 @@ export default function PuasaSunnahPanel({ initialHijri = null }) {
                     {t("puasa.today") ?? "Hari Ini"}
                 </p>
                 {todayMatches.length === 0 ? (
-                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400'>
                         {t("puasa.no_today") ??
                             "Tidak ada puasa sunnah khusus hari ini."}
                     </p>
@@ -140,7 +140,7 @@ export default function PuasaSunnahPanel({ initialHijri = null }) {
 
             {upcoming.length > 0 && (
                 <div>
-                    <p className='text-xs font-medium text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-2'>
+                    <p className='text-xs font-medium text-gray-500 dark:text-gray-400 mb-2'>
                         {t("puasa.upcoming") ?? "Akan Datang (30 hari)"}
                     </p>
                     <ul className='space-y-2'>
@@ -162,7 +162,7 @@ export default function PuasaSunnahPanel({ initialHijri = null }) {
                                     </p>
                                 </div>
                                 <div className='flex-1 min-w-0'>
-                                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                    <p className='text-xs text-gray-500 dark:text-gray-400'>
                                         {formatDate(entry.date, lang)}
                                     </p>
                                     {entry.matches.map((m) => (
@@ -189,14 +189,14 @@ export default function PuasaSunnahPanel({ initialHijri = null }) {
             </div>
 
             <details className='mt-3'>
-                <summary className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 cursor-pointer hover:text-gray-700 hover:dark:text-gray-200 dark:hover:text-gray-200'>
+                <summary className='text-xs text-gray-500 dark:text-gray-400 cursor-pointer hover:text-gray-700 hover:dark:text-gray-200 dark:hover:text-gray-200'>
                     {t("puasa.show_all") ??
                         `Lihat semua ${PUASA_SUNNAH.length} puasa sunnah`}
                 </summary>
                 <ul className='mt-2 space-y-1.5 pl-3'>
                     {PUASA_SUNNAH.map((p) => (
                         <li key={p.id} className='text-xs'>
-                            <p className='font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300'>
+                            <p className='font-medium text-gray-700 dark:text-gray-300'>
                                 {labelOf(p, lang)}
                             </p>
                             {p.dalil && (

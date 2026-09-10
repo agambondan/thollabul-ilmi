@@ -98,7 +98,7 @@ export default function AsbabunNuzulForm({
                 onSubmit={handleSearch}
                 className='flex items-center gap-3 mb-8'
             >
-                <div className='flex-1 flex items-center gap-2 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
+                <div className='flex-1 flex items-center gap-2 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
                     <BsSearch className='text-gray-400 shrink-0' />
                     <select
                         value={surahNumber}
@@ -152,7 +152,7 @@ export default function AsbabunNuzulForm({
             {isLoading && <SkeletonInline rows={4} />}
 
             {!isLoading && searched && results.length === 0 && !error && (
-                <div className='text-center py-16 text-gray-400 dark:text-gray-600 dark:text-gray-300 text-sm bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
+                <div className='text-center py-16 text-gray-400 dark:text-gray-600 text-sm bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                     <p className='mb-2'>
                         {t("asbabun.no_data_title") || noDataTitle}
                     </p>
@@ -164,10 +164,10 @@ export default function AsbabunNuzulForm({
 
             {!isLoading && !searched && (
                 <div className='text-center py-12 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
-                    <p className='text-gray-400 dark:text-gray-600 dark:text-gray-300 text-sm mb-6'>
+                    <p className='text-gray-400 dark:text-gray-600 text-sm mb-6'>
                         {t("asbabun.enter_surah") || enterSurahLabel}
                     </p>
-                    <p className='text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300'>
+                    <p className='text-xs text-gray-400 dark:text-gray-600'>
                         {t("asbabun.source") || sourceLabel}
                     </p>
                 </div>
@@ -191,7 +191,7 @@ export default function AsbabunNuzulForm({
                                 {asbabunAyahLabel(item, t)}
                             </Link>
                         </div>
-                        <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
+                        <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
                             {getLocalizedField(item, "content", lang, [
                                 "description",
                                 "text",

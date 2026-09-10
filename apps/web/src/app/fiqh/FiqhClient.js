@@ -202,10 +202,10 @@ export default function FiqhClient({
                     </svg>
                 </div>
                 <div>
-                    <h1 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white'>
+                    <h1 className='text-xl font-bold text-emerald-900 dark:text-white'>
                         {t("fiqh.title")}
                     </h1>
-                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                    <p className='text-xs text-gray-500 dark:text-gray-400'>
                         {t("fiqh.subtitle")}
                     </p>
                 </div>

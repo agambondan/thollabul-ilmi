@@ -290,7 +290,7 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder={t("belajar.search_placeholder")}
-                    className='w-full pl-9 pr-4 py-2 text-sm bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                    className='w-full pl-9 pr-4 py-2 text-sm bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500'
                 />
             </div>
 
@@ -312,7 +312,7 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
 
             {recent.length > 0 && !search && (
                 <div className='mt-5'>
-                    <h2 className='text-xs font-bold text-gray-500 dark:text-gray-300 dark:text-gray-400 uppercase tracking-wider mb-3'>
+                    <h2 className='text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3'>
                         {t("belajar.recent")}
                     </h2>
                     <div className='flex gap-3 overflow-x-auto pb-2 scrollbar-none'>
@@ -322,7 +322,7 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
                                 href={item.href}
                                 className='shrink-0 w-52 p-3 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl hover:shadow-sm'
                             >
-                                <p className='text-xs font-bold text-gray-900 dark:text-gray-100 dark:text-white truncate'>
+                                <p className='text-xs font-bold text-gray-900 dark:text-white truncate'>
                                     {item.title}
                                 </p>
                                 <p className='text-[10px] text-gray-400 mt-1 truncate'>
@@ -349,15 +349,15 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
                                                 name: track.key,
                                             })}
                                         </p>
-                                        <h3 className='text-lg font-extrabold text-gray-900 dark:text-gray-100 dark:text-white'>
+                                        <h3 className='text-lg font-extrabold text-gray-900 dark:text-white'>
                                             {t(track.titleKey)}
                                         </h3>
-                                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1'>
+                                        <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
                                             {t(track.descKey)}
                                         </p>
                                     </div>
                                     <div className='text-right'>
-                                        <p className='text-xs font-bold text-emerald-700 dark:text-emerald-400 dark:text-emerald-300'>
+                                        <p className='text-xs font-bold text-emerald-700 dark:text-emerald-400'>
                                             {percent}%
                                         </p>
                                         <p className='text-[10px] text-gray-400'>
@@ -414,15 +414,15 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
                                                         )}
                                                     </div>
                                                     <div className='flex-1 min-w-0'>
-                                                        <p className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white group-hover:text-emerald-600 transition-colors'>
+                                                        <p className='text-sm font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 transition-colors'>
                                                             {mod.title}
                                                         </p>
-                                                        <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1 line-clamp-2'>
+                                                        <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2'>
                                                             {mod.description}
                                                         </p>
                                                         <div className='flex flex-wrap items-center gap-2 mt-2 text-[10px] font-semibold text-gray-500 dark:text-gray-300'>
                                                             {mod.level && (
-                                                                <span className='rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 dark:text-emerald-300 px-2 py-0.5'>
+                                                                <span className='rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-2 py-0.5'>
                                                                     {mod.level}
                                                                 </span>
                                                             )}
@@ -470,7 +470,7 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
             )}
 
             <section className='mt-8'>
-                <h3 className='text-xs font-bold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-3'>
+                <h3 className='text-xs font-bold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 mb-3'>
                     {t("belajar.references")}
                 </h3>
                 <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
@@ -484,10 +484,10 @@ export default function BelajarHub({ basePath = "/dashboard" }) {
                                 {tool.icon}
                             </div>
                             <div>
-                                <p className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white group-hover:text-emerald-600 transition-colors'>
+                                <p className='text-sm font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 transition-colors'>
                                     {t(tool.titleKey)}
                                 </p>
-                                <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-1 line-clamp-2'>
+                                <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2'>
                                     {t(tool.descKey)}
                                 </p>
                             </div>

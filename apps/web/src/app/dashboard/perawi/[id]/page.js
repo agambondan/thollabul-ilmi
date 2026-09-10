@@ -39,7 +39,7 @@ function StatusBadge({ status }) {
 
 function SectionTitle({ children }) {
     return (
-        <h2 className='text-sm font-bold text-gray-700 dark:text-gray-200 dark:text-gray-300 uppercase tracking-wider mb-3'>
+        <h2 className='text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-3'>
             {children}
         </h2>
     );
@@ -49,7 +49,7 @@ function InfoRow({ label, value }) {
     if (!value) return null;
     return (
         <div className='flex gap-2 text-sm'>
-            <span className='text-gray-500 dark:text-gray-300 dark:text-gray-400 shrink-0 min-w-[120px]'>
+            <span className='text-gray-500 dark:text-gray-400 shrink-0 min-w-[120px]'>
                 {label}
             </span>
             <span className='text-gray-800 dark:text-gray-200'>{value}</span>
@@ -133,7 +133,7 @@ export function PerawiDetailContent({
                 >
                     ← {t("perawi.back")}
                 </Link>
-                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-400'>
                     {t("perawi.empty")}
                 </p>
             </div>
@@ -157,16 +157,16 @@ export function PerawiDetailContent({
                 {data.nama_arab && (
                     <p
                         dir='rtl'
-                        className='font-arabic text-3xl text-gray-800 dark:text-gray-200 dark:text-gray-100 leading-loose text-right mb-2'
+                        className='font-arabic text-3xl text-gray-800 dark:text-gray-200 leading-loose text-right mb-2'
                     >
                         {data.nama_arab}
                     </p>
                 )}
-                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-1'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-white mb-1'>
                     {data.nama_latin}
                 </h1>
                 {data.nama_lengkap && (
-                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-3'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-3'>
                         {data.nama_lengkap}
                     </p>
                 )}
@@ -203,10 +203,10 @@ export function PerawiDetailContent({
                 )}
                 {data.biografis && (
                     <div className='pt-1'>
-                        <p className='text-xs font-semibold text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-1'>
+                        <p className='text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1'>
                             {t("perawi.biografis")}
                         </p>
-                        <p className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-relaxed'>
+                        <p className='text-sm text-gray-700 dark:text-gray-300 leading-relaxed'>
                             {data.biografis}
                         </p>
                     </div>
@@ -251,13 +251,13 @@ export function PerawiDetailContent({
                                 {j.teks_nilai && (
                                     <p
                                         dir='rtl'
-                                        className='font-arabic text-base text-gray-700 dark:text-gray-200 dark:text-gray-300 leading-loose text-right mb-1'
+                                        className='font-arabic text-base text-gray-700 dark:text-gray-300 leading-loose text-right mb-1'
                                     >
                                         {j.teks_nilai}
                                     </p>
                                 )}
                                 {j.catatan && (
-                                    <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                                    <p className='text-xs text-gray-500 dark:text-gray-400'>
                                         {j.catatan}
                                     </p>
                                 )}

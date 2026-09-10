@@ -80,10 +80,10 @@ export default function HadithBookGrid({ books, basePath = "/hadith" }) {
                             />
                             <div className='flex flex-col justify-between p-4 flex-1'>
                                 <div>
-                                    <h2 className='text-base font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
+                                    <h2 className='text-base font-bold text-emerald-900 dark:text-white mb-1'>
                                         {label}
                                     </h2>
-                                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-2'>
+                                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-2'>
                                         {book.count}{" "}
                                         {t("hadith.unit") || "Hadits"}
                                     </p>

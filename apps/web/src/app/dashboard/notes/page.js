@@ -195,7 +195,7 @@ const NotesPage = () => {
     return (
         <ContentWidth compact='max-w-3xl' className='px-4 py-6'>
             <div className='flex items-center justify-between mb-4'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
                     {t("notes.title")}
                 </h1>
                 <button
@@ -207,7 +207,7 @@ const NotesPage = () => {
                 </button>
             </div>
             {syncError ? (
-                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 dark:text-amber-400 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300'>
+                <div className='mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700 dark:text-amber-400 dark:border-amber-900/60 dark:bg-amber-950/30'>
                     {syncError}
                 </div>
             ) : null}
@@ -218,13 +218,13 @@ const NotesPage = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={t("notes.search_placeholder")}
-                className='w-full px-4 py-2.5 mb-5 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                className='w-full px-4 py-2.5 mb-5 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
             />
 
             {filtered.length === 0 ? (
                 <div className='text-center py-16'>
                     <p className='text-4xl mb-3'>📝</p>
-                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 text-sm'>
+                    <p className='text-gray-500 dark:text-gray-400 text-sm'>
                         {search ? t("notes.empty_search") : t("notes.empty")}
                     </p>
                     {!search && (
@@ -246,7 +246,7 @@ const NotesPage = () => {
                         >
                             <div className='flex items-start justify-between gap-2'>
                                 <div className='min-w-0'>
-                                    <p className='text-sm font-bold text-gray-800 dark:text-gray-200 dark:text-white truncate'>
+                                    <p className='text-sm font-bold text-gray-800 dark:text-white truncate'>
                                         {note.title}
                                     </p>
                                     <p className='text-xs text-gray-400 mt-0.5'>
@@ -267,7 +267,7 @@ const NotesPage = () => {
                                     </p>
                                     {note.content && (
                                         <div
-                                            className='text-sm text-gray-600 dark:text-gray-300 dark:text-gray-400 mt-1 leading-relaxed'
+                                            className='text-sm text-gray-600 dark:text-gray-400 mt-1 leading-relaxed'
                                             dangerouslySetInnerHTML={{
                                                 __html: sanitizeHtml(
                                                     note.content.length > 100
@@ -289,7 +289,7 @@ const NotesPage = () => {
                                             {note.tags.map((tag) => (
                                                 <span
                                                     key={tag}
-                                                    className='px-2 py-0.5 bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-300 dark:text-gray-400 rounded-full text-[11px]'
+                                                    className='px-2 py-0.5 bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400 rounded-full text-[11px]'
                                                 >
                                                     {tag}
                                                 </span>
@@ -303,7 +303,7 @@ const NotesPage = () => {
                                         remove(note.id);
                                     }}
                                     aria-label={t("notes.delete")}
-                                    className='text-gray-300 dark:text-slate-600 dark:text-slate-300 hover:text-red-500 transition-colors shrink-0'
+                                    className='text-gray-300 dark:text-slate-600 hover:text-red-500 transition-colors shrink-0'
                                 >
                                     <BsTrash />
                                 </button>
@@ -326,7 +326,7 @@ const NotesPage = () => {
                         className='bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md mx-4 p-6'
                     >
                         <div className='flex items-center justify-between mb-4'>
-                            <h2 className='text-base font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
+                            <h2 className='text-base font-semibold text-gray-900 dark:text-white'>
                                 {editNote ? t("notes.edit") : t("notes.add")}
                             </h2>
                             <button
@@ -341,7 +341,7 @@ const NotesPage = () => {
                             <div>
                                 <label
                                     htmlFor='page-label-title'
-                                    className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
                                 >
                                     {t("notes.label_title")}
                                 </label>
@@ -356,13 +356,13 @@ const NotesPage = () => {
                                         }))
                                     }
                                     placeholder={t("notes.title_placeholder")}
-                                    className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                    className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor='page-label-content'
-                                    className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
                                 >
                                     {t("notes.label_content")}
                                 </label>
@@ -377,13 +377,13 @@ const NotesPage = () => {
                                     }
                                     rows={5}
                                     placeholder={t("notes.content_placeholder")}
-                                    className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none'
+                                    className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none'
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor='page-label-tags'
-                                    className='block text-xs font-medium text-gray-600 dark:text-gray-300 dark:text-gray-400 mb-1'
+                                    className='block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1'
                                 >
                                     {t("notes.label_tags")}
                                 </label>
@@ -398,7 +398,7 @@ const NotesPage = () => {
                                         }))
                                     }
                                     placeholder={t("notes.search_example")}
-                                    className='w-full px-3 py-2 border border-gray-200 dark:border-gray-700 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                    className='w-full px-3 py-2 border border-gray-200 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 />
                             </div>
                         </div>
@@ -406,7 +406,7 @@ const NotesPage = () => {
                         <div className='flex justify-end gap-2 mt-5'>
                             <button
                                 onClick={() => setShowModal(false)}
-                                className='px-4 py-2 text-sm text-gray-600 dark:text-gray-300 dark:text-gray-400'
+                                className='px-4 py-2 text-sm text-gray-600 dark:text-gray-400'
                             >
                                 {t("common.cancel")}
                             </button>

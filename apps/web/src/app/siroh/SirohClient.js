@@ -110,15 +110,15 @@ export default function SirohClient({
                 >
                     السِّيرَةُ النَّبَوِيَّة
                 </p>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
                     {t("siroh.title")}
                 </h1>
-                <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-gray-400'>
                     {t("siroh.page_subtitle")}
                 </p>
             </div>
 
-            <div className='flex items-center gap-2 mb-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-gray-700 dark:border-slate-700 px-3 py-2'>
+            <div className='flex items-center gap-2 mb-6 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 px-3 py-2'>
                 <SearchIcon className='text-gray-400 shrink-0' />
                 <input
                     type='text'
@@ -134,12 +134,12 @@ export default function SirohClient({
             {!isLoading && chapters.length === 0 && (
                 <div className='text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700'>
                     <p
-                        className='text-4xl text-emerald-300 dark:text-emerald-700 dark:text-emerald-400 mb-3'
+                        className='text-4xl text-emerald-300 dark:text-emerald-700 mb-3'
                         style={{ fontFamily: "Amiri, serif" }}
                     >
                         سِيَرَة
                     </p>
-                    <p className='text-gray-500 dark:text-gray-300 dark:text-gray-400 font-medium mb-1'>
+                    <p className='text-gray-500 dark:text-gray-400 font-medium mb-1'>
                         {t("siroh.empty_title")}
                     </p>
                     <p className='text-sm text-gray-400'>
@@ -159,11 +159,11 @@ export default function SirohClient({
                             {index + 1}
                         </span>
                         <div className='flex-1 min-w-0'>
-                            <p className='font-semibold text-emerald-900 dark:text-emerald-300 dark:text-white text-sm truncate'>
+                            <p className='font-semibold text-emerald-900 dark:text-white text-sm truncate'>
                                 {getLocalizedField(chapter, "title", lang)}
                             </p>
                             {getLocalizedField(chapter, "excerpt", lang) && (
-                                <p className='text-xs text-gray-500 dark:text-gray-300 dark:text-gray-400 mt-0.5 truncate'>
+                                <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate'>
                                     {getLocalizedField(
                                         chapter,
                                         "excerpt",
@@ -172,7 +172,7 @@ export default function SirohClient({
                                 </p>
                             )}
                         </div>
-                        <span className='text-gray-300 dark:text-gray-600 dark:text-gray-300 text-sm'>
+                        <span className='text-gray-300 dark:text-gray-600 text-sm'>
                             ›
                         </span>
                     </Link>
@@ -188,7 +188,7 @@ export default function SirohClient({
             <div ref={sentinelRef} className='h-1' />
 
             {!hasMore && chapters.length > 0 && !isLoading && (
-                <p className='text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 py-4'>
+                <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
                     {t("siroh.all_shown")}
                 </p>
             )}
@@ -196,7 +196,7 @@ export default function SirohClient({
             {!isLoading &&
                 filteredChapters.length === 0 &&
                 chapters.length > 0 && (
-                    <p className='text-center text-xs text-gray-400 dark:text-gray-600 dark:text-gray-300 py-4'>
+                    <p className='text-center text-xs text-gray-400 dark:text-gray-600 py-4'>
                         {t("siroh.no_search")}
                     </p>
                 )}

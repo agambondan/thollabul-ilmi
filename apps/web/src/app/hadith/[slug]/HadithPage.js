@@ -220,7 +220,7 @@ function TakhrijPanel({ hadithId }) {
                     >
                         {bookName}
                         {tk.nomor_hadis_kitab && (
-                            <span className='bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-300 dark:text-amber-200 px-1.5 py-0.5 rounded text-[10px]'>
+                            <span className='bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-300 px-1.5 py-0.5 rounded text-[10px]'>
                                 #{tk.nomor_hadis_kitab}
                             </span>
                         )}
@@ -570,7 +570,7 @@ const HadithPage = ({
                             </button>
                             {settingPopUp ? (
                                 <div className='absolute right-0 top-9 z-20 md:right-auto md:left-9 md:top-0'>
-                                    <div className='flex flex-col bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-56 p-1 shadow-lg text-emerald-900 dark:text-emerald-300 dark:text-white'>
+                                    <div className='flex flex-col bg-white dark:bg-slate-800 border border-emerald-100 dark:border-slate-700 rounded-xl w-56 p-1 shadow-lg text-emerald-900 dark:text-white'>
                                         {actionsMenu && (
                                             <div className='border-b border-emerald-50 dark:border-slate-700 pb-1 mb-1'>
                                                 {detailPath && (

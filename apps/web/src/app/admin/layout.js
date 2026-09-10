@@ -336,10 +336,10 @@ const AdminLayout = ({ children }) => {
     if (profileUnavailable) {
         return (
             <div className='min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center bg-gray-50 dark:bg-gray-950'>
-                <p className='text-base font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
+                <p className='text-base font-semibold text-gray-900 dark:text-white'>
                     {t("admin.profile_error")}
                 </p>
-                <p className='max-w-sm text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                <p className='max-w-sm text-sm text-gray-500 dark:text-gray-400'>
                     {t("admin.profile_error_desc")}
                 </p>
                 <button
@@ -402,7 +402,7 @@ const AdminLayout = ({ children }) => {
                         </div>
                         {!collapsed && (
                             <div className='min-w-0'>
-                                <p className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white leading-none truncate'>
+                                <p className='text-sm font-bold text-gray-900 dark:text-white leading-none truncate'>
                                     {t("admin.panel")}
                                 </p>
                                 <p className='text-[10px] text-gray-400 mt-0.5 arabic-text'>
@@ -415,7 +415,7 @@ const AdminLayout = ({ children }) => {
                         type='button'
                         aria-label={t("nav.close_menu")}
                         onClick={() => setMobileNavOpen(false)}
-                        className='md:hidden h-9 w-9 shrink-0 inline-flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-300 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800'
+                        className='md:hidden h-9 w-9 shrink-0 inline-flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800'
                     >
                         <MdClose />
                     </button>
@@ -425,13 +425,13 @@ const AdminLayout = ({ children }) => {
                     {collapsed ? (
                         <div
                             title={user?.name ?? "Admin"}
-                            className='mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-xs font-semibold text-emerald-700 dark:text-emerald-400 dark:bg-emerald-900/30 dark:text-emerald-300'
+                            className='mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-xs font-semibold text-emerald-700 dark:text-emerald-400 dark:bg-emerald-900/30'
                         >
                             {(user?.name ?? "A").slice(0, 1).toUpperCase()}
                         </div>
                     ) : (
                         <>
-                            <p className='text-sm font-medium text-gray-800 dark:text-gray-200 dark:text-white truncate'>
+                            <p className='text-sm font-medium text-gray-800 dark:text-white truncate'>
                                 {user?.name ?? "Admin"}
                             </p>
                             <p className='text-xs text-gray-400 truncate'>
@@ -528,7 +528,7 @@ const AdminLayout = ({ children }) => {
                             onClick={() => setMobileNavOpen(true)}
                             aria-label={t("nav.menu")}
                             aria-expanded={mobileNavOpen}
-                            className='md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 hover:dark:text-gray-100 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors'
+                            className='md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 hover:dark:text-gray-100 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors'
                         >
                             <BsList className='text-lg' />
                         </button>
@@ -537,7 +537,7 @@ const AdminLayout = ({ children }) => {
                             onClick={toggleSidebar}
                             aria-label={sidebarToggleLabel}
                             title={sidebarToggleLabel}
-                            className='hidden md:inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-900 hover:dark:text-gray-100 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors'
+                            className='hidden md:inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 hover:dark:text-gray-100 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors'
                         >
                             {isCollapsed ? (
                                 <BsChevronRight />
@@ -545,7 +545,7 @@ const AdminLayout = ({ children }) => {
                                 <BsChevronLeft />
                             )}
                         </button>
-                        <span className='md:hidden text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white truncate'>
+                        <span className='md:hidden text-sm font-bold text-gray-900 dark:text-white truncate'>
                             {t("admin.panel")}
                         </span>
                     </div>
@@ -591,7 +591,7 @@ const AdminLayout = ({ children }) => {
                                             </span>
                                         </div>
                                         <div className='min-w-0'>
-                                            <p className='text-sm font-semibold text-gray-900 dark:text-gray-100 dark:text-white truncate'>
+                                            <p className='text-sm font-semibold text-gray-900 dark:text-white truncate'>
                                                 {user?.name ?? "Admin"}
                                             </p>
                                             <p className='text-xs text-gray-400 truncate'>
@@ -603,7 +603,7 @@ const AdminLayout = ({ children }) => {
 
                                 {/* Theme toggle */}
                                 <div className='px-4 py-2.5 flex items-center justify-between border-b border-gray-100 dark:border-slate-700'>
-                                    <span className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
+                                    <span className='text-sm text-gray-700 dark:text-gray-300'>
                                         {isDarkMode
                                             ? t("nav.dark")
                                             : t("nav.light")}
@@ -659,7 +659,7 @@ const AdminLayout = ({ children }) => {
                                 {/* Layout width toggle */}
                                 <div className='hidden md:block px-4 py-2.5 border-b border-gray-100 dark:border-slate-700'>
                                     <div className='flex items-center justify-between mb-2'>
-                                        <span className='text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300'>
+                                        <span className='text-sm text-gray-700 dark:text-gray-300'>
                                             {t("settings.content_width") ||
                                                 "Lebar Konten"}
                                         </span>
@@ -709,7 +709,7 @@ const AdminLayout = ({ children }) => {
                                     <Link
                                         href='/profile'
                                         onClick={() => setAccountOpen(false)}
-                                        className='flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                                        className='flex items-center gap-3 w-full px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
                                     >
                                         <MdPersonOutline className='text-base' />
                                         {t("nav.profile")}

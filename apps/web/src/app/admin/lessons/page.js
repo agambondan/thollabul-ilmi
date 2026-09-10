@@ -151,7 +151,7 @@ export default function AdminLessonsPage() {
     return (
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
-                <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
+                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
                     Kelola Modul Belajar
                 </h1>
                 <button
@@ -200,7 +200,7 @@ export default function AdminLessonsPage() {
                             className='hover:bg-gray-50 dark:hover:bg-slate-700/30'
                         >
                             <Td className='font-bold'>{m.order}</Td>
-                            <Td className='font-semibold text-gray-900 dark:text-gray-100 dark:text-white'>
+                            <Td className='font-semibold text-gray-900 dark:text-white'>
                                 {m.title}
                             </Td>
                             <Td className='text-gray-500 dark:text-gray-300'>
@@ -251,7 +251,7 @@ export default function AdminLessonsPage() {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 shadow-xl'
                 >
-                    <h2 className='text-lg font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4'>
+                    <h2 className='text-lg font-bold text-gray-900 dark:text-white mb-4'>
                         {editing ? "Edit Modul" : "Tambah Modul"}
                     </h2>
                     <form onSubmit={handleSave} className='space-y-4'>

@@ -52,7 +52,7 @@ const RegisterPage = () => {
                 </div>
                 <div className='text-center mb-8'>
                     <Link href='/' className='inline-block'>
-                        <h1 className='text-2xl font-extrabold text-emerald-800 dark:text-emerald-300 dark:text-emerald-400'>
+                        <h1 className='text-2xl font-extrabold text-emerald-800 dark:text-emerald-400'>
                             Thullaabul &apos;Ilmi
                         </h1>
                         <p
@@ -65,7 +65,7 @@ const RegisterPage = () => {
                 </div>
 
                 <div className='bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 p-8'>
-                    <h2 className='text-xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-6'>
+                    <h2 className='text-xl font-bold text-emerald-900 dark:text-white mb-6'>
                         {t("auth.register_title")}
                     </h2>
 
@@ -79,7 +79,7 @@ const RegisterPage = () => {
                         <div>
                             <label
                                 htmlFor='page-name'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
                                 {t("auth.name")}
                             </label>
@@ -89,14 +89,14 @@ const RegisterPage = () => {
                                 required
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className='w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                className='w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 placeholder={t("auth.name_placeholder")}
                             />
                         </div>
                         <div>
                             <label
                                 htmlFor='page-email'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
                                 {t("auth.email")}
                             </label>
@@ -106,14 +106,14 @@ const RegisterPage = () => {
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className='w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                className='w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                 placeholder={t("auth.email_placeholder")}
                             />
                         </div>
                         <div>
                             <label
                                 htmlFor='page-password'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
                                 {t("auth.password")}
                             </label>
@@ -127,7 +127,7 @@ const RegisterPage = () => {
                                     onChange={(e) =>
                                         setPassword(e.target.value)
                                     }
-                                    className='w-full px-3 py-2 pr-10 rounded-lg border border-gray-300 dark:border-gray-600 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500'
+                                    className='w-full px-3 py-2 pr-10 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500'
                                     placeholder={t("auth.min_chars")}
                                 />
                                 <button
@@ -167,7 +167,7 @@ const RegisterPage = () => {
 
                     <a
                         href={`${process.env.NEXT_PUBLIC_API_URL || "https://api-thollabul.jangkauin.site"}/api/v1/auth/google`}
-                        className='w-full inline-flex items-center justify-center gap-2 py-2.5 border border-gray-300 dark:border-gray-600 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-200 dark:text-white font-semibold rounded-lg text-sm transition-colors'
+                        className='w-full inline-flex items-center justify-center gap-2 py-2.5 border border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 text-gray-800 dark:text-white font-semibold rounded-lg text-sm transition-colors'
                     >
                         <svg
                             width='18'
@@ -196,7 +196,7 @@ const RegisterPage = () => {
                         {t("auth.google_register")}
                     </a>
 
-                    <p className='mt-5 text-center text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                    <p className='mt-5 text-center text-sm text-gray-500 dark:text-gray-400'>
                         {t("auth.have_account")}{" "}
                         <Link
                             href={buildLoginHref(nextUrl)}

@@ -189,10 +189,10 @@ const AdminQuizPage = () => {
         <div className='p-6'>
             <div className='flex items-center justify-between mb-6'>
                 <div>
-                    <h1 className='text-xl font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
+                    <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
                         Quiz
                     </h1>
-                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400'>
                         {items.length} {t("admin.quiz.questions_unit")}
                     </p>
                 </div>
@@ -214,7 +214,7 @@ const AdminQuizPage = () => {
                         setSearch(e.target.value);
                         setPage(1);
                     }}
-                    className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 dark:text-white'
+                    className='w-full max-w-xs px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-800 text-gray-900 dark:text-white'
                 />
             </div>
 
@@ -240,7 +240,7 @@ const AdminQuizPage = () => {
                     >
                         {visible.map((item) => (
                             <Tr key={item.id ?? item._id}>
-                                <Td className='text-gray-900 dark:text-gray-100 dark:text-white max-w-xs truncate'>
+                                <Td className='text-gray-900 dark:text-white max-w-xs truncate'>
                                     {getLocalizedField(item, "question", lang, [
                                         "question_text",
                                         "text",
@@ -251,7 +251,7 @@ const AdminQuizPage = () => {
                                         {item.category}
                                     </span>
                                 </Td>
-                                <Td className='text-gray-500 dark:text-gray-300 dark:text-gray-400 hidden md:table-cell text-xs max-w-xs truncate'>
+                                <Td className='text-gray-500 dark:text-gray-400 hidden md:table-cell text-xs max-w-xs truncate'>
                                     {getAnswerLabel(item)}
                                 </Td>
                                 <Td>
@@ -310,7 +310,7 @@ const AdminQuizPage = () => {
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto'
                 >
                     <div className='flex items-center justify-between p-5 border-b border-gray-100 dark:border-slate-700'>
-                        <h2 className='font-bold text-gray-900 dark:text-gray-100 dark:text-white'>
+                        <h2 className='font-bold text-gray-900 dark:text-white'>
                             {editId
                                 ? t("admin.quiz.edit_question")
                                 : t("admin.quiz.add_question")}
@@ -326,7 +326,7 @@ const AdminQuizPage = () => {
                         <div>
                             <label
                                 htmlFor='page-question'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
                                 {t("admin.quiz.question")}
                             </label>
@@ -340,14 +340,14 @@ const AdminQuizPage = () => {
                                     })
                                 }
                                 rows={2}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>
                         {OPTION_KEYS.map((key, idx) => (
                             <div key={key}>
                                 <label
                                     htmlFor='page-field-1'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
                                     {t("admin.quiz.option")}{" "}
                                     {OPTION_LABELS[idx]}
@@ -362,7 +362,7 @@ const AdminQuizPage = () => {
                                             [key]: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 />
                             </div>
                         ))}
@@ -370,7 +370,7 @@ const AdminQuizPage = () => {
                             <div>
                                 <label
                                     htmlFor='page-correct-answer'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
                                     {t("admin.quiz.correct_answer")}
                                 </label>
@@ -383,7 +383,7 @@ const AdminQuizPage = () => {
                                             answer: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 >
                                     {OPTION_LABELS.map((label, idx) => (
                                         <option key={idx} value={String(idx)}>
@@ -395,7 +395,7 @@ const AdminQuizPage = () => {
                             <div>
                                 <label
                                     htmlFor='page-category'
-                                    className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                    className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                                 >
                                     {t("admin.field.category")}
                                 </label>
@@ -408,7 +408,7 @@ const AdminQuizPage = () => {
                                             category: e.target.value,
                                         })
                                     }
-                                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                    className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                                 >
                                     {CATEGORIES.map((c) => (
                                         <option key={c} value={c}>
@@ -421,7 +421,7 @@ const AdminQuizPage = () => {
                         <div>
                             <label
                                 htmlFor='page-explanation-optional'
-                                className='block text-sm font-medium text-gray-700 dark:text-gray-200 dark:text-gray-300 mb-1'
+                                className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
                                 {t("admin.quiz.explanation_optional")}
                             </label>
@@ -435,14 +435,14 @@ const AdminQuizPage = () => {
                                     })
                                 }
                                 rows={2}
-                                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 dark:text-white'
+                                className='w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-gray-900 dark:text-white'
                             />
                         </div>
                     </div>
                     <div className='flex gap-3 p-5 border-t border-gray-100 dark:border-slate-700'>
                         <button
                             onClick={() => setShowModal(false)}
-                            className='flex-1 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 text-gray-700 dark:text-gray-200 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-700'
                         >
                             {t("common.cancel")}
                         </button>
@@ -470,19 +470,19 @@ const AdminQuizPage = () => {
                     overlayClassName='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'
                     panelClassName='bg-white dark:bg-slate-800 rounded-2xl w-full max-w-sm p-6'
                 >
-                    <h2 className='font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-2'>
+                    <h2 className='font-bold text-gray-900 dark:text-white mb-2'>
                         {t("admin.crud.delete_title").replace(
                             "{item}",
                             t("admin.quiz.question"),
                         )}
                     </h2>
-                    <p className='text-sm text-gray-500 dark:text-gray-300 dark:text-gray-400 mb-5'>
+                    <p className='text-sm text-gray-500 dark:text-gray-400 mb-5'>
                         {t("admin.crud.delete_body")}
                     </p>
                     <div className='flex gap-3'>
                         <button
                             onClick={() => setDeleteId(null)}
-                            className='flex-1 py-2 border border-gray-300 dark:border-gray-600 dark:border-slate-600 text-gray-700 dark:text-gray-200 dark:text-gray-300 rounded-lg text-sm font-medium'
+                            className='flex-1 py-2 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium'
                         >
                             {t("common.cancel")}
                         </button>

@@ -132,10 +132,10 @@ export default function KomunitasPage({
             }
         >
             <div className='mb-6'>
-                <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-2'>
+                <h1 className='text-2xl font-bold text-gray-900 dark:text-white mb-2'>
                     {t("komunitas.title")}
                 </h1>
-                <p className='text-sm text-gray-600 dark:text-gray-300 dark:text-gray-400'>
+                <p className='text-sm text-gray-600 dark:text-gray-400'>
                     {t("komunitas.desc")}
                 </p>
             </div>
@@ -171,7 +171,7 @@ export default function KomunitasPage({
 
                 <div className='space-y-6'>
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                        <h3 className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4 flex items-center gap-2'>
+                        <h3 className='text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2'>
                             <BsStarFill className='text-amber-500' />{" "}
                             {t("komunitas.hall_of_fame")}
                         </h3>
@@ -218,7 +218,7 @@ export default function KomunitasPage({
                     </div>
 
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                        <h3 className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4 flex items-center gap-2'>
+                        <h3 className='text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2'>
                             <BsChatLeftDots className='text-rose-500' />{" "}
                             {t("komunitas.hot_forum")}
                         </h3>
@@ -249,7 +249,7 @@ export default function KomunitasPage({
                     </div>
 
                     <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
-                        <h3 className='text-sm font-bold text-gray-900 dark:text-gray-100 dark:text-white mb-4 flex items-center gap-2'>
+                        <h3 className='text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2'>
                             <BsNewspaper className='text-blue-500' />{" "}
                             {t("komunitas.highlight")}
                         </h3>

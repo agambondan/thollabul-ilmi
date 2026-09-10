@@ -215,7 +215,7 @@ export default function QuizContent({ initialType = "" }) {
                 <div className='inline-flex items-center justify-center w-14 h-14 bg-emerald-100 dark:bg-emerald-900/40 rounded-2xl mb-3'>
                     <FaBrain className='text-2xl text-emerald-700 dark:text-emerald-400' />
                 </div>
-                <h1 className='text-2xl font-bold text-emerald-900 dark:text-emerald-300 dark:text-white mb-1'>
+                <h1 className='text-2xl font-bold text-emerald-900 dark:text-white mb-1'>
                     {t("quiz.title")}
                 </h1>
             </div>
