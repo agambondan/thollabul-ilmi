@@ -107,6 +107,8 @@ func main() {
 	skipCachePath := flag.String("skip-cache", defaultSkipCacheFile(), "Path to no-transcript skip cache JSON")
 	listChannels := flag.Bool("list-channels", false, "Print each channel's output slug and exit (no scraping)")
 	concurrency := flag.Int("concurrency", 2, "Channels scraped in parallel. Each channel still fetches its own videos one at a time with a delay between them -- this only overlaps different channels' requests. Keep it low (2-3); YouTube rate-limits/blocks by source IP, so this multiplies the request rate seen from this machine.")
+	refreshTitles := flag.Bool("refresh-titles", false, "Fast path: look up each already-scraped video's title via YouTube oEmbed (plain HTTP, no yt-dlp) instead of re-listing whole channels. Only updates title/description on rows that already exist; does not discover new videos or fetch transcripts.")
+	refreshConcurrency := flag.Int("refresh-concurrency", 6, "Concurrent oEmbed lookups during -refresh-titles")
 	flag.Parse()
 
 	targets := []Channel{}
@@ -130,11 +132,17 @@ func main() {
 		return
 	}
 
-	if _, err := exec.LookPath("yt-dlp"); err != nil {
-		fatalf("yt-dlp not found in PATH")
-	}
 	if err := os.MkdirAll(*outDir, 0o755); err != nil {
 		fatalf("create output dir: %v", err)
+	}
+
+	if *refreshTitles {
+		refreshTitlesOnly(targets, *outDir, *refreshConcurrency)
+		return
+	}
+
+	if _, err := exec.LookPath("yt-dlp"); err != nil {
+		fatalf("yt-dlp not found in PATH")
 	}
 
 	skipCache := loadSkipCache(*skipCachePath)
