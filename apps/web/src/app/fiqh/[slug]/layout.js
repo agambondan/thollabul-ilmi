@@ -79,6 +79,7 @@ export default async function FiqhItemLayout(props) {
               "@context": "https://schema.org",
               "@type": "Article",
               headline: item.title,
+              image: [`${SITE_URL}${OG_IMAGE.url}`],
               articleBody: item.content,
               ...((item.dalil || item.source) && {
                   citation: item.dalil || item.source,
@@ -89,7 +90,16 @@ export default async function FiqhItemLayout(props) {
                   url: `${SITE_URL}/fiqh`,
                   name: "Fiqh Ringkas",
               },
-              publisher: { "@type": "Organization", name: SITE_NAME },
+              publisher: {
+                  "@type": "Organization",
+                  name: SITE_NAME,
+                  logo: {
+                      "@type": "ImageObject",
+                      url: `${SITE_URL}/icon-512.png`,
+                      width: 512,
+                      height: 512,
+                  },
+              },
           }
         : null;
 
