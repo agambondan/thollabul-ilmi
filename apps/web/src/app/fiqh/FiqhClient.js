@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import ContentWidth from "@/components/layout/ContentWidth";
 import { useLocale } from "@/context/Locale";
 import { fiqhApi } from "@/lib/api";
@@ -404,6 +405,17 @@ export default function FiqhClient({
                                                                     }
                                                                 />
                                                             </div>
+                                                        )}
+                                                        {item.slug && (
+                                                            <Link
+                                                                href={`/fiqh/${item.slug}`}
+                                                                className='inline-block mt-2 text-emerald-600 dark:text-emerald-400 font-medium'
+                                                            >
+                                                                {t(
+                                                                    "fiqh.read_full",
+                                                                ) ??
+                                                                    "Baca halaman detail →"}
+                                                            </Link>
                                                         )}
                                                     </div>
                                                 </div>

@@ -195,6 +195,22 @@ async function getSirohRoutes() {
     }
 }
 
+async function getFiqhRoutes() {
+    try {
+        const res = await fetch(`${API_URL}/api/v1/fiqh/items?size=500`, {
+            next: { revalidate: 86400 },
+        });
+        if (!res.ok) return [];
+        const data = await res.json();
+        const items = Array.isArray(data?.items) ? data.items : [];
+        return items
+            .filter((it) => it.slug)
+            .map((it) => url(`/fiqh/${it.slug}`, 0.6, "monthly"));
+    } catch {
+        return [];
+    }
+}
+
 async function getBlogRoutes() {
     try {
         const res = await fetch(
@@ -269,6 +285,7 @@ export default async function sitemap() {
         surahAndTafsirRoutes,
         hadithRoutes,
         sirohRoutes,
+        fiqhRoutes,
         blogRoutes,
         libraryRoutes,
         perawiRoutes,
@@ -276,6 +293,7 @@ export default async function sitemap() {
         getSurahAndTafsirRoutes(),
         getHadithRoutes(),
         getSirohRoutes(),
+        getFiqhRoutes(),
         getBlogRoutes(),
         getLibraryRoutes(),
         getPerawiRoutes(),
@@ -286,6 +304,7 @@ export default async function sitemap() {
         ...surahAndTafsirRoutes,
         ...hadithRoutes,
         ...sirohRoutes,
+        ...fiqhRoutes,
         ...blogRoutes,
         ...libraryRoutes,
         ...perawiRoutes,

@@ -814,6 +814,7 @@ const en = {
     "fiqh.topic_unit": "topics",
     "fiqh.no_match": "No fiqh topics match your search.",
     "fiqh.evidence": "Evidence",
+    "fiqh.read_full": "Read full page →",
     "fiqh.disclaimer":
         "This content is a summary. For detailed issues, consult a scholar or fiqh expert.",
     "history.title": "Islamic History",

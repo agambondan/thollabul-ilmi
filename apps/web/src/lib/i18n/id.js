@@ -806,6 +806,7 @@ const id = {
     "fiqh.topic_unit": "topik",
     "fiqh.no_match": "Tidak ada topik fiqh yang cocok dengan pencarian.",
     "fiqh.evidence": "Dalil",
+    "fiqh.read_full": "Baca halaman detail →",
     "fiqh.disclaimer":
         "Konten merupakan ringkasan. Untuk masalah detail, konsultasikan dengan ulama atau ahli fiqh.",
     "history.title": "Sejarah Islam",
