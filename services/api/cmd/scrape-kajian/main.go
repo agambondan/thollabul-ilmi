@@ -358,7 +358,7 @@ func getChannelVideos(channelURL string, maxVideos int, cookies string) []Video 
 		args := append([]string{}, cookieArgs(cookies)...)
 		args = append(args, langArgs...)
 		args = append(args, "--flat-playlist", "--no-warnings", "--dump-json", "--playlist-end", "1", candidate)
-		stdout, err := runCmd(20*time.Second, "yt-dlp", args...)
+		stdout, err := runCmdWithRetry(20*time.Second, 3, 10*time.Second, "yt-dlp", args...)
 		if err == nil && strings.TrimSpace(string(stdout)) != "" {
 			target = candidate
 			break
@@ -386,7 +386,7 @@ func getChannelVideos(channelURL string, maxVideos int, cookies string) []Video 
 	if maxVideos <= 0 || maxVideos > 200 {
 		listTimeout = 30 * time.Minute
 	}
-	stdout, err := runCmd(listTimeout, "yt-dlp", args...)
+	stdout, err := runCmdWithRetry(listTimeout, 4, 15*time.Second, "yt-dlp", args...)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error fetching channel videos from %s: %v\n", channelURL, err)
 		return nil
@@ -448,7 +448,7 @@ func fetchTranscript(videoID string, cookies string) (snippets []Snippet, confir
 		args := append([]string{}, cookieArgs(cookies)...)
 		args = append(args, mode)
 		args = append(args, base...)
-		_, err := runCmd(60*time.Second, "yt-dlp", args...)
+		_, err := runCmdWithRetry(60*time.Second, 4, 15*time.Second, "yt-dlp", args...)
 		files, _ := filepath.Glob(filepath.Join(dir, "caption_tmp*.vtt"))
 		if len(files) > 0 {
 			// yt-dlp can exit non-zero after partially succeeding (e.g. one
@@ -586,6 +586,27 @@ func runCmd(timeout time.Duration, name string, args ...string) ([]byte, error) 
 		_ = cmd.Process.Kill()
 		<-done
 		return stdout.Bytes(), fmt.Errorf("timeout after %s", timeout)
+	}
+}
+
+// runCmdWithRetry retries a failed yt-dlp call with backoff instead of
+// giving up on the first attempt. This laptop's network can hop onto one
+// that blocks YouTube entirely (BBG) for anywhere from a few seconds to
+// several minutes and back again without warning, so a single transient
+// failure is not evidence the video/channel is actually unreachable --
+// only that this one attempt landed during a blip. Retrying here means a
+// short outage gets ridden out within the same run instead of silently
+// costing that item until someone notices and reruns the whole scrape.
+func runCmdWithRetry(timeout time.Duration, retries int, backoff time.Duration, name string, args ...string) ([]byte, error) {
+	var stdout []byte
+	var err error
+	for attempt := 0; ; attempt++ {
+		stdout, err = runCmd(timeout, name, args...)
+		if err == nil || attempt >= retries {
+			return stdout, err
+		}
+		time.Sleep(backoff)
+		backoff *= 2
 	}
 }
 

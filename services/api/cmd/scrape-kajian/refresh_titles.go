@@ -104,9 +104,24 @@ func refreshTitlesOnly(targets []Channel, outDir string, workers int) {
 
 var oEmbedClient = &http.Client{Timeout: 10 * time.Second}
 
+// fetchOEmbedTitle retries on failure -- this hits youtube.com same as the
+// yt-dlp calls elsewhere in this tool, so it is just as exposed to this
+// machine's network hopping onto one that blocks YouTube (BBG) for a few
+// seconds to a few minutes at a time. A single blip during one lookup
+// shouldn't cost that video's title fix for the whole run.
 func fetchOEmbedTitle(videoID string) (string, bool) {
 	url := "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=" + videoID + "&format=json"
-	resp, err := oEmbedClient.Get(url)
+	backoff := 10 * time.Second
+	var resp *http.Response
+	var err error
+	for attempt := 0; ; attempt++ {
+		resp, err = oEmbedClient.Get(url)
+		if err == nil || attempt >= 3 {
+			break
+		}
+		time.Sleep(backoff)
+		backoff *= 2
+	}
 	if err != nil {
 		return "", false
 	}
