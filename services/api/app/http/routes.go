@@ -606,8 +606,8 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	// GET /fiqh/:slug, and the payload carries no draft or internal fields, so
 	// gating the flat list only blocked cross-category search.
 	master.Get("/fiqh/items", newFiqhController.FindAllItems)
-	master.Get("/fiqh/:slug/:id", newFiqhController.FindItemByCategoryAndID)
 	master.Get("/fiqh/item/:slug", newFiqhController.FindItemBySlug)
+	master.Get("/fiqh/:slug/:id", newFiqhController.FindItemByCategoryAndID)
 	master.Get("/fiqh/:slug", newFiqhController.FindCategoryBySlug)
 	master.Post("/fiqh", middlewares.EditorOrAdminMiddleware(), newFiqhController.CreateItem)
 	master.Post("/fiqh/items", middlewares.EditorOrAdminMiddleware(), newFiqhController.CreateItem)
