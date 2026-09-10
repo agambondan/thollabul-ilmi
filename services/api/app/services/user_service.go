@@ -17,6 +17,11 @@ import (
 var (
 	ErrSessionNotFound            = errors.New("session not found")
 	ErrCannotRevokeCurrentSession = errors.New("cannot revoke current session")
+
+	// errLoginFailed is returned in place of raw token/DB errors so internal
+	// failure details (driver messages, constraint names) never reach the
+	// client; the real error is logged server-side instead.
+	errLoginFailed = errors.New("unable to log in right now, please try again")
 )
 
 type UserService interface {
@@ -81,12 +86,14 @@ func (s *userService) Login(req *model.LoginRequest) (*model.LoginResponse, erro
 	}
 	token, err := createToken(user.ID.String(), *user.Email, string(user.Role), lang)
 	if err != nil {
-		return nil, err
+		slog.Error("login: failed to create access token", "user_id", user.ID.String(), "err", err)
+		return nil, errLoginFailed
 	}
 
 	refreshToken := uuid.New().String()
 	if err := s.user.SaveRefreshToken(user.ID.String(), lib.ConvertToSHA256(refreshToken), time.Now().Add(7*24*time.Hour)); err != nil {
-		return nil, err
+		slog.Error("login: failed to save refresh token", "user_id", user.ID.String(), "err", err)
+		return nil, errLoginFailed
 	}
 
 	user.Password = nil
@@ -112,14 +119,16 @@ func (s *userService) RefreshAccessToken(refreshToken string) (*model.LoginRespo
 	}
 	newToken, err := createToken(user.ID.String(), *user.Email, string(user.Role), lang)
 	if err != nil {
-		return nil, err
+		slog.Error("refresh token: failed to create access token", "user_id", user.ID.String(), "err", err)
+		return nil, errLoginFailed
 	}
 
 	// Rotate: the presented refresh token is single-use, so replace it with a
 	// fresh one instead of letting the same value be replayed until expiry.
 	newRefreshToken := uuid.New().String()
 	if err := s.user.SaveRefreshToken(user.ID.String(), lib.ConvertToSHA256(newRefreshToken), time.Now().Add(7*24*time.Hour)); err != nil {
-		return nil, err
+		slog.Error("refresh token: failed to save refresh token", "user_id", user.ID.String(), "err", err)
+		return nil, errLoginFailed
 	}
 	_ = s.user.DeleteRefreshTokenByID(rt.ID)
 
@@ -319,12 +328,14 @@ func (s *userService) FindOrCreateOAuthUser(email, name, picture, provider, prov
 	}
 	token, err := createToken(user.ID.String(), *user.Email, string(user.Role), lang)
 	if err != nil {
-		return nil, err
+		slog.Error("oauth login: failed to create access token", "user_id", user.ID.String(), "err", err)
+		return nil, errLoginFailed
 	}
 
 	refreshToken := uuid.New().String()
 	if err := s.user.SaveRefreshToken(user.ID.String(), lib.ConvertToSHA256(refreshToken), time.Now().Add(7*24*time.Hour)); err != nil {
-		return nil, err
+		slog.Error("oauth login: failed to save refresh token", "user_id", user.ID.String(), "err", err)
+		return nil, errLoginFailed
 	}
 
 	user.Password = nil
