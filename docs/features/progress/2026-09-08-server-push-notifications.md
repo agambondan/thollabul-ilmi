@@ -88,6 +88,7 @@ Ditemukan dan diperbaiki sebelum masuk `master` (repo ini tidak punya PR gate):
   murni unit/integration test dengan sqlite in-memory & mock, bukan device
   fisik atau Expo push sungguhan.
 - Notes:
+- **Re-verified 2026-09-10** (setelah banyak commit lain masuk `master`, memastikan tidak regresi): `go build ./...`, `go vet ./...` bersih; `TestUpsertPushTokenReassignsSharedDeviceToNewUser`, `TestUpsertPushTokenSameUserDoesNotDeactivateItself` (app/repository), `TestUnregisterPushTokenDeactivatesGivenToken`, `TestUnregisterPushTokenRejectsEmptyToken` (app/services), dan mobile `context-session.test.js` ("signOut unregisters the device push token...") semua masih PASS. Task #6 (smoke test device fisik) tetap satu-satunya gap — butuh HP/Expo dev build sungguhan, di luar kemampuan sesi kerja ini.
 
 ## Source of Truth
 

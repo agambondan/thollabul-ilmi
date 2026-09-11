@@ -1,6 +1,6 @@
 # Semantic Search & Islamic RAG
 
-Status: `IN_PROGRESS` — API backend jalan end-to-end, UI mobile/web belum digarap
+Status: `IN_PROGRESS` — API + UI mobile/web jalan end-to-end; kualitas retrieval semantik sungguhan masih perlu keputusan (lihat Evidence)
 Priority: `P2`
 Tanggal: `2026-09-08` (dipindah ke progress 2026-09-09)
 
@@ -40,7 +40,7 @@ Pengguna bisa mencari dan bertanya lintas Quran, Hadith, Tafsir, Asbabun Nuzul, 
 4. ✅ CLI backfill embeddings (`go run ./cmd/backfill-content-embeddings -types ... -limit ... -batch ...`).
 5. ✅ Endpoint `GET /search/semantic?q=&types=&limit=`.
 6. ✅ Endpoint `POST /ask` dengan retrieval + confidence threshold + fallback jawaban.
-7. ❌ UI mobile/web untuk hasil semantic search & ask — belum dikerjakan.
+7. ✅ UI web (`apps/web/src/app/search/SearchClient.js`, toggle Kata Kunci/Makna) dan mobile (`apps/mobile/src/screens/GlobalSearchScreen.js`, kedua layout classic & web_app) — hasil semantik + jawaban Ask dirender, tidak ada navigasi/deep-link ke tiap sumber (rute per content_type belum diverifikasi ada).
 8. ⚠️ Guardrail dasar ada (fallback text saat similarity < 0.3 / tidak ada hasil), tapi belum ditest dengan skenario adversarial atau red-team query.
 
 ## Acceptance Criteria
@@ -57,6 +57,9 @@ Pengguna bisa mencari dan bertanya lintas Quran, Hadith, Tafsir, Asbabun Nuzul, 
 - `GET /search/semantic` dan `POST /ask` merespons 200 dengan data nyata (bukan cuma fallback kosong) setelah backfill.
 - **Catatan kualitas retrieval:** provider embedding yang dipakai adalah `LocalHashProvider` (hash token + trigram, pure-Go, sama seperti yang dipakai kajian transcript search) — bukan model embedding semantik sungguhan. Hasil test manual: query makna seperti "siapa saja yang berhak menerima zakat" tidak selalu menaikkan chunk fiqh zakat yang relevan ke urutan atas (malah kalah sama chunk topik lain yang share kata umum). Acceptance criteria "menemukan hasil relevan meski kata literal berbeda" **belum sepenuhnya tercapai** dengan provider ini — cocok untuk lexical/hybrid matching (mirip kajian search), tapi lemah untuk true semantic query lintas topik yang beda kosakata. Perlu keputusan: terima trade-off ini (gratis, tanpa dependency eksternal) atau ganti provider ke model embedding sungguhan (mis. OpenAI text-embedding-3-small / lokal sentence-transformer via sidecar) untuk kualitas lebih baik.
 - Bug yang ditemukan & diperbaiki saat verifikasi: kolom `content_embeddings.embedding` sempat didefinisikan `vector(1536)` padahal `LocalHashProvider` menghasilkan 256 dimensi — insert akan gagal di production kalau tidak disamakan ke `vector(256)`.
+- UI web: `npx jest src/__tests__/SearchClient.test.js` (23 test) lolos tanpa regresi setelah nambah mode toggle.
+- UI mobile: full suite `npx jest --runInBand` (54 suite / 775 test) lolos, prettier & babel-parse bersih. Belum ada verifikasi visual di Expo/browser beneran (gak ada tool screenshot/emulator di sesi kerja ini) — klaimnya sebatas "kodenya benar & test lolos".
+- Diputuskan (2026-09-10): tetap pakai `LocalHashProvider` (gratis) ketimbang Ollama/OpenAI — VPS produksi (`sumopod-1`) cuma 1.9GB RAM, ~700MB available & udah swapping, gak ada ruang buat model embedding lokal; 9router (proxy OAuth pribadi) juga gak bisa dipakai karena cuma jalan di laptop, gak reachable dari VPS produksi buat live query.
 
 ## Source of Truth
 
