@@ -11,9 +11,32 @@ export const login = async ({ email, password }) => {
     return normalizeSession(payload);
 };
 
-export const register = async ({ name, email, password }) => {
-    await postJson("/api/v1/auth/register", { email, name, password });
-};
+export const register = async ({
+    name,
+    email,
+    password,
+    verificationChannel,
+    phone,
+}) =>
+    postJson("/api/v1/auth/register", {
+        email,
+        name,
+        password,
+        verification_channel: verificationChannel,
+        phone,
+    });
+
+export const verifyEmail = async (token) =>
+    postJson("/api/v1/auth/verify-email", { token });
+
+export const verifyWhatsapp = async ({ phone, code }) =>
+    postJson("/api/v1/auth/verify-whatsapp", { phone, code });
+
+export const resendVerification = async (identifier) =>
+    postJson("/api/v1/auth/resend-verification", { identifier });
+
+export const getWhatsappAvailability = async () =>
+    requestJson("/api/v1/whatsapp/availability");
 
 export const forgotPassword = async (email) => {
     const payload = await postJson("/api/v1/auth/forgot-password", { email });

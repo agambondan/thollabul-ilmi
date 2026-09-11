@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react-native";
 import {
     ActivityIndicator,
@@ -11,9 +11,17 @@ import {
 import { useFeedback } from "../context/FeedbackContext";
 import { useSession } from "../context/SessionContext";
 import { useMobileLocale } from "../i18n/MobileLocaleProvider";
-import { forgotPassword, register } from "../api/auth";
+import {
+    forgotPassword,
+    getWhatsappAvailability,
+    register,
+    resendVerification,
+    verifyWhatsapp,
+} from "../api/auth";
 import { colors, radius, spacing } from "../theme";
 import { Card, CardTitle } from "./Card";
+
+const ACCOUNT_NOT_VERIFIED_MESSAGE = "account not verified";
 
 export function SessionCard() {
     const { error, loading, signIn, signOut, user } = useSession();
@@ -27,6 +35,27 @@ export function SessionCard() {
     const [message, setMessage] = useState("");
     const [mode, setMode] = useState("signin");
     const [busy, setBusy] = useState(false);
+    // Registration channel choice + the WhatsApp-only phone field.
+    const [verificationChannel, setVerificationChannel] = useState("email");
+    const [phone, setPhone] = useState("");
+    const [waAvailable, setWaAvailable] = useState(false);
+    // Carried into "verify" mode after a successful register or a
+    // not-yet-verified login, so the same screen serves both entry points.
+    const [verifyIdentifier, setVerifyIdentifier] = useState("");
+    const [verifyChannel, setVerifyChannel] = useState("email");
+    const [code, setCode] = useState("");
+
+    useEffect(() => {
+        let alive = true;
+        getWhatsappAvailability()
+            .then((res) => {
+                if (alive) setWaAvailable(Boolean(res?.available));
+            })
+            .catch(() => {});
+        return () => {
+            alive = false;
+        };
+    }, []);
 
     const submit = async () => {
         setMessage("");
@@ -36,6 +65,16 @@ export function SessionCard() {
             setMessage(t("session.signIn.success"));
             showSuccess(t("session.signIn.success"));
         } catch (err) {
+            if (err?.status === 401 && err?.message === ACCOUNT_NOT_VERIFIED_MESSAGE) {
+                const identifier = email.trim();
+                setVerifyIdentifier(identifier);
+                setVerifyChannel(identifier.includes("@") ? "email" : "whatsapp");
+                setCode("");
+                setMode("verify");
+                setMessage("");
+                showInfo(t("session.verify.needed"));
+                return;
+            }
             setMessage("");
             showError(err?.message ?? error ?? t("session.signIn.error"));
         }
@@ -80,7 +119,11 @@ export function SessionCard() {
     }
 
     const submitRegister = async () => {
-        if (!name.trim() || !email.trim() || !password) return;
+        const trimmedEmail = email.trim();
+        const trimmedPhone = phone.trim();
+        if (!name.trim() || !password) return;
+        if (verificationChannel === "email" && !trimmedEmail) return;
+        if (verificationChannel === "whatsapp" && !trimmedPhone) return;
         const trimmedPassword = password.trim();
         if (trimmedPassword.length < 8) {
             setMessage(t("session.password.minLength"));
@@ -95,20 +138,59 @@ export function SessionCard() {
         setBusy(true);
         setMessage("");
         try {
-            await register({
-                email: email.trim(),
+            const user = await register({
+                email: trimmedEmail,
                 name: name.trim(),
                 password: trimmedPassword,
+                verificationChannel,
+                phone: verificationChannel === "whatsapp" ? trimmedPhone : undefined,
             });
-            setMode("signin");
             setPassword("");
             setConfirmPassword("");
+            setVerifyIdentifier(
+                verificationChannel === "whatsapp" ? trimmedPhone : trimmedEmail,
+            );
+            setVerifyChannel(user?.verification_channel ?? verificationChannel);
+            setCode("");
+            setMode("verify");
             setMessage(t("session.register.success"));
             showSuccess(t("session.register.success"));
         } catch (err) {
             const nextMessage = err?.message ?? t("session.register.error");
             setMessage(nextMessage);
             showError(nextMessage);
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    const submitVerifyCode = async () => {
+        if (!code.trim()) return;
+        setBusy(true);
+        setMessage("");
+        try {
+            await verifyWhatsapp({ phone: verifyIdentifier, code: code.trim() });
+            setCode("");
+            setMode("signin");
+            setMessage(t("session.verify.success"));
+            showSuccess(t("session.verify.success"));
+        } catch (err) {
+            const nextMessage = err?.message ?? t("session.verify.error");
+            setMessage(nextMessage);
+            showError(nextMessage);
+        } finally {
+            setBusy(false);
+        }
+    };
+
+    const handleResendVerification = async () => {
+        setBusy(true);
+        setMessage("");
+        try {
+            await resendVerification(verifyIdentifier);
+            showSuccess(t("session.resend.success"));
+        } catch {
+            showError(t("session.resend.error"));
         } finally {
             setBusy(false);
         }
@@ -143,16 +225,21 @@ export function SessionCard() {
     const isSignIn = mode === "signin";
     const isRegister = mode === "register";
     const isForgot = mode === "forgot";
+    const isVerify = mode === "verify";
+    const isVerifyWhatsapp = isVerify && verifyChannel === "whatsapp";
+    const isVerifyEmail = isVerify && verifyChannel !== "whatsapp";
     const isSubmitDisabled =
         loading ||
         busy ||
         (isSignIn && (!email || !password)) ||
         (isRegister &&
             (!name.trim() ||
-                !email ||
+                (verificationChannel === "email" && !email.trim()) ||
+                (verificationChannel === "whatsapp" && !phone.trim()) ||
                 password.trim().length < 8 ||
                 password.trim() !== confirmPassword.trim())) ||
-        (isForgot && !email);
+        (isForgot && !email) ||
+        (isVerifyWhatsapp && !code.trim());
 
     return (
         <Card>
@@ -161,9 +248,17 @@ export function SessionCard() {
                     ? t("session.signIn.title")
                     : isRegister
                       ? t("session.register.title")
-                      : t("session.forgot.title")}
+                      : isVerify
+                        ? t("session.verify.title")
+                        : t("session.forgot.title")}
             </CardTitle>
-            <Text style={styles.muted}>{t("session.card.description")}</Text>
+            <Text style={styles.muted}>
+                {isVerifyWhatsapp
+                    ? t("session.verify.whatsappDesc")
+                    : isVerifyEmail
+                      ? t("session.verify.emailDesc")
+                      : t("session.card.description")}
+            </Text>
             <View style={styles.form}>
                 {isRegister ? (
                     <TextInput
@@ -177,18 +272,117 @@ export function SessionCard() {
                         value={name}
                     />
                 ) : null}
-                <TextInput
-                    accessibilityLabel={t("session.email.label")}
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    keyboardType='email-address'
-                    onChangeText={setEmail}
-                    placeholder={t("session.email.placeholder")}
-                    placeholderTextColor={colors.muted}
-                    style={styles.input}
-                    value={email}
-                />
-                {!isForgot ? (
+                {isRegister ? (
+                    <View style={styles.modeRow}>
+                        <Pressable
+                            accessibilityLabel={t("session.channel.email")}
+                            accessibilityRole='button'
+                            accessibilityState={{
+                                selected: verificationChannel === "email",
+                            }}
+                            android_ripple={{
+                                color: "rgba(91, 110, 91, 0.12)",
+                                borderless: false,
+                            }}
+                            onPress={() => setVerificationChannel("email")}
+                            style={[
+                                styles.modeLink,
+                                verificationChannel === "email"
+                                    ? styles.modeLinkActive
+                                    : null,
+                            ]}
+                        >
+                            <Text
+                                style={[
+                                    styles.modeLinkText,
+                                    verificationChannel === "email"
+                                        ? styles.modeLinkTextActive
+                                        : null,
+                                ]}
+                            >
+                                {t("session.channel.email")}
+                            </Text>
+                        </Pressable>
+                        <Pressable
+                            accessibilityLabel={t("session.channel.whatsapp")}
+                            accessibilityRole='button'
+                            accessibilityState={{
+                                selected: verificationChannel === "whatsapp",
+                                disabled: !waAvailable,
+                            }}
+                            android_ripple={{
+                                color: "rgba(91, 110, 91, 0.12)",
+                                borderless: false,
+                            }}
+                            disabled={!waAvailable}
+                            onPress={() =>
+                                waAvailable &&
+                                setVerificationChannel("whatsapp")
+                            }
+                            style={[
+                                styles.modeLink,
+                                verificationChannel === "whatsapp"
+                                    ? styles.modeLinkActive
+                                    : null,
+                                !waAvailable ? styles.buttonDisabled : null,
+                            ]}
+                        >
+                            <Text
+                                style={[
+                                    styles.modeLinkText,
+                                    verificationChannel === "whatsapp"
+                                        ? styles.modeLinkTextActive
+                                        : null,
+                                ]}
+                            >
+                                {t("session.channel.whatsapp")}
+                            </Text>
+                        </Pressable>
+                    </View>
+                ) : null}
+                {!isVerify ? (
+                    <TextInput
+                        accessibilityLabel={t("session.email.label")}
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        keyboardType='email-address'
+                        onChangeText={setEmail}
+                        placeholder={
+                            isRegister && verificationChannel === "whatsapp"
+                                ? `${t("session.email.placeholder")} (${t("session.optional")})`
+                                : t("session.email.placeholder")
+                        }
+                        placeholderTextColor={colors.muted}
+                        style={styles.input}
+                        value={email}
+                    />
+                ) : null}
+                {isRegister && verificationChannel === "whatsapp" ? (
+                    <TextInput
+                        accessibilityLabel={t("session.phone.label")}
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        keyboardType='phone-pad'
+                        onChangeText={setPhone}
+                        placeholder={t("session.phone.placeholder")}
+                        placeholderTextColor={colors.muted}
+                        style={styles.input}
+                        value={phone}
+                    />
+                ) : null}
+                {isVerifyWhatsapp ? (
+                    <TextInput
+                        accessibilityLabel={t("session.code.label")}
+                        keyboardType='number-pad'
+                        maxLength={6}
+                        onChangeText={setCode}
+                        placeholder={t("session.code.placeholder")}
+                        placeholderTextColor={colors.muted}
+                        style={styles.input}
+                        value={code}
+                    />
+                ) : null}
+                {!isForgot && !isVerify ? (
                     <View style={styles.passwordField}>
                         <TextInput
                             accessibilityLabel={t("session.password.label")}
@@ -254,7 +448,11 @@ export function SessionCard() {
                             ? t("session.signIn.accessibility")
                             : isRegister
                               ? t("session.register.accessibility")
-                              : t("session.forgot.accessibility")
+                              : isVerifyWhatsapp
+                                ? t("session.verify.accessibility")
+                                : isVerifyEmail
+                                  ? t("session.resend.accessibility")
+                                  : t("session.forgot.accessibility")
                     }
                     accessibilityRole='button'
                     accessibilityState={{ disabled: isSubmitDisabled }}
@@ -268,7 +466,11 @@ export function SessionCard() {
                             ? submit
                             : isRegister
                               ? submitRegister
-                              : submitForgot
+                              : isVerifyWhatsapp
+                                ? submitVerifyCode
+                                : isVerifyEmail
+                                  ? handleResendVerification
+                                  : submitForgot
                     }
                     style={[
                         styles.button,
@@ -283,11 +485,47 @@ export function SessionCard() {
                                 ? t("session.signIn.label")
                                 : isRegister
                                   ? t("session.register.label")
-                                  : t("session.forgot.label")}
+                                  : isVerifyWhatsapp
+                                    ? t("session.verify.label")
+                                    : isVerifyEmail
+                                      ? t("session.resend.label")
+                                      : t("session.forgot.label")}
                         </Text>
                     )}
                 </Pressable>
+                {isVerifyWhatsapp ? (
+                    <Pressable
+                        accessibilityLabel={t("session.resend.accessibility")}
+                        accessibilityRole='button'
+                        android_ripple={{
+                            color: "rgba(91, 110, 91, 0.12)",
+                            borderless: false,
+                        }}
+                        disabled={busy}
+                        onPress={handleResendVerification}
+                    >
+                        <Text style={styles.link}>
+                            {t("session.resend.label")}
+                        </Text>
+                    </Pressable>
+                ) : null}
+                {isVerify ? (
+                    <Pressable
+                        accessibilityLabel={t("session.mode.signIn")}
+                        accessibilityRole='button'
+                        android_ripple={{
+                            color: "rgba(91, 110, 91, 0.12)",
+                            borderless: false,
+                        }}
+                        onPress={() => setMode("signin")}
+                    >
+                        <Text style={styles.link}>
+                            {t("session.signIn.label")}
+                        </Text>
+                    </Pressable>
+                ) : null}
             </View>
+            {!isVerify ? (
             <View style={styles.modeRow}>
                 <Pressable
                     accessibilityLabel={t("session.mode.signIn")}
@@ -359,6 +597,7 @@ export function SessionCard() {
                     </Text>
                 </Pressable>
             </View>
+            ) : null}
             {error ? <Text style={styles.error}>{error}</Text> : null}
             {message ? <Text style={styles.success}>{message}</Text> : null}
         </Card>
@@ -479,5 +718,12 @@ const styles = StyleSheet.create({
     },
     modeLinkTextActive: {
         color: colors.primary,
+    },
+    link: {
+        color: colors.primary,
+        fontSize: 13,
+        fontWeight: "700",
+        textAlign: "center",
+        marginTop: spacing.xs,
     },
 });

@@ -9,6 +9,9 @@ jest.mock("../context/FeedbackContext", () => ({
 jest.mock("../api/auth", () => ({
     forgotPassword: jest.fn(),
     register: jest.fn(),
+    verifyWhatsapp: jest.fn(),
+    resendVerification: jest.fn(),
+    getWhatsappAvailability: jest.fn().mockResolvedValue({ available: false }),
 }));
 
 import React from "react";
@@ -108,11 +111,13 @@ describe("SessionCard", () => {
         await act(async () => {
             fireEvent.press(getByText("Buat Akun"));
         });
-        await findByText("Akun berhasil dibuat. Silakan masuk.");
+        await findByText("Akun berhasil dibuat. Ikuti langkah verifikasi berikut.");
         expect(register).toHaveBeenCalledWith({
             email: "test@test.com",
             name: "Test User",
             password: "password123",
+            verificationChannel: "email",
+            phone: undefined,
         });
     });
 
