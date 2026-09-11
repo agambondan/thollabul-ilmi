@@ -7,6 +7,7 @@ import (
 
 type SanadService interface {
 	Create(*model.Sanad) (*model.Sanad, error)
+	FindAll() ([]model.Sanad, error)
 	FindByID(*int) (*model.Sanad, error)
 	FindByHadithID(*int) ([]model.Sanad, error)
 	UpdateByID(*int, *model.Sanad) (*model.Sanad, error)
@@ -28,6 +29,10 @@ func NewSanadService(repo repository.SanadRepository) SanadService {
 
 func (s *sanadService) Create(sanad *model.Sanad) (*model.Sanad, error) {
 	return s.repo.Save(sanad)
+}
+
+func (s *sanadService) FindAll() ([]model.Sanad, error) {
+	return s.repo.FindAll()
 }
 
 func (s *sanadService) FindByID(id *int) (*model.Sanad, error) {

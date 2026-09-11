@@ -830,9 +830,12 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Get("/hadiths/:id/takhrij", newTakhrijController.FindByHadithID)
 
 	// Hadith-Ayah cross-reference (public read, editor/admin write)
+	master.Get("/hadith-ayahs", newHadithAyahController.FindAll)
+	master.Get("/hadith-ayahs/:id", newHadithAyahController.FindByID)
 	master.Get("/hadiths/:hadithId/ayahs", newHadithAyahController.FindByHadithID)
 	master.Get("/ayahs/:ayahId/hadiths", newHadithAyahController.FindByAyahID)
 	master.Post("/hadith-ayahs", middlewares.EditorOrAdminMiddleware(), newHadithAyahController.Create)
+	master.Put("/hadith-ayahs/:id", middlewares.EditorOrAdminMiddleware(), newHadithAyahController.Update)
 	master.Delete("/hadith-ayahs/:id", middlewares.EditorOrAdminMiddleware(), newHadithAyahController.Delete)
 
 	// Forum Q&A
@@ -891,6 +894,7 @@ func Handle(app *fiber.App, repo *repository.Repositories) {
 	master.Delete("/radio-islamic/:id", admin, newRadioIslamicController.Delete)
 
 	// #53 Sanad & Mata Sanad (public read, editor/admin write)
+	master.Get("/sanad", newSanadController.FindAll)
 	master.Get("/sanad/:id", newSanadController.FindByID)
 	master.Post("/sanad", middlewares.EditorOrAdminMiddleware(), newSanadController.Create)
 	master.Put("/sanad/:id", middlewares.EditorOrAdminMiddleware(), newSanadController.UpdateByID)

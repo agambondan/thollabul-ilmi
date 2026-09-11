@@ -11,6 +11,7 @@ import (
 
 type SanadController interface {
 	Create(ctx *fiber.Ctx) error
+	FindAll(ctx *fiber.Ctx) error
 	FindByID(ctx *fiber.Ctx) error
 	FindByHadithID(ctx *fiber.Ctx) error
 	UpdateByID(ctx *fiber.Ctx) error
@@ -50,6 +51,22 @@ func (c *sanadController) Create(ctx *fiber.Ctx) error {
 		return lib.ErrorConflict(ctx, err)
 	}
 	return lib.OK(ctx, result)
+}
+
+// FindAll sanad
+// @Summary List all sanad
+// @Description Get list of all sanad entries
+// @Accept json
+// @Produce json
+// @Success 200 {object} lib.Response
+// @Router /sanad [get]
+// @Tags Sanad
+func (c *sanadController) FindAll(ctx *fiber.Ctx) error {
+	list, err := c.svc.FindAll()
+	if err != nil {
+		return lib.ErrorInternal(ctx)
+	}
+	return lib.OK(ctx, list)
 }
 
 func (c *sanadController) FindByHadithID(ctx *fiber.Ctx) error {

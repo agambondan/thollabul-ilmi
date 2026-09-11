@@ -175,6 +175,16 @@ const NAV_GROUPS = [
                 label: "Sanad",
                 icon: <BsBook />,
             },
+            {
+                href: "/admin/takhrij",
+                label: "Takhrij",
+                icon: <BsBookHalf />,
+            },
+            {
+                href: "/admin/hadith-ayah",
+                label: "Hadith ⇄ Ayat",
+                icon: <BsGrid />,
+            },
         ],
     },
     {

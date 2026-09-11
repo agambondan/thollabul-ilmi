@@ -18,10 +18,10 @@ type JarhTadil struct {
 	Penilai       *Perawi         `json:"penilai,omitempty" gorm:"foreignKey:PenilaiID"`
 	JenisNilai    *JarhTadilJenis `json:"jenis_nilai,omitempty" gorm:"type:varchar(10);not null;index"`
 	Tingkat       *int            `json:"tingkat,omitempty" gorm:"not null;check:tingkat >= 1 AND tingkat <= 7"`
-	TeksNilai     *string         `json:"-" gorm:"type:varchar(255)"`
+	TeksNilai     *string         `json:"teks_nilai,omitempty" gorm:"type:varchar(255)"`
 	Sumber        *string         `json:"sumber,omitempty" gorm:"type:varchar(255)"`
 	Halaman       *string         `json:"halaman,omitempty" gorm:"type:varchar(50)"`
-	Catatan       *string         `json:"-" gorm:"type:text"`
+	Catatan       *string         `json:"catatan,omitempty" gorm:"type:text"`
 	TranslationID *int            `json:"translation_id,omitempty" gorm:"index"`
 	Translation   *Translation    `json:"translation,omitempty" gorm:"foreignKey:TranslationID;-:migration"`
 }

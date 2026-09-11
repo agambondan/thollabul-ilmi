@@ -1000,8 +1000,7 @@ export const adminJarhTadilApi = buildResourceApi({
 });
 
 export const adminSanadApi = {
-    list: () => authFetch("/api/v1/hadiths?size=1"),
-    get: (id) => authFetch(`/api/v1/hadiths/${id}/sanad`),
+    list: () => authFetch("/api/v1/sanad?size=500"),
     create: (data) =>
         authFetch("/api/v1/sanad", {
             method: "POST",
@@ -1026,6 +1025,16 @@ export const adminSanadApi = {
     deleteMata: (id) =>
         authFetch(`/api/v1/mata-sanad/${id}`, { method: "DELETE" }),
 };
+
+export const adminTakhrijApi = buildResourceApi({
+    listPath: "/api/v1/takhrij",
+    listParam: "size=500",
+});
+
+export const adminHadithAyahApi = buildResourceApi({
+    listPath: "/api/v1/hadith-ayahs",
+    listParam: "size=500",
+});
 
 export const adminTokohTarikhApi = buildResourceApi({
     listPath: "/api/v1/tokoh-tarikh",

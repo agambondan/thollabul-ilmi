@@ -4,21 +4,25 @@ import GenericAdminCRUD from "@/components/panel/GenericAdminCRUD";
 import { adminPerawiApi } from "@/lib/api";
 
 const STATUSES = [
-    "tsiqah",
-    "tsiqah_jiddan",
-    "shaduq",
-    "shaikh",
-    "dhaif",
-    "matruk",
-    "kadzdzab",
+    { value: "tsiqah_tsiqah", label: "Tsiqah Tsiqah" },
+    { value: "tsiqah", label: "Tsiqah" },
+    { value: "shaduq", label: "Shaduq" },
+    { value: "la_baasa_bihi", label: "La Ba'sa Bihi" },
+    { value: "maqbul", label: "Maqbul" },
+    { value: "majhul", label: "Majhul" },
+    { value: "layyin", label: "Layyin" },
+    { value: "dhaif", label: "Dhaif" },
+    { value: "matruk", label: "Matruk" },
+    { value: "kadzdzab", label: "Kadzdzab" },
 ];
 const TABAQAT = [
-    "sahabat",
-    "tabiin",
-    "tabiut_tabiin",
-    "tabiut_tabiin_ala_tabiin",
-    "salaf",
-    "khalaf",
+    { value: "sahabat", label: "Sahabat" },
+    { value: "tabiin", label: "Tabi'in" },
+    { value: "tabiut_tabiin", label: "Tabi'ut Tabi'in" },
+    { value: "atbaut_tabiin", label: "Atba'ut Tabi'in" },
+    { value: "tabaqah_5", label: "Tabaqah 5" },
+    { value: "tabaqah_6", label: "Tabaqah 6" },
+    { value: "tabaqah_7", label: "Tabaqah 7" },
 ];
 
 export default function AdminPerawiPage() {

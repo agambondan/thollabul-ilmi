@@ -42,7 +42,7 @@ type Perawi struct {
 	TempatWafat   *string      `json:"tempat_wafat,omitempty" gorm:"type:varchar(100)"`
 	Tabaqah       *string      `json:"tabaqah,omitempty" gorm:"type:varchar(50);index"`
 	Status        *string      `json:"status,omitempty" gorm:"type:varchar(30);index"`
-	Biografis     *string      `json:"-" gorm:"type:text"`
+	Biografis     *string      `json:"biografis,omitempty" gorm:"type:text"`
 	TranslationID *int         `json:"translation_id,omitempty" gorm:"index"`
 	Translation   *Translation `json:"translation,omitempty" gorm:"foreignKey:TranslationID;-:migration"`
 

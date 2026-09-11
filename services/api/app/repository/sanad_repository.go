@@ -7,6 +7,7 @@ import (
 
 type SanadRepository interface {
 	Save(*model.Sanad) (*model.Sanad, error)
+	FindAll() ([]model.Sanad, error)
 	FindByID(*int) (*model.Sanad, error)
 	FindByHadithID(*int) ([]model.Sanad, error)
 	UpdateByID(*int, *model.Sanad) (*model.Sanad, error)
@@ -39,6 +40,12 @@ func (r *sanadRepo) Save(s *model.Sanad) (*model.Sanad, error) {
 		return nil, err
 	}
 	return s, nil
+}
+
+func (r *sanadRepo) FindAll() ([]model.Sanad, error) {
+	var list []model.Sanad
+	err := r.withMataSanad(r.db).Order("hadith_id, id").Limit(500).Find(&list).Error
+	return list, err
 }
 
 func (r *sanadRepo) FindByID(id *int) (*model.Sanad, error) {

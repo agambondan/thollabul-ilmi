@@ -82,6 +82,7 @@ export default function GenericAdminCRUD({
     idField = "id",
     transformPayload,
     formLayout = "stacked",
+    renderExtra,
 }) {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -532,6 +533,11 @@ export default function GenericAdminCRUD({
                             );
                         })}
                     </div>
+                    {editing && renderExtra ? (
+                        <div className='px-4 pb-2 border-t border-gray-100 dark:border-slate-800 pt-3'>
+                            {renderExtra(editing, { reload: load })}
+                        </div>
+                    ) : null}
                     {formError ? (
                         <p className='px-4 pb-1 text-xs text-red-500'>
                             {formError}

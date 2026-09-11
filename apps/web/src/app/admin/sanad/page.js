@@ -2,6 +2,7 @@
 
 import GenericAdminCRUD from "@/components/panel/GenericAdminCRUD";
 import { adminSanadApi } from "@/lib/api";
+import MataSanadEditor from "./MataSanadEditor";
 
 const JENIS = ["musnad", "mursal", "munqathi", "mudhal", "muallaq"];
 const STATUS = ["muttashil", "munqathi"];
@@ -43,6 +44,9 @@ export default function AdminSanadPage() {
                 }
                 return out;
             }}
+            renderExtra={(item, { reload }) => (
+                <MataSanadEditor sanad={item} onChanged={reload} />
+            )}
         />
     );
 }

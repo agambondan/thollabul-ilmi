@@ -1,6 +1,6 @@
 # Audit Gap CRUD Admin untuk Data Dinamis
 
-Status: `TODO`
+Status: `IN_PROGRESS` (Gelombang 1, 2 & 3 selesai, lihat Todo Implementasi)
 Tanggal: `2026-09-07`
 
 ## Ringkasan
@@ -47,11 +47,16 @@ Referensi utama:
 
 ### P0 — Konten tampil ke user, DB-backed, belum ada write API/admin UI
 
+**Selesai (diverifikasi ulang 2026-09-11 terhadap kode):** ketiga baris di
+bawah sudah punya write API + halaman `/admin` + link nav (Gelombang 1 & 2
+di Todo Implementasi). Tabel di bawah adalah arsip gap yang tadinya ada —
+jangan jadikan acuan status terkini.
+
 | Fitur              | Seed/model                         | Endpoint publik              | Catatan                                                                                         |
 | ------------------ | ---------------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------- |
-| Panduan Sholat     | `sholat_guide.json`, `SholatGuide` | `GET /api/v1/panduan-sholat` | Belum ada create/update/delete. Kasus nyata: hapus/ubah materi niat harus lewat seed/DB manual. |
-| Achievements       | `achievement.json`, `Achievement`  | `GET /api/v1/achievements`   | Badge/points tampil ke user, belum ada admin pengelolaan.                                       |
-| Amalan master item | `amalan_item.json`, `AmalanItem`   | `GET /api/v1/amalan`         | User hanya toggle status. Item master belum bisa dikelola admin.                                |
+| Panduan Sholat     | `sholat_guide.json`, `SholatGuide` | `GET /api/v1/panduan-sholat` | Sudah ada `/admin/panduan-sholat` + `POST/PUT/DELETE /panduan-sholat`. |
+| Achievements       | `achievement.json`, `Achievement`  | `GET /api/v1/achievements`   | Sudah ada `/admin/achievements` + `POST/PUT/DELETE /achievements`. |
+| Amalan master item | `amalan_item.json`, `AmalanItem`   | `GET /api/v1/amalan`         | Sudah ada `/admin/amalan` + `POST/PUT/DELETE /amalan/items`. |
 
 ### P1 — Write API sudah ada, admin UI belum ada
 
@@ -59,11 +64,11 @@ Referensi utama:
 | ------------------------------------------ | -------------------------------------------- | -------------------------------------------------------------------------------- |
 | Quran core: ayah/surah/juz                 | `/ayah`, `/surah`, `/juz`                    | Admin API ada. UI belum ada, tapi risiko edit tinggi karena data Quran sensitif. |
 | Hadith core: books/themes/chapters/hadiths | `/books`, `/themes`, `/chapters`, `/hadiths` | Admin API ada. UI belum ada.                                                     |
-| Ilmu Rijal: perawi                         | `/perawi`                                    | Admin API ada. Belum ada UI, padahal data sanad/perawi sering perlu koreksi.     |
-| Jarh wa Ta'dil                             | `/jarh-tadil`                                | Admin API ada. Belum ada UI.                                                     |
-| Sanad & mata sanad                         | `/sanad`, `/mata-sanad`                      | Admin API ada. Belum ada UI.                                                     |
-| Takhrij                                    | `/takhrij`                                   | Admin API ada. Belum ada UI.                                                     |
-| Hadith-Ayah cross-reference                | `/hadith-ayahs`                              | Admin API ada. Belum ada UI relasi.                                              |
+| Ilmu Rijal: perawi                         | `/perawi`                                    | **Selesai (2026-09-11)**: `/admin/perawi`. Sempat ada bug field `biografis` tidak pernah ter-serialize (`json:"-"`) — sudah diperbaiki, plus opsi dropdown status/tabaqah disamakan dengan enum backend. |
+| Jarh wa Ta'dil                             | `/jarh-tadil`                                | **Selesai (2026-09-11)**: `/admin/jarh-tadil`. Sama seperti perawi, field `teks_nilai`/`catatan` sempat tidak ter-serialize — sudah diperbaiki. |
+| Sanad & mata sanad                         | `/sanad`, `/mata-sanad`                      | **Selesai (2026-09-11)**: `/admin/sanad`. Halaman sudah ada sebelumnya tapi rusak total (`list()` salah endpoint, backend belum punya `GET /sanad`) — sudah ditambah endpoint list + editor mata sanad nested. |
+| Takhrij                                    | `/takhrij`                                   | **Selesai (2026-09-11)**: `/admin/takhrij` (baru).                              |
+| Hadith-Ayah cross-reference                | `/hadith-ayahs`                              | **Selesai (2026-09-11)**: `/admin/hadith-ayah` (baru). Backend ditambah `GET /hadith-ayahs` (list), `GET /hadith-ayahs/:id`, `PUT /hadith-ayahs/:id` yang sebelumnya belum ada. |
 | Munasabah                                  | `/munasabah`                                 | Admin API ada. Belum ada UI.                                                     |
 | Tokoh Tarikh                               | `/tokoh-tarikh`                              | Create/delete API ada. Belum ada UI; update API juga belum terlihat.             |
 | Peta Islam / Locations                     | `/locations`                                 | Create/delete API ada. Belum ada UI; update API juga belum terlihat.             |
@@ -99,12 +104,39 @@ Referensi utama:
 
 ### Gelombang 3 — Hadith/Rijal editor
 
-- [ ] Buat `/admin/perawi`.
-- [ ] Buat `/admin/jarh-tadil`.
-- [ ] Buat `/admin/sanad` dengan editor mata sanad.
-- [ ] Buat `/admin/takhrij`.
-- [ ] Buat UI relasi `hadith-ayahs`.
-- [ ] Tambah guardrails data integrity untuk sanad/perawi.
+- [x] Buat `/admin/perawi`. Plus fix bug: `Perawi.Biografis` punya tag
+      `json:"-"` di `model/perawi.go` — field tidak pernah ter-serialize ke
+      response publik maupun tersimpan lewat form admin. Sudah diperbaiki
+      jadi `json:"biografis,omitempty"`. Opsi dropdown status/tabaqah juga
+      disamakan dengan konstanta `PerawiStatus`/`PerawiTabaqah` yang asli.
+- [x] Buat `/admin/jarh-tadil`. Bug serupa: `TeksNilai` & `Catatan` di
+      `model/jarh_tadil.go` juga `json:"-"` — sudah diperbaiki.
+- [x] Buat `/admin/sanad` dengan editor mata sanad. Halaman lama sudah ada
+      tapi rusak (`adminSanadApi.list()` memanggil endpoint yang salah,
+      backend belum punya `GET /sanad`) — ditambah `FindAll` di
+      repository/service/controller/route Sanad, endpoint list diperbaiki,
+      dan `MataSanadEditor` (baru) disisipkan lewat prop `renderExtra` baru
+      di `GenericAdminCRUD` (backward-compatible, opsional).
+- [x] Buat `/admin/takhrij`. Backend sudah full CRUD sebelumnya, tinggal
+      halaman + `adminTakhrijApi`.
+- [x] Buat UI relasi `hadith-ayahs`. Backend sebelumnya cuma create+delete —
+      ditambah `FindAll`, `FindByID`, `Update` di repository/service/
+      controller + route `GET/PUT /hadith-ayahs`.
+- [ ] Tambah guardrails data integrity untuk sanad/perawi. **Di-skip**:
+      guardrail relasi guru/murid perawi tidak actionable karena belum ada
+      endpoint TULIS untuk relasi itu sama sekali (`/perawi/:id/guru` &
+      `/perawi/:id/murid` cuma `GET`) — menambah fitur kelola guru/murid di
+      luar scope gelombang ini. Satu guardrail ringan yang masuk akal (warning
+      urutan duplikat dalam satu sanad) sudah ditambahkan di sisi UI
+      `MataSanadEditor` (bukan blocking, karena tidak ada unique constraint
+      di DB untuk itu).
+
+Diverifikasi: `go build ./...` & `go vet ./...` bersih, `next build` bersih,
+smoke test manual via curl (create/read/update/delete) untuk `/sanad`,
+`/mata-sanad`, `/takhrij`, `/hadith-ayahs` dengan akun admin uji lokal — data
+uji sudah dibersihkan sesudahnya. Belum sempat click-through di browser
+sungguhan (server dev lokal shared dengan sesi lain, cek dulu sebelum
+dianggap final secara UX).
 
 ### Gelombang 4 — Quran/Hadith core editor
 

@@ -7,8 +7,11 @@ import (
 
 type HadithAyahService interface {
 	Create(req *model.CreateHadithAyahRequest) (*model.HadithAyah, error)
+	FindAll() ([]model.HadithAyah, error)
+	FindByID(int) (*model.HadithAyah, error)
 	FindByHadithID(int) ([]model.HadithAyah, error)
 	FindByAyahID(int) ([]model.HadithAyah, error)
+	Update(int, *model.HadithAyah) (*model.HadithAyah, error)
 	Delete(int) error
 }
 
@@ -27,6 +30,18 @@ func (s *hadithAyahService) Create(req *model.CreateHadithAyahRequest) (*model.H
 		Catatan:  req.Catatan,
 	}
 	return s.repo.Save(ha)
+}
+
+func (s *hadithAyahService) FindAll() ([]model.HadithAyah, error) {
+	return s.repo.FindAll()
+}
+
+func (s *hadithAyahService) FindByID(id int) (*model.HadithAyah, error) {
+	return s.repo.FindByID(id)
+}
+
+func (s *hadithAyahService) Update(id int, ha *model.HadithAyah) (*model.HadithAyah, error) {
+	return s.repo.Update(id, ha)
 }
 
 func (s *hadithAyahService) FindByHadithID(hadithID int) ([]model.HadithAyah, error) {
