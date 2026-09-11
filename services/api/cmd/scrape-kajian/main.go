@@ -108,6 +108,7 @@ func main() {
 	concurrency := flag.Int("concurrency", 2, "Videos fetched in parallel, round-robin across channels (channel 1's video 1, channel 2's video 1, ..., then channel 1's video 2, ...) rather than draining one channel before starting the next -- so an interrupted run still leaves every channel with some progress. Keep it low (2-3); YouTube rate-limits/blocks by source IP, so this multiplies the request rate seen from this machine.")
 	refreshTitles := flag.Bool("refresh-titles", false, "Fast path: look up each already-scraped video's title via YouTube oEmbed (plain HTTP, no yt-dlp) instead of re-listing whole channels. Only updates title/description on rows that already exist; does not discover new videos or fetch transcripts.")
 	refreshConcurrency := flag.Int("refresh-concurrency", 6, "Concurrent oEmbed lookups during -refresh-titles")
+	fixVideoID := flag.String("fix-video", "", "Re-fetch and upsert one specific video id into its channel's file (use with -channel/-speaker to identify the channel), bypassing listing and the round-robin queue entirely. For patching a single corrupted/fabricated/incomplete entry without a full re-scrape.")
 	flag.Parse()
 
 	targets := []Channel{}
@@ -142,6 +143,14 @@ func main() {
 
 	if _, err := exec.LookPath("yt-dlp"); err != nil {
 		fatalf("yt-dlp not found in PATH")
+	}
+
+	if strings.TrimSpace(*fixVideoID) != "" {
+		if len(targets) != 1 {
+			fatalf("-fix-video requires -channel (and -speaker) to identify which channel file to update")
+		}
+		fixSingleVideo(targets[0], strings.TrimSpace(*fixVideoID), *cookies, *outDir)
+		return
 	}
 
 	skipCache := loadSkipCache(*skipCachePath)
@@ -341,6 +350,53 @@ func shouldDefer(cache SkipCache, videoID string, now time.Time) bool {
 	}
 	entry, ok := cache.Entries[videoID]
 	return ok && now.Before(entry.RetryAfter)
+}
+
+// fixSingleVideo re-fetches one specific video's transcript through the
+// same fetchTranscript/chunkTranscript pipeline as a normal scrape, and
+// upserts it into the channel's existing file. It keeps whatever
+// title/duration/thumbnail is already on record for that video (the
+// listing-derived fields aren't what's broken in the cases this exists
+// for -- a corrupted or fabricated transcript is) rather than re-listing
+// the whole channel just to get them again.
+func fixSingleVideo(channel Channel, videoID string, cookies string, outDir string) {
+	path := filepath.Join(outDir, channelSlug(channel)+".json")
+	_, existing := loadExisting(path)
+
+	snippets, confirmedAbsent, publishedAt := fetchTranscript(videoID, cookies)
+	chunks := chunkTranscript(snippets, 60)
+	if len(chunks) == 0 {
+		fmt.Printf("[fix-video] %s: no transcript found (confirmedAbsent=%v) -- left unchanged\n", videoID, confirmedAbsent)
+		return
+	}
+
+	existingItem := existing[videoID]
+	if publishedAt == "" {
+		publishedAt = existingItem.PublishedAt
+	}
+	if publishedAt == "" {
+		publishedAt = "2024-01-01"
+	}
+	title := existingItem.Title
+	item := KajianItem{
+		Title:        title,
+		Speaker:      channel.Name,
+		Topic:        strings.Join(channel.Focus, ", "),
+		Type:         "video",
+		URL:          "https://www.youtube.com/watch?v=" + videoID,
+		VideoID:      videoID,
+		Description:  fmt.Sprintf("Kajian oleh %s: %s", channel.Name, title),
+		Duration:     existingItem.Duration,
+		ThumbnailURL: existingItem.ThumbnailURL,
+		PublishedAt:  publishedAt,
+		Transcripts:  chunks,
+	}
+	existing[videoID] = item
+	if err := writeItems(path, mapValues(existing)); err != nil {
+		fmt.Printf("[fix-video] %s: write failed: %v\n", videoID, err)
+		return
+	}
+	fmt.Printf("[fix-video] %s: %d chunks written to %s\n", videoID, len(chunks), path)
 }
 
 func getChannelVideos(channelURL string, maxVideos int, cookies string) []Video {
