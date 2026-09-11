@@ -3,13 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { BsBell, BsBellFill, BsX } from "react-icons/bs";
-import { notificationApi } from "@/lib/api";
 import {
+    ensurePushSubscriptionRegistered,
     getPushPermissionStatus,
-    registerServiceWorker,
     requestNotificationPermission,
-    subscribeToPush,
-    subscriptionToPlainObject,
 } from "@/lib/pushSubscription";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
@@ -39,46 +36,10 @@ export default function NotificationPermissionPrompt() {
     const locationRequestedRef = useRef(false);
     const syncedRef = useRef(false);
 
-    const registerPushToken = useCallback(async () => {
-        if (typeof window === "undefined") return false;
-
-        const { supported, registration } = await registerServiceWorker();
-        if (!supported || !registration) return false;
-
-        const result = await subscribeToPush(registration, {
-            vapidKeyFetcher: notificationApi.getVapidPublicKey,
-        });
-        if (!result.success) return false;
-
-        if (isAuthenticated) {
-            const sub = subscriptionToPlainObject(result.subscription);
-            if (sub) {
-                const storedLoc = readStoredUserLocation();
-                const lat = storedLoc?.lat ? Number(storedLoc.lat) : -6.2088;
-                const lng = storedLoc?.lng ? Number(storedLoc.lng) : 106.8456;
-                const cityName = storedLoc?.label || "Jakarta";
-                const userTimezone =
-                    Intl.DateTimeFormat().resolvedOptions().timeZone ||
-                    "Asia/Jakarta";
-                const tzOffsetMinutes = -new Date().getTimezoneOffset();
-                await notificationApi.registerPushToken({
-                    token: sub.endpoint,
-                    platform: "web",
-                    provider: "web",
-                    device_id: `web:${navigator.userAgent?.slice(0, 40) ?? "unknown"}`,
-                    key_p256dh: sub.keys?.p256dh ?? "",
-                    key_auth: sub.keys?.auth ?? "",
-                    latitude: lat,
-                    longitude: lng,
-                    city_name: cityName,
-                    timezone: userTimezone,
-                    tz_offset_minutes: tzOffsetMinutes,
-                });
-            }
-        }
-
-        return true;
-    }, [isAuthenticated]);
+    const registerPushToken = useCallback(
+        () => ensurePushSubscriptionRegistered({ isAuthenticated }),
+        [isAuthenticated],
+    );
 
     useEffect(() => {
         let cancelled = false;

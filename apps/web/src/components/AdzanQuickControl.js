@@ -8,6 +8,8 @@ import {
     useSettings,
 } from "@/lib/useSettings";
 import { fireAdzanNotification } from "@/lib/adzanNotification";
+import { ensurePushSubscriptionRegistered } from "@/lib/pushSubscription";
+import { useAuth } from "@/context/Auth";
 
 export default function AdzanQuickControl({
     i18n = {},
@@ -15,6 +17,7 @@ export default function AdzanQuickControl({
     compact = false,
 }) {
     const { settings, updateSetting } = useSettings();
+    const { isAuthenticated } = useAuth();
     const t = (key, fallback) => {
         if (i18n[key] !== undefined) return i18n[key];
         return fallback;
@@ -98,6 +101,9 @@ export default function AdzanQuickControl({
             } else {
                 setNotifChecked(true);
             }
+            ensurePushSubscriptionRegistered({ isAuthenticated }).catch(
+                () => {},
+            );
         }
         updateSetting("notifAdzan", next);
     };

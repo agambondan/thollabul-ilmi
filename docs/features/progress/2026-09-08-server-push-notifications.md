@@ -66,6 +66,64 @@ Ditemukan dan diperbaiki sebelum masuk `master` (repo ini tidak punya PR gate):
   menekan "Keluar". Best-effort dan dibungkus try/catch jadi tidak
   memblokir logout, tapi belum ada fix khusus untuk ini.
 
+## Fix 2026-09-11: toggle "Notif Adzan" web tidak pernah subscribe push
+
+Laporan user: sudah nyalakan toggle notif adzan di web/PWA, tapi saat masuk
+waktu sholat tidak ada suara maupun notifikasi yang muncul sama sekali.
+
+Root cause: ada dua jalur notifikasi berjalan sendiri-sendiri.
+
+- **Client-side timer** (`apps/web/src/app/jadwal-sholat/JadwalSholatClient.js`)
+  — play audio + `Notification()` lokal, tapi cuma hidup selama tab
+  `/jadwal-sholat` terbuka & foreground. Pindah halaman atau tab di-minimize,
+  reminder mati total.
+- **Server push** (`services/api/app/services/notification_service.go`,
+  `notification_push.go`) — sudah lengkap (Web Push + VAPID, jalan walau tab
+  ditutup), tapi toggle "Notif Adzan" di `AdzanQuickControl.js` **hanya**
+  memanggil `Notification.requestPermission()` dan menyimpan preferensi lokal
+  — tidak pernah mendaftarkan Push Subscription. Alur registrasi
+  (`registerServiceWorker` → `subscribeToPush` → `notificationApi.registerPushToken`)
+  cuma terpasang di `NotificationPermissionPrompt.js` (banner global), jadi
+  user yang menyalakan toggle tanpa pernah klik banner itu tidak pernah punya
+  row `push_tokens` — scheduler backend jalan tapi tidak ada token dikirimi.
+
+Fix: logic registrasi push subscription diekstrak jadi
+`ensurePushSubscriptionRegistered()` di `apps/web/src/lib/pushSubscription.js`,
+dipakai ulang oleh `NotificationPermissionPrompt.js` (refactor, tidak ada
+perubahan perilaku) dan sekarang juga dipanggil dari `toggleNotif()` di
+`AdzanQuickControl.js` saat user menyalakan toggle dan izin notifikasi
+granted.
+
+Belum digarap (di luar scope laporan ini): `DispatchDueAdzanPush` di backend
+mengirim ke semua token aktif tanpa cek preferensi `notifAdzan` user — toggle
+OFF di web tidak benar-benar menghentikan push dari server. Default
+`notifAdzan` adalah `true`, jadi ini tidak memengaruhi bug yang dilaporkan.
+
+**Verifikasi:**
+
+- Unit test baru `apps/web/src/lib/__tests__/pushSubscription.test.js`
+  (4 kasus) memastikan `ensurePushSubscriptionRegistered()` benar memanggil
+  `registerServiceWorker` → `subscribeToPush` → `notificationApi.registerPushToken`
+  dengan payload yang tepat, termasuk kasus belum login, subscription yang
+  sudah ada, dan browser tanpa dukungan push.
+- Component test baru `apps/web/src/__tests__/AdzanQuickControl.test.js`
+  (2 kasus) memastikan toggle di UI benar memanggil
+  `ensurePushSubscriptionRegistered` saat izin granted, dan tidak
+  memanggilnya saat izin denied.
+- End-to-end manual: login ke API lokal, `PUT /api/v1/notifications/push-token`
+  dengan payload persis seperti yang dikirim `ensurePushSubscriptionRegistered`
+  (device_id, key_p256dh, key_auth, dst.) — backend menerima dan menyimpan
+  row aktif di tabel `push_token` (dicek langsung via psql). Data uji sudah
+  dibersihkan setelahnya.
+- Full click-through di browser sungguhan (Playwright, headless) **tidak bisa
+  diselesaikan** dalam sesi ini: mesin dev sedang dipakai banyak sesi agent
+  paralel (load average ~17 di CPU 12-core, RAM nyaris habis), sehingga
+  `next dev` gagal compile route `/dashboard` walau ditunggu >10 menit (bahkan
+  `curl` polos tanpa JS pun timeout di route yang sama) — murni kontensi
+  resource, bukan bug dari perubahan ini. Rekomendasi: user coba toggle
+  "Notif Adzan" + tombol "Tes Notifikasi" langsung di browser mereka sendiri
+  untuk konfirmasi akhir end-to-end.
+
 ## Acceptance Criteria
 
 - User dapat mendaftarkan push token perangkat ke server saat login.
