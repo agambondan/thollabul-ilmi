@@ -16,14 +16,7 @@ chmod 755 "${LOG_DIR}" 2>/dev/null || true
 ts() { date -u +"%Y-%m-%dT%H:%M:%SZ"; }
 {
   echo "[$(ts)] backfill-kajian-embeddings start"
-  docker run --rm \
-    --network "${NETWORK}" \
-    -e DB_HOST=tholabul-ilmi-postgres \
-    -e DB_PORT=5432 \
-    -e DB_USER=postgres \
-    -e DB_PASS=postgres \
-    -e DB_NAME=thullabul_ilmi \
-    -e DB_SSLMODE=disable \
-    "${IMAGE}" /app/main -environment container -backfill-embeddings
+  docker compose -f /works/me/thollabul-ilmi/docker-compose.yml --env-file /works/me/thollabul-ilmi/.env.oauth run --rm \
+    tholabul-ilmi-api /app/main -environment container -backfill-embeddings
   echo "[$(ts)] backfill-kajian-embeddings done"
 } >>"${LOG_FILE}" 2>&1

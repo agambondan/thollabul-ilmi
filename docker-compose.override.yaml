@@ -1,0 +1,8 @@
+services:
+    tholabul-ilmi-api:
+        environment:
+            - ACCESS_SECRET=local-dev-demo-secret-do-not-use-in-prod
+            # Not "production" so Register()/dispatchVerification logs the
+            # raw verification link/OTP code — needed for local testing
+            # since SMTP/WhatsApp aren't configured in this sandbox.
+            - ENVIRONMENT=development
