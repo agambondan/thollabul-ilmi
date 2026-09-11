@@ -15,30 +15,45 @@ type channelWork struct {
 	items   map[string]KajianItem
 }
 
-// scrapeAllRoundRobin lists every channel first, then interleaves their
-// videos one at a time -- channel 1's video 1, channel 2's video 1, ...,
-// channel 1's video 2, channel 2's video 2, ... -- instead of draining one
-// channel's entire backlog before starting the next. A prolific channel
-// (Khalid Basalamah, ~4900 videos) would otherwise starve every other
-// channel of progress for hours; round-robin means a run interrupted
-// partway (network drop, laptop closed) still leaves every channel with
-// some coverage instead of a few finished and the rest untouched.
+// scrapeAllRoundRobin interleaves every channel's videos one at a time --
+// channel 1's video 1, channel 2's video 1, ..., channel 1's video 2, ... --
+// instead of draining one channel's entire backlog before starting the
+// next. A prolific channel (Khalid Basalamah, ~4900 videos) would
+// otherwise starve every other channel of progress for hours; round-robin
+// means a run interrupted partway (network drop, laptop closed) still
+// leaves every channel with some coverage instead of a few finished and
+// the rest untouched.
+//
+// Listing and fetching run concurrently rather than as two sequential
+// phases: a single prolific channel's listing (Yufid, 20k+ videos) can
+// take 10+ minutes to paginate through, which would otherwise leave every
+// other, already-listed channel sitting idle for that whole stretch
+// before any fetching starts at all. The dispatcher below advances
+// whichever channels have reported their video list so far by one video
+// each pass, folding newly-listed channels into the rotation as they
+// arrive instead of waiting for the slowest one.
 func scrapeAllRoundRobin(targets []Channel, maxVideos int, cookies string, onlyWithTranscript bool, outDir string, skipCache SkipCache, retryInterval time.Duration, now *time.Time, skipCachePath *string, concurrency int) (totalNew, totalAll int) {
 	workers := concurrency
 	if workers < 1 {
 		workers = 1
 	}
 
-	works := make([]*channelWork, len(targets))
-	videoLists := make([][]Video, len(targets))
+	type channelData struct {
+		work   *channelWork
+		videos []Video
+	}
+
+	var readyMu sync.Mutex
+	ready := make([]channelData, 0, len(targets))
+	remaining := len(targets)
 
 	listSem := make(chan struct{}, workers)
 	var listWg sync.WaitGroup
-	for i, target := range targets {
-		i, target := i, target
+	for _, target := range targets {
+		target := target
 		path := filepath.Join(outDir, channelSlug(target)+".json")
 		_, existing := loadExisting(path)
-		works[i] = &channelWork{channel: target, path: path, items: existing}
+		work := &channelWork{channel: target, path: path, items: existing}
 
 		listWg.Add(1)
 		listSem <- struct{}{}
@@ -49,10 +64,13 @@ func scrapeAllRoundRobin(targets []Channel, maxVideos int, cookies string, onlyW
 			fmt.Printf("\n%s [SCAN] %s (%s)...\n", tag, target.Name, target.ChannelURL)
 			videos := getChannelVideos(target.ChannelURL, maxVideos, cookies)
 			fmt.Printf("%s        Ditemukan %d video.\n", tag, len(videos))
-			videoLists[i] = videos
+
+			readyMu.Lock()
+			ready = append(ready, channelData{work: work, videos: videos})
+			remaining--
+			readyMu.Unlock()
 		}()
 	}
-	listWg.Wait()
 
 	type job struct {
 		work  *channelWork
@@ -60,29 +78,14 @@ func scrapeAllRoundRobin(targets []Channel, maxVideos int, cookies string, onlyW
 		pos   int
 		total int
 	}
-	var jobs []job
-	maxLen := 0
-	for _, vl := range videoLists {
-		if len(vl) > maxLen {
-			maxLen = len(vl)
-		}
-	}
-	for round := 0; round < maxLen; round++ {
-		for i, vl := range videoLists {
-			if round < len(vl) {
-				jobs = append(jobs, job{work: works[i], video: vl[round], pos: round + 1, total: len(vl)})
-			}
-		}
-	}
-
 	var cacheMu sync.Mutex
 	var totalsMu sync.Mutex
 	jobCh := make(chan job, 256)
-	var wg sync.WaitGroup
+	var fetchWg sync.WaitGroup
 	for w := 0; w < workers; w++ {
-		wg.Add(1)
+		fetchWg.Add(1)
 		go func() {
-			defer wg.Done()
+			defer fetchWg.Done()
 			for j := range jobCh {
 				if processVideo(j.work, j.video, j.pos, j.total, cookies, onlyWithTranscript, skipCache, &cacheMu, retryInterval, now, skipCachePath) {
 					totalsMu.Lock()
@@ -92,15 +95,42 @@ func scrapeAllRoundRobin(targets []Channel, maxVideos int, cookies string, onlyW
 			}
 		}()
 	}
-	for _, j := range jobs {
-		jobCh <- j
-	}
-	close(jobCh)
-	wg.Wait()
 
-	for _, w := range works {
-		totalAll += len(w.items)
+	go func() {
+		nextRound := map[int]int{}
+		for {
+			readyMu.Lock()
+			snapshot := append([]channelData{}, ready...)
+			doneListing := remaining == 0
+			readyMu.Unlock()
+
+			dispatchedAny := false
+			for i, cd := range snapshot {
+				round := nextRound[i]
+				if round < len(cd.videos) {
+					jobCh <- job{work: cd.work, video: cd.videos[round], pos: round + 1, total: len(cd.videos)}
+					nextRound[i] = round + 1
+					dispatchedAny = true
+				}
+			}
+			if !dispatchedAny {
+				if doneListing {
+					break
+				}
+				time.Sleep(500 * time.Millisecond)
+			}
+		}
+		close(jobCh)
+	}()
+
+	listWg.Wait()
+	fetchWg.Wait()
+
+	readyMu.Lock()
+	for _, cd := range ready {
+		totalAll += len(cd.work.items)
 	}
+	readyMu.Unlock()
 	return totalNew, totalAll
 }
 
