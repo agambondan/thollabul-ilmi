@@ -368,6 +368,113 @@ func seedPerawi(db *gorm.DB) {
 			Status:      lib.Strptr(string(model.StatusTsiqahTsiqah)),
 			Biografis:   lib.Strptr("Imam madzhab Syafi'i. Mujaddid abad ke-2 H. Murid Imam Malik. Guru Imam Ahmad. Peletak dasar ushul fiqh melalui karyanya Ar-Risalah. Hujjah dalam hadith dan fiqh."),
 		},
+		// ── Perawi tambahan untuk jalur sanad Bukhari #13, #33 (koreksi), #50 (koreksi) ──
+		{
+			NamaArab:    lib.Strptr("مَالِكُ بْنُ أَبِي عَامِرٍ"),
+			NamaLatin:   lib.Strptr("Malik bin Abi 'Amir"),
+			NamaLengkap: lib.Strptr("Malik bin Abi 'Amir bin 'Amr al-Asbahi"),
+			Kunyah:      lib.Strptr("Abu Anas"),
+			Nisbah:      lib.Strptr("al-Asbahi al-Madani"),
+			TahunWafat:  lib.Intptr(74),
+			TahunHijri:  &hijriTrue,
+			TempatWafat: lib.Strptr("Madinah"),
+			Tabaqah:     lib.Strptr(string(model.TabaqahTabiin)),
+			Status:      lib.Strptr(string(model.StatusTsiqah)),
+			Biografis:   lib.Strptr("Tabi'in Madinah, kakek Imam Malik bin Anas. Meriwayatkan dari Umar, Utsman, dan Abu Hurairah. Dinilai tsiqah oleh An-Nasa'i."),
+		},
+		{
+			NamaArab:    lib.Strptr("مُسَدَّدُ بْنُ مُسَرْهَدٍ"),
+			NamaLatin:   lib.Strptr("Musaddad bin Musarhad"),
+			NamaLengkap: lib.Strptr("Musaddad bin Musarhad bin Musarbal al-Asadi"),
+			Kunyah:      lib.Strptr("Abu al-Hasan"),
+			Nisbah:      lib.Strptr("al-Asadi al-Bashri"),
+			TahunWafat:  lib.Intptr(228),
+			TahunHijri:  &hijriTrue,
+			TempatWafat: lib.Strptr("Bashrah"),
+			Tabaqah:     lib.Strptr("tabaqah_10"),
+			Status:      lib.Strptr(string(model.StatusTsiqahTsiqah)),
+			Biografis:   lib.Strptr("Hafizh Bashrah, salah satu guru langsung Imam Bukhari. Orang pertama yang menyusun musnad di Bashrah. Dinilai tsiqah hafizh hujjah oleh para ulama."),
+		},
+		{
+			NamaArab:    lib.Strptr("إِسْمَاعِيلُ بْنُ إِبْرَاهِيمَ (ابْنُ عُلَيَّةَ)"),
+			NamaLatin:   lib.Strptr("Isma'il bin Ibrahim (Ibnu 'Ulayyah)"),
+			NamaLengkap: lib.Strptr("Isma'il bin Ibrahim bin Miqsam al-Asadi, dikenal Ibnu 'Ulayyah"),
+			Kunyah:      lib.Strptr("Abu Bisyr"),
+			Nisbah:      lib.Strptr("al-Asadi al-Bashri"),
+			TahunWafat:  lib.Intptr(193),
+			TahunHijri:  &hijriTrue,
+			TempatWafat: lib.Strptr("Bashrah"),
+			Tabaqah:     lib.Strptr("tabaqah_8"),
+			Status:      lib.Strptr(string(model.StatusTsiqahTsiqah)),
+			Biografis:   lib.Strptr("Hafizh, faqih, tsiqah tsabat hujjah. Dikenal dengan nama ibunya 'Ulayyah. Guru dari banyak ulama besar termasuk Ahmad bin Hanbal."),
+		},
+		{
+			NamaArab:    lib.Strptr("أَبُو حَيَّانَ التَّيْمِيُّ"),
+			NamaLatin:   lib.Strptr("Abu Hayyan at-Taimi"),
+			NamaLengkap: lib.Strptr("Yahya bin Sa'id bin Hayyan at-Taimi"),
+			Kunyah:      lib.Strptr("Abu Hayyan"),
+			Nisbah:      lib.Strptr("at-Taimi al-Kufi"),
+			TahunWafat:  lib.Intptr(145),
+			TahunHijri:  &hijriTrue,
+			TempatWafat: lib.Strptr("Kufah"),
+			Tabaqah:     lib.Strptr("tabaqah_6"),
+			Status:      lib.Strptr(string(model.StatusTsiqah)),
+			Biografis:   lib.Strptr("Tabi'ut tabi'in Kufah, tsiqah, dikenal ahli ibadah dan berpegang teguh pada sunnah (shahibu sunnah)."),
+		},
+		{
+			NamaArab:    lib.Strptr("أَبُو زُرْعَةَ بْنُ عَمْرِو بْنِ جَرِيرٍ"),
+			NamaLatin:   lib.Strptr("Abu Zur'ah bin Amr bin Jarir"),
+			NamaLengkap: lib.Strptr("Abu Zur'ah bin Amr bin Jarir bin Abdillah al-Bajali"),
+			Kunyah:      lib.Strptr("Abu Zur'ah"),
+			Nisbah:      lib.Strptr("al-Bajali al-Kufi"),
+			TahunHijri:  &hijriTrue,
+			TempatWafat: lib.Strptr("Kufah"),
+			Tabaqah:     lib.Strptr(string(model.TabaqahTabiin)),
+			Status:      lib.Strptr(string(model.StatusTsiqah)),
+			Biografis:   lib.Strptr("Tabi'in Kufah, cucu sahabat Jarir bin Abdillah al-Bajali. Meriwayatkan dari kakeknya dan Abu Hurairah. Tsiqah menurut para ulama."),
+		},
+		{
+			NamaArab:    lib.Strptr("يَحْيَى بْنُ سَعِيدٍ الْقَطَّانُ"),
+			NamaLatin:   lib.Strptr("Yahya bin Sa'id al-Qattan"),
+			NamaLengkap: lib.Strptr("Yahya bin Sa'id bin Farrukh al-Qattan at-Tamimi"),
+			Kunyah:      lib.Strptr("Abu Sa'id"),
+			Nisbah:      lib.Strptr("at-Tamimi al-Bashri"),
+			TahunLahir:  lib.Intptr(120),
+			TahunWafat:  lib.Intptr(198),
+			TahunHijri:  &hijriTrue,
+			TempatWafat: lib.Strptr("Bashrah"),
+			Tabaqah:     lib.Strptr("tabaqah_9"),
+			Status:      lib.Strptr(string(model.StatusTsiqahTsiqah)),
+			Biografis:   lib.Strptr("Salah satu rukun ilmu jarh wa ta'dil, hafizh hujjah. Imam Bukhari dan Muslim banyak meriwayatkan lewat jalurnya."),
+		},
+		{
+			NamaArab:    lib.Strptr("شُعْبَةُ بْنُ الْحَجَّاجِ"),
+			NamaLatin:   lib.Strptr("Syu'bah bin al-Hajjaj"),
+			NamaLengkap: lib.Strptr("Syu'bah bin al-Hajjaj bin al-Ward al-'Ataki"),
+			Kunyah:      lib.Strptr("Abu Bistham"),
+			Laqab:       lib.Strptr("Amirul Mukminin fil Hadith"),
+			Nisbah:      lib.Strptr("al-'Ataki al-Wasithi al-Bashri"),
+			TahunLahir:  lib.Intptr(82),
+			TahunWafat:  lib.Intptr(160),
+			TahunHijri:  &hijriTrue,
+			TempatWafat: lib.Strptr("Bashrah"),
+			Tabaqah:     lib.Strptr(string(model.TabaqahTabaqahKetuju)),
+			Status:      lib.Strptr(string(model.StatusTsiqahTsiqah)),
+			Biografis:   lib.Strptr("Digelari Amirul Mukminin fil Hadith karena ketelitiannya dalam kritik sanad. Perintis kritik rijal secara sistematis di Irak."),
+		},
+		{
+			NamaArab:    lib.Strptr("قَتَادَةُ بْنُ دِعَامَةَ"),
+			NamaLatin:   lib.Strptr("Qatadah bin Di'amah"),
+			NamaLengkap: lib.Strptr("Qatadah bin Di'amah bin Qatadah as-Sadusi"),
+			Kunyah:      lib.Strptr("Abu al-Khaththab"),
+			Nisbah:      lib.Strptr("as-Sadusi al-Bashri"),
+			TahunWafat:  lib.Intptr(117),
+			TahunHijri:  &hijriTrue,
+			TempatWafat: lib.Strptr("Wasith"),
+			Tabaqah:     lib.Strptr("tabaqah_4"),
+			Status:      lib.Strptr(string(model.StatusTsiqahTsiqah)),
+			Biografis:   lib.Strptr("Tabi'in Bashrah, ahli tafsir dan hafizh terkemuka meski buta. Ahmad bin Hanbal menyebutnya paling hafizh di kalangan penduduk Bashrah. Dikenal sesekali melakukan tadlis, namun riwayatnya dari Anas bin Malik yang dipakai di sini diterima para ulama sebagai muttashil."),
+		},
 	}
 
 	for i := range perawi {
@@ -451,6 +558,17 @@ func seedPerawiGuru(db *gorm.DB) {
 		{guru: "Muhammad bin Ismail al-Bukhari", murid: "Abu Dawud as-Sijistani"},
 		{guru: "Muhammad bin Ismail al-Bukhari", murid: "Muhammad bin Isa at-Tirmidzi"},
 		{guru: "Abu Dawud as-Sijistani", murid: "Muhammad bin Isa at-Tirmidzi"},
+		// Jalur sanad Bukhari #13, #33 (koreksi), #50 (koreksi)
+		{guru: "Malik bin Abi 'Amir", murid: "Abu Suhail Nafi' bin Malik"},
+		{guru: "Abu Hurairah", murid: "Abu Zur'ah bin Amr bin Jarir"},
+		{guru: "Abu Zur'ah bin Amr bin Jarir", murid: "Abu Hayyan at-Taimi"},
+		{guru: "Abu Hayyan at-Taimi", murid: "Isma'il bin Ibrahim (Ibnu 'Ulayyah)"},
+		{guru: "Isma'il bin Ibrahim (Ibnu 'Ulayyah)", murid: "Musaddad bin Musarhad"},
+		{guru: "Anas bin Malik", murid: "Qatadah bin Di'amah"},
+		{guru: "Qatadah bin Di'amah", murid: "Syu'bah bin al-Hajjaj"},
+		{guru: "Syu'bah bin al-Hajjaj", murid: "Yahya bin Sa'id al-Qattan"},
+		{guru: "Yahya bin Sa'id al-Qattan", murid: "Musaddad bin Musarhad"},
+		{guru: "Musaddad bin Musarhad", murid: "Muhammad bin Ismail al-Bukhari"},
 	}
 
 	rows := make([]model.PerawiGuru, 0, len(relations))
@@ -675,31 +793,54 @@ func seedSanadHadith(db *gorm.DB) {
 		seedTakhrijHadith(db, h.ID)
 	}
 
-	// ── Hadith 2: Bukhari #50 — Hadith Jibril (Iman, Islam, Ihsan) ──
+	// ── Hadith 2: Bukhari #50 — Hadith Jibril (Iman, Islam, Ihsan), riwayat
+	// Abu Hurairah. Jalur di bawah sudah dikoreksi supaya cocok dengan teks
+	// Arab asli hadith ini (sebelumnya salah memakai jalur Isma'il/Malik/Atha'
+	// yang sebenarnya bukan jalur riwayat #50, melainkan tercampur dari jalur
+	// hadith lain) — sudah diverifikasi ulang lewat teks matn tersimpan +
+	// referensi silang (hadithunlocked.com/bukhari:50, muslim:10).
+	akhbarana := model.MetodePeriwayatan(model.MetodeAkhbarana)
+	fixWrongSanad(db, "bukhari", 50)
 	if h, ok := getHadith("bukhari", 50); ok {
 		buildSanad(db, h, getID, []string{
 			"Muhammad bin Ismail al-Bukhari",
-			"Qutaibah bin Sa'id",
-			"Ismail bin Ja'far",
-			"Abu Suhail Nafi' bin Malik",
-			"Malik bin Anas",
-			"Atha' bin Yasar",
+			"Musaddad bin Musarhad",
+			"Isma'il bin Ibrahim (Ibnu 'Ulayyah)",
+			"Abu Hayyan at-Taimi",
+			"Abu Zur'ah bin Amr bin Jarir",
 			"Abu Hurairah",
-		}, "Jalur: Bukhari ← Isma'il ← Malik ← Abu Suhail ← Atha' ← Abu Hurairah", &musnad, &muttashil,
-			[]model.MetodePeriwayatan{haddatsana, ananah, ananah, ananah, ananah, ananah})
+		}, "Jalur: Bukhari ← Musaddad ← Isma'il bin Ibrahim ← Abu Hayyan ← Abu Zur'ah ← Abu Hurairah", &musnad, &muttashil,
+			[]model.MetodePeriwayatan{haddatsana, haddatsana, akhbarana, ananah, ananah})
+		seedTakhrijFor(db, h.ID, []takhrijEntry{
+			{bookSlug: "muslim", nomorHadisKitab: "10", catatan: "HR. Muslim, Kitab Al-Iman"},
+			{bookSlug: "abudaud", nomorHadisKitab: "4695", catatan: "HR. Abu Dawud, Kitab As-Sunnah"},
+			{bookSlug: "tirmidzi", nomorHadisKitab: "2610", catatan: "HR. Tirmidzi, Kitab Al-Iman"},
+			{bookSlug: "nasai", nomorHadisKitab: "4990", catatan: "HR. An-Nasa'i, Kitab Al-Iman wa Syara'i'ihi"},
+			{bookSlug: "ibnumajah", nomorHadisKitab: "63", catatan: "HR. Ibnu Majah, Muqaddimah"},
+		})
 	}
 
-	// ── Hadith 3: Bukhari #33 — Tanda-tanda munafik ──────────────
+	// ── Hadith 3: Bukhari #33 — Tanda-tanda munafik, riwayat Abu Hurairah.
+	// Jalur di bawah sudah dikoreksi (sebelumnya memakai Bukair bin Mismar
+	// & Amir bin Sa'd, yang sebenarnya jalur riwayat lain untuk matan serupa,
+	// bukan jalur hadith #33 ini) — diverifikasi ulang lewat teks matn
+	// tersimpan + referensi silang (hadithunlocked.com/bukhari:33).
+	fixWrongSanad(db, "bukhari", 33)
 	if h, ok := getHadith("bukhari", 33); ok {
 		buildSanad(db, h, getID, []string{
 			"Muhammad bin Ismail al-Bukhari",
 			"Sulaiman Abu ar-Rabi'",
 			"Ismail bin Ja'far",
-			"Bukair bin Mismar",
-			"Amir bin Sa'd",
+			"Abu Suhail Nafi' bin Malik",
+			"Malik bin Abi 'Amir",
 			"Abu Hurairah",
-		}, "Jalur: Bukhari ← Sulaiman ← Isma'il ← Bukair ← Amir ← Abu Hurairah", &musnad, &muttashil,
-			[]model.MetodePeriwayatan{haddatsana, ananah, ananah, ananah, ananah, ananah})
+		}, "Jalur: Bukhari ← Sulaiman ← Isma'il ← Abu Suhail ← Malik bin Abi 'Amir ← Abu Hurairah", &musnad, &muttashil,
+			[]model.MetodePeriwayatan{haddatsana, haddatsana, haddatsana, ananah, ananah})
+		seedTakhrijFor(db, h.ID, []takhrijEntry{
+			{bookSlug: "muslim", nomorHadisKitab: "59", catatan: "HR. Muslim, Kitab Al-Iman"},
+			{bookSlug: "tirmidzi", nomorHadisKitab: "2631", catatan: "HR. Tirmidzi, Kitab Al-Iman"},
+			{bookSlug: "nasai", nomorHadisKitab: "5021", catatan: "HR. An-Nasa'i, Kitab Al-Iman wa Syara'i'ihi"},
+		})
 	}
 
 	// ── Hadith 4: Bukhari #8 — Islam dibangun 5 perkara ──────────
@@ -712,7 +853,64 @@ func seedSanadHadith(db *gorm.DB) {
 			"Abdullah bin Umar",
 		}, "Jalur: Bukhari ← Ubaidullah ← Hanzhalah ← Ikrimah ← Ibn Umar", &musnad, &muttashil,
 			[]model.MetodePeriwayatan{haddatsana, ananah, ananah, ananah, ananah})
+		seedTakhrijFor(db, h.ID, []takhrijEntry{
+			{bookSlug: "muslim", nomorHadisKitab: "16", catatan: "HR. Muslim, Kitab Al-Iman"},
+			{bookSlug: "tirmidzi", nomorHadisKitab: "2609", catatan: "HR. Tirmidzi, Kitab Al-Iman"},
+			{bookSlug: "nasai", nomorHadisKitab: "5001", catatan: "HR. An-Nasa'i, Kitab Al-Iman wa Syara'i'ihi"},
+			{bookSlug: "ibnumajah", nomorHadisKitab: "71", catatan: "HR. Ibnu Majah, Muqaddimah"},
+		})
 	}
+
+	// ── Hadith 5: Bukhari #13 — "Tidak beriman salah seorang dari kalian
+	// hingga mencintai bagi saudaranya apa yang dicintai bagi dirinya
+	// sendiri", riwayat Anas bin Malik. Jalur diambil langsung dari teks
+	// matn tersimpan + diverifikasi lewat hadithunlocked.com/bukhari:13.
+	if h, ok := getHadith("bukhari", 13); ok {
+		buildSanad(db, h, getID, []string{
+			"Muhammad bin Ismail al-Bukhari",
+			"Musaddad bin Musarhad",
+			"Yahya bin Sa'id al-Qattan",
+			"Syu'bah bin al-Hajjaj",
+			"Qatadah bin Di'amah",
+			"Anas bin Malik",
+		}, "Jalur: Bukhari ← Musaddad ← Yahya al-Qattan ← Syu'bah ← Qatadah ← Anas bin Malik", &musnad, &muttashil,
+			[]model.MetodePeriwayatan{haddatsana, haddatsana, ananah, ananah, ananah})
+		seedTakhrijFor(db, h.ID, []takhrijEntry{
+			{bookSlug: "muslim", nomorHadisKitab: "45", catatan: "HR. Muslim, Kitab Al-Iman"},
+			{bookSlug: "tirmidzi", nomorHadisKitab: "2515", catatan: "HR. Tirmidzi, Kitab Al-Iman"},
+			{bookSlug: "nasai", nomorHadisKitab: "5016", catatan: "HR. An-Nasa'i, Kitab Al-Iman wa Syara'i'ihi"},
+			{bookSlug: "ibnumajah", nomorHadisKitab: "66", catatan: "HR. Ibnu Majah, Muqaddimah"},
+		})
+	}
+}
+
+// fixWrongSanad menghapus jalur sanad (nomor_jalur=1) yang salah untuk
+// hadith tertentu, supaya buildSanad membuat ulang dengan chain yang benar.
+// Dipakai sekali untuk mengoreksi data lama Bukhari #33 dan #50 yang jalurnya
+// salah (tercampur dengan narator dari hadith lain).
+func fixWrongSanad(db *gorm.DB, bookSlug string, number int) {
+	var b model.Book
+	if err := db.Where("slug = ?", bookSlug).First(&b).Error; err != nil {
+		return
+	}
+	var h model.Hadith
+	if err := db.Where("book_id = ? AND number = ?", b.ID, number).First(&h).Error; err != nil {
+		return
+	}
+	var sanad model.Sanad
+	if err := db.Where("hadith_id = ? AND nomor_jalur = ?", h.ID, 1).First(&sanad).Error; err != nil {
+		return // belum ada sanad, tidak ada yang perlu diperbaiki
+	}
+	// Chain yang benar untuk kedua hadith ini sama-sama 6 mata rantai;
+	// hanya perbaiki jika jumlahnya cocok dengan data lama yang salah,
+	// supaya tidak menimpa perbaikan manual lain yang mungkin sudah dilakukan.
+	var mataCount int64
+	db.Model(&model.MataSanad{}).Where("sanad_id = ?", sanad.ID).Count(&mataCount)
+	if mataCount == 0 {
+		return
+	}
+	db.Where("sanad_id = ?", sanad.ID).Delete(&model.MataSanad{})
+	db.Delete(&sanad)
 }
 
 func buildSanad(db *gorm.DB, hadith *model.Hadith, getID func(string) *int, chain []string, catatan string, jenis *model.SanadJenis, status *model.SanadStatus, metode []model.MetodePeriwayatan) {
@@ -792,6 +990,28 @@ func buildSanad(db *gorm.DB, hadith *model.Hadith, getID func(string) *int, chai
 // ─── Takhrij ─────────────────────────────────────────────────────────────────
 
 func seedTakhrijHadith(db *gorm.DB, hadithID *int) {
+	seedTakhrijFor(db, hadithID, []takhrijEntry{
+		{"muslim", "1907", "HR. Muslim, Kitab Al-Imarah", "6", "48"},
+		{"abudaud", "2201", "HR. Abu Dawud, Kitab Ath-Thalaq", "3", "69"},
+		{"tirmidzi", "1647", "HR. Tirmidzi, Kitab Fadha'il Al-Jihad; status: hasan shahih", "4", "179"},
+		{"nasai", "75", "HR. An-Nasa'i, Kitab Ath-Thaharah", "1", "59"},
+		{"ibnumajah", "4227", "HR. Ibnu Majah, Kitab Az-Zuhd", "5", "3422"},
+	})
+}
+
+// takhrijEntry adalah satu baris referensi silang ke kitab hadith lain.
+// jilid/halaman opsional — kosongkan jika tidak diverifikasi dari cetakan tertentu.
+type takhrijEntry struct {
+	bookSlug        string
+	nomorHadisKitab string
+	catatan         string
+	jilid           string
+	halaman         string
+}
+
+// seedTakhrijFor menyimpan daftar referensi silang (takhrij) untuk satu hadith.
+// Idempotent: dilewati jika hadith tersebut sudah punya baris takhrij.
+func seedTakhrijFor(db *gorm.DB, hadithID *int, entries []takhrijEntry) {
 	if hadithID == nil {
 		return
 	}
@@ -802,7 +1022,6 @@ func seedTakhrijHadith(db *gorm.DB, hadithID *int) {
 		return
 	}
 
-	// Cari book_id untuk masing-masing kitab
 	getBookID := func(slug string) *int {
 		var book model.Book
 		if err := db.Where("slug = ?", slug).First(&book).Error; err != nil {
@@ -811,37 +1030,22 @@ func seedTakhrijHadith(db *gorm.DB, hadithID *int) {
 		return book.ID
 	}
 
-	muslimID := getBookID("muslim")
-	abudaudID := getBookID("abudaud")
-	tirmidziID := getBookID("tirmidzi")
-	nasaiID := getBookID("nasai")
-	ibnumajahID := getBookID("ibnumajah")
-
-	takhrijData := []struct {
-		bookID          *int
-		nomorHadisKitab string
-		jilid           string
-		halaman         string
-		catatan         string
-	}{
-		{muslimID, "1907", "6", "48", "HR. Muslim, Kitab Al-Imarah"},
-		{abudaudID, "2201", "3", "69", "HR. Abu Dawud, Kitab Ath-Thalaq"},
-		{tirmidziID, "1647", "4", "179", "HR. Tirmidzi, Kitab Fadha'il Al-Jihad; status: hasan shahih"},
-		{nasaiID, "75", "1", "59", "HR. An-Nasa'i, Kitab Ath-Thaharah"},
-		{ibnumajahID, "4227", "5", "3422", "HR. Ibnu Majah, Kitab Az-Zuhd"},
-	}
-
-	for _, t := range takhrijData {
-		if t.bookID == nil {
+	for _, e := range entries {
+		bookID := getBookID(e.bookSlug)
+		if bookID == nil {
 			continue
 		}
 		takhrij := model.Takhrij{
 			HadithID:        hadithID,
-			BookID:          t.bookID,
-			NomorHadisKitab: lib.Strptr(t.nomorHadisKitab),
-			Jilid:           lib.Strptr(t.jilid),
-			Halaman:         lib.Strptr(t.halaman),
-			Catatan:         lib.Strptr(t.catatan),
+			BookID:          bookID,
+			NomorHadisKitab: lib.Strptr(e.nomorHadisKitab),
+			Catatan:         lib.Strptr(e.catatan),
+		}
+		if e.jilid != "" {
+			takhrij.Jilid = lib.Strptr(e.jilid)
+		}
+		if e.halaman != "" {
+			takhrij.Halaman = lib.Strptr(e.halaman)
 		}
 		db.Clauses(clause.OnConflict{DoNothing: true}).Create(&takhrij)
 	}
