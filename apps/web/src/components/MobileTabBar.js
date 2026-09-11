@@ -1,13 +1,13 @@
 "use client";
 
 import { useLocale } from "@/context/Locale";
-import { usePublicMobileMenu } from "@/context/PublicMobileMenu";
 import { isNavLinkActive } from "@/lib/navGroups";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BsSearch } from "react-icons/bs";
 import { FaGraduationCap, FaQuran } from "react-icons/fa";
 import { ImBook } from "react-icons/im";
-import { MdMenu, MdOutlinePlayLesson } from "react-icons/md";
+import { MdOutlinePlayLesson } from "react-icons/md";
 import { useQuranFullscreen } from "@/lib/useQuranFullscreen";
 
 const TABS = [
@@ -19,6 +19,7 @@ const TABS = [
         Icon: MdOutlinePlayLesson,
     },
     { href: "/belajar", labelKey: "link.belajar_short", Icon: FaGraduationCap },
+    { href: "/search", labelKey: "link.search", Icon: BsSearch },
 ];
 
 // Surfaces with their own navigation, plus the immersive reader.
@@ -28,7 +29,6 @@ export default function MobileTabBar() {
     const pathname = usePathname();
     const { t } = useLocale();
     const { isFullscreen } = useQuranFullscreen();
-    const { open: menuOpen, setOpen: setMenuOpen } = usePublicMobileMenu();
 
     if (
         !pathname ||
@@ -69,23 +69,6 @@ export default function MobileTabBar() {
                         </Link>
                     );
                 })}
-                <button
-                    type='button'
-                    onClick={() => setMenuOpen((v) => !v)}
-                    aria-label={t("nav.open_menu")}
-                    aria-haspopup='dialog'
-                    aria-expanded={menuOpen}
-                    className={`min-h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 text-[10px] transition-colors ${
-                        menuOpen
-                            ? "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/30 font-medium"
-                            : "text-gray-500 dark:text-gray-400"
-                    }`}
-                >
-                    <MdMenu className='text-lg' />
-                    <span className='max-w-full px-1 truncate'>
-                        {t("nav.menu")}
-                    </span>
-                </button>
             </div>
         </nav>
     );

@@ -362,7 +362,7 @@ export function JadwalSholatContent({
             <ContentWidth
                 compact='max-w-lg'
                 compactClassName='w-full sm:max-w-lg sm:mx-auto'
-                className='flex-1 px-4 pt-navbar pb-8'
+                className='flex-1 px-4 pb-8'
             >
                 {/* Header */}
                 <div className='mb-6 text-center'>

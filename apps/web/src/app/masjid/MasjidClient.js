@@ -125,7 +125,7 @@ export function MasjidClientContent({ initialMasjids = [], initialTotal = 0 }) {
     };
 
     return (
-        <ContentWidth compact='max-w-5xl' className='px-4 pt-navbar pb-10'>
+        <ContentWidth compact='max-w-5xl' className='px-4 pb-10'>
             <div className='mb-6 text-center'>
                 <div className='inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'>
                     <MdMosque className='text-4xl' />

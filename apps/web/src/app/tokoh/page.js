@@ -31,10 +31,7 @@ export default async function TokohPage() {
     return (
         <main className='min-h-screen flex flex-col bg-parchment-50 dark:bg-slate-900'>
             <Section>
-                <TokohClient
-                    initialItems={initialItems}
-                    className='pt-navbar'
-                />
+                <TokohClient initialItems={initialItems} />
             </Section>
         </main>
     );
