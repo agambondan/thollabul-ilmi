@@ -18,7 +18,7 @@ export default function MasjidMapComponent({ masjids = [], onSelect }) {
     const defaultCenter = [-6.2088, 106.8456];
 
     return (
-        <div className="h-[480px] w-full overflow-hidden rounded-3xl border border-gray-100 shadow-sm dark:border-slate-700">
+        <div className="isolate h-[480px] w-full overflow-hidden rounded-3xl border border-gray-100 shadow-sm dark:border-slate-700">
             <MapContainer
                 center={defaultCenter}
                 zoom={11}

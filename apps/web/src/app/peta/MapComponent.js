@@ -120,7 +120,7 @@ export default function MapComponent() {
             {loadError && !loading ? <InlineError /> : null}
 
             <div
-                className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden'
+                className='isolate bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 overflow-hidden'
                 style={{ height: "500px" }}
             >
                 <MapContainer
