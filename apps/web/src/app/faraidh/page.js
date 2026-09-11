@@ -6,6 +6,8 @@ import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { faraidhSimpanApi } from "@/lib/api";
 import { calculateFaraidh, HEIR_LABELS } from "@/lib/faraidh";
+import { listMasjidImage } from "@/lib/const";
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import {
     BsCalculator,
@@ -14,8 +16,13 @@ import {
     BsFloppyFill,
     BsInfoCircle,
     BsPrinter,
+    BsShare,
     BsTrash,
 } from "react-icons/bs";
+
+const ShareAyah = dynamic(() =>
+    import("@/components/popup/ListImage").then((m) => m.ShareAyah),
+);
 
 const HEIR_FIELDS = [
     { key: "suami", max: 1, group: "spouse" },
@@ -96,6 +103,25 @@ const fmtNumber = (n, lang) =>
     }).format(Number.isFinite(n) ? n : 0);
 
 const fmtFrac = (f) => (f ? `${f.num}/${f.den}` : "—");
+
+const buildFaraidhShareText = (result, totalNet, lang, t) => {
+    const lines = [
+        t("faraidh.share_heading") ?? "Hasil Perhitungan Waris (Faraidh)",
+        "",
+    ];
+    result.rows.forEach((row) => {
+        lines.push(
+            `${heirRowLabel(row.key, lang)} (${row.count}x): ${fmtFrac(row.fraction)} — ${(row.share * 100).toFixed(2)}% — ${fmtNumber(row.amount, lang)}`,
+        );
+    });
+    lines.push("");
+    lines.push(
+        `${t("common.total") ?? "Total"}: ${(result.totalShare * 100).toFixed(2)}% — ${fmtNumber(totalNet * result.totalShare, lang)}`,
+    );
+    lines.push("");
+    lines.push(t("faraidh.share_footer") ?? "Dihitung via Thullaabul 'Ilmi");
+    return lines.join("\n");
+};
 
 export function FaraidhContent() {
     const { t, lang } = useLocale();
@@ -265,6 +291,8 @@ export function FaraidhContent() {
         if (typeof window !== "undefined") window.print();
     };
 
+    const [showShare, setShowShare] = useState(false);
+
     const willCap = Math.max(
         0,
         ((Number(wealth) || 0) - (Number(debt) || 0) - (Number(funeral) || 0)) /
@@ -290,7 +318,7 @@ export function FaraidhContent() {
                 </p>
             </div>
 
-            <div className='bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl p-4 mb-5 flex items-start gap-3'>
+            <div className='bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl p-4 mb-5 flex items-start gap-3 print:hidden'>
                 <BsInfoCircle className='text-amber-600 dark:text-amber-400 text-lg shrink-0 mt-0.5' />
                 <p className='text-xs text-amber-800 dark:text-amber-300 leading-relaxed'>
                     {t("faraidh.disclaimer") ??
@@ -298,7 +326,7 @@ export function FaraidhContent() {
                 </p>
             </div>
 
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6 print:hidden'>
                 <div className='bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
                     <h2 className='text-base font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2'>
                         <BsCalculator className='text-emerald-600' />
@@ -486,7 +514,7 @@ export function FaraidhContent() {
                     <h2 className='text-base font-semibold text-gray-800 dark:text-white'>
                         {t("faraidh.result") ?? "Hasil Perhitungan"}
                     </h2>
-                    <div className='flex items-center gap-2'>
+                    <div className='flex items-center gap-2 print:hidden'>
                         <span className='text-xs text-gray-400 hidden sm:block'>
                             {t("faraidh.net_wealth") ?? "Tirkah bersih"}:{" "}
                             {fmtNumber(totalNet, lang)}
@@ -528,8 +556,29 @@ export function FaraidhContent() {
                                 {t("faraidh.print") ?? "Cetak"}
                             </button>
                         )}
+                        {totalHeirs > 0 && result.rows.length > 0 && (
+                            <button
+                                onClick={() => setShowShare(true)}
+                                className='flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-slate-600 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors'
+                            >
+                                <BsShare />
+                                {t("faraidh.share") ?? "Bagikan"}
+                            </button>
+                        )}
                     </div>
                 </div>
+
+                {showShare && (
+                    <ShareAyah
+                        images={listMasjidImage}
+                        isCopiedCallback={() => setShowShare(false)}
+                        title={
+                            t("faraidh.share_title") ?? "Bagikan Hasil Faraidh"
+                        }
+                        filename='hasil-faraidh.png'
+                        text={buildFaraidhShareText(result, totalNet, lang, t)}
+                    />
+                )}
 
                 {totalHeirs === 0 ? (
                     <p className='text-center text-gray-400 py-8 text-sm'>
@@ -689,7 +738,7 @@ export function FaraidhContent() {
 
             {/* History panel */}
             {showHistory && history.length > 0 && (
-                <div className='mt-5 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5'>
+                <div className='mt-5 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 p-5 print:hidden'>
                     <h2 className='text-base font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2'>
                         <BsClockHistory className='text-emerald-600' />
                         {t("faraidh.history") ?? "Riwayat Perhitungan"}

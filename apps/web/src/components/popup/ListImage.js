@@ -25,7 +25,13 @@ const loadImage = (src) =>
         image.src = src;
     });
 
-export const ShareAyah = ({ images, isCopiedCallback, text }) => {
+export const ShareAyah = ({
+    images,
+    isCopiedCallback,
+    text,
+    title,
+    filename = "ayat.png",
+}) => {
     const { t } = useLocale();
     const [isCopied, SetIsCopied] = useState(false);
     const [isProcessing, SetIsProcessing] = useState(false);
@@ -126,7 +132,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
 
             if (mode === "download") {
                 try {
-                    downloadCanvas(canvas, "ayat.png");
+                    downloadCanvas(canvas, filename);
                     setStatus("Gambar berhasil diunduh.");
                     setTimeout(() => setStatus(""), 2000);
                 } catch {
@@ -147,7 +153,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                     setTimeout(() => setStatus(""), 3500);
                 } catch {
                     try {
-                        downloadCanvas(canvas, "ayat.png");
+                        downloadCanvas(canvas, filename);
                         setError("Clipboard tidak didukung. Gambar diunduh.");
                         setTimeout(() => setError(""), 3000);
                     } catch {
@@ -165,7 +171,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                     title: "Thullaabul 'Ilmi",
                     text: shareText,
                     url: shareUrl,
-                    filename: "ayat.png",
+                    filename,
                 });
                 isCopiedCallback();
                 return;
@@ -180,7 +186,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
                         return;
                     } catch {
                         try {
-                            downloadCanvas(canvas, "ayat.png");
+                            downloadCanvas(canvas, filename);
                             setError(
                                 "Clipboard tidak didukung. Gambar diunduh.",
                             );
@@ -204,6 +210,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
             isProcessing,
             buildImageCanvas,
             downloadCanvas,
+            filename,
             t,
             shareText,
             shareUrl,
@@ -236,7 +243,7 @@ export const ShareAyah = ({ images, isCopiedCallback, text }) => {
             >
                 <div className='flex items-center justify-between mb-3'>
                     <h3 className='text-sm font-semibold text-emerald-900 dark:text-white'>
-                        {t("ayah.share_title")}
+                        {title || t("ayah.share_title")}
                     </h3>
                     <button
                         onClick={isCopiedCallback}

@@ -189,8 +189,7 @@ const en = {
     "auth.whatsapp_unavailable":
         "WhatsApp verification is currently unavailable, please use email",
     "auth.phone": "WhatsApp Number",
-    "auth.phone_invalid":
-        "Invalid phone number, use format 08xx or +62xx",
+    "auth.phone_invalid": "Invalid phone number, use format 08xx or +62xx",
     "auth.verify_email_title": "Verify Account",
     "auth.verify_email_missing_token": "Invalid verification link.",
     "auth.verify_email_success":
@@ -720,6 +719,10 @@ const en = {
         "Remaining inheritance is returned proportionally to heirs (excluding spouse).",
     "faraidh.history": "Calculation History",
     "faraidh.heir_unit": "heirs",
+    "faraidh.share": "Share",
+    "faraidh.share_title": "Share Faraidh Result",
+    "faraidh.share_heading": "Inheritance Calculation Result (Faraidh)",
+    "faraidh.share_footer": "Calculated via Thullaabul 'Ilmi",
     "zakat.title": "Zakat Calculator",
     "zakat.subtitle":
         "Calculate maal, fitrah, and other zakat according to syariah",
