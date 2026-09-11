@@ -7,6 +7,7 @@ import { useLocale } from "@/context/Locale";
 import { faraidhSimpanApi } from "@/lib/api";
 import { calculateFaraidh, HEIR_LABELS } from "@/lib/faraidh";
 import { listMasjidImage } from "@/lib/const";
+import SourceBadges from "@/components/SourceBadges";
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -324,6 +325,17 @@ export function FaraidhContent() {
                     {t("faraidh.disclaimer") ??
                         "Kalkulator ini menangani kasus dasar Ashabul Furudh & Ashabah. Kasus kompleks (Musytarakah, Akdariyah, kakek bersama saudara, dll.) memerlukan konsultasi ulama. Selalu konfirmasi hasil ke ahli faraidh."}
                 </p>
+            </div>
+
+            <div className='bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 rounded-xl p-4 mb-5 print:hidden'>
+                <h2 className='text-xs font-semibold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider mb-2'>
+                    {t("faraidh.dalil_title") ?? "Dasar Hukum Pembagian Waris"}
+                </h2>
+                <p className='text-xs text-emerald-800 dark:text-emerald-300 leading-relaxed mb-2'>
+                    {t("faraidh.dalil_desc") ??
+                        "Bagian ahli waris dalam kalkulator ini mengikuti QS. An-Nisa: 11 (bagian anak dan orang tua), QS. An-Nisa: 12 (bagian suami/istri dan saudara seibu), dan QS. An-Nisa: 176 (bagian saudara kandung/seayah pada kasus kalalah). Sisa harta setelah Ashabul Furudh diberikan kepada ahli waris ashabah (kerabat laki-laki terdekat), sesuai hadits berikut."}
+                </p>
+                <SourceBadges source='QS. An-Nisa: 11; QS. An-Nisa: 12; QS. An-Nisa: 176; HR. Bukhari No. 6732' />
             </div>
 
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6 print:hidden'>

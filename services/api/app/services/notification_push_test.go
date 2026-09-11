@@ -20,6 +20,7 @@ type deactivatedByTokenCall struct {
 type fakeNotificationRepo struct {
 	deactivated        []int
 	deactivatedByToken []deactivatedByTokenCall
+	deleted            []int
 	due                []model.NotificationSetting
 	marked             []int
 	tokens             []model.PushToken
@@ -45,6 +46,10 @@ func (f *fakeNotificationRepo) FindAllActivePushTokens() ([]model.PushToken, err
 	return f.tokens, nil
 }
 
+func (f *fakeNotificationRepo) FindAllPushTokens() ([]model.PushToken, error) {
+	return f.tokens, nil
+}
+
 func (f *fakeNotificationRepo) FindPushTokensByUser(userID uuid.UUID) ([]model.PushToken, error) {
 	return f.tokens, nil
 }
@@ -56,6 +61,11 @@ func (f *fakeNotificationRepo) DeactivatePushToken(id int) error {
 
 func (f *fakeNotificationRepo) DeactivatePushTokenByToken(userID uuid.UUID, token string) error {
 	f.deactivatedByToken = append(f.deactivatedByToken, deactivatedByTokenCall{userID: userID, token: token})
+	return nil
+}
+
+func (f *fakeNotificationRepo) DeletePushToken(id int) error {
+	f.deleted = append(f.deleted, id)
 	return nil
 }
 

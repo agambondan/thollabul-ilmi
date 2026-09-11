@@ -3,6 +3,7 @@
 import { useLocale } from "@/context/Locale";
 import { useLayoutMode } from "@/lib/useLayoutMode";
 import { getLocalizedField } from "@/lib/translation";
+import SourceBadges from "@/components/SourceBadges";
 import { useEffect, useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
@@ -234,6 +235,9 @@ const WiridClient = ({ initialItems = [] }) => {
                                             )}
                                         </p>
                                     </div>
+                                )}
+                                {item.source && (
+                                    <SourceBadges source={item.source} />
                                 )}
                             </div>
                         </div>

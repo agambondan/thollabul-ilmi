@@ -4,6 +4,7 @@ import ContentWidth from "@/components/layout/ContentWidth";
 import { useAuth } from "@/context/Auth";
 import { useLocale } from "@/context/Locale";
 import { kalkulasiZakatApi } from "@/lib/api";
+import SourceBadges from "@/components/SourceBadges";
 import Link from "next/link";
 import { useState } from "react";
 import { BsBookmarkPlus } from "react-icons/bs";
@@ -210,6 +211,10 @@ export function ZakatContent({ basePath = "/zakat" }) {
                             {t("zakat.maal_info_prefix")} <strong>2,5%</strong>.
                         </span>
                     </div>
+                    <div className='flex flex-wrap items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400'>
+                        <span>{t("zakat.dalil_label") ?? "Dalil"}:</span>
+                        <SourceBadges source='HR. Abu Dawud No. 1573, Tirmidzi No. 620' />
+                    </div>
                     <InputField
                         label={t("zakat.gold_price")}
                         value={goldPrice}
@@ -286,6 +291,10 @@ export function ZakatContent({ basePath = "/zakat" }) {
                             <strong>1 sha&apos; (±2,5 kg)</strong>{" "}
                             {t("zakat.fitrah_info_suffix")}
                         </span>
+                    </div>
+                    <div className='flex flex-wrap items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400'>
+                        <span>{t("zakat.dalil_label") ?? "Dalil"}:</span>
+                        <SourceBadges source='HR. Bukhari No. 1503, Abu Dawud No. 1609' />
                     </div>
                     <InputField
                         label={t("zakat.rice_price")}
@@ -367,6 +376,16 @@ export function ZakatContent({ basePath = "/zakat" }) {
                             {t("zakat.trade_info") ??
                                 "Zakat perdagangan 2,5% dari (modal + stok + piutang − utang) jika ≥ nisab emas setelah 1 haul."}
                         </span>
+                    </div>
+                    <div className='text-xs text-gray-500 dark:text-gray-400 space-y-1'>
+                        <p>
+                            {t("zakat.trade_dalil_note") ??
+                                "Zakat 'urudh tijarah (barang dagangan) ditetapkan ulama fiqih melalui qiyas (analogi) dan ijma' atas zakat maal — nisab dan kadarnya disamakan dengan zakat maal berikut:"}
+                        </p>
+                        <div className='flex flex-wrap items-center gap-1.5'>
+                            <span>{t("zakat.dalil_label") ?? "Dalil"}:</span>
+                            <SourceBadges source='HR. Abu Dawud No. 1573, Tirmidzi No. 620' />
+                        </div>
                     </div>
                     <InputField
                         label={t("zakat.gold_price")}
@@ -464,6 +483,10 @@ export function ZakatContent({ basePath = "/zakat" }) {
                                 "Nisab 5 wasq (±653 kg gabah). Irigasi: 5%, tadah hujan: 10%. Wajib tiap panen."}
                         </span>
                     </div>
+                    <div className='flex flex-wrap items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400'>
+                        <span>{t("zakat.dalil_label") ?? "Dalil"}:</span>
+                        <SourceBadges source='HR. Bukhari No. 1459' />
+                    </div>
                     <InputField
                         label={t("zakat.harvest_weight") ?? "Hasil panen (kg)"}
                         value={harvestWeight}
@@ -547,6 +570,10 @@ export function ZakatContent({ basePath = "/zakat" }) {
                             {t("zakat.gold_info") ??
                                 "Nisab emas 85g, perak 595g. Wajib setelah 1 haul. Tarif 2,5%."}
                         </span>
+                    </div>
+                    <div className='flex flex-wrap items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400'>
+                        <span>{t("zakat.dalil_label") ?? "Dalil"}:</span>
+                        <SourceBadges source='HR. Abu Dawud No. 1573, Tirmidzi No. 620' />
                     </div>
                     <InputField
                         label={

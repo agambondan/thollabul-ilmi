@@ -67,10 +67,12 @@ func (s *zakatService) refreshGoldLoop() {
 	}
 }
 
-func (s *zakatService) fetchGoldPrice() {
-	resp, err := http.Get("https://api.exchangerate-api.com/v4/latest/USD")
+var goldFetchClient = &http.Client{Timeout: 8 * time.Second}
+
+func fetchUsdToIdrRate() (float64, error) {
+	resp, err := goldFetchClient.Get("https://api.exchangerate-api.com/v4/latest/USD")
 	if err != nil {
-		return
+		return 0, err
 	}
 	defer resp.Body.Close()
 	var data struct {
@@ -78,11 +80,36 @@ func (s *zakatService) fetchGoldPrice() {
 			IDR float64 `json:"IDR"`
 		} `json:"rates"`
 	}
-	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil || data.Rates.IDR == 0 {
+	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+		return 0, err
+	}
+	return data.Rates.IDR, nil
+}
+
+func fetchGoldOunceUSD() (float64, error) {
+	resp, err := goldFetchClient.Get("https://api.gold-api.com/price/XAU")
+	if err != nil {
+		return 0, err
+	}
+	defer resp.Body.Close()
+	var data struct {
+		Price float64 `json:"price"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+		return 0, err
+	}
+	return data.Price, nil
+}
+
+func (s *zakatService) fetchGoldPrice() {
+	usdToIdr, err := fetchUsdToIdrRate()
+	if err != nil || usdToIdr == 0 {
 		return
 	}
-	usdToIdr := data.Rates.IDR
-	goldOunce := 2400.0
+	goldOunce, err := fetchGoldOunceUSD()
+	if err != nil || goldOunce == 0 {
+		return
+	}
 	goldPerGram := (goldOunce * usdToIdr) / 31.1035
 	s.goldMu.Lock()
 	s.goldPrice = math.Round(goldPerGram/100) * 100
