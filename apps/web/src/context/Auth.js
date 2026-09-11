@@ -143,11 +143,12 @@ export const AuthProvider = ({ children }) => {
         return data;
     };
 
-    const resendVerification = async (email) => {
+    // identifier: email or phone, whichever the account was found by.
+    const resendVerification = async (identifier) => {
         const res = await fetch(`${API_URL}/api/v1/auth/resend-verification`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify({ identifier }),
         });
         return res.ok;
     };

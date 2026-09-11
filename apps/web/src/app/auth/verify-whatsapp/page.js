@@ -15,7 +15,7 @@ const VerifyWhatsAppPage = () => {
     const { resendVerification } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const email = searchParams.get("email") || "";
+    const phone = searchParams.get("phone") || "";
     const [code, setCode] = useState("");
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +29,7 @@ const VerifyWhatsAppPage = () => {
             const res = await fetch(`${API_URL}/api/v1/auth/verify-whatsapp`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, code: code.trim() }),
+                body: JSON.stringify({ phone, code: code.trim() }),
             });
             const data = await res.json().catch(() => ({}));
             if (!res.ok) {
@@ -46,7 +46,7 @@ const VerifyWhatsAppPage = () => {
 
     const handleResend = async () => {
         setResent(false);
-        await resendVerification(email);
+        await resendVerification(phone);
         setResent(true);
     };
 

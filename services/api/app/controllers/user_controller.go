@@ -512,7 +512,7 @@ func (c *userController) VerifyWhatsApp(ctx *fiber.Ctx) error {
 	if err := lib.BodyParser(ctx, req); err != nil {
 		return lib.ErrorBadRequest(ctx, err)
 	}
-	if err := c.user.VerifyWhatsApp(req.Email, req.Code); err != nil {
+	if err := c.user.VerifyWhatsApp(req.Phone, req.Code); err != nil {
 		return lib.ErrorBadRequest(ctx, err)
 	}
 	return lib.OK(ctx, "Account verified successfully.")
@@ -534,7 +534,7 @@ func (c *userController) ResendVerification(ctx *fiber.Ctx) error {
 		return lib.ErrorBadRequest(ctx, err)
 	}
 	// Always return 200 to avoid account enumeration.
-	_ = c.user.ResendVerification(req.Email)
+	_ = c.user.ResendVerification(req.Identifier)
 	return lib.OK(ctx, "If that account exists and isn't verified yet, a new code has been sent.")
 }
 

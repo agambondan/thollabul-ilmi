@@ -132,18 +132,22 @@ const LoginPage = () => {
                                 htmlFor='login-email'
                                 className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
-                                {t("auth.email")}
+                                {t("auth.email_or_phone") ||
+                                    "Email atau Nomor WhatsApp"}
                             </label>
                             <input
                                 id='login-email'
                                 name='email'
-                                autoComplete='email'
-                                type='email'
+                                autoComplete='username'
+                                type='text'
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className='w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500'
-                                placeholder={t("auth.email_placeholder")}
+                                placeholder={
+                                    t("auth.email_or_phone_placeholder") ||
+                                    "nama@email.com atau 08xxxxxxxxxx"
+                                }
                             />
                         </div>
                         <div>

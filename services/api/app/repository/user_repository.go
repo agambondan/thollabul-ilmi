@@ -14,6 +14,7 @@ type UserRepository interface {
 	FindAll(*fiber.Ctx) *paginate.Page
 	FindById(string) (*model.User, error)
 	FindByEmail(string) (*model.User, error)
+	FindByPhone(string) (*model.User, error)
 	UpdateById(string, *model.User) (*model.User, error)
 	DeleteById(string) error
 	Count() (*int64, error)
@@ -70,6 +71,14 @@ func (r *userRepo) FindById(id string) (*model.User, error) {
 func (r *userRepo) FindByEmail(email string) (*model.User, error) {
 	var user model.User
 	if err := r.db.First(&user, "email = ?", email).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *userRepo) FindByPhone(phone string) (*model.User, error) {
+	var user model.User
+	if err := r.db.First(&user, "phone = ?", phone).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil

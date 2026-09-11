@@ -15,8 +15,11 @@ const (
 
 type User struct {
 	BaseUUID
-	Name          *string  `json:"name,omitempty" gorm:"type:varchar(256);not null" validate:"required"`
-	Email         *string  `json:"email,omitempty" gorm:"type:varchar(256);uniqueIndex;not null" validate:"required,email"`
+	Name  *string `json:"name,omitempty" gorm:"type:varchar(256);not null" validate:"required"`
+	// Email is optional: an account that verified via WhatsApp may register
+	// without one. A unique index still applies, but Postgres treats every
+	// NULL as distinct so multiple email-less accounts don't collide.
+	Email         *string  `json:"email,omitempty" gorm:"type:varchar(256);uniqueIndex" validate:"omitempty,email"`
 	Password      *string  `json:"-" gorm:"type:varchar(256);not null"`
 	Role          UserRole `json:"role,omitempty" gorm:"type:varchar(50);default:'user'"`
 	Avatar        *string  `json:"avatar,omitempty" gorm:"type:varchar(512)"`
@@ -52,20 +55,25 @@ const (
 )
 
 type RegisterRequest struct {
-	Name     string `json:"name" validate:"required"`
-	Email    string `json:"email" validate:"required,email"`
+	Name string `json:"name" validate:"required"`
+	// Email is required only when VerificationChannel is "email"; optional
+	// (but must be a valid address if given) when it's "whatsapp" — enforced
+	// in the service layer, same as Phone below.
+	Email    string `json:"email" validate:"omitempty,email"`
 	Password string `json:"password" validate:"required,min=8"`
 	// VerificationChannel is the account-activation method the user picked:
 	// "email" (link) or "whatsapp" (OTP code) — see IsVerified/Login.
 	VerificationChannel string `json:"verification_channel" validate:"required,oneof=email whatsapp"`
-	// Phone is required only when VerificationChannel is "whatsapp";
-	// enforced in the service layer since validator's required_if needs the
-	// literal field name and this keeps the check readable.
+	// Phone is required only when VerificationChannel is "whatsapp".
 	Phone string `json:"phone"`
 }
 
 type LoginRequest struct {
-	Email    string `json:"email" validate:"required,email"`
+	// Email holds whatever the user typed in the single login field — an
+	// email address or an Indonesian phone number. The JSON key stays
+	// "email" for backward compatibility with existing clients (mobile);
+	// Login() decides which lookup to use based on the value's shape.
+	Email    string `json:"email" validate:"required"`
 	Password string `json:"password" validate:"required"`
 }
 
@@ -145,12 +153,15 @@ type VerifyEmailRequest struct {
 }
 
 type VerifyWhatsAppRequest struct {
-	Email string `json:"email" validate:"required,email"`
+	Phone string `json:"phone" validate:"required"`
 	Code  string `json:"code" validate:"required"`
 }
 
+// ResendVerificationRequest identifies the account the same way LoginRequest
+// does — email or phone, whichever the caller has — since a WhatsApp-only
+// account may not have an email to key off of.
 type ResendVerificationRequest struct {
-	Email string `json:"email" validate:"required,email"`
+	Identifier string `json:"identifier" validate:"required"`
 }
 
 type ForgotPasswordRequest struct {

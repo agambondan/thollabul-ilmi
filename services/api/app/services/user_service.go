@@ -78,8 +78,8 @@ type UserService interface {
 	ForgotPassword(email string) error
 	ResetPassword(token, newPassword string) error
 	VerifyEmail(token string) error
-	VerifyWhatsApp(email, code string) error
-	ResendVerification(email string) error
+	VerifyWhatsApp(phone, code string) error
+	ResendVerification(identifier string) error
 	FindAll(*fiber.Ctx) *paginate.Page
 	FindById(string) (*model.User, error)
 	UpdateById(string, *model.User) (*model.User, error)
@@ -100,8 +100,14 @@ func NewUserService(repo repository.UserRepository, wa *whatsapp.Manager) UserSe
 }
 
 func (s *userService) Register(req *model.RegisterRequest) (*model.User, error) {
-	if _, err := s.user.FindByEmail(req.Email); err == nil {
-		return nil, errors.New("unable to register with the provided details")
+	email := strings.TrimSpace(req.Email)
+	if req.VerificationChannel == model.VerificationChannelEmail && email == "" {
+		return nil, errors.New("email is required for email verification")
+	}
+	if email != "" {
+		if _, err := s.user.FindByEmail(email); err == nil {
+			return nil, errors.New("unable to register with the provided details")
+		}
 	}
 
 	var phone string
@@ -114,6 +120,9 @@ func (s *userService) Register(req *model.RegisterRequest) (*model.User, error) 
 			return nil, errors.New("nomor HP tidak valid, gunakan format 08xx atau +62xx")
 		}
 		phone = normalized
+		if _, err := s.user.FindByPhone(phone); err == nil {
+			return nil, errors.New("unable to register with the provided details")
+		}
 	}
 
 	hashed := lib.PasswordEncrypt(req.Password)
@@ -122,10 +131,12 @@ func (s *userService) Register(req *model.RegisterRequest) (*model.User, error) 
 	user := &model.User{
 		BaseUUID:            model.BaseUUID{ID: id},
 		Name:                lib.Strptr(req.Name),
-		Email:               lib.Strptr(req.Email),
 		Password:            lib.Strptr(hashed),
 		Role:                model.RoleUser,
 		VerificationChannel: lib.Strptr(req.VerificationChannel),
+	}
+	if email != "" {
+		user.Email = lib.Strptr(email)
 	}
 	if phone != "" {
 		user.Phone = lib.Strptr(phone)
@@ -209,8 +220,27 @@ func (s *userService) dispatchVerification(user *model.User) error {
 	return nil
 }
 
+// resolveUserByIdentifier looks a user up by email or phone depending on
+// which the identifier looks like. Shared by Login and ResendVerification,
+// since a WhatsApp-only account (no email on file) can only be found by
+// phone.
+func (s *userService) resolveUserByIdentifier(identifier string) (*model.User, error) {
+	identifier = strings.TrimSpace(identifier)
+	if identifier == "" {
+		return nil, errors.New("identifier is required")
+	}
+	if strings.Contains(identifier, "@") {
+		return s.user.FindByEmail(identifier)
+	}
+	phone, err := normalizePhone(identifier)
+	if err != nil {
+		return nil, err
+	}
+	return s.user.FindByPhone(phone)
+}
+
 func (s *userService) Login(req *model.LoginRequest) (*model.LoginResponse, error) {
-	user, err := s.user.FindByEmail(req.Email)
+	user, err := s.resolveUserByIdentifier(req.Email)
 	if err != nil {
 		return nil, errors.New("invalid email or password")
 	}
@@ -227,7 +257,7 @@ func (s *userService) Login(req *model.LoginRequest) (*model.LoginResponse, erro
 	if user.PreferredLang != nil {
 		lang = *user.PreferredLang
 	}
-	token, err := createToken(user.ID.String(), *user.Email, string(user.Role), lang)
+	token, err := createToken(user.ID.String(), derefStr(user.Email), string(user.Role), lang)
 	if err != nil {
 		slog.Error("login: failed to create access token", "user_id", user.ID.String(), "err", err)
 		return nil, errLoginFailed
@@ -260,7 +290,7 @@ func (s *userService) RefreshAccessToken(refreshToken string) (*model.LoginRespo
 	if user.PreferredLang != nil {
 		lang = *user.PreferredLang
 	}
-	newToken, err := createToken(user.ID.String(), *user.Email, string(user.Role), lang)
+	newToken, err := createToken(user.ID.String(), derefStr(user.Email), string(user.Role), lang)
 	if err != nil {
 		slog.Error("refresh token: failed to create access token", "user_id", user.ID.String(), "err", err)
 		return nil, errLoginFailed
@@ -394,8 +424,12 @@ func (s *userService) VerifyEmail(token string) error {
 	return s.user.MarkVerificationTokenVerified(vt.ID)
 }
 
-func (s *userService) VerifyWhatsApp(email, code string) error {
-	user, err := s.user.FindByEmail(email)
+func (s *userService) VerifyWhatsApp(phone, code string) error {
+	normalized, err := normalizePhone(phone)
+	if err != nil {
+		return errors.New("invalid verification code")
+	}
+	user, err := s.user.FindByPhone(normalized)
 	if err != nil {
 		return errors.New("invalid verification code")
 	}
@@ -423,8 +457,8 @@ func (s *userService) VerifyWhatsApp(email, code string) error {
 	return s.user.MarkVerificationTokenVerified(active.ID)
 }
 
-func (s *userService) ResendVerification(email string) error {
-	user, err := s.user.FindByEmail(email)
+func (s *userService) ResendVerification(identifier string) error {
+	user, err := s.resolveUserByIdentifier(identifier)
 	if err != nil {
 		// Anti-enumeration: pretend it worked either way.
 		return nil
@@ -528,7 +562,7 @@ func (s *userService) FindOrCreateOAuthUser(email, name, picture, provider, prov
 	if user.PreferredLang != nil {
 		lang = *user.PreferredLang
 	}
-	token, err := createToken(user.ID.String(), *user.Email, string(user.Role), lang)
+	token, err := createToken(user.ID.String(), derefStr(user.Email), string(user.Role), lang)
 	if err != nil {
 		slog.Error("oauth login: failed to create access token", "user_id", user.ID.String(), "err", err)
 		return nil, errLoginFailed

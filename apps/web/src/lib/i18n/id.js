@@ -200,6 +200,9 @@ const id = {
     "auth.resend_success": "Kode/link baru sudah dikirim ulang.",
     "auth.account_not_verified":
         "Akun kamu belum diverifikasi. Cek email/WhatsApp kamu, atau kirim ulang.",
+    "auth.email_or_phone": "Email atau Nomor WhatsApp",
+    "auth.email_or_phone_placeholder": "nama@email.com atau 08xxxxxxxxxx",
+    "auth.optional": "opsional",
     "pwa.install_title": "Install aplikasi Thullaabul 'Ilmi",
     "pwa.install_desc":
         "Akses cepat Quran, Hadits, & jadwal sholat dari layar HP",

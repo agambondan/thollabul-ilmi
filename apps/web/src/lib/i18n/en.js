@@ -207,6 +207,9 @@ const en = {
     "auth.resend_success": "A new code/link has been sent.",
     "auth.account_not_verified":
         "Your account isn't verified yet. Check your email/WhatsApp, or resend it.",
+    "auth.email_or_phone": "Email or WhatsApp Number",
+    "auth.email_or_phone_placeholder": "name@email.com or 08xxxxxxxxxx",
+    "auth.optional": "optional",
     "pwa.install_title": "Install Thullaabul 'Ilmi app",
     "pwa.install_desc":
         "Quick access to Quran, Hadith, and prayer times from your phone",

@@ -62,7 +62,7 @@ const RegisterPage = () => {
             });
             if (channel === "whatsapp") {
                 router.push(
-                    `/auth/verify-whatsapp?email=${encodeURIComponent(email)}`,
+                    `/auth/verify-whatsapp?phone=${encodeURIComponent(phone.trim())}`,
                 );
             } else {
                 router.push(`${buildLoginHref(nextUrl)}&registered=1`);
@@ -133,11 +133,17 @@ const RegisterPage = () => {
                                 className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'
                             >
                                 {t("auth.email")}
+                                {channel === "whatsapp" && (
+                                    <span className='text-gray-400 font-normal'>
+                                        {" "}
+                                        ({t("auth.optional") || "opsional"})
+                                    </span>
+                                )}
                             </label>
                             <input
                                 id='page-email'
                                 type='email'
-                                required
+                                required={channel !== "whatsapp"}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className='w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500'
